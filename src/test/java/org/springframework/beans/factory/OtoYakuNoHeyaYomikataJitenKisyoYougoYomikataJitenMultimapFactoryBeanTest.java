@@ -29,7 +29,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_STRINGS, METHOD_TEST_AND_APPLY, METHOD_CLEAR, METHOD_GET_UNICODE_BLOCKS,
-			METHOD_TEST_AND_ACCEPT, METHOD_MATCHES = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_MATCHES, METHOD_OR = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -50,6 +50,8 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 				BiConsumer.class)).setAccessible(true);
 		//
 		(METHOD_MATCHES = clz.getDeclaredMethod("matches", String.class, String.class)).setAccessible(true);
+		//
+		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
 	}
 
@@ -248,6 +250,35 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 	private static boolean matches(final String instance, final String regex) throws Throwable {
 		try {
 			final Object obj = METHOD_MATCHES.invoke(null, instance, regex);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testOr() throws Throwable {
+		//
+		Assertions.assertFalse(or(false, false));
+		//
+		Assertions.assertTrue(or(false, true));
+		//
+		Assertions.assertTrue(or(true, false));
+		//
+		Assertions.assertTrue(or(false, false, true));
+		//
+		Assertions.assertFalse(or(false, false, null));
+		//
+		Assertions.assertFalse(or(false, false, false));
+		//
+	}
+
+	private static boolean or(final boolean a, final boolean b, final boolean... bs) throws Throwable {
+		try {
+			final Object obj = METHOD_OR.invoke(null, a, b, bs);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}

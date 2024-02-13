@@ -128,30 +128,31 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 						//
 				} // while
 					//
-			} else if (Objects.equals(Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-					unicodeBlocks = getUnicodeBlocks(s1))
-					|| Objects.equals(Arrays.asList(UnicodeBlock.KATAKANA, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-							unicodeBlocks)
-					|| Objects.equals(Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS, UnicodeBlock.KATAKANA),
-							unicodeBlocks)
-					|| Objects.equals(Arrays.asList(UnicodeBlock.GREEK, UnicodeBlock.BASIC_LATIN,
-							UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), unicodeBlocks)
-					|| Objects.equals(Arrays.asList(UnicodeBlock.KATAKANA, UnicodeBlock.BASIC_LATIN,
-							UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), unicodeBlocks)) {
+			} else if (or(
+					Objects.equals(Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+							unicodeBlocks = getUnicodeBlocks(s1)),
+					Objects.equals(Arrays.asList(UnicodeBlock.KATAKANA, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+							unicodeBlocks),
+					Objects.equals(Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS, UnicodeBlock.KATAKANA),
+							unicodeBlocks),
+					Objects.equals(Arrays.asList(UnicodeBlock.GREEK, UnicodeBlock.BASIC_LATIN,
+							UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), unicodeBlocks),
+					Objects.equals(Arrays.asList(UnicodeBlock.KATAKANA, UnicodeBlock.BASIC_LATIN,
+							UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), unicodeBlocks))) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.collect(Util.filter(Util.stream(getStrings(s1, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
 								StringUtils::isNotBlank), Collectors.joining()),
 						Util.collect(Util.filter(Util.stream(ss2), StringUtils::isNotBlank), Collectors.joining()));
 				//
-			} else if (Objects
-					.equals(Arrays.asList(UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS, UnicodeBlock.KATAKANA,
-							UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), unicodeBlocks = getUnicodeBlocks(s1))
-					|| Objects.equals(Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.KATAKANA,
-							UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), unicodeBlocks = getUnicodeBlocks(s1))
-					|| Objects.equals(Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS, UnicodeBlock.BASIC_LATIN),
-							unicodeBlocks = getUnicodeBlocks(s1))
-					|| Objects.equals("国際防災の10年", s1)) {
+			} else if (or(
+					Objects.equals(Arrays.asList(UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS, UnicodeBlock.KATAKANA,
+							UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), unicodeBlocks = getUnicodeBlocks(s1)),
+					Objects.equals(Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.KATAKANA,
+							UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), unicodeBlocks = getUnicodeBlocks(s1)),
+					Objects.equals(Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS, UnicodeBlock.BASIC_LATIN),
+							unicodeBlocks = getUnicodeBlocks(s1)),
+					Objects.equals("国際防災の10年", s1))) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
 						Util.collect(Util.filter(Util.stream(ss2), StringUtils::isNotBlank), Collectors.joining()));
@@ -268,6 +269,30 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		} // for
 			//
 		return multimap;
+		//
+	}
+
+	private static boolean or(final boolean a, final boolean b, final boolean... bs) {
+		//
+		boolean result = a || b;
+		//
+		if (result) {
+			//
+			return result;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if (result |= bs[i]) {
+				//
+				return result;
+				//
+			} // if
+				//
+		} // for
+			//
+		return result;
 		//
 	}
 
