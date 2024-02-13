@@ -37,7 +37,8 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_STRINGS, METHOD_TEST_AND_APPLY, METHOD_CLEAR, METHOD_GET_UNICODE_BLOCKS,
 			METHOD_TEST_AND_ACCEPT, METHOD_MATCHES, METHOD_OR, METHOD_CREATE_MULTI_MAP_ITERABLE,
-			METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2, METHOD_CREATE_MULTI_MAP3, METHOD_AND = null;
+			METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2, METHOD_CREATE_MULTI_MAP_STRING_CHAR_ARRAY_ITERABLE,
+			METHOD_CREATE_MULTI_MAP3, METHOD_AND = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -70,8 +71,11 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 		(METHOD_CREATE_MULTI_MAP2 = clz.getDeclaredMethod("createMultimap2", String.class, String.class))
 				.setAccessible(true);
 		//
-		(METHOD_CREATE_MULTI_MAP3 = clz.getDeclaredMethod("createMultimap", String.class, char[].class, Iterable.class))
+		(METHOD_CREATE_MULTI_MAP3 = clz.getDeclaredMethod("createMultimap3", String.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_CREATE_MULTI_MAP_STRING_CHAR_ARRAY_ITERABLE = clz.getDeclaredMethod("createMultimap", String.class,
+				char[].class, Iterable.class)).setAccessible(true);
 		//
 		(METHOD_AND = clz.getDeclaredMethod("and", Predicate.class, Object.class, Object.class)).setAccessible(true);
 		//
@@ -346,7 +350,7 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 	private static IValue0<Multimap<String, String>> createMultimap(final String s, final char[] cs,
 			final Iterable<String> iterable) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MULTI_MAP3.invoke(null, s, cs, iterable);
+			final Object obj = METHOD_CREATE_MULTI_MAP_STRING_CHAR_ARRAY_ITERABLE.invoke(null, s, cs, iterable);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IValue0) {
@@ -396,6 +400,29 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 			throws Throwable {
 		try {
 			final Object obj = METHOD_CREATE_MULTI_MAP2.invoke(null, s1, s2);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateMultimap3() throws Throwable {
+		//
+		Assertions.assertEquals("[{青空比色目盛り=[あおぞらひしょくめもり]}]",
+				Util.toString(createMultimap3("リンケの青空比色目盛り", "（リンケのあおぞらひしょくめもり）")));
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> createMultimap3(final String s1, final String s2)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULTI_MAP3.invoke(null, s1, s2);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IValue0) {
