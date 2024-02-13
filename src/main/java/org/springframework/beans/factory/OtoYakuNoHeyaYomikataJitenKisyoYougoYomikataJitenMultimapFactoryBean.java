@@ -117,12 +117,12 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				matcher = Util.matcher(
 						Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InCJKUnifiedIdeographs}+)）$"), s1);
 				//
-				while (matcher != null && matcher.find() && matcher.groupCount() > 1) {
+				while (Util.find(matcher) && Util.groupCount(matcher) > 1) {
 					//
-					for (int j = 1; j < matcher.groupCount() + 1; j++) {
+					for (int j = 1; j < Util.groupCount(matcher) + 1; j++) {
 						//
 						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								matcher.group(j), IterableUtils.get(ss2, 0));
+								Util.group(matcher, j), IterableUtils.get(ss2, 0));
 						//
 					} // for
 						//
@@ -162,17 +162,17 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				//
 				matcher = Util.matcher(Pattern.compile("[\\p{InKatakana}|A-Z]+の(\\p{InCJKUnifiedIdeographs}+)"), s1);
 				//
-				while (matcher != null && matcher.find() && matcher.groupCount() > 0) {
+				while (Util.find(matcher) && Util.groupCount(matcher) > 0) {
 					//
-					iv0 = Unit.with(matcher.group(1));
+					iv0 = Unit.with(Util.group(matcher, 1));
 					//
 				} // while
 					//
 				matcher = Util.matcher(Pattern.compile("\\p{InKatakana}+の(\\p{InHiragana}+)"), s2);
 				//
-				while (matcher != null && matcher.find() && matcher.groupCount() > 0) {
+				while (Util.find(matcher) && Util.groupCount(matcher) > 0) {
 					//
-					iv1 = Unit.with(matcher.group(1));
+					iv1 = Unit.with(Util.group(matcher, 1));
 					//
 				} // while
 					//
@@ -190,17 +190,17 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				matcher = Util.matcher(
 						Pattern.compile("^\\p{InKatakana}+の([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)"), s1);
 				//
-				while (matcher != null && matcher.find() && matcher.groupCount() > 0) {
+				while (Util.find(matcher) && Util.groupCount(matcher) > 0) {
 					//
-					iv0 = Unit.with(matcher.group(1));
+					iv0 = Unit.with(Util.group(matcher, 1));
 					//
 				} // while
 					//
 				matcher = Util.matcher(Pattern.compile("\\p{InKatakana}+の(\\p{InHiragana}+)"), s2);
 				//
-				while (matcher != null && matcher.find() && matcher.groupCount() > 0) {
+				while (Util.find(matcher) && Util.groupCount(matcher) > 0) {
 					//
-					iv1 = Unit.with(matcher.group(1));
+					iv1 = Unit.with(Util.group(matcher, 1));
 					//
 				} // while
 					//
@@ -234,11 +234,11 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				matcher = Util.matcher(
 						Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)の\\d+(\\p{InCJKUnifiedIdeographs}+)"), s1);
 				//
-				while (matcher != null && matcher.find() && matcher.groupCount() > 1) {
+				while (Util.find(matcher) && Util.groupCount(matcher) > 1) {
 					//
-					for (int j = 1; j <= matcher.groupCount(); j++) {
+					for (int j = 1; j <= Util.groupCount(matcher); j++) {
 						//
-						Util.add(ss1 = ObjectUtils.getIfNull(ss1, ArrayList::new), matcher.group(j));
+						Util.add(ss1 = ObjectUtils.getIfNull(ss1, ArrayList::new), Util.group(matcher, j));
 						//
 					} // for
 						//
@@ -246,11 +246,11 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 					//
 				matcher = Util.matcher(Pattern.compile("(\\p{InHiragana}+)の\\d+(\\p{InHiragana}+)"), s2);
 				//
-				while (matcher != null && matcher.find() && matcher.groupCount() > 1) {
+				while (Util.find(matcher) && Util.groupCount(matcher) > 1) {
 					//
-					for (int j = 1; j <= matcher.groupCount(); j++) {
+					for (int j = 1; j <= Util.groupCount(matcher); j++) {
 						//
-						Util.add(ss2 = ObjectUtils.getIfNull(ss2, ArrayList::new), matcher.group(j));
+						Util.add(ss2 = ObjectUtils.getIfNull(ss2, ArrayList::new), Util.group(matcher, j));
 						//
 					} // if
 						//
