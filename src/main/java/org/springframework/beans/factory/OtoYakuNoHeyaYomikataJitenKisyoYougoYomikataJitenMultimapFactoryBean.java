@@ -271,7 +271,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 	}
 
-	private static boolean matches(final String instance, final String regex) {
+	private static boolean matches(@Nullable final String instance, @Nullable final String regex) {
 		//
 		try {
 			//
