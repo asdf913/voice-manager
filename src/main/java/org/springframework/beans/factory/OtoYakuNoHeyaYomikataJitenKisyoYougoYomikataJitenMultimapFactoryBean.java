@@ -101,7 +101,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 		IValue0<Multimap<String, String>> ivmm = createMultimap(s1, cs, ss2);
 		//
-		if (ivmm != null || (ivmm = createMultimap1(s1, ss2)) != null) {
+		if (ivmm != null || (ivmm = createMultimap1(s1, ss2)) != null || (ivmm = createMultimap2(s1, s2)) != null) {
 			//
 			return IValue0Util.getValue0(ivmm);
 			//
@@ -141,33 +141,6 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
 					Util.collect(Util.filter(Util.stream(ss2), StringUtils::isNotBlank), Collectors.joining()));
 			//
-		} else if (matches(s1, "[\\p{InKatakana}|A-Z]+の(\\p{InCJKUnifiedIdeographs}+)")) {
-			//
-			iv0 = iv1 = null;
-			//
-			matcher = Util.matcher(Pattern.compile("[\\p{InKatakana}|A-Z]+の(\\p{InCJKUnifiedIdeographs}+)"), s1);
-			//
-			while (Util.find(matcher) && Util.groupCount(matcher) > 0) {
-				//
-				iv0 = Unit.with(Util.group(matcher, 1));
-				//
-			} // while
-				//
-			matcher = Util.matcher(Pattern.compile("\\p{InKatakana}+の(\\p{InHiragana}+)"), s2);
-			//
-			while (Util.find(matcher) && Util.groupCount(matcher) > 0) {
-				//
-				iv1 = Unit.with(Util.group(matcher, 1));
-				//
-			} // while
-				//
-			if (and(Objects::nonNull, iv0, iv1)) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						IValue0Util.getValue0(iv0), IValue0Util.getValue0(iv1));
-				//
-			} // if
-				//
 		} else if (matches(s1, "^\\p{InKatakana}+の([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)")) {
 			//
 			iv0 = iv1 = null;
@@ -331,6 +304,45 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				} // for
 					//
 			} // while
+				//
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> createMultimap2(final String s1, final String s2) {
+		//
+		IValue0<Multimap<String, String>> multimap = null;
+		//
+		if (matches(s1, "[\\p{InKatakana}|A-Z]+の(\\p{InCJKUnifiedIdeographs}+)")) {
+			//
+			IValue0<String> iv0 = null, iv1 = null;
+			//
+			Matcher matcher = Util.matcher(Pattern.compile("[\\p{InKatakana}|A-Z]+の(\\p{InCJKUnifiedIdeographs}+)"),
+					s1);
+			//
+			while (Util.find(matcher) && Util.groupCount(matcher) > 0) {
+				//
+				iv0 = Unit.with(Util.group(matcher, 1));
+				//
+			} // while
+				//
+			matcher = Util.matcher(Pattern.compile("\\p{InKatakana}+の(\\p{InHiragana}+)"), s2);
+			//
+			while (Util.find(matcher) && Util.groupCount(matcher) > 0) {
+				//
+				iv1 = Unit.with(Util.group(matcher, 1));
+				//
+			} // while
+				//
+			if (and(Objects::nonNull, iv0, iv1)) {
+				//
+				MultimapUtil.put(IValue0Util.getValue0(
+						multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))),
+						IValue0Util.getValue0(iv0), IValue0Util.getValue0(iv1));
+				//
+			} // if
 				//
 		} // if
 			//
