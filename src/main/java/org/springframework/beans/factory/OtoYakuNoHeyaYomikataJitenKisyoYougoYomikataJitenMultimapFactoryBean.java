@@ -254,10 +254,10 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 	}
 
 	@Nullable
-	private static IValue0<Multimap<String, String>> createMultimap(final String s, final char[] cs,
+	private static IValue0<Multimap<String, String>> createMultimap(final String string, final char[] cs,
 			@Nullable final Iterable<String> iterable) {
 		//
-		if (!StringUtils.containsAny(s, cs)) {
+		if (!StringUtils.containsAny(string, cs)) {
 			//
 			return null;
 			//
@@ -267,7 +267,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 		for (int j = 0; cs != null && j < cs.length; j++) {
 			//
-			if ((ss = StringUtils.split(s, cs[j])) != null && ss.length > 1) {
+			if ((ss = StringUtils.split(string, cs[j])) != null && ss.length > 1) {
 				//
 				break;
 				//
@@ -277,16 +277,30 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 			//
 		IValue0<Multimap<String, String>> multimap = null;
 		//
+		int size = 0;
+		//
+		String s = null;
+		//
 		for (int j = 0; ss != null && j < ss.length; j++) {
 			//
+			if ((size = IterableUtils.size(iterable)) == 1) {
+				//
+				s = IterableUtils.get(iterable, 0);
+				//
+			} else if (size > 0) {
+				//
+				s = IterableUtils.get(iterable, Math.min(j, IterableUtils.size(iterable) - 1));
+				//
+			} else {
+				//
+				s = null;
+				//
+			} // if
+				//
 			MultimapUtil.put(
 					IValue0Util.getValue0(
 							multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))),
-					ss[j],
-					IterableUtils.size(iterable) == 1 ? IterableUtils.get(iterable, 0)
-							: IterableUtils.size(iterable) > 0
-									? IterableUtils.get(iterable, Math.min(j, IterableUtils.size(iterable) - 1))
-									: null);
+					ss[j], s);
 			//
 		} // for
 			//
