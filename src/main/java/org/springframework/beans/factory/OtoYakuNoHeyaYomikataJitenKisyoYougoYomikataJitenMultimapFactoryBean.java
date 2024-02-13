@@ -370,8 +370,6 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 		if (Objects.equals("荒天の40度", s1)) {
 			//
-			System.out.println(s1 + " " + s2);
-			//
 			List<String> ss1 = null;
 			//
 			Matcher matcher = Util
