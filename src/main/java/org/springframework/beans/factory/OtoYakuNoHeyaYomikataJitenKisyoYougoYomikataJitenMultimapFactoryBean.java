@@ -93,8 +93,6 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 		final char[] cs = new char[] { '・', '、' };
 		//
-		Matcher matcher = null;
-		//
 		List<UnicodeBlock> unicodeBlocks = null;
 		//
 		IValue0<Multimap<String, String>> ivmm = createMultimap(s1, cs, ss2);
@@ -148,42 +146,6 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 			//
 			ss2 = Util.toList(Util.filter(Util.stream(getStrings(s2, UnicodeBlock.HIRAGANA)), StringUtils::isNotBlank));
 			//
-			for (int j = 0; j < Math.min(IterableUtils.size(ss1), IterableUtils.size(ss2)); j++) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						IterableUtils.get(ss1, j), IterableUtils.get(ss2, j));
-				//
-			} // for
-				//
-		} else if (Objects.equals("荒天の40度", s1)) {
-			//
-			ss1 = ss2 = null;
-			//
-			matcher = Util.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)の\\d+(\\p{InCJKUnifiedIdeographs}+)"),
-					s1);
-			//
-			while (Util.find(matcher) && Util.groupCount(matcher) > 1) {
-				//
-				for (int j = 1; j <= Util.groupCount(matcher); j++) {
-					//
-					Util.add(ss1 = ObjectUtils.getIfNull(ss1, ArrayList::new), Util.group(matcher, j));
-					//
-				} // for
-					//
-			} // while
-				//
-			matcher = Util.matcher(Pattern.compile("(\\p{InHiragana}+)の\\d+(\\p{InHiragana}+)"), s2);
-			//
-			while (Util.find(matcher) && Util.groupCount(matcher) > 1) {
-				//
-				for (int j = 1; j <= Util.groupCount(matcher); j++) {
-					//
-					Util.add(ss2 = ObjectUtils.getIfNull(ss2, ArrayList::new), Util.group(matcher, j));
-					//
-				} // if
-					//
-			} // while
-				//
 			for (int j = 0; j < Math.min(IterableUtils.size(ss1), IterableUtils.size(ss2)); j++) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
