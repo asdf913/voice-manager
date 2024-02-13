@@ -191,7 +191,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				//
 			} // while
 				//
-			if (iv0 != null && iv1 != null) {
+			if (and(Objects::nonNull, iv0, iv1)) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						IValue0Util.getValue0(iv0), IValue0Util.getValue0(iv1));
@@ -219,7 +219,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				//
 			} // while
 				//
-			if (iv0 != null && iv1 != null) {
+			if (and(Objects::nonNull, iv0, iv1)) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						IValue0Util.getValue0(iv0), IValue0Util.getValue0(iv1));
@@ -280,6 +280,12 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		} // if
 			//
 		return multimap;
+		//
+	}
+
+	private static <T> boolean and(final Predicate<T> predicate, final T a, final T b) {
+		//
+		return Boolean.logicalAnd(Util.test(predicate, a), Util.test(predicate, b));
 		//
 	}
 
