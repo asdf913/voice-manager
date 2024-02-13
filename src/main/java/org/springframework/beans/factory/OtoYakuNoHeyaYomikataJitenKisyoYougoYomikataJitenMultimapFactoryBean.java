@@ -291,6 +291,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 	}
 
+	@Nullable
 	private static IValue0<Multimap<String, String>> createMultimap1(final String s,
 			@Nullable final Iterable<String> iterable) {
 		//
