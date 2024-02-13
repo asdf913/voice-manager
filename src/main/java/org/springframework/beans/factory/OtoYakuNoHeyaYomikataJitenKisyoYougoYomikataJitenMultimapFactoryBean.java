@@ -358,7 +358,8 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 	}
 
 	@Nullable
-	private static List<String> getStrings(final String string, final UnicodeBlock ub, final UnicodeBlock... ubs) {
+	private static List<String> getStrings(@Nullable final String string, final UnicodeBlock ub,
+			final UnicodeBlock... ubs) {
 		//
 		final char[] cs = Util.toCharArray(string);
 		//
