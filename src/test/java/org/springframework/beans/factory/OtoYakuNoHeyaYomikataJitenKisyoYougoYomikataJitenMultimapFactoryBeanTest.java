@@ -3,7 +3,7 @@ package org.springframework.beans.factory;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -12,10 +12,10 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,10 +24,12 @@ import org.junit.jupiter.api.Test;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Multimap;
 
+import io.github.toolfactory.narcissus.Narcissus;
+
 class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_STRINGS, METHOD_TEST_AND_APPLY, METHOD_CLEAR, METHOD_GET_UNICODE_BLOCKS,
-			METHOD_TEST_AND_ACCEPT = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_MATCHES = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -46,6 +48,8 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
 				BiConsumer.class)).setAccessible(true);
+		//
+		(METHOD_MATCHES = clz.getDeclaredMethod("matches", String.class, String.class)).setAccessible(true);
 		//
 	}
 
@@ -205,6 +209,49 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 			final BiConsumer<T, U> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT.invoke(null, instance, t, u, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMatches() throws Throwable {
+		//
+		Assertions.assertFalse(matches(null, null));
+		//
+		Assertions.assertFalse(matches("", null));
+		//
+		Assertions.assertTrue(matches("", ""));
+		//
+		final String string = new String("a");
+		//
+		Assertions.assertFalse(matches(string, ""));
+		//
+		FieldUtils.getAllFieldsList(Util.getClass(string)).forEach(f -> {
+			//
+			if (f == null || Modifier.isStatic(f.getModifiers()) || ClassUtils.isPrimitiveOrWrapper(f.getType())) {
+				//
+				return;
+				//
+			} // if
+				//
+			Narcissus.setObjectField(string, f, null);
+			//
+		});
+		//
+		Assertions.assertFalse(matches(string, ""));
+		//
+		Assertions.assertFalse(matches(string, string));
+		//
+	}
+
+	private static boolean matches(final String instance, final String regex) throws Throwable {
+		try {
+			final Object obj = METHOD_MATCHES.invoke(null, instance, regex);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -27,10 +27,14 @@ import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerUtil;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
+
+import io.github.toolfactory.narcissus.Narcissus;
 
 /*
  * https://hiramatu-hifuka.com/onyak/kotoba-1/kisyo.html
@@ -103,12 +107,12 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 					//
 				} // for
 					//
-			} else if (s1 != null && s1.matches("^(\\p{InCJKUnifiedIdeographs}|々|・|、|\\p{InHiragana})+$")) {
+			} else if (matches(s1, "^(\\p{InCJKUnifiedIdeographs}|々|・|、|\\p{InHiragana})+$")) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
 						IterableUtils.get(ss2, 0));
 				//
-			} else if (s1 != null && s1.matches("^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InCJKUnifiedIdeographs}+)）$")) {
+			} else if (matches(s1, "^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InCJKUnifiedIdeographs}+)）$")) {
 				//
 				matcher = Util.matcher(
 						Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InCJKUnifiedIdeographs}+)）$"), s1);
@@ -152,7 +156,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
 						Util.collect(Util.filter(Util.stream(ss2), StringUtils::isNotBlank), Collectors.joining()));
 				//
-			} else if (s1 != null && s1.matches("[\\p{InKatakana}|A-Z]+の(\\p{InCJKUnifiedIdeographs}+)")) {
+			} else if (matches(s1, "[\\p{InKatakana}|A-Z]+の(\\p{InCJKUnifiedIdeographs}+)")) {
 				//
 				iv0 = iv1 = null;
 				//
@@ -179,7 +183,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 					//
 				} // if
 					//
-			} else if (s1 != null && s1.matches("^\\p{InKatakana}+の([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)")) {
+			} else if (matches(s1, "^\\p{InKatakana}+の([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)")) {
 				//
 				iv0 = iv1 = null;
 				//
@@ -264,6 +268,28 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		} // for
 			//
 		return multimap;
+		//
+	}
+
+	private static boolean matches(final String instance, final String regex) {
+		//
+		try {
+			//
+			if (instance == null || Narcissus.getField(instance, String.class.getDeclaredField("value")) == null) {
+				//
+				return false;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(
+					LoggerFactory.getLogger(OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBean.class),
+					e.getMessage(), e);
+			//
+		} // try
+			//
+		return regex != null && instance.matches(regex);
 		//
 	}
 
