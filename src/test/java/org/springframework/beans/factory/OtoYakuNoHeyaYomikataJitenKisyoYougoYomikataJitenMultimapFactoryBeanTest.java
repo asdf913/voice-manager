@@ -18,6 +18,7 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.javatuples.valueintf.IValue0;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
@@ -33,7 +35,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_STRINGS, METHOD_TEST_AND_APPLY, METHOD_CLEAR, METHOD_GET_UNICODE_BLOCKS,
-			METHOD_TEST_AND_ACCEPT, METHOD_MATCHES, METHOD_OR, METHOD_CREATE_MULTI_MAP, METHOD_AND = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_MATCHES, METHOD_OR, METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP3,
+			METHOD_AND = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -57,7 +60,10 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
-		(METHOD_CREATE_MULTI_MAP = clz.getDeclaredMethod("createMultimap", Iterable.class)).setAccessible(true);
+		(METHOD_CREATE_MULTI_MAP1 = clz.getDeclaredMethod("createMultimap", Iterable.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_MULTI_MAP3 = clz.getDeclaredMethod("createMultimap", String.class, char[].class, Iterable.class))
+				.setAccessible(true);
 		//
 		(METHOD_AND = clz.getDeclaredMethod("and", Predicate.class, Object.class, Object.class)).setAccessible(true);
 		//
@@ -307,15 +313,36 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(createMultimap(null));
 		//
+		Assertions.assertEquals("[{雨脚=[あまあし], 雨足=[あまあし]}]",
+				Util.toString(createMultimap("雨脚・雨足", new char[] { '・' }, Collections.singleton("あまあし"))));
+		//
+		Assertions.assertEquals("[{雨脚=[null], 雨足=[null]}]",
+				Util.toString(createMultimap("雨脚・雨足", new char[] { '・' }, null)));
+		//
 	}
 
 	private static Multimap<String, String> createMultimap(final Iterable<Element> es) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MULTI_MAP.invoke(null, es);
+			final Object obj = METHOD_CREATE_MULTI_MAP1.invoke(null, es);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static IValue0<Multimap<String, String>> createMultimap(final String s, final char[] cs,
+			final Iterable<String> iterable) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULTI_MAP3.invoke(null, s, cs, iterable);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

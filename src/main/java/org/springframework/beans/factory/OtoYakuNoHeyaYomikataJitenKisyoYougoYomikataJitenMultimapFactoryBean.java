@@ -99,29 +99,15 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 		IValue0<String> iv0 = null, iv1 = null;
 		//
-		if (StringUtils.containsAny(s1, cs)) {
+		IValue0<Multimap<String, String>> ivmm = createMultimap(s1, cs, ss2);
+		//
+		if (ivmm != null) {
 			//
-			String[] ss = null;
+			return IValue0Util.getValue0(ivmm);
 			//
-			for (int j = 0; cs != null && j < cs.length; j++) {
-				//
-				if ((ss = StringUtils.split(s1, cs[j])) != null && ss.length > 1) {
-					//
-					break;
-					//
-				} // if
-					//
-			} // if
-				//
-			for (int j = 0; ss != null && j < ss.length; j++) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), ss[j],
-						IterableUtils.size(ss2) == 1 ? IterableUtils.get(ss2, 0)
-								: IterableUtils.get(ss2, Math.min(j, IterableUtils.size(ss2) - 1)));
-				//
-			} // for
-				//
-		} else if (matches(s1, "^(\\p{InCJKUnifiedIdeographs}|々|・|、|\\p{InHiragana})+$")) {
+		} // if
+			//
+		if (matches(s1, "^(\\p{InCJKUnifiedIdeographs}|々|・|、|\\p{InHiragana})+$")) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
 					IterableUtils.get(ss2, 0));
@@ -274,6 +260,43 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						IterableUtils.get(ss1, j), IterableUtils.get(ss2, j));
+				//
+			} // for
+				//
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> createMultimap(final String s, final char[] cs,
+			final Iterable<String> iterable) {
+		//
+		IValue0<Multimap<String, String>> multimap = null;
+		//
+		if (StringUtils.containsAny(s, cs)) {
+			//
+			String[] ss = null;
+			//
+			for (int j = 0; cs != null && j < cs.length; j++) {
+				//
+				if ((ss = StringUtils.split(s, cs[j])) != null && ss.length > 1) {
+					//
+					break;
+					//
+				} // if
+					//
+			} // if
+				//
+			for (int j = 0; ss != null && j < ss.length; j++) {
+				//
+				MultimapUtil.put(IValue0Util.getValue0(
+						multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))),
+						ss[j],
+						IterableUtils.size(iterable) == 1 ? IterableUtils.get(iterable, 0)
+								: IterableUtils.size(iterable) > 0
+										? IterableUtils.get(iterable, Math.min(j, IterableUtils.size(iterable) - 1))
+										: null);
 				//
 			} // for
 				//
