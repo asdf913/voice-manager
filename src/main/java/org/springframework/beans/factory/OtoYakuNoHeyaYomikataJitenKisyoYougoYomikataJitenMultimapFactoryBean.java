@@ -306,7 +306,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 	}
 
-	private static <T> boolean and(final Predicate<T> predicate, final T a, final T b) {
+	private static <T> boolean and(final Predicate<T> predicate, @Nullable final T a, @Nullable final T b) {
 		//
 		return Boolean.logicalAnd(Util.test(predicate, a), Util.test(predicate, b));
 		//
