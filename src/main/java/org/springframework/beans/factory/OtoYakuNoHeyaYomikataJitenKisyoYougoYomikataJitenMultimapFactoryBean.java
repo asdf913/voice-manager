@@ -128,11 +128,11 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 			//
 		} else if (or(
 				Objects.equals(Arrays.asList(UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS, UnicodeBlock.KATAKANA,
-						UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), unicodeBlocks = getUnicodeBlocks(s1)),
+						UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), unicodeBlocks),
 				Objects.equals(Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.KATAKANA,
-						UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), unicodeBlocks = getUnicodeBlocks(s1)),
+						UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), unicodeBlocks),
 				Objects.equals(Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS, UnicodeBlock.BASIC_LATIN),
-						unicodeBlocks = getUnicodeBlocks(s1)),
+						unicodeBlocks),
 				Objects.equals("国際防災の10年", s1))) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
