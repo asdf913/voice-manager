@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -38,7 +37,7 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 	private static Method METHOD_GET_STRINGS, METHOD_TEST_AND_APPLY, METHOD_CLEAR, METHOD_GET_UNICODE_BLOCKS,
 			METHOD_TEST_AND_ACCEPT, METHOD_MATCHES, METHOD_OR, METHOD_CREATE_MULTI_MAP_ITERABLE,
 			METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2, METHOD_CREATE_MULTI_MAP_STRING_CHAR_ARRAY_ITERABLE,
-			METHOD_CREATE_MULTI_MAP3, METHOD_CREATE_MULTI_MAP4, METHOD_AND = null;
+			METHOD_CREATE_MULTI_MAP3, METHOD_CREATE_MULTI_MAP4, METHOD_CREATE_MULTI_MAP5, METHOD_AND = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -75,6 +74,9 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_MULTI_MAP4 = clz.getDeclaredMethod("createMultimap4", String.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_CREATE_MULTI_MAP5 = clz.getDeclaredMethod("createMultimap5", String.class, Collection.class))
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_MULTI_MAP_STRING_CHAR_ARRAY_ITERABLE = clz.getDeclaredMethod("createMultimap", String.class,
@@ -446,6 +448,41 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 			throws Throwable {
 		try {
 			final Object obj = METHOD_CREATE_MULTI_MAP4.invoke(null, s1, s2);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateMultimap5() throws Throwable {
+		//
+		Assertions.assertEquals("[{青い太陽=[あおいたいよう]}]",
+				Util.toString(createMultimap5("青い太陽", Collections.singleton("あおいたいよう"))));
+		//
+		Assertions.assertEquals("[{青い太陽=[null]}]", Util.toString(createMultimap5("青い太陽", null)));
+		//
+		Assertions.assertEquals("[{報告書=[ほうこくしょ]}]", Util.toString(
+				createMultimap5("IPCC報告書", Arrays.asList("", "", "", "", "", "", "", "", "", "", "", "ほうこくしょ"))));
+		//
+		Assertions.assertEquals("[{報告書=[null]}]", Util.toString(createMultimap5("IPCC報告書", null)));
+		//
+		Assertions.assertEquals("[{１ヶ月予報=[いっかげつよほう]}]",
+				Util.toString(createMultimap5("１ヶ月予報", Collections.singleton("いっかげつよほう"))));
+		//
+		Assertions.assertEquals("[{１ヶ月予報=[null]}]", Util.toString(createMultimap5("１ヶ月予報", null)));
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> createMultimap5(final String s1, final Collection<String> ss2)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULTI_MAP5.invoke(null, s1, ss2);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IValue0) {
