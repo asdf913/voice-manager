@@ -104,6 +104,26 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 					//
 				} // while
 					//
+			} else if (Util.contains(Arrays.asList("風花", "梅雨"), s1)) {
+				//
+				matcher = Util.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"), s3);
+				//
+				while (Util.find(matcher)) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(matcher, 1), Util.group(matcher, 2));
+					//
+				} // while
+					//
+				matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）+"), s3);
+				//
+				while (Util.find(matcher)) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+							Util.group(matcher, 1));
+					//
+				} // while
+					//
 			} // if
 				//
 		} // for
