@@ -127,7 +127,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 		Matcher matcher = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"), s3);
 		//
-		final int size = MultimapUtil.size(multimap);
+		int size = MultimapUtil.size(multimap);
 		//
 		while (Util.find(matcher) && Util.groupCount(matcher) > 1) {
 			//
@@ -141,18 +141,22 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 			//
 		} // if
 			//
-		if (Objects.equals(s1, "較差")) {
+		size = MultimapUtil.size(multimap);
+		//
+		if ((ivmm = createMultimap6(s1, s3)) != null) {
 			//
-			matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）+"), s3);
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					IValue0Util.getValue0(ivmm));
 			//
-			while (Util.find(matcher)) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
-						Util.group(matcher, 1));
-				//
-			} // while
-				//
-		} else if (Util.contains(Arrays.asList("風花", "梅雨"), s1)) {
+		} // if
+			//
+		if (MultimapUtil.size(multimap) != size) {
+			//
+			return multimap;
+			//
+		} // if
+			//
+		if (Util.contains(Arrays.asList("風花", "梅雨"), s1)) {
 			//
 			matcher = Util.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"), s3);
 			//
@@ -444,6 +448,28 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 							multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))),
 					s1, Util.collect(Util.filter(Util.stream(ss2), StringUtils::isNotBlank), Collectors.joining()));
 			//
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> createMultimap6(final String s1, final String s3) {
+		//
+		IValue0<Multimap<String, String>> multimap = null;
+		//
+		if (Objects.equals(s1, "較差")) {
+			//
+			final Matcher matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）+"), s3);
+			//
+			while (Util.find(matcher)) {
+				//
+				MultimapUtil.put(IValue0Util.getValue0(
+						multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))), s1,
+						Util.group(matcher, 1));
+				//
+			} // while
+				//
 		} // if
 			//
 		return multimap;

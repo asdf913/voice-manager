@@ -37,7 +37,8 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 	private static Method METHOD_GET_STRINGS, METHOD_TEST_AND_APPLY, METHOD_CLEAR, METHOD_GET_UNICODE_BLOCKS,
 			METHOD_TEST_AND_ACCEPT, METHOD_MATCHES, METHOD_OR, METHOD_CREATE_MULTI_MAP_ITERABLE,
 			METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2, METHOD_CREATE_MULTI_MAP_STRING_CHAR_ARRAY_ITERABLE,
-			METHOD_CREATE_MULTI_MAP3, METHOD_CREATE_MULTI_MAP4, METHOD_CREATE_MULTI_MAP5, METHOD_AND = null;
+			METHOD_CREATE_MULTI_MAP3, METHOD_CREATE_MULTI_MAP4, METHOD_CREATE_MULTI_MAP5, METHOD_CREATE_MULTI_MAP6,
+			METHOD_AND = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -77,6 +78,9 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_MULTI_MAP5 = clz.getDeclaredMethod("createMultimap5", String.class, Collection.class))
+				.setAccessible(true);
+		//
+		(METHOD_CREATE_MULTI_MAP6 = clz.getDeclaredMethod("createMultimap6", String.class, String.class))
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_MULTI_MAP_STRING_CHAR_ARRAY_ITERABLE = clz.getDeclaredMethod("createMultimap", String.class,
@@ -483,6 +487,31 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 			throws Throwable {
 		try {
 			final Object obj = METHOD_CREATE_MULTI_MAP5.invoke(null, s1, ss2);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateMultimap6() throws Throwable {
+		//
+		Assertions.assertNull(createMultimap6("較差", null));
+		//
+		Assertions.assertEquals("[{較差=[こうさ, かくさ]}]",
+				Util.toString(createMultimap6("較差", "日本国語大辞典（こうさ）の慣用読みとある 学術用語集は（かくさ）")));
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> createMultimap6(final String s1, final String s3)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULTI_MAP6.invoke(null, s1, s3);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IValue0) {
