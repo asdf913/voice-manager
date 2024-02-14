@@ -251,7 +251,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 		if (matches(s1, "[\\p{InKatakana}|A-Z]+の(\\p{InCJKUnifiedIdeographs}+)")) {
 			//
-			IValue0<String> iv0 = null, iv1 = null;
+			IValue0<String> iv0 = null;
 			//
 			Matcher matcher = Util.matcher(Pattern.compile("[\\p{InKatakana}|A-Z]+の(\\p{InCJKUnifiedIdeographs}+)"),
 					s1);
@@ -263,6 +263,8 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 			} // while
 				//
 			matcher = Util.matcher(Pattern.compile("\\p{InKatakana}+の(\\p{InHiragana}+)"), s2);
+			//
+			IValue0<String> iv1 = null;
 			//
 			while (Util.find(matcher) && Util.groupCount(matcher) > 0) {
 				//
