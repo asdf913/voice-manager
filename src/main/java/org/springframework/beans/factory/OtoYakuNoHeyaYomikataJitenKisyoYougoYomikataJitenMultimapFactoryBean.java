@@ -59,12 +59,6 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 		Element e = null;
 		//
-		Matcher matcher = null;
-		//
-		int size = 0;
-		//
-		String s1, s3 = null;
-		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
 			if ((e = es.get(i)) == null || e.childrenSize() < 3) {
@@ -75,57 +69,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					createMultimap(e.children()));
-			//
-			matcher = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
-					s3 = ElementUtil.text(IterableUtils.get(e.children(), 2)));
-			//
-			size = MultimapUtil.size(multimap);
-			//
-			while (Util.find(matcher) && Util.groupCount(matcher) > 1) {
-				//
-				MultimapUtil.put(multimap, Util.group(matcher, 1), Util.group(matcher, 2));
-				//
-			} // while
-				//
-			if (MultimapUtil.size(multimap) != size) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if (Objects.equals(s1 = ElementUtil.text(IterableUtils.get(e.children(), 0)), "較差")) {
-				//
-				matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）+"), s3);
-				//
-				while (Util.find(matcher)) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
-							Util.group(matcher, 1));
-					//
-				} // while
-					//
-			} else if (Util.contains(Arrays.asList("風花", "梅雨"), s1)) {
-				//
-				matcher = Util.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"), s3);
-				//
-				while (Util.find(matcher)) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.group(matcher, 1), Util.group(matcher, 2));
-					//
-				} // while
-					//
-				matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）+"), s3);
-				//
-				while (Util.find(matcher)) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
-							Util.group(matcher, 1));
-					//
-				} // while
-					//
-			} // if
-				//
+
 		} // for
 			//
 		return multimap;
@@ -208,6 +152,58 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 						IterableUtils.get(ss1, j), IterableUtils.get(ss2, j));
 				//
 			} // for
+				//
+		} // if
+			//
+		final String s3 = ElementUtil
+				.text(testAndApply(x -> IterableUtils.size(es) > 2, es, x -> IterableUtils.get(x, 2), null));
+		//
+		Matcher matcher = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"), s3);
+		//
+		final int size = MultimapUtil.size(multimap);
+		//
+		while (Util.find(matcher) && Util.groupCount(matcher) > 1) {
+			//
+			MultimapUtil.put(multimap, Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+		} // while
+			//
+		if (MultimapUtil.size(multimap) != size) {
+			//
+			return multimap;
+			//
+		} // if
+			//
+		if (Objects.equals(s1, "較差")) {
+			//
+			matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）+"), s3);
+			//
+			while (Util.find(matcher)) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+						Util.group(matcher, 1));
+				//
+			} // while
+				//
+		} else if (Util.contains(Arrays.asList("風花", "梅雨"), s1)) {
+			//
+			matcher = Util.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"), s3);
+			//
+			while (Util.find(matcher)) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, 1), Util.group(matcher, 2));
+				//
+			} // while
+				//
+			matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）+"), s3);
+			//
+			while (Util.find(matcher)) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+						Util.group(matcher, 1));
+				//
+			} // while
 				//
 		} // if
 			//
