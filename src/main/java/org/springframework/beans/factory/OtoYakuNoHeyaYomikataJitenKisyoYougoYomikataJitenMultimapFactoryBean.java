@@ -156,28 +156,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 			//
 		} // if
 			//
-		if (Util.contains(Arrays.asList("風花", "梅雨"), s1)) {
-			//
-			matcher = Util.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"), s3);
-			//
-			while (Util.find(matcher)) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(matcher, 1), Util.group(matcher, 2));
-				//
-			} // while
-				//
-			matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）+"), s3);
-			//
-			while (Util.find(matcher)) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
-						Util.group(matcher, 1));
-				//
-			} // while
-				//
-		} else if (Util.contains(Arrays.asList("寒気湖", "時雨", "南風", "初霜", "氷点", "盆地霧", "御神渡り", "茅花流し", "閉そく", "雪迎え"),
-				s1)) {
+		if (Util.contains(Arrays.asList("寒気湖", "時雨", "南風", "初霜", "氷点", "盆地霧", "御神渡り", "茅花流し", "閉そく", "雪迎え"), s1)) {
 			//
 			matcher = Util.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"), s3);
 			//
@@ -471,15 +450,47 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 		IValue0<Multimap<String, String>> multimap = null;
 		//
+		Matcher matcher = null;
+		//
 		if (Objects.equals(s1, "較差")) {
 			//
-			final Matcher matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）+"), s3);
+			matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）+"), s3);
 			//
 			while (Util.find(matcher)) {
 				//
 				MultimapUtil.put(IValue0Util.getValue0(
 						multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))), s1,
 						Util.group(matcher, 1));
+				//
+			} // while
+				//
+		} else if (Util.contains(Arrays.asList("風花", "梅雨"), s1)) {
+			//
+			matcher = Util.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"), s3);
+			//
+			while (Util.find(matcher)) {
+				//
+				MultimapUtil.put(IValue0Util.getValue0(
+						multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))),
+						Util.group(matcher, 1), Util.group(matcher, 2));
+				//
+			} // while
+				//
+			matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）+"), s3);
+			//
+			String g1 = null;
+			//
+			while (Util.find(matcher)) {
+				//
+				if (Objects.equals(g1 = Util.group(matcher, 1), "ふっこし") && Objects.equals(s1, "風花")) {
+					//
+					continue;
+					//
+				} // if
+					//
+				MultimapUtil.put(IValue0Util.getValue0(
+						multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))), s1,
+						g1);
 				//
 			} // while
 				//
