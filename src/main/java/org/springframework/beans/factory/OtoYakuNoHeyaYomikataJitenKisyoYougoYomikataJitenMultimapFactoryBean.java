@@ -59,6 +59,8 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 		Element e = null;
 		//
+		Matcher matcher = null;
+		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
 			if ((e = es.get(i)) == null || e.childrenSize() < 3) {
@@ -70,6 +72,15 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					createMultimap(e.children()));
 			//
+			matcher = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
+					ElementUtil.text(IterableUtils.get(e.children(), 2)));
+			//
+			while (Util.find(matcher) && Util.groupCount(matcher) > 1) {
+				//
+				MultimapUtil.put(multimap, Util.group(matcher, 1), Util.group(matcher, 2));
+				//
+			} // while
+				//
 		} // for
 			//
 		return multimap;

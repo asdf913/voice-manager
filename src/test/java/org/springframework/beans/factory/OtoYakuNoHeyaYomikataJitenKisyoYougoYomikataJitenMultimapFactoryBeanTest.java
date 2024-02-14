@@ -1,5 +1,6 @@
 package org.springframework.beans.factory;
 
+import java.io.File;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,6 +15,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -92,7 +94,7 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 	}
 
 	@Test
-	void testGetObjecct() throws Exception {
+	void testGetObject() throws Exception {
 		//
 		Assertions.assertNull(getObject(instance));
 		//
@@ -124,14 +126,12 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 				//
 			} // if
 				//
-			final Collection<Entry<String, String>> entries = MultimapUtil.entries(getObject(instance));
+			final File file = new File("OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBean.txt");
 			//
-			if (entries != null) {
-				//
-				entries.forEach(System.out::println);
-				//
-			} // if
-				//
+			FileUtils.writeLines(file, MultimapUtil.entries(getObject(instance)));
+			//
+			System.out.println(file.getAbsolutePath());
+			//
 		} // if
 			//
 	}
