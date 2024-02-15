@@ -143,7 +143,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 			//
 		size = MultimapUtil.size(multimap);
 		//
-		if ((ivmm = createMultimap6(s1, s3)) != null) {
+		if ((ivmm = createMultimap6(s1, s3)) != null || (ivmm = createMultimap7(s1, s3)) != null) {
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					IValue0Util.getValue0(ivmm));
@@ -464,7 +464,49 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				//
 			} // while
 				//
-		} else if (Util.contains(Arrays.asList("風花", "梅雨", "雨脚・雨足"), s1)) {
+		} else if (Util.contains(Arrays.asList("風花", "梅雨"), s1)) {
+			//
+			matcher = Util.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"), s3);
+			//
+			while (Util.find(matcher)) {
+				//
+				MultimapUtil.put(IValue0Util.getValue0(
+						multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))),
+						Util.group(matcher, 1), Util.group(matcher, 2));
+				//
+			} // while
+				//
+			String g1 = null;
+			//
+			matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）+"), s3);
+			//
+			while (Util.find(matcher)) {
+				//
+				if (Boolean.logicalAnd(Objects.equals(g1 = Util.group(matcher, 1), "ふっこし"), Objects.equals(s1, "風花"))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				MultimapUtil.put(IValue0Util.getValue0(
+						multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))), s1,
+						g1);
+				//
+			} // while
+				//
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> createMultimap7(final String s1, final String s3) {
+		//
+		IValue0<Multimap<String, String>> multimap = null;
+		//
+		Matcher matcher = null;
+		//
+		if (Util.contains(Arrays.asList("雨脚・雨足"), s1)) {
 			//
 			matcher = Util.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"), s3);
 			//
@@ -472,11 +514,8 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 			//
 			while (Util.find(matcher)) {
 				//
-				g1 = Util.group(matcher, 1);
-				//
-				g2 = Util.group(matcher, 2);
-				//
-				if (Boolean.logicalAnd(Objects.equals(g1, "雨脚"), StringUtils.endsWith(g2, "とも"))) {
+				if (Boolean.logicalAnd(Objects.equals(g1 = Util.group(matcher, 1), "雨脚"),
+						StringUtils.endsWith(g2 = Util.group(matcher, 2), "とも"))) {
 					//
 					g2 = StringUtils.removeEnd(g2, "とも");
 					//
@@ -494,38 +533,24 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 			//
 			while (Util.find(matcher)) {
 				//
-				if (Boolean.logicalAnd(Objects.equals(g1 = Util.group(matcher, 1), "ふっこし"), Objects.equals(s1, "風花"))) {
+				ss = StringUtils.split(s1, '・');
+				//
+				for (int i = 0; ss != null && i < ss.length; i++) {
 					//
-					continue;
-					//
-				} // if
-					//
-				if (StringUtils.contains(s1, '・')) {
-					//
-					ss = StringUtils.split(s1, '・');
-					//
-					for (int i = 0; ss != null && i < ss.length; i++) {
+					if (Boolean.logicalAnd(Objects.equals(ss[i], "雨足"),
+							Objects.equals(g1 = testAndApply(x -> StringUtils.endsWith(x, "とも"),
+									g1 = Util.group(matcher, 1), x -> StringUtils.removeEnd(x, "とも"), x -> x),
+									"うきゃく"))) {
 						//
-						if (Boolean.logicalAnd(Objects.equals(ss[i], "雨足"),
-								Objects.equals(g1 = testAndApply(x -> StringUtils.endsWith(x, "とも"), g1,
-										x -> StringUtils.removeEnd(x, "とも"), x -> x), "うきゃく"))) {
-							//
-							continue;
-							//
-						} // if
-							//
-						MultimapUtil.put(IValue0Util.getValue0(multimap = ObjectUtils.getIfNull(multimap,
-								() -> Unit.with(LinkedHashMultimap.create()))), ss[i], g1);
+						continue;
 						//
-					} // for
+					} // if
 						//
-				} else {
-					//
 					MultimapUtil.put(IValue0Util.getValue0(
 							multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))),
-							s1, g1);
+							ss[i], g1);
 					//
-				} // if
+				} // for
 					//
 			} // while
 				//
