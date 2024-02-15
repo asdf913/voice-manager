@@ -29,6 +29,8 @@ import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.meeuw.functional.TriConsumer;
+import org.meeuw.functional.TriPredicate;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 
@@ -293,14 +295,11 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				//
 			} // while
 				//
-			if (and(Objects::nonNull, iv0, iv1)) {
-				//
-				MultimapUtil.put(IValue0Util.getValue0(
-						multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))),
-						IValue0Util.getValue0(iv0), IValue0Util.getValue0(iv1));
-				//
-			} // if
-				//
+			testAndAccept((a, b, c) -> and(Objects::nonNull, b, c),
+					multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create())), iv0, iv1,
+					(a, b, c) -> MultimapUtil.put(IValue0Util.getValue0(a), IValue0Util.getValue0(b),
+							IValue0Util.getValue0(c)));
+			//
 		} else if (matches(s1, "^\\p{InKatakana}+の([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)")) {
 			//
 			IValue0<String> iv0 = null;
@@ -324,18 +323,22 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				//
 			} // while
 				//
-			if (and(Objects::nonNull, iv0, iv1)) {
-				//
-				MultimapUtil.put(IValue0Util.getValue0(
-						multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))),
-						IValue0Util.getValue0(iv0), IValue0Util.getValue0(iv1));
-				//
-			} // if
-				//
+			testAndAccept((a, b, c) -> and(Objects::nonNull, b, c),
+					multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create())), iv0, iv1,
+					(a, b, c) -> MultimapUtil.put(IValue0Util.getValue0(a), IValue0Util.getValue0(b),
+							IValue0Util.getValue0(c)));
+			//
 		} // if
 			//
 		return multimap;
 		//
+	}
+
+	private static <T, U, V> void testAndAccept(final TriPredicate<T, U, V> predicate, final T t, final U u, final V v,
+			final TriConsumer<T, U, V> consumer) {
+		if (predicate != null && predicate.test(t, u, v) && consumer != null) {
+			consumer.accept(t, u, v);
+		}
 	}
 
 	@Nullable

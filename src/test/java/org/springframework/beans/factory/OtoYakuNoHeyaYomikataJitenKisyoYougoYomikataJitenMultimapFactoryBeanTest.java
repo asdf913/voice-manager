@@ -20,14 +20,18 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.meeuw.functional.TriConsumer;
+import org.meeuw.functional.TriPredicate;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
@@ -36,7 +40,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_STRINGS, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CLEAR,
-			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_ACCEPT, METHOD_MATCHES, METHOD_OR,
+			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_MATCHES, METHOD_OR,
 			METHOD_CREATE_MULTI_MAP_ITERABLE, METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2,
 			METHOD_CREATE_MULTI_MAP_STRING_CHAR_ARRAY_ITERABLE, METHOD_CREATE_MULTI_MAP4, METHOD_CREATE_MULTI_MAP5,
 			METHOD_CREATE_MULTI_MAP6, METHOD_CREATE_MULTI_MAP7, METHOD_AND = null;
@@ -59,8 +63,11 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_GET_UNICODE_BLOCKS = clz.getDeclaredMethod("getUnicodeBlocks", String.class)).setAccessible(true);
 		//
-		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
+		(METHOD_TEST_AND_ACCEPT4 = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
 				BiConsumer.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT5 = clz.getDeclaredMethod("testAndAccept", TriPredicate.class, Object.class,
+				Object.class, Object.class, TriConsumer.class)).setAccessible(true);
 		//
 		(METHOD_MATCHES = clz.getDeclaredMethod("matches", String.class, String.class)).setAccessible(true);
 		//
@@ -259,12 +266,25 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertDoesNotThrow(() -> testAndAccept((a, b) -> true, null, null, null));
 		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(null, null, null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept((a, b, c) -> true, null, null, null, null));
+		//
 	}
 
 	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
 			final BiConsumer<T, U> consumer) throws Throwable {
 		try {
-			METHOD_TEST_AND_ACCEPT.invoke(null, instance, t, u, consumer);
+			METHOD_TEST_AND_ACCEPT4.invoke(null, instance, t, u, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T, U, V> void testAndAccept(final TriPredicate<T, U, V> predicate, final T t, final U u, final V v,
+			final TriConsumer<T, U, V> consumer) throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT5.invoke(null, predicate, t, u, v, consumer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -414,12 +434,11 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertEquals("[{渦=[うず]}]", Util.toString(createMultimap2("カルマンの渦", "（カルマンのうず）")));
 		//
-		Assertions.assertNull(createMultimap2("カルマンの渦", null));
+		Assertions.assertEquals(Unit.with(ImmutableMultimap.of()), createMultimap2("カルマンの渦", null));
 		//
 		Assertions.assertEquals("[{青空比色目盛り=[あおぞらひしょくめもり]}]",
 				Util.toString(createMultimap2("リンケの青空比色目盛り", "（リンケのあおぞらひしょくめもり）")));
 		//
-
 	}
 
 	private static IValue0<Multimap<String, String>> createMultimap2(final String s1, final String s2)
