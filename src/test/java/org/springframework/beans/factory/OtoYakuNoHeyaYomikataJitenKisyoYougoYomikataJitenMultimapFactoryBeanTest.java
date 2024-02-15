@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
@@ -34,11 +35,11 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_GET_STRINGS, METHOD_TEST_AND_APPLY, METHOD_CLEAR, METHOD_GET_UNICODE_BLOCKS,
-			METHOD_TEST_AND_ACCEPT, METHOD_MATCHES, METHOD_OR, METHOD_CREATE_MULTI_MAP_ITERABLE,
-			METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2, METHOD_CREATE_MULTI_MAP_STRING_CHAR_ARRAY_ITERABLE,
-			METHOD_CREATE_MULTI_MAP3, METHOD_CREATE_MULTI_MAP4, METHOD_CREATE_MULTI_MAP5, METHOD_CREATE_MULTI_MAP6,
-			METHOD_CREATE_MULTI_MAP7, METHOD_AND = null;
+	private static Method METHOD_GET_STRINGS, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CLEAR,
+			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_ACCEPT, METHOD_MATCHES, METHOD_OR,
+			METHOD_CREATE_MULTI_MAP_ITERABLE, METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2,
+			METHOD_CREATE_MULTI_MAP_STRING_CHAR_ARRAY_ITERABLE, METHOD_CREATE_MULTI_MAP3, METHOD_CREATE_MULTI_MAP4,
+			METHOD_CREATE_MULTI_MAP5, METHOD_CREATE_MULTI_MAP6, METHOD_CREATE_MULTI_MAP7, METHOD_AND = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -48,8 +49,11 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 		(METHOD_GET_STRINGS = clz.getDeclaredMethod("getStrings", String.class, UnicodeBlock.class,
 				UnicodeBlock[].class)).setAccessible(true);
 		//
-		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
+		(METHOD_TEST_AND_APPLY4 = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY5 = clz.getDeclaredMethod("testAndApply", BiPredicate.class, Object.class, Object.class,
+				BiFunction.class, BiFunction.class)).setAccessible(true);
 		//
 		(METHOD_CLEAR = clz.getDeclaredMethod("clear", StringBuilder.class)).setAccessible(true);
 		//
@@ -175,13 +179,24 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(testAndApply(Predicates.alwaysTrue(), null, null, null));
 		//
+		Assertions.assertNull(testAndApply((a, b) -> false, null, null, null, null));
+		//
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
 			throws Throwable {
 		try {
-			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+			return (R) METHOD_TEST_AND_APPLY4.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) throws Throwable {
+		try {
+			return (R) METHOD_TEST_AND_APPLY5.invoke(null, predicate, t, u, functionTrue, functionFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
