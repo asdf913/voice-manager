@@ -538,10 +538,11 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				//
 				for (int i = 0; ss != null && i < ss.length; i++) {
 					//
-					if (Boolean.logicalAnd(Objects.equals(ss[i], "雨足"),
-							Objects.equals(g1 = testAndApply(x -> StringUtils.endsWith(x, "とも"),
-									g1 = Util.group(matcher, 1), x -> StringUtils.removeEnd(x, "とも"), x -> x),
-									"うきゃく"))) {
+					if (Boolean
+							.logicalAnd(Objects.equals(ss[i], "雨足"),
+									Objects.equals(g1 = testAndApply(x -> StringUtils.endsWith(x, "とも"),
+											Util.group(matcher, 1), x -> StringUtils.removeEnd(x, "とも"), x -> x),
+											"うきゃく"))) {
 						//
 						continue;
 						//
@@ -563,9 +564,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 
 	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
 			final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) {
-		return Util.test(predicate, t, u) 
-				? Util.apply(functionTrue, t, u)
-						: Util.apply(functionFalse, t, u);
+		return Util.test(predicate, t, u) ? Util.apply(functionTrue, t, u) : Util.apply(functionFalse, t, u);
 	}
 
 	private static <T> boolean and(final Predicate<T> predicate, @Nullable final T a, @Nullable final T b) {
