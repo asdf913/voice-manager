@@ -31,7 +31,6 @@ import org.jsoup.nodes.ElementUtil;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 
-import com.google.common.base.Functions;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
