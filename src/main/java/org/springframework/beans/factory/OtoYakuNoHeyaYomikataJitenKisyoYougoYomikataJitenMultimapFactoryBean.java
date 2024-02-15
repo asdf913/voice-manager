@@ -334,8 +334,8 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 	}
 
-	private static <T, U, V> void testAndAccept(@Nullable final TriPredicate<T, U, V> predicate, final T t, final U u,
-			final V v, @Nullable final TriConsumer<T, U, V> consumer) {
+	private static <T, U, V> void testAndAccept(@Nullable final TriPredicate<T, U, V> predicate, final T t,
+			@Nullable final U u, final V v, @Nullable final TriConsumer<T, U, V> consumer) {
 		if (predicate != null && predicate.test(t, u, v) && consumer != null) {
 			consumer.accept(t, u, v);
 		}
