@@ -31,6 +31,7 @@ import org.jsoup.nodes.ElementUtil;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 
+import com.google.common.base.Functions;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
@@ -506,14 +507,9 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 					//
 					for (int i = 0; ss != null && i < ss.length; i++) {
 						//
-						if (StringUtils.endsWith(g1, "とも")) {
-							//
-							g1 = StringUtils.removeEnd(g1, "とも");
-							//
-						} // if
-							//
-
-						if (Boolean.logicalAnd(Objects.equals(ss[i], "雨足"), Objects.equals(g1, "うきゃく"))) {
+						if (Boolean.logicalAnd(Objects.equals(ss[i], "雨足"),
+								Objects.equals(g1 = testAndApply(x -> StringUtils.endsWith(x, "とも"), g1,
+										x -> StringUtils.removeEnd(x, "とも"), x -> x), "うきゃく"))) {
 							//
 							continue;
 							//
