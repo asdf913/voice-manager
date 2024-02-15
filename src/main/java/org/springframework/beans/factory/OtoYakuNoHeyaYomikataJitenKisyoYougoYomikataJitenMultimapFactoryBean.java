@@ -43,6 +43,9 @@ import io.github.toolfactory.narcissus.Narcissus;
 public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBean
 		implements FactoryBean<Multimap<String, String>> {
 
+	private static final Pattern PATTERN_FULLWIDTH_LEFT_PARENTHESIS_HIRAGANA_FULLWIDTH_RIGHT_PARENTHESIS = Pattern
+			.compile("（(\\p{InHiragana}+)）+");
+
 	private String url = null;
 
 	public void setUrl(final String url) {
@@ -454,7 +457,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 		if (Objects.equals(s1, "較差")) {
 			//
-			matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）+"), s3);
+			matcher = Util.matcher(PATTERN_FULLWIDTH_LEFT_PARENTHESIS_HIRAGANA_FULLWIDTH_RIGHT_PARENTHESIS, s3);
 			//
 			while (Util.find(matcher)) {
 				//
@@ -478,7 +481,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				//
 			String g1 = null;
 			//
-			matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）+"), s3);
+			matcher = Util.matcher(PATTERN_FULLWIDTH_LEFT_PARENTHESIS_HIRAGANA_FULLWIDTH_RIGHT_PARENTHESIS, s3);
 			//
 			while (Util.find(matcher)) {
 				//
@@ -528,7 +531,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				//
 			} // while
 				//
-			matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）+"), s3);
+			matcher = Util.matcher(PATTERN_FULLWIDTH_LEFT_PARENTHESIS_HIRAGANA_FULLWIDTH_RIGHT_PARENTHESIS, s3);
 			//
 			String[] ss = null;
 			//
