@@ -476,7 +476,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				//
 				g2 = Util.group(matcher, 2);
 				//
-				if (Objects.equals(g1, "雨脚") && StringUtils.endsWith(g2, "とも")) {
+				if (Boolean.logicalAnd(Objects.equals(g1, "雨脚"), StringUtils.endsWith(g2, "とも"))) {
 					//
 					g2 = StringUtils.removeEnd(g2, "とも");
 					//
@@ -494,7 +494,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 			//
 			while (Util.find(matcher)) {
 				//
-				if (Objects.equals(g1 = Util.group(matcher, 1), "ふっこし") && Objects.equals(s1, "風花")) {
+				if (Boolean.logicalAnd(Objects.equals(g1 = Util.group(matcher, 1), "ふっこし"), Objects.equals(s1, "風花"))) {
 					//
 					continue;
 					//
@@ -513,7 +513,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 						} // if
 							//
 
-						if (Objects.equals(ss[i], "雨足") && Objects.equals(g1, "うきゃく")) {
+						if (Boolean.logicalAnd(Objects.equals(ss[i], "雨足"), Objects.equals(g1, "うきゃく"))) {
 							//
 							continue;
 							//
