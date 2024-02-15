@@ -47,6 +47,9 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 	private static final Pattern PATTERN_FULLWIDTH_LEFT_PARENTHESIS_HIRAGANA_FULLWIDTH_RIGHT_PARENTHESIS = Pattern
 			.compile("（(\\p{InHiragana}+)）+");
 
+	private static final Pattern PATTERN_CJK_UNIFIED_IDEOGRAPHS_FULLWIDTH_LEFT_PARENTHESIS_HIRAGANA_FULLWIDTH_RIGHT_PARENTHESIS = Pattern
+			.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）");
+
 	private String url = null;
 
 	public void setUrl(final String url) {
@@ -162,7 +165,8 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 			//
 		if (Util.contains(Arrays.asList("寒気湖", "時雨", "南風", "初霜", "氷点", "盆地霧", "御神渡り", "茅花流し", "閉そく", "雪迎え"), s1)) {
 			//
-			matcher = Util.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"), s3);
+			matcher = Util.matcher(
+					PATTERN_CJK_UNIFIED_IDEOGRAPHS_FULLWIDTH_LEFT_PARENTHESIS_HIRAGANA_FULLWIDTH_RIGHT_PARENTHESIS, s3);
 			//
 			while (Util.find(matcher)) {
 				//
@@ -470,7 +474,8 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				//
 		} else if (Util.contains(Arrays.asList("風花", "梅雨"), s1)) {
 			//
-			matcher = Util.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"), s3);
+			matcher = Util.matcher(
+					PATTERN_CJK_UNIFIED_IDEOGRAPHS_FULLWIDTH_LEFT_PARENTHESIS_HIRAGANA_FULLWIDTH_RIGHT_PARENTHESIS, s3);
 			//
 			while (Util.find(matcher)) {
 				//
@@ -513,7 +518,8 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 		if (Objects.equals("雨脚・雨足", s1)) {
 			//
-			matcher = Util.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"), s3);
+			matcher = Util.matcher(
+					PATTERN_CJK_UNIFIED_IDEOGRAPHS_FULLWIDTH_LEFT_PARENTHESIS_HIRAGANA_FULLWIDTH_RIGHT_PARENTHESIS, s3);
 			//
 			String g1 = null;
 			//
