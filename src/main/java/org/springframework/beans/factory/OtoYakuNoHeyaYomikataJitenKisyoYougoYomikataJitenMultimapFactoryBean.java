@@ -104,8 +104,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		IValue0<Multimap<String, String>> ivmm = createMultimap(s1, cs, ss2);
 		//
 		if (ivmm != null || (ivmm = createMultimap1(s1, ss2)) != null || (ivmm = createMultimap2(s1, s2)) != null
-				|| (ivmm = createMultimap3(s1, s2)) != null || (ivmm = createMultimap4(s1, s2)) != null
-				|| (ivmm = createMultimap5(s1, ss2)) != null) {
+				|| (ivmm = createMultimap4(s1, s2)) != null || (ivmm = createMultimap5(s1, ss2)) != null) {
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					IValue0Util.getValue0(ivmm));
@@ -302,18 +301,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				//
 			} // if
 				//
-		} // if
-			//
-		return multimap;
-		//
-	}
-
-	@Nullable
-	private static IValue0<Multimap<String, String>> createMultimap3(final String s1, final String s2) {
-		//
-		IValue0<Multimap<String, String>> multimap = null;
-		//
-		if (matches(s1, "^\\p{InKatakana}+の([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)")) {
+		} else if (matches(s1, "^\\p{InKatakana}+の([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)")) {
 			//
 			IValue0<String> iv0 = null;
 			//
