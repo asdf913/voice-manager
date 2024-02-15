@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -510,24 +511,20 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 		Matcher matcher = null;
 		//
-		if (Util.contains(Arrays.asList("雨脚・雨足"), s1)) {
+		if (Objects.equals("雨脚・雨足", s1)) {
 			//
 			matcher = Util.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"), s3);
 			//
-			String g1, g2 = null;
+			String g1 = null;
 			//
 			while (Util.find(matcher)) {
 				//
-				if (Boolean.logicalAnd(Objects.equals(g1 = Util.group(matcher, 1), "雨脚"),
-						StringUtils.endsWith(g2 = Util.group(matcher, 2), "とも"))) {
-					//
-					g2 = StringUtils.removeEnd(g2, "とも");
-					//
-				} // if
-					//
 				MultimapUtil.put(IValue0Util.getValue0(
-						multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))), g1,
-						g2);
+						multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))),
+						g1 = Util.group(matcher, 1),
+						testAndApply(
+								(a, b) -> Boolean.logicalAnd(Objects.equals(a, "雨脚"), StringUtils.endsWith(b, "とも")),
+								g1, Util.group(matcher, 2), (a, b) -> StringUtils.removeEnd(b, "とも"), (a, b) -> b));
 				//
 			} // while
 				//
@@ -562,6 +559,13 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 			//
 		return multimap;
 		//
+	}
+
+	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) {
+		return Util.test(predicate, t, u) 
+				? Util.apply(functionTrue, t, u)
+						: Util.apply(functionFalse, t, u);
 	}
 
 	private static <T> boolean and(final Predicate<T> predicate, @Nullable final T a, @Nullable final T b) {
