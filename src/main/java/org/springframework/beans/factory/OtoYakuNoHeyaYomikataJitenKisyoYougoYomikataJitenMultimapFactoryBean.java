@@ -164,6 +164,8 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 			//
 		} // if
 			//
+		size = MultimapUtil.size(multimap);
+		//
 		if (Util.contains(Arrays.asList("寒気湖", "時雨", "南風", "初霜", "氷点", "盆地霧", "御神渡り", "茅花流し", "閉そく", "雪迎え"), s1)) {
 			//
 			matcher = Util.matcher(
@@ -176,6 +178,21 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				//
 			} // while
 				//
+		} // if
+			//
+		if (Util.matches(matcher = Util
+				.matcher(Pattern.compile("^([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)（(\\p{InHiragana}+)）$"), s3))
+				&& Util.groupCount(matcher) > 1) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) != size) {
+			//
+			return multimap;
+			//
 		} // if
 			//
 		return multimap;
