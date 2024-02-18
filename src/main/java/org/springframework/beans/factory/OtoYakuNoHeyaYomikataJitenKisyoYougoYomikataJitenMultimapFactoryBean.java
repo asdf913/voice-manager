@@ -574,10 +574,9 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 					//
 			} // while
 				//
-		} // if
-			//
-		if (Util.matches(matcher = Util
-				.matcher(Pattern.compile("^([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)（(\\p{InHiragana}+)）$"), s3))
+		} else if (Util
+				.matches(matcher = Util.matcher(
+						Pattern.compile("^([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)（(\\p{InHiragana}+)）$"), s3))
 				&& Util.groupCount(matcher) > 1) {
 			//
 			MultimapUtil.put(
@@ -585,6 +584,23 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 							multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))),
 					Util.group(matcher, 1), Util.group(matcher, 2));
 			//
+		} else {
+			//
+			matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）"), s3);
+			//
+			while (Util.find(matcher)) {
+				//
+				if (Util.contains(Arrays.asList("雨水", "極渦", "降灰", "紅葉前線", "日較差", "白夜", "百葉箱", "雷雲"), s1)
+						&& Util.groupCount(matcher) > 0) {
+					//
+					MultimapUtil.put(IValue0Util.getValue0(
+							multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))),
+							s1, Util.group(matcher, 1));
+					//
+				} // if
+					//
+			} // while
+				//
 		} // if
 			//
 		return multimap;
