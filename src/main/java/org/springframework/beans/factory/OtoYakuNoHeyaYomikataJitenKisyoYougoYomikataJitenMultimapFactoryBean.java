@@ -408,11 +408,24 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 		if (matches(s1, "^(\\p{InCJKUnifiedIdeographs}|々|・|、|\\p{InHiragana})+$")) {
 			//
-			MultimapUtil.put(
-					IValue0Util.getValue0(
+			if (Util.iterator(ss2) != null) {
+				//
+				for (final String s : ss2) {
+					//
+					if (StringUtils.isBlank(s)) {
+						//
+						continue;
+						//
+					} // if
+						//
+					MultimapUtil.put(IValue0Util.getValue0(
 							multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))),
-					s1, testAndApply(x -> IterableUtils.size(x) > 0, ss2, x -> IterableUtils.get(x, 0), null));
-			//
+							s1, s);
+					//
+				} // for
+					//
+			} // if
+				//
 		} else if (or(
 				Objects.equals(Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 						unicodeBlocks = getUnicodeBlocks(s1)),

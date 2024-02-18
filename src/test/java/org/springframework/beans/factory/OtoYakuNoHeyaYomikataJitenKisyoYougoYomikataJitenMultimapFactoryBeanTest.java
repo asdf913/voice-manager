@@ -484,7 +484,7 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 		Assertions.assertEquals("[{青い太陽=[あおいたいよう]}]",
 				Util.toString(createMultimap5("青い太陽", Collections.singleton("あおいたいよう"))));
 		//
-		Assertions.assertEquals("[{青い太陽=[null]}]", Util.toString(createMultimap5("青い太陽", null)));
+		Assertions.assertNull(createMultimap5("青い太陽", null));
 		//
 		Assertions.assertEquals("[{報告書=[ほうこくしょ]}]", Util.toString(
 				createMultimap5("IPCC報告書", Arrays.asList("", "", "", "", "", "", "", "", "", "", "", "ほうこくしょ"))));
