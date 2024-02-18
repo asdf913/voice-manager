@@ -43,7 +43,7 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_MATCHES, METHOD_OR,
 			METHOD_CREATE_MULTI_MAP_ITERABLE, METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2,
 			METHOD_CREATE_MULTI_MAP_STRING_CHAR_ARRAY_ITERABLE, METHOD_CREATE_MULTI_MAP4, METHOD_CREATE_MULTI_MAP5,
-			METHOD_CREATE_MULTI_MAP6, METHOD_CREATE_MULTI_MAP7, METHOD_AND = null;
+			METHOD_CREATE_MULTI_MAP6, METHOD_CREATE_MULTI_MAP7, METHOD_CREATE_MULTI_MAP8, METHOD_AND = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -92,6 +92,9 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_MULTI_MAP7 = clz.getDeclaredMethod("createMultimap7", String.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_CREATE_MULTI_MAP8 = clz.getDeclaredMethod("createMultimap8", String.class, String.class))
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_MULTI_MAP_STRING_CHAR_ARRAY_ITERABLE = clz.getDeclaredMethod("createMultimap", String.class,
@@ -551,14 +554,36 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertEquals("[{吹き溜り雪=[ふきだまりゆき]}]", Util.toString(createMultimap7("吹き溜り", "吹き溜り雪（ふきだまりゆき）")));
 		//
-		Assertions.assertEquals("[{雨水=[あまみず]}]", Util.toString(createMultimap7("雨水", "1）二十四節気の一つ　 2）降水のひとつで（あまみず）とも")));
-		//
 	}
 
 	private static IValue0<Multimap<String, String>> createMultimap7(final String s1, final String s3)
 			throws Throwable {
 		try {
 			final Object obj = METHOD_CREATE_MULTI_MAP7.invoke(null, s1, s3);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateMultimap8() throws Throwable {
+		//
+		Assertions.assertNull(createMultimap8("寒気湖", "冷気湖（れいきこ）とも"));
+		//
+		Assertions.assertEquals("[{雨水=[あまみず]}]", Util.toString(createMultimap8("雨水", "1）二十四節気の一つ　 2）降水のひとつで（あまみず）とも")));
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> createMultimap8(final String s1, final String s3)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULTI_MAP8.invoke(null, s1, s3);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IValue0) {

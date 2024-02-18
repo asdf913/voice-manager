@@ -151,7 +151,8 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 			//
 		size = MultimapUtil.size(multimap);
 		//
-		if ((ivmm = createMultimap6(s1, s3)) != null || (ivmm = createMultimap7(s1, s3)) != null) {
+		if ((ivmm = createMultimap6(s1, s3)) != null || (ivmm = createMultimap7(s1, s3)) != null
+				|| (ivmm = createMultimap8(s1, s3)) != null) {
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					IValue0Util.getValue0(ivmm));
@@ -584,24 +585,30 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 							multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))),
 					Util.group(matcher, 1), Util.group(matcher, 2));
 			//
-		} else {
-			//
-			matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）"), s3);
-			//
-			while (Util.find(matcher)) {
-				//
-				if (Util.contains(Arrays.asList("雨水", "極渦", "降灰", "紅葉前線", "日較差", "白夜", "百葉箱", "雷雲"), s1)
-						&& Util.groupCount(matcher) > 0) {
-					//
-					MultimapUtil.put(IValue0Util.getValue0(
-							multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))),
-							s1, Util.group(matcher, 1));
-					//
-				} // if
-					//
-			} // while
-				//
 		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> createMultimap8(final String s1, final String s3) {
+		//
+		IValue0<Multimap<String, String>> multimap = null;
+		//
+		final Matcher matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）"), s3);
+		//
+		while (Util.find(matcher)) {
+			//
+			if (Util.contains(Arrays.asList("雨水", "極渦", "降灰", "紅葉前線", "日較差", "白夜", "百葉箱", "雷雲"), s1)
+					&& Util.groupCount(matcher) > 0) {
+				//
+				MultimapUtil.put(IValue0Util.getValue0(
+						multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))), s1,
+						Util.group(matcher, 1));
+				//
+			} // if
+				//
+		} // while
 			//
 		return multimap;
 		//
