@@ -549,6 +549,8 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 		Assertions.assertEquals("[{雨脚=[うきゃく, あめあし], 雨足=[あめあし]}]",
 				Util.toString(createMultimap7("雨脚・雨足", "（あめあし）とも　雨脚（うきゃくとも）")));
 		//
+		Assertions.assertEquals("[{吹き溜り雪=[ふきだまりゆき]}]", Util.toString(createMultimap7("吹き溜り", "吹き溜り雪（ふきだまりゆき）")));
+		//
 	}
 
 	private static IValue0<Multimap<String, String>> createMultimap7(final String s1, final String s3)

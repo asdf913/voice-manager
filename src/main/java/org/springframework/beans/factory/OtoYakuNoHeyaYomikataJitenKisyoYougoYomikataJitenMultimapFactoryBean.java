@@ -180,15 +180,6 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 				//
 		} // if
 			//
-		if (Util.matches(matcher = Util
-				.matcher(Pattern.compile("^([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)（(\\p{InHiragana}+)）$"), s3))
-				&& Util.groupCount(matcher) > 1) {
-			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					Util.group(matcher, 1), Util.group(matcher, 2));
-			//
-		} // if
-			//
 		if (MultimapUtil.size(multimap) != size) {
 			//
 			return multimap;
@@ -570,6 +561,17 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 					//
 			} // while
 				//
+		} // if
+			//
+		if (Util.matches(matcher = Util
+				.matcher(Pattern.compile("^([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)（(\\p{InHiragana}+)）$"), s3))
+				&& Util.groupCount(matcher) > 1) {
+			//
+			MultimapUtil.put(
+					IValue0Util.getValue0(
+							multimap = ObjectUtils.getIfNull(multimap, () -> Unit.with(LinkedHashMultimap.create()))),
+					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
 		} // if
 			//
 		return multimap;
