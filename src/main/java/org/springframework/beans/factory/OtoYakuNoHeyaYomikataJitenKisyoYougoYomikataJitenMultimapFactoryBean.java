@@ -591,6 +591,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 	}
 
+	@Nullable
 	private static IValue0<Multimap<String, String>> createMultimap8(final String s1, final String s3) {
 		//
 		IValue0<Multimap<String, String>> multimap = null;
