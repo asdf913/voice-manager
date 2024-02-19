@@ -600,7 +600,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 		while (Util.find(matcher)) {
 			//
-			if (Util.contains(Arrays.asList("雨水", "極渦", "降灰", "紅葉前線", "日較差", "白夜", "百葉箱", "雷雲"), s1)
+			if (Util.contains(Arrays.asList("雨水", "極渦", "降灰", "紅葉前線", "日較差", "白夜", "百葉箱", "雷雲", "黄道光"), s1)
 					&& Util.groupCount(matcher) > 0) {
 				//
 				MultimapUtil.put(IValue0Util.getValue0(
