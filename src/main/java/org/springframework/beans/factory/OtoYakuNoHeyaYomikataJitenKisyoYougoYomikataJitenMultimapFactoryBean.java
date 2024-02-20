@@ -31,14 +31,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.meeuw.functional.TriConsumer;
 import org.meeuw.functional.TriPredicate;
-import org.slf4j.LoggerFactory;
-import org.slf4j.LoggerUtil;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
-
-import io.github.toolfactory.narcissus.Narcissus;
 
 /*
  * https://hiramatu-hifuka.com/onyak/kotoba-1/kisyo.html
