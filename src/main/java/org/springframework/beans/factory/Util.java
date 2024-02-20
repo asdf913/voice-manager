@@ -53,6 +53,8 @@ abstract class Util {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Util.class);
 
+	private static final String VALUE = "value";
+
 	private Util() {
 	}
 
@@ -347,7 +349,7 @@ abstract class Util {
 		//
 		try {
 			//
-			final Field value = String.class.getDeclaredField("value");
+			final Field value = String.class.getDeclaredField(VALUE);
 			//
 			if (instance == null || Narcissus.getField(instance, value) == null
 					|| (regex != null && Narcissus.getField(regex, value) == null)) {
@@ -465,7 +467,7 @@ abstract class Util {
 			//
 		try {
 			//
-			if (Narcissus.getField(instance, getDeclaredField(String.class, "value")) == null) {
+			if (Narcissus.getField(instance, getDeclaredField(String.class, VALUE)) == null) {
 				//
 				return null;
 				//
@@ -525,7 +527,7 @@ abstract class Util {
 		} // if
 			//
 		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(getClass(instance))),
-				f -> Objects.equals(getName(f), "value")));
+				f -> Objects.equals(getName(f), VALUE)));
 		//
 		final int size = IterableUtils.size(fs);
 		//
