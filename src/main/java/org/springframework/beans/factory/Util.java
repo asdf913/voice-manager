@@ -347,24 +347,25 @@ abstract class Util {
 
 	static boolean matches(@Nullable final String instance, @Nullable final String regex) {
 		//
-		try {
+		final List<Field> fs = toList(
+				filter(stream(FieldUtils.getAllFieldsList(String.class)), f -> Objects.equals(getName(f), VALUE)));
+		//
+		final int size = IterableUtils.size(fs);
+		//
+		if (size > 1) {
 			//
-			final Field value = String.class.getDeclaredField(VALUE);
+			throw new IllegalStateException();
 			//
-			if (instance == null || Narcissus.getField(instance, value) == null
-					|| (regex != null && Narcissus.getField(regex, value) == null)) {
-				//
-				return false;
-				//
-			} // if
-				//
-		} catch (final NoSuchFieldException e) {
+		} // if
 			//
-			LoggerUtil.error(
-					LoggerFactory.getLogger(OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBean.class),
-					e.getMessage(), e);
+		final Field value = size == 1 ? IterableUtils.get(fs, 0) : null;
+		//
+		if (instance == null || Narcissus.getField(instance, value) == null
+				|| (regex != null && Narcissus.getField(regex, value) == null)) {
 			//
-		} // try
+			return false;
+			//
+		} // if
 			//
 		return regex != null && instance.matches(regex);
 		//
