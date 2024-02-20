@@ -6,7 +6,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -18,6 +20,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -267,9 +272,43 @@ class UtilTest {
 	@Test
 	void testMatches() {
 		//
+		new FailableStream<>(Util.filter(Arrays.stream(Util.class.getDeclaredMethods()),
+				m -> m != null && Objects.equals("matches", Util.getName(m)))).forEach(m -> {
+					//
+					if (m == null) {
+						//
+						return;
+						//
+					} // if
+						//
+					Assertions.assertEquals(Boolean.FALSE, m.invoke(null, new Object[m.getParameterCount()]),
+							Util.toString(m));
+					//
+				});
+		//
 		Assertions.assertTrue(Util.matches(Util.matcher(Pattern.compile("\\d"), "1")));
 		//
 		Assertions.assertFalse(Util.matches(Util.cast(Matcher.class, Narcissus.allocateInstance(Matcher.class))));
+		//
+		Assertions.assertFalse(Util.matches("", null));
+		//
+		final String string = new String("a");
+		//
+		FieldUtils.getAllFieldsList(Util.getClass(string)).forEach(f -> {
+			//
+			if (f == null || Modifier.isStatic(f.getModifiers()) || ClassUtils.isPrimitiveOrWrapper(f.getType())) {
+				//
+				return;
+				//
+			} // if
+				//
+			Narcissus.setObjectField(string, f, null);
+			//
+		});
+		//
+		Assertions.assertFalse(Util.matches(string, ""));
+		//
+		Assertions.assertFalse(Util.matches("", string));
 		//
 	}
 

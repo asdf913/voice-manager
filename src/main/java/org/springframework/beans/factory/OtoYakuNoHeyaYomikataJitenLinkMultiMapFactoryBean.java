@@ -263,7 +263,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 		//
 		return Util.collect(
 				Util.filter(Util.stream(ElementUtil.select(element, "td[align=\"center\"]")),
-						x -> ElementUtil.text(x).matches("\\d+")),
+						x -> Util.matches(ElementUtil.text(x), "\\d+")),
 				ArrayListMultimap::create, OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean::putHref,
 				Multimap::putAll);
 		//

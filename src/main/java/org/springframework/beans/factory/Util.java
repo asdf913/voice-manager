@@ -343,6 +343,31 @@ abstract class Util {
 		//
 	}
 
+	static boolean matches(final String instance, final String regex) {
+		//
+		try {
+			//
+			final Field value = String.class.getDeclaredField("value");
+			//
+			if (instance == null || Narcissus.getField(instance, value) == null
+					|| (regex != null && Narcissus.getField(regex, value) == null)) {
+				//
+				return false;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(
+					LoggerFactory.getLogger(OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBean.class),
+					e.getMessage(), e);
+			//
+		} // try
+			//
+		return regex != null && instance.matches(regex);
+		//
+	}
+
 	@Nullable
 	static Class<?> getDeclaringClass(@Nullable final Member instance) {
 		return instance != null ? instance.getDeclaringClass() : null;

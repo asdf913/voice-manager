@@ -4,7 +4,6 @@ import java.io.File;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,10 +15,8 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.jsoup.nodes.Element;
@@ -35,12 +32,10 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
-import io.github.toolfactory.narcissus.Narcissus;
-
 class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_STRINGS, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CLEAR,
-			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_MATCHES, METHOD_OR,
+			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_OR,
 			METHOD_CREATE_MULTI_MAP_ITERABLE, METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2,
 			METHOD_CREATE_MULTI_MAP_STRING_CHAR_ARRAY_ITERABLE, METHOD_CREATE_MULTI_MAP4, METHOD_CREATE_MULTI_MAP5,
 			METHOD_CREATE_MULTI_MAP6, METHOD_CREATE_MULTI_MAP7, METHOD_CREATE_MULTI_MAP8, METHOD_AND = null;
@@ -68,8 +63,6 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_ACCEPT5 = clz.getDeclaredMethod("testAndAccept", TriPredicate.class, Object.class,
 				Object.class, Object.class, TriConsumer.class)).setAccessible(true);
-		//
-		(METHOD_MATCHES = clz.getDeclaredMethod("matches", String.class, String.class)).setAccessible(true);
 		//
 		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
@@ -288,49 +281,6 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 			final TriConsumer<T, U, V> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT5.invoke(null, predicate, t, u, v, consumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMatches() throws Throwable {
-		//
-		Assertions.assertFalse(matches(null, null));
-		//
-		Assertions.assertFalse(matches("", null));
-		//
-		Assertions.assertTrue(matches("", ""));
-		//
-		final String string = new String("a");
-		//
-		Assertions.assertFalse(matches(string, ""));
-		//
-		FieldUtils.getAllFieldsList(Util.getClass(string)).forEach(f -> {
-			//
-			if (f == null || Modifier.isStatic(f.getModifiers()) || ClassUtils.isPrimitiveOrWrapper(f.getType())) {
-				//
-				return;
-				//
-			} // if
-				//
-			Narcissus.setObjectField(string, f, null);
-			//
-		});
-		//
-		Assertions.assertFalse(matches(string, ""));
-		//
-		Assertions.assertFalse(matches(string, string));
-		//
-	}
-
-	private static boolean matches(final String instance, final String regex) throws Throwable {
-		try {
-			final Object obj = METHOD_MATCHES.invoke(null, instance, regex);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

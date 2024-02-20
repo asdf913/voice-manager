@@ -252,7 +252,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 		IValue0<Multimap<String, String>> multimap = null;
 		//
-		if (matches(s, "^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InCJKUnifiedIdeographs}+)）$")) {
+		if (Util.matches(s, "^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InCJKUnifiedIdeographs}+)）$")) {
 			//
 			final Matcher matcher = Util
 					.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InCJKUnifiedIdeographs}+)）$"), s);
@@ -281,7 +281,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 		IValue0<Multimap<String, String>> multimap = null;
 		//
-		if (matches(s1, "[\\p{InKatakana}|A-Z]+の(\\p{InCJKUnifiedIdeographs}+)")) {
+		if (Util.matches(s1, "[\\p{InKatakana}|A-Z]+の(\\p{InCJKUnifiedIdeographs}+)")) {
 			//
 			IValue0<String> iv0 = null;
 			//
@@ -309,7 +309,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 					(a, b, c) -> MultimapUtil.put(IValue0Util.getValue0(a), IValue0Util.getValue0(b),
 							IValue0Util.getValue0(c)));
 			//
-		} else if (matches(s1, "^\\p{InKatakana}+の([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)")) {
+		} else if (Util.matches(s1, "^\\p{InKatakana}+の([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)")) {
 			//
 			IValue0<String> iv0 = null;
 			//
@@ -407,7 +407,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 		Iterable<UnicodeBlock> unicodeBlocks = null;
 		//
-		if (matches(s1, "^(\\p{InCJKUnifiedIdeographs}|々|・|、|\\p{InHiragana})+$")) {
+		if (Util.matches(s1, "^(\\p{InCJKUnifiedIdeographs}|々|・|、|\\p{InHiragana})+$")) {
 			//
 			if (Util.iterator(ss2) != null) {
 				//
@@ -647,28 +647,6 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		} // for
 			//
 		return result;
-		//
-	}
-
-	private static boolean matches(@Nullable final String instance, @Nullable final String regex) {
-		//
-		try {
-			//
-			if (instance == null || Narcissus.getField(instance, String.class.getDeclaredField("value")) == null) {
-				//
-				return false;
-				//
-			} // if
-				//
-		} catch (final NoSuchFieldException e) {
-			//
-			LoggerUtil.error(
-					LoggerFactory.getLogger(OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBean.class),
-					e.getMessage(), e);
-			//
-		} // try
-			//
-		return regex != null && instance.matches(regex);
 		//
 	}
 
