@@ -345,7 +345,7 @@ abstract class Util {
 		//
 	}
 
-	static boolean matches(final String instance, final String regex) {
+	static boolean matches(@Nullable final String instance, @Nullable final String regex) {
 		//
 		try {
 			//
