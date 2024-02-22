@@ -91,6 +91,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> createMultimap(final String url) throws Exception {
 		//
 		Multimap<String, String> multimap = null;
