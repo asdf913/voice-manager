@@ -1,5 +1,6 @@
 package org.springframework.beans.factory;
 
+import java.io.IOException;
 import java.lang.Character.UnicodeBlock;
 import java.net.URI;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
 
@@ -31,6 +33,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.meeuw.functional.TriConsumer;
 import org.meeuw.functional.TriPredicate;
+import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
@@ -50,12 +53,46 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 
 	private String url = null;
 
+	private Iterable<Link> links = null;
+
+	private IValue0<String> text = null;
+
 	public void setUrl(final String url) {
 		this.url = url;
 	}
 
+	public void setLinks(final Iterable<Link> links) {
+		this.links = links;
+	}
+
+	public void setText(final String text) {
+		this.text = Unit.with(text);
+	}
+
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
+		//
+		final List<Link> ls = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.spliterator(links), x -> StreamSupport.stream(x, false), null),
+				x -> text != null && x != null && Objects.equals(x.getText(), IValue0Util.getValue0(text))));
+		//
+		final int size = IterableUtils.size(ls);
+		//
+		if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} else if (size == 1) {
+			//
+			return createMultimap(Link.getUrl(IterableUtils.get(ls, 0)));
+			//
+		} // if
+			//
+		return createMultimap(url);
+		//
+	}
+
+	private static Multimap<String, String> createMultimap(final String url) throws IOException, Exception {
 		//
 		Multimap<String, String> multimap = null;
 		//
