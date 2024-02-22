@@ -103,7 +103,7 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 
 	private static class IH implements InvocationHandler {
 
-		private String text, url = null;
+		private String text, url, description = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -119,6 +119,10 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 				} else if (Objects.equals(methodName, "getUrl")) {
 					//
 					return url;
+					//
+				} else if (Objects.equals(methodName, "getDescription")) {
+					//
+					return description;
 					//
 				} // if
 					//
@@ -161,6 +165,24 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 		Assertions.assertNull(getObject(instance));
 		//
 		final Link link = Reflection.newProxy(Link.class, new IH());
+		//
+		if (instance != null) {
+			//
+			instance.setLinks(Arrays.asList(link));
+			//
+			instance.setDescription(null);
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setLinks(Collections.nCopies(2, link));
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
 		//
 		if (instance != null) {
 			//

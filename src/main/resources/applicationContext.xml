@@ -794,6 +794,8 @@
 		<property name="links" ref="OtoYakuNoHeyaYomikataJitenLinkList" />
 		<property name="text"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBean.text}" />
+		<property name="description"
+			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBean.description}" />
 	</bean>
 
 	<!-- -->
