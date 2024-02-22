@@ -1,6 +1,5 @@
 package org.springframework.beans.factory;
 
-import java.io.IOException;
 import java.lang.Character.UnicodeBlock;
 import java.net.URI;
 import java.util.ArrayList;
@@ -92,7 +91,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 	}
 
-	private static Multimap<String, String> createMultimap(final String url) throws IOException, Exception {
+	private static Multimap<String, String> createMultimap(final String url) throws Exception {
 		//
 		Multimap<String, String> multimap = null;
 		//
