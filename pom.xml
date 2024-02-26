@@ -162,7 +162,7 @@
 		<dependency>
 			<groupId>com.github.curious-odd-man</groupId>
 			<artifactId>rgxgen</artifactId>
-			<version>1.4</version>
+			<version>2.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.github.toolfactory/narcissus -->
 		<dependency>

@@ -11590,7 +11590,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static class ExportTask implements Runnable {
 
 		private static String FILE_NAME_PREFIX_PADDING = Util.orElse(
-				min(Util.stream(IteratorUtils.toList(new RgxGen("\\d").iterateUnique())), StringUtils::compare), null);
+				min(Util.stream(IteratorUtils.toList(RgxGen.parse("\\d").iterateUnique())), StringUtils::compare),
+				null);
 
 		@Note("Count")
 		private Integer count;
