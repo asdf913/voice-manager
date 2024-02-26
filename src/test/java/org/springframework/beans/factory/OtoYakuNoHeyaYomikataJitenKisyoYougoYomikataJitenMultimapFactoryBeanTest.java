@@ -15,10 +15,13 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.jsoup.nodes.Element;
@@ -215,6 +218,12 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 			} // if
 				//
 			final File file = new File("OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBean.txt");
+			//
+			new FailableStream<>(Stream.of("text", "description")).forEach(x -> {
+				//
+				FieldUtils.writeDeclaredField(instance, x, null, true);
+				//
+			});
 			//
 			FileUtils.writeLines(file, MultimapUtil.entries(getObject(instance)));
 			//
