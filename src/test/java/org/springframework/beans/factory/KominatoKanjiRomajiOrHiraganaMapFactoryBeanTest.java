@@ -113,7 +113,7 @@ class KominatoKanjiRomajiOrHiraganaMapFactoryBeanTest {
 	@Test
 	void testGetObjectType() {
 		//
-		Assertions.assertSame(Map.class, instance != null ? instance.getObjectType() : null);
+		Assertions.assertSame(Map.class, FactoryBeanUtil.getObjectType(instance));
 		//
 	}
 

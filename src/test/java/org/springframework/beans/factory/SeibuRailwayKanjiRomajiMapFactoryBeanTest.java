@@ -87,7 +87,7 @@ class SeibuRailwayKanjiRomajiMapFactoryBeanTest {
 	@Test
 	void testGetObjectType() {
 		//
-		Assertions.assertEquals(Map.class, instance != null ? instance.getObjectType() : null);
+		Assertions.assertEquals(Map.class, FactoryBeanUtil.getObjectType(instance));
 		//
 	}
 

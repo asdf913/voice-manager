@@ -62,6 +62,7 @@ import org.springframework.beans.config.Title;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryUtil;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.FactoryBeanUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -599,7 +600,7 @@ public class MapReportGui extends JFrame
 				//
 			if (((Util.isAssignableFrom(FactoryBean.class, clz = Util.forName(bd.getBeanClassName()))
 					&& (fb = Util.cast(FactoryBean.class, Narcissus.allocateInstance(clz))) != null
-					&& Util.isAssignableFrom(classToBeFound, fb.getObjectType()))
+					&& Util.isAssignableFrom(classToBeFound, FactoryBeanUtil.getObjectType(fb)))
 					|| Util.isAssignableFrom(classToBeFound, clz)) && isAllAttributesMatched(attributes, bd)) {
 				//
 				Util.add(multimapBeanDefinitionNames = ObjectUtils.getIfNull(multimapBeanDefinitionNames,

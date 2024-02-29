@@ -53,7 +53,7 @@ class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testGetObjectType() {
 		//
-		Assertions.assertEquals(Multimap.class, instance != null ? instance.getObjectType() : null);
+		Assertions.assertEquals(Multimap.class, FactoryBeanUtil.getObjectType(instance));
 		//
 	}
 

@@ -53,7 +53,7 @@ class AllowedRomajiCharacterArrayFactoryBeanTest {
 	@Test
 	void testGetObjectType() {
 		//
-		Assertions.assertEquals(char[].class, instance != null ? instance.getObjectType() : null);
+		Assertions.assertEquals(char[].class, FactoryBeanUtil.getObjectType(instance));
 		//
 	}
 

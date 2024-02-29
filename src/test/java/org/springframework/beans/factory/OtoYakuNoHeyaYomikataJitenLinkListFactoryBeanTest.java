@@ -466,7 +466,7 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 	@Test
 	void testGetObjectType() {
 		//
-		Assertions.assertSame(List.class, instance != null ? instance.getObjectType() : null);
+		Assertions.assertSame(List.class, FactoryBeanUtil.getObjectType(instance));
 		//
 	}
 

@@ -33,7 +33,7 @@ class JlptLevelListFactoryBeanTest {
 	@Test
 	void testGetObjectType() {
 		//
-		Assertions.assertEquals(List.class, instance != null ? instance.getObjectType() : null);
+		Assertions.assertEquals(List.class, FactoryBeanUtil.getObjectType(instance));
 		//
 	}
 

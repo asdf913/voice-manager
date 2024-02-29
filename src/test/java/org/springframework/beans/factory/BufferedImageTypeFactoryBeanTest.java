@@ -101,7 +101,7 @@ class BufferedImageTypeFactoryBeanTest {
 	@Test
 	void testGetObjectType() {
 		//
-		Assertions.assertEquals(Integer.class, instance != null ? instance.getObjectType() : null);
+		Assertions.assertEquals(Integer.class, FactoryBeanUtil.getObjectType(instance));
 		//
 	}
 
