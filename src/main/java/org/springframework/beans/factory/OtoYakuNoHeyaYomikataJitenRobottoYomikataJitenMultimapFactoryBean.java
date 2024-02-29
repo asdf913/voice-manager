@@ -12,6 +12,9 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Node;
@@ -60,12 +63,17 @@ public class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBean
 
 		private Multimap<String, String> multimap = null;
 
+		private IValue0<String> kanji = null;
+
 		@Override
 		public void head(final Node node, final int depth) {
 			//
-			final Matcher matcher = Util.matcher(
-					Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(((\\u3000)?\\p{InHiragana}+)+)）"),
-					StringUtils.trim(TextNodeUtil.text(Util.cast(TextNode.class, node))));
+			final String text = StringUtils.trim(TextNodeUtil.text(Util.cast(TextNode.class, node)));
+			//
+			Matcher matcher = Util
+					.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(((\\u3000)?\\p{InHiragana}+)+)）"), text);
+			//
+			final int size = MultimapUtil.size(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create));
 			//
 			while (Util.find(matcher)) {
 				//
@@ -77,6 +85,31 @@ public class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBean
 				} // if
 					//
 			} // while
+				//
+			if (size == MultimapUtil.size(multimap)) {
+				//
+				if (Util.matches(text, "^\\p{InCJKUnifiedIdeographs}+$")) {
+					//
+					kanji = Unit.with(text);
+					//
+				} else {
+					//
+					matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）"), text);
+					//
+					while (Util.find(matcher)) {
+						//
+						if (Util.groupCount(matcher) > 0 && kanji != null) {
+							//
+							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+									IValue0Util.getValue0(kanji), Util.group(matcher, 1));
+							//
+						} // if
+							//
+					} // while
+						//
+				} // if
+					//
+			} // if
 				//
 		}
 

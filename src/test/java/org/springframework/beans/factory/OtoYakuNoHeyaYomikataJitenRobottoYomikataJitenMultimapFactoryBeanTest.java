@@ -2,6 +2,7 @@ package org.springframework.beans.factory;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -12,6 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.NodeVisitor;
 import org.junit.jupiter.api.Assertions;
@@ -20,6 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
@@ -102,21 +105,40 @@ class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBeanTest {
 		final NodeVisitor nodeVisitor = Util.cast(NodeVisitor.class,
 				constructor != null ? constructor.newInstance() : null);
 		//
-		if (nodeVisitor != null) {
-			//
-			Assertions.assertDoesNotThrow(() -> nodeVisitor.head(null, 0));
-			//
-			Assertions.assertDoesNotThrow(
-					() -> nodeVisitor.head(Util.cast(TextNode.class, Narcissus.allocateInstance(TextNode.class)), 0));
-			//
-			Assertions.assertDoesNotThrow(
-					() -> nodeVisitor.head(new TextNode("　（エイモス）＊芝浦工大　大学院生　高橋良至（たかはしよしゆき）氏　朝日新聞　200１/3/16夕刊"), 0));
-			//
-			Assertions.assertEquals(Collections.singleton(Pair.of("高橋良至", "たかはしよしゆき")), MultimapUtil
-					.entries(Util.cast(Multimap.class, FieldUtils.readDeclaredField(nodeVisitor, "multimap", true))));
-			//
-		} // if
-			//
+		Assertions.assertDoesNotThrow(() -> head(nodeVisitor, null, 0));
+		//
+		Assertions.assertDoesNotThrow(
+				() -> head(nodeVisitor, Util.cast(TextNode.class, Narcissus.allocateInstance(TextNode.class)), 0));
+		//
+		Assertions.assertDoesNotThrow(
+				() -> head(nodeVisitor, new TextNode("　（エイモス）＊芝浦工大　大学院生　高橋良至（たかはしよしゆき）氏　朝日新聞　200１/3/16夕刊"), 0));
+		//
+		final Field multimap = FieldUtils.getField(clz, "multimap", true);
+		//
+		Assertions.assertEquals(Collections.singleton(Pair.of("高橋良至", "たかはしよしゆき")),
+				MultimapUtil.entries(Util.cast(Multimap.class, get(multimap, nodeVisitor))));
+		//
+		FieldUtils.writeDeclaredField(nodeVisitor, "multimap", null, true);
+		//
+		Assertions.assertDoesNotThrow(() -> head(nodeVisitor, new TextNode("山祇"), 0));
+		//
+		Assertions.assertEquals(ImmutableMultimap.of(), get(multimap, nodeVisitor));
+		//
+		Assertions.assertDoesNotThrow(() -> head(nodeVisitor, new TextNode("（やまずみ）1号＊"), 0));
+		//
+		Assertions.assertEquals(Collections.singleton(Pair.of("山祇", "やまずみ")),
+				MultimapUtil.entries(Util.cast(Multimap.class, get(multimap, nodeVisitor))));
+		//
+	}
+
+	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+		return field != null ? field.get(instance) : null;
+	}
+
+	private static void head(final NodeVisitor instance, final Node node, final int depth) {
+		if (instance != null) {
+			instance.head(node, depth);
+		}
 	}
 
 	@Test
