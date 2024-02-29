@@ -19,20 +19,15 @@ public interface FactoryBeanUtil {
 			//
 			final Class<?> clz = Util.getClass(instance);
 			//
-			if (Util.isAssignableFrom(clz, Class.forName("org.springframework.aop.framework.ProxyFactoryBean"))
-					&& FieldUtils.readField(instance, "listeners", true) == null) {
-				//
-				return null;
-				//
-			} else if (Util.isAssignableFrom(clz, Class.forName("org.springframework.aop.scope.ScopedProxyFactoryBean"))
-					&& FieldUtils.readField(instance, "proxy", true) == null
-					&& FieldUtils.readField(instance, "scopedTargetSource", true) == null) {
-				//
-				return null;
-				//
-			} else if (Util.isAssignableFrom(clz,
-					Class.forName("org.springframework.transaction.config.JtaTransactionManagerFactoryBean"))
-					&& FieldUtils.readField(instance, "transactionManager", true) == null) {
+			if ((Util.isAssignableFrom(clz, Class.forName("org.springframework.aop.framework.ProxyFactoryBean"))
+					&& FieldUtils.readField(instance, "listeners", true) == null)
+					|| (Util.isAssignableFrom(clz,
+							Class.forName("org.springframework.aop.scope.ScopedProxyFactoryBean"))
+							&& FieldUtils.readField(instance, "proxy", true) == null
+							&& FieldUtils.readField(instance, "scopedTargetSource", true) == null)
+					|| (Util.isAssignableFrom(clz,
+							Class.forName("org.springframework.transaction.config.JtaTransactionManagerFactoryBean"))
+							&& FieldUtils.readField(instance, "transactionManager", true) == null)) {
 				//
 				return null;
 				//
