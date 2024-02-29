@@ -62,7 +62,7 @@ public class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBean
 		public void head(final Node node, final int depth) {
 			//
 			final Matcher matcher = Util.matcher(
-					Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(((　)?\\p{InHiragana}+)+)）"),
+					Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(((\\u3000)?\\p{InHiragana}+)+)）"),
 					StringUtils.trim(TextNodeUtil.text(Util.cast(TextNode.class, node))));
 			//
 			while (Util.find(matcher)) {
