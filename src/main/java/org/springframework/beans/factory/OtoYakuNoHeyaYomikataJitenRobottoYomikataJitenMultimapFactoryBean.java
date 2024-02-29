@@ -65,6 +65,13 @@ public class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBean
 
 		private IValue0<String> kanji = null;
 
+		private Multimap<String, String> getMultimap() {
+			if (multimap == null) {
+				multimap = LinkedHashMultimap.create();
+			}
+			return multimap;
+		}
+
 		@Override
 		public void head(final Node node, final int depth) {
 			//
@@ -73,20 +80,20 @@ public class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBean
 			Matcher matcher = Util
 					.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(((\\u3000)?\\p{InHiragana}+)+)）"), text);
 			//
-			final int size = MultimapUtil.size(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create));
+			final int size = MultimapUtil.size(getMultimap());
 			//
 			while (Util.find(matcher)) {
 				//
 				if (Util.groupCount(matcher) > 1) {
 					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.group(matcher, 1), StringUtils.deleteWhitespace(Util.group(matcher, 2)));
+					MultimapUtil.put(getMultimap(), Util.group(matcher, 1),
+							StringUtils.deleteWhitespace(Util.group(matcher, 2)));
 					//
 				} // if
 					//
 			} // while
 				//
-			if (size == MultimapUtil.size(multimap)) {
+			if (size == MultimapUtil.size(getMultimap())) {
 				//
 				if (Util.matches(text, "^\\p{InCJKUnifiedIdeographs}+$")) {
 					//
@@ -100,8 +107,7 @@ public class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBean
 						//
 						if (Util.groupCount(matcher) > 0 && kanji != null) {
 							//
-							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-									IValue0Util.getValue0(kanji), Util.group(matcher, 1));
+							MultimapUtil.put(getMultimap(), IValue0Util.getValue0(kanji), Util.group(matcher, 1));
 							//
 						} // if
 							//
