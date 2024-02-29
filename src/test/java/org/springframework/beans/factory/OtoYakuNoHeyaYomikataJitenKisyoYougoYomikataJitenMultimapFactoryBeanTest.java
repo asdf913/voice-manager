@@ -42,7 +42,7 @@ import com.google.common.reflect.Reflection;
 class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_STRINGS, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CLEAR,
-			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_OR,
+			METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5,
 			METHOD_CREATE_MULTI_MAP_ITERABLE, METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2,
 			METHOD_CREATE_MULTI_MAP_STRING_CHAR_ARRAY_ITERABLE, METHOD_CREATE_MULTI_MAP4, METHOD_CREATE_MULTI_MAP5,
 			METHOD_CREATE_MULTI_MAP6, METHOD_CREATE_MULTI_MAP7, METHOD_CREATE_MULTI_MAP8, METHOD_AND = null;
@@ -70,8 +70,6 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_ACCEPT5 = clz.getDeclaredMethod("testAndAccept", TriPredicate.class, Object.class,
 				Object.class, Object.class, TriConsumer.class)).setAccessible(true);
-		//
-		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
 		(METHOD_CREATE_MULTI_MAP_ITERABLE = clz.getDeclaredMethod("createMultimap", Iterable.class))
 				.setAccessible(true);
@@ -365,35 +363,6 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 			final TriConsumer<T, U, V> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT5.invoke(null, predicate, t, u, v, consumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testOr() throws Throwable {
-		//
-		Assertions.assertFalse(or(false, false));
-		//
-		Assertions.assertTrue(or(false, true));
-		//
-		Assertions.assertTrue(or(true, false));
-		//
-		Assertions.assertTrue(or(false, false, true));
-		//
-		Assertions.assertFalse(or(false, false, null));
-		//
-		Assertions.assertFalse(or(false, false, false));
-		//
-	}
-
-	private static boolean or(final boolean a, final boolean b, final boolean... bs) throws Throwable {
-		try {
-			final Object obj = METHOD_OR.invoke(null, a, b, bs);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

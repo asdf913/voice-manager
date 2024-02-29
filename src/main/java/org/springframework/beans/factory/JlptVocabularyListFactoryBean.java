@@ -91,7 +91,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			//
 			final String mimeType = Util.getMimeType(ResourceContentInfoUtil.getContentInfo(resource));
 			//
-			if (or(Objects.equals("application/vnd.openxmlformats-officedocument", mimeType),
+			if (Util.or(Objects.equals("application/vnd.openxmlformats-officedocument", mimeType),
 					Boolean.logicalAnd(Objects.equals("application/zip", mimeType), XlsxUtil.isXlsx(resource)),
 					XlsUtil.isXls(resource))) {
 				//
@@ -244,7 +244,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 		for (int i = 0; ObjectUtils.compare(i, physicalNumberOfCells) < 0; i++) {
 			//
-			if (or((f = MapUtils.getObject(fieldMap, Integer.valueOf(i))) == null,
+			if (Util.or((f = MapUtils.getObject(fieldMap, Integer.valueOf(i))) == null,
 					(cell = RowUtil.getCell(row, i)) == null,
 					Objects.equals(CellType.BLANK, cellType = CellUtil.getCellType(cell)))) {
 				//
@@ -441,30 +441,6 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
-	}
-
-	private static boolean or(final boolean a, final boolean b, @Nullable final boolean... bs) {
-		//
-		boolean result = a || b;
-		//
-		if (result) {
-			//
-			return result;
-			//
-		} // if
-			//
-		for (int i = 0; bs != null && i < bs.length; i++) {
-			//
-			if (result |= bs[i]) {
-				//
-				return result;
-				//
-			} // if
-				//
-		} // for
-			//
-		return result;
-		//
 	}
 
 	@Nullable

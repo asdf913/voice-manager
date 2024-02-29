@@ -50,7 +50,7 @@ class JlptVocabularyListFactoryBeanTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_ANNOTATION_TYPE, METHOD_OR, METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE,
+	private static Method METHOD_ANNOTATION_TYPE, METHOD_GET_FIELDS_BY_NAME, METHOD_GET_INTEGER_VALUE,
 			METHOD_GET_STRING_VALUE_CELL, METHOD_INVOKE, METHOD_GET_DECLARED_ANNOTATIONS, METHOD_GET_DECLARED_METHODS,
 			METHOD_SET_ACCESSIBLE, METHOD_GET_NUMBER_VALUE, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS = null;
 
@@ -60,8 +60,6 @@ class JlptVocabularyListFactoryBeanTest {
 		final Class<?> clz = JlptVocabularyListFactoryBean.class;
 		//
 		(METHOD_ANNOTATION_TYPE = clz.getDeclaredMethod("annotationType", Annotation.class)).setAccessible(true);
-		//
-		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
 		(METHOD_GET_FIELDS_BY_NAME = clz.getDeclaredMethod("getFieldsByName", Field[].class, String.class))
 				.setAccessible(true);
@@ -376,29 +374,6 @@ class JlptVocabularyListFactoryBeanTest {
 				return (Class) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testOr() throws Throwable {
-		//
-		Assertions.assertTrue(or(false, true));
-		//
-		Assertions.assertFalse(or(false, false, null));
-		//
-		Assertions.assertTrue(or(false, false, true));
-		//
-	}
-
-	private static boolean or(final boolean a, final boolean b, final boolean... bs) throws Throwable {
-		try {
-			final Object obj = METHOD_OR.invoke(null, a, b, bs);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(obj != null && obj.getClass() != null ? obj.getClass().toString() : null);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

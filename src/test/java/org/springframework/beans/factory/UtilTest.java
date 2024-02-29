@@ -456,4 +456,15 @@ class UtilTest {
 		//
 	}
 
+	@Test
+	void testOr() {
+		//
+		Assertions.assertTrue(Util.or(false, true, null));
+		//
+		Assertions.assertFalse(Util.or(false, false, null));
+		//
+		Assertions.assertTrue(Util.or(false, false, true));
+		//
+	}
+
 }

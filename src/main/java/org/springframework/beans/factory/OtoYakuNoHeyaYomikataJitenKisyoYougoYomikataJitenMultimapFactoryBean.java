@@ -488,7 +488,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 					//
 			} // if
 				//
-		} else if (or(
+		} else if (Util.or(
 				Objects.equals(Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 						unicodeBlocks = getUnicodeBlocks(s1)),
 				Objects.equals(Arrays.asList(UnicodeBlock.KATAKANA, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
@@ -507,7 +507,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 							StringUtils::isNotBlank), Collectors.joining()),
 					Util.collect(Util.filter(Util.stream(ss2), StringUtils::isNotBlank), Collectors.joining()));
 			//
-		} else if (or(
+		} else if (Util.or(
 				Objects.equals(Arrays.asList(UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS, UnicodeBlock.KATAKANA,
 						UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), unicodeBlocks),
 				Objects.equals(Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.KATAKANA,
@@ -684,30 +684,6 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 	private static <T> boolean and(final Predicate<T> predicate, @Nullable final T a, @Nullable final T b) {
 		//
 		return Boolean.logicalAnd(Util.test(predicate, a), Util.test(predicate, b));
-		//
-	}
-
-	private static boolean or(final boolean a, final boolean b, @Nullable final boolean... bs) {
-		//
-		boolean result = a || b;
-		//
-		if (result) {
-			//
-			return result;
-			//
-		} // if
-			//
-		for (int i = 0; bs != null && i < bs.length; i++) {
-			//
-			if (result |= bs[i]) {
-				//
-				return result;
-				//
-			} // if
-				//
-		} // for
-			//
-		return result;
 		//
 	}
 

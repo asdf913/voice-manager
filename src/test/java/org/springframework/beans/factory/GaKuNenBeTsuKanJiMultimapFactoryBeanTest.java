@@ -38,7 +38,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 
 	private static Method METHOD_CREATE_MULIT_MAP_UNIT_WORK_BOOK, METHOD_CREATE_MULIT_MAP_UNIT_SPREAD_SHEET_DOCUMENT,
-			METHOD_OR, METHOD_GET_ROW_COUNT, METHOD_GET_SHEET_COUNT = null;
+			METHOD_GET_ROW_COUNT, METHOD_GET_SHEET_COUNT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -50,8 +50,6 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 		//
 		(METHOD_CREATE_MULIT_MAP_UNIT_SPREAD_SHEET_DOCUMENT = clz.getDeclaredMethod("createMulitmapUnit",
 				SpreadsheetDocument.class)).setAccessible(true);
-		//
-		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
 		(METHOD_GET_ROW_COUNT = clz.getDeclaredMethod("getRowCount", Table.class)).setAccessible(true);
 		//
@@ -438,31 +436,6 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Unit) {
 				return (Unit) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testOr() throws Throwable {
-		//
-		Assertions.assertTrue(or(true, false));
-		//
-		Assertions.assertTrue(or(false, true));
-		//
-		Assertions.assertFalse(or(false, false, null));
-		//
-		Assertions.assertTrue(or(false, false, true));
-		//
-	}
-
-	private static boolean or(final boolean a, final boolean b, final boolean... bs) throws Throwable {
-		try {
-			final Object obj = METHOD_OR.invoke(null, a, b, bs);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

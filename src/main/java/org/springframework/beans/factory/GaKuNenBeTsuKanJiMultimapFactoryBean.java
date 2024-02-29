@@ -123,7 +123,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 			//
 			final String mimeType = Util.getMimeType(ci);
 			//
-			if (or(Objects.equals("application/vnd.openxmlformats-officedocument", mimeType),
+			if (Util.or(Objects.equals("application/vnd.openxmlformats-officedocument", mimeType),
 					Boolean.logicalAnd(Objects.equals("application/zip", mimeType), XlsxUtil.isXlsx(resource)),
 					XlsUtil.isXls(resource))) {
 				//
@@ -204,30 +204,6 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 
 	private static int getRowCount(@Nullable final Table instance) {
 		return instance != null ? instance.getRowCount() : 0;
-	}
-
-	private static boolean or(final boolean a, final boolean b, @Nullable final boolean... bs) {
-		//
-		boolean result = a || b;
-		//
-		if (result) {
-			//
-			return result;
-			//
-		} // if
-			//
-		for (int i = 0; bs != null && i < bs.length; i++) {
-			//
-			if (result |= bs[i]) {
-				//
-				return result;
-				//
-			} // if
-				//
-		} // for
-			//
-		return result;
-		//
 	}
 
 	@Nullable
