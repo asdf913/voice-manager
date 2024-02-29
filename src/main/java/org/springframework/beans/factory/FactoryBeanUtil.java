@@ -1,8 +1,10 @@
 package org.springframework.beans.factory;
 
+import javax.annotation.Nullable;
+
 public interface FactoryBeanUtil {
 
-	static Class<?> getObjectType(final FactoryBean<?> instance) {
+	static Class<?> getObjectType(@Nullable final FactoryBean<?> instance) {
 		return instance != null ? instance.getObjectType() : null;
 	}
 
