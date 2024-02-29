@@ -11,7 +11,6 @@ import java.util.function.Predicate;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.function.FailableFunction;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
@@ -113,13 +112,23 @@ class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBeanTest {
 		Assertions.assertDoesNotThrow(
 				() -> head(nodeVisitor, new TextNode("　（エイモス）＊芝浦工大　大学院生　高橋良至（たかはしよしゆき）氏　朝日新聞　200１/3/16夕刊"), 0));
 		//
-		final Field multimap = FieldUtils.getField(clz, "multimap", true);
+		final Field multimap = clz != null ? clz.getDeclaredField("multimap") : null;
 		//
+		if (multimap != null) {
+			//
+			multimap.setAccessible(true);
+			//
+		} // if
+			//
 		Assertions.assertEquals(Collections.singleton(Pair.of("高橋良至", "たかはしよしゆき")),
 				MultimapUtil.entries(Util.cast(Multimap.class, get(multimap, nodeVisitor))));
 		//
-		FieldUtils.writeDeclaredField(nodeVisitor, "multimap", null, true);
-		//
+		if (multimap != null) {
+			//
+			multimap.set(nodeVisitor, null);
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> head(nodeVisitor, new TextNode("山祇"), 0));
 		//
 		Assertions.assertEquals(ImmutableMultimap.of(), get(multimap, nodeVisitor));
