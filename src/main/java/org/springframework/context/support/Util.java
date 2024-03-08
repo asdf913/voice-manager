@@ -889,8 +889,12 @@ public abstract class Util {
 			//
 		} // if
 			//
-		return cpg != null ? instance.getClassName(cpg) : null;
+		return cpg != null ? getClassName(instance.getReferenceType(cpg)) : null;
 		//
+	}
+
+	private static String getClassName(final Type instance) {
+		return instance != null ? instance.getClassName() : null;
 	}
 
 	@Nullable

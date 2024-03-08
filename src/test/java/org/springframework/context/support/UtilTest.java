@@ -60,8 +60,8 @@ class UtilTest {
 
 	private static Method METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD, METHOD_TEST, METHOD_IS_STATIC,
 			METHOD_GET_FIELD_NMAE_IF_SINGLE_LINE_RETURN_METHOD, METHOD_GET_FIELD_NMAE_FOR_STREAM_OF_AND_ITERATOR,
-			METHOD_GET_FIELD_NAME, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD_NAME, METHOD_GET_ARGUMENT_TYPES,
-			METHOD_COLLECT, METHOD_GET_RESOURCE_AS_STREAM, METHOD_PUT_ALL = null;
+			METHOD_GET_FIELD_NAME, METHOD_GET_CLASS_NAME1, METHOD_GET_CLASS_NAME2, METHOD_GET_METHOD_NAME,
+			METHOD_GET_ARGUMENT_TYPES, METHOD_COLLECT, METHOD_GET_RESOURCE_AS_STREAM, METHOD_PUT_ALL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -84,7 +84,9 @@ class UtilTest {
 		(METHOD_GET_FIELD_NAME = clz.getDeclaredMethod("getFieldName", FieldInstruction.class, ConstantPoolGen.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_CLASS_NAME = clz.getDeclaredMethod("getClassName", FieldOrMethod.class, ConstantPoolGen.class))
+		(METHOD_GET_CLASS_NAME1 = clz.getDeclaredMethod("getClassName", Type.class)).setAccessible(true);
+		//
+		(METHOD_GET_CLASS_NAME2 = clz.getDeclaredMethod("getClassName", FieldOrMethod.class, ConstantPoolGen.class))
 				.setAccessible(true);
 		//
 		(METHOD_GET_METHOD_NAME = clz.getDeclaredMethod("getMethodName", InvokeInstruction.class,
@@ -616,6 +618,8 @@ class UtilTest {
 	@Test
 	void testGetClassName() throws Throwable {
 		//
+		Assertions.assertNull(getClassName(null));
+		//
 		Assertions.assertNull(getClassName(null, null));
 		//
 		Assertions.assertNull(getClassName(createProxyObject(FieldOrMethod.class, mh), null));
@@ -647,9 +651,23 @@ class UtilTest {
 			//
 	}
 
+	private static String getClassName(final Type instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CLASS_NAME1.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 	private static String getClassName(final FieldOrMethod instance, final ConstantPoolGen cpg) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_CLASS_NAME.invoke(null, instance, cpg);
+			final Object obj = METHOD_GET_CLASS_NAME2.invoke(null, instance, cpg);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {
