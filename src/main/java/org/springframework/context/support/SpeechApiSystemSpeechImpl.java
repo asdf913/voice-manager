@@ -15,6 +15,7 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -236,6 +237,8 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 		//
 		Map<String, String> map = null;
 		//
+		List<StringPair> sps = null;
+		//
 		for (int i = 0; res != null && i < res.length; i++) {
 			//
 			if ((re = res[i]) == null) {
@@ -247,9 +250,11 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 							? sfi.getTable(0)
 							: null;
 			//
-			for (int j = 0; st != null && j < st.getCount(); j++) {
+			sps = st != null ? st.getStrings() : null;
+			//
+			for (int j = 0; j < IterableUtils.size(sps); j++) {
 				//
-				if ((sp = st.getString(j)) == null) {
+				if ((sp = IterableUtils.get(sps, j)) == null) {
 					continue;
 				} // if
 					//
