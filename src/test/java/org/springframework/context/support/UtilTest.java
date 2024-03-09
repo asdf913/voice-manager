@@ -46,11 +46,8 @@ import org.springframework.util.ReflectionUtils;
 
 import com.google.common.reflect.Reflection;
 
-import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
-import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ClassInfoUtil;
-import io.github.classgraph.ScanResult;
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
@@ -62,6 +59,8 @@ class UtilTest {
 			METHOD_GET_FIELD_NMAE_IF_SINGLE_LINE_RETURN_METHOD, METHOD_GET_FIELD_NMAE_FOR_STREAM_OF_AND_ITERATOR,
 			METHOD_GET_FIELD_NAME, METHOD_GET_CLASS_NAME1, METHOD_GET_CLASS_NAME2, METHOD_GET_METHOD_NAME,
 			METHOD_GET_ARGUMENT_TYPES, METHOD_COLLECT, METHOD_GET_RESOURCE_AS_STREAM, METHOD_PUT_ALL = null;
+
+	private static List<ClassInfo> CLASS_INFOS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -102,6 +101,8 @@ class UtilTest {
 		//
 		(METHOD_PUT_ALL = clz.getDeclaredMethod("putAll", Map.class, Object.class, Object.class, Object[].class))
 				.setAccessible(true);
+		//
+		CLASS_INFOS = ClassInfoUtil.getClassInfos();
 		//
 	}
 
@@ -442,9 +443,7 @@ class UtilTest {
 		//
 		Assertions.assertNull(Util.toList(empty));
 		//
-		final List<ClassInfo> classInfos = ClassInfoUtil.getClassInfos();
-		//
-		if (Util.iterator(classInfos) == null) {
+		if (Util.iterator(CLASS_INFOS) == null) {
 			//
 			return;
 			//
@@ -454,7 +453,7 @@ class UtilTest {
 		//
 		Class<?> clz = null;
 		//
-		for (final ClassInfo classInfo : classInfos) {
+		for (final ClassInfo classInfo : CLASS_INFOS) {
 			//
 			try {
 				//
@@ -506,9 +505,7 @@ class UtilTest {
 		//
 		Assertions.assertNull(Util.iterator(null));
 		//
-		final List<ClassInfo> classInfos = ClassInfoUtil.getClassInfos();
-		//
-		if (Util.iterator(classInfos) == null) {
+		if (Util.iterator(CLASS_INFOS) == null) {
 			//
 			return;
 			//
@@ -518,7 +515,7 @@ class UtilTest {
 		//
 		Class<?> clz = null;
 		//
-		for (final ClassInfo classInfo : classInfos) {
+		for (final ClassInfo classInfo : CLASS_INFOS) {
 			//
 			try {
 				//
@@ -542,14 +539,6 @@ class UtilTest {
 				//
 		} // for
 			//
-	}
-
-	private static ClassInfoList getAllClasses(final ScanResult instance) {
-		return instance != null ? instance.getAllClasses() : null;
-	}
-
-	private static ScanResult scan(final ClassGraph instance) {
-		return instance != null ? instance.scan() : null;
 	}
 
 	@Test
