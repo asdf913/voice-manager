@@ -635,17 +635,16 @@ class UtilTest {
 					ClassParserUtil.parse(new ClassParser(is, null)),
 					clz != null ? clz.getDeclaredMethod("toString") : null);
 			//
-			Assertions
-					.assertNull(getClassName(
-							Util.map(
-									Util.filter(Arrays.stream(InstructionListUtil
-											.getInstructions(MethodGenUtil.getInstructionList(new MethodGen(m, null,
-													m != null
-															? new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(m))
-															: null)))),
-											x -> x instanceof InvokeInstruction),
-									x -> Util.cast(InvokeInstruction.class, x)).findFirst().orElse(null),
-							null));
+			final FieldOrMethod fom = Util.map(Util.filter(
+					Arrays.stream(InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(new MethodGen(m,
+							null, m != null ? new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(m)) : null)))),
+					x -> x instanceof InvokeInstruction), x -> Util.cast(InvokeInstruction.class, x)).findFirst()
+					.orElse(null);
+			//
+			Assertions.assertNull(getClassName(fom, null));
+			//
+			Assertions.assertNull(getClassName(fom,
+					Util.cast(ConstantPoolGen.class, Narcissus.allocateInstance(ConstantPoolGen.class))));
 			//
 		} // try
 			//

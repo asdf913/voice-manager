@@ -889,6 +889,20 @@ public abstract class Util {
 			//
 		} // if
 			//
+		try {
+			//
+			if (cpg != null && FieldUtils.readField(cpg.getConstantPool(), "constantPool", true) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} catch (final IllegalAccessException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
 		return cpg != null ? getClassName(instance.getReferenceType(cpg)) : null;
 		//
 	}
