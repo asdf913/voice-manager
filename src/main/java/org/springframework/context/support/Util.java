@@ -73,6 +73,8 @@ public abstract class Util {
 
 	private static final String UNDER_SCORE_RUNS = "_runs";
 
+	private static final String DELEGATE = "delegate";
+
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[] {};
 
 	private Util() {
@@ -529,8 +531,7 @@ public abstract class Util {
 					x -> Narcissus.getField(instance, Narcissus.findField(x, "_hashArea")) == null);
 			//
 			putAll(predicates,
-					x -> Narcissus.invokeMethod(instance,
-							Narcissus.findMethod(x, "delegate", EMPTY_CLASS_ARRAY)) == null,
+					x -> Narcissus.invokeMethod(instance, Narcissus.findMethod(x, DELEGATE, EMPTY_CLASS_ARRAY)) == null,
 					"com.google.common.collect.ForwardingQueue",
 					"org.apache.jena.ext.com.google.common.collect.ForwardingQueue");
 			//
@@ -739,7 +740,7 @@ public abstract class Util {
 			//
 			Util.put(map,
 					"net.bytebuddy.agent.builder.AgentBuilder$RedefinitionStrategy$ResubmissionStrategy$Enabled$Resubmitter$ConcurrentHashSet",
-					"delegate");
+					DELEGATE);
 			//
 			Util.put(map, "net.bytebuddy.build.Plugin$Engine$Source$Compound$Origin", "origins");
 			//
@@ -747,7 +748,7 @@ public abstract class Util {
 			//
 			Util.put(map, "net.bytebuddy.build.Plugin$Engine$Source$InMemory", "storage");
 			//
-			Util.put(map, "net.bytebuddy.build.Plugin$Engine$Source$Origin$Filtering", "delegate");
+			Util.put(map, "net.bytebuddy.build.Plugin$Engine$Source$Origin$Filtering", DELEGATE);
 			//
 			Util.put(map, "net.bytebuddy.build.Plugin$Engine$Source$Origin$ForJarFile", "file");
 			//
@@ -768,7 +769,7 @@ public abstract class Util {
 					"recordComponent");
 			//
 			Util.put(map, "net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$WithResolvedErasure",
-					"delegate");
+					DELEGATE);
 			//
 			Util.put(map, "net.bytebuddy.description.type.TypeDescription$Generic$OfTypeVariable$ForLoadedType",
 					"typeVariable");
