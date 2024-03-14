@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.GenericSignatureFormatError;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
@@ -526,9 +527,41 @@ class UtilTest {
 					//
 					System.out.println(name);
 					//
-					Assertions.assertDoesNotThrow(() -> Util.iterator(it), name);
-					//
+					if (Util.contains(Arrays.asList(
+							"net.bytebuddy.description.type.TypeDescription$Generic$Visitor$AnnotationStripper$NonAnnotatedTypeVariable",
+							"net.bytebuddy.description.type.TypeDescription$Generic$Visitor$Substitutor$ForTypeVariableBinding$RetainedMethodTypeVariable",
+							"net.bytebuddy.description.type.TypeList$Generic$ForDetachedTypes$OfTypeVariables$AttachedTypeVariable",
+							"net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$GenericTypeToken$ForLowerBoundWildcard$LazyLowerBoundWildcard",
+							"net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$GenericTypeToken$ForTypeVariable$AnnotatedTypeVariable",
+							"net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$GenericTypeToken$ForUpperBoundWildcard$LazyUpperBoundWildcard",
+							"net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$LazyMethodDescription$LazyParameterizedReceiverType$TypeArgumentList$AnnotatedTypeVariable"),
+							name)) {
+						//
+						Assertions.assertThrows(NullPointerException.class, () -> Util.iterator(it), name);
+						//
+					} else if (Objects.equals(
+							"net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$TokenizedGenericType$Malformed",
+							name)) {
+						//
+						Assertions.assertThrows(GenericSignatureFormatError.class, () -> Util.iterator(it), name);
+						//
+					} else if (Util.contains(Arrays.asList(
+							"net.bytebuddy.description.type.TypeDescription$Generic$OfTypeVariable$Symbolic",
+							"net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$GenericTypeToken$ForTypeVariable$Formal$LazyTypeVariable",
+							"net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$GenericTypeToken$ForTypeVariable$UnresolvedTypeVariable",
+							"net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$GenericTypeToken$ForUnboundWildcard$LazyUnboundWildcard"),
+							name)) {
+						//
+						Assertions.assertThrows(IllegalStateException.class, () -> Util.iterator(it), name);
+						//
+					} else {
+						//
+						Assertions.assertDoesNotThrow(() -> Util.iterator(it), name);
+						//
+					} // if
+						//
 				} // if
+					//
 			} catch (final Throwable e) {
 				//
 				System.err.println(name);

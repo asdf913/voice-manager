@@ -2163,16 +2163,42 @@ class VoiceManagerTest {
 			//
 		ih.isInstalled = Boolean.TRUE;
 		//
-		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+		final URL url = getClass().getResource("/help.html.ftl");
 		//
+		if (url == null) {
+			//
+			Assertions.assertThrows(RuntimeException.class, () -> instance.afterPropertiesSet());
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+			//
+		} // if
+			//
 		instance.setGaKuNenBeTsuKanJiListPageUrl(EMPTY);
 		//
-		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
-		//
+		if (url == null) {
+			//
+			Assertions.assertThrows(RuntimeException.class, () -> instance.afterPropertiesSet());
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+			//
+		} // if
+			//
 		instance.setGaKuNenBeTsuKanJiListPageUrl(SPACE);
 		//
-		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
-		//
+		if (url == null) {
+			//
+			Assertions.assertThrows(RuntimeException.class, () -> instance.afterPropertiesSet());
+			//
+		} else {
+			//
+			Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+			//
+		} // if
+			//
 	}
 
 	@Test

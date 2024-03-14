@@ -299,7 +299,7 @@ class IniAsPropertiesResourceTest {
 	}
 
 	@Test
-	void testGetInputStream() throws IOException {
+	void testGetInputStream() throws Throwable {
 		//
 		Assertions.assertNotNull(new IniAsPropertiesResource(null).getInputStream());
 		//
@@ -319,9 +319,8 @@ class IniAsPropertiesResourceTest {
 			//
 		} // try
 			//
-		Assertions.assertNotNull(
-				new IniAsPropertiesResource(new UrlResource(getClass().getResource("/applicationContext.xml")))
-						.getInputStream());
+		Assertions.assertNotNull(new IniAsPropertiesResource(testAndApply(Objects::nonNull,
+				getClass().getResource("/applicationContext.xml"), UrlResource::new, null)).getInputStream());
 		//
 		try (final InputStream is = new ByteArrayInputStream(EMPTY.getBytes())) {
 			//

@@ -406,6 +406,7 @@ public abstract class Util {
 				} // if
 					//
 			} // if
+				//
 		} catch (final ClassNotFoundException e) {
 			//
 			LoggerUtil.error(LOG, e.getMessage(), e);
@@ -433,6 +434,23 @@ public abstract class Util {
 		//
 		final String name = getName(clz);
 		//
+		if (contains(Arrays.asList("net.bytebuddy.description.type.TypeDescription$Generic$OfTypeVariable$Symbolic",
+				"net.bytebuddy.description.type.TypeDescription$Generic$Visitor$AnnotationStripper$NonAnnotatedTypeVariable",
+				"net.bytebuddy.description.type.TypeDescription$Generic$Visitor$Substitutor$ForTypeVariableBinding$RetainedMethodTypeVariable",
+				"net.bytebuddy.description.type.TypeList$Generic$ForDetachedTypes$OfTypeVariables$AttachedTypeVariable",
+				"net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$GenericTypeToken$ForLowerBoundWildcard$LazyLowerBoundWildcard",
+				"net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$GenericTypeToken$ForTypeVariable$AnnotatedTypeVariable",
+				"net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$GenericTypeToken$ForTypeVariable$Formal$LazyTypeVariable",
+				"net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$GenericTypeToken$ForTypeVariable$UnresolvedTypeVariable",
+				"net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$GenericTypeToken$ForUnboundWildcard$LazyUnboundWildcard",
+				"net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$GenericTypeToken$ForUpperBoundWildcard$LazyUpperBoundWildcard",
+				"net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$LazyMethodDescription$LazyParameterizedReceiverType$TypeArgumentList$AnnotatedTypeVariable",
+				"net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$TokenizedGenericType$Malformed"), name)) {
+			//
+			return instance.iterator();
+			//
+		} // if
+			//
 		try {
 			//
 			final Method method = Narcissus.findMethod(clz, "iterator");
@@ -710,6 +728,62 @@ public abstract class Util {
 			Util.put(map, "org.apache.xmlbeans.XmlSimpleList", "underlying");
 			//
 			Util.put(map, "org.springframework.beans.MutablePropertyValues", "propertyValueList");
+			//
+			Util.put(map,
+					"net.bytebuddy.agent.builder.AgentBuilder$RedefinitionStrategy$BatchAllocator$Slicing$SlicingIterable",
+					"iterable");
+			//
+			Util.put(map,
+					"net.bytebuddy.agent.builder.AgentBuilder$RedefinitionStrategy$Listener$Compound$CompoundIterable",
+					"iterables");
+			//
+			Util.put(map,
+					"net.bytebuddy.agent.builder.AgentBuilder$RedefinitionStrategy$ResubmissionStrategy$Enabled$Resubmitter$ConcurrentHashSet",
+					"delegate");
+			//
+			Util.put(map, "net.bytebuddy.build.Plugin$Engine$Source$Compound$Origin", "origins");
+			//
+			Util.put(map, "net.bytebuddy.build.Plugin$Engine$Source$ForFolder", "folder");
+			//
+			Util.put(map, "net.bytebuddy.build.Plugin$Engine$Source$InMemory", "storage");
+			//
+			Util.put(map, "net.bytebuddy.build.Plugin$Engine$Source$Origin$Filtering", "delegate");
+			//
+			Util.put(map, "net.bytebuddy.build.Plugin$Engine$Source$Origin$ForJarFile", "file");
+			//
+			Util.put(map, "net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$ForLoadedFieldType",
+					"field");
+			//
+			Util.put(map, "net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$ForLoadedReturnType",
+					"method");
+			//
+			Util.put(map,
+					"net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$OfConstructorParameter",
+					"constructor");
+			//
+			Util.put(map, "net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$OfMethodParameter",
+					"method");
+			//
+			Util.put(map, "net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$OfRecordComponent",
+					"recordComponent");
+			//
+			Util.put(map, "net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$WithResolvedErasure",
+					"delegate");
+			//
+			Util.put(map, "net.bytebuddy.description.type.TypeDescription$Generic$OfTypeVariable$ForLoadedType",
+					"typeVariable");
+			//
+			Util.put(map, "net.bytebuddy.description.type.TypeDescription$Generic$OfTypeVariable$WithAnnotationOverlay",
+					"typeVariable");
+			//
+			Util.put(map, "net.bytebuddy.description.type.TypeDescription$Generic$OfWildcardType$ForLoadedType",
+					"wildcardType");
+			//
+			Util.put(map, "net.bytebuddy.description.type.TypeDescription$Generic$OfWildcardType$Latent",
+					"lowerBounds");
+			//
+			Util.put(map, "net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$TokenizedGenericType",
+					"genericTypeToken");
 			//
 			if (map.containsKey(name)
 					&& Narcissus.getField(instance, Narcissus.findField(clz, map.get(name))) == null) {
