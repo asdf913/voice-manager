@@ -984,6 +984,7 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	private static String getClassName(@Nullable final Type instance) {
 		return instance != null ? instance.getClassName() : null;
 	}
