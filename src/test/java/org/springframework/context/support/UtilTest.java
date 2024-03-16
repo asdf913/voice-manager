@@ -34,6 +34,7 @@ import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
+import org.apache.bcel.generic.ReferenceType;
 import org.apache.bcel.generic.Type;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailablePredicate;
@@ -58,8 +59,8 @@ class UtilTest {
 
 	private static Method METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD, METHOD_TEST, METHOD_IS_STATIC,
 			METHOD_GET_FIELD_NMAE_IF_SINGLE_LINE_RETURN_METHOD, METHOD_GET_FIELD_NMAE_FOR_STREAM_OF_AND_ITERATOR,
-			METHOD_GET_FIELD_NAME, METHOD_GET_CLASS_NAME1, METHOD_GET_CLASS_NAME2, METHOD_GET_METHOD_NAME,
-			METHOD_GET_ARGUMENT_TYPES, METHOD_COLLECT, METHOD_GET_RESOURCE_AS_STREAM, METHOD_PUT_ALL = null;
+			METHOD_GET_FIELD_NAME, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD_NAME, METHOD_GET_ARGUMENT_TYPES,
+			METHOD_COLLECT, METHOD_GET_RESOURCE_AS_STREAM, METHOD_PUT_ALL, METHOD_GET_REFERENCE_TYPE = null;
 
 	private static List<ClassInfo> CLASS_INFOS = null;
 
@@ -84,10 +85,7 @@ class UtilTest {
 		(METHOD_GET_FIELD_NAME = clz.getDeclaredMethod("getFieldName", FieldInstruction.class, ConstantPoolGen.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_CLASS_NAME1 = clz.getDeclaredMethod("getClassName", Type.class)).setAccessible(true);
-		//
-		(METHOD_GET_CLASS_NAME2 = clz.getDeclaredMethod("getClassName", FieldOrMethod.class, ConstantPoolGen.class))
-				.setAccessible(true);
+		(METHOD_GET_CLASS_NAME = clz.getDeclaredMethod("getClassName", Type.class)).setAccessible(true);
 		//
 		(METHOD_GET_METHOD_NAME = clz.getDeclaredMethod("getMethodName", InvokeInstruction.class,
 				ConstantPoolGen.class)).setAccessible(true);
@@ -102,6 +100,9 @@ class UtilTest {
 		//
 		(METHOD_PUT_ALL = clz.getDeclaredMethod("putAll", Map.class, Object.class, Object.class, Object[].class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_REFERENCE_TYPE = clz.getDeclaredMethod("getReferenceType", FieldOrMethod.class,
+				ConstantPoolGen.class)).setAccessible(true);
 		//
 		CLASS_INFOS = ClassInfoUtil.getClassInfos();
 		//
@@ -170,7 +171,7 @@ class UtilTest {
 					//
 			} else if (self instanceof FieldOrMethod) {
 				//
-				if (Objects.equals(methodName, "getClassName")) {
+				if (Objects.equals(methodName, "getReferenceType")) {
 					//
 					return null;
 					//
@@ -642,53 +643,11 @@ class UtilTest {
 		//
 		Assertions.assertNull(getClassName(null));
 		//
-		Assertions.assertNull(getClassName(null, null));
-		//
-		Assertions.assertNull(getClassName(createProxyObject(FieldOrMethod.class, mh), null));
-		//
-		final Class<?> clz = Method.class;
-		//
-		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(
-						String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))
-				: null) {
-			//
-			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
-					ClassParserUtil.parse(new ClassParser(is, null)),
-					clz != null ? clz.getDeclaredMethod("toString") : null);
-			//
-			final FieldOrMethod fom = Util.map(Util.filter(
-					Arrays.stream(InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(new MethodGen(m,
-							null, m != null ? new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(m)) : null)))),
-					x -> x instanceof InvokeInstruction), x -> Util.cast(InvokeInstruction.class, x)).findFirst()
-					.orElse(null);
-			//
-			Assertions.assertNull(getClassName(fom, null));
-			//
-			Assertions.assertNull(getClassName(fom,
-					Util.cast(ConstantPoolGen.class, Narcissus.allocateInstance(ConstantPoolGen.class))));
-			//
-		} // try
-			//
 	}
 
 	private static String getClassName(final Type instance) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_CLASS_NAME1.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static String getClassName(final FieldOrMethod instance, final ConstantPoolGen cpg) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CLASS_NAME2.invoke(null, instance, cpg);
+			final Object obj = METHOD_GET_CLASS_NAME.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {
@@ -874,6 +833,54 @@ class UtilTest {
 			//
 		} // try
 			//
+	}
+
+	@Test
+	void testGetReferenceType() throws Throwable {
+		//
+		Assertions.assertNull(getReferenceType(null, null));
+		//
+		Assertions.assertNull(getReferenceType(createProxyObject(FieldOrMethod.class, mh), null));
+		//
+		final Class<?> clz = Method.class;
+		//
+		try (final InputStream is = clz != null
+				? clz.getResourceAsStream(
+						String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))
+				: null) {
+			//
+			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
+					ClassParserUtil.parse(new ClassParser(is, null)),
+					clz != null ? clz.getDeclaredMethod("toString") : null);
+			//
+			final FieldOrMethod fom = Util.map(Util.filter(
+					Arrays.stream(InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(new MethodGen(m,
+							null, m != null ? new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(m)) : null)))),
+					x -> x instanceof InvokeInstruction), x -> Util.cast(InvokeInstruction.class, x)).findFirst()
+					.orElse(null);
+			//
+			Assertions.assertNull(getReferenceType(fom, null));
+			//
+			Assertions.assertNull(getReferenceType(fom,
+					Util.cast(ConstantPoolGen.class, Narcissus.allocateInstance(ConstantPoolGen.class))));
+			//
+		} // try
+			//
+	}
+
+	private static ReferenceType getReferenceType(final FieldOrMethod instance, final ConstantPoolGen cpg)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_REFERENCE_TYPE.invoke(null, instance, cpg);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof ReferenceType) {
+				return (ReferenceType) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }

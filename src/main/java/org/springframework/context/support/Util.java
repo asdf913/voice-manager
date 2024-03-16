@@ -51,6 +51,7 @@ import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
+import org.apache.bcel.generic.ReferenceType;
 import org.apache.bcel.generic.Type;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
@@ -913,7 +914,7 @@ public abstract class Util {
 				//
 				final ConstantPoolGen cpg = new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(m));
 				//
-				if (Objects.equals(getClassName(invokeStatic, cpg), "java.util.stream.Stream")
+				if (Objects.equals(getClassName(getReferenceType(invokeStatic, cpg)), "java.util.stream.Stream")
 						&& Objects.equals(getMethodName(invokeStatic, cpg), "of")
 						&& Objects.equals(
 								collect(Util.map(Arrays.stream(getArgumentTypes(invokeStatic, cpg)), Util::toString),
@@ -951,8 +952,7 @@ public abstract class Util {
 		//
 	}
 
-	@Nullable
-	private static String getClassName(@Nullable final FieldOrMethod instance, @Nullable final ConstantPoolGen cpg) {
+	private static ReferenceType getReferenceType(final FieldOrMethod instance, final ConstantPoolGen cpg) {
 		//
 		if (instance == null) {
 			//
@@ -960,7 +960,7 @@ public abstract class Util {
 			//
 		} else if (ProxyFactory.isProxyClass(getClass(instance))) {
 			//
-			return instance.getClassName(cpg);
+			return instance.getReferenceType(cpg);
 			//
 		} // if
 			//
@@ -978,7 +978,7 @@ public abstract class Util {
 			//
 		} // try
 			//
-		return cpg != null ? getClassName(instance.getReferenceType(cpg)) : null;
+		return cpg != null ? instance.getReferenceType(cpg) : null;
 		//
 	}
 
