@@ -76,6 +76,7 @@ public class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> createMultimap(final String url) throws Exception {
 		//
 		final Document document = testAndApply(Objects::nonNull,
