@@ -1,6 +1,5 @@
 package org.springframework.beans.factory;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
@@ -77,7 +76,7 @@ public class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static Multimap<String, String> createMultimap(final String url) throws IOException, Exception {
+	private static Multimap<String, String> createMultimap(final String url) throws Exception {
 		//
 		final Document document = testAndApply(Objects::nonNull,
 				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
