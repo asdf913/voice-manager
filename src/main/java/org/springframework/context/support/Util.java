@@ -952,6 +952,7 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	private static ReferenceType getReferenceType(@Nullable final FieldOrMethod instance,
 			@Nullable final ConstantPoolGen cpg) {
 		//
