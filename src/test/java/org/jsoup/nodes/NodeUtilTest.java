@@ -5,10 +5,13 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.apache.commons.collections4.IterableUtils;
+import org.jsoup.select.NodeVisitor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,6 +46,8 @@ class NodeUtilTest {
 
 		private String absUrl = null;
 
+		private Integer childNodeSize = null;
+
 		@Override
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
@@ -55,7 +60,11 @@ class NodeUtilTest {
 					//
 					return absUrl;
 					//
-				} else if (Objects.equals(methodName, "attr")) {
+				} else if (Objects.equals(methodName, "childNodeSize")) {
+					//
+					return childNodeSize;
+					//
+				} else if (IterableUtils.contains(Arrays.asList("attr", "traverse", "nextSibling"), methodName)) {
 					//
 					return proceed != null ? proceed.invoke(self, args) : null;
 					//
@@ -84,6 +93,14 @@ class NodeUtilTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof NodeVisitor) {
+				//
+				if (Objects.equals(Void.TYPE, method != null ? method.getReturnType() : null)) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -93,6 +110,10 @@ class NodeUtilTest {
 	}
 
 	private Node node = null;
+
+	private IH ih = null;
+
+	private MH mh = null;
 
 	@BeforeEach
 	private void beforeEach()
@@ -108,7 +129,7 @@ class NodeUtilTest {
 		//
 		final Object instance = constructor != null ? constructor.newInstance() : null;
 		//
-		final MH mh = new MH();
+		mh = new MH();
 		//
 		if (instance instanceof ProxyObject) {
 			//
@@ -117,6 +138,8 @@ class NodeUtilTest {
 		} // if
 			//
 		node = cast(Node.class, instance);
+		//
+		ih = new IH();
 		//
 	}
 
@@ -203,7 +226,7 @@ class NodeUtilTest {
 		//
 		Assertions.assertNull(filter(Stream.empty(), null));
 		//
-		final Stream<?> stream = Reflection.newProxy(Stream.class, new IH());
+		final Stream<?> stream = Reflection.newProxy(Stream.class, ih);
 		//
 		Assertions.assertSame(stream, filter(stream, null));
 		//
@@ -241,6 +264,23 @@ class NodeUtilTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testTraverse() {
+		//
+		Assertions.assertNull(NodeUtil.traverse(null, null));
+		//
+		Assertions.assertSame(node, NodeUtil.traverse(node, null));
+		//
+		if (mh != null) {
+			//
+			mh.childNodeSize = Integer.valueOf(0);
+			//
+		} // if
+			//
+		Assertions.assertSame(node, NodeUtil.traverse(node, Reflection.newProxy(NodeVisitor.class, ih)));
+		//
 	}
 
 }

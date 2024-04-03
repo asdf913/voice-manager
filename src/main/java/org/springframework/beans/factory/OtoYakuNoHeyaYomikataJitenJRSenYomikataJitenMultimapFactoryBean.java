@@ -14,6 +14,7 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Node;
+import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.nodes.TextNodeUtil;
 import org.jsoup.select.NodeVisitor;
@@ -52,7 +53,7 @@ public class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBean
 			//
 			final NodeVisitorImpl nodeVisitorImpl = new NodeVisitorImpl();
 			//
-			document.traverse(nodeVisitorImpl);
+			NodeUtil.traverse(document, nodeVisitorImpl);
 			//
 			return nodeVisitorImpl.multimap;
 			//

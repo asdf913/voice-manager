@@ -10,6 +10,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.jsoup.select.NodeVisitor;
+
 public class NodeUtil {
 
 	private NodeUtil() {
@@ -88,6 +90,10 @@ public class NodeUtil {
 
 	public static String nodeName(final Node instance) {
 		return instance != null ? instance.nodeName() : null;
+	}
+
+	public static Node traverse(final Node instance, final NodeVisitor nodeVisitor) {
+		return instance != null && nodeVisitor != null ? instance.traverse(nodeVisitor) : instance;
 	}
 
 }
