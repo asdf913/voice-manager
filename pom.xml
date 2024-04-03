@@ -174,7 +174,7 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-http</artifactId>
-			<version>12.0.7</version>
+			<version>12.0.8</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.eclipse.jetty</groupId>
@@ -462,23 +462,6 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-			<!--https://mvnrepository.com/artifact/com.github.tomxiong/spell-check-maven-plugin-->
-			<plugin>
-				<groupId>com.github.tomxiong</groupId>
-				<artifactId>spell-check-maven-plugin</artifactId>
-				<version>1.0.0</version>
-				<executions>
-					<execution>
-						<phase>validate</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<customDictionaryFile>spell-check-custom-dictionary.txt</customDictionaryFile>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

@@ -299,6 +299,8 @@ public interface ClassInfoUtil {
 				, "org.eclipse.jetty.http.pathmap.PathSpecSet"
 				//
 				, "org.eclipse.jetty.http.HttpCompliance"
+				//
+				, "org.eclipse.jetty.http.DateParser"
 		//
 		));
 		//
