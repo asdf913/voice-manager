@@ -39,7 +39,7 @@ public class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBean
 
 	private Iterable<Link> links = null;
 
-	private IValue0<String> text = null;
+	private IValue0<String> text, description = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
@@ -53,16 +53,33 @@ public class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBean
 		this.text = Unit.with(text);
 	}
 
+	public void setDescription(final String description) {
+		this.description = Unit.with(description);
+	}
+
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
-		final List<Link> ls = Util.toList(Util.filter(
+		List<Link> ls = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.spliterator(links), x -> StreamSupport.stream(x, false), null),
 				x -> text != null && x != null && Objects.equals(x.getText(), IValue0Util.getValue0(text))));
 		//
-		final int size = IterableUtils.size(ls);
+		int size = IterableUtils.size(ls);
 		//
 		if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} else if (size == 1) {
+			//
+			return createMultimap(Link.getUrl(IterableUtils.get(ls, 0)));
+			//
+		} // if
+			//
+		if ((size = IterableUtils.size(ls = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.spliterator(links), x -> StreamSupport.stream(x, false), null),
+				x -> description != null && x != null
+						&& Objects.equals(x.getDescription(), IValue0Util.getValue0(description)))))) > 1) {
 			//
 			throw new IllegalStateException();
 			//
