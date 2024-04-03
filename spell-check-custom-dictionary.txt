@@ -1,0 +1,16 @@
+aac
+aspx
+csv
+ftl
+growx
+htm
+https
+jlpt
+json
+libreoffice
+odp
+png
+tbody
+UnicodeBlock
+wav
+xls

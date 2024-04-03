@@ -476,6 +476,9 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<customDictionaryFile>spell-check-custom-dictionary.txt</customDictionaryFile>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
