@@ -12,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
@@ -45,21 +44,13 @@ public class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBean
 	@Nullable
 	private static Multimap<String, String> createMultimap(final String url) throws Exception {
 		//
-		final Document document = testAndApply(Objects::nonNull,
-				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
-				null);
+		final NodeVisitorImpl nodeVisitorImpl = new NodeVisitorImpl();
 		//
-		if (document != null) {
-			//
-			final NodeVisitorImpl nodeVisitorImpl = new NodeVisitorImpl();
-			//
-			NodeUtil.traverse(document, nodeVisitorImpl);
-			//
-			return nodeVisitorImpl.multimap;
-			//
-		} // if
-			//
-		return null;
+		NodeUtil.traverse(testAndApply(Objects::nonNull,
+				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
+				null), nodeVisitorImpl);
+		//
+		return nodeVisitorImpl.multimap;
 		//
 	}
 
