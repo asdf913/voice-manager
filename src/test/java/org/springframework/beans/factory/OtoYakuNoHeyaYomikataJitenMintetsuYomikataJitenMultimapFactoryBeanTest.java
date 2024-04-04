@@ -34,7 +34,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_ACCEPT,
-			METHOD_TO_MULTI_MAP_ELEMENT, METHOD_TO_MULTI_MAP_STRING = null;
+			METHOD_TO_MULTI_MAP_ELEMENT, METHOD_TO_MULTI_MAP_STRING2, METHOD_TO_MULTI_MAP_STRING3 = null;
 
 	private static Class<?> CLASS_PATTERN_MAP, CLASS_IH = null;
 
@@ -56,7 +56,10 @@ class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean$PatternMap")))
 				.setAccessible(true);
 		//
-		(METHOD_TO_MULTI_MAP_STRING = clz.getDeclaredMethod("toMultimap", String.class, String.class,
+		(METHOD_TO_MULTI_MAP_STRING2 = clz.getDeclaredMethod("toMultimap", String.class, String.class,
+				CLASS_PATTERN_MAP)).setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP_STRING3 = clz.getDeclaredMethod("toMultimap", String.class, String.class, String.class,
 				CLASS_PATTERN_MAP)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName(
@@ -207,6 +210,38 @@ class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 		//
 		assertTrue(biPredicate, toMultimap("（鋼索線）", "（こうさくせん）", patternMap), ImmutableMultimap.of("鋼索線", "こうさくせん"));
 		//
+		assertTrue(biPredicate, toMultimap("札幌市交通局 （さっぽろしこうつうきょく）", "南北線", "なんぼくせん", patternMap),
+				ImmutableMultimap.of("札幌市交通局", "さっぽろしこうつうきょく", "南北線", "なんぼくせん"));
+		//
+		assertTrue(biPredicate, toMultimap("太平洋石炭販売輸送 （たいへいようせきたんはんばいゆそう）", "臨港線", "りんこうせん＊貨物", patternMap),
+				ImmutableMultimap.of("太平洋石炭販売輸送", "たいへいようせきたんはんばいゆそう", "臨港線", "りんこうせん"));
+		//
+		assertTrue(biPredicate,
+				toMultimap("苫小牧港開発 （とまこまいこうかいはつ）", "苫小牧港開発株式会社線", "とまこまいこうかいはつかぶしきがいしゃせん ＊貨物　1998年4月1日から休止中",
+						patternMap),
+				ImmutableMultimap.of("苫小牧港開発", "とまこまいこうかいはつ", "苫小牧港開発株式会社線", "とまこまいこうかいはつかぶしきがいしゃせん"));
+		//
+		assertTrue(biPredicate, toMultimap("北海道ちほく高原鉄道 （ほっかいどうちほくこうげんてつどう）", "ふるさと銀河線", "ふるさとぎんがせん", patternMap),
+				ImmutableMultimap.of("銀河線", "ぎんがせん"));
+		//
+		assertTrue(biPredicate, toMultimap("秋田臨海鉄道 （あきたりんかいてつどう）", "秋田臨海鉄道線", "あきたりんかいてつどうせん ＊貨物", patternMap),
+				ImmutableMultimap.of("秋田臨海鉄道", "あきたりんかいてつどう", "秋田臨海鉄道線", "あきたりんかいてつどうせん"));
+		//
+		assertTrue(biPredicate, toMultimap("くりはら田園鉄道 （くりはらでんえんてつどう）", "くりはら田園鉄道線", "くりはらでんえんてつどうせん", patternMap),
+				ImmutableMultimap.of("田園鉄道線", "でんえんてつどうせん", "田園鉄道", "でんえんてつどう"));
+		//
+		assertTrue(biPredicate, toMultimap("ひたちなか海浜鉄道 （ひたちなかかいひんてつどう ）", "湊線", "みなとせん　　旧・茨城交通（いばらきこうつう）", patternMap),
+				ImmutableMultimap.of("海浜鉄道", "かいひんてつどう", "湊線", "みなとせん", "茨城交通", "いばらきこうつう"));
+		//
+		assertTrue(biPredicate, toMultimap("高尾登山電鉄 （たかおとざんでんてつ）", "（鋼索線）", "（こうさくせん）", patternMap),
+				ImmutableMultimap.of("高尾登山電鉄", "たかおとざんでんてつ", "鋼索線", "こうさくせん"));
+		//
+		assertTrue(biPredicate, toMultimap("帝都高速度交通営団 （ていとこうそくどこうつうえいだん）", "銀座線（３号線）", "ぎんざせん", patternMap),
+				ImmutableMultimap.of("帝都高速度交通営団", "ていとこうそくどこうつうえいだん", "銀座線", "ぎんざせん"));
+		//
+		assertTrue(biPredicate, toMultimap("東京都交通局 （とうきょうとこうつうきょく）", "１号線　浅草線", "あさくさせん", patternMap),
+				ImmutableMultimap.of("東京都交通局", "とうきょうとこうつうきょく", "浅草線", "あさくさせん"));
+		//
 	}
 
 	private static void assertTrue(final BiPredicate<Multimap<?, ?>, Multimap<?, ?>> biPredicate,
@@ -235,7 +270,22 @@ class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 	private static Multimap<String, String> toMultimap(final String s0, final String s1, final Object patternMap)
 			throws Throwable {
 		try {
-			final Object obj = METHOD_TO_MULTI_MAP_STRING.invoke(null, s0, s1, patternMap);
+			final Object obj = METHOD_TO_MULTI_MAP_STRING2.invoke(null, s0, s1, patternMap);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Multimap<String, String> toMultimap(final String s0, final String s1, final String s2,
+			final Object patternMap) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP_STRING3.invoke(null, s0, s1, s2, patternMap);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
