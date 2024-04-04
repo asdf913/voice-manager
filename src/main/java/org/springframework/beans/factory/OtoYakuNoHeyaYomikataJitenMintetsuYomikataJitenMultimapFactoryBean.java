@@ -235,10 +235,9 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 								Objects.equals(getUnicodeBlocks(g1 = Util.group(m1, 1)),
 										Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
 								Objects.equals(getUnicodeBlocks(s2), Collections.singletonList(UnicodeBlock.HIRAGANA)))
-						&& !Objects.equals(g1, "線")
-						&& (multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create)) != null) {
+						&& !Objects.equals(g1, "線")) {
 					//
-					MultimapUtil.put(multimap, g1, s2);
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), g1, s2);
 					//
 				} else if (Util.matches((m1 = Util.matcher(p15 = ObjectUtils.getIfNull(p15, () -> Pattern.compile(
 						"^(\\p{InHiragana}+)\\s+\\p{InHALFWIDTH_AND_FULLWIDTH_FORMS}+\\p{InCJKUnifiedIdeographs}+$")),
@@ -248,23 +247,23 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 								Objects.equals(getUnicodeBlocks(s1),
 										Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
 								Objects.equals(getUnicodeBlocks(g1 = Util.group(m1, 1)),
-										Collections.singletonList(UnicodeBlock.HIRAGANA)))
-						&& (multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create)) != null) {
+										Collections.singletonList(UnicodeBlock.HIRAGANA)))) {
 					//
-					MultimapUtil.put(multimap, s1, g1);
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), s1, g1);
 					//
 				} else if (Objects.equals(getUnicodeBlocks(s1),
 						Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS))
 						&& Objects.equals(getUnicodeBlocks(s2), Collections.singletonList(UnicodeBlock.HIRAGANA))
 						&& StringUtils.startsWith(s2, cp = StringUtils.getCommonPrefix(s1, s2))) {
 					//
-					MultimapUtil.put(multimap, StringUtils.substring(s1, StringUtils.length(cp)),
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create),
+							StringUtils.substring(s1, StringUtils.length(cp)),
 							StringUtils.substring(s2, StringUtils.length(cp)));
 					//
 				} else if (Objects.equals(getUnicodeBlocks(s1), Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS))
 						&& (ss = StringUtils.split(s2, ' ')) != null && ss.length > 0) {
 					//
-					MultimapUtil.put(multimap, s1, ss[0]);
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), s1, ss[0]);
 					//
 				} else if (Boolean.logicalAnd(
 						Objects.equals(getUnicodeBlocks(s1),
@@ -280,10 +279,9 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 						Objects.equals(ub1 = getUnicodeBlocks(s0),
 								Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
 						Objects.equals(getUnicodeBlocks(s1 = IterableUtils.get(strings, 1)),
-								Collections.singletonList(UnicodeBlock.HIRAGANA)))
-						&& (multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create)) != null) {
+								Collections.singletonList(UnicodeBlock.HIRAGANA)))) {
 					//
-					MultimapUtil.put(multimap, s0, s1);
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), s0, s1);
 					//
 					continue;
 					//
@@ -296,10 +294,9 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 						&& Boolean.logicalAnd(
 								Objects.equals(ub1, Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
 								Objects.equals(getUnicodeBlocks(g1 = Util.group(m1, 1)),
-										Collections.singletonList(UnicodeBlock.HIRAGANA)))
-						&& (multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create)) != null) {
+										Collections.singletonList(UnicodeBlock.HIRAGANA)))) {
 					//
-					MultimapUtil.put(multimap, s0, g1);
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), s0, g1);
 					//
 					continue;
 					//
@@ -312,10 +309,10 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 						&& Boolean.logicalAnd(
 								Objects.equals(getUnicodeBlocks(g1 = Util.group(m1, 1)),
 										Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
-								Objects.equals(getUnicodeBlocks(s1), Collections.singletonList(UnicodeBlock.HIRAGANA)))
-						&& (multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create)) != null) {
+								Objects.equals(getUnicodeBlocks(s1),
+										Collections.singletonList(UnicodeBlock.HIRAGANA)))) {
 					//
-					MultimapUtil.put(multimap, g1, s1);
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), g1, s1);
 					//
 					continue;
 					//
@@ -336,10 +333,9 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 								Objects.equals(getUnicodeBlocks(g1 = Util.group(m1, 1)),
 										Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
 								Objects.equals(getUnicodeBlocks(g2 = Util.group(m2, 1)),
-										Collections.singletonList(UnicodeBlock.HIRAGANA)))
-						&& (multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create)) != null) {
+										Collections.singletonList(UnicodeBlock.HIRAGANA)))) {
 					//
-					MultimapUtil.put(multimap, g1, s1);
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), g1, s1);
 					//
 					continue;
 					//
@@ -353,10 +349,9 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 								Objects.equals(getUnicodeBlocks(g1 = Util.group(m1, 1)),
 										Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
 								Objects.equals(getUnicodeBlocks(s1), Collections.singletonList(UnicodeBlock.HIRAGANA)))
-						&& !Objects.equals(g1, "線")
-						&& (multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create)) != null) {
+						&& !Objects.equals(g1, "線")) {
 					//
-					MultimapUtil.put(multimap, g1, s1);
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), g1, s1);
 					//
 					continue;
 					//
@@ -370,10 +365,9 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 								Objects.equals(getUnicodeBlocks(g1 = Util.group(m1, 1)),
 										Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
 								Objects.equals(getUnicodeBlocks(s1), Collections.singletonList(UnicodeBlock.HIRAGANA)))
-						&& !Objects.equals(g1, "線")
-						&& (multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create)) != null) {
+						&& !Objects.equals(g1, "線")) {
 					//
-					MultimapUtil.put(multimap, g1, s1);
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), g1, s1);
 					//
 					continue;
 					//
@@ -391,10 +385,9 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 								Objects.equals(getUnicodeBlocks(g1 = Util.group(m1, 1)),
 										Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
 								Objects.equals(getUnicodeBlocks(g2 = Util.group(m1, 2)),
-										Collections.singletonList(UnicodeBlock.HIRAGANA)))
-						&& (multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create)) != null) {
+										Collections.singletonList(UnicodeBlock.HIRAGANA)))) {
 					//
-					MultimapUtil.put(multimap, g1, g2);
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), g1, g2);
 					//
 					continue;
 					//
@@ -402,8 +395,7 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 					//
 				if (Util.find((m1 = Util.matcher(p8 = ObjectUtils.getIfNull(p8, () -> Pattern.compile(
 						"(\\p{InHiragana}+)+\\p{InHalfWidth_And_FullWidth_Forms}(\\p{InCJKUnifiedIdeographs}+)+（(\\p{InHiragana}+)）")),
-						s1))) && Util.groupCount(m1) > 2
-						&& (multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create)) != null) {
+						s1))) && Util.groupCount(m1) > 2) {
 					//
 					if (Boolean.logicalAnd(
 							Objects.equals(getUnicodeBlocks(s0),
@@ -411,7 +403,8 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 							Objects.equals(getUnicodeBlocks(m1.group(1)),
 									Collections.singletonList(UnicodeBlock.HIRAGANA)))) {
 						//
-						MultimapUtil.put(multimap, s0, m1.group(1));
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), s0,
+								m1.group(1));
 						//
 					} // if
 						//
@@ -438,8 +431,7 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 										p10 = ObjectUtils.getIfNull(p10,
 												() -> Pattern.compile("^(\\p{InHiragana}+)\\s?（(\\p{InHiragana}+)）$")),
 										s1)))
-						&& Util.groupCount(m2) > 1
-						&& (multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create)) != null) {
+						&& Util.groupCount(m2) > 1) {
 					//
 					if (Boolean.logicalAnd(
 							Objects.equals(getUnicodeBlocks(g1 = Util.group(m1, 1)),
@@ -447,7 +439,7 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 							Objects.equals(getUnicodeBlocks(g2 = Util.group(m2, 1)),
 									Collections.singletonList(UnicodeBlock.HIRAGANA)))) {
 						//
-						MultimapUtil.put(multimap, g1, g2);
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), g1, g2);
 						//
 					} // if
 						//
@@ -457,7 +449,7 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 							Objects.equals(getUnicodeBlocks(g2 = Util.group(m2, 2)),
 									Collections.singletonList(UnicodeBlock.HIRAGANA)))) {
 						//
-						MultimapUtil.put(multimap, g1, g2);
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), g1, g2);
 						//
 					} // if
 						//
@@ -481,11 +473,9 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 								Objects.equals(getUnicodeBlocks(g1 = Util.group(m1, 1)),
 										Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
 								Objects.equals(getUnicodeBlocks(g2 = Util.group(m2, 1)),
-										Collections.singletonList(UnicodeBlock.HIRAGANA)))
-
-						&& (multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create)) != null) {
+										Collections.singletonList(UnicodeBlock.HIRAGANA)))) {
 					//
-					MultimapUtil.put(multimap, g1, g2);
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), g1, g2);
 					//
 				} // if
 					//
