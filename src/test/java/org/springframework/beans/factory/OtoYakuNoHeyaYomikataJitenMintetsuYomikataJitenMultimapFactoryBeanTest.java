@@ -2,6 +2,7 @@ package org.springframework.beans.factory;
 
 import java.io.File;
 import java.lang.Character.UnicodeBlock;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -13,6 +14,7 @@ import java.util.function.Predicate;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,13 +23,19 @@ import org.junit.jupiter.api.Test;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
+import com.google.common.reflect.Reflection;
+
+import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_ACCEPT = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_ACCEPT,
+			METHOD_TO_MULTI_MAP = null;
+
+	private static Class<?> CLASS_PATTERN_MAP = null;
 
 	@BeforeAll
-	static void beforeAll() throws NoSuchMethodException {
+	static void beforeAll() throws NoSuchMethodException, ClassNotFoundException {
 		//
 		final Class<?> clz = OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean.class;
 		//
@@ -38,6 +46,11 @@ class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
 				BiConsumer.class)).setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", Element.class, Object.class,
+				CLASS_PATTERN_MAP = Class.forName(
+						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean$PatternMap")))
+				.setAccessible(true);
 		//
 	}
 
@@ -143,6 +156,85 @@ class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testToMultimap() throws Throwable {
+		//
+		Assertions.assertNull(toMultimap(null, null, null));
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final Element element, final Object firstRowTexts,
+			final Object patternMap) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, element, firstRowTexts, patternMap);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIH() throws Throwable {
+		//
+		final InvocationHandler ih = Util.cast(InvocationHandler.class, Narcissus.allocateInstance(Class.forName(
+				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean$IH")));
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, null, null, null));
+		//
+		final Object patternMap = Reflection.newProxy(CLASS_PATTERN_MAP, ih);
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, patternMap, null, null));
+		//
+		final Method getPattern = CLASS_PATTERN_MAP != null
+				? CLASS_PATTERN_MAP.getDeclaredMethod("getPattern", String.class)
+				: null;
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, patternMap, getPattern, null));
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, patternMap, getPattern, new Object[] {}));
+		//
+		Assertions.assertNull(invoke(ih, patternMap, getPattern, new Object[] { null }));
+		//
+		final Object o1 = invoke(ih, patternMap, getPattern, new Object[] { "" });
+		//
+		Assertions.assertNotNull(o1);
+		//
+		Assertions.assertSame(o1, invoke(ih, patternMap, getPattern, new Object[] { "" }));
+		//
+	}
+
+	private static Object invoke(final InvocationHandler instance, final Object proxy, final Method method,
+			final Object[] args) throws Throwable {
+		return instance != null ? instance.invoke(proxy, method, args) : null;
+	}
+
+	@Test
+	void testPatternMap() throws Throwable {
+		//
+		final Method getPattern = CLASS_PATTERN_MAP != null
+				? CLASS_PATTERN_MAP.getDeclaredMethod("getPattern", CLASS_PATTERN_MAP, String.class)
+				: null;
+		//
+		if (getPattern != null) {
+			//
+			getPattern.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(getPattern != null ? getPattern.invoke(null, Reflection.newProxy(CLASS_PATTERN_MAP,
+				Util.cast(InvocationHandler.class, Narcissus.allocateInstance(Class.forName(
+						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean$IH")))),
+				null) : null);
+		//
+		Assertions.assertNull(getPattern != null ? getPattern.invoke(null, null, null) : null);
+		//
 	}
 
 }
