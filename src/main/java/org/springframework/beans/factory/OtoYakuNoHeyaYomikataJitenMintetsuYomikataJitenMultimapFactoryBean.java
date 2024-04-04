@@ -183,6 +183,7 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap(final String s0, final String s1, final String s2,
 			final PatternMap patternMap) {
 		//
