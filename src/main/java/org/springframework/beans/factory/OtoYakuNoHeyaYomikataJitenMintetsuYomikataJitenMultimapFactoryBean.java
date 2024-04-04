@@ -105,23 +105,20 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 			//
 			final String methodName = Util.getName(method);
 			//
-			if (proxy instanceof PatternMap) {
+			if (proxy instanceof PatternMap && Objects.equals(methodName, "getPattern") && args != null
+					&& args.length > 0) {
 				//
-				if (Objects.equals(methodName, "getPattern") && args != null && args.length > 0) {
+				final Object arg0 = args[0];
+				//
+				if (!Util.containsKey(getPatternMap(), arg0)) {
 					//
-					final Object arg0 = args[0];
-					//
-					if (!Util.containsKey(getPatternMap(), arg0)) {
-						//
-						Util.put(getPatternMap(), arg0,
-								testAndApply(x -> x != null, Util.toString(arg0), Pattern::compile, null));
-						//
-					} // if
-						//
-					return Util.get(getPatternMap(), arg0);
+					Util.put(getPatternMap(), arg0,
+							testAndApply(x -> x != null, Util.toString(arg0), Pattern::compile, null));
 					//
 				} // if
 					//
+				return Util.get(getPatternMap(), arg0);
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
