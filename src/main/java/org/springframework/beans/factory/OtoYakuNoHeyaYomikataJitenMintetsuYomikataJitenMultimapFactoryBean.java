@@ -134,6 +134,7 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 
 		Pattern getPattern(final String pattern);
 
+		@Nullable
 		private static Pattern getPattern(@Nullable final PatternMap instance, final String pattern) {
 			return instance != null ? instance.getPattern(pattern) : null;
 		}
