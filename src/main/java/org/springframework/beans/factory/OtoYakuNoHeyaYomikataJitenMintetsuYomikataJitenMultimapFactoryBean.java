@@ -80,6 +80,7 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap(final Element e, final Object firstRowTexts) {
 		//
 		Multimap<String, String> multimap = null;
