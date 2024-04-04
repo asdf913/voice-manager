@@ -11,7 +11,10 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.jsoup.nodes.Element;
@@ -21,6 +24,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 import com.google.common.reflect.Reflection;
@@ -30,9 +34,9 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_ACCEPT,
-			METHOD_TO_MULTI_MAP = null;
+			METHOD_TO_MULTI_MAP_ELEMENT, METHOD_TO_MULTI_MAP_STRING = null;
 
-	private static Class<?> CLASS_PATTERN_MAP = null;
+	private static Class<?> CLASS_PATTERN_MAP, CLASS_IH = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException, ClassNotFoundException {
@@ -47,10 +51,16 @@ class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
 				BiConsumer.class)).setAccessible(true);
 		//
-		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", Element.class, Object.class,
+		(METHOD_TO_MULTI_MAP_ELEMENT = clz.getDeclaredMethod("toMultimap", Element.class, Object.class,
 				CLASS_PATTERN_MAP = Class.forName(
 						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean$PatternMap")))
 				.setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP_STRING = clz.getDeclaredMethod("toMultimap", String.class, String.class,
+				CLASS_PATTERN_MAP)).setAccessible(true);
+		//
+		CLASS_IH = Class.forName(
+				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean$IH");
 		//
 	}
 
@@ -161,14 +171,71 @@ class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testToMultimap() throws Throwable {
 		//
-		Assertions.assertNull(toMultimap(null, null, null));
+		Assertions.assertNull(toMultimap((Element) null, null, null));
+		//
+		Assertions.assertNull(toMultimap((String) null, null, null));
+		//
+		final BiPredicate<Multimap<?, ?>, Multimap<?, ?>> biPredicate = (a, b) -> CollectionUtils
+				.isEqualCollection(MultimapUtil.entries(a), MultimapUtil.entries(b));
+		//
+		assertTrue(biPredicate, toMultimap("東西線", "とうざいせん", null), ImmutableMultimap.of("東西線", "とうざいせん"));
+		//
+		final Object patternMap = Reflection.newProxy(CLASS_PATTERN_MAP,
+				Util.cast(InvocationHandler.class, Narcissus.allocateInstance(CLASS_IH)));
+		//
+		assertTrue(biPredicate, toMultimap("一条線", "いちじょうせん＊軌道線", patternMap), ImmutableMultimap.of("一条線", "いちじょうせん"));
+		//
+		assertTrue(biPredicate, toMultimap("千原線 ＊旧千葉急行電鉄", "ちはらせん", patternMap), ImmutableMultimap.of("千原線", "ちはらせん"));
+		//
+		assertTrue(biPredicate, toMultimap("千葉急行電鉄 （ちばきゅうこうでんてつ）", "＊平成10年10月1日京成電鉄に営業移管　千原線に 京成電鉄参照", patternMap),
+				ImmutableMultimap.of("千葉急行電鉄", "ちばきゅうこうでんてつ"));
+		//
+		assertTrue(biPredicate, toMultimap("日比谷線（２号線）", "ひびやせん", patternMap), ImmutableMultimap.of("日比谷線", "ひびやせん"));
+		//
+		assertTrue(biPredicate, toMultimap("東西線（５号線）", "とうざいせん", patternMap), ImmutableMultimap.of("東西線", "とうざいせん"));
+		//
+		assertTrue(biPredicate, toMultimap("目黒線", "めぐろせん＊目蒲線（めかません）が二つに分かれる （目黒～多摩川～武蔵小杉）平成12年8月6日", patternMap),
+				ImmutableMultimap.of("目黒線", "めぐろせん", "目蒲線", "めかません"));
+		//
+		assertTrue(biPredicate, toMultimap("６号線　三田線", "みたせん", patternMap), ImmutableMultimap.of("三田線", "みたせん"));
+		//
+		assertTrue(biPredicate, toMultimap("あぷとライン（井川線）", "あぷとらいん（いかわせん）", patternMap),
+				ImmutableMultimap.of("井川線", "いかわせん"));
+		//
+		assertTrue(biPredicate, toMultimap("国際文化公園都市線 （彩都線）", "こくさいぶんかこうえんとしせん （さいとせん）", patternMap),
+				ImmutableMultimap.of("国際文化公園都市線", "こくさいぶんかこうえんとしせん", "彩都線", "さいとせん"));
+		//
+		assertTrue(biPredicate, toMultimap("（鋼索線）", "（こうさくせん）", patternMap), ImmutableMultimap.of("鋼索線", "こうさくせん"));
+		//
+	}
+
+	private static void assertTrue(final BiPredicate<Multimap<?, ?>, Multimap<?, ?>> biPredicate,
+			final Multimap<?, ?> a, final Multimap<?, ?> b) {
+		//
+		Assertions.assertTrue(Util.test(biPredicate, a, b),
+				Util.collect(Util.map(Stream.of(a, b), Util::toString), Collectors.joining("!=")));
 		//
 	}
 
 	private static Multimap<String, String> toMultimap(final Element element, final Object firstRowTexts,
 			final Object patternMap) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, element, firstRowTexts, patternMap);
+			final Object obj = METHOD_TO_MULTI_MAP_ELEMENT.invoke(null, element, firstRowTexts, patternMap);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Multimap<String, String> toMultimap(final String s0, final String s1, final Object patternMap)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP_STRING.invoke(null, s0, s1, patternMap);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
@@ -183,8 +250,7 @@ class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testIH() throws Throwable {
 		//
-		final InvocationHandler ih = Util.cast(InvocationHandler.class, Narcissus.allocateInstance(Class.forName(
-				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean$IH")));
+		final InvocationHandler ih = Util.cast(InvocationHandler.class, Narcissus.allocateInstance(CLASS_IH));
 		//
 		Assertions.assertThrows(Throwable.class, () -> invoke(ih, null, null, null));
 		//
