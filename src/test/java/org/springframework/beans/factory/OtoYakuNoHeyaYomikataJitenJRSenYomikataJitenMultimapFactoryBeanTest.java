@@ -3,14 +3,17 @@ package org.springframework.beans.factory;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
@@ -19,10 +22,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
+import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
@@ -40,12 +45,43 @@ class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBeanTest {
 		//
 	}
 
+	private static class IH implements InvocationHandler {
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = Util.getName(method);
+			//
+			if (proxy instanceof Link) {
+				//
+				if (Objects.equals(methodName, "getText")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(methodName, "getUrl")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+	}
+
 	private OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBean instance = null;
+
+	private IH ih = null;
 
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBean();
+		//
+		ih = new IH();
 		//
 	}
 
@@ -58,6 +94,52 @@ class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBeanTest {
 
 	@Test
 	void testGetObject() throws Exception {
+		//
+		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setLinks(Collections.singleton(null));
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setText(null);
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		final Link link = Reflection.newProxy(Link.class, ih);
+		//
+		if (instance != null) {
+			//
+			instance.setLinks(Collections.nCopies(2, link));
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setLinks(Collections.singleton(link));
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setText("");
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		FieldUtils.writeDeclaredField(instance, "text", null, true);
 		//
 		Assertions.assertNull(getObject(instance));
 		//
