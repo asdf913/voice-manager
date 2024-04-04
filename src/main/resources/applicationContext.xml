@@ -825,6 +825,19 @@
 		<property name="valueColumnIndex" value="1" />
 	</bean>
 
+	<!--https://hiramatu-hifuka.com/onyak/onyak2/tetu-jr.html-->
+	<bean
+		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBean">
+		<meta key="value" value="hiragana" />
+		<property name="url"
+			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBean.url}" />
+		<property name="links" ref="OtoYakuNoHeyaYomikataJitenLinkList" />
+		<property name="text"
+			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBean.text}" />
+		<property name="description"
+			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBean.description}" />
+	</bean>
+
 	<!-- -->
 	<bean class="org.springframework.context.support.VoiceManager">
 		<property name="layout" ref="MigLayout" />
