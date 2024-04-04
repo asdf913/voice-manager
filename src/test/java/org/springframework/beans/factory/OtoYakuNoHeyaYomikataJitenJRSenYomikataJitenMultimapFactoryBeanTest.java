@@ -182,12 +182,14 @@ class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBeanTest {
 		final Map<Object, Object> properties = System.getProperties();
 		//
 		if (Util.containsKey(properties,
-				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.url")) {
+				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBean.url")) {
 			//
 			if (instance != null) {
 				//
+				instance.setLinks(null);
+				//
 				instance.setUrl(Util.toString(Util.get(properties,
-						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.url")));
+						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBean.url")));
 				//
 			} // if
 				//
