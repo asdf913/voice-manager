@@ -86,7 +86,7 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 				//
 				if (Objects.equals(firstRowText,
 						strings = ElementUtil.children(IterableUtils.get(ElementUtil.children(e2), j)).stream()
-								.map(x -> ElementUtil.text(x)).toList())) {
+								.map(ElementUtil::text).toList())) {
 					//
 					continue;
 					//
