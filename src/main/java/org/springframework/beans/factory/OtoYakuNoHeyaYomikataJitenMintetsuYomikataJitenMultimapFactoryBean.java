@@ -271,8 +271,6 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 						Objects.equals(getUnicodeBlocks(s2),
 								Collections.singletonList(UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS)))) {
 					//
-					continue;
-					//
 				} // if
 					//
 			} else if (size > 1) {
@@ -487,8 +485,6 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 						&& (multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create)) != null) {
 					//
 					MultimapUtil.put(multimap, g1, g2);
-					//
-					continue;
 					//
 				} // if
 					//
