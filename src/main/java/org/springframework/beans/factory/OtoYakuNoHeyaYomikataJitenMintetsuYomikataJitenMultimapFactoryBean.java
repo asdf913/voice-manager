@@ -72,10 +72,10 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 		//
 		Matcher m1 = null, m2 = null;
 		//
-		for (int i = 0; es1 != null && i < es1.size(); i++) {
+		for (int i = 0; i < IterableUtils.size(es1); i++) {
 			//
-			if ((e1 = es1.get(i)) == null || e1.childrenSize() != 1
-					|| !Objects.equals(ElementUtil.tagName(e2 = e1.children().get(0)), "tbody")
+			if (ElementUtil.childrenSize(e1 = es1.get(i)) != 1 || !Objects
+					.equals(ElementUtil.tagName(e2 = IterableUtils.get(ElementUtil.children(e1), 0)), "tbody")
 					|| (childrenSize = ElementUtil.childrenSize(e2)) <= 1) {
 				//
 				continue;
@@ -85,8 +85,9 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 			for (int j = 0; j < childrenSize; j++) {
 				//
 				if (Objects.equals(firstRowText,
-						strings = ElementUtil.children(IterableUtils.get(ElementUtil.children(e2), j)).stream()
-								.map(ElementUtil::text).toList())) {
+						strings = Util.toList(Util.map(
+								Util.stream(ElementUtil.children(IterableUtils.get(ElementUtil.children(e2), j))),
+								ElementUtil::text)))) {
 					//
 					continue;
 					//
