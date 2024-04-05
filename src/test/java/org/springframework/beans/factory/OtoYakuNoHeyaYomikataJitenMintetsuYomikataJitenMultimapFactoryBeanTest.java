@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -181,74 +182,83 @@ class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 		final BiPredicate<Multimap<?, ?>, Multimap<?, ?>> biPredicate = (a, b) -> CollectionUtils
 				.isEqualCollection(MultimapUtil.entries(a), MultimapUtil.entries(b));
 		//
-		assertTrue(biPredicate, toMultimap((Object) null, "東西線", "とうざいせん"), ImmutableMultimap.of("東西線", "とうざいせん"));
+		final BiFunction<Multimap<?, ?>, Multimap<?, ?>, String> biFunction = (a, b) -> Util
+				.collect(Util.map(Stream.of(a, b), Util::toString), Collectors.joining("!="));
+		//
+		assertTrue(biPredicate, toMultimap((Object) null, "東西線", "とうざいせん"), ImmutableMultimap.of("東西線", "とうざいせん"),
+				biFunction);
 		//
 		final Object patternMap = Reflection.newProxy(CLASS_PATTERN_MAP,
 				Util.cast(InvocationHandler.class, Narcissus.allocateInstance(CLASS_IH)));
 		//
-		assertTrue(biPredicate, toMultimap(patternMap, "一条線", "いちじょうせん＊軌道線"), ImmutableMultimap.of("一条線", "いちじょうせん"));
+		assertTrue(biPredicate, toMultimap(patternMap, "一条線", "いちじょうせん＊軌道線"), ImmutableMultimap.of("一条線", "いちじょうせん"),
+				biFunction);
 		//
-		assertTrue(biPredicate, toMultimap(patternMap, "千原線 ＊旧千葉急行電鉄", "ちはらせん"), ImmutableMultimap.of("千原線", "ちはらせん"));
+		assertTrue(biPredicate, toMultimap(patternMap, "千原線 ＊旧千葉急行電鉄", "ちはらせん"), ImmutableMultimap.of("千原線", "ちはらせん"),
+				biFunction);
 		//
 		assertTrue(biPredicate, toMultimap(patternMap, "千葉急行電鉄 （ちばきゅうこうでんてつ）", "＊平成10年10月1日京成電鉄に営業移管　千原線に 京成電鉄参照"),
-				ImmutableMultimap.of("千葉急行電鉄", "ちばきゅうこうでんてつ"));
+				ImmutableMultimap.of("千葉急行電鉄", "ちばきゅうこうでんてつ"), biFunction);
 		//
-		assertTrue(biPredicate, toMultimap(patternMap, "日比谷線（２号線）", "ひびやせん"), ImmutableMultimap.of("日比谷線", "ひびやせん"));
+		assertTrue(biPredicate, toMultimap(patternMap, "日比谷線（２号線）", "ひびやせん"), ImmutableMultimap.of("日比谷線", "ひびやせん"),
+				biFunction);
 		//
-		assertTrue(biPredicate, toMultimap(patternMap, "東西線（５号線）", "とうざいせん"), ImmutableMultimap.of("東西線", "とうざいせん"));
+		assertTrue(biPredicate, toMultimap(patternMap, "東西線（５号線）", "とうざいせん"), ImmutableMultimap.of("東西線", "とうざいせん"),
+				biFunction);
 		//
 		assertTrue(biPredicate, toMultimap(patternMap, "目黒線", "めぐろせん＊目蒲線（めかません）が二つに分かれる （目黒～多摩川～武蔵小杉）平成12年8月6日"),
-				ImmutableMultimap.of("目黒線", "めぐろせん", "目蒲線", "めかません"));
+				ImmutableMultimap.of("目黒線", "めぐろせん", "目蒲線", "めかません"), biFunction);
 		//
-		assertTrue(biPredicate, toMultimap(patternMap, "６号線　三田線", "みたせん"), ImmutableMultimap.of("三田線", "みたせん"));
+		assertTrue(biPredicate, toMultimap(patternMap, "６号線　三田線", "みたせん"), ImmutableMultimap.of("三田線", "みたせん"),
+				biFunction);
 		//
 		assertTrue(biPredicate, toMultimap(patternMap, "あぷとライン（井川線）", "あぷとらいん（いかわせん）"),
-				ImmutableMultimap.of("井川線", "いかわせん"));
+				ImmutableMultimap.of("井川線", "いかわせん"), biFunction);
 		//
 		assertTrue(biPredicate, toMultimap(patternMap, "国際文化公園都市線 （彩都線）", "こくさいぶんかこうえんとしせん （さいとせん）"),
-				ImmutableMultimap.of("国際文化公園都市線", "こくさいぶんかこうえんとしせん", "彩都線", "さいとせん"));
+				ImmutableMultimap.of("国際文化公園都市線", "こくさいぶんかこうえんとしせん", "彩都線", "さいとせん"), biFunction);
 		//
-		assertTrue(biPredicate, toMultimap(patternMap, "（鋼索線）", "（こうさくせん）"), ImmutableMultimap.of("鋼索線", "こうさくせん"));
+		assertTrue(biPredicate, toMultimap(patternMap, "（鋼索線）", "（こうさくせん）"), ImmutableMultimap.of("鋼索線", "こうさくせん"),
+				biFunction);
 		//
 		assertTrue(biPredicate, toMultimap(patternMap, "札幌市交通局 （さっぽろしこうつうきょく）", "南北線", "なんぼくせん"),
-				ImmutableMultimap.of("札幌市交通局", "さっぽろしこうつうきょく", "南北線", "なんぼくせん"));
+				ImmutableMultimap.of("札幌市交通局", "さっぽろしこうつうきょく", "南北線", "なんぼくせん"), biFunction);
 		//
 		assertTrue(biPredicate, toMultimap(patternMap, "太平洋石炭販売輸送 （たいへいようせきたんはんばいゆそう）", "臨港線", "りんこうせん＊貨物"),
-				ImmutableMultimap.of("太平洋石炭販売輸送", "たいへいようせきたんはんばいゆそう", "臨港線", "りんこうせん"));
+				ImmutableMultimap.of("太平洋石炭販売輸送", "たいへいようせきたんはんばいゆそう", "臨港線", "りんこうせん"), biFunction);
 		//
 		assertTrue(biPredicate,
 				toMultimap(patternMap, "苫小牧港開発 （とまこまいこうかいはつ）", "苫小牧港開発株式会社線",
 						"とまこまいこうかいはつかぶしきがいしゃせん ＊貨物　1998年4月1日から休止中"),
-				ImmutableMultimap.of("苫小牧港開発", "とまこまいこうかいはつ", "苫小牧港開発株式会社線", "とまこまいこうかいはつかぶしきがいしゃせん"));
+				ImmutableMultimap.of("苫小牧港開発", "とまこまいこうかいはつ", "苫小牧港開発株式会社線", "とまこまいこうかいはつかぶしきがいしゃせん"), biFunction);
 		//
 		assertTrue(biPredicate, toMultimap(patternMap, "北海道ちほく高原鉄道 （ほっかいどうちほくこうげんてつどう）", "ふるさと銀河線", "ふるさとぎんがせん"),
-				ImmutableMultimap.of("銀河線", "ぎんがせん"));
+				ImmutableMultimap.of("銀河線", "ぎんがせん"), biFunction);
 		//
 		assertTrue(biPredicate, toMultimap(patternMap, "秋田臨海鉄道 （あきたりんかいてつどう）", "秋田臨海鉄道線", "あきたりんかいてつどうせん ＊貨物"),
-				ImmutableMultimap.of("秋田臨海鉄道", "あきたりんかいてつどう", "秋田臨海鉄道線", "あきたりんかいてつどうせん"));
+				ImmutableMultimap.of("秋田臨海鉄道", "あきたりんかいてつどう", "秋田臨海鉄道線", "あきたりんかいてつどうせん"), biFunction);
 		//
 		assertTrue(biPredicate, toMultimap(patternMap, "くりはら田園鉄道 （くりはらでんえんてつどう）", "くりはら田園鉄道線", "くりはらでんえんてつどうせん"),
-				ImmutableMultimap.of("田園鉄道線", "でんえんてつどうせん", "田園鉄道", "でんえんてつどう"));
+				ImmutableMultimap.of("田園鉄道線", "でんえんてつどうせん", "田園鉄道", "でんえんてつどう"), biFunction);
 		//
 		assertTrue(biPredicate, toMultimap(patternMap, "ひたちなか海浜鉄道 （ひたちなかかいひんてつどう ）", "湊線", "みなとせん　　旧・茨城交通（いばらきこうつう）"),
-				ImmutableMultimap.of("海浜鉄道", "かいひんてつどう", "湊線", "みなとせん", "茨城交通", "いばらきこうつう"));
+				ImmutableMultimap.of("海浜鉄道", "かいひんてつどう", "湊線", "みなとせん", "茨城交通", "いばらきこうつう"), biFunction);
 		//
 		assertTrue(biPredicate, toMultimap(patternMap, "高尾登山電鉄 （たかおとざんでんてつ）", "（鋼索線）", "（こうさくせん）"),
-				ImmutableMultimap.of("高尾登山電鉄", "たかおとざんでんてつ", "鋼索線", "こうさくせん"));
+				ImmutableMultimap.of("高尾登山電鉄", "たかおとざんでんてつ", "鋼索線", "こうさくせん"), biFunction);
 		//
 		assertTrue(biPredicate, toMultimap(patternMap, "帝都高速度交通営団 （ていとこうそくどこうつうえいだん）", "銀座線（３号線）", "ぎんざせん"),
-				ImmutableMultimap.of("帝都高速度交通営団", "ていとこうそくどこうつうえいだん", "銀座線", "ぎんざせん"));
+				ImmutableMultimap.of("帝都高速度交通営団", "ていとこうそくどこうつうえいだん", "銀座線", "ぎんざせん"), biFunction);
 		//
 		assertTrue(biPredicate, toMultimap(patternMap, "東京都交通局 （とうきょうとこうつうきょく）", "１号線　浅草線", "あさくさせん"),
-				ImmutableMultimap.of("東京都交通局", "とうきょうとこうつうきょく", "浅草線", "あさくさせん"));
+				ImmutableMultimap.of("東京都交通局", "とうきょうとこうつうきょく", "浅草線", "あさくさせん"), biFunction);
 		//
 	}
 
-	private static void assertTrue(final BiPredicate<Multimap<?, ?>, Multimap<?, ?>> biPredicate,
-			final Multimap<?, ?> a, final Multimap<?, ?> b) {
+	private static <T> void assertTrue(final BiPredicate<T, T> biPredicate, final T a, final T b,
+			final BiFunction<T, T, String> biFunction) {
 		//
-		Assertions.assertTrue(Util.test(biPredicate, a, b),
-				Util.collect(Util.map(Stream.of(a, b), Util::toString), Collectors.joining("!=")));
+		Assertions.assertTrue(Util.test(biPredicate, a, b), Util.apply(biFunction, a, b));
 		//
 	}
 
