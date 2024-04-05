@@ -15,7 +15,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -41,7 +40,7 @@ import com.google.common.reflect.Reflection;
 class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_CREATE_TABLE,
-			METHOD_GET_UNICODE_BLOCKS, METHOD_ACCEPT, METHOD_IS_INSTANCE, METHOD_GET_TRIPLES_1, METHOD_GET_TRIPLES_2,
+			METHOD_GET_UNICODE_BLOCKS, METHOD_IS_INSTANCE, METHOD_GET_TRIPLES_1, METHOD_GET_TRIPLES_2,
 			METHOD_GET_NAME_MODULE, METHOD_GET_MODULE, METHOD_GET = null;
 
 	@BeforeAll
@@ -58,9 +57,6 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		(METHOD_CREATE_TABLE = clz.getDeclaredMethod("createTable", Object[].class)).setAccessible(true);
 		//
 		(METHOD_GET_UNICODE_BLOCKS = clz.getDeclaredMethod("getUnicodeBlocks", char[].class)).setAccessible(true);
-		//
-		(METHOD_ACCEPT = clz.getDeclaredMethod("accept", BiConsumer.class, Object.class, Object.class))
-				.setAccessible(true);
 		//
 		(METHOD_IS_INSTANCE = clz.getDeclaredMethod("isInstance", Class.class, Object.class)).setAccessible(true);
 		//
@@ -336,21 +332,6 @@ class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBeanTest {
 				return (List) obj;
 			}
 			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAccept() {
-		//
-		Assertions.assertDoesNotThrow(() -> accept(null, null, null));
-		//
-	}
-
-	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) throws Throwable {
-		try {
-			METHOD_ACCEPT.invoke(null, instance, t, u);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

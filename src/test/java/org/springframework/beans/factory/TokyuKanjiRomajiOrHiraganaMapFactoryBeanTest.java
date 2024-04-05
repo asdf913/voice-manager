@@ -6,7 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableFunction;
@@ -21,7 +20,7 @@ import com.google.common.base.Predicates;
 class TokyuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
 	private static Method METHOD_GET_OBJECT, METHOD_GET_ROMAJI_OR_HIRAGANA_MAP,
-			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_ACCEPT, METHOD_TEST_AND_APPLY = null;
+			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -35,9 +34,6 @@ class TokyuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK = clz.getDeclaredMethod("isAllCharacterInSameUnicodeBlock",
 				String.class, UnicodeBlock.class)).setAccessible(true);
-		//
-		(METHOD_ACCEPT = clz.getDeclaredMethod("accept", BiConsumer.class, Object.class, Object.class))
-				.setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -229,21 +225,6 @@ class TokyuKanjiRomajiOrHiraganaMapFactoryBeanTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(obj != null ? obj.getClass() : null));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAccept() {
-		//
-		Assertions.assertDoesNotThrow(() -> accept(null, null, null));
-		//
-	}
-
-	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) throws Throwable {
-		try {
-			METHOD_ACCEPT.invoke(null, instance, t, u);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

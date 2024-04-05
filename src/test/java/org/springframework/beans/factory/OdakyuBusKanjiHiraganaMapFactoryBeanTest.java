@@ -13,7 +13,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableFunction;
@@ -35,8 +34,8 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_GET_OBJECT, METHOD_CREATE_MAP, METHOD_TEST_AND_APPLY, METHOD_PROCESS,
-			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_ACCEPT,
-			METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE, METHOD_PERFORM = null;
+			METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK, METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE,
+			METHOD_PERFORM = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -53,9 +52,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 		//
 		(METHOD_IS_ALL_CHARACTER_IN_SAME_UNICODE_BLOCK = clz.getDeclaredMethod("isAllCharacterInSameUnicodeBlock",
 				String.class, UnicodeBlock.class)).setAccessible(true);
-		//
-		(METHOD_ACCEPT = clz.getDeclaredMethod("accept", BiConsumer.class, Object.class, Object.class))
-				.setAccessible(true);
 		//
 		(METHOD_CHECK_IF_KEY_EXISTS_AND_DIFFERENCE_VALUE = clz.getDeclaredMethod("checkIfKeyExistsAndDifferenceValue",
 				Map.class, Entry.class)).setAccessible(true);
@@ -273,21 +269,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAccept() {
-		//
-		Assertions.assertDoesNotThrow(() -> accept(null, null, null));
-		//
-	}
-
-	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) throws Throwable {
-		try {
-			METHOD_ACCEPT.invoke(null, instance, t, u);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
