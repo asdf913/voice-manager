@@ -167,7 +167,7 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 			s1 = IterableUtils.get(strings, 1);
 			//
 			if (((size = IterableUtils.size(strings)) > 2
-					&& (mm = toMultimap(s0, s1, IterableUtils.get(strings, 2), patternMap)) != null)
+					&& (mm = toMultimap(patternMap, s0, s1, IterableUtils.get(strings, 2))) != null)
 					|| (size > 1 && (mm = toMultimap(patternMap, s0, s1)) != null)) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), mm);
@@ -181,8 +181,8 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 	}
 
 	@Nullable
-	private static Multimap<String, String> toMultimap(final String s0, final String s1, final String s2,
-			final PatternMap patternMap) {
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s0, final String s1,
+			final String s2) {
 		//
 		Matcher m1 = null;
 		//
