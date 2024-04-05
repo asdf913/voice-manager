@@ -168,7 +168,7 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 			//
 			if (((size = IterableUtils.size(strings)) > 2
 					&& (mm = toMultimap(s0, s1, IterableUtils.get(strings, 2), patternMap)) != null)
-					|| (size > 1 && (mm = toMultimap(s0, s1, patternMap)) != null)) {
+					|| (size > 1 && (mm = toMultimap(patternMap, s0, s1)) != null)) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), mm);
 				//
@@ -339,7 +339,7 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 	}
 
 	@Nullable
-	private static Multimap<String, String> toMultimap(final String s0, final String s1, final PatternMap patternMap) {
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s0, final String s1) {
 		//
 		final List<UnicodeBlock> ub0 = getUnicodeBlocks(s0);
 		//
