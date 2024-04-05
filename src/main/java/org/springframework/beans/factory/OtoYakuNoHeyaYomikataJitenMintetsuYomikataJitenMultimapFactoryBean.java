@@ -210,27 +210,15 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 				"^(\\p{InHiragana}+)?\\p{InCJK_Symbols_And_Punctuation}+\\p{InCJKUnifiedIdeographs}+\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
 				s2))), Util.groupCount(m1) > 2)) {
 			//
-			if (Boolean.logicalAnd(
-					Objects.equals(getUnicodeBlocks(s1),
-							Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
-					Objects.equals(getUnicodeBlocks(g1 = Util.group(m1, 1)),
-							Collections.singletonList(UnicodeBlock.HIRAGANA)))) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), s1, g1);
-				//
-			} // if
-				//
-			final String g3 = Util.group(m1, 3);
+			final BiPredicate<String, String> biPredicate = createBiPredicate();
 			//
-			if (Boolean.logicalAnd(
-					Objects.equals(getUnicodeBlocks(g2 = Util.group(m1, 2)),
-							Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
-					Objects.equals(getUnicodeBlocks(g3), Collections.singletonList(UnicodeBlock.HIRAGANA)))) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), g2, g3);
-				//
-			} // if
-				//
+			final BiConsumer<String, String> biConsumer = createBiConsumer(
+					multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create));
+			//
+			testAndAccept(biPredicate, s1, Util.group(m1, 1), biConsumer);
+			//
+			testAndAccept(biPredicate, Util.group(m1, 2), Util.group(m1, 3), biConsumer);
+			//
 		} else if (Util
 				.matches((m1 = Util.matcher(
 						PatternMap.getPattern(patternMap,
@@ -313,6 +301,18 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 			//
 		return multimap;
 		//
+	}
+
+	private static BiPredicate<String, String> createBiPredicate() {
+		//
+		return (a, b) -> Boolean.logicalAnd(
+				Objects.equals(getUnicodeBlocks(a), Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
+				Objects.equals(getUnicodeBlocks(b), Collections.singletonList(UnicodeBlock.HIRAGANA)));
+		//
+	}
+
+	private static <T, U> BiConsumer<T, U> createBiConsumer(final Multimap<T, U> multimap) {
+		return (t, u) -> MultimapUtil.put(multimap, t, u);
 	}
 
 	private static int length(@Nullable final Object[] instance) {
@@ -480,28 +480,23 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		BiPredicate<String, String> biPredicate = null;
+		//
+		BiConsumer<String, String> biConsumer = null;
+		//
 		if (Util.find((m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"(\\p{InHiragana}+)+\\p{InHalfWidth_And_FullWidth_Forms}(\\p{InCJKUnifiedIdeographs}+)+（(\\p{InHiragana}+)）"),
 				s1))) && Util.groupCount(m1) > 2) {
 			//
-			if (Boolean.logicalAnd(
-					Objects.equals(getUnicodeBlocks(s0),
-							Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
-					Objects.equals(getUnicodeBlocks(m1.group(1)), Collections.singletonList(UnicodeBlock.HIRAGANA)))) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), s0, m1.group(1));
-				//
-			} // if
-				//
-			if (Boolean.logicalAnd(
-					Objects.equals(getUnicodeBlocks(m1.group(2)),
-							Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
-					Objects.equals(getUnicodeBlocks(m1.group(3)), Collections.singletonList(UnicodeBlock.HIRAGANA)))) {
-				//
-				MultimapUtil.put(multimap, m1.group(2), m1.group(3));
-				//
-			} // if
-				//
+			final Multimap<String, String> mm = multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create);
+			//
+			testAndAccept(
+					biPredicate = ObjectUtils.getIfNull(biPredicate,
+							OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean::createBiPredicate),
+					s0, m1.group(1), biConsumer = ObjectUtils.getIfNull(biConsumer, () -> createBiConsumer(mm)));
+			//
+			testAndAccept(biPredicate, m1.group(2), m1.group(3), biConsumer);
+			//
 		} // if
 			//
 		if (Util.matches((m1 = Util.matcher(PatternMap.getPattern(patternMap,
@@ -511,26 +506,16 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 						PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)\\s?（(\\p{InHiragana}+)）$"), s1)))
 				&& Util.groupCount(m2) > 1) {
 			//
-			if (Boolean.logicalAnd(
-					Objects.equals(getUnicodeBlocks(g1 = Util.group(m1, 1)),
-							Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
-					Objects.equals(getUnicodeBlocks(g2 = Util.group(m2, 1)),
-							Collections.singletonList(UnicodeBlock.HIRAGANA)))) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), g1, g2);
-				//
-			} // if
-				//
-			if (Boolean.logicalAnd(
-					Objects.equals(getUnicodeBlocks(g1 = Util.group(m1, 2)),
-							Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
-					Objects.equals(getUnicodeBlocks(g2 = Util.group(m2, 2)),
-							Collections.singletonList(UnicodeBlock.HIRAGANA)))) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), g1, g2);
-				//
-			} // if
-				//
+			final Multimap<String, String> mm = multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create);
+			//
+			testAndAccept(
+					biPredicate = ObjectUtils.getIfNull(biPredicate,
+							OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean::createBiPredicate),
+					Util.group(m1, 1), Util.group(m2, 1),
+					biConsumer = ObjectUtils.getIfNull(biConsumer, () -> createBiConsumer(mm)));
+			//
+			testAndAccept(biPredicate, Util.group(m1, 2), Util.group(m2, 2), biConsumer);
+			//
 		} // if
 			//
 		if (Util.matches((m1 = Util.matcher(PatternMap.getPattern(patternMap,
