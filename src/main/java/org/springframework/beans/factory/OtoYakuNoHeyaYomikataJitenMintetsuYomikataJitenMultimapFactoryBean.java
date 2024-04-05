@@ -184,38 +184,19 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s0, final String s1,
 			final String s2) {
 		//
-		Matcher m1 = null;
-		//
-		String g1, g2, cp;
-		//
 		Multimap<String, String> multimap = null;
 		//
-		if (Util.matches((m1 = Util.matcher(
-				PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)\\s（(\\p{InHiragana}+)）$"), s0)))
-				&& Util.groupCount(m1) > 1
-				&& Boolean.logicalAnd(
-						Objects.equals(getUnicodeBlocks(g1 = Util.group(m1, 1)),
-								Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
-						Objects.equals(getUnicodeBlocks(g2 = Util.group(m1, 2)),
-								Collections.singletonList(UnicodeBlock.HIRAGANA)))
-				&& (multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create)) != null) {
+		final Multimap<String, String> mm = toMultimap(patternMap, s0);
+		//
+		if (mm != null) {
 			//
-			MultimapUtil.put(multimap, g1, g2);
-			//
-		} else if (Util
-				.matches((m1 = Util.matcher(PatternMap.getPattern(patternMap,
-						"^(\\p{InHiragana}+\\p{InCJKUnifiedIdeographs}+)\\s+（([\\p{InHiragana}|\\s]+)）$"), s0)))
-				&& Util.groupCount(m1) > 1
-				&& StringUtils.startsWith(g2 = StringUtils.trim(Util.group(m1, 2)),
-						cp = StringUtils.getCommonPrefix(g1 = Util.group(m1, 1), g2))
-				&& (multimap = ObjectUtils.getIfNull(multimap, ArrayListMultimap::create)) != null) {
-			//
-			MultimapUtil.put(multimap, StringUtils.substring(g1, StringUtils.length(cp)),
-					StringUtils.substring(g2, StringUtils.length(cp)));
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), mm);
 			//
 		} // if
 			//
-		Matcher m2 = null;
+		Matcher m1, m2 = null;
+		//
+		String g1, g2, cp;
 		//
 		String[] ss = null;
 		//
@@ -331,6 +312,41 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 				&& (ss = StringUtils.split(s2, ' ')) != null && ss.length > 0) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), s1, ss[0]);
+			//
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s) {
+		//
+		Matcher m1 = null;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		String g1, g2, cp;
+		//
+		if (Util.matches((m1 = Util.matcher(
+				PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)\\s（(\\p{InHiragana}+)）$"), s)))
+				&& Util.groupCount(m1) > 1
+				&& Boolean.logicalAnd(
+						Objects.equals(getUnicodeBlocks(g1 = Util.group(m1, 1)),
+								Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
+						Objects.equals(getUnicodeBlocks(g2 = Util.group(m1, 2)),
+								Collections.singletonList(UnicodeBlock.HIRAGANA)))) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), g1, g2);
+			//
+		} else if (Util
+				.matches((m1 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InHiragana}+\\p{InCJKUnifiedIdeographs}+)\\s+（([\\p{InHiragana}|\\s]+)）$"), s)))
+				&& Util.groupCount(m1) > 1 && StringUtils.startsWith(g2 = StringUtils.trim(Util.group(m1, 2)),
+						cp = StringUtils.getCommonPrefix(g1 = Util.group(m1, 1), g2))) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, ArrayListMultimap::create),
+					StringUtils.substring(g1, StringUtils.length(cp)),
+					StringUtils.substring(g2, StringUtils.length(cp)));
 			//
 		} // if
 			//
