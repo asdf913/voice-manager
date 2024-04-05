@@ -166,12 +166,9 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 			//
 			s1 = IterableUtils.get(strings, 1);
 			//
-			if ((size = IterableUtils.size(strings)) > 2
-					&& (mm = toMultimap(s0, s1, IterableUtils.get(strings, 2), patternMap)) != null) {
-				//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), mm);
-				//
-			} else if (size > 1 && (mm = toMultimap(s0, s1, patternMap)) != null) {
+			if (((size = IterableUtils.size(strings)) > 2
+					&& (mm = toMultimap(s0, s1, IterableUtils.get(strings, 2), patternMap)) != null)
+					|| (size > 1 && (mm = toMultimap(s0, s1, patternMap)) != null)) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), mm);
 				//
