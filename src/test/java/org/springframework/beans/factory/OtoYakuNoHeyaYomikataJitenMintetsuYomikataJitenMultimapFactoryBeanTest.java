@@ -35,7 +35,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_ACCEPT,
-			METHOD_TO_MULTI_MAP_ELEMENT, METHOD_TO_MULTI_MAP_STRING2, METHOD_TO_MULTI_MAP_STRING3 = null;
+			METHOD_TO_MULTI_MAP_ELEMENT, METHOD_TO_MULTI_MAP_STRING2, METHOD_TO_MULTI_MAP_STRING3, METHOD_LENGTH,
+			METHOD_AND = null;
 
 	private static Class<?> CLASS_PATTERN_MAP, CLASS_IH = null;
 
@@ -62,6 +63,10 @@ class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TO_MULTI_MAP_STRING3 = clz.getDeclaredMethod("toMultimap", CLASS_PATTERN_MAP, String.class,
 				String.class, String.class)).setAccessible(true);
+		//
+		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
+		//
+		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName(
 				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean$IH");
@@ -361,6 +366,46 @@ class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(getPattern != null ? getPattern.invoke(null, null, null) : null);
 		//
+	}
+
+	@Test
+	void testLength() throws Throwable {
+		//
+		Assertions.assertEquals(0, length(null));
+		//
+	}
+
+	private static int length(final Object[] instance) throws Throwable {
+		try {
+			final Object obj = METHOD_LENGTH.invoke(null, (Object) instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAnd() throws Throwable {
+		//
+		Assertions.assertFalse(and(true, false));
+		//
+		Assertions.assertTrue(and(true, true, null));
+		//
+	}
+
+	private static boolean and(final boolean a, final boolean b, final boolean... bs) throws Throwable {
+		try {
+			final Object obj = METHOD_AND.invoke(null, a, b, bs);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }

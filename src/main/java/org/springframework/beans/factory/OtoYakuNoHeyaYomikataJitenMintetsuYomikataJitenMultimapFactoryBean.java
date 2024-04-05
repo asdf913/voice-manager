@@ -303,15 +303,38 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 					StringUtils.substring(s1, StringUtils.length(cp)),
 					StringUtils.substring(s2, StringUtils.length(cp)));
 			//
-		} else if (Boolean.logicalAnd(
-				Objects.equals(getUnicodeBlocks(s1), Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
-				(ss = StringUtils.split(s2, ' ')) != null) && ss.length > 0) {
+		} else if (and(Objects.equals(getUnicodeBlocks(s1), Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
+				(ss = StringUtils.split(s2, ' ')) != null, length(ss) > 0)) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), s1, ss[0]);
 			//
 		} // if
 			//
 		return multimap;
+		//
+	}
+
+	private static int length(final Object[] instance) {
+		return instance != null ? instance.length : 0;
+	}
+
+	private static boolean and(final boolean a, final boolean b, final boolean... bs) {
+		//
+		boolean result = a && b;
+		//
+		if (!result) {
+			//
+			return result;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			result &= bs[i];
+			//
+		} // for
+			//
+		return result;
 		//
 	}
 
