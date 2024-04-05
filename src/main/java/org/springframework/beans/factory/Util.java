@@ -167,7 +167,7 @@ abstract class Util {
 		}
 	}
 
-	static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) {
+	static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, final T t, final U u) {
 		if (instance != null) {
 			instance.accept(t, u);
 		}
