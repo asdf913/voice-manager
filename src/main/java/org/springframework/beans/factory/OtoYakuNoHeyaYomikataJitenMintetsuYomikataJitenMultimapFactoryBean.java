@@ -303,8 +303,9 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 					StringUtils.substring(s1, StringUtils.length(cp)),
 					StringUtils.substring(s2, StringUtils.length(cp)));
 			//
-		} else if (Objects.equals(getUnicodeBlocks(s1), Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS))
-				&& (ss = StringUtils.split(s2, ' ')) != null && ss.length > 0) {
+		} else if (Boolean.logicalAnd(
+				Objects.equals(getUnicodeBlocks(s1), Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
+				(ss = StringUtils.split(s2, ' ')) != null) && ss.length > 0) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), s1, ss[0]);
 			//
