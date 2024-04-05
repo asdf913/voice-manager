@@ -294,10 +294,11 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), s1, g1);
 			//
-		} else if (Objects.equals(getUnicodeBlocks(s1),
-				Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS))
-				&& Objects.equals(getUnicodeBlocks(s2), Collections.singletonList(UnicodeBlock.HIRAGANA))
-				&& StringUtils.startsWith(s2, cp = StringUtils.getCommonPrefix(s1, s2))) {
+		} else if (and(
+				Objects.equals(getUnicodeBlocks(s1),
+						Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
+				Objects.equals(getUnicodeBlocks(s2), Collections.singletonList(UnicodeBlock.HIRAGANA)),
+				StringUtils.startsWith(s2, cp = StringUtils.getCommonPrefix(s1, s2)))) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create),
 					StringUtils.substring(s1, StringUtils.length(cp)),
