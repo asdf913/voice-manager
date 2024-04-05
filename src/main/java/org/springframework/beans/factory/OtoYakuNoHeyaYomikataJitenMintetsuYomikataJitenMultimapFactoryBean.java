@@ -206,9 +206,9 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), s1, s2);
 			//
-		} else if (Util.matches((m1 = Util.matcher(PatternMap.getPattern(patternMap,
+		} else if (Boolean.logicalAnd(Util.matches((m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InHiragana}+)?\\p{InCJK_Symbols_And_Punctuation}+\\p{InCJKUnifiedIdeographs}+\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
-				s2))) && Util.groupCount(m1) > 2) {
+				s2))), Util.groupCount(m1) > 2)) {
 			//
 			if (Boolean.logicalAnd(
 					Objects.equals(getUnicodeBlocks(s1),
