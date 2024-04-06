@@ -518,11 +518,31 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		if (Util.matches((m1 = Util.matcher(PatternMap.getPattern(patternMap,
-				"^[\\p{InHiragana}|\\p{InKatakana}]+（(\\p{InCJKUnifiedIdeographs}+)）$"), s0)))
-				&& Util.groupCount(m1) > 0
-				&& Util.matches((m2 = Util
-						.matcher(PatternMap.getPattern(patternMap, "^[\\p{InHiragana}]+（(\\p{InHiragana}+)）$"), s1)))
+		final Multimap<String, String> mm = toMultimap2(patternMap, s0, s1);
+		//
+		if (mm != null) {
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), mm);
+			//
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap2(final PatternMap patternMap, final String s0, final String s1) {
+		//
+		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^[\\p{InHiragana}|\\p{InKatakana}]+（(\\p{InCJKUnifiedIdeographs}+)）$"), s0);
+		//
+		Matcher m2 = null;
+		//
+		String g1, g2 = null;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		if (Util.matches(m1) && Util.groupCount(m1) > 0 && Util.matches(
+				(m2 = Util.matcher(PatternMap.getPattern(patternMap, "^[\\p{InHiragana}]+（(\\p{InHiragana}+)）$"), s1)))
 				&& Util.groupCount(m2) > 0
 				&& Boolean.logicalAnd(
 						Objects.equals(getUnicodeBlocks(g1 = Util.group(m1, 1)),
