@@ -420,15 +420,13 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		Matcher m2 = null;
+		final Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap, "^（(\\p{InHiragana}+)）$"), s1);
 		//
 		String g2 = null;
 		//
 		if (Util.matches(
 				(m1 = Util.matcher(PatternMap.getPattern(patternMap, "^（(\\p{InCJKUnifiedIdeographs}+)）$"), s0)))
-				&& Util.groupCount(m1) > 0
-				&& Util.matches((m2 = Util.matcher(PatternMap.getPattern(patternMap, "^（(\\p{InHiragana}+)）$"), s1)))
-				&& Util.groupCount(m2) > 0
+				&& Util.groupCount(m1) > 0 && Util.matches(m2) && Util.groupCount(m2) > 0
 				&& Boolean.logicalAnd(
 						Objects.equals(getUnicodeBlocks(g1 = Util.group(m1, 1)),
 								Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
