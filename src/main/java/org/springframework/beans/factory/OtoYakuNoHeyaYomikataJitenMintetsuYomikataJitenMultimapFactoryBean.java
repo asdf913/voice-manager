@@ -486,19 +486,6 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 		//
 		final Multimap<String, String> mm1 = multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create);
 		//
-		if (Util.find((m1 = Util.matcher(PatternMap.getPattern(patternMap,
-				"(\\p{InHiragana}+)+\\p{InHalfWidth_And_FullWidth_Forms}(\\p{InCJKUnifiedIdeographs}+)+（(\\p{InHiragana}+)）"),
-				s1))) && Util.groupCount(m1) > 2) {
-			//
-			testAndAccept(
-					biPredicate = ObjectUtils.getIfNull(biPredicate,
-							OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean::createBiPredicate),
-					s0, m1.group(1), biConsumer = ObjectUtils.getIfNull(biConsumer, () -> createBiConsumer(mm1)));
-			//
-			testAndAccept(biPredicate, m1.group(2), m1.group(3), biConsumer);
-			//
-		} // if
-			//
 		final Multimap<String, String> mm2 = toMultimap2(patternMap, s0, s1,
 				ObjectUtils.getIfNull(biPredicate,
 						OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean::createBiPredicate),
@@ -522,8 +509,17 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 		//
 		Multimap<String, String> multimap = null;
 		//
-		if (Util.matches((m1 = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)\\s?（(\\p{InCJKUnifiedIdeographs}+)）$"), s0)))
+		if (Util.find((m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"(\\p{InHiragana}+)+\\p{InHalfWidth_And_FullWidth_Forms}(\\p{InCJKUnifiedIdeographs}+)+（(\\p{InHiragana}+)）"),
+				s1))) && Util.groupCount(m1) > 2) {
+			//
+			testAndAccept(biPredicate, s0, m1.group(1), biConsumer);
+			//
+			testAndAccept(biPredicate, m1.group(2), m1.group(3), biConsumer);
+			//
+		} else if (Util
+				.matches((m1 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)\\s?（(\\p{InCJKUnifiedIdeographs}+)）$"), s0)))
 				&& Util.groupCount(m1) > 1
 				&& Util.matches((m2 = Util.matcher(
 						PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)\\s?（(\\p{InHiragana}+)）$"), s1)))
