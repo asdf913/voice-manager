@@ -182,7 +182,7 @@ class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(toMultimap((Element) null, null, (Object) null));
 		//
-		Assertions.assertNull(toMultimap((String) null, null, null));
+		Assertions.assertEquals(ImmutableMultimap.of(), toMultimap((String) null, null, null));
 		//
 		final BiPredicate<Multimap<?, ?>, Multimap<?, ?>> biPredicate = (a, b) -> CollectionUtils
 				.isEqualCollection(MultimapUtil.entries(a), MultimapUtil.entries(b));
