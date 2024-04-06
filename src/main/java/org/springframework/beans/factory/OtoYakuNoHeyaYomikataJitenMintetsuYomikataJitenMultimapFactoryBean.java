@@ -530,6 +530,7 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap2(final PatternMap patternMap, final String s0, final String s1) {
 		//
 		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
