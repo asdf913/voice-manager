@@ -93,6 +93,10 @@ class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 					//
 					return null;
 					//
+				} else if (Objects.equals(methodName, "getDescription")) {
+					//
+					return null;
+					//
 				} // if
 					//
 			} // if
@@ -167,6 +171,26 @@ class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 		} // if
 			//
 		FieldUtils.writeDeclaredField(instance, "text", null, true);
+		//
+		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setDescription(null);
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setLinks(Collections.nCopies(2, link));
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
+		//
+		FieldUtils.writeDeclaredField(instance, "description", null, true);
 		//
 		Assertions.assertNull(getObject(instance));
 		//
