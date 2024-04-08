@@ -463,6 +463,20 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!--https://mvnrepository.com/artifact/com.github.tomxiong/spell-check-maven-plugin-->
+			<plugin>
+				<groupId>com.github.tomxiong</groupId>
+				<artifactId>spell-check-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 	<!---->
