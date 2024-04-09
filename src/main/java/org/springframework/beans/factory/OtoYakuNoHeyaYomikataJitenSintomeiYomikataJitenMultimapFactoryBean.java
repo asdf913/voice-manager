@@ -93,9 +93,9 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 		//
 		int offset = 0;
 		//
-		Pattern p1 = null, p2 = null;
+		Pattern p1 = null, p2 = null, p3 = null;
 		//
-		Matcher m1, m2;
+		Matcher m1, m2, m3;
 		//
 		String s1, s, s2;
 		//
@@ -135,6 +135,20 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 					//
 				} // if
 					//
+			} // if
+				//
+			if (Util.matches(
+					m3 = Util
+							.matcher(
+									p3 = ObjectUtils.getIfNull(p3,
+											() -> Pattern
+													.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）")),
+									ElementUtil.text(IterableUtils.get(children, 3 + offset))))
+					&& Util.groupCount(m3) > 1) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m3, 1), Util.group(m3, 2));
+				//
 			} // if
 				//
 			if (rowspan != null) {
