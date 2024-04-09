@@ -117,7 +117,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static boolean hasAttr(final Node instance, final String attributeKey) {
+	private static boolean hasAttr(@Nullable final Node instance, final String attributeKey) {
 		return instance != null && instance.hasAttr(attributeKey);
 	}
 
