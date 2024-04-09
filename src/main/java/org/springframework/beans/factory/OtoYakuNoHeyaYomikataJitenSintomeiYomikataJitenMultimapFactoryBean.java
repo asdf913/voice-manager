@@ -267,7 +267,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static Integer decrease(final Integer instance, final int i) {
+	private static Integer decrease(@Nullable final Integer instance, final int i) {
 		return Integer.valueOf(intValue(instance, 0) - i);
 	}
 
