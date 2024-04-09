@@ -91,6 +91,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 
 		Pattern getPattern(final String pattern);
 
+		@Nullable
 		private static Pattern getPattern(@Nullable final PatternMap instance, final String pattern) {
 			return instance != null ? instance.getPattern(pattern) : null;
 		}
@@ -221,6 +222,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final List<Element> children,
 			final int offset) {
 		//
