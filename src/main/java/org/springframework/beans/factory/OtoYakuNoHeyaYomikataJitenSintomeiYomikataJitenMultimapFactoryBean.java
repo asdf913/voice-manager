@@ -222,7 +222,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static int childNodeSize(final Node instance) {
+	private static int childNodeSize(@Nullable final Node instance) {
 		return instance != null ? instance.childNodeSize() : 0;
 	}
 
