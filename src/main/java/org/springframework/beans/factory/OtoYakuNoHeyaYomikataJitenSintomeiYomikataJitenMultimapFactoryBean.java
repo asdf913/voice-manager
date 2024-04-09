@@ -113,7 +113,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 					p1 = ObjectUtils.getIfNull(p1,
 							() -> Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)?$")),
 					ElementUtil.text(IterableUtils.get(children,
-							0 + (offset = rowspan == null || hasAttrRowspan || intValue(rowspan, 0) <= 0 ? 1 : 0)))))
+							0 + (offset = iif(rowspan == null || hasAttrRowspan || intValue(rowspan, 0) <= 0, 1, 0))))))
 					&& Util.groupCount(m1) > 0
 					&& Util.matches(m2 = Util.matcher(
 							p2 = ObjectUtils.getIfNull(p2, () -> Pattern.compile("^\\p{InHiragana}+$")),
@@ -160,6 +160,10 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 			//
 		return multimap;
 		//
+	}
+
+	private static int iif(final boolean condition, final int trueValue, final int falseValue) {
+		return condition ? trueValue : falseValue;
 	}
 
 	private static int intValue(@Nullable final Number instance, final int defaultValue) {

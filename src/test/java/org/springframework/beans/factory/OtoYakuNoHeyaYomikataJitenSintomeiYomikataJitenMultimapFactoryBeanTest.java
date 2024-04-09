@@ -24,9 +24,11 @@ import com.google.common.reflect.Reflection;
 
 class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_INT_VALUE, METHOD_VALUE_OF, METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_INT_VALUE, METHOD_VALUE_OF, METHOD_TEST_AND_APPLY, METHOD_IIF = null;
 
 	private static final int ZERO = 0;
+
+	private static final int ONE = 1;
 
 	@BeforeAll
 	static void beforeClass() throws ReflectiveOperationException {
@@ -39,6 +41,8 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
+		//
+		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -155,11 +159,9 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testIntValue() throws Throwable {
 		//
-		final int one = 1;
+		Assertions.assertEquals(ONE, intValue(null, ONE));
 		//
-		Assertions.assertEquals(one, intValue(null, one));
-		//
-		Assertions.assertEquals(ZERO, intValue(Integer.valueOf(ZERO), one));
+		Assertions.assertEquals(ZERO, intValue(Integer.valueOf(ZERO), ONE));
 		//
 	}
 
@@ -216,6 +218,27 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIif() throws Throwable {
+		//
+		Assertions.assertEquals(ZERO, iif(true, ZERO, ONE));
+		//
+		Assertions.assertEquals(ONE, iif(false, ZERO, ONE));
+		//
+	}
+
+	private static int iif(final boolean condition, final int trueValue, final int falseValue) throws Throwable {
+		try {
+			final Object obj = METHOD_IIF.invoke(null, condition, trueValue, falseValue);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
