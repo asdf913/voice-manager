@@ -1,11 +1,13 @@
 package org.springframework.beans.factory;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
 
@@ -14,11 +16,15 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
+import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
@@ -32,12 +38,46 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 
 	private String url = null;
 
+	private Iterable<Link> links = null;
+
+	private IValue0<String> text = null;
+
 	public void setUrl(final String url) {
 		this.url = url;
 	}
 
+	public void setLinks(final Iterable<Link> links) {
+		this.links = links;
+	}
+
+	public void setText(final String text) {
+		this.text = Unit.with(text);
+	}
+
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
+		//
+		final List<Link> ls = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.spliterator(links), x -> StreamSupport.stream(x, false), null),
+				x -> text != null && x != null && Objects.equals(x.getText(), IValue0Util.getValue0(text))));
+		//
+		final int size = IterableUtils.size(ls);
+		//
+		if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} else if (size == 1) {
+			//
+			return toMultimap(Link.getUrl(IterableUtils.get(ls, 0)));
+			//
+		} // if
+			//
+		return toMultimap(url);
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final String url) throws IOException, Exception {
 		//
 		final Document document = testAndApply(Objects::nonNull,
 				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
