@@ -255,7 +255,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 				ObjectUtils.getIfNull(patternMap, () -> Reflection.newProxy(PatternMap.class, new IH())),
 				"(\\p{InCJKUnifiedIdeographs}+)\\s?（(\\p{InHiragana}+)[\\)）]"), s3);
 		//
-		Matcher m4 = null;
+		Matcher m4, m5 = null;
 		//
 		if (Util.matches(m3) && Util.groupCount(m3) > 1) {
 			//
@@ -282,6 +282,18 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 					//
 				} // if
 					//
+			} // while
+				//
+		} else if ((m5 = Util.matcher(PatternMap.getPattern(
+				ObjectUtils.getIfNull(patternMap, () -> Reflection.newProxy(PatternMap.class, new IH())),
+				"（[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+）(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)[)）]"),
+				s3)) != null) {
+			//
+			while (Util.find(m5) && Util.groupCount(m5) > 1) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m5, 1), Util.group(m5, 2));
+				//
 			} // while
 				//
 		} // if

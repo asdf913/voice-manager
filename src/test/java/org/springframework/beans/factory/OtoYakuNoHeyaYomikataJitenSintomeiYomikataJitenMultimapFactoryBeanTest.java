@@ -433,10 +433,6 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		}
 	}
 
-	// 御殿場市駒門（ごてんばしこまかど）/東名へ
-
-	// 沼津市根古屋（ぬまづしねごや)
-
 	@Test
 	void testToMultimap2() throws Throwable {
 		//
@@ -464,6 +460,12 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		Assertions.assertTrue(
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("沼津市根古屋", "ぬまづしねごや")),
 						MultimapUtil.entries(toMultimap2(null, Arrays.asList(null, null, null, e), 0))));
+		//
+		mh1.text = "（上り）静岡市葵区小瀬戸（しずおかしあおいくこぜと） （下り）静岡市葵区飯間（しずおかしあおいくはんま)";
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				MultimapUtil.entries(ImmutableMultimap.of("静岡市葵区小瀬戸", "しずおかしあおいくこぜと", "静岡市葵区飯間", "しずおかしあおいくはんま")),
+				MultimapUtil.entries(toMultimap2(null, Arrays.asList(null, null, null, e), 0))));
 		//
 	}
 
