@@ -121,7 +121,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 		return instance != null && instance.hasAttr(attributeKey);
 	}
 
-	private static int intValue(final Number instance, final int defaultValue) {
+	private static int intValue(@Nullable final Number instance, final int defaultValue) {
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
