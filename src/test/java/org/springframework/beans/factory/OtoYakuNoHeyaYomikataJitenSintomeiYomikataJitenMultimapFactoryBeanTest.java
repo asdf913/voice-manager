@@ -24,10 +24,14 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 import com.google.common.reflect.Reflection;
 
+import io.github.toolfactory.narcissus.Narcissus;
+
 class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_VALUE_OF, METHOD_TEST_AND_APPLY, METHOD_IIF, METHOD_DECREASE,
 			METHOD_GET_UNICODE_BLOCKS = null;
+
+	private static Class<?> CLASS_PATTERN_MAP, CLASS_IH = null;
 
 	private static final int ZERO = 0;
 
@@ -48,6 +52,12 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		(METHOD_DECREASE = clz.getDeclaredMethod("decrease", Integer.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_UNICODE_BLOCKS = clz.getDeclaredMethod("getUnicodeBlocks", String.class)).setAccessible(true);
+		//
+		CLASS_PATTERN_MAP = Class.forName(
+				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean$PatternMap");
+		//
+		CLASS_IH = Class.forName(
+				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean$IH");
 		//
 	}
 
@@ -272,6 +282,64 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testPatternMap() throws Throwable {
+		//
+		final Method getPattern = CLASS_PATTERN_MAP != null
+				? CLASS_PATTERN_MAP.getDeclaredMethod("getPattern", CLASS_PATTERN_MAP, String.class)
+				: null;
+		//
+		if (getPattern != null) {
+			//
+			getPattern.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(getPattern != null
+				? getPattern.invoke(null,
+						Reflection.newProxy(CLASS_PATTERN_MAP,
+								Util.cast(InvocationHandler.class, Narcissus.allocateInstance(CLASS_IH))),
+						null)
+				: null);
+		//
+		Assertions.assertNull(getPattern != null ? getPattern.invoke(null, null, null) : null);
+		//
+	}
+
+	@Test
+	void testIH() throws Throwable {
+		//
+		final InvocationHandler ih = Util.cast(InvocationHandler.class, Narcissus.allocateInstance(CLASS_IH));
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, null, null, null));
+		//
+		final Object patternMap = Reflection.newProxy(CLASS_PATTERN_MAP, ih);
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, patternMap, null, null));
+		//
+		final Method getPattern = CLASS_PATTERN_MAP != null
+				? CLASS_PATTERN_MAP.getDeclaredMethod("getPattern", String.class)
+				: null;
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, patternMap, getPattern, null));
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, patternMap, getPattern, new Object[] {}));
+		//
+		Assertions.assertNull(invoke(ih, patternMap, getPattern, new Object[] { null }));
+		//
+		final Object o1 = invoke(ih, patternMap, getPattern, new Object[] { "" });
+		//
+		Assertions.assertNotNull(o1);
+		//
+		Assertions.assertSame(o1, invoke(ih, patternMap, getPattern, new Object[] { "" }));
+		//
+	}
+
+	private static Object invoke(final InvocationHandler instance, final Object proxy, final Method method,
+			final Object[] args) throws Throwable {
+		return instance != null ? instance.invoke(proxy, method, args) : null;
 	}
 
 }
