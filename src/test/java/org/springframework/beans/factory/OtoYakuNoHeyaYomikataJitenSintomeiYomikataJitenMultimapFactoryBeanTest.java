@@ -1,10 +1,12 @@
 package org.springframework.beans.factory;
 
 import java.io.File;
+import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.function.Predicate;
@@ -24,7 +26,8 @@ import com.google.common.reflect.Reflection;
 
 class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_INT_VALUE, METHOD_VALUE_OF, METHOD_TEST_AND_APPLY, METHOD_IIF = null;
+	private static Method METHOD_VALUE_OF, METHOD_TEST_AND_APPLY, METHOD_IIF, METHOD_DECREASE,
+			METHOD_GET_UNICODE_BLOCKS = null;
 
 	private static final int ZERO = 0;
 
@@ -35,14 +38,16 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		final Class<?> clz = OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean.class;
 		//
-		(METHOD_INT_VALUE = clz.getDeclaredMethod("intValue", Number.class, Integer.TYPE)).setAccessible(true);
-		//
 		(METHOD_VALUE_OF = clz.getDeclaredMethod("valueOf", String.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Integer.TYPE, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_DECREASE = clz.getDeclaredMethod("decrease", Integer.class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_GET_UNICODE_BLOCKS = clz.getDeclaredMethod("getUnicodeBlocks", String.class)).setAccessible(true);
 		//
 	}
 
@@ -157,27 +162,6 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 	}
 
 	@Test
-	void testIntValue() throws Throwable {
-		//
-		Assertions.assertEquals(ONE, intValue(null, ONE));
-		//
-		Assertions.assertEquals(ZERO, intValue(Integer.valueOf(ZERO), ONE));
-		//
-	}
-
-	private static int intValue(final Number instance, final int defaultValue) throws Throwable {
-		try {
-			final Object obj = METHOD_INT_VALUE.invoke(null, instance, defaultValue);
-			if (obj instanceof Number) {
-				return ((Number) obj).intValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testValueOf() throws Throwable {
 		//
 		Assertions.assertNull(valueOf(null));
@@ -237,6 +221,52 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 			final Object obj = METHOD_IIF.invoke(null, condition, trueValue, falseValue);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testDecrease() throws Throwable {
+		//
+		Assertions.assertEquals(ZERO, decrease(null, ZERO));
+		//
+		Assertions.assertEquals(ZERO, decrease(Integer.valueOf(ONE), ONE));
+		//
+	}
+
+	private static Integer decrease(final Integer instance, final int i) throws Throwable {
+		try {
+			final Object obj = METHOD_DECREASE.invoke(null, instance, i);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Integer) {
+				return (Integer) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetUnicodeBlocks() throws Throwable {
+		//
+		Assertions.assertNull(getUnicodeBlocks(null));
+		//
+		Assertions.assertEquals(Collections.singletonList(UnicodeBlock.BASIC_LATIN), getUnicodeBlocks("AA"));
+		//
+	}
+
+	private static List<UnicodeBlock> getUnicodeBlocks(final String string) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_UNICODE_BLOCKS.invoke(null, string);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

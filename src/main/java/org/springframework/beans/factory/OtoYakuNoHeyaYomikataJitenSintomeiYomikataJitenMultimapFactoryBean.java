@@ -178,16 +178,16 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 					//
 			} // if
 				//
-			if (rowspan != null) {
-				//
-				rowspan = Integer.valueOf(rowspan.intValue() - 1);
-				//
-			} // if
-				//
+			rowspan = decrease(rowspan, 1);
+			//
 		} // for
 			//
 		return multimap;
 		//
+	}
+
+	private static Integer decrease(final Integer instance, final int i) {
+		return Integer.valueOf(intValue(instance, 0) - i);
 	}
 
 	@Nullable
