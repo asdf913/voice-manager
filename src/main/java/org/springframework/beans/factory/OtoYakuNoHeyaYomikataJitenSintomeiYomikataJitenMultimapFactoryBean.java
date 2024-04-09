@@ -62,7 +62,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 		//
 		Multimap<String, String> multimap = null;
 		//
-		for (int i = 0; es != null && i < es.size(); i++) {
+		for (int i = 0; i < IterableUtils.size(es); i++) {
 			//
 			if (hasAttrRowspan = hasAttr(
 					IterableUtils.get(children = ElementUtil.children(IterableUtils.get(es, i)), 0), "rowspan")) {
