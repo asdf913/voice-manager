@@ -85,7 +85,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 							0 + (offset = rowspan == null || hasAttrRowspan || intValue(rowspan, 0) <= 0 ? 1 : 0)))))
 					&& Util.groupCount(m1) > 0
 					&& Util.matches(m2 = Util.matcher(
-							p2 = ObjectUtils.getIfNull(p2, () -> Pattern.compile("^\\p{InHiragana}+?$")),
+							p2 = ObjectUtils.getIfNull(p2, () -> Pattern.compile("^\\p{InHiragana}+$")),
 							ElementUtil.text(IterableUtils.get(children, 2 + offset))))) {
 				//
 				s1 = Util.group(m1, 1);
