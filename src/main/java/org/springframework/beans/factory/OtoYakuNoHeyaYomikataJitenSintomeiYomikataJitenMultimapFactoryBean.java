@@ -153,12 +153,6 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 		//
 		int offset = 0;
 		//
-		Matcher m3, m4;
-		//
-		String s3, s41;
-		//
-		Element e3;
-		//
 		Multimap<String, String> multimap = null, temp;
 		//
 		PatternMap patternMap = null;
@@ -182,36 +176,10 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
-			if (Util.matches(m3 = Util.matcher(
-					PatternMap.getPattern(
-							patternMap = ObjectUtils.getIfNull(patternMap,
-									() -> Reflection.newProxy(PatternMap.class, new IH())),
-							"(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)[\\)）]"),
-					s3 = ElementUtil.text(e3 = IterableUtils.get(children, 3 + offset)))) && Util.groupCount(m3) > 1) {
+			if ((temp = toMultimap2(patternMap, children, offset)) != null) {
 				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(m3, 1), Util.group(m3, 2));
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), temp);
 				//
-			} else if (childNodeSize(e3) == 1 && IterableUtils.get(NodeUtil.childNodes(e3), 0) instanceof TextNode
-					&& (m4 = Util.matcher(
-							PatternMap.getPattern(
-									patternMap = ObjectUtils.getIfNull(patternMap,
-											() -> Reflection.newProxy(PatternMap.class, new IH())),
-									"([\\p{InCJKUnifiedIdeographs}|\\p{InKatakana}]+)（(\\p{InHiragana}+)[\\)）]"),
-							s3)) != null) {
-				//
-				while (Util.find(m4) && Util.groupCount(m4) > 1) {
-					//
-					if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-							getUnicodeBlocks(s41 = Util.group(m4, 1)))) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s41,
-								Util.group(m4, 2));
-						//
-					} // if
-						//
-				} // while
-					//
 			} // if
 				//
 			rowspan = decrease(rowspan, 1);
@@ -266,6 +234,56 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s2);
 				//
 			} // if
+				//
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap2(final PatternMap patternMap, final List<Element> children,
+			final int offset) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		final Element e3 = testAndApply(x -> IterableUtils.size(x) > 3 + offset, children,
+				x -> IterableUtils.get(x, 3 + offset), null);
+		//
+		final String s3 = ElementUtil.text(e3);
+		//
+		final Matcher m3 = Util.matcher(PatternMap.getPattern(
+				ObjectUtils.getIfNull(patternMap, () -> Reflection.newProxy(PatternMap.class, new IH())),
+				"(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)[\\)）]"), s3);
+		//
+		Matcher m4 = null;
+		//
+		if (Util.matches(m3) && Util.groupCount(m3) > 1) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m3, 1),
+					Util.group(m3, 2));
+			//
+		} else if (childNodeSize(e3) == 1 
+				&& IterableUtils.get(NodeUtil.childNodes(e3), 0) instanceof TextNode
+				&& (m4 = Util.matcher(
+						PatternMap.getPattern(
+								ObjectUtils.getIfNull(patternMap,
+										() -> Reflection.newProxy(PatternMap.class, new IH())),
+								"([\\p{InCJKUnifiedIdeographs}|\\p{InKatakana}]+)（(\\p{InHiragana}+)[\\)）]"),
+						s3)) != null) {
+			//
+			String s41 = null;
+			//
+			while (Util.find(m4) && Util.groupCount(m4) > 1) {
+				//
+				if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+						getUnicodeBlocks(s41 = Util.group(m4, 1)))) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s41,
+							Util.group(m4, 2));
+					//
+				} // if
+					//
+			} // while
 				//
 		} // if
 			//

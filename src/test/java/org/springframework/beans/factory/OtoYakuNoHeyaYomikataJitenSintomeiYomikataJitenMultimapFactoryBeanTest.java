@@ -14,6 +14,7 @@ import java.util.Properties;
 import java.util.function.Predicate;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.jsoup.nodes.Element;
@@ -38,7 +39,7 @@ import javassist.util.proxy.ProxyObject;
 class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_VALUE_OF, METHOD_TEST_AND_APPLY, METHOD_IIF, METHOD_DECREASE,
-			METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP, METHOD_CHILD_NODE_SIZE = null;
+			METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP, METHOD_TO_MULTI_MAP2, METHOD_CHILD_NODE_SIZE = null;
 
 	private static Class<?> CLASS_PATTERN_MAP, CLASS_IH = null;
 
@@ -65,6 +66,9 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", CLASS_PATTERN_MAP = Class.forName(
 				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean$PatternMap"),
 				List.class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP2 = clz.getDeclaredMethod("toMultimap2", CLASS_PATTERN_MAP, List.class, Integer.TYPE))
+				.setAccessible(true);
 		//
 		(METHOD_CHILD_NODE_SIZE = clz.getDeclaredMethod("childNodeSize", Node.class)).setAccessible(true);
 		//
@@ -104,7 +108,7 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 
 		private String text = null;
 
-		private Integer childNodeSize = null;
+		private List<Node> childNodes = null;
 
 		@Override
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
@@ -116,9 +120,14 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 				//
 				if (Objects.equals(methodName, "childNodeSize")) {
 					//
-					return childNodeSize;
+					return IterableUtils.size(childNodes);
+					//
+				} else if (Objects.equals(methodName, "childNodes")) {
+					//
+					return childNodes;
 					//
 				} // if
+					//
 					//
 			} // if
 				//
@@ -424,6 +433,55 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		}
 	}
 
+	// 御殿場市駒門（ごてんばしこまかど）/東名へ
+
+	// 沼津市根古屋（ぬまづしねごや)
+
+	@Test
+	void testToMultimap2() throws Throwable {
+		//
+		Assertions.assertNull(toMultimap2(null, null, 0));
+		//
+		final MH mh1 = new MH();
+		//
+		final FailableFunction<Class<?>, Element, Throwable> function = x -> {
+			final Constructor<?> c = x != null ? x.getDeclaredConstructor(String.class) : null;
+			//
+			if (c != null) {
+				//
+				c.setAccessible(true);
+				//
+			} // if
+				//
+			return Util.cast(Element.class, c != null ? c.newInstance("A") : null);
+			//
+		};
+		//
+		final Element e = createProxy(Element.class, mh1, function);
+		//
+		mh1.text = "沼津市根古屋（ぬまづしねごや)";
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("沼津市根古屋", "ぬまづしねごや")),
+						MultimapUtil.entries(toMultimap2(null, Arrays.asList(null, null, null, e), 0))));
+		//
+	}
+
+	private static Multimap<String, String> toMultimap2(final Object patternMap, final List<Element> children,
+			final int offset) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP2.invoke(null, patternMap, children, offset);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 	@Test
 	void testchildNodeSize() throws Throwable {
 		//
@@ -431,7 +489,7 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		final MH mh = new MH();
 		//
-		mh.childNodeSize = Integer.valueOf(ONE);
+		mh.childNodes = Collections.nCopies(ONE, null);
 		//
 		Assertions.assertEquals(ONE, childNodeSize(createProxy(Node.class, mh, null)));
 		//
