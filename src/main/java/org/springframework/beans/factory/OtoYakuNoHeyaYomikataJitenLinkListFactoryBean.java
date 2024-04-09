@@ -669,7 +669,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkListFactoryBean implements
 			} // if
 				//
 			if ((childrenSize = ElementUtil.childrenSize(e)) > 0
-					&& (hasAttrRowSpan = hasAttr(child = ElementUtil.child(e, 0), "rowspan"))) {
+					&& (hasAttrRowSpan = NodeUtil.hasAttr(child = ElementUtil.child(e, 0), "rowspan"))) {
 				//
 				category = ElementUtil.text(child);
 				//
@@ -710,10 +710,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkListFactoryBean implements
 
 	private static int iif(final boolean condition, final int trueValue, final int falseValue) {
 		return condition ? trueValue : falseValue;
-	}
-
-	private static boolean hasAttr(@Nullable final Element instance, @Nullable final String attributeKey) {
-		return instance != null && attributeKey != null && instance.hasAttr(attributeKey);
 	}
 
 	@Nullable

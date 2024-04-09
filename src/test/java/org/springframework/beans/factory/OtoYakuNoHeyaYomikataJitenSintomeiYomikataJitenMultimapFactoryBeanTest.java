@@ -1,16 +1,13 @@
 package org.springframework.beans.factory;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.function.Predicate;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.function.FailableFunction;
-import org.jsoup.nodes.Node;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,13 +17,9 @@ import org.meeuw.functional.Predicates;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
-import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
-
 class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_HAS_ATTR, METHOD_INT_VALUE, METHOD_VALUE_OF, METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_INT_VALUE, METHOD_VALUE_OF, METHOD_TEST_AND_APPLY = null;
 
 	private static final int ZERO = 0;
 
@@ -35,8 +28,6 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		final Class<?> clz = OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean.class;
 		//
-		(METHOD_HAS_ATTR = clz.getDeclaredMethod("hasAttr", Node.class, String.class)).setAccessible(true);
-		//
 		(METHOD_INT_VALUE = clz.getDeclaredMethod("intValue", Number.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_VALUE_OF = clz.getDeclaredMethod("valueOf", String.class)).setAccessible(true);
@@ -44,32 +35,6 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
-	}
-
-	private static class MH implements MethodHandler {
-
-		private Boolean hasAttr;
-
-		@Override
-		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
-				throws Throwable {
-			//
-			final String methodName = Util.getName(thisMethod);
-			//
-			if (self instanceof Node) {
-				//
-				if (Objects.equals(methodName, "hasAttr")) {
-					//
-					return hasAttr;
-					//
-				} // if
-					//
-			} // if
-				//
-			throw new Throwable(methodName);
-			//
-		}
-
 	}
 
 	private OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean instance = null;
@@ -117,55 +82,6 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 
 	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
 		return instance != null ? instance.getObject() : null;
-	}
-
-	@Test
-	void testHasAttr() throws Throwable {
-		//
-		Assertions.assertFalse(hasAttr(null, null));
-		//
-		final MH mh = new MH();
-		//
-		final Node node = createProxy(Node.class, mh);
-		//
-		Assertions.assertEquals(mh.hasAttr = Boolean.FALSE, Boolean.valueOf(hasAttr(node, null)));
-		//
-		Assertions.assertEquals(mh.hasAttr = Boolean.TRUE, Boolean.valueOf(hasAttr(node, null)));
-		//
-	}
-
-	private static <T> T createProxy(final Class<T> superClass, final MethodHandler mh) throws Throwable {
-		//
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(superClass);
-		//
-		final Class<?> clz = proxyFactory.createClass();
-		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
-		//
-		final Object instance = constructor != null ? constructor.newInstance() : null;
-		//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
-		return (T) Util.cast(clz, instance);
-		//
-	}
-
-	private static boolean hasAttr(final Node instance, final String attributeKey) throws Throwable {
-		try {
-			final Object obj = METHOD_HAS_ATTR.invoke(null, instance, attributeKey);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test

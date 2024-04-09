@@ -18,7 +18,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
-import org.jsoup.nodes.Node;
 import org.jsoup.nodes.NodeUtil;
 
 import com.google.common.collect.LinkedHashMultimap;
@@ -64,7 +63,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 		//
 		for (int i = 0; i < IterableUtils.size(es); i++) {
 			//
-			if (hasAttrRowspan = hasAttr(
+			if (hasAttrRowspan = NodeUtil.hasAttr(
 					IterableUtils.get(children = ElementUtil.children(IterableUtils.get(es, i)), 0), "rowspan")) {
 				//
 				rowspan = valueOf(NodeUtil.attr(IterableUtils.get(children, 0), "rowspan"));
@@ -108,10 +107,6 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 			//
 		return multimap;
 		//
-	}
-
-	private static boolean hasAttr(@Nullable final Node instance, final String attributeKey) {
-		return instance != null && instance.hasAttr(attributeKey);
 	}
 
 	private static int intValue(@Nullable final Number instance, final int defaultValue) {

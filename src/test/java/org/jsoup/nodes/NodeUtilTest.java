@@ -48,6 +48,8 @@ class NodeUtilTest {
 
 		private Integer childNodeSize = null;
 
+		private Boolean hasAttr;
+
 		@Override
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
@@ -63,6 +65,10 @@ class NodeUtilTest {
 				} else if (Objects.equals(methodName, "childNodeSize")) {
 					//
 					return childNodeSize;
+					//
+				} else if (Objects.equals(methodName, "hasAttr")) {
+					//
+					return hasAttr;
 					//
 				} else if (IterableUtils.contains(Arrays.asList("attr", "traverse", "nextSibling"), methodName)) {
 					//
@@ -280,6 +286,45 @@ class NodeUtilTest {
 		} // if
 			//
 		Assertions.assertSame(node, NodeUtil.traverse(node, Reflection.newProxy(NodeVisitor.class, ih)));
+		//
+	}
+
+	@Test
+	void testHasAttr() throws Throwable {
+		//
+		Assertions.assertFalse(NodeUtil.hasAttr(null, null));
+		//
+		if (mh != null) {
+			//
+			final Node node = createProxy(Node.class, mh);
+			//
+			Assertions.assertEquals(mh.hasAttr = Boolean.FALSE, Boolean.valueOf(NodeUtil.hasAttr(node, null)));
+			//
+			Assertions.assertEquals(mh.hasAttr = Boolean.TRUE, Boolean.valueOf(NodeUtil.hasAttr(node, null)));
+			//
+		} // if
+			//
+	}
+
+	private static <T> T createProxy(final Class<T> superClass, final MethodHandler mh) throws Throwable {
+		//
+		final ProxyFactory proxyFactory = new ProxyFactory();
+		//
+		proxyFactory.setSuperclass(superClass);
+		//
+		final Class<?> clz = proxyFactory.createClass();
+		//
+		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+		//
+		final Object instance = constructor != null ? constructor.newInstance() : null;
+		//
+		if (instance instanceof ProxyObject) {
+			//
+			((ProxyObject) instance).setHandler(mh);
+			//
+		} // if
+			//
+		return (T) cast(clz, instance);
 		//
 	}
 

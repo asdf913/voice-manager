@@ -66,9 +66,8 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 	private static Class<?> CLASS_IH = null;
 
 	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_TRIM, METHOD_TEST_AND_APPLY, METHOD_APPLY,
-			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS, METHOD_HAS_ATTR, METHOD_IIF, METHOD_GET_IMG,
-			METHOD_FOR_EACH, METHOD_TO_MAP, METHOD_FORMAT_CELL_VALUE, METHOD_TO_INT_STRING_MAP, METHOD_TO_LINK,
-			METHOD_GET_FIELDS = null;
+			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS, METHOD_IIF, METHOD_GET_IMG, METHOD_FOR_EACH,
+			METHOD_TO_MAP, METHOD_FORMAT_CELL_VALUE, METHOD_TO_INT_STRING_MAP, METHOD_TO_LINK, METHOD_GET_FIELDS = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -97,8 +96,6 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 				Class.forName(
 						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean$ObjectMap"),
 				String.class)).setAccessible(true);
-		//
-		(METHOD_HAS_ATTR = clz.getDeclaredMethod("hasAttr", Element.class, String.class)).setAccessible(true);
 		//
 		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
@@ -661,37 +658,6 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 			METHOD_ADD_LINKS.invoke(null, links, a1, as2, e, objectMap, imgSrc);
 		} catch (final InvocationTargetException ex) {
 			throw ex.getTargetException();
-		}
-	}
-
-	@Test
-	void testHasAttr() throws Throwable {
-		//
-		Assertions.assertFalse(hasAttr(null, null));
-		//
-		Assertions.assertFalse(hasAttr(element, null));
-		//
-		Assertions.assertFalse(hasAttr(element, EMPTY));
-		//
-		if (element != null) {
-			//
-			element.attributes().put(EMPTY, EMPTY);
-			//
-		} // if
-			//
-		Assertions.assertTrue(hasAttr(element, EMPTY));
-		//
-	}
-
-	private static boolean hasAttr(final Element instance, final String attributeKey) throws Throwable {
-		try {
-			final Object obj = METHOD_HAS_ATTR.invoke(null, instance, attributeKey);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
 		}
 	}
 

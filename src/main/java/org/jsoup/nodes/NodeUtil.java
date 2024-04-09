@@ -84,6 +84,10 @@ public class NodeUtil {
 		return instance != null ? instance.apply(value) : null;
 	}
 
+	public static boolean hasAttr(final Node instance, final String attributeKey) {
+		return instance != null && instance.hasAttr(attributeKey);
+	}
+
 	public static String attr(final Node instance, final String attributeKey) {
 		return instance != null && attributeKey != null ? instance.attr(attributeKey) : null;
 	}
