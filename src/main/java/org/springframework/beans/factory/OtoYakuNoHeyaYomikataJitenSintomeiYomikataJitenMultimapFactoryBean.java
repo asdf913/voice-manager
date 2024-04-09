@@ -1,8 +1,13 @@
 package org.springframework.beans.factory;
 
+import java.lang.Character.UnicodeBlock;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,6 +28,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
+import org.jsoup.nodes.TextNode;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
 
 import com.google.common.collect.LinkedHashMultimap;
@@ -92,11 +98,13 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 		//
 		int offset = 0;
 		//
-		Pattern p1 = null, p2 = null, p3 = null;
+		Pattern p1 = null, p2 = null, p3 = null, p4 = null;
 		//
-		Matcher m1, m2, m3;
+		Matcher m1, m2, m3, m4;
 		//
-		String s1, s, s2;
+		String s1, s, s2, s3, s41;
+		//
+		Element e3;
 		//
 		Multimap<String, String> multimap = null;
 		//
@@ -141,14 +149,33 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 					m3 = Util
 							.matcher(
 									p3 = ObjectUtils.getIfNull(p3,
-											() -> Pattern
-													.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）")),
-									ElementUtil.text(IterableUtils.get(children, 3 + offset))))
+											() -> Pattern.compile(
+													"(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)[\\)）]")),
+									s3 = ElementUtil.text(e3 = IterableUtils.get(children, 3 + offset))))
 					&& Util.groupCount(m3) > 1) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(m3, 1), Util.group(m3, 2));
 				//
+			} else if (e3 != null && e3.childNodeSize() == 1
+					&& IterableUtils.get(NodeUtil.childNodes(e3), 0) instanceof TextNode
+					&& (m4 = Util.matcher(
+							p4 = ObjectUtils.getIfNull(p4, () -> Pattern.compile(
+									"([\\p{InCJKUnifiedIdeographs}|\\p{InKatakana}]+)（(\\p{InHiragana}+)[\\)）]")),
+							s3)) != null) {
+				//
+				while (Util.find(m4) && Util.groupCount(m4) > 1) {
+					//
+					if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+							getUnicodeBlocks(s41 = Util.group(m4, 1)))) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s41,
+								Util.group(m4, 2));
+						//
+					} // if
+						//
+				} // while
+					//
 			} // if
 				//
 			if (rowspan != null) {
@@ -161,6 +188,37 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 			//
 		return multimap;
 		//
+	}
+
+	private static List<UnicodeBlock> getUnicodeBlocks(final String string) {
+		//
+		final char[] cs = Util.toCharArray(string);
+		//
+		if (cs != null) {
+			//
+			List<UnicodeBlock> unicodeBlocks = null;
+			//
+			for (final char c : cs) {
+				//
+				testAndAccept((a, b) -> b != null && !Util.contains(a, b),
+						unicodeBlocks = ObjectUtils.getIfNull(unicodeBlocks, ArrayList::new), UnicodeBlock.of(c),
+						Util::add);
+				//
+			} // for
+				//
+			return unicodeBlocks;
+			//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (Util.test(instance, t, u)) {
+			Util.accept(consumer, t, u);
+		} // if
 	}
 
 	private static int iif(final boolean condition, final int trueValue, final int falseValue) {
