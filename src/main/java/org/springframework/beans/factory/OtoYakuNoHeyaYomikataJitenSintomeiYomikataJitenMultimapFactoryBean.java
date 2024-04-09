@@ -46,8 +46,6 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 		//
 		final List<Element> es = ElementUtil.select(document, "table[border=\"1\"] tr");
 		//
-		Element e = null;
-		//
 		boolean hasAttrRowspan = false;
 		//
 		List<Element> children = null;
@@ -66,13 +64,8 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
-			if ((e = es.get(i)) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if (hasAttrRowspan = hasAttr(IterableUtils.get(children = e.children(), 0), "rowspan")) {
+			if (hasAttrRowspan = hasAttr(
+					IterableUtils.get(children = ElementUtil.children(IterableUtils.get(es, i)), 0), "rowspan")) {
 				//
 				rowspan = valueOf(NodeUtil.attr(IterableUtils.get(children, 0), "rowspan"));
 				//
