@@ -14,11 +14,9 @@ import java.util.Properties;
 import java.util.function.Predicate;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,7 +63,7 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", CLASS_PATTERN_MAP = Class.forName(
 				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean$PatternMap"),
-				List.class, Integer.TYPE, Boolean.TYPE)).setAccessible(true);
+				List.class, Integer.TYPE)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName(
 				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean$IH");
@@ -324,9 +322,9 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testToMultimap() throws Throwable {
 		//
-		Assertions.assertNull(toMultimap(null, null, 0, false));
+		Assertions.assertNull(toMultimap(null, null, 0));
 		//
-		Assertions.assertNull(toMultimap(null, Collections.nCopies(3, null), 0, false));
+		Assertions.assertNull(toMultimap(null, Collections.nCopies(3, null), 0));
 		//
 		final MH mh1 = new MH();
 		//
@@ -345,7 +343,7 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		final Element e1 = createProxy(Element.class, mh1, function);
 		//
-		Assertions.assertNull(toMultimap(null, Arrays.asList(e1, null, null), 0, false));
+		Assertions.assertNull(toMultimap(null, Arrays.asList(e1, null, null), 0));
 		//
 		final MH mh2 = new MH();
 		//
@@ -353,14 +351,14 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(
 				MultimapUtil.entries(ImmutableMultimap.of(mh1.text = "御殿場", mh2.text = "ごてんば")),
-				MultimapUtil.entries(toMultimap(null, Arrays.asList(e1, null, e2), 0, false))));
+				MultimapUtil.entries(toMultimap(null, Arrays.asList(e1, null, e2), 0))));
 		//
 		mh1.text = "清水いはら";
 		//
 		mh2.text = "しみずいはら";
 		//
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("清水", "しみず")),
-				MultimapUtil.entries(toMultimap(null, Arrays.asList(e1, null, e2), 0, false))));
+				MultimapUtil.entries(toMultimap(null, Arrays.asList(e1, null, e2), 0))));
 		//
 	}
 
@@ -397,9 +395,9 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 	}
 
 	private static Multimap<String, String> toMultimap(final Object patternMap, final List<Element> children,
-			final int offset, final boolean hasAttrRowspan) throws Throwable {
+			final int offset) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, patternMap, children, offset, hasAttrRowspan);
+			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, patternMap, children, offset);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {

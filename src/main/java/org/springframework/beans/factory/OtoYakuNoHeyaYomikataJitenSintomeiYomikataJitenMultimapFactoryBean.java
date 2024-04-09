@@ -173,8 +173,8 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 			if ((temp = toMultimap(
 					patternMap = ObjectUtils.getIfNull(patternMap,
 							() -> Reflection.newProxy(PatternMap.class, new IH())),
-					children, offset = iif(Util.or(rowspan == null, hasAttrRowspan, intValue(rowspan, 0) <= 0), 1, 0),
-					hasAttrRowspan)) != null) {
+					children,
+					offset = iif(Util.or(rowspan == null, hasAttrRowspan, intValue(rowspan, 0) <= 0), 1, 0))) != null) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), temp);
 				//
@@ -222,7 +222,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 	}
 
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final List<Element> children,
-			final int offset, final boolean hasAttrRowspan) {
+			final int offset) {
 		//
 		Multimap<String, String> multimap = null;
 		//
