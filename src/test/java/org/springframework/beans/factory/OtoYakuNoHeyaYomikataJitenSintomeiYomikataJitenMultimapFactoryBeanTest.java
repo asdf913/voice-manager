@@ -2,17 +2,23 @@ package org.springframework.beans.factory;
 
 import java.io.File;
 import java.lang.Character.UnicodeBlock;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.function.Predicate;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,16 +26,20 @@ import org.junit.jupiter.api.Test;
 import org.meeuw.functional.Predicates;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyObject;
 
 class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_VALUE_OF, METHOD_TEST_AND_APPLY, METHOD_IIF, METHOD_DECREASE,
-			METHOD_GET_UNICODE_BLOCKS = null;
+			METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP = null;
 
 	private static Class<?> CLASS_PATTERN_MAP, CLASS_IH = null;
 
@@ -53,8 +63,9 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_GET_UNICODE_BLOCKS = clz.getDeclaredMethod("getUnicodeBlocks", String.class)).setAccessible(true);
 		//
-		CLASS_PATTERN_MAP = Class.forName(
-				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean$PatternMap");
+		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", CLASS_PATTERN_MAP = Class.forName(
+				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean$PatternMap"),
+				List.class, Integer.TYPE, Boolean.TYPE)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName(
 				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean$IH");
@@ -77,6 +88,32 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 				} else if (Objects.equals(methodName, "getUrl")) {
 					//
 					return null;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+	}
+
+	private static class MH implements MethodHandler {
+
+		private String text = null;
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			final String methodName = Util.getName(thisMethod);
+			//
+			if (self instanceof Element) {
+				//
+				if (Objects.equals(methodName, "text")) {
+					//
+					return text;
 					//
 				} // if
 					//
@@ -277,6 +314,96 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof List) {
 				return (List) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToMultimap() throws Throwable {
+		//
+		Assertions.assertNull(toMultimap(null, null, 0, false));
+		//
+		Assertions.assertNull(toMultimap(null, Collections.nCopies(3, null), 0, false));
+		//
+		final MH mh1 = new MH();
+		//
+		final FailableFunction<Class<?>, Element, Throwable> function = x -> {
+			final Constructor<?> c = x != null ? x.getDeclaredConstructor(String.class) : null;
+			//
+			if (c != null) {
+				//
+				c.setAccessible(true);
+				//
+			} // if
+				//
+			return Util.cast(Element.class, c != null ? c.newInstance("A") : null);
+			//
+		};
+		//
+		final Element e1 = createProxy(Element.class, mh1, function);
+		//
+		Assertions.assertNull(toMultimap(null, Arrays.asList(e1, null, null), 0, false));
+		//
+		final MH mh2 = new MH();
+		//
+		final Element e2 = createProxy(Element.class, mh2, function);
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				MultimapUtil.entries(ImmutableMultimap.of(mh1.text = "御殿場", mh2.text = "ごてんば")),
+				MultimapUtil.entries(toMultimap(null, Arrays.asList(e1, null, e2), 0, false))));
+		//
+		mh1.text = "清水いはら";
+		//
+		mh2.text = "しみずいはら";
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("清水", "しみず")),
+				MultimapUtil.entries(toMultimap(null, Arrays.asList(e1, null, e2), 0, false))));
+		//
+	}
+
+	private static <T> T createProxy(final Class<T> superClass, final MethodHandler mh,
+			final FailableFunction<Class<?>, T, Throwable> function) throws Throwable {
+		//
+		final ProxyFactory proxyFactory = new ProxyFactory();
+		//
+		proxyFactory.setSuperclass(superClass);
+		//
+		final Class<?> clz = proxyFactory.createClass();
+		//
+		Object instance = null;
+		//
+		if (function == null) {
+			//
+			final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+			//
+			instance = constructor != null ? constructor.newInstance() : null;
+		} else {
+			//
+			instance = function.apply(clz);
+			//
+		} // if
+			//
+		if (instance instanceof ProxyObject) {
+			//
+			((ProxyObject) instance).setHandler(mh);
+			//
+		} // if
+			//
+		return (T) Util.cast(clz, instance);
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final Object patternMap, final List<Element> children,
+			final int offset, final boolean hasAttrRowspan) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, patternMap, children, offset, hasAttrRowspan);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
