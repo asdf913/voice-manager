@@ -17,6 +17,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +38,7 @@ import javassist.util.proxy.ProxyObject;
 class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_VALUE_OF, METHOD_TEST_AND_APPLY, METHOD_IIF, METHOD_DECREASE,
-			METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP = null;
+			METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP, METHOD_CHILD_NODE_SIZE = null;
 
 	private static Class<?> CLASS_PATTERN_MAP, CLASS_IH = null;
 
@@ -64,6 +65,8 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", CLASS_PATTERN_MAP = Class.forName(
 				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean$PatternMap"),
 				List.class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_CHILD_NODE_SIZE = clz.getDeclaredMethod("childNodeSize", Node.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName(
 				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean$IH");
@@ -101,12 +104,24 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 
 		private String text = null;
 
+		private Integer childNodeSize = null;
+
 		@Override
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
 			//
 			final String methodName = Util.getName(thisMethod);
 			//
+			if (self instanceof Node) {
+				//
+				if (Objects.equals(methodName, "childNodeSize")) {
+					//
+					return childNodeSize;
+					//
+				} // if
+					//
+			} // if
+				//
 			if (self instanceof Element) {
 				//
 				if (Objects.equals(methodName, "text")) {
@@ -402,6 +417,31 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testchildNodeSize() throws Throwable {
+		//
+		Assertions.assertEquals(0, childNodeSize(null));
+		//
+		final MH mh = new MH();
+		//
+		mh.childNodeSize = Integer.valueOf(ONE);
+		//
+		Assertions.assertEquals(ONE, childNodeSize(createProxy(Node.class, mh, null)));
+		//
+	}
+
+	private static int childNodeSize(final Node instance) throws Throwable {
+		try {
+			final Object obj = METHOD_CHILD_NODE_SIZE.invoke(null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

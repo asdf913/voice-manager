@@ -31,6 +31,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.jsoup.nodes.Node;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
@@ -191,8 +192,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(m3, 1), Util.group(m3, 2));
 				//
-			} else if (e3 != null && e3.childNodeSize() == 1
-					&& IterableUtils.get(NodeUtil.childNodes(e3), 0) instanceof TextNode
+			} else if (childNodeSize(e3) == 1 && IterableUtils.get(NodeUtil.childNodes(e3), 0) instanceof TextNode
 					&& (m4 = Util.matcher(
 							PatternMap.getPattern(
 									patternMap = ObjectUtils.getIfNull(patternMap,
@@ -220,6 +220,10 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 			//
 		return multimap;
 		//
+	}
+
+	private static int childNodeSize(final Node instance) {
+		return instance != null ? instance.childNodeSize() : 0;
 	}
 
 	@Nullable
