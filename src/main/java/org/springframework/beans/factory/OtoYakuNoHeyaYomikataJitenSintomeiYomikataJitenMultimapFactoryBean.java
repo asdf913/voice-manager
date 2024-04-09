@@ -113,7 +113,8 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 					p1 = ObjectUtils.getIfNull(p1,
 							() -> Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)?$")),
 					ElementUtil.text(IterableUtils.get(children,
-							0 + (offset = iif(rowspan == null || hasAttrRowspan || intValue(rowspan, 0) <= 0, 1, 0))))))
+							0 + (offset = iif(Util.or(rowspan == null, hasAttrRowspan, intValue(rowspan, 0) <= 0), 1,
+									0))))))
 					&& Util.groupCount(m1) > 0
 					&& Util.matches(m2 = Util.matcher(
 							p2 = ObjectUtils.getIfNull(p2, () -> Pattern.compile("^\\p{InHiragana}+$")),
