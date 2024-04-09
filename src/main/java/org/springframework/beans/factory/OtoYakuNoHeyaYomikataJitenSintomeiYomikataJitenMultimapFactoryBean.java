@@ -125,6 +125,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
+	@Nullable
 	private static Integer valueOf(final String instance) {
 		try {
 			return StringUtils.isNotBlank(instance) ? Integer.valueOf(instance) : null;
