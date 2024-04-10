@@ -189,23 +189,20 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 			//
 		} // for
 			//
-		if (document != null && document.getAllElements() != null) {
+		final NodeVisitorImpl nodeVisitorImpl = new NodeVisitorImpl();
+		//
+		nodeVisitorImpl.patternMap = ObjectUtils.getIfNull(patternMap,
+				() -> Reflection.newProxy(PatternMap.class, new IH()));
+		//
+		NodeUtil.traverse(document, nodeVisitorImpl);
+		//
+		if (nodeVisitorImpl.multimap != null) {
 			//
-			final NodeVisitorImpl nodeVisitorImpl = new NodeVisitorImpl();
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					nodeVisitorImpl.multimap);
 			//
-			nodeVisitorImpl.patternMap = ObjectUtils.getIfNull(patternMap,
-					() -> Reflection.newProxy(PatternMap.class, new IH()));
-			//
-			document.getAllElements().traverse(nodeVisitorImpl);
-			//
-			if (nodeVisitorImpl.multimap != null) {
-				//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						nodeVisitorImpl.multimap);
-				//
-			} // if
-				//
 		} // if
+			//
 			//
 		return multimap;
 		//
