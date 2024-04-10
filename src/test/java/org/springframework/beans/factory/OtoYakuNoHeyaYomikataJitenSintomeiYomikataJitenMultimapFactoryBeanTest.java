@@ -3,6 +3,7 @@ package org.springframework.beans.factory;
 import java.io.File;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -17,8 +18,11 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.select.NodeVisitor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -565,6 +569,53 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 	private static Object invoke(final InvocationHandler instance, final Object proxy, final Method method,
 			final Object[] args) throws Throwable {
 		return instance != null ? instance.invoke(proxy, method, args) : null;
+	}
+
+	@Test
+	void testNodeVisitorImpl() throws ReflectiveOperationException {
+		//
+		final Class<?> clz = Class.forName(
+				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean$NodeVisitorImpl");
+		//
+		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final NodeVisitor nodeVisitor = Util.cast(NodeVisitor.class,
+				constructor != null ? constructor.newInstance() : null);
+		//
+		Assertions.assertDoesNotThrow(() -> head(nodeVisitor, null, 0));
+		//
+		Assertions.assertDoesNotThrow(
+				() -> head(nodeVisitor, Util.cast(TextNode.class, Narcissus.allocateInstance(TextNode.class)), 0));
+		//
+		Assertions.assertDoesNotThrow(() -> head(nodeVisitor, new TextNode("江差線（えさしせん）"), 0));
+		//
+		final Field multimap = clz != null ? clz.getDeclaredField("multimap") : null;
+		//
+		if (multimap != null) {
+			//
+			multimap.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertEquals(Collections.singleton(Pair.of("江差線", "えさしせん")),
+				MultimapUtil.entries(Util.cast(Multimap.class, get(multimap, nodeVisitor))));
+		//
+	}
+
+	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+		return field != null ? field.get(instance) : null;
+	}
+
+	private static void head(final NodeVisitor instance, final Node node, final int depth) {
+		if (instance != null) {
+			instance.head(node, depth);
+		}
 	}
 
 }

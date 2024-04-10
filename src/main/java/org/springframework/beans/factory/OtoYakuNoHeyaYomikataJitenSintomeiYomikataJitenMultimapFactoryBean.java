@@ -34,6 +34,8 @@ import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
+import org.jsoup.nodes.TextNodeUtil;
+import org.jsoup.select.NodeVisitor;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
 
 import com.google.common.collect.LinkedHashMultimap;
@@ -186,8 +188,52 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 			//
 		} // for
 			//
+		if (document != null && document.getAllElements() != null) {
+			//
+			final NodeVisitorImpl nodeVisitorImpl = new NodeVisitorImpl();
+			//
+			document.getAllElements().traverse(nodeVisitorImpl);
+			//
+			if (nodeVisitorImpl.multimap != null) {
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						nodeVisitorImpl.multimap);
+				//
+			} // if
+				//
+		} // if
+			//
 		return multimap;
 		//
+	}
+
+	private static class NodeVisitorImpl implements NodeVisitor {
+
+		private Multimap<String, String> multimap = null;
+
+		@Override
+		public void head(final Node node, final int depth) {
+			//
+			final Matcher m = Util.matcher(
+					Pattern.compile("([\\p{InCJKUnifiedIdeographs}|\\p{InKatakana}]+)（(\\p{InHiragana}+)）"),
+					TextNodeUtil.text(Util.cast(TextNode.class, node)));
+			//
+			String s1 = null;
+			//
+			while (Util.find(m) && Util.groupCount(m) > 1) {
+				//
+				if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+						getUnicodeBlocks(s1 = Util.group(m, 1)))) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+							Util.group(m, 2));
+					//
+				} // if
+					//
+			} // while
+				//
+		}
+
 	}
 
 	private static int childNodeSize(@Nullable final Node instance) {
