@@ -139,6 +139,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap(final String url) throws Exception {
 		//
 		final Document document = testAndApply(Objects::nonNull,
@@ -343,6 +344,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap21(final PatternMap patternMap, final String s3) {
 		//
 		Multimap<String, String> multimap = null;
