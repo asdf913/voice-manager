@@ -876,6 +876,13 @@
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean.text}" />
 		<property name="description"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean.description}" />
+		<property name="resource"
+			value="classpath:OtoYakuNoHeyaYomikataJiten.xlsx" />
+		<property name="sheetName"
+			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean.sheetName}" />
+		<property name="keyColumnName" value="kanji" />
+		<property name="valueColumnName" value="hiragana" />
+		<property name="valueColumnIndex" value="1" />
 	</bean>
 
 	<!-- -->

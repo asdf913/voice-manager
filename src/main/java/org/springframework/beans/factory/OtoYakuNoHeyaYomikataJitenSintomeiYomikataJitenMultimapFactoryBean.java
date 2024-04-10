@@ -47,7 +47,7 @@ import com.google.common.reflect.Reflection;
  * https://hiramatu-hifuka.com/onyak/kotoba-1/sintomei.html
  */
 public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
-		implements FactoryBean<Multimap<String, String>> {
+		extends StringMultiMapFromResourceFactoryBean {
 
 	private String url = null;
 
@@ -78,6 +78,14 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
+		final IValue0<Multimap<String, String>> multimap = getIvalue0();
+		//
+		if (multimap != null) {
+			//
+			return IValue0Util.getValue0(multimap);
+			//
+		} // if
+			//
 		List<Link> ls = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.spliterator(links), x -> StreamSupport.stream(x, false), null),
 				x -> text != null && x != null && Objects.equals(x.getText(), IValue0Util.getValue0(text))));
