@@ -287,14 +287,21 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 				//
 		} else if ((m5 = Util.matcher(PatternMap.getPattern(
 				ObjectUtils.getIfNull(patternMap, () -> Reflection.newProxy(PatternMap.class, new IH())),
-				"（[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+）(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)[)）]"),
+				"[（|(][\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+[)|）]([\\p{InCJKUnifiedIdeographs}|\\p{InKatakana}]+)（(\\p{InHiragana}+)[)）]"),
 				s3)) != null) {
+			//
+			String s51 = null;
 			//
 			while (Util.find(m5) && Util.groupCount(m5) > 1) {
 				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(m5, 1), Util.group(m5, 2));
-				//
+				if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+						getUnicodeBlocks(s51 = Util.group(m5, 1)))) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s51,
+							Util.group(m5, 2));
+					//
+				} // if
+					//
 			} // while
 				//
 		} // if
