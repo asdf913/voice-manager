@@ -291,7 +291,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 	private static Multimap<String, String> toMultimap2(final PatternMap patternMap, final List<Element> children,
 			final int offset) {
 		//
-		Multimap<String, String> multimap = null;
+		Multimap<String, String> multimap = null, mm;
 		//
 		final Element e3 = testAndApply(x -> IterableUtils.size(x) > 3 + offset, children,
 				x -> IterableUtils.get(x, 3 + offset), null);
@@ -302,7 +302,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 				ObjectUtils.getIfNull(patternMap, () -> Reflection.newProxy(PatternMap.class, new IH())),
 				"(\\p{InCJKUnifiedIdeographs}+)\\s?（(\\p{InHiragana}+)[\\)）]"), s3);
 		//
-		Matcher m4, m5 = null;
+		Matcher m4 = null;
 		//
 		if (Util.matches(m3) && Util.groupCount(m3) > 1) {
 			//
@@ -331,7 +331,25 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 					//
 			} // while
 				//
-		} else if ((m5 = Util.matcher(PatternMap.getPattern(
+		} else if ((mm = toMultimap21(
+				ObjectUtils.getIfNull(patternMap, () -> Reflection.newProxy(PatternMap.class, new IH())),
+				s3)) != null) {
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+			//
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap21(final PatternMap patternMap, final String s3) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		Matcher m5 = null;
+		//
+		if ((m5 = Util.matcher(PatternMap.getPattern(
 				ObjectUtils.getIfNull(patternMap, () -> Reflection.newProxy(PatternMap.class, new IH())),
 				"[（|(][\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+[)|）]([\\p{InCJKUnifiedIdeographs}|\\p{InKatakana}]+)（(\\p{InHiragana}+)[)）]"),
 				s3)) != null) {
