@@ -216,7 +216,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 					} else {
 						//
 						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								g1 = Util.group(m1, j), StringUtils.substring(g2 = Util.group(m2, j), 0,
+								Util.group(m1, j), StringUtils.substring(g2 = Util.group(m2, j), 0,
 										StringUtils.length(g2) - StringUtils.length(Util.group(m1, j + 1))));
 						//
 					} // if
