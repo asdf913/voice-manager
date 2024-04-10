@@ -18,6 +18,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
@@ -93,6 +94,10 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 					return null;
 					//
 				} else if (Objects.equals(methodName, "getUrl")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(methodName, "getDescription")) {
 					//
 					return null;
 					//
@@ -200,6 +205,26 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		} // if
 			//
 		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setLinks(Collections.nCopies(2, link));
+			//
+			instance.setDescription(null);
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setLinks(Collections.singletonList(link));
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		FieldUtils.writeDeclaredField(instance, "description", null, true);
 		//
 		final Properties properties = System.getProperties();
 		//
