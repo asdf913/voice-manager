@@ -193,6 +193,9 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 			//
 			final NodeVisitorImpl nodeVisitorImpl = new NodeVisitorImpl();
 			//
+			nodeVisitorImpl.patternMap = ObjectUtils.getIfNull(patternMap,
+					() -> Reflection.newProxy(PatternMap.class, new IH()));
+			//
 			document.getAllElements().traverse(nodeVisitorImpl);
 			//
 			if (nodeVisitorImpl.multimap != null) {
@@ -212,12 +215,18 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 
 		private Multimap<String, String> multimap = null;
 
+		private PatternMap patternMap = null;
+
 		@Override
 		public void head(final Node node, final int depth) {
 			//
-			final Matcher m = Util.matcher(
-					Pattern.compile("([\\p{InCJKUnifiedIdeographs}|\\p{InKatakana}]+)（(\\p{InHiragana}+)）"),
-					TextNodeUtil.text(Util.cast(TextNode.class, node)));
+			final Matcher m = Util
+					.matcher(
+							PatternMap.getPattern(
+									ObjectUtils.getIfNull(patternMap,
+											() -> Reflection.newProxy(PatternMap.class, new IH())),
+									"([\\p{InCJKUnifiedIdeographs}|\\p{InKatakana}]+)（(\\p{InHiragana}+)）"),
+							TextNodeUtil.text(Util.cast(TextNode.class, node)));
 			//
 			String s1 = null;
 			//
