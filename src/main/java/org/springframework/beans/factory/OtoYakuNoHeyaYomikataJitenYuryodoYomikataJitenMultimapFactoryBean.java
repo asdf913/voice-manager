@@ -310,6 +310,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		return instance != null ? instance.length : 0;
 	}
 
+	@Nullable
 	private static List<UnicodeBlock> getUnicodeBlocks(final String string) {
 		//
 		final char[] cs = Util.toCharArray(string);
