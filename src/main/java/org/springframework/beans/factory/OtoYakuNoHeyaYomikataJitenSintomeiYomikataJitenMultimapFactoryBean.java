@@ -246,10 +246,6 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 
 	}
 
-	private static int childNodeSize(@Nullable final Node instance) {
-		return instance != null ? instance.childNodeSize() : 0;
-	}
-
 	@Nullable
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final List<Element> children,
 			final int offset) {
@@ -319,7 +315,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m3, 1),
 					Util.group(m3, 2));
 			//
-		} else if (childNodeSize(e3) == 1 && IterableUtils.get(NodeUtil.childNodes(e3), 0) instanceof TextNode
+		} else if (NodeUtil.childNodeSize(e3) == 1 && IterableUtils.get(NodeUtil.childNodes(e3), 0) instanceof TextNode
 				&& (m4 = Util.matcher(
 						PatternMap.getPattern(
 								ObjectUtils.getIfNull(patternMap,

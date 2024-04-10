@@ -43,7 +43,7 @@ import javassist.util.proxy.ProxyObject;
 class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_VALUE_OF, METHOD_TEST_AND_APPLY, METHOD_IIF, METHOD_DECREASE,
-			METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP, METHOD_TO_MULTI_MAP2, METHOD_CHILD_NODE_SIZE = null;
+			METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP, METHOD_TO_MULTI_MAP2 = null;
 
 	private static Class<?> CLASS_PATTERN_MAP, CLASS_IH = null;
 
@@ -73,8 +73,6 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TO_MULTI_MAP2 = clz.getDeclaredMethod("toMultimap2", CLASS_PATTERN_MAP, List.class, Integer.TYPE))
 				.setAccessible(true);
-		//
-		(METHOD_CHILD_NODE_SIZE = clz.getDeclaredMethod("childNodeSize", Node.class)).setAccessible(true);
 		//
 		CLASS_IH = Class.forName(
 				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean$IH");
@@ -126,12 +124,7 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 					//
 					return IterableUtils.size(childNodes);
 					//
-				} else if (Objects.equals(methodName, "childNodes")) {
-					//
-					return childNodes;
-					//
 				} // if
-					//
 					//
 			} // if
 				//
@@ -481,31 +474,6 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testchildNodeSize() throws Throwable {
-		//
-		Assertions.assertEquals(0, childNodeSize(null));
-		//
-		final MH mh = new MH();
-		//
-		mh.childNodes = Collections.nCopies(ONE, null);
-		//
-		Assertions.assertEquals(ONE, childNodeSize(createProxy(Node.class, mh, null)));
-		//
-	}
-
-	private static int childNodeSize(final Node instance) throws Throwable {
-		try {
-			final Object obj = METHOD_CHILD_NODE_SIZE.invoke(null, instance);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

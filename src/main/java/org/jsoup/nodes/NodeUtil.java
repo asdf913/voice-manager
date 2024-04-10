@@ -10,6 +10,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.select.NodeVisitor;
 
 public class NodeUtil {
@@ -98,6 +99,36 @@ public class NodeUtil {
 
 	public static Node traverse(final Node instance, final NodeVisitor nodeVisitor) {
 		return instance != null && nodeVisitor != null ? instance.traverse(nodeVisitor) : instance;
+	}
+
+	public static int childNodeSize(final Node instance) {
+		//
+		final Element element = cast(Element.class, instance);
+		//
+		if (element != null) {
+			//
+			try {
+				//
+				if (FieldUtils.readField(element, "childNodes", true) == null) {
+					//
+					return 0;
+					//
+				} // if
+					//
+			} catch (final IllegalAccessException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+		} // if
+			//
+		return instance != null ? instance.childNodeSize() : 0;
+		//
+	}
+
+	private static <T> T cast(final Class<T> clz, final Object instance) {
+		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
 }

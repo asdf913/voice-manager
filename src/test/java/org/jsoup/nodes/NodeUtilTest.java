@@ -5,7 +5,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -16,16 +18,18 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import com.google.common.reflect.Reflection;
 
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ClassInfoUtil;
+import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
 
 class NodeUtilTest {
 
-	private static Method METHOD_GET_NAME, METHOD_GET_CLASS, METHOD_FILTER, METHOD_TEST = null;
+	private static Method METHOD_GET_NAME, METHOD_GET_CLASS, METHOD_FILTER, METHOD_TEST, METHOD_CAST = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -39,6 +43,8 @@ class NodeUtilTest {
 		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
 		(METHOD_TEST = clz.getDeclaredMethod("test", Predicate.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -122,8 +128,7 @@ class NodeUtilTest {
 	private MH mh = null;
 
 	@BeforeEach
-	private void beforeEach()
-			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+	private void beforeEach() throws Throwable {
 		//
 		final ProxyFactory proxyFactory = new ProxyFactory();
 		//
@@ -159,8 +164,12 @@ class NodeUtilTest {
 		//
 	}
 
-	private static <T> T cast(final Class<T> clz, final Object instance) {
-		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
+	private static <T> T cast(final Class<T> clz, final Object instance) throws Throwable {
+		try {
+			return (T) METHOD_CAST.invoke(null, clz, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
@@ -287,6 +296,58 @@ class NodeUtilTest {
 			//
 		Assertions.assertSame(node, NodeUtil.traverse(node, Reflection.newProxy(NodeVisitor.class, ih)));
 		//
+	}
+
+	@Test
+	void testChildNodeSize() throws Throwable {
+		//
+		final List<ClassInfo> classInfos = ClassInfoUtil.getClassInfos();
+		//
+		if (classInfos == null || classInfos.iterator() == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		String name = null;
+		//
+		Class<?> clz = null;
+		//
+		for (final ClassInfo classInfo : classInfos) {
+			//
+			if (classInfo == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			try {
+				//
+				if (isAssignableFrom(Node.class, Class.forName(name = classInfo.getName()))
+						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
+					//
+					final Node node = cast(Node.class, Narcissus.allocateInstance(clz));
+					//
+					System.out.println(name);
+					//
+					Assertions.assertDoesNotThrow(() -> NodeUtil.childNodeSize(node), name);
+					//
+				} // if
+					//
+			} catch (final Throwable e) {
+				//
+				System.err.println(name);
+				//
+				throw e;
+				//
+			} // try
+				//
+		} // for
+			//
+	}
+
+	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) {
+		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
 	@Test

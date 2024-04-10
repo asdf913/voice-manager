@@ -29,6 +29,7 @@ import org.jsoup.helper.ProtocolUtil;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.Node;
+import org.jsoup.nodes.NodeUtil;
 import org.jsoup.select.Elements;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.SpreadsheetDocumentUtil;
@@ -216,7 +217,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 				//
 			for (int j = 0; j < IterableUtils.size(trs); j++) {
 				//
-				if ((tr = IterableUtils.get(trs, j)) == null || tr.childNodeSize() < 2
+				if (NodeUtil.childNodeSize(tr = IterableUtils.get(trs, j)) < 2
 						|| (as = ElementUtil.getElementsByTag(tr, "a")) == null || as == null || as.isEmpty()
 						|| (a = IterableUtils.get(as, 0)) == null) {
 					//
