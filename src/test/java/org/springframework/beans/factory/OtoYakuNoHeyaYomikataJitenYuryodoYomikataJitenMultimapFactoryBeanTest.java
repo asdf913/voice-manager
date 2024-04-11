@@ -39,8 +39,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_LENGTH, METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP1,
-			METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3, METHOD_TO_MULTI_MAP4, METHOD_TO_MULTI_MAP5, METHOD_TO_ENTRY,
-			METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT = null;
+			METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3, METHOD_TO_MULTI_MAP4, METHOD_TO_MULTI_MAP5,
+			METHOD_TO_MULTI_MAP6, METHOD_TO_ENTRY, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT = null;
 
 	private static int ZERO = 0;
 
@@ -67,6 +67,8 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		(METHOD_TO_MULTI_MAP4 = clz.getDeclaredMethod("toMultimap4", String.class, String.class)).setAccessible(true);
 		//
 		(METHOD_TO_MULTI_MAP5 = clz.getDeclaredMethod("toMultimap5", String.class, String.class)).setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP6 = clz.getDeclaredMethod("toMultimap6", String.class, String.class)).setAccessible(true);
 		//
 		(METHOD_TO_ENTRY = clz.getDeclaredMethod("toEntry", Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
@@ -409,10 +411,6 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		//
 		TableUtil.put(table, "三才山トンネル有料道路", "みさやまとんねるゆうりょうどうろ", "{三才山=[みさやま], 有料道路=[ゆうりょうどうろ]}");
 		//
-		TableUtil.put(table, "奈良奥山ドライブウェイ （奈良奥山ドライブコース） （新若草山コース） （高円山コース）",
-				"ならおくやまどらいぶうぇい （ならおくやまどらいぶこーす） （しんわかくさやまこーす） （たかまどやまこーす）",
-				"{奈良奥山=[ならおくやま], 新若草山=[しんわかくさやま], 高円山=[たかまどやま]}");
-		//
 		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
 		//
 		if (cellSet != null && cellSet.iterator() != null) {
@@ -437,6 +435,47 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 	private static Multimap<String, String> toMultimap5(final String s1, final String s2) throws Throwable {
 		try {
 			final Object obj = METHOD_TO_MULTI_MAP5.invoke(null, s1, s2);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToMultimap6() throws Throwable {
+		//
+		final Iterable<Cell<String, String, String>> cellSet = TableUtil
+				.cellSet(ImmutableTable.of("奈良奥山ドライブウェイ （奈良奥山ドライブコース） （新若草山コース） （高円山コース）",
+						"ならおくやまどらいぶうぇい （ならおくやまどらいぶこーす） （しんわかくさやまこーす） （たかまどやまこーす）",
+						"{奈良奥山=[ならおくやま], 新若草山=[しんわかくさやま], 高円山=[たかまどやま]}"));
+		//
+		if (cellSet != null && cellSet.iterator() != null) {
+			//
+			for (final Cell<String, String, String> cell : cellSet) {
+				//
+				if (cell == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				Assertions.assertEquals(cell.getValue(),
+						Util.toString(toMultimap6(cell.getRowKey(), cell.getColumnKey())), Util.toString(cell));
+				//
+			} // for
+				//
+		} // if
+			//
+	}
+
+	private static Multimap<String, String> toMultimap6(final String s1, final String s2) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP6.invoke(null, s1, s2);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
