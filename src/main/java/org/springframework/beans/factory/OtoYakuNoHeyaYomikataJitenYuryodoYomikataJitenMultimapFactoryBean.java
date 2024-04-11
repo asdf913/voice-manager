@@ -127,6 +127,12 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
+			if (MultimapUtil.size(multimap) == size && (mm = toMultimap7(s1, s2)) != null) {
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+				//
+			} // if
+				//
 		} // for
 			//
 		return multimap;
@@ -506,9 +512,21 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				//
 			} // for
 				//
-		} else if (Util.matches(m1 = Util.matcher(Pattern.compile(
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap7(final String s1, final String s2) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		final Matcher m1 = Util.matcher(Pattern.compile(
 				"^(\\p{InCJKUnifiedIdeographs}+)([\\p{InKatakana}|\\p{InHiragana}]+)(\\p{InCJKUnifiedIdeographs}+)$"),
-				KanaConverter.convertKana(s1, KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA))) && Util.groupCount(m1) > 2) {
+				KanaConverter.convertKana(s1, KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA));
+		//
+		if (Util.matches(m1) && Util.groupCount(m1) > 2) {
 			//
 			final String[] ss = StringUtils.splitByWholeSeparator(s2, Util.group(m1, 2));
 			//
