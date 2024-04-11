@@ -449,10 +449,14 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testToMultimap6() throws Throwable {
 		//
-		final Iterable<Cell<String, String, String>> cellSet = TableUtil
-				.cellSet(ImmutableTable.of("奈良奥山ドライブウェイ （奈良奥山ドライブコース） （新若草山コース） （高円山コース）",
+		final Table<String, String, String> table = HashBasedTable
+				.create(ImmutableTable.of("奈良奥山ドライブウェイ （奈良奥山ドライブコース） （新若草山コース） （高円山コース）",
 						"ならおくやまどらいぶうぇい （ならおくやまどらいぶこーす） （しんわかくさやまこーす） （たかまどやまこーす）",
 						"{奈良奥山=[ならおくやま], 新若草山=[しんわかくさやま], 高円山=[たかまどやま]}"));
+		//
+		TableUtil.put(table, "白山スーパー林道", "はくさんすーぱーりんどう", "{白山=[はくさん], 林道=[りんどう]}");
+		//
+		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
 		//
 		if (cellSet != null && cellSet.iterator() != null) {
 			//
