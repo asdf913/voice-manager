@@ -145,12 +145,6 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
-			if (MultimapUtil.size(multimap) == size && (mm = toMultimap9(s1, s2)) != null) {
-				//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
-				//
-			} // if
-				//
 		} // for
 			//
 		return multimap;
@@ -654,6 +648,46 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 						MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 						//
 					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+		} else if (Util.matches(m1 = Util.matcher(Pattern.compile(
+				"^(\\p{InCJKUnifiedIdeographs}+)\\s（(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)(\\p{InCJKUnifiedIdeographs}+)）$"),
+				s1)) && Util.groupCount(m1) > 0
+				&& Util.matches(m2 = Util.matcher(Pattern.compile("^(\\p{InHiragana}+)\\s（(\\p{InHiragana}+)）$"), s2))
+				&& Util.groupCount(m2) > 1) {
+			//
+			final int groupCount = Util.groupCount(m1);
+			//
+			for (int i = 1; i <= orElse(min(mapToInt(Stream.of(m1, m2), Util::groupCount)), 0); i++) {
+				//
+				if (i == 1) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(m1, i), Util.group(m2, i));
+					//
+				} else {
+					//
+					final String[] ss = StringUtils.splitByWholeSeparator(Util.group(m2, i), KanaConverter.convertKana(
+							Util.group(m1, Math.min(groupCount, i + 1)), KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA));
+					//
+					for (int j = 0; j < length(ss); j++) {
+						//
+						if (j == 0) {
+							//
+							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+									Util.group(m1, Math.min(groupCount, i)), ss[j]);
+							//
+						} else {
+							//
+							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+									Util.group(m1, Math.min(groupCount, i + 2)), ss[j]);
+							//
+						} // if
+							//
+					} // for
 						//
 				} // if
 					//
