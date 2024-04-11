@@ -268,10 +268,8 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testToMultimap2() throws Throwable {
 		//
-		final Table<String, String, String> table = HashBasedTable.create(ImmutableTable.of("三陸自動車道 （仙台松島道路）",
-				"さんりくじどうしゃどう （せんだいまつしまどうろ）", "{三陸自動車道=[さんりくじどうしゃどう], 仙台松島道路=[せんだいまつしまどうろ]}"));
-		//
-		TableUtil.put(table, "第二みちのく有料道路", "だいにみちのくゆうりょうどうろ", "{第二=[だいに], 有料道路=[ゆうりょうどうろ]}");
+		final Table<String, String, String> table = HashBasedTable
+				.create(ImmutableTable.of("第二みちのく有料道路", "だいにみちのくゆうりょうどうろ", "{第二=[だいに], 有料道路=[ゆうりょうどうろ]}"));
 		//
 		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
 		//
@@ -312,9 +310,7 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 	void testToMultimap3() throws Throwable {
 		//
 		final Table<String, String, String> table = HashBasedTable
-				.create(ImmutableTable.of("西吾妻スカイバレー", "にしあづますかいばれー", "{西吾妻=[にしあづま]}"));
-		//
-		TableUtil.put(table, "日塩道路（もみじライン）", "にちえんどうろ", "{日塩道路=[にちえんどうろ]}");
+				.create(ImmutableTable.of("日塩道路（もみじライン）", "にちえんどうろ", "{日塩道路=[にちえんどうろ]}"));
 		//
 		TableUtil.put(table, "嵐山-高雄パークウェイ", "あらしやま-たかおぱーくうぇい", "{嵐山=[あらしやま], 高雄=[たかお]}");
 		//
@@ -322,6 +318,9 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 				"{六甲有料道路=[ろっこうゆうりょうどうろ], 表六甲=[おもてろっこう]}");
 		//
 		TableUtil.put(table, "津軽岩木スカイライン", "つがるいわきすかいらいん", "{津軽岩木=[つがるいわき]}");
+		//
+		TableUtil.put(table, "三陸自動車道 （仙台松島道路）", "さんりくじどうしゃどう （せんだいまつしまどうろ）",
+				"{三陸自動車道=[さんりくじどうしゃどう], 仙台松島道路=[せんだいまつしまどうろ]}");
 		//
 		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
 		//
@@ -367,6 +366,8 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		TableUtil.put(table, "パールロード （奥志摩ライン）", "ぱーるろーど （おくしまらいん）", "{奥志摩=[おくしま]}");
 		//
 		TableUtil.put(table, "那須高原道路 （ボルケーノハイウェイ）", "なすこうげんどうろ", "{那須高原道路=[なすこうげんどうろ]}");
+		//
+		TableUtil.put(table, "西吾妻スカイバレー", "にしあづますかいばれー", "{西吾妻=[にしあづま]}");
 		//
 		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
 		//
