@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.function.BiConsumer;
@@ -67,7 +68,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		Entry<Integer, Integer> entry;
 		//
-		boolean first = true;
+		final AtomicBoolean first = new AtomicBoolean(true);
 		//
 		String s1, s2;
 		//
@@ -75,10 +76,9 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		for (int i = 0; i < IterableUtils.size(es); i++) {
 			//
-			if (first || (entry = toEntry(ElementUtil.childrenSize(e = IterableUtils.get(es, i)),
-					maxChildrenSize)) == null) {
-				//
-				first = false;
+			if (Boolean.logicalOr(first.getAndSet(false),
+					(entry = toEntry(ElementUtil.childrenSize(e = IterableUtils.get(es, i)),
+							maxChildrenSize)) == null)) {
 				//
 				continue;
 				//
