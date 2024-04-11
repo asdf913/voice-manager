@@ -126,7 +126,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 		return multimap;
 		//
-	}
+	}	
 
 	@Nullable
 	private static Multimap<String, String> toMultimap1(final String s1, final String s2) {
@@ -135,7 +135,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		final List<UnicodeBlock> ub = getUnicodeBlocks(s1);
 		//
-		String commonPrefix, group, g1, g2;
+		String commonPrefix, group, g2;
 		//
 		String[] ss1, ss2;
 		//
@@ -202,11 +202,26 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 					StringUtils.substring(s1, 0, StringUtils.length(s1) - StringUtils.length(g2 = Util.group(m1, 2))),
 					StringUtils.substring(s2, 0, StringUtils.length(s2) - StringUtils.length(g2)));
 			//
-		} else if (Util
-				.matches(m1 = Util.matcher(Pattern.compile(
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	@Nullable
+	private static Multimap<String, String> toMultimap2(final String s1, final String s2) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		Matcher m1, m2;
+		//
+		String g1, g2;
+		//
+		if (Util.matches(m1 = Util.matcher(
+				Pattern.compile(
 						"^(\\p{InCJKUnifiedIdeographs}+)\\s?（((\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+))）$"),
-						s1))
-				&& Util.groupCount(m1) > 2 && Util.matches(
+				s1)) && Util.groupCount(m1) > 2
+				&& Util.matches(
 						m2 = Util.matcher(Pattern.compile("^(\\p{InHiragana}+)\\s?（(\\p{InHiragana}+)）$"), s2))) {
 			//
 			int length;
@@ -229,24 +244,11 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 					//
 			} // for
 				//
-		} // if
-			//
-		return multimap;
-		//
-	}
-
-	@Nullable
-	private static Multimap<String, String> toMultimap2(final String s1, final String s2) {
-		//
-		Multimap<String, String> multimap = null;
-		//
-		Matcher m1, m2;
-		//
-		String g2;
-		//
-		if (Util.matches(m1 = Util.matcher(
-				Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)-(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$"),
-				s1))
+		} else if (Util
+				.matches(m1 = Util.matcher(
+						Pattern.compile(
+								"^(\\p{InCJKUnifiedIdeographs}+)-(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$"),
+						s1))
 				&& Util.groupCount(m1) > 2
 				&& Util.matches(m2 = Util
 						.matcher(Pattern.compile("^(\\p{InHiragana}+)-([\\p{InHiragana}|\\p{InKatakana}]+)"), s2))

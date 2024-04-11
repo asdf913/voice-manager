@@ -177,9 +177,6 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		TableUtil.put(table, "三陸自動車道 （仙台松島道路）", "さんりくじどうしゃどう （せんだいまつしまどうろ）",
 				"{三陸自動車道=[さんりくじどうしゃどう], 仙台松島道路=[せんだいまつしまどうろ]}");
 		//
-		TableUtil.put(table, "六甲有料道路 （表六甲ドライブウェイ）", "ろっこうゆうりょうどうろ （おもてろっこうどらいぶうぇい）",
-				"{六甲有料道路=[ろっこうゆうりょうどうろ], 表六甲=[おもてろっこう]}");
-		//
 		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
 		//
 		if (cellSet != null && cellSet.iterator() != null) {
@@ -222,7 +219,10 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 				.create(ImmutableTable.of("嵐山-高雄パークウェイ", "あらしやま-たかおぱーくうぇい", "{嵐山=[あらしやま], 高雄=[たかお]}"));
 		//
 		TableUtil.put(table, "日塩道路（もみじライン）", "にちえんどうろ", "{日塩道路=[にちえんどうろ]}");
-
+		//
+		TableUtil.put(table, "六甲有料道路 （表六甲ドライブウェイ）", "ろっこうゆうりょうどうろ （おもてろっこうどらいぶうぇい）",
+				"{六甲有料道路=[ろっこうゆうりょうどうろ], 表六甲=[おもてろっこう]}");
+		//
 		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
 		//
 		if (cellSet != null && cellSet.iterator() != null) {
