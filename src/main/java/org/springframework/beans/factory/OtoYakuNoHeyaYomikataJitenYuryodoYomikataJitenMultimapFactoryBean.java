@@ -167,7 +167,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		return instance != null ? instance.max() : null;
 	}
 
-	private static OptionalInt min(final IntStream instance) {
+	private static OptionalInt min(@Nullable final IntStream instance) {
 		return instance != null ? instance.min() : null;
 	}
 
