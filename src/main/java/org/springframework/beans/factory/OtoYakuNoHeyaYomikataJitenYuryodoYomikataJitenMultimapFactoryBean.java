@@ -534,9 +534,11 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 			final String[] ss = StringUtils.splitByWholeSeparator(s2, Util.group(m1, 2));
 			//
+			final int length = length(ss);
+			//
 			final int groupCount = Util.groupCount(m1);
 			//
-			for (int i = 0; i < ss.length; i++) {
+			for (int i = 0; i < length && groupCount - length == 1; i++) {
 				//
 				if (i == 0) {
 					//
