@@ -473,9 +473,9 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			for (int i = 0; i < Math.min(length(ss1), length(ss2)); i++) {
 				//
 				if (Boolean.logicalAnd(StringUtils.startsWith(sk = ss1 != null ? ss1[i] : null, "（"),
-						StringUtils.endsWith(ss1 != null ? ss1[i] : null, "）"))) {
+						StringUtils.endsWith(sk, "）"))) {
 					//
-					sk = StringUtils.substringBetween(ss1[i], "（", "）");
+					sk = StringUtils.substringBetween(sk, "（", "）");
 					//
 				} // if
 					//
