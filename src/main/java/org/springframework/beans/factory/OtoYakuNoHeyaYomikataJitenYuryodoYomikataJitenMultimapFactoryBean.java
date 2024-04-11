@@ -177,7 +177,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		final List<UnicodeBlock> ub = getUnicodeBlocks(s1);
 		//
-		String commonPrefix, group, g2;
+		String commonPrefix, group;
 		//
 		String[] ss1, ss2;
 		//
@@ -235,15 +235,6 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				//
 			} // for
 				//
-		} else if (Util
-				.matches(m1 = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$"), s1))
-				&& Util.groupCount(m1) > 1
-				&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2))) {
-			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					StringUtils.substring(s1, 0, StringUtils.length(s1) - StringUtils.length(g2 = Util.group(m1, 2))),
-					StringUtils.substring(s2, 0, StringUtils.length(s2) - StringUtils.length(g2)));
-			//
 		} // if
 			//
 		return multimap;
@@ -259,11 +250,19 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		String g1, g2;
 		//
-		if (Util.matches(m1 = Util.matcher(
-				Pattern.compile(
+		if (Util.matches(m1 = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$"), s1))
+				&& Util.groupCount(m1) > 1
+				&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2))) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					StringUtils.substring(s1, 0, StringUtils.length(s1) - StringUtils.length(g2 = Util.group(m1, 2))),
+					StringUtils.substring(s2, 0, StringUtils.length(s2) - StringUtils.length(g2)));
+			//
+		} else if (Util
+				.matches(m1 = Util.matcher(Pattern.compile(
 						"^(\\p{InCJKUnifiedIdeographs}+)\\s?（((\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+))）$"),
-				s1)) && Util.groupCount(m1) > 2
-				&& Util.matches(
+						s1))
+				&& Util.groupCount(m1) > 2 && Util.matches(
 						m2 = Util.matcher(Pattern.compile("^(\\p{InHiragana}+)\\s?（(\\p{InHiragana}+)）$"), s2))) {
 			//
 			int length;
@@ -313,15 +312,6 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 					//
 			} // for
 				//
-		} else if (Util
-				.matches(m1 = Util.matcher(
-						Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)（\\p{InHiragana}+\\p{InKatakana}+）$"), s1))
-				&& Util.groupCount(m1) > 0
-				&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2))) {
-			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m1, 1),
-					s2);
-			//
 		} // if
 			//
 		return multimap;
@@ -335,7 +325,16 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		Matcher m1, m2;
 		//
-		if (Util.matches(m1 = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$"), s1))
+		if (Util.matches(m1 = Util
+				.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)（\\p{InHiragana}+\\p{InKatakana}+）$"), s1))
+				&& Util.groupCount(m1) > 0
+				&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2))) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m1, 1),
+					s2);
+			//
+		} else if (Util
+				.matches(m1 = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$"), s1))
 				&& Util.groupCount(m1) > 1
 				&& Objects.equals(Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.KATAKANA), getUnicodeBlocks(s2))) {
 			//
