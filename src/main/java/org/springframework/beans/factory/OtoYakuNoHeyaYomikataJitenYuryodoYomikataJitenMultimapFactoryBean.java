@@ -475,8 +475,6 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		Multimap<String, String> multimap = null;
 		//
-		Matcher m1;
-		//
 		if (Util.matches(Util.matcher(Pattern.compile(
 				"^((\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+))(\\s?（((\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+))）)+"),
 				s1))
