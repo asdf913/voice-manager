@@ -2,15 +2,23 @@ package org.springframework.beans.factory;
 
 import java.io.File;
 import java.lang.Character.UnicodeBlock;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.OptionalInt;
 import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,11 +32,19 @@ import com.google.common.collect.MultimapUtil;
 import com.google.common.collect.Table;
 import com.google.common.collect.Table.Cell;
 import com.google.common.collect.TableUtil;
+import com.google.common.reflect.Reflection;
+
+import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_LENGTH, METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP1,
-			METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3 = null;
+			METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3, METHOD_TO_ENTRY, METHOD_OR_ELSE, METHOD_MAX,
+			METHOD_MAP_TO_INT = null;
+
+	private static int ZERO = 0;
+
+	private static int ONE = 1;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -48,14 +64,58 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TO_MULTI_MAP3 = clz.getDeclaredMethod("toMultimap3", String.class, String.class)).setAccessible(true);
 		//
+		(METHOD_TO_ENTRY = clz.getDeclaredMethod("toEntry", Integer.TYPE, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", OptionalInt.class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_MAX = clz.getDeclaredMethod("max", IntStream.class)).setAccessible(true);
+		//
+		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
+		//
+	}
+
+	private static class IH implements InvocationHandler {
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = method != null ? method.getName() : null;
+			//
+			if (proxy instanceof IntStream) {
+				//
+				if (Objects.equals(methodName, "max")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Stream) {
+				//
+				if (Objects.equals(methodName, "mapToInt")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} // if
+				//
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	private OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean instance = null;
+
+	private IH ih = null;
 
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean();
+		//
+		ih = new IH();
 		//
 	}
 
@@ -117,11 +177,9 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testLength() throws Throwable {
 		//
-		Assertions.assertEquals(0, length((Object[]) null));
+		Assertions.assertEquals(ZERO, length((Object[]) null));
 		//
-		final int size = 1;
-		//
-		Assertions.assertEquals(size, length(new Object[size]));
+		Assertions.assertEquals(ONE, length(new Object[ONE]));
 		//
 	}
 
@@ -304,4 +362,103 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 			throw e.getTargetException();
 		}
 	}
+
+	@Test
+	void testToEntry() throws Throwable {
+		//
+		Assertions.assertNull(toEntry(ZERO, ONE));
+		//
+		Assertions.assertEquals(Pair.of(Integer.valueOf(ONE), Integer.valueOf(2)), toEntry(ZERO, ZERO));
+		//
+		Assertions.assertEquals(Pair.of(Integer.valueOf(ZERO), Integer.valueOf(ONE)), toEntry(2, ZERO));
+		//
+	}
+
+	private static Entry<Integer, Integer> toEntry(final int childrenSize, final int maxChildrenSize) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_ENTRY.invoke(null, childrenSize, maxChildrenSize);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Entry) {
+				return (Entry) obj;
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testOrElse() throws Throwable {
+		//
+		Assertions.assertEquals(ZERO, orElse(OptionalInt.of(ZERO), ONE));
+		//
+		Assertions.assertEquals(ONE,
+				orElse(Util.cast(OptionalInt.class, Narcissus.allocateInstance(OptionalInt.class)), ONE));
+		//
+	}
+
+	private static int orElse(final OptionalInt instance, final int other) throws Throwable {
+		try {
+			final Object obj = METHOD_OR_ELSE.invoke(null, instance, other);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMax() throws Throwable {
+		//
+		Assertions.assertNull(max(null));
+		//
+		Assertions.assertNull(max(Reflection.newProxy(IntStream.class, ih)));
+		//
+	}
+
+	private static OptionalInt max(final IntStream instance) throws Throwable {
+		try {
+			final Object obj = METHOD_MAX.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof OptionalInt) {
+				return (OptionalInt) obj;
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMapToInt() throws Throwable {
+		//
+		Stream<?> stream = Stream.of((Object) null);
+		//
+		Assertions.assertNull(mapToInt(stream, null));
+		//
+		Assertions.assertNotNull(mapToInt(stream, x -> 0));
+		//
+		Assertions.assertNull(mapToInt(stream = Reflection.newProxy(Stream.class, ih), null));
+		//
+	}
+
+	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_MAP_TO_INT.invoke(null, instance, mapper);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IntStream) {
+				return (IntStream) obj;
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 }

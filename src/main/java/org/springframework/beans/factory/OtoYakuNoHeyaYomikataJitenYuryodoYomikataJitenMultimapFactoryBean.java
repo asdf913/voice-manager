@@ -1,6 +1,7 @@
 package org.springframework.beans.factory;
 
 import java.lang.Character.UnicodeBlock;
+import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,11 +9,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.OptionalInt;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -57,7 +61,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		Element e = null;
 		//
-		int childrenSize, size;
+		int size;
 		//
 		List<Element> children;
 		//
@@ -66,6 +70,8 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		boolean first = true;
 		//
 		String s1, s2;
+		//
+		final int maxChildrenSize = orElse(max(mapToInt(Util.stream(es), ElementUtil::childrenSize)), 0);
 		//
 		for (int i = 0; i < IterableUtils.size(es); i++) {
 			//
@@ -83,19 +89,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
-			entry = null;
-			//
-			if ((childrenSize = e.childrenSize()) == 5) {
-				//
-				entry = Pair.of(Integer.valueOf(1), Integer.valueOf(2));
-				//
-			} else if (childrenSize > 1) {
-				//
-				entry = Pair.of(Integer.valueOf(0), Integer.valueOf(1));
-				//
-			} // if
-				//
-			if (entry == null) {
+			if ((entry = toEntry(e.childrenSize(), maxChildrenSize)) == null) {
 				//
 				continue;
 				//
@@ -125,6 +119,50 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		} // for
 			//
 		return multimap;
+		//
+	}
+
+	private static Entry<Integer, Integer> toEntry(final int childrenSize, final int maxChildrenSize) {
+		//
+		Entry<Integer, Integer> entry = null;
+		//
+		if (childrenSize == maxChildrenSize) {
+			//
+			entry = Pair.of(Integer.valueOf(1), Integer.valueOf(2));
+			//
+		} else if (childrenSize > 1) {
+			//
+			entry = Pair.of(Integer.valueOf(0), Integer.valueOf(1));
+			//
+		} // if
+			//
+		return entry;
+		//
+	}
+
+	private static int orElse(final OptionalInt instance, final int other) {
+		return instance != null ? instance.orElse(other) : other;
+	}
+
+	private static OptionalInt max(final IntStream instance) {
+		return instance != null ? instance.max() : null;
+	}
+
+	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper) {
+		//
+		final Class<?> clz = Util.getClass(instance);
+		//
+		if (Objects.equals(Util.getName(clz), "java.util.stream.ReferencePipeline$Head") && mapper == null) {
+			//
+			return null;
+			//
+		} else if (clz != null && Proxy.isProxyClass(clz)) {
+			//
+			return instance.mapToInt(mapper);
+			//
+		} // if
+			//
+		return instance != null ? instance.mapToInt(mapper) : null;
 		//
 	}
 
