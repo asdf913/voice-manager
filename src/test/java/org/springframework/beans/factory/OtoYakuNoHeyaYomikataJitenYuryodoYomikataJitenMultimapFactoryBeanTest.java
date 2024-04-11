@@ -309,11 +309,8 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testToMultimap3() throws Throwable {
 		//
-		final Table<String, String, String> table = HashBasedTable
-				.create(ImmutableTable.of("嵐山-高雄パークウェイ", "あらしやま-たかおぱーくうぇい", "{嵐山=[あらしやま], 高雄=[たかお]}"));
-		//
-		TableUtil.put(table, "六甲有料道路 （表六甲ドライブウェイ）", "ろっこうゆうりょうどうろ （おもてろっこうどらいぶうぇい）",
-				"{六甲有料道路=[ろっこうゆうりょうどうろ], 表六甲=[おもてろっこう]}");
+		final Table<String, String, String> table = HashBasedTable.create(ImmutableTable.of("六甲有料道路 （表六甲ドライブウェイ）",
+				"ろっこうゆうりょうどうろ （おもてろっこうどらいぶうぇい）", "{六甲有料道路=[ろっこうゆうりょうどうろ], 表六甲=[おもてろっこう]}"));
 		//
 		TableUtil.put(table, "津軽岩木スカイライン", "つがるいわきすかいらいん", "{津軽岩木=[つがるいわき]}");
 		//
@@ -368,6 +365,8 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		TableUtil.put(table, "西吾妻スカイバレー", "にしあづますかいばれー", "{西吾妻=[にしあづま]}");
 		//
 		TableUtil.put(table, "日塩道路（もみじライン）", "にちえんどうろ", "{日塩道路=[にちえんどうろ]}");
+		//
+		TableUtil.put(table, "嵐山-高雄パークウェイ", "あらしやま-たかおぱーくうぇい", "{嵐山=[あらしやま], 高雄=[たかお]}");
 		//
 		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
 		//
