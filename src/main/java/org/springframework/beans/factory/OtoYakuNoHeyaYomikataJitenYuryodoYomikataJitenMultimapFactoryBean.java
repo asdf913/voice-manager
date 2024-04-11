@@ -44,6 +44,8 @@ import com.mariten.kanatools.KanaConverter;
 public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		implements FactoryBean<Multimap<String, String>> {
 
+	private static final String PATTERN_CJK_UNIFIED_IDEOGRAPHS_AND_KATAKANA = "^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$";
+
 	private String url = null;
 
 	public void setUrl(final String url) {
@@ -210,8 +212,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 					StringUtils.substring(s1, StringUtils.length(commonPrefix)),
 					StringUtils.substring(s2, StringUtils.length(commonPrefix)));
 			//
-		} else if (Util
-				.matches(m1 = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$"), s1))
+		} else if (Util.matches(m1 = Util.matcher(Pattern.compile(PATTERN_CJK_UNIFIED_IDEOGRAPHS_AND_KATAKANA), s1))
 				&& Util.groupCount(m1) > 1
 				&& Objects.equals(Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.KATAKANA), getUnicodeBlocks(s2))) {
 			//
@@ -281,8 +282,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				//
 			} // for
 				//
-		} else if (Util
-				.matches(m1 = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$"), s1))
+		} else if (Util.matches(m1 = Util.matcher(Pattern.compile(PATTERN_CJK_UNIFIED_IDEOGRAPHS_AND_KATAKANA), s1))
 				&& Util.groupCount(m1) > 1
 				&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2))) {
 			//
@@ -489,14 +489,10 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 			for (int i = 0; i < Math.min(length(ss1), length(ss2)); i++) {
 				//
-				if (!Util
-						.matches(
-								m = Util.matcher(
-										p = ObjectUtils.getIfNull(p,
-												() -> Pattern
-														.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$")),
-										sk = substringBetween(ss1 != null ? ss1[i] : null, "（", "）")))
-						|| Util.groupCount(m) < 2) {
+				if (!Util.matches(m = Util.matcher(
+						p = ObjectUtils.getIfNull(p,
+								() -> Pattern.compile(PATTERN_CJK_UNIFIED_IDEOGRAPHS_AND_KATAKANA)),
+						sk = substringBetween(ss1 != null ? ss1[i] : null, "（", "）"))) || Util.groupCount(m) < 2) {
 					//
 					continue;
 					//
