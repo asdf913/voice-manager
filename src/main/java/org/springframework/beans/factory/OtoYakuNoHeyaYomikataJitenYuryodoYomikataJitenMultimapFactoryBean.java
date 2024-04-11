@@ -164,7 +164,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 		} else if (clz != null && Proxy.isProxyClass(clz)) {
 			//
-			return instance.mapToInt(mapper);
+			return instance != null ? instance.mapToInt(mapper) : null;
 			//
 		} // if
 			//
