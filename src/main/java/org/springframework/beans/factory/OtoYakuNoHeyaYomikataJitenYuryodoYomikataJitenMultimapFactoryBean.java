@@ -151,7 +151,8 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 	}
 
 	@Nullable
-	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance, final ToIntFunction<? super T> mapper) {
+	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
+			@Nullable final ToIntFunction<? super T> mapper) {
 		//
 		final Class<?> clz = Util.getClass(instance);
 		//
