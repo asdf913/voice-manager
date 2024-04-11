@@ -426,7 +426,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			} // for
 				//
 		} else if (Util
-				.matches(m1 = Util.matcher(
+				.matches(Util.matcher(
 						Pattern.compile(
 								"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)(\\p{InCJKUnifiedIdeographs}+)$"),
 						s1))
