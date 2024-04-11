@@ -88,7 +88,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			size = MultimapUtil.size(multimap);
 			//
 			if ((mm = toMultimap1(
-					s1 = ElementUtil.text(IterableUtils.get(children = ElementUtil.children(e), entry.getKey())),
+					s1 = ElementUtil.text(IterableUtils.get(children = ElementUtil.children(e), Util.getKey(entry))),
 					s2 = ElementUtil.text(IterableUtils.get(children, entry.getValue())))) != null) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
