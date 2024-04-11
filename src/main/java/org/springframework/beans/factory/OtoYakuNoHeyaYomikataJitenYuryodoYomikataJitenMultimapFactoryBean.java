@@ -472,27 +472,13 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 			for (int i = 0; i < Math.min(length(ss1), length(ss2)); i++) {
 				//
-				if (Boolean.logicalAnd(StringUtils.startsWith(sk = ss1 != null ? ss1[i] : null, "（"),
-						StringUtils.endsWith(sk, "）"))) {
-					//
-					sk = StringUtils.substringBetween(sk, "（", "）");
-					//
-				} // if
-					//
-				if (Boolean.logicalAnd(StringUtils.startsWith(sh = ss2 != null ? ss2[i] : null, "（"),
-						StringUtils.endsWith(ss2[i], "）"))) {
-					//
-					sh = StringUtils.substringBetween(ss2[i], "（", "）");
-					//
-				} // if
-					//
 				if (!Util
 						.matches(
 								m = Util.matcher(
 										p = ObjectUtils.getIfNull(p,
 												() -> Pattern
 														.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$")),
-										sk))
+										sk = substringBetween(ss1 != null ? ss1[i] : null, "（", "）")))
 						|| Util.groupCount(m) < 2) {
 					//
 					continue;
@@ -502,13 +488,22 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						StringUtils.substring(sk, 0,
 								StringUtils.length(sk) - StringUtils.length(g2 = Util.group(m, 2))),
-						StringUtils.substring(sh, 0, StringUtils.length(sh) - StringUtils.length(g2)));
+						StringUtils.substring(sh = substringBetween(ss2 != null ? ss2[i] : null, "（", "）"), 0,
+								StringUtils.length(sh) - StringUtils.length(g2)));
 				//
 			} // for
 				//
 		} // if
 			//
 		return multimap;
+		//
+	}
+
+	private static String substringBetween(final String str, final String open, final String close) {
+		//
+		return Boolean.logicalAnd(StringUtils.startsWith(str, open), StringUtils.endsWith(str, close))
+				? StringUtils.substringBetween(str, open, close)
+				: str;
 		//
 	}
 
