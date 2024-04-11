@@ -36,6 +36,7 @@ import org.jsoup.nodes.ElementUtil;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
+import com.mariten.kanatools.KanaConverter;
 
 /*
  * https://hiramatu-hifuka.com/onyak/onyak2/yuryodo.html
@@ -423,6 +424,33 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				} // if
 					//
 			} // for
+				//
+		} else if (Util
+				.matches(m1 = Util.matcher(
+						Pattern.compile(
+								"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)(\\p{InCJKUnifiedIdeographs}+)$"),
+						s1))
+				&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2))) {
+			//
+			final String string = KanaConverter.convertKana(s1, KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA);
+			//
+			final Matcher m = Util.matcher(
+					Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)$"),
+					string);
+			//
+			String[] ss = null;
+			//
+			if (!Objects.equals(string, s1) && Util.matches(m) && Util.groupCount(m) > 2
+					&& StringUtils.countMatches(s2, Util.group(m, 2)) == 1
+					&& (ss = StringUtils.splitByWholeSeparator(s2, Util.group(m, 2))) != null && ss.length > 1) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m, 1), ss[0]);
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m, 3), ss[1]);
+				//
+			} // if
 				//
 		} // if
 			//
