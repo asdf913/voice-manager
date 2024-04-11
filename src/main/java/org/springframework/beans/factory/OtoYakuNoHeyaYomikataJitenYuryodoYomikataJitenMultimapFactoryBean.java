@@ -499,7 +499,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static String substringBetween(final String str, final String open, final String close) {
+	private static String substringBetween(@Nullable final String str, final String open, final String close) {
 		//
 		return Boolean.logicalAnd(StringUtils.startsWith(str, open), StringUtils.endsWith(str, close))
 				? StringUtils.substringBetween(str, open, close)
