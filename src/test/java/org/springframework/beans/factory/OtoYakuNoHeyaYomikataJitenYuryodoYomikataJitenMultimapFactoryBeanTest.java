@@ -28,7 +28,7 @@ import com.google.common.collect.TableUtil;
 class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_LENGTH, METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP1,
-			METHOD_TO_MULTI_MAP2 = null;
+			METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3 = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -45,6 +45,8 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		(METHOD_TO_MULTI_MAP1 = clz.getDeclaredMethod("toMultimap1", String.class, String.class)).setAccessible(true);
 		//
 		(METHOD_TO_MULTI_MAP2 = clz.getDeclaredMethod("toMultimap2", String.class, String.class)).setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP3 = clz.getDeclaredMethod("toMultimap3", String.class, String.class)).setAccessible(true);
 		//
 	}
 
@@ -175,8 +177,6 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		TableUtil.put(table, "三陸自動車道 （仙台松島道路）", "さんりくじどうしゃどう （せんだいまつしまどうろ）",
 				"{三陸自動車道=[さんりくじどうしゃどう], 仙台松島道路=[せんだいまつしまどうろ]}");
 		//
-		TableUtil.put(table, "嵐山-高雄パークウェイ", "あらしやま-たかおぱーくうぇい", "{嵐山=[あらしやま], 高雄=[たかお]}");
-		//
 		TableUtil.put(table, "六甲有料道路 （表六甲ドライブウェイ）", "ろっこうゆうりょうどうろ （おもてろっこうどらいぶうぇい）",
 				"{六甲有料道路=[ろっこうゆうりょうどうろ], 表六甲=[おもてろっこう]}");
 		//
@@ -218,17 +218,11 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testToMultimap2() throws Throwable {
 		//
-		final Table<String, String, String> table = HashBasedTable.create(ImmutableTable.of("万座ハイウェイ （万座温泉〜三原）",
-				"まんざはいうぇい （まんざおんせん〜みはら）", "{万座=[まんざ], 万座温泉=[まんざおんせん], 三原=[みはら]}"));
-		//
-		TableUtil.put(table, "パールロード （奥志摩ライン）", "ぱーるろーど （おくしまらいん）", "{奥志摩=[おくしま]}");
-		//
-		TableUtil.put(table, "那須高原道路 （ボルケーノハイウェイ）", "なすこうげんどうろ", "{那須高原道路=[なすこうげんどうろ]}");
-		//
-		TableUtil.put(table, "西吾妻スカイバレー", "にしあづますかいばれー", "{西吾妻=[にしあづま]}");
+		final Table<String, String, String> table = HashBasedTable
+				.create(ImmutableTable.of("嵐山-高雄パークウェイ", "あらしやま-たかおぱーくうぇい", "{嵐山=[あらしやま], 高雄=[たかお]}"));
 		//
 		TableUtil.put(table, "日塩道路（もみじライン）", "にちえんどうろ", "{日塩道路=[にちえんどうろ]}");
-		//
+
 		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
 		//
 		if (cellSet != null && cellSet.iterator() != null) {
@@ -264,4 +258,50 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		}
 	}
 
+	@Test
+	void testToMultimap3() throws Throwable {
+		//
+		final Table<String, String, String> table = HashBasedTable.create(ImmutableTable.of("万座ハイウェイ （万座温泉〜三原）",
+				"まんざはいうぇい （まんざおんせん〜みはら）", "{万座=[まんざ], 万座温泉=[まんざおんせん], 三原=[みはら]}"));
+		//
+		TableUtil.put(table, "西吾妻スカイバレー", "にしあづますかいばれー", "{西吾妻=[にしあづま]}");
+		//
+		TableUtil.put(table, "那須高原道路 （ボルケーノハイウェイ）", "なすこうげんどうろ", "{那須高原道路=[なすこうげんどうろ]}");
+		//
+		TableUtil.put(table, "パールロード （奥志摩ライン）", "ぱーるろーど （おくしまらいん）", "{奥志摩=[おくしま]}");
+		//
+		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
+		//
+		if (cellSet != null && cellSet.iterator() != null) {
+			//
+			for (final Cell<String, String, String> cell : cellSet) {
+				//
+				if (cell == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				Assertions.assertEquals(cell.getValue(),
+						Util.toString(toMultimap3(cell.getRowKey(), cell.getColumnKey())), Util.toString(cell));
+				//
+			} // for
+				//
+		} // if
+			//
+	}
+
+	private static Multimap<String, String> toMultimap3(final String s1, final String s2) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP3.invoke(null, s1, s2);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
 }
