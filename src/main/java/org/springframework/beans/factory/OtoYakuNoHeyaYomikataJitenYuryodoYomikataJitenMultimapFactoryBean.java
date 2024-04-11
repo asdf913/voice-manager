@@ -8,9 +8,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.Objects;
 import java.util.OptionalInt;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -451,6 +451,58 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 						Util.group(m, 3), ss[1]);
 				//
 			} // if
+				//
+		} else if (Util.matches(Util.matcher(Pattern.compile(
+				"^((\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+))(\\s?（((\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+))）)+"),
+				s1))
+				&& Util.matches(Util.matcher(
+						Pattern.compile("^(\\p{InHiragana}+)(\\s?（([\\p{InHiragana}|\\p{InKatakana}]+)）)+$"), s2))) {
+			//
+			final String[] ss1 = StringUtils.split(s1, " ");
+			//
+			final String[] ss2 = StringUtils.split(s2, " ");
+			//
+			String sk, sh;
+			//
+			Pattern p = null;
+			//
+			Matcher m;
+			//
+			String g2;
+			//
+			for (int i = 0; i < Math.min(length(ss1), length(ss2)); i++) {
+				//
+				if (StringUtils.startsWith(sk = ss1[i], "（") && StringUtils.endsWith(ss1[i], "）")) {
+					//
+					sk = StringUtils.substringBetween(ss1[i], "（", "）");
+					//
+				} // if
+					//
+				if (StringUtils.startsWith(sh = ss2[i], "（") && StringUtils.endsWith(ss2[i], "）")) {
+					//
+					sh = StringUtils.substringBetween(ss2[i], "（", "）");
+					//
+				} // if
+					//
+				if (!Util
+						.matches(
+								m = Util.matcher(
+										p = ObjectUtils.getIfNull(p,
+												() -> Pattern
+														.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$")),
+										sk))
+						|| Util.groupCount(m) < 2) {
+					//
+					continue;
+					//
+				} // if
+					//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						StringUtils.substring(sk, 0,
+								StringUtils.length(sk) - StringUtils.length(g2 = Util.group(m, 2))),
+						StringUtils.substring(sh, 0, StringUtils.length(sh) - StringUtils.length(g2)));
+				//
+			} // for
 				//
 		} // if
 			//

@@ -409,6 +409,10 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		//
 		TableUtil.put(table, "三才山トンネル有料道路", "みさやまとんねるゆうりょうどうろ", "{三才山=[みさやま], 有料道路=[ゆうりょうどうろ]}");
 		//
+		TableUtil.put(table, "奈良奥山ドライブウェイ （奈良奥山ドライブコース） （新若草山コース） （高円山コース）",
+				"ならおくやまどらいぶうぇい （ならおくやまどらいぶこーす） （しんわかくさやまこーす） （たかまどやまこーす）",
+				"{奈良奥山=[ならおくやま], 新若草山=[しんわかくさやま], 高円山=[たかまどやま]}");
+		//
 		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
 		//
 		if (cellSet != null && cellSet.iterator() != null) {
