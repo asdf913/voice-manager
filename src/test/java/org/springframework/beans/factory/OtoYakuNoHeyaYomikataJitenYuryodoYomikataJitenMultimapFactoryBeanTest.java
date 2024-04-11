@@ -17,8 +17,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
+import com.google.common.collect.Table;
+import com.google.common.collect.Table.Cell;
+import com.google.common.collect.TableUtil;
 
 class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 
@@ -155,35 +159,53 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(toMultimap(null, null));
 		//
-		Assertions.assertEquals("{藻岩山観光自動車道=[もいわやまかんこうじどうしゃどう]}",
-				Util.toString(toMultimap("藻岩山観光自動車道", "もいわやまかんこうじどうしゃどう")));
+		final Table<String, String, String> table = HashBasedTable.create();
 		//
-		Assertions.assertEquals("{有料道路=[ゆうりょうどうろ]}", Util.toString(toMultimap("みちのく有料道路", "みちのくゆうりょうどうろ")));
+		TableUtil.put(table, "藻岩山観光自動車道", "もいわやまかんこうじどうしゃどう", "{藻岩山観光自動車道=[もいわやまかんこうじどうしゃどう]}");
 		//
-		Assertions.assertEquals("{第二=[だいに], 有料道路=[ゆうりょうどうろ]}",
-				Util.toString(toMultimap("第二みちのく有料道路", "だいにみちのくゆうりょうどうろ")));
+		TableUtil.put(table, "みちのく有料道路", "みちのくゆうりょうどうろ", "{有料道路=[ゆうりょうどうろ]}");
 		//
-		Assertions.assertEquals("{津軽岩木=[つがるいわき]}", Util.toString(toMultimap("津軽岩木スカイライン", "つがるいわきすかいらいん")));
+		TableUtil.put(table, "第二みちのく有料道路", "だいにみちのくゆうりょうどうろ", "{第二=[だいに], 有料道路=[ゆうりょうどうろ]}");
 		//
-		Assertions.assertEquals("{三陸自動車道=[さんりくじどうしゃどう], 仙台松島道路=[せんだいまつしまどうろ]}",
-				Util.toString(toMultimap("三陸自動車道 （仙台松島道路）", "さんりくじどうしゃどう （せんだいまつしまどうろ）")));
+		TableUtil.put(table, "津軽岩木スカイライン", "つがるいわきすかいらいん", "{津軽岩木=[つがるいわき]}");
 		//
-		Assertions.assertEquals("{嵐山=[あらしやま], 高雄=[たかお]}", Util.toString(toMultimap("嵐山-高雄パークウェイ", "あらしやま-たかおぱーくうぇい")));
+		TableUtil.put(table, "三陸自動車道 （仙台松島道路）", "さんりくじどうしゃどう （せんだいまつしまどうろ）",
+				"{三陸自動車道=[さんりくじどうしゃどう], 仙台松島道路=[せんだいまつしまどうろ]}");
 		//
-		Assertions.assertEquals("{六甲有料道路=[ろっこうゆうりょうどうろ], 表六甲=[おもてろっこう]}",
-				Util.toString(toMultimap("六甲有料道路 （表六甲ドライブウェイ）", "ろっこうゆうりょうどうろ （おもてろっこうどらいぶうぇい）")));
+		TableUtil.put(table, "嵐山-高雄パークウェイ", "あらしやま-たかおぱーくうぇい", "{嵐山=[あらしやま], 高雄=[たかお]}");
 		//
-		Assertions.assertEquals("{西吾妻=[にしあづま]}", Util.toString(toMultimap("西吾妻スカイバレー", "にしあづますかいばれー")));
+		TableUtil.put(table, "六甲有料道路 （表六甲ドライブウェイ）", "ろっこうゆうりょうどうろ （おもてろっこうどらいぶうぇい）",
+				"{六甲有料道路=[ろっこうゆうりょうどうろ], 表六甲=[おもてろっこう]}");
 		//
-		Assertions.assertEquals("{日塩道路=[にちえんどうろ]}", Util.toString(toMultimap("日塩道路（もみじライン）", "にちえんどうろ")));
+		TableUtil.put(table, "西吾妻スカイバレー", "にしあづますかいばれー", "{西吾妻=[にしあづま]}");
 		//
-		Assertions.assertEquals("{那須高原道路=[なすこうげんどうろ]}", Util.toString(toMultimap("那須高原道路 （ボルケーノハイウェイ）", "なすこうげんどうろ")));
+		TableUtil.put(table, "日塩道路（もみじライン）", "にちえんどうろ", "{日塩道路=[にちえんどうろ]}");
 		//
-		Assertions.assertEquals("{万座=[まんざ], 万座温泉=[まんざおんせん], 三原=[みはら]}",
-				Util.toString(toMultimap("万座ハイウェイ （万座温泉〜三原）", "まんざはいうぇい （まんざおんせん〜みはら）")));
+		TableUtil.put(table, "那須高原道路 （ボルケーノハイウェイ）", "なすこうげんどうろ", "{那須高原道路=[なすこうげんどうろ]}");
 		//
-		Assertions.assertEquals("{奥志摩=[おくしま]}", Util.toString(toMultimap("パールロード （奥志摩ライン）", "ぱーるろーど （おくしまらいん）")));
+		TableUtil.put(table, "万座ハイウェイ （万座温泉〜三原）", "まんざはいうぇい （まんざおんせん〜みはら）", "{万座=[まんざ], 万座温泉=[まんざおんせん], 三原=[みはら]}");
 		//
+		TableUtil.put(table, "パールロード （奥志摩ライン）", "ぱーるろーど （おくしまらいん）", "{奥志摩=[おくしま]}");
+		//
+		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
+		//
+		if (cellSet != null && cellSet.iterator() != null) {
+			//
+			for (final Cell<String, String, String> cell : cellSet) {
+				//
+				if (cell == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				Assertions.assertEquals(cell.getValue(),
+						Util.toString(toMultimap(cell.getRowKey(), cell.getColumnKey())), Util.toString(cell));
+				//
+			} // for
+				//
+		} // if
+			//
 	}
 
 	private static Multimap<String, String> toMultimap(final String s1, final String s2) throws Throwable {
