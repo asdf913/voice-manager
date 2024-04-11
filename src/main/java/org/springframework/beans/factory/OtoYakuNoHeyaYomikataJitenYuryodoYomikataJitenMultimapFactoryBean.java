@@ -181,6 +181,8 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		String commonPrefix;
 		//
+		Matcher m1;
+		//
 		if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), ub)
 				&& Objects.equals(Collections.singletonList(UnicodeBlock.BASIC_LATIN), getUnicodeBlocks(s2))) {
 			//
@@ -201,6 +203,14 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 					StringUtils.substring(s1, StringUtils.length(commonPrefix)),
 					StringUtils.substring(s2, StringUtils.length(commonPrefix)));
 			//
+		} else if (Util
+				.matches(m1 = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$"), s1))
+				&& Util.groupCount(m1) > 1
+				&& Objects.equals(Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.KATAKANA), getUnicodeBlocks(s2))) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m1, 1),
+					StringUtils.substring(s2, 0, StringUtils.length(s2) - StringUtils.length(Util.group(m1, 2))));
+			//
 		} // if
 			//
 		return multimap;
@@ -211,8 +221,6 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 	private static Multimap<String, String> toMultimap2(final String s1, final String s2) {
 		//
 		Multimap<String, String> multimap = null;
-		//
-		Matcher m1;
 		//
 		if (Boolean.logicalAnd(
 				Objects.equals(Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS, UnicodeBlock.HIRAGANA),
@@ -240,14 +248,6 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 					//
 			} // while
 				//
-		} else if (Util
-				.matches(m1 = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$"), s1))
-				&& Util.groupCount(m1) > 1
-				&& Objects.equals(Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.KATAKANA), getUnicodeBlocks(s2))) {
-			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m1, 1),
-					StringUtils.substring(s2, 0, StringUtils.length(s2) - StringUtils.length(Util.group(m1, 2))));
-			//
 		} // if
 			//
 		return multimap;

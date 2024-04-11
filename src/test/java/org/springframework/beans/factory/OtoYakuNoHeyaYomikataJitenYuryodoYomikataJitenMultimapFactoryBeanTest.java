@@ -232,6 +232,8 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		//
 		TableUtil.put(table, "みちのく有料道路", "みちのくゆうりょうどうろ", "{有料道路=[ゆうりょうどうろ]}");
 		//
+		TableUtil.put(table, "西吾妻スカイバレー", "にしあづますかいばれー", "{西吾妻=[にしあづま]}");
+		//
 		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
 		//
 		if (cellSet != null && cellSet.iterator() != null) {
@@ -270,12 +272,8 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testToMultimap2() throws Throwable {
 		//
-		final Table<String, String, String> table = HashBasedTable
-				.create(ImmutableTable.of("第二みちのく有料道路", "だいにみちのくゆうりょうどうろ", "{第二=[だいに], 有料道路=[ゆうりょうどうろ]}"));
-		//
-		TableUtil.put(table, "西吾妻スカイバレー", "にしあづますかいばれー", "{西吾妻=[にしあづま]}");
-		//
-		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
+		final Iterable<Cell<String, String, String>> cellSet = TableUtil
+				.cellSet(ImmutableTable.of("第二みちのく有料道路", "だいにみちのくゆうりょうどうろ", "{第二=[だいに], 有料道路=[ゆうりょうどうろ]}"));
 		//
 		if (cellSet != null && cellSet.iterator() != null) {
 			//
