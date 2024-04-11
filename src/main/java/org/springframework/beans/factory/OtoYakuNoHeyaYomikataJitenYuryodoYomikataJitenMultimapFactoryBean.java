@@ -464,6 +464,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap6(final String s1, final String s2) {
 		//
 		Multimap<String, String> multimap = null;
@@ -515,6 +516,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static String substringBetween(@Nullable final String str, final String open, final String close) {
 		//
 		return Boolean.logicalAnd(StringUtils.startsWith(str, open), StringUtils.endsWith(str, close))
