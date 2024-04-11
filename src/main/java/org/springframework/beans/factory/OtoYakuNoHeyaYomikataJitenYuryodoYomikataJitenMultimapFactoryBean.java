@@ -167,6 +167,10 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		return instance != null ? instance.max() : null;
 	}
 
+	private static OptionalInt min(final IntStream instance) {
+		return instance != null ? instance.min() : null;
+	}
+
 	@Nullable
 	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
 			@Nullable final ToIntFunction<? super T> mapper) {
@@ -281,7 +285,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+) （(\\p{InCJKUnifiedIdeographs}+)）$"), s1))
 				&& Util.matches(m2 = Util.matcher(Pattern.compile("^(\\p{InHiragana}+) （(\\p{InHiragana}+)）$"), s2))) {
 			//
-			for (int j = 1; j <= orElse(mapToInt(Stream.of(m1, m2), Util::groupCount).min(),0); j++) {
+			for (int j = 1; j <= orElse(min(mapToInt(Stream.of(m1, m2), Util::groupCount)), 0); j++) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(m1, j), Util.group(m2, j));
@@ -307,7 +311,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 			String g1;
 			//
-			for (int j = 1; j <= orElse(mapToInt(Stream.of(m1, m2), Util::groupCount).min(),0); j++) {
+			for (int j = 1; j <= orElse(min(mapToInt(Stream.of(m1, m2), Util::groupCount)), 0); j++) {
 				//
 				if (j == 1) {
 					//
@@ -348,7 +352,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 			String g2;
 			//
-			for (int j = 1; j <= orElse(mapToInt(Stream.of(m1, m2), Util::groupCount).min(),0); j++) {
+			for (int j = 1; j <= orElse(min(mapToInt(Stream.of(m1, m2), Util::groupCount)), 0); j++) {
 				//
 				if (j == 1) {
 					//
@@ -419,7 +423,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 						Pattern.compile("^(\\p{InHiragana}+)\\s?（(\\p{InHiragana}+)〜(\\p{InHiragana}+)）$"), s2))
 				&& Util.groupCount(m2) > 2) {
 			//
-			for (int j = 1; j <= orElse(mapToInt(Stream.of(m1, m2), Util::groupCount).min(),0); j++) {
+			for (int j = 1; j <= orElse(min(mapToInt(Stream.of(m1, m2), Util::groupCount)), 0); j++) {
 				//
 				if (j == 1) {
 					//
