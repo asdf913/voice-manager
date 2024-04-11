@@ -145,10 +145,12 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		return instance != null ? instance.orElse(other) : other;
 	}
 
+	@Nullable
 	private static OptionalInt max(@Nullable final IntStream instance) {
 		return instance != null ? instance.max() : null;
 	}
 
+	@Nullable
 	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance, final ToIntFunction<? super T> mapper) {
 		//
 		final Class<?> clz = Util.getClass(instance);
