@@ -122,6 +122,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Entry<Integer, Integer> toEntry(final int childrenSize, final int maxChildrenSize) {
 		//
 		Entry<Integer, Integer> entry = null;
@@ -140,15 +141,15 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static int orElse(final OptionalInt instance, final int other) {
+	private static int orElse(@Nullable final OptionalInt instance, final int other) {
 		return instance != null ? instance.orElse(other) : other;
 	}
 
-	private static OptionalInt max(final IntStream instance) {
+	private static OptionalInt max(@Nullable final IntStream instance) {
 		return instance != null ? instance.max() : null;
 	}
 
-	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper) {
+	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance, final ToIntFunction<? super T> mapper) {
 		//
 		final Class<?> clz = Util.getClass(instance);
 		//
