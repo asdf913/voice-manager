@@ -143,8 +143,8 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 					//
 					for (int j = 0; j < Math.min(length(ss1), length(ss2)); j++) {
 						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), ss1[j],
-								ss2[j]);
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								ss1 != null ? ss1[j] : null, ss2 != null ? ss2[j] : null);
 						//
 					} // for
 						//
