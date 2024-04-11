@@ -472,13 +472,15 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 			for (int i = 0; i < Math.min(length(ss1), length(ss2)); i++) {
 				//
-				if (StringUtils.startsWith(sk = ss1[i], "（") && StringUtils.endsWith(ss1[i], "）")) {
+				if (StringUtils.startsWith(sk = ss1 != null ? ss1[i] : null, "（")
+						&& StringUtils.endsWith(ss1[i], "）")) {
 					//
 					sk = StringUtils.substringBetween(ss1[i], "（", "）");
 					//
 				} // if
 					//
-				if (StringUtils.startsWith(sh = ss2[i], "（") && StringUtils.endsWith(ss2[i], "）")) {
+				if (StringUtils.startsWith(sh = ss2 != null ? ss2[i] : null, "（")
+						&& StringUtils.endsWith(ss2[i], "）")) {
 					//
 					sh = StringUtils.substringBetween(ss2[i], "（", "）");
 					//
