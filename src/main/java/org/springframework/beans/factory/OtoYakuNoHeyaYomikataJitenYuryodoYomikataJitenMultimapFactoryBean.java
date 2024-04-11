@@ -57,13 +57,15 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		Element e = null;
 		//
-		int childrenSize;
+		int childrenSize, size;
 		//
 		List<Element> children;
 		//
 		Entry<Integer, Integer> entry;
 		//
 		boolean first = true;
+		//
+		String s1, s2;
 		//
 		for (int i = 0; i < IterableUtils.size(es); i++) {
 			//
@@ -99,8 +101,16 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
-			if ((mm = toMultimap(ElementUtil.text(IterableUtils.get(children = e.children(), entry.getKey())),
-					ElementUtil.text(IterableUtils.get(children, entry.getValue())))) != null) {
+			size = MultimapUtil.size(multimap);
+			//
+			if ((mm = toMultimap1(s1 = ElementUtil.text(IterableUtils.get(children = e.children(), entry.getKey())),
+					s2 = ElementUtil.text(IterableUtils.get(children, entry.getValue())))) != null) {
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+				//
+			} // if
+				//
+			if (MultimapUtil.size(multimap) == size && (mm = toMultimap2(s1, s2)) != null) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 				//
@@ -113,7 +123,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 	}
 
 	@Nullable
-	private static Multimap<String, String> toMultimap(final String s1, final String s2) {
+	private static Multimap<String, String> toMultimap1(final String s1, final String s2) {
 		//
 		Multimap<String, String> multimap = null;
 		//
@@ -281,7 +291,19 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m1, 2),
 					StringUtils.substring(m22, 0, StringUtils.length(m22) - StringUtils.length(Util.group(m1, 3))));
 			//
-		} else if (Util.matches(m1 = Util.matcher(Pattern.compile(
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap2(final String s1, final String s2) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		Matcher m1, m2;
+		//
+		if (Util.matches(m1 = Util.matcher(Pattern.compile(
 				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)\\s?（(\\p{InCJKUnifiedIdeographs}+)〜(\\p{InCJKUnifiedIdeographs}+)）$"),
 				s1))
 				&& Util.groupCount(m1) > 3
