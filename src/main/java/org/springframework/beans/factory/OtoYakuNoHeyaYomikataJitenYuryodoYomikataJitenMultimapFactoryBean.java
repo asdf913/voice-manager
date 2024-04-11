@@ -145,6 +145,12 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
+			if (MultimapUtil.size(multimap) == size && (mm = toMultimap9(s1, s2)) != null) {
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+				//
+			} // if
+				//
 		} // for
 			//
 		return multimap;
