@@ -160,12 +160,6 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
-			if (MultimapUtil.size(multimap) == size && (mm = toMultimap6(s1, s2)) != null) {
-				//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
-				//
-			} // if
-				//
 			if ((mm = createMultimap(s1, s2)) != null) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
@@ -185,7 +179,13 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		final int size = MultimapUtil.size(multimap);
 		//
-		if ((mm = toMultimap7(s1, s2)) != null) {
+		if ((mm = toMultimap6(s1, s2)) != null) {
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) == size && (mm = toMultimap7(s1, s2)) != null) {
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 			//
