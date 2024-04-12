@@ -42,7 +42,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_LENGTH, METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP1,
-			METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3, METHOD_TO_MULTI_MAP13, METHOD_TO_ENTRY, METHOD_OR_ELSE,
+			METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3, METHOD_TO_MULTI_MAP14, METHOD_TO_ENTRY, METHOD_OR_ELSE,
 			METHOD_MAX, METHOD_MIN, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2 = null;
 
 	private static int ZERO = 0;
@@ -67,7 +67,7 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TO_MULTI_MAP3 = clz.getDeclaredMethod("toMultimap3", String.class, String.class)).setAccessible(true);
 		//
-		(METHOD_TO_MULTI_MAP13 = clz.getDeclaredMethod("toMultimap13", String.class, String.class, Iterable.class))
+		(METHOD_TO_MULTI_MAP14 = clz.getDeclaredMethod("toMultimap14", String.class, String.class, Iterable.class))
 				.setAccessible(true);
 		//
 		(METHOD_TO_ENTRY = clz.getDeclaredMethod("toEntry", Integer.TYPE, Integer.TYPE)).setAccessible(true);
@@ -406,16 +406,16 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 	}
 
 	@Test
-	void testToMultimap13() throws Throwable {
+	void testToMultimap14() throws Throwable {
 		//
-		Assertions.assertEquals("{三=[さん], 根山=[ねさん]}", Util.toString(toMultimap13("三ヶ根山スカイライン", "さんがねさんすかいらいん", null)));
+		Assertions.assertEquals("{三=[さん], 根山=[ねさん]}", Util.toString(toMultimap14("三ヶ根山スカイライン", "さんがねさんすかいらいん", null)));
 		//
 	}
 
-	private static Multimap<String, String> toMultimap13(final String s1, final String s2,
+	private static Multimap<String, String> toMultimap14(final String s1, final String s2,
 			final Iterable<String> kanjiExcluded) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_MULTI_MAP13.invoke(null, s1, s2, kanjiExcluded);
+			final Object obj = METHOD_TO_MULTI_MAP14.invoke(null, s1, s2, kanjiExcluded);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {

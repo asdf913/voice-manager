@@ -242,7 +242,13 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		} // if
 			//
 		if (MultimapUtil.size(multimap) == size
-				&& (mm = toMultimap13(s1, s2, Arrays.asList("美", "八", "久須夜", "根山"))) != null) {
+				&& (mm = toMultimap13(s1, s2, Arrays.asList("美", "八", "久須夜"))) != null) {
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) == size && (mm = toMultimap14(s1, s2, Collections.singleton("根山"))) != null) {
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 			//
@@ -1038,16 +1044,26 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				//
 			} // for
 				//
-		} else if (Util
-				.matches(m1 = Util.matcher(
-						Pattern.compile(
-								"^(\\p{InCJKUnifiedIdeographs}+)(ヶ)(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$"),
-						s1))
-				&& Util.groupCount(m1) > 3
-				&& Util.matches(m2 = Util.matcher(Pattern.compile(PATTERN_HIRAGANA_GA_HIRAGANA, Pattern.CANON_EQ), s2))
-				&& Util.groupCount(m2) > 2) {
+		} // if
 			//
-			String m2i = null;
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap14(final String s1, final String s2,
+			final Iterable<String> kanjiExcluded) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		final Matcher m1 = Util.matcher(
+				Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(ヶ)(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$"),
+				s1);
+		//
+		final Matcher m2 = Util.matcher(Pattern.compile(PATTERN_HIRAGANA_GA_HIRAGANA, Pattern.CANON_EQ), s2);
+		//
+		if (Util.matches(m1) && Util.groupCount(m1) > 3 && Util.matches(m2) && Util.groupCount(m2) > 2) {
+			//
+			String m1i, m2i;
 			//
 			for (int i = 1; i <= orElse(min(mapToInt(Stream.of(m1, m2), Util::groupCount)), 0); i++) {
 				//
