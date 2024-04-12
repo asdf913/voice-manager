@@ -178,13 +178,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
-			if (MultimapUtil.size(multimap) == size && (mm = toMultimap9(s1, s2)) != null) {
-				//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
-				//
-			} // if
-				//
-			if ((mm = createMultimap(MultimapUtil.size(multimap) == size, s1, s2)) != null) {
+			if ((mm = createMultimap(s1, s2)) != null) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 				//
@@ -197,11 +191,19 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 	}
 
 	@Nullable
-	private static Multimap<String, String> createMultimap(final boolean b, final String s1, final String s2) {
+	private static Multimap<String, String> createMultimap(final String s1, final String s2) {
 		//
 		Multimap<String, String> multimap = null, mm;
 		//
-		if (b && (mm = toMultimap10(s1, s2)) != null) {
+		final int size = MultimapUtil.size(multimap);
+		//
+		if ((mm = toMultimap9(s1, s2)) != null) {
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) == size && (mm = toMultimap10(s1, s2)) != null) {
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 			//

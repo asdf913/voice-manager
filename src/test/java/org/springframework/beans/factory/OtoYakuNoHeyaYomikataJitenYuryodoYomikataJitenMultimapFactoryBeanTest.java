@@ -43,8 +43,8 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_LENGTH, METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP1,
 			METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3, METHOD_TO_MULTI_MAP4, METHOD_TO_MULTI_MAP5,
-			METHOD_TO_MULTI_MAP6, METHOD_TO_MULTI_MAP7, METHOD_TO_MULTI_MAP8, METHOD_TO_MULTI_MAP9, METHOD_TO_ENTRY,
-			METHOD_OR_ELSE, METHOD_MAX, METHOD_MIN, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP = null;
+			METHOD_TO_MULTI_MAP6, METHOD_TO_MULTI_MAP7, METHOD_TO_MULTI_MAP8, METHOD_TO_ENTRY, METHOD_OR_ELSE,
+			METHOD_MAX, METHOD_MIN, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP = null;
 
 	private static int ZERO = 0;
 
@@ -78,8 +78,6 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TO_MULTI_MAP8 = clz.getDeclaredMethod("toMultimap8", String.class, String.class)).setAccessible(true);
 		//
-		(METHOD_TO_MULTI_MAP9 = clz.getDeclaredMethod("toMultimap9", String.class, String.class)).setAccessible(true);
-		//
 		(METHOD_TO_ENTRY = clz.getDeclaredMethod("toEntry", Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", OptionalInt.class, Integer.TYPE)).setAccessible(true);
@@ -90,7 +88,7 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
 		//
-		(METHOD_CREATE_MULTI_MAP = clz.getDeclaredMethod("createMultimap", Boolean.TYPE, String.class, String.class))
+		(METHOD_CREATE_MULTI_MAP = clz.getDeclaredMethod("createMultimap", String.class, String.class))
 				.setAccessible(true);
 		//
 	}
@@ -622,46 +620,6 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 	}
 
 	@Test
-	void testToMultimap9() throws Throwable {
-		//
-		final Iterable<Cell<String, String, String>> cellSet = TableUtil
-				.cellSet(ImmutableTable.of("銚子新大橋有料道路 （利根かもめ大橋有料道路）", "ちょうししんおおはしゆうりょうどうろ （とねかもめおおはしゆうりょうどうろ）",
-						"{銚子新大橋有料道路=[ちょうししんおおはしゆうりょうどうろ], 利根=[とね], 大橋有料道路=[おおはしゆうりょうどうろ]}"));
-		//
-		if (cellSet != null && cellSet.iterator() != null) {
-			//
-			for (final Cell<String, String, String> cell : cellSet) {
-				//
-				if (cell == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				Assertions.assertEquals(cell.getValue(),
-						Util.toString(toMultimap9(cell.getRowKey(), cell.getColumnKey())), Util.toString(cell));
-				//
-			} // for
-				//
-		} // if
-			//
-	}
-
-	private static Multimap<String, String> toMultimap9(final String s1, final String s2) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_MULTI_MAP9.invoke(null, s1, s2);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Multimap) {
-				return (Multimap) obj;
-			}
-			throw new Throwable(Util.getName(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testToEntry() throws Throwable {
 		//
 		Assertions.assertNull(toEntry(ZERO, ONE));
@@ -785,17 +743,40 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testCreateMultimap() throws Throwable {
 		//
-		Assertions.assertNull(Util.toString(createMultimap(false, null, null)));
+		Assertions.assertNull(Util.toString(createMultimap(null, null)));
 		//
-		Assertions.assertEquals("{六甲有料道路=[ろっこうゆうりょうどうろ], 六甲=[ろっこう], 線=[せん]}",
-				Util.toString(createMultimap(true, "六甲有料道路 （六甲トンネル線）", "ろっこうゆうりょうどうろ （ろっこうとんねるせん）")));
+		final Table<String, String, String> table = HashBasedTable
+				.create(ImmutableTable.of("銚子新大橋有料道路 （利根かもめ大橋有料道路）", "ちょうししんおおはしゆうりょうどうろ （とねかもめおおはしゆうりょうどうろ）",
+						"{銚子新大橋有料道路=[ちょうししんおおはしゆうりょうどうろ], 利根=[とね], 大橋有料道路=[おおはしゆうりょうどうろ]}"));
 		//
+		TableUtil.put(table, "六甲有料道路 （六甲トンネル線）", "ろっこうゆうりょうどうろ （ろっこうとんねるせん）",
+				"{六甲有料道路=[ろっこうゆうりょうどうろ], 六甲=[ろっこう], 線=[せん]}");
+		//
+		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
+		//
+		if (cellSet != null && cellSet.iterator() != null) {
+			//
+			for (final Cell<String, String, String> cell : cellSet) {
+				//
+				if (cell == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				Assertions.assertEquals(cell.getValue(),
+						Util.toString(createMultimap(cell.getRowKey(), cell.getColumnKey())), Util.toString(cell));
+				//
+			} // for
+				//
+		} // if
+			//
+
 	}
 
-	private static Multimap<String, String> createMultimap(final boolean b, final String s1, final String s2)
-			throws Throwable {
+	private static Multimap<String, String> createMultimap(final String s1, final String s2) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MULTI_MAP.invoke(null, b, s1, s2);
+			final Object obj = METHOD_CREATE_MULTI_MAP.invoke(null, s1, s2);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
