@@ -43,9 +43,9 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_LENGTH, METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP1,
-			METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3, METHOD_TO_MULTI_MAP14, METHOD_TO_ENTRY, METHOD_OR_ELSE,
-			METHOD_MAX, METHOD_MIN, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2,
-			METHOD_PUT = null;
+			METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3, METHOD_TO_MULTI_MAP14, METHOD_TO_MULTI_MAP15, METHOD_TO_ENTRY,
+			METHOD_OR_ELSE, METHOD_MAX, METHOD_MIN, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP1,
+			METHOD_CREATE_MULTI_MAP2, METHOD_PUT = null;
 
 	private static int ZERO = 0;
 
@@ -70,6 +70,9 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		(METHOD_TO_MULTI_MAP3 = clz.getDeclaredMethod("toMultimap3", String.class, String.class)).setAccessible(true);
 		//
 		(METHOD_TO_MULTI_MAP14 = clz.getDeclaredMethod("toMultimap14", String.class, String.class, Iterable.class))
+				.setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP15 = clz.getDeclaredMethod("toMultimap15", String.class, String.class, Iterable.class))
 				.setAccessible(true);
 		//
 		(METHOD_TO_ENTRY = clz.getDeclaredMethod("toEntry", Integer.TYPE, Integer.TYPE)).setAccessible(true);
@@ -414,15 +417,35 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertEquals("{三=[さん], 根山=[ねさん]}", Util.toString(toMultimap14("三ヶ根山スカイライン", "さんがねさんすかいらいん", null)));
 		//
-		Assertions.assertEquals("{鬼押=[おにおし], 三原=[みはら], 鬼押出=[おにおしだ], 峰=[みね], 茶屋=[ちゃや]}", Util.toString(
-				toMultimap14("鬼押ハイウェー （三原〜鬼押出し） （鬼押出し〜峰の茶屋）", "おにおしはいうぇー （みはら〜おにおしだし） （おにおしだし〜みねのちゃや）", null)));
-		//
 	}
 
 	private static Multimap<String, String> toMultimap14(final String s1, final String s2,
 			final Iterable<String> kanjiExcluded) throws Throwable {
 		try {
 			final Object obj = METHOD_TO_MULTI_MAP14.invoke(null, s1, s2, kanjiExcluded);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToMultimap15() throws Throwable {
+		//
+		Assertions.assertEquals("{鬼押=[おにおし], 三原=[みはら], 鬼押出=[おにおしだ], 峰=[みね], 茶屋=[ちゃや]}", Util.toString(
+				toMultimap15("鬼押ハイウェー （三原〜鬼押出し） （鬼押出し〜峰の茶屋）", "おにおしはいうぇー （みはら〜おにおしだし） （おにおしだし〜みねのちゃや）", null)));
+		//
+	}
+
+	private static Multimap<String, String> toMultimap15(final String s1, final String s2,
+			final Iterable<String> kanjiExcluded) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP15.invoke(null, s1, s2, kanjiExcluded);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {

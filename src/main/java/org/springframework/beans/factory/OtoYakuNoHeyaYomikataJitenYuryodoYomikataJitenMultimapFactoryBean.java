@@ -250,8 +250,13 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		if (MultimapUtil.size(multimap) == size
-				&& (mm = toMultimap14(s1, s2, Arrays.asList("根山", "鬼押", "鬼押出"))) != null) {
+		if (MultimapUtil.size(multimap) == size && (mm = toMultimap14(s1, s2, Collections.singleton("根山"))) != null) {
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) == size && (mm = toMultimap15(s1, s2, Arrays.asList("鬼押", "鬼押出"))) != null) {
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 			//
@@ -1096,20 +1101,34 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 					//
 			} // for
 				//
-		} else if (Util.matches(m1 = Util.matcher(Pattern.compile(
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap15(final String s1, final String s2,
+			final Iterable<String> kanjiExcluded) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		final Matcher m1 = Util.matcher(Pattern.compile(
 				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)\\s?（(\\p{InCJKUnifiedIdeographs}+)〜([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)）\\s?（([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)〜([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)）$"),
-				s1))
-				&& Util.groupCount(m1) > 0
-				&& Util.matches(m2 = Util.matcher(Pattern.compile(
-						"^([\\p{InHiragana}|\\p{InKatakana}]+)\\s?（(\\p{InHiragana}+)〜(\\p{InHiragana}+)）\\s?（(\\p{InHiragana}+)〜(\\p{InHiragana}+)）$"),
-						s2))
-				&& Util.groupCount(m2) > 2) {
+				s1);
+		//
+		final Matcher m2 = Util.matcher(Pattern.compile(
+				"^([\\p{InHiragana}|\\p{InKatakana}]+)\\s?（(\\p{InHiragana}+)〜(\\p{InHiragana}+)）\\s?（(\\p{InHiragana}+)〜(\\p{InHiragana}+)）$"),
+				s2);
+		//
+		if (Util.matches(m1) && Util.groupCount(m1) > 0 && Util.matches(m2) && Util.groupCount(m2) > 2) {
 			//
 			final int gc1 = Util.groupCount(m1);
 			//
 			Matcher m = null;
 			//
 			Entry<String, String> entry = null;
+			//
+			String m2i;
 			//
 			for (int i = 1; i <= orElse(min(mapToInt(Stream.of(m1, m2), Util::groupCount)), 0); i++) {
 				//
