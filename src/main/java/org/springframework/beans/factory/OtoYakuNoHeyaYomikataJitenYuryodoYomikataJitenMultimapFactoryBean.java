@@ -1051,8 +1051,10 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 			for (int i = 1; i <= orElse(min(mapToInt(Stream.of(m1, m2), Util::groupCount)), 0); i++) {
 				//
-				if (!Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-						getUnicodeBlocks(m1i = Util.group(m1, i))) || IterableUtils.contains(kanjiExcluded, m1i)) {
+				if (Boolean.logicalOr(
+						!Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+								getUnicodeBlocks(m1i = Util.group(m1, i))),
+						IterableUtils.contains(kanjiExcluded, m1i))) {
 					//
 					continue;
 					//
