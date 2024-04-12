@@ -775,6 +775,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap101(final String[] ss, final int i, final int groupCount,
 			final Matcher m) {
 		//
