@@ -987,14 +987,15 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		Multimap<String, String> multimap = null;
 		//
-		final Matcher m1 = Util
-				.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(ヶ)(\\p{InCJKUnifiedIdeographs}+)$"), s1);
+		Matcher m1, m2;
 		//
-		final Matcher m2 = Util.matcher(Pattern.compile("^(\\p{InHiragana}+)(が)(\\p{InHiragana}+)$"), s2);
+		String m1i;
 		//
-		if (Util.matches(m1) && Util.groupCount(m1) > 2 && Util.matches(m2) && Util.groupCount(m2) > 2) {
-			//
-			String m1i = null;
+		if (Util.matches(m1 = Util
+				.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(ヶ)(\\p{InCJKUnifiedIdeographs}+)$"), s1))
+				&& Util.groupCount(m1) > 2
+				&& Util.matches(m2 = Util.matcher(Pattern.compile("^(\\p{InHiragana}+)(が)(\\p{InHiragana}+)$"), s2))
+				&& Util.groupCount(m2) > 2) {
 			//
 			for (int i = 1; i <= orElse(min(mapToInt(Stream.of(m1, m2), Util::groupCount)), 0); i++) {
 				//
@@ -1002,6 +1003,28 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 						!Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 								getUnicodeBlocks(m1i = Util.group(m1, i))),
 						IterableUtils.contains(kanjiExcluded, m1i))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), m1i,
+						Util.group(m2, i));
+				//
+			} // for
+				//
+		} else if (Util
+				.matches(m1 = Util.matcher(Pattern.compile(
+						"^(\\p{InCJKUnifiedIdeographs}+)(ケ)(\\p{InCJKUnifiedIdeographs}+)\\s?（\\p{InKatakana}+）*$"),
+						s1))
+				&& Util.groupCount(m1) > 2
+				&& Util.matches(m2 = Util.matcher(Pattern.compile("^(\\p{InHiragana}+)(が)(\\p{InHiragana}+)$"), s2))
+				&& Util.groupCount(m2) > 2) {
+			//
+			for (int i = 0; i <= orElse(min(mapToInt(Stream.of(m1, m2), Util::groupCount)), 0); i++) {
+				//
+				if (!Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+						getUnicodeBlocks(m1i = Util.group(m1, i)))) {
 					//
 					continue;
 					//

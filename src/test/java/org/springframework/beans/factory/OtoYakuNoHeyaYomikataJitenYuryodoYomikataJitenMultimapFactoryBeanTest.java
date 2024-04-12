@@ -605,6 +605,8 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		//
 		TableUtil.put(table, "美ヶ原林道", "うつくしがはらりんどう", "{原林道=[はらりんどう]}");
 		//
+		TableUtil.put(table, "霧ケ峰有料道路 （ビーナスライン））", "きりがみねゆうりょうどうろ", "{霧=[きり], 峰有料道路=[みねゆうりょうどうろ]}");
+		//
 		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
 		//
 		if (cellSet != null && cellSet.iterator() != null) {
