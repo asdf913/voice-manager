@@ -1140,16 +1140,13 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 					if (Util.matches(
 							m = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)$"),
 									Util.group(m1, Math.min(gc1, i + 1))))
-							&& Util.groupCount(m) > 1) {
+							&& Util.groupCount(m) > 1
+							&& !IterableUtils.contains(kanjiExcluded,
+									Util.getKey(entry = Pair.of(Util.group(m, 1), StringUtils.substring(m2i, 0,
+											StringUtils.length(m2i) - StringUtils.length(Util.group(m, 2))))))) {
 						//
-						if (!IterableUtils.contains(kanjiExcluded,
-								Util.getKey(entry = Pair.of(Util.group(m, 1), StringUtils.substring(m2i, 0,
-										StringUtils.length(m2i) - StringUtils.length(Util.group(m, 2))))))) {
-							//
-							put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), entry);
-							//
-						} // if
-							//
+						put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), entry);
+						//
 					} // if
 						//
 				} else {
