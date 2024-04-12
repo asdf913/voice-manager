@@ -745,6 +745,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap10(final String s1, final String s2) {
 		//
 		Multimap<String, String> multimap = null;
