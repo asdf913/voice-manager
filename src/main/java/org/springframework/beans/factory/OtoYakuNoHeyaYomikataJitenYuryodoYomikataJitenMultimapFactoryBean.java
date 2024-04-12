@@ -230,7 +230,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		Multimap<String, String> multimap = null, mm;
 		//
-		if ((mm = toMultimap12(s1, s2)) != null) {
+		if ((mm = toMultimap12(s1, s2, Arrays.asList("美", "八", "久須夜"))) != null) {
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 			//
@@ -918,17 +918,18 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static Multimap<String, String> toMultimap12(final String s1, final String s2) {
+	private static Multimap<String, String> toMultimap12(final String s1, final String s2,
+			final Iterable<String> kanjiExcluded) {
 		//
 		Multimap<String, String> multimap = null;
 		//
-		final Matcher m1 = Util.matcher(Pattern.compile(
-				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)\\s?（((\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+))）$"),
-				s1);
+		Matcher m1 = null;
 		//
 		Matcher m2 = null;
 		//
-		if (Util.matches(m1) && Util.groupCount(m1) > 5
+		if (Util.matches(m1 = Util.matcher(Pattern.compile(
+				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)\\s?（((\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+))）$"),
+				s1)) && Util.groupCount(m1) > 5
 				&& Util.matches(m2 = Util.matcher(Pattern.compile("^(\\p{InHiragana}+)\\s?（(\\p{InHiragana}+)）$"), s2))
 				&& Util.groupCount(m2) > 1) {
 			//
@@ -966,6 +967,29 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				} // if
 					//
 			} // if
+				//
+		} else if (Util
+				.matches(m1 = Util.matcher(
+						Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(ヶ)(\\p{InCJKUnifiedIdeographs}+)$"), s1))
+				&& Util.groupCount(m1) > 2
+				&& Util.matches(m2 = Util.matcher(Pattern.compile("^(\\p{InHiragana}+)(が)(\\p{InHiragana}+)$"), s2))
+				&& Util.groupCount(m1) > 2) {
+			//
+			String m1i = null;
+			//
+			for (int i = 1; i <= orElse(min(mapToInt(Stream.of(m1, m2), Util::groupCount)), 0); i++) {
+				//
+				if (!Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+						getUnicodeBlocks(m1i = Util.group(m1, i))) || IterableUtils.contains(kanjiExcluded, m1i)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), m1i,
+						Util.group(m2, i));
+				//
+			} // for
 				//
 		} // if
 			//
