@@ -42,8 +42,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_LENGTH, METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP1,
-			METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3, METHOD_TO_MULTI_MAP4, METHOD_TO_ENTRY, METHOD_OR_ELSE,
-			METHOD_MAX, METHOD_MIN, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP = null;
+			METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3, METHOD_TO_ENTRY, METHOD_OR_ELSE, METHOD_MAX, METHOD_MIN,
+			METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP = null;
 
 	private static int ZERO = 0;
 
@@ -66,8 +66,6 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		(METHOD_TO_MULTI_MAP2 = clz.getDeclaredMethod("toMultimap2", String.class, String.class)).setAccessible(true);
 		//
 		(METHOD_TO_MULTI_MAP3 = clz.getDeclaredMethod("toMultimap3", String.class, String.class)).setAccessible(true);
-		//
-		(METHOD_TO_MULTI_MAP4 = clz.getDeclaredMethod("toMultimap4", String.class, String.class)).setAccessible(true);
 		//
 		(METHOD_TO_ENTRY = clz.getDeclaredMethod("toEntry", Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
@@ -402,53 +400,6 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 	}
 
 	@Test
-	void testToMultimap4() throws Throwable {
-		//
-		final Table<String, String, String> table = HashBasedTable
-				.create(ImmutableTable.of("パールロード （奥志摩ライン）", "ぱーるろーど （おくしまらいん）", "{奥志摩=[おくしま]}"));
-		//
-		TableUtil.put(table, "那須高原道路 （ボルケーノハイウェイ）", "なすこうげんどうろ", "{那須高原道路=[なすこうげんどうろ]}");
-		//
-		TableUtil.put(table, "日塩道路（もみじライン）", "にちえんどうろ", "{日塩道路=[にちえんどうろ]}");
-		//
-		TableUtil.put(table, "嵐山-高雄パークウェイ", "あらしやま-たかおぱーくうぇい", "{嵐山=[あらしやま], 高雄=[たかお]}");
-		//
-		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
-		//
-		if (cellSet != null && cellSet.iterator() != null) {
-			//
-			for (final Cell<String, String, String> cell : cellSet) {
-				//
-				if (cell == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				Assertions.assertEquals(cell.getValue(),
-						Util.toString(toMultimap4(cell.getRowKey(), cell.getColumnKey())), Util.toString(cell));
-				//
-			} // for
-				//
-		} // if
-			//
-	}
-
-	private static Multimap<String, String> toMultimap4(final String s1, final String s2) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_MULTI_MAP4.invoke(null, s1, s2);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Multimap) {
-				return (Multimap) obj;
-			}
-			throw new Throwable(Util.getName(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testToEntry() throws Throwable {
 		//
 		Assertions.assertNull(toEntry(ZERO, ONE));
@@ -574,8 +525,16 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(Util.toString(createMultimap(null, null)));
 		//
-		final Table<String, String, String> table = HashBasedTable.create(ImmutableTable.of("万座ハイウェイ （万座温泉〜三原）",
-				"まんざはいうぇい （まんざおんせん〜みはら）", "{万座=[まんざ], 万座温泉=[まんざおんせん], 三原=[みはら]}"));
+		final Table<String, String, String> table = HashBasedTable
+				.create(ImmutableTable.of("パールロード （奥志摩ライン）", "ぱーるろーど （おくしまらいん）", "{奥志摩=[おくしま]}"));
+		//
+		TableUtil.put(table, "那須高原道路 （ボルケーノハイウェイ）", "なすこうげんどうろ", "{那須高原道路=[なすこうげんどうろ]}");
+		//
+		TableUtil.put(table, "日塩道路（もみじライン）", "にちえんどうろ", "{日塩道路=[にちえんどうろ]}");
+		//
+		TableUtil.put(table, "嵐山-高雄パークウェイ", "あらしやま-たかおぱーくうぇい", "{嵐山=[あらしやま], 高雄=[たかお]}");
+		//
+		TableUtil.put(table, "万座ハイウェイ （万座温泉〜三原）", "まんざはいうぇい （まんざおんせん〜みはら）", "{万座=[まんざ], 万座温泉=[まんざおんせん], 三原=[みはら]}");
 		//
 		TableUtil.put(table, "三才山トンネル有料道路", "みさやまとんねるゆうりょうどうろ", "{三才山=[みさやま], 有料道路=[ゆうりょうどうろ]}");
 		//
