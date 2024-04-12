@@ -835,7 +835,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		Matcher m1, m2 = null;
 		//
-		String sk, separator;
+		String separator;
 		//
 		if (Util.matches(m1 = Util.matcher(Pattern.compile(
 				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$"),
@@ -845,9 +845,11 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 			final String lastGroup = Util.group(m1, Util.groupCount(m1));
 			//
+			final String sk = StringUtils.substring(s1, 0, StringUtils.length(s1) - StringUtils.length(lastGroup));
+			//
 			final Matcher m = Util.matcher(
 					Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)$"),
-					sk = StringUtils.substring(s1, 0, StringUtils.length(s1) - StringUtils.length(lastGroup)));
+					sk);
 			//
 			if (Util.matches(m) && Util.groupCount(m) > 2) {
 				//
@@ -873,7 +875,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 						x -> KanaConverter.convertKana(x, KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA), null)))
 				&& Util.groupCount(m1) > 4 && Util.matches(Util.matcher(Pattern.compile("^\\p{InHiragana}+$"), s2))) {
 			//
-			final String[] ss1 = StringUtils.split(sk = Util.group(m1, 1), separator = Util.group(m1, 3));
+			final String[] ss1 = StringUtils.split(Util.group(m1, 1), separator = Util.group(m1, 3));
 			//
 			final String[] ss2 = StringUtils.split(
 					StringUtils.substring(s2, 0,
