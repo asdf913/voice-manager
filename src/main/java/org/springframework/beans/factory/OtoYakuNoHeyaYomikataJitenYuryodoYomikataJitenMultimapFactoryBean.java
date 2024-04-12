@@ -210,6 +210,12 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		if (MultimapUtil.size(multimap) == size && (mm = toMultimap11(s1, s2)) != null) {
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+			//
+		} // if
+			//
 		return multimap;
 		//
 	}
@@ -790,7 +796,45 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 					//
 			} // for
 				//
-		} else if (Util.matches(m1 = Util.matcher(Pattern.compile(
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	@Nullable
+	private static Multimap<String, String> toMultimap101(final String[] ss, final int i, final int groupCount,
+			final Matcher m) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		for (int j = 0; j < length(ss); j++) {
+			//
+			if (j == 0) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m, Math.min(groupCount, i)), ss[j]);
+				//
+			} else {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m, Math.min(groupCount, i + 2)), ss[j]);
+				//
+			} // if
+				//
+		} // for
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap11(final String s1, final String s2) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		Matcher m1, m2 = null;
+		//
+		if (Util.matches(m1 = Util.matcher(Pattern.compile(
 				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$"),
 				s1)) && Util.groupCount(m1) > 3
 				&& Util.matches(m2 = Util.matcher(Pattern.compile("^([\\p{InHiragana}|\\p{InKatakana}]+)$"), s2))
@@ -825,32 +869,6 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			} // if
 				//
 		} // if
-			//
-		return multimap;
-		//
-	}
-
-	@Nullable
-	private static Multimap<String, String> toMultimap101(final String[] ss, final int i, final int groupCount,
-			final Matcher m) {
-		//
-		Multimap<String, String> multimap = null;
-		//
-		for (int j = 0; j < length(ss); j++) {
-			//
-			if (j == 0) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(m, Math.min(groupCount, i)), ss[j]);
-				//
-			} else {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(m, Math.min(groupCount, i + 2)), ss[j]);
-				//
-			} // if
-				//
-		} // for
 			//
 		return multimap;
 		//
