@@ -166,12 +166,6 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
-			if (MultimapUtil.size(multimap) == size && (mm = toMultimap7(s1, s2)) != null) {
-				//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
-				//
-			} // if
-				//
 			if ((mm = createMultimap(s1, s2)) != null) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
@@ -191,7 +185,13 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		final int size = MultimapUtil.size(multimap);
 		//
-		if ((mm = toMultimap8(s1, s2)) != null) {
+		if ((mm = toMultimap7(s1, s2)) != null) {
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) == size && (mm = toMultimap8(s1, s2)) != null) {
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 			//
@@ -602,7 +602,8 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		final Matcher m1 = Util.matcher(Pattern.compile(
 				"^(\\p{InCJKUnifiedIdeographs}+)([\\p{InKatakana}|\\p{InHiragana}]+)(\\p{InCJKUnifiedIdeographs}+)$"),
-				KanaConverter.convertKana(s1, KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA));
+				testAndApply(Objects::nonNull, s1,
+						x -> KanaConverter.convertKana(s1, KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA), null));
 		//
 		if (Util.matches(m1) && Util.groupCount(m1) > 2) {
 			//
