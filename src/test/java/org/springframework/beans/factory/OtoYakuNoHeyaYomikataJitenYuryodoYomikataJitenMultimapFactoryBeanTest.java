@@ -557,6 +557,8 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		//
 		TableUtil.put(table, "芦ノ湖スカイライン", "あしのこすかいらいん", "{芦=[あし], 湖=[こ]}");
 		//
+		TableUtil.put(table, "蓼科スカイライン （林道夢の平線）", "たてしなすかいらいん （りんどうゆめのだいらせん）", "{蓼科=[たてしな], 林道夢=[りんどうゆめ], 平線=[だいらせん]}");
+		//
 		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
 		//
 		if (cellSet != null && cellSet.iterator() != null) {
