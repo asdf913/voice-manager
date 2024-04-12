@@ -995,7 +995,8 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		if (Util.matches(m1 = Util
 				.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(ヶ)(\\p{InCJKUnifiedIdeographs}+)$"), s1))
 				&& Util.groupCount(m1) > 2
-				&& Util.matches(m2 = Util.matcher(Pattern.compile("^(\\p{InHiragana}+)(が)(\\p{InHiragana}+)$"), s2))
+				&& Util.matches(m2 = Util
+						.matcher(Pattern.compile("^(\\p{InHiragana}+)(が)(\\p{InHiragana}+)$", Pattern.CANON_EQ), s2))
 				&& Util.groupCount(m2) > 2) {
 			//
 			for (int i = 1; i <= orElse(min(mapToInt(Stream.of(m1, m2), Util::groupCount)), 0); i++) {
@@ -1019,7 +1020,8 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 						"^(\\p{InCJKUnifiedIdeographs}+)(ケ)(\\p{InCJKUnifiedIdeographs}+)\\s?（\\p{InKatakana}+）*$"),
 						s1))
 				&& Util.groupCount(m1) > 2
-				&& Util.matches(m2 = Util.matcher(Pattern.compile("^(\\p{InHiragana}+)(が)(\\p{InHiragana}+)$"), s2))
+				&& Util.matches(m2 = Util
+						.matcher(Pattern.compile("^(\\p{InHiragana}+)(が)(\\p{InHiragana}+)$", Pattern.CANON_EQ), s2))
 				&& Util.groupCount(m2) > 2) {
 			//
 			for (int i = 0; i <= orElse(min(mapToInt(Stream.of(m1, m2), Util::groupCount)), 0); i++) {
