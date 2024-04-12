@@ -1135,7 +1135,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 						//
 					} // if
 						//
-				} else if (i == 3 || i == 4) {
+				} else if (Boolean.logicalOr(i == 3, i == 4)) {
 					//
 					if (Util.matches(
 							m = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)$"),
