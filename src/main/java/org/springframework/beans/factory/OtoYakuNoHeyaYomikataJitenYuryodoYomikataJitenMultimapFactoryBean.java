@@ -1144,59 +1144,12 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		Multimap<String, String> multimap = null, mm;
 		//
-		final int gc1 = Util.groupCount(m1);
-		//
-		Matcher m = null;
-		//
-		Entry<String, String> entry = null;
-		//
-		String m2i;
-		//
 		for (int i = 1; i <= orElse(min(mapToInt(Stream.of(m1, m2), Util::groupCount)), 0); i++) {
 			//
-			m2i = Util.group(m2, i);
-			//
-			if (i == 1) {
+			if ((mm = toMultimap15(i, kanjiExcluded, m1, m2)) != null) {
 				//
-				if (!IterableUtils.contains(kanjiExcluded,
-						Util.getKey(entry = Pair.of(Util.group(m1, i),
-								StringUtils.substring(Util.group(m2, i), 0, StringUtils.length(m2i)
-										- StringUtils.length(Util.group(m1, Math.min(gc1, i + 1)))))))) {
-					//
-					put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), entry);
-					//
-				} // if
-					//
-			} else if (i == 2) {
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 				//
-				if (!IterableUtils.contains(kanjiExcluded,
-						Util.getKey(entry = Pair.of(Util.group(m1, Math.min(gc1, i + 1)), Util.group(m2, i))))) {
-					//
-					put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), entry);
-					//
-				} // if
-					//
-			} else if (Boolean.logicalOr(i == 3, i == 4)) {
-				//
-				if (Util.matches(m = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)$"),
-						Util.group(m1, Math.min(gc1, i + 1))))
-						&& Util.groupCount(m) > 1
-						&& !IterableUtils.contains(kanjiExcluded,
-								Util.getKey(entry = Pair.of(Util.group(m, 1), StringUtils.substring(m2i, 0,
-										StringUtils.length(m2i) - StringUtils.length(Util.group(m, 2))))))) {
-					//
-					put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), entry);
-					//
-				} // if
-					//
-			} else {
-				//
-				if ((mm = toMultimap15Else(m1, i, m2i, kanjiExcluded)) != null) {
-					//
-					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
-					//
-				} // if
-					//
 			} // if
 				//
 		} // for
@@ -1205,37 +1158,74 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	@Nullable
-	private static Multimap<String, String> toMultimap15Else(final Matcher m1, final int i, final String m2i,
-			final Iterable<String> kanjiExcluded) {
+	private static Multimap<String, String> toMultimap15(final int i, final Iterable<String> kanjiExcluded,
+			final Matcher m1, final Matcher m2) {
 		//
 		Multimap<String, String> multimap = null;
 		//
+		Entry<String, String> entry;
+		//
 		final int gc1 = Util.groupCount(m1);
 		//
-		final Matcher m = Util.matcher(Pattern.compile(PATTERN_CJK_UNIFIED_IDEOGRAPHS_HIRAGANA_CJK_UNIFIED_IDEOGRAPHS),
-				Util.group(m1, Math.min(gc1, i + 1)));
+		final String m2i = Util.group(m2, i);
 		//
-		if (Util.matches(m) && Util.groupCount(m) > 2) {
+		Matcher m;
+		//
+		if (i == 1) {
 			//
-			final String g2 = Util.group(m, 2);
-			//
-			final String[] ss1 = StringUtils.split(Util.group(m1, Math.min(gc1, i + 1)), g2);
-			//
-			final String[] ss2 = StringUtils.split(m2i, g2);
-			//
-			Entry<String, String> entry = null;
-			//
-			for (int j = 0; j < orElse(min(mapToInt(Stream.of(ss1, ss2),
-					OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean::length)), 0); j++) {
+			if (!IterableUtils.contains(kanjiExcluded,
+					Util.getKey(entry = Pair.of(Util.group(m1, i), StringUtils.substring(Util.group(m2, i), 0,
+							StringUtils.length(m2i) - StringUtils.length(Util.group(m1, Math.min(gc1, i + 1)))))))) {
 				//
-				if (!IterableUtils.contains(kanjiExcluded, Util.getKey(entry = Pair.of(ss1[j], ss2[j])))) {
+				put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), entry);
+				//
+			} // if
+				//
+		} else if (i == 2) {
+			//
+			if (!IterableUtils.contains(kanjiExcluded,
+					Util.getKey(entry = Pair.of(Util.group(m1, Math.min(gc1, i + 1)), Util.group(m2, i))))) {
+				//
+				put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), entry);
+				//
+			} // if
+				//
+		} else if (Boolean.logicalOr(i == 3, i == 4)) {
+			//
+			if (Util.matches(m = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)$"),
+					Util.group(m1, Math.min(gc1, i + 1)))) && Util.groupCount(m) > 1
+					&& !IterableUtils.contains(kanjiExcluded, Util.getKey(entry = Pair.of(Util.group(m, 1), StringUtils
+							.substring(m2i, 0, StringUtils.length(m2i) - StringUtils.length(Util.group(m, 2))))))) {
+				//
+				put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), entry);
+				//
+			} // if
+				//
+		} else {
+			//
+			if (Util.matches(
+					m = Util.matcher(Pattern.compile(PATTERN_CJK_UNIFIED_IDEOGRAPHS_HIRAGANA_CJK_UNIFIED_IDEOGRAPHS),
+							Util.group(m1, Math.min(gc1, i + 1))))
+					&& Util.groupCount(m) > 2) {
+				//
+				final String g2 = Util.group(m, 2);
+				//
+				final String[] ss1 = StringUtils.split(Util.group(m1, Math.min(gc1, i + 1)), g2);
+				//
+				final String[] ss2 = StringUtils.split(m2i, g2);
+				//
+				for (int j = 0; j < orElse(min(mapToInt(Stream.of(ss1, ss2),
+						OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean::length)), 0); j++) {
 					//
-					put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), entry);
+					if (!IterableUtils.contains(kanjiExcluded, Util.getKey(entry = Pair.of(ss1[j], ss2[j])))) {
+						//
+						put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), entry);
+						//
+					} // if
+						//
+				} // for
 					//
-				} // if
-					//
-			} // for
+			} // if
 				//
 		} // if
 			//
