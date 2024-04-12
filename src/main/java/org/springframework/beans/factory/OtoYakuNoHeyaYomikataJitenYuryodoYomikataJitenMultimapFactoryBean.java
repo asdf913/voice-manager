@@ -1189,7 +1189,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static <K, V> void put(final Multimap<K, V> instance, final Entry<K, V> entry) {
+	private static <K, V> void put(@Nullable final Multimap<K, V> instance, @Nullable final Entry<K, V> entry) {
 		if (instance != null && entry != null) {
 			instance.put(Util.getKey(entry), Util.getValue(entry));
 		}
