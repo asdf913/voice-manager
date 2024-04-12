@@ -43,7 +43,7 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_LENGTH, METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP1,
 			METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3, METHOD_TO_ENTRY, METHOD_OR_ELSE, METHOD_MAX, METHOD_MIN,
-			METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP = null;
+			METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2 = null;
 
 	private static int ZERO = 0;
 
@@ -77,7 +77,10 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
 		//
-		(METHOD_CREATE_MULTI_MAP = clz.getDeclaredMethod("createMultimap", String.class, String.class))
+		(METHOD_CREATE_MULTI_MAP1 = clz.getDeclaredMethod("createMultimap1", String.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_CREATE_MULTI_MAP2 = clz.getDeclaredMethod("createMultimap2", String.class, String.class))
 				.setAccessible(true);
 		//
 	}
@@ -521,9 +524,9 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 	}
 
 	@Test
-	void testCreateMultimap() throws Throwable {
+	void testCreateMultimap1() throws Throwable {
 		//
-		Assertions.assertNull(Util.toString(createMultimap(null, null)));
+		Assertions.assertNull(Util.toString(createMultimap1(null, null)));
 		//
 		final Table<String, String, String> table = HashBasedTable
 				.create(ImmutableTable.of("パールロード （奥志摩ライン）", "ぱーるろーど （おくしまらいん）", "{奥志摩=[おくしま]}"));
@@ -557,8 +560,6 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		//
 		TableUtil.put(table, "芦ノ湖スカイライン", "あしのこすかいらいん", "{芦=[あし], 湖=[こ]}");
 		//
-		TableUtil.put(table, "蓼科スカイライン （林道夢の平線）", "たてしなすかいらいん （りんどうゆめのだいらせん）", "{蓼科=[たてしな], 林道夢=[りんどうゆめ], 平線=[だいらせん]}");
-		//
 		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
 		//
 		if (cellSet != null && cellSet.iterator() != null) {
@@ -572,7 +573,7 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 				} // if
 					//
 				Assertions.assertEquals(cell.getValue(),
-						Util.toString(createMultimap(cell.getRowKey(), cell.getColumnKey())), Util.toString(cell));
+						Util.toString(createMultimap1(cell.getRowKey(), cell.getColumnKey())), Util.toString(cell));
 				//
 			} // for
 				//
@@ -580,9 +581,50 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 			//
 	}
 
-	private static Multimap<String, String> createMultimap(final String s1, final String s2) throws Throwable {
+	private static Multimap<String, String> createMultimap1(final String s1, final String s2) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MULTI_MAP.invoke(null, s1, s2);
+			final Object obj = METHOD_CREATE_MULTI_MAP1.invoke(null, s1, s2);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateMultimap2() throws Throwable {
+		//
+		Assertions.assertNull(Util.toString(createMultimap2(null, null)));
+		//
+		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(ImmutableTable.of("蓼科スカイライン （林道夢の平線）",
+				"たてしなすかいらいん （りんどうゆめのだいらせん）", "{蓼科=[たてしな], 林道夢=[りんどうゆめ], 平線=[だいらせん]}"));
+		//
+		if (cellSet != null && cellSet.iterator() != null) {
+			//
+			for (final Cell<String, String, String> cell : cellSet) {
+				//
+				if (cell == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				Assertions.assertEquals(cell.getValue(),
+						Util.toString(createMultimap2(cell.getRowKey(), cell.getColumnKey())), Util.toString(cell));
+				//
+			} // for
+				//
+		} // if
+			//
+	}
+
+	private static Multimap<String, String> createMultimap2(final String s1, final String s2) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULTI_MAP2.invoke(null, s1, s2);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
