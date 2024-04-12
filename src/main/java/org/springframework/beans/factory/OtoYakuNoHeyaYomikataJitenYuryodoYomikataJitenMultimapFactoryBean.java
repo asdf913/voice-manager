@@ -1044,7 +1044,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 								"^(\\p{InCJKUnifiedIdeographs}+)(ヶ)(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$"),
 						s1))
 				&& Util.groupCount(m1) > 3
-				&& Util.matches(m2 = Util.matcher(Pattern.compile(PATTERN_HIRAGANA_GA_HIRAGANA), s2))
+				&& Util.matches(m2 = Util.matcher(Pattern.compile(PATTERN_HIRAGANA_GA_HIRAGANA, Pattern.CANON_EQ), s2))
 				&& Util.groupCount(m2) > 2) {
 			//
 			String m2i = null;
