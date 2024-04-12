@@ -553,6 +553,8 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		TableUtil.put(table, "六甲有料道路 （六甲トンネル線）", "ろっこうゆうりょうどうろ （ろっこうとんねるせん）",
 				"{六甲有料道路=[ろっこうゆうりょうどうろ], 六甲=[ろっこう], 線=[せん]}");
 		//
+		TableUtil.put(table, "火の山パークウェイ", "ひのやまぱーくうぇい", "{火=[ひ], 山=[やま]}");
+		//
 		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
 		//
 		if (cellSet != null && cellSet.iterator() != null) {
