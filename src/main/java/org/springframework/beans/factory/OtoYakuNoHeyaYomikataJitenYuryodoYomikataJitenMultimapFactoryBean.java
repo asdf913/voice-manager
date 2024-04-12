@@ -53,6 +53,8 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 
 	private static final String PATTERN_HIRAGANA_GA_HIRAGANA = "^(\\p{InHiragana}+)(が)(\\p{InHiragana}+)$";
 
+	private static final String PATTERN_CJK_UNIFIED_IDEOGRAPHS_HIRAGANA_CJK_UNIFIED_IDEOGRAPHS = "^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)$";
+
 	private String url = null;
 
 	private Iterable<Link> links = null;
@@ -571,9 +573,8 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 			final String string = KanaConverter.convertKana(s1, KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA);
 			//
-			final Matcher m = Util.matcher(
-					Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)$"),
-					string);
+			final Matcher m = Util
+					.matcher(Pattern.compile(PATTERN_CJK_UNIFIED_IDEOGRAPHS_HIRAGANA_CJK_UNIFIED_IDEOGRAPHS), string);
 			//
 			String[] ss = null;
 			//
@@ -888,9 +889,8 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 			final String sk = StringUtils.substring(s1, 0, StringUtils.length(s1) - StringUtils.length(lastGroup));
 			//
-			final Matcher m = Util.matcher(
-					Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)$"),
-					sk);
+			final Matcher m = Util
+					.matcher(Pattern.compile(PATTERN_CJK_UNIFIED_IDEOGRAPHS_HIRAGANA_CJK_UNIFIED_IDEOGRAPHS), sk);
 			//
 			if (Util.matches(m) && Util.groupCount(m) > 2) {
 				//
@@ -1155,8 +1155,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				} else {
 					//
 					if (Util.matches(m = Util.matcher(
-							Pattern.compile(
-									"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)$"),
+							Pattern.compile(PATTERN_CJK_UNIFIED_IDEOGRAPHS_HIRAGANA_CJK_UNIFIED_IDEOGRAPHS),
 							Util.group(m1, Math.min(gc1, i + 1)))) && Util.groupCount(m) > 2) {
 						//
 						final String g2 = Util.group(m, 2);
