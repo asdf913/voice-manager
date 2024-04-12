@@ -240,7 +240,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		} // if
 			//
 		if (MultimapUtil.size(multimap) == size
-				&& (mm = toMultimap13(s1, s2, Arrays.asList("美", "八", "久須夜"))) != null) {
+				&& (mm = toMultimap13(s1, s2, Arrays.asList("美", "八", "久須夜", "根山"))) != null) {
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 			//
@@ -1034,6 +1034,42 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), m1i,
 						Util.group(m2, i));
 				//
+			} // for
+				//
+		} else if (Util
+				.matches(m1 = Util.matcher(
+						Pattern.compile(
+								"^(\\p{InCJKUnifiedIdeographs}+)(ヶ)(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$"),
+						s1))
+				&& Util.groupCount(m1) > 3
+				&& Util.matches(m2 = Util.matcher(Pattern.compile("^(\\p{InHiragana}+)(が)(\\p{InHiragana}+)$"), s2))
+				&& Util.groupCount(m2) > 2) {
+			//
+			String m2i = null;
+			//
+			for (int i = 1; i <= orElse(min(mapToInt(Stream.of(m1, m2), Util::groupCount)), 0); i++) {
+				//
+				if (!Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+						getUnicodeBlocks(m1i = Util.group(m1, i))) || IterableUtils.contains(kanjiExcluded, m1i)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				m2i = Util.group(m2, i);
+				//
+				if (i == 1) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), m1i, m2i);
+					//
+				} else {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), m1i,
+							StringUtils.substring(m2i, 0,
+									StringUtils.length(m2i) - StringUtils.length(Util.group(m1, Util.groupCount(m1)))));
+					//
+				} // if
+					//
 			} // for
 				//
 		} // if

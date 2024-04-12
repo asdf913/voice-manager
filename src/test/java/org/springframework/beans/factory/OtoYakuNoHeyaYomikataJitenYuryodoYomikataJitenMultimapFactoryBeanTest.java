@@ -42,8 +42,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_LENGTH, METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP1,
-			METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3, METHOD_TO_ENTRY, METHOD_OR_ELSE, METHOD_MAX, METHOD_MIN,
-			METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2 = null;
+			METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3, METHOD_TO_MULTI_MAP13, METHOD_TO_ENTRY, METHOD_OR_ELSE,
+			METHOD_MAX, METHOD_MIN, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2 = null;
 
 	private static int ZERO = 0;
 
@@ -66,6 +66,9 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		(METHOD_TO_MULTI_MAP2 = clz.getDeclaredMethod("toMultimap2", String.class, String.class)).setAccessible(true);
 		//
 		(METHOD_TO_MULTI_MAP3 = clz.getDeclaredMethod("toMultimap3", String.class, String.class)).setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP13 = clz.getDeclaredMethod("toMultimap13", String.class, String.class, Iterable.class))
+				.setAccessible(true);
 		//
 		(METHOD_TO_ENTRY = clz.getDeclaredMethod("toEntry", Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
@@ -403,6 +406,28 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 	}
 
 	@Test
+	void testToMultimap13() throws Throwable {
+		//
+		Assertions.assertEquals("{三=[さん], 根山=[ねさん]}", Util.toString(toMultimap13("三ヶ根山スカイライン", "さんがねさんすかいらいん", null)));
+		//
+	}
+
+	private static Multimap<String, String> toMultimap13(final String s1, final String s2,
+			final Iterable<String> kanjiExcluded) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP13.invoke(null, s1, s2, kanjiExcluded);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testToEntry() throws Throwable {
 		//
 		Assertions.assertNull(toEntry(ZERO, ONE));
@@ -606,6 +631,8 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		TableUtil.put(table, "美ヶ原林道", "うつくしがはらりんどう", "{原林道=[はらりんどう]}");
 		//
 		TableUtil.put(table, "霧ケ峰有料道路 （ビーナスライン））", "きりがみねゆうりょうどうろ", "{霧=[きり], 峰有料道路=[みねゆうりょうどうろ]}");
+		//
+		TableUtil.put(table, "三ヶ根山スカイライン", "さんがねさんすかいらいん", "{三=[さん]}");
 		//
 		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
 		//
