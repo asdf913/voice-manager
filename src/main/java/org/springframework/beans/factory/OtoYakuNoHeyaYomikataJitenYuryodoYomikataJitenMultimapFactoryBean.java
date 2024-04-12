@@ -715,30 +715,47 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 					//
 				} else {
 					//
-					final String[] ss = StringUtils.splitByWholeSeparator(Util.group(m2, i), KanaConverter.convertKana(
-							Util.group(m1, Math.min(groupCount, i + 1)), KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA));
+					final Multimap<String, String> mm = toMultimap101(StringUtils.splitByWholeSeparator(
+							Util.group(m2, i), KanaConverter.convertKana(Util.group(m1, Math.min(groupCount, i + 1)),
+									KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA)),
+							i, groupCount, m1);
 					//
-					for (int j = 0; j < length(ss); j++) {
+					if (mm != null) {
 						//
-						if (j == 0) {
-							//
-							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-									Util.group(m1, Math.min(groupCount, i)), ss[j]);
-							//
-						} else {
-							//
-							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-									Util.group(m1, Math.min(groupCount, i + 2)), ss[j]);
-							//
-						} // if
-							//
-					} // for
+						MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+						//
+					} // if
 						//
 				} // if
 					//
 			} // for
 				//
 		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap101(final String[] ss, final int i, final int groupCount,
+			final Matcher m) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		for (int j = 0; j < length(ss); j++) {
+			//
+			if (j == 0) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m, Math.min(groupCount, i)), ss[j]);
+				//
+			} else {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m, Math.min(groupCount, i + 2)), ss[j]);
+				//
+			} // if
+				//
+		} // for
 			//
 		return multimap;
 		//
