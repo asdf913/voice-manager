@@ -216,6 +216,12 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		if (MultimapUtil.size(multimap) == size && (mm = toMultimap12(s1, s2)) != null) {
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+			//
+		} // if
+			//
 		return multimap;
 		//
 	}
@@ -892,9 +898,23 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				//
 			} // for
 				//
-		} else if (Util.matches(m1 = Util.matcher(Pattern.compile(
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap12(final String s1, final String s2) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		final Matcher m1 = Util.matcher(Pattern.compile(
 				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)\\s?（((\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+))）$"),
-				s1)) && Util.groupCount(m1) > 5
+				s1);
+		//
+		Matcher m2 = null;
+		//
+		if (Util.matches(m1) && Util.groupCount(m1) > 5
 				&& Util.matches(m2 = Util.matcher(Pattern.compile("^(\\p{InHiragana}+)\\s?（(\\p{InHiragana}+)）$"), s2))
 				&& Util.groupCount(m2) > 1) {
 			//
@@ -914,9 +934,10 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 					//
 				} else {
 					//
-					ss1 = StringUtils.split(Util.group(m1, Math.min(gc1, i + 1)), Util.group(m1, Math.min(gc1, i + 3)));
+					final String[] ss1 = StringUtils.split(Util.group(m1, Math.min(gc1, i + 1)),
+							Util.group(m1, Math.min(gc1, i + 3)));
 					//
-					ss2 = StringUtils.split(m2i, Util.group(m1, Math.min(gc1, i + 3)));
+					final String[] ss2 = StringUtils.split(m2i, Util.group(m1, Math.min(gc1, i + 3)));
 					//
 					for (int j = 0; j < orElse(
 							min(mapToInt(Stream.of(ss1, ss2),
