@@ -184,13 +184,27 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
-			if (MultimapUtil.size(multimap) == size && (mm = toMultimap10(s1, s2)) != null) {
+			if ((mm = createMultimap(MultimapUtil.size(multimap) == size, s1, s2)) != null) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 				//
 			} // if
 				//
 		} // for
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> createMultimap(final boolean b, final String s1, final String s2) {
+		//
+		Multimap<String, String> multimap = null, mm;
+		//
+		if (b && (mm = toMultimap10(s1, s2)) != null) {
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+			//
+		} // if
 			//
 		return multimap;
 		//
