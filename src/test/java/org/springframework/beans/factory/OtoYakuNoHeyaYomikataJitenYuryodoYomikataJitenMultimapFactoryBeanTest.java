@@ -19,11 +19,13 @@ import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.HashBasedTable;
@@ -115,8 +117,19 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 					//
 				} // if
 					//
-			} // if
+			} else if (proxy instanceof Link) {
 				//
+				if (Objects.equals(methodName, "getText")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(methodName, "getUrl")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} // if
 				//
 			throw new Throwable(methodName);
 			//
@@ -148,6 +161,36 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 	void testGetObject() throws Exception {
 		//
 		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setText(null);
+			//
+			instance.setLinks(Collections.singleton(null));
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		final Link link = Reflection.newProxy(Link.class, ih);
+		//
+		if (instance != null) {
+			//
+			instance.setLinks(Collections.nCopies(2, link));
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setLinks(Collections.singleton(link));
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		FieldUtils.writeDeclaredField(instance, "text", null, true);
 		//
 		final Map<Object, Object> properties = System.getProperties();
 		//
