@@ -1129,8 +1129,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 				//
-			} //
-				// if
+			} // if
 				//
 		} // if
 			//
@@ -1158,6 +1157,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap15(final int i, final Iterable<String> kanjiExcluded,
 			final Matcher m1, final Matcher m2) {
 		//
