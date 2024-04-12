@@ -248,7 +248,8 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		if (MultimapUtil.size(multimap) == size && (mm = toMultimap14(s1, s2, Collections.singleton("根山"))) != null) {
+		if (MultimapUtil.size(multimap) == size
+				&& (mm = toMultimap14(s1, s2, Arrays.asList("根山", "鬼押", "鬼押出"))) != null) {
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 			//
@@ -1056,15 +1057,17 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		Multimap<String, String> multimap = null;
 		//
-		final Matcher m1 = Util.matcher(
+		Matcher m1, m2;
+		//
+		String m2i;
+		//
+		if (Util.matches(m1 = Util.matcher(
 				Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(ヶ)(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$"),
-				s1);
-		//
-		final Matcher m2 = Util.matcher(Pattern.compile(PATTERN_HIRAGANA_GA_HIRAGANA, Pattern.CANON_EQ), s2);
-		//
-		if (Util.matches(m1) && Util.groupCount(m1) > 3 && Util.matches(m2) && Util.groupCount(m2) > 2) {
+				s1)) && Util.groupCount(m1) > 3
+				&& Util.matches(m2 = Util.matcher(Pattern.compile(PATTERN_HIRAGANA_GA_HIRAGANA, Pattern.CANON_EQ), s2))
+				&& Util.groupCount(m2) > 2) {
 			//
-			String m1i, m2i;
+			String m1i;
 			//
 			for (int i = 1; i <= orElse(min(mapToInt(Stream.of(m1, m2), Util::groupCount)), 0); i++) {
 				//
@@ -1093,10 +1096,104 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 					//
 			} // for
 				//
+		} else if (Util.matches(m1 = Util.matcher(Pattern.compile(
+				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)\\s?（(\\p{InCJKUnifiedIdeographs}+)〜([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)）\\s?（([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)〜([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)）$"),
+				s1))
+				&& Util.groupCount(m1) > 0
+				&& Util.matches(m2 = Util.matcher(Pattern.compile(
+						"^([\\p{InHiragana}|\\p{InKatakana}]+)\\s?（(\\p{InHiragana}+)〜(\\p{InHiragana}+)）\\s?（(\\p{InHiragana}+)〜(\\p{InHiragana}+)）$"),
+						s2))
+				&& Util.groupCount(m2) > 2) {
+			//
+			final int gc1 = Util.groupCount(m1);
+			//
+			Matcher m = null;
+			//
+			Entry<String, String> entry = null;
+			//
+			for (int i = 1; i <= orElse(min(mapToInt(Stream.of(m1, m2), Util::groupCount)), 0); i++) {
+				//
+				m2i = Util.group(m2, i);
+				//
+				if (i == 1) {
+					//
+					if (!IterableUtils.contains(kanjiExcluded,
+							Util.getKey(entry = Pair.of(Util.group(m1, i),
+									StringUtils.substring(Util.group(m2, i), 0, StringUtils.length(m2i)
+											- StringUtils.length(Util.group(m1, Math.min(gc1, i + 1)))))))) {
+						//
+						put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), entry);
+						//
+					} // if
+						//
+				} else if (i == 2) {
+					//
+					if (!IterableUtils.contains(kanjiExcluded,
+							Util.getKey(entry = Pair.of(Util.group(m1, Math.min(gc1, i + 1)), Util.group(m2, i))))) {
+						//
+						put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), entry);
+						//
+					} // if
+						//
+				} else if (i == 3 || i == 4) {
+					//
+					if (Util.matches(
+							m = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)$"),
+									Util.group(m1, Math.min(gc1, i + 1))))
+							&& Util.groupCount(m) > 1) {
+						//
+						if (!IterableUtils.contains(kanjiExcluded,
+								Util.getKey(entry = Pair.of(Util.group(m, 1), StringUtils.substring(m2i, 0,
+										StringUtils.length(m2i) - StringUtils.length(Util.group(m, 2))))))) {
+							//
+							put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), entry);
+							//
+						} // if
+							//
+					} // if
+						//
+				} else {
+					//
+					if (Util.matches(m = Util.matcher(
+							Pattern.compile(
+									"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)$"),
+							Util.group(m1, Math.min(gc1, i + 1)))) && Util.groupCount(m) > 2) {
+						//
+						final String g2 = Util.group(m, 2);
+						//
+						final String[] ss1 = StringUtils.split(Util.group(m1, Math.min(gc1, i + 1)), g2);
+						//
+						final String[] ss2 = StringUtils.split(m2i, g2);
+						//
+						for (int j = 0; j < orElse(
+								min(mapToInt(Stream.of(ss1, ss2),
+										OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean::length)),
+								0); j++) {
+							//
+							if (!IterableUtils.contains(kanjiExcluded, Util.getKey(entry = Pair.of(ss1[j], ss2[j])))) {
+								//
+								put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), entry);
+								//
+							} // if
+								//
+						} // for
+							//
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
 		} // if
 			//
 		return multimap;
 		//
+	}
+
+	private static <K, V> void put(final Multimap<K, V> instance, final Entry<K, V> entry) {
+		if (instance != null && entry != null) {
+			instance.put(Util.getKey(entry), Util.getValue(entry));
+		}
 	}
 
 	@Nullable

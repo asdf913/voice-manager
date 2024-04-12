@@ -29,6 +29,7 @@ import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFacto
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
@@ -43,7 +44,8 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_LENGTH, METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP1,
 			METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3, METHOD_TO_MULTI_MAP14, METHOD_TO_ENTRY, METHOD_OR_ELSE,
-			METHOD_MAX, METHOD_MIN, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2 = null;
+			METHOD_MAX, METHOD_MIN, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2,
+			METHOD_PUT = null;
 
 	private static int ZERO = 0;
 
@@ -85,6 +87,8 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_CREATE_MULTI_MAP2 = clz.getDeclaredMethod("createMultimap2", String.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_PUT = clz.getDeclaredMethod("put", Multimap.class, Entry.class)).setAccessible(true);
 		//
 	}
 
@@ -410,6 +414,9 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertEquals("{三=[さん], 根山=[ねさん]}", Util.toString(toMultimap14("三ヶ根山スカイライン", "さんがねさんすかいらいん", null)));
 		//
+		Assertions.assertEquals("{鬼押=[おにおし], 三原=[みはら], 鬼押出=[おにおしだ], 峰=[みね], 茶屋=[ちゃや]}", Util.toString(
+				toMultimap14("鬼押ハイウェー （三原〜鬼押出し） （鬼押出し〜峰の茶屋）", "おにおしはいうぇー （みはら〜おにおしだし） （おにおしだし〜みねのちゃや）", null)));
+		//
 	}
 
 	private static Multimap<String, String> toMultimap14(final String s1, final String s2,
@@ -634,8 +641,11 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		//
 		TableUtil.put(table, "三ヶ根山スカイライン", "さんがねさんすかいらいん", "{三=[さん]}");
 		//
-		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
+		TableUtil.put(table, "鬼押ハイウェー （三原〜鬼押出し） （鬼押出し〜峰の茶屋）", "おにおしはいうぇー （みはら〜おにおしだし） （おにおしだし〜みねのちゃや）",
+				"{三原=[みはら], 峰=[みね], 茶屋=[ちゃや]}");
 		//
+		final Iterable<Cell<String, String, String>> cellSet = TableUtil.cellSet(table);
+		// s
 		if (cellSet != null && cellSet.iterator() != null) {
 			//
 			for (final Cell<String, String, String> cell : cellSet) {
@@ -664,6 +674,23 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 				return (Multimap) obj;
 			}
 			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPut() {
+		//
+		Assertions.assertDoesNotThrow(() -> put(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> put(ImmutableMultimap.of(), null));
+		//
+	}
+
+	private static <K, V> void put(final Multimap<K, V> instance, final Entry<K, V> entry) throws Throwable {
+		try {
+			METHOD_PUT.invoke(null, instance, entry);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
