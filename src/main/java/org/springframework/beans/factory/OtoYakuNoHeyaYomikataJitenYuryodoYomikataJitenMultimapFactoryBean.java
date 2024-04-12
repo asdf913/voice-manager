@@ -1161,7 +1161,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 	private static Multimap<String, String> toMultimap15(final int i, final Iterable<String> kanjiExcluded,
 			final Matcher m1, final Matcher m2) {
 		//
-		Multimap<String, String> multimap = null;
+		Multimap<String, String> multimap = null, mm;
 		//
 		Entry<String, String> entry;
 		//
@@ -1203,29 +1203,48 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				//
 		} else {
 			//
-			if (Util.matches(
-					m = Util.matcher(Pattern.compile(PATTERN_CJK_UNIFIED_IDEOGRAPHS_HIRAGANA_CJK_UNIFIED_IDEOGRAPHS),
-							Util.group(m1, Math.min(gc1, i + 1))))
-					&& Util.groupCount(m) > 2) {
+			if ((mm = toMultimap15Else(m1, i, m2i, kanjiExcluded)) != null) {
 				//
-				final String g2 = Util.group(m, 2);
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 				//
-				final String[] ss1 = StringUtils.split(Util.group(m1, Math.min(gc1, i + 1)), g2);
-				//
-				final String[] ss2 = StringUtils.split(m2i, g2);
-				//
-				for (int j = 0; j < orElse(min(mapToInt(Stream.of(ss1, ss2),
-						OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean::length)), 0); j++) {
-					//
-					if (!IterableUtils.contains(kanjiExcluded, Util.getKey(entry = Pair.of(ss1[j], ss2[j])))) {
-						//
-						put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), entry);
-						//
-					} // if
-						//
-				} // for
-					//
 			} // if
+				//
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap15Else(final Matcher m1, final int i, final String m2i,
+			final Iterable<String> kanjiExcluded) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		final int gc1 = Util.groupCount(m1);
+		//
+		final Matcher m = Util.matcher(Pattern.compile(PATTERN_CJK_UNIFIED_IDEOGRAPHS_HIRAGANA_CJK_UNIFIED_IDEOGRAPHS),
+				Util.group(m1, Math.min(gc1, i + 1)));
+		//
+		if (Util.matches(m) && Util.groupCount(m) > 2) {
+			//
+			final String g2 = Util.group(m, 2);
+			//
+			final String[] ss1 = StringUtils.split(Util.group(m1, Math.min(gc1, i + 1)), g2);
+			//
+			final String[] ss2 = StringUtils.split(m2i, g2);
+			//
+			Entry<String, String> entry = null;
+			//
+			for (int j = 0; j < orElse(min(mapToInt(Stream.of(ss1, ss2),
+					OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean::length)), 0); j++) {
+				//
+				if (!IterableUtils.contains(kanjiExcluded, Util.getKey(entry = Pair.of(ss1[j], ss2[j])))) {
+					//
+					put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), entry);
+					//
+				} // if
+					//
+			} // for
 				//
 		} // if
 			//
