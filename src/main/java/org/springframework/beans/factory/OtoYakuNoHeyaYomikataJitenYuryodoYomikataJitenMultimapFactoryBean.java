@@ -159,12 +159,6 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
-			if (MultimapUtil.size(mm1) == size && (mm2 = toMultimap3(s1, s2)) != null) {
-				//
-				MultimapUtil.putAll(mm1, mm2);
-				//
-			} // if
-				//
 			if ((mm2 = createMultimap1(s1, s2, multimap)) != null) {
 				//
 				MultimapUtil.putAll(mm1, mm2);
@@ -198,7 +192,13 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		final int size = MultimapUtil.size(mm1);
 		//
-		if ((mm2 = toMultimap4(s1, s2)) != null) {
+		if ((mm2 = toMultimap3(s1, s2)) != null) {
+			//
+			MultimapUtil.putAll(mm1, mm2);
+			//
+		} // if
+			//
+		if (MultimapUtil.size(mm1) == size && (mm2 = toMultimap4(s1, s2)) != null) {
 			//
 			MultimapUtil.putAll(mm1, mm2);
 			//
