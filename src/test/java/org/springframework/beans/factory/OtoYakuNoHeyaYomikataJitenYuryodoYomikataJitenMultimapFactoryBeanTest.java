@@ -130,6 +130,10 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 					//
 					return null;
 					//
+				} else if (Objects.equals(methodName, "getDescription")) {
+					//
+					return null;
+					//
 				} // if
 					//
 			} // if
@@ -194,6 +198,26 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		Assertions.assertNull(getObject(instance));
 		//
 		FieldUtils.writeDeclaredField(instance, "text", null, true);
+		//
+		if (instance != null) {
+			//
+			instance.setLinks(Collections.nCopies(2, link));
+			//
+			instance.setDescription(null);
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setLinks(Collections.singletonList(link));
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		FieldUtils.writeDeclaredField(instance, "description", null, true);
 		//
 		final Map<Object, Object> properties = System.getProperties();
 		//
