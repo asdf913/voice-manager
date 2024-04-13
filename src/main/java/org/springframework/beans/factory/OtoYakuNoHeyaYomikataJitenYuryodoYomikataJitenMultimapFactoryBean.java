@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,7 +38,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
+import org.springframework.util.function.SingletonSupplier;
 
+import com.google.common.base.Suppliers;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
@@ -99,11 +102,13 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 	@Nullable
 	private static Multimap<String, String> createMultimap(final String url) throws Exception {
 		//
+		Supplier<Multimap<String, String>> multimap = null;
+		//
 		final Document document = testAndApply(Objects::nonNull,
 				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
 				null);
 		//
-		Multimap<String, String> multimap = null, mm;
+		Multimap<String, String> mm1, mm2;
 		//
 		final List<Element> es = ElementUtil.select(document, "table[border=\"1\"] tr");
 		//
@@ -131,138 +136,154 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
-			size = MultimapUtil.size(multimap);
+			if (multimap == null) {
+				//
+				multimap = new SingletonSupplier<Multimap<String, String>>(Suppliers.ofInstance(null),
+						LinkedHashMultimap::create);
+				//
+			} // if
+				//
+			size = MultimapUtil.size(mm1 = get(multimap));
 			//
-			if ((mm = toMultimap1(
+			if ((mm2 = toMultimap1(
 					s1 = ElementUtil.text(IterableUtils.get(children = ElementUtil.children(e), Util.getKey(entry))),
 					s2 = ElementUtil.text(IterableUtils.get(children, Util.getValue(entry))))) != null) {
 				//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+				MultimapUtil.putAll(mm1, mm2);
 				//
 			} // if
 				//
-			if (MultimapUtil.size(multimap) == size && (mm = toMultimap2(s1, s2)) != null) {
+			if (MultimapUtil.size(mm1) == size && (mm2 = toMultimap2(s1, s2)) != null) {
 				//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
-				//
-			} // if
-				//
-			if (MultimapUtil.size(multimap) == size && (mm = toMultimap3(s1, s2)) != null) {
-				//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+				MultimapUtil.putAll(mm1, mm2);
 				//
 			} // if
 				//
-			if ((mm = createMultimap1(s1, s2)) != null) {
+			if (MultimapUtil.size(mm1) == size && (mm2 = toMultimap3(s1, s2)) != null) {
 				//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+				MultimapUtil.putAll(mm1, mm2);
 				//
 			} // if
 				//
-			if ((mm = createMultimap2(s1, s2)) != null) {
+			if ((mm2 = createMultimap1(s1, s2, multimap)) != null) {
 				//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+				MultimapUtil.putAll(mm1, mm2);
+				//
+			} // if
+				//
+			if ((mm2 = createMultimap2(s1, s2, multimap)) != null) {
+				//
+				MultimapUtil.putAll(mm1, mm2);
 				//
 			} // if
 				//
 		} // for
 			//
-		return multimap;
+		return get(multimap);
+		//
+	}
+
+	private static <T> T get(final Supplier<T> instance) {
+		return instance != null ? instance.get() : null;
+	}
+
+	@Nullable
+	private static Multimap<String, String> createMultimap1(final String s1, final String s2,
+			final Supplier<Multimap<String, String>> multimap) {
+		//
+		final Multimap<String, String> mm1 = get(multimap);
+		//
+		Multimap<String, String> mm2;
+		//
+		final int size = MultimapUtil.size(mm1);
+		//
+		if ((mm2 = toMultimap4(s1, s2)) != null) {
+			//
+			MultimapUtil.putAll(mm1, mm2);
+			//
+		} // if
+			//
+		if (MultimapUtil.size(mm1) == size && (mm2 = toMultimap5(s1, s2)) != null) {
+			//
+			MultimapUtil.putAll(mm1, mm2);
+			//
+		} // if
+			//
+		if (MultimapUtil.size(mm1) == size && (mm2 = toMultimap6(s1, s2)) != null) {
+			//
+			MultimapUtil.putAll(mm1, mm2);
+			//
+		} // if
+			//
+		if (MultimapUtil.size(mm1) == size && (mm2 = toMultimap7(s1, s2)) != null) {
+			//
+			MultimapUtil.putAll(mm1, mm2);
+			//
+		} // if
+			//
+		if (MultimapUtil.size(mm1) == size && (mm2 = toMultimap8(s1, s2)) != null) {
+			//
+			MultimapUtil.putAll(mm1, mm2);
+			//
+		} // if
+			//
+		if (MultimapUtil.size(mm1) == size && (mm2 = toMultimap9(s1, s2)) != null) {
+			//
+			MultimapUtil.putAll(mm1, mm2);
+			//
+		} // if
+			//
+		if (MultimapUtil.size(mm1) == size && (mm2 = toMultimap10(s1, s2)) != null) {
+			//
+			MultimapUtil.putAll(mm1, mm2);
+			//
+		} // if
+			//
+		if (MultimapUtil.size(mm1) == size && (mm2 = toMultimap11(s1, s2)) != null) {
+			//
+			MultimapUtil.putAll(mm1, mm2);
+			//
+		} // if
+			//
+		return mm1;
 		//
 	}
 
 	@Nullable
-	private static Multimap<String, String> createMultimap1(final String s1, final String s2) {
+	private static Multimap<String, String> createMultimap2(final String s1, final String s2,
+			final Supplier<Multimap<String, String>> multimap) {
 		//
-		Multimap<String, String> multimap = null, mm;
+		final Multimap<String, String> mm1 = get(multimap);
 		//
-		final int size = MultimapUtil.size(multimap);
+		Multimap<String, String> mm2;
 		//
-		if ((mm = toMultimap4(s1, s2)) != null) {
-			//
-			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
-			//
-		} // if
-			//
-		if (MultimapUtil.size(multimap) == size && (mm = toMultimap5(s1, s2)) != null) {
-			//
-			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
-			//
-		} // if
-			//
-		if (MultimapUtil.size(multimap) == size && (mm = toMultimap6(s1, s2)) != null) {
-			//
-			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
-			//
-		} // if
-			//
-		if (MultimapUtil.size(multimap) == size && (mm = toMultimap7(s1, s2)) != null) {
-			//
-			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
-			//
-		} // if
-			//
-		if (MultimapUtil.size(multimap) == size && (mm = toMultimap8(s1, s2)) != null) {
-			//
-			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
-			//
-		} // if
-			//
-		if (MultimapUtil.size(multimap) == size && (mm = toMultimap9(s1, s2)) != null) {
-			//
-			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
-			//
-		} // if
-			//
-		if (MultimapUtil.size(multimap) == size && (mm = toMultimap10(s1, s2)) != null) {
-			//
-			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
-			//
-		} // if
-			//
-		if (MultimapUtil.size(multimap) == size && (mm = toMultimap11(s1, s2)) != null) {
-			//
-			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
-			//
-		} // if
-			//
-		return multimap;
+		final int size = MultimapUtil.size(mm1);
 		//
-	}
-
-	@Nullable
-	private static Multimap<String, String> createMultimap2(final String s1, final String s2) {
-		//
-		Multimap<String, String> multimap = null, mm;
-		//
-		final int size = MultimapUtil.size(multimap);
-		//
-		if ((mm = toMultimap12(s1, s2)) != null) {
+		if ((mm2 = toMultimap12(s1, s2)) != null) {
 			//
-			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+			MultimapUtil.putAll(mm1, mm2);
 			//
 		} // if
 			//
-		if (MultimapUtil.size(multimap) == size
-				&& (mm = toMultimap13(s1, s2, Arrays.asList("美", "八", "久須夜"))) != null) {
+		if (MultimapUtil.size(mm1) == size && (mm2 = toMultimap13(s1, s2, Arrays.asList("美", "八", "久須夜"))) != null) {
 			//
-			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
-			//
-		} // if
-			//
-		if (MultimapUtil.size(multimap) == size && (mm = toMultimap14(s1, s2, Collections.singleton("根山"))) != null) {
-			//
-			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+			MultimapUtil.putAll(mm1, mm2);
 			//
 		} // if
 			//
-		if (MultimapUtil.size(multimap) == size && (mm = toMultimap15(s1, s2, Arrays.asList("鬼押", "鬼押出"))) != null) {
+		if (MultimapUtil.size(mm1) == size && (mm2 = toMultimap14(s1, s2, Collections.singleton("根山"))) != null) {
 			//
-			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+			MultimapUtil.putAll(mm1, mm2);
 			//
 		} // if
 			//
-		return multimap;
+		if (MultimapUtil.size(mm1) == size && (mm2 = toMultimap15(s1, s2, Arrays.asList("鬼押", "鬼押出"))) != null) {
+			//
+			MultimapUtil.putAll(mm1, mm2);
+			//
+		} // if
+			//
+		return mm1;
 		//
 	}
 

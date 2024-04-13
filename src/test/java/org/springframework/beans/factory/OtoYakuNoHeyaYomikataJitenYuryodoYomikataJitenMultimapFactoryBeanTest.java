@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -31,6 +32,7 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableTable;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 import com.google.common.collect.Table;
@@ -85,11 +87,11 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
 		//
-		(METHOD_CREATE_MULTI_MAP1 = clz.getDeclaredMethod("createMultimap1", String.class, String.class))
-				.setAccessible(true);
+		(METHOD_CREATE_MULTI_MAP1 = clz.getDeclaredMethod("createMultimap1", String.class, String.class,
+				Supplier.class)).setAccessible(true);
 		//
-		(METHOD_CREATE_MULTI_MAP2 = clz.getDeclaredMethod("createMultimap2", String.class, String.class))
-				.setAccessible(true);
+		(METHOD_CREATE_MULTI_MAP2 = clz.getDeclaredMethod("createMultimap2", String.class, String.class,
+				Supplier.class)).setAccessible(true);
 		//
 		(METHOD_PUT = clz.getDeclaredMethod("put", Multimap.class, Entry.class)).setAccessible(true);
 		//
@@ -581,7 +583,7 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testCreateMultimap1() throws Throwable {
 		//
-		Assertions.assertNull(Util.toString(createMultimap1(null, null)));
+		Assertions.assertNull(Util.toString(createMultimap1(null, null, null)));
 		//
 		final Table<String, String, String> table = HashBasedTable
 				.create(ImmutableTable.of("パールロード （奥志摩ライン）", "ぱーるろーど （おくしまらいん）", "{奥志摩=[おくしま]}"));
@@ -628,7 +630,9 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 				} // if
 					//
 				Assertions.assertEquals(cell.getValue(),
-						Util.toString(createMultimap1(cell.getRowKey(), cell.getColumnKey())), Util.toString(cell));
+						Util.toString(
+								createMultimap1(cell.getRowKey(), cell.getColumnKey(), LinkedHashMultimap::create)),
+						Util.toString(cell));
 				//
 			} // for
 				//
@@ -636,9 +640,10 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 			//
 	}
 
-	private static Multimap<String, String> createMultimap1(final String s1, final String s2) throws Throwable {
+	private static Multimap<String, String> createMultimap1(final String s1, final String s2,
+			final Supplier<Multimap<String, String>> multimap) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MULTI_MAP1.invoke(null, s1, s2);
+			final Object obj = METHOD_CREATE_MULTI_MAP1.invoke(null, s1, s2, multimap);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
@@ -653,7 +658,7 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testCreateMultimap2() throws Throwable {
 		//
-		Assertions.assertNull(Util.toString(createMultimap2(null, null)));
+		Assertions.assertNull(Util.toString(createMultimap2(null, null, null)));
 		//
 		final Table<String, String, String> table = HashBasedTable.create(ImmutableTable.of("蓼科スカイライン （林道夢の平線）",
 				"たてしなすかいらいん （りんどうゆめのだいらせん）", "{蓼科=[たてしな], 林道夢=[りんどうゆめ], 平線=[だいらせん]}"));
@@ -680,7 +685,9 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 				} // if
 					//
 				Assertions.assertEquals(cell.getValue(),
-						Util.toString(createMultimap2(cell.getRowKey(), cell.getColumnKey())), Util.toString(cell));
+						Util.toString(
+								createMultimap2(cell.getRowKey(), cell.getColumnKey(), LinkedHashMultimap::create)),
+						Util.toString(cell));
 				//
 			} // for
 				//
@@ -688,9 +695,10 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 			//
 	}
 
-	private static Multimap<String, String> createMultimap2(final String s1, final String s2) throws Throwable {
+	private static Multimap<String, String> createMultimap2(final String s1, final String s2,
+			final Supplier<Multimap<String, String>> multimap) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MULTI_MAP2.invoke(null, s1, s2);
+			final Object obj = METHOD_CREATE_MULTI_MAP2.invoke(null, s1, s2, multimap);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
