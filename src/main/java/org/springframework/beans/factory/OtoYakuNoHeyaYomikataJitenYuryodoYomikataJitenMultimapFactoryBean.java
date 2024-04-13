@@ -1215,6 +1215,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap15Else(final Matcher m1, final int i, final String m2i,
 			final Iterable<String> kanjiExcluded) {
 		//
