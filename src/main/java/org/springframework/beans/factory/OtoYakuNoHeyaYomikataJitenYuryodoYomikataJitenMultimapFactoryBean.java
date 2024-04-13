@@ -1113,15 +1113,16 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		Multimap<String, String> multimap = null;
 		//
-		final Matcher m1 = Util.matcher(Pattern.compile(
+		Matcher m1, m2;
+		//
+		if (Util.matches(m1 = Util.matcher(Pattern.compile(
 				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)\\s?（(\\p{InCJKUnifiedIdeographs}+)〜([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)）\\s?（([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)〜([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)）$"),
-				s1);
-		//
-		final Matcher m2 = Util.matcher(Pattern.compile(
-				"^([\\p{InHiragana}|\\p{InKatakana}]+)\\s?（(\\p{InHiragana}+)〜(\\p{InHiragana}+)）\\s?（(\\p{InHiragana}+)〜(\\p{InHiragana}+)）$"),
-				s2);
-		//
-		if (Util.matches(m1) && Util.groupCount(m1) > 0 && Util.matches(m2) && Util.groupCount(m2) > 2) {
+				s1))
+				&& Util.groupCount(m1) > 0
+				&& Util.matches(m2 = Util.matcher(Pattern.compile(
+						"^([\\p{InHiragana}|\\p{InKatakana}]+)\\s?（(\\p{InHiragana}+)〜(\\p{InHiragana}+)）\\s?（(\\p{InHiragana}+)〜(\\p{InHiragana}+)）$"),
+						s2))
+				&& Util.groupCount(m2) > 2) {
 			//
 			final Multimap<String, String> mm = toMultimap15(m1, m2, kanjiExcluded);
 			//
@@ -1131,6 +1132,17 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
+		} else if (Util
+				.find(m1 = Util.matcher(
+						Pattern.compile(
+								"^(\\p{InCJKUnifiedIdeographs}+)\\s? （[\\p{InKatakana}]+\\p{InLatin_1_Supplement}）"),
+						s1))
+				&& Util.groupCount(m1) > 0 && Util.find(m2 = Util.matcher(Pattern.compile("^(\\p{InHiragana}+)"), s2))
+				&& Util.groupCount(m2) > 0) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m1, 1),
+					Util.group(m2, 1));
+			//
 		} // if
 			//
 		return multimap;
