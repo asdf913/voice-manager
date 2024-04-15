@@ -50,7 +50,7 @@ import com.mariten.kanatools.KanaConverter;
  * https://hiramatu-hifuka.com/onyak/onyak2/yuryodo.html
  */
 public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
-		implements FactoryBean<Multimap<String, String>> {
+		extends StringMultiMapFromResourceFactoryBean {
 
 	private static final String PATTERN_CJK_UNIFIED_IDEOGRAPHS_AND_KATAKANA = "^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$";
 
@@ -87,6 +87,14 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
+		final IValue0<Multimap<String, String>> multimap = getIvalue0();
+		//
+		if (multimap != null) {
+			//
+			return IValue0Util.getValue0(multimap);
+			//
+		} // if
+			//
 		List<Link> ls = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.spliterator(links), x -> StreamSupport.stream(x, false), null),
 				x -> text != null && x != null && Objects.equals(x.getText(), IValue0Util.getValue0(text))));
