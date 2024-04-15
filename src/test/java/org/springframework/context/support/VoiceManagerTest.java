@@ -45,8 +45,10 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.security.MessageDigest;
@@ -164,6 +166,7 @@ import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.NEW;
 import org.apache.bcel.generic.ObjectType;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -268,6 +271,9 @@ import domain.Voice;
 import domain.Voice.ByteArray;
 import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.cache.TemplateLoader;
+import freemarker.template.Template;
 import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
 import j2html.attributes.Attribute;
@@ -2121,7 +2127,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testAfterPropertiesSet() throws IOException {
+	void testAfterPropertiesSet() throws IOException, IllegalAccessException, URISyntaxException {
 		//
 		if (instance == null) {
 			//
@@ -2163,7 +2169,11 @@ class VoiceManagerTest {
 			//
 		ih.isInstalled = Boolean.TRUE;
 		//
-		final URL url = getClass().getResource("/help.html.ftl");
+		final Class<?> clz = getClass();
+		//
+		final URL url = getResource(clz, "/help.html.ftl");
+		//
+		UnknownHostException uhe = null;
 		//
 		if (url == null) {
 			//
@@ -2171,8 +2181,58 @@ class VoiceManagerTest {
 			//
 		} else {
 			//
-			Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+			final freemarker.template.Configuration configuration = new freemarker.template.Configuration(
+					freemarker.template.Configuration.getVersion());
 			//
+			final TemplateLoader tl = new ClassTemplateLoader(clz, "/");
+			//
+			tl.findTemplateSource("/help.html.ftl");
+			//
+			configuration.setTemplateLoader(tl);
+			//
+			final Template template = configuration.getTemplate("/help.html.ftl");
+			//
+			final Iterable<String> urls = new FailableStream<>(Util.filter(
+					Stream.of(Util.cast(Object[].class,
+							FieldUtils.readField(FieldUtils.readDeclaredField(template, "rootElement", true),
+									"childBuffer", true))),
+					x -> Objects.equals(Util.getName(Util.getClass(x)), "freemarker.core.Assignment"))).map(x -> {
+						//
+						final URI uri = new URI(Util.toString(FieldUtils
+								.readDeclaredField(FieldUtils.readDeclaredField(x, "valueExp", true), "value", true)));
+						//
+						return StringUtils.join("", uri.getScheme(), "://", uri.getHost());
+						//
+					}).collect(Collectors.toSet());
+			//
+			if (urls != null && urls.iterator() != null) {
+				//
+				for (final String u : urls) {
+					//
+					try (final InputStream is = new URL(u).openStream()) {
+						//
+						IOUtils.toByteArray(is);
+						//
+					} catch (final UnknownHostException e) {
+						//
+						uhe = e;
+						//
+					} // try
+						//
+				} // for
+					//
+			} // if
+				//
+			if (uhe != null) {
+				//
+				Assertions.assertThrows(RuntimeException.class, () -> instance.afterPropertiesSet());
+				//
+			} else {
+				//
+				Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+				//
+			} // if
+				//
 		} // if
 			//
 		instance.setGaKuNenBeTsuKanJiListPageUrl(EMPTY);
@@ -2183,8 +2243,16 @@ class VoiceManagerTest {
 			//
 		} else {
 			//
-			Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
-			//
+			if (uhe != null) {
+				//
+				Assertions.assertThrows(RuntimeException.class, () -> instance.afterPropertiesSet());
+				//
+			} else {
+				//
+				Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+				//
+			} // if
+				//
 		} // if
 			//
 		instance.setGaKuNenBeTsuKanJiListPageUrl(SPACE);
@@ -2195,10 +2263,22 @@ class VoiceManagerTest {
 			//
 		} else {
 			//
-			Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
-			//
+			if (uhe != null) {
+				//
+				Assertions.assertThrows(RuntimeException.class, () -> instance.afterPropertiesSet());
+				//
+			} else {
+				//
+				Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+				//
+			} // if
+				//
 		} // if
 			//
+	}
+
+	private static URL getResource(final Class<?> instance, final String name) {
+		return instance != null ? instance.getResource(name) : null;
 	}
 
 	@Test
