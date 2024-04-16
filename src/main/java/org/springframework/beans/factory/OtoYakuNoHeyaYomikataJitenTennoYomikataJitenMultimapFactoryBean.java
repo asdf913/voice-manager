@@ -107,47 +107,59 @@ public class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean
 				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
 				null), "table[border=\"1\"] tr");
 		//
-		List<Element> tds = null;
-		//
-		Pattern p = null;
-		//
-		Matcher m;
-		//
-		Multimap<String, String> multimap = null;
-		//
-		String s;
+		Multimap<String, String> multimap = null, mm;
 		//
 		for (int i = 0; trs != null && i < trs.size(); i++) {
 			//
-			if ((tds = ElementUtil.children(trs.get(i))) == null || tds.size() < 5
-					|| (m = Util.matcher(p = ObjectUtils.getIfNull(p, () -> Pattern.compile("^（(\\p{InHiragana}+)）$")),
-							ElementUtil.text(tds.get(2)))) == null
-					|| !m.matches() || Util.groupCount(m) < 1) {
+			if ((mm = createMultimap(ElementUtil.children(trs.get(i)))) != null) {
 				//
-				continue;
-				//
-			} // if
-				//
-			if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-					getUnicodeBlocks(s = ElementUtil.text(tds.get(1))))) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s,
-						Util.group(m, 1));
-				//
-			} // if
-				//
-			if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-					getUnicodeBlocks(s = ElementUtil.text(tds.get(3))))
-					&& (m = Util.matcher(p = ObjectUtils.getIfNull(p, () -> Pattern.compile("^（(\\p{InHiragana}+)）$")),
-							ElementUtil.text(tds.get(4)))) != null
-					&& m.matches() && Util.groupCount(m) > 0) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s,
-						Util.group(m, 1));
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 				//
 			} // if
 				//
 		} // for
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> createMultimap(final Iterable<Element> tds) {
+		//
+		if (tds == null || IterableUtils.size(tds) < 5) {
+			//
+			return null;
+			//
+		} // if
+			//
+		String s = null;
+		//
+		Matcher m = null;
+		//
+		Pattern p = null;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+				getUnicodeBlocks(s = ElementUtil.text(IterableUtils.get(tds, 1))))
+				&& (m = Util.matcher(p = ObjectUtils.getIfNull(p, () -> Pattern.compile("^（(\\p{InHiragana}+)）$")),
+						ElementUtil.text(IterableUtils.get(tds, 2)))) != null
+				&& Util.matches(m) && Util.groupCount(m) > 0) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s,
+					Util.group(m, 1));
+			//
+		} // if
+			//
+		if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+				getUnicodeBlocks(s = ElementUtil.text(IterableUtils.get(tds, 3))))
+				&& (m = Util.matcher(p = ObjectUtils.getIfNull(p, () -> Pattern.compile("^（(\\p{InHiragana}+)）$")),
+						ElementUtil.text(IterableUtils.get(tds, 4)))) != null
+				&& m.matches() && Util.groupCount(m) > 0) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s,
+					Util.group(m, 1));
+			//
+		} // if
 			//
 		return multimap;
 		//

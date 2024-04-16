@@ -14,6 +14,7 @@ import java.util.function.Predicate;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +28,7 @@ import com.google.common.reflect.Reflection;
 
 class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_UNICODE_BLOCKS = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_UNICODE_BLOCKS, METHOD_CREATE_MULTI_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -38,6 +39,8 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_GET_UNICODE_BLOCKS = clz.getDeclaredMethod("getUnicodeBlocks", String.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_MULTI_MAP = clz.getDeclaredMethod("createMultimap", Iterable.class)).setAccessible(true);
 		//
 	}
 
@@ -196,6 +199,31 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof List) {
 				return (List) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateMultimap() throws Throwable {
+		//
+		Assertions.assertNull(createMultimap(null));
+		//
+		Assertions.assertNull(createMultimap(Collections.singleton(null)));
+		//
+		Assertions.assertNull(createMultimap(Collections.nCopies(5, null)));
+		//
+	}
+
+	private static Multimap<String, String> createMultimap(final Iterable<Element> tds) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULTI_MAP.invoke(null, tds);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
