@@ -112,9 +112,14 @@ public class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean
 		//
 		Multimap<String, String> multimap = null, mm;
 		//
+		Supplier<Pattern> supplier = null;
+		//
 		for (int i = 0; trs != null && i < trs.size(); i++) {
 			//
-			if ((mm = createMultimap(ElementUtil.children(trs.get(i)))) != null) {
+			if ((mm = createMultimap(
+					supplier = ObjectUtils.getIfNull(supplier,
+							() -> new SingletonSupplier<>(null, () -> Pattern.compile("^（(\\p{InHiragana}+)）$"))),
+					ElementUtil.children(trs.get(i)))) != null) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 				//
@@ -127,7 +132,8 @@ public class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean
 	}
 
 	@Nullable
-	private static Multimap<String, String> createMultimap(@Nullable final Iterable<Element> tds) {
+	private static Multimap<String, String> createMultimap(final Supplier<Pattern> supplier,
+			@Nullable final Iterable<Element> tds) {
 		//
 		if (tds == null || IterableUtils.size(tds) < 5) {
 			//
@@ -136,9 +142,6 @@ public class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean
 		} // if
 			//
 		Multimap<String, String> multimap = null, mm;
-		//
-		final Supplier<Pattern> supplier = new SingletonSupplier<>(null,
-				() -> Pattern.compile("^（(\\p{InHiragana}+)）$"));
 		//
 		if ((mm = createMultimap(supplier, ElementUtil.text(IterableUtils.get(tds, 1)),
 				ElementUtil.text(IterableUtils.get(tds, 2)))) != null) {

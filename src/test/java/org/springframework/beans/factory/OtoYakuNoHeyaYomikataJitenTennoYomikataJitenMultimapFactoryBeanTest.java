@@ -30,8 +30,8 @@ import com.google.common.reflect.Reflection;
 
 class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_UNICODE_BLOCKS, METHOD_CREATE_MULTI_MAP1,
-			METHOD_CREATE_MULTI_MAP2 = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_UNICODE_BLOCKS, METHOD_CREATE_MULTI_MAP2,
+			METHOD_CREATE_MULTI_MAP3 = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -43,9 +43,10 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_GET_UNICODE_BLOCKS = clz.getDeclaredMethod("getUnicodeBlocks", String.class)).setAccessible(true);
 		//
-		(METHOD_CREATE_MULTI_MAP1 = clz.getDeclaredMethod("createMultimap", Iterable.class)).setAccessible(true);
+		(METHOD_CREATE_MULTI_MAP2 = clz.getDeclaredMethod("createMultimap", Supplier.class, Iterable.class))
+				.setAccessible(true);
 		//
-		(METHOD_CREATE_MULTI_MAP2 = clz.getDeclaredMethod("createMultimap", Supplier.class, String.class, String.class))
+		(METHOD_CREATE_MULTI_MAP3 = clz.getDeclaredMethod("createMultimap", Supplier.class, String.class, String.class))
 				.setAccessible(true);
 		//
 	}
@@ -215,11 +216,11 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testCreateMultimap() throws Throwable {
 		//
-		Assertions.assertNull(createMultimap(null));
+		Assertions.assertNull(createMultimap(null, null));
 		//
-		Assertions.assertNull(createMultimap(Collections.singleton(null)));
+		Assertions.assertNull(createMultimap(null, Collections.singleton(null)));
 		//
-		Assertions.assertNull(createMultimap(Collections.nCopies(5, null)));
+		Assertions.assertNull(createMultimap(null, Collections.nCopies(5, null)));
 		//
 		Assertions.assertEquals("{神武天皇=[じんむてんのう]}", Util.toString(createMultimap(null, "神武天皇", "（じんむてんのう）")));
 		//
@@ -228,9 +229,10 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 		//
 	}
 
-	private static Multimap<String, String> createMultimap(final Iterable<Element> tds) throws Throwable {
+	private static Multimap<String, String> createMultimap(final Supplier<Pattern> supplier,
+			final Iterable<Element> tds) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MULTI_MAP1.invoke(null, tds);
+			final Object obj = METHOD_CREATE_MULTI_MAP2.invoke(null, supplier, tds);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
@@ -245,7 +247,7 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 	private static Multimap<String, String> createMultimap(final Supplier<Pattern> supplier, final String s1,
 			final String s2) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MULTI_MAP2.invoke(null, supplier, s1, s2);
+			final Object obj = METHOD_CREATE_MULTI_MAP3.invoke(null, supplier, s1, s2);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
