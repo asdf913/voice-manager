@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.StreamSupport;
@@ -27,6 +28,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
+import org.springframework.util.function.SingletonSupplier;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
@@ -135,14 +137,17 @@ public class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean
 			//
 		Multimap<String, String> multimap = null, mm;
 		//
-		if ((mm = createMultimap(ElementUtil.text(IterableUtils.get(tds, 1)),
+		final Supplier<Pattern> supplier = new SingletonSupplier<>(null,
+				() -> Pattern.compile("^（(\\p{InHiragana}+)）$"));
+		//
+		if ((mm = createMultimap(supplier, ElementUtil.text(IterableUtils.get(tds, 1)),
 				ElementUtil.text(IterableUtils.get(tds, 2)))) != null) {
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 			//
 		} // if
 			//
-		if ((mm = createMultimap(ElementUtil.text(IterableUtils.get(tds, 3)),
+		if ((mm = createMultimap(supplier, ElementUtil.text(IterableUtils.get(tds, 3)),
 				ElementUtil.text(IterableUtils.get(tds, 4)))) != null) {
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
@@ -154,9 +159,11 @@ public class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean
 	}
 
 	@Nullable
-	private static Multimap<String, String> createMultimap(final String s1, final String s2) {
+	private static Multimap<String, String> createMultimap(final Supplier<Pattern> supplier, final String s1,
+			final String s2) {
 		//
-		final Matcher m = Util.matcher(Pattern.compile("^（(\\p{InHiragana}+)）$"), s2);
+		final Matcher m = Util
+				.matcher(ObjectUtils.getIfNull(get(supplier), () -> Pattern.compile("^（(\\p{InHiragana}+)）$")), s2);
 		//
 		if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), getUnicodeBlocks(s1))
 				&& Util.matches(m) && Util.groupCount(m) > 0) {
@@ -167,6 +174,10 @@ public class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean
 			//
 		return null;
 		//
+	}
+
+	private static <T> T get(final Supplier<T> instance) {
+		return instance != null ? instance.get() : null;
 	}
 
 	@Nullable

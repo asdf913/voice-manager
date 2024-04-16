@@ -10,6 +10,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -43,7 +45,7 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_CREATE_MULTI_MAP1 = clz.getDeclaredMethod("createMultimap", Iterable.class)).setAccessible(true);
 		//
-		(METHOD_CREATE_MULTI_MAP2 = clz.getDeclaredMethod("createMultimap", String.class, String.class))
+		(METHOD_CREATE_MULTI_MAP2 = clz.getDeclaredMethod("createMultimap", Supplier.class, String.class, String.class))
 				.setAccessible(true);
 		//
 	}
@@ -219,7 +221,10 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(createMultimap(Collections.nCopies(5, null)));
 		//
-		Assertions.assertEquals("{神武天皇=[じんむてんのう]}", Util.toString(createMultimap("神武天皇", "（じんむてんのう）")));
+		Assertions.assertEquals("{神武天皇=[じんむてんのう]}", Util.toString(createMultimap(null, "神武天皇", "（じんむてんのう）")));
+		//
+		Assertions.assertEquals("{神武天皇=[じんむてんのう]}",
+				Util.toString(createMultimap(() -> Pattern.compile("^（(\\p{InHiragana}+)）$"), "神武天皇", "（じんむてんのう）")));
 		//
 	}
 
@@ -237,9 +242,10 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 		}
 	}
 
-	private static Multimap<String, String> createMultimap(final String s1, final String s2) throws Throwable {
+	private static Multimap<String, String> createMultimap(final Supplier<Pattern> supplier, final String s1,
+			final String s2) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MULTI_MAP2.invoke(null, s1, s2);
+			final Object obj = METHOD_CREATE_MULTI_MAP2.invoke(null, supplier, s1, s2);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
