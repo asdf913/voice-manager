@@ -176,7 +176,7 @@ public class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static <T> T get(final Supplier<T> instance) {
+	private static <T> T get(@Nullable final Supplier<T> instance) {
 		return instance != null ? instance.get() : null;
 	}
 
