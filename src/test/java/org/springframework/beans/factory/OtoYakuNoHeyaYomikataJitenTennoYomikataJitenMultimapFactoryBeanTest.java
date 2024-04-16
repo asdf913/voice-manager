@@ -2,8 +2,10 @@ package org.springframework.beans.factory;
 
 import java.io.File;
 import java.lang.Character.UnicodeBlock;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -11,14 +13,17 @@ import java.util.function.Predicate;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
+import com.google.common.reflect.Reflection;
 
 class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 
@@ -34,6 +39,29 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_GET_UNICODE_BLOCKS = clz.getDeclaredMethod("getUnicodeBlocks", String.class)).setAccessible(true);
 		//
+	}
+
+	private static class IH implements InvocationHandler {
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = Util.getName(method);
+			//
+			if (proxy instanceof Link) {
+				//
+				if (Util.contains(Arrays.asList("getText", "getUrl"), methodName)) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	private OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean instance = null;
@@ -56,6 +84,36 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 	void testGetObject() throws Exception {
 		//
 		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setText(null);
+			//
+			instance.setLinks(Collections.singleton(null));
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		final Link link = Reflection.newProxy(Link.class, new IH());
+		//
+		if (instance != null) {
+			//
+			instance.setLinks(Collections.singleton(link));
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setLinks(Collections.nCopies(2, link));
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
+		//
+		FieldUtils.writeDeclaredField(instance, "text", null, true);
 		//
 		final Map<Object, Object> properties = System.getProperties();
 		//
