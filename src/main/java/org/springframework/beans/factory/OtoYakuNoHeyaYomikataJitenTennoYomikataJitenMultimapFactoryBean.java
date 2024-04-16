@@ -124,7 +124,7 @@ public class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean
 	}
 
 	@Nullable
-	private static Multimap<String, String> createMultimap(final Iterable<Element> tds) {
+	private static Multimap<String, String> createMultimap(@Nullable final Iterable<Element> tds) {
 		//
 		if (tds == null || IterableUtils.size(tds) < 5) {
 			//
