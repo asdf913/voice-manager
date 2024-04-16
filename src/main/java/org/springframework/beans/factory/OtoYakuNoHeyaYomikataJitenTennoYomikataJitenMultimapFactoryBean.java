@@ -152,7 +152,7 @@ public class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean
 			//
 		if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 				getUnicodeBlocks(s = ElementUtil.text(IterableUtils.get(tds, 3))))
-				&& (m = Util.matcher(p = ObjectUtils.getIfNull(p, () -> Pattern.compile("^（(\\p{InHiragana}+)）$")),
+				&& (m = Util.matcher(ObjectUtils.getIfNull(p, () -> Pattern.compile("^（(\\p{InHiragana}+)）$")),
 						ElementUtil.text(IterableUtils.get(tds, 4)))) != null
 				&& m.matches() && Util.groupCount(m) > 0) {
 			//
