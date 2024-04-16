@@ -153,6 +153,7 @@ public class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> createMultimap(final String s1, final String s2) {
 		//
 		final Matcher m = Util.matcher(Pattern.compile("^（(\\p{InHiragana}+)）$"), s2);
