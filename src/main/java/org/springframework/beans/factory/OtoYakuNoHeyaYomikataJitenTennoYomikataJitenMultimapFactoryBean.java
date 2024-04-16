@@ -42,7 +42,11 @@ public class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean
 
 	private Iterable<Link> links = null;
 
-	private IValue0<String> text, description = null;
+	@Note("Text")
+	private IValue0<String> text = null;
+
+	@Note("Description")
+	private IValue0<String> description = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
