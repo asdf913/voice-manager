@@ -28,6 +28,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
@@ -132,37 +133,38 @@ public class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		String s = null;
+		Multimap<String, String> multimap = null, mm;
 		//
-		Matcher m = null;
-		//
-		Pattern p = null;
-		//
-		Multimap<String, String> multimap = null;
-		//
-		if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-				getUnicodeBlocks(s = ElementUtil.text(IterableUtils.get(tds, 1))))
-				&& (m = Util.matcher(p = ObjectUtils.getIfNull(p, () -> Pattern.compile("^（(\\p{InHiragana}+)）$")),
-						ElementUtil.text(IterableUtils.get(tds, 2)))) != null
-				&& Util.matches(m) && Util.groupCount(m) > 0) {
+		if ((mm = createMultimap(ElementUtil.text(IterableUtils.get(tds, 1)),
+				ElementUtil.text(IterableUtils.get(tds, 2)))) != null) {
 			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s,
-					Util.group(m, 1));
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 			//
 		} // if
 			//
-		if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-				getUnicodeBlocks(s = ElementUtil.text(IterableUtils.get(tds, 3))))
-				&& (m = Util.matcher(ObjectUtils.getIfNull(p, () -> Pattern.compile("^（(\\p{InHiragana}+)）$")),
-						ElementUtil.text(IterableUtils.get(tds, 4)))) != null
-				&& m.matches() && Util.groupCount(m) > 0) {
+		if ((mm = createMultimap(ElementUtil.text(IterableUtils.get(tds, 3)),
+				ElementUtil.text(IterableUtils.get(tds, 4)))) != null) {
 			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s,
-					Util.group(m, 1));
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 			//
 		} // if
 			//
 		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> createMultimap(final String s1, final String s2) {
+		//
+		final Matcher m = Util.matcher(Pattern.compile("^（(\\p{InHiragana}+)）$"), s2);
+		//
+		if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), getUnicodeBlocks(s1))
+				&& Util.matches(m) && Util.groupCount(m) > 0) {
+			//
+			return ImmutableMultimap.of(s1, Util.group(m, 1));
+			//
+		} // if
+			//
+		return null;
 		//
 	}
 

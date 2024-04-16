@@ -28,7 +28,8 @@ import com.google.common.reflect.Reflection;
 
 class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_UNICODE_BLOCKS, METHOD_CREATE_MULTI_MAP = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_UNICODE_BLOCKS, METHOD_CREATE_MULTI_MAP1,
+			METHOD_CREATE_MULTI_MAP2 = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -40,7 +41,10 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_GET_UNICODE_BLOCKS = clz.getDeclaredMethod("getUnicodeBlocks", String.class)).setAccessible(true);
 		//
-		(METHOD_CREATE_MULTI_MAP = clz.getDeclaredMethod("createMultimap", Iterable.class)).setAccessible(true);
+		(METHOD_CREATE_MULTI_MAP1 = clz.getDeclaredMethod("createMultimap", Iterable.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_MULTI_MAP2 = clz.getDeclaredMethod("createMultimap", String.class, String.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -215,11 +219,27 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(createMultimap(Collections.nCopies(5, null)));
 		//
+		Assertions.assertEquals("{神武天皇=[じんむてんのう]}", Util.toString(createMultimap("神武天皇", "（じんむてんのう）")));
+		//
 	}
 
 	private static Multimap<String, String> createMultimap(final Iterable<Element> tds) throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MULTI_MAP.invoke(null, tds);
+			final Object obj = METHOD_CREATE_MULTI_MAP1.invoke(null, tds);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Multimap<String, String> createMultimap(final String s1, final String s2) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MULTI_MAP2.invoke(null, s1, s2);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
