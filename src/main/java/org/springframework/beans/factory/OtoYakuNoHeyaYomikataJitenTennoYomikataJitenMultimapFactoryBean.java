@@ -36,7 +36,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
 /*
- * https://hiramatu-hifuka.com/onyak/onyak2/tenno.html
+ * https://hiramatu-hifuka.com/onyak/rekisi/tenno.html
  */
 public class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean
 		implements FactoryBean<Multimap<String, String>> {
