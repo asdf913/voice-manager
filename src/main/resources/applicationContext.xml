@@ -905,6 +905,19 @@
 		<property name="valueColumnIndex" value="1" />
 	</bean>
 
+	<!--https://hiramatu-hifuka.com/onyak/onyak2/tenno.html-->
+	<bean
+		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean">
+		<meta key="value" value="hiragana" />
+		<property name="url"
+			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean.url}" />
+		<property name="links" ref="OtoYakuNoHeyaYomikataJitenLinkList" />
+		<property name="text"
+			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean.text}" />
+		<property name="description"
+			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean.description}" />
+	</bean>
+
 	<!-- -->
 	<bean class="org.springframework.context.support.VoiceManager">
 		<property name="layout" ref="MigLayout" />
