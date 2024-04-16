@@ -50,7 +50,7 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 			//
 			if (proxy instanceof Link) {
 				//
-				if (Util.contains(Arrays.asList("getText", "getUrl"), methodName)) {
+				if (Util.contains(Arrays.asList("getText", "getUrl", "getDescription"), methodName)) {
 					//
 					return null;
 					//
@@ -114,6 +114,26 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
 		//
 		FieldUtils.writeDeclaredField(instance, "text", null, true);
+		//
+		if (instance != null) {
+			//
+			instance.setDescription(null);
+			//
+		} // if
+			///
+		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
+		//
+		if (instance != null) {
+			//
+			instance.setLinks(Collections.singleton(link));
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		FieldUtils.writeDeclaredField(instance, "description", null, true);
+		//
+		Assertions.assertNull(getObject(instance));
 		//
 		final Map<Object, Object> properties = System.getProperties();
 		//
