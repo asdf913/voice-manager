@@ -79,6 +79,7 @@ public class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> getObject(final String url) throws Exception {
 		//
 		final List<Element> trs = ElementUtil.select(testAndApply(Objects::nonNull,
