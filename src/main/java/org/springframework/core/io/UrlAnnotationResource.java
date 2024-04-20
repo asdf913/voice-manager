@@ -85,7 +85,7 @@ public class UrlAnnotationResource implements Resource {
 					//
 				} // if
 					//
-				for (int k = 0; as != null && k < as.length; k++) {
+				for (int k = 0; k < as.length; k++) {
 					//
 					if ((a = as[k]) == null) {
 						//
