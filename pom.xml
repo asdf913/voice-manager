@@ -312,6 +312,12 @@
 			<artifactId>nashorn-core</artifactId>
 			<version>15.4</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.github.classgraph/classgraph -->
+		<dependency>
+		    <groupId>io.github.classgraph</groupId>
+		    <artifactId>classgraph</artifactId>
+		    <version>4.8.172</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -380,13 +386,6 @@
 					<artifactId>xercesImpl</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/io.github.classgraph/classgraph -->
-		<dependency>
-		    <groupId>io.github.classgraph</groupId>
-		    <artifactId>classgraph</artifactId>
-		    <version>4.8.172</version>
-		    <scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>
