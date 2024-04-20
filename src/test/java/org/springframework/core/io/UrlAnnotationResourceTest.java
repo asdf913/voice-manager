@@ -2,6 +2,7 @@ package org.springframework.core.io;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -48,7 +49,8 @@ import com.google.common.base.Predicates;
 class UrlAnnotationResourceTest {
 
 	private static Method METHOD_CAST, METHOD_FOR_NAME, METHOD_GET_CLASS, METHOD_FILTER, METHOD_TO_INPUT_STREAM,
-			METHOD_GET_DECLARED_METHODS, METHOD_TEST_AND_APPLY, METHOD_GET_DECLARING_CLASS, METHOD_PUT_ALL = null;
+			METHOD_GET_DECLARED_METHODS, METHOD_TEST_AND_APPLY, METHOD_GET_DECLARING_CLASS, METHOD_PUT_ALL,
+			METHOD_GET_URL_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -71,6 +73,8 @@ class UrlAnnotationResourceTest {
 				Function.class)).setAccessible(true);
 		//
 		(METHOD_GET_DECLARING_CLASS = clz.getDeclaredMethod("getDeclaringClass", Member.class)).setAccessible(true);
+		//
+		(METHOD_GET_URL_VALUE = clz.getDeclaredMethod("getUrlValue", Object.class, Field.class)).setAccessible(true);
 		//
 		(METHOD_PUT_ALL = clz.getDeclaredMethod("putAll", Properties.class, Map.class)).setAccessible(true);
 		//
@@ -587,6 +591,27 @@ class UrlAnnotationResourceTest {
 	private static <K, V> void putAll(final Properties instance, final Map<?, ?> b) throws Throwable {
 		try {
 			invoke(METHOD_PUT_ALL, null, instance, b);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetUrlValue() throws Throwable {
+		//
+		Assertions.assertNull(getUrlValue(null, null));
+		//
+	}
+
+	private static Map<String, Object> getUrlValue(final Object a, final Field f) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_GET_URL_VALUE, null, a, f);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Map) {
+				return (Map) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

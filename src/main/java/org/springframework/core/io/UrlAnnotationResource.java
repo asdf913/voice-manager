@@ -56,8 +56,6 @@ public class UrlAnnotationResource implements Resource {
 		//
 		Annotation[] as;
 		//
-		Annotation a;
-		//
 		for (int i = 0; i < IterableUtils.size(classInfos); i++) {
 			//
 			try {
@@ -82,13 +80,7 @@ public class UrlAnnotationResource implements Resource {
 					//
 				for (int k = 0; k < as.length; k++) {
 					//
-					if ((a = as[k]) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					putAll(properties = ObjectUtils.getIfNull(properties, Properties::new), getUrlValue(a, f));
+					putAll(properties = ObjectUtils.getIfNull(properties, Properties::new), getUrlValue(as[k], f));
 					//
 				} // for
 					//
@@ -111,7 +103,7 @@ public class UrlAnnotationResource implements Resource {
 		//
 		final Class<?> clz = getClass(a);
 		//
-		if (Proxy.isProxyClass(clz)) {
+		if (clz != null && Proxy.isProxyClass(clz)) {
 			//
 			final List<Field> fields = toList(
 					filter(Arrays.stream(FieldUtils.getAllFields(getClass(Proxy.getInvocationHandler(a)))),
