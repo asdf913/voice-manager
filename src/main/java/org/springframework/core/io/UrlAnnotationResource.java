@@ -129,7 +129,7 @@ public class UrlAnnotationResource implements Resource {
 							//
 						try {
 							//
-							properties.put(StringUtils.joinWith(".", getName(f1.getDeclaringClass()), getName(f1)),
+							properties.put(StringUtils.joinWith(".", getName(getDeclaringClass(f1)), getName(f1)),
 									Narcissus.invokeMethod(a, m));
 							//
 						} catch (final IllegalArgumentException e) {
@@ -148,6 +148,10 @@ public class UrlAnnotationResource implements Resource {
 			//
 		return toInputStream(properties);
 		//
+	}
+
+	private static Class<?> getDeclaringClass(final Member instance) {
+		return instance != null ? instance.getDeclaringClass() : null;
 	}
 
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
