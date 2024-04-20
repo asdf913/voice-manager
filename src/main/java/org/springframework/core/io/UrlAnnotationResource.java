@@ -110,14 +110,17 @@ public class UrlAnnotationResource implements Resource {
 		//
 	}
 
+	@Nullable
 	private static ClassInfoList getAllClasses(@Nullable final ScanResult instance) {
 		return instance != null ? instance.getAllClasses() : null;
 	}
 
+	@Nullable
 	private static ScanResult scan(@Nullable final ClassGraph instance) {
 		return instance != null ? instance.scan() : null;
 	}
 
+	@Nullable
 	private static Package getPackage(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getPackage() : null;
 	}
@@ -252,6 +255,7 @@ public class UrlAnnotationResource implements Resource {
 		return instance != null ? instance.getName() : null;
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Package instance) {
 		return instance != null ? instance.getName() : null;
 	}
