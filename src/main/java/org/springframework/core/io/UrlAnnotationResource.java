@@ -154,6 +154,7 @@ public class UrlAnnotationResource implements Resource {
 		return instance != null ? instance.toList() : null;
 	}
 
+	@Nullable
 	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
 			@Nullable final Predicate<? super T> predicate) {
 		return instance != null && predicate != null ? instance.filter(predicate) : instance;
@@ -183,6 +184,7 @@ public class UrlAnnotationResource implements Resource {
 		return instance != null ? instance.getName() : null;
 	}
 
+	@Nullable
 	private static Class<?> forName(final String className) {
 		try {
 			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
@@ -191,6 +193,7 @@ public class UrlAnnotationResource implements Resource {
 		}
 	}
 
+	@Nullable
 	private static <T> T cast(@Nullable final Class<T> clz, final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
