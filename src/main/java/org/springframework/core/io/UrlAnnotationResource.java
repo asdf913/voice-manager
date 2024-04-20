@@ -20,6 +20,8 @@ import java.util.Properties;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -152,7 +154,8 @@ public class UrlAnnotationResource implements Resource {
 		return instance != null ? instance.toList() : null;
 	}
 
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
+			@Nullable final Predicate<? super T> predicate) {
 		return instance != null && predicate != null ? instance.filter(predicate) : instance;
 	}
 
@@ -188,7 +191,7 @@ public class UrlAnnotationResource implements Resource {
 		}
 	}
 
-	private static <T> T cast(final Class<T> clz, final Object instance) {
+	private static <T> T cast(@Nullable final Class<T> clz, final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
