@@ -101,7 +101,7 @@ public class UrlAnnotationResource implements Resource {
 		//
 	}
 
-	private static void putAll(final Properties instance, final Map<?, ?> b) {
+	private static void putAll(@Nullable final Properties instance, @Nullable final Map<?, ?> b) {
 		if (instance != null && b != null) {
 			instance.putAll(b);
 		}
