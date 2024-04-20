@@ -14,7 +14,9 @@ import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.function.Function;
@@ -24,6 +26,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
@@ -42,25 +45,19 @@ public class UrlAnnotationResource implements Resource {
 	@Override
 	public InputStream getInputStream() throws IOException {
 		//
-		final Properties properties = new Properties();
+		Properties properties = null;
 		//
 		final List<ClassInfo> classInfos = ClassInfoUtil.getClassInfos();
 		//
 		Field[] fs = null;
 		//
-		Field f1, f2;
+		Field f;
 		//
 		Annotation[] as;
 		//
 		Annotation a;
 		//
-		List<Field> fields = null;
-		//
-		Class<?> clz = null;
-		//
-		List<Method> ms = null;
-		//
-		Method m = null;
+		Map<?, ?> m = null;
 		//
 		for (int i = 0; i < IterableUtils.size(classInfos); i++) {
 			//
@@ -78,7 +75,7 @@ public class UrlAnnotationResource implements Resource {
 				//
 			for (int j = 0; j < fs.length; j++) {
 				//
-				if ((as = getAnnotations(f1 = fs[j])) == null) {
+				if ((as = getAnnotations(f = fs[j])) == null) {
 					//
 					continue;
 					//
@@ -86,61 +83,15 @@ public class UrlAnnotationResource implements Resource {
 					//
 				for (int k = 0; k < as.length; k++) {
 					//
-					if ((a = as[k]) == null) {
+					if ((a = as[k]) == null || (properties = ObjectUtils.getIfNull(properties, Properties::new)) == null
+							|| (m = getUrlValue(a, f)) == null) {
 						//
 						continue;
 						//
 					} // if
 						//
-					if (Proxy.isProxyClass(clz = getClass(a))) {
-						//
-						if (IterableUtils.size(fields = toList(
-								filter(Arrays.stream(FieldUtils.getAllFields(getClass(Proxy.getInvocationHandler(a)))),
-										x -> Objects.equals(getName(x), "type")))) > 1) {
-							//
-							throw new RuntimeException();
-							//
-						} // if
-							//
-						if ((f2 = testAndApply(x -> IterableUtils.size(x) == 1, fields, x -> IterableUtils.get(x, 0),
-								null)) == null
-								|| !Objects.equals(
-										getName(cast(Class.class,
-												Narcissus.getField(Proxy.getInvocationHandler(a), f2))),
-										"org.springframework.beans.factory.URL")
-								|| (ms = toList(filter(Arrays.stream(getDeclaredMethods(clz)),
-										x -> Objects.equals(getName(x), "value")))) == null) {
-							//
-							continue;
-							//
-						} // if
-							//
-						if (IterableUtils.size(ms) > 1) {
-							//
-							throw new IllegalStateException();
-							//
-						} // if
-							//
-						if ((m = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0),
-								null)) == null) {
-							//
-							continue;
-							//
-						} // if
-							//
-						try {
-							//
-							properties.put(StringUtils.joinWith(".", getName(getDeclaringClass(f1)), getName(f1)),
-									Narcissus.invokeMethod(a, m));
-							//
-						} catch (final IllegalArgumentException e) {
-							//
-							LoggerUtil.error(LOG, e.getMessage(), e);
-							//
-						} // try
-							//
-					} // if
-						//
+					properties.putAll(m);
+					//
 				} // for
 					//
 			} // for
@@ -148,6 +99,68 @@ public class UrlAnnotationResource implements Resource {
 		} // for
 			//
 		return toInputStream(properties);
+		//
+	}
+
+	private static Map<String, Object> getUrlValue(final Object a, final Field f) {
+		//
+		final Class<?> clz = getClass(a);
+		//
+		if (Proxy.isProxyClass(clz)) {
+			//
+			final List<Field> fields = toList(
+					filter(Arrays.stream(FieldUtils.getAllFields(getClass(Proxy.getInvocationHandler(a)))),
+							x -> Objects.equals(getName(x), "type")));
+			//
+			if (IterableUtils.size(fields) > 1) {
+				//
+				throw new RuntimeException();
+				//
+			} // if
+				//
+			final Field f2 = testAndApply(x -> IterableUtils.size(x) == 1, fields, x -> IterableUtils.get(x, 0), null);
+			//
+			List<Method> ms = null;
+			//
+			if (f2 == null
+					|| !Objects.equals(
+							getName(cast(Class.class, Narcissus.getField(Proxy.getInvocationHandler(a), f2))),
+							"org.springframework.beans.factory.URL")
+					|| (ms = toList(filter(Arrays.stream(getDeclaredMethods(clz)),
+							x -> Objects.equals(getName(x), "value")))) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+			if (IterableUtils.size(ms) > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			Method m = null;
+			//
+			if ((m = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null)) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+			try {
+				//
+				return Collections.singletonMap(StringUtils.joinWith(".", getName(getDeclaringClass(f)), getName(f)),
+						Narcissus.invokeMethod(a, m));
+				//
+			} catch (final IllegalArgumentException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
+				//
+		} // if
+			//
+		return null;
 		//
 	}
 
