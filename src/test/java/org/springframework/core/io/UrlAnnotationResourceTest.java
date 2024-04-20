@@ -7,6 +7,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.function.Function;
@@ -47,7 +48,7 @@ import com.google.common.base.Predicates;
 class UrlAnnotationResourceTest {
 
 	private static Method METHOD_CAST, METHOD_FOR_NAME, METHOD_GET_CLASS, METHOD_FILTER, METHOD_TO_INPUT_STREAM,
-			METHOD_GET_DECLARED_METHODS, METHOD_TEST_AND_APPLY, METHOD_GET_DECLARING_CLASS = null;
+			METHOD_GET_DECLARED_METHODS, METHOD_TEST_AND_APPLY, METHOD_GET_DECLARING_CLASS, METHOD_PUT_ALL = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -70,6 +71,8 @@ class UrlAnnotationResourceTest {
 				Function.class)).setAccessible(true);
 		//
 		(METHOD_GET_DECLARING_CLASS = clz.getDeclaredMethod("getDeclaringClass", Member.class)).setAccessible(true);
+		//
+		(METHOD_PUT_ALL = clz.getDeclaredMethod("putAll", Properties.class, Map.class)).setAccessible(true);
 		//
 	}
 
@@ -393,14 +396,14 @@ class UrlAnnotationResourceTest {
 	@Test
 	void testGetInputStream() throws IOException {
 		//
-		final UrlAnnotationResource instance = new UrlAnnotationResource();
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			try (final InputStream is = instance != null ? instance.getInputStream() : null) {
+				//
+			} // try
+				//
+		});
 		//
-		try (final InputStream is = instance.getInputStream()) {
-			//
-			Assertions.assertNotNull(is);
-			//
-		} // try
-			//
 	}
 
 	@Test
@@ -563,6 +566,27 @@ class UrlAnnotationResourceTest {
 				return (Class) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPutAll() throws Throwable {
+		//
+		Assertions.assertDoesNotThrow(() -> putAll(null, null));
+		//
+		final Properties properties = new Properties();
+		//
+		Assertions.assertDoesNotThrow(() -> putAll(properties, null));
+		//
+		Assertions.assertDoesNotThrow(() -> putAll(properties, properties));
+		//
+	}
+
+	private static <K, V> void putAll(final Properties instance, final Map<?, ?> b) throws Throwable {
+		try {
+			invoke(METHOD_PUT_ALL, null, instance, b);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

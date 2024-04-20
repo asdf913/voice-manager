@@ -83,14 +83,13 @@ public class UrlAnnotationResource implements Resource {
 					//
 				for (int k = 0; k < as.length; k++) {
 					//
-					if ((a = as[k]) == null || (properties = ObjectUtils.getIfNull(properties, Properties::new)) == null
-							|| (m = getUrlValue(a, f)) == null) {
+					if ((a = as[k]) == null || (m = getUrlValue(a, f)) == null) {
 						//
 						continue;
 						//
 					} // if
 						//
-					properties.putAll(m);
+					putAll(properties = ObjectUtils.getIfNull(properties, Properties::new), m);
 					//
 				} // for
 					//
@@ -100,6 +99,12 @@ public class UrlAnnotationResource implements Resource {
 			//
 		return toInputStream(properties);
 		//
+	}
+
+	private static <K, V> void putAll(final Properties instance, final Map<?, ?> b) {
+		if (instance != null && b != null) {
+			instance.putAll(b);
+		}
 	}
 
 	@Nullable
