@@ -197,7 +197,7 @@ public class UrlAnnotationResource implements Resource {
 	}
 
 	@Nullable
-	private static Class<?> forName(final String className) {
+	private static Class<?> forName(@Nullable final String className) {
 		try {
 			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
 		} catch (final ClassNotFoundException e) {
