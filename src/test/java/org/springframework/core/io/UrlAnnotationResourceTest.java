@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.function.Function;
@@ -74,7 +75,8 @@ class UrlAnnotationResourceTest {
 		//
 		(METHOD_GET_DECLARING_CLASS = clz.getDeclaredMethod("getDeclaringClass", Member.class)).setAccessible(true);
 		//
-		(METHOD_GET_URL_VALUE = clz.getDeclaredMethod("getUrlValue", Object.class, Field.class)).setAccessible(true);
+		(METHOD_GET_URL_VALUE = clz.getDeclaredMethod("getUrlValue", Field.class, Object.class, Entry.class))
+				.setAccessible(true);
 		//
 		(METHOD_PUT_ALL = clz.getDeclaredMethod("putAll", Properties.class, Map.class)).setAccessible(true);
 		//
@@ -599,13 +601,14 @@ class UrlAnnotationResourceTest {
 	@Test
 	void testGetUrlValue() throws Throwable {
 		//
-		Assertions.assertNull(getUrlValue(null, null));
+		Assertions.assertNull(getUrlValue(null, null, null));
 		//
 	}
 
-	private static Map<String, Object> getUrlValue(final Object a, final Field f) throws Throwable {
+	private static Map<String, Object> getUrlValue(final Field f, final Object a, final Entry<String, String> entry)
+			throws Throwable {
 		try {
-			final Object obj = invoke(METHOD_GET_URL_VALUE, null, a, f);
+			final Object obj = invoke(METHOD_GET_URL_VALUE, null, a, f, entry);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Map) {

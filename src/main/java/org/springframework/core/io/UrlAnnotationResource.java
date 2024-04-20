@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.function.Function;
@@ -29,13 +30,17 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 
+import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ClassInfoUtil;
 import io.github.classgraph.HasName;
+import io.github.classgraph.ScanResult;
 import io.github.toolfactory.narcissus.Narcissus;
 
 public class UrlAnnotationResource implements Resource {
@@ -48,8 +53,20 @@ public class UrlAnnotationResource implements Resource {
 		//
 		Properties properties = null;
 		//
-		final List<ClassInfo> classInfos = ClassInfoUtil.getClassInfos();
+		final Class<?> clz = forName("org.springframework.beans.factory.URL");
 		//
+		List<ClassInfo> classInfos = null;
+		//
+		if (clz.getModifiers() == 9728) {
+			//
+			classInfos = getAllClasses(scan(new ClassGraph().acceptPackages(getName(getPackage(clz)))));
+			//
+		} else {
+			//
+			classInfos = ClassInfoUtil.getClassInfos();
+			//
+		} // if
+			//
 		Field[] fs = null;
 		//
 		Field f;
@@ -80,7 +97,8 @@ public class UrlAnnotationResource implements Resource {
 					//
 				for (int k = 0; k < as.length; k++) {
 					//
-					putAll(properties = ObjectUtils.getIfNull(properties, Properties::new), getUrlValue(as[k], f));
+					putAll(properties = ObjectUtils.getIfNull(properties, Properties::new),
+							getUrlValue(f, as[k], Pair.of(getName(clz), "value")));
 					//
 				} // for
 					//
@@ -92,6 +110,18 @@ public class UrlAnnotationResource implements Resource {
 		//
 	}
 
+	private static ClassInfoList getAllClasses(final ScanResult instance) {
+		return instance != null ? instance.getAllClasses() : null;
+	}
+
+	private static ScanResult scan(final ClassGraph instance) {
+		return instance != null ? instance.scan() : null;
+	}
+
+	private static Package getPackage(final Class<?> instance) {
+		return instance != null ? instance.getPackage() : null;
+	}
+
 	private static void putAll(@Nullable final Properties instance, @Nullable final Map<?, ?> b) {
 		if (instance != null && b != null) {
 			instance.putAll(b);
@@ -99,7 +129,7 @@ public class UrlAnnotationResource implements Resource {
 	}
 
 	@Nullable
-	private static Map<String, Object> getUrlValue(final Object a, final Field f) {
+	private static Map<String, Object> getUrlValue(final Field f, final Object a, final Entry<String, String> entry) {
 		//
 		final Class<?> clz = getClass(a);
 		//
@@ -122,9 +152,9 @@ public class UrlAnnotationResource implements Resource {
 			if (f2 == null
 					|| !Objects.equals(
 							getName(cast(Class.class, Narcissus.getField(Proxy.getInvocationHandler(a), f2))),
-							"org.springframework.beans.factory.URL")
+							entry.getKey())
 					|| (ms = toList(filter(Arrays.stream(getDeclaredMethods(clz)),
-							x -> Objects.equals(getName(x), "value")))) == null) {
+							x -> Objects.equals(getName(x), entry.getValue())))) == null) {
 				//
 				return null;
 				//
@@ -219,6 +249,10 @@ public class UrlAnnotationResource implements Resource {
 
 	@Nullable
 	private static String getName(@Nullable final Class<?> instance) {
+		return instance != null ? instance.getName() : null;
+	}
+
+	private static String getName(final Package instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
