@@ -150,10 +150,12 @@ public class UrlAnnotationResource implements Resource {
 		//
 	}
 
+	@Nullable
 	private static Class<?> getDeclaringClass(@Nullable final Member instance) {
 		return instance != null ? instance.getDeclaringClass() : null;
 	}
 
+	@Nullable
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
@@ -164,26 +166,32 @@ public class UrlAnnotationResource implements Resource {
 		return instance != null && predicate != null ? instance.filter(predicate) : instance;
 	}
 
+	@Nullable
 	private static Method[] getDeclaredMethods(@Nullable final Class<?> instance) throws SecurityException {
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
+	@Nullable
 	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
+	@Nullable
 	private static Annotation[] getAnnotations(@Nullable final AnnotatedElement instance) {
 		return instance != null ? instance.getAnnotations() : null;
 	}
 
+	@Nullable
 	private static String getName(@Nullable final HasName instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getName() : null;
 	}
@@ -202,6 +210,7 @@ public class UrlAnnotationResource implements Resource {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
+	@Nullable
 	private static InputStream toInputStream(@Nullable final Properties properties) throws IOException {
 		//
 		if (properties == null) {
