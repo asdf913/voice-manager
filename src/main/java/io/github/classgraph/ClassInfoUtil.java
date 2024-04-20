@@ -341,17 +341,21 @@ public interface ClassInfoUtil {
 			//
 		} // if
 			//
-		classInfos.removeIf(x -> {
+		if (classInfos != null) {
 			//
-			if (x == null) {
+			classInfos.removeIf(x -> {
 				//
-				return false;
-				//
-			} // if
-				//
-			return CollectionUtils.isNotEmpty(classToBeExcluded) && contains(classToBeExcluded, x.getName());
-		});
-		//
+				if (x == null) {
+					//
+					return false;
+					//
+				} // if
+					//
+				return CollectionUtils.isNotEmpty(classToBeExcluded) && contains(classToBeExcluded, x.getName());
+			});
+			//
+		} // if
+			//
 		return classInfos;
 		//
 	}
