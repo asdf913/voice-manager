@@ -57,8 +57,6 @@ public class UrlAnnotationResource implements Resource {
 		//
 		Annotation a;
 		//
-		Map<?, ?> m = null;
-		//
 		for (int i = 0; i < IterableUtils.size(classInfos); i++) {
 			//
 			try {
@@ -83,13 +81,13 @@ public class UrlAnnotationResource implements Resource {
 					//
 				for (int k = 0; k < as.length; k++) {
 					//
-					if ((a = as[k]) == null || (m = getUrlValue(a, f)) == null) {
+					if ((a = as[k]) == null) {
 						//
 						continue;
 						//
 					} // if
 						//
-					putAll(properties = ObjectUtils.getIfNull(properties, Properties::new), m);
+					putAll(properties = ObjectUtils.getIfNull(properties, Properties::new), getUrlValue(a, f));
 					//
 				} // for
 					//
