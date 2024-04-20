@@ -102,6 +102,7 @@ public class UrlAnnotationResource implements Resource {
 		//
 	}
 
+	@Nullable
 	private static Map<String, Object> getUrlValue(final Object a, final Field f) {
 		//
 		final Class<?> clz = getClass(a);
