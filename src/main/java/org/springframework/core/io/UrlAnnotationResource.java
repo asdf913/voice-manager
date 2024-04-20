@@ -150,7 +150,7 @@ public class UrlAnnotationResource implements Resource {
 		//
 	}
 
-	private static <T> List<T> toList(final Stream<T> instance) {
+	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
 
@@ -159,27 +159,27 @@ public class UrlAnnotationResource implements Resource {
 		return instance != null && predicate != null ? instance.filter(predicate) : instance;
 	}
 
-	private static Method[] getDeclaredMethods(final Class<?> instance) throws SecurityException {
+	private static Method[] getDeclaredMethods(@Nullable final Class<?> instance) throws SecurityException {
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
-	private static Annotation[] getAnnotations(final AnnotatedElement instance) {
+	private static Annotation[] getAnnotations(@Nullable final AnnotatedElement instance) {
 		return instance != null ? instance.getAnnotations() : null;
 	}
 
-	private static String getName(final HasName instance) {
+	private static String getName(@Nullable final HasName instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static String getName(final Member instance) {
+	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static String getName(final Class<?> instance) {
+	private static String getName(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
@@ -195,7 +195,7 @@ public class UrlAnnotationResource implements Resource {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
-	private static InputStream toInputStream(final Properties properties) throws IOException {
+	private static InputStream toInputStream(@Nullable final Properties properties) throws IOException {
 		//
 		if (properties == null) {
 			//
