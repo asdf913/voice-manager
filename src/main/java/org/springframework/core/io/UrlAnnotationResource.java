@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -54,8 +55,6 @@ public class UrlAnnotationResource implements Resource {
 		Annotation a;
 		//
 		List<Field> fields = null;
-		//
-		int size;
 		//
 		Class<?> clz = null;
 		//
@@ -95,15 +94,16 @@ public class UrlAnnotationResource implements Resource {
 						//
 					if (Proxy.isProxyClass(clz = getClass(a))) {
 						//
-						if ((size = IterableUtils.size(fields = toList(
+						if (IterableUtils.size(fields = toList(
 								filter(Arrays.stream(FieldUtils.getAllFields(getClass(Proxy.getInvocationHandler(a)))),
-										x -> Objects.equals(getName(x), "type"))))) > 1) {
+										x -> Objects.equals(getName(x), "type")))) > 1) {
 							//
 							throw new RuntimeException();
 							//
 						} // if
 							//
-						if ((f2 = size == 1 ? IterableUtils.get(fields, 0) : null) == null
+						if ((f2 = testAndApply(x -> IterableUtils.size(x) == 1, fields, x -> IterableUtils.get(x, 0),
+								null)) == null
 								|| !Objects.equals(
 										getName(cast(Class.class,
 												Narcissus.getField(Proxy.getInvocationHandler(a), f2))),
@@ -115,13 +115,14 @@ public class UrlAnnotationResource implements Resource {
 							//
 						} // if
 							//
-						if ((size = ms.size()) > 1) {
+						if (IterableUtils.size(ms) > 1) {
 							//
 							throw new IllegalStateException();
 							//
 						} // if
 							//
-						if ((m = size == 1 ? ms.get(0) : null) == null) {
+						if ((m = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0),
+								null)) == null) {
 							//
 							continue;
 							//
@@ -148,6 +149,19 @@ public class UrlAnnotationResource implements Resource {
 			//
 		return toInputStream(properties);
 		//
+	}
+
+	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,
+			final Function<T, R> functionFalse) {
+		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
+	}
+
+	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+		return instance != null && instance.test(value);
+	}
+
+	private static <T, R> R apply(final Function<T, R> instance, final T value) {
+		return instance != null ? instance.apply(value) : null;
 	}
 
 	@Nullable

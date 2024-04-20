@@ -42,10 +42,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.base.Predicates;
+
 class UrlAnnotationResourceTest {
 
 	private static Method METHOD_CAST, METHOD_FOR_NAME, METHOD_GET_CLASS, METHOD_FILTER, METHOD_TO_INPUT_STREAM,
-			METHOD_GET_DECLARED_METHODS = null;
+			METHOD_GET_DECLARED_METHODS, METHOD_TEST_AND_APPLY, METHOD_GET_DECLARING_CLASS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -63,6 +65,11 @@ class UrlAnnotationResourceTest {
 		(METHOD_TO_INPUT_STREAM = clz.getDeclaredMethod("toInputStream", Properties.class)).setAccessible(true);
 		//
 		(METHOD_GET_DECLARED_METHODS = clz.getDeclaredMethod("getDeclaredMethods", Class.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class, Function.class,
+				Function.class)).setAccessible(true);
+		//
+		(METHOD_GET_DECLARING_CLASS = clz.getDeclaredMethod("getDeclaringClass", Member.class)).setAccessible(true);
 		//
 	}
 
@@ -383,19 +390,6 @@ class UrlAnnotationResourceTest {
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,
-			final Function<T, R> functionFalse) {
-		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
-	}
-
-	private static <T> boolean test(final Predicate<T> instance, final T value) {
-		return instance != null && instance.test(value);
-	}
-
-	private static <T, R> R apply(final Function<T, R> instance, final T value) {
-		return instance != null ? instance.apply(value) : null;
-	}
-
 	@Test
 	void testGetInputStream() throws IOException {
 		//
@@ -526,6 +520,47 @@ class UrlAnnotationResourceTest {
 				return null;
 			} else if (obj instanceof Method[]) {
 				return (Method[]) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndApply() throws Throwable {
+		//
+		Assertions.assertNull(testAndApply(null, null, null, null));
+		//
+		Assertions.assertNull(testAndApply(Predicates.alwaysFalse(), null, null, null));
+		//
+	}
+
+	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,
+			final Function<T, R> functionFalse) throws Throwable {
+		try {
+			return (R) invoke(METHOD_TEST_AND_APPLY, null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetDeclaringClass() throws Throwable {
+		//
+		final Class<?> clz = Object.class;
+		//
+		Assertions.assertSame(clz, getDeclaringClass(clz.getDeclaredMethod("toString")));
+		//
+	}
+
+	private static Class<?> getDeclaringClass(final Member instance) throws Throwable {
+		try {
+			final Object obj = invoke(METHOD_GET_DECLARING_CLASS, null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class) {
+				return (Class) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
