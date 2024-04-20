@@ -63,11 +63,11 @@ public class UrlAnnotationResource implements Resource {
 		//
 		Method m = null;
 		//
-		for (int i = 0; classInfos != null && i < classInfos.size(); i++) {
+		for (int i = 0; i < IterableUtils.size(classInfos); i++) {
 			//
 			try {
 				//
-				if ((fs = FieldUtils.getAllFields(forName(getName(classInfos.get(i))))) == null) {
+				if ((fs = FieldUtils.getAllFields(forName(getName(IterableUtils.get(classInfos, i))))) == null) {
 					//
 					continue;
 					//
