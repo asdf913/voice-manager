@@ -153,11 +153,11 @@ public class UrlAnnotationResource implements Resource {
 
 	@Nullable
 	private static <T, R> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
-			final Function<T, R> functionTrue, final Function<T, R> functionFalse) {
+			final Function<T, R> functionTrue, @Nullable final Function<T, R> functionFalse) {
 		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
 		return instance != null && instance.test(value);
 	}
 
