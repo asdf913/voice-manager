@@ -39,7 +39,6 @@ import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ClassInfoUtil;
-import io.github.classgraph.HasName;
 import io.github.classgraph.HasNameUtil;
 import io.github.classgraph.ScanResult;
 import io.github.toolfactory.narcissus.Narcissus;
