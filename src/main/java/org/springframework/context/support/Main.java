@@ -188,9 +188,6 @@ public class Main {
 											//
 										} // if
 											//
-										System.out.println(StringUtils.joinWith(",", Util.getName(f1), Narcissus
-												.invokeMethod(a, getDeclaredMethod(Util.getClass(a), "value"))));
-										//
 										bd.getPropertyValues().add(Util.getName(f1), Narcissus.invokeMethod(a,
 												getDeclaredMethod(Util.getClass(a), "value")));
 										//
