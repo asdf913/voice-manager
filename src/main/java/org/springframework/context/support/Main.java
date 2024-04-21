@@ -210,23 +210,28 @@ public class Main {
 					//
 			}
 
+			@Nullable
 			private static ClassInfoList getAllClasses(@Nullable final ScanResult instance) {
 				return instance != null ? instance.getAllClasses() : null;
 			}
 
+			@Nullable
 			private static ScanResult scan(@Nullable final ClassGraph instance) {
 				return instance != null ? instance.scan() : null;
 			}
 
+			@Nullable
 			private static String getName(@Nullable final Package instance) {
 				return instance != null ? instance.getName() : null;
 			}
 
+			@Nullable
 			private static Method getDeclaredMethod(@Nullable final Class<?> instance, final String name,
 					final Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException {
 				return instance != null ? instance.getDeclaredMethod(name, parameterTypes) : null;
 			}
 
+			@Nullable
 			private static Annotation[] getAnnotations(@Nullable final AnnotatedElement instance) {
 				return instance != null ? instance.getAnnotations() : null;
 			}
