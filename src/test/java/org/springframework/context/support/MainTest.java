@@ -27,6 +27,7 @@ import javax.swing.JTextField;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -192,6 +193,31 @@ class MainTest {
 	void beforeEach() {
 		//
 		listableBeanFactory = Reflection.newProxy(ListableBeanFactory.class, ih = new IH());
+		//
+	}
+
+	@Test
+	void testMain() {
+		//
+		if (!GraphicsEnvironment.isHeadless()) {
+			//
+			return;
+			//
+		} // if
+			//
+		Assertions.assertThrows(HeadlessException.class, () -> {
+			//
+			try {
+				//
+				Main.main(null);
+				//
+			} catch (final Exception e) {
+				//
+				throw ExceptionUtils.getRootCause(e);
+				//
+			} // try
+				//
+		});
 		//
 	}
 
