@@ -33,6 +33,7 @@ import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.INVOKESPECIAL;
+import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.InvokeInstruction;
@@ -53,6 +54,8 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionStoreException;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.PropertyResolver;
 
 import com.google.common.base.Predicates;
@@ -65,7 +68,8 @@ class MainTest {
 	private static Method METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_GET_BEAN_NAMES_FOR_TYPE,
 			METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE, METHOD_TEST_AND_APPLY,
 			METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS3, METHOD_IS_RAISE_THROWABLE_ONLY,
-			METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD = null;
+			METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD,
+			METHOD_CREATE_CONFIGURABLE_APPLICATION_CONTEXT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -107,6 +111,9 @@ class MainTest {
 		//
 		(METHOD_GET_METHOD = clz.getDeclaredMethod("getMethod", Class.class, String.class, Class[].class))
 				.setAccessible(true);
+		//
+		(METHOD_CREATE_CONFIGURABLE_APPLICATION_CONTEXT = clz.getDeclaredMethod("createConfigurableApplicationContext",
+				String.class)).setAccessible(true);
 		//
 	}
 
@@ -735,6 +742,113 @@ class MainTest {
 	private static <T> T newInstance(final Constructor<T> instance, final Object... initargs)
 			throws InstantiationException, IllegalAccessException, InvocationTargetException {
 		return instance != null ? instance.newInstance(initargs) : null;
+	}
+
+	@Test
+	void testCreateConfigurableApplicationContext() throws Throwable {
+		//
+		Assertions.assertThrows(IllegalArgumentException.class, () -> createConfigurableApplicationContext(null));
+		//
+		Assertions.assertThrows(XmlBeanDefinitionStoreException.class, () -> createConfigurableApplicationContext(""));
+		//
+		Class<?> clz = Main.class;
+		//
+		Unit<Object> argument = null;
+		//
+		try (final InputStream is = clz != null
+				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
+				: null) {
+			//
+			final org.apache.bcel.classfile.Method[] methods = JavaClassUtil.getMethods(
+					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)));
+			//
+			org.apache.bcel.classfile.Method method = null;
+			//
+			Instruction[] ins = null;
+			//
+			LDC ldc = null;
+			//
+			INVOKESTATIC invokestatic = null;
+			//
+			for (int i = 0; methods != null && i < methods.length; i++) {
+				//
+				if ((method = methods[i]) == null || (ins = InstructionListUtil
+						.getInstructions(MethodGenUtil.getInstructionList(testAndApply(Objects::nonNull, method,
+								x -> new MethodGen(x, null, new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(x))),
+								null)))) == null
+						|| !Objects.equals(FieldOrMethodUtil.getName(method), "main")) {
+					//
+					continue;
+					//
+				} // if
+					//
+				for (int j = 0; j < ins.length; j++) {
+					//
+					if ((ldc = Util.cast(LDC.class, ins[j])) != null && j < ins.length - 1
+							&& (invokestatic = Util.cast(INVOKESTATIC.class, ins[j + 1])) != null) {
+						//
+						final ConstantPoolGen cpg = new ConstantPoolGen(method.getConstantPool());
+						//
+						if (!Objects.equals(invokestatic.getMethodName(cpg), "createConfigurableApplicationContext")) {
+							//
+							continue;
+							//
+						} // if
+							//
+						argument = Unit.with(ldc.getValue(cpg));
+						//
+						break;
+						//
+					} // if
+						//
+				} // for
+					//
+			} // for
+				//
+		} // try
+			//
+		final Object configurableApplicationContext = createConfigurableApplicationContext(
+				Util.toString(IValue0Util.getValue0(argument)));
+		//
+		Assertions.assertNotNull(configurableApplicationContext);
+		//
+		final Method[] ms = Util.getDeclaredMethods(clz = Util.getClass(configurableApplicationContext));
+		//
+		Method m = null;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ms[i]) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			m.setAccessible(true);
+			//
+			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				m.invoke(null, new Object[m.getParameterCount()]);
+				//
+			} // if
+				//
+		} // for
+			//
+	}
+
+	private static ConfigurableApplicationContext createConfigurableApplicationContext(final String fileName)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_CONFIGURABLE_APPLICATION_CONTEXT.invoke(null, fileName);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof ConfigurableApplicationContext) {
+				return (ConfigurableApplicationContext) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }

@@ -76,8 +76,51 @@ public class Main {
 
 	public static void main(final String[] args) throws IllegalAccessException {
 		//
-		try (final ConfigurableApplicationContext beanFactory = new ClassPathXmlApplicationContext(
-				"applicationContext.xml") {
+		try (final ConfigurableApplicationContext beanFactory = createConfigurableApplicationContext(
+				"applicationContext.xml")) {
+			//
+			final ConfigurableListableBeanFactory clbf = beanFactory.getBeanFactory();
+			//
+			Class<?> clz = getClass(clbf, beanFactory.getEnvironment(),
+					"org.springframework.context.support.Main.class");
+			//
+			if (clz == null) {
+				//
+				final JList<Object> list = testAndApply(Objects::nonNull,
+						getBeanNamesForType(beanFactory, Component.class), JList::new, x -> new JList<>());
+				//
+				JOptionPane.showMessageDialog(null, list, "Component", JOptionPane.PLAIN_MESSAGE);
+				//
+				clz = Util
+						.forName(getBeanClassName(testAndApply(Objects::nonNull, Util.toString(getSelectedValue(list)),
+								x -> ConfigurableListableBeanFactoryUtil.getBeanDefinition(clbf, x), null)));
+				//
+			} // if
+				//
+			final PrintStream ps = Util.cast(PrintStream.class,
+					FieldUtils.readDeclaredStaticField(System.class, "out"));
+			//
+			if (clz == null) {
+				//
+				showMessageDialogOrPrintln(ps, "java.lang.Class is null");
+				//
+				return;
+				//
+			} // if
+				//
+			final Object instance = getInstance(beanFactory, clz, x -> showMessageDialogOrPrintln(ps, x));
+			//
+			pack(Util.cast(Window.class, instance));
+			//
+			setVisible(Util.cast(Component.class, instance), true);
+			//
+		} // try
+			//
+	}
+
+	private static ConfigurableApplicationContext createConfigurableApplicationContext(final String fileName) {
+		//
+		return new ClassPathXmlApplicationContext(fileName) {
 
 			@Override
 			protected void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) {
@@ -180,7 +223,7 @@ public class Main {
 
 										if ((bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(beanFactory,
 												bdns[l])) == null
-												|| !Objects.equals(Util.getName(f1.getDeclaringClass()),
+												|| !Objects.equals(Util.getName(Util.getDeclaringClass(f1)),
 														bd.getBeanClassName())
 												|| bd.getPropertyValues() == null
 												|| bd.getPropertyValues().contains(Util.getName(f1))) {
@@ -236,45 +279,8 @@ public class Main {
 				return instance != null ? instance.getAnnotations() : null;
 			}
 
-		}) {
-			//
-			final ConfigurableListableBeanFactory clbf = beanFactory.getBeanFactory();
-			//
-			Class<?> clz = getClass(clbf, beanFactory.getEnvironment(),
-					"org.springframework.context.support.Main.class");
-			//
-			if (clz == null) {
-				//
-				final JList<Object> list = testAndApply(Objects::nonNull,
-						getBeanNamesForType(beanFactory, Component.class), JList::new, x -> new JList<>());
-				//
-				JOptionPane.showMessageDialog(null, list, "Component", JOptionPane.PLAIN_MESSAGE);
-				//
-				clz = Util
-						.forName(getBeanClassName(testAndApply(Objects::nonNull, Util.toString(getSelectedValue(list)),
-								x -> ConfigurableListableBeanFactoryUtil.getBeanDefinition(clbf, x), null)));
-				//
-			} // if
-				//
-			final PrintStream ps = Util.cast(PrintStream.class,
-					FieldUtils.readDeclaredStaticField(System.class, "out"));
-			//
-			if (clz == null) {
-				//
-				showMessageDialogOrPrintln(ps, "java.lang.Class is null");
-				//
-				return;
-				//
-			} // if
-				//
-			final Object instance = getInstance(beanFactory, clz, x -> showMessageDialogOrPrintln(ps, x));
-			//
-			pack(Util.cast(Window.class, instance));
-			//
-			setVisible(Util.cast(Component.class, instance), true);
-			//
-		} // try
-			//
+		};
+
 	}
 
 	@Nullable
