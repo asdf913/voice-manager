@@ -351,7 +351,8 @@ public interface ClassInfoUtil {
 					//
 				} // if
 					//
-				return CollectionUtils.isNotEmpty(classToBeExcluded) && contains(classToBeExcluded, x.getName());
+				return CollectionUtils.isNotEmpty(classToBeExcluded)
+						&& contains(classToBeExcluded, HasNameUtil.getName(x));
 			});
 			//
 		} // if

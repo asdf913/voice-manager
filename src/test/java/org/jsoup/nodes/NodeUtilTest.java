@@ -22,6 +22,7 @@ import com.google.common.reflect.Reflection;
 
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoUtil;
+import io.github.classgraph.HasNameUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
@@ -323,7 +324,7 @@ class NodeUtilTest {
 				//
 			try {
 				//
-				if (isAssignableFrom(Node.class, Class.forName(name = classInfo.getName()))
+				if (isAssignableFrom(Node.class, Class.forName(name = HasNameUtil.getName(classInfo)))
 						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
 					//
 					final Node node = cast(Node.class, Narcissus.allocateInstance(clz));

@@ -40,6 +40,7 @@ import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ClassInfoUtil;
 import io.github.classgraph.HasName;
+import io.github.classgraph.HasNameUtil;
 import io.github.classgraph.ScanResult;
 import io.github.toolfactory.narcissus.Narcissus;
 
@@ -77,7 +78,8 @@ public class UrlAnnotationResource implements Resource {
 			//
 			try {
 				//
-				if ((fs = FieldUtils.getAllFields(forName(getName(IterableUtils.get(classInfos, i))))) == null) {
+				if ((fs = FieldUtils
+						.getAllFields(forName(HasNameUtil.getName(IterableUtils.get(classInfos, i))))) == null) {
 					//
 					continue;
 					//
@@ -234,11 +236,6 @@ public class UrlAnnotationResource implements Resource {
 	@Nullable
 	private static Annotation[] getAnnotations(@Nullable final AnnotatedElement instance) {
 		return instance != null ? instance.getAnnotations() : null;
-	}
-
-	@Nullable
-	private static String getName(@Nullable final HasName instance) {
-		return instance != null ? instance.getName() : null;
 	}
 
 	@Nullable

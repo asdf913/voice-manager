@@ -50,6 +50,7 @@ import com.google.common.reflect.Reflection;
 
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoUtil;
+import io.github.classgraph.HasNameUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
@@ -459,7 +460,7 @@ class UtilTest {
 			//
 			try {
 				//
-				if (Util.isAssignableFrom(Stream.class, Class.forName(name = classInfo.getName()))
+				if (Util.isAssignableFrom(Stream.class, Class.forName(name = HasNameUtil.getName(classInfo)))
 						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
 					//
 					final Stream<?> stream = Util.cast(Stream.class, Narcissus.allocateInstance(clz));
@@ -521,7 +522,7 @@ class UtilTest {
 			//
 			try {
 				//
-				if (Util.isAssignableFrom(Iterable.class, Class.forName(name = classInfo.getName()))
+				if (Util.isAssignableFrom(Iterable.class, Class.forName(name = HasNameUtil.getName(classInfo)))
 						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
 					//
 					final Iterable<?> it = Util.cast(Iterable.class, Narcissus.allocateInstance(clz));

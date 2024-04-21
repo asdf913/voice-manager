@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoUtil;
+import io.github.classgraph.HasNameUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 
 class FactoryBeanUtilTest {
@@ -33,7 +34,7 @@ class FactoryBeanUtilTest {
 			//
 			try {
 				//
-				if (Util.isAssignableFrom(FactoryBean.class, Class.forName(name = classInfo.getName()))
+				if (Util.isAssignableFrom(FactoryBean.class, Class.forName(name = HasNameUtil.getName(classInfo)))
 						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
 					//
 					final FactoryBean<?> factoryBean = Util.cast(FactoryBean.class, Narcissus.allocateInstance(clz));
