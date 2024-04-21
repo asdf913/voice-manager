@@ -89,13 +89,9 @@ public class UrlAnnotationResource implements Resource {
 				//
 			for (int j = 0; j < fs.length; j++) {
 				//
-				if ((as = getAnnotations(f = fs[j])) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				for (int k = 0; k < as.length; k++) {
+				as = getAnnotations(f = fs[j]);
+				//
+				for (int k = 0; as != null && k < as.length; k++) {
 					//
 					putAll(properties = ObjectUtils.getIfNull(properties, Properties::new),
 							getUrlValue(f, as[k], Pair.of(getName(clz), "value")));
