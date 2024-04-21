@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
-import org.apache.bcel.classfile.FieldOrMethod;
 import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.generic.ACONST_NULL;
@@ -117,7 +116,7 @@ class ClassInfoUtilTest {
 						//
 				} // for
 					//
-				final String name = getName(method);
+				final String name = FieldOrMethodUtil.getName(method);
 				//
 				if (Arrays.equals(new boolean[] { true, true, true, true, true, true, true }, bs)
 						&& (ms = filter(Arrays.stream(clz.getDeclaredMethods()), x -> Objects.equals(getName(x), name))
@@ -241,7 +240,7 @@ class ClassInfoUtilTest {
 						//
 				} // for
 					//
-				final String name = getName(method);
+				final String name = FieldOrMethodUtil.getName(method);
 				//
 				if (Arrays.equals(new boolean[] { true, true, true, true, true, true, true, true, true, true }, bs)
 						&& (ms = filter(Arrays.stream(clz.getDeclaredMethods()), x -> Objects.equals(getName(x), name))
@@ -285,10 +284,6 @@ class ClassInfoUtilTest {
 
 	private static <T, R> R apply(final Function<T, R> instance, final T value) {
 		return instance != null ? instance.apply(value) : null;
-	}
-
-	private static String getName(final FieldOrMethod instance) {
-		return instance != null ? instance.getName() : null;
 	}
 
 	private static String getName(final Member instance) {

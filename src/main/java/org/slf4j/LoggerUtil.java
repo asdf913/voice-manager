@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
+import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.Instruction;
@@ -71,7 +72,8 @@ public class LoggerUtil {
 			//
 		return CollectionUtils.isNotEmpty(toList(filter(testAndApply(Objects::nonNull, ms, Arrays::stream, null), m -> {
 			//
-			if (m == null || !Objects.equals(Type.VOID, m.getReturnType()) || matches(matcher(PATTERN, m.getName()))) {
+			if (m == null || !Objects.equals(Type.VOID, m.getReturnType())
+					|| matches(matcher(PATTERN, FieldOrMethodUtil.getName(m)))) {
 				//
 				return false;
 				//

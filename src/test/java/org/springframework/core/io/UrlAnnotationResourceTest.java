@@ -18,7 +18,6 @@ import java.util.stream.Stream;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
-import org.apache.bcel.classfile.FieldOrMethod;
 import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.generic.ACONST_NULL;
@@ -162,7 +161,7 @@ class UrlAnnotationResourceTest {
 						//
 				} // for.
 					//
-				final String name = getName(method);
+				final String name = FieldOrMethodUtil.getName(method);
 				//
 				if (Arrays.equals(new boolean[] { true, true, true, true }, bs)
 						&& (ms = filter(Arrays.stream(clz.getDeclaredMethods()), x -> Objects.equals(getName(x), name))
@@ -184,7 +183,7 @@ class UrlAnnotationResourceTest {
 							//
 						} // try
 							//
-					}, getName(method));
+					}, FieldOrMethodUtil.getName(method));
 					//
 				} // if
 					//
@@ -258,7 +257,7 @@ class UrlAnnotationResourceTest {
 						//
 				} // for
 					//
-				final String name = getName(method);
+				final String name = FieldOrMethodUtil.getName(method);
 				//
 				if (Arrays.equals(new boolean[] { true, true }, bs)
 						&& (ms = filter(Arrays.stream(clz.getDeclaredMethods()), x -> Objects.equals(getName(x), name))
@@ -354,7 +353,7 @@ class UrlAnnotationResourceTest {
 						//
 				} // for
 					//
-				final String name = getName(method);
+				final String name = FieldOrMethodUtil.getName(method);
 				//
 				if (Arrays.equals(new boolean[] { true, true, true, true, true, true, true }, bs)
 						&& (ms = filter(Arrays.stream(clz.getDeclaredMethods()), x -> Objects.equals(getName(x), name))
@@ -392,10 +391,6 @@ class UrlAnnotationResourceTest {
 	}
 
 	private static String getName(final Member instance) {
-		return instance != null ? instance.getName() : null;
-	}
-
-	private static String getName(final FieldOrMethod instance) {
 		return instance != null ? instance.getName() : null;
 	}
 

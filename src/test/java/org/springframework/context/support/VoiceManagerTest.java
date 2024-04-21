@@ -147,7 +147,6 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.ConstantPool;
-import org.apache.bcel.classfile.FieldOrMethod;
 import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.JavaClassUtil;
@@ -11647,11 +11646,6 @@ class VoiceManagerTest {
 					} // try
 						//
 				});
-		//
-		// getName(org.apache.bcel.classfile.FieldOrMethod)
-		//
-		Assertions.assertNull(invoke(clz != null ? clz.getDeclaredMethod("getName", FieldOrMethod.class) : null,
-				instance, (Object) null));
 		//
 		// createQuality(org.apache.bcel.generic.Instruction[])
 		//

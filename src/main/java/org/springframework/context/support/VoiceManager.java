@@ -193,7 +193,6 @@ import org.apache.bcel.Const;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.ConstantPool;
-import org.apache.bcel.classfile.FieldOrMethod;
 import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.generic.ASTORE;
@@ -1334,7 +1333,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									JavaClassUtil.getMethods(ClassParserUtil.parse(
 											testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null))),
 									Arrays::stream, null),
-							m -> m != null && Objects.equals(m.getName(), "createTempFile")
+							m -> m != null && Objects.equals(FieldOrMethodUtil.getName(m), "createTempFile")
 									&& Objects.deepEquals(m.getArgumentTypes(), objectTypes)));
 			//
 			if (ms != null && !ms.isEmpty()) {
@@ -9236,7 +9235,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										JavaClassUtil.getMethods(ClassParserUtil.parse(testAndApply(Objects::nonNull,
 												is, x -> new ClassParser(x, null), null))),
 										Arrays::stream, null),
-								x -> Objects.equals(getName(x), "string2quality")));
+								x -> Objects.equals(FieldOrMethodUtil.getName(x), "string2quality")));
 				//
 				org.apache.bcel.classfile.Method m = null;
 				//
@@ -9320,11 +9319,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private static int length(@Nullable final byte[] instance) {
 			return instance != null ? instance.length : 0;
-		}
-
-		@Nullable
-		private static String getName(@Nullable final FieldOrMethod instance) {
-			return instance != null ? instance.getName() : null;
 		}
 
 		@Override
