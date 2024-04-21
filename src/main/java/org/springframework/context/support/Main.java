@@ -6,7 +6,11 @@ import java.awt.Window;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +45,7 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -54,6 +59,12 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ClassInfoList;
+import io.github.classgraph.ClassInfoUtil;
+import io.github.classgraph.HasNameUtil;
+import io.github.classgraph.ScanResult;
 import io.github.toolfactory.narcissus.Narcissus;
 
 public class Main {
@@ -66,7 +77,163 @@ public class Main {
 	public static void main(final String[] args) throws IllegalAccessException {
 		//
 		try (final ConfigurableApplicationContext beanFactory = new ClassPathXmlApplicationContext(
-				"applicationContext.xml")) {
+				"applicationContext.xml") {
+
+			protected void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) {
+				//
+				final Class<?> classUrl = Util.forName("org.springframework.beans.factory.URL");
+				//
+				List<ClassInfo> classInfos = null;
+				//
+				if (classUrl != null && classUrl.getModifiers() == 9728) {
+					//
+					if ((classInfos = getAllClasses(
+							scan(new ClassGraph().acceptPackages(getName(classUrl.getPackage()))))) != null) {
+						//
+						classInfos.removeIf(x -> x != null && x.getModuleInfo() != null);
+						//
+					} // if
+						//
+				} else {
+					//
+					classInfos = ClassInfoUtil.getClassInfos();
+					//
+				} // if
+					//
+				Field[] fs = null;
+				//
+				Field f1;
+				//
+				Annotation[] as;
+				//
+				Annotation a;
+				//
+				List<Field> fields = null;
+				//
+				int size;
+				//
+				String[] bdns = null;
+				//
+				BeanDefinition bd = null;
+				//
+				Class<?> clz = null;
+				//
+				for (int i = 0; classInfos != null && i < classInfos.size(); i++) {
+					//
+					try {
+						//
+						if ((clz = Util.forName(HasNameUtil.getName(classInfos.get(i)))) == null
+								|| (fs = FieldUtils.getAllFields(clz)) == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+					} catch (final Throwable e) {
+						//
+					} // try
+						//
+					for (int j = 0; j < fs.length; j++) {
+						//
+						if ((as = getAnnotations(f1 = fs[j])) == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						for (int k = 0; as != null && k < as.length; k++) {
+							//
+							if ((a = as[k]) == null) {
+								//
+								continue;
+								//
+							} // if
+								//
+							if (Proxy.isProxyClass(Util.getClass(a))) {
+								//
+								if ((size = IterableUtils.size(fields = Util.toList(Util.filter(
+										Arrays.stream(
+												FieldUtils.getAllFields(Util.getClass(Proxy.getInvocationHandler(a)))),
+										x -> Objects.equals(Util.getName(x), "type"))))) > 1) {
+									//
+									throw new RuntimeException();
+									//
+								} // if
+									//
+								if (!Objects.equals(
+										Util.getName(Util.cast(Class.class,
+												Narcissus.getField(Proxy.getInvocationHandler(a),
+														size == 1 ? IterableUtils.get(fields, 0) : null))),
+										Util.getName(classUrl))) {
+									//
+									continue;
+									//
+								} // if
+									//
+								try {
+									//
+									bdns = ObjectUtils.getIfNull(bdns,
+											() -> ListableBeanFactoryUtil.getBeanDefinitionNames(beanFactory));
+									//
+									for (int l = 0; bdns != null && l < bdns.length; l++) {
+
+										if ((bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(beanFactory,
+												bdns[l])) == null
+												|| !Objects.equals(Util.getName(f1.getDeclaringClass()),
+														bd.getBeanClassName())
+												|| bd.getPropertyValues() == null
+												|| bd.getPropertyValues().contains(Util.getName(f1))) {
+											//
+											continue;
+											//
+										} // if
+											//
+										System.out.println(StringUtils.joinWith(",", Util.getName(f1), Narcissus
+												.invokeMethod(a, getDeclaredMethod(Util.getClass(a), "value"))));
+										//
+										bd.getPropertyValues().add(Util.getName(f1), Narcissus.invokeMethod(a,
+												getDeclaredMethod(Util.getClass(a), "value")));
+										//
+									} // for
+										//
+								} catch (final IllegalArgumentException | NoSuchMethodException e) {
+									//
+									LoggerUtil.error(LOG, e.getMessage(), e);
+									//
+								} // try
+									//
+							} // if
+								//
+						} // for
+							//
+					} // for
+						//
+				} // for
+					//
+			}
+
+			private static ClassInfoList getAllClasses(final ScanResult instance) {
+				return instance != null ? instance.getAllClasses() : null;
+			}
+
+			private static ScanResult scan(final ClassGraph instance) {
+				return instance != null ? instance.scan() : null;
+			}
+
+			private static String getName(final Package instance) {
+				return instance != null ? instance.getName() : null;
+			}
+
+			private static Method getDeclaredMethod(final Class<?> instance, final String name,
+					final Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException {
+				return instance != null ? instance.getDeclaredMethod(name, parameterTypes) : null;
+			}
+
+			private static Annotation[] getAnnotations(final AnnotatedElement instance) {
+				return instance != null ? instance.getAnnotations() : null;
+			}
+
+		}) {
 			//
 			final ConfigurableListableBeanFactory clbf = beanFactory.getBeanFactory();
 			//

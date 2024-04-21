@@ -6,11 +6,14 @@ import java.awt.HeadlessException;
 import java.awt.Window;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -24,11 +27,24 @@ import java.util.stream.Stream;
 import javax.swing.JList;
 import javax.swing.JTextField;
 
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ClassParserUtil;
+import org.apache.bcel.classfile.FieldOrMethodUtil;
+import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.INVOKESPECIAL;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.InvokeInstruction;
+import org.apache.bcel.generic.LDC;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0Util;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -610,6 +626,108 @@ class MainTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testMain1() throws Throwable {
+		//
+		Class<?> clz = Main.class;
+		//
+		Unit<String> className = null;
+		//
+		Unit<Object> argument = null;
+		//
+		try (final InputStream is = clz != null
+				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
+				: null) {
+			//
+			final org.apache.bcel.classfile.Method[] methods = JavaClassUtil.getMethods(
+					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)));
+			//
+			org.apache.bcel.classfile.Method method = null;
+			//
+			Instruction[] ins = null;
+			//
+			LDC ldc = null;
+			//
+			INVOKESPECIAL invokespecial = null;
+			//
+			for (int i = 0; methods != null && i < methods.length; i++) {
+				//
+				if ((method = methods[i]) == null || (ins = InstructionListUtil
+						.getInstructions(MethodGenUtil.getInstructionList(testAndApply(Objects::nonNull, method,
+								x -> new MethodGen(x, null, new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(x))),
+								null)))) == null
+						|| !Objects.equals(FieldOrMethodUtil.getName(method), "main")) {
+					//
+					continue;
+					//
+				} // if
+					//
+				for (int j = 0; j < ins.length; j++) {
+					//
+					if ((ldc = Util.cast(LDC.class, ins[j])) != null && j < ins.length - 1
+							&& (invokespecial = Util.cast(INVOKESPECIAL.class, ins[j + 1])) != null) {
+						//
+						final ConstantPoolGen cpg = new ConstantPoolGen(method.getConstantPool());
+						//
+						className = Unit.with(invokespecial.getClassName(cpg));
+						//
+						if (!Objects.equals(invokespecial.getMethodName(cpg), "<init>")) {
+							//
+							continue;
+							//
+						} // if
+							//
+						argument = Unit.with(ldc.getValue(cpg));
+						//
+						break;
+						//
+					} // if
+						//
+				} // for
+					//
+			} // for
+				//
+		} // try
+			//
+		final Method[] ms = Util.getDeclaredMethods(clz = Util.forName(IValue0Util.getValue0(className)));
+		//
+		Method m = null;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ms[i]) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			m.setAccessible(true);
+			//
+			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				m.invoke(null, new Object[m.getParameterCount()]);
+				//
+			} else {
+				//
+				m.invoke(newInstance(getDeclaredConstructor(clz, String.class), IValue0Util.getValue0(argument)),
+						new Object[m.getParameterCount()]);
+				//
+			} // if
+				//
+		} // for
+			//
+	}
+
+	private static <T> Constructor<T> getDeclaredConstructor(final Class<T> instance, final Class<?>... parameterTypes)
+			throws NoSuchMethodException {
+		return instance != null ? instance.getDeclaredConstructor(parameterTypes) : null;
+	}
+
+	private static <T> T newInstance(final Constructor<T> instance, final Object... initargs)
+			throws InstantiationException, IllegalAccessException, InvocationTargetException {
+		return instance != null ? instance.newInstance(initargs) : null;
 	}
 
 }
