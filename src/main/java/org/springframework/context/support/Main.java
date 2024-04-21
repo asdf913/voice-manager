@@ -79,6 +79,7 @@ public class Main {
 		try (final ConfigurableApplicationContext beanFactory = new ClassPathXmlApplicationContext(
 				"applicationContext.xml") {
 
+			@Override
 			protected void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) {
 				//
 				final Class<?> classUrl = Util.forName("org.springframework.beans.factory.URL");
