@@ -119,11 +119,11 @@ public class Main {
 				//
 				Class<?> clz = null;
 				//
-				for (int i = 0; classInfos != null && i < classInfos.size(); i++) {
+				for (int i = 0; i < IterableUtils.size(classInfos); i++) {
 					//
 					try {
 						//
-						if ((clz = Util.forName(HasNameUtil.getName(classInfos.get(i)))) == null
+						if ((clz = Util.forName(HasNameUtil.getName(IterableUtils.get(classInfos, i)))) == null
 								|| (fs = FieldUtils.getAllFields(clz)) == null) {
 							//
 							continue;
