@@ -711,6 +711,13 @@ class MainTest {
 				//
 			} else {
 				//
+				if (Objects.equals("org.springframework.context.support.Main$1", Util.getName(clz))
+						&& GraphicsEnvironment.isHeadless()) {
+					//
+					continue;
+					//
+				} //
+					//
 				m.invoke(newInstance(getDeclaredConstructor(clz, String.class), IValue0Util.getValue0(argument)),
 						new Object[m.getParameterCount()]);
 				//
