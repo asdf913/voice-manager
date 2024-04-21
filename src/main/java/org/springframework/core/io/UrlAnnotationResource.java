@@ -57,7 +57,7 @@ public class UrlAnnotationResource implements Resource {
 		//
 		List<ClassInfo> classInfos = null;
 		//
-		if (clz.getModifiers() == 9728) {
+		if (clz != null && clz.getModifiers() == 9728) {
 			//
 			classInfos = getAllClasses(scan(new ClassGraph().acceptPackages(getName(getPackage(clz)))));
 			//
