@@ -8,6 +8,8 @@
 		<property name="ignoreResourceNotFound" value="true" />
 		<property name="locations">
 			<list>
+				<bean
+					class="org.springframework.core.io.UrlAnnotationResource" />
 				<value>classpath:configuration.properties</value>
 				<value>file:configuration.properties</value>
 				<bean
