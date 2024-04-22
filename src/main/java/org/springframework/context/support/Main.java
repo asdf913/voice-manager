@@ -74,9 +74,169 @@ public class Main {
 	private Main() {
 	}
 
+	private static class CustomClassPathXmlApplicationContext extends ClassPathXmlApplicationContext {
+
+		private CustomClassPathXmlApplicationContext(final String configLocation) {
+			//
+			super(configLocation);
+			//
+		}
+
+		@Override
+		protected void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) {
+			//
+			final Class<?> classUrl = Util.forName("org.springframework.beans.factory.URL");
+			//
+			List<ClassInfo> classInfos = null;
+			//
+			if (classUrl != null && classUrl.getModifiers() == 9728) {
+				//
+				if ((classInfos = getAllClasses(
+						scan(new ClassGraph().acceptPackages(getName(classUrl.getPackage()))))) != null) {
+					//
+					classInfos.removeIf(x -> x != null && x.getModuleInfo() != null);
+					//
+				} // if
+					//
+			} else {
+				//
+				classInfos = ClassInfoUtil.getClassInfos();
+				//
+			} // if
+				//
+			Field[] fs = null;
+			//
+			Field f1;
+			//
+			Annotation[] as;
+			//
+			Annotation a;
+			//
+			List<Field> fields = null;
+			//
+			String[] bdns = null;
+			//
+			BeanDefinition bd = null;
+			//
+			Class<?> clz = null;
+			//
+			for (int i = 0; i < IterableUtils.size(classInfos); i++) {
+				//
+				try {
+					//
+					if ((clz = Util.forName(HasNameUtil.getName(IterableUtils.get(classInfos, i)))) == null
+							|| (fs = FieldUtils.getAllFields(clz)) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+				} catch (final Throwable e) {
+					//
+				} // try
+					//
+				for (int j = 0; j < fs.length; j++) {
+					//
+					if ((as = getAnnotations(f1 = fs[j])) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					for (int k = 0; as != null && k < as.length; k++) {
+						//
+						if ((clz = Util.getClass(a = as[k])) != null && Proxy.isProxyClass(clz)) {
+							//
+							if (IterableUtils.size(fields = Util.toList(Util.filter(
+									Arrays.stream(
+											FieldUtils.getAllFields(Util.getClass(Proxy.getInvocationHandler(a)))),
+									x -> Objects.equals(Util.getName(x), "type")))) > 1) {
+								//
+								throw new RuntimeException();
+								//
+							} // if
+								//
+							if (!Objects.equals(
+									Util.getName(Util.cast(Class.class,
+											Narcissus.getField(Proxy.getInvocationHandler(a),
+													testAndApply(x -> IterableUtils.size(x) == 1, fields,
+															x -> IterableUtils.get(x, 0), null)))),
+									Util.getName(classUrl))) {
+								//
+								continue;
+								//
+							} // if
+								//
+							try {
+								//
+								bdns = ObjectUtils.getIfNull(bdns,
+										() -> ListableBeanFactoryUtil.getBeanDefinitionNames(beanFactory));
+								//
+								for (int l = 0; bdns != null && l < bdns.length; l++) {
+
+									if ((bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(beanFactory,
+											bdns[l])) == null
+											|| !Objects.equals(Util.getName(Util.getDeclaringClass(f1)),
+													bd.getBeanClassName())
+											|| bd.getPropertyValues() == null
+											|| bd.getPropertyValues().contains(Util.getName(f1))) {
+										//
+										continue;
+										//
+									} // if
+										//
+									bd.getPropertyValues().add(Util.getName(f1),
+											Narcissus.invokeMethod(a, getDeclaredMethod(Util.getClass(a), "value")));
+									//
+								} // for
+									//
+							} catch (final IllegalArgumentException | NoSuchMethodException e) {
+								//
+								LoggerUtil.error(LOG, e.getMessage(), e);
+								//
+							} // try
+								//
+						} // if
+							//
+					} // for
+						//
+				} // for
+					//
+			} // for
+				//
+		}
+
+		@Nullable
+		private static ClassInfoList getAllClasses(@Nullable final ScanResult instance) {
+			return instance != null ? instance.getAllClasses() : null;
+		}
+
+		@Nullable
+		private static ScanResult scan(@Nullable final ClassGraph instance) {
+			return instance != null ? instance.scan() : null;
+		}
+
+		@Nullable
+		private static String getName(@Nullable final Package instance) {
+			return instance != null ? instance.getName() : null;
+		}
+
+		@Nullable
+		private static Method getDeclaredMethod(@Nullable final Class<?> instance, final String name,
+				final Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException {
+			return instance != null ? instance.getDeclaredMethod(name, parameterTypes) : null;
+		}
+
+		@Nullable
+		private static Annotation[] getAnnotations(@Nullable final AnnotatedElement instance) {
+			return instance != null ? instance.getAnnotations() : null;
+		}
+
+	}
+
 	public static void main(final String[] args) throws IllegalAccessException {
 		//
-		try (final ConfigurableApplicationContext beanFactory = createConfigurableApplicationContext(
+		try (final ConfigurableApplicationContext beanFactory = new CustomClassPathXmlApplicationContext(
 				"applicationContext.xml")) {
 			//
 			final ConfigurableListableBeanFactory clbf = beanFactory.getBeanFactory();
@@ -116,164 +276,6 @@ public class Main {
 			//
 		} // try
 			//
-	}
-
-	private static ConfigurableApplicationContext createConfigurableApplicationContext(final String fileName) {
-		//
-		return new ClassPathXmlApplicationContext(fileName) {
-
-			@Override
-			protected void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) {
-				//
-				final Class<?> classUrl = Util.forName("org.springframework.beans.factory.URL");
-				//
-				List<ClassInfo> classInfos = null;
-				//
-				if (classUrl != null && classUrl.getModifiers() == 9728) {
-					//
-					if ((classInfos = getAllClasses(
-							scan(new ClassGraph().acceptPackages(getName(classUrl.getPackage()))))) != null) {
-						//
-						classInfos.removeIf(x -> x != null && x.getModuleInfo() != null);
-						//
-					} // if
-						//
-				} else {
-					//
-					classInfos = ClassInfoUtil.getClassInfos();
-					//
-				} // if
-					//
-				Field[] fs = null;
-				//
-				Field f1;
-				//
-				Annotation[] as;
-				//
-				Annotation a;
-				//
-				List<Field> fields = null;
-				//
-				String[] bdns = null;
-				//
-				BeanDefinition bd = null;
-				//
-				Class<?> clz = null;
-				//
-				for (int i = 0; i < IterableUtils.size(classInfos); i++) {
-					//
-					try {
-						//
-						if ((clz = Util.forName(HasNameUtil.getName(IterableUtils.get(classInfos, i)))) == null
-								|| (fs = FieldUtils.getAllFields(clz)) == null) {
-							//
-							continue;
-							//
-						} // if
-							//
-					} catch (final Throwable e) {
-						//
-					} // try
-						//
-					for (int j = 0; j < fs.length; j++) {
-						//
-						if ((as = getAnnotations(f1 = fs[j])) == null) {
-							//
-							continue;
-							//
-						} // if
-							//
-						for (int k = 0; as != null && k < as.length; k++) {
-							//
-							if ((clz = Util.getClass(a = as[k])) != null && Proxy.isProxyClass(clz)) {
-								//
-								if (IterableUtils.size(fields = Util.toList(Util.filter(
-										Arrays.stream(
-												FieldUtils.getAllFields(Util.getClass(Proxy.getInvocationHandler(a)))),
-										x -> Objects.equals(Util.getName(x), "type")))) > 1) {
-									//
-									throw new RuntimeException();
-									//
-								} // if
-									//
-								if (!Objects.equals(
-										Util.getName(Util.cast(Class.class,
-												Narcissus.getField(Proxy.getInvocationHandler(a),
-														testAndApply(x -> IterableUtils.size(x) == 1, fields,
-																x -> IterableUtils.get(x, 0), null)))),
-										Util.getName(classUrl))) {
-									//
-									continue;
-									//
-								} // if
-									//
-								try {
-									//
-									bdns = ObjectUtils.getIfNull(bdns,
-											() -> ListableBeanFactoryUtil.getBeanDefinitionNames(beanFactory));
-									//
-									for (int l = 0; bdns != null && l < bdns.length; l++) {
-
-										if ((bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(beanFactory,
-												bdns[l])) == null
-												|| !Objects.equals(Util.getName(Util.getDeclaringClass(f1)),
-														bd.getBeanClassName())
-												|| bd.getPropertyValues() == null
-												|| bd.getPropertyValues().contains(Util.getName(f1))) {
-											//
-											continue;
-											//
-										} // if
-											//
-										bd.getPropertyValues().add(Util.getName(f1), Narcissus.invokeMethod(a,
-												getDeclaredMethod(Util.getClass(a), "value")));
-										//
-									} // for
-										//
-								} catch (final IllegalArgumentException | NoSuchMethodException e) {
-									//
-									LoggerUtil.error(LOG, e.getMessage(), e);
-									//
-								} // try
-									//
-							} // if
-								//
-						} // for
-							//
-					} // for
-						//
-				} // for
-					//
-			}
-
-			@Nullable
-			private static ClassInfoList getAllClasses(@Nullable final ScanResult instance) {
-				return instance != null ? instance.getAllClasses() : null;
-			}
-
-			@Nullable
-			private static ScanResult scan(@Nullable final ClassGraph instance) {
-				return instance != null ? instance.scan() : null;
-			}
-
-			@Nullable
-			private static String getName(@Nullable final Package instance) {
-				return instance != null ? instance.getName() : null;
-			}
-
-			@Nullable
-			private static Method getDeclaredMethod(@Nullable final Class<?> instance, final String name,
-					final Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException {
-				return instance != null ? instance.getDeclaredMethod(name, parameterTypes) : null;
-			}
-
-			@Nullable
-			private static Annotation[] getAnnotations(@Nullable final AnnotatedElement instance) {
-				return instance != null ? instance.getAnnotations() : null;
-			}
-
-		};
-
 	}
 
 	@Nullable

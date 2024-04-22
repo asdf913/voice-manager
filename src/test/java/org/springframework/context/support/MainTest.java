@@ -44,8 +44,6 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
-import org.javatuples.Unit;
-import org.javatuples.valueintf.IValue0Util;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,8 +52,6 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.xml.XmlBeanDefinitionStoreException;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.PropertyResolver;
 
 import com.google.common.base.Predicates;
@@ -68,8 +64,7 @@ class MainTest {
 	private static Method METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_GET_BEAN_NAMES_FOR_TYPE,
 			METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE, METHOD_TEST_AND_APPLY,
 			METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS3, METHOD_IS_RAISE_THROWABLE_ONLY,
-			METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD,
-			METHOD_CREATE_CONFIGURABLE_APPLICATION_CONTEXT = null;
+			METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -111,9 +106,6 @@ class MainTest {
 		//
 		(METHOD_GET_METHOD = clz.getDeclaredMethod("getMethod", Class.class, String.class, Class[].class))
 				.setAccessible(true);
-		//
-		(METHOD_CREATE_CONFIGURABLE_APPLICATION_CONTEXT = clz.getDeclaredMethod("createConfigurableApplicationContext",
-				String.class)).setAccessible(true);
 		//
 	}
 
@@ -777,15 +769,13 @@ class MainTest {
 	}
 
 	@Test
-	void testCreateConfigurableApplicationContext() throws Throwable {
-		//
-		Assertions.assertThrows(IllegalArgumentException.class, () -> createConfigurableApplicationContext(null));
-		//
-		Assertions.assertThrows(XmlBeanDefinitionStoreException.class, () -> createConfigurableApplicationContext(""));
+	void testCustomConfigurableApplicationContext() throws Throwable {
 		//
 		Class<?> clz = Main.class;
 		//
-		Unit<Object> argument = null;
+		String className = null;
+		//
+		Object argument = null;
 		//
 		try (final InputStream is = clz != null
 				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
@@ -800,7 +790,7 @@ class MainTest {
 			//
 			LDC ldc = null;
 			//
-			INVOKESTATIC invokestatic = null;
+			INVOKESPECIAL invokespecial = null;
 			//
 			for (int i = 0; methods != null && i < methods.length; i++) {
 				//
@@ -817,17 +807,19 @@ class MainTest {
 				for (int j = 0; j < ins.length; j++) {
 					//
 					if ((ldc = Util.cast(LDC.class, ins[j])) != null && j < ins.length - 1
-							&& (invokestatic = Util.cast(INVOKESTATIC.class, ins[j + 1])) != null) {
+							&& (invokespecial = Util.cast(INVOKESPECIAL.class, ins[j + 1])) != null) {
 						//
 						final ConstantPoolGen cpg = new ConstantPoolGen(method.getConstantPool());
 						//
-						if (!Objects.equals(invokestatic.getMethodName(cpg), "createConfigurableApplicationContext")) {
+						if (!Objects.equals(invokespecial.getMethodName(cpg), "<init>")) {
 							//
 							continue;
 							//
 						} // if
 							//
-						argument = Unit.with(ldc.getValue(cpg));
+						className = invokespecial.getClassName(cpg);
+						//
+						argument = ldc.getValue(cpg);
 						//
 						break;
 						//
@@ -839,25 +831,37 @@ class MainTest {
 				//
 		} // try
 			//
-		Method[] ms = null;
+		Assertions.assertNotNull(Narcissus.allocateInstance(clz));
 		//
-		if (!GraphicsEnvironment.isHeadless()) {
+		final Constructor<?>[] cs = (clz = Util.forName(className)).getDeclaredConstructors();
+		//
+		Constructor<?> c = null;
+		//
+		for (int i = 0; cs != null && i < cs.length; i++) {
 			//
-			final Object configurableApplicationContext = !GraphicsEnvironment.isHeadless()
-					? createConfigurableApplicationContext(Util.toString(IValue0Util.getValue0(argument)))
-					: null;
+			if ((c = cs[i]) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			c.setAccessible(true);
 			//
-			Assertions.assertNotNull(configurableApplicationContext);
-			//
-			ms = Util.getDeclaredMethods(clz = Util.getClass(configurableApplicationContext));
-			//
+			if (c.getParameterCount() == 1 && !GraphicsEnvironment.isHeadless()) {
+				//
+				Assertions.assertNotNull(c.newInstance(argument));
+				//
+			} // if
+				//
 		} // if
 			//
-		Method m = null;
+		final Method[] ms = Util.getDeclaredMethods(clz);
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
-			if ((m = ms[i]) == null) {
+			final Method m = ms[i];
+			//
+			if (m == null || m.isSynthetic()) {
 				//
 				continue;
 				//
@@ -867,27 +871,12 @@ class MainTest {
 			//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
-				m.invoke(null, new Object[m.getParameterCount()]);
+				Assertions.assertDoesNotThrow(() -> m.invoke(null, new Object[m.getParameterCount()]));
 				//
 			} // if
 				//
 		} // for
 			//
-	}
-
-	private static ConfigurableApplicationContext createConfigurableApplicationContext(final String fileName)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_CONFIGURABLE_APPLICATION_CONTEXT.invoke(null, fileName);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof ConfigurableApplicationContext) {
-				return (ConfigurableApplicationContext) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 }
