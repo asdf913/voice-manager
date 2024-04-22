@@ -137,12 +137,8 @@ public class Main {
 					//
 				for (int j = 0; j < fs.length; j++) {
 					//
-					if ((as = getAnnotations(f1 = fs[j])) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
+					as = getAnnotations(f1 = fs[j]);
+					//
 					for (int k = 0; as != null && k < as.length; k++) {
 						//
 						if ((clz = Util.getClass(a = as[k])) != null && Proxy.isProxyClass(clz)) {
