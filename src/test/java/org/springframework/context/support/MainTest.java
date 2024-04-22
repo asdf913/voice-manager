@@ -640,9 +640,9 @@ class MainTest {
 		//
 		Class<?> clz = Main.class;
 		//
-		Unit<String> className = null;
+		String className = null;
 		//
-		Unit<Object> argument = null;
+		Object argument = null;
 		//
 		try (final InputStream is = clz != null
 				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
@@ -657,54 +657,82 @@ class MainTest {
 			//
 			LDC ldc = null;
 			//
+			INVOKESTATIC invokestatic = null;
+			//
 			INVOKESPECIAL invokespecial = null;
+			//
+			String name = null;
 			//
 			for (int i = 0; methods != null && i < methods.length; i++) {
 				//
 				if ((method = methods[i]) == null || (ins = InstructionListUtil
 						.getInstructions(MethodGenUtil.getInstructionList(testAndApply(Objects::nonNull, method,
 								x -> new MethodGen(x, null, new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(x))),
-								null)))) == null
-						|| !Objects.equals(FieldOrMethodUtil.getName(method), "main")) {
+								null)))) == null) {
 					//
 					continue;
 					//
 				} // if
 					//
-				for (int j = 0; j < ins.length; j++) {
+				if (Objects.equals(name = FieldOrMethodUtil.getName(method), "main")) {
 					//
-					if ((ldc = Util.cast(LDC.class, ins[j])) != null && j < ins.length - 1
-							&& (invokespecial = Util.cast(INVOKESPECIAL.class, ins[j + 1])) != null) {
+					for (int j = 0; j < ins.length; j++) {
 						//
-						final ConstantPoolGen cpg = new ConstantPoolGen(method.getConstantPool());
-						//
-						className = Unit.with(invokespecial.getClassName(cpg));
-						//
-						if (!Objects.equals(invokespecial.getMethodName(cpg), "<init>")) {
+						if ((ldc = Util.cast(LDC.class, ins[j])) != null && j < ins.length - 1
+								&& (invokestatic = Util.cast(INVOKESTATIC.class, ins[j + 1])) != null) {
 							//
-							continue;
+							final ConstantPoolGen cpg = new ConstantPoolGen(method.getConstantPool());
+							//
+							if (!Objects.equals(invokestatic.getMethodName(cpg),
+									"createConfigurableApplicationContext")) {
+								//
+								continue;
+								//
+							} // if
+								//
+							argument = ldc.getValue(cpg);
+							//
+							break;
 							//
 						} // if
 							//
-						argument = Unit.with(ldc.getValue(cpg));
+					} // for
 						//
-						break;
+				} else if (Objects.equals(name, "createConfigurableApplicationContext")) {
+					//
+					for (int j = 0; j < ins.length; j++) {
 						//
-					} // if
+						if ((invokespecial = Util.cast(INVOKESPECIAL.class, ins[j])) != null) {
+							//
+							final ConstantPoolGen cpg = new ConstantPoolGen(method.getConstantPool());
+							//
+							className = invokespecial.getClassName(cpg);
+							//
+							if (!Objects.equals(invokespecial.getMethodName(cpg), "<init>")) {
+								//
+								continue;
+								//
+							} // if
+								//
+							break;
+							//
+						} // if
+							//
+					} // for
 						//
-				} // for
+				} // if
 					//
 			} // for
 				//
 		} // try
 			//
-		final Method[] ms = Util.getDeclaredMethods(clz = Util.forName(IValue0Util.getValue0(className)));
-		//
-		Method m = null;
+		final Method[] ms = Util.getDeclaredMethods(clz = Util.forName(className));
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
-			if ((m = ms[i]) == null) {
+			final Method m = ms[i];
+			//
+			if (m == null) {
 				//
 				continue;
 				//
@@ -714,7 +742,7 @@ class MainTest {
 			//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
-				m.invoke(null, new Object[m.getParameterCount()]);
+				Assertions.assertDoesNotThrow(() -> m.invoke(null, new Object[m.getParameterCount()]));
 				//
 			} else {
 				//
@@ -723,10 +751,14 @@ class MainTest {
 					//
 					continue;
 					//
-				} //
+				} // if
 					//
-				m.invoke(newInstance(getDeclaredConstructor(clz, String.class), IValue0Util.getValue0(argument)),
-						new Object[m.getParameterCount()]);
+				final Class<?> c = clz;
+				//
+				final Object a = argument;
+				//
+				Assertions.assertDoesNotThrow(() -> m.invoke(newInstance(getDeclaredConstructor(c, String.class), a),
+						new Object[m.getParameterCount()]));
 				//
 			} // if
 				//
@@ -807,13 +839,20 @@ class MainTest {
 				//
 		} // try
 			//
-		final Object configurableApplicationContext = createConfigurableApplicationContext(
-				Util.toString(IValue0Util.getValue0(argument)));
+		Method[] ms = null;
 		//
-		Assertions.assertNotNull(configurableApplicationContext);
-		//
-		final Method[] ms = Util.getDeclaredMethods(clz = Util.getClass(configurableApplicationContext));
-		//
+		if (!GraphicsEnvironment.isHeadless()) {
+			//
+			final Object configurableApplicationContext = !GraphicsEnvironment.isHeadless()
+					? createConfigurableApplicationContext(Util.toString(IValue0Util.getValue0(argument)))
+					: null;
+			//
+			Assertions.assertNotNull(configurableApplicationContext);
+			//
+			ms = Util.getDeclaredMethods(clz = Util.getClass(configurableApplicationContext));
+			//
+		} // if
+			//
 		Method m = null;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
