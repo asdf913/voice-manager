@@ -185,13 +185,7 @@ public class Main {
 							//
 						for (int k = 0; as != null && k < as.length; k++) {
 							//
-							if ((a = as[k]) == null) {
-								//
-								continue;
-								//
-							} // if
-								//
-							if (Proxy.isProxyClass(Util.getClass(a))) {
+							if ((clz = Util.getClass(a = as[k])) != null && Proxy.isProxyClass(clz)) {
 								//
 								if (IterableUtils.size(fields = Util.toList(Util.filter(
 										Arrays.stream(
