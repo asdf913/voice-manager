@@ -154,8 +154,6 @@ public class Main {
 				//
 				List<Field> fields = null;
 				//
-				int size;
-				//
 				String[] bdns = null;
 				//
 				BeanDefinition bd = null;
@@ -195,10 +193,10 @@ public class Main {
 								//
 							if (Proxy.isProxyClass(Util.getClass(a))) {
 								//
-								if ((size = IterableUtils.size(fields = Util.toList(Util.filter(
+								if (IterableUtils.size(fields = Util.toList(Util.filter(
 										Arrays.stream(
 												FieldUtils.getAllFields(Util.getClass(Proxy.getInvocationHandler(a)))),
-										x -> Objects.equals(Util.getName(x), "type"))))) > 1) {
+										x -> Objects.equals(Util.getName(x), "type")))) > 1) {
 									//
 									throw new RuntimeException();
 									//
