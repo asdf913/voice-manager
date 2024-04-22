@@ -207,7 +207,8 @@ public class Main {
 								if (!Objects.equals(
 										Util.getName(Util.cast(Class.class,
 												Narcissus.getField(Proxy.getInvocationHandler(a),
-														size == 1 ? IterableUtils.get(fields, 0) : null))),
+														testAndApply(x -> IterableUtils.size(x) == 1, fields,
+																x -> IterableUtils.get(x, 0), null)))),
 										Util.getName(classUrl))) {
 									//
 									continue;
