@@ -732,7 +732,7 @@ class MainTest {
 			//
 			final Method m = ms[i];
 			//
-			if (m == null) {
+			if (m == null || m.isSynthetic()) {
 				//
 				continue;
 				//
