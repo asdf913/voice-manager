@@ -46,6 +46,8 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
+import org.springframework.beans.MutablePropertyValues;
+import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -121,6 +123,8 @@ public class Main {
 			//
 			Class<?> clz = null;
 			//
+			MutablePropertyValues pv = null;
+			//
 			for (int i = 0; i < IterableUtils.size(classInfos); i++) {
 				//
 				try {
@@ -171,17 +175,17 @@ public class Main {
 								//
 								for (int l = 0; bdns != null && l < bdns.length; l++) {
 									//
-									if (!Objects.equals(Util.getName(Util.getDeclaringClass(f1)),
-											getBeanClassName(bd = ConfigurableListableBeanFactoryUtil
-													.getBeanDefinition(beanFactory, bdns[l])))
-											|| bd.getPropertyValues() == null
-											|| bd.getPropertyValues().contains(Util.getName(f1))) {
+									if (Boolean.logicalOr(
+											!Objects.equals(Util.getName(Util.getDeclaringClass(f1)),
+													getBeanClassName(bd = ConfigurableListableBeanFactoryUtil
+															.getBeanDefinition(beanFactory, bdns[l]))),
+											contains(pv = getPropertyValues(bd), Util.getName(f1)))) {
 										//
 										continue;
 										//
 									} // if
 										//
-									bd.getPropertyValues().add(Util.getName(f1),
+									add(pv, Util.getName(f1),
 											Narcissus.invokeMethod(a, getDeclaredMethod(Util.getClass(a), "value")));
 									//
 								} // for
@@ -200,6 +204,21 @@ public class Main {
 					//
 			} // for
 				//
+		}
+
+		private static void add(final MutablePropertyValues instance, final String propertyName,
+				final Object propertyValue) {
+			if (instance != null) {
+				instance.add(propertyName, propertyValue);
+			}
+		}
+
+		private static boolean contains(final PropertyValues instance, final String propertyName) {
+			return instance != null && instance.contains(propertyName);
+		}
+
+		private static MutablePropertyValues getPropertyValues(final BeanDefinition instance) {
+			return instance != null ? instance.getPropertyValues() : null;
 		}
 
 		@Nullable
