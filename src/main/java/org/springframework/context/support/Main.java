@@ -203,7 +203,7 @@ public class Main {
 				//
 		}
 
-		private static boolean isProxyClass(final Class<?> instance) {
+		private static boolean isProxyClass(@Nullable final Class<?> instance) {
 			return instance != null && Proxy.isProxyClass(instance);
 		}
 
