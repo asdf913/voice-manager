@@ -202,6 +202,7 @@ public class Main {
 				//
 		}
 
+		@Nullable
 		private static String getBeanClassName(@Nullable final BeanDefinition instance) {
 			return instance != null ? instance.getBeanClassName() : null;
 		}
