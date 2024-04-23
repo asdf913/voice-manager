@@ -142,7 +142,7 @@ public class Main {
 					//
 					for (int k = 0; as != null && k < as.length; k++) {
 						//
-						if (isProxyClass(clz = Util.getClass(a = as[k]))) {
+						if (isProxyClass(Util.getClass(a = as[k]))) {
 							//
 							if (IterableUtils.size(fields = Util.toList(Util.filter(
 									Arrays.stream(
