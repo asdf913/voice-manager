@@ -15,7 +15,7 @@ public interface ClassInfoUtil {
 
 	static List<ClassInfo> getClassInfos() {
 		//
-		final List<ClassInfo> classInfos = getAllClasses(scan(new ClassGraph().enableClassInfo()));
+		final List<ClassInfo> classInfos = getAllClasses(ClassGraphUtil.scan(new ClassGraph().enableClassInfo()));
 		//
 		final Collection<String> classToBeExcluded = new ArrayList<>(Arrays.asList(
 				//
@@ -375,10 +375,6 @@ public interface ClassInfoUtil {
 
 	private static ClassInfoList getAllClasses(final ScanResult instance) {
 		return instance != null ? instance.getAllClasses() : null;
-	}
-
-	private static ScanResult scan(final ClassGraph instance) {
-		return instance != null ? instance.scan() : null;
 	}
 
 }

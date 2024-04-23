@@ -63,6 +63,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
 import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassGraphUtil;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ClassInfoUtil;
@@ -210,8 +211,8 @@ public class Main {
 			//
 			if (classUrl != null && classUrl.getModifiers() == 9728) {
 				//
-				if ((classInfos = getAllClasses(
-						scan(new ClassGraph().acceptPackages(getName(classUrl.getPackage()))))) != null) {
+				if ((classInfos = getAllClasses(ClassGraphUtil
+						.scan(new ClassGraph().acceptPackages(getName(classUrl.getPackage()))))) != null) {
 					//
 					classInfos.removeIf(x -> getModuleInfo(x) != null);
 					//
@@ -255,11 +256,6 @@ public class Main {
 		@Nullable
 		private static ClassInfoList getAllClasses(@Nullable final ScanResult instance) {
 			return instance != null ? instance.getAllClasses() : null;
-		}
-
-		@Nullable
-		private static ScanResult scan(@Nullable final ClassGraph instance) {
-			return instance != null ? instance.scan() : null;
 		}
 
 		@Nullable

@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 
 import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassGraphUtil;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ClassInfoUtil;
@@ -59,7 +60,7 @@ public class UrlAnnotationResource implements Resource {
 		//
 		if (clz != null && clz.getModifiers() == 9728) {
 			//
-			classInfos = getAllClasses(scan(new ClassGraph().acceptPackages(getName(getPackage(clz)))));
+			classInfos = getAllClasses(ClassGraphUtil.scan(new ClassGraph().acceptPackages(getName(getPackage(clz)))));
 			//
 		} else {
 			//
@@ -110,11 +111,6 @@ public class UrlAnnotationResource implements Resource {
 	@Nullable
 	private static ClassInfoList getAllClasses(@Nullable final ScanResult instance) {
 		return instance != null ? instance.getAllClasses() : null;
-	}
-
-	@Nullable
-	private static ScanResult scan(@Nullable final ClassGraph instance) {
-		return instance != null ? instance.scan() : null;
 	}
 
 	@Nullable
