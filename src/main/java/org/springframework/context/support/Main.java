@@ -64,6 +64,7 @@ import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ClassInfoUtil;
 import io.github.classgraph.HasNameUtil;
+import io.github.classgraph.ModuleInfo;
 import io.github.classgraph.ScanResult;
 import io.github.toolfactory.narcissus.Narcissus;
 
@@ -94,7 +95,7 @@ public class Main {
 				if ((classInfos = getAllClasses(
 						scan(new ClassGraph().acceptPackages(getName(classUrl.getPackage()))))) != null) {
 					//
-					classInfos.removeIf(x -> x != null && x.getModuleInfo() != null);
+					classInfos.removeIf(x -> getModuleInfo(x) != null);
 					//
 				} // if
 					//
@@ -200,6 +201,10 @@ public class Main {
 					//
 			} // for
 				//
+		}
+
+		private static ModuleInfo getModuleInfo(final ClassInfo instance) {
+			return instance != null ? instance.getModuleInfo() : null;
 		}
 
 		@Nullable
