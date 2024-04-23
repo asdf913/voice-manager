@@ -38,10 +38,9 @@ import org.slf4j.LoggerUtil;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassGraphUtil;
 import io.github.classgraph.ClassInfo;
-import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ClassInfoUtil;
 import io.github.classgraph.HasNameUtil;
-import io.github.classgraph.ScanResult;
+import io.github.classgraph.ScanResultUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 
 public class UrlAnnotationResource implements Resource {
@@ -60,7 +59,8 @@ public class UrlAnnotationResource implements Resource {
 		//
 		if (clz != null && clz.getModifiers() == 9728) {
 			//
-			classInfos = getAllClasses(ClassGraphUtil.scan(new ClassGraph().acceptPackages(getName(getPackage(clz)))));
+			classInfos = ScanResultUtil
+					.getAllClasses(ClassGraphUtil.scan(new ClassGraph().acceptPackages(getName(getPackage(clz)))));
 			//
 		} else {
 			//
@@ -106,11 +106,6 @@ public class UrlAnnotationResource implements Resource {
 			//
 		return toInputStream(properties);
 		//
-	}
-
-	@Nullable
-	private static ClassInfoList getAllClasses(@Nullable final ScanResult instance) {
-		return instance != null ? instance.getAllClasses() : null;
 	}
 
 	@Nullable

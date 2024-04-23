@@ -65,11 +65,10 @@ import com.google.common.collect.MultimapUtil;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassGraphUtil;
 import io.github.classgraph.ClassInfo;
-import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ClassInfoUtil;
 import io.github.classgraph.HasNameUtil;
 import io.github.classgraph.ModuleInfo;
-import io.github.classgraph.ScanResult;
+import io.github.classgraph.ScanResultUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 
 public class Main {
@@ -211,7 +210,7 @@ public class Main {
 			//
 			if (classUrl != null && classUrl.getModifiers() == 9728) {
 				//
-				if ((classInfos = getAllClasses(ClassGraphUtil
+				if ((classInfos = ScanResultUtil.getAllClasses(ClassGraphUtil
 						.scan(new ClassGraph().acceptPackages(getName(classUrl.getPackage()))))) != null) {
 					//
 					classInfos.removeIf(x -> getModuleInfo(x) != null);
@@ -251,11 +250,6 @@ public class Main {
 		@Nullable
 		private static ModuleInfo getModuleInfo(@Nullable final ClassInfo instance) {
 			return instance != null ? instance.getModuleInfo() : null;
-		}
-
-		@Nullable
-		private static ClassInfoList getAllClasses(@Nullable final ScanResult instance) {
-			return instance != null ? instance.getAllClasses() : null;
 		}
 
 		@Nullable
