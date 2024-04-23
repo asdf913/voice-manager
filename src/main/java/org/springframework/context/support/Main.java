@@ -203,7 +203,7 @@ public class Main {
 				//
 		}
 
-		private static ModuleInfo getModuleInfo(final ClassInfo instance) {
+		private static ModuleInfo getModuleInfo(@Nullable final ClassInfo instance) {
 			return instance != null ? instance.getModuleInfo() : null;
 		}
 
