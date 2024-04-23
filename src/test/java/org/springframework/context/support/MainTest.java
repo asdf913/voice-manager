@@ -62,9 +62,9 @@ import io.github.toolfactory.narcissus.Narcissus;
 class MainTest {
 
 	private static Method METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_GET_BEAN_NAMES_FOR_TYPE,
-			METHOD_GET_BEAN_CLASS_NAME, METHOD_PACK, METHOD_SET_VISIBLE, METHOD_TEST_AND_APPLY,
-			METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS3, METHOD_IS_RAISE_THROWABLE_ONLY,
-			METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD = null;
+			METHOD_PACK, METHOD_SET_VISIBLE, METHOD_TEST_AND_APPLY, METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS3,
+			METHOD_IS_RAISE_THROWABLE_ONLY, METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME,
+			METHOD_GET_METHOD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -79,9 +79,6 @@ class MainTest {
 		//
 		(METHOD_GET_BEAN_NAMES_FOR_TYPE = clz.getDeclaredMethod("getBeanNamesForType", ListableBeanFactory.class,
 				Class.class)).setAccessible(true);
-		//
-		(METHOD_GET_BEAN_CLASS_NAME = clz.getDeclaredMethod("getBeanClassName", BeanDefinition.class))
-				.setAccessible(true);
 		//
 		(METHOD_PACK = clz.getDeclaredMethod("pack", Window.class)).setAccessible(true);
 		//
@@ -326,29 +323,6 @@ class MainTest {
 				return null;
 			} else if (obj instanceof String[]) {
 				return (String[]) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetBeanClassName() throws Throwable {
-		//
-		Assertions.assertNull(getBeanClassName(null));
-		//
-		Assertions.assertNull(getBeanClassName(Reflection.newProxy(BeanDefinition.class, ih)));
-		//
-	}
-
-	private static String getBeanClassName(final BeanDefinition instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_BEAN_CLASS_NAME.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

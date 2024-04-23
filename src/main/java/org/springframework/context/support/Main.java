@@ -51,6 +51,7 @@ import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.BeanDefinitionUtil;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactoryUtil;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -187,8 +188,8 @@ public class Main {
 				//
 				if (Boolean.logicalOr(
 						!Objects.equals(Util.getName(Util.getDeclaringClass(f)),
-								getBeanClassName(bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(beanFactory,
-										beanDefinitionNames[l]))),
+								BeanDefinitionUtil.getBeanClassName(bd = ConfigurableListableBeanFactoryUtil
+										.getBeanDefinition(beanFactory, beanDefinitionNames[l]))),
 						contains(pv = getPropertyValues(bd), Util.getName(f)))) {
 					//
 					continue;
@@ -240,11 +241,6 @@ public class Main {
 		@Nullable
 		private static MutablePropertyValues getPropertyValues(@Nullable final BeanDefinition instance) {
 			return instance != null ? instance.getPropertyValues() : null;
-		}
-
-		@Nullable
-		private static String getBeanClassName(@Nullable final BeanDefinition instance) {
-			return instance != null ? instance.getBeanClassName() : null;
 		}
 
 		private static boolean isProxyClass(@Nullable final Class<?> instance) {
@@ -301,8 +297,8 @@ public class Main {
 				//
 				JOptionPane.showMessageDialog(null, list, "Component", JOptionPane.PLAIN_MESSAGE);
 				//
-				clz = Util
-						.forName(getBeanClassName(testAndApply(Objects::nonNull, Util.toString(getSelectedValue(list)),
+				clz = Util.forName(BeanDefinitionUtil
+						.getBeanClassName(testAndApply(Objects::nonNull, Util.toString(getSelectedValue(list)),
 								x -> ConfigurableListableBeanFactoryUtil.getBeanDefinition(clbf, x), null)));
 				//
 			} // if
@@ -355,7 +351,7 @@ public class Main {
 					//
 				} // if
 					//
-				if ((ss = StringUtils.split(getBeanClassName(bd), ".")) != null && ss.length > 0
+				if ((ss = StringUtils.split(BeanDefinitionUtil.getBeanClassName(bd), ".")) != null && ss.length > 0
 						&& StringUtils.equals(string, ss[ss.length - 1])) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), string,
@@ -367,9 +363,12 @@ public class Main {
 				//
 			if (MultimapUtil.size(multimap) == 1) {
 				//
-				clz = Util.forName(
-						Util.orElse(Util.map(Util.stream(MultimapUtil.values(multimap)), Main::getBeanClassName)
-								.reduce((first, second) -> first), null));
+				clz = Util
+						.forName(
+								Util.orElse(
+										Util.map(Util.stream(MultimapUtil.values(multimap)),
+												BeanDefinitionUtil::getBeanClassName).reduce((first, second) -> first),
+										null));
 				//
 			} // if
 				//
@@ -546,11 +545,6 @@ public class Main {
 	@Nullable
 	private static String[] getBeanNamesForType(@Nullable final ListableBeanFactory instance, final Class<?> type) {
 		return instance != null ? instance.getBeanNamesForType(type) : null;
-	}
-
-	@Nullable
-	private static String getBeanClassName(@Nullable final BeanDefinition instance) {
-		return instance != null ? instance.getBeanClassName() : null;
 	}
 
 	private static void showMessageDialogOrPrintln(@Nullable final PrintStream ps, final Object object) {
