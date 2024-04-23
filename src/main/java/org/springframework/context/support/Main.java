@@ -170,7 +170,7 @@ public class Main {
 				//
 		}
 
-		private static void add(final String[] beanDefinitionNames, final Field f,
+		private static void add(@Nullable final String[] beanDefinitionNames, final Field f,
 				final ConfigurableListableBeanFactory beanFactory, final Object instance)
 				throws NoSuchMethodException, SecurityException {
 			//
