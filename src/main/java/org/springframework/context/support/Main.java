@@ -142,7 +142,7 @@ public class Main {
 					//
 					for (int k = 0; as != null && k < as.length; k++) {
 						//
-						if ((clz = Util.getClass(a = as[k])) != null && Proxy.isProxyClass(clz)) {
+						if (isProxyClass(clz = Util.getClass(a = as[k]))) {
 							//
 							if (IterableUtils.size(fields = Util.toList(Util.filter(
 									Arrays.stream(
@@ -201,6 +201,10 @@ public class Main {
 					//
 			} // for
 				//
+		}
+
+		private static boolean isProxyClass(final Class<?> instance) {
+			return instance != null && Proxy.isProxyClass(instance);
 		}
 
 		@Nullable

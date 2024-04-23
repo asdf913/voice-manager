@@ -877,6 +877,18 @@ class MainTest {
 				//
 		} // for
 			//
+			// org.springframework.context.support.Main$CustomClassPathXmlApplicationContext.isProxyClass(java.lang.Class)
+			//
+		final Method m = clz != null ? clz.getDeclaredMethod("isProxyClass", Class.class) : null;
+		//
+		if (m != null) {
+			//
+			m.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertEquals(Boolean.FALSE, m != null ? m.invoke(null, Class.class) : null);
+		//
 	}
 
 }
