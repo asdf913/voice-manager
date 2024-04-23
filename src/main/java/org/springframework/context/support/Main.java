@@ -94,13 +94,7 @@ public class Main {
 			//
 			Field[] fs = null;
 			//
-			Field f1;
-			//
-			Annotation[] as;
-			//
-			Annotation a;
-			//
-			List<Field> fields = null;
+			Field f;
 			//
 			String[] bdns = null;
 			//
@@ -122,47 +116,18 @@ public class Main {
 					//
 				for (int j = 0; j < fs.length; j++) {
 					//
-					as = getAnnotations(f1 = fs[j]);
-					//
-					for (int k = 0; as != null && k < as.length; k++) {
+					try {
 						//
-						if (isProxyClass(Util.getClass(a = as[k]))) {
-							//
-							if (IterableUtils.size(fields = Util.toList(Util.filter(
-									Arrays.stream(
-											FieldUtils.getAllFields(Util.getClass(Proxy.getInvocationHandler(a)))),
-									x -> Objects.equals(Util.getName(x), "type")))) > 1) {
-								//
-								throw new RuntimeException();
-								//
-							} // if
-								//
-							if (!Objects.equals(
-									Util.getName(Util.cast(Class.class,
-											Narcissus.getField(Proxy.getInvocationHandler(a),
-													testAndApply(x -> IterableUtils.size(x) == 1, fields,
-															x -> IterableUtils.get(x, 0), null)))),
-									Util.getName(classUrl))) {
-								//
-								continue;
-								//
-							} // if
-								//
-							try {
-								//
-								add(bdns = ObjectUtils.getIfNull(bdns,
-										() -> ListableBeanFactoryUtil.getBeanDefinitionNames(beanFactory)), f1,
-										beanFactory, a);
-								//
-							} catch (final IllegalArgumentException | NoSuchMethodException e) {
-								//
-								LoggerUtil.error(LOG, e.getMessage(), e);
-								//
-							} // try
-								//
-						} // if
-							//
-					} // for
+						addMutablePropertyValues(getAnnotations(f = fs[j]), classUrl,
+								bdns = ObjectUtils.getIfNull(bdns,
+										() -> ListableBeanFactoryUtil.getBeanDefinitionNames(beanFactory)),
+								beanFactory, f);
+						//
+					} catch (final NoSuchMethodException e) {
+						//
+						LoggerUtil.error(LOG, e.getMessage(), e);
+						//
+					} // try
 						//
 				} // for
 					//
@@ -170,9 +135,48 @@ public class Main {
 				//
 		}
 
-		private static void add(@Nullable final String[] beanDefinitionNames, final Field f,
-				final ConfigurableListableBeanFactory beanFactory, final Object instance)
-				throws NoSuchMethodException, SecurityException {
+		private static void addMutablePropertyValues(final Annotation[] as, final Class<?> clz,
+				final String[] beanDefinitionNames, final ConfigurableListableBeanFactory beanFactory, final Field f)
+				throws NoSuchMethodException {
+			//
+			Annotation a;
+			//
+			List<Field> fields = null;
+			//
+			for (int k = 0; as != null && k < as.length; k++) {
+				//
+				if (isProxyClass(Util.getClass(a = as[k]))) {
+					//
+					if (IterableUtils.size(fields = Util.toList(Util.filter(
+							Arrays.stream(FieldUtils.getAllFields(Util.getClass(Proxy.getInvocationHandler(a)))),
+							x -> Objects.equals(Util.getName(x), "type")))) > 1) {
+						//
+						throw new RuntimeException();
+						//
+					} // if
+						//
+					if (!Objects.equals(
+							Util.getName(
+									Util.cast(Class.class,
+											Narcissus.getField(Proxy.getInvocationHandler(a),
+													testAndApply(x -> IterableUtils.size(x) == 1, fields,
+															x -> IterableUtils.get(x, 0), null)))),
+							Util.getName(clz))) {
+						//
+						continue;
+						//
+					} // if
+						//
+					addMutablePropertyValues(beanDefinitionNames, f, beanFactory, a);
+					//
+				} // if
+					//
+			} // for
+				//
+		}
+
+		private static void addMutablePropertyValues(@Nullable final String[] beanDefinitionNames, final Field f,
+				final ConfigurableListableBeanFactory beanFactory, final Object instance) throws NoSuchMethodException {
 			//
 			BeanDefinition bd = null;
 			//
@@ -268,7 +272,7 @@ public class Main {
 
 		@Nullable
 		private static Method getDeclaredMethod(@Nullable final Class<?> instance, final String name,
-				final Class<?>... parameterTypes) throws NoSuchMethodException, SecurityException {
+				final Class<?>... parameterTypes) throws NoSuchMethodException {
 			return instance != null ? instance.getDeclaredMethod(name, parameterTypes) : null;
 		}
 
