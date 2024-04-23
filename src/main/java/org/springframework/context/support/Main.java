@@ -135,7 +135,7 @@ public class Main {
 				//
 		}
 
-		private static void addMutablePropertyValues(final Annotation[] as, final Class<?> clz,
+		private static void addMutablePropertyValues(@Nullable final Annotation[] as, final Class<?> clz,
 				final String[] beanDefinitionNames, final ConfigurableListableBeanFactory beanFactory, final Field f)
 				throws NoSuchMethodException {
 			//
