@@ -170,11 +170,10 @@ public class Main {
 										() -> ListableBeanFactoryUtil.getBeanDefinitionNames(beanFactory));
 								//
 								for (int l = 0; bdns != null && l < bdns.length; l++) {
-
-									if ((bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(beanFactory,
-											bdns[l])) == null
-											|| !Objects.equals(Util.getName(Util.getDeclaringClass(f1)),
-													bd.getBeanClassName())
+									//
+									if (!Objects.equals(Util.getName(Util.getDeclaringClass(f1)),
+											getBeanClassName(bd = ConfigurableListableBeanFactoryUtil
+													.getBeanDefinition(beanFactory, bdns[l])))
 											|| bd.getPropertyValues() == null
 											|| bd.getPropertyValues().contains(Util.getName(f1))) {
 										//
@@ -201,6 +200,10 @@ public class Main {
 					//
 			} // for
 				//
+		}
+
+		private static String getBeanClassName(final BeanDefinition instance) {
+			return instance != null ? instance.getBeanClassName() : null;
 		}
 
 		private static boolean isProxyClass(@Nullable final Class<?> instance) {
