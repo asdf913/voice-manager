@@ -217,6 +217,7 @@ public class Main {
 			return instance != null && instance.contains(propertyName);
 		}
 
+		@Nullable
 		private static MutablePropertyValues getPropertyValues(@Nullable final BeanDefinition instance) {
 			return instance != null ? instance.getPropertyValues() : null;
 		}
