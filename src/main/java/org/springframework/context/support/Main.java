@@ -104,10 +104,6 @@ public class Main {
 			//
 			String[] bdns = null;
 			//
-			BeanDefinition bd = null;
-			//
-			MutablePropertyValues pv = null;
-			//
 			for (int i = 0; i < IterableUtils.size(classInfos); i++) {
 				//
 				try {
@@ -154,26 +150,10 @@ public class Main {
 								//
 							try {
 								//
-								bdns = ObjectUtils.getIfNull(bdns,
-										() -> ListableBeanFactoryUtil.getBeanDefinitionNames(beanFactory));
+								add(bdns = ObjectUtils.getIfNull(bdns,
+										() -> ListableBeanFactoryUtil.getBeanDefinitionNames(beanFactory)), f1,
+										beanFactory, a);
 								//
-								for (int l = 0; bdns != null && l < bdns.length; l++) {
-									//
-									if (Boolean.logicalOr(
-											!Objects.equals(Util.getName(Util.getDeclaringClass(f1)),
-													getBeanClassName(bd = ConfigurableListableBeanFactoryUtil
-															.getBeanDefinition(beanFactory, bdns[l]))),
-											contains(pv = getPropertyValues(bd), Util.getName(f1)))) {
-										//
-										continue;
-										//
-									} // if
-										//
-									add(pv, Util.getName(f1),
-											Narcissus.invokeMethod(a, getDeclaredMethod(Util.getClass(a), "value")));
-									//
-								} // for
-									//
 							} catch (final IllegalArgumentException | NoSuchMethodException e) {
 								//
 								LoggerUtil.error(LOG, e.getMessage(), e);
@@ -186,6 +166,33 @@ public class Main {
 						//
 				} // for
 					//
+			} // for
+				//
+		}
+
+		private static void add(final String[] beanDefinitionNames, final Field f,
+				final ConfigurableListableBeanFactory beanFactory, final Object instance)
+				throws NoSuchMethodException, SecurityException {
+			//
+			BeanDefinition bd = null;
+			//
+			MutablePropertyValues pv = null;
+			//
+			for (int l = 0; beanDefinitionNames != null && l < beanDefinitionNames.length; l++) {
+				//
+				if (Boolean.logicalOr(
+						!Objects.equals(Util.getName(Util.getDeclaringClass(f)),
+								getBeanClassName(bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(beanFactory,
+										beanDefinitionNames[l]))),
+						contains(pv = getPropertyValues(bd), Util.getName(f)))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				add(pv, Util.getName(f),
+						Narcissus.invokeMethod(instance, getDeclaredMethod(Util.getClass(instance), "value")));
+				//
 			} // for
 				//
 		}
