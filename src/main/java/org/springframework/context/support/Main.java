@@ -106,16 +106,15 @@ public class Main {
 			//
 			BeanDefinition bd = null;
 			//
-			Class<?> clz = null;
-			//
 			MutablePropertyValues pv = null;
 			//
 			for (int i = 0; i < IterableUtils.size(classInfos); i++) {
 				//
 				try {
 					//
-					if ((clz = Util.forName(HasNameUtil.getName(IterableUtils.get(classInfos, i)))) == null
-							|| (fs = FieldUtils.getAllFields(clz)) == null) {
+					if ((fs = testAndApply(Objects::nonNull,
+							Util.forName(HasNameUtil.getName(IterableUtils.get(classInfos, i))),
+							FieldUtils::getAllFields, null)) == null) {
 						//
 						continue;
 						//
