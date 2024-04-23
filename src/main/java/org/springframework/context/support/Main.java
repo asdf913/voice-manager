@@ -90,23 +90,8 @@ public class Main {
 			//
 			final Class<?> classUrl = Util.forName("org.springframework.beans.factory.URL");
 			//
-			List<ClassInfo> classInfos = null;
+			final List<ClassInfo> classInfos = getClassInfoList(classUrl);
 			//
-			if (classUrl != null && classUrl.getModifiers() == 9728) {
-				//
-				if ((classInfos = getAllClasses(
-						scan(new ClassGraph().acceptPackages(getName(classUrl.getPackage()))))) != null) {
-					//
-					classInfos.removeIf(x -> getModuleInfo(x) != null);
-					//
-				} // if
-					//
-			} else {
-				//
-				classInfos = ClassInfoUtil.getClassInfos();
-				//
-			} // if
-				//
 			Field[] fs = null;
 			//
 			Field f1;
@@ -204,6 +189,29 @@ public class Main {
 					//
 			} // for
 				//
+		}
+
+		private static List<ClassInfo> getClassInfoList(final Class<?> classUrl) {
+			//
+			List<ClassInfo> classInfos = null;
+			//
+			if (classUrl != null && classUrl.getModifiers() == 9728) {
+				//
+				if ((classInfos = getAllClasses(
+						scan(new ClassGraph().acceptPackages(getName(classUrl.getPackage()))))) != null) {
+					//
+					classInfos.removeIf(x -> getModuleInfo(x) != null);
+					//
+				} // if
+					//
+			} else {
+				//
+				classInfos = ClassInfoUtil.getClassInfos();
+				//
+			} // if
+				//
+			return classInfos;
+			//
 		}
 
 		private static void add(@Nullable final MutablePropertyValues instance, final String propertyName,
