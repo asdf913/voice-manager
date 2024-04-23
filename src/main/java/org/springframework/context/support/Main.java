@@ -191,7 +191,7 @@ public class Main {
 				//
 		}
 
-		private static List<ClassInfo> getClassInfoList(final Class<?> classUrl) {
+		private static List<ClassInfo> getClassInfoList(@Nullable final Class<?> classUrl) {
 			//
 			List<ClassInfo> classInfos = null;
 			//
