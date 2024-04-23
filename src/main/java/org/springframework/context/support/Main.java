@@ -206,14 +206,14 @@ public class Main {
 				//
 		}
 
-		private static void add(final MutablePropertyValues instance, final String propertyName,
+		private static void add(@Nullable final MutablePropertyValues instance, final String propertyName,
 				final Object propertyValue) {
 			if (instance != null) {
 				instance.add(propertyName, propertyValue);
 			}
 		}
 
-		private static boolean contains(final PropertyValues instance, final String propertyName) {
+		private static boolean contains(@Nullable final PropertyValues instance, final String propertyName) {
 			return instance != null && instance.contains(propertyName);
 		}
 
