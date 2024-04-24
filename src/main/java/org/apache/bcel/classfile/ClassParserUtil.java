@@ -23,12 +23,13 @@ public interface ClassParserUtil {
 				//
 			} else if (Objects.equals(Boolean.TRUE, FieldUtils.readField(instance, "fileOwned", true))) {
 				//
-				if (Objects.equals(Boolean.FALSE, FieldUtils.readField(instance, "isZip", true))
-						&& FieldUtils.readField(instance, "fileName", true) == null) {
+				final Object isZip = FieldUtils.readField(instance, "isZip", true);
+				//
+				if (Objects.equals(Boolean.FALSE, isZip) && FieldUtils.readField(instance, "fileName", true) == null) {
 					//
 					return null;
 					//
-				} else if (Objects.equals(Boolean.TRUE, FieldUtils.readField(instance, "isZip", true))
+				} else if (Objects.equals(Boolean.TRUE, isZip)
 						&& FieldUtils.readField(instance, "zipFile", true) == null) {
 					//
 					return null;
