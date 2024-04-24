@@ -25,12 +25,9 @@ public interface ClassParserUtil {
 				//
 				final Object isZip = FieldUtils.readField(instance, "isZip", true);
 				//
-				if (Objects.equals(Boolean.FALSE, isZip) && FieldUtils.readField(instance, "fileName", true) == null) {
-					//
-					return null;
-					//
-				} else if (Objects.equals(Boolean.TRUE, isZip)
-						&& FieldUtils.readField(instance, "zipFile", true) == null) {
+				if ((Objects.equals(Boolean.FALSE, isZip) && FieldUtils.readField(instance, "fileName", true) == null)
+						|| (Objects.equals(Boolean.TRUE, isZip)
+								&& FieldUtils.readField(instance, "zipFile", true) == null)) {
 					//
 					return null;
 					//
