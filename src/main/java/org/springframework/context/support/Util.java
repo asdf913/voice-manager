@@ -966,9 +966,12 @@ public abstract class Util {
 			//
 		} // if
 			//
+		Object constantPool = null;
+		//
 		try {
 			//
-			if (cpg != null && FieldUtils.readField(cpg.getConstantPool(), "constantPool", true) == null) {
+			if (cpg != null
+					&& (constantPool = FieldUtils.readField(cpg.getConstantPool(), "constantPool", true)) == null) {
 				//
 				return null;
 				//
@@ -979,6 +982,14 @@ public abstract class Util {
 			LoggerUtil.error(LOG, e.getMessage(), e);
 			//
 		} // try
+			//
+		final Object[] os = cast(Object[].class, constantPool);
+		//
+		if (os != null && os.length < instance.getIndex()) {
+			//
+			return null;
+			//
+		} // if
 			//
 		return cpg != null ? instance.getReferenceType(cpg) : null;
 		//
