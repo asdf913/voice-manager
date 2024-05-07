@@ -302,6 +302,8 @@ public interface ClassInfoUtil {
 				, "org.eclipse.jetty.http.HttpCompliance"
 				//
 				, "org.eclipse.jetty.http.DateParser"
+				//
+				, "org.eclipse.jetty.http.HttpDateTime"
 		//
 		));
 		//
