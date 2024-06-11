@@ -304,6 +304,14 @@ public interface ClassInfoUtil {
 				, "org.eclipse.jetty.http.DateParser"
 				//
 				, "org.eclipse.jetty.http.HttpDateTime"
+				//
+				, "freemarker.ext.jakarta.jsp.EventForwarding"
+				//
+				, "freemarker.ext.jakarta.jsp.FreemarkerTag"
+				//
+				, "freemarker.ext.jakarta.servlet.FreemarkerServlet"
+				//
+				, "freemarker.ext.jakarta.servlet.IncludePage"
 		//
 		));
 		//
