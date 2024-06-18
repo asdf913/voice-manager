@@ -3,6 +3,7 @@ package io.github.classgraph;
 import java.awt.GraphicsEnvironment;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
+import java.nio.file.spi.FileSystemProvider;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -336,10 +337,8 @@ public final class ClassInfoUtil {
 			//
 		} // if
 			//
-		final FileSystem fs = FileSystems.getDefault();
-		//
 		if (!Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
-				getName(getClass(fs != null ? fs.provider() : null)))) {
+				getName(getClass(provider(FileSystems.getDefault()))))) {
 			//
 			classToBeExcluded.addAll(Arrays.asList("com.sun.jna.platform.win32.Advapi32",
 					"com.sun.jna.platform.win32.Kernel32", "com.sun.jna.platform.win32.COM.COMBindingBaseObject",
@@ -381,6 +380,10 @@ public final class ClassInfoUtil {
 		//
 		return IValue0Util.getValue0(CLASS_INFOS = Unit.with(classInfos));
 		//
+	}
+
+	private static FileSystemProvider provider(final FileSystem instance) {
+		return instance != null ? instance.provider() : null;
 	}
 
 	private static <T> void removeIf(final Collection<T> instance, final Predicate<T> predicate) {
