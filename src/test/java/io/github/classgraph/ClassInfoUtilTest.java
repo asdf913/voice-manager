@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -33,9 +36,20 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class ClassInfoUtilTest {
+
+	private static Method METHOD_REMOVE_IF = null;
+
+	@BeforeAll
+	static void beforeAll() throws ReflectiveOperationException {
+		//
+		(METHOD_REMOVE_IF = ClassInfoUtil.class.getDeclaredMethod("removeIf", Collection.class, Predicate.class))
+				.setAccessible(true);
+		//
+	}
 
 	@Test
 	void testIif() throws IOException, IllegalAccessException, InvocationTargetException {
@@ -292,6 +306,23 @@ class ClassInfoUtilTest {
 
 	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
 		return instance != null && predicate != null ? instance.filter(predicate) : instance;
+	}
+
+	@Test
+	void testRemoveIf() {
+		//
+		Assertions.assertDoesNotThrow(() -> removeIf(null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> removeIf(Collections.emptySet(), null));
+		//
+	}
+
+	private static <T> void removeIf(final Collection<T> instance, final Predicate<T> predicate) throws Throwable {
+		try {
+			METHOD_REMOVE_IF.invoke(null, instance, predicate);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }

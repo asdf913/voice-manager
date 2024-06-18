@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.javatuples.Unit;
@@ -366,25 +367,26 @@ public final class ClassInfoUtil {
 			//
 		} // if
 			//
-		if (classInfos != null) {
+		removeIf(classInfos, x -> {
 			//
-			classInfos.removeIf(x -> {
+			if (x == null) {
 				//
-				if (x == null) {
-					//
-					return false;
-					//
-				} // if
-					//
-				return CollectionUtils.isNotEmpty(classToBeExcluded)
-						&& contains(classToBeExcluded, HasNameUtil.getName(x));
+				return false;
 				//
-			});
+			} // if
+				//
+			return CollectionUtils.isNotEmpty(classToBeExcluded) && contains(classToBeExcluded, HasNameUtil.getName(x));
 			//
-		} // if
-			//
+		});
+		//
 		return IValue0Util.getValue0(CLASS_INFOS = Unit.with(classInfos));
 		//
+	}
+
+	private static <T> void removeIf(final Collection<T> instance, final Predicate<T> predicate) {
+		if (instance != null && predicate != null) {
+			instance.removeIf(predicate);
+		}
 	}
 
 	private static boolean contains(final Collection<?> items, final Object item) {
