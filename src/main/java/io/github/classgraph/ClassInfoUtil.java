@@ -10,11 +10,25 @@ import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 
-public interface ClassInfoUtil {
+public final class ClassInfoUtil {
 
-	static List<ClassInfo> getClassInfos() {
+	private static IValue0<List<ClassInfo>> CLASS_INFOS = null;
+
+	private ClassInfoUtil() {
+	}
+
+	public static List<ClassInfo> getClassInfos() {
 		//
+		if (CLASS_INFOS != null) {
+			//
+			return IValue0Util.getValue0(CLASS_INFOS);
+			//
+		} // if
+			//
 		final List<ClassInfo> classInfos = ScanResultUtil
 				.getAllClasses(ClassGraphUtil.scan(new ClassGraph().enableClassInfo()));
 		//
@@ -364,11 +378,12 @@ public interface ClassInfoUtil {
 					//
 				return CollectionUtils.isNotEmpty(classToBeExcluded)
 						&& contains(classToBeExcluded, HasNameUtil.getName(x));
+				//
 			});
 			//
 		} // if
 			//
-		return classInfos;
+		return IValue0Util.getValue0(CLASS_INFOS = Unit.with(classInfos));
 		//
 	}
 
