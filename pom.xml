@@ -316,7 +316,7 @@
 		<dependency>
 		    <groupId>io.github.classgraph</groupId>
 		    <artifactId>classgraph</artifactId>
-		    <version>4.8.173</version>
+		    <version>4.8.174</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<dependency>
