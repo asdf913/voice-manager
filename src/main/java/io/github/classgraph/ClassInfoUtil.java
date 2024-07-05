@@ -328,6 +328,24 @@ public final class ClassInfoUtil {
 				, "freemarker.ext.jakarta.servlet.FreemarkerServlet"
 				//
 				, "freemarker.ext.jakarta.servlet.IncludePage"
+				//
+				, "org.openxmlformats.schemas.spreadsheetml.x2006.main.CTColHierarchiesUsage"
+				//
+				, "org.openxmlformats.schemas.spreadsheetml.x2006.main.CTChartFormats"
+				//
+				, "org.openxmlformats.schemas.spreadsheetml.x2006.main.CTColItems"
+				//
+				, "org.openxmlformats.schemas.spreadsheetml.x2006.main.CTConditionalFormats"
+				//
+				, "org.openxmlformats.schemas.spreadsheetml.x2006.main.CTFormats"
+				//
+				, "org.openxmlformats.schemas.spreadsheetml.x2006.main.CTPivotFilters"
+				//
+				, "org.openxmlformats.schemas.spreadsheetml.x2006.main.CTPivotHierarchies"
+				//
+				, "org.openxmlformats.schemas.spreadsheetml.x2006.main.CTRowHierarchiesUsage"
+				//
+				, "org.openxmlformats.schemas.spreadsheetml.x2006.main.CTRowItems"
 		//
 		));
 		//
