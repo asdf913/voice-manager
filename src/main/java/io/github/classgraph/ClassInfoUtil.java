@@ -78,7 +78,7 @@ public final class ClassInfoUtil {
 
 	private static boolean checkJavaClass(final JavaClass javaClass) {
 		//
-		if (forName(javaClass != null ? javaClass.getClassName() : null) == null) {
+		if (forName(getClassName(javaClass)) == null) {
 			//
 			return false;
 			//
@@ -128,6 +128,10 @@ public final class ClassInfoUtil {
 			//
 		return true;
 		//
+	}
+
+	private static String getClassName(final JavaClass instance) {
+		return instance != null ? instance.getClassName() : null;
 	}
 
 	private static <T> T cast(final Class<T> clz, final Object instance) {

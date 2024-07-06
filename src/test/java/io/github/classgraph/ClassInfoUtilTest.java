@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.FieldOrMethodUtil;
+import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.generic.ACONST_NULL;
 import org.apache.bcel.generic.ALOAD;
@@ -42,15 +43,17 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class ClassInfoUtilTest {
 
-	private static Method METHOD_GET_CLASS_NAME, METHOD_FOR_NAME, METHOD_REMOVE_IF, METHOD_TEST_AND_APPLY,
-			METHOD_CAST = null;
+	private static Method METHOD_GET_CLASS_NAME_JAVA_CLASS, METHOD_GET_CLASS_NAME_TYPE, METHOD_FOR_NAME,
+			METHOD_REMOVE_IF, METHOD_TEST_AND_APPLY, METHOD_CAST = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = ClassInfoUtil.class;
 		//
-		(METHOD_GET_CLASS_NAME = clz.getDeclaredMethod("getClassName", Type.class)).setAccessible(true);
+		(METHOD_GET_CLASS_NAME_JAVA_CLASS = clz.getDeclaredMethod("getClassName", JavaClass.class)).setAccessible(true);
+		//
+		(METHOD_GET_CLASS_NAME_TYPE = clz.getDeclaredMethod("getClassName", Type.class)).setAccessible(true);
 		//
 		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
 		//
@@ -236,9 +239,30 @@ class ClassInfoUtilTest {
 			//
 	}
 
+	@Test
+	void testGetClassName() throws Throwable {
+		//
+		Assertions.assertNull(getClassName(cast(JavaClass.class, Narcissus.allocateInstance(JavaClass.class))));
+		//
+	}
+
+	private static String getClassName(final JavaClass instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CLASS_NAME_JAVA_CLASS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(Objects.toString(obj.getClass()));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 	private static String getClassName(final Type instance) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_CLASS_NAME.invoke(null, instance);
+			final Object obj = METHOD_GET_CLASS_NAME_TYPE.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {
