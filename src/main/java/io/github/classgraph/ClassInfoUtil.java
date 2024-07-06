@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
+import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ArrayType;
 import org.apache.bcel.generic.BasicType;
@@ -84,9 +85,9 @@ public final class ClassInfoUtil {
 			//
 		} // if
 			//
-		final org.apache.bcel.classfile.Field[] fs = javaClass != null ? javaClass.getFields() : null;
+		final Field[] fs = getFields(javaClass);
 		//
-		org.apache.bcel.classfile.Field f = null;
+		Field f = null;
 		//
 		Type type, basicType = null;
 		//
@@ -128,6 +129,10 @@ public final class ClassInfoUtil {
 			//
 		return true;
 		//
+	}
+
+	private static Field[] getFields(final JavaClass instance) {
+		return instance != null ? instance.getFields() : null;
 	}
 
 	private static String getClassName(final JavaClass instance) {
