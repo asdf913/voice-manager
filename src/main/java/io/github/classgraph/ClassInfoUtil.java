@@ -96,7 +96,7 @@ public final class ClassInfoUtil {
 		//
 		for (int i = 0; i < length(fs); i++) {
 			//
-			if ((f = ArrayUtils.get(fs, i)) == null || (type = f.getType()) instanceof BasicType) {
+			if (Boolean.logicalOr((f = ArrayUtils.get(fs, i)) == null, (type = getType(f)) instanceof BasicType)) {
 				//
 				continue;
 				//
@@ -118,7 +118,7 @@ public final class ClassInfoUtil {
 					//
 			} else {
 				//
-				if (forName(getClassName(f.getType())) == null) {
+				if (forName(getClassName(getType(f))) == null) {
 					//
 					return false;
 					//
@@ -130,6 +130,10 @@ public final class ClassInfoUtil {
 			//
 		return true;
 		//
+	}
+
+	private static Type getType(final Field instance) {
+		return instance != null && instance.getConstantPool() != null ? instance.getType() : null;
 	}
 
 	private static int length(final Object[] instance) {
