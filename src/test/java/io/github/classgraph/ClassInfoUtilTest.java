@@ -44,8 +44,9 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class ClassInfoUtilTest {
 
-	private static Method METHOD_GET_CLASS_NAME_JAVA_CLASS, METHOD_GET_CLASS_NAME_TYPE, METHOD_FOR_NAME,
-			METHOD_REMOVE_IF, METHOD_TEST_AND_APPLY, METHOD_CAST, METHOD_GET_FIELDS = null;
+	private static Method METHOD_GET_CLASS_NAME_JAVA_CLASS, METHOD_GET_CLASS, METHOD_GET_CLASS_NAME_TYPE,
+			METHOD_FOR_NAME, METHOD_REMOVE_IF, METHOD_TEST_AND_APPLY, METHOD_CAST, METHOD_GET_FIELDS,
+			METHOD_LENGTH = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -53,6 +54,8 @@ class ClassInfoUtilTest {
 		final Class<?> clz = ClassInfoUtil.class;
 		//
 		(METHOD_GET_CLASS_NAME_JAVA_CLASS = clz.getDeclaredMethod("getClassName", JavaClass.class)).setAccessible(true);
+		//
+		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_CLASS_NAME_TYPE = clz.getDeclaredMethod("getClassName", Type.class)).setAccessible(true);
 		//
@@ -66,6 +69,8 @@ class ClassInfoUtilTest {
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_FIELDS = clz.getDeclaredMethod("getFields", JavaClass.class)).setAccessible(true);
+		//
+		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
 		//
 	}
 
@@ -211,7 +216,8 @@ class ClassInfoUtilTest {
 					//
 					final Type argumentType0 = argumentTypes.length > 0 ? argumentTypes[0] : null;
 					//
-					if (argumentTypes.length == 1 && method.isStatic() && !method.isSynthetic()) {
+					if (argumentTypes.length == 1 && method.isStatic() && !method.isSynthetic()
+							&& !StringUtils.startsWith(getClassName(argumentType0), "[")) {
 						//
 						Assertions.assertDoesNotThrow(() -> Narcissus.invokeStaticMethod(Narcissus.findMethod(clz,
 								FieldOrMethodUtil.getName(m), forName(getClassName(argumentType0))), (Object) null));
@@ -257,7 +263,21 @@ class ClassInfoUtilTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(Objects.toString(obj.getClass()));
+			throw new Throwable(Objects.toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Class<?> getClass(final Object instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CLASS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class) {
+				return (Class<?>) obj;
+			}
+			throw new Throwable(Objects.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -271,7 +291,7 @@ class ClassInfoUtilTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(Objects.toString(obj.getClass()));
+			throw new Throwable(Objects.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -285,7 +305,7 @@ class ClassInfoUtilTest {
 			} else if (obj instanceof Class) {
 				return (Class<?>) obj;
 			}
-			throw new Throwable(Objects.toString(obj.getClass()));
+			throw new Throwable(Objects.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -361,7 +381,28 @@ class ClassInfoUtilTest {
 			} else if (obj instanceof Field[]) {
 				return (Field[]) obj;
 			}
-			throw new Throwable(Objects.toString(obj.getClass()));
+			throw new Throwable(Objects.toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testLength() throws Throwable {
+		//
+		Assertions.assertEquals(0, length(null));
+		//
+		Assertions.assertEquals(0, length(new Object[] {}));
+		//
+	}
+
+	private static int length(final Object[] instance) throws Throwable {
+		try {
+			final Object obj = METHOD_LENGTH.invoke(null, (Object) instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Objects.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

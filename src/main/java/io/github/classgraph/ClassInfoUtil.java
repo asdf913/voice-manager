@@ -15,6 +15,7 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ArrayType;
 import org.apache.bcel.generic.BasicType;
 import org.apache.bcel.generic.Type;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -93,9 +94,9 @@ public final class ClassInfoUtil {
 		//
 		ArrayType arrayType = null;
 		//
-		for (int i = 0; fs != null && i < fs.length; i++) {
+		for (int i = 0; i < length(fs); i++) {
 			//
-			if ((f = fs[i]) == null || (type = f.getType()) instanceof BasicType) {
+			if ((f = ArrayUtils.get(fs, i)) == null || (type = f.getType()) instanceof BasicType) {
 				//
 				continue;
 				//
@@ -129,6 +130,10 @@ public final class ClassInfoUtil {
 			//
 		return true;
 		//
+	}
+
+	private static int length(final Object[] instance) {
+		return instance != null ? instance.length : 0;
 	}
 
 	private static Field[] getFields(final JavaClass instance) {
