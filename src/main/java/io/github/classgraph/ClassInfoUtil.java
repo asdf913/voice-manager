@@ -88,47 +88,71 @@ public final class ClassInfoUtil {
 			//
 		final Field[] fs = getFields(javaClass);
 		//
-		Field f = null;
-		//
-		Type type, basicType = null;
-		//
-		ArrayType arrayType = null;
+		ContinueOrFalse cof = null;
 		//
 		for (int i = 0; i < length(fs); i++) {
 			//
-			if (Boolean.logicalOr((f = ArrayUtils.get(fs, i)) == null, (type = getType(f)) instanceof BasicType)) {
+			if ((cof = checkType(getType(ArrayUtils.get(fs, i)))) == null) {
+				//
+				throw new IllegalStateException();
+				//
+			} else if (Objects.equals(cof, ContinueOrFalse.CONTINUE)) {
 				//
 				continue;
 				//
-			} // if
+			} else if (Objects.equals(cof, ContinueOrFalse.FALSE)) {
 				//
-			if ((arrayType = cast(ArrayType.class, type)) != null) {
+				return false;
 				//
-				if ((basicType = arrayType.getBasicType()) instanceof BasicType) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (forName(getClassName(basicType)) == null) {
-					//
-					return false;
-					//
-				} // if
-					//
-			} else {
-				//
-				if (forName(getClassName(getType(f))) == null) {
-					//
-					return false;
-					//
-				} // if
-					//
 			} // if
 				//
 		} // for
 			//
 		return true;
+		//
+	}
+
+	private static enum ContinueOrFalse {
+		CONTINUE, FALSE;
+	}
+
+	private static ContinueOrFalse checkType(final Type type) {
+		//
+		if (type instanceof BasicType) {
+			//
+			return ContinueOrFalse.CONTINUE;
+			//
+		} // if
+			//
+		final ArrayType arrayType = cast(ArrayType.class, type);
+		//
+		if (arrayType != null) {
+			//
+			final Type basicType = arrayType.getBasicType();
+			//
+			if (basicType instanceof BasicType) {
+				//
+				return ContinueOrFalse.CONTINUE;
+				//
+			} // if
+				//
+			if (forName(getClassName(basicType)) == null) {
+				//
+				return ContinueOrFalse.FALSE;
+				//
+			} // if
+				//
+		} else {
+			//
+			if (forName(getClassName(type)) == null) {
+				//
+				return ContinueOrFalse.FALSE;
+				//
+			} // if
+				//
+		} // if
+			//
+		return ContinueOrFalse.CONTINUE;
 		//
 	}
 
