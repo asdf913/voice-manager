@@ -57,6 +57,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.javatuples.Unit;
@@ -353,9 +355,11 @@ public abstract class Util {
 	}
 
 	@Nullable
-	private static <T, R> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
-			final Function<T, R> functionTrue, @Nullable final Function<T, R> functionFalse) {
-		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
+		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
 	static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
@@ -457,23 +461,14 @@ public abstract class Util {
 			//
 		} // if
 			//
+			//
+		IValue0<Iterator<T>> iValue0 = null;
+		//
 		try {
 			//
-			final Method method = Narcissus.findMethod(clz, "iterator");
-			//
-			String fieldName = getFieldNmaeIfSingleLineReturnMethod(method);
-			//
-			if (StringUtils.isNotBlank(fieldName)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, fieldName)) == null) {
+			if ((iValue0 = iterator(clz, instance)) != null) {
 				//
-				return null;
-				//
-			} // if
-				//
-			if (StringUtils.isNotBlank(fieldName = getFieldNmaeForStreamOfAndIterator(method))
-					&& Narcissus.getField(instance, Narcissus.findField(clz, fieldName)) == null) {
-				//
-				return null;
+				return IValue0Util.getValue0(iValue0);
 				//
 			} // if
 				//
@@ -803,9 +798,7 @@ public abstract class Util {
 			//
 		} catch (final NullPointerException npe) {
 			//
-			final IValue0<Iterator<T>> iValue0 = handleIteratorThrowable(instance, clz);
-			//
-			if (iValue0 != null) {
+			if ((iValue0 = handleIteratorThrowable(instance, clz)) != null) {
 				//
 				return IValue0Util.getValue0(iValue0);
 				//
@@ -820,6 +813,31 @@ public abstract class Util {
 		} // try
 			//
 		return instance.iterator();
+		//
+	}
+
+	private static <T> IValue0<Iterator<T>> iterator(final Class<?> clz, final Object instance)
+			throws ReflectiveOperationException, IOException {
+		//
+		final Method method = testAndApply(Objects::nonNull, clz, x -> Narcissus.findMethod(x, "iterator"), null);
+		//
+		String fieldName = getFieldNmaeIfSingleLineReturnMethod(method);
+		//
+		if (StringUtils.isNotBlank(fieldName)
+				&& Narcissus.getField(instance, Narcissus.findField(clz, fieldName)) == null) {
+			//
+			return Unit.with(null);
+			//
+		} // if
+			//
+		if (StringUtils.isNotBlank(fieldName = getFieldNmaeForStreamOfAndIterator(method))
+				&& Narcissus.getField(instance, Narcissus.findField(clz, fieldName)) == null) {
+			//
+			return Unit.with(null);
+			//
+		} // if
+			//
+		return null;
 		//
 	}
 

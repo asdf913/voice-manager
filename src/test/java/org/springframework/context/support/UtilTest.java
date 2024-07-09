@@ -13,6 +13,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -40,6 +41,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,7 +63,8 @@ class UtilTest {
 	private static Method METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD, METHOD_TEST, METHOD_IS_STATIC,
 			METHOD_GET_FIELD_NMAE_IF_SINGLE_LINE_RETURN_METHOD, METHOD_GET_FIELD_NMAE_FOR_STREAM_OF_AND_ITERATOR,
 			METHOD_GET_FIELD_NAME, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD_NAME, METHOD_GET_ARGUMENT_TYPES,
-			METHOD_COLLECT, METHOD_GET_RESOURCE_AS_STREAM, METHOD_PUT_ALL, METHOD_GET_REFERENCE_TYPE = null;
+			METHOD_COLLECT, METHOD_GET_RESOURCE_AS_STREAM, METHOD_PUT_ALL, METHOD_GET_REFERENCE_TYPE, METHOD_ITERATOR,
+			METHOD_HANDLE_ITERATOR_THROWABLE = null;
 
 	private static List<ClassInfo> CLASS_INFOS = null;
 
@@ -104,6 +107,11 @@ class UtilTest {
 		//
 		(METHOD_GET_REFERENCE_TYPE = clz.getDeclaredMethod("getReferenceType", FieldOrMethod.class,
 				ConstantPoolGen.class)).setAccessible(true);
+		//
+		(METHOD_ITERATOR = clz.getDeclaredMethod("iterator", Class.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_HANDLE_ITERATOR_THROWABLE = clz.getDeclaredMethod("handleIteratorThrowable", Object.class, Class.class))
+				.setAccessible(true);
 		//
 		CLASS_INFOS = ClassInfoUtil.getClassInfos();
 		//
@@ -574,6 +582,22 @@ class UtilTest {
 				//
 		} // for
 			//
+		Assertions.assertNull(iterator(null, null));
+		//
+	}
+
+	private static <T> IValue0<Iterator<T>> iterator(final Class<?> clz, final Object instance) throws Throwable {
+		try {
+			final Object obj = METHOD_ITERATOR.invoke(null, clz, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
@@ -877,6 +901,28 @@ class UtilTest {
 				return null;
 			} else if (obj instanceof ReferenceType) {
 				return (ReferenceType) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testHandleIteratorThrowable() throws Throwable {
+		//
+		Assertions.assertNull(handleIteratorThrowable(null, null));
+		//
+	}
+
+	private static <T> IValue0<Iterator<T>> handleIteratorThrowable(final Object instance, final Class<?> clz)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_HANDLE_ITERATOR_THROWABLE.invoke(null, instance, clz);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
