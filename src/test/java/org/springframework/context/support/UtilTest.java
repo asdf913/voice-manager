@@ -41,6 +41,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -63,8 +64,8 @@ class UtilTest {
 	private static Method METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD, METHOD_TEST, METHOD_IS_STATIC,
 			METHOD_GET_FIELD_NMAE_IF_SINGLE_LINE_RETURN_METHOD, METHOD_GET_FIELD_NMAE_FOR_STREAM_OF_AND_ITERATOR,
 			METHOD_GET_FIELD_NAME, METHOD_GET_CLASS_NAME, METHOD_GET_METHOD_NAME, METHOD_GET_ARGUMENT_TYPES,
-			METHOD_COLLECT, METHOD_GET_RESOURCE_AS_STREAM, METHOD_PUT_ALL, METHOD_GET_REFERENCE_TYPE, METHOD_ITERATOR,
-			METHOD_HANDLE_ITERATOR_THROWABLE = null;
+			METHOD_COLLECT, METHOD_GET_RESOURCE_AS_STREAM, METHOD_PUT_ALL, METHOD_GET_REFERENCE_TYPE, METHOD_ITERATOR2,
+			METHOD_ITERATOR3, METHOD_HANDLE_ITERATOR_THROWABLE = null;
 
 	private static List<ClassInfo> CLASS_INFOS = null;
 
@@ -108,7 +109,10 @@ class UtilTest {
 		(METHOD_GET_REFERENCE_TYPE = clz.getDeclaredMethod("getReferenceType", FieldOrMethod.class,
 				ConstantPoolGen.class)).setAccessible(true);
 		//
-		(METHOD_ITERATOR = clz.getDeclaredMethod("iterator", Class.class, Object.class)).setAccessible(true);
+		(METHOD_ITERATOR2 = clz.getDeclaredMethod("iterator", Class.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_ITERATOR3 = clz.getDeclaredMethod("iterator", Class.class, Object.class, Map.class))
+				.setAccessible(true);
 		//
 		(METHOD_HANDLE_ITERATOR_THROWABLE = clz.getDeclaredMethod("handleIteratorThrowable", Object.class, Class.class))
 				.setAccessible(true);
@@ -584,11 +588,30 @@ class UtilTest {
 			//
 		Assertions.assertNull(iterator(null, null));
 		//
+		Assertions.assertNull(iterator(null, null, null));
+		//
+		Assertions.assertEquals(Unit.with(null), iterator(null, null, Collections.singletonMap(null, null)));
+		//
 	}
 
 	private static <T> IValue0<Iterator<T>> iterator(final Class<?> clz, final Object instance) throws Throwable {
 		try {
-			final Object obj = METHOD_ITERATOR.invoke(null, clz, instance);
+			final Object obj = METHOD_ITERATOR2.invoke(null, clz, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T> IValue0<Iterator<T>> iterator(final Class<?> clz, final Object instance,
+			final Map<String, String> map) throws Throwable {
+		try {
+			final Object obj = METHOD_ITERATOR3.invoke(null, clz, instance, map);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IValue0) {

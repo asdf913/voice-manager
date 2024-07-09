@@ -55,6 +55,7 @@ import org.apache.bcel.generic.ReferenceType;
 import org.apache.bcel.generic.Type;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -775,10 +776,9 @@ public abstract class Util {
 			Util.put(map, "net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$TokenizedGenericType",
 					"genericTypeToken");
 			//
-			if (map.containsKey(name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, map.get(name))) == null) {
+			if ((iValue0 = iterator(clz, instance, map)) != null) {
 				//
-				return null;
+				return IValue0Util.getValue0(iValue0);
 				//
 			} // if
 				//
@@ -804,6 +804,27 @@ public abstract class Util {
 			//
 		return instance.iterator();
 		//
+	}
+
+	private static <T> IValue0<Iterator<T>> iterator(final Class<?> clz, final Object instance,
+			final Map<String, String> map) throws NoSuchFieldException {
+		//
+		final String name = getName(clz);
+		//
+		if (containsKey(map, name) && testAndApply(Objects::nonNull,
+				testAndApply(Objects::nonNull, MapUtils.getObject(map, name), x -> Narcissus.findField(clz, x), null),
+				x -> Narcissus.getField(instance, x), null) == null) {
+			//
+			return Unit.with(null);
+			//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static boolean containsKey(final Map<?, ?> instance, final Object key) {
+		return instance != null && instance.containsKey(key);
 	}
 
 	@Nullable
