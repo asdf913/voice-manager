@@ -806,7 +806,7 @@ public abstract class Util {
 		//
 	}
 
-	private static <T> IValue0<Iterator<T>> iterator(final Class<?> clz, final Object instance,
+	private static <T> IValue0<Iterator<T>> iterator(@Nullable final Class<?> clz, final Object instance,
 			final Map<String, String> map) throws NoSuchFieldException {
 		//
 		final String name = getName(clz);
