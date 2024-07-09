@@ -59,6 +59,9 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -800,20 +803,13 @@ public abstract class Util {
 			//
 		} catch (final NullPointerException npe) {
 			//
-			try {
+			final IValue0<Iterator<T>> iValue0 = handleIteratorThrowable(instance, clz);
+			//
+			if (iValue0 != null) {
 				//
-				if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableDefinitionImpl"), name)
-						&& Narcissus.getField(instance, Narcissus.findField(clz, "_database")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} catch (final NoSuchFieldException e) {
+				return IValue0Util.getValue0(iValue0);
 				//
-				LoggerUtil.error(LOG, e.getMessage(), e);
-				//
-			} // try
+			} // if
 				//
 			throw npe;
 			//
@@ -824,6 +820,27 @@ public abstract class Util {
 		} // try
 			//
 		return instance.iterator();
+		//
+	}
+
+	private static <T> IValue0<Iterator<T>> handleIteratorThrowable(final Object instance, final Class<?> clz) {
+		//
+		try {
+			//
+			if (Objects.equals("com.healthmarketscience.jackcess.impl.TableDefinitionImpl", getName(clz))
+					&& Narcissus.getField(instance, Narcissus.findField(clz, "_database")) == null) {
+				//
+				return Unit.with(null);
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return null;
 		//
 	}
 
