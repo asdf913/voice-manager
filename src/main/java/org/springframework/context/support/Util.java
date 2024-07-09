@@ -806,6 +806,7 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	private static <T> IValue0<Iterator<T>> iterator(@Nullable final Class<?> clz, final Object instance)
 			throws ReflectiveOperationException, IOException {
 		//
@@ -843,6 +844,7 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	private static <T> IValue0<Iterator<T>> handleIteratorThrowable(final Object instance,
 			@Nullable final Class<?> clz) {
 		//
