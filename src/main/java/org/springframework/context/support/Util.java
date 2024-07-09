@@ -577,16 +577,6 @@ public abstract class Util {
 					//
 			} // for
 				//
-			if (Boolean.logicalOr(
-					contains(Arrays.asList("org.apache.commons.math3.util.IntegerSequence$Range"), name)
-							&& Narcissus.getIntField(instance, Narcissus.findField(clz, "step")) == 0,
-					contains(Arrays.asList("org.apache.commons.math3.util.MultidimensionalCounter"), name)
-							&& (Narcissus.getIntField(instance, Narcissus.findField(clz, "dimension"))) == 0)) {
-				//
-				return null;
-				//
-			} // if
-				//
 			final Map<String, String> map = new LinkedHashMap<>();
 			//
 			putAll(map, "backingMap", "com.google.common.collect.HashMultiset",
@@ -832,6 +822,18 @@ public abstract class Util {
 			//
 		if (StringUtils.isNotBlank(fieldName = getFieldNmaeForStreamOfAndIterator(method))
 				&& Narcissus.getField(instance, Narcissus.findField(clz, fieldName)) == null) {
+			//
+			return Unit.with(null);
+			//
+		} // if
+			//
+		final String name = getName(clz);
+		//
+		if (Boolean.logicalOr(
+				Objects.equals("org.apache.commons.math3.util.IntegerSequence$Range", name)
+						&& Narcissus.getIntField(instance, Narcissus.findField(clz, "step")) == 0,
+				Objects.equals("org.apache.commons.math3.util.MultidimensionalCounter", name)
+						&& (Narcissus.getIntField(instance, Narcissus.findField(clz, "dimension"))) == 0)) {
 			//
 			return Unit.with(null);
 			//
