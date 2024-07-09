@@ -806,7 +806,7 @@ public abstract class Util {
 		//
 	}
 
-	private static <T> IValue0<Iterator<T>> iterator(final Class<?> clz, final Object instance)
+	private static <T> IValue0<Iterator<T>> iterator(@Nullable final Class<?> clz, final Object instance)
 			throws ReflectiveOperationException, IOException {
 		//
 		final Method method = testAndApply(Objects::nonNull, clz, x -> Narcissus.findMethod(x, "iterator"), null);
@@ -843,7 +843,8 @@ public abstract class Util {
 		//
 	}
 
-	private static <T> IValue0<Iterator<T>> handleIteratorThrowable(final Object instance, final Class<?> clz) {
+	private static <T> IValue0<Iterator<T>> handleIteratorThrowable(final Object instance,
+			@Nullable final Class<?> clz) {
 		//
 		try {
 			//
