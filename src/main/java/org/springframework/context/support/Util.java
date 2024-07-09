@@ -885,7 +885,7 @@ public abstract class Util {
 	}
 
 	@Nullable
-	private static String getFieldNmaeForStreamOfAndIterator(final Method method) throws IOException {
+	private static String getFieldNmaeForStreamOfAndIterator(@Nullable final Method method) throws IOException {
 		//
 		final Class<?> clz = getDeclaringClass(method);
 		//
