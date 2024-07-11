@@ -823,7 +823,7 @@ public abstract class Util {
 		//
 	}
 
-	private static boolean containsKey(final Map<?, ?> instance, @Nullable final Object key) {
+	private static boolean containsKey(@Nullable final Map<?, ?> instance, @Nullable final Object key) {
 		return instance != null && instance.containsKey(key);
 	}
 
