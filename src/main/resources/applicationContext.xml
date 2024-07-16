@@ -89,8 +89,6 @@
 	<bean
 		class="org.springframework.beans.factory.YojijukugoMultimapFactoryBean">
 		<meta key="value" value="hiragana" />
-		<property name="url"
-			value="${org.springframework.beans.factory.YojijukugoMultimapFactoryBean.url}" />
 		<property name="resource" value="classpath:yojijukugo.xlsx" />
 	</bean>
 

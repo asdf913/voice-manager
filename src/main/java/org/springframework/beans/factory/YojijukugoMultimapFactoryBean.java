@@ -49,6 +49,7 @@ import com.j256.simplemagic.ContentInfoUtil;
 
 public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<String, String>> {
 
+	@URL("http://www.edrdg.org/projects/yojijukugo.html")
 	private String url = null;
 
 	private Resource resource = null;
