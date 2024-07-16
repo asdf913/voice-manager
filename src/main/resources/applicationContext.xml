@@ -94,20 +94,10 @@
 		<property name="resource" value="classpath:yojijukugo.xlsx" />
 	</bean>
 
-	<!--
-	org.springframework.beans.factory.AccentDictionaryForJapaneseEducationMultimapFactoryBean -->
-	<bean
-		id="org.springframework.beans.factory.AccentDictionaryForJapaneseEducationMultimapFactoryBean.url"
-		class="java.lang.String">
-		<constructor-arg index="0"
-			value="${org.springframework.beans.factory.AccentDictionaryForJapaneseEducationMultimapFactoryBean.url}" />
-	</bean>
-
+	<!--org.springframework.beans.factory.AccentDictionaryForJapaneseEducationMultimapFactoryBean-->
 	<bean
 		class="org.springframework.beans.factory.AccentDictionaryForJapaneseEducationMultimapFactoryBean">
 		<meta key="value" value="hiragana" />
-		<property name="url"
-			ref="org.springframework.beans.factory.AccentDictionaryForJapaneseEducationMultimapFactoryBean.url" />
 		<property name="resource"
 			value="classpath:AccentDictionaryForJapaneseEducationHiragana.xlsx" />
 		<property name="unicodeBlock" value="Hiragana" />
@@ -116,8 +106,6 @@
 	<bean
 		class="org.springframework.beans.factory.AccentDictionaryForJapaneseEducationMultimapFactoryBean">
 		<meta key="value" value="katakana" />
-		<property name="url"
-			ref="org.springframework.beans.factory.AccentDictionaryForJapaneseEducationMultimapFactoryBean.url" />
 		<property name="resource"
 			value="classpath:AccentDictionaryForJapaneseEducationKatakana.xlsx" />
 		<property name="unicodeBlock" value="Katakana" />

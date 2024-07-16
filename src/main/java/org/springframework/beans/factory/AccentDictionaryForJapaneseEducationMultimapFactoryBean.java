@@ -47,6 +47,7 @@ public class AccentDictionaryForJapaneseEducationMultimapFactoryBean implements 
 
 	private Resource resource = null;
 
+	@URL("https://accent.u-biq.org")
 	private String url = null;
 
 	private String unicodeBlock = null;
