@@ -160,8 +160,6 @@
 	<bean
 		class="org.springframework.beans.factory.OdakyuKanjiHiraganaMapFactoryBean">
 		<meta key="value" value="hiragana" />
-		<property name="url"
-			value="${org.springframework.beans.factory.OdakyuKanjiHiraganaMapFactoryBean.url}" />
 		<property name="keyColumnName" value="kanji" />
 		<property name="valueColumnName" value="hiragana" />
 		<property name="valueColumnIndex" value="1" />

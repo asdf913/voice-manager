@@ -21,6 +21,7 @@ import org.jsoup.nodes.ElementUtil;
 
 public class OdakyuKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
+	@URL("https://www.odakyu.jp/station/by_station")
 	private String url = null;
 
 	public void setUrl(final String url) {
