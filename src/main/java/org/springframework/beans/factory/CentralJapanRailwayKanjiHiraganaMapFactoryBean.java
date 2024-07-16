@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 
 public class CentralJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
+	@URL("https://railway.jr-central.co.jp/common/_api/time-schedule/list_station.json")
 	private String url = null;
 
 	public void setUrl(final String url) {
