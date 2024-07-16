@@ -25,6 +25,7 @@ import org.jsoup.nodes.TextNodeUtil;
 
 public class ToykoMetroKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
+	@URL("https://www.tokyometro.jp/station/index03.html")
 	private String url = null;
 
 	public void setUrl(final String url) {
