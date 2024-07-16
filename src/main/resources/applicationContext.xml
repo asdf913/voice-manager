@@ -82,8 +82,6 @@
 		class="org.springframework.beans.factory.JapaneseNameMultimapFactoryBean">
 		<meta key="value" value="hiragana" />
 		<property name="resource" value="classpath:JapaneseName.xlsx" />
-		<property name="url"
-			value="${org.springframework.beans.factory.JapaneseNameMultimapFactoryBean.url}" />
 	</bean>
 
 	<bean

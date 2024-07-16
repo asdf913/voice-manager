@@ -48,6 +48,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 
 	private Resource resource = null;
 
+	@URL("https://accent.u-biq.org/namae.html")
 	private String url = null;
 
 	public void setResource(final Resource resource) {
