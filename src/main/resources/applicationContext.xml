@@ -242,8 +242,6 @@
 	<bean
 		class="org.springframework.beans.factory.RinkaiSenKanjRomajiMapFactoryBean">
 		<meta key="value" value="romaji" />
-		<property name="url"
-			value="${org.springframework.beans.factory.RinkaiSenKanjRomajiMapFactoryBean.url}" />
 		<property name="valueColumnName" value="romaji" />
 		<property name="valueColumnIndex" value="1" />
 		<property name="resource" value="classpath:RinkaiSen.xlsx" />

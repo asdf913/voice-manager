@@ -25,6 +25,7 @@ import org.jsoup.nodes.NodeUtil;
 
 public class RinkaiSenKanjRomajiMapFactoryBean extends StringMapFromResourceFactoryBean {
 
+	@URL("https://www.twr.co.jp/route/tabid/105/Default.aspx")
 	private String url = null;
 
 	public void setUrl(final String url) {
