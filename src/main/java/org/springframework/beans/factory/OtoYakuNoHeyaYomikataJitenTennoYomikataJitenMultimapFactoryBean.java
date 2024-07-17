@@ -41,6 +41,7 @@ import com.google.common.collect.MultimapUtil;
 public class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean
 		extends StringMultiMapFromResourceFactoryBean {
 
+	@URL("https://hiramatu-hifuka.com/onyak/rekisi/tenno.html")
 	private String url = null;
 
 	private Iterable<Link> links = null;
