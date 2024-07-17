@@ -50,6 +50,7 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 	private static final Pattern PATTERN_CJK_UNIFIED_IDEOGRAPHS_FULLWIDTH_LEFT_PARENTHESIS_HIRAGANA_FULLWIDTH_RIGHT_PARENTHESIS = Pattern
 			.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）");
 
+	@URL("https://hiramatu-hifuka.com/onyak/kotoba-1/kisyo.html")
 	private String url = null;
 
 	private Iterable<Link> links = null;
