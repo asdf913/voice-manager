@@ -29,6 +29,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResou
 
 	private static final Pattern PATTERN = Pattern.compile("^([^駅]+)駅$");
 
+	@URL("https://www.keikyu.co.jp/ride/kakueki")
 	private String url = null;
 
 	public void setUrl(final String url) {
