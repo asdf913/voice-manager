@@ -57,6 +57,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 
 	private static IValue0<Iterable<Class<?>>> CLASSES = null;
 
+	@org.springframework.beans.factory.URL("https://hiramatu-hifuka.com/onyak/kotoba-1/sugaku.html")
 	private String url = null;
 
 	private Iterable<Link> links = null;

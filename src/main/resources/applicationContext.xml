@@ -735,8 +735,6 @@
 	<bean
 		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean">
 		<meta key="value" value="hiragana" />
-		<property name="url"
-			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean.url}" />
 		<property name="links" ref="OtoYakuNoHeyaYomikataJitenLinkList" />
 		<property name="text"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean.text}" />
