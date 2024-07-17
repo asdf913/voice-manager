@@ -58,6 +58,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 
 	private static final String PATTERN_CJK_UNIFIED_IDEOGRAPHS_HIRAGANA_CJK_UNIFIED_IDEOGRAPHS = "^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)$";
 
+	@URL("https://hiramatu-hifuka.com/onyak/onyak2/yuryodo.html")
 	private String url = null;
 
 	private Iterable<Link> links = null;
