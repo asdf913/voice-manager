@@ -680,8 +680,6 @@
 	<bean
 		id="OtoYakuNoHeyaYomikataJitenLinkList"
 		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean">
-		<property name="url"
-			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.url}" />
 		<property name="title"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.title}" />
 		<property name="urlTransitionSheetName"

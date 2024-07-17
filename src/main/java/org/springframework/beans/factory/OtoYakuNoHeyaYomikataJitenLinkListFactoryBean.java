@@ -61,6 +61,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkListFactoryBean implements
 		FactoryBean<List<org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link>>,
 		InitializingBean {
 
+	@org.springframework.beans.factory.URL("https://hiramatu-hifuka.com/onyak/onyindx.html")
 	private String url = null;
 
 	@Note("title")
