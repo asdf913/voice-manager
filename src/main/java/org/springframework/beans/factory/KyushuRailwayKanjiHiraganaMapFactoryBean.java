@@ -21,6 +21,7 @@ import org.jsoup.nodes.ElementUtil;
 
 public class KyushuRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
+	@URL("http://www.jrkyushu.co.jp/railway/station/index.html")
 	private String url = null;
 
 	public void setUrl(final String url) {
