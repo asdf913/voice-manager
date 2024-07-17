@@ -21,6 +21,7 @@ import org.jsoup.nodes.ElementUtil;
 
 public class SeibuRailwayKanjiRomajiMapFactoryBean extends StringMapFromResourceFactoryBean {
 
+	@URL("https://www.seiburailway.jp/railway/station")
 	private String url = null;
 
 	public void setUrl(final String url) {
