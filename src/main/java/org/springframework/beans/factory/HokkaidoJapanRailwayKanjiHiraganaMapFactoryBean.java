@@ -37,7 +37,7 @@ import com.opencsv.exceptions.CsvValidationException;
 
 public class HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResourceFactoryBean {
 
-	@Note("URL")
+	@URL("https://www.jrhokkaido.co.jp/network/station/csv/station.csv")
 	private String url = null;
 
 	private String encoding = null;

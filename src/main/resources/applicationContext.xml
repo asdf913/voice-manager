@@ -424,8 +424,6 @@
 	<bean
 		class="org.springframework.beans.factory.HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean">
 		<meta key="value" value="hiragana" />
-		<property name="url"
-			value="${org.springframework.beans.factory.HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean.url}" />
 		<property name="encoding"
 			value="${org.springframework.beans.factory.HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean.encoding}" />
 		<property name="keyColumnName" value="kanji" />
