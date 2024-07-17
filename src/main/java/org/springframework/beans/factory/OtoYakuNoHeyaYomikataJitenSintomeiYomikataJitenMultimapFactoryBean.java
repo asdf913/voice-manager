@@ -49,6 +49,7 @@ import com.google.common.reflect.Reflection;
 public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 		extends StringMultiMapFromResourceFactoryBean {
 
+	@URL("https://hiramatu-hifuka.com/onyak/kotoba-1/sintomei.html")
 	private String url = null;
 
 	private Iterable<Link> links = null;
