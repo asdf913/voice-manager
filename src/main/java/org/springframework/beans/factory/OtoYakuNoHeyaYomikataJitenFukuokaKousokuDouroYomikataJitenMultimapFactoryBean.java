@@ -118,13 +118,13 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
-	private static void append(final TextStringBuilder instance, final String str) {
+	private static void append(@Nullable final TextStringBuilder instance, final String str) {
 		if (instance != null) {
 			instance.append(str);
 		}
 	}
 
-	private static void clear(final TextStringBuilder instance) {
+	private static void clear(@Nullable final TextStringBuilder instance) {
 		if (instance != null) {
 			instance.clear();
 		}
