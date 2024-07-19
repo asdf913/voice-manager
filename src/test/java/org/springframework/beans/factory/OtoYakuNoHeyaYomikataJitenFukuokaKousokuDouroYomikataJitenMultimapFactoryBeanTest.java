@@ -34,7 +34,7 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
-	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
+	static void beforeClass() throws NoSuchMethodException {
 		//
 		final Class<?> clz = OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean.class;
 		//
