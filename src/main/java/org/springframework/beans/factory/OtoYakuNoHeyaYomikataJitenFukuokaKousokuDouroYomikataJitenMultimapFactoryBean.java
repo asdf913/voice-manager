@@ -73,6 +73,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
+	@Nullable
 	private static List<UnicodeBlock> getUnicodeBlocks(final String string) {
 		//
 		final char[] cs = Util.toCharArray(string);
