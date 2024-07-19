@@ -18,6 +18,7 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.text.TextStringBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +32,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_APPEND, METHOD_CLEAR = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -43,11 +44,17 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
+		(METHOD_APPEND = clz.getDeclaredMethod("append", TextStringBuilder.class, String.class)).setAccessible(true);
+		//
+		(METHOD_CLEAR = clz.getDeclaredMethod("clear", TextStringBuilder.class)).setAccessible(true);
+		//
 	}
 
 	private OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean instance = null;
 
 	private boolean isSystemPropertiesContainsTestGetObject = false;
+
+	private TextStringBuilder tsb = null;
 
 	@BeforeEach
 	void beforeEach() {
@@ -56,6 +63,8 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 		//
 		isSystemPropertiesContainsTestGetObject = Util.containsKey(System.getProperties(),
 				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBeanTest.testGetObject");
+		//
+		tsb = Util.cast(TextStringBuilder.class, Narcissus.allocateInstance(TextStringBuilder.class));
 		//
 	}
 
@@ -223,6 +232,48 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAppend() {
+		//
+		Assertions.assertDoesNotThrow(() -> append(null, null));
+		//
+		if (!isSystemPropertiesContainsTestGetObject) {
+			//
+			Assertions.assertDoesNotThrow(() -> append(tsb, null));
+			//
+		} // if
+			//
+	}
+
+	private static void append(final TextStringBuilder instance, final String str) throws Throwable {
+		try {
+			METHOD_APPEND.invoke(null, instance, str);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testClear() {
+		//
+		Assertions.assertDoesNotThrow(() -> clear(null));
+		//
+		if (!isSystemPropertiesContainsTestGetObject) {
+			//
+			Assertions.assertDoesNotThrow(() -> clear(tsb));
+			//
+		} // if
+			//
+	}
+
+	private static void clear(final TextStringBuilder instance) throws Throwable {
+		try {
+			METHOD_CLEAR.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

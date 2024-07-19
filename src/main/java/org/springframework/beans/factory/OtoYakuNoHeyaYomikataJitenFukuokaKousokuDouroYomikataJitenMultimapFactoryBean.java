@@ -9,6 +9,8 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 
@@ -17,6 +19,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.text.TextStringBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -45,9 +48,17 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 		List<Element> nextElementSiblings = null;
 		//
-		String s1, s2 = null;
+		String s1, s2, s = null;
 		//
 		Multimap<String, String> multimap = null;
+		//
+		Pattern pattern = null;
+		//
+		Matcher matcher = null;
+		//
+		TextStringBuilder tsb = null;
+		//
+		String[] ss1, ss2 = null;
 		//
 		for (int i = 0; es1 != null && i < es1.size(); i++) {
 			//
@@ -65,12 +76,58 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s2);
 				//
+			} else {
+				//
+				clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
+				//
+				if ((matcher = Util.matcher(
+						pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("\\p{InHiragana}")),
+						s1)) != null) {
+					//
+					while (matcher.find()) {
+						//
+						append(tsb, matcher.group());
+						//
+					} // while
+						//
+				} // if
+					//
+				if (StringUtils.length(tsb) == 1
+						&& IterableUtils.size(nextElementSiblings = e.nextElementSiblings()) > 1
+						&& StringUtils.countMatches(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1)),
+								tsb) == 1) {
+					//
+					ss1 = StringUtils.split(s1, s = Objects.toString(tsb));
+					//
+					ss2 = StringUtils.split(s2, s);
+					//
+					for (int j = 0; ss1 != null && ss2 != null && j < Math.min(ss1.length, ss2.length); j++) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), ss1[j],
+								ss2[j]);
+						//
+					} // for
+						//
+				} // if
+					//
 			} // if
 				//
 		} // for
 			//
 		return multimap;
 		//
+	}
+
+	private static void append(final TextStringBuilder instance, final String str) {
+		if (instance != null) {
+			instance.append(str);
+		}
+	}
+
+	private static void clear(final TextStringBuilder instance) {
+		if (instance != null) {
+			instance.clear();
+		}
 	}
 
 	@Nullable
