@@ -65,9 +65,9 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 		char c = ' ';
 		//
-		for (int i = 0; es1 != null && i < es1.size(); i++) {
+		for (int i = 0; i < IterableUtils.size(es1); i++) {
 			//
-			if ((e = es1.get(i)) == null) {
+			if ((e = IterableUtils.get(es1, i)) == null) {
 				//
 				continue;
 				//
