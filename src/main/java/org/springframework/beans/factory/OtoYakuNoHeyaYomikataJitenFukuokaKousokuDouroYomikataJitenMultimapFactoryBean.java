@@ -134,22 +134,9 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 							//
 						clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
 						//
-						if (Boolean.logicalAnd(StringUtils.isNotBlank(s1), StringUtils.isNotBlank(s2))) {
-							//
-							if (multimap == null) {
-								//
-								MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-										StringUtils.substring(s1, 4), s2);
-								//
-							} else {
-								//
-								MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-										s1, s2);
-								//
-							} // if
-								//
-						} // if
-							//
+						MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								toMultimap(isEmpty(multimap), s1, s2));
+						//
 					} else {
 						//
 						append(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new), c);
@@ -158,6 +145,33 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 						//
 				} // for
 					//
+			} // if
+				//
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static boolean isEmpty(final Multimap<?, ?> instance) {
+		return instance == null || instance.isEmpty();
+	}
+
+	private static Multimap<String, String> toMultimap(final boolean first, final String s1, final String s2) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		if (Boolean.logicalAnd(StringUtils.isNotBlank(s1), StringUtils.isNotBlank(s2))) {
+			//
+			if (first) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						StringUtils.substring(s1, 4), s2);
+				//
+			} else {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s2);
+				//
 			} // if
 				//
 		} // if

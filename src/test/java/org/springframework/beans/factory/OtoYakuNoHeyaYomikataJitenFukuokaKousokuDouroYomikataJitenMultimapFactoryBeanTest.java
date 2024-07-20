@@ -37,7 +37,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP1, METHOD_TO_MULTI_MAP3,
-			METHOD_CLEAR, METHOD_APPEND = null;
+			METHOD_CLEAR, METHOD_APPEND, METHOD_IS_EMPTY = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -57,6 +57,8 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 		(METHOD_CLEAR = clz.getDeclaredMethod("clear", TextStringBuilder.class)).setAccessible(true);
 		//
 		(METHOD_APPEND = clz.getDeclaredMethod("append", Appendable.class, Character.TYPE)).setAccessible(true);
+		//
+		(METHOD_IS_EMPTY = clz.getDeclaredMethod("isEmpty", Multimap.class)).setAccessible(true);
 		//
 	}
 
@@ -325,6 +327,25 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 	private static void append(final Appendable instance, final char c) throws Throwable {
 		try {
 			METHOD_APPEND.invoke(null, instance, c);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsEmpty() throws Throwable {
+		//
+		Assertions.assertTrue(isEmpty(null));
+		//
+	}
+
+	private static boolean isEmpty(final Multimap<?, ?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_EMPTY.invoke(null, instance);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
