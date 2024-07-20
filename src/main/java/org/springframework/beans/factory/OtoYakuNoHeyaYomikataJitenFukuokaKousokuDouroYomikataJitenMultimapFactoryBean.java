@@ -105,7 +105,8 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 		final List<UnicodeBlock> ubs = getUnicodeBlocks(s);
 		//
-		if (Util.contains(ubs, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS) && Util.contains(ubs, UnicodeBlock.HIRAGANA)
+		if (Boolean.logicalAnd(Util.contains(ubs, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+				Util.contains(ubs, UnicodeBlock.HIRAGANA))
 				&& Util.contains(ubs, UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS)) {
 			//
 			if (StringUtils.countMatches(s, '）') > 1) {
