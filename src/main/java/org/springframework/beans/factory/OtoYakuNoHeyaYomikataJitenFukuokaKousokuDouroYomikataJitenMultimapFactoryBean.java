@@ -19,7 +19,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
-import org.apache.commons.text.TextStringBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -48,17 +47,11 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 		List<Element> nextElementSiblings = null;
 		//
-		String s1, s2, s = null;
+		String s1, s2 = null;
 		//
 		Multimap<String, String> multimap = null;
 		//
 		Pattern pattern = null;
-		//
-		Matcher matcher = null;
-		//
-		TextStringBuilder tsb = null;
-		//
-		String[] ss1, ss2 = null;
 		//
 		for (int i = 0; es1 != null && i < es1.size(); i++) {
 			//
@@ -78,38 +71,13 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 				//
 			} else {
 				//
-				clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						toMultimap(pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("\\p{InHiragana}")),
+								s1,
+								IterableUtils.size(nextElementSiblings = e.nextElementSiblings()) > 1
+										? s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))
+										: null));
 				//
-				if ((matcher = Util.matcher(
-						pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("\\p{InHiragana}")),
-						s1)) != null) {
-					//
-					while (matcher.find()) {
-						//
-						append(tsb, matcher.group());
-						//
-					} // while
-						//
-				} // if
-					//
-				if (StringUtils.length(tsb) == 1
-						&& IterableUtils.size(nextElementSiblings = e.nextElementSiblings()) > 1
-						&& StringUtils.countMatches(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1)),
-								tsb) == 1) {
-					//
-					ss1 = StringUtils.split(s1, s = Objects.toString(tsb));
-					//
-					ss2 = StringUtils.split(s2, s);
-					//
-					for (int j = 0; ss1 != null && ss2 != null && j < Math.min(ss1.length, ss2.length); j++) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), ss1[j],
-								ss2[j]);
-						//
-					} // for
-						//
-				} // if
-					//
 			} // if
 				//
 		} // for
@@ -118,16 +86,39 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
-	private static void append(@Nullable final TextStringBuilder instance, final String str) {
-		if (instance != null) {
-			instance.append(str);
-		}
-	}
-
-	private static void clear(@Nullable final TextStringBuilder instance) {
-		if (instance != null) {
-			instance.clear();
-		}
+	private static Multimap<String, String> toMultimap(final Pattern pattern, final String s1, final String s2) {
+		//
+		final StringBuilder sb = new StringBuilder();
+		//
+		final Matcher matcher = Util.matcher(pattern, s1);
+		//
+		while (matcher != null && matcher.find()) {
+			//
+			sb.append(matcher.group());
+			//
+		} // while
+			//
+		Multimap<String, String> multimap = null;
+		//
+		if (StringUtils.length(sb) == 1 && StringUtils.countMatches(s2, sb) == 1) {
+			//
+			final String s = Objects.toString(sb);
+			//
+			final String[] ss1 = StringUtils.split(s1, s);
+			//
+			final String[] ss2 = StringUtils.split(s2, s);
+			//
+			for (int j = 0; ss1 != null && ss2 != null && j < Math.min(ss1.length, ss2.length); j++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), ss1[j],
+						ss2[j]);
+				//
+			} // for
+				//
+		} // if
+			//
+		return multimap;
+		//
 	}
 
 	@Nullable

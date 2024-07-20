@@ -11,14 +11,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.function.Predicate;
 import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.text.TextStringBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,13 +27,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.util.ReflectionUtils;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_APPEND, METHOD_CLEAR = null;
+	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -44,17 +47,14 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
-		(METHOD_APPEND = clz.getDeclaredMethod("append", TextStringBuilder.class, String.class)).setAccessible(true);
-		//
-		(METHOD_CLEAR = clz.getDeclaredMethod("clear", TextStringBuilder.class)).setAccessible(true);
+		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", Pattern.class, String.class, String.class))
+				.setAccessible(true);
 		//
 	}
 
 	private OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean instance = null;
 
 	private boolean isSystemPropertiesContainsTestGetObject = false;
-
-	private TextStringBuilder tsb = null;
 
 	@BeforeEach
 	void beforeEach() {
@@ -63,8 +63,6 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 		//
 		isSystemPropertiesContainsTestGetObject = Util.containsKey(System.getProperties(),
 				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBeanTest.testGetObject");
-		//
-		tsb = Util.cast(TextStringBuilder.class, Narcissus.allocateInstance(TextStringBuilder.class));
 		//
 	}
 
@@ -238,42 +236,33 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 	}
 
 	@Test
-	void testAppend() {
+	void testToMultimap() throws Throwable {
 		//
-		Assertions.assertDoesNotThrow(() -> append(null, null));
+		Assertions.assertNull(toMultimap(null, null, null));
 		//
 		if (!isSystemPropertiesContainsTestGetObject) {
 			//
-			Assertions.assertDoesNotThrow(() -> append(tsb, null));
+			Assertions.assertNull(
+					toMultimap(Util.cast(Pattern.class, Narcissus.allocateInstance(Pattern.class)), null, null));
+			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("多", "た", "津", "つ")),
+							MultimapUtil.entries(toMultimap(Pattern.compile("\\p{InHiragana}"), "多の津", "たのつ"))));
 			//
 		} // if
 			//
 	}
 
-	private static void append(final TextStringBuilder instance, final String str) throws Throwable {
+	private static Multimap<String, String> toMultimap(final Pattern pattern, final String s1, final String s2)
+			throws Throwable {
 		try {
-			METHOD_APPEND.invoke(null, instance, str);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testClear() {
-		//
-		Assertions.assertDoesNotThrow(() -> clear(null));
-		//
-		if (!isSystemPropertiesContainsTestGetObject) {
-			//
-			Assertions.assertDoesNotThrow(() -> clear(tsb));
-			//
-		} // if
-			//
-	}
-
-	private static void clear(final TextStringBuilder instance) throws Throwable {
-		try {
-			METHOD_CLEAR.invoke(null, instance);
+			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, pattern, s1, s2);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
