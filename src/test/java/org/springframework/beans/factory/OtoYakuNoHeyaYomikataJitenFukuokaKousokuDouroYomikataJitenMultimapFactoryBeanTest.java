@@ -20,6 +20,7 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.text.TextStringBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +36,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP = null;
+	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP1, METHOD_TO_MULTI_MAP3,
+			METHOD_CLEAR, METHOD_APPEND = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -47,8 +49,14 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
-		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", Pattern.class, String.class, String.class))
+		(METHOD_TO_MULTI_MAP1 = clz.getDeclaredMethod("toMultimap", String.class)).setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP3 = clz.getDeclaredMethod("toMultimap", Pattern.class, String.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_CLEAR = clz.getDeclaredMethod("clear", TextStringBuilder.class)).setAccessible(true);
+		//
+		(METHOD_APPEND = clz.getDeclaredMethod("append", Appendable.class, Character.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -242,6 +250,16 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 		//
 		if (!isSystemPropertiesContainsTestGetObject) {
 			//
+			Assertions.assertNull(toMultimap(null));
+			//
+			Assertions.assertNull(toMultimap("北"));
+			//
+			Assertions.assertNull(toMultimap("北こ"));
+			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("小倉北区", "こくらきたく", "菜園場", "さえんば")),
+					MultimapUtil.entries(toMultimap("北九州市小倉北区（こくらきたく）菜園場（さえんば）一丁目"))));
+			//
 			Assertions.assertNull(
 					toMultimap(Util.cast(Pattern.class, Narcissus.allocateInstance(Pattern.class)), null, null));
 			//
@@ -253,16 +271,60 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 			//
 	}
 
-	private static Multimap<String, String> toMultimap(final Pattern pattern, final String s1, final String s2)
-			throws Throwable {
+	private static Multimap<String, String> toMultimap(final String s) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, pattern, s1, s2);
+			final Object obj = METHOD_TO_MULTI_MAP1.invoke(null, s);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Multimap<String, String> toMultimap(final Pattern pattern, final String s1, final String s2)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP3.invoke(null, pattern, s1, s2);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testClear() {
+		//
+		Assertions.assertDoesNotThrow(() -> clear(null));
+		//
+	}
+
+	private static void clear(final TextStringBuilder instance) throws Throwable {
+		try {
+			METHOD_CLEAR.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAppend() {
+		//
+		Assertions.assertDoesNotThrow(() -> append(null, ' '));
+		//
+	}
+
+	private static void append(final Appendable instance, final char c) throws Throwable {
+		try {
+			METHOD_APPEND.invoke(null, instance, c);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
