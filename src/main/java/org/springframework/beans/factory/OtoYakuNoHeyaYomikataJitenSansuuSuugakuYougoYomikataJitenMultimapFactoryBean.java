@@ -27,6 +27,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.text.TextStringBuilder;
+import org.apache.commons.text.TextStringBuilderUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -438,7 +439,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 						//
 						clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
 						//
-						clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
+						TextStringBuilderUtil.clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
 						//
 						leftParenthesisFound = false;
 						//
@@ -478,12 +479,6 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 		instance.append(c);
 		//
-	}
-
-	private static void clear(@Nullable final TextStringBuilder instance) {
-		if (instance != null) {
-			instance.clear();
-		}
 	}
 
 	private static class Prefix差StringToMultimap implements StringToMultimap {
@@ -540,7 +535,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					//
 					clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
 					//
-					clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
+					TextStringBuilderUtil.clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
 					//
 					leftParenthesisFound = false;
 					//
@@ -622,7 +617,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 					//
 					clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
 					//
-					clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
+					TextStringBuilderUtil.clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
 					//
 				} // if
 					//

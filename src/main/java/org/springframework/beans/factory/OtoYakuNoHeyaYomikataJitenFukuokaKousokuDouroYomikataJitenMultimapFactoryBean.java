@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.text.TextStringBuilder;
+import org.apache.commons.text.TextStringBuilderUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -133,7 +134,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 							//
 						} // if
 							//
-						clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
+						TextStringBuilderUtil.clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
 						//
 						MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 								toMultimap(MultimapUtil.isEmpty(multimap), s1, s2));
@@ -177,12 +178,6 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 			//
 		return multimap;
 		//
-	}
-
-	private static void clear(@Nullable final TextStringBuilder instance) {
-		if (instance != null) {
-			instance.clear();
-		}
 	}
 
 	private static void append(@Nullable final Appendable instance, final char c) throws IOException {
