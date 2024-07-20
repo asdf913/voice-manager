@@ -17,7 +17,7 @@ import com.google.common.base.Predicates;
 
 class BufferedImageTypeFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_GET, METHOD_IS_PRIMITIVE, METHOD_AND, METHOD_INT_VALUE = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_GET, METHOD_IS_PRIMITIVE, METHOD_INT_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -30,8 +30,6 @@ class BufferedImageTypeFactoryBeanTest {
 		(METHOD_GET = clz.getDeclaredMethod("get", Field.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_IS_PRIMITIVE = clz.getDeclaredMethod("isPrimitive", Class.class)).setAccessible(true);
-		//
-		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
 		(METHOD_INT_VALUE = clz.getDeclaredMethod("intValue", Number.class, Integer.TYPE)).setAccessible(true);
 		//
@@ -153,27 +151,6 @@ class BufferedImageTypeFactoryBeanTest {
 	private static boolean isPrimitive(final Class<?> instance) throws Throwable {
 		try {
 			final Object obj = METHOD_IS_PRIMITIVE.invoke(null, instance);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAnd() throws Throwable {
-		//
-		Assertions.assertFalse(and(true, false));
-		//
-		Assertions.assertTrue(and(true, true, null));
-		//
-	}
-
-	private static boolean and(final boolean a, final boolean b, final boolean... bs) throws Throwable {
-		try {
-			final Object obj = METHOD_AND.invoke(null, a, b, bs);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}

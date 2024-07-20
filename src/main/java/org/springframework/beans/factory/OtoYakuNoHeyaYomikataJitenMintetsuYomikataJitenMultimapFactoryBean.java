@@ -352,7 +352,7 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), s1, g1);
 			//
-		} else if (and(
+		} else if (Util.and(
 				Objects.equals(getUnicodeBlocks(s1),
 						Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
 				Objects.equals(getUnicodeBlocks(s2), Collections.singletonList(UnicodeBlock.HIRAGANA)),
@@ -362,7 +362,7 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 					StringUtils.substring(s1, StringUtils.length(cp)),
 					StringUtils.substring(s2, StringUtils.length(cp)));
 			//
-		} else if (and(Objects.equals(getUnicodeBlocks(s1), Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
+		} else if (Util.and(Objects.equals(getUnicodeBlocks(s1), Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
 				(ss = StringUtils.split(s2, ' ')) != null, length(ss) > 0)) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), s1, ss[0]);
@@ -389,25 +389,7 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 		return instance != null ? instance.length : 0;
 	}
 
-	private static boolean and(final boolean a, final boolean b, @Nullable final boolean... bs) {
-		//
-		boolean result = a && b;
-		//
-		if (!result) {
-			//
-			return result;
-			//
-		} // if
-			//
-		for (int i = 0; bs != null && i < bs.length; i++) {
-			//
-			result &= bs[i];
-			//
-		} // for
-			//
-		return result;
-		//
-	}
+	
 
 	@Nullable
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s) {

@@ -467,4 +467,13 @@ class UtilTest {
 		//
 	}
 
+	@Test
+	void testAnd() {
+		//
+		Assertions.assertFalse(Util.and(true, false));
+		//
+		Assertions.assertTrue(Util.and(true, true, null));
+		//
+	}
+
 }

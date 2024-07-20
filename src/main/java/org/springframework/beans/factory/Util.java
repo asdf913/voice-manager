@@ -595,4 +595,28 @@ abstract class Util {
 		//
 	}
 
+	static boolean and(final boolean a, final boolean b, final boolean... bs) {
+		//
+		boolean result = a && b;
+		//
+		if (!result) {
+			//
+			return false;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if (!(result &= bs[i])) {
+				//
+				return false;
+				//
+			} // if
+				//
+		} // for
+			//
+		return result;
+		//
+	}
+
 }
