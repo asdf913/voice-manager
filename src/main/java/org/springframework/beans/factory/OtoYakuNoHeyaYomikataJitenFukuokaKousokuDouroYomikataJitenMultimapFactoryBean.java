@@ -75,7 +75,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 						toMultimap(pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("\\p{InHiragana}")),
 								s1,
 								IterableUtils.size(nextElementSiblings = e.nextElementSiblings()) > 1
-										? s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))
+										? ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))
 										: null));
 				//
 			} // if
