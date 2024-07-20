@@ -160,7 +160,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 
 	@Nullable
 	private static Multimap<String, String> toMultimap(final boolean first, @Nullable final String s1,
-			final String s2) {
+			@Nullable final String s2) {
 		//
 		Multimap<String, String> multimap = null;
 		//
