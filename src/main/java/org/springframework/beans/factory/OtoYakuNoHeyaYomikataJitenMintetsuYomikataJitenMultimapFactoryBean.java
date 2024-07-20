@@ -21,6 +21,7 @@ import java.util.stream.StreamSupport;
 import javax.annotation.Nullable;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -365,7 +366,8 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 		} else if (Util.and(Objects.equals(getUnicodeBlocks(s1), Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
 				(ss = StringUtils.split(s2, ' ')) != null, length(ss) > 0)) {
 			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), s1, ss[0]);
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), s1,
+					ArrayUtils.get(ss, 0));
 			//
 		} // if
 			//
@@ -388,8 +390,6 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 	private static int length(@Nullable final Object[] instance) {
 		return instance != null ? instance.length : 0;
 	}
-
-	
 
 	@Nullable
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s) {
