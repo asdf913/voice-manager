@@ -125,7 +125,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 								//
 							clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
 							//
-							if (StringUtils.isNotBlank(s1) && StringUtils.isNotBlank(s2)) {
+							if (Boolean.logicalAnd(StringUtils.isNotBlank(s1), StringUtils.isNotBlank(s2))) {
 								//
 								if (size == MultimapUtil.size(multimap)) {
 									//
