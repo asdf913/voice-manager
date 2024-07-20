@@ -97,6 +97,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap(final String s) throws IOException {
 		//
 		Multimap<String, String> multimap = null;
@@ -157,6 +158,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		return instance == null || instance.isEmpty();
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap(final boolean first, @Nullable final String s1,
 			final String s2) {
 		//
