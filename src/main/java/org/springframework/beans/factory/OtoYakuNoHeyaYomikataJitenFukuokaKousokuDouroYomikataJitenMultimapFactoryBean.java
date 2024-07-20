@@ -1,5 +1,6 @@
 package org.springframework.beans.factory;
 
+import java.io.IOException;
 import java.lang.Character.UnicodeBlock;
 import java.net.URI;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.text.TextStringBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -47,11 +49,21 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 		List<Element> nextElementSiblings = null;
 		//
-		String s1, s2 = null;
+		String s1, s2, s3 = null;
 		//
 		Multimap<String, String> multimap = null;
 		//
 		Pattern pattern = null;
+		//
+		int size = 0;
+		//
+		List<UnicodeBlock> ubs = null;
+		//
+		char[] cs = null;
+		//
+		TextStringBuilder tsb = null;
+		//
+		char c = ' ';
 		//
 		for (int i = 0; es1 != null && i < es1.size(); i++) {
 			//
@@ -63,7 +75,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 				//
 			if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 					getUnicodeBlocks(s1 = ElementUtil.text(e)))
-					&& IterableUtils.size(nextElementSiblings = e.nextElementSiblings()) > 1
+					&& (size = IterableUtils.size(nextElementSiblings = e.nextElementSiblings())) > 1
 					&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
 							getUnicodeBlocks(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))))) {
 				//
@@ -80,10 +92,85 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 				//
 			} // if
 				//
+			if (size > 2
+					&& Util.contains(
+							ubs = getUnicodeBlocks(s3 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 2))),
+							UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)
+					&& Util.contains(ubs, UnicodeBlock.HIRAGANA)
+					&& Util.contains(ubs, UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS)) {
+				//
+				if (StringUtils.countMatches(s3, '）') > 1) {
+					//
+					cs = Util.toCharArray(s3);
+					//
+					size = MultimapUtil.size(multimap);
+					//
+					s1 = s2 = null;
+					//
+					for (int j = 0; cs != null && j < cs.length; j++) {
+						//
+						if (Objects.equals(UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS, UnicodeBlock.of(c = cs[j]))) {
+							//
+							if (c == '（') {
+								//
+								s1 = Objects.toString(tsb);
+								//
+								s2 = null;
+								//
+							} else if (c == '）') {
+								//
+								s2 = Objects.toString(tsb);
+								//
+							} // if
+								//
+							clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
+							//
+							if (StringUtils.isNotBlank(s1) && StringUtils.isNotBlank(s2)) {
+								//
+								if (size == MultimapUtil.size(multimap)) {
+									//
+									MultimapUtil.put(
+											multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+											StringUtils.substring(s1, 4), s2);
+									//
+								} else {
+									//
+									MultimapUtil.put(
+											multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+											s2);
+									//
+								} // if
+									//
+							} // if
+								//
+						} else {
+							//
+							append(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new), c);
+							//
+						} // if
+							//
+					} // for
+						//
+				} // if
+					//
+			} // if
+				//
 		} // for
 			//
 		return multimap;
 		//
+	}
+
+	private static void clear(final TextStringBuilder instance) {
+		if (instance != null) {
+			instance.clear();
+		}
+	}
+
+	private static void append(final Appendable instance, final char c) throws IOException {
+		if (instance != null) {
+			instance.append(c);
+		}
 	}
 
 	@Nullable
