@@ -157,7 +157,8 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		return instance == null || instance.isEmpty();
 	}
 
-	private static Multimap<String, String> toMultimap(final boolean first, final String s1, final String s2) {
+	private static Multimap<String, String> toMultimap(final boolean first, @Nullable final String s1,
+			final String s2) {
 		//
 		Multimap<String, String> multimap = null;
 		//
