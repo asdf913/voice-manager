@@ -49,4 +49,8 @@ public interface MultimapUtil {
 		return instance != null ? instance.values() : null;
 	}
 
+	static boolean isEmpty(final Multimap<?, ?> instance) {
+		return instance == null || instance.isEmpty();
+	}
+
 }

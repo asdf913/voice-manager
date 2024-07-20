@@ -530,25 +530,4 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		}
 	}
 
-	@Test
-	void testPrefix差StringToMultimap()
-			throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-		//
-		final Class<?> clz = Class.forName(
-				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean$Prefix差StringToMultimap");
-		//
-		// org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean$Prefix差StringToMultimap.isEmpty(com.google.common.collect.Multimap)
-		//
-		final Method isEmpty = clz != null ? clz.getDeclaredMethod("isEmpty", Multimap.class) : null;
-		//
-		if (isEmpty != null) {
-			//
-			isEmpty.setAccessible(true);
-			//
-		} // if
-			//
-		Assertions.assertEquals(Boolean.TRUE, isEmpty != null ? isEmpty.invoke(null, (Object) null) : null);
-		//
-	}
-
 }

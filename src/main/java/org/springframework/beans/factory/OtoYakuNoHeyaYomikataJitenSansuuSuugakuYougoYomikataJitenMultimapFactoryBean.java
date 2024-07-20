@@ -536,7 +536,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 				} else if (c == '）') {
 					//
 					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							toMultimap(isEmpty(multimap), Util.toString(sb), Util.toString(tsb)));
+							toMultimap(MultimapUtil.isEmpty(multimap), Util.toString(sb), Util.toString(tsb)));
 					//
 					clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
 					//
@@ -550,10 +550,6 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 				//
 			return multimap;
 			//
-		}
-
-		private static boolean isEmpty(@Nullable final Multimap<?, ?> instance) {
-			return instance == null || instance.isEmpty();
 		}
 
 		@Nullable

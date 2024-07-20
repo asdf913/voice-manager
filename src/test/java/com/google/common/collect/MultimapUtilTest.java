@@ -41,4 +41,10 @@ class MultimapUtilTest {
 		//
 	}
 
+	@Test
+	void testIsEmpty() {
+		//
+		Assertions.assertTrue(MultimapUtil.isEmpty(null));
+		//
+	}
 }

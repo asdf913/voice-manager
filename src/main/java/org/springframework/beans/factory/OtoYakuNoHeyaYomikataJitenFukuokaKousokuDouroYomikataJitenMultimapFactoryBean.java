@@ -136,7 +136,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 						clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
 						//
 						MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								toMultimap(isEmpty(multimap), s1, s2));
+								toMultimap(MultimapUtil.isEmpty(multimap), s1, s2));
 						//
 					} else {
 						//
@@ -152,10 +152,6 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 			//
 		return multimap;
 		//
-	}
-
-	private static boolean isEmpty(@Nullable final Multimap<?, ?> instance) {
-		return instance == null || instance.isEmpty();
 	}
 
 	@Nullable
