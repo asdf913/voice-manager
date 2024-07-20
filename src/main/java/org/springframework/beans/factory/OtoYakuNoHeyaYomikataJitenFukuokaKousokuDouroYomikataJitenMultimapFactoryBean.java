@@ -154,7 +154,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
-	private static boolean isEmpty(final Multimap<?, ?> instance) {
+	private static boolean isEmpty(@Nullable final Multimap<?, ?> instance) {
 		return instance == null || instance.isEmpty();
 	}
 
@@ -183,13 +183,13 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
-	private static void clear(final TextStringBuilder instance) {
+	private static void clear(@Nullable final TextStringBuilder instance) {
 		if (instance != null) {
 			instance.clear();
 		}
 	}
 
-	private static void append(final Appendable instance, final char c) throws IOException {
+	private static void append(@Nullable final Appendable instance, final char c) throws IOException {
 		if (instance != null) {
 			instance.append(c);
 		}
