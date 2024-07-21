@@ -203,7 +203,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 		int b = StringUtils.indexOf(s, '（');
 		//
-		final int c = StringUtils.indexOf(s, "く）");
+		int c = StringUtils.indexOf(s, "く）");
 		//
 		if (Boolean.logicalAnd(a < b, b < c)) {
 			//
@@ -214,6 +214,13 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 				&& (a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）'))) {
 			//
 			return Unit.with(ImmutableMultimap.of(StringUtils.substring(s, 0, a), StringUtils.substring(s, a + 1, b)));
+			//
+		} else if ((a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）'))
+				&& b == StringUtils.length(s) - 1 && StringUtils.countMatches(s, '区') == 1
+				&& (c = StringUtils.indexOf(s, '区')) < a) {
+			//
+			return Unit
+					.with(ImmutableMultimap.of(StringUtils.substring(s, c + 1, a), StringUtils.substring(s, a + 1, b)));
 			//
 		} // if
 			//
