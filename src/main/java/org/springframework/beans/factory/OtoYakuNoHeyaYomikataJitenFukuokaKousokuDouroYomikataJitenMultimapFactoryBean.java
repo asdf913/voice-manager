@@ -163,7 +163,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 			//
 			final int c = StringUtils.indexOf(s, "く）");
 			//
-			if (a < b && b < c) {
+			if (Boolean.logicalAnd(a < b, b < c)) {
 				//
 				multimap = ImmutableMultimap.of(StringUtils.substring(s, a + 1, b),
 						StringUtils.substring(s, b + 1, Math.min(c + 1, StringUtils.length(s))));
