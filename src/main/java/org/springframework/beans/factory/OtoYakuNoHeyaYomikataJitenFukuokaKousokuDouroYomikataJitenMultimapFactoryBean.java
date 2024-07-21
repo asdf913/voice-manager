@@ -27,6 +27,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
@@ -113,9 +114,11 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 			//
 		} // if
 			//
-		if (StringUtils.countMatches(s, '）') > 1) {
-			//
-			Multimap<String, String> multimap = null;
+		final int countMatcher = StringUtils.countMatches(s, '）');
+		//
+		Multimap<String, String> multimap = null;
+		//
+		if (countMatcher > 1) {
 			//
 			String s1 = null, s2 = null;
 			//
@@ -152,11 +155,24 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 					//
 			} // for
 				//
-			return multimap;
+		} else if (countMatcher > 0) {
 			//
+			final int a = StringUtils.indexOf(s, '市');
+			//
+			final int b = StringUtils.indexOf(s, '（');
+			//
+			final int c = StringUtils.indexOf(s, "く）");
+			//
+			if (a < b && b < c) {
+				//
+				multimap = ImmutableMultimap.of(StringUtils.substring(s, a + 1, b),
+						StringUtils.substring(s, b + 1, Math.min(c + 1, StringUtils.length(s))));
+				//
+			} // if
+				//
 		} // if
 			//
-		return null;
+		return multimap;
 		//
 	}
 

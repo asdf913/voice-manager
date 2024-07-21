@@ -264,6 +264,10 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("多", "た", "津", "つ")),
 							MultimapUtil.entries(toMultimap(Pattern.compile("\\p{InHiragana}"), "多の津", "たのつ"))));
 			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("小倉南区", "こくらみなみく")),
+							MultimapUtil.entries(toMultimap("北九州市小倉南区（こくらみなみく）長野二丁目"))));
+			//
 		} // if
 			//
 	}
