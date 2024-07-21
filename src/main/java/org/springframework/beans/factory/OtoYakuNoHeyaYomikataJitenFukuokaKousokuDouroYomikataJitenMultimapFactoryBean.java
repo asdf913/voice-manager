@@ -105,12 +105,12 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 		final List<UnicodeBlock> ubs = getUnicodeBlocks(s);
 		//
+		final char[] cs = Util.toCharArray(s);
+		//
 		if (Util.and(Util.contains(ubs, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), Util.contains(ubs, UnicodeBlock.HIRAGANA),
-				Util.contains(ubs, UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS))) {
+				Util.contains(ubs, UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS), cs != null)) {
 			//
 			if (StringUtils.countMatches(s, '）') > 1) {
-				//
-				final char[] cs = Util.toCharArray(s);
 				//
 				String s1 = null, s2 = null;
 				//
@@ -118,7 +118,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 				//
 				TextStringBuilder tsb = null;
 				//
-				for (int j = 0; cs != null && j < cs.length; j++) {
+				for (int j = 0; j < cs.length; j++) {
 					//
 					if (Objects.equals(UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS, UnicodeBlock.of(c = cs[j]))) {
 						//
