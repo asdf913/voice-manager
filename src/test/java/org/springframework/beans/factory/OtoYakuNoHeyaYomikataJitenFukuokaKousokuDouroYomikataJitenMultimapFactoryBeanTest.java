@@ -281,6 +281,10 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("許斐町", "このみまち")),
 							MultimapUtil.entries(toMultimap("北九州市小倉北区許斐町（このみまち）"))));
 			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("香住ヶ丘", "かすみがおか")),
+							MultimapUtil.entries(toMultimap("福岡市東区香住ヶ丘（かすみがおか）二丁目"))));
+			//
 		} // if
 			//
 	}
