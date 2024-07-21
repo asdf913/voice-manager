@@ -214,7 +214,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
-	private static int length(final char[] instance) {
+	private static int length(@Nullable final char[] instance) {
 		return instance != null ? instance.length : 0;
 	}
 
