@@ -101,57 +101,62 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 	@Nullable
 	private static Multimap<String, String> toMultimap(final String s) throws IOException {
 		//
-		Multimap<String, String> multimap = null;
-		//
 		final List<UnicodeBlock> ubs = getUnicodeBlocks(s);
 		//
 		final char[] cs = Util.toCharArray(s);
 		//
-		if (Util.and(Util.contains(ubs, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), Util.contains(ubs, UnicodeBlock.HIRAGANA),
+		if (!Util.and(Util.contains(ubs, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+				Util.contains(ubs, UnicodeBlock.HIRAGANA),
 				Util.contains(ubs, UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS), cs != null)) {
 			//
-			if (StringUtils.countMatches(s, '）') > 1) {
+			return null;
+			//
+		} // if
+			//
+		if (StringUtils.countMatches(s, '）') > 1) {
+			//
+			Multimap<String, String> multimap = null;
+			//
+			String s1 = null, s2 = null;
+			//
+			char c;
+			//
+			TextStringBuilder tsb = null;
+			//
+			for (int j = 0; j < cs.length; j++) {
 				//
-				String s1 = null, s2 = null;
-				//
-				char c;
-				//
-				TextStringBuilder tsb = null;
-				//
-				for (int j = 0; j < cs.length; j++) {
+				if (Objects.equals(UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS, UnicodeBlock.of(c = cs[j]))) {
 					//
-					if (Objects.equals(UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS, UnicodeBlock.of(c = cs[j]))) {
+					if (c == '（') {
 						//
-						if (c == '（') {
-							//
-							s1 = Objects.toString(tsb);
-							//
-							s2 = null;
-							//
-						} else if (c == '）') {
-							//
-							s2 = Objects.toString(tsb);
-							//
-						} // if
-							//
-						TextStringBuilderUtil.clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
+						s1 = Objects.toString(tsb);
 						//
-						MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								toMultimap(MultimapUtil.isEmpty(multimap), s1, s2));
+						s2 = null;
 						//
-					} else {
+					} else if (c == '）') {
 						//
-						append(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new), c);
+						s2 = Objects.toString(tsb);
 						//
 					} // if
 						//
-				} // for
+					TextStringBuilderUtil.clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
 					//
-			} // if
+					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							toMultimap(MultimapUtil.isEmpty(multimap), s1, s2));
+					//
+				} else {
+					//
+					append(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new), c);
+					//
+				} // if
+					//
+			} // for
 				//
+			return multimap;
+			//
 		} // if
 			//
-		return multimap;
+		return null;
 		//
 	}
 
