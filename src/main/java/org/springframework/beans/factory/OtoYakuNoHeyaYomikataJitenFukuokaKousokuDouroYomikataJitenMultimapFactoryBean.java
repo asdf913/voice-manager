@@ -138,6 +138,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
+	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap1(final String s) throws IOException {
 		//
 		if (StringUtils.countMatches(s, '）') <= 1) {
@@ -189,6 +190,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
+	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap2(final String s) {
 		//
 		if (StringUtils.countMatches(s, '）') <= 0) {
