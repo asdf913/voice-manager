@@ -199,9 +199,9 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 			//
 		} // if
 			//
-		final int a = StringUtils.indexOf(s, '市');
+		int a = StringUtils.indexOf(s, '市');
 		//
-		final int b = StringUtils.indexOf(s, '（');
+		int b = StringUtils.indexOf(s, '（');
 		//
 		final int c = StringUtils.indexOf(s, "く）");
 		//
@@ -209,6 +209,11 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 			//
 			return Unit.with(ImmutableMultimap.of(StringUtils.substring(s, a + 1, b),
 					StringUtils.substring(s, b + 1, Math.min(c + 1, StringUtils.length(s)))));
+			//
+		} else if (StringUtils.endsWith(s, "）へ")
+				&& (a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）'))) {
+			//
+			return Unit.with(ImmutableMultimap.of(StringUtils.substring(s, 0, a), StringUtils.substring(s, a + 1, b)));
 			//
 		} // if
 			//
