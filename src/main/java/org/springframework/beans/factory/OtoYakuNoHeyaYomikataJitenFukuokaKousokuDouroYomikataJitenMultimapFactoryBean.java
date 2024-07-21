@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.Character.UnicodeBlock;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +23,9 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.text.TextStringBuilder;
 import org.apache.commons.text.TextStringBuilderUtil;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -114,66 +118,104 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 			//
 		} // if
 			//
-		final int countMatcher = StringUtils.countMatches(s, '）');
+		final List<FailableFunction<String, IValue0<Multimap<String, String>>, IOException>> functions = Arrays.asList(
+				OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean::toMultimap1,
+				OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean::toMultimap2);
+		//
+		IValue0<Multimap<String, String>> iValue0 = null;
+		//
+		for (int i = 0; i < IterableUtils.size(functions); i++) {
+			//
+			if ((iValue0 = FailableFunctionUtil.apply(IterableUtils.get(functions, i), s)) != null) {
+				//
+				return IValue0Util.getValue0(iValue0);
+				//
+			} // for
+				//
+		} // for
+			//
+		return null;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap1(final String s) throws IOException {
+		//
+		if (StringUtils.countMatches(s, '）') <= 1) {
+			//
+			return null;
+			//
+		} // if
+			//
+		String s1 = null, s2 = null;
+		//
+		char c;
+		//
+		TextStringBuilder tsb = null;
 		//
 		Multimap<String, String> multimap = null;
 		//
-		if (countMatcher > 1) {
+		final char[] cs = Util.toCharArray(s);
+		//
+		for (int j = 0; j < length(cs); j++) {
 			//
-			String s1 = null, s2 = null;
-			//
-			char c;
-			//
-			TextStringBuilder tsb = null;
-			//
-			for (int j = 0; j < cs.length; j++) {
+			if (Objects.equals(UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS, UnicodeBlock.of(c = cs[j]))) {
 				//
-				if (Objects.equals(UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS, UnicodeBlock.of(c = cs[j]))) {
+				if (c == '（') {
 					//
-					if (c == '（') {
-						//
-						s1 = Objects.toString(tsb);
-						//
-						s2 = null;
-						//
-					} else if (c == '）') {
-						//
-						s2 = Objects.toString(tsb);
-						//
-					} // if
-						//
-					TextStringBuilderUtil.clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
+					s1 = Objects.toString(tsb);
 					//
-					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							toMultimap(MultimapUtil.isEmpty(multimap), s1, s2));
+					s2 = null;
 					//
-				} else {
+				} else if (c == '）') {
 					//
-					append(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new), c);
+					s2 = Objects.toString(tsb);
 					//
 				} // if
 					//
-			} // for
+				TextStringBuilderUtil.clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
 				//
-		} else if (countMatcher > 0) {
-			//
-			final int a = StringUtils.indexOf(s, '市');
-			//
-			final int b = StringUtils.indexOf(s, '（');
-			//
-			final int c = StringUtils.indexOf(s, "く）");
-			//
-			if (Boolean.logicalAnd(a < b, b < c)) {
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						toMultimap(MultimapUtil.isEmpty(multimap), s1, s2));
 				//
-				multimap = ImmutableMultimap.of(StringUtils.substring(s, a + 1, b),
-						StringUtils.substring(s, b + 1, Math.min(c + 1, StringUtils.length(s))));
+			} else {
+				//
+				append(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new), c);
 				//
 			} // if
 				//
+		} // for
+			//
+		return Unit.with(multimap);
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap2(final String s) {
+		//
+		if (StringUtils.countMatches(s, '）') <= 0) {
+			//
+			return null;
+			//
 		} // if
 			//
-		return multimap;
+		final int a = StringUtils.indexOf(s, '市');
 		//
+		final int b = StringUtils.indexOf(s, '（');
+		//
+		final int c = StringUtils.indexOf(s, "く）");
+		//
+		if (Boolean.logicalAnd(a < b, b < c)) {
+			//
+			return Unit.with(ImmutableMultimap.of(StringUtils.substring(s, a + 1, b),
+					StringUtils.substring(s, b + 1, Math.min(c + 1, StringUtils.length(s)))));
+			//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static int length(final char[] instance) {
+		return instance != null ? instance.length : 0;
 	}
 
 	@Nullable

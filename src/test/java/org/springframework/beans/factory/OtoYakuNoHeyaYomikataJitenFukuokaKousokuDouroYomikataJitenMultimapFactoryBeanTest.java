@@ -20,6 +20,7 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +37,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP1, METHOD_TO_MULTI_MAP3,
-			METHOD_APPEND = null;
+			METHOD_APPEND, METHOD_TO_MULTI_MAP2, METHOD_LENGTH = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -54,6 +55,10 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 				.setAccessible(true);
 		//
 		(METHOD_APPEND = clz.getDeclaredMethod("append", Appendable.class, Character.TYPE)).setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP2 = clz.getDeclaredMethod("toMultimap2", String.class)).setAccessible(true);
+		//
+		(METHOD_LENGTH = clz.getDeclaredMethod("length", char[].class)).setAccessible(true);
 		//
 	}
 
@@ -311,6 +316,46 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 	private static void append(final Appendable instance, final char c) throws Throwable {
 		try {
 			METHOD_APPEND.invoke(null, instance, c);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToMultimap2() throws Throwable {
+		//
+		Assertions.assertNull(toMultimap2(null));
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap2(final String s) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP2.invoke(null, s);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testLength() throws Throwable {
+		//
+		Assertions.assertEquals(0, length(null));
+		//
+	}
+
+	private static int length(final char[] instance) throws Throwable {
+		try {
+			final Object obj = METHOD_LENGTH.invoke(null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
