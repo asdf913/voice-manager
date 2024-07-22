@@ -228,6 +228,12 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 			return Unit
 					.with(ImmutableMultimap.of(StringUtils.substring(s, c + 1, a), StringUtils.substring(s, a + 1, b)));
 			//
+		} else if ((a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）'))
+				&& StringUtils.countMatches(s, '市') == 1 && (c = StringUtils.indexOf(s, '市')) < a) {
+			//
+			return Unit
+					.with(ImmutableMultimap.of(StringUtils.substring(s, c + 1, a), StringUtils.substring(s, a + 1, b)));
+			//
 		} // if
 			//
 		return null;
