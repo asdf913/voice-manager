@@ -417,7 +417,7 @@ abstract class Util {
 		return instance != null ? instance.group(group) : null;
 	}
 
-	static String group(final MatchResult instance) {
+	static String group(@Nullable final MatchResult instance) {
 		return instance != null ? instance.group() : null;
 	}
 
