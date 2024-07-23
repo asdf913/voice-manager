@@ -166,10 +166,10 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 								testAndApply(x -> Util.groupCount(x) > 0, matcher, x -> Util.group(x, 1), Util::group));
 						//
 					} else if (StringUtils.countMatches(s = StringUtils.substring(text, Util.intValue(end, 0), start),
-							'　') == 1) {
+							'\u3000') == 1) {
 						//
 						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								StringUtils.substringAfter(s, '　'),
+								StringUtils.substringAfter(s, '\u3000'),
 								testAndApply(x -> Util.groupCount(x) > 0, matcher, x -> Util.group(x, 1), Util::group));
 						//
 					} // if
