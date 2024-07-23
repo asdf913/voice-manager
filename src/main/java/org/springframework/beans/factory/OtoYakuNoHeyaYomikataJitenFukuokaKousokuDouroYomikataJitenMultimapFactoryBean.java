@@ -108,6 +108,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap(final Iterable<Node> nodes) {
 		//
 		boolean b = false;
