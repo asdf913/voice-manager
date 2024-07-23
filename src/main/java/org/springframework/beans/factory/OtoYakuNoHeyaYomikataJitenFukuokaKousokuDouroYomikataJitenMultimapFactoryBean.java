@@ -159,7 +159,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 							//
 							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 									StringUtils.substringAfter(s, '区'), testAndApply(x -> Util.groupCount(x) > 0,
-											matcher, x -> Util.group(x, 1), x -> Util.group(x)));
+											matcher, x -> Util.group(x, 1), Util::group));
 							//
 						} // if
 							//
