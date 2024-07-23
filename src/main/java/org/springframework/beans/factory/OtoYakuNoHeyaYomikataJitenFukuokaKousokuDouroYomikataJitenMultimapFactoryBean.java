@@ -112,6 +112,12 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 	@Nullable
 	private static Multimap<String, String> toMultimap(final Iterable<Node> nodes) {
 		//
+		if (Util.iterator(nodes) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
 		boolean b = false;
 		//
 		TextNode textNode = null;
@@ -126,52 +132,48 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 		Multimap<String, String> multimap = null;
 		//
-		if (Util.iterator(nodes) != null) {
+		for (final Node node : nodes) {
 			//
-			for (final Node node : nodes) {
+			if (Objects.equals("建設中路線", Util.toString(node))) {
 				//
-				if (Objects.equals("建設中路線", Util.toString(node))) {
-					//
-					b = true;
-					//
-				} else if (Boolean.logicalAnd(b,
-						Boolean.logicalOr(
-								StringUtils.equalsIgnoreCase("img",
-										tagName = ElementUtil.tagName(Util.cast(Element.class, node))),
-								StringUtils.equalsIgnoreCase("p", tagName)))) {
-					//
-					b = false;
-					//
-				} // if
-					//
-				if (Boolean.logicalAnd(b, (textNode = Util.cast(TextNode.class, node)) != null)) {
-					//
-					matcher = Util.matcher(
-							pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("（(\\p{InHIRAGANA}+)）")),
-							text = textNode.text());
-					//
-					end = null;
-					//
-					while (Util.find(matcher)) {
-						//
-						if (StringUtils.countMatches(
-								s = StringUtils.substring(text, end != null ? end : 0, matcher.start()), '区') == 1) {
-							//
-							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-									StringUtils.substringAfter(s, '区'), testAndApply(x -> Util.groupCount(x) > 0,
-											matcher, x -> Util.group(x, 1), Util::group));
-							//
-						} // if
-							//
-						end = end(matcher);
-						//
-					} // while
-						//
-				} // if
-					//
-			} // for
+				b = true;
 				//
-		} // if
+			} else if (Boolean.logicalAnd(b,
+					Boolean.logicalOr(
+							StringUtils.equalsIgnoreCase("img",
+									tagName = ElementUtil.tagName(Util.cast(Element.class, node))),
+							StringUtils.equalsIgnoreCase("p", tagName)))) {
+				//
+				b = false;
+				//
+			} // if
+				//
+			if (Boolean.logicalAnd(b, (textNode = Util.cast(TextNode.class, node)) != null)) {
+				//
+				matcher = Util.matcher(
+						pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("（(\\p{InHIRAGANA}+)）")),
+						text = textNode.text());
+				//
+				end = null;
+				//
+				while (Util.find(matcher)) {
+					//
+					if (StringUtils.countMatches(
+							s = StringUtils.substring(text, end != null ? end : 0, matcher.start()), '区') == 1) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								StringUtils.substringAfter(s, '区'),
+								testAndApply(x -> Util.groupCount(x) > 0, matcher, x -> Util.group(x, 1), Util::group));
+						//
+					} // if
+						//
+					end = end(matcher);
+					//
+				} // while
+					//
+			} // if
+				//
+		} // for
 			//
 		return multimap;
 		//
