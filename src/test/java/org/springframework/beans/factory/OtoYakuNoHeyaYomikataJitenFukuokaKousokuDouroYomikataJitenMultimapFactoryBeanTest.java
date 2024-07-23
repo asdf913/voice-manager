@@ -301,7 +301,8 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 			//
 			Assertions
 					.assertTrue(
-							CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("蒲田", "かまた")),
+							CollectionUtils.isEqualCollection(
+									MultimapUtil.entries(ImmutableMultimap.of("糟屋郡粕屋町", "かすやぐんかすやまち", "蒲田", "かまた")),
 									MultimapUtil.entries(toMultimap(Util.toList(Util.map(Util.map(
 											Stream.of("建設中路線", "福岡高速４号線　糟屋郡粕屋町（かすやぐんかすやまち）大字戸原（とばら）〜福岡市東区蒲田（かまた）三丁目"),
 											TextNode::new), x -> Util.cast(Node.class, x)))))));

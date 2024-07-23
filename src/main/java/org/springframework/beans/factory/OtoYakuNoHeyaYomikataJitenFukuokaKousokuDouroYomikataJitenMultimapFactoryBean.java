@@ -128,7 +128,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 		String tagName, text, s = null;
 		//
-		Integer end = null;
+		Integer start, end = null;
 		//
 		Multimap<String, String> multimap = null;
 		//
@@ -159,10 +159,17 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 				while (Util.find(matcher)) {
 					//
 					if (StringUtils.countMatches(
-							s = StringUtils.substring(text, Util.intValue(end, 0), matcher.start()), '区') == 1) {
+							s = StringUtils.substring(text, Util.intValue(end, 0), start = start(matcher)), '区') == 1) {
 						//
 						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 								StringUtils.substringAfter(s, '区'),
+								testAndApply(x -> Util.groupCount(x) > 0, matcher, x -> Util.group(x, 1), Util::group));
+						//
+					} else if (StringUtils.countMatches(s = StringUtils.substring(text, Util.intValue(end, 0), start),
+							'　') == 1) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								StringUtils.substringAfter(s, '　'),
 								testAndApply(x -> Util.groupCount(x) > 0, matcher, x -> Util.group(x, 1), Util::group));
 						//
 					} // if
@@ -177,6 +184,10 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 			//
 		return multimap;
 		//
+	}
+
+	private static Integer start(final MatchResult instance) {
+		return instance != null ? Integer.valueOf(instance.start()) : null;
 	}
 
 	@Nullable
