@@ -143,7 +143,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 					//
 				} // if
 					//
-				if (b && (textNode = Util.cast(TextNode.class, node)) != null) {
+				if (Boolean.logicalAnd(b, (textNode = Util.cast(TextNode.class, node)) != null)) {
 					//
 					matcher = Util.matcher(
 							pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("（(\\p{InHIRAGANA}+)）")),
