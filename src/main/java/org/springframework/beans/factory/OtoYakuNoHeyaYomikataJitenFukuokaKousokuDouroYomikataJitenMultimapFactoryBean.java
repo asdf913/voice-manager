@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -151,18 +152,18 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 					//
 					end = null;
 					//
-					while (matcher != null && matcher.find()) {
+					while (Util.find(matcher)) {
 						//
 						if (StringUtils.countMatches(
 								s = StringUtils.substring(text, end != null ? end : 0, matcher.start()), '区') == 1) {
 							//
 							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 									StringUtils.substringAfter(s, '区'),
-									Util.groupCount(matcher) > 0 ? Util.group(matcher, 1) : matcher.group());
+									Util.groupCount(matcher) > 0 ? Util.group(matcher, 1) : group(matcher));
 							//
 						} // if
 							//
-						end = matcher.end();
+						end = end(matcher);
 						//
 					} // while
 						//
@@ -174,6 +175,14 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 			//
 		return multimap;
 		//
+	}
+
+	private static Integer end(final MatchResult instance) {
+		return instance != null ? Integer.valueOf(instance.end()) : null;
+	}
+
+	private static String group(final MatchResult instance) {
+		return instance != null ? instance.group() : null;
 	}
 
 	@Nullable
