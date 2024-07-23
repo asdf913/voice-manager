@@ -134,9 +134,10 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 					b = true;
 					//
 				} else if (Boolean.logicalAnd(b,
-						(StringUtils.equalsIgnoreCase("img",
-								tagName = ElementUtil.tagName(Util.cast(Element.class, node)))
-								|| StringUtils.equalsIgnoreCase("p", tagName)))) {
+						Boolean.logicalOr(
+								StringUtils.equalsIgnoreCase("img",
+										tagName = ElementUtil.tagName(Util.cast(Element.class, node))),
+								StringUtils.equalsIgnoreCase("p", tagName)))) {
 					//
 					b = false;
 					//
