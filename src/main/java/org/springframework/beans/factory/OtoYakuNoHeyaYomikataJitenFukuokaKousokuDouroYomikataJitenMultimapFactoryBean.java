@@ -30,6 +30,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
@@ -98,6 +100,63 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 			} // if
 				//
 		} // for
+			//
+		if (document != null) {
+			//
+			boolean b = false;
+			//
+			TextNode textNode = null;
+			//
+			pattern = null;
+			//
+			Matcher matcher = null;
+			//
+			String tagName, text, s = null;
+			//
+			Integer end = null;
+			//
+			for (final Node node : Util.toList(document.nodeStream())) {
+				//
+				if (Objects.equals("建設中路線", Objects.toString(node))) {
+					//
+					b = true;
+					//
+				} else if (b && (StringUtils.equalsIgnoreCase("img",
+						tagName = ElementUtil.tagName(Util.cast(Element.class, node)))
+						|| StringUtils.equalsIgnoreCase("p", tagName))) {
+					//
+					b = false;
+					//
+				} // if
+					//
+				if (b && (textNode = Util.cast(TextNode.class, node)) != null) {
+					//
+					matcher = Util.matcher(
+							pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("（(\\p{InHIRAGANA}+)）")),
+							text = textNode.text());
+					//
+					end = null;
+					//
+					while (matcher != null && matcher.find()) {
+						//
+						if (StringUtils.countMatches(
+								s = StringUtils.substring(text, end != null ? end : 0, matcher.start()), '区') == 1) {
+							//
+							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+									StringUtils.substringAfter(s, '区'),
+									Util.groupCount(matcher) > 0 ? Util.group(matcher, 1) : matcher.group());
+							//
+						} // if
+							//
+						end = matcher.end();
+						//
+					} // while
+						//
+				} // if
+					//
+			} // for
+				//
+		} // if
 			//
 		return multimap;
 		//
