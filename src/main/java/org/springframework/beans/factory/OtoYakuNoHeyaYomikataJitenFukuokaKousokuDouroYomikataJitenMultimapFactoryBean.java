@@ -125,7 +125,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 		Multimap<String, String> multimap = null;
 		//
-		if (nodes != null && nodes.iterator() != null) {
+		if (Util.iterator(nodes) != null) {
 			//
 			for (final Node node : nodes) {
 				//
