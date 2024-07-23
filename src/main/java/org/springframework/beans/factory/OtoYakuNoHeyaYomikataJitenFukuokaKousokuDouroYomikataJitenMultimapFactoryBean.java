@@ -101,23 +101,34 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 				//
 		} // for
 			//
-		if (document != null) {
+		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+				toMultimap(document != null ? Util.toList(document.nodeStream()) : null));
+		//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final Iterable<Node> nodes) {
+		//
+		boolean b = false;
+		//
+		TextNode textNode = null;
+		//
+		Pattern pattern = null;
+		//
+		Matcher matcher = null;
+		//
+		String tagName, text, s = null;
+		//
+		Integer end = null;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		if (nodes != null && nodes.iterator() != null) {
 			//
-			boolean b = false;
-			//
-			TextNode textNode = null;
-			//
-			pattern = null;
-			//
-			Matcher matcher = null;
-			//
-			String tagName, text, s = null;
-			//
-			Integer end = null;
-			//
-			for (final Node node : Util.toList(document.nodeStream())) {
+			for (final Node node : nodes) {
 				//
-				if (Objects.equals("建設中路線", Objects.toString(node))) {
+				if (Objects.equals("建設中路線", Util.toString(node))) {
 					//
 					b = true;
 					//

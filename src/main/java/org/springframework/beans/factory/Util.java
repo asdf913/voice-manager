@@ -41,6 +41,8 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -175,7 +177,27 @@ abstract class Util {
 
 	@Nullable
 	static String toString(@Nullable final Object instance) {
+		//
+		if (instance instanceof TextNode) {
+			//
+			try {
+				//
+				if (Narcissus.getField(instance, Narcissus.findField(getClass(instance), "value")) == null) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} catch (final NoSuchFieldException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
+				//
+		} // if
+			//
 		return instance != null ? instance.toString() : null;
+		//
 	}
 
 	@Nullable

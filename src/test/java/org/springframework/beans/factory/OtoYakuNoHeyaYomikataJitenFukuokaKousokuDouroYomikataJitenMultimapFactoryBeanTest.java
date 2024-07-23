@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,6 +15,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
@@ -21,6 +23,8 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.javatuples.valueintf.IValue0;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,13 +35,14 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
+import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP1, METHOD_TO_MULTI_MAP3,
-			METHOD_APPEND, METHOD_TO_MULTI_MAP2, METHOD_LENGTH = null;
+			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_APPEND, METHOD_TO_MULTI_MAP2, METHOD_LENGTH = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -54,12 +59,39 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 		(METHOD_TO_MULTI_MAP3 = clz.getDeclaredMethod("toMultimap", Pattern.class, String.class, String.class))
 				.setAccessible(true);
 		//
+		(METHOD_TO_MULTI_MAP_ITERABLE = clz.getDeclaredMethod("toMultimap", Iterable.class)).setAccessible(true);
+		//
 		(METHOD_APPEND = clz.getDeclaredMethod("append", Appendable.class, Character.TYPE)).setAccessible(true);
 		//
 		(METHOD_TO_MULTI_MAP2 = clz.getDeclaredMethod("toMultimap2", String.class)).setAccessible(true);
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", char[].class)).setAccessible(true);
 		//
+	}
+
+	private static class IH implements InvocationHandler {
+
+		private Iterable<?> iterator = null;
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = Util.getName(method);
+			//
+			if (proxy instanceof Iterable) {
+				//
+				if (Objects.equals(methodName, "iterator")) {
+					//
+					return iterator;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	private OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean instance = null;
@@ -86,7 +118,9 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(instance != null ? instance.getObject() : null);
+		final Multimap<?, ?> multimap = ImmutableMultimap.of();
+		//
+		Assertions.assertEquals(multimap, instance != null ? instance.getObject() : null);
 		//
 		final Entry<Field, Object> entry = getFieldWithUrlAnnotationAndValue();
 		//
@@ -94,11 +128,11 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 		//
 		Narcissus.setObjectField(instance, url, "");
 		//
-		Assertions.assertNull(instance != null ? instance.getObject() : null);
+		Assertions.assertEquals(multimap, instance != null ? instance.getObject() : null);
 		//
 		Narcissus.setObjectField(instance, url, " ");
 		//
-		Assertions.assertNull(instance != null ? instance.getObject() : null);
+		Assertions.assertEquals(multimap, instance != null ? instance.getObject() : null);
 		//
 		if (isSystemPropertiesContainsTestGetObject) {
 			//
@@ -250,13 +284,27 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 		//
 		Assertions.assertNull(toMultimap(null, null, null));
 		//
+		Assertions.assertNull(toMultimap(Reflection.newProxy(Iterable.class, new IH())));
+		//
 		if (!isSystemPropertiesContainsTestGetObject) {
-			//
-			Assertions.assertNull(toMultimap(null));
 			//
 			Assertions.assertNull(toMultimap("北"));
 			//
 			Assertions.assertNull(toMultimap("北こ"));
+			//
+			Assertions.assertNull(toMultimap(Collections.singleton(null)));
+			//
+			Assertions.assertNull(toMultimap(
+					Collections.singleton(Util.cast(Node.class, Narcissus.allocateInstance(TextNode.class)))));
+			//
+			Assertions.assertNull(toMultimap(Collections.singleton(new TextNode("建設中路線"))));
+			//
+			Assertions
+					.assertTrue(
+							CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("蒲田", "かまた")),
+									MultimapUtil.entries(toMultimap(Util.toList(Util.map(Util.map(
+											Stream.of("建設中路線", "福岡高速４号線　糟屋郡粕屋町（かすやぐんかすやまち）大字戸原（とばら）〜福岡市東区蒲田（かまた）三丁目"),
+											TextNode::new), x -> Util.cast(Node.class, x)))))));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("小倉北区", "こくらきたく", "菜園場", "さえんば")),
@@ -322,6 +370,20 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 		}
 	}
 
+	private static Multimap<String, String> toMultimap(final Iterable<Node> nodes) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP_ITERABLE.invoke(null, nodes);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 	@Test
 	void testAppend() {
 		//
@@ -375,6 +437,28 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testName() throws Exception {
+		//
+		Util.filter(Arrays.stream(OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean.class
+				.getDeclaredMethods()), m -> m != null && m.getParameterCount() == 1 && !m.isSynthetic()).forEach(m -> {
+					//
+					if (m == null) {
+						//
+						return;
+						//
+					} // if
+						//
+					if (Modifier.isStatic(m.getModifiers())) {
+						//
+						Assertions.assertDoesNotThrow(() -> Narcissus.invokeStaticMethod(m, (Object) null));
+						//
+					} // if
+						//
+				});
+		//
 	}
 
 }
