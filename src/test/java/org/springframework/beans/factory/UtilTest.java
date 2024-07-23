@@ -351,6 +351,8 @@ class UtilTest {
 	@Test
 	void testGroup() {
 		//
+		Assertions.assertNull(Util.group(null));
+		//
 		Assertions.assertNull(Util.group(null, 0));
 		//
 	}

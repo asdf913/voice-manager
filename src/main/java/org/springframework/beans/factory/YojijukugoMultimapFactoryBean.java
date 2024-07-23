@@ -233,7 +233,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 						&& Util.find(matcher = Util.matcher(pattern, nextSibling.outerHtml()))) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create),
-							ElementUtil.text(a), matcher.group());
+							ElementUtil.text(a), Util.group(matcher));
 					//
 				} // if
 					//

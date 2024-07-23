@@ -433,7 +433,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 			while (Util.find(m)) {
 				//
-				ss1 = StringUtils.split(s1, group = m.group());
+				ss1 = StringUtils.split(s1, group = Util.group(m));
 				//
 				ss2 = StringUtils.split(s2, group);
 				//

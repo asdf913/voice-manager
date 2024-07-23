@@ -417,6 +417,10 @@ abstract class Util {
 		return instance != null ? instance.group(group) : null;
 	}
 
+	static String group(final MatchResult instance) {
+		return instance != null ? instance.group() : null;
+	}
+
 	static boolean find(@Nullable final Matcher instance) {
 		//
 		if (instance == null) {

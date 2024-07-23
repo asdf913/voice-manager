@@ -159,7 +159,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 							//
 							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 									StringUtils.substringAfter(s, '区'),
-									Util.groupCount(matcher) > 0 ? Util.group(matcher, 1) : group(matcher));
+									Util.groupCount(matcher) > 0 ? Util.group(matcher, 1) : Util.group(matcher));
 							//
 						} // if
 							//
@@ -179,10 +179,6 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 
 	private static Integer end(final MatchResult instance) {
 		return instance != null ? Integer.valueOf(instance.end()) : null;
-	}
-
-	private static String group(final MatchResult instance) {
-		return instance != null ? instance.group() : null;
 	}
 
 	@Nullable
@@ -367,7 +363,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 		while (matcher != null && matcher.find()) {
 			//
-			sb.append(matcher.group());
+			sb.append(Util.group(matcher));
 			//
 		} // while
 			//

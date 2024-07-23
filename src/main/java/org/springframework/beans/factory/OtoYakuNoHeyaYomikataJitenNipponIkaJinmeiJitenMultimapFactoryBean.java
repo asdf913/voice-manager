@@ -336,7 +336,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 					while (Util.find(matcher)) {
 						//
 						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), key,
-								matcher.group());
+								Util.group(matcher));
 						//
 					} // while
 						//
