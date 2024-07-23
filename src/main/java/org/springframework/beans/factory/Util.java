@@ -181,7 +181,7 @@ abstract class Util {
 			//
 			try {
 				//
-				if (Narcissus.getField(instance, Narcissus.findField(getClass(instance), "value")) == null) {
+				if (Narcissus.getField(instance, Narcissus.findField(getClass(instance), VALUE)) == null) {
 					//
 					return null;
 					//
