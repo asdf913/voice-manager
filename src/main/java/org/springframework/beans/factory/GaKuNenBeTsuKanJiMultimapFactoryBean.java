@@ -165,7 +165,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 								x -> StringUtils.equalsAnyIgnoreCase(Util.getProtocol(x),
 										ProtocolUtil.getAllowProtocols()),
 								testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null),
-								x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null),
+								x -> Jsoup.parse(x, Util.intValue(toMillis(timeout), 0)), null),
 						"//span[@class='mw-headline'][starts-with(.,'第')]");
 		//
 		Element element = null;
@@ -280,10 +280,6 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 	@Nullable
 	private static Long toMillis(@Nullable final Duration instance) {
 		return instance != null ? Long.valueOf(instance.toMillis()) : null;
-	}
-
-	private static int intValue(@Nullable final Number instance, final int defaultValue) {
-		return instance != null ? instance.intValue() : defaultValue;
 	}
 
 	@Override

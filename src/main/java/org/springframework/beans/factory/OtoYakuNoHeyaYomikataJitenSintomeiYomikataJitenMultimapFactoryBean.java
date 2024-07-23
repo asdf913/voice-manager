@@ -202,8 +202,8 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 			if ((temp = toMultimap(
 					patternMap = ObjectUtils.getIfNull(patternMap,
 							() -> Reflection.newProxy(PatternMap.class, new IH())),
-					children,
-					offset = iif(Util.or(rowspan == null, hasAttrRowspan, intValue(rowspan, 0) <= 0), 1, 0))) != null) {
+					children, offset = iif(Util.or(rowspan == null, hasAttrRowspan, Util.intValue(rowspan, 0) <= 0), 1,
+							0))) != null) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), temp);
 				//
@@ -408,7 +408,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 	}
 
 	private static Integer decrease(@Nullable final Integer instance, final int i) {
-		return Integer.valueOf(intValue(instance, 0) - i);
+		return Integer.valueOf(Util.intValue(instance, 0) - i);
 	}
 
 	@Nullable
@@ -445,10 +445,6 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 
 	private static int iif(final boolean condition, final int trueValue, final int falseValue) {
 		return condition ? trueValue : falseValue;
-	}
-
-	private static int intValue(@Nullable final Number instance, final int defaultValue) {
-		return instance != null ? instance.intValue() : defaultValue;
 	}
 
 	@Nullable

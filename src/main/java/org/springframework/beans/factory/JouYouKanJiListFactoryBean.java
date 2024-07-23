@@ -122,7 +122,7 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 		//
 		final Document document = testAndApply(Objects::nonNull,
 				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null),
-				x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null);
+				x -> Jsoup.parse(x, Util.intValue(toMillis(timeout), 0)), null);
 		//
 		List<Element> trs = testAndApply(x -> IterableUtils.size(x) == 1,
 				ElementUtil.selectXpath(document, "//h3/span[text()=\"本表\"]/../following-sibling::table[1]/tbody"),
@@ -207,10 +207,6 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 	@Nullable
 	private static Long toMillis(@Nullable final Duration instance) {
 		return instance != null ? Long.valueOf(instance.toMillis()) : null;
-	}
-
-	private static int intValue(@Nullable final Number instance, final int defaultValue) {
-		return instance != null ? instance.intValue() : defaultValue;
 	}
 
 	@Override

@@ -158,8 +158,8 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 				//
 				while (Util.find(matcher)) {
 					//
-					if (StringUtils.countMatches(s = StringUtils.substring(text, intValue(end, 0), matcher.start()),
-							'区') == 1) {
+					if (StringUtils.countMatches(
+							s = StringUtils.substring(text, Util.intValue(end, 0), matcher.start()), '区') == 1) {
 						//
 						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 								StringUtils.substringAfter(s, '区'),
@@ -177,10 +177,6 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 			//
 		return multimap;
 		//
-	}
-
-	private static int intValue(@Nullable final Number instance, final int defaultValue) {
-		return instance != null ? instance.intValue() : defaultValue;
 	}
 
 	@Nullable

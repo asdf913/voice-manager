@@ -70,7 +70,7 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 			//
 		} else if (value instanceof Number number) {
 			//
-			result = Unit.with(Integer.valueOf(intValue(number, 0)));
+			result = Unit.with(Integer.valueOf(Util.intValue(number, 0)));
 			//
 		} else if (value instanceof CharSequence cs) {
 			//
@@ -94,10 +94,6 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 			//
 		throw new IllegalStateException(Util.toString(Util.getClass(value)));
 		//
-	}
-
-	private static int intValue(@Nullable final Number instance, final int defaultValue) {
-		return instance != null ? instance.intValue() : defaultValue;
 	}
 
 	private static IValue0<Integer> getImageType(final CharSequence cs) {
@@ -151,7 +147,7 @@ public class BufferedImageTypeFactoryBean implements FactoryBean<Integer> {
 			//
 			if (obj instanceof Number number) {
 				//
-				return Unit.with(Integer.valueOf(intValue(number, 0)));
+				return Unit.with(Integer.valueOf(Util.intValue(number, 0)));
 				//
 			} // if
 				//

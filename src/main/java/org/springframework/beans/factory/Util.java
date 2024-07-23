@@ -485,6 +485,10 @@ abstract class Util {
 		return instance != null ? instance.longValue() : defaultValue;
 	}
 
+	static int intValue(final Number instance, final int defaultValue) {
+		return instance != null ? instance.intValue() : defaultValue;
+	}
+
 	static boolean isStatic(@Nullable final Member instance) {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}

@@ -149,24 +149,19 @@ public class JlptLevelListFactoryBean implements FactoryBean<List<String>> {
 	private static List<String> getObjectByUrl(final String url, final Duration timeout) throws Exception {
 		//
 		return Util
-				.toList(Util
-						.map(Util.stream(ElementUtil.select(
-								testAndApply(
-										x -> StringUtils.equalsAnyIgnoreCase(Util.getProtocol(x),
-												ProtocolUtil.getAllowProtocols()),
-										testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null),
-										x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null),
-								".thLeft[scope='col']")), ElementUtil::text));
+				.toList(Util.map(Util.stream(ElementUtil.select(
+						testAndApply(
+								x -> StringUtils.equalsAnyIgnoreCase(Util.getProtocol(x),
+										ProtocolUtil.getAllowProtocols()),
+								testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null),
+								x -> Jsoup.parse(x, Util.intValue(toMillis(timeout), 0)), null),
+						".thLeft[scope='col']")), ElementUtil::text));
 		//
 	}
 
 	@Nullable
 	private static Long toMillis(@Nullable final Duration instance) {
 		return instance != null ? Long.valueOf(instance.toMillis()) : null;
-	}
-
-	private static int intValue(@Nullable final Number instance, final int defaultValue) {
-		return instance != null ? instance.intValue() : defaultValue;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
