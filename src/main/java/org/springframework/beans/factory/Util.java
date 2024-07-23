@@ -485,7 +485,7 @@ abstract class Util {
 		return instance != null ? instance.longValue() : defaultValue;
 	}
 
-	static int intValue(final Number instance, final int defaultValue) {
+	static int intValue(@Nullable final Number instance, final int defaultValue) {
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
