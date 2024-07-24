@@ -126,13 +126,15 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 		Matcher matcher = null;
 		//
-		String tagName, text = null;
+		String tagName, text, s = null;
 		//
 		Integer end = null;
 		//
 		Multimap<String, String> multimap = null;
 		//
 		char[] cs = null;
+		//
+		int size = 0, length;
 		//
 		for (final Node node : nodes) {
 			//
@@ -160,10 +162,19 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 				//
 				while (Util.find(matcher)) {
 					//
-					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							toMultimap(cs = ObjectUtils.getIfNull(cs, () -> new char[] { '区', '\u3000' }), matcher,
-									text, end));
+					size = MultimapUtil.size(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create));
 					//
+					MultimapUtil.putAll(multimap, toMultimap(
+							cs = ObjectUtils.getIfNull(cs, () -> new char[] { '区', '\u3000' }), matcher, text, end));
+					//
+					if (size == MultimapUtil.size(multimap) && (length = StringUtils
+							.length(s = StringUtils.substring(text, end, start(matcher)))) >= 2) {
+						//
+						MultimapUtil.put(multimap, StringUtils.substring(s, length - 2, length),
+								testAndApply(x -> Util.groupCount(x) > 0, matcher, x -> Util.group(x, 1), Util::group));
+						//
+					} // if
+						//
 					end = end(matcher);
 					//
 				} // while
