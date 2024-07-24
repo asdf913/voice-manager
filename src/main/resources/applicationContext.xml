@@ -875,6 +875,11 @@
 		<property name="valueColumnIndex" value="1" />
 	</bean>
 
+	<!--https://hiramatu-hifuka.com/onyak/onyak2/tosiko01.html -->
+	<bean
+		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean">
+	</bean>
+
 	<!-- -->
 	<bean class="org.springframework.context.support.VoiceManager">
 		<property name="layout" ref="MigLayout" />
