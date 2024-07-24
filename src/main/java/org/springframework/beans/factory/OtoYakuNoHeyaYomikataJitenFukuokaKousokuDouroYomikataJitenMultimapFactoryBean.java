@@ -128,7 +128,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 		String tagName, text, s = null;
 		//
-		Integer start, end = null;
+		Integer end = null;
 		//
 		Multimap<String, String> multimap = null;
 		//
