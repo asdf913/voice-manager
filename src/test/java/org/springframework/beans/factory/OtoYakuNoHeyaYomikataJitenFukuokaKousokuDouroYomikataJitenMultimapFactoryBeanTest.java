@@ -78,14 +78,10 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 			//
 			final String methodName = Util.getName(method);
 			//
-			if (proxy instanceof Iterable) {
+			if (Boolean.logicalAnd(proxy instanceof Iterable, Objects.equals(methodName, "iterator"))) {
 				//
-				if (Objects.equals(methodName, "iterator")) {
-					//
-					return iterator;
-					//
-				} // if
-					//
+				return iterator;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
