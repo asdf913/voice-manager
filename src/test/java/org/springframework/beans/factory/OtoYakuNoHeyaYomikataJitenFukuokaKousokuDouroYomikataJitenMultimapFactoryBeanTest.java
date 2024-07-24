@@ -111,14 +111,10 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 			//
 			final String methodName = Util.getName(thisMethod);
 			//
-			if (self instanceof Node) {
+			if (self instanceof Node && Objects.equals(methodName, "nodeStream")) {
 				//
-				if (Objects.equals(methodName, "nodeStream")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
