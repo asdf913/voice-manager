@@ -167,11 +167,11 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 					MultimapUtil.putAll(multimap, toMultimap(
 							cs = ObjectUtils.getIfNull(cs, () -> new char[] { '区', '\u3000' }), matcher, text, end));
 					//
-					if (Boolean.logicalAnd(
+					if (Util.and(
 							StringUtils.countMatches(
 									s = StringUtils.substring(text, Util.intValue(end, 0), start(matcher)), '区') == 1,
-							StringUtils.countMatches(s, '\u3000') == 1)
-							&& StringUtils.indexOf(s, '区') > StringUtils.indexOf(s, '\u3000') && multimap != null) {
+							StringUtils.countMatches(s, '\u3000') == 1,
+							StringUtils.indexOf(s, '区') > StringUtils.indexOf(s, '\u3000')) && multimap != null) {
 						//
 						multimap.removeAll(StringUtils.substringAfter(s, "\u3000"));
 						//
