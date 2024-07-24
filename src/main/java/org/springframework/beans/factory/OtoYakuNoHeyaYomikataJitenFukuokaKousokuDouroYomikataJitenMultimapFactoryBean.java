@@ -165,8 +165,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 						for (final char c : cs) {
 							//
 							if (StringUtils.countMatches(
-									s = StringUtils.substring(text, Util.intValue(end, 0), start = start(matcher)),
-									c) == 1) {
+									s = StringUtils.substring(text, Util.intValue(end, 0), start(matcher)), c) == 1) {
 								//
 								MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 										StringUtils.substringAfter(s, c), testAndApply(x -> Util.groupCount(x) > 0,
