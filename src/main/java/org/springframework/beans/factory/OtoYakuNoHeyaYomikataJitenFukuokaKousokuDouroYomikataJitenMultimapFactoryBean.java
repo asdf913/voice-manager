@@ -177,7 +177,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 	}
 
 	private static Multimap<String, String> toMultimap(@Nullable final char[] cs, final Matcher matcher,
-			final String text, final Number end) {
+			final String text, @Nullable final Number end) {
 		//
 		Multimap<String, String> multimap = null;
 		//
