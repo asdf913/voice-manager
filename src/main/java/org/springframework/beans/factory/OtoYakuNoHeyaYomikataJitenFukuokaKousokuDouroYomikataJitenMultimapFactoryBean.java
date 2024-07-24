@@ -132,6 +132,8 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 		Multimap<String, String> multimap = null;
 		//
+		char[] cs = null;
+		//
 		for (final Node node : nodes) {
 			//
 			if (Objects.equals("建設中路線", Util.toString(node))) {
@@ -158,20 +160,22 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 				//
 				while (Util.find(matcher)) {
 					//
-					if (StringUtils.countMatches(
-							s = StringUtils.substring(text, Util.intValue(end, 0), start = start(matcher)), '区') == 1) {
+					if ((cs = ObjectUtils.getIfNull(cs, () -> new char[] { '区', '\u3000' })) != null) {
 						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								StringUtils.substringAfter(s, '区'),
-								testAndApply(x -> Util.groupCount(x) > 0, matcher, x -> Util.group(x, 1), Util::group));
-						//
-					} else if (StringUtils.countMatches(s = StringUtils.substring(text, Util.intValue(end, 0), start),
-							'\u3000') == 1) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								StringUtils.substringAfter(s, '\u3000'),
-								testAndApply(x -> Util.groupCount(x) > 0, matcher, x -> Util.group(x, 1), Util::group));
-						//
+						for (final char c : cs) {
+							//
+							if (StringUtils.countMatches(
+									s = StringUtils.substring(text, Util.intValue(end, 0), start = start(matcher)),
+									c) == 1) {
+								//
+								MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+										StringUtils.substringAfter(s, c), testAndApply(x -> Util.groupCount(x) > 0,
+												matcher, x -> Util.group(x, 1), Util::group));
+								//
+							} // if
+								//
+						} // for
+							//
 					} // if
 						//
 					end = end(matcher);
