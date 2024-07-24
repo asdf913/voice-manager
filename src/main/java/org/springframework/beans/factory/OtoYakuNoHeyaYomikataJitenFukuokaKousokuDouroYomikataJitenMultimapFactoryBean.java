@@ -186,7 +186,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
-	private static Integer start(final MatchResult instance) {
+	private static Integer start(@Nullable final MatchResult instance) {
 		return instance != null ? Integer.valueOf(instance.start()) : null;
 	}
 
