@@ -5,7 +5,6 @@ import java.lang.Character.UnicodeBlock;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -16,7 +15,6 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 
 import org.apache.commons.collections4.IterableUtils;
@@ -40,7 +38,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
-import com.google.errorprone.annotations.CompatibleWith;
 
 public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean
 		implements FactoryBean<Multimap<String, String>> {
