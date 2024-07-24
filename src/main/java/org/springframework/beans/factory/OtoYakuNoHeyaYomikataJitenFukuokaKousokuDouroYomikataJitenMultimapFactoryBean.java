@@ -175,8 +175,8 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 						//
 					} // if
 						//
-					if (size == MultimapUtil.size(multimap) && (length = StringUtils
-							.length(s = StringUtils.substring(text, end, start(matcher)))) >= 2) {
+					if (Boolean.logicalAnd(size == MultimapUtil.size(multimap), (length = StringUtils
+							.length(s = StringUtils.substring(text, Util.intValue(end, 0), start(matcher)))) >= 2)) {
 						//
 						MultimapUtil.put(multimap, StringUtils.substring(s, length - 2, length),
 								testAndApply(x -> Util.groupCount(x) > 0, matcher, x -> Util.group(x, 1), Util::group));
