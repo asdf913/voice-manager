@@ -43,8 +43,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP1, METHOD_TO_MULTI_MAP3,
-			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_4, METHOD_APPEND, METHOD_TO_MULTI_MAP2,
-			METHOD_LENGTH = null;
+			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_4, METHOD_APPEND, METHOD_TO_MULTI_MAP2, METHOD_LENGTH,
+			METHOD_REMOVE_ALL = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -71,6 +71,8 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 		(METHOD_TO_MULTI_MAP2 = clz.getDeclaredMethod("toMultimap2", String.class)).setAccessible(true);
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", char[].class)).setAccessible(true);
+		//
+		(METHOD_REMOVE_ALL = clz.getDeclaredMethod("removeAll", Multimap.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -459,6 +461,21 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testRemoveAll() {
+		//
+		Assertions.assertDoesNotThrow(() -> removeAll(null, null));
+		//
+	}
+
+	private static void removeAll(final Multimap<?, ?> instance, final Object key) throws Throwable {
+		try {
+			METHOD_REMOVE_ALL.invoke(null, instance, key);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -5,6 +5,7 @@ import java.lang.Character.UnicodeBlock;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -15,6 +16,7 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nullable;
 
 import org.apache.commons.collections4.IterableUtils;
@@ -38,6 +40,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
+import com.google.errorprone.annotations.CompatibleWith;
 
 public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean
 		implements FactoryBean<Multimap<String, String>> {
@@ -171,9 +174,9 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 							StringUtils.countMatches(
 									s = StringUtils.substring(text, Util.intValue(end, 0), start(matcher)), '区') == 1,
 							StringUtils.countMatches(s, '\u3000') == 1,
-							StringUtils.indexOf(s, '区') > StringUtils.indexOf(s, '\u3000')) && multimap != null) {
+							StringUtils.indexOf(s, '区') > StringUtils.indexOf(s, '\u3000'))) {
 						//
-						multimap.removeAll(StringUtils.substringAfter(s, "\u3000"));
+						removeAll(multimap, StringUtils.substringAfter(s, "\u3000"));
 						//
 					} // if
 						//
@@ -195,6 +198,12 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 			//
 		return multimap;
 		//
+	}
+
+	private static void removeAll(final Multimap<?, ?> instance, final Object key) {
+		if (instance != null) {
+			instance.removeAll(key);
+		}
 	}
 
 	@Nullable
