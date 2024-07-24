@@ -167,18 +167,15 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 					MultimapUtil.putAll(multimap, toMultimap(
 							cs = ObjectUtils.getIfNull(cs, () -> new char[] { '区', '\u3000' }), matcher, text, end));
 					//
-					if (Util.and(
-							StringUtils.countMatches(
-									s = StringUtils.substring(text, Util.intValue(end, 0), start(matcher)), '区') == 1,
-							StringUtils.countMatches(s, '\u3000') == 1,
-							StringUtils.indexOf(s, '区') > StringUtils.indexOf(s, '\u3000'))) {
-						//
-						removeAll(multimap, StringUtils.substringAfter(s, "\u3000"));
-						//
-					} // if
-						//
-					if (Boolean.logicalAnd(size == MultimapUtil.size(multimap), (length = StringUtils
-							.length(s = StringUtils.substring(text, Util.intValue(end, 0), start(matcher)))) >= 2)) {
+					testAndAccept(
+							(x, y) -> Util.and(StringUtils.countMatches(x, '区') == 1,
+									StringUtils.countMatches(x, '\u3000') == 1,
+									StringUtils.indexOf(x, '区') > StringUtils.indexOf(x, '\u3000')),
+							s = StringUtils.substring(text, Util.intValue(end, 0), start(matcher)), multimap,
+							(x, y) -> removeAll(y, StringUtils.substringAfter(x, "\u3000")));
+					//
+					if (Boolean.logicalAnd(size == MultimapUtil.size(multimap),
+							(length = StringUtils.length(s)) >= 2)) {
 						//
 						MultimapUtil.put(multimap, StringUtils.substring(s, length - 2, length),
 								testAndApply(x -> Util.groupCount(x) > 0, matcher, x -> Util.group(x, 1), Util::group));
