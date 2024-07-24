@@ -878,6 +878,7 @@
 	<!--https://hiramatu-hifuka.com/onyak/onyak2/tosiko01.html -->
 	<bean
 		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean">
+		<meta key="value" value="hiragana" />
 	</bean>
 
 	<!-- -->
