@@ -14,6 +14,7 @@ import java.util.function.Predicate;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -103,10 +104,14 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		} // for
 			//
 		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-				toMultimap(document != null ? Util.toList(document.nodeStream()) : null));
+				toMultimap(Util.toList(nodeStream(document))));
 		//
 		return multimap;
 		//
+	}
+
+	private static Stream<Node> nodeStream(final Node instance) {
+		return instance != null ? instance.nodeStream() : null;
 	}
 
 	@Nullable
