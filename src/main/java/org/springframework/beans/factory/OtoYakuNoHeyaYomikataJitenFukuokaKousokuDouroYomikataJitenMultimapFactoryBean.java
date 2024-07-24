@@ -197,7 +197,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
-	private static void removeAll(final Multimap<?, ?> instance, final Object key) {
+	private static void removeAll(@Nullable final Multimap<?, ?> instance, final Object key) {
 		if (instance != null) {
 			instance.removeAll(key);
 		}
