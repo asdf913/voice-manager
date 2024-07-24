@@ -110,6 +110,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
+	@Nullable
 	private static Stream<Node> nodeStream(@Nullable final Node instance) {
 		return instance != null ? instance.nodeStream() : null;
 	}
