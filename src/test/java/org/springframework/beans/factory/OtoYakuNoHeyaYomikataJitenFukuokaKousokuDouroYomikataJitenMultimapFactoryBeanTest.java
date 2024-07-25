@@ -1,14 +1,12 @@
 package org.springframework.beans.factory;
 
 import java.lang.Character.UnicodeBlock;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -20,10 +18,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.function.FailableFunction;
-import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.javatuples.valueintf.IValue0;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
@@ -31,7 +26,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.util.ReflectionUtils;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMultimap;
@@ -151,7 +145,8 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 		//
 		Assertions.assertEquals(multimap, instance != null ? instance.getObject() : null);
 		//
-		final Entry<Field, Object> entry = getFieldWithUrlAnnotationAndValue();
+		final Entry<Field, Object> entry = TestUtil.getFieldWithUrlAnnotationAndValue(
+				OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean.class);
 		//
 		final Field url = entry != null ? entry.getKey() : null;
 		//
@@ -171,93 +166,6 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 			//
 		} // if
 			//
-	}
-
-	private static Entry<Field, Object> getFieldWithUrlAnnotationAndValue() throws ClassNotFoundException {
-		//
-		final Class<?> clz = Class.forName("org.springframework.beans.factory.URL");
-		//
-		final List<Field> fs = FieldUtils
-				.getAllFieldsList(OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean.class);
-		//
-		Field f = null;
-		//
-		Annotation[] as = null;
-		//
-		InvocationHandler ih = null;
-		//
-		List<Field> fs2 = null;
-		//
-		int size = 0;
-		//
-		List<Method> ms = null;
-		//
-		Entry<Field, Object> entry = null;
-		//
-		for (int i = 0; fs != null && i < fs.size(); i++) {
-			//
-			if ((f = fs.get(i)) == null || (as = f != null ? f.getDeclaredAnnotations() : null) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			for (final Annotation a : as) {
-				//
-				if (a == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if ((ih = Proxy.isProxyClass(Util.getClass(a))
-						? Util.cast(InvocationHandler.class, Proxy.getInvocationHandler(a))
-						: null) != null) {
-					//
-					if ((size = IterableUtils.size(
-							fs2 = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(ih))),
-									x -> Objects.equals(Util.getType(x), Class.class))))) == 1) {
-						//
-						if (Objects.equals(clz, Narcissus.getField(ih, IterableUtils.get(fs2, 0)))) {
-							//
-							if ((size = IterableUtils.size(
-									ms = Util.toList(Util.filter(Arrays.stream(Util.getClass(a).getDeclaredMethods()),
-											x -> Objects.equals(String.class, x != null ? x.getReturnType() : null)
-													&& !ReflectionUtils.isToStringMethod(x))))) == 1) {
-								//
-								if (entry == null) {
-									//
-									entry = Pair.of(f, Narcissus.invokeObjectMethod(a, IterableUtils.get(ms, 0)));
-									//
-								} else {
-									//
-									throw new IllegalStateException();
-									//
-								} // if
-									//
-							} else if (size > 1) {
-								//
-								throw new IllegalStateException();
-								//
-							} // if
-								//
-								//
-						} // if
-							//
-					} else if (size > 1) {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-				} // if
-					//
-			} // for
-				//
-		} // for
-			//
-		return entry;
-		//
 	}
 
 	@Test
