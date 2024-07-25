@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.swing.JList;
@@ -168,12 +169,28 @@ public class Main {
 						//
 					} // if
 						//
+					if (noneMatch(
+							testAndApply(Objects::nonNull, getMethods(Util.getDeclaringClass(f)), Arrays::stream, null),
+							m -> Objects.equals("set" + StringUtils.capitalize(Util.getName(f)), Util.getName(m)))) {
+						//
+						continue;
+						//
+					} // if
+						//
 					addMutablePropertyValues(beanDefinitionNames, f, beanFactory, a);
 					//
 				} // if
 					//
 			} // for
 				//
+		}
+
+		private static <T> boolean noneMatch(final Stream<T> instance, final Predicate<? super T> predicate) {
+			return instance == null || instance.noneMatch(predicate);
+		}
+
+		private static Method[] getMethods(final Class<?> instance) {
+			return instance != null ? instance.getMethods() : null;
 		}
 
 		private static void addMutablePropertyValues(@Nullable final String[] beanDefinitionNames,
