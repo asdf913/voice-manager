@@ -9,6 +9,8 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 
@@ -49,6 +51,10 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		Multimap<String, String> multimap = null;
 		//
+		Pattern pattern = null;
+		//
+		Matcher matcher = null;
+		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
 			if ((e = es.get(i)) == null) {
@@ -65,6 +71,13 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 						getUnicodeBlocks(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))))) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s2);
+					//
+				} else if (Util.matches(matcher = Util.matcher(
+						pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("^(\\p{InHiragana}+).+")), s2))
+						&& Util.groupCount(matcher) > 0) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+							Util.group(matcher, 1));
 					//
 				} // if
 					//
