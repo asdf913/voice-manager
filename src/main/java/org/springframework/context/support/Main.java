@@ -186,7 +186,7 @@ public class Main {
 				//
 		}
 
-		private static <T> boolean noneMatch(final Stream<T> instance, final Predicate<? super T> predicate) {
+		private static <T> boolean noneMatch(@Nullable final Stream<T> instance, final Predicate<? super T> predicate) {
 			return instance == null || instance.noneMatch(predicate);
 		}
 
