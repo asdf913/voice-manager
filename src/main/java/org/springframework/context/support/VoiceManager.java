@@ -9529,7 +9529,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final String attribute = attributes[i];
 			//
 			if ((methods = Util.toList(Util.filter(
-					testAndApply(Objects::nonNull, ms = getIfNull(ms, () -> getMethods(Util.getClass(id3v1))),
+					testAndApply(Objects::nonNull, ms = getIfNull(ms, () -> Util.getMethods(Util.getClass(id3v1))),
 							Arrays::stream, null),
 					a -> matches(matcher(Pattern.compile(String.format("get%1$s", StringUtils.capitalize(attribute))),
 							Util.getName(a)))))) == null
@@ -13891,11 +13891,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static <T> Optional<T> findFirst(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.findFirst() : null;
-	}
-
-	@Nullable
-	private static Method[] getMethods(@Nullable final Class<?> instance) {
-		return instance != null ? instance.getMethods() : null;
 	}
 
 	@Nullable
