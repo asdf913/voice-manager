@@ -1202,6 +1202,7 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	static Method[] getMethods(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getMethods() : null;
 	}
