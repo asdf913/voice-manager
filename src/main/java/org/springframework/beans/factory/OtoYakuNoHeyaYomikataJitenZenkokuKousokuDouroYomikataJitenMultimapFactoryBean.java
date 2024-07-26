@@ -138,11 +138,11 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		final List<TextNode> textNodes = Util.toList(Util
 				.filter(Util.map(NodeUtil.nodeStream(document), x -> Util.cast(TextNode.class, x)), Objects::nonNull));
 		//
-		for (int i = 0; textNodes != null && i < textNodes.size(); i++) {
+		for (int i = 0; i < IterableUtils.size(textNodes); i++) {
 			//
 			if (Util.matches(matcher = Util.matcher(
 					p4 = ObjectUtils.getIfNull(p4, () -> Pattern.compile("^（(\\p{InHIRAGANA}+)）$")),
-					TextNodeUtil.text(textNodes.get(i)))) && Util.groupCount(matcher) > 0 && i > 0
+					TextNodeUtil.text(IterableUtils.get(textNodes, i)))) && Util.groupCount(matcher) > 0 && i > 0
 					&& Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 							getUnicodeBlocks(s1 = TextNodeUtil.text(textNodes.get(i - 1))))) {
 				//
