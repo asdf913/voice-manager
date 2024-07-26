@@ -144,6 +144,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap(final Iterable<TextNode> textNodes, final Pattern pattern) {
 		//
 		Matcher matcher = null;
