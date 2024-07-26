@@ -140,10 +140,11 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		for (int i = 0; i < IterableUtils.size(textNodes); i++) {
 			//
-			if (Util.matches(matcher = Util.matcher(
-					p4 = ObjectUtils.getIfNull(p4, () -> Pattern.compile("^（(\\p{InHIRAGANA}+)）$")),
-					TextNodeUtil.text(IterableUtils.get(textNodes, i)))) && Util.groupCount(matcher) > 0 && i > 0
-					&& Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+			if (Boolean
+					.logicalAnd(Util.matches(matcher = Util.matcher(
+							p4 = ObjectUtils.getIfNull(p4, () -> Pattern.compile("^（(\\p{InHIRAGANA}+)）$")),
+							TextNodeUtil.text(IterableUtils.get(textNodes, i)))), Util.groupCount(matcher) > 0)
+					&& i > 0 && Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 							getUnicodeBlocks(s1 = TextNodeUtil.text(textNodes.get(i - 1))))) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
