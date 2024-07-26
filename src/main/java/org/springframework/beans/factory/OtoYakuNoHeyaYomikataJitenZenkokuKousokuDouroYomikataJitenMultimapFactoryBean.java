@@ -79,10 +79,10 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				//
 			} // if
 				//
-			nextElementSiblings = e.nextElementSiblings();
-			//
-			if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-					getUnicodeBlocks(s1 = ElementUtil.text(e))) && IterableUtils.size(nextElementSiblings) > 1) {
+			if (Boolean.logicalAnd(
+					Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+							getUnicodeBlocks(s1 = ElementUtil.text(e))),
+					IterableUtils.size(nextElementSiblings = e.nextElementSiblings()) > 1)) {
 				//
 				if (Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
 						getUnicodeBlocks(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))))) {
