@@ -419,11 +419,11 @@ class NodeUtilTest {
 				if (isAssignableFrom(Node.class, Class.forName(name = HasNameUtil.getName(classInfo)))
 						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
 					//
-					final Node node = cast(Node.class, Narcissus.allocateInstance(clz));
+					final Node n = cast(Node.class, Narcissus.allocateInstance(clz));
 					//
 					System.out.println(name);
 					//
-					Assertions.assertDoesNotThrow(() -> NodeUtil.nodeStream(node), name);
+					Assertions.assertDoesNotThrow(() -> NodeUtil.nodeStream(n), name);
 					//
 				} // if
 					//
