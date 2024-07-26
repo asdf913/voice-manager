@@ -13313,8 +13313,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						testAndApply(Objects::nonNull, FieldUtils.getAllFields(LocaleID.class), Arrays::stream, null),
 						x -> x != null && !Objects.equals(Util.getType(x), Util.getDeclaringClass(x))
 								&& !x.isSynthetic() && !isStatic(x)),
-						(a, b) -> StringUtils.compare(getName(getPackage(Util.getDeclaringClass(a))),
-								getName(getPackage(Util.getDeclaringClass(b))))));
+						(a, b) -> StringUtils.compare(Util.getName(getPackage(Util.getDeclaringClass(a))),
+								Util.getName(getPackage(Util.getDeclaringClass(b))))));
 				//
 			} // if
 				//
@@ -13881,11 +13881,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static Class<? extends Annotation> annotationType(@Nullable final Annotation instance) {
 		return instance != null ? instance.annotationType() : null;
-	}
-
-	@Nullable
-	private static String getName(@Nullable final Package instance) {
-		return instance != null ? instance.getName() : null;
 	}
 
 	@Nullable

@@ -219,7 +219,7 @@ public class Main {
 			if (classUrl != null && classUrl.getModifiers() == 9728) {
 				//
 				if ((classInfos = ScanResultUtil.getAllClasses(ClassGraphUtil
-						.scan(new ClassGraph().acceptPackages(getName(classUrl.getPackage()))))) != null) {
+						.scan(new ClassGraph().acceptPackages(Util.getName(classUrl.getPackage()))))) != null) {
 					//
 					classInfos.removeIf(x -> getModuleInfo(x) != null);
 					//
@@ -258,11 +258,6 @@ public class Main {
 		@Nullable
 		private static ModuleInfo getModuleInfo(@Nullable final ClassInfo instance) {
 			return instance != null ? instance.getModuleInfo() : null;
-		}
-
-		@Nullable
-		private static String getName(@Nullable final Package instance) {
-			return instance != null ? instance.getName() : null;
 		}
 
 		@Nullable
