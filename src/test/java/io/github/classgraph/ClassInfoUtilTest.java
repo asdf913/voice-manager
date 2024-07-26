@@ -33,6 +33,7 @@ import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.Type;
+import org.apache.bcel.generic.TypeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -44,9 +45,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class ClassInfoUtilTest {
 
-	private static Method METHOD_GET_CLASS_NAME_JAVA_CLASS, METHOD_GET_CLASS, METHOD_GET_CLASS_NAME_TYPE,
-			METHOD_FOR_NAME, METHOD_REMOVE_IF, METHOD_TEST_AND_APPLY, METHOD_CAST, METHOD_GET_FIELDS, METHOD_LENGTH,
-			METHOD_GET_TYPE = null;
+	private static Method METHOD_GET_CLASS_NAME_JAVA_CLASS, METHOD_GET_CLASS, METHOD_FOR_NAME, METHOD_REMOVE_IF,
+			METHOD_TEST_AND_APPLY, METHOD_CAST, METHOD_GET_FIELDS, METHOD_LENGTH, METHOD_GET_TYPE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -56,8 +56,6 @@ class ClassInfoUtilTest {
 		(METHOD_GET_CLASS_NAME_JAVA_CLASS = clz.getDeclaredMethod("getClassName", JavaClass.class)).setAccessible(true);
 		//
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
-		//
-		(METHOD_GET_CLASS_NAME_TYPE = clz.getDeclaredMethod("getClassName", Type.class)).setAccessible(true);
 		//
 		(METHOD_FOR_NAME = clz.getDeclaredMethod("forName", String.class)).setAccessible(true);
 		//
@@ -219,15 +217,16 @@ class ClassInfoUtilTest {
 					final Type argumentType0 = argumentTypes.length > 0 ? argumentTypes[0] : null;
 					//
 					if (argumentTypes.length == 1 && method.isStatic() && !method.isSynthetic()
-							&& !StringUtils.startsWith(getClassName(argumentType0), "[")) {
+							&& !StringUtils.startsWith(TypeUtil.getClassName(argumentType0), "[")) {
 						//
 						Assertions.assertDoesNotThrow(() -> Narcissus.invokeStaticMethod(Narcissus.findMethod(clz,
-								FieldOrMethodUtil.getName(m), forName(getClassName(argumentType0))), (Object) null));
+								FieldOrMethodUtil.getName(m), forName(TypeUtil.getClassName(argumentType0))),
+								(Object) null));
 						//
-						if (Objects.equals("java.lang.Object", getClassName(argumentType0))) {
+						if (Objects.equals("java.lang.Object", TypeUtil.getClassName(argumentType0))) {
 							//
 							Assertions.assertDoesNotThrow(() -> Narcissus.invokeStaticMethod(Narcissus.findMethod(clz,
-									FieldOrMethodUtil.getName(m), forName(getClassName(argumentType0))), ""));
+									FieldOrMethodUtil.getName(m), forName(TypeUtil.getClassName(argumentType0))), ""));
 							//
 						} // if
 							//
@@ -235,10 +234,9 @@ class ClassInfoUtilTest {
 						//
 						final Type argumentType1 = argumentTypes[1];
 						//
-						Assertions.assertDoesNotThrow(() -> Narcissus.invokeStaticMethod(
-								Narcissus.findMethod(clz, FieldOrMethodUtil.getName(m),
-										forName(getClassName(argumentType0)), forName(getClassName(argumentType1))),
-								null, null));
+						Assertions.assertDoesNotThrow(() -> Narcissus.invokeStaticMethod(Narcissus.findMethod(clz,
+								FieldOrMethodUtil.getName(m), forName(TypeUtil.getClassName(argumentType0)),
+								forName(TypeUtil.getClassName(argumentType1))), null, null));
 						//
 					} // if
 						//
@@ -278,20 +276,6 @@ class ClassInfoUtilTest {
 				return null;
 			} else if (obj instanceof Class) {
 				return (Class<?>) obj;
-			}
-			throw new Throwable(Objects.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static String getClassName(final Type instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CLASS_NAME_TYPE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
 			}
 			throw new Throwable(Objects.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

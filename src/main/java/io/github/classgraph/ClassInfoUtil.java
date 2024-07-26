@@ -15,6 +15,7 @@ import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.generic.ArrayType;
 import org.apache.bcel.generic.BasicType;
 import org.apache.bcel.generic.Type;
+import org.apache.bcel.generic.TypeUtil;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.javatuples.Unit;
@@ -136,7 +137,7 @@ public final class ClassInfoUtil {
 				//
 			} // if
 				//
-			if (forName(getClassName(basicType)) == null) {
+			if (forName(TypeUtil.getClassName(basicType)) == null) {
 				//
 				return ContinueOrFalse.FALSE;
 				//
@@ -144,7 +145,7 @@ public final class ClassInfoUtil {
 				//
 		} else {
 			//
-			if (forName(getClassName(type)) == null) {
+			if (forName(TypeUtil.getClassName(type)) == null) {
 				//
 				return ContinueOrFalse.FALSE;
 				//
@@ -190,10 +191,6 @@ public final class ClassInfoUtil {
 			//
 		} // try
 			//
-	}
-
-	private static String getClassName(final Type instance) {
-		return instance != null ? instance.getClassName() : null;
 	}
 
 	private static Class<?> forName(final String className) {

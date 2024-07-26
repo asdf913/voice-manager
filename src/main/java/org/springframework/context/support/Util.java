@@ -53,6 +53,7 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.ReferenceType;
 import org.apache.bcel.generic.Type;
+import org.apache.bcel.generic.TypeUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -981,7 +982,8 @@ public abstract class Util {
 				//
 				final ConstantPoolGen cpg = new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(m));
 				//
-				if (Objects.equals(getClassName(getReferenceType(invokeStatic, cpg)), "java.util.stream.Stream")
+				if (Objects.equals(TypeUtil.getClassName(getReferenceType(invokeStatic, cpg)),
+						"java.util.stream.Stream")
 						&& Objects.equals(getMethodName(invokeStatic, cpg), "of")
 						&& Objects.equals(
 								collect(Util.map(Arrays.stream(getArgumentTypes(invokeStatic, cpg)), Util::toString),
@@ -1065,11 +1067,6 @@ public abstract class Util {
 			//
 		return cpg != null ? instance.getReferenceType(cpg) : null;
 		//
-	}
-
-	@Nullable
-	private static String getClassName(@Nullable final Type instance) {
-		return instance != null ? instance.getClassName() : null;
 	}
 
 	@Nullable
