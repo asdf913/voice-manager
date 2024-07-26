@@ -446,7 +446,15 @@ class NodeUtilTest {
 		//
 		Method m = null;
 		//
+		int parameterCount = 0;
+		//
 		boolean isStatic = false;
+		//
+		Object result = null;
+		//
+		String toString = null;
+		//
+		Class<?> returnType = null;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
@@ -458,14 +466,42 @@ class NodeUtilTest {
 				//
 			isStatic = Modifier.isStatic(m.getModifiers());
 			//
-			if (m.getParameterCount() == 1 && isStatic) {
+			toString = Objects.toString(m);
+			//
+			returnType = m.getReturnType();
+			//
+			if ((parameterCount = m.getParameterCount()) == 1 && isStatic) {
 				//
-				Narcissus.invokeStaticMethod(m, (Object) null);
+				result = Narcissus.invokeStaticMethod(m, (Object) null);
 				//
-			} else if (m.getParameterCount() == 2 && isStatic) {
+				if (Objects.equals(Integer.TYPE, returnType)) {
+					//
+					Assertions.assertEquals(Integer.valueOf(0), result, toString);
+					//
+				} else if (Objects.equals(Boolean.TYPE, returnType)) {
+					//
+					Assertions.assertEquals(Boolean.FALSE, result, toString);
+					//
+				} else {
+					//
+					Assertions.assertNull(result, toString);
+					//
+				} // if
+					//
+			} else if (parameterCount == 2 && isStatic) {
 				//
-				Narcissus.invokeStaticMethod(m, null, null);
+				result = Narcissus.invokeStaticMethod(m, null, null);
 				//
+				if (Objects.equals(Boolean.TYPE, returnType)) {
+					//
+					Assertions.assertEquals(Boolean.FALSE, result, toString);
+					//
+				} else {
+					//
+					Assertions.assertNull(result, toString);
+					//
+				} // if
+					//
 			} // if
 				//
 		} // for
