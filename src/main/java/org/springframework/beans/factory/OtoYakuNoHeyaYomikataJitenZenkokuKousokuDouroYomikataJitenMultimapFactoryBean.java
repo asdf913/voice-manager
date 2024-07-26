@@ -68,7 +68,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		Multimap<String, String> multimap = null;
 		//
-		Pattern p1 = null, p2 = null, p3 = null, p4 = null;
+		Pattern p1 = null, p2 = null, p3 = null;
 		//
 		Matcher matcher = null;
 		//
@@ -135,16 +135,29 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				//
 		} // for
 			//
-		final List<TextNode> textNodes = Util.toList(Util
-				.filter(Util.map(NodeUtil.nodeStream(document), x -> Util.cast(TextNode.class, x)), Objects::nonNull));
+		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+				toMultimap(Util.toList(Util.filter(
+						Util.map(NodeUtil.nodeStream(document), x -> Util.cast(TextNode.class, x)), Objects::nonNull)),
+						Pattern.compile("^（(\\p{InHIRAGANA}+)）$")));
+		//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final Iterable<TextNode> textNodes, final Pattern pattern) {
+		//
+		Matcher matcher = null;
+		//
+		String s1 = null;
+		//
+		Multimap<String, String> multimap = null;
 		//
 		for (int i = 0; i < IterableUtils.size(textNodes); i++) {
 			//
-			if (and(Util.matches(matcher = Util.matcher(
-					p4 = ObjectUtils.getIfNull(p4, () -> Pattern.compile("^（(\\p{InHIRAGANA}+)）$")),
-					TextNodeUtil.text(IterableUtils.get(textNodes, i)))), Util.groupCount(matcher) > 0, i > 0)
+			if (and(Util.matches(matcher = Util.matcher(pattern, TextNodeUtil.text(IterableUtils.get(textNodes, i)))),
+					Util.groupCount(matcher) > 0, i > 0)
 					&& Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-							getUnicodeBlocks(s1 = TextNodeUtil.text(textNodes.get(i - 1))))) {
+							getUnicodeBlocks(s1 = TextNodeUtil.text(IterableUtils.get(textNodes, i - 1))))) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
 						Util.group(matcher, 1));

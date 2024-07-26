@@ -4,25 +4,31 @@ import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.jsoup.nodes.TextNode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_AND = null;
+	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_AND, METHOD_TO_MULTI_MAP = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -35,6 +41,8 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", Iterable.class, Pattern.class)).setAccessible(true);
 		//
 	}
 
@@ -62,7 +70,9 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(instance != null ? instance.getObject() : null);
+		final Multimap<?, ?> multimap = ImmutableMultimap.of();
+		//
+		Assertions.assertEquals(multimap, instance != null ? instance.getObject() : null);
 		//
 		final Entry<Field, Object> entry = TestUtil.getFieldWithUrlAnnotationAndValue(
 				OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBean.class);
@@ -71,11 +81,11 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 		//
 		Narcissus.setField(instance, url, "");
 		//
-		Assertions.assertNull(instance != null ? instance.getObject() : null);
+		Assertions.assertEquals(multimap, instance != null ? instance.getObject() : null);
 		//
 		Narcissus.setField(instance, url, " ");
 		//
-		Assertions.assertNull(instance != null ? instance.getObject() : null);
+		Assertions.assertEquals(multimap, instance != null ? instance.getObject() : null);
 		//
 		if (isSystemPropertiesContainsTestGetObject) {
 			//
@@ -161,6 +171,44 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 			final Object obj = METHOD_AND.invoke(null, a, b, bs);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToMultimap() throws Throwable {
+		//
+		Assertions.assertNull(toMultimap(Collections.singleton(null), null));
+		//
+		final Pattern pattern = Pattern.compile("^（(\\p{InHIRAGANA}+)）$");
+		//
+		final TextNode textNode = new TextNode("（さっそんじどうしゃどう）");
+		//
+		Assertions.assertNull(toMultimap(Arrays.asList(new TextNode(""), textNode), pattern));
+		//
+		if (!isSystemPropertiesContainsTestGetObject) {
+			//
+			Assertions.assertNull(toMultimap(Collections.singleton(textNode), pattern));
+			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("札樽自動車道", "さっそんじどうしゃどう")),
+					MultimapUtil.entries(toMultimap(Arrays.asList(new TextNode("札樽自動車道"), textNode), pattern))));
+			//
+		} // if
+			//
+	}
+
+	private static Multimap<String, String> toMultimap(final Iterable<TextNode> textNodes, final Pattern pattern)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, textNodes, pattern);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
