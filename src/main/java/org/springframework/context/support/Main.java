@@ -157,22 +157,16 @@ public class Main {
 						//
 					} // if
 						//
-					if (!Objects.equals(
-							Util.getName(
-									Util.cast(Class.class,
-											Narcissus.getField(Proxy.getInvocationHandler(a),
-													testAndApply(x -> IterableUtils.size(x) == 1, fields,
-															x -> IterableUtils.get(x, 0), null)))),
-							Util.getName(clz))) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (noneMatch(
-							testAndApply(Objects::nonNull, Util.getMethods(Util.getDeclaringClass(f)), Arrays::stream,
-									null),
-							m -> Objects.equals("set" + StringUtils.capitalize(Util.getName(f)), Util.getName(m)))) {
+					if (!Objects.equals(Util.getName(Util.cast(Class.class,
+							Narcissus.getField(Proxy.getInvocationHandler(a),
+									testAndApply(x -> IterableUtils.size(x) == 1, fields, x -> IterableUtils.get(x, 0),
+											null)))),
+							Util.getName(clz))
+							|| noneMatch(
+									testAndApply(Objects::nonNull, Util.getMethods(Util.getDeclaringClass(f)),
+											Arrays::stream, null),
+									m -> Objects.equals("set" + StringUtils.capitalize(Util.getName(f)),
+											Util.getName(m)))) {
 						//
 						continue;
 						//
