@@ -99,9 +99,10 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 					//
 				} // if
 					//
-			} else if (Util.matches(matcher = Util.matcher(p2 = ObjectUtils.getIfNull(p2, () -> Pattern.compile(
-					"^\\p{InCJKUnifiedIdeographs}+\\s?（(\\p{InCJKUnifiedIdeographs}+)）\\s?（(\\p{InHiragana}+)）$")), s1))
-					&& Util.groupCount(matcher) > 1) {
+			} else if (Boolean.logicalAnd(Util.matches(matcher = Util.matcher(
+					p2 = ObjectUtils.getIfNull(p2, () -> Pattern.compile(
+							"^\\p{InCJKUnifiedIdeographs}+\\s?（(\\p{InCJKUnifiedIdeographs}+)）\\s?（(\\p{InHiragana}+)）$")),
+					s1)), Util.groupCount(matcher) > 1)) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(matcher, 1), Util.group(matcher, 2));
