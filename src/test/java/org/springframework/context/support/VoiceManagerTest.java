@@ -378,9 +378,9 @@ class VoiceManagerTest {
 			METHOD_GET_VALUE_COLLECTION_BY_KEY, METHOD_CREATE_YOMI_NAME_MAP0, METHOD_CREATE_YOMI_NAME_MAP1,
 			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_ADD_SPEED_BUTTONS,
 			METHOD_SET_MAJOR_TICK_SPACING, METHOD_SET_PAINT_TICKS, METHOD_SET_PAINT_LABELS, METHOD_SORTED,
-			METHOD_DISTINCT, METHOD_GET_ID3V1_TAG, METHOD_GET_ID3V2_TAG, METHOD_ADD_VALIDATION_DATA,
-			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG,
-			METHOD_OPEN_STREAM, METHOD_ACTION_PERFORMED_FOR_IMPORT_FILE_TEMPLATE, METHOD_SUBMIT, METHOD_OPEN_CONNECTION,
+			METHOD_GET_ID3V1_TAG, METHOD_GET_ID3V2_TAG, METHOD_ADD_VALIDATION_DATA, METHOD_CREATE_IMPORT_RESULT_PANEL,
+			METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG, METHOD_OPEN_STREAM,
+			METHOD_ACTION_PERFORMED_FOR_IMPORT_FILE_TEMPLATE, METHOD_SUBMIT, METHOD_OPEN_CONNECTION,
 			METHOD_FORMAT_HEX = null;
 
 	@BeforeAll
@@ -1081,8 +1081,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_SORTED = clz.getDeclaredMethod("sorted", Stream.class, Comparator.class)).setAccessible(true);
-		//
-		(METHOD_DISTINCT = clz.getDeclaredMethod("distinct", Stream.class)).setAccessible(true);
 		//
 		(METHOD_GET_ID3V1_TAG = clz.getDeclaredMethod("getId3v1Tag", Mp3File.class)).setAccessible(true);
 		//
@@ -10177,29 +10175,6 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			final Object obj = METHOD_SORTED.invoke(null, instance, comparator);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testDistinct() throws Throwable {
-		//
-		Assertions.assertNull(distinct(null));
-		//
-		Assertions.assertSame(stream, distinct(stream));
-		//
-	}
-
-	private static <T> Stream<T> distinct(final Stream<T> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_DISTINCT.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Stream) {

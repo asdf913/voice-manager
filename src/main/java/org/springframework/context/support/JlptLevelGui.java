@@ -521,7 +521,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				setSelectedIndices(jlJlptLevel, new int[] {});
 				//
 				testAndAccept(x -> IterableUtils.size(x) == 1,
-						Util.toList(distinct(Util.map(Util.stream(temp), JlptLevelGui::getLevel))), x -> {
+						Util.toList(Util.distinct(Util.map(Util.stream(temp), JlptLevelGui::getLevel))), x -> {
 							//
 							if (instance != null) {
 								//
@@ -548,11 +548,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static <T> Stream<T> distinct(@Nullable final Stream<T> instance) {
-		return instance != null ? instance.distinct() : null;
 	}
 
 	private static void removeElementAt(@Nullable final MutableComboBoxModel<?> instnace, final int index) {

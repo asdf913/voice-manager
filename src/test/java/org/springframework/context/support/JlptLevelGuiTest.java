@@ -99,7 +99,7 @@ class JlptLevelGuiTest {
 			METHOD_INVOKE, METHOD_IIF, METHOD_GET_PARAMETER_TYPES, METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL,
 			METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM, METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES,
-			METHOD_TO_URI, METHOD_REMOVE_ELEMENT_AT, METHOD_DISTINCT, METHOD_MAX = null;
+			METHOD_TO_URI, METHOD_REMOVE_ELEMENT_AT, METHOD_MAX = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -163,8 +163,6 @@ class JlptLevelGuiTest {
 		//
 		(METHOD_REMOVE_ELEMENT_AT = clz.getDeclaredMethod("removeElementAt", MutableComboBoxModel.class, Integer.TYPE))
 				.setAccessible(true);
-		//
-		(METHOD_DISTINCT = clz.getDeclaredMethod("distinct", Stream.class)).setAccessible(true);
 		//
 		(METHOD_MAX = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
 		//
@@ -1130,29 +1128,6 @@ class JlptLevelGuiTest {
 	private static void removeElementAt(final MutableComboBoxModel<?> instnace, final int index) throws Throwable {
 		try {
 			METHOD_REMOVE_ELEMENT_AT.invoke(null, instnace, index);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testDistinct() throws Throwable {
-		//
-		Assertions.assertNull(distinct(null));
-		//
-		Assertions.assertNotNull(distinct(Stream.empty()));
-		//
-	}
-
-	private static <T> Stream<T> distinct(final Stream<T> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_DISTINCT.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

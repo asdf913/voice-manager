@@ -1019,6 +1019,10 @@ public abstract class Util {
 		//
 	}
 
+	static <T> Stream<T> distinct(final Stream<T> instance) {
+		return instance != null ? instance.distinct() : null;
+	}
+
 	@Nullable
 	private static ReferenceType getReferenceType(@Nullable final FieldOrMethod instance,
 			@Nullable final ConstantPoolGen cpg) {
