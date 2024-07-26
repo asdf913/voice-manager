@@ -54,6 +54,12 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			//
 		} // if
 			//
+		return toMultimap(url);
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final String url) throws Exception {
+		//
 		final Document document = testAndApply(Objects::nonNull,
 				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
 				null);
