@@ -65,9 +65,11 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		Multimap<String, String> multimap = null;
 		//
-		Pattern p1 = null, p2 = null;
+		Pattern p1 = null, p2 = null, p3 = null;
 		//
 		Matcher matcher = null;
+		//
+		StringBuilder sb = null;
 		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
@@ -77,9 +79,10 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				//
 			} // if
 				//
+			nextElementSiblings = e.nextElementSiblings();
+			//
 			if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-					getUnicodeBlocks(s1 = ElementUtil.text(e)))
-					&& IterableUtils.size(nextElementSiblings = e.nextElementSiblings()) > 1) {
+					getUnicodeBlocks(s1 = ElementUtil.text(e))) && IterableUtils.size(nextElementSiblings) > 1) {
 				//
 				if (Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
 						getUnicodeBlocks(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))))) {
@@ -102,6 +105,27 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(matcher, 1), Util.group(matcher, 2));
+				//
+			} else if (Util
+					.matches(
+							matcher = Util
+									.matcher(
+											p3 = ObjectUtils.getIfNull(p3,
+													() -> Pattern.compile(
+															"^(\\p{InCJKUnifiedIdeographs}+)([\\p{InKatakana}\\s]+)$")),
+											s1))
+					&& Util.groupCount(matcher) > 1 && IterableUtils.size(nextElementSiblings) > 1) {
+				//
+				sb = new StringBuilder(ElementUtil.text(IterableUtils.get(nextElementSiblings, 1)));
+				//
+				for (int j = 0; j < StringUtils.length(Util.group(matcher, 2)); j++) {
+					//
+					sb.deleteCharAt(StringUtils.length(sb) - 1);
+					//
+				} // for
+					//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, 1), Objects.toString(sb));
 				//
 			} // if
 				//
