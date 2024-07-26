@@ -1019,6 +1019,7 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	static <T> Stream<T> distinct(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.distinct() : null;
 	}
