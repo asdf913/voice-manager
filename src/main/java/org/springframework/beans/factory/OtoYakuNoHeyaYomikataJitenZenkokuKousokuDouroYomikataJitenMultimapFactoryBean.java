@@ -89,10 +89,10 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s2);
 					//
-				} else if (Util
-						.matches(matcher = Util.matcher(
-								p1 = ObjectUtils.getIfNull(p1, () -> Pattern.compile("^(\\p{InHiragana}+).+")), s2))
-						&& Util.groupCount(matcher) > 0) {
+				} else if (Boolean.logicalAnd(
+						Util.matches(matcher = Util.matcher(
+								p1 = ObjectUtils.getIfNull(p1, () -> Pattern.compile("^(\\p{InHiragana}+).+")), s2)),
+						Util.groupCount(matcher) > 0)) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
 							Util.group(matcher, 1));
