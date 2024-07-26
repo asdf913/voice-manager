@@ -71,9 +71,9 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		StringBuilder sb = null;
 		//
-		for (int i = 0; es != null && i < es.size(); i++) {
+		for (int i = 0; i < IterableUtils.size(es); i++) {
 			//
-			if ((e = es.get(i)) == null) {
+			if ((e = IterableUtils.get(es, i)) == null) {
 				//
 				continue;
 				//
