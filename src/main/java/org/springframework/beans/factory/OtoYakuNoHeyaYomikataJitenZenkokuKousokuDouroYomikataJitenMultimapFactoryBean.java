@@ -11,6 +11,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -25,6 +26,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.nodes.TextNodeUtil;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
@@ -65,7 +69,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		Multimap<String, String> multimap = null;
 		//
-		Pattern p1 = null, p2 = null, p3 = null;
+		Pattern p1 = null, p2 = null, p3 = null, p4 = null;
 		//
 		Matcher matcher = null;
 		//
@@ -132,8 +136,30 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				//
 		} // for
 			//
+		final List<TextNode> textNodes = Util.toList(
+				Util.filter(Util.map(nodeStream(document), x -> Util.cast(TextNode.class, x)), Objects::nonNull));
+		//
+		for (int i = 0; textNodes != null && i < textNodes.size(); i++) {
+			//
+			if (Util.matches(matcher = Util.matcher(
+					p4 = ObjectUtils.getIfNull(p4, () -> Pattern.compile("^（(\\p{InHIRAGANA}+)）$")),
+					TextNodeUtil.text(textNodes.get(i)))) && Util.groupCount(matcher) > 0 && i > 0
+					&& Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+							getUnicodeBlocks(s1 = TextNodeUtil.text(textNodes.get(i - 1))))) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+						Util.group(matcher, 1));
+				//
+			} // if
+				//
+		} // for
+			//
 		return multimap;
 		//
+	}
+
+	private static Stream<Node> nodeStream(final Node instance) {
+		return instance != null ? instance.nodeStream() : null;
 	}
 
 	private static boolean and(final boolean a, final boolean b, @Nullable final boolean... bs) {
