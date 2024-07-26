@@ -107,15 +107,16 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(matcher, 1), Util.group(matcher, 2));
 				//
-			} else if (Util
-					.matches(
-							matcher = Util
-									.matcher(
+			} else if (Boolean
+					.logicalAnd(
+							Util.matches(
+									matcher = Util.matcher(
 											p3 = ObjectUtils.getIfNull(p3,
 													() -> Pattern.compile(
 															"^(\\p{InCJKUnifiedIdeographs}+)([\\p{InKatakana}\\s]+)$")),
-											s1))
-					&& Util.groupCount(matcher) > 1 && IterableUtils.size(nextElementSiblings) > 1) {
+											s1)),
+							Util.groupCount(matcher) > 1)
+					&& IterableUtils.size(nextElementSiblings) > 1) {
 				//
 				sb = new StringBuilder(ElementUtil.text(IterableUtils.get(nextElementSiblings, 1)));
 				//
