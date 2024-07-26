@@ -446,6 +446,8 @@ class NodeUtilTest {
 		//
 		Method m = null;
 		//
+		boolean isStatic = false;
+		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ms[i]) == null) {
@@ -454,22 +456,16 @@ class NodeUtilTest {
 				//
 			} // if
 				//
-			if (m.getParameterCount() == 1) {
+			isStatic = Modifier.isStatic(m.getModifiers());
+			//
+			if (m.getParameterCount() == 1 && isStatic) {
 				//
-				if (Modifier.isStatic(m.getModifiers())) {
-					//
-					Narcissus.invokeStaticMethod(m, (Object) null);
-					//
-				} // if
-					//
-			} else if (m.getParameterCount() == 2) {
+				Narcissus.invokeStaticMethod(m, (Object) null);
 				//
-				if (Modifier.isStatic(m.getModifiers())) {
-					//
-					Narcissus.invokeStaticMethod(m, null, null);
-					//
-				} // if
-					//
+			} else if (m.getParameterCount() == 2 && isStatic) {
+				//
+				Narcissus.invokeStaticMethod(m, null, null);
+				//
 			} // if
 				//
 		} // for
