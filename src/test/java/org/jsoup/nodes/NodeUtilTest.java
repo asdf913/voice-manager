@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import com.google.common.reflect.Reflection;
 
 import io.github.classgraph.ClassInfo;
@@ -388,6 +389,91 @@ class NodeUtilTest {
 			//
 		return (T) cast(clz, instance);
 		//
+	}
+
+	@Test
+	void testNodeStream() throws Throwable {
+		//
+		final List<ClassInfo> classInfos = ClassInfoUtil.getClassInfos();
+		//
+		if (classInfos == null || classInfos.iterator() == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		String name = null;
+		//
+		Class<?> clz = null;
+		//
+		for (final ClassInfo classInfo : classInfos) {
+			//
+			if (classInfo == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			try {
+				//
+				if (isAssignableFrom(Node.class, Class.forName(name = HasNameUtil.getName(classInfo)))
+						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
+					//
+					final Node node = cast(Node.class, Narcissus.allocateInstance(clz));
+					//
+					System.out.println(name);
+					//
+					Assertions.assertDoesNotThrow(() -> NodeUtil.nodeStream(node), name);
+					//
+				} // if
+					//
+			} catch (final Throwable e) {
+				//
+				System.err.println(name);
+				//
+				throw e;
+				//
+			} // try
+				//
+		} // for
+			//
+	}
+
+	@Test
+	void testNull() {
+		//
+		final Method[] ms = NodeUtil.class.getDeclaredMethods();
+		//
+		Method m = null;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ms[i]) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (m.getParameterCount() == 1) {
+				//
+				if (Modifier.isStatic(m.getModifiers())) {
+					//
+					Narcissus.invokeStaticMethod(m, (Object) null);
+					//
+				} // if
+					//
+			} else if (m.getParameterCount() == 2) {
+				//
+				if (Modifier.isStatic(m.getModifiers())) {
+					//
+					Narcissus.invokeStaticMethod(m, null, null);
+					//
+				} // if
+					//
+			} // if
+				//
+		} // for
+			//
 	}
 
 }

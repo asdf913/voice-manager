@@ -14,7 +14,6 @@ import java.util.function.Predicate;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -33,6 +32,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.Node;
+import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 
 import com.google.common.collect.ImmutableMultimap;
@@ -116,15 +116,10 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		} // for
 			//
 		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-				toMultimap(Util.toList(nodeStream(document))));
+				toMultimap(Util.toList(NodeUtil.nodeStream(document))));
 		//
 		return multimap;
 		//
-	}
-
-	@Nullable
-	private static Stream<Node> nodeStream(@Nullable final Node instance) {
-		return instance != null ? instance.nodeStream() : null;
 	}
 
 	@Nullable

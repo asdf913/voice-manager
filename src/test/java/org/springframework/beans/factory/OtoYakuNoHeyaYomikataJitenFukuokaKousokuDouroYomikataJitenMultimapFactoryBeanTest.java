@@ -1,7 +1,6 @@
 package org.springframework.beans.factory;
 
 import java.lang.Character.UnicodeBlock;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -35,14 +34,12 @@ import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
 
 class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP1, METHOD_TO_MULTI_MAP3,
 			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_4, METHOD_APPEND, METHOD_TO_MULTI_MAP2, METHOD_LENGTH,
-			METHOD_REMOVE_ALL, METHOD_NODE_STREAM = null;
+			METHOD_REMOVE_ALL = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -71,8 +68,6 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", char[].class)).setAccessible(true);
 		//
 		(METHOD_REMOVE_ALL = clz.getDeclaredMethod("removeAll", Multimap.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_NODE_STREAM = clz.getDeclaredMethod("nodeStream", Node.class)).setAccessible(true);
 		//
 	}
 
@@ -410,60 +405,6 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 	private static void removeAll(final Multimap<?, ?> instance, final Object key) throws Throwable {
 		try {
 			METHOD_REMOVE_ALL.invoke(null, instance, key);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testNodeStram() throws Throwable {
-		//
-		if (!isSystemPropertiesContainsTestGetObject) {
-			//
-			Assertions.assertNull(nodeStream(Util.cast(Node.class, createProxy(Node.class, new MH(), null))));
-			//
-		} // if
-			//
-	}
-
-	private static <T, E extends Throwable> T createProxy(final Class<T> superClass, final MethodHandler mh,
-			final FailableFunction<Class<?>, ?, E> function) throws Throwable {
-		//
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(superClass);
-		//
-		final Class<?> clz = proxyFactory.createClass();
-		//
-		Object instance = function != null ? function.apply(clz) : null;
-		//
-		if (instance == null) {
-			//
-			final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
-			//
-			instance = constructor != null ? constructor.newInstance() : null;
-			//
-		} // if
-			//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
-		return (T) Util.cast(clz, instance);
-		//
-	}
-
-	private static Stream<Node> nodeStream(final Node instance) throws Throwable {
-		try {
-			final Object obj = METHOD_NODE_STREAM.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

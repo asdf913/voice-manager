@@ -131,4 +131,8 @@ public class NodeUtil {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
+	public static Stream<Node> nodeStream(final Node instance) {
+		return instance != null ? instance.nodeStream() : null;
+	}
+
 }

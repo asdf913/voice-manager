@@ -11,7 +11,6 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -26,7 +25,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
-import org.jsoup.nodes.Node;
+import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.nodes.TextNodeUtil;
 
@@ -136,8 +135,8 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				//
 		} // for
 			//
-		final List<TextNode> textNodes = Util.toList(
-				Util.filter(Util.map(nodeStream(document), x -> Util.cast(TextNode.class, x)), Objects::nonNull));
+		final List<TextNode> textNodes = Util.toList(Util
+				.filter(Util.map(NodeUtil.nodeStream(document), x -> Util.cast(TextNode.class, x)), Objects::nonNull));
 		//
 		for (int i = 0; textNodes != null && i < textNodes.size(); i++) {
 			//
@@ -156,10 +155,6 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			//
 		return multimap;
 		//
-	}
-
-	private static Stream<Node> nodeStream(final Node instance) {
-		return instance != null ? instance.nodeStream() : null;
 	}
 
 	private static boolean and(final boolean a, final boolean b, @Nullable final boolean... bs) {
