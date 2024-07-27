@@ -44,7 +44,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 
 	private Iterable<String> urls = null;
 
-	public void setUrls(final Object input) throws JsonProcessingException {
+	public void setUrls(@Nullable final Object input) throws JsonProcessingException {
 		//
 		if (input == null) {
 			//
