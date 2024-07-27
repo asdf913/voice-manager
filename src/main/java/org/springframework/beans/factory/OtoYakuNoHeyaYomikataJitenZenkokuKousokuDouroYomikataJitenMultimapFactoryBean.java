@@ -42,6 +42,7 @@ import com.google.common.collect.MultimapUtil;
 public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBean
 		extends StringMultiMapFromResourceFactoryBean {
 
+	@Nullable
 	private Iterable<String> urls = null;
 
 	public void setUrls(@Nullable final Object input) throws JsonProcessingException {
