@@ -1,20 +1,15 @@
 package org.springframework.beans.factory;
 
 import java.lang.Character.UnicodeBlock;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
@@ -41,7 +36,6 @@ import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFacto
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
-import com.google.common.reflect.Reflection;
 
 /*
  * https://hiramatu-hifuka.com/onyak/kotoba-1/sintomei.html
@@ -120,55 +114,6 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static interface PatternMap {
-
-		Pattern getPattern(final String pattern);
-
-		@Nullable
-		private static Pattern getPattern(@Nullable final PatternMap instance, final String pattern) {
-			return instance != null ? instance.getPattern(pattern) : null;
-		}
-
-	}
-
-	private static class IH implements InvocationHandler {
-
-		private Map<Object, Pattern> patternMap = null;
-
-		private Map<Object, Pattern> getPatternMap() {
-			if (patternMap == null) {
-				patternMap = new LinkedHashMap<>();
-			}
-			return patternMap;
-		}
-
-		@Override
-		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
-			//
-			final String methodName = Util.getName(method);
-			//
-			if (proxy instanceof PatternMap && Objects.equals(methodName, "getPattern") && args != null
-					&& args.length > 0) {
-				//
-				final Object arg0 = args[0];
-				//
-				if (!Util.containsKey(getPatternMap(), arg0)) {
-					//
-					Util.put(getPatternMap(), arg0,
-							testAndApply(x -> x != null, Util.toString(arg0), Pattern::compile, null));
-					//
-				} // if
-					//
-				return Util.get(getPatternMap(), arg0);
-				//
-			} // if
-				//
-			throw new Throwable(methodName);
-			//
-		}
-
-	}
-
 	@Nullable
 	private static Multimap<String, String> toMultimap(final String url) throws Exception {
 		//
@@ -199,10 +144,8 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
-			if ((temp = toMultimap(
-					patternMap = ObjectUtils.getIfNull(patternMap,
-							() -> Reflection.newProxy(PatternMap.class, new IH())),
-					children, offset = iif(Util.or(rowspan == null, hasAttrRowspan, Util.intValue(rowspan, 0) <= 0), 1,
+			if ((temp = toMultimap(patternMap = ObjectUtils.getIfNull(patternMap, () -> new PatternMapImpl()), children,
+					offset = iif(Util.or(rowspan == null, hasAttrRowspan, Util.intValue(rowspan, 0) <= 0), 1,
 							0))) != null) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), temp);
@@ -221,8 +164,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 			//
 		final NodeVisitorImpl nodeVisitorImpl = new NodeVisitorImpl();
 		//
-		nodeVisitorImpl.patternMap = ObjectUtils.getIfNull(patternMap,
-				() -> Reflection.newProxy(PatternMap.class, new IH()));
+		nodeVisitorImpl.patternMap = ObjectUtils.getIfNull(patternMap, () -> new PatternMapImpl());
 		//
 		NodeUtil.traverse(document, nodeVisitorImpl);
 		//
@@ -246,13 +188,10 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 		@Override
 		public void head(final Node node, final int depth) {
 			//
-			final Matcher m = Util
-					.matcher(
-							PatternMap.getPattern(
-									ObjectUtils.getIfNull(patternMap,
-											() -> Reflection.newProxy(PatternMap.class, new IH())),
-									"([\\p{InCJKUnifiedIdeographs}|\\p{InKatakana}]+)（(\\p{InHiragana}+)）"),
-							TextNodeUtil.text(Util.cast(TextNode.class, node)));
+			final Matcher m = Util.matcher(
+					PatternMap.getPattern(ObjectUtils.getIfNull(patternMap, () -> new PatternMapImpl()),
+							"([\\p{InCJKUnifiedIdeographs}|\\p{InKatakana}]+)（(\\p{InHiragana}+)）"),
+					TextNodeUtil.text(Util.cast(TextNode.class, node)));
 			//
 			String s1 = null;
 			//
@@ -278,21 +217,17 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 		//
 		Multimap<String, String> multimap = null;
 		//
-		final Matcher m1 = Util
-				.matcher(
-						PatternMap.getPattern(
-								ObjectUtils.getIfNull(patternMap,
-										() -> Reflection.newProxy(PatternMap.class, new IH())),
-								"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)?$"),
-						ElementUtil.text(testAndApply(x -> IterableUtils.size(x) > offset, children,
-								x -> IterableUtils.get(children, offset), null)));
+		final Matcher m1 = Util.matcher(
+				PatternMap.getPattern(ObjectUtils.getIfNull(patternMap, () -> new PatternMapImpl()),
+						"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)?$"),
+				ElementUtil.text(testAndApply(x -> IterableUtils.size(x) > offset, children,
+						x -> IterableUtils.get(children, offset), null)));
 		//
-		final Matcher m2 = Util
-				.matcher(
-						PatternMap.getPattern(ObjectUtils.getIfNull(patternMap,
-								() -> Reflection.newProxy(PatternMap.class, new IH())), "^\\p{InHiragana}+$"),
-						ElementUtil.text(testAndApply(x -> IterableUtils.size(x) > 2 + offset, children,
-								x -> IterableUtils.get(children, 2 + offset), null)));
+		final Matcher m2 = Util.matcher(
+				PatternMap.getPattern(ObjectUtils.getIfNull(patternMap, () -> new PatternMapImpl()),
+						"^\\p{InHiragana}+$"),
+				ElementUtil.text(testAndApply(x -> IterableUtils.size(x) > 2 + offset, children,
+						x -> IterableUtils.get(children, 2 + offset), null)));
 		//
 		if (Util.matches(m1) && Util.groupCount(m1) > 0 && Util.matches(m2)) {
 			//
@@ -330,9 +265,9 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 		//
 		final String s3 = ElementUtil.text(e3);
 		//
-		final Matcher m3 = Util.matcher(PatternMap.getPattern(
-				ObjectUtils.getIfNull(patternMap, () -> Reflection.newProxy(PatternMap.class, new IH())),
-				"(\\p{InCJKUnifiedIdeographs}+)\\s?（(\\p{InHiragana}+)[\\)）]"), s3);
+		final Matcher m3 = Util
+				.matcher(PatternMap.getPattern(ObjectUtils.getIfNull(patternMap, () -> new PatternMapImpl()),
+						"(\\p{InCJKUnifiedIdeographs}+)\\s?（(\\p{InHiragana}+)[\\)）]"), s3);
 		//
 		Matcher m4 = null;
 		//
@@ -343,9 +278,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 			//
 		} else if (NodeUtil.childNodeSize(e3) == 1 && IterableUtils.get(NodeUtil.childNodes(e3), 0) instanceof TextNode
 				&& (m4 = Util.matcher(
-						PatternMap.getPattern(
-								ObjectUtils.getIfNull(patternMap,
-										() -> Reflection.newProxy(PatternMap.class, new IH())),
+						PatternMap.getPattern(ObjectUtils.getIfNull(patternMap, () -> new PatternMapImpl()),
 								"([\\p{InCJKUnifiedIdeographs}|\\p{InKatakana}]+)（(\\p{InHiragana}+)[\\)）]"),
 						s3)) != null) {
 			//
@@ -363,9 +296,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 					//
 			} // while
 				//
-		} else if ((mm = toMultimap21(
-				ObjectUtils.getIfNull(patternMap, () -> Reflection.newProxy(PatternMap.class, new IH())),
-				s3)) != null) {
+		} else if ((mm = toMultimap21(ObjectUtils.getIfNull(patternMap, () -> new PatternMapImpl()), s3)) != null) {
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
 			//
@@ -381,7 +312,7 @@ public class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean
 		Multimap<String, String> multimap = null;
 		//
 		final Matcher m = Util.matcher(PatternMap.getPattern(
-				ObjectUtils.getIfNull(patternMap, () -> Reflection.newProxy(PatternMap.class, new IH())),
+				ObjectUtils.getIfNull(patternMap, () -> new PatternMapImpl()),
 				"[（|(][\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+[)|）]([\\p{InCJKUnifiedIdeographs}|\\p{InKatakana}]+)（(\\p{InHiragana}+)[)）]"),
 				s3);
 		//

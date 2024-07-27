@@ -1,21 +1,16 @@
 package org.springframework.beans.factory;
 
 import java.lang.Character.UnicodeBlock;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
@@ -39,7 +34,6 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 import com.google.common.collect.TreeMultimap;
-import com.google.common.reflect.Reflection;
 
 /*
  * https://hiramatu-hifuka.com/onyak/onyak2/tetu-min.html
@@ -147,8 +141,7 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 				//
 			if ((mm = toMultimap(e2,
 					firstRowTexts = ObjectUtils.getIfNull(firstRowTexts, () -> Arrays.asList("会社名など", "路線名", "読み方")),
-					patternMap = ObjectUtils.getIfNull(patternMap,
-							() -> Reflection.newProxy(PatternMap.class, new IH())))) != null) {
+					patternMap = ObjectUtils.getIfNull(patternMap, () -> new PatternMapImpl()))) != null) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), mm);
 				//
@@ -158,55 +151,6 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 			//
 		return multimap;
 		//
-	}
-
-	private static class IH implements InvocationHandler {
-
-		private Map<Object, Pattern> patternMap = null;
-
-		private Map<Object, Pattern> getPatternMap() {
-			if (patternMap == null) {
-				patternMap = new LinkedHashMap<>();
-			}
-			return patternMap;
-		}
-
-		@Override
-		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
-			//
-			final String methodName = Util.getName(method);
-			//
-			if (proxy instanceof PatternMap && Objects.equals(methodName, "getPattern") && args != null
-					&& args.length > 0) {
-				//
-				final Object arg0 = args[0];
-				//
-				if (!Util.containsKey(getPatternMap(), arg0)) {
-					//
-					Util.put(getPatternMap(), arg0,
-							testAndApply(x -> x != null, Util.toString(arg0), Pattern::compile, null));
-					//
-				} // if
-					//
-				return Util.get(getPatternMap(), arg0);
-				//
-			} // if
-				//
-			throw new Throwable(methodName);
-			//
-		}
-
-	}
-
-	private static interface PatternMap {
-
-		Pattern getPattern(final String pattern);
-
-		@Nullable
-		private static Pattern getPattern(@Nullable final PatternMap instance, final String pattern) {
-			return instance != null ? instance.getPattern(pattern) : null;
-		}
-
 	}
 
 	@Nullable
