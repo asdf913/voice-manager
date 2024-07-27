@@ -58,9 +58,9 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			//
 			return;
 			//
-		} else if (input instanceof Object[]) {
+		} else if (input instanceof Object[] os) {
 			//
-			urls = Util.toList(Util.map(Arrays.stream((Object[]) input), Util::toString));
+			urls = Util.toList(Util.map(Arrays.stream(os), Util::toString));
 			//
 			return;
 			//
