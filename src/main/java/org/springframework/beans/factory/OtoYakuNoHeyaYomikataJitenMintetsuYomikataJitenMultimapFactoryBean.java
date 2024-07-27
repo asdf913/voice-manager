@@ -141,7 +141,7 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 				//
 			if ((mm = toMultimap(e2,
 					firstRowTexts = ObjectUtils.getIfNull(firstRowTexts, () -> Arrays.asList("会社名など", "路線名", "読み方")),
-					patternMap = ObjectUtils.getIfNull(patternMap, () -> new PatternMapImpl()))) != null) {
+					patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new))) != null) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), mm);
 				//
