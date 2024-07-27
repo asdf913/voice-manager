@@ -286,8 +286,6 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 		//
 		Assertions.assertEquals(Collections.singleton(Util.toString(b)), FieldUtils.readField(urls, instance));
 		//
-		setUrls(instance, objectMapper.writeValueAsString(Collections.emptyMap()));
-		//
 		Assertions.assertThrows(IllegalStateException.class,
 				() -> setUrls(instance, objectMapper.writeValueAsString(Collections.emptyMap())));
 		//
