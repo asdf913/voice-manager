@@ -7,26 +7,28 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.nodes.TextNode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
-import io.github.toolfactory.narcissus.Narcissus;
-
 class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBeanTest {
+
+	private static final String SPACE = " ";
 
 	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_AND, METHOD_TO_MULTI_MAP = null;
 
@@ -70,27 +72,35 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 	@Test
 	void testGetObject() throws Exception {
 		//
+		Assertions.assertNull(instance != null ? instance.getObject() : null);
+		//
+		if (instance != null) {
+			//
+			instance.setUrls(Collections.singleton(""));
+			//
+		} // if
+			//
 		final Multimap<?, ?> multimap = ImmutableMultimap.of();
 		//
 		Assertions.assertEquals(multimap, instance != null ? instance.getObject() : null);
 		//
-		final Entry<Field, Object> entry = TestUtil.getFieldWithUrlAnnotationAndValue(
-				OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBean.class);
-		//
-		final Field url = Util.getKey(entry);
-		//
-		Narcissus.setField(instance, url, "");
-		//
-		Assertions.assertEquals(multimap, instance != null ? instance.getObject() : null);
-		//
-		Narcissus.setField(instance, url, " ");
-		//
+		if (instance != null) {
+			//
+			instance.setUrls(Collections.singleton(SPACE));
+			//
+		} // if
+			//
 		Assertions.assertEquals(multimap, instance != null ? instance.getObject() : null);
 		//
 		if (isSystemPropertiesContainsTestGetObject) {
 			//
-			Narcissus.setField(instance, url, Util.getValue(entry));
-			//
+			if (instance != null) {
+				//
+				instance.setUrls(Arrays.asList("https://hiramatu-hifuka.com/onyak/onyak2/kosoku01.html",
+						"https://hiramatu-hifuka.com/onyak/onyak2/kosoku02.html"));
+				//
+			} // if
+				//
 			Assertions.assertDoesNotThrow(() -> instance != null ? instance.getObject() : null);
 			//
 		} // if
@@ -213,6 +223,80 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetUrls() throws Exception {
+		//
+		final Field urls = OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBean.class
+				.getDeclaredField("urls");
+		//
+		if (urls != null) {
+			//
+			urls.setAccessible(true);
+			//
+		} // if
+			//
+		setUrls(instance, null);
+		//
+		Assertions.assertNull(FieldUtils.readField(urls, instance));
+		//
+		String string = "";
+		//
+		setUrls(instance, string);
+		//
+		Assertions.assertEquals(Collections.singleton(string), FieldUtils.readField(urls, instance));
+		//
+		setUrls(instance, new String[] { string });
+		//
+		Assertions.assertEquals(Collections.singletonList(string), FieldUtils.readField(urls, instance));
+		//
+		setUrls(instance, string = SPACE);
+		//
+		Assertions.assertEquals(Collections.singleton(string), FieldUtils.readField(urls, instance));
+		//
+		final Number number = Integer.valueOf(1);
+		//
+		setUrls(instance, number);
+		//
+		Assertions.assertEquals(Collections.singleton(Util.toString(number)), FieldUtils.readField(urls, instance));
+		//
+		final Boolean b = Boolean.TRUE;
+		//
+		setUrls(instance, b);
+		//
+		Assertions.assertEquals(Collections.singleton(Util.toString(b)), FieldUtils.readField(urls, instance));
+		//
+		setUrls(instance, new ObjectMapper().writeValueAsString(Collections.emptySet()));
+		//
+		Assertions.assertEquals(Collections.emptyList(), FieldUtils.readField(urls, instance));
+		//
+		final ObjectMapper objectMapper = new ObjectMapper();
+		//
+		setUrls(instance, objectMapper.writeValueAsString(SPACE));
+		//
+		Assertions.assertEquals(Collections.singletonList(SPACE), FieldUtils.readField(urls, instance));
+		//
+		setUrls(instance, objectMapper.writeValueAsString(number));
+		//
+		Assertions.assertEquals(Collections.singletonList(Util.toString(number)), FieldUtils.readField(urls, instance));
+		//
+		setUrls(instance, objectMapper.writeValueAsString(b));
+		//
+		Assertions.assertEquals(Collections.singleton(Util.toString(b)), FieldUtils.readField(urls, instance));
+		//
+		setUrls(instance, objectMapper.writeValueAsString(Collections.emptyMap()));
+		//
+		Assertions.assertThrows(IllegalStateException.class,
+				() -> setUrls(instance, objectMapper.writeValueAsString(Collections.emptyMap())));
+		//
+	}
+
+	private void setUrls(final OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBean instance,
+			final Object input) throws JsonProcessingException {
+		if (instance != null) {
+			instance.setUrls(input);
 		}
 	}
 
