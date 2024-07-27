@@ -155,7 +155,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		Multimap<String, String> multimap = null;
 		//
-		Pattern p1 = null, p2 = null, p3 = null;
+		PatternMap patternMap = null;
 		//
 		Matcher matcher = null;
 		//
@@ -179,32 +179,29 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s2);
 					//
-				} else if (Boolean.logicalAnd(
-						Util.matches(matcher = Util.matcher(
-								p1 = ObjectUtils.getIfNull(p1, () -> Pattern.compile("^(\\p{InHiragana}+).+")), s2)),
-						Util.groupCount(matcher) > 0)) {
+				} else if (Boolean.logicalAnd(Util.matches(matcher = Util.matcher(
+						PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
+								"^(\\p{InHiragana}+).+"),
+						s2)), Util.groupCount(matcher) > 0)) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
 							Util.group(matcher, 1));
 					//
 				} // if
 					//
-			} else if (Boolean.logicalAnd(Util.matches(matcher = Util.matcher(
-					p2 = ObjectUtils.getIfNull(p2, () -> Pattern.compile(
-							"^\\p{InCJKUnifiedIdeographs}+\\s?（(\\p{InCJKUnifiedIdeographs}+)）\\s?（(\\p{InHiragana}+)）$")),
-					s1)), Util.groupCount(matcher) > 1)) {
+			} else if (Boolean.logicalAnd(Util.matches(matcher = Util.matcher(PatternMap.getPattern(
+					patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
+					"^\\p{InCJKUnifiedIdeographs}+\\s?（(\\p{InCJKUnifiedIdeographs}+)）\\s?（(\\p{InHiragana}+)）$"), s1)),
+					Util.groupCount(matcher) > 1)) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(matcher, 1), Util.group(matcher, 2));
 				//
 			} else if (and(
-					Util.matches(
-							matcher = Util
-									.matcher(
-											p3 = ObjectUtils.getIfNull(p3,
-													() -> Pattern.compile(
-															"^(\\p{InCJKUnifiedIdeographs}+)([\\p{InKatakana}\\s]+)$")),
-											s1)),
+					Util.matches(matcher = Util.matcher(
+							PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
+									"^(\\p{InCJKUnifiedIdeographs}+)([\\p{InKatakana}\\s]+)$"),
+							s1)),
 					Util.groupCount(matcher) > 1, IterableUtils.size(nextElementSiblings) > 1)) {
 				//
 				sb = new StringBuilder(ElementUtil.text(IterableUtils.get(nextElementSiblings, 1)));
