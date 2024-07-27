@@ -6,6 +6,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nullable;
+
 public class PatternMapImpl implements PatternMap {
 
 	private Map<Object, Pattern> patternMap = null;
@@ -33,7 +35,7 @@ public class PatternMapImpl implements PatternMap {
 	}
 
 	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,
-			final Function<T, R> functionFalse) {
+			@Nullable final Function<T, R> functionFalse) {
 		return Util.test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
 	}
 
