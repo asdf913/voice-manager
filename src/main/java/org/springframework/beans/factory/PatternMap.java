@@ -8,6 +8,7 @@ interface PatternMap {
 
 	Pattern getPattern(final String pattern);
 
+	@Nullable
 	static Pattern getPattern(@Nullable final PatternMap instance, final String pattern) {
 		return instance != null ? instance.getPattern(pattern) : null;
 	}
