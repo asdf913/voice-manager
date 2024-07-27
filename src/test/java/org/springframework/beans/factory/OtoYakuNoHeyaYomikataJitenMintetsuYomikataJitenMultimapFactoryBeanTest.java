@@ -39,7 +39,7 @@ class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 			METHOD_TO_MULTI_MAP_ELEMENT, METHOD_TO_MULTI_MAP_STRING2, METHOD_TO_MULTI_MAP_STRING3, METHOD_LENGTH = null;
 
 	@BeforeAll
-	static void beforeAll() throws NoSuchMethodException, ClassNotFoundException {
+	static void beforeAll() throws NoSuchMethodException {
 		//
 		final Class<?> clz = OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean.class;
 		//
