@@ -75,14 +75,10 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 			//
 			final String methodName = Util.getName(thisMethod);
 			//
-			if (self instanceof Element) {
+			if (self instanceof Element && Objects.equals(methodName, "text")) {
 				//
-				if (Objects.equals(methodName, "text")) {
-					//
-					return text;
-					//
-				} // if
-					//
+				return text;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
