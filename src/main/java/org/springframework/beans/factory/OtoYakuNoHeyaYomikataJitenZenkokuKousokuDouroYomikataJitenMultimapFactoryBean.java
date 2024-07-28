@@ -161,7 +161,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		StringBuilder sb = null;
 		//
-		int nextElementSiblingsSize = 0, size = 0;
+		int nextElementSiblingsSize = 0, size = 0, size1 = 0;
 		//
 		for (int i = 0; i < IterableUtils.size(es); i++) {
 			//
@@ -171,6 +171,8 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				//
 			} // if
 				//
+			size1 = MultimapUtil.size(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create));
+			//
 			if (Boolean.logicalAnd(
 					Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 							getUnicodeBlocks(s1 = ElementUtil.text(e))),
@@ -209,6 +211,14 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 					//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(matcher, 1), Objects.toString(sb));
+				//
+			} else if (Boolean.logicalAnd(
+					Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+							"^.+を(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"), s1)),
+					Util.groupCount(matcher) > 1)) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, 1), Util.group(matcher, 2));
 				//
 			} // if
 				//
