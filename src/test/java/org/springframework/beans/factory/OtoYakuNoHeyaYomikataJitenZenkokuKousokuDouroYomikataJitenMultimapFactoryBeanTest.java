@@ -30,7 +30,8 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 
 	private static final String SPACE = " ";
 
-	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_AND, METHOD_TO_MULTI_MAP = null;
+	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_AND, METHOD_TO_MULTI_MAP_STRING,
+			METHOD_TO_MULTI_MAP_ITERABLE = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -44,7 +45,11 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 		//
 		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
-		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", Iterable.class, Pattern.class)).setAccessible(true);
+		(METHOD_TO_MULTI_MAP_STRING = clz.getDeclaredMethod("toMultimap", PatternMap.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP_ITERABLE = clz.getDeclaredMethod("toMultimap", Iterable.class, Pattern.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -201,20 +206,47 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 		//
 		if (!isSystemPropertiesContainsTestGetObject) {
 			//
+			Assertions.assertNull(toMultimap((PatternMap) null, null));
+			//
 			Assertions.assertNull(toMultimap(Collections.singleton(textNode), pattern));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("札樽自動車道", "さっそんじどうしゃどう")),
 					MultimapUtil.entries(toMultimap(Arrays.asList(new TextNode("札樽自動車道"), textNode), pattern))));
 			//
+			final PatternMap patternMap = new PatternMapImpl();
+			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("札樽道", "さっそんどう")),
+							MultimapUtil.entries(toMultimap(patternMap, "札樽自動車道 （札樽道） （さっそんどう）"))));
+			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("百石道路", "ももいしどうろ")),
+							MultimapUtil.entries(toMultimap(patternMap, "百石道路 （ももいしどうろ）"))));
+			//
 		} // if
 			//
+	}
+
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String string)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP_STRING.invoke(null, patternMap, string);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static Multimap<String, String> toMultimap(final Iterable<TextNode> textNodes, final Pattern pattern)
 			throws Throwable {
 		try {
-			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, textNodes, pattern);
+			final Object obj = METHOD_TO_MULTI_MAP_ITERABLE.invoke(null, textNodes, pattern);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
