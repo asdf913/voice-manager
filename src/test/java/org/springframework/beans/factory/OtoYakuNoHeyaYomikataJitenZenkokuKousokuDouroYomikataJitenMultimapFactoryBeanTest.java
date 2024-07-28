@@ -302,6 +302,12 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 					.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("台", "だい")),
 							MultimapUtil.entries(toMultimap(patternMap, "しらかし台", es))));
 			//
+			mh.text = "ぬまのはたにし";
+			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("沼", "ぬま", "端西", "はたにし")),
+					MultimapUtil.entries(toMultimap(patternMap, "沼ノ端西", es))));
+			//
 		} // if
 			//
 	}
