@@ -149,7 +149,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		Element e = null;
 		//
-		String s1, s2, g1;
+		String s1, s2;
 		//
 		List<Element> nextElementSiblings = null;
 		//
