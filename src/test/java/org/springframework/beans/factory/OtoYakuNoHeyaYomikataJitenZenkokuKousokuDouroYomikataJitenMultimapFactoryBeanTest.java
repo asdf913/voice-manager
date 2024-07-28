@@ -1,18 +1,26 @@
 package org.springframework.beans.factory;
 
 import java.lang.Character.UnicodeBlock;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -26,12 +34,16 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyObject;
+
 class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBeanTest {
 
 	private static final String SPACE = " ";
 
 	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_AND, METHOD_TO_MULTI_MAP_STRING,
-			METHOD_TO_MULTI_MAP_ITERABLE = null;
+			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_3 = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -51,6 +63,35 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 		(METHOD_TO_MULTI_MAP_ITERABLE = clz.getDeclaredMethod("toMultimap", Iterable.class, Pattern.class))
 				.setAccessible(true);
 		//
+		(METHOD_TO_MULTI_MAP_3 = clz.getDeclaredMethod("toMultimap", PatternMap.class, String.class, Iterable.class))
+				.setAccessible(true);
+		//
+	}
+
+	private static class MH implements MethodHandler {
+
+		private String text = null;
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			final String methodName = Util.getName(thisMethod);
+			//
+			if (self instanceof Element) {
+				//
+				if (Objects.equals(methodName, "text")) {
+					//
+					return text;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	private OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBean instance = null;
@@ -210,6 +251,8 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 			//
 			Assertions.assertNull(toMultimap(Collections.singleton(textNode), pattern));
 			//
+			Assertions.assertNull(toMultimap(null, null, null));
+			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("札樽自動車道", "さっそんじどうしゃどう")),
 					MultimapUtil.entries(toMultimap(Arrays.asList(new TextNode("札樽自動車道"), textNode), pattern))));
@@ -224,8 +267,98 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("百石道路", "ももいしどうろ")),
 							MultimapUtil.entries(toMultimap(patternMap, "百石道路 （ももいしどうろ）"))));
 			//
+			final MH mh = new MH();
+			//
+			final Document document = createProxy(Document.class, mh, x -> {
+				//
+				final Constructor<?> constructor = getDeclaredConstructor(x, String.class);
+				//
+				if (constructor != null) {
+					//
+					constructor.setAccessible(true);
+					//
+				} // if
+					//
+				return Util.cast(Document.class, newInstance(constructor, ""));
+				//
+			});
+			//
+			final Iterable<Element> es = Arrays.asList(null, document);
+			//
+			Assertions.assertNull(toMultimap(null, null, es));
+			//
+			Assertions.assertNull(toMultimap(patternMap, "仙台南（東北）", es));
+			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("仙台南", mh.text = "せんだいみなみ")),
+					MultimapUtil.entries(toMultimap(patternMap, "仙台南（東北）", es))));
+			//
 		} // if
 			//
+	}
+
+	private static <T> Constructor<T> getDeclaredConstructor(final Class<T> instance, final Class<?>... parameterTypes)
+			throws NoSuchMethodException {
+		return instance != null ? instance.getDeclaredConstructor(parameterTypes) : null;
+	}
+
+	private static <T> T newInstance(final Constructor<T> instance, final Object... initargs)
+			throws InstantiationException, IllegalAccessException, InvocationTargetException {
+		return instance != null ? instance.newInstance(initargs) : null;
+	}
+
+	private static <T> T createProxy(final Class<T> superClass, final MethodHandler mh,
+			final FailableFunction<Class<?>, T, Exception> function) throws Throwable {
+		//
+		final ProxyFactory proxyFactory = new ProxyFactory();
+		//
+		proxyFactory.setSuperclass(superClass);
+		//
+		final Class<?> clz = proxyFactory.createClass();
+		//
+		Object instance = null;
+		//
+		if (function != null) {
+			//
+			instance = FailableFunctionUtil.apply(function, clz);
+			//
+		} else {
+			//
+			final Constructor<?> constructor = getDeclaredConstructor(clz);
+			//
+			if (constructor != null) {
+				//
+				constructor.setAccessible(true);
+				//
+			} // if
+				//
+			instance = newInstance(constructor);
+			//
+		} // if
+			//
+		if (instance instanceof ProxyObject) {
+			//
+			((ProxyObject) instance).setHandler(mh);
+			//
+		} // if
+			//
+		return (T) Util.cast(clz, instance);
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s1,
+			final Iterable<Element> nextElementSiblings) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP_3.invoke(null, patternMap, s1, nextElementSiblings);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String string)

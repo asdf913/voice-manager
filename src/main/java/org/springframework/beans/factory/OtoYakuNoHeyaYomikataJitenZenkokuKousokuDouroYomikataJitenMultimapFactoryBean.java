@@ -224,7 +224,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				//
 			} // if
 				//
-			size = MultimapUtil.size(multimap);
+			size = MultimapUtil.size(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create));
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					toMultimap(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), s1));
@@ -235,6 +235,11 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				//
 			} // if
 				//
+			size = MultimapUtil.size(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create));
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), toMultimap(
+					patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), s1, nextElementSiblings));
+			//
 		} // for
 			//
 		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
@@ -242,6 +247,30 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 						Util.map(NodeUtil.nodeStream(document), x -> Util.cast(TextNode.class, x)), Objects::nonNull)),
 						Pattern.compile("^（(\\p{InHIRAGANA}+)）$")));
 		//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s1,
+			final Iterable<Element> nextElementSiblings) {
+		//
+		Matcher matcher = null;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		final String s2 = IterableUtils.size(nextElementSiblings) > 1
+				? ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))
+				: null;
+		//
+		if (Util.matches(matcher = Util.matcher(
+				PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)\\s?（\\p{InCJKUnifiedIdeographs}+）$"),
+				s1)) && Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2))) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), s2);
+			//
+		} // if
+			//
 		return multimap;
 		//
 	}
