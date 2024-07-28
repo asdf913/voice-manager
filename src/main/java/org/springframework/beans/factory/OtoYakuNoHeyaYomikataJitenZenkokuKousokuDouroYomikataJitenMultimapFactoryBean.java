@@ -212,13 +212,14 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(matcher, 1), Objects.toString(sb));
 				//
-			} else if (Util
-					.matches(matcher = Util.matcher(
+			} else if (Boolean.logicalAnd(
+					Util.matches(matcher = Util.matcher(
 							PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
 									"^(\\p{InCJKUnifiedIdeographs}+)ノ(\\p{InCJKUnifiedIdeographs}+)$"),
-							s1))
-					&& Util.groupCount(matcher) > 1 && nextElementSiblingsSize > 1 && (ss = StringUtils
-							.split(ElementUtil.text(IterableUtils.get(nextElementSiblings, 1)), 'の')) != null
+							s1)),
+					Util.groupCount(matcher) > 1) && nextElementSiblingsSize > 1
+					&& (ss = StringUtils.split(ElementUtil.text(IterableUtils.get(nextElementSiblings, 1)),
+							'の')) != null
 					&& ss.length == 2) {
 				//
 				for (int j = 0; j < ss.length; j++) {
