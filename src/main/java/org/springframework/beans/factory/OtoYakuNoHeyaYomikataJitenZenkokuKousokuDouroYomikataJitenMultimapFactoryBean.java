@@ -161,7 +161,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		StringBuilder sb = null;
 		//
-		int nextElementSiblingsSize = 0, size = 0, size1 = 0;
+		int nextElementSiblingsSize = 0, size = 0;
 		//
 		for (int i = 0; i < IterableUtils.size(es); i++) {
 			//
