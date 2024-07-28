@@ -218,7 +218,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 									"^(\\p{InCJKUnifiedIdeographs}+)ノ(\\p{InCJKUnifiedIdeographs}+)$"),
 							s1))
 					&& Util.groupCount(matcher) > 1 && nextElementSiblingsSize > 1 && (ss = StringUtils
-							.split(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1)), 'の')) != null
+							.split(ElementUtil.text(IterableUtils.get(nextElementSiblings, 1)), 'の')) != null
 					&& ss.length == 2) {
 				//
 				for (int j = 0; j < ss.length; j++) {
