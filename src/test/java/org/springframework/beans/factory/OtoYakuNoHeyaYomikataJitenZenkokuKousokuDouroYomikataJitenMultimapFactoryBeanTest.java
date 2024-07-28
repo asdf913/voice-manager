@@ -260,6 +260,10 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("百石道路", "ももいしどうろ")),
 							MultimapUtil.entries(toMultimap(patternMap, "百石道路 （ももいしどうろ）"))));
 			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("仙塩道路", "せんえんどうろ")),
+							MultimapUtil.entries(toMultimap(patternMap, "＊仙台港北〜利府中 を仙塩道路（せんえんどうろ）"))));
+			//
 			final MH mh = new MH();
 			//
 			final Document document = createProxy(Document.class, mh, x -> {
