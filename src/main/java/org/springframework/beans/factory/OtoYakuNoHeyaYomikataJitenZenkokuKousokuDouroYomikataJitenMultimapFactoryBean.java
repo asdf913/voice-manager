@@ -192,14 +192,6 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 					//
 				} // if
 					//
-			} else if (Boolean.logicalAnd(Util.matches(matcher = Util.matcher(PatternMap.getPattern(
-					patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
-					"^\\p{InCJKUnifiedIdeographs}+\\s?（(\\p{InCJKUnifiedIdeographs}+)）\\s?（(\\p{InHiragana}+)）$"), s1)),
-					Util.groupCount(matcher) > 1)) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(matcher, 1), Util.group(matcher, 2));
-				//
 			} else if (and(
 					Util.matches(matcher = Util.matcher(
 							PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
@@ -217,21 +209,6 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 					//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(matcher, 1), Objects.toString(sb));
-				//
-			} else if (Boolean
-					.logicalAnd(
-							Util.matches(
-									matcher = Util
-											.matcher(
-													PatternMap.getPattern(
-															patternMap = ObjectUtils.getIfNull(patternMap,
-																	PatternMapImpl::new),
-															"^(\\p{InCJKUnifiedIdeographs}+)\\s?（(\\p{InHiragana}+)）$"),
-													s1)),
-							Util.groupCount(matcher) > 1)) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(matcher, 1), Util.group(matcher, 2));
 				//
 			} else if (Boolean.logicalAnd(
 					Util.matches(matcher = Util.matcher(
