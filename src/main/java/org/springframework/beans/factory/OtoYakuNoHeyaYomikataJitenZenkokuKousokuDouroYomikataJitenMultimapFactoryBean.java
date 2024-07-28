@@ -223,8 +223,6 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				//
 			} // if
 				//
-			size = MultimapUtil.size(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create));
-			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), toMultimap(
 					patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), s1, nextElementSiblings));
 			//
