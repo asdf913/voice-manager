@@ -170,7 +170,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				continue;
 				//
 			} // if
-				//
+			//
 			if (Boolean.logicalAnd(
 					Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 							getUnicodeBlocks(s1 = ElementUtil.text(e))),
@@ -276,13 +276,8 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				|| Boolean.logicalAnd(
 						Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
 								"^(\\p{InCJKUnifiedIdeographs}+)\\s?（(\\p{InHiragana}+)）$"), string)),
-						Util.groupCount(matcher) > 1)) {
-			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					Util.group(matcher, 1), Util.group(matcher, 2));
-			//
-		} else if (Boolean
-				.logicalAnd(
+						Util.groupCount(matcher) > 1)
+				|| Boolean.logicalAnd(
 						Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
 								"^.+を(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"), string)),
 						Util.groupCount(matcher) > 1)) {
