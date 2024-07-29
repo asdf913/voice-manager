@@ -12,8 +12,7 @@ public final class ProxyUtil {
 	}
 
 	public static <T, E extends Throwable> T createProxy(final Class<T> superClass, final MethodHandler mh)
-			throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException,
-			Throwable {
+			throws Throwable {
 		return createProxy(superClass, mh, null);
 	}
 

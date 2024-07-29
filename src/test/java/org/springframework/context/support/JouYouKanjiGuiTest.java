@@ -695,8 +695,7 @@ class JouYouKanjiGuiTest {
 	}
 
 	@Test
-	void testSetPreferredWidth()
-			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+	void testSetPreferredWidth() {
 		//
 		Assertions.assertDoesNotThrow(() -> setPreferredWidth(0, null));
 		//
