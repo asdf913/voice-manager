@@ -288,7 +288,13 @@ class IpaSymbolGuiTest {
 		//
 		Assertions.assertNull(digest(null, null));
 		//
-		final MessageDigest messageDigest = ProxyUtil.createProxy(MessageDigest.class, mh);
+		final MessageDigest messageDigest = ProxyUtil.createProxy(MessageDigest.class, mh, clz -> {
+			//
+			final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor(String.class) : null;
+			//
+			return constructor != null ? constructor.newInstance((Object) null) : null;
+			//
+		});
 		//
 		Assertions.assertNull(digest(messageDigest, null));
 		//
