@@ -197,9 +197,12 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 							PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
 									"^(\\p{InCJKUnifiedIdeographs}+)([\\p{InKatakana}\\s]+)$"),
 							s1)),
-					Util.groupCount(matcher) > 1, nextElementSiblingsSize > 1)) {
+					Util.groupCount(matcher) > 1, nextElementSiblingsSize > 1)
+					&& !Util.contains(
+							getUnicodeBlocks(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))),
+							UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS)) {
 				//
-				sb = new StringBuilder(ElementUtil.text(IterableUtils.get(nextElementSiblings, 1)));
+				sb = new StringBuilder(s2);
 				//
 				for (int j = 0; j < StringUtils.length(Util.group(matcher, 2)); j++) {
 					//
