@@ -329,6 +329,16 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 					MultimapUtil.entries(ImmutableMultimap.of("沼", "ぬま", "端西", "はたにし")),
 					MultimapUtil.entries(toMultimap(patternMap, "沼ノ端西", es))));
 			//
+			mh.text = "すながわはいうぇい おあしす";
+			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("砂川", "すながわ")),
+							MultimapUtil.entries(toMultimap(patternMap, "砂川ハイウェイ オアシス", es))));
+			//
+			mh.text = "ＩＣ";
+			//
+			Assertions.assertNull(toMultimap(patternMap, "東京湾アクアライン", es));
+			//
 		} // if
 			//
 	}

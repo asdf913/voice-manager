@@ -159,9 +159,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		Matcher matcher = null;
 		//
-		StringBuilder sb = null;
-		//
-		int nextElementSiblingsSize = 0, size = 0;
+		int size = 0;
 		//
 		for (int i = 0; i < IterableUtils.size(es); i++) {
 			//
@@ -174,8 +172,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			if (Boolean.logicalAnd(
 					Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 							getUnicodeBlocks(s1 = ElementUtil.text(e))),
-					(nextElementSiblingsSize = IterableUtils
-							.size(nextElementSiblings = e.nextElementSiblings())) > 1)) {
+					IterableUtils.size(nextElementSiblings = e.nextElementSiblings()) > 1)) {
 				//
 				if (Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
 						getUnicodeBlocks(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))))) {
@@ -192,27 +189,6 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 					//
 				} // if
 					//
-			} else if (and(
-					Util.matches(matcher = Util.matcher(
-							PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
-									"^(\\p{InCJKUnifiedIdeographs}+)([\\p{InKatakana}\\s]+)$"),
-							s1)),
-					Util.groupCount(matcher) > 1, nextElementSiblingsSize > 1)
-					&& !Util.contains(
-							getUnicodeBlocks(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))),
-							UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS)) {
-				//
-				sb = new StringBuilder(s2);
-				//
-				for (int j = 0; j < StringUtils.length(Util.group(matcher, 2)); j++) {
-					//
-					sb.deleteCharAt(StringUtils.length(sb) - 1);
-					//
-				} // for
-					//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(matcher, 1), Objects.toString(sb));
-				//
 			} // if
 				//
 			size = MultimapUtil.size(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create));
@@ -296,6 +272,22 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				//
 			} // for
 				//
+		} else if (and(Util.matches(matcher = Util.matcher(
+				PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)([\\p{InKatakana}\\s]+)$"), s1)),
+				Util.groupCount(matcher) > 1)
+				&& !Util.contains(getUnicodeBlocks(s2), UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS)) {
+			//
+			final StringBuilder sb = new StringBuilder(s2);
+			//
+			for (int j = 0; j < StringUtils.length(Util.group(matcher, 2)); j++) {
+				//
+				sb.deleteCharAt(StringUtils.length(sb) - 1);
+				//
+			} // for
+				//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Objects.toString(sb));
+			//
 		} // if
 			//
 		return multimap;
