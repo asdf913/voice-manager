@@ -25,8 +25,7 @@ import org.junit.jupiter.api.Test;
 import com.google.common.base.Predicates;
 
 import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
+import javassist.util.proxy.ProxyUtil;
 
 class KyushuJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 
@@ -150,7 +149,7 @@ class KyushuJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		//
 		final MH mh = new MH();
 		//
-		final Document document = createProxy(Document.class, mh, x -> {
+		final Document document = ProxyUtil.createProxy(Document.class, mh, x -> {
 			//
 			final Constructor<?> constructor = getDeclaredConstructor(x, String.class);
 			//
@@ -196,44 +195,6 @@ class KyushuJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	private static <T> T newInstance(final Constructor<T> instance, final Object... initargs)
 			throws InstantiationException, IllegalAccessException, InvocationTargetException {
 		return instance != null ? instance.newInstance(initargs) : null;
-	}
-
-	private static <T> T createProxy(final Class<T> superClass, final MethodHandler mh,
-			final FailableFunction<Class<?>, T, Exception> function) throws Throwable {
-		//
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(superClass);
-		//
-		final Class<?> clz = proxyFactory.createClass();
-		//
-		Object instance = null;
-		//
-		if (function != null) {
-			//
-			instance = function != null ? function.apply(clz) : null;
-		} else {
-			//
-			final Constructor<?> constructor = getDeclaredConstructor(clz);
-			//
-			if (constructor != null) {
-				//
-				constructor.setAccessible(true);
-				//
-			} // if
-				//
-			instance = newInstance(constructor);
-			//
-		} // if
-			//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
-		return (T) Util.cast(clz, instance);
-		//
 	}
 
 	private static Entry<String, String> createEntry(final String url) throws Throwable {

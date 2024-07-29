@@ -3,7 +3,6 @@ package org.springframework.context.support;
 import java.awt.Component;
 import java.io.File;
 import java.io.InputStream;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericSignatureFormatError;
 import java.lang.reflect.InvocationHandler;
@@ -56,8 +55,7 @@ import io.github.classgraph.ClassInfoUtil;
 import io.github.classgraph.HasNameUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
+import javassist.util.proxy.ProxyUtil;
 
 class UtilTest {
 
@@ -203,35 +201,11 @@ class UtilTest {
 	private MH mh = null;
 
 	@BeforeEach
-	void beforeEach()
-			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+	void beforeEach() throws Throwable {
 		//
 		stream = Reflection.newProxy(Stream.class, new IH());
 		//
-		invokeInstruction = createProxyObject(InvokeInstruction.class, mh = new MH());
-		//
-	}
-
-	private static <T> T createProxyObject(final Class<T> clz, final MethodHandler mh)
-			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(clz);
-		//
-		final Class<?> c = proxyFactory.createClass();
-		//
-		final Constructor<?> constructor = c != null ? c.getDeclaredConstructor() : null;
-		//
-		final Object instance = constructor != null ? constructor.newInstance() : null;
-		//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
-		return Util.cast(clz, instance);
+		invokeInstruction = ProxyUtil.createProxy(InvokeInstruction.class, mh = new MH());
 		//
 	}
 
@@ -865,7 +839,7 @@ class UtilTest {
 		//
 		Assertions.assertNull(getReferenceType(null, null));
 		//
-		Assertions.assertNull(getReferenceType(createProxyObject(FieldOrMethod.class, mh), null));
+		Assertions.assertNull(getReferenceType(ProxyUtil.createProxy(FieldOrMethod.class, mh), null));
 		//
 		final Class<?> clz = Method.class;
 		//

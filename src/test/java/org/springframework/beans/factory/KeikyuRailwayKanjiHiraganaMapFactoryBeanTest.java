@@ -1,6 +1,5 @@
 package org.springframework.beans.factory;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -20,8 +19,7 @@ import org.junit.jupiter.api.Test;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
+import javassist.util.proxy.ProxyUtil;
 
 class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 
@@ -120,7 +118,7 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 		//
 		final MH mh = new MH();
 		//
-		final Node parentNode = createProxy(Node.class, mh);
+		final Node parentNode = ProxyUtil.createProxy(Node.class, mh);
 		//
 		if (element != null) {
 			//
@@ -149,28 +147,6 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 		} // if
 			//
 		Assertions.assertEquals("{1=null}", Util.toString(createMap(elements)));
-		//
-	}
-
-	private static <T> T createProxy(final Class<T> superClass, final MethodHandler mh) throws Throwable {
-		//
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(superClass);
-		//
-		final Class<?> clz = proxyFactory.createClass();
-		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
-		//
-		final Object instance = constructor != null ? constructor.newInstance() : null;
-		//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
-		return (T) cast(clz, instance);
 		//
 	}
 

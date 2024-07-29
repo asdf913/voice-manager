@@ -35,8 +35,7 @@ import com.google.common.base.Predicates;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
+import javassist.util.proxy.ProxyUtil;
 
 class IpaSymbolGuiTest {
 
@@ -289,23 +288,7 @@ class IpaSymbolGuiTest {
 		//
 		Assertions.assertNull(digest(null, null));
 		//
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(MessageDigest.class);
-		//
-		final Class<?> clz = proxyFactory.createClass();
-		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor(String.class) : null;
-		//
-		final Object instance = constructor != null ? constructor.newInstance((Object) null) : null;
-		//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
-		final MessageDigest messageDigest = cast(MessageDigest.class, instance);
+		final MessageDigest messageDigest = ProxyUtil.createProxy(MessageDigest.class, mh);
 		//
 		Assertions.assertNull(digest(messageDigest, null));
 		//
@@ -343,30 +326,13 @@ class IpaSymbolGuiTest {
 	}
 
 	@Test
-	void testSetPreferredWidth()
-			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+	void testSetPreferredWidth() throws Throwable {
 		//
 		Assertions.assertDoesNotThrow(() -> setPreferredWidth(0, (Component[]) null));
 		//
 		Assertions.assertDoesNotThrow(() -> setPreferredWidth(0, (Component) null));
 		//
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(Component.class);
-		//
-		final Class<?> clz = proxyFactory.createClass();
-		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
-		//
-		final Object instance = constructor != null ? constructor.newInstance() : null;
-		//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
-		final Component component = cast(Component.class, instance);
+		final Component component = ProxyUtil.createProxy(Component.class, mh);
 		//
 		Assertions.assertDoesNotThrow(() -> setPreferredWidth(0, component));
 		//

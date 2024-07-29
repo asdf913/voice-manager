@@ -4,13 +4,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
-import org.apache.commons.lang3.function.FailableFunction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
+import javassist.util.proxy.ProxyUtil;
 
 class TagUtilTest {
 
@@ -43,7 +41,7 @@ class TagUtilTest {
 		//
 		Assertions.assertNull(TagUtil.attr(null, null, null));
 		//
-		Assertions.assertNull(TagUtil.attr(createProxy(Tag.class, new MH(), x -> {
+		Assertions.assertNull(TagUtil.attr(ProxyUtil.createProxy(Tag.class, new MH(), x -> {
 			//
 			final Constructor<?> constructor = x != null ? x.getDeclaredConstructor(String.class) : null;
 			//
@@ -51,39 +49,6 @@ class TagUtilTest {
 			//
 		}), null, null));
 		//
-	}
-
-	private static <T, E extends Throwable> T createProxy(final Class<T> superClass, final MethodHandler mh,
-			final FailableFunction<Class<?>, ?, E> function) throws Throwable {
-		//
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(superClass);
-		//
-		final Class<?> clz = proxyFactory.createClass();
-		//
-		Object instance = function != null ? function.apply(clz) : null;
-		//
-		if (instance == null) {
-			//
-			final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
-			//
-			instance = constructor != null ? constructor.newInstance() : null;
-			//
-		} // if
-			//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
-		return (T) cast(clz, instance);
-		//
-	}
-
-	private static <T> T cast(final Class<T> clz, final Object instance) {
-		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
 }

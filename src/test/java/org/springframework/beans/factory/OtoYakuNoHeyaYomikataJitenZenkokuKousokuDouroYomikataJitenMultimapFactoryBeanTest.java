@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
-import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -32,8 +31,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
 import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
+import javassist.util.proxy.ProxyUtil;
 
 class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBeanTest {
 
@@ -266,7 +264,7 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 			//
 			final MH mh = new MH();
 			//
-			final Document document = createProxy(Document.class, mh, x -> {
+			final Document document = ProxyUtil.createProxy(Document.class, mh, x -> {
 				//
 				final Constructor<?> constructor = getDeclaredConstructor(x, String.class);
 				//
@@ -320,45 +318,6 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 	private static <T> T newInstance(final Constructor<T> instance, final Object... initargs)
 			throws InstantiationException, IllegalAccessException, InvocationTargetException {
 		return instance != null ? instance.newInstance(initargs) : null;
-	}
-
-	private static <T> T createProxy(final Class<T> superClass, final MethodHandler mh,
-			final FailableFunction<Class<?>, T, Exception> function) throws Throwable {
-		//
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(superClass);
-		//
-		final Class<?> clz = proxyFactory.createClass();
-		//
-		Object instance = null;
-		//
-		if (function != null) {
-			//
-			instance = FailableFunctionUtil.apply(function, clz);
-			//
-		} else {
-			//
-			final Constructor<?> constructor = getDeclaredConstructor(clz);
-			//
-			if (constructor != null) {
-				//
-				constructor.setAccessible(true);
-				//
-			} // if
-				//
-			instance = newInstance(constructor);
-			//
-		} // if
-			//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
-		return (T) Util.cast(clz, instance);
-		//
 	}
 
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s1,

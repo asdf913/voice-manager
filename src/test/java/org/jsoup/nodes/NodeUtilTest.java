@@ -1,6 +1,5 @@
 package org.jsoup.nodes;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
@@ -26,8 +25,7 @@ import io.github.classgraph.ClassInfoUtil;
 import io.github.classgraph.HasNameUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
+import javassist.util.proxy.ProxyUtil;
 
 class NodeUtilTest {
 
@@ -132,25 +130,7 @@ class NodeUtilTest {
 	@BeforeEach
 	private void beforeEach() throws Throwable {
 		//
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(Node.class);
-		//
-		final Class<?> clz = proxyFactory.createClass();
-		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
-		//
-		final Object instance = constructor != null ? constructor.newInstance() : null;
-		//
-		mh = new MH();
-		//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
-		node = cast(Node.class, instance);
+		node = ProxyUtil.createProxy(Node.class, mh = new MH());
 		//
 		ih = new IH();
 		//
@@ -359,7 +339,7 @@ class NodeUtilTest {
 		//
 		if (mh != null) {
 			//
-			final Node node = createProxy(Node.class, mh);
+			final Node node = ProxyUtil.createProxy(Node.class, mh);
 			//
 			Assertions.assertEquals(mh.hasAttr = Boolean.FALSE, Boolean.valueOf(NodeUtil.hasAttr(node, null)));
 			//
@@ -367,28 +347,6 @@ class NodeUtilTest {
 			//
 		} // if
 			//
-	}
-
-	private static <T> T createProxy(final Class<T> superClass, final MethodHandler mh) throws Throwable {
-		//
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(superClass);
-		//
-		final Class<?> clz = proxyFactory.createClass();
-		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
-		//
-		final Object instance = constructor != null ? constructor.newInstance() : null;
-		//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
-		return (T) cast(clz, instance);
-		//
 	}
 
 	@Test

@@ -33,8 +33,7 @@ import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
+import javassist.util.proxy.ProxyUtil;
 
 class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 
@@ -306,8 +305,7 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 	}
 
 	@Test
-	void testSetHiraganaKanjiRomaji()
-			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+	void testSetHiraganaKanjiRomaji() throws Throwable {
 		//
 		Assertions
 				.assertDoesNotThrow(() -> setHiraganaKanjiRomaji(null, Reflection.newProxy(Iterable.class, new IH())));
@@ -316,7 +314,7 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 		//
 		final MH mh = new MH();
 		//
-		final Iterable<Node> nodes = Collections.singleton(createProxy(Node.class, mh));
+		final Iterable<Node> nodes = Collections.singleton(ProxyUtil.createProxy(Node.class, mh));
 		//
 		Assertions.assertDoesNotThrow(() -> setHiraganaKanjiRomaji(null, nodes));
 		//
@@ -336,29 +334,6 @@ class RyutetsuKanjiHiraganaMapFactoryBeanTest {
 			//
 		Assertions.assertDoesNotThrow(
 				() -> setHiraganaKanjiRomaji(constructor != null ? constructor.newInstance() : null, nodes));
-		//
-	}
-
-	private static <T> T createProxy(final Class<T> clz, final MethodHandler mh)
-			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(clz);
-		//
-		final Class<?> c = proxyFactory.createClass();
-		//
-		final Constructor<?> constructor = c != null ? c.getDeclaredConstructor() : null;
-		//
-		final Object instance = constructor != null ? constructor.newInstance() : null;
-		//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
-		return Util.cast(clz, instance);
 		//
 	}
 

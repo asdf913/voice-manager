@@ -38,8 +38,7 @@ import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
+import javassist.util.proxy.ProxyUtil;
 
 class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 
@@ -381,13 +380,13 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 			//
 		};
 		//
-		final Element e1 = createProxy(Element.class, mh1, function);
+		final Element e1 = ProxyUtil.createProxy(Element.class, mh1, function);
 		//
 		Assertions.assertNull(toMultimap(null, Arrays.asList(e1, null, null), 0));
 		//
 		final MH mh2 = new MH();
 		//
-		final Element e2 = createProxy(Element.class, mh2, function);
+		final Element e2 = ProxyUtil.createProxy(Element.class, mh2, function);
 		//
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(
 				MultimapUtil.entries(ImmutableMultimap.of(mh1.text = "御殿場", mh2.text = "ごてんば")),
@@ -399,38 +398,6 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("清水", "しみず")),
 				MultimapUtil.entries(toMultimap(null, Arrays.asList(e1, null, e2), 0))));
-		//
-	}
-
-	private static <T> T createProxy(final Class<T> superClass, final MethodHandler mh,
-			final FailableFunction<Class<?>, T, Throwable> function) throws Throwable {
-		//
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(superClass);
-		//
-		final Class<?> clz = proxyFactory.createClass();
-		//
-		Object instance = null;
-		//
-		if (function == null) {
-			//
-			final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
-			//
-			instance = constructor != null ? constructor.newInstance() : null;
-		} else {
-			//
-			instance = function.apply(clz);
-			//
-		} // if
-			//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
-		return (T) Util.cast(clz, instance);
 		//
 	}
 
@@ -469,7 +436,7 @@ class OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBeanTest {
 			//
 		};
 		//
-		final Element e = createProxy(Element.class, mh1, function);
+		final Element e = ProxyUtil.createProxy(Element.class, mh1, function);
 		//
 		mh1.text = "沼津市根古屋（ぬまづしねごや)";
 		//

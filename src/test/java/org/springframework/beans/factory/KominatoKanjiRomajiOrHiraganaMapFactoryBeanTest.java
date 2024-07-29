@@ -31,8 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
+import javassist.util.proxy.ProxyUtil;
 
 class KominatoKanjiRomajiOrHiraganaMapFactoryBeanTest {
 
@@ -155,37 +154,10 @@ class KominatoKanjiRomajiOrHiraganaMapFactoryBeanTest {
 								.writeValueAsString(objectMapper,
 										getKanjiHiraganaRomaji(
 												new FailableStream<>(Stream.of(mh1, mh2, mh3))
-														.map(x -> createProxy(Element.class, x,
+														.map(x -> ProxyUtil.createProxy(Element.class, x,
 																y -> newInstance(
 																		getDeclaredConstructor(y, String.class), "a")))
 														.collect(Collectors.toList()))));
-		//
-	}
-
-	private static <T, E extends ReflectiveOperationException> T createProxy(final Class<T> clz, final MethodHandler mh,
-			final FailableFunction<Class<?>, Object, E> function) throws ReflectiveOperationException {
-		//
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(Element.class);
-		//
-		final Class<?> c = proxyFactory.createClass();
-		//
-		Object instance = function != null ? function.apply(c) : null;
-		//
-		if (instance == null) {
-			//
-			instance = newInstance(c != null ? c.getDeclaredConstructor() : null);
-			//
-		} // if
-			//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
-		return Util.cast(clz, instance);
 		//
 	}
 

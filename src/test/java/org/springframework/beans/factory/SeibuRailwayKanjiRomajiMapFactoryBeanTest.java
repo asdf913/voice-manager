@@ -11,7 +11,6 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableFunction;
-import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
@@ -23,8 +22,7 @@ import com.google.common.base.Predicates;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
+import javassist.util.proxy.ProxyUtil;
 
 class SeibuRailwayKanjiRomajiMapFactoryBeanTest {
 
@@ -113,7 +111,7 @@ class SeibuRailwayKanjiRomajiMapFactoryBeanTest {
 		//
 		mh.text = "";
 		//
-		final Element childNode2 = createProxy(Element.class, clz -> {
+		final Element childNode2 = ProxyUtil.createProxy(Element.class, mh, clz -> {
 			//
 			final Constructor<?> c = clz != null ? clz.getDeclaredConstructor(String.class) : null;
 			//
@@ -125,7 +123,7 @@ class SeibuRailwayKanjiRomajiMapFactoryBeanTest {
 				//
 			return c != null ? c.newInstance("A") : null;
 			//
-		}, mh);
+		});
 		//
 		final Element element2 = cast(Element.class, Narcissus.allocateInstance(Element.class));
 		//
@@ -137,40 +135,6 @@ class SeibuRailwayKanjiRomajiMapFactoryBeanTest {
 		} // if
 			//
 		Assertions.assertThrows(IllegalStateException.class, () -> createMap(Arrays.asList(element1, element2)));
-		//
-	}
-
-	private static <T> T createProxy(final Class<T> superClass,
-			final FailableFunction<Class<?>, Object, ReflectiveOperationException> function, final MethodHandler mh)
-			throws ReflectiveOperationException {
-		//
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(superClass);
-		//
-		final Class<?> clz = proxyFactory.createClass();
-		//
-		Object instance = null;
-		//
-		if (function != null) {
-			//
-			instance = FailableFunctionUtil.apply(function, clz);
-			//
-		} else {
-			//
-			final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
-			//
-			instance = constructor != null ? constructor.newInstance() : null;
-			//
-		} // if
-			//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
-		return (T) cast(clz, instance);
 		//
 	}
 

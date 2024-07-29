@@ -65,8 +65,7 @@ import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
+import javassist.util.proxy.ProxyUtil;
 
 class MapReportGuiTest {
 
@@ -74,10 +73,10 @@ class MapReportGuiTest {
 
 	private static Method METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_REMOVE_ROW, METHOD_ADD_ROW,
 			METHOD_GET_PREFERRED_WIDTH, METHOD_DOUBLE_VALUE, METHOD_AS_MAP, METHOD_GET_VALUES, METHOD_OR_ELSE,
-			METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_GET_SYSTEM_CLIP_BOARD,
-			METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_LENGTH, METHOD_TEST_AND_APPLY,
-			METHOD_CREATE_MULTIMAP, METHOD_CLEAR, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
-			METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER, METHOD_WRITE_VALUE_AS_STRING = null;
+			METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS,
+			METHOD_ADD_ACTION_LISTENER, METHOD_LENGTH, METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_CLEAR,
+			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER,
+			METHOD_WRITE_VALUE_AS_STRING = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -569,7 +568,7 @@ class MapReportGuiTest {
 		//
 		if (GraphicsEnvironment.isHeadless()) {
 			//
-			final Component component = createProxy(Component.class, mh);
+			final Component component = ProxyUtil.createProxy(Component.class, mh);
 			//
 			Assertions.assertNull(getPreferredWidth(component));
 			//
@@ -785,32 +784,10 @@ class MapReportGuiTest {
 		//
 		if (GraphicsEnvironment.isHeadless()) {
 			//
-			Assertions.assertNull(getSystemClipboard(createProxy(Toolkit.class, mh)));
+			Assertions.assertNull(getSystemClipboard(ProxyUtil.createProxy(Toolkit.class, mh)));
 			//
 		} // if
 			//
-	}
-
-	private static <T> T createProxy(final Class<T> c, final MethodHandler mh) throws Throwable {
-		//
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(c);
-		//
-		final Class<?> clz = proxyFactory.createClass();
-		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
-		//
-		final Object instance = constructor != null ? constructor.newInstance() : null;
-		//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
-		return Util.cast(c, instance);
-		//
 	}
 
 	private static Clipboard getSystemClipboard(final Toolkit instance) throws Throwable {

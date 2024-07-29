@@ -76,8 +76,7 @@ import com.google.common.util.concurrent.Runnables;
 import domain.Pronunciation;
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
+import javassist.util.proxy.ProxyUtil;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 
@@ -675,28 +674,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		}
 	}
 
-	private static <T> T createProxy(final Class<T> superClass, final MethodHandler mh) throws Throwable {
-		//
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(superClass);
-		//
-		final Class<?> clz = proxyFactory.createClass();
-		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
-		//
-		final Object instance = constructor != null ? constructor.newInstance() : null;
-		//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
-		return (T) Util.cast(clz, instance);
-		//
-	}
-
 	@Test
 	void testGetWidth() throws Throwable {
 		//
@@ -797,7 +774,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		Assertions.assertNull(getSystemClipboard(null));
 		//
-		Assertions.assertNull(getSystemClipboard(createProxy(Toolkit.class, mh)));
+		Assertions.assertNull(getSystemClipboard(ProxyUtil.createProxy(Toolkit.class, mh)));
 		//
 	}
 

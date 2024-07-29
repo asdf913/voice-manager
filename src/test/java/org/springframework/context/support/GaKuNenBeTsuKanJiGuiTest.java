@@ -52,8 +52,7 @@ import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
+import javassist.util.proxy.ProxyUtil;
 
 class GaKuNenBeTsuKanJiGuiTest {
 
@@ -739,26 +738,8 @@ class GaKuNenBeTsuKanJiGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> setPreferredWidth(0, Collections.singleton(null)));
 		//
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(Component.class);
-		//
-		final Class<?> clz = proxyFactory.createClass();
-		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
-		//
-		final Object instance = constructor != null ? constructor.newInstance() : null;
-		//
-		final MH mh = new MH();
-		//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
 		Assertions.assertDoesNotThrow(
-				() -> setPreferredWidth(0, Collections.singleton(Util.cast(Component.class, instance))));
+				() -> setPreferredWidth(0, Collections.singleton(ProxyUtil.createProxy(Component.class, new MH()))));
 		//
 	}
 

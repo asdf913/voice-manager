@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -35,7 +34,6 @@ import java.util.stream.Stream;
 
 import javax.swing.JComboBox;
 
-import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -54,8 +52,7 @@ import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
+import javassist.util.proxy.ProxyUtil;
 
 class IniAsPropertiesResourceTest {
 
@@ -798,29 +795,10 @@ class IniAsPropertiesResourceTest {
 	@Test
 	void testReady() throws Throwable {
 		//
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(Reader.class);
-		//
-		final Class<?> clz = proxyFactory.createClass();
-		//
-		final List<Constructor<?>> cs = toList(
-				filter(testAndApply(Objects::nonNull, clz != null ? clz.getDeclaredConstructors() : null,
-						Arrays::stream, null), x -> x != null && x.getParameterCount() == 0));
-		//
-		final Constructor<?> c = testAndApply(x -> IterableUtils.size(x) == 1, cs, x -> IterableUtils.get(x, 0), null);
-		//
-		final Object instance = c != null ? c.newInstance() : null;
-		//
 		final MH mh = new MH();
 		//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
-		Assertions.assertSame(mh.ready = Boolean.FALSE, Boolean.valueOf(ready(cast(Reader.class, instance))));
+		Assertions.assertSame(mh.ready = Boolean.FALSE,
+				Boolean.valueOf(ready(ProxyUtil.createProxy(Reader.class, mh))));
 		//
 	}
 

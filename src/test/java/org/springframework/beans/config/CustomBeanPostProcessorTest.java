@@ -7,7 +7,6 @@ import java.awt.GraphicsEnvironment;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -43,8 +42,7 @@ import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
+import javassist.util.proxy.ProxyUtil;
 
 class CustomBeanPostProcessorTest {
 
@@ -325,7 +323,7 @@ class CustomBeanPostProcessorTest {
 	}
 
 	@Test
-	void testPostProcessAfterInitialization() throws ReflectiveOperationException {
+	void testPostProcessAfterInitialization() throws Throwable {
 		//
 		// org.springframework.core.env.PropertyResolver
 		//
@@ -384,22 +382,8 @@ class CustomBeanPostProcessorTest {
 		// Create a "java.awt.Component" instance which
 		// "java.awt.Component.getPreferredSize()" method returns null
 		//
-		final ProxyFactory proxyFactory = new ProxyFactory();
+		final Object object = ProxyUtil.createProxy(Component.class, new MH());
 		//
-		proxyFactory.setSuperclass(Component.class);
-		//
-		final Class<?> clz = proxyFactory.createClass();
-		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
-		//
-		final Object object = constructor != null ? constructor.newInstance() : null;
-		//
-		if (object instanceof ProxyObject) {
-			//
-			((ProxyObject) object).setHandler(new MH());
-			//
-		} // if
-			//
 		Assertions.assertSame(object, postProcessAfterInitialization(instance, object, null));
 		//
 	}

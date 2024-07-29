@@ -47,8 +47,7 @@ import com.google.common.reflect.Reflection;
 import domain.Pronunciation;
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
+import javassist.util.proxy.ProxyUtil;
 
 class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 
@@ -460,29 +459,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		//
 		Assertions.assertNull(getGraphics(null));
 		//
-		Assertions.assertNull(getGraphics(createProxy(Image.class, mh)));
-		//
-	}
-
-	private static <T> T createProxy(final Class<T> superClass, final MethodHandler mh) throws Throwable {
-		//
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(superClass);
-		//
-		final Class<?> clz = proxyFactory.createClass();
-		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
-		//
-		final Object instance = constructor != null ? constructor.newInstance() : null;
-		//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(mh);
-			//
-		} // if
-			//
-		return (T) cast(clz, instance);
+		Assertions.assertNull(getGraphics(ProxyUtil.createProxy(Image.class, mh)));
 		//
 	}
 
@@ -513,7 +490,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(b, drawImage(createProxy(Graphics.class, mh), null, ZERO, ZERO, null));
+		Assertions.assertEquals(b, drawImage(ProxyUtil.createProxy(Graphics.class, mh), null, ZERO, ZERO, null));
 		//
 		if (mh != null) {
 			//
@@ -521,7 +498,7 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(b, drawImage(createProxy(Graphics.class, mh), null, ZERO, ZERO, null));
+		Assertions.assertEquals(b, drawImage(ProxyUtil.createProxy(Graphics.class, mh), null, ZERO, ZERO, null));
 		//
 	}
 

@@ -65,8 +65,7 @@ import com.helger.css.decl.CSSExpression;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyFactory;
-import javassist.util.proxy.ProxyObject;
+import javassist.util.proxy.ProxyUtil;
 
 class JouYouKanjiGuiTest {
 
@@ -703,24 +702,8 @@ class JouYouKanjiGuiTest {
 		//
 		// java.awt.Component.getPreferredSize() return null
 		//
-		final ProxyFactory proxyFactory = new ProxyFactory();
-		//
-		proxyFactory.setSuperclass(Component.class);
-		//
-		final Class<?> clz = proxyFactory.createClass();
-		//
-		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
-		//
-		final Object instance = constructor != null ? constructor.newInstance() : null;
-		//
-		if (instance instanceof ProxyObject) {
-			//
-			((ProxyObject) instance).setHandler(new MH());
-			//
-		} // if
-			//
 		Assertions.assertDoesNotThrow(
-				() -> setPreferredWidth(0, Arrays.asList(null, Util.cast(Component.class, instance))));
+				() -> setPreferredWidth(0, Arrays.asList(null, ProxyUtil.createProxy(Component.class, new MH()))));
 		//
 	}
 
