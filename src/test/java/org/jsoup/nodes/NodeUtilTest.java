@@ -339,11 +339,11 @@ class NodeUtilTest {
 		//
 		if (mh != null) {
 			//
-			final Node node = ProxyUtil.createProxy(Node.class, mh);
+			final Node n = ProxyUtil.createProxy(Node.class, mh);
 			//
-			Assertions.assertEquals(mh.hasAttr = Boolean.FALSE, Boolean.valueOf(NodeUtil.hasAttr(node, null)));
+			Assertions.assertEquals(mh.hasAttr = Boolean.FALSE, Boolean.valueOf(NodeUtil.hasAttr(n, null)));
 			//
-			Assertions.assertEquals(mh.hasAttr = Boolean.TRUE, Boolean.valueOf(NodeUtil.hasAttr(node, null)));
+			Assertions.assertEquals(mh.hasAttr = Boolean.TRUE, Boolean.valueOf(NodeUtil.hasAttr(n, null)));
 			//
 		} // if
 			//
