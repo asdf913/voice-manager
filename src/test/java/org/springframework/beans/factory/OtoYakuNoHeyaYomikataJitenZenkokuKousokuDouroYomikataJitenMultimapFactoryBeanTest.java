@@ -1,5 +1,6 @@
 package org.springframework.beans.factory;
 
+import java.io.InputStream;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -9,9 +10,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -133,9 +136,29 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 			//
 			if (instance != null) {
 				//
-				instance.setUrls(Arrays.asList("https://hiramatu-hifuka.com/onyak/onyak2/kosoku01.html",
-						"https://hiramatu-hifuka.com/onyak/onyak2/kosoku02.html"));
+				final Class<?> clz = getClass();
 				//
+				Properties properties = null;
+				//
+				try (final InputStream is = clz != null ? clz.getResourceAsStream("/configuration.properties") : null) {
+					if (is != null) {
+						(properties = new Properties()).load(is);
+					}
+				}
+				//
+				if (Util.containsKey(properties,
+						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBean.urls")) {
+					//
+					instance.setUrls(MapUtils.getObject(properties,
+							"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBean.urls"));
+					//
+				} else {
+					//
+					instance.setUrls(Arrays.asList("https://hiramatu-hifuka.com/onyak/onyak2/kosoku01.html",
+							"https://hiramatu-hifuka.com/onyak/onyak2/kosoku02.html"));
+					//
+				} // if
+					//
 			} // if
 				//
 			Assertions.assertDoesNotThrow(() -> instance != null ? instance.getObject() : null);
