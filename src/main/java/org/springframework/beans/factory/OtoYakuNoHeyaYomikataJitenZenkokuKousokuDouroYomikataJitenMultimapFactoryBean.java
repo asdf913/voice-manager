@@ -83,22 +83,17 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				//
 		} // for
 			//
-		if (Util.iterator(urls) != null) {
+		for (int i = 0; i < IterableUtils.size(urls); i++) {
 			//
-			for (final String url : urls) {
-				//
-				MultimapUtil
-						.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								toMultimap(
-										testAndApply(Objects::nonNull,
-												testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(),
-														null),
-												x -> Jsoup.parse(x, 0), null),
-										patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new)));
-				//
-			} // for
-				//
-		} // if
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					toMultimap(
+							testAndApply(Objects::nonNull,
+									testAndApply(StringUtils::isNotBlank, IterableUtils.get(urls, i),
+											x -> new URI(x).toURL(), null),
+									x -> Jsoup.parse(x, 0), null),
+							patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new)));
+			//
+		} // for
 			//
 		return multimap;
 		//
