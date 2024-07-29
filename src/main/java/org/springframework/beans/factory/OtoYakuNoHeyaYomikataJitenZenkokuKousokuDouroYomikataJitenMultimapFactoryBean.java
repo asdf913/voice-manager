@@ -60,14 +60,14 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		Multimap<String, String> multimap = null;
 		//
+		PatternMap patternMap = null;
+		//
 		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-				toMultimap(document));
+				toMultimap(document, patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new)));
 		//
 		final List<Element> es = ElementUtil.select(document, "a");
 		//
 		Element e = null;
-		//
-		PatternMap patternMap = null;
 		//
 		List<String> urls = null;
 		//
@@ -87,10 +87,14 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			//
 			for (final String url : urls) {
 				//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						toMultimap(testAndApply(Objects::nonNull,
-								testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null),
-								x -> Jsoup.parse(x, 0), null)));
+				MultimapUtil
+						.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								toMultimap(
+										testAndApply(Objects::nonNull,
+												testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(),
+														null),
+												x -> Jsoup.parse(x, 0), null),
+										patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new)));
 				//
 			} // for
 				//
@@ -100,7 +104,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
-	private static Multimap<String, String> toMultimap(final Document document) {
+	private static Multimap<String, String> toMultimap(final Document document, final PatternMap patternMap) {
 		//
 		final List<Element> es = ElementUtil.select(document, "td");
 		//
@@ -111,8 +115,6 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		List<Element> nextElementSiblings = null;
 		//
 		Multimap<String, String> multimap = null;
-		//
-		PatternMap patternMap = null;
 		//
 		Matcher matcher = null;
 		//
@@ -136,10 +138,10 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s2);
 					//
-				} else if (Boolean.logicalAnd(Util.matches(matcher = Util.matcher(
-						PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
-								"^(\\p{InHiragana}+).+"),
-						s2)), Util.groupCount(matcher) > 0)) {
+				} else if (Boolean.logicalAnd(
+						Util.matches(
+								matcher = Util.matcher(PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+).+"), s2)),
+						Util.groupCount(matcher) > 0)) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
 							Util.group(matcher, 1));
@@ -151,7 +153,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			size = MultimapUtil.size(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create));
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					toMultimap(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), s1));
+					toMultimap(patternMap, s1));
 			//
 			if (MultimapUtil.size(multimap) > size) {
 				//
@@ -159,8 +161,8 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				//
 			} // if
 				//
-			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), toMultimap(
-					patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), s1, nextElementSiblings));
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					toMultimap(patternMap, s1, nextElementSiblings));
 			//
 		} // for
 			//
