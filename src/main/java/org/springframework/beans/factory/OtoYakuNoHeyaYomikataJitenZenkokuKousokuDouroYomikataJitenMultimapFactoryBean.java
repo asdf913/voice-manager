@@ -3,17 +3,14 @@ package org.springframework.beans.factory;
 import java.lang.Character.UnicodeBlock;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
 
@@ -32,9 +29,6 @@ import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.nodes.TextNodeUtil;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
@@ -42,73 +36,11 @@ import com.google.common.collect.MultimapUtil;
 public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBean
 		extends StringMultiMapFromResourceFactoryBean {
 
-	@Nullable
-	private Iterable<String> urls = null;
+	@URL("https://hiramatu-hifuka.com/onyak/onyak2/kosoku01.html")
+	private String url = null;
 
-	public void setUrls(@Nullable final Object input) throws JsonProcessingException {
-		//
-		if (input == null) {
-			//
-			urls = null;
-			//
-			return;
-			//
-		} else if (input instanceof Number || input instanceof Boolean) {
-			//
-			urls = Collections.singleton(Util.toString(input));
-			//
-			return;
-			//
-		} else if (input instanceof Object[] os) {
-			//
-			urls = Util.toList(Util.map(Arrays.stream(os), Util::toString));
-			//
-			return;
-			//
-		} // if
-			//
-		final Iterable<?> iterable = Util.cast(Iterable.class, input);
-		//
-		if (iterable != null) {
-			//
-			urls = Util.toList(Util.map(StreamSupport.stream(iterable.spliterator(), false), Util::toString));
-			//
-			return;
-			//
-		} // if
-			//
-		final String string = Util.toString(input);
-		//
-		if (StringUtils.isEmpty(string)) {
-			//
-			urls = Collections.singleton(string);
-			//
-		} else {
-			//
-			final Object object = ObjectMapperUtil.readValue(new ObjectMapper(), Util.toString(input), Object.class);
-			//
-			if (object instanceof Iterable<?>) {
-				//
-				setUrls(object);
-				//
-				return;
-				//
-			} else if (object instanceof CharSequence || object instanceof Number) {
-				//
-				setUrls(Collections.singleton(object));
-				//
-				return;
-				//
-			} else if (object instanceof Map) {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
-		} // if
-			//
-		urls = Collections.singleton(Util.toString(input));
-		//
+	public void setUrl(final String url) {
+		this.url = url;
 	}
 
 	@Override
@@ -122,14 +54,43 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			//
 		} // if
 			//
+		final Document document = testAndApply(Objects::nonNull,
+				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
+				null);
+		//
 		Multimap<String, String> multimap = null;
 		//
+		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+				toMultimap(document));
+		//
+		final List<Element> es = ElementUtil.select(document, "a");
+		//
+		Element e = null;
+		//
+		PatternMap patternMap = null;
+		//
+		List<String> urls = null;
+		//
+		for (int i = 0; es != null && i < es.size(); i++) {
+			//
+			if (Util.matches(Util.matcher(PatternMap
+					.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), "^Ｎｏ.\\d+$"),
+					ElementUtil.text(e = es.get(i))))) {
+				//
+				Util.add(urls = ObjectUtils.getIfNull(urls, ArrayList::new), e.absUrl("href"));
+				//
+			} // if
+				//
+		} // for
+			//
 		if (Util.iterator(urls) != null) {
 			//
 			for (final String url : urls) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						toMultimap(url));
+						toMultimap(testAndApply(Objects::nonNull,
+								testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null),
+								x -> Jsoup.parse(x, 0), null)));
 				//
 			} // for
 				//
@@ -139,11 +100,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
-	private static Multimap<String, String> toMultimap(final String url) throws Exception {
-		//
-		final Document document = testAndApply(Objects::nonNull,
-				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
-				null);
+	private static Multimap<String, String> toMultimap(final Document document) {
 		//
 		final List<Element> es = ElementUtil.select(document, "td");
 		//

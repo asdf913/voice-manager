@@ -1,23 +1,18 @@
 package org.springframework.beans.factory;
 
-import java.io.InputStream;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Properties;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
@@ -26,8 +21,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
@@ -37,8 +30,6 @@ import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyUtil;
 
 class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBeanTest {
-
-	private static final String SPACE = " ";
 
 	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_AND, METHOD_TO_MULTI_MAP_STRING,
 			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_3 = null;
@@ -112,53 +103,15 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(instance != null ? instance.getObject() : null);
-		//
-		if (instance != null) {
-			//
-			instance.setUrls(Collections.singleton(""));
-			//
-		} // if
-			//
-		final Multimap<?, ?> multimap = ImmutableMultimap.of();
-		//
-		Assertions.assertEquals(multimap, instance != null ? instance.getObject() : null);
-		//
-		if (instance != null) {
-			//
-			instance.setUrls(Collections.singleton(SPACE));
-			//
-		} // if
-			//
-		Assertions.assertEquals(multimap, instance != null ? instance.getObject() : null);
+		Assertions.assertEquals(ImmutableMultimap.of(), instance != null ? instance.getObject() : null);
 		//
 		if (isSystemPropertiesContainsTestGetObject) {
 			//
 			if (instance != null) {
 				//
-				final Class<?> clz = getClass();
+				instance.setUrl(Util.toString(Util.getValue(TestUtil.getFieldWithUrlAnnotationAndValue(
+						OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBean.class))));
 				//
-				Properties properties = null;
-				//
-				try (final InputStream is = clz != null ? clz.getResourceAsStream("/configuration.properties") : null) {
-					if (is != null) {
-						(properties = new Properties()).load(is);
-					}
-				}
-				//
-				if (Util.containsKey(properties,
-						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBean.urls")) {
-					//
-					instance.setUrls(MapUtils.getObject(properties,
-							"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBean.urls"));
-					//
-				} else {
-					//
-					instance.setUrls(Arrays.asList("https://hiramatu-hifuka.com/onyak/onyak2/kosoku01.html",
-							"https://hiramatu-hifuka.com/onyak/onyak2/kosoku02.html"));
-					//
-				} // if
-					//
 			} // if
 				//
 			Assertions.assertDoesNotThrow(() -> instance != null ? instance.getObject() : null);
@@ -395,78 +348,6 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetUrls() throws Exception {
-		//
-		final Field urls = OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBean.class
-				.getDeclaredField("urls");
-		//
-		if (urls != null) {
-			//
-			urls.setAccessible(true);
-			//
-		} // if
-			//
-		setUrls(instance, null);
-		//
-		Assertions.assertNull(FieldUtils.readField(urls, instance));
-		//
-		String string = "";
-		//
-		setUrls(instance, string);
-		//
-		Assertions.assertEquals(Collections.singleton(string), FieldUtils.readField(urls, instance));
-		//
-		setUrls(instance, new String[] { string });
-		//
-		Assertions.assertEquals(Collections.singletonList(string), FieldUtils.readField(urls, instance));
-		//
-		setUrls(instance, string = SPACE);
-		//
-		Assertions.assertEquals(Collections.singleton(string), FieldUtils.readField(urls, instance));
-		//
-		final Number number = Integer.valueOf(1);
-		//
-		setUrls(instance, number);
-		//
-		Assertions.assertEquals(Collections.singleton(Util.toString(number)), FieldUtils.readField(urls, instance));
-		//
-		final Boolean b = Boolean.TRUE;
-		//
-		setUrls(instance, b);
-		//
-		Assertions.assertEquals(Collections.singleton(Util.toString(b)), FieldUtils.readField(urls, instance));
-		//
-		setUrls(instance, new ObjectMapper().writeValueAsString(Collections.emptySet()));
-		//
-		Assertions.assertEquals(Collections.emptyList(), FieldUtils.readField(urls, instance));
-		//
-		final ObjectMapper objectMapper = new ObjectMapper();
-		//
-		setUrls(instance, objectMapper.writeValueAsString(SPACE));
-		//
-		Assertions.assertEquals(Collections.singletonList(SPACE), FieldUtils.readField(urls, instance));
-		//
-		setUrls(instance, objectMapper.writeValueAsString(number));
-		//
-		Assertions.assertEquals(Collections.singletonList(Util.toString(number)), FieldUtils.readField(urls, instance));
-		//
-		setUrls(instance, objectMapper.writeValueAsString(b));
-		//
-		Assertions.assertEquals(Collections.singleton(Util.toString(b)), FieldUtils.readField(urls, instance));
-		//
-		Assertions.assertThrows(IllegalStateException.class,
-				() -> setUrls(instance, objectMapper.writeValueAsString(Collections.emptyMap())));
-		//
-	}
-
-	private void setUrls(final OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBean instance,
-			final Object input) throws JsonProcessingException {
-		if (instance != null) {
-			instance.setUrls(input);
 		}
 	}
 
