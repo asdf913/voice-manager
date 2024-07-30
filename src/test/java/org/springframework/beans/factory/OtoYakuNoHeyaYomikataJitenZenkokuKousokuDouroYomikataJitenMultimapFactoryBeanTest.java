@@ -4,7 +4,10 @@ import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +17,7 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.validator.routines.IntegerValidator;
 import org.jsoup.nodes.Document;
@@ -30,6 +34,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
+import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyUtil;
 
@@ -37,7 +42,7 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 
 	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_AND,
 			METHOD_TO_MULTI_MAP_STRING, METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_3_ITERABLE,
-			METHOD_TO_MULTI_MAP_3_MULTI_MAP, METHOD_CONTAINS_ENTRY, METHOD_VALIDATE = null;
+			METHOD_TO_MULTI_MAP_3_MULTI_MAP, METHOD_VALIDATE = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -65,9 +70,6 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 		//
 		(METHOD_TO_MULTI_MAP_3_MULTI_MAP = clz.getDeclaredMethod("toMultimap", PatternMap.class, String.class,
 				Multimap.class)).setAccessible(true);
-		//
-		(METHOD_CONTAINS_ENTRY = clz.getDeclaredMethod("containsEntry", Multimap.class, Object.class, Object.class))
-				.setAccessible(true);
 		//
 		(METHOD_VALIDATE = clz.getDeclaredMethod("validate", IntegerValidator.class, String.class)).setAccessible(true);
 		//
@@ -139,8 +141,6 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 	@Test
 	void testTestAndApply() throws Throwable {
 		//
-		Assertions.assertNull(testAndApply(null, null, null, null, null));
-		//
 		Assertions.assertNull(testAndApply(org.meeuw.functional.Predicates.biAlwaysFalse(), null, null, null, null));
 		//
 		if (!isSystemPropertiesContainsTestGetObject) {
@@ -175,8 +175,6 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 
 	@Test
 	void testGetUnicodeBlocks() throws Throwable {
-		//
-		Assertions.assertNull(getUnicodeBlocks(null));
 		//
 		if (!isSystemPropertiesContainsTestGetObject) {
 			//
@@ -255,8 +253,6 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 			//
 		} // if
 			//
-		Assertions.assertNull(toMultimap((PatternMap) null, null));
-		//
 		final Pattern pattern = Pattern.compile("^（(\\p{InHIRAGANA}+)）$");
 		//
 		final TextNode textNode = new TextNode("（さっそんじどうしゃどう）");
@@ -264,10 +260,6 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 		Assertions.assertNull(toMultimap(Collections.singleton(textNode), pattern));
 		//
 		final Multimap<?, ?> multimap = ImmutableMultimap.of();
-		//
-		Assertions.assertEquals(multimap, toMultimap(null, null, (Iterable) null));
-		//
-		Assertions.assertNull(toMultimap(null, null, (Multimap) null));
 		//
 		final PatternMap patternMap = new PatternMapImpl();
 		//
@@ -454,29 +446,7 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 	}
 
 	@Test
-	void testContainsEntry() throws Throwable {
-		//
-		Assertions.assertFalse(containsEntry(null, null, null));
-		//
-	}
-
-	private static boolean containsEntry(final Multimap<?, ?> instance, final Object key, final Object value)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_CONTAINS_ENTRY.invoke(null, instance, key, value);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testValidate() throws Throwable {
-		//
-		Assertions.assertNull(validate(null, null));
 		//
 		Assertions.assertNull(validate(IntegerValidator.getInstance(), null));
 		//
@@ -494,6 +464,86 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testNull() {
+		//
+		final Method[] ms = OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBean.class
+				.getDeclaredMethods();
+		//
+		Method m = null;
+		//
+		Object result = null;
+		//
+		String toString = null;
+		//
+		Collection<Object> collection = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
+		Object[] os = null;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ms[i]) == null || m.isSynthetic()
+					|| Boolean.logicalAnd(Objects.equals(Util.getName(m), "and"), Arrays.equals(m.getParameterTypes(),
+							new Class<?>[] { Boolean.TYPE, Boolean.TYPE, boolean[].class }))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			toString = Objects.toString(m);
+			//
+			clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
+			//
+			collection.addAll(Collections.nCopies(m.getParameterCount(), null));
+			//
+			os = toArray(collection);
+			//
+			result = Modifier.isStatic(m.getModifiers()) ? Narcissus.invokeStaticMethod(m, os)
+					: Narcissus.invokeMethod(instance, m, os);
+			//
+			parameterTypes = m.getParameterTypes();
+			//
+			if (Objects.equals(Util.getName(m), "toMultimap")
+					&& Arrays.equals(parameterTypes, new Class<?>[] { Document.class, PatternMap.class })
+					|| Objects.equals(Util.getName(m), "toMultimap") && Arrays.equals(parameterTypes,
+							new Class<?>[] { PatternMap.class, String.class, Iterable.class })
+					|| Objects.equals(Util.getName(m), "getObject")
+							&& Arrays.equals(parameterTypes, new Class<?>[] {})) {
+				//
+				Assertions.assertEquals(ImmutableMultimap.of(), result, toString);
+				//
+			} else if (Objects.equals(Util.getName(m), "getObjectType")
+					&& Arrays.equals(parameterTypes, new Class<?>[] {})) {
+				//
+				Assertions.assertEquals(Multimap.class, result, toString);
+				//
+			} else if (Objects.equals(Util.getName(m), "containsEntry")
+					&& Arrays.equals(parameterTypes, new Class<?>[] { Multimap.class, Object.class, Object.class })) {
+				//
+				Assertions.assertEquals(Boolean.FALSE, result, toString);
+				//
+			} else {
+				//
+				Assertions.assertNull(result, toString);
+				//
+			} // if
+				//
+		} // for
+			//
+	}
+
+	private void clear(final Collection<Object> instance) {
+		if (instance != null) {
+			instance.clear();
+		}
+	}
+
+	private static Object[] toArray(final Collection<?> instance) {
+		return instance != null ? instance.toArray() : null;
 	}
 
 }

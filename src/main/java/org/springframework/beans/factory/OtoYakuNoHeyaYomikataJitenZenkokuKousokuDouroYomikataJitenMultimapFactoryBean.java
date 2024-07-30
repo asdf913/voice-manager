@@ -3,6 +3,7 @@ package org.springframework.beans.factory;
 import java.lang.Character.UnicodeBlock;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -20,6 +21,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.function.TriFunction;
 import org.apache.commons.validator.routines.IntegerValidator;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -330,19 +332,33 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			//
 		} // if
 			//
-		if (MultimapUtil.isEmpty(multimap)) {
+		final List<TriFunction<PatternMap, String, String, Multimap<String, String>>> functions = Arrays.asList(
+				OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBean::toMultimap1,
+				OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBean::toMultimap2);
+		//
+		for (int i = 0; i < IterableUtils.size(functions); i++) {
 			//
+			if (!MultimapUtil.isEmpty(multimap)) {
+				//
+				break;
+				//
+			} // if
+				//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					toMultimap(patternMap, s1, s2));
+					apply(IterableUtils.get(functions, i), patternMap, s1, s2));
 			//
-		} // if
+		} // for
 			//
 		return multimap;
 		//
 	}
 
+	private static <T, U, V, R> R apply(final TriFunction<T, U, V, R> instance, final T t, final U u, final V v) {
+		return instance != null ? instance.apply(t, u, v) : null;
+	}
+
 	@Nullable
-	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s1,
+	private static Multimap<String, String> toMultimap1(final PatternMap patternMap, final String s1,
 			@Nullable final String s2) {
 		//
 		Matcher m1, m2;
@@ -395,19 +411,31 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m1, 1),
 					s2);
 			//
-		} else if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-				getUnicodeBlocks(s1))) {
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap2(final PatternMap patternMap, final String s1, final String s2) {
+		//
+		Matcher matcher;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), getUnicodeBlocks(s1))) {
 			//
 			if (Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2))) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s2);
 				//
 			} else if (Boolean.logicalAnd(
-					Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+).+"), s2)),
-					Util.groupCount(m1) > 0)) {
+					Util.matches(
+							matcher = Util.matcher(PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+).+"), s2)),
+					Util.groupCount(matcher) > 0)) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
-						Util.group(m1, 1));
+						Util.group(matcher, 1));
 				//
 			} // if
 				//
@@ -524,7 +552,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			return unicodeBlocks;
 			//
 		} // if
-			//
+		//
 		return null;
 		//
 	}
