@@ -358,6 +358,18 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 					MultimapUtil.entries(ImmutableMultimap.of("首都高速", mh.text = "しゅとこうそく")),
 					MultimapUtil.entries(toMultimap(patternMap, "（首都高速）", es))));
 			//
+			String string = "国縫";
+			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of(string, mh.text = "くんぬい")),
+					MultimapUtil.entries(toMultimap(patternMap, string, es))));
+			//
+			mh.text = "ちとせえにわ（道東道へ）";
+			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of(string = "千歳恵庭", "ちとせえにわ")),
+					MultimapUtil.entries(toMultimap(patternMap, string, es))));
+			//
 		} // if
 			//
 	}
