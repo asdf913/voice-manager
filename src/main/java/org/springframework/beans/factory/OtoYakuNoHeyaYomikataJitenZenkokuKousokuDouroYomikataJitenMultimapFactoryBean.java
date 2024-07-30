@@ -182,7 +182,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 									group,
 									ElementUtil.text(IterableUtils.get(
-											ElementUtil.children(ElementUtil.nextElementSibling(parent(e))),
+											ElementUtil.children(ElementUtil.nextElementSibling(ElementUtil.parent(e))),
 											e.elementSiblingIndex() + 1)));
 							//
 						} // if
@@ -224,10 +224,6 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		return multimap;
 		//
-	}
-
-	private static final Element parent(final Element instnace) {
-		return instnace != null ? instnace.parent() : null;
 	}
 
 	private static Integer validate(final IntegerValidator instance, final String value) {

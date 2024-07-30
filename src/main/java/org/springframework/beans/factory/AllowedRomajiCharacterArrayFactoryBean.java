@@ -49,7 +49,7 @@ public class AllowedRomajiCharacterArrayFactoryBean implements FactoryBean<char[
 		//
 		while (element != null && (element.nextElementSibling()) == null) {
 			//
-			element = element.parent();
+			element = ElementUtil.parent(element);
 			//
 		} // while
 			//

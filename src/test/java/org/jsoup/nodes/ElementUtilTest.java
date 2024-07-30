@@ -2,8 +2,13 @@ package org.jsoup.nodes;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -149,6 +154,82 @@ class ElementUtilTest {
 		//
 		Assertions.assertNotNull(ElementUtil.parents(element));
 		//
+	}
+
+	@Test
+	void testParent() {
+		//
+		Assertions.assertNull(ElementUtil.parent(element));
+		//
+	}
+
+	@Test
+	void testNull() throws IllegalAccessException, InvocationTargetException {
+		//
+		final Method[] ms = ElementUtil.class.getDeclaredMethods();
+		//
+		Method m = null;
+		//
+		Object[] os = null;
+		//
+		Collection<Object> list = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ms[i]) == null || !Modifier.isStatic(m.getModifiers()) || m.isSynthetic()) {
+				//
+				continue;
+				//
+			} // if
+				//
+			clear(list = ObjectUtils.getIfNull(list, ArrayList::new));
+			//
+			if ((parameterTypes = m.getParameterTypes()) != null) {
+				//
+				for (final Class<?> clz : parameterTypes) {
+					//
+					if (Objects.equals(Integer.TYPE, clz)) {
+						//
+						list.add(Integer.valueOf(0));
+						//
+					} else {
+						//
+						list.add(null);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+			os = toArray(list);
+			//
+			System.out.println(m);
+			//
+			if (Objects.equals(Integer.TYPE, m.getReturnType())) {
+				//
+				Assertions.assertEquals(0, Narcissus.invokeStaticIntMethod(m, os));
+				//
+			} else {
+				//
+				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), Objects.toString(m));
+				//
+			} // if
+				//
+		} // for
+			//
+	}
+
+	private void clear(final Collection<Object> instance) {
+		if (instance != null) {
+			instance.clear();
+		}
+	}
+
+	private static Object[] toArray(final Collection<?> instance) {
+		return instance != null ? instance.toArray() : null;
 	}
 
 }

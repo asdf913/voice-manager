@@ -162,4 +162,8 @@ public final class ElementUtil {
 		return instance != null ? instance.parents() : null;
 	}
 
+	public static final Element parent(final Element instnace) {
+		return instnace != null ? instnace.parent() : null;
+	}
+
 }
