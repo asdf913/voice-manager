@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
@@ -21,6 +23,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.meeuw.functional.Functions;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMultimap;
@@ -32,9 +35,9 @@ import javassist.util.proxy.ProxyUtil;
 
 class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_AND, METHOD_TO_MULTI_MAP_STRING,
-			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_3_ITERABLE, METHOD_TO_MULTI_MAP_3_MULTI_MAP,
-			METHOD_CONTAINS_ENTRY, METHOD_VALIDATE = null;
+	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_AND,
+			METHOD_TO_MULTI_MAP_STRING, METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_3_ITERABLE,
+			METHOD_TO_MULTI_MAP_3_MULTI_MAP, METHOD_CONTAINS_ENTRY, METHOD_VALIDATE = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -43,8 +46,11 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 		//
 		(METHOD_GET_UNICODE_BLOCKS = clz.getDeclaredMethod("getUnicodeBlocks", String.class)).setAccessible(true);
 		//
-		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
+		(METHOD_TEST_AND_APPLY4 = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY5 = clz.getDeclaredMethod("testAndApply", BiPredicate.class, Object.class, Object.class,
+				BiFunction.class, BiFunction.class)).setAccessible(true);
 		//
 		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
@@ -133,9 +139,16 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 	@Test
 	void testTestAndApply() throws Throwable {
 		//
+		Assertions.assertNull(testAndApply(null, null, null, null, null));
+		//
+		Assertions.assertNull(testAndApply(org.meeuw.functional.Predicates.biAlwaysFalse(), null, null, null, null));
+		//
 		if (!isSystemPropertiesContainsTestGetObject) {
 			//
 			Assertions.assertNull(testAndApply(Predicates.alwaysTrue(), null, null, null));
+			//
+			Assertions.assertNull(testAndApply(org.meeuw.functional.Predicates.biAlwaysTrue(), null, null,
+					Functions.biAlways(null), null));
 			//
 		} // if
 			//
@@ -145,7 +158,16 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
 			throws Throwable {
 		try {
-			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+			return (R) METHOD_TEST_AND_APPLY4.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) throws Throwable {
+		try {
+			return (R) METHOD_TEST_AND_APPLY5.invoke(null, predicate, t, u, functionTrue, functionFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

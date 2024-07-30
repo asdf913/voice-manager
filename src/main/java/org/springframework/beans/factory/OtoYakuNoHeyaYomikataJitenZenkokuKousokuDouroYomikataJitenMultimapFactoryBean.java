@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -165,8 +166,8 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 					&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
 							getUnicodeBlocks(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))))) {
 				//
-				if (NodeUtil.hasAttr(e, "rowspan") && (rowspan = Util
-						.intValue(validate(IntegerValidator.getInstance(), NodeUtil.attr(e, "rowspan")), 0)) > 1) {
+				if ((rowspan = Util.intValue(validate(IntegerValidator.getInstance(),
+						testAndApply(NodeUtil::hasAttr, e, "rowspan", NodeUtil::attr, null)), 0)) > 1) {
 					//
 					for (int j = 0; j < Math.min(Util.groupCount(matcher), rowspan); j++) {
 						//
@@ -224,6 +225,15 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		return multimap;
 		//
+	}
+
+	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) {
+		return predicate != null && predicate.test(t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
+	}
+
+	private static <R, T, U> R apply(final BiFunction<T, U, R> instance, final T t, final U u) {
+		return instance != null ? instance.apply(t, u) : null;
 	}
 
 	private static Integer validate(@Nullable final IntegerValidator instance, final String value) {
