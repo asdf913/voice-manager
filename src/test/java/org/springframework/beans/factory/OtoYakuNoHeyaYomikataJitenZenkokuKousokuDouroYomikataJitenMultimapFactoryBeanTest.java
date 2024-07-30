@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.validator.routines.IntegerValidator;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
@@ -33,7 +34,7 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 
 	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_AND, METHOD_TO_MULTI_MAP_STRING,
 			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_3_ITERABLE, METHOD_TO_MULTI_MAP_3_MULTI_MAP,
-			METHOD_CONTAINS_ENTRY = null;
+			METHOD_CONTAINS_ENTRY, METHOD_VALIDATE = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -61,6 +62,8 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 		//
 		(METHOD_CONTAINS_ENTRY = clz.getDeclaredMethod("containsEntry", Multimap.class, Object.class, Object.class))
 				.setAccessible(true);
+		//
+		(METHOD_VALIDATE = clz.getDeclaredMethod("validate", IntegerValidator.class, String.class)).setAccessible(true);
 		//
 	}
 
@@ -416,6 +419,29 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 			final Object obj = METHOD_CONTAINS_ENTRY.invoke(null, instance, key, value);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testValidate() throws Throwable {
+		//
+		Assertions.assertNull(validate(null, null));
+		//
+		Assertions.assertNull(validate(IntegerValidator.getInstance(), null));
+		//
+	}
+
+	private static Integer validate(final IntegerValidator instance, final String value) throws Throwable {
+		try {
+			final Object obj = METHOD_VALIDATE.invoke(null, instance, value);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Integer) {
+				return (Integer) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

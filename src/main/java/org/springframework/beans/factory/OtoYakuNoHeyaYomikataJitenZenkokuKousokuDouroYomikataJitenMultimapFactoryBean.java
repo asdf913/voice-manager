@@ -19,6 +19,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.validator.routines.IntegerValidator;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
@@ -106,7 +107,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		Element e = null;
 		//
-		String s1, s2;
+		String s1, s2, group;
 		//
 		List<Element> nextElementSiblings = null;
 		//
@@ -114,7 +115,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		Matcher matcher;
 		//
-		int size = 0;
+		int size, rowspan;
 		//
 		for (int i = 0; i < IterableUtils.size(es); i++) {
 			//
@@ -154,6 +155,42 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(matcher, 1), s2);
 				//
+			} else if (Util
+					.matches(
+							matcher = Util.matcher(
+									PatternMap.getPattern(patternMap,
+											"^(\\p{InCJKUnifiedIdeographs}+)\\s+（(\\p{InCJKUnifiedIdeographs}+).+）$"),
+									s1))
+					&& IterableUtils.size(nextElementSiblings) > 1
+					&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
+							getUnicodeBlocks(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))))) {
+				//
+				if (NodeUtil.hasAttr(e, "rowspan") && (rowspan = Util
+						.intValue(validate(IntegerValidator.getInstance(), NodeUtil.attr(e, "rowspan")), 0)) > 1) {
+					//
+					for (int j = 0; j < Math.min(Util.groupCount(matcher), rowspan); j++) {
+						//
+						group = Util.group(matcher, j + 1);
+						//
+						if (j == 0) {
+							//
+							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+									group, s2);
+							//
+						} else {
+							//
+							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+									group,
+									ElementUtil.text(IterableUtils.get(
+											ElementUtil.children(ElementUtil.nextElementSibling(parent(e))),
+											e.elementSiblingIndex() + 1)));
+							//
+						} // if
+							//
+					} // for
+						//
+				} // if
+					//
 			} // if
 				//
 			size = MultimapUtil.size(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create));
@@ -187,6 +224,14 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		return multimap;
 		//
+	}
+
+	private static final Element parent(final Element instnace) {
+		return instnace != null ? instnace.parent() : null;
+	}
+
+	private static Integer validate(final IntegerValidator instance, final String value) {
+		return instance != null ? instance.validate(value) : null;
 	}
 
 	@Nullable
@@ -336,8 +381,8 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				s1)), Util.groupCount(m1) > 0)
 				&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2))) {
 			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					Util.group(m1, 1), s2);
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m1, 1),
+					s2);
 			//
 		} else if (and(
 				Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
