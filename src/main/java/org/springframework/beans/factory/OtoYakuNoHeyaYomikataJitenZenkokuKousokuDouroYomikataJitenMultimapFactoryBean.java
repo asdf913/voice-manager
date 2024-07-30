@@ -126,33 +126,11 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				//
 			} // if
 				//
-			if (Boolean.logicalAnd(
-					Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-							getUnicodeBlocks(s1 = ElementUtil.text(e))),
-					IterableUtils.size(nextElementSiblings = e.nextElementSiblings()) > 1)) {
-				//
-				if (Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
-						getUnicodeBlocks(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))))) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s2);
-					//
-				} else if (Boolean.logicalAnd(
-						Util.matches(
-								matcher = Util.matcher(PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+).+"), s2)),
-						Util.groupCount(matcher) > 0)) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
-							Util.group(matcher, 1));
-					//
-				} // if
-					//
-			} else if (Boolean
-					.logicalAnd(
-							Util.matches(matcher = Util.matcher(
-									PatternMap.getPattern(patternMap,
-											"^(\\p{InCJKUnifiedIdeographs}+)\\s+（(\\p{InCJKUnifiedIdeographs}+).+）$"),
-									s1)),
-							IterableUtils.size(nextElementSiblings) > 1)
+			if (Boolean
+					.logicalAnd(Util.matches(matcher = Util.matcher(
+							PatternMap.getPattern(patternMap,
+									"^(\\p{InCJKUnifiedIdeographs}+)\\s+（(\\p{InCJKUnifiedIdeographs}+).+）$"),
+							s1 = ElementUtil.text(e))), IterableUtils.size(nextElementSiblings) > 1)
 					&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
 							getUnicodeBlocks(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))))
 					&& (rowspan = Util.intValue(validate(IntegerValidator.getInstance(),
@@ -348,6 +326,23 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.group(matcher, 1), s2);
 			//
+		} else if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+				getUnicodeBlocks(s1))) {
+			//
+			if (Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2))) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s2);
+				//
+			} else if (Boolean.logicalAnd(
+					Util.matches(
+							matcher = Util.matcher(PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+).+"), s2)),
+					Util.groupCount(matcher) > 0)) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+						Util.group(matcher, 1));
+				//
+			} // if
+				//
 		} // if
 			//
 		if (MultimapUtil.isEmpty(multimap)) {
