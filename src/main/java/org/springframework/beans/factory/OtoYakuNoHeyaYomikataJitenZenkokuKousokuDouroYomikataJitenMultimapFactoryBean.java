@@ -237,9 +237,14 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		String[] ss = null;
 		//
-		if (Util.matches(matcher = Util.matcher(
-				PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)\\s?（\\p{InCJKUnifiedIdeographs}+）$"),
-				s1)) && Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2))) {
+		if (Boolean
+				.logicalAnd(
+						Util.matches(
+								matcher = Util.matcher(
+										PatternMap.getPattern(patternMap,
+												"^(\\p{InCJKUnifiedIdeographs}+)\\s?（\\p{InCJKUnifiedIdeographs}+）$"),
+										s1)),
+						Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2)))) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.group(matcher, 1), s2);
