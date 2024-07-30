@@ -353,7 +353,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
-	private static <T, U, V, R> R apply(final TriFunction<T, U, V, R> instance, final T t, final U u,
+	private static <T, U, V, R> R apply(@Nullable final TriFunction<T, U, V, R> instance, final T t, final U u,
 			@Nullable final V v) {
 		return instance != null ? instance.apply(t, u, v) : null;
 	}
