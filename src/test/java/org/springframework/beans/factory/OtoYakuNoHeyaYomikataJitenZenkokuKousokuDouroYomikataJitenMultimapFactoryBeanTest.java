@@ -311,6 +311,10 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 			//
 			Assertions.assertNull(toMultimap(patternMap, "東京湾アクアライン", es));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("南郷", mh.text = "なんごう")),
+					MultimapUtil.entries(toMultimap(patternMap, "南郷(京滋ＢＰ）", es))));
+			//
 		} // if
 			//
 	}
