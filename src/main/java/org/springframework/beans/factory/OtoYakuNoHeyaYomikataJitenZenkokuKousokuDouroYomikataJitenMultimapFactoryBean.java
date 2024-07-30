@@ -215,7 +215,8 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
-	private static boolean containsEntry(final Multimap<?, ?> instance, final Object key, final Object value) {
+	private static boolean containsEntry(@Nullable final Multimap<?, ?> instance, final Object key,
+			final Object value) {
 		return instance != null && instance.containsEntry(key, value);
 	}
 
