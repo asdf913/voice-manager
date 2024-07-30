@@ -226,7 +226,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
-	private static Integer validate(final IntegerValidator instance, final String value) {
+	private static Integer validate(@Nullable final IntegerValidator instance, final String value) {
 		return instance != null ? instance.validate(value) : null;
 	}
 
