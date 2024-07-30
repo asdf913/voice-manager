@@ -315,6 +315,12 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 					MultimapUtil.entries(ImmutableMultimap.of("南郷", mh.text = "なんごう")),
 					MultimapUtil.entries(toMultimap(patternMap, "南郷(京滋ＢＰ）", es))));
 			//
+			mh.text = "とうぶゆのまる";
+			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("東部湯", "とうぶゆ", "丸", "まる")),
+					MultimapUtil.entries(toMultimap(patternMap, "東部湯の丸", es))));
+			//
 		} // if
 			//
 	}
