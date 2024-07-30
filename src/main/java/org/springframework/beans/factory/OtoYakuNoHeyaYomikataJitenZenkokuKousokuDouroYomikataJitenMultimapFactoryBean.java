@@ -116,8 +116,6 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		int size = 0;
 		//
-		String[] ss = null;
-		//
 		for (int i = 0; i < IterableUtils.size(es); i++) {
 			//
 			if ((e = IterableUtils.get(es, i)) == null) {
