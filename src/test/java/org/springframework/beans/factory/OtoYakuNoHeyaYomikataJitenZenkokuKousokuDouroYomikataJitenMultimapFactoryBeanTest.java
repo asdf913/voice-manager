@@ -234,7 +234,7 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 	}
 
 	@Test
-	void testToMultimap() throws Throwable {
+	void testToMultimap1() throws Throwable {
 		//
 		Assertions.assertNull(toMultimap(Collections.singleton(null), null));
 		//
@@ -244,134 +244,143 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 		//
 		Assertions.assertNull(toMultimap(Arrays.asList(new TextNode(""), textNode), pattern));
 		//
-		if (!isSystemPropertiesContainsTestGetObject) {
+	}
+
+	@Test
+	void testToMultimap2() throws Throwable {
+		//
+		if (isSystemPropertiesContainsTestGetObject) {
 			//
-			Assertions.assertNull(toMultimap((PatternMap) null, null));
-			//
-			Assertions.assertNull(toMultimap(Collections.singleton(textNode), pattern));
-			//
-			final Multimap<?, ?> multimap = ImmutableMultimap.of();
-			//
-			Assertions.assertEquals(multimap, toMultimap(null, null, (Iterable) null));
-			//
-			Assertions.assertNull(toMultimap(null, null, (Multimap) null));
-			//
-			final PatternMap patternMap = new PatternMapImpl();
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("米原市", "まいばらし")),
-							MultimapUtil.entries(toMultimap(patternMap, "米原市（まいばらし）", (Multimap) null))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("米原市", "まいばらし")),
-							MultimapUtil.entries(toMultimap(patternMap, "米原市（まいばらし）", ImmutableMultimap.of()))));
-			//
-			Assertions.assertNull(toMultimap(patternMap, "米原市（まいばらし）", ImmutableMultimap.of("米原市", "まいばらし")));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of("札樽自動車道", "さっそんじどうしゃどう")),
-					MultimapUtil.entries(toMultimap(Arrays.asList(new TextNode("札樽自動車道"), textNode), pattern))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("札樽道", "さっそんどう")),
-							MultimapUtil.entries(toMultimap(patternMap, "札樽自動車道 （札樽道） （さっそんどう）"))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("百石道路", "ももいしどうろ")),
-							MultimapUtil.entries(toMultimap(patternMap, "百石道路 （ももいしどうろ）"))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("仙塩道路", "せんえんどうろ")),
-							MultimapUtil.entries(toMultimap(patternMap, "＊仙台港北〜利府中 を仙塩道路（せんえんどうろ）"))));
-			//
-			final MH mh = new MH();
-			//
-			final Document document = ProxyUtil.createProxy(Document.class, mh, x -> {
-				//
-				final Constructor<?> constructor = getDeclaredConstructor(x, String.class);
-				//
-				if (constructor != null) {
-					//
-					constructor.setAccessible(true);
-					//
-				} // if
-					//
-				return Util.cast(Document.class, newInstance(constructor, ""));
-				//
-			});
-			//
-			final Iterable<Element> es = Arrays.asList(null, document);
-			//
-			Assertions.assertEquals(multimap, toMultimap(null, null, es));
-			//
-			Assertions.assertEquals(multimap, toMultimap(patternMap, "仙台南（東北）", es));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of("仙台南", mh.text = "せんだいみなみ")),
-					MultimapUtil.entries(toMultimap(patternMap, "仙台南（東北）", es))));
-			//
-			mh.text = "さかたみなと";
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("酒田", "さかた")),
-							MultimapUtil.entries(toMultimap(patternMap, "酒田みなと", es))));
-			//
-			mh.text = "しらかしだい";
-			//
-			Assertions
-					.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("台", "だい")),
-							MultimapUtil.entries(toMultimap(patternMap, "しらかし台", es))));
-			//
-			mh.text = "ぬまのはたにし";
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of("沼", "ぬま", "端西", "はたにし")),
-					MultimapUtil.entries(toMultimap(patternMap, "沼ノ端西", es))));
-			//
-			mh.text = "すながわはいうぇい おあしす";
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("砂川", "すながわ")),
-							MultimapUtil.entries(toMultimap(patternMap, "砂川ハイウェイ オアシス", es))));
-			//
-			mh.text = "ＩＣ";
-			//
-			Assertions.assertEquals(multimap, toMultimap(patternMap, "東京湾アクアライン", es));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of("南郷", mh.text = "なんごう")),
-					MultimapUtil.entries(toMultimap(patternMap, "南郷(京滋ＢＰ）", es))));
-			//
-			mh.text = "とうぶゆのまる";
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of("東部湯", "とうぶゆ", "丸", "まる")),
-					MultimapUtil.entries(toMultimap(patternMap, "東部湯の丸", es))));
-			//
-			mh.text = "いなわしろ ばんだいこうげん";
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of("猪苗代", "いなわしろ", "磐梯高原", "ばんだいこうげん")),
-					MultimapUtil.entries(toMultimap(patternMap, "猪苗代 磐梯高原", es))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of("首都高速", mh.text = "しゅとこうそく")),
-					MultimapUtil.entries(toMultimap(patternMap, "（首都高速）", es))));
-			//
-			String string = "国縫";
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of(string, mh.text = "くんぬい")),
-					MultimapUtil.entries(toMultimap(patternMap, string, es))));
-			//
-			mh.text = "ちとせえにわ（道東道へ）";
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of(string = "千歳恵庭", "ちとせえにわ")),
-					MultimapUtil.entries(toMultimap(patternMap, string, es))));
+			return;
 			//
 		} // if
 			//
+		Assertions.assertNull(toMultimap((PatternMap) null, null));
+		//
+		final Pattern pattern = Pattern.compile("^（(\\p{InHIRAGANA}+)）$");
+		//
+		final TextNode textNode = new TextNode("（さっそんじどうしゃどう）");
+		//
+		Assertions.assertNull(toMultimap(Collections.singleton(textNode), pattern));
+		//
+		final Multimap<?, ?> multimap = ImmutableMultimap.of();
+		//
+		Assertions.assertEquals(multimap, toMultimap(null, null, (Iterable) null));
+		//
+		Assertions.assertNull(toMultimap(null, null, (Multimap) null));
+		//
+		final PatternMap patternMap = new PatternMapImpl();
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("米原市", "まいばらし")),
+						MultimapUtil.entries(toMultimap(patternMap, "米原市（まいばらし）", (Multimap) null))));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("米原市", "まいばらし")),
+						MultimapUtil.entries(toMultimap(patternMap, "米原市（まいばらし）", ImmutableMultimap.of()))));
+		//
+		Assertions.assertNull(toMultimap(patternMap, "米原市（まいばらし）", ImmutableMultimap.of("米原市", "まいばらし")));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("札樽自動車道", "さっそんじどうしゃどう")),
+						MultimapUtil.entries(toMultimap(Arrays.asList(new TextNode("札樽自動車道"), textNode), pattern))));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("札樽道", "さっそんどう")),
+						MultimapUtil.entries(toMultimap(patternMap, "札樽自動車道 （札樽道） （さっそんどう）"))));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("百石道路", "ももいしどうろ")),
+						MultimapUtil.entries(toMultimap(patternMap, "百石道路 （ももいしどうろ）"))));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("仙塩道路", "せんえんどうろ")),
+						MultimapUtil.entries(toMultimap(patternMap, "＊仙台港北〜利府中 を仙塩道路（せんえんどうろ）"))));
+		//
+		final MH mh = new MH();
+		//
+		final Document document = ProxyUtil.createProxy(Document.class, mh, x -> {
+			//
+			final Constructor<?> constructor = getDeclaredConstructor(x, String.class);
+			//
+			if (constructor != null) {
+				//
+				constructor.setAccessible(true);
+				//
+			} // if
+				//
+			return Util.cast(Document.class, newInstance(constructor, ""));
+			//
+		});
+		//
+		final Iterable<Element> es = Arrays.asList(null, document);
+		//
+		Assertions.assertEquals(multimap, toMultimap(null, null, es));
+		//
+		Assertions.assertEquals(multimap, toMultimap(patternMap, "仙台南（東北）", es));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				MultimapUtil.entries(ImmutableMultimap.of("仙台南", mh.text = "せんだいみなみ")),
+				MultimapUtil.entries(toMultimap(patternMap, "仙台南（東北）", es))));
+		//
+		mh.text = "さかたみなと";
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("酒田", "さかた")),
+				MultimapUtil.entries(toMultimap(patternMap, "酒田みなと", es))));
+		//
+		mh.text = "しらかしだい";
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("台", "だい")),
+				MultimapUtil.entries(toMultimap(patternMap, "しらかし台", es))));
+		//
+		mh.text = "ぬまのはたにし";
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("沼", "ぬま", "端西", "はたにし")),
+						MultimapUtil.entries(toMultimap(patternMap, "沼ノ端西", es))));
+		//
+		mh.text = "すながわはいうぇい おあしす";
+		//
+		Assertions
+				.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("砂川", "すながわ")),
+						MultimapUtil.entries(toMultimap(patternMap, "砂川ハイウェイ オアシス", es))));
+		//
+		mh.text = "ＩＣ";
+		//
+		Assertions.assertEquals(multimap, toMultimap(patternMap, "東京湾アクアライン", es));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("南郷", mh.text = "なんごう")),
+						MultimapUtil.entries(toMultimap(patternMap, "南郷(京滋ＢＰ）", es))));
+		//
+		mh.text = "とうぶゆのまる";
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("東部湯", "とうぶゆ", "丸", "まる")),
+						MultimapUtil.entries(toMultimap(patternMap, "東部湯の丸", es))));
+		//
+		mh.text = "いなわしろ ばんだいこうげん";
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				MultimapUtil.entries(ImmutableMultimap.of("猪苗代", "いなわしろ", "磐梯高原", "ばんだいこうげん")),
+				MultimapUtil.entries(toMultimap(patternMap, "猪苗代 磐梯高原", es))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				MultimapUtil.entries(ImmutableMultimap.of("首都高速", mh.text = "しゅとこうそく")),
+				MultimapUtil.entries(toMultimap(patternMap, "（首都高速）", es))));
+		//
+		String string = "国縫";
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of(string, mh.text = "くんぬい")),
+						MultimapUtil.entries(toMultimap(patternMap, string, es))));
+		//
+		mh.text = "ちとせえにわ（道東道へ）";
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of(string = "千歳恵庭", "ちとせえにわ")),
+						MultimapUtil.entries(toMultimap(patternMap, string, es))));
+		//
 	}
 
 	private static <T> Constructor<T> getDeclaredConstructor(final Class<T> instance, final Class<?>... parameterTypes)
