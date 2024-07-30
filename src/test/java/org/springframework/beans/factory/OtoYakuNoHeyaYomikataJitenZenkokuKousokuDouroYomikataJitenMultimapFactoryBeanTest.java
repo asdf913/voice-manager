@@ -354,6 +354,10 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 					MultimapUtil.entries(ImmutableMultimap.of("猪苗代", "いなわしろ", "磐梯高原", "ばんだいこうげん")),
 					MultimapUtil.entries(toMultimap(patternMap, "猪苗代 磐梯高原", es))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("首都高速", mh.text = "しゅとこうそく")),
+					MultimapUtil.entries(toMultimap(patternMap, "（首都高速）", es))));
+			//
 		} // if
 			//
 	}
