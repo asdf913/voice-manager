@@ -232,6 +232,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		return predicate != null && predicate.test(t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
 	}
 
+	@Nullable
 	private static <R, T, U> R apply(@Nullable final BiFunction<T, U, R> instance, final T t, final U u) {
 		return instance != null ? instance.apply(t, u) : null;
 	}
