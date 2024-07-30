@@ -225,9 +225,7 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 			//
 			Assertions.assertNull(toMultimap(Collections.singleton(textNode), pattern));
 			//
-			final Multimap<?, ?> multimap = ImmutableMultimap.of();
-			//
-			Assertions.assertEquals(multimap, toMultimap(null, null, (Iterable) null));
+			Assertions.assertNull(toMultimap(null, null, (Iterable) null));
 			//
 			Assertions.assertNull(toMultimap(null, null, (Multimap) null));
 			//
@@ -277,9 +275,9 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 			//
 			final Iterable<Element> es = Arrays.asList(null, document);
 			//
-			Assertions.assertEquals(multimap, toMultimap(null, null, es));
+			Assertions.assertNull(toMultimap(null, null, es));
 			//
-			Assertions.assertEquals(multimap, toMultimap(patternMap, "仙台南（東北）", es));
+			Assertions.assertNull(toMultimap(patternMap, "仙台南（東北）", es));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("仙台南", mh.text = "せんだいみなみ")),
@@ -311,7 +309,7 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 			//
 			mh.text = "ＩＣ";
 			//
-			Assertions.assertEquals(multimap, toMultimap(patternMap, "東京湾アクアライン", es));
+			Assertions.assertNull(toMultimap(patternMap, "東京湾アクアライン", es));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("南郷", mh.text = "なんごう")),
