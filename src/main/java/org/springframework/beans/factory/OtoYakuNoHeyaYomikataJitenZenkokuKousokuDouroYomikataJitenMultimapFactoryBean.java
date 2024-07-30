@@ -29,6 +29,7 @@ import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.nodes.TextNodeUtil;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
@@ -109,7 +110,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		List<Element> nextElementSiblings = null;
 		//
-		Multimap<String, String> multimap = null;
+		Multimap<String, String> multimap = null, excluded = null;
 		//
 		Matcher matcher = null;
 		//
@@ -169,6 +170,14 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					toMultimap(patternMap, s1, nextElementSiblings));
 			//
+			if (MultimapUtil.size(multimap) == size) {
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						toMultimap(patternMap, s1, excluded = ObjectUtils.getIfNull(excluded,
+								() -> ImmutableMultimap.of("警察署", "まいばら", "現在", "まいはら"))));
+				//
+			} // if
+				//
 		} // for
 			//
 		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
@@ -178,6 +187,36 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		return multimap;
 		//
+	}
+
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String string,
+			final Multimap<?, ?> excluded) {
+		//
+		final Matcher matcher = Util.matcher(
+				PatternMap.getPattern(patternMap, "((\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）)"), string);
+		//
+		Multimap<String, String> multimap = null;
+		//
+		String k, v;
+		//
+		while (Util.find(matcher) && Util.groupCount(matcher) > 2) {
+			//
+			if (containsEntry(excluded, k = Util.group(matcher, 2), v = Util.group(matcher, 3))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), k, v);
+			//
+		} // while
+			//
+		return multimap;
+		//
+	}
+
+	private static boolean containsEntry(final Multimap<?, ?> instance, final Object key, final Object value) {
+		return instance != null && instance.containsEntry(key, value);
 	}
 
 	@Nullable

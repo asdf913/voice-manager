@@ -32,7 +32,8 @@ import javassist.util.proxy.ProxyUtil;
 class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_AND, METHOD_TO_MULTI_MAP_STRING,
-			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_3 = null;
+			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_3_ITERABLE, METHOD_TO_MULTI_MAP_3_MULTI_MAP,
+			METHOD_CONTAINS_ENTRY = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -52,7 +53,13 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 		(METHOD_TO_MULTI_MAP_ITERABLE = clz.getDeclaredMethod("toMultimap", Iterable.class, Pattern.class))
 				.setAccessible(true);
 		//
-		(METHOD_TO_MULTI_MAP_3 = clz.getDeclaredMethod("toMultimap", PatternMap.class, String.class, Iterable.class))
+		(METHOD_TO_MULTI_MAP_3_ITERABLE = clz.getDeclaredMethod("toMultimap", PatternMap.class, String.class,
+				Iterable.class)).setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP_3_MULTI_MAP = clz.getDeclaredMethod("toMultimap", PatternMap.class, String.class,
+				Multimap.class)).setAccessible(true);
+		//
+		(METHOD_CONTAINS_ENTRY = clz.getDeclaredMethod("containsEntry", Multimap.class, Object.class, Object.class))
 				.setAccessible(true);
 		//
 	}
@@ -218,13 +225,25 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 			//
 			Assertions.assertNull(toMultimap(Collections.singleton(textNode), pattern));
 			//
-			Assertions.assertNull(toMultimap(null, null, null));
+			Assertions.assertNull(toMultimap(null, null, (Iterable) null));
+			//
+			Assertions.assertNull(toMultimap(null, null, (Multimap) null));
+			//
+			final PatternMap patternMap = new PatternMapImpl();
+			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("米原市", "まいばらし")),
+							MultimapUtil.entries(toMultimap(patternMap, "米原市（まいばらし）", (Multimap) null))));
+			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("米原市", "まいばらし")),
+							MultimapUtil.entries(toMultimap(patternMap, "米原市（まいばらし）", ImmutableMultimap.of()))));
+			//
+			Assertions.assertNull(toMultimap(patternMap, "米原市（まいばらし）", ImmutableMultimap.of("米原市", "まいばらし")));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("札樽自動車道", "さっそんじどうしゃどう")),
 					MultimapUtil.entries(toMultimap(Arrays.asList(new TextNode("札樽自動車道"), textNode), pattern))));
-			//
-			final PatternMap patternMap = new PatternMapImpl();
 			//
 			Assertions.assertTrue(
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("札樽道", "さっそんどう")),
@@ -306,10 +325,25 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 		return instance != null ? instance.newInstance(initargs) : null;
 	}
 
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String string,
+			final Multimap<?, ?> excluded) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP_3_MULTI_MAP.invoke(null, patternMap, string, excluded);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s1,
 			final Iterable<Element> nextElementSiblings) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_MULTI_MAP_3.invoke(null, patternMap, s1, nextElementSiblings);
+			final Object obj = METHOD_TO_MULTI_MAP_3_ITERABLE.invoke(null, patternMap, s1, nextElementSiblings);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {
@@ -344,6 +378,26 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 				return null;
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testContainsEntry() throws Throwable {
+		//
+		Assertions.assertFalse(containsEntry(null, null, null));
+		//
+	}
+
+	private static boolean containsEntry(final Multimap<?, ?> instance, final Object key, final Object value)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_CONTAINS_ENTRY.invoke(null, instance, key, value);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
