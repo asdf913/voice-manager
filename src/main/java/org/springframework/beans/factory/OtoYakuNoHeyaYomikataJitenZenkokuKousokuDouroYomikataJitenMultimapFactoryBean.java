@@ -189,6 +189,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String string,
 			final Multimap<?, ?> excluded) {
 		//
