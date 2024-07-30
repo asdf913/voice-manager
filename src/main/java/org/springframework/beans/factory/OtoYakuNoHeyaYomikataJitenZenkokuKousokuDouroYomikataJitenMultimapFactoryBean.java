@@ -154,33 +154,29 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 									s1)),
 							IterableUtils.size(nextElementSiblings) > 1)
 					&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
-							getUnicodeBlocks(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))))) {
+							getUnicodeBlocks(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))))
+					&& (rowspan = Util.intValue(validate(IntegerValidator.getInstance(),
+							testAndApply(NodeUtil::hasAttr, e, "rowspan", NodeUtil::attr, null)), 0)) > 1) {
 				//
-				if ((rowspan = Util.intValue(validate(IntegerValidator.getInstance(),
-						testAndApply(NodeUtil::hasAttr, e, "rowspan", NodeUtil::attr, null)), 0)) > 1) {
+				for (int j = 0; j < Math.min(Util.groupCount(matcher), rowspan); j++) {
 					//
-					for (int j = 0; j < Math.min(Util.groupCount(matcher), rowspan); j++) {
+					group = Util.group(matcher, j + 1);
+					//
+					if (j == 0) {
 						//
-						group = Util.group(matcher, j + 1);
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), group,
+								s2);
 						//
-						if (j == 0) {
-							//
-							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-									group, s2);
-							//
-						} else {
-							//
-							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-									group,
-									ElementUtil.text(IterableUtils.get(
-											ElementUtil.children(ElementUtil.nextElementSibling(ElementUtil.parent(e))),
-											e.elementSiblingIndex() + 1)));
-							//
-						} // if
-							//
-					} // for
+					} else {
 						//
-				} // if
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), group,
+								ElementUtil.text(IterableUtils.get(
+										ElementUtil.children(ElementUtil.nextElementSibling(ElementUtil.parent(e))),
+										e.elementSiblingIndex() + 1)));
+						//
+					} // if
+						//
+				} // for
 					//
 			} // if
 				//
