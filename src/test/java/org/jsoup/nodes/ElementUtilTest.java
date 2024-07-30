@@ -206,8 +206,6 @@ class ElementUtilTest {
 				//
 			os = toArray(list);
 			//
-			System.out.println(m);
-			//
 			if (Objects.equals(Integer.TYPE, m.getReturnType())) {
 				//
 				Assertions.assertEquals(0, Narcissus.invokeStaticIntMethod(m, os));
