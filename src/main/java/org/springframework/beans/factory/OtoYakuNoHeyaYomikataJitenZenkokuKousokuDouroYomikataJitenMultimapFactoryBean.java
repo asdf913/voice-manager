@@ -328,23 +328,6 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.group(matcher, 1), s2);
 			//
-		} else if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-				getUnicodeBlocks(s1))) {
-			//
-			if (Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2))) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s2);
-				//
-			} else if (Boolean.logicalAnd(
-					Util.matches(
-							matcher = Util.matcher(PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+).+"), s2)),
-					Util.groupCount(matcher) > 0)) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
-						Util.group(matcher, 1));
-				//
-			} // if
-				//
 		} // if
 			//
 		if (MultimapUtil.isEmpty(multimap)) {
@@ -412,6 +395,22 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m1, 1),
 					s2);
 			//
+		} else if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+				getUnicodeBlocks(s1))) {
+			//
+			if (Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2))) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s2);
+				//
+			} else if (Boolean.logicalAnd(
+					Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+).+"), s2)),
+					Util.groupCount(m1) > 0)) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+						Util.group(m1, 1));
+				//
+			} // if
+				//
 		} // if
 			//
 		return multimap;
