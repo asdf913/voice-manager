@@ -127,10 +127,12 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			} // if
 				//
 			if (Boolean
-					.logicalAnd(Util.matches(matcher = Util.matcher(
-							PatternMap.getPattern(patternMap,
-									"^(\\p{InCJKUnifiedIdeographs}+)\\s+（(\\p{InCJKUnifiedIdeographs}+).+）$"),
-							s1 = ElementUtil.text(e))), IterableUtils.size(nextElementSiblings) > 1)
+					.logicalAnd(
+							Util.matches(matcher = Util.matcher(
+									PatternMap.getPattern(patternMap,
+											"^(\\p{InCJKUnifiedIdeographs}+)\\s+（(\\p{InCJKUnifiedIdeographs}+).+）$"),
+									s1 = ElementUtil.text(e))),
+							IterableUtils.size(nextElementSiblings = e.nextElementSiblings()) > 1)
 					&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
 							getUnicodeBlocks(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))))
 					&& (rowspan = Util.intValue(validate(IntegerValidator.getInstance(),
