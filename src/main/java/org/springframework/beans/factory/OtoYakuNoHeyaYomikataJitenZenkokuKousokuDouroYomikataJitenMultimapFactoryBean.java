@@ -112,7 +112,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		Multimap<String, String> multimap = null, excluded = null;
 		//
-		Matcher matcher = null;
+		Matcher matcher, m2;
 		//
 		int size = 0;
 		//
@@ -154,6 +154,21 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(matcher, 1), s2);
 				//
+			} else if (Boolean.logicalAnd(
+					Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+							"^(\\p{InCJKUnifiedIdeographs}+)\\s+(\\p{InCJKUnifiedIdeographs}+)$"), s1)),
+					IterableUtils.size(nextElementSiblings) > 1)
+					&& Util.matches(m2 = Util.matcher(
+							PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)\\s+(\\p{InHiragana}+)$"),
+							ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))))) {
+				//
+				for (int j = 1; j <= Math.min(Util.groupCount(matcher), Util.groupCount(m2)); j++) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(matcher, j), Util.group(m2, j));
+					//
+				} // for
+					//
 			} // if
 				//
 			size = MultimapUtil.size(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create));
