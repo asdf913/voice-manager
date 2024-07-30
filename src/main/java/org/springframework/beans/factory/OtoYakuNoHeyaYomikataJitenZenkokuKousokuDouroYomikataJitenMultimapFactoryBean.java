@@ -353,7 +353,8 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 	}
 
-	private static <T, U, V, R> R apply(final TriFunction<T, U, V, R> instance, final T t, final U u, final V v) {
+	private static <T, U, V, R> R apply(final TriFunction<T, U, V, R> instance, final T t, final U u,
+			@Nullable final V v) {
 		return instance != null ? instance.apply(t, u, v) : null;
 	}
 
@@ -552,7 +553,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			return unicodeBlocks;
 			//
 		} // if
-		//
+			//
 		return null;
 		//
 	}
