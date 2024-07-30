@@ -282,10 +282,12 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				//
 			} // for
 				//
-		} else if (and(Util.matches(matcher = Util.matcher(
-				PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)([\\p{InKatakana}\\s]+)$"), s1)),
-				Util.groupCount(matcher) > 1)
-				&& !Util.contains(getUnicodeBlocks(s2), UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS)) {
+		} else if (and(
+				Util.matches(matcher = Util.matcher(
+						PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)([\\p{InKatakana}\\s]+)$"),
+						s1)),
+				Util.groupCount(matcher) > 1,
+				!Util.contains(getUnicodeBlocks(s2), UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS))) {
 			//
 			final StringBuilder sb = new StringBuilder(s2);
 			//
