@@ -225,7 +225,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s1,
 			final Iterable<Element> nextElementSiblings) {
 		//
-		Matcher matcher, m2;
+		Matcher matcher;
 		//
 		Multimap<String, String> multimap = null;
 		//
@@ -308,21 +308,6 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.group(matcher, 1), s2);
 			//
-		} else if (Boolean.logicalAnd(
-				Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
-						"^(\\p{InCJKUnifiedIdeographs}+)\\s+(\\p{InCJKUnifiedIdeographs}+)$"), s1)),
-				IterableUtils.size(nextElementSiblings) > 1)
-				&& Util.matches(m2 = Util.matcher(
-						PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)\\s+(\\p{InHiragana}+)$"),
-						ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))))) {
-			//
-			for (int j = 1; j <= Math.min(Util.groupCount(matcher), Util.groupCount(m2)); j++) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(matcher, j), Util.group(m2, j));
-				//
-			} // for
-				//
 		} // if
 			//
 		if (MultimapUtil.isEmpty(multimap)) {
@@ -340,31 +325,44 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s1,
 			@Nullable final String s2) {
 		//
-		Matcher matcher = null;
+		Matcher m1, m2;
 		//
 		Multimap<String, String> multimap = null;
 		//
 		String[] ss = null;
 		//
-		if (Boolean.logicalAnd(Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+		if (Boolean.logicalAnd(Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\([\\p{InCJKUnifiedIdeographs}|\\p{InHalfwidthAndFullwidthForms}]+）$"),
-				s1)), Util.groupCount(matcher) > 0)
+				s1)), Util.groupCount(m1) > 0)
 				&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2))) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					Util.group(matcher, 1), s2);
+					Util.group(m1, 1), s2);
 			//
 		} else if (and(
-				Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 						"^(\\p{InCJKUnifiedIdeographs}+)の(\\p{InCJKUnifiedIdeographs}+)$"), s1)),
-				Util.groupCount(matcher) > 0,
+				Util.groupCount(m1) > 0,
 				Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2)),
 				StringUtils.countMatches(s2, 'の') == 1) && (ss = StringUtils.split(s2, 'の')) != null) {
 			//
-			for (int j = 0; j < Math.min(ss.length, Util.groupCount(matcher)); j++) {
+			for (int j = 0; j < Math.min(ss.length, Util.groupCount(m1)); j++) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(matcher, j + 1), ss[j]);
+						Util.group(m1, j + 1), ss[j]);
+				//
+			} // for
+				//
+		} else if (Util
+				.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)\\s+(\\p{InCJKUnifiedIdeographs}+)$"), s1))
+				&& Util.matches(m2 = Util.matcher(
+						PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)\\s+(\\p{InHiragana}+)$"), s2))) {
+			//
+			for (int j = 1; j <= Math.min(Util.groupCount(m1), Util.groupCount(m2)); j++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m1, j), Util.group(m2, j));
 				//
 			} // for
 				//
