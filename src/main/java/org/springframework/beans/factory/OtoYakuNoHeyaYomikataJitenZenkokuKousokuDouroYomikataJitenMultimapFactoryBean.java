@@ -238,7 +238,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 	}
 
 	@Nullable
-	private static <T, U, R> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t, final U u,
+	private static <T, U, R> R testAndApply(@Nullable final BiPredicate<T, U> predicate, @Nullable final T t, final U u,
 			final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse) {
 		return Util.test(predicate, t, u) ? Util.apply(functionTrue, t, u) : Util.apply(functionFalse, t, u);
 	}
