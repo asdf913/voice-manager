@@ -304,24 +304,6 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				//
 			} // for
 				//
-		} else if (and(
-				Util.matches(matcher = Util.matcher(
-						PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)([\\p{InKatakana}\\s]+)$"),
-						s1)),
-				Util.groupCount(matcher) > 1,
-				!Util.contains(getUnicodeBlocks(s2), UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS))) {
-			//
-			final StringBuilder sb = new StringBuilder(s2);
-			//
-			for (int j = 0; j < StringUtils.length(Util.group(matcher, 2)); j++) {
-				//
-				sb.deleteCharAt(StringUtils.length(sb) - 1);
-				//
-			} // for
-				//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					Util.group(matcher, 1), Objects.toString(sb));
-			//
 		} // if
 			//
 		final List<TriFunction<PatternMap, String, String, Multimap<String, String>>> functions = Arrays.asList(
@@ -441,6 +423,24 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.group(matcher, 1), s2);
+			//
+		} else if (and(
+				Util.matches(matcher = Util.matcher(
+						PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)([\\p{InKatakana}\\s]+)$"),
+						s1)),
+				Util.groupCount(matcher) > 1,
+				!Util.contains(getUnicodeBlocks(s2), UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS))) {
+			//
+			final StringBuilder sb = new StringBuilder(s2);
+			//
+			for (int j = 0; j < StringUtils.length(Util.group(matcher, 2)); j++) {
+				//
+				sb.deleteCharAt(StringUtils.length(sb) - 1);
+				//
+			} // for
+				//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Objects.toString(sb));
 			//
 		} // if
 			//
