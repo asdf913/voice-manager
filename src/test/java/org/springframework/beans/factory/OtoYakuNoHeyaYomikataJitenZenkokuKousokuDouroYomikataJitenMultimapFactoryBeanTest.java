@@ -22,7 +22,9 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.validator.routines.IntegerValidator;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
+import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,8 +43,8 @@ import javassist.util.proxy.ProxyUtil;
 class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_AND,
-			METHOD_TO_MULTI_MAP_STRING, METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_3_ITERABLE,
-			METHOD_TO_MULTI_MAP_3_MULTI_MAP, METHOD_VALIDATE = null;
+			METHOD_TO_MULTI_MAP_STRING, METHOD_TO_MULTI_MAP_ELEMENT, METHOD_TO_MULTI_MAP_ITERABLE,
+			METHOD_TO_MULTI_MAP_3_ITERABLE, METHOD_TO_MULTI_MAP_3_MULTI_MAP, METHOD_VALIDATE = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -62,6 +64,9 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 		(METHOD_TO_MULTI_MAP_STRING = clz.getDeclaredMethod("toMultimap", PatternMap.class, String.class))
 				.setAccessible(true);
 		//
+		(METHOD_TO_MULTI_MAP_ELEMENT = clz.getDeclaredMethod("toMultimap", PatternMap.class, Element.class))
+				.setAccessible(true);
+//
 		(METHOD_TO_MULTI_MAP_ITERABLE = clz.getDeclaredMethod("toMultimap", Iterable.class, Pattern.class))
 				.setAccessible(true);
 		//
@@ -77,7 +82,11 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 
 	private static class MH implements MethodHandler {
 
-		private String text = null;
+		private String text, attr;
+
+		private Elements nextElementSiblings = null;
+
+		private Boolean hasAttr = null;
 
 		@Override
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
@@ -85,10 +94,32 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 			//
 			final String methodName = Util.getName(thisMethod);
 			//
-			if (self instanceof Element && Objects.equals(methodName, "text")) {
+			if (self instanceof Node) {
 				//
-				return text;
+				if (Objects.equals(methodName, "attr")) {
+					//
+					return attr;
+					//
+				} else if (Objects.equals(methodName, "hasAttr")) {
+					//
+					return hasAttr;
+					//
+				} // if
+					//
+			} // if
 				//
+			if (self instanceof Element) {
+				//
+				if (Objects.equals(methodName, "text")) {
+					//
+					return text;
+					//
+				} else if (Objects.equals(methodName, "nextElementSiblings")) {
+					//
+					return nextElementSiblings;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -373,6 +404,62 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of(string = "千歳恵庭", "ちとせえにわ")),
 						MultimapUtil.entries(toMultimap(patternMap, string, es))));
 		//
+		final Element element1 = ProxyUtil.createProxy(Element.class, mh, x -> {
+			//
+			final Constructor<?> constructor = getDeclaredConstructor(x, String.class);
+			//
+			if (constructor != null) {
+				//
+				constructor.setAccessible(true);
+				//
+			} // if
+				//
+			return Util.cast(Element.class, newInstance(constructor, "A"));
+			//
+		});
+		//
+		Assertions.assertNull(toMultimap(patternMap, element1));
+		//
+		mh.text = "和光北 （新倉ＰＡ併設）";
+		//
+		Assertions.assertNull(toMultimap(patternMap, element1));
+		//
+		mh.nextElementSiblings = new Elements(Collections.nCopies(2, null));
+		//
+		Assertions.assertNull(toMultimap(patternMap, element1));
+		//
+		final MH mh2 = new MH();
+		//
+		final Element element2 = ProxyUtil.createProxy(Element.class, mh2, x -> {
+			//
+			final Constructor<?> constructor = getDeclaredConstructor(x, String.class);
+			//
+			if (constructor != null) {
+				//
+				constructor.setAccessible(true);
+				//
+			} // if
+				//
+			return Util.cast(Element.class, newInstance(constructor, "A"));
+			//
+		});
+		//
+		mh.nextElementSiblings = new Elements(Arrays.asList(null, element2));
+		//
+		mh2.text = "わこうきた";
+		//
+		mh.hasAttr = Boolean.FALSE;
+		//
+		Assertions.assertNull(toMultimap(patternMap, element1));
+		//
+		mh.hasAttr = Boolean.TRUE;
+		//
+		mh.attr = "2";
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("和光北", mh2.text)),
+						MultimapUtil.entries(toMultimap(patternMap, element1))));
+		//
 	}
 
 	private static <T> Constructor<T> getDeclaredConstructor(final Class<T> instance, final Class<?>... parameterTypes)
@@ -383,6 +470,21 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 	private static <T> T newInstance(final Constructor<T> instance, final Object... initargs)
 			throws InstantiationException, IllegalAccessException, InvocationTargetException {
 		return instance != null ? instance.newInstance(initargs) : null;
+	}
+
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final Element element)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP_ELEMENT.invoke(null, patternMap, element);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String string,

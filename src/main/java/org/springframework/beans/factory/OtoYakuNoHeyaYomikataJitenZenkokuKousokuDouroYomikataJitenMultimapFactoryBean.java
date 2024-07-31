@@ -110,15 +110,11 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		Element e = null;
 		//
-		String s1, s2, group;
-		//
-		List<Element> nextElementSiblings = null;
+		String s1;
 		//
 		Multimap<String, String> multimap = null, excluded = null;
 		//
-		Matcher matcher;
-		//
-		int size, rowspan;
+		int size;
 		//
 		for (int i = 0; i < IterableUtils.size(es); i++) {
 			//
@@ -128,44 +124,12 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				//
 			} // if
 				//
-			if (Boolean
-					.logicalAnd(
-							Util.matches(matcher = Util.matcher(
-									PatternMap.getPattern(patternMap,
-											"^(\\p{InCJKUnifiedIdeographs}+)\\s+（(\\p{InCJKUnifiedIdeographs}+).+）$"),
-									s1 = ElementUtil.text(e))),
-							IterableUtils.size(nextElementSiblings = e.nextElementSiblings()) > 1)
-					&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
-							getUnicodeBlocks(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))))
-					&& (rowspan = Util.intValue(validate(IntegerValidator.getInstance(),
-							testAndApply(NodeUtil::hasAttr, e, "rowspan", NodeUtil::attr, null)), 0)) > 1) {
-				//
-				for (int j = 0; j < Math.min(Util.groupCount(matcher), rowspan); j++) {
-					//
-					group = Util.group(matcher, j + 1);
-					//
-					if (j == 0) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), group,
-								s2);
-						//
-					} else {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), group,
-								ElementUtil.text(IterableUtils.get(
-										ElementUtil.children(ElementUtil.nextElementSibling(ElementUtil.parent(e))),
-										e.elementSiblingIndex() + 1)));
-						//
-					} // if
-						//
-				} // for
-					//
-			} // if
-				//
+
+			//
 			size = MultimapUtil.size(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create));
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					toMultimap(patternMap, s1));
+					toMultimap(patternMap, s1 = ElementUtil.text(e)));
 			//
 			if (MultimapUtil.size(multimap) > size) {
 				//
@@ -174,7 +138,16 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			} // if
 				//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					toMultimap(patternMap, s1, nextElementSiblings));
+					toMultimap(patternMap, e));
+			//
+			if (MultimapUtil.size(multimap) > size) {
+				//
+				continue;
+				//
+			} // if
+				//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					toMultimap(patternMap, s1, e.nextElementSiblings()));
 			//
 			if (MultimapUtil.size(multimap) == size) {
 				//
@@ -191,6 +164,57 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 						Util.map(NodeUtil.nodeStream(document), x -> Util.cast(TextNode.class, x)), Objects::nonNull)),
 						Pattern.compile("^（(\\p{InHIRAGANA}+)）$")));
 		//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final Element element) {
+		//
+		final Matcher matcher = Util.matcher(
+				PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)\\s+（(\\p{InCJKUnifiedIdeographs}+).+）$"),
+				ElementUtil.text(element));
+		//
+		String s2, group;
+		//
+		final Iterable<Element> nextElementSiblings = element != null ? element.nextElementSiblings() : null;
+		//
+		int rowspan;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		Iterable<Element> children = null;
+		//
+		if (Boolean.logicalAnd(Util.matches(matcher), IterableUtils.size(nextElementSiblings) > 1)
+				&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
+						getUnicodeBlocks(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))))
+				&& (rowspan = Util.intValue(validate(IntegerValidator.getInstance(),
+						testAndApply(NodeUtil::hasAttr, element, "rowspan", NodeUtil::attr, null)), 0)) > 1) {
+			//
+			for (int j = 0; j < Math.min(Util.groupCount(matcher), rowspan); j++) {
+				//
+				group = Util.group(matcher, j + 1);
+				//
+				if (j == 0) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), group, s2);
+					//
+				} else {
+					//
+					if (!IterableUtils.isEmpty(children = ElementUtil
+							.children(ElementUtil.nextElementSibling(ElementUtil.parent(element))))) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), group,
+								ElementUtil.text(IterableUtils.get(children, element.elementSiblingIndex() + 1)));
+						//
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
 		return multimap;
 		//
 	}
