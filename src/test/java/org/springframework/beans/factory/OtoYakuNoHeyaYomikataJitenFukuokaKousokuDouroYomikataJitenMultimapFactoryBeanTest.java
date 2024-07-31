@@ -33,7 +33,6 @@ import com.google.common.collect.MultimapUtil;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
-import javassist.util.proxy.MethodHandler;
 
 class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBeanTest {
 
@@ -83,26 +82,6 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 			if (Boolean.logicalAnd(proxy instanceof Iterable, Objects.equals(methodName, "iterator"))) {
 				//
 				return iterator;
-				//
-			} // if
-				//
-			throw new Throwable(methodName);
-			//
-		}
-
-	}
-
-	private static class MH implements MethodHandler {
-
-		@Override
-		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
-				throws Throwable {
-			//
-			final String methodName = Util.getName(thisMethod);
-			//
-			if (self instanceof Node && Objects.equals(methodName, "nodeStream")) {
-				//
-				return null;
 				//
 			} // if
 				//
