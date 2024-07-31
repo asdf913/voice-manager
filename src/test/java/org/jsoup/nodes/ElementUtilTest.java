@@ -164,7 +164,7 @@ class ElementUtilTest {
 	}
 
 	@Test
-	void testNull() throws IllegalAccessException, InvocationTargetException {
+	void testNull() {
 		//
 		final Method[] ms = ElementUtil.class.getDeclaredMethods();
 		//
