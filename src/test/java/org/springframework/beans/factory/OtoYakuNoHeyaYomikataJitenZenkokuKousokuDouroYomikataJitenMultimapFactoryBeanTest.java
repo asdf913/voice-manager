@@ -66,7 +66,7 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 		//
 		(METHOD_TO_MULTI_MAP_ELEMENT = clz.getDeclaredMethod("toMultimap", PatternMap.class, Element.class))
 				.setAccessible(true);
-//
+		//
 		(METHOD_TO_MULTI_MAP_ITERABLE = clz.getDeclaredMethod("toMultimap", Iterable.class, Pattern.class))
 				.setAccessible(true);
 		//
@@ -132,6 +132,10 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 
 	private boolean isSystemPropertiesContainsTestGetObject = false;
 
+	private MH mh = null;
+
+	private PatternMap patternMap = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -139,6 +143,10 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 		//
 		isSystemPropertiesContainsTestGetObject = Util.containsKey(System.getProperties(),
 				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBeanTest.testGetObject");
+		//
+		mh = new MH();
+		//
+		patternMap = new PatternMapImpl();
 		//
 	}
 
@@ -292,8 +300,6 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 		//
 		final Multimap<?, ?> multimap = ImmutableMultimap.of();
 		//
-		final PatternMap patternMap = new PatternMapImpl();
-		//
 		Assertions.assertTrue(
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("米原市", "まいばらし")),
 						MultimapUtil.entries(toMultimap(patternMap, "米原市（まいばらし）", (Multimap) null))));
@@ -320,8 +326,6 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("仙塩道路", "せんえんどうろ")),
 						MultimapUtil.entries(toMultimap(patternMap, "＊仙台港北〜利府中 を仙塩道路（せんえんどうろ）"))));
 		//
-		final MH mh = new MH();
-		//
 		final Document document = ProxyUtil.createProxy(Document.class, mh, x -> {
 			//
 			final Constructor<?> constructor = getDeclaredConstructor(x, String.class);
@@ -346,44 +350,72 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 				MultimapUtil.entries(ImmutableMultimap.of("仙台南", mh.text = "せんだいみなみ")),
 				MultimapUtil.entries(toMultimap(patternMap, "仙台南（東北）", es))));
 		//
-		mh.text = "さかたみなと";
-		//
+		if (mh != null) {
+			//
+			mh.text = "さかたみなと";
+			//
+		} // if
+			//
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("酒田", "さかた")),
 				MultimapUtil.entries(toMultimap(patternMap, "酒田みなと", es))));
 		//
-		mh.text = "しらかしだい";
-		//
+		if (mh != null) {
+			//
+			mh.text = "しらかしだい";
+			//
+		} // if
+			//
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("台", "だい")),
 				MultimapUtil.entries(toMultimap(patternMap, "しらかし台", es))));
 		//
-		mh.text = "ぬまのはたにし";
-		//
+		if (mh != null) {
+			//
+			mh.text = "ぬまのはたにし";
+			//
+		} // if
+			//
 		Assertions.assertTrue(
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("沼", "ぬま", "端西", "はたにし")),
 						MultimapUtil.entries(toMultimap(patternMap, "沼ノ端西", es))));
 		//
-		mh.text = "すながわはいうぇい おあしす";
-		//
+		if (mh != null) {
+			//
+			mh.text = "すながわはいうぇい おあしす";
+			//
+		} // if
+			//
 		Assertions
 				.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("砂川", "すながわ")),
 						MultimapUtil.entries(toMultimap(patternMap, "砂川ハイウェイ オアシス", es))));
 		//
-		mh.text = "ＩＣ";
-		//
+		if (mh != null) {
+			//
+			mh.text = "ＩＣ";
+			//
+		} // if
+			//
 		Assertions.assertEquals(multimap, toMultimap(patternMap, "東京湾アクアライン", es));
 		//
 		Assertions.assertTrue(
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("南郷", mh.text = "なんごう")),
 						MultimapUtil.entries(toMultimap(patternMap, "南郷(京滋ＢＰ）", es))));
 		//
-		mh.text = "とうぶゆのまる";
-		//
+		if (mh != null) {
+			//
+			mh.text = "とうぶゆのまる";
+			//
+		} // if
+			//
 		Assertions.assertTrue(
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("東部湯", "とうぶゆ", "丸", "まる")),
 						MultimapUtil.entries(toMultimap(patternMap, "東部湯の丸", es))));
 		//
-		mh.text = "いなわしろ ばんだいこうげん";
-		//
+		if (mh != null) {
+			//
+			mh.text = "いなわしろ ばんだいこうげん";
+			//
+		} // if
+			//
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(
 				MultimapUtil.entries(ImmutableMultimap.of("猪苗代", "いなわしろ", "磐梯高原", "ばんだいこうげん")),
 				MultimapUtil.entries(toMultimap(patternMap, "猪苗代 磐梯高原", es))));
@@ -398,8 +430,12 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of(string, mh.text = "くんぬい")),
 						MultimapUtil.entries(toMultimap(patternMap, string, es))));
 		//
-		mh.text = "ちとせえにわ（道東道へ）";
-		//
+		if (mh != null) {
+			//
+			mh.text = "ちとせえにわ（道東道へ）";
+			//
+		} // if
+			//
 		Assertions.assertTrue(
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of(string = "千歳恵庭", "ちとせえにわ")),
 						MultimapUtil.entries(toMultimap(patternMap, string, es))));
@@ -420,12 +456,47 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 		//
 		Assertions.assertNull(toMultimap(patternMap, element1));
 		//
-		mh.text = "和光北 （新倉ＰＡ併設）";
+	}
+
+	@Test
+	void testToMultimap3() throws Throwable {
+		//
+		if (isSystemPropertiesContainsTestGetObject) {
+			//
+			return;
+			//
+		} // if
+			//
+		final Element element1 = ProxyUtil.createProxy(Element.class, mh, x -> {
+			//
+			final Constructor<?> constructor = getDeclaredConstructor(x, String.class);
+			//
+			if (constructor != null) {
+				//
+				constructor.setAccessible(true);
+				//
+			} // if
+				//
+			return Util.cast(Element.class, newInstance(constructor, "A"));
+			//
+		});
 		//
 		Assertions.assertNull(toMultimap(patternMap, element1));
 		//
-		mh.nextElementSiblings = new Elements(Collections.nCopies(2, null));
+		if (mh != null) {
+			//
+			mh.text = "和光北 （新倉ＰＡ併設）";
+			//
+		} // if
+			//
+		Assertions.assertNull(toMultimap(patternMap, element1));
 		//
+		if (mh != null) {
+			//
+			mh.nextElementSiblings = new Elements(Collections.nCopies(2, null));
+			//
+		} // if
+			//
 		Assertions.assertNull(toMultimap(patternMap, element1));
 		//
 		final MH mh2 = new MH();
@@ -444,18 +515,30 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 			//
 		});
 		//
-		mh.nextElementSiblings = new Elements(Arrays.asList(null, element2));
-		//
+		if (mh != null) {
+			//
+			mh.nextElementSiblings = new Elements(Arrays.asList(null, element2));
+			//
+		} // if
+			//
 		mh2.text = "わこうきた";
 		//
-		mh.hasAttr = Boolean.FALSE;
-		//
+		if (mh != null) {
+			//
+			mh.hasAttr = Boolean.FALSE;
+			//
+		} // if
+			//
 		Assertions.assertNull(toMultimap(patternMap, element1));
 		//
-		mh.hasAttr = Boolean.TRUE;
-		//
-		mh.attr = "2";
-		//
+		if (mh != null) {
+			//
+			mh.hasAttr = Boolean.TRUE;
+			//
+			mh.attr = "2";
+			//
+		} // if
+			//
 		Assertions.assertTrue(
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("和光北", mh2.text)),
 						MultimapUtil.entries(toMultimap(patternMap, element1))));
