@@ -186,7 +186,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 	}
 
 	@Nullable
-	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final Element element) {
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, @Nullable final Element element) {
 		//
 		final Matcher matcher = Util.matcher(
 				PatternMap.getPattern(patternMap,
