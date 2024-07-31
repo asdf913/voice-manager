@@ -219,7 +219,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 					//
 				} else {
 					//
-					if (!IterableUtils.isEmpty(children = ElementUtil
+					if (element != null && !IterableUtils.isEmpty(children = ElementUtil
 							.children(ElementUtil.nextElementSibling(ElementUtil.parent(element))))) {
 						//
 						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), group,
