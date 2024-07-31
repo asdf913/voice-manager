@@ -61,11 +61,11 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 			//
 		} // if
 			//
-		final Multimap<String, String> multimap = toMultimap(testAndApply(Objects::nonNull,
+		final Document document = testAndApply(Objects::nonNull,
 				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
-				null));
+				null);
 		//
-		return multimap;
+		return toMultimap(document);
 		//
 	}
 
