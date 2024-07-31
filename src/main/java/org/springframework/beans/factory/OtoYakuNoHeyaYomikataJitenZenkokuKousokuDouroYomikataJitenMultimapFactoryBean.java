@@ -322,14 +322,6 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.group(matcher, 1), Objects.toString(sb));
 			//
-		} else if (and(Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)\\([\\p{InCJKUnifiedIdeographs}|\\p{InHalfwidthAndFullwidthForms}]+）$"),
-				s1)), Util.groupCount(matcher) > 0,
-				Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2)))) {
-			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					Util.group(matcher, 1), s2);
-			//
 		} // if
 			//
 		final List<TriFunction<PatternMap, String, String, Multimap<String, String>>> functions = Arrays.asList(
@@ -442,6 +434,14 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				//
 			} // if
 				//
+		} else if (and(Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\([\\p{InCJKUnifiedIdeographs}|\\p{InHalfwidthAndFullwidthForms}]+）$"),
+				s1)), Util.groupCount(matcher) > 0,
+				Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2)))) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), s2);
+			//
 		} // if
 			//
 		return multimap;
