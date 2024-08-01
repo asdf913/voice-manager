@@ -569,6 +569,27 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap4(final PatternMap patternMap, final String s) {
 		//
+		// 高速１１号台場線（１１）と分岐 （だいばせん）
+		//
+		final Matcher matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^高速\\p{InHalfwidthAndFullwidthForms}+号(\\p{InCJKUnifiedIdeographs}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+[ ]（(\\p{InHiragana}+)）$"),
+				s);
+		//
+		Multimap<String, String> multimap = null;
+		//
+		if (Util.matches(matcher) && Util.groupCount(matcher) > 1) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
 		int a, b, c;
 		//
 		if (((a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）')) && b == StringUtils.length(s) - 1
