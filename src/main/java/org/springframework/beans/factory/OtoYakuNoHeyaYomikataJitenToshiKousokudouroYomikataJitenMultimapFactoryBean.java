@@ -71,7 +71,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		//
 		PatternMap patternMap = null;
 		//
-		Multimap<String, String> multimap = toMultimap(document);
+		Multimap<String, String> multimap = toMultimapByDocument(document);
 		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
@@ -79,9 +79,8 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 					.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), "^Ｎｏ.\\d+$"),
 					ElementUtil.text(e = es.get(i)))) && NodeUtil.hasAttr(e, "href")) {
 				//
-				MultimapUtil
-						.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								toMultimap(testAndApply(
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								toMultimapByDocument(testAndApply(
 										Objects::nonNull, testAndApply(StringUtils::isNotBlank,
 												NodeUtil.absUrl(e, "href"), x -> new URI(x).toURL(), null),
 										x -> Jsoup.parse(x, 0), null)));
@@ -96,7 +95,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		//
 	}
 
-	private static Multimap<String, String> toMultimap(final Document document) throws IOException {
+	private static Multimap<String, String> toMultimapByDocument(final Document document) throws IOException {
 		//
 		final List<Element> es1 = ElementUtil.select(document, "table[border=\"1\"] tr td[colspan=\"3\"]");
 		//
