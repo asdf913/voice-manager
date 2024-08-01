@@ -465,7 +465,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		//
 		// 並木（なみき）横浜横須賀道路に接続 金沢支線（かなざわしせん）へ続く
 		//
-		final Matcher matcher = Util.matcher(PatternMap.getPattern(patternMap,
+		Matcher matcher = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+\\s+(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+$"),
 				s);
 		//
@@ -487,6 +487,23 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
+			// 北九州市小倉南区（こくらみなみく）長野二丁目
+			//
+		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^\\p{InCJKUnifiedIdeographs}+市(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\p{InCJKUnifiedIdeographs}+$"),
+				s)) && Util.groupCount(matcher) > 1) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
 		if (StringUtils.countMatches(s, '）') <= 0) {
 			//
 			return null;
@@ -499,26 +516,14 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		//
 		int c = StringUtils.indexOf(s, "く）");
 		//
-		if (Boolean.logicalAnd(a < b, b < c)) {
-			//
-			return Unit.with(ImmutableMultimap.of(StringUtils.substring(s, a + 1, b),
-					StringUtils.substring(s, b + 1, Math.min(c + 1, StringUtils.length(s)))));
-			//
-		} else if ((a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）'))
-				&& b == StringUtils.length(s) - 1 && StringUtils.countMatches(s, '区') == 1
-				&& (c = StringUtils.indexOf(s, '区')) < a) {
+		if ((a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）')) && b == StringUtils.length(s) - 1
+				&& StringUtils.countMatches(s, '区') == 1 && (c = StringUtils.indexOf(s, '区')) < a) {
 			//
 			return Unit
 					.with(ImmutableMultimap.of(StringUtils.substring(s, c + 1, a), StringUtils.substring(s, a + 1, b)));
 			//
 		} else if (StringUtils.endsWith(s, "目") && (a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）'))
 				&& StringUtils.countMatches(s, '区') == 1 && (c = StringUtils.indexOf(s, '区')) < a) {
-			//
-			return Unit
-					.with(ImmutableMultimap.of(StringUtils.substring(s, c + 1, a), StringUtils.substring(s, a + 1, b)));
-			//
-		} else if ((a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）'))
-				&& StringUtils.countMatches(s, '市') == 1 && (c = StringUtils.indexOf(s, '市')) < a) {
 			//
 			return Unit
 					.with(ImmutableMultimap.of(StringUtils.substring(s, c + 1, a), StringUtils.substring(s, a + 1, b)));

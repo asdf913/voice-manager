@@ -41,7 +41,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP1, METHOD_TO_MULTI_MAP3,
-			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_4, METHOD_TO_MULTI_MAP2, METHOD_REMOVE_ALL = null;
+			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_4, METHOD_TO_MULTI_MAP2 = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -65,8 +65,6 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 		//
 		(METHOD_TO_MULTI_MAP2 = clz.getDeclaredMethod("toMultimap2", PatternMap.class, String.class))
 				.setAccessible(true);
-		//
-		(METHOD_REMOVE_ALL = clz.getDeclaredMethod("removeAll", Multimap.class, Object.class)).setAccessible(true);
 		//
 	}
 
