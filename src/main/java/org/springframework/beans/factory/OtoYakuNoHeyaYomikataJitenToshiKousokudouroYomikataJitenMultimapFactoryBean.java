@@ -359,21 +359,6 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
-		if (Util.matches(
-				matcher = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）へ$"), s))
-				&& Util.groupCount(matcher) > 1) {
-			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					Util.group(matcher, 1), Util.group(matcher, 2));
-			//
-		} // if
-			//
-		if (MultimapUtil.size(multimap) > 0) {
-			//
-			return Unit.with(multimap);
-			//
-		} // if
-			//
 		if (StringUtils.countMatches(s, '）') <= 1) {
 			//
 			return null;
@@ -424,6 +409,24 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap2(final String s) {
 		//
+		final Matcher matcher = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）へ$"),
+				s);
+		//
+		Multimap<String, String> multimap = null;
+		//
+		if (Util.matches(matcher) && Util.groupCount(matcher) > 1) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
 		if (StringUtils.countMatches(s, '）') <= 0) {
 			//
 			return null;
