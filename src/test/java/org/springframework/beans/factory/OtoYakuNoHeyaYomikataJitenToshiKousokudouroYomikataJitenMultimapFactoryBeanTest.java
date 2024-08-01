@@ -187,7 +187,7 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 	}
 
 	@Test
-	void testToMultimap() throws Throwable {
+	void testToMultimap01() throws Throwable {
 		//
 		Assertions.assertNull(toMultimap(null, null, null));
 		//
@@ -195,98 +195,102 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 		//
 		Assertions.assertNull(toMultimap(null, null, null, null));
 		//
-		if (!isSystemPropertiesContainsTestGetObject) {
+	}
+
+	@Test
+	void testToMultimap02() throws Throwable {
+		//
+		if (isSystemPropertiesContainsTestGetObject) {
 			//
-			Assertions.assertNull(toMultimap("北"));
-			//
-			Assertions.assertNull(toMultimap("北こ"));
-			//
-			Assertions.assertNull(toMultimap(Collections.singleton(null)));
-			//
-			Assertions.assertNull(toMultimap(
-					Collections.singleton(Util.cast(Node.class, Narcissus.allocateInstance(TextNode.class)))));
-			//
-			Assertions.assertNull(toMultimap(Collections.singleton(new TextNode("建設中路線"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of("糟屋郡粕屋町", "かすやぐんかすやまち", "戸原", "とばら", "蒲田", "かまた")),
-					MultimapUtil.entries(toMultimap(Util.toList(
-							Util.map(Util.map(Stream.of("建設中路線", "福岡高速４号線　糟屋郡粕屋町（かすやぐんかすやまち）大字戸原（とばら）〜福岡市東区蒲田（かまた）三丁目"),
-									TextNode::new), x -> Util.cast(Node.class, x)))))));
-			//
-			Assertions
-					.assertTrue(
-							CollectionUtils.isEqualCollection(
-									MultimapUtil.entries(ImmutableMultimap.of("西月隈", "にしつきぐま", "福重", "ふくしげ")),
-									MultimapUtil.entries(toMultimap(Util.toList(Util.map(Util.map(
-											Stream.of("建設中路線", "福岡高速５号線　福岡市博多区西月隈（にしつきぐま）四丁目〜福岡市西区福重（ふくしげ）三丁目"),
-											TextNode::new), x -> Util.cast(Node.class, x)))))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of("小倉北区", "こくらきたく", "菜園場", "さえんば")),
-					MultimapUtil.entries(toMultimap("北九州市小倉北区（こくらきたく）菜園場（さえんば）一丁目"))));
-			//
-			Assertions.assertNull(
-					toMultimap(Util.cast(Pattern.class, Narcissus.allocateInstance(Pattern.class)), null, null));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("多", "た", "津", "つ")),
-							MultimapUtil.entries(toMultimap(Pattern.compile("\\p{InHiragana}"), "多の津", "たのつ"))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("小倉南区", "こくらみなみく")),
-							MultimapUtil.entries(toMultimap("北九州市小倉南区（こくらみなみく）長野二丁目"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of("福岡前原道路", "ふくおかまえばるどうろ")),
-					MultimapUtil.entries(toMultimap("福岡前原道路（ふくおかまえばるどうろ）へ"))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("許斐町", "このみまち")),
-							MultimapUtil.entries(toMultimap("北九州市小倉北区許斐町（このみまち）"))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("香住ヶ丘", "かすみがおか")),
-							MultimapUtil.entries(toMultimap("福岡市東区香住ヶ丘（かすみがおか）二丁目"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of("八幡区西区茶屋", "やはたにしくちゃや", "原", "はる")),
-					MultimapUtil.entries(toMultimap("北九州市八幡区西区茶屋の原（やはたにしくちゃやのはる）二丁目 九州自動車道八幡ＩＣへ"))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("八重洲線", "やえすせん")),
-							MultimapUtil.entries(toMultimap("高速八重洲線（Ｙ）へ分岐 （やえすせん）"))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("池袋線", "いけぶくろせん")),
-							MultimapUtil.entries(toMultimap("高速５号池袋線（５）へ分岐 （いけぶくろせん）"))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("千代", "ちよ")),
-							MultimapUtil.entries(toMultimap("福岡市博多区千代（ちよ）六丁目"))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("戸畑区戸畑", "とばたくとばた")),
-							MultimapUtil.entries(toMultimap("北九州市戸畑区大字戸畑（とばたくとばた）"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of("福岡前原道路", "ふくおかまえばるどうろ")),
-					MultimapUtil.entries(toMultimap("福岡前原道路（ふくおかまえばるどうろ）へ"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of("並木", "なみき", "金沢支線", "かなざわしせん")),
-					MultimapUtil.entries(toMultimap("並木（なみき）横浜横須賀道路に接続 金沢支線（かなざわしせん）へ続く"))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("許斐町", "このみまち")),
-							MultimapUtil.entries(toMultimap("北九州市小倉北区許斐町（このみまち）"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of("向島線", "むこうじません", "上野線", "うえのせん")),
-					MultimapUtil.entries(toMultimap("高速６号向島線（６）へ分岐 （むこうじません） 高速１号上野線（１）へ分岐 （うえのせん）"))));
+			return;
 			//
 		} // if
 			//
+		Assertions.assertNull(toMultimap("北"));
+		//
+		Assertions.assertNull(toMultimap("北こ"));
+		//
+		Assertions.assertNull(toMultimap(Collections.singleton(null)));
+		//
+		Assertions.assertNull(
+				toMultimap(Collections.singleton(Util.cast(Node.class, Narcissus.allocateInstance(TextNode.class)))));
+		//
+		Assertions.assertNull(toMultimap(Collections.singleton(new TextNode("建設中路線"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				MultimapUtil.entries(ImmutableMultimap.of("糟屋郡粕屋町", "かすやぐんかすやまち", "戸原", "とばら", "蒲田", "かまた")),
+				MultimapUtil.entries(toMultimap(Util.toList(
+						Util.map(Util.map(Stream.of("建設中路線", "福岡高速４号線　糟屋郡粕屋町（かすやぐんかすやまち）大字戸原（とばら）〜福岡市東区蒲田（かまた）三丁目"),
+								TextNode::new), x -> Util.cast(Node.class, x)))))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				MultimapUtil.entries(ImmutableMultimap.of("西月隈", "にしつきぐま", "福重", "ふくしげ")),
+				MultimapUtil.entries(toMultimap(Util.toList(Util.map(
+						Util.map(Stream.of("建設中路線", "福岡高速５号線　福岡市博多区西月隈（にしつきぐま）四丁目〜福岡市西区福重（ふくしげ）三丁目"), TextNode::new),
+						x -> Util.cast(Node.class, x)))))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				MultimapUtil.entries(ImmutableMultimap.of("小倉北区", "こくらきたく", "菜園場", "さえんば")),
+				MultimapUtil.entries(toMultimap("北九州市小倉北区（こくらきたく）菜園場（さえんば）一丁目"))));
+		//
+		Assertions.assertNull(
+				toMultimap(Util.cast(Pattern.class, Narcissus.allocateInstance(Pattern.class)), null, null));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("多", "た", "津", "つ")),
+						MultimapUtil.entries(toMultimap(Pattern.compile("\\p{InHiragana}"), "多の津", "たのつ"))));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("小倉南区", "こくらみなみく")),
+						MultimapUtil.entries(toMultimap("北九州市小倉南区（こくらみなみく）長野二丁目"))));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("福岡前原道路", "ふくおかまえばるどうろ")),
+						MultimapUtil.entries(toMultimap("福岡前原道路（ふくおかまえばるどうろ）へ"))));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("許斐町", "このみまち")),
+						MultimapUtil.entries(toMultimap("北九州市小倉北区許斐町（このみまち）"))));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("香住ヶ丘", "かすみがおか")),
+						MultimapUtil.entries(toMultimap("福岡市東区香住ヶ丘（かすみがおか）二丁目"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				MultimapUtil.entries(ImmutableMultimap.of("八幡区西区茶屋", "やはたにしくちゃや", "原", "はる")),
+				MultimapUtil.entries(toMultimap("北九州市八幡区西区茶屋の原（やはたにしくちゃやのはる）二丁目 九州自動車道八幡ＩＣへ"))));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("八重洲線", "やえすせん")),
+						MultimapUtil.entries(toMultimap("高速八重洲線（Ｙ）へ分岐 （やえすせん）"))));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("池袋線", "いけぶくろせん")),
+						MultimapUtil.entries(toMultimap("高速５号池袋線（５）へ分岐 （いけぶくろせん）"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("千代", "ちよ")),
+				MultimapUtil.entries(toMultimap("福岡市博多区千代（ちよ）六丁目"))));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("戸畑区戸畑", "とばたくとばた")),
+						MultimapUtil.entries(toMultimap("北九州市戸畑区大字戸畑（とばたくとばた）"))));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("福岡前原道路", "ふくおかまえばるどうろ")),
+						MultimapUtil.entries(toMultimap("福岡前原道路（ふくおかまえばるどうろ）へ"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				MultimapUtil.entries(ImmutableMultimap.of("並木", "なみき", "金沢支線", "かなざわしせん")),
+				MultimapUtil.entries(toMultimap("並木（なみき）横浜横須賀道路に接続 金沢支線（かなざわしせん）へ続く"))));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("許斐町", "このみまち")),
+						MultimapUtil.entries(toMultimap("北九州市小倉北区許斐町（このみまち）"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				MultimapUtil.entries(ImmutableMultimap.of("向島線", "むこうじません", "上野線", "うえのせん")),
+				MultimapUtil.entries(toMultimap("高速６号向島線（６）へ分岐 （むこうじません） 高速１号上野線（１）へ分岐 （うえのせん）"))));
+		//
 	}
 
 	private static Multimap<String, String> toMultimap(final String s) throws Throwable {
