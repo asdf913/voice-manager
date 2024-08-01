@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.MatchResult;
@@ -20,8 +21,6 @@ import javax.annotation.Nullable;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.function.FailableBiFunction;
-import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.javatuples.Unit;
@@ -288,9 +287,9 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 	@Nullable
 	private static Multimap<String, String> toMultimap(final String s) throws IOException {
 		//
-		final List<FailableBiFunction<PatternMap, String, IValue0<Multimap<String, String>>, IOException>> functions = Arrays
-				.asList(OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean::toMultimap1,
-						OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean::toMultimap2);
+		final List<BiFunction<PatternMap, String, IValue0<Multimap<String, String>>>> functions = Arrays.asList(
+				OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean::toMultimap1,
+				OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean::toMultimap2);
 		//
 		IValue0<Multimap<String, String>> iValue0 = null;
 		//
@@ -298,7 +297,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		//
 		for (int i = 0; i < IterableUtils.size(functions); i++) {
 			//
-			if ((iValue0 = FailableBiFunctionUtil.apply(IterableUtils.get(functions, i),
+			if ((iValue0 = Util.apply(IterableUtils.get(functions, i),
 					patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), s)) != null) {
 				//
 				return IValue0Util.getValue0(iValue0);
@@ -312,8 +311,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 	}
 
 	@Nullable
-	private static IValue0<Multimap<String, String>> toMultimap1(final PatternMap patternMap, final String s)
-			throws IOException {
+	private static IValue0<Multimap<String, String>> toMultimap1(final PatternMap patternMap, final String s) {
 		//
 		Matcher matcher = Util.matcher(PatternMap.getPattern(patternMap,
 				"^高速(\\p{InCJKUnifiedIdeographs}+)（\\p{InHalfwidthAndFullwidthForms}）へ分岐\\s+（(\\p{InHiragana}+)）$"), s);
