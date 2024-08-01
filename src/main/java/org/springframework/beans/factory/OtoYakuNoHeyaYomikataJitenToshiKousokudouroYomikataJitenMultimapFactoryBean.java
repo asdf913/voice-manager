@@ -20,10 +20,10 @@ import javax.annotation.Nullable;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableBiFunction;
+import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
-import org.apache.commons.text.TextStringBuilder;
-import org.apache.commons.text.TextStringBuilderUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -288,15 +288,18 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 	@Nullable
 	private static Multimap<String, String> toMultimap(final String s) throws IOException {
 		//
-		final List<FailableFunction<String, IValue0<Multimap<String, String>>, IOException>> functions = Arrays.asList(
-				OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean::toMultimap1,
-				OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean::toMultimap2);
+		final List<FailableBiFunction<PatternMap, String, IValue0<Multimap<String, String>>, IOException>> functions = Arrays
+				.asList(OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean::toMultimap1,
+						OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean::toMultimap2);
 		//
 		IValue0<Multimap<String, String>> iValue0 = null;
 		//
+		PatternMap patternMap = null;
+		//
 		for (int i = 0; i < IterableUtils.size(functions); i++) {
 			//
-			if ((iValue0 = FailableFunctionUtil.apply(IterableUtils.get(functions, i), s)) != null) {
+			if ((iValue0 = FailableBiFunctionUtil.apply(IterableUtils.get(functions, i),
+					patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), s)) != null) {
 				//
 				return IValue0Util.getValue0(iValue0);
 				//
@@ -309,9 +312,10 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 	}
 
 	@Nullable
-	private static IValue0<Multimap<String, String>> toMultimap1(final String s) throws IOException {
+	private static IValue0<Multimap<String, String>> toMultimap1(final PatternMap patternMap, final String s)
+			throws IOException {
 		//
-		Matcher matcher = Util.matcher(Pattern.compile(
+		Matcher matcher = Util.matcher(PatternMap.getPattern(patternMap,
 				"^高速(\\p{InCJKUnifiedIdeographs}+)（\\p{InHalfwidthAndFullwidthForms}）へ分岐\\s+（(\\p{InHiragana}+)）$"), s);
 		//
 		Multimap<String, String> multimap = null;
@@ -329,12 +333,30 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
-		if (Util.matches(matcher = Util.matcher(Pattern.compile(
+		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
 				"^高速\\p{InHalfwidthAndFullwidthForms}号(\\p{InCJKUnifiedIdeographs}+)（\\p{InHalfwidthAndFullwidthForms}）へ分岐\\s+（(\\p{InHiragana}+)）$"),
 				s)) && Util.groupCount(matcher) > 1) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
+		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^\\p{InCJKUnifiedIdeographs}+市(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\p{InCJKUnifiedIdeographs}+$"),
+				s)) && Util.groupCount(matcher) > 3) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 3), Util.group(matcher, 4));
 			//
 		} // if
 			//
@@ -350,51 +372,15 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
-		String s1 = null, s2 = null;
-		//
-		char c;
-		//
-		TextStringBuilder tsb = null;
-		//
-		final char[] cs = Util.toCharArray(s);
-		//
-		for (int j = 0; j < length(cs); j++) {
-			//
-			if (Objects.equals(UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS, UnicodeBlock.of(c = cs[j]))) {
-				//
-				if (c == '（') {
-					//
-					s1 = Objects.toString(tsb);
-					//
-					s2 = null;
-					//
-				} else if (c == '）') {
-					//
-					s2 = Objects.toString(tsb);
-					//
-				} // if
-					//
-				TextStringBuilderUtil.clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
-				//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						toMultimap(MultimapUtil.isEmpty(multimap), s1, s2));
-				//
-			} else {
-				//
-				append(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new), c);
-				//
-			} // if
-				//
-		} // for
-			//
 		return Unit.with(multimap);
 		//
 	}
 
 	@Nullable
-	private static IValue0<Multimap<String, String>> toMultimap2(final String s) {
+	private static IValue0<Multimap<String, String>> toMultimap2(final PatternMap patternMap, final String s) {
 		//
-		Matcher matcher = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）へ$"), s);
+		Matcher matcher = Util
+				.matcher(PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）へ$"), s);
 		//
 		Multimap<String, String> multimap = null;
 		//
@@ -411,7 +397,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
-		if (Util.matches(matcher = Util.matcher(Pattern.compile(
+		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
 				"^\\p{InCJKUnifiedIdeographs}+区(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\p{InCJKUnifiedIdeographs}丁目$"),
 				s)) && Util.groupCount(matcher) > 1) {
 			//
@@ -468,10 +454,6 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		//
 	}
 
-	private static int length(@Nullable final char[] instance) {
-		return instance != null ? instance.length : 0;
-	}
-
 	@Nullable
 	private static Multimap<String, String> toMultimap(final boolean first, @Nullable final String s1,
 			@Nullable final String s2) {
@@ -495,12 +477,6 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		return multimap;
 		//
-	}
-
-	private static void append(@Nullable final Appendable instance, final char c) throws IOException {
-		if (instance != null) {
-			instance.append(c);
-		}
 	}
 
 	@Nullable

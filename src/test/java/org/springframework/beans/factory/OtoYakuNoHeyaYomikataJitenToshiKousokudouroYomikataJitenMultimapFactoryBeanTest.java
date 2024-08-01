@@ -6,7 +6,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
@@ -17,8 +19,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.javatuples.valueintf.IValue0;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.junit.jupiter.api.Assertions;
@@ -37,8 +41,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP1, METHOD_TO_MULTI_MAP3,
-			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_4, METHOD_APPEND, METHOD_TO_MULTI_MAP2, METHOD_LENGTH,
-			METHOD_REMOVE_ALL = null;
+			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_4, METHOD_TO_MULTI_MAP2, METHOD_REMOVE_ALL = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -60,11 +63,8 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 		(METHOD_TO_MULTI_MAP_4 = clz.getDeclaredMethod("toMultimap", char[].class, Matcher.class, String.class,
 				Number.class)).setAccessible(true);
 		//
-		(METHOD_APPEND = clz.getDeclaredMethod("append", Appendable.class, Character.TYPE)).setAccessible(true);
-		//
-		(METHOD_TO_MULTI_MAP2 = clz.getDeclaredMethod("toMultimap2", String.class)).setAccessible(true);
-		//
-		(METHOD_LENGTH = clz.getDeclaredMethod("length", char[].class)).setAccessible(true);
+		(METHOD_TO_MULTI_MAP2 = clz.getDeclaredMethod("toMultimap2", PatternMap.class, String.class))
+				.setAccessible(true);
 		//
 		(METHOD_REMOVE_ALL = clz.getDeclaredMethod("removeAll", Multimap.class, Object.class)).setAccessible(true);
 		//
@@ -144,8 +144,6 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 
 	@Test
 	void testGetUnicodeBlocks() throws Throwable {
-		//
-		Assertions.assertNull(getUnicodeBlocks(null));
 		//
 		if (!isSystemPropertiesContainsTestGetObject) {
 			//
@@ -269,7 +267,7 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("千代", "ちよ")),
 							MultimapUtil.entries(toMultimap("福岡市博多区千代（ちよ）六丁目"))));
 			//
-			//福岡前原道路（ふくおかまえばるどうろ）へ
+			// 福岡前原道路（ふくおかまえばるどうろ）へ
 			//
 		} // if
 			//
@@ -334,70 +332,22 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 	}
 
 	@Test
-	void testAppend() {
-		//
-		Assertions.assertDoesNotThrow(() -> append(null, ' '));
-		//
-	}
-
-	private static void append(final Appendable instance, final char c) throws Throwable {
-		try {
-			METHOD_APPEND.invoke(null, instance, c);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testToMultimap2() throws Throwable {
 		//
-		Assertions.assertNull(toMultimap2(null));
+		Assertions.assertNull(toMultimap2(null, null));
 		//
 	}
 
-	private static IValue0<Multimap<String, String>> toMultimap2(final String s) throws Throwable {
+	private static IValue0<Multimap<String, String>> toMultimap2(final PatternMap patternMap, final String s)
+			throws Throwable {
 		try {
-			final Object obj = METHOD_TO_MULTI_MAP2.invoke(null, s);
+			final Object obj = METHOD_TO_MULTI_MAP2.invoke(null, patternMap, s);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testLength() throws Throwable {
-		//
-		Assertions.assertEquals(0, length(null));
-		//
-	}
-
-	private static int length(final char[] instance) throws Throwable {
-		try {
-			final Object obj = METHOD_LENGTH.invoke(null, instance);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testRemoveAll() {
-		//
-		Assertions.assertDoesNotThrow(() -> removeAll(null, null));
-		//
-	}
-
-	private static void removeAll(final Multimap<?, ?> instance, final Object key) throws Throwable {
-		try {
-			METHOD_REMOVE_ALL.invoke(null, instance, key);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -424,6 +374,79 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 						//
 				});
 		//
+	}
+
+	@Test
+	void testNull() {
+		//
+		final Method[] ms = OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean.class
+				.getDeclaredMethods();
+		//
+		Method m = null;
+		//
+		Collection<Object> list = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
+		Object result = null;
+		//
+		String toString = null;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ms[i]) == null || !Modifier.isStatic(m.getModifiers()) || m.isSynthetic()) {
+				//
+				continue;
+				//
+			} // if
+				//
+			clear(list = ObjectUtils.getIfNull(list, ArrayList::new));
+			//
+			if ((parameterTypes = m.getParameterTypes()) != null) {
+				//
+				for (final Class<?> clz : parameterTypes) {
+					//
+					if (Objects.equals(Boolean.TYPE, clz)) {
+						//
+						list.add(Boolean.FALSE);
+						//
+					} else {
+						//
+						list.add(null);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+			result = Narcissus.invokeStaticMethod(m, toArray(list));
+			//
+			toString = Objects.toString(m);
+			//
+			if (Objects.equals(Util.getName(m), "toMultimapByDocument")
+					&& Arrays.equals(m.getParameterTypes(), new Class<?>[] { Document.class })) {
+				//
+				Assertions.assertEquals(ImmutableMultimap.of(), result, toString);
+				//
+			} else {
+				//
+				Assertions.assertNull(result, toString);
+				//
+			} // if
+				//
+		} // for
+			//
+	}
+
+	private void clear(final Collection<Object> instance) {
+		if (instance != null) {
+			instance.clear();
+		}
+	}
+
+	private static Object[] toArray(final Collection<?> instance) {
+		return instance != null ? instance.toArray() : null;
 	}
 
 }
