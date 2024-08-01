@@ -277,6 +277,10 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 					MultimapUtil.entries(ImmutableMultimap.of("並木", "なみき", "金沢支線", "かなざわしせん")),
 					MultimapUtil.entries(toMultimap("並木（なみき）横浜横須賀道路に接続 金沢支線（かなざわしせん）へ続く"))));
 			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("許斐町", "このみまち")),
+							MultimapUtil.entries(toMultimap("北九州市小倉北区許斐町（このみまち）"))));
+			//
 		} // if
 			//
 	}
