@@ -432,6 +432,32 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
+			// 北九州市八幡区西区茶屋の原（やはたにしくちゃやのはる）二丁目 九州自動車道八幡ＩＣへ
+			//
+		String g3 = null;
+		//
+		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^\\p{InCJKUnifiedIdeographs}+市(\\p{InCJKUnifiedIdeographs}+)の(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）[\\p{InCJKUnifiedIdeographs}|\\s|\\p{InHalfwidthAndFullwidthForms}\\p{InHiragana}]+$"),
+				s)) && Util.groupCount(matcher) > 2
+				&& StringUtils.countMatches(g3 = Util.group(matcher, 3), 'の') == 1) {
+			//
+			final String[] ss = StringUtils.split(g3, 'の');
+			//
+			for (int i = 0; ss != null && i < ss.length; i++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, i + 1), ss[i]);
+				//
+			} // for
+				//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
 		return null;
 		//
 	}
