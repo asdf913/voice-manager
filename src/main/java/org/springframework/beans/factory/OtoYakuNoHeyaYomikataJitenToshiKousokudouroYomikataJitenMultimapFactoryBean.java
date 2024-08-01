@@ -96,7 +96,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 
 	private static Multimap<String, String> toMultimapByDocument(final Document document) {
 		//
-		final List<Element> es1 = ElementUtil.select(document, "table[border=\"1\"] tr td[colspan=\"3\"]");
+		final List<Element> es1 = ElementUtil.select(document, "table[border=\"1\"] tr td");
 		//
 		Element e = null;
 		//
@@ -128,12 +128,11 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 				//
 			} else {
 				//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						toMultimap(pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("\\p{InHiragana}")),
-								s1,
-								IterableUtils.size(nextElementSiblings = ElementUtil.nextElementSiblings(e)) > 1
-										? ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))
-										: null));
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), toMultimap(
+						pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("\\p{InHiragana}")), s1,
+						(size = IterableUtils.size(nextElementSiblings = ElementUtil.nextElementSiblings(e))) > 1
+								? ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))
+								: null));
 				//
 			} // if
 				//
