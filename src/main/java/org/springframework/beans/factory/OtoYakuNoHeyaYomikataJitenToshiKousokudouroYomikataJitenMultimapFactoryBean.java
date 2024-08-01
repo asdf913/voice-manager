@@ -379,6 +379,8 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap2(final PatternMap patternMap, final String s) {
 		//
+		// 福岡前原道路（ふくおかまえばるどうろ）へ
+		//
 		Matcher matcher = Util
 				.matcher(PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）へ$"), s);
 		//
@@ -397,12 +399,31 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
+			// 福岡市博多区千代（ちよ）六丁目
+			//
 		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
 				"^\\p{InCJKUnifiedIdeographs}+区(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\p{InCJKUnifiedIdeographs}丁目$"),
 				s)) && Util.groupCount(matcher) > 1) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
+			// 北九州市戸畑区大字戸畑（とばたくとばた）
+			//
+		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^\\p{InCJKUnifiedIdeographs}+市(\\p{InCJKUnifiedIdeographs}+)大字(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
+				s)) && Util.groupCount(matcher) > 2) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					StringUtils.join(Util.group(matcher, 1), Util.group(matcher, 2)), Util.group(matcher, 3));
 			//
 		} // if
 			//

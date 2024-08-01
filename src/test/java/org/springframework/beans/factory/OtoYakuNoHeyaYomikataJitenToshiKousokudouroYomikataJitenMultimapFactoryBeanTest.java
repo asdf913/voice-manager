@@ -267,7 +267,13 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("千代", "ちよ")),
 							MultimapUtil.entries(toMultimap("福岡市博多区千代（ちよ）六丁目"))));
 			//
-			// 福岡前原道路（ふくおかまえばるどうろ）へ
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("戸畑区戸畑", "とばたくとばた")),
+							MultimapUtil.entries(toMultimap("北九州市戸畑区大字戸畑（とばたくとばた）"))));
+			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("福岡前原道路", "ふくおかまえばるどうろ")),
+					MultimapUtil.entries(toMultimap("福岡前原道路（ふくおかまえばるどうろ）へ"))));
 			//
 		} // if
 			//
