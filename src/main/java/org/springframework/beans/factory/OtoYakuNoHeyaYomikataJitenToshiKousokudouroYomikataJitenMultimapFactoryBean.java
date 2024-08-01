@@ -456,11 +456,22 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
-			// 並木（なみき）横浜横須賀道路に接続 金沢支線（かなざわしせん）へ続く
-			//
-		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+		return null;
+		//
+	}
+
+	@Nullable
+	private static IValue0<Multimap<String, String>> toMultimap3(final PatternMap patternMap, final String s) {
+		//
+		// 並木（なみき）横浜横須賀道路に接続 金沢支線（かなざわしせん）へ続く
+		//
+		final Matcher matcher = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+\\s+(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+$"),
-				s)) && Util.groupCount(matcher) > 3) {
+				s);
+		//
+		Multimap<String, String> multimap = null;
+		//
+		if (Util.matches(matcher) && Util.groupCount(matcher) > 3) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.group(matcher, 1), Util.group(matcher, 2));
@@ -476,13 +487,6 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
-		return null;
-		//
-	}
-
-	@Nullable
-	private static IValue0<Multimap<String, String>> toMultimap3(final PatternMap patternMap, final String s) {
-		//
 		if (StringUtils.countMatches(s, '）') <= 0) {
 			//
 			return null;
