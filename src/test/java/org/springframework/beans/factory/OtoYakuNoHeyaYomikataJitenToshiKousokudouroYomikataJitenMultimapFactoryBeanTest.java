@@ -275,6 +275,10 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 					MultimapUtil.entries(ImmutableMultimap.of("福岡前原道路", "ふくおかまえばるどうろ")),
 					MultimapUtil.entries(toMultimap("福岡前原道路（ふくおかまえばるどうろ）へ"))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("並木", "なみき", "金沢支線", "かなざわしせん")),
+					MultimapUtil.entries(toMultimap("並木（なみき）横浜横須賀道路に接続 金沢支線（かなざわしせん）へ続く"))));
+			//
 		} // if
 			//
 	}
