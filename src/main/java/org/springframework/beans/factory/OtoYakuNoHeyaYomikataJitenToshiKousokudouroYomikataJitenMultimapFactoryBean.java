@@ -1,6 +1,5 @@
 package org.springframework.beans.factory;
 
-import java.io.IOException;
 import java.lang.Character.UnicodeBlock;
 import java.net.URI;
 import java.util.ArrayList;
@@ -95,7 +94,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		//
 	}
 
-	private static Multimap<String, String> toMultimapByDocument(final Document document) throws IOException {
+	private static Multimap<String, String> toMultimapByDocument(final Document document) {
 		//
 		final List<Element> es1 = ElementUtil.select(document, "table[border=\"1\"] tr td[colspan=\"3\"]");
 		//
