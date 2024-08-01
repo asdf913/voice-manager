@@ -40,7 +40,7 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
-public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean
+public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean
 		extends StringMultiMapFromResourceFactoryBean {
 
 	@URL("https://hiramatu-hifuka.com/onyak/onyak2/tosiko01.html")
@@ -274,8 +274,8 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 		} // if
 			//
 		final List<FailableFunction<String, IValue0<Multimap<String, String>>, IOException>> functions = Arrays.asList(
-				OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean::toMultimap1,
-				OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean::toMultimap2);
+				OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean::toMultimap1,
+				OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean::toMultimap2);
 		//
 		IValue0<Multimap<String, String>> iValue0 = null;
 		//

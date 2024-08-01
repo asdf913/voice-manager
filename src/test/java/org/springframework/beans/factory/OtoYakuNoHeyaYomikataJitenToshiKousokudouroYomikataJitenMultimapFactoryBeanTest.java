@@ -34,7 +34,7 @@ import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
-class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBeanTest {
+class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP1, METHOD_TO_MULTI_MAP3,
 			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_4, METHOD_APPEND, METHOD_TO_MULTI_MAP2, METHOD_LENGTH,
@@ -43,7 +43,7 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
 		//
-		final Class<?> clz = OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean.class;
+		final Class<?> clz = OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean.class;
 		//
 		(METHOD_GET_UNICODE_BLOCKS = clz.getDeclaredMethod("getUnicodeBlocks", String.class)).setAccessible(true);
 		//
@@ -91,17 +91,17 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 
 	}
 
-	private OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean instance = null;
+	private OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean instance = null;
 
 	private boolean isSystemPropertiesContainsTestGetObject = false;
 
 	@BeforeEach
 	void beforeEach() {
 		//
-		instance = new OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean();
+		instance = new OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean();
 		//
 		isSystemPropertiesContainsTestGetObject = Util.containsKey(System.getProperties(),
-				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBeanTest.testGetObject");
+				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBeanTest.testGetObject");
 		//
 	}
 
@@ -120,7 +120,7 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 		Assertions.assertEquals(multimap, instance != null ? instance.getObject() : null);
 		//
 		final Entry<Field, Object> entry = TestUtil.getFieldWithUrlAnnotationAndValue(
-				OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean.class);
+				OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean.class);
 		//
 		final Field url = entry != null ? entry.getKey() : null;
 		//
@@ -392,8 +392,9 @@ class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryB
 	@Test
 	void testName() throws Exception {
 		//
-		Util.filter(Arrays.stream(OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapFactoryBean.class
-				.getDeclaredMethods()), m -> m != null && m.getParameterCount() == 1 && !m.isSynthetic()).forEach(m -> {
+		Util.filter(Arrays.stream(
+				OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean.class.getDeclaredMethods()),
+				m -> m != null && m.getParameterCount() == 1 && !m.isSynthetic()).forEach(m -> {
 					//
 					if (m == null) {
 						//
