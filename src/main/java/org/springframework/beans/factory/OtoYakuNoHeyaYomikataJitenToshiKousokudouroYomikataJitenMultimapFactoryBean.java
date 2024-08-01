@@ -285,7 +285,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 	}
 
 	@Nullable
-	private static Multimap<String, String> toMultimap(final String s) throws IOException {
+	private static Multimap<String, String> toMultimap(final String s) {
 		//
 		final List<BiFunction<PatternMap, String, IValue0<Multimap<String, String>>>> functions = Arrays.asList(
 				OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean::toMultimap1,
