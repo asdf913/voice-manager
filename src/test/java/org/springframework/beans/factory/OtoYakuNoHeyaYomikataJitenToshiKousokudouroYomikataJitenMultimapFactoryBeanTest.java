@@ -318,6 +318,10 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("江北橋", "こうほくばし")),
 						MultimapUtil.entries(toMultimap("江北橋（こうほくばし）付近で 高速中央環状線（Ｃ２）と接続。将来は 江北橋付近で高速中央環状王子線に接続"))));
 		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				MultimapUtil.entries(ImmutableMultimap.of("谷河内", "やごうち", "京葉道路", "けいようどうろ")),
+				MultimapUtil.entries(toMultimap("谷河内で京葉道路に接続 （やごうち）（けいようどうろ）"))));
+		//
 	}
 
 	private static Multimap<String, String> toMultimap(final String s) throws Throwable {
