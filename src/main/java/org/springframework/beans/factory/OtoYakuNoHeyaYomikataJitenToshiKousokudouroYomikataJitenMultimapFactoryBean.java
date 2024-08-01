@@ -662,26 +662,6 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
-			// 狩場（かりば）料金所で 横浜横須賀道路に接続 （よこはまよこすかどうろ）
-			//
-		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+\\s+(\\p{InCJKUnifiedIdeographs}+)\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+\\s+（(\\p{InHiragana}+)）$"),
-				s)) && Util.groupCount(matcher) > 3) {
-			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					Util.group(matcher, 1), Util.group(matcher, 2));
-			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					Util.group(matcher, 3), Util.group(matcher, 4));
-			//
-		} // if
-			//
-		if (MultimapUtil.size(multimap) > 0) {
-			//
-			return Unit.with(multimap);
-			//
-		} // if
-			//
 			// 市川料金所 市川市高谷（いちかわしこうや）で 東関東自動車道に接続
 			//
 		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
@@ -706,6 +686,30 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap5(final PatternMap patternMap, final String s) {
 		//
+		// 狩場（かりば）料金所で 横浜横須賀道路に接続 （よこはまよこすかどうろ）
+		//
+		final Matcher matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+\\s+(\\p{InCJKUnifiedIdeographs}+)\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+\\s+（(\\p{InHiragana}+)）$"),
+				s);
+		//
+		Multimap<String, String> multimap = null;
+		//
+		if (Util.matches(matcher) && Util.groupCount(matcher) > 3) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 3), Util.group(matcher, 4));
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
 		int a, b, c;
 		//
 		if (((a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）')) && b == StringUtils.length(s) - 1
