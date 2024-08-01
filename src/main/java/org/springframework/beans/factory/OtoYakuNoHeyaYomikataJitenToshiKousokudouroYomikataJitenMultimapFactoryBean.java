@@ -524,6 +524,26 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
+			// 高速６号向島線（６）へ分岐 （むこうじません） 高速１号上野線（１）へ分岐 （うえのせん）
+			//
+		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^高速\\p{InHalfwidthAndFullwidthForms}号(\\p{InCJKUnifiedIdeographs}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}|\\s]+（(\\p{InHiragana}+)）\\s?高速\\p{InHalfwidthAndFullwidthForms}号(\\p{InCJKUnifiedIdeographs}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}|\\s]+（(\\p{InHiragana}+)）$"),
+				s)) && Util.groupCount(matcher) > 3) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 3), Util.group(matcher, 4));
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
 		if (StringUtils.countMatches(s, '）') <= 0) {
 			//
 			return null;
