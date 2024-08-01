@@ -562,12 +562,6 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
-		if (StringUtils.countMatches(s, '）') <= 0) {
-			//
-			return null;
-			//
-		} // if
-			//
 		return null;
 		//
 	}
