@@ -571,13 +571,30 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		//
 		// 高速１１号台場線（１１）と分岐 （だいばせん）
 		//
-		final Matcher matcher = Util.matcher(PatternMap.getPattern(patternMap,
+		Matcher matcher = Util.matcher(PatternMap.getPattern(patternMap,
 				"^高速\\p{InHalfwidthAndFullwidthForms}+号(\\p{InCJKUnifiedIdeographs}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+[ ]（(\\p{InHiragana}+)）$"),
 				s);
 		//
 		Multimap<String, String> multimap = null;
 		//
 		if (Util.matches(matcher) && Util.groupCount(matcher) > 1) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
+			// 高速神奈川１号横羽線（ｋ１）に接続 （よこはねせん）・環状八号線に出入
+			//
+		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^高速[\\p{InCJKUnifiedIdeographs}|\\p{InHalfwidthAndFullwidthForms}]+号(\\p{InCJKUnifiedIdeographs}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+\\s（(\\p{InHiragana}+)）[\\p{Inkatakana}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+$"),
+				s)) && Util.groupCount(matcher) > 1) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.group(matcher, 1), Util.group(matcher, 2));
