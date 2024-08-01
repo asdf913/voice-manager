@@ -79,7 +79,8 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 					.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), "^Ｎｏ.\\d+$"),
 					ElementUtil.text(e = es.get(i)))) && NodeUtil.hasAttr(e, "href")) {
 				//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+				MultimapUtil
+						.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 								toMultimapByDocument(testAndApply(
 										Objects::nonNull, testAndApply(StringUtils::isNotBlank,
 												NodeUtil.absUrl(e, "href"), x -> new URI(x).toURL(), null),
@@ -310,21 +311,32 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap1(final String s) throws IOException {
 		//
-		final Matcher matcher = Util
-				.matcher(Pattern.compile("(高速(\\p{InCJKUnifiedIdeographs}+)（.）.+（(\\p{InHiragana}+)）)"), s);
+		Matcher matcher = Util.matcher(Pattern.compile(
+				"^高速(\\p{InCJKUnifiedIdeographs}+)（\\p{InHalfwidthAndFullwidthForms}）へ分岐\\s+（(\\p{InHiragana}+)）$"), s);
 		//
 		Multimap<String, String> multimap = null;
 		//
-		while (Util.find(matcher)) {
+		if (Util.matches(matcher) && Util.groupCount(matcher) > 1) {
 			//
-			if (Util.groupCount(matcher) > 2) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(matcher, 2), Util.group(matcher, 3));
-				//
-			} // if
-				//
-		} // while
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
+		if (Util.matches(matcher = Util.matcher(Pattern.compile(
+				"^高速\\p{InHalfwidthAndFullwidthForms}号(\\p{InCJKUnifiedIdeographs}+)（\\p{InHalfwidthAndFullwidthForms}）へ分岐\\s+（(\\p{InHiragana}+)）$"),
+				s)) && Util.groupCount(matcher) > 1) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+		} // if
 			//
 		if (MultimapUtil.size(multimap) > 0) {
 			//
