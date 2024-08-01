@@ -82,7 +82,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 					.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), "^Ｎｏ.\\d+$"),
 					ElementUtil.text(e = es.get(i))))) {
 				//
-				Util.add(urls = ObjectUtils.getIfNull(urls, ArrayList::new), e.absUrl("href"));
+				Util.add(urls = ObjectUtils.getIfNull(urls, ArrayList::new), NodeUtil.absUrl(e, "href"));
 				//
 			} // if
 				//
