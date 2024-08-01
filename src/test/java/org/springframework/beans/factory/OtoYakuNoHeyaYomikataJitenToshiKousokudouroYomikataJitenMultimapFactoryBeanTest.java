@@ -257,6 +257,10 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 					MultimapUtil.entries(ImmutableMultimap.of("八幡区西区茶屋の原", "やはたにしくちゃやのはる")),
 					MultimapUtil.entries(toMultimap("北九州市八幡区西区茶屋の原（やはたにしくちゃやのはる）二丁目 九州自動車道八幡ＩＣへ"))));
 			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("八重洲線", "やえすせん")),
+							MultimapUtil.entries(toMultimap("高速八重洲線（Ｙ）へ分岐 （やえすせん）"))));
+			//
 		} // if
 			//
 	}
