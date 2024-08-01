@@ -545,6 +545,23 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
+			// 高速川口線（s１）に接続 （かわぐちせん）
+			//
+		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^高速(\\p{InCJKUnifiedIdeographs}+)（[\\p{InHalfwidthAndFullwidthForms}|\\p{InBasicLatin}]+[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+\\s（(\\p{InHiragana}+)）$"),
+				s)) && Util.groupCount(matcher) > 1) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
 		if (StringUtils.countMatches(s, '）') <= 0) {
 			//
 			return null;
