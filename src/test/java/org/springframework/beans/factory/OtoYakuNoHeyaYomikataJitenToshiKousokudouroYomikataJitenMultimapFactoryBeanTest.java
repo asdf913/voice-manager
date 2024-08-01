@@ -269,6 +269,8 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("千代", "ちよ")),
 							MultimapUtil.entries(toMultimap("福岡市博多区千代（ちよ）六丁目"))));
 			//
+			//福岡前原道路（ふくおかまえばるどうろ）へ
+			//
 		} // if
 			//
 	}

@@ -337,7 +337,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 					Util.group(matcher, 1), Util.group(matcher, 2));
 			//
 		} // if
-		//
+			//
 		if (MultimapUtil.size(multimap) > 0) {
 			//
 			return Unit.with(multimap);
@@ -347,6 +347,21 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		if (Util.matches(matcher = Util.matcher(Pattern.compile(
 				"^\\p{InCJKUnifiedIdeographs}+区(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\p{InCJKUnifiedIdeographs}丁目$"),
 				s)) && Util.groupCount(matcher) > 1) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
+		if (Util.matches(
+				matcher = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）へ$"), s))
+				&& Util.groupCount(matcher) > 1) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.group(matcher, 1), Util.group(matcher, 2));
@@ -425,11 +440,6 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 			return Unit.with(ImmutableMultimap.of(StringUtils.substring(s, a + 1, b),
 					StringUtils.substring(s, b + 1, Math.min(c + 1, StringUtils.length(s)))));
-			//
-		} else if (StringUtils.endsWith(s, "）へ")
-				&& (a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）'))) {
-			//
-			return Unit.with(ImmutableMultimap.of(StringUtils.substring(s, 0, a), StringUtils.substring(s, a + 1, b)));
 			//
 		} else if ((a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）'))
 				&& b == StringUtils.length(s) - 1 && StringUtils.countMatches(s, '区') == 1
