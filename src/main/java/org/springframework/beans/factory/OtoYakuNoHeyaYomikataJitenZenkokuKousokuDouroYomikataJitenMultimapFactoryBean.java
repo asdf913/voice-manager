@@ -132,7 +132,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 					PatternMap.getPattern(patternMap,
 							"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)（\\p{InCJKUnifiedIdeographs}+）$"),
 					s1 = ElementUtil.text(e))) && Util.groupCount(matcher) > 1
-					&& IterableUtils.size(nextElementSiblings = e.nextElementSiblings()) > 1
+					&& IterableUtils.size(nextElementSiblings = ElementUtil.nextElementSiblings(e)) > 1
 					&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
 							getUnicodeBlocks(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))))
 					&& StringUtils.endsWith(s2, Util.group(matcher, 2))) {
@@ -164,7 +164,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			} // if
 				//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					toMultimap(patternMap, s1, e.nextElementSiblings()));
+					toMultimap(patternMap, s1, ElementUtil.nextElementSiblings(e)));
 			//
 			if (MultimapUtil.size(multimap) == size) {
 				//
@@ -195,7 +195,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		String s2, group;
 		//
-		final Iterable<Element> nextElementSiblings = element != null ? element.nextElementSiblings() : null;
+		final Iterable<Element> nextElementSiblings = ElementUtil.nextElementSiblings(element);
 		//
 		int rowspan;
 		//

@@ -10,6 +10,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -160,6 +161,13 @@ class ElementUtilTest {
 	void testParent() {
 		//
 		Assertions.assertNull(ElementUtil.parent(element));
+		//
+	}
+
+	@Test
+	void testNextElementSiblings() {
+		//
+		Assertions.assertEquals(new Elements(), ElementUtil.nextElementSiblings(element));
 		//
 	}
 

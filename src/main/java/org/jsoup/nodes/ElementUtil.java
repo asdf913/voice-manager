@@ -166,4 +166,8 @@ public final class ElementUtil {
 		return instnace != null ? instnace.parent() : null;
 	}
 
+	public static Elements nextElementSiblings(final Element instnace) {
+		return instnace != null ? instnace.nextElementSiblings() : null;
+	}
+
 }

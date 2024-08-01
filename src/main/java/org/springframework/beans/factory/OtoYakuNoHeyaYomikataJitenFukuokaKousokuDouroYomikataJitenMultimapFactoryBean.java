@@ -95,7 +95,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 				//
 			if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 					getUnicodeBlocks(s1 = ElementUtil.text(e)))
-					&& (size = IterableUtils.size(nextElementSiblings = e.nextElementSiblings())) > 1
+					&& (size = IterableUtils.size(nextElementSiblings = ElementUtil.nextElementSiblings(e))) > 1
 					&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
 							getUnicodeBlocks(s2 = ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))))) {
 				//
@@ -106,7 +106,7 @@ public class OtoYakuNoHeyaYomikataJitenFukuokaKousokuDouroYomikataJitenMultimapF
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						toMultimap(pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("\\p{InHiragana}")),
 								s1,
-								IterableUtils.size(nextElementSiblings = e.nextElementSiblings()) > 1
+								IterableUtils.size(nextElementSiblings = ElementUtil.nextElementSiblings(e)) > 1
 										? ElementUtil.text(IterableUtils.get(nextElementSiblings, 1))
 										: null));
 				//
