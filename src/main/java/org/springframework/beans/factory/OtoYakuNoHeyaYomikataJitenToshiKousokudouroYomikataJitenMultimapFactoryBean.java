@@ -304,14 +304,6 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		//
 		Map<Entry<String, String>, Entry<String, String>> map = null;
 		//
-		Collection<Entry<Entry<String, String>, Entry<String, String>>> entrySet = null;
-		//
-		Multimap<String, String> mm = null;
-		//
-		Entry<String, String> key, value;
-		//
-		String k, v;
-		//
 		for (int i = 0; i < IterableUtils.size(functions); i++) {
 			//
 			if ((iValue0 = Util.apply(IterableUtils.get(functions, i),
@@ -324,31 +316,46 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 					//
 				} // if
 					//
-				if ((mm = IValue0Util.getValue0(iValue0)) != null
-						&& Util.iterator(entrySet = Util.entrySet(map)) != null) {
-					//
-					for (final Entry<Entry<String, String>, Entry<String, String>> entry : entrySet) {
-						//
-						if (mm.containsEntry(k = Util.getKey(key = Util.getKey(entry)), v = Util.getValue(key))
-								&& (value = Util.getValue(entry)) != null) {
-							//
-							mm.remove(k, v);
-							//
-							mm.put(Util.getKey(value), Util.getValue(value));
-							//
-						} // if
-							//
-					} // for
-						//
-				} // if
-					//
-				return mm;
+				return replaceMultimapEntries(IValue0Util.getValue0(iValue0), map);
 				//
 			} // for
 				//
 		} // for
 			//
 		return null;
+		//
+	}
+
+	private static Multimap<String, String> replaceMultimapEntries(final Multimap<String, String> mm,
+			final Map<Entry<String, String>, Entry<String, String>> map) {
+		//
+		final Collection<Entry<Entry<String, String>, Entry<String, String>>> entrySet = Util.entrySet(map);
+		//
+		Multimap<String, String> result = null;
+		//
+		if (mm != null && Util.iterator(entrySet) != null) {
+			//
+			String k, v;
+			//
+			Entry<String, String> key, value;
+			//
+			for (final Entry<Entry<String, String>, Entry<String, String>> entry : entrySet) {
+				//
+				if (mm.containsEntry(k = Util.getKey(key = Util.getKey(entry)), v = Util.getValue(key))
+						&& (value = Util.getValue(entry)) != null
+						&& (result = ObjectUtils.getIfNull(result, () -> LinkedHashMultimap.create(mm))) != null) {
+					//
+					result.remove(k, v);
+					//
+					result.put(Util.getKey(value), Util.getValue(value));
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		return ObjectUtils.defaultIfNull(result, mm);
 		//
 	}
 

@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -21,7 +22,7 @@ import java.util.stream.Stream;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
-import org.javatuples.valueintf.IValue0;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
@@ -41,7 +42,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP1, METHOD_TO_MULTI_MAP3,
-			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_4, METHOD_TO_MULTI_MAP2 = null;
+			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_4, METHOD_REPLACE_MULTI_MAP_ENTRIES = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -63,7 +64,7 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 		(METHOD_TO_MULTI_MAP_4 = clz.getDeclaredMethod("toMultimap", char[].class, Matcher.class, String.class,
 				Number.class)).setAccessible(true);
 		//
-		(METHOD_TO_MULTI_MAP2 = clz.getDeclaredMethod("toMultimap2", PatternMap.class, String.class))
+		(METHOD_REPLACE_MULTI_MAP_ENTRIES = clz.getDeclaredMethod("replaceMultimapEntries", Multimap.class, Map.class))
 				.setAccessible(true);
 		//
 	}
@@ -346,6 +347,10 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("湾岸線", "わんがんせん")),
 						MultimapUtil.entries(toMultimap("高速湾岸線（Ｂ）（わんがんせん）から分岐"))));
 		//
+		Assertions
+				.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("枝光", "えだみつ")),
+						MultimapUtil.entries(toMultimap("北九州市八幡東区大字枝光（えだみつ）"))));
+		//
 	}
 
 	private static Multimap<String, String> toMultimap(final String s) throws Throwable {
@@ -399,28 +404,6 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 				return null;
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testToMultimap2() throws Throwable {
-		//
-		Assertions.assertNull(toMultimap2(null, null));
-		//
-	}
-
-	private static IValue0<Multimap<String, String>> toMultimap2(final PatternMap patternMap, final String s)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_TO_MULTI_MAP2.invoke(null, patternMap, s);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof IValue0) {
-				return (IValue0) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
@@ -522,6 +505,33 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 
 	private static Object[] toArray(final Collection<?> instance) {
 		return instance != null ? instance.toArray() : null;
+	}
+
+	@Test
+	void testReplaceMultimapEntries() throws Throwable {
+		//
+		Multimap<String, String> multimap = ImmutableMultimap.of();
+		//
+		Assertions.assertSame(multimap, replaceMultimapEntries(multimap, null));
+		//
+		Assertions.assertEquals(multimap = ImmutableMultimap.of("八幡東区枝光", "えだみつ"),
+				replaceMultimapEntries(multimap, Collections.singletonMap(Pair.of("八幡東区枝光", "えだみつ"), null)));
+		//
+	}
+
+	private static Multimap<String, String> replaceMultimapEntries(final Multimap<String, String> mm,
+			final Map<Entry<String, String>, Entry<String, String>> map) throws Throwable {
+		try {
+			final Object obj = METHOD_REPLACE_MULTI_MAP_ENTRIES.invoke(null, mm, map);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }
