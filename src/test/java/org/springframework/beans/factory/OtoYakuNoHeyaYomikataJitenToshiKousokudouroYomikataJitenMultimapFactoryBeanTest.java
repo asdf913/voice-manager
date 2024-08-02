@@ -338,6 +338,10 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("大黒線", "だいこくせん")),
 						MultimapUtil.entries(toMultimap("高速神奈川５号大黒線（ｋ５）が分岐 （だいこくせん）"))));
 		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				MultimapUtil.entries(ImmutableMultimap.of("第三京浜道路", "だいさんけいひんどうろ", "横浜新道", "よこはましんどう")),
+				MultimapUtil.entries(toMultimap("第三京浜道路・横浜新道に接続 （だいさんけいひんどうろ）（よこはましんどう）"))));
+		//
 	}
 
 	private static Multimap<String, String> toMultimap(final String s) throws Throwable {
