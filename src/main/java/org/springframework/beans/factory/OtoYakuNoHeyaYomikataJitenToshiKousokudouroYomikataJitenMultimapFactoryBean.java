@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -149,9 +150,13 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 				//
 		} // for
 			//
+		final Map<Entry<String, String>, Entry<String, String>> map = new LinkedHashMap<>(
+				Collections.singletonMap(Pair.of("川向町", "つづきくかわむこうちょう"), Pair.of("川向町", "かわむこうちょう")));
+		//
+		Util.put(map, Pair.of("生麦", "つるみくなまむぎ"), Pair.of("生麦", "なまむぎ"));
+		//
 		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-				replaceMultimapEntries(toMultimap(Util.toList(NodeUtil.nodeStream(document))),
-						Collections.singletonMap(Pair.of("川向町", "つづきくかわむこうちょう"), Pair.of("川向町", "かわむこうちょう"))));
+				replaceMultimapEntries(toMultimap(Util.toList(NodeUtil.nodeStream(document))), map));
 		//
 		return multimap;
 		//
