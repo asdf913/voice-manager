@@ -290,7 +290,8 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 				OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean::toMultimap2,
 				OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean::toMultimap3,
 				OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean::toMultimap4,
-				OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean::toMultimap5);
+				OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean::toMultimap5,
+				OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean::toMultimap6);
 		//
 		IValue0<Multimap<String, String>> iValue0 = null;
 		//
@@ -764,6 +765,12 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
+		return null;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap6(final PatternMap patternMap, final String s) {
+		//
 		int a, b, c;
 		//
 		if (((a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）')) && b == StringUtils.length(s) - 1
