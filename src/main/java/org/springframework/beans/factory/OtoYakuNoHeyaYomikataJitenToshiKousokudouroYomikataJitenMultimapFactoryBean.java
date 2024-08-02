@@ -4,8 +4,12 @@ import java.lang.Character.UnicodeBlock;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -22,6 +26,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.tuple.Pair;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -297,12 +302,47 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		//
 		PatternMap patternMap = null;
 		//
+		Map<Entry<String, String>, Entry<String, String>> map = null;
+		//
+		Collection<Entry<Entry<String, String>, Entry<String, String>>> entrySet = null;
+		//
+		Multimap<String, String> mm = null;
+		//
+		Entry<String, String> key, value;
+		//
+		String k, v;
+		//
 		for (int i = 0; i < IterableUtils.size(functions); i++) {
 			//
 			if ((iValue0 = Util.apply(IterableUtils.get(functions, i),
 					patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), s)) != null) {
 				//
-				return IValue0Util.getValue0(iValue0);
+				if (map == null) {
+					//
+					map = new LinkedHashMap<>(
+							Collections.singletonMap(Pair.of("八幡東区枝光", "えだみつ"), Pair.of("枝光", "えだみつ")));
+					//
+				} // if
+					//
+				if ((mm = IValue0Util.getValue0(iValue0)) != null
+						&& Util.iterator(entrySet = Util.entrySet(map)) != null) {
+					//
+					for (final Entry<Entry<String, String>, Entry<String, String>> entry : entrySet) {
+						//
+						if (mm.containsEntry(k = Util.getKey(key = Util.getKey(entry)), v = Util.getValue(key))
+								&& (value = Util.getValue(entry)) != null) {
+							//
+							mm.remove(k, v);
+							//
+							mm.put(Util.getKey(value), Util.getValue(value));
+							//
+						} // if
+							//
+					} // for
+						//
+				} // if
+					//
+				return mm;
 				//
 			} // for
 				//
