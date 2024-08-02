@@ -325,7 +325,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		//
 	}
 
-	private static Multimap<String, String> replaceMultimapEntries(final Multimap<String, String> mm,
+	private static Multimap<String, String> replaceMultimapEntries(@Nullable final Multimap<String, String> mm,
 			final Map<Entry<String, String>, Entry<String, String>> map) {
 		//
 		final Collection<Entry<Entry<String, String>, Entry<String, String>>> entrySet = Util.entrySet(map);
