@@ -151,7 +151,8 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		} // for
 			//
 		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-				toMultimap(Util.toList(NodeUtil.nodeStream(document))));
+				replaceMultimapEntries(toMultimap(Util.toList(NodeUtil.nodeStream(document))),
+						Collections.singletonMap(Pair.of("川向町", "つづきくかわむこうちょう"), Pair.of("川向町", "かわむこうちょう"))));
 		//
 		return multimap;
 		//
