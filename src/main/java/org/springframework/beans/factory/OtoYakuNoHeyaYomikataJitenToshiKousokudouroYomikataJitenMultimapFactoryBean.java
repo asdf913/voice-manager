@@ -311,8 +311,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 				//
 				if (map == null) {
 					//
-					map = new LinkedHashMap<>(
-							Collections.singletonMap(Pair.of("八幡東区枝光", "えだみつ"), Pair.of("枝光", "えだみつ")));
+					map = Collections.singletonMap(Pair.of("八幡東区枝光", "えだみつ"), Pair.of("枝光", "えだみつ"));
 					//
 				} // if
 					//
