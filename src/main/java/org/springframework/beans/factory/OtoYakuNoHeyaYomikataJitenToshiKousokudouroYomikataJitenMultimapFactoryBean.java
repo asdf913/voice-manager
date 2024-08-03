@@ -942,6 +942,10 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 			// 南港北（なんこうきた）　　天保山（てんぽうざん）JCT　　北港（ほっこう）JCT　　北港西（ほっこうにし）　　中島（なかじま）PA　　中島（なかじま）　　尼崎東海岸（あまがさきひがしかいがん）　　尼崎末広（あまがさきすえひろ）　　鳴尾浜（なるおはま）　　甲子園浜（こうしえんはま）　　西宮浜（にしのみやはま）　　南芦屋浜（みなみあしやはま）　　深江浜（ふかえはま）　　住吉浜（すみよしはま）　　魚崎浜（うおざきはま）　　六甲アイランド北（ろっこうあいらんどきた）
 			//
+			// [BASIC_LATIN, CJK_UNIFIED_IDEOGRAPHS, CJK_SYMBOLS_AND_PUNCTUATION, HALFWIDTH_AND_FULLWIDTH_FORMS, HIRAGANA, KATAKANA]
+			//
+			// 環状線分岐　　西長堀（にしながほり）　　中之島西（なかのしまにし）　　海老江（えびえ）　　姫島（ひめじま）　　大和田（おおわだ）　　尼崎東（あまがさきひがし）　　尼崎（あまがさき）ミニPA　　尼崎西（あまがさきにし）　　武庫川（むこがわ）　　西宮（にしのみや）IC　　西宮（にしのみや）　　芦屋（あしや）　　深江（ふかえ）　　魚崎（うおざき）　　摩耶（まや）　　生田川（いくたがわ）　　京橋（きょうばし）　　京橋（きょうばし）PA　　柳原（やなぎはら）　　湊川（みなとがわ）　　若宮（わかみや）　　月見山（つきみやま）
+			//
 		final Iterable<UnicodeBlock> ubs = getUnicodeBlocks(s);
 		//
 		if (Objects.equals(ubs,
@@ -951,7 +955,11 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 				|| Objects.equals(ubs,
 						Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS,
 								UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS, UnicodeBlock.HIRAGANA,
-								UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION, UnicodeBlock.KATAKANA))) {
+								UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION, UnicodeBlock.KATAKANA))
+				|| Objects.equals(ubs,
+						Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS,
+								UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION, UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS,
+								UnicodeBlock.HIRAGANA, UnicodeBlock.KATAKANA))) {
 			//
 			multimap = toMultimap(patternMap, StringUtils.split(s, "\u3000\u3000"));
 			//
@@ -993,7 +1001,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		for (int i = 0; ss != null && i < ss.length; i++) {
 			//
 			if (Util.matches(matcher = Util.matcher(
-					PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\w*$"),
+					PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）[\\w*|\\p{InKatakana}]*$"),
 					StringUtils.trim(ss[i])))) {
 				//
 				// 湊町（みなとまち）
