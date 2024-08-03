@@ -932,6 +932,26 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
+			// 埼玉県さいたま市大字三浦（みうら）〜埼玉県さいたま市円阿弥（えんなみ）
+			//
+		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+大字(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）〜[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+市(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
+				s)) && Util.groupCount(matcher) > 3) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 3), Util.group(matcher, 4));
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
 			// 高速神奈川２号三ツ沢線（ｋ２）が分岐 （みつざわせん）
 			//
 		String[] ss = null;

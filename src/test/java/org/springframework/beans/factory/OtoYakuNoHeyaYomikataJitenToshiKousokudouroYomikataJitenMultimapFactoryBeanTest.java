@@ -399,6 +399,10 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 				MultimapUtil.entries(ImmutableMultimap.of("環状線", "かんじょうせん")),
 				MultimapUtil.entries(toMultimap(Arrays.asList(new TextNode("１号　環状線"), new TextNode("（かんじょうせん）"))))));
 		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				MultimapUtil.entries(ImmutableMultimap.of("三浦", "みうら", "円阿弥", "えんなみ")),
+				MultimapUtil.entries(toMultimap("埼玉県さいたま市大字三浦（みうら）〜埼玉県さいたま市円阿弥（えんなみ）"))));
+		//
 	}
 
 	private static Multimap<String, String> toMultimap(final String s) throws Throwable {
