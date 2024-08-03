@@ -1026,20 +1026,6 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 						Util.group(matcher, 3), g1);
 				//
 			} else if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
-					"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
-					ss[i])) && Util.groupCount(matcher) > 3
-					&& (ss2 = StringUtils.split(Util.group(matcher, 4), Util.group(matcher, 2))) != null
-					&& ss2.length == 2) {
-				//
-				// 四つ橋（よつばし）
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(matcher, 1), ss2[0]);
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(matcher, 3), ss2[1]);
-				//
-			} else if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
 					"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InCJKUnifiedIdeographs}]+$"),
 					ss[i])) && Util.groupCount(matcher) > 1) {
 				//
@@ -1048,7 +1034,11 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(matcher, 1), Util.group(matcher, 2));
 				//
-			} else if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+			} else if ((Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+					"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
+					ss[i])) && Util.groupCount(matcher) > 3
+					&& (ss2 = StringUtils.split(Util.group(matcher, 4), Util.group(matcher, 2))) != null
+					&& ss2.length == 2)||(Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
 					"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)(\\p{InCJKUnifiedIdeographs}+)（([(\\p{InHiragana}]+)）$"),
 					ss[i]))
 					&& Util.groupCount(matcher) > 3
@@ -1056,7 +1046,9 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 							Collections.singletonList(UnicodeBlock.KATAKANA))
 					&& (ss2 = StringUtils.split(Util.group(matcher, 4),
 							KanaConverter.convertKana(g2, KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA))) != null
-					&& ss2.length == 2) {
+					&& ss2.length == 2)) {
+				//
+				// 四つ橋（よつばし）
 				//
 				// 六甲アイランド北（ろっこうあいらんどきた）
 				//
