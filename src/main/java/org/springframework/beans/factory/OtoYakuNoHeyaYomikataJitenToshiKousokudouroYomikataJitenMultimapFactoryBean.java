@@ -181,12 +181,37 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		boolean b = false;
 		//
-		String tagName = null;
+		String tagName, kanji = null, toString;
 		//
 		Multimap<String, String> multimap = null;
 		//
+		PatternMap patternMap = null;
+		//
+		Matcher matcher = null;
+		//
 		for (final Node node : nodes) {
 			//
+			if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(
+					patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
+					"^[\\p{InHalfwidthAndFullwidthForms}|\\p{InCJKUnifiedIdeographs}]+\\p{InCJKSymbolsAndPunctuation}(\\p{InCJKUnifiedIdeographs}+)$"),
+					toString = Util.toString(node))) && Util.groupCount(matcher) > 0) {
+				//
+				kanji = Util.group(matcher, 1);
+				//
+			} // if
+				//
+			if (Util.matches(matcher = Util
+					.matcher(PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
+							"^（(\\p{InHiragana}+)）"), toString))
+					&& Util.groupCount(matcher) > 0) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), kanji,
+						Util.group(matcher, 1));
+				//
+				continue;
+				//
+			} // if
+				//
 			if (Objects.equals("建設中路線", Util.toString(node))) {
 				//
 				b = true;
