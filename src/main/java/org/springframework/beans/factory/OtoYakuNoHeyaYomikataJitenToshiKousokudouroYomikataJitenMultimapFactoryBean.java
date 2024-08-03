@@ -92,7 +92,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 												NodeUtil.absUrl(e, "href"), x -> new URI(x).toURL(), null),
 										x -> Jsoup.parse(x, 0), null)));
 				//
-				if (index++ > 0) {// TODO
+				if (index++ > 1) {// TODO
 					//
 					break;
 					//
@@ -930,6 +930,81 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(matcher, i + 1), ss[i]);
 				//
+			} // for
+				//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
+			// 湊町（みなとまち）　　四つ橋（よつばし）　　信濃橋（しなのばし）　　土佐堀（とさぼり）　　堂島（どうじま）　　北浜（きたはま）　　高麗橋（こうらいばし）　　本町（ほんまち）　　長堀（ながほり）　　道頓堀（どうとんぼり）　高津（こうづ）　夕陽丘（ゆうひがおか）　　えびす町（えびすちょう）　　なんば（なんば）＊難波　　湊町（みなとまち）
+		 	// 天保山（てんぽうざん）JCT　　天保山（てんぽうざん）　　南港北（なんこうきた）　　南港中（なんこうなか）　　南港南（なんこうみなみ）　　三宝（さんぼう）　　大浜（おおはま）　　出島（でじま）　　石津（いしづ）　　浜寺（はまでら）　　高石（たかいし）　　助松（すけまつ）　　助松（すけまつ）JCT　　泉大津（いずみおおつ）　　泉大津（いずみおおつ）PA　　岸和田北（きしわだきた）　　岸和田南（きしわだみなみ）　　貝塚（かいづか）　　泉佐野北（いずみさのきた）　　泉佐野南（いずみさのみなみ）　　りんくうJCT
+		 	// 名谷（みょうだに）JCT　　垂水（たるみ）JCT　　垂水（たるみ）IC
+		 	// 伊川谷（いかわだに）JCT　　永井谷（ながいたに）JCT　　永井谷（ながいたに）　　前開（ぜんかい）PA　　前開（ぜんかい）　　布施畑（ふせはた）JCT　　布施畑西（ふせはたにし）　　布施畑東（ふせはたひがし）　　しあわせの村（しあわせのむら）　　白川（しらかわ）PA　　藍那（あいな）　　箕谷（みのたに）　　からと西（からとにし）　　有馬口（ありまぐち）JCT　　有馬口（ありまぐち）　　五社（ごしゃ）　　柳谷（やなぎだに）JCT
+			//
+		if (Objects.equals(getUnicodeBlocks(s),
+				Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS,
+						UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS, UnicodeBlock.HIRAGANA,
+						UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION))
+				&& (ss = StringUtils.split(s, "　　")) != null) {
+			//
+			String g1, g3;
+			//
+			String[] ss2 = null;
+			//
+			for (int i = 0; i < ss.length; i++) {
+				//
+				if (Util.matches(matcher = Util.matcher(
+						PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\w*$"),
+						StringUtils.trim(ss[i])))) {
+					//
+					// 湊町（みなとまち）
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(matcher, 1), Util.group(matcher, 2));
+					//
+				} else if (Util
+						.matches(matcher = Util.matcher(
+								PatternMap.getPattern(patternMap,
+										"^(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
+								ss[i]))
+						&& Util.groupCount(matcher) > 2
+						&& StringUtils.startsWith(g3 = Util.group(matcher, 3), g1 = Util.group(matcher, 1))) {
+					//
+					// えびす町（えびすちょう）
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(matcher, 2), StringUtils.substring(g3, StringUtils.length(g1)));
+					//
+				} else if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InHiragana}+)（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)"),
+						ss[i])) && Util.groupCount(matcher) > 2
+						&& Objects.equals(g1 = Util.group(matcher, 1), Util.group(matcher, 2))) {
+					//
+					// なんば（なんば）＊難波
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(matcher, 3), g1);
+					//
+				} else if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
+						ss[i])) && Util.groupCount(matcher) > 3
+						&& (ss2 = StringUtils.split(Util.group(matcher, 4), Util.group(matcher, 2))) != null
+						&& ss2.length == 2) {
+					//
+					// 四つ橋（よつばし）
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(matcher, 1), ss2[0]);
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(matcher, 3), ss2[1]);
+					//
+				} // if
+					//
 			} // for
 				//
 		} // if
