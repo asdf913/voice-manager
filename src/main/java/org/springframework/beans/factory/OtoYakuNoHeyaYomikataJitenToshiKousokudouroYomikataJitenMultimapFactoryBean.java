@@ -184,8 +184,6 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		//
 		Multimap<String, String> multimap = null;
 		//
-		int size = 0;
-		//
 		for (final Node node : nodes) {
 			//
 			if (Objects.equals("建設中路線", Util.toString(node))) {
@@ -202,17 +200,9 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 				//
 			} // if
 				//
-			size = MultimapUtil.size(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create));
-			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					toMultimap(TextNodeUtil.text(Util.cast(TextNode.class, node))));
 			//
-			if (MultimapUtil.size(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create)) != size) {
-				//
-				break;
-				//
-			} // if
-				//
 		} // for
 			//
 		return multimap;
