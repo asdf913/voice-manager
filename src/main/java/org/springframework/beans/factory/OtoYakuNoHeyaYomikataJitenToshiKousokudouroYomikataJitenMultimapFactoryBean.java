@@ -782,14 +782,21 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
-			// 市川市高谷（いちかわしこうや）で
-			//
-		if (Util.matches(
-				matcher = Util.matcher(
-						PatternMap.getPattern(patternMap,
-								"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\p{InHiragana}$"),
-						StringUtils.trim(s)))
-				&& Util.groupCount(matcher) > 1) {
+		return null;
+		//
+	}
+
+	@Nullable
+	private static IValue0<Multimap<String, String>> toMultimap6(final PatternMap patternMap, final String s) {
+		//
+		// 市川市高谷（いちかわしこうや）で
+		//
+		final Matcher matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\p{InHiragana}$"), StringUtils.trim(s));
+		//
+		Multimap<String, String> multimap = null;
+		//
+		if (Util.matches(matcher) && Util.groupCount(matcher) > 1) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.group(matcher, 1), Util.group(matcher, 2));
@@ -802,13 +809,6 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
-		return null;
-		//
-	}
-
-	@Nullable
-	private static IValue0<Multimap<String, String>> toMultimap6(final PatternMap patternMap, final String s) {
-		//
 		int a, b, c;
 		//
 		if (((a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）')) && b == StringUtils.length(s) - 1
