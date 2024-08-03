@@ -209,7 +209,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 			if (MultimapUtil.size(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create)) != size) {
 				//
-				continue;
+				break;
 				//
 			} // if
 				//
