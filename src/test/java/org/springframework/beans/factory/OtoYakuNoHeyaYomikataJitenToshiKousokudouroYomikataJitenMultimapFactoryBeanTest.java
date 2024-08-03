@@ -230,14 +230,16 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 							Util.map(Util.map(Stream.of("建設中路線", "福岡高速４号線　糟屋郡粕屋町（かすやぐんかすやまち）大字戸原（とばら）〜福岡市東区蒲田（かまた）三丁目"),
 									TextNode::new), x -> Util.cast(Node.class, x)))))));
 			//
-		Assertions.assertTrue(CollectionUtils.isEqualCollection(
-				MultimapUtil.entries(ImmutableMultimap.of("西月隈", "にしつきぐま", "福重", "ふくしげ")),
-				MultimapUtil.entries(toMultimap(Util.toList(Util.map(
-						Util.map(Stream.of("建設中路線", "福岡高速５号線　福岡市博多区西月隈（にしつきぐま）四丁目〜福岡市西区福重（ふくしげ）三丁目"), TextNode::new),
-						x -> Util.cast(Node.class, x)))))));
-		//
+			Assertions
+					.assertTrue(
+							CollectionUtils.isEqualCollection(
+									MultimapUtil.entries(ImmutableMultimap.of("西月隈", "にしつきぐま", "福重", "ふくしげ")),
+									MultimapUtil.entries(toMultimap(Util.toList(Util.map(Util.map(
+											Stream.of("建設中路線", "福岡高速５号線　福岡市博多区西月隈（にしつきぐま）四丁目〜福岡市西区福重（ふくしげ）三丁目"),
+											TextNode::new), x -> Util.cast(Node.class, x)))))));
+			//
 		} // if
-		//
+			//
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(
 				MultimapUtil.entries(ImmutableMultimap.of("小倉北区", "こくらきたく", "菜園場", "さえんば")),
 				MultimapUtil.entries(toMultimap("北九州市小倉北区（こくらきたく）菜園場（さえんば）一丁目"))));
@@ -362,6 +364,10 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 		Assertions.assertTrue(
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("市川市高谷", "いちかわしこうや")),
 						MultimapUtil.entries(toMultimap(" 市川市高谷（いちかわしこうや）で"))));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("広島高速道路", "ひろしまこうそくどうろ")),
+						MultimapUtil.entries(toMultimap(" 広島高速道路　ひろしまこうそくどうろ"))));
 		//
 	}
 
