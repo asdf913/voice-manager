@@ -946,6 +946,10 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 			// 環状線分岐　　西長堀（にしながほり）　　中之島西（なかのしまにし）　　海老江（えびえ）　　姫島（ひめじま）　　大和田（おおわだ）　　尼崎東（あまがさきひがし）　　尼崎（あまがさき）ミニPA　　尼崎西（あまがさきにし）　　武庫川（むこがわ）　　西宮（にしのみや）IC　　西宮（にしのみや）　　芦屋（あしや）　　深江（ふかえ）　　魚崎（うおざき）　　摩耶（まや）　　生田川（いくたがわ）　　京橋（きょうばし）　　京橋（きょうばし）PA　　柳原（やなぎはら）　　湊川（みなとがわ）　　若宮（わかみや）　　月見山（つきみやま）
 			//
+			// [BASIC_LATIN, CJK_UNIFIED_IDEOGRAPHS, CJK_SYMBOLS_AND_PUNCTUATION, HALFWIDTH_AND_FULLWIDTH_FORMS, HIRAGANA]
+			//
+			// 環状線分岐　　中之島（なかのしま）　　出入橋（でいりばし）　　梅田（うめだ）　　福島（ふくしま）　　塚本（つかもと）　　加島（かしま）　　豊中南（とよなかみなみ）　　豊中北（とよなかきた）　　大阪空港（おおさかくうこう）　　池田（いけだ）　　神田（こうだ）　　川西小花（かわにしおばな）　　池田木部（いけだきべ） 
+			//
 		final Iterable<UnicodeBlock> ubs = getUnicodeBlocks(s);
 		//
 		if (Objects.equals(ubs,
@@ -959,7 +963,11 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 				|| Objects.equals(ubs,
 						Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS,
 								UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION, UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS,
-								UnicodeBlock.HIRAGANA, UnicodeBlock.KATAKANA))) {
+								UnicodeBlock.HIRAGANA, UnicodeBlock.KATAKANA))
+				|| Objects.equals(ubs,
+						Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS,
+								UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION, UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS,
+								UnicodeBlock.HIRAGANA))) {
 			//
 			multimap = toMultimap(patternMap, StringUtils.split(s, "\u3000\u3000"));
 			//
