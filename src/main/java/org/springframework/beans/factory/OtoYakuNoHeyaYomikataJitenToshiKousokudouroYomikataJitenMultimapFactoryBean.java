@@ -948,65 +948,10 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		if (Objects.equals(getUnicodeBlocks(s),
 				Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS,
 						UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS, UnicodeBlock.HIRAGANA,
-						UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION))
-				&& (ss = StringUtils.split(s, "\u3000\u3000")) != null) {
+						UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION))) {
 			//
-			String g1, g3;
+			multimap = toMultimap(patternMap, StringUtils.split(s, "\u3000\u3000"));
 			//
-			String[] ss2 = null;
-			//
-			for (int i = 0; i < ss.length; i++) {
-				//
-				if (Util.matches(matcher = Util.matcher(
-						PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\w*$"),
-						StringUtils.trim(ss[i])))) {
-					//
-					// 湊町（みなとまち）
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.group(matcher, 1), Util.group(matcher, 2));
-					//
-				} else if (Util
-						.matches(matcher = Util.matcher(
-								PatternMap.getPattern(patternMap,
-										"^(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
-								ss[i]))
-						&& Util.groupCount(matcher) > 2
-						&& StringUtils.startsWith(g3 = Util.group(matcher, 3), g1 = Util.group(matcher, 1))) {
-					//
-					// えびす町（えびすちょう）
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.group(matcher, 2), StringUtils.substring(g3, StringUtils.length(g1)));
-					//
-				} else if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
-						"^(\\p{InHiragana}+)（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)"),
-						ss[i])) && Util.groupCount(matcher) > 2
-						&& Objects.equals(g1 = Util.group(matcher, 1), Util.group(matcher, 2))) {
-					//
-					// なんば（なんば）＊難波
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.group(matcher, 3), g1);
-					//
-				} else if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
-						"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
-						ss[i])) && Util.groupCount(matcher) > 3
-						&& (ss2 = StringUtils.split(Util.group(matcher, 4), Util.group(matcher, 2))) != null
-						&& ss2.length == 2) {
-					//
-					// 四つ橋（よつばし）
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.group(matcher, 1), ss2[0]);
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.group(matcher, 3), ss2[1]);
-					//
-				} // if
-					//
-			} // for
-				//
 		} // if
 			//
 		if (MultimapUtil.size(multimap) > 0) {
@@ -1029,6 +974,73 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		} // if
 			//
 		return null;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String[] ss) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		Matcher matcher = null;
+		//
+		String g1, g3;
+		//
+		String[] ss2 = null;
+		//
+		for (int i = 0; ss != null && i < ss.length; i++) {
+			//
+			if (Util.matches(matcher = Util.matcher(
+					PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\w*$"),
+					StringUtils.trim(ss[i])))) {
+				//
+				// 湊町（みなとまち）
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, 1), Util.group(matcher, 2));
+				//
+			} else if (Util
+					.matches(
+							matcher = Util.matcher(
+									PatternMap.getPattern(patternMap,
+											"^(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
+									ss[i]))
+					&& Util.groupCount(matcher) > 2
+					&& StringUtils.startsWith(g3 = Util.group(matcher, 3), g1 = Util.group(matcher, 1))) {
+				//
+				// えびす町（えびすちょう）
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, 2), StringUtils.substring(g3, StringUtils.length(g1)));
+				//
+			} else if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+					"^(\\p{InHiragana}+)（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)"),
+					ss[i])) && Util.groupCount(matcher) > 2
+					&& Objects.equals(g1 = Util.group(matcher, 1), Util.group(matcher, 2))) {
+				//
+				// なんば（なんば）＊難波
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, 3), g1);
+				//
+			} else if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+					"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
+					ss[i])) && Util.groupCount(matcher) > 3
+					&& (ss2 = StringUtils.split(Util.group(matcher, 4), Util.group(matcher, 2))) != null
+					&& ss2.length == 2) {
+				//
+				// 四つ橋（よつばし）
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, 1), ss2[0]);
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, 3), ss2[1]);
+				//
+			} // if
+				//
+		} // for
+			//
+		return multimap;
 		//
 	}
 
