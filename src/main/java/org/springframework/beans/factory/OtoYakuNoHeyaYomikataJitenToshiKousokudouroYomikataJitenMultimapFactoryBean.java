@@ -37,6 +37,7 @@ import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
+import org.jsoup.nodes.TextNodeUtil;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
@@ -76,6 +77,8 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		//
 		Multimap<String, String> multimap = toMultimapByDocument(document);
 		//
+		int index = 0;// TODO
+		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
 			if (Util.matches(Util.matcher(PatternMap
@@ -89,8 +92,12 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 												NodeUtil.absUrl(e, "href"), x -> new URI(x).toURL(), null),
 										x -> Jsoup.parse(x, 0), null)));
 				//
-				break;// TODO
-				//
+				if (index++ > 0) {// TODO
+					//
+					break;
+					//
+				} // if
+					//
 			} // if
 				//
 		} // for
@@ -173,21 +180,11 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		boolean b = false;
 		//
-		TextNode textNode = null;
-		//
-		Pattern pattern = null;
-		//
-		Matcher matcher = null;
-		//
-		String tagName, text, s = null;
-		//
-		Integer end = null;
+		String tagName = null;
 		//
 		Multimap<String, String> multimap = null;
 		//
-		char[] cs = null;
-		//
-		int size = 0, length;
+		int size = 0;
 		//
 		for (final Node node : nodes) {
 			//
@@ -205,52 +202,21 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 				//
 			} // if
 				//
-			if (Boolean.logicalAnd(b, (textNode = Util.cast(TextNode.class, node)) != null)) {
+			size = MultimapUtil.size(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create));
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					toMultimap(TextNodeUtil.text(Util.cast(TextNode.class, node))));
+			//
+			if (MultimapUtil.size(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create)) != size) {
 				//
-				matcher = Util.matcher(
-						pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("（(\\p{InHIRAGANA}+)）")),
-						text = textNode.text());
+				continue;
 				//
-				end = null;
-				//
-				while (Util.find(matcher)) {
-					//
-					size = MultimapUtil.size(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create));
-					//
-					MultimapUtil.putAll(multimap, toMultimap(
-							cs = ObjectUtils.getIfNull(cs, () -> new char[] { '区', '\u3000' }), matcher, text, end));
-					//
-					testAndAccept(
-							(x, y) -> Util.and(StringUtils.countMatches(x, '区') == 1,
-									StringUtils.countMatches(x, '\u3000') == 1,
-									StringUtils.indexOf(x, '区') > StringUtils.indexOf(x, '\u3000')),
-							s = StringUtils.substring(text, Util.intValue(end, 0), start(matcher)), multimap,
-							(x, y) -> removeAll(y, StringUtils.substringAfter(x, "\u3000")));
-					//
-					if (Boolean.logicalAnd(size == MultimapUtil.size(multimap),
-							(length = StringUtils.length(s)) >= 2)) {
-						//
-						MultimapUtil.put(multimap, StringUtils.substring(s, length - 2, length),
-								testAndApply(x -> Util.groupCount(x) > 0, matcher, x -> Util.group(x, 1), Util::group));
-						//
-					} // if
-						//
-					end = end(matcher);
-					//
-				} // while
-					//
 			} // if
 				//
 		} // for
 			//
 		return multimap;
 		//
-	}
-
-	private static void removeAll(@Nullable final Multimap<?, ?> instance, final Object key) {
-		if (instance != null) {
-			instance.removeAll(key);
-		}
 	}
 
 	@Nullable
@@ -804,6 +770,26 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
 				"^高速(\\p{InCJKUnifiedIdeographs}+)[\\p{InHalfwidthAndFullwidthForms}]+（(\\p{InHiragana}+)）[\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+$"),
 				s)) && Util.groupCount(matcher) > 1) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
+			// 市川市高谷（いちかわしこうや）で
+			//
+		if (Util.matches(
+				matcher = Util.matcher(
+						PatternMap.getPattern(patternMap,
+								"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\p{InHiragana}$"),
+						StringUtils.trim(s)))
+				&& Util.groupCount(matcher) > 1) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.group(matcher, 1), Util.group(matcher, 2));
