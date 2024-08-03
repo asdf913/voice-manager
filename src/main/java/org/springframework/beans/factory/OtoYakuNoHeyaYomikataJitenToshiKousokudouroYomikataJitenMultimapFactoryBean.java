@@ -827,6 +827,29 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
+			// 福岡高速４号線 糟屋郡粕屋町（かすやぐんかすやまち）大字戸原（とばら）〜福岡市東区蒲田（かまた）三丁目
+			//
+		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^[\\p{InCJKUnifiedIdeographs}|\\p{InHalfwidthAndFullwidthForms}]+\\p{InCJKSymbolsAndPunctuation}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）大字(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\p{InCJKSymbolsAndPunctuation}\\p{InCJKUnifiedIdeographs}+区(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\p{InCJKUnifiedIdeographs}+$"),
+				StringUtils.trim(s))) && Util.groupCount(matcher) > 5) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 3), Util.group(matcher, 4));
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 5), Util.group(matcher, 6));
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
 		int a, b, c;
 		//
 		if (((a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）')) && b == StringUtils.length(s) - 1
