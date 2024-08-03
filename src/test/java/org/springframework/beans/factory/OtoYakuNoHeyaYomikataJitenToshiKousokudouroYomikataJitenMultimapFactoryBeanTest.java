@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 import com.google.common.reflect.Reflection;
@@ -385,10 +386,14 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("三", "み", "沢線", "ざわせん")),
 						MultimapUtil.entries(toMultimap("高速神奈川２号三ツ沢線（ｋ２）が分岐 （みつざわせん）"))));
 		//
-		Assertions.assertTrue(CollectionUtils.isEqualCollection(
-				MultimapUtil.entries(ImmutableMultimap.of("湊町", "みなとまち", "町", "ちょう", "難波", "なんば", "四", "よ", "橋", "ばし")),
-				MultimapUtil.entries(
-						toMultimap(" 湊町（みなとまち）\u3000\u3000えびす町（えびすちょう）\u3000\u3000なんば（なんば）＊難波\u3000\u3000四つ橋（よつばし）"))));
+		final Multimap<String, String> multimap = LinkedHashMultimap
+				.create(ImmutableMultimap.of("湊町", "みなとまち", "町", "ちょう", "難波", "なんば", "四", "よ", "橋", "ばし"));
+		//
+		MultimapUtil.putAll(multimap, ImmutableMultimap.of("島屋東", "しまやひがし", "六甲", "ろっこう", "北", "きた"));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(multimap), MultimapUtil.entries(toMultimap(
+						" 湊町（みなとまち）\u3000\u3000えびす町（えびすちょう）\u3000\u3000なんば（なんば）＊難波\u3000\u3000四つ橋（よつばし）\u3000\u3000島屋東（しまやひがし）＊（仮）\u3000\u3000六甲アイランド北（ろっこうあいらんどきた）"))));
 		//
 	}
 

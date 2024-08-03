@@ -43,6 +43,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
+import com.mariten.kanatools.KanaConverter;
 
 public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean
 		extends StringMultiMapFromResourceFactoryBean {
@@ -930,15 +931,27 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
+			// [BASIC_LATIN,CJK_UNIFIED_IDEOGRAPHS,HALFWIDTH_AND_FULLWIDTH_FORMS,HIRAGANA,CJK_SYMBOLS_AND_PUNCTUATION]
+			//
 			// 湊町（みなとまち）　　四つ橋（よつばし）　　信濃橋（しなのばし）　　土佐堀（とさぼり）　　堂島（どうじま）　　北浜（きたはま）　　高麗橋（こうらいばし）　　本町（ほんまち）　　長堀（ながほり）　　道頓堀（どうとんぼり）　高津（こうづ）　夕陽丘（ゆうひがおか）　　えびす町（えびすちょう）　　なんば（なんば）＊難波　　湊町（みなとまち）
 		 	// 天保山（てんぽうざん）JCT　　天保山（てんぽうざん）　　南港北（なんこうきた）　　南港中（なんこうなか）　　南港南（なんこうみなみ）　　三宝（さんぼう）　　大浜（おおはま）　　出島（でじま）　　石津（いしづ）　　浜寺（はまでら）　　高石（たかいし）　　助松（すけまつ）　　助松（すけまつ）JCT　　泉大津（いずみおおつ）　　泉大津（いずみおおつ）PA　　岸和田北（きしわだきた）　　岸和田南（きしわだみなみ）　　貝塚（かいづか）　　泉佐野北（いずみさのきた）　　泉佐野南（いずみさのみなみ）　　りんくうJCT
 		 	// 名谷（みょうだに）JCT　　垂水（たるみ）JCT　　垂水（たるみ）IC
 		 	// 伊川谷（いかわだに）JCT　　永井谷（ながいたに）JCT　　永井谷（ながいたに）　　前開（ぜんかい）PA　　前開（ぜんかい）　　布施畑（ふせはた）JCT　　布施畑西（ふせはたにし）　　布施畑東（ふせはたひがし）　　しあわせの村（しあわせのむら）　　白川（しらかわ）PA　　藍那（あいな）　　箕谷（みのたに）　　からと西（からとにし）　　有馬口（ありまぐち）JCT　　有馬口（ありまぐち）　　五社（ごしゃ）　　柳谷（やなぎだに）JCT
 			//
-		if (Objects.equals(getUnicodeBlocks(s),
+			// [BASIC_LATIN, CJK_UNIFIED_IDEOGRAPHS, HALFWIDTH_AND_FULLWIDTH_FORMS, HIRAGANA, CJK_SYMBOLS_AND_PUNCTUATION, KATAKANA]
+			//
+			// 南港北（なんこうきた）　　天保山（てんぽうざん）JCT　　北港（ほっこう）JCT　　北港西（ほっこうにし）　　中島（なかじま）PA　　中島（なかじま）　　尼崎東海岸（あまがさきひがしかいがん）　　尼崎末広（あまがさきすえひろ）　　鳴尾浜（なるおはま）　　甲子園浜（こうしえんはま）　　西宮浜（にしのみやはま）　　南芦屋浜（みなみあしやはま）　　深江浜（ふかえはま）　　住吉浜（すみよしはま）　　魚崎浜（うおざきはま）　　六甲アイランド北（ろっこうあいらんどきた）
+			//
+		final Iterable<UnicodeBlock> ubs = getUnicodeBlocks(s);
+		//
+		if (Objects.equals(ubs,
 				Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS,
 						UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS, UnicodeBlock.HIRAGANA,
-						UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION))) {
+						UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION))
+				|| Objects.equals(ubs,
+						Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS,
+								UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS, UnicodeBlock.HIRAGANA,
+								UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION, UnicodeBlock.KATAKANA))) {
 			//
 			multimap = toMultimap(patternMap, StringUtils.split(s, "\u3000\u3000"));
 			//
@@ -973,7 +986,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		//
 		Matcher matcher = null;
 		//
-		String g1, g3;
+		String g1, g2, g3;
 		//
 		String[] ss2 = null;
 		//
@@ -1019,6 +1032,33 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 					&& ss2.length == 2) {
 				//
 				// 四つ橋（よつばし）
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, 1), ss2[0]);
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, 3), ss2[1]);
+				//
+			} else if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+					"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InCJKUnifiedIdeographs}]+$"),
+					ss[i])) && Util.groupCount(matcher) > 1) {
+				//
+				// 島屋東（しまやひがし）＊（仮）
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, 1), Util.group(matcher, 2));
+				//
+			} else if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+					"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)(\\p{InCJKUnifiedIdeographs}+)（([(\\p{InHiragana}]+)）$"),
+					ss[i]))
+					&& Util.groupCount(matcher) > 3
+					&& Objects.equals(getUnicodeBlocks(g2 = Util.group(matcher, 2)),
+							Collections.singletonList(UnicodeBlock.KATAKANA))
+					&& (ss2 = StringUtils.split(Util.group(matcher, 4),
+							KanaConverter.convertKana(g2, KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA))) != null
+					&& ss2.length == 2) {
+				//
+				// 六甲アイランド北（ろっこうあいらんどきた）
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(matcher, 1), ss2[0]);
