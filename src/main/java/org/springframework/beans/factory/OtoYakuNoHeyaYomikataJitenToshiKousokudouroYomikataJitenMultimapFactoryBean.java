@@ -916,6 +916,30 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
+			// 高速神奈川２号三ツ沢線（ｋ２）が分岐 （みつざわせん）
+			//
+		String[] ss = null;
+		//
+		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}号(\\p{InCJKUnifiedIdeographs}+)ツ(\\p{InCJKUnifiedIdeographs}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+\\s+（(\\p{InHiragana}+)）$"),
+				s)) && Util.groupCount(matcher) > 2 && (ss = StringUtils.split(Util.group(matcher, 3), 'つ')) != null
+				&& ss.length == 2) {
+			//
+			for (int i = 0; i < ss.length; i++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, i + 1), ss[i]);
+				//
+			} // for
+				//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
 		int a, b, c;
 		//
 		if (((a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）')) && b == StringUtils.length(s) - 1
