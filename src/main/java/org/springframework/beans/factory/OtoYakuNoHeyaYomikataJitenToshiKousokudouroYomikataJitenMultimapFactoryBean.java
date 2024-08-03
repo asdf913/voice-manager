@@ -949,7 +949,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 				Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS,
 						UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS, UnicodeBlock.HIRAGANA,
 						UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION))
-				&& (ss = StringUtils.split(s, "　　")) != null) {
+				&& (ss = StringUtils.split(s, "\u3000\u3000")) != null) {
 			//
 			String g1, g3;
 			//

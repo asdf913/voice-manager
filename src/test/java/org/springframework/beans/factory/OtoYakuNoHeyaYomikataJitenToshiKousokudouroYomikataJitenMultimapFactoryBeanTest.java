@@ -222,8 +222,8 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 		//
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(
 				MultimapUtil.entries(ImmutableMultimap.of("糟屋郡粕屋町", "かすやぐんかすやまち", "戸原", "とばら", "蒲田", "かまた")),
-				MultimapUtil.entries(toMultimap(Util.toList(
-						Util.map(Util.map(Stream.of("建設中路線", "福岡高速４号線　糟屋郡粕屋町（かすやぐんかすやまち）大字戸原（とばら）〜福岡市東区蒲田（かまた）三丁目"),
+				MultimapUtil.entries(toMultimap(Util.toList(Util
+						.map(Util.map(Stream.of("建設中路線", "福岡高速４号線\u3000糟屋郡粕屋町（かすやぐんかすやまち）大字戸原（とばら）〜福岡市東区蒲田（かまた）三丁目"),
 								TextNode::new), x -> Util.cast(Node.class, x)))))));
 		//
 		// TODO
@@ -235,7 +235,7 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 							CollectionUtils.isEqualCollection(
 									MultimapUtil.entries(ImmutableMultimap.of("西月隈", "にしつきぐま", "福重", "ふくしげ")),
 									MultimapUtil.entries(toMultimap(Util.toList(Util.map(Util.map(
-											Stream.of("建設中路線", "福岡高速５号線　福岡市博多区西月隈（にしつきぐま）四丁目〜福岡市西区福重（ふくしげ）三丁目"),
+											Stream.of("建設中路線", "福岡高速５号線\u3000福岡市博多区西月隈（にしつきぐま）四丁目〜福岡市西区福重（ふくしげ）三丁目"),
 											TextNode::new), x -> Util.cast(Node.class, x)))))));
 			//
 		} // if
@@ -367,7 +367,7 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 		//
 		Assertions.assertTrue(
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("広島高速道路", "ひろしまこうそくどうろ")),
-						MultimapUtil.entries(toMultimap(" 広島高速道路　ひろしまこうそくどうろ"))));
+						MultimapUtil.entries(toMultimap(" 広島高速道路\u3000ひろしまこうそくどうろ"))));
 		//
 		Assertions.assertTrue(
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("広島呉道路", "ひろしまくれどうろ")),
@@ -387,7 +387,8 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 		//
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(
 				MultimapUtil.entries(ImmutableMultimap.of("湊町", "みなとまち", "町", "ちょう", "難波", "なんば", "四", "よ", "橋", "ばし")),
-				MultimapUtil.entries(toMultimap(" 湊町（みなとまち）　　えびす町（えびすちょう）　　なんば（なんば）＊難波　　四つ橋（よつばし）"))));
+				MultimapUtil.entries(
+						toMultimap(" 湊町（みなとまち）\u3000\u3000えびす町（えびすちょう）\u3000\u3000なんば（なんば）＊難波\u3000\u3000四つ橋（よつばし）"))));
 		//
 	}
 
