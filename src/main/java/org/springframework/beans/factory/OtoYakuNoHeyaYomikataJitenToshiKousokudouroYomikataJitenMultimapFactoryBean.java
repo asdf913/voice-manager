@@ -1028,7 +1028,8 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		return null;
 		//
 	}
-	
+
+	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap8(final PatternMap patternMap, final String s) {
 		//
 		int a, b, c;
