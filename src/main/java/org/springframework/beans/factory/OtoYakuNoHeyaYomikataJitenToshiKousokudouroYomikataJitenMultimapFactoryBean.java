@@ -174,7 +174,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 														patternMap = ObjectUtils.getIfNull(patternMap,
 																PatternMapImpl::new),
 														"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}+$"),
-												s1 = ElementUtil.text(IterableUtils.get(tds, 0))))
+												ElementUtil.text(IterableUtils.get(tds, 0))))
 								&& Util.groupCount(m1) > 0
 								&& Util.matches(
 										m2 = Util.matcher(
@@ -182,7 +182,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 														patternMap = ObjectUtils.getIfNull(patternMap,
 																PatternMapImpl::new),
 														"^(\\p{InHiragana}+)\\p{InKatakana}+$"),
-												s2 = ElementUtil.text(IterableUtils.get(tds, 1))))
+												ElementUtil.text(IterableUtils.get(tds, 1))))
 								&& Util.groupCount(m2) > 0) {
 							//
 							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
