@@ -123,15 +123,11 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
-		Collection<Element> tds, trs;
+		Collection<Element> tds;
 		//
 		Element td = null;
 		//
-		String s1, s2;
-		//
 		Multimap<String, String> multimap = null;
-		//
-		Matcher m1, m2;
 		//
 		for (final String string : names) {
 			//
@@ -147,11 +143,30 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 				//
 			} // if
 				//
-			trs = ElementUtil.nextElementSiblings(ElementUtil.parent(td));
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					toMultimap(patternMap, ElementUtil.nextElementSiblings(ElementUtil.parent(td))));
 			//
-			for (int j = 0; j < IterableUtils.size(trs); j++) {
+		} // for
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final Iterable<Element> trs) {
+		//
+		Iterable<Element> tds = null;
+		//
+		String s1, s2;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		Matcher m1, m2;
+		//
+		if (Util.iterator(trs) != null) {
+			//
+			for (final Element tr : trs) {
 				//
-				if (IterableUtils.size(tds = ElementUtil.children(IterableUtils.get(trs, j))) < 2) {
+				if (IterableUtils.size(tds = ElementUtil.children(tr)) < 2) {
 					//
 					continue;
 					//
@@ -181,7 +196,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 					//
 			} // for
 				//
-		} // for
+		} // if
 			//
 		return multimap;
 		//
