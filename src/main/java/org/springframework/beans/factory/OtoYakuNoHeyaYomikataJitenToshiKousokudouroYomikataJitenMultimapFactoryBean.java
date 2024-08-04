@@ -49,6 +49,8 @@ import com.mariten.kanatools.KanaConverter;
 public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBean
 		extends StringMultiMapFromResourceFactoryBean {
 
+	private static final String PATTERN_HIRAGANA = "^\\p{InHiragana}+$";
+
 	@URL("https://hiramatu-hifuka.com/onyak/onyak2/tosiko01.html")
 	private String url = null;
 
@@ -177,7 +179,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 					//
 				if (Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+$"),
 						s1 = ElementUtil.text(IterableUtils.get(tds, 0))))
-						&& Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InHiragana}+$"),
+						&& Util.matches(Util.matcher(PatternMap.getPattern(patternMap, PATTERN_HIRAGANA),
 								s2 = ElementUtil.text(IterableUtils.get(tds, 1))))) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s2);
@@ -200,7 +202,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 								"^(\\p{InCJKUnifiedIdeographs}+)（[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+）$"),
 								ElementUtil.text(IterableUtils.get(tds, 0))))
 						&& Util.groupCount(m1) > 0
-						&& Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InHiragana}+$"),
+						&& Util.matches(Util.matcher(PatternMap.getPattern(patternMap, PATTERN_HIRAGANA),
 								s2 = ElementUtil.text(IterableUtils.get(tds, 1))))) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
@@ -211,7 +213,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 								"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)$"),
 								ElementUtil.text(IterableUtils.get(tds, 0))))
 						&& Util.groupCount(m1) > 2
-						&& Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InHiragana}+$"),
+						&& Util.matches(Util.matcher(PatternMap.getPattern(patternMap, PATTERN_HIRAGANA),
 								s2 = ElementUtil.text(IterableUtils.get(tds, 1))))
 						&& (ss = StringUtils.split(s2, Util.group(m1, 2))) != null && ss.length == 2) {
 					//
