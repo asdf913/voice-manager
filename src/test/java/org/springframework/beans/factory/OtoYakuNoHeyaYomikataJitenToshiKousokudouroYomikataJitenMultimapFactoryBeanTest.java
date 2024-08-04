@@ -24,6 +24,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.junit.jupiter.api.Assertions;
@@ -488,6 +489,18 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 		Assertions.assertTrue(
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("東方端", "ひがしかたは")),
 						MultimapUtil.entries(toMultimap(patternMap, Arrays.asList(null, e)))));
+		//
+		(e = new Element("a")).appendChild(e1 = new Element("a"));
+		//
+		e.appendChild(e2 = new Element("a"));
+		//
+		e1.append("春岡（入口は予定）");
+		//
+		Assertions.assertNull(toMultimap(patternMap, Arrays.asList(null, e)));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				MultimapUtil.entries(ImmutableMultimap.of("春岡", ElementUtil.text(e2.append("はるおか")))),
+				MultimapUtil.entries(toMultimap(patternMap, Arrays.asList(null, e)))));
 		//
 	}
 

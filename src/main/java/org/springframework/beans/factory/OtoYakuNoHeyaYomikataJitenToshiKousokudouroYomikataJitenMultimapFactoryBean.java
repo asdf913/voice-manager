@@ -193,6 +193,16 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							Util.group(m1, 1), Util.group(m2, 1));
 					//
+				} else if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)（[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+）$"),
+						ElementUtil.text(IterableUtils.get(tds, 0)))) && Util.groupCount(m1) > 0
+						&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)$"),
+								s2 = ElementUtil.text(IterableUtils.get(tds, 1))))
+						&& Util.groupCount(m2) > 0) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(m1, 1), s2);
+					//
 				} // if
 					//
 			} // for
