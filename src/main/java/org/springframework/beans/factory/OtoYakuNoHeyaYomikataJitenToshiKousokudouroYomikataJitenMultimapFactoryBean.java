@@ -972,16 +972,12 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 			// 神奈川県川崎市都筑区川向町（つづきくかわむこうちょう）〜
 			//
-		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+		if ((Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
 				"^\\p{InCJKUnifiedIdeographs}+(都筑区\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\p{InCJKSymbolsAndPunctuation}$"),
-				s)) && Util.groupCount(matcher) > 1) {
-			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					Util.group(matcher, 1), Util.group(matcher, 2));
-			//
-		} else if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
-				"^\\p{InCJKUnifiedIdeographs}+区(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\p{InCJKSymbolsAndPunctuation}$"),
-				s)) && Util.groupCount(matcher) > 1) {
+				s)) && Util.groupCount(matcher) > 1)
+				|| (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+						"^\\p{InCJKUnifiedIdeographs}+区(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\p{InCJKSymbolsAndPunctuation}$"),
+						s)) && Util.groupCount(matcher) > 1)) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.group(matcher, 1), Util.group(matcher, 2));
