@@ -987,30 +987,6 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
-			// 高速神奈川２号三ツ沢線（ｋ２）が分岐 （みつざわせん）
-			//
-		String[] ss = null;
-		//
-		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
-				"^\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}号(\\p{InCJKUnifiedIdeographs}+)ツ(\\p{InCJKUnifiedIdeographs}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+\\s+（(\\p{InHiragana}+)）$"),
-				s)) && Util.groupCount(matcher) > 2 && (ss = StringUtils.split(Util.group(matcher, 3), 'つ')) != null
-				&& ss.length == 2) {
-			//
-			for (int i = 0; i < ss.length; i++) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(matcher, i + 1), ss[i]);
-				//
-			} // for
-				//
-		} // if
-			//
-		if (MultimapUtil.size(multimap) > 0) {
-			//
-			return Unit.with(multimap);
-			//
-		} // if
-			//
 			// [BASIC_LATIN,CJK_UNIFIED_IDEOGRAPHS,HALFWIDTH_AND_FULLWIDTH_FORMS,HIRAGANA,CJK_SYMBOLS_AND_PUNCTUATION]
 			//
 			// 湊町（みなとまち）　　四つ橋（よつばし）　　信濃橋（しなのばし）　　土佐堀（とさぼり）　　堂島（どうじま）　　北浜（きたはま）　　高麗橋（こうらいばし）　　本町（ほんまち）　　長堀（ながほり）　　道頓堀（どうとんぼり）　高津（こうづ）　夕陽丘（ゆうひがおか）　　えびす町（えびすちょう）　　なんば（なんば）＊難波　　湊町（みなとまち）
@@ -1067,6 +1043,34 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap8(final PatternMap patternMap, final String s) {
 		//
+		// 高速神奈川２号三ツ沢線（ｋ２）が分岐 （みつざわせん）
+		//
+		final Matcher matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}号(\\p{InCJKUnifiedIdeographs}+)ツ(\\p{InCJKUnifiedIdeographs}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+\\s+（(\\p{InHiragana}+)）$"),
+				s);
+		//
+		Multimap<String, String> multimap = null;
+		//
+		String[] ss = null;
+		//
+		if (Util.matches(matcher) && Util.groupCount(matcher) > 2
+				&& (ss = StringUtils.split(Util.group(matcher, 3), 'つ')) != null && ss.length == 2) {
+			//
+			for (int i = 0; i < ss.length; i++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, i + 1), ss[i]);
+				//
+			} // for
+				//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
 		int a, b, c;
 		//
 		if (((a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）')) && b == StringUtils.length(s) - 1
