@@ -166,6 +166,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap(final Element element, final PatternMap patternMap,
 			final Iterable<String> names, final Iterable<String> nextElementSiblingNames) {
 		//
