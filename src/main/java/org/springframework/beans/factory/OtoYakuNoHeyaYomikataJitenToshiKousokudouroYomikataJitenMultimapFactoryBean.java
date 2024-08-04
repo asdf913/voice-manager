@@ -1032,7 +1032,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		final Iterable<UnicodeBlock> ubs = getUnicodeBlocks(s);
 		//
-		if (Boolean.logicalOr(
+		if (Util.or(
 				Objects.equals(ubs,
 						Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS,
 								UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS, UnicodeBlock.HIRAGANA,
@@ -1040,11 +1040,11 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 				Objects.equals(ubs,
 						Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS,
 								UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS, UnicodeBlock.HIRAGANA,
-								UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION, UnicodeBlock.KATAKANA)))
-				|| Objects.equals(ubs,
+								UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION, UnicodeBlock.KATAKANA)),
+				Objects.equals(ubs,
 						Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS,
 								UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION, UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS,
-								UnicodeBlock.HIRAGANA, UnicodeBlock.KATAKANA))
+								UnicodeBlock.HIRAGANA, UnicodeBlock.KATAKANA)))
 				|| Objects.equals(ubs,
 						Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS,
 								UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION, UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS,
