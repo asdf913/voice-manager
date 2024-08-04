@@ -1044,11 +1044,11 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 				Objects.equals(ubs,
 						Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS,
 								UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION, UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS,
-								UnicodeBlock.HIRAGANA, UnicodeBlock.KATAKANA)))
-				|| Objects.equals(ubs,
+								UnicodeBlock.HIRAGANA, UnicodeBlock.KATAKANA)),
+				Objects.equals(ubs,
 						Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS,
 								UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION, UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS,
-								UnicodeBlock.HIRAGANA))) {
+								UnicodeBlock.HIRAGANA)))) {
 			//
 			multimap = toMultimap(patternMap, StringUtils.split(s, "\u3000\u3000"));
 			//
