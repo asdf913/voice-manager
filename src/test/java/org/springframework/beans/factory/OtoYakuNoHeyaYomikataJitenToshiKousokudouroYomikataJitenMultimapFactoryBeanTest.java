@@ -24,6 +24,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.junit.jupiter.api.Assertions;
@@ -43,7 +44,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP1, METHOD_TO_MULTI_MAP3,
-			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_4, METHOD_REPLACE_MULTI_MAP_ENTRIES = null;
+			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_4, METHOD_TO_MULTI_MAP_4_ELEMENT,
+			METHOD_REPLACE_MULTI_MAP_ENTRIES = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -64,6 +66,9 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 		//
 		(METHOD_TO_MULTI_MAP_4 = clz.getDeclaredMethod("toMultimap", char[].class, Matcher.class, String.class,
 				Number.class)).setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP_4_ELEMENT = clz.getDeclaredMethod("toMultimap", Element.class, PatternMap.class,
+				Iterable.class, Iterable.class)).setAccessible(true);
 		//
 		(METHOD_REPLACE_MULTI_MAP_ENTRIES = clz.getDeclaredMethod("replaceMultimapEntries", Multimap.class, Map.class))
 				.setAccessible(true);
@@ -95,6 +100,8 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 
 	private boolean isSystemPropertiesContainsTestGetObject = false;
 
+	private IH ih = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -102,6 +109,8 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 		//
 		isSystemPropertiesContainsTestGetObject = Util.containsKey(System.getProperties(),
 				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBeanTest.testGetObject");
+		//
+		ih = new IH();
 		//
 	}
 
@@ -193,9 +202,7 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 		//
 		Assertions.assertNull(toMultimap(null, null, null));
 		//
-		Assertions.assertNull(toMultimap(Reflection.newProxy(Iterable.class, new IH())));
-		//
-		Assertions.assertNull(toMultimap(null, null, null, null));
+		Assertions.assertNull(toMultimap(Reflection.newProxy(Iterable.class, ih)));
 		//
 	}
 
@@ -425,6 +432,9 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 	@Test
 	void testToMultimap04() throws Throwable {
 		//
+		Assertions.assertNull(
+				MultimapUtil.entries(toMultimap(null, null, Reflection.newProxy(Iterable.class, ih), null)));
+		//
 		if (isSystemPropertiesContainsTestGetObject) {
 			//
 			return;
@@ -439,6 +449,25 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("安芸府中道路", "あきふちゅうどうろ")),
 						MultimapUtil.entries(toMultimap(" 広島高速１号線（安芸府中道路）　ひろしまこうそくいちごうせん（あきふちゅうどうろ）"))));
 		//
+		Assertions.assertNull(MultimapUtil.entries(toMultimap(null, null, Collections.singleton(null), null)));
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final Element element, final PatternMap patternMap,
+			final Iterable<String> names, final Iterable<String> nextElementSiblingNames) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP_4_ELEMENT.invoke(null, element, patternMap, names,
+					nextElementSiblingNames);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+
 	}
 
 	private static Multimap<String, String> toMultimap(final String s) throws Throwable {
