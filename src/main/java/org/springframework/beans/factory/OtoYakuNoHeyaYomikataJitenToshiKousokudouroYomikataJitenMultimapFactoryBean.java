@@ -170,6 +170,12 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 	private static Multimap<String, String> toMultimap(final Element element, final PatternMap patternMap,
 			final Iterable<String> names, final Iterable<String> nextElementSiblingNames) {
 		//
+		if (Util.iterator(names) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
 		Collection<Element> tds, trs;
 		//
 		Element td = null;
@@ -178,46 +184,41 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		//
 		Multimap<String, String> multimap = null;
 		//
-		if (Util.iterator(names) != null) {
+		for (final String string : names) {
 			//
-			for (final String string : names) {
+			if (IterableUtils
+					.size(tds = Util.toList(Util.filter(Util.stream(ElementUtil.select(element, "td")),
+							x -> Objects.equals(ElementUtil.text(x), string)))) > 0
+					&& Iterables.elementsEqual(nextElementSiblingNames,
+							Util.toList(Util.map(
+									Util.stream(ElementUtil.nextElementSiblings(td = IterableUtils.get(tds, 0))),
+									ElementUtil::text)))) {
 				//
-				if (IterableUtils
-						.size(tds = Util.toList(Util.filter(Util.stream(ElementUtil.select(element, "td")),
-								x -> Objects.equals(ElementUtil.text(x), string)))) > 0
-						&& Iterables.elementsEqual(nextElementSiblingNames,
-								Util.toList(Util.map(
-										Util.stream(ElementUtil.nextElementSiblings(td = IterableUtils.get(tds, 0))),
-										ElementUtil::text)))) {
-					//
-					trs = ElementUtil.nextElementSiblings(ElementUtil.parent(td));
-					//
-					for (int j = 0; j < IterableUtils.size(trs); j++) {
-						//
-						if (IterableUtils.size(tds = ElementUtil.children(IterableUtils.get(trs, j))) < 2) {
-							//
-							continue;
-							//
-						} // if
-							//
-						if (Util.matches(
-								Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+$"),
-										s1 = ElementUtil.text(IterableUtils.get(tds, 0))))
-								&& Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InHiragana}+$"),
-										s2 = ElementUtil.text(IterableUtils.get(tds, 1))))) {
-							//
-							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
-									s2);
-							//
-						} // if
-							//
-					} // for
-						//
-				} // if
-					//
-			} // for
+				trs = ElementUtil.nextElementSiblings(ElementUtil.parent(td));
 				//
-		} // if
+				for (int j = 0; j < IterableUtils.size(trs); j++) {
+					//
+					if (IterableUtils.size(tds = ElementUtil.children(IterableUtils.get(trs, j))) < 2) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+$"),
+							s1 = ElementUtil.text(IterableUtils.get(tds, 0))))
+							&& Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InHiragana}+$"),
+									s2 = ElementUtil.text(IterableUtils.get(tds, 1))))) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+								s2);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+		} // for
 			//
 		return multimap;
 		//
