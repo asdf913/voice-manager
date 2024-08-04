@@ -416,7 +416,7 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 						MultimapUtil.entries(toMultimap("神奈川県川崎市川崎区富士見（ふじみ）〜"))));
 		//
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(
-				MultimapUtil.entries(ImmutableMultimap.of("台東区北上野", "たいとうくうえの", "足立区本木", "あだちくもとき")),
+				MultimapUtil.entries(ImmutableMultimap.of("足立区本木", "あだちくもとき", "台東区上野", "たいとうくうえの")),
 				MultimapUtil.entries(toMultimap("東京都台東区北上野（たいとうくうえの）〜東京都足立区本木（あだちくもとき）"))));
 		//
 	}
