@@ -492,15 +492,35 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 		//
 		(e = new Element("a")).appendChild(e1 = new Element("a"));
 		//
-		e.appendChild(e2 = new Element("a"));
-		//
 		e1.append("春岡（入口は予定）");
 		//
-		Assertions.assertNull(toMultimap(patternMap, Arrays.asList(null, e)));
+		e.appendChild(e2 = new Element("a"));
 		//
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(
 				MultimapUtil.entries(ImmutableMultimap.of("春岡", ElementUtil.text(e2.append("はるおか")))),
 				MultimapUtil.entries(toMultimap(patternMap, Arrays.asList(null, e)))));
+		//
+		(e = new Element("a")).appendChild(e1 = new Element("a"));
+		//
+		e1.append("丸の内");
+		//
+		e.appendChild(e2 = new Element("a"));
+		//
+		e2.append("まるのうち");
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("丸", "まる", "内", "うち")),
+						MultimapUtil.entries(toMultimap(patternMap, Arrays.asList(null, e)))));
+		//
+		(e = new Element("a")).appendChild(e1 = new Element("a"));
+		//
+		e1.append("丸の内");
+		//
+		e.appendChild(e2 = new Element("a"));
+		//
+		e2.append("まる");
+		//
+		Assertions.assertNull(toMultimap(patternMap, Arrays.asList(null, e)));
 		//
 	}
 

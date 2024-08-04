@@ -155,15 +155,17 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 	@Nullable
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final Iterable<Element> trs) {
 		//
-		Iterable<Element> tds = null;
-		//
-		String s1, s2;
-		//
 		Multimap<String, String> multimap = null;
 		//
-		Matcher m1, m2;
-		//
 		if (Util.iterator(trs) != null) {
+			//
+			Iterable<Element> tds = null;
+			//
+			String s1, s2;
+			//
+			Matcher m1, m2;
+			//
+			String[]ss = null;
 			//
 			for (final Element tr : trs) {
 				//
@@ -193,15 +195,31 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							Util.group(m1, 1), Util.group(m2, 1));
 					//
-				} else if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
-						"^(\\p{InCJKUnifiedIdeographs}+)（[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+）$"),
-						ElementUtil.text(IterableUtils.get(tds, 0)))) && Util.groupCount(m1) > 0
-						&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)$"),
-								s2 = ElementUtil.text(IterableUtils.get(tds, 1))))
-						&& Util.groupCount(m2) > 0) {
+				} else if (Util
+						.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+								"^(\\p{InCJKUnifiedIdeographs}+)（[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+）$"),
+								ElementUtil.text(IterableUtils.get(tds, 0))))
+						&& Util.groupCount(m1) > 0
+						&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InHiragana}+$"),
+								s2 = ElementUtil.text(IterableUtils.get(tds, 1))))) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							Util.group(m1, 1), s2);
+					//
+				} else if (Util
+						.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+								"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)$"),
+								ElementUtil.text(IterableUtils.get(tds, 0))))
+						&& Util.groupCount(m1) > 2
+						&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InHiragana}+$"),
+								s2 = ElementUtil.text(IterableUtils.get(tds, 1))))
+						&& (ss = StringUtils.split(s2, Util.group(m1, 2))) != null && ss.length == 2) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(m1, 1), ss[0]);
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(m1, 3), ss[1]);
 					//
 				} // if
 					//
