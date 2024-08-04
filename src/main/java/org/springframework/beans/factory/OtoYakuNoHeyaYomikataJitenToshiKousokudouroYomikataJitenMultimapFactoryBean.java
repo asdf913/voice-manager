@@ -1074,6 +1074,26 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
+			// 東京都台東区北上野（たいとうくうえの）〜東京都足立区本木（あだちくもとき）
+			//
+		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^\\p{InCJKUnifiedIdeographs}+(台東区\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\p{InCJKSymbolsAndPunctuation}\\p{InCJKUnifiedIdeographs}+(足立区\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
+				s)) && Util.groupCount(matcher) > 3) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 3), Util.group(matcher, 4));
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
 		int a, b, c;
 		//
 		if (((a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）')) && b == StringUtils.length(s) - 1
