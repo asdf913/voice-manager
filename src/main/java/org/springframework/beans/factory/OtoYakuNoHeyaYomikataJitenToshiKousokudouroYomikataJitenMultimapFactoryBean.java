@@ -165,7 +165,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 			Matcher m1, m2;
 			//
-			String[]ss = null;
+			String[] ss = null;
 			//
 			for (final Element tr : trs) {
 				//
@@ -200,7 +200,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 								"^(\\p{InCJKUnifiedIdeographs}+)（[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+）$"),
 								ElementUtil.text(IterableUtils.get(tds, 0))))
 						&& Util.groupCount(m1) > 0
-						&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InHiragana}+$"),
+						&& Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InHiragana}+$"),
 								s2 = ElementUtil.text(IterableUtils.get(tds, 1))))) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
@@ -211,7 +211,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 								"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)$"),
 								ElementUtil.text(IterableUtils.get(tds, 0))))
 						&& Util.groupCount(m1) > 2
-						&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InHiragana}+$"),
+						&& Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InHiragana}+$"),
 								s2 = ElementUtil.text(IterableUtils.get(tds, 1))))
 						&& (ss = StringUtils.split(s2, Util.group(m1, 2))) != null && ss.length == 2) {
 					//
