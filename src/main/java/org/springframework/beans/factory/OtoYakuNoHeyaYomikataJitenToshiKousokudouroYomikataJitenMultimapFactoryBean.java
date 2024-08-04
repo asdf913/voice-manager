@@ -953,23 +953,6 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
-			// 並木（なみき）横浜横須賀道路に接続
-			//
-		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+$"),
-				s)) && Util.groupCount(matcher) > 1) {
-			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					Util.group(matcher, 1), Util.group(matcher, 2));
-			//
-		} // if
-			//
-		if (MultimapUtil.size(multimap) > 0) {
-			//
-			return Unit.with(multimap);
-			//
-		} // if
-			//
 			// 神奈川県川崎市都筑区川向町（つづきくかわむこうちょう）〜
 			//
 		if ((Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
@@ -1048,7 +1031,7 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		//
 		// 高速神奈川２号三ツ沢線（ｋ２）が分岐 （みつざわせん）
 		//
-		final Matcher matcher = Util.matcher(PatternMap.getPattern(patternMap,
+		Matcher matcher = Util.matcher(PatternMap.getPattern(patternMap,
 				"^\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}号(\\p{InCJKUnifiedIdeographs}+)ツ(\\p{InCJKUnifiedIdeographs}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+\\s+（(\\p{InHiragana}+)）$"),
 				s);
 		//
@@ -1066,6 +1049,23 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 				//
 			} // for
 				//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
+			// 並木（なみき）横浜横須賀道路に接続
+			//
+		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+$"),
+				s)) && Util.groupCount(matcher) > 1) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
 		} // if
 			//
 		if (MultimapUtil.size(multimap) > 0) {
