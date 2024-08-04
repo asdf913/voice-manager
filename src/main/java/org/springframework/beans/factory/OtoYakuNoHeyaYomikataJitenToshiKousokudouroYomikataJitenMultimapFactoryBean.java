@@ -188,35 +188,36 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 			if (IterableUtils
 					.size(tds = Util.toList(Util.filter(Util.stream(ElementUtil.select(element, "td")),
-							x -> Objects.equals(ElementUtil.text(x), string)))) > 0
-					&& Iterables.elementsEqual(nextElementSiblingNames,
+							x -> Objects.equals(ElementUtil.text(x), string)))) <= 0
+					|| !Iterables.elementsEqual(nextElementSiblingNames,
 							Util.toList(Util.map(
 									Util.stream(ElementUtil.nextElementSiblings(td = IterableUtils.get(tds, 0))),
 									ElementUtil::text)))) {
 				//
-				trs = ElementUtil.nextElementSiblings(ElementUtil.parent(td));
+				continue;
 				//
-				for (int j = 0; j < IterableUtils.size(trs); j++) {
-					//
-					if (IterableUtils.size(tds = ElementUtil.children(IterableUtils.get(trs, j))) < 2) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+$"),
-							s1 = ElementUtil.text(IterableUtils.get(tds, 0))))
-							&& Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InHiragana}+$"),
-									s2 = ElementUtil.text(IterableUtils.get(tds, 1))))) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
-								s2);
-						//
-					} // if
-						//
-				} // for
-					//
 			} // if
+				//
+			trs = ElementUtil.nextElementSiblings(ElementUtil.parent(td));
+			//
+			for (int j = 0; j < IterableUtils.size(trs); j++) {
+				//
+				if (IterableUtils.size(tds = ElementUtil.children(IterableUtils.get(trs, j))) < 2) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+$"),
+						s1 = ElementUtil.text(IterableUtils.get(tds, 0))))
+						&& Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InHiragana}+$"),
+								s2 = ElementUtil.text(IterableUtils.get(tds, 1))))) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s2);
+					//
+				} // if
+					//
+			} // for
 				//
 		} // for
 			//
