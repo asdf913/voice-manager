@@ -1033,39 +1033,17 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap8(final PatternMap patternMap, final String s) {
 		//
-		// 高速神奈川２号三ツ沢線（ｋ２）が分岐 （みつざわせん）
+		// 並木（なみき）横浜横須賀道路に接続
 		//
 		Matcher matcher = Util.matcher(PatternMap.getPattern(patternMap,
-				"^\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}号(\\p{InCJKUnifiedIdeographs}+)ツ(\\p{InCJKUnifiedIdeographs}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+\\s+（(\\p{InHiragana}+)）$"),
+				"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+$"),
 				s);
 		//
 		Multimap<String, String> multimap = null;
 		//
-		String[] ss = null;
+		// 並木（なみき）横浜横須賀道路に接続
 		//
-		if (Util.matches(matcher) && Util.groupCount(matcher) > 2
-				&& (ss = StringUtils.split(Util.group(matcher, 3), 'つ')) != null && ss.length == 2) {
-			//
-			for (int i = 0; i < ss.length; i++) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(matcher, i + 1), ss[i]);
-				//
-			} // for
-				//
-		} // if
-			//
-		if (MultimapUtil.size(multimap) > 0) {
-			//
-			return Unit.with(multimap);
-			//
-		} // if
-			//
-			// 並木（なみき）横浜横須賀道路に接続
-			//
-		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+$"),
-				s)) && Util.groupCount(matcher) > 1) {
+		if (Util.matches(matcher) && Util.groupCount(matcher) > 1) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.group(matcher, 1), Util.group(matcher, 2));
@@ -1129,6 +1107,34 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap9(final PatternMap patternMap, final String s) {
 		//
+		// 高速神奈川２号三ツ沢線（ｋ２）が分岐 （みつざわせん）
+		//
+		Matcher matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}号(\\p{InCJKUnifiedIdeographs}+)ツ(\\p{InCJKUnifiedIdeographs}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+\\s+（(\\p{InHiragana}+)）$"),
+				s);
+		//
+		Multimap<String, String> multimap = null;
+		//
+		String[] ss = null;
+		//
+		if (Util.matches(matcher) && Util.groupCount(matcher) > 2
+				&& (ss = StringUtils.split(Util.group(matcher, 3), 'つ')) != null && ss.length == 2) {
+			//
+			for (int i = 0; i < ss.length; i++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, i + 1), ss[i]);
+				//
+			} // for
+				//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
 		int a, b, c;
 		//
 		if (((a = StringUtils.indexOf(s, '（')) < (b = StringUtils.indexOf(s, '）')) && b == StringUtils.length(s) - 1
