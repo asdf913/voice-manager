@@ -88,11 +88,11 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 		//
 		Matcher m1, m2;
 		//
-		for (int i = 0; es != null && i < es.size(); i++) {
+		for (int i = 0; i < IterableUtils.size(es); i++) {
 			//
 			if (Util.matches(Util.matcher(PatternMap
 					.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), "^Ｎｏ.\\d+$"),
-					ElementUtil.text(e = es.get(i)))) && NodeUtil.hasAttr(e, "href")) {
+					ElementUtil.text(e = IterableUtils.get(es, i)))) && NodeUtil.hasAttr(e, "href")) {
 				//
 				document = testAndApply(Objects::nonNull, testAndApply(StringUtils::isNotBlank,
 						NodeUtil.absUrl(e, "href"), x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0), null);
