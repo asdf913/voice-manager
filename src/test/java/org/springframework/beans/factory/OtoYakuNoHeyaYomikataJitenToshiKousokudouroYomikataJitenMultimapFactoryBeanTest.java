@@ -427,6 +427,10 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 				MultimapUtil.entries(ImmutableMultimap.of("福田町", "ふくだちょう", "馬木町", "うまきちょう")),
 				MultimapUtil.entries(toMultimap("広島市東区福田町（ふくだちょう）〜馬木町（うまきちょう）"))));
 		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				MultimapUtil.entries(ImmutableMultimap.of("金沢支線", "かなざわしせん")),
+				MultimapUtil.entries(toMultimap(" 金沢支線（かなざわしせん）へ続く"))));
+		//
 	}
 
 	private static Multimap<String, String> toMultimap(final String s) throws Throwable {
