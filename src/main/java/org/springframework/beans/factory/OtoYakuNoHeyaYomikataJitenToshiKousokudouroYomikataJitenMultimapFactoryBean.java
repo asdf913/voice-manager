@@ -1115,6 +1115,23 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			//
 		} // if
 			//
+			// 広島高速１号線（安芸府中道路）　ひろしまこうそくいちごうせん（あきふちゅうどうろ）
+			//
+		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^[\\p{InCJKUnifiedIdeographs}|\\p{InHalfwidthAndFullwidthForms}]+（(\\p{InCJKUnifiedIdeographs}+)）[\\p{InCJKSymbolsAndPunctuation}|\\p{InHiragana}]+（(\\p{InHiragana}+)）"),
+				StringUtils.trim(s))) && Util.groupCount(matcher) > 1) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(matcher, 1), Util.group(matcher, 2));
+			//
+		} // if
+			//
+		if (MultimapUtil.size(multimap) > 0) {
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
 		return null;
 		//
 	}
