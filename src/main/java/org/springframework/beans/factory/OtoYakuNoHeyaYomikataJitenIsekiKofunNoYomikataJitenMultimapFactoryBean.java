@@ -214,9 +214,25 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 		//
 		Matcher matcher;
 		//
-		if (Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)$"), s1))
+		boolean isCJKUnifiedIdeographs;
+		//
+		if ((isCJKUnifiedIdeographs = Util
+				.matches(Util.matcher(PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)$"), s1)))
 				&& Util.matches(matcher = Util.matcher(
 						PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)\\s+(\\p{InHiragana}+)$"), s2))) {
+			//
+			for (int i = 1; i <= Util.groupCount(matcher); i++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+						Util.group(matcher, i));
+				//
+			} // for
+				//
+			return Unit.with(multimap);
+			//
+		} else if (isCJKUnifiedIdeographs && Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InHiragana}+)[\\s|\\p{InHalfwidthAndFullwidthForms}|\\p{InCJKUnifiedIdeographs}]+(\\p{InHiragana}+)[\\s|\\p{InHalfwidthAndFullwidthForms}|\\p{InCJKUnifiedIdeographs}|\\p{InKatakana}]+$"),
+				s2)) && Util.groupCount(matcher) > 1) {
 			//
 			for (int i = 1; i <= Util.groupCount(matcher); i++) {
 				//
