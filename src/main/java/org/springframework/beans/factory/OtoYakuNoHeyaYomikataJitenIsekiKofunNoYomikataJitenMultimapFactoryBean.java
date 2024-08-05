@@ -316,7 +316,7 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 				.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 						"^(\\p{InCJKUnifiedIdeographs}+)ヶ(\\p{InCJKUnifiedIdeographs}+)$"), s1))
 				&& Util.groupCount(m1) > 1
-				&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InHiragana}+$"), s2))
+				&& Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InHiragana}+$"), s2))
 				&& (ss = StringUtils.split(s2, 'が')) != null && ss.length == 2) {
 			//
 			for (int i = 0; i < ss.length; i++) {
