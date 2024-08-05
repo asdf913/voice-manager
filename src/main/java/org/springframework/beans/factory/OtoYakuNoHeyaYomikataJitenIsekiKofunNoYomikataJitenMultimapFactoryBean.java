@@ -258,15 +258,35 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 		} else if (isCJKUnifiedIdeographs
 				&& Util.matches(m2 = Util.matcher(
 						PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)$"), s2))
-				&& (groupCount = Util.groupCount(m2)) > 1
-				&& StringUtils.length(Util.group(m2, 1)) == StringUtils.length(Util.group(m2, 2))) {
+				&& (groupCount = Util.groupCount(m2)) > 1) {
 			//
-			for (int i = 1; i <= groupCount; i++) {
+			if (StringUtils.length(Util.group(m2, 1)) == StringUtils.length(Util.group(m2, 2))) {
 				//
+				for (int i = 1; i <= groupCount; i++) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+							Util.group(m2, i));
+					//
+				} // for
+					//
+			} else {
+				//
+				StringBuilder sb = null;
+				//
+				for (int i = 1; i <= groupCount; i++) {
+					//
+					if ((sb = ObjectUtils.getIfNull(sb, StringBuilder::new)) != null) {
+						//
+						sb.append(Util.group(m2, i));
+						//
+					} // if
+						//
+				} // for
+					//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
-						Util.group(m2, i));
+						Util.toString(sb));
 				//
-			} // for
+			} // if
 				//
 			return Unit.with(multimap);
 			//
