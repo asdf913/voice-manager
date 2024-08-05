@@ -51,6 +51,8 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 		//
 		Matcher matcher = null;
 		//
+		String[] ss = null;
+		//
 		for (int i = 0; i < IterableUtils.size(tables); i++) {
 			//
 			if (Boolean.logicalOr(!StringUtils.equalsIgnoreCase(
@@ -106,6 +108,18 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
 							Util.group(matcher, 1));
+					//
+				} else if (Util.matches(matcher = Util.matcher(
+						PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
+								"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)$"),
+						s1)) && Util.groupCount(matcher) > 2 && isHiragana
+						&& (ss = StringUtils.split(s2, Util.group(matcher, 2))) != null && ss.length == 2) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(matcher, 1), ss[0]);
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(matcher, 3), ss[1]);
 					//
 				} // if
 					//
