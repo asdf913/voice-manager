@@ -65,6 +65,7 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final Iterable<Element> trs) {
 		//
 		Multimap<String, String> multimap = null;
