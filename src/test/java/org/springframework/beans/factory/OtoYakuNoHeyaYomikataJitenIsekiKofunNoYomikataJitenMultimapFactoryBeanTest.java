@@ -253,6 +253,13 @@ class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBeanTest
 					MultimapUtil.entries(ImmutableMultimap.of("金山城跡", "かなやまじょうあと", "金山城跡", "かなやまじょうせき")),
 					MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
 			//
+			append(append(append(e = new Element("a"), "<b>鷹島沖海底遺跡 （元寇遺跡）</b>"), "<b>たかしまおきかいていいせき （げんこういせき）</b>"),
+					"<b/>");
+			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("鷹島沖海底遺跡", "たかしまおきかいていいせき", "元寇遺跡", "げんこういせき")),
+					MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+			//
 		} // if
 			//
 	}
