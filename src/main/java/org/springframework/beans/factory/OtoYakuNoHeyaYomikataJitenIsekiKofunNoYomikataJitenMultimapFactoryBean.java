@@ -103,7 +103,7 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 					//
 				} else if (isCJKUnifiedIdeographs && Util.matches(matcher = Util.matcher(PatternMap.getPattern(
 						patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
-						"^\\p{InHalfwidthAndFullwidthForms}+(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$"),
+						"^\\p{InHalfwidthAndFullwidthForms}?(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}?$"),
 						s2)) && Util.groupCount(matcher) > 0) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
