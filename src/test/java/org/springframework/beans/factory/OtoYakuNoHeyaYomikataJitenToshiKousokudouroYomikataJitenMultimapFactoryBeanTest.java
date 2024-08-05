@@ -468,6 +468,10 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("安芸府中道路", "あきふちゅうどうろ")),
 						MultimapUtil.entries(toMultimap(" 広島高速１号線（安芸府中道路）　ひろしまこうそくいちごうせん（あきふちゅうどうろ）"))));
 		//
+		Assertions
+				.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("江北", "こうほく")),
+						MultimapUtil.entries(toMultimap("（江北・こうほく〜"))));
+		//
 		Assertions.assertNull(toMultimap(null, null, Collections.singleton(null), null));
 		//
 		e2.append("ひがしかたはジャンクション");
