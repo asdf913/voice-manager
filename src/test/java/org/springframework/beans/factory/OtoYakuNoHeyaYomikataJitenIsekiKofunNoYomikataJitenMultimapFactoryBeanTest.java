@@ -128,6 +128,12 @@ class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBeanTest
 		//
 		Collection<Object> list = null;
 		//
+		Class<?>[] parameterTypes = null;
+		//
+		Object result = null;
+		//
+		String toString = null;
+		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ms[i]) == null || !Modifier.isStatic(m.getModifiers()) || m.isSynthetic()) {
@@ -138,10 +144,38 @@ class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBeanTest
 				//
 			clear(list = ObjectUtils.getIfNull(list, ArrayList::new));
 			//
-			list.addAll(Collections.nCopies(m.getParameterCount(), null));
+			if ((parameterTypes = m.getParameterTypes()) != null) {
+				//
+				for (final Class<?> clz : parameterTypes) {
+					//
+					if (Objects.equals(Integer.TYPE, clz)) {
+						//
+						list.add(Integer.valueOf(0));
+						//
+					} else {
+						//
+						list.add(null);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+			result = Narcissus.invokeStaticMethod(m, toArray(list));
 			//
-			Assertions.assertNull(Narcissus.invokeStaticMethod(m, toArray(list)), Objects.toString(m));
+			toString = Objects.toString(m);
 			//
+			if (Objects.equals(Util.getName(m), "join")) {
+				//
+				Assertions.assertEquals("null", result, toString);
+				//
+			} else {
+				//
+				Assertions.assertNull(result, toString);
+				//
+			} // if
+				//
 		} // for
 			//
 	}
