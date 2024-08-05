@@ -194,7 +194,7 @@ class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBeanTest
 				//
 			} // for
 				//
-			Assertions.assertEquals(ImmutableMultimap.of(), toMultimap(null, Collections.singleton(e)));
+			Assertions.assertNull(toMultimap(null, Collections.singleton(e)));
 			//
 			append(append(append(e = new Element("a"), "<b>青田遺跡</b>"), "<b>あおたいせき</b>"), "<b/>");
 			//

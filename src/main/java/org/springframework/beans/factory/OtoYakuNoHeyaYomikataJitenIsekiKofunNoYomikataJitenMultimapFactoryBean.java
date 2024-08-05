@@ -1,6 +1,7 @@
 package org.springframework.beans.factory;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -13,11 +14,16 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.function.TriFunction;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
@@ -79,18 +85,39 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 		//
 		Iterable<Element> tds = null;
 		//
+		IValue0<Multimap<String, String>> iValue0 = null;
+		//
+		List<TriFunction<PatternMap, String, String, IValue0<Multimap<String, String>>>> functions = null;
+		//
 		for (final Element tr : trs) {
 			//
-			if (IterableUtils.size(tds = ElementUtil.children(tr)) != 3) {
+			if (IterableUtils.size(tds = ElementUtil.children(tr)) != 3 || (functions = ObjectUtils.getIfNull(functions,
+					() -> Arrays.asList(
+							OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBean::toMultimap1,
+							OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBean::toMultimap2))) == null) {
 				//
 				continue;
 				//
 			} // if
 				//
-			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					toMultimap(patternMap, ElementUtil.text(IterableUtils.get(tds, 0)),
-							ElementUtil.text(IterableUtils.get(tds, 1))));
-			//
+			for (final TriFunction<PatternMap, String, String, IValue0<Multimap<String, String>>> function : functions) {
+				//
+				if (function == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if ((iValue0 = function.apply(patternMap, ElementUtil.text(IterableUtils.get(tds, 0)),
+						ElementUtil.text(IterableUtils.get(tds, 1)))) != null) {
+					//
+					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							IValue0Util.getValue0(iValue0));
+					//
+				} // if
+					//
+			} // for
+				//
 		} // for
 			//
 		return multimap;
@@ -98,7 +125,8 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 	}
 
 	@Nullable
-	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s1, final String s2) {
+	private static IValue0<Multimap<String, String>> toMultimap1(final PatternMap patternMap, final String s1,
+			final String s2) {
 		//
 		Multimap<String, String> multimap = null;
 		//
@@ -116,22 +144,21 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 				isHiragana = Util
 						.matches(Util.matcher(PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)$"), s2)))) {
 			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s2);
+			return Unit.with(ImmutableMultimap.of(s1, s2));
 			//
 		} else if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
 				"^\\p{InCJKSymbolsAndPunctuation}+(\\p{InCJKUnifiedIdeographs}+)\\p{InCJKSymbolsAndPunctuation}+(\\p{InCJKUnifiedIdeographs}+)$"),
 				s1)) && Util.groupCount(matcher) > 1 && isHiragana) {
 			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					StringUtils.join(Util.group(matcher, 1), Util.group(matcher, 2)), s2);
+			return Unit
+					.with(ImmutableMultimap.of(StringUtils.join(Util.group(matcher, 1), Util.group(matcher, 2)), s2));
 			//
 		} else if (Boolean.logicalAnd(isCJKUnifiedIdeographs,
 				Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
 						"^\\p{InHalfwidthAndFullwidthForms}?(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}?$"),
 						s2)) && Util.groupCount(matcher) > 0)) {
 			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
-					Util.group(matcher, 1));
+			return Unit.with(ImmutableMultimap.of(s1, Util.group(matcher, 1)));
 			//
 		} else if ((Util
 				.matches(matcher = Util.matcher(
@@ -154,14 +181,16 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.group(matcher, 3), ss[1]);
 			//
+			return Unit.with(multimap);
+			//
 		} else if (Util
 				.matches(matcher = Util.matcher(
 						PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)$"), s1))
 				&& Util.groupCount(matcher) > 1 && isHiragana
 				&& StringUtils.startsWith(s2, g1 = Util.group(matcher, 1))) {
 			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					Util.group(matcher, 2), StringUtils.substring(s2, StringUtils.length(g1)));
+			return Unit.with(
+					ImmutableMultimap.of(Util.group(matcher, 2), StringUtils.substring(s2, StringUtils.length(g1))));
 			//
 		} else if (Util
 				.matches(matcher = Util.matcher(
@@ -169,11 +198,25 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 				&& Util.groupCount(matcher) > 1 && isHiragana && StringUtils.startsWith(s2, KanaConverter
 						.convertKana(g1 = Util.group(matcher, 1), KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA))) {
 			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					Util.group(matcher, 2), StringUtils.substring(s2, StringUtils.length(g1)));
+			return Unit.with(
+					ImmutableMultimap.of(Util.group(matcher, 2), StringUtils.substring(s2, StringUtils.length(g1))));
 			//
-		} else if (isCJKUnifiedIdeographs && Util.matches(matcher = Util
-				.matcher(PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)\\s+(\\p{InHiragana}+)$"), s2))) {
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap2(final PatternMap patternMap, final String s1,
+			final String s2) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		Matcher matcher;
+		//
+		if (Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)$"), s1))
+				&& Util.matches(matcher = Util.matcher(
+						PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)\\s+(\\p{InHiragana}+)$"), s2))) {
 			//
 			for (int i = 1; i <= Util.groupCount(matcher); i++) {
 				//
@@ -182,9 +225,11 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 				//
 			} // for
 				//
+			return Unit.with(multimap);
+			//
 		} // if
 			//
-		return multimap;
+		return null;
 		//
 	}
 
