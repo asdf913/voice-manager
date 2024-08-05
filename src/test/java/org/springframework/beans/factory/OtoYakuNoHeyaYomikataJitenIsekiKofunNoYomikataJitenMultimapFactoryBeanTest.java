@@ -1,40 +1,73 @@
 package org.springframework.beans.factory;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapUtil;
+import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
 		//
-		(METHOD_TEST_AND_APPLY = OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBean.class
-				.getDeclaredMethod("testAndApply", Predicate.class, Object.class, FailableFunction.class,
-						FailableFunction.class))
+		final Class<?> clz = OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBean.class;
+		//
+		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
+				FailableFunction.class, FailableFunction.class)).setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", PatternMap.class, Iterable.class))
 				.setAccessible(true);
 		//
+	}
+
+	private static class IH implements InvocationHandler {
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = Util.getName(method);
+			//
+			if (proxy instanceof Iterable) {
+				//
+				if (Objects.equals(methodName, "iterator")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	private OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBean instance = null;
@@ -144,6 +177,74 @@ class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBeanTest
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToMultimap() throws Throwable {
+		//
+		Assertions.assertNull(toMultimap(null, Reflection.newProxy(Iterable.class, new IH())));
+		//
+		if (!isSystemPropertiesContainsTestGetObject) {
+			//
+			Assertions.assertNull(toMultimap(null, Collections.singleton(null)));
+			//
+			Element e = new Element("a");
+			//
+			for (int i = 0; i < 3; i++) {
+				//
+				e.appendChild(new Element("a"));
+				//
+			} // for
+				//
+			Assertions.assertNull(toMultimap(null, Collections.singleton(e)));
+			//
+			append(append(append(e = new Element("a"), "<b>青田遺跡</b>"), "<b>あおたいせき</b>"), "<b/>");
+			//
+			final PatternMap patternMap = new PatternMapImpl();
+			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("青田遺跡", "あおたいせき")),
+							MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+			//
+			append(append(append(e = new Element("a"), "<b>「禾津頓宮」跡</b>"), "<b>あわづとんぐうあと</b>"), "<b/>");
+			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("禾津頓宮跡", "あわづとんぐうあと")),
+							MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+			//
+			append(append(append(e = new Element("a"), "<b>入口遺跡</b>"), "<b>いりぐちいせき）</b>"), "<b/>");
+			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("入口遺跡", "いりぐちいせき")),
+							MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+			//
+			append(append(append(e = new Element("a"), "<b>島の山古墳</b>"), "<b>しまのやまこふん</b>"), "<b/>");
+			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("島", "しま", "山古墳", "やまこふん")),
+					MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+			//
+		} // if
+			//
+	}
+
+	private static Element append(final Element instance, final String html) {
+		return instance != null ? instance.append(html) : instance;
+	}
+
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final Iterable<Element> trs)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, patternMap, trs);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
