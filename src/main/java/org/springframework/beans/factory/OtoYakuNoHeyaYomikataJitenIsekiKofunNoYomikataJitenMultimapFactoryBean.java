@@ -68,81 +68,83 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 	@Nullable
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final Iterable<Element> trs) {
 		//
+		if (Util.iterator(trs) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
 		Multimap<String, String> multimap = null;
 		//
-		if (Util.iterator(trs) != null) {
+		Iterable<Element> tds = null;
+		//
+		boolean isCJKUnifiedIdeographs, isHiragana;
+		//
+		String s1, s2, g1;
+		//
+		Matcher matcher;
+		//
+		String[] ss = null;
+		//
+		for (final Element tr : trs) {
 			//
-			Iterable<Element> tds = null;
-			//
-			boolean isCJKUnifiedIdeographs, isHiragana;
-			//
-			String s1, s2, g1;
-			//
-			Matcher matcher;
-			//
-			String[] ss = null;
-			//
-			for (final Element tr : trs) {
+			if (IterableUtils.size(tds = ElementUtil.children(tr)) != 3) {
 				//
-				if (IterableUtils.size(tds = ElementUtil.children(tr)) != 3) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (Boolean.logicalAnd(
-						isCJKUnifiedIdeographs = Util.matches(
-								Util.matcher(PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)$"),
-										s1 = ElementUtil.text(IterableUtils.get(tds, 0)))),
-						isHiragana = Util
-								.matches(Util.matcher(PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)$"),
-										s2 = ElementUtil.text(IterableUtils.get(tds, 1)))))) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s2);
-					//
-				} else if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
-						"^\\p{InCJKSymbolsAndPunctuation}+(\\p{InCJKUnifiedIdeographs}+)\\p{InCJKSymbolsAndPunctuation}+(\\p{InCJKUnifiedIdeographs}+)$"),
-						s1)) && Util.groupCount(matcher) > 1 && isHiragana) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							StringUtils.join(Util.group(matcher, 1), Util.group(matcher, 2)), s2);
-					//
-				} else if (Boolean.logicalAnd(isCJKUnifiedIdeographs,
-						Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
-								"^\\p{InHalfwidthAndFullwidthForms}?(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}?$"),
-								s2)) && Util.groupCount(matcher) > 0)) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
-							Util.group(matcher, 1));
-					//
-				} else if (Util
-						.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
-								"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)$"),
-								s1))
-						&& Util.groupCount(matcher) > 2 && isHiragana
-						&& (ss = StringUtils.split(s2, Util.group(matcher, 2))) != null && ss.length == 2) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.group(matcher, 1), ss[0]);
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.group(matcher, 3), ss[1]);
-					//
-				} else if (Util
-						.matches(matcher = Util.matcher(
-								PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)$"),
-								s1))
-						&& Util.groupCount(matcher) > 1 && isHiragana
-						&& StringUtils.startsWith(s2, g1 = Util.group(matcher, 1))) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.group(matcher, 2), StringUtils.substring(s2, StringUtils.length(g1)));
-					//
-				} // if
-					//
-			} // for
+				continue;
 				//
-		} // if
+			} // if
+				//
+			if (Boolean.logicalAnd(
+					isCJKUnifiedIdeographs = Util
+							.matches(Util.matcher(PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)$"),
+									s1 = ElementUtil.text(IterableUtils.get(tds, 0)))),
+					isHiragana = Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)$"),
+							s2 = ElementUtil.text(IterableUtils.get(tds, 1)))))) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, s2);
+				//
+			} else if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+					"^\\p{InCJKSymbolsAndPunctuation}+(\\p{InCJKUnifiedIdeographs}+)\\p{InCJKSymbolsAndPunctuation}+(\\p{InCJKUnifiedIdeographs}+)$"),
+					s1)) && Util.groupCount(matcher) > 1 && isHiragana) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						StringUtils.join(Util.group(matcher, 1), Util.group(matcher, 2)), s2);
+				//
+			} else if (Boolean.logicalAnd(isCJKUnifiedIdeographs,
+					Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+							"^\\p{InHalfwidthAndFullwidthForms}?(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}?$"),
+							s2)) && Util.groupCount(matcher) > 0)) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+						Util.group(matcher, 1));
+				//
+			} else if (Util
+					.matches(matcher = Util.matcher(
+							PatternMap.getPattern(patternMap,
+									"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)$"),
+							s1))
+					&& Util.groupCount(matcher) > 2 && isHiragana
+					&& (ss = StringUtils.split(s2, Util.group(matcher, 2))) != null && ss.length == 2) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, 1), ss[0]);
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, 3), ss[1]);
+				//
+			} else if (Util
+					.matches(matcher = Util.matcher(
+							PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)$"),
+							s1))
+					&& Util.groupCount(matcher) > 1 && isHiragana
+					&& StringUtils.startsWith(s2, g1 = Util.group(matcher, 1))) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, 2), StringUtils.substring(s2, StringUtils.length(g1)));
+				//
+			} // if
+				//
+		} // for
 			//
 		return multimap;
 		//
