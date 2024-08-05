@@ -266,6 +266,12 @@ class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBeanTest
 					MultimapUtil.entries(ImmutableMultimap.of("黒塚古墳", "くろづかこふん", "黒塚古墳", "くろつかこふん")),
 					MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
 			//
+			append(append(append(e = new Element("a"), "<b>条（條）ウル神古墳</b>"), "<b>じょううるがみこふん</b>"), "<b/>");
+			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("条", "じょ", "條", "じょ", "神古墳", "がみこふん")),
+					MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+			//
 		} // if
 			//
 	}
