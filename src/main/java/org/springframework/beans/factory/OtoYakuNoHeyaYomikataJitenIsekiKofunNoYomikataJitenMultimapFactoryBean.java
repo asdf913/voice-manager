@@ -95,7 +95,8 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 					() -> Arrays.asList(
 							OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBean::toMultimap1,
 							OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBean::toMultimap2,
-							OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBean::toMultimap3))) == null) {
+							OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBean::toMultimap3,
+							OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBean::toMultimap4))) == null) {
 				//
 				continue;
 				//
@@ -330,6 +331,19 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 			//
 		} // if
 			//
+		return null;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap4(final PatternMap patternMap, final String s1,
+			final String s2) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		Matcher m1;
+		//
+		String[] ss = null;
+		//
 		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InCJKUnifiedIdeographs}+)）(\\p{InKatakana}+)(\\p{InCJKUnifiedIdeographs}+)$"),
 				s1)) && Util.groupCount(m1) > 3
