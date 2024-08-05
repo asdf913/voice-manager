@@ -37,8 +37,6 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 		//
 		final List<Element> tables = ElementUtil.select(document, "table");
 		//
-		Element table;
-		//
 		Iterable<Element> children, tds;
 		//
 		Element tbody;
@@ -55,9 +53,8 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 		//
 		for (int i = 0; i < IterableUtils.size(tables); i++) {
 			//
-			if ((table = IterableUtils.get(tables, i)) == null
-					|| IterableUtils.size(children = ElementUtil.children(table)) <= 0 || !StringUtils
-							.equalsIgnoreCase(ElementUtil.tagName(tbody = IterableUtils.get(children, 0)), "tbody")
+			if (IterableUtils.size(children = ElementUtil.children(IterableUtils.get(tables, i))) <= 0 || !StringUtils
+					.equalsIgnoreCase(ElementUtil.tagName(tbody = IterableUtils.get(children, 0)), "tbody")
 					|| IterableUtils.size(children = ElementUtil.children(tbody)) <= 0) {
 				//
 				continue;
