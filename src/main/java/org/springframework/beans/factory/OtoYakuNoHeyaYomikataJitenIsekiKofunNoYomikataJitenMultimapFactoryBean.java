@@ -241,21 +241,7 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 		//
 		int groupCount;
 		//
-		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)\\s（(\\p{InCJKUnifiedIdeographs}+)）$"), s1))
-				&& Util.matches(m2 = Util.matcher(
-						PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)\\s（(\\p{InHiragana}+)）$"), s2))) {
-			//
-			for (int i = 1; i <= Math.min(Util.groupCount(m1), Util.groupCount(m2)); i++) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(m1, i), Util.group(m2, i));
-				//
-			} // for
-				//
-			return Unit.with(multimap);
-			//
-		} else if (isCJKUnifiedIdeographs
+		if (isCJKUnifiedIdeographs
 				&& Util.matches(m2 = Util.matcher(
 						PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)$"), s2))
 				&& (groupCount = Util.groupCount(m2)) > 1) {
@@ -308,30 +294,46 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 		//
 		Multimap<String, String> multimap = null;
 		//
-		Matcher matcher;
+		Matcher m1, m2;
 		//
+		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\s（(\\p{InCJKUnifiedIdeographs}+)）$"), s1))
+				&& Util.matches(m2 = Util.matcher(
+						PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)\\s（(\\p{InHiragana}+)）$"), s2))) {
+			//
+			for (int i = 1; i <= Math.min(Util.groupCount(m1), Util.groupCount(m2)); i++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m1, i), Util.group(m2, i));
+				//
+			} // for
+				//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
 		String[] ss = null;
 		//
-		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InCJKUnifiedIdeographs}+)）(\\p{InKatakana}+)(\\p{InCJKUnifiedIdeographs}+)$"),
-				s1)) && Util.groupCount(matcher) > 3
-				&& (ss = StringUtils.split(s2, KanaConverter.convertKana(Util.group(matcher, 3),
-						KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA))) != null) {
+				s1)) && Util.groupCount(m1) > 3
+				&& (ss = StringUtils.split(s2,
+						KanaConverter.convertKana(Util.group(m1, 3), KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA))) != null) {
 			//
 			for (int i = 0; i < ss.length; i++) {
 				//
 				if (i == 0) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.group(matcher, 1), ss[i]);
+							Util.group(m1, 1), ss[i]);
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.group(matcher, 2), ss[i]);
+							Util.group(m1, 2), ss[i]);
 					//
 				} else {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.group(matcher, 4), ss[i]);
+							Util.group(m1, 4), ss[i]);
 					//
 				} // if
 					//
