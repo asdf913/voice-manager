@@ -217,6 +217,8 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 		//
 		boolean isCJKUnifiedIdeographs;
 		//
+		int groupCount;
+		//
 		if (((isCJKUnifiedIdeographs = Util
 				.matches(Util.matcher(PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)$"), s1)))
 				&& Util.matches(m1 = Util
@@ -244,6 +246,21 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(m1, i), Util.group(m2, i));
+				//
+			} // for
+				//
+			return Unit.with(multimap);
+			//
+		} else if (isCJKUnifiedIdeographs
+				&& Util.matches(m2 = Util.matcher(
+						PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)$"), s2))
+				&& (groupCount = Util.groupCount(m2)) > 1
+				&& StringUtils.length(Util.group(m2, 1)) == StringUtils.length(Util.group(m2, 2))) {
+			//
+			for (int i = 1; i <= groupCount; i++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+						Util.group(m2, i));
 				//
 			} // for
 				//
