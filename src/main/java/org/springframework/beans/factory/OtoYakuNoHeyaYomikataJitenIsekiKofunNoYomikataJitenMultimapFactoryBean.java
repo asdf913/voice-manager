@@ -292,7 +292,7 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 		//
 	}
 
-	private static void append(final StringBuilder instance, final String str) {
+	private static void append(@Nullable final StringBuilder instance, final String str) {
 		if (instance != null) {
 			instance.append(str);
 		}
