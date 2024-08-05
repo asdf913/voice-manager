@@ -275,12 +275,8 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 				//
 				for (int i = 1; i <= groupCount; i++) {
 					//
-					if ((sb = ObjectUtils.getIfNull(sb, StringBuilder::new)) != null) {
-						//
-						sb.append(Util.group(m2, i));
-						//
-					} // if
-						//
+					append(sb = ObjectUtils.getIfNull(sb, StringBuilder::new), Util.group(m2, i));
+					//
 				} // for
 					//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
@@ -294,6 +290,12 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 			//
 		return null;
 		//
+	}
+
+	private static void append(final StringBuilder instance, final String str) {
+		if (instance != null) {
+			instance.append(str);
+		}
 	}
 
 	@Nullable
