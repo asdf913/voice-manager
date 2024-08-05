@@ -53,9 +53,9 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 		//
 		for (int i = 0; i < IterableUtils.size(tables); i++) {
 			//
-			if (IterableUtils.size(children = ElementUtil.children(IterableUtils.get(tables, i))) <= 0 || !StringUtils
-					.equalsIgnoreCase(ElementUtil.tagName(tbody = IterableUtils.get(children, 0)), "tbody")
-					|| IterableUtils.size(children = ElementUtil.children(tbody)) <= 0) {
+			if (!StringUtils.equalsIgnoreCase(ElementUtil.tagName(tbody = testAndApply(x -> IterableUtils.size(x) > 0,
+					children = ElementUtil.children(IterableUtils.get(tables, i)), x -> IterableUtils.get(x, 0), null)),
+					"tbody") || IterableUtils.size(children = ElementUtil.children(tbody)) <= 0) {
 				//
 				continue;
 				//
