@@ -276,6 +276,7 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 		//
 	}
 
+	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap3(final PatternMap patternMap, final String s1,
 			final String s2) {
 		//
