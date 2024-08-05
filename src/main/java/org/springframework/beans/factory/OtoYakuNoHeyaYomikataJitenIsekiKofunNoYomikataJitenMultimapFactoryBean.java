@@ -21,6 +21,7 @@ import org.jsoup.nodes.ElementUtil;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
+import com.mariten.kanatools.KanaConverter;
 
 public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBean
 		implements FactoryBean<Multimap<String, String>> {
@@ -141,6 +142,21 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(matcher, 2), StringUtils.substring(s2, StringUtils.length(g1)));
+				//
+			} else if (Util
+					.matches(matcher = Util.matcher(
+							PatternMap.getPattern(patternMap,
+									"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)(\\p{InCJKUnifiedIdeographs}+)$"),
+							s1))
+					&& Util.groupCount(matcher) > 1 && isHiragana && (ss = StringUtils.split(s2, KanaConverter
+							.convertKana(Util.group(matcher, 2), KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA))) != null
+					&& ss.length == 2) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, 1), ss[0]);
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, 3), ss[1]);
 				//
 			} // if
 				//
