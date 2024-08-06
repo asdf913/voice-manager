@@ -91,10 +91,10 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 				} // for
 					//
 			} else if (Boolean.logicalAnd(
-					(Util.matches(m1 = Util.matcher(
+					Util.matches(m1 = Util.matcher(
 							PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
 									"^(\\p{InCJKUnifiedIdeographs}+)\\p{InCJKSymbolsAndPunctuation}+$"),
-							s1))) && Util.groupCount(m1) > 0,
+							s1)) && Util.groupCount(m1) > 0,
 					Util.matches(m2 = Util.matcher(
 							PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
 									"^（(\\p{InHiragana}+)）$"),
