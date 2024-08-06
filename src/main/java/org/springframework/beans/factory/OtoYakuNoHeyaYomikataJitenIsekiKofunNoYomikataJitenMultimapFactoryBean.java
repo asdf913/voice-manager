@@ -38,11 +38,9 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
-		Document document = testAndApply(Objects::nonNull,
+		final List<Element> tables = ElementUtil.select(testAndApply(Objects::nonNull,
 				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
-				null);
-		//
-		final List<Element> tables = ElementUtil.select(document, "table");
+				null), "table");
 		//
 		Iterable<Element> children;
 		//
