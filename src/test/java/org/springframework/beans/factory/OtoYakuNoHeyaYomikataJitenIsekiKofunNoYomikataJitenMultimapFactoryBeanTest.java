@@ -344,6 +344,12 @@ class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBeanTest
 					MultimapUtil.entries(ImmutableMultimap.of("健児", "こんでい", "良岑安世", "よしみねのやすよ")),
 					MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
 			//
+			append(append(append(e = new Element("a"), "<b/>"), "<b/>"), "<b>奈良県明日香村 関連用語：東漢氏（やまとのあやうじ）玄室（げんしつ）</b>");
+			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("東漢氏", "やまとのあやうじ", "玄室", "げんしつ")),
+					MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+			//
 		} // if
 			//
 	}
