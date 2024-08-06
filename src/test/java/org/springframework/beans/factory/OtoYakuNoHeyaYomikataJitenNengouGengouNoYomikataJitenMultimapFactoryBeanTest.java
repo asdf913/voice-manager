@@ -174,6 +174,10 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 			Assertions.assertEquals(ImmutableMultimap.of("元弘", "げんこう"),
 					IValue0Util.getValue0(toMultimap(patternMap, "元弘　　", "（げんこう）")));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("正慶", "しょうけい", "正慶", "しょうきょう")),
+					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "正慶　　", "（しょうけい） （しょうきょう）")))));
+			//
 		} // if
 			//
 	}

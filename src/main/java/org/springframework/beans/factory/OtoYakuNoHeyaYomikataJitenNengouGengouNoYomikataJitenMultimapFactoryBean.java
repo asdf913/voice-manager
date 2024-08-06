@@ -87,14 +87,14 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 		//
 		Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap, "^（(\\p{InHiragana}+)）$"), s2);
 		//
+		Multimap<String, String> multimap = null;
+		//
 		if (Boolean.logicalAnd(isCJKUnifiedIdeographs, Util.matches(m2) && Util.groupCount(m2) > 0)) {
 			//
 			return Unit.with(ImmutableMultimap.of(s1, Util.group(m2, 1)));
 			//
 		} else if (isCJKUnifiedIdeographs && Util.matches(m2 = Util
 				.matcher(PatternMap.getPattern(patternMap, "^（(\\p{InHiragana}+)）\\s（(\\p{InHiragana}+)）$"), s2))) {
-			//
-			Multimap<String, String> multimap = null;
 			//
 			for (int j = 1; j <= Util.groupCount(m2); j++) {
 				//
@@ -109,19 +109,29 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 			//
 		Matcher m1;
 		//
-		if (Boolean
-				.logicalAnd(
-						Util.matches(
-								m1 = Util.matcher(
-										PatternMap.getPattern(patternMap,
-												"^(\\p{InCJKUnifiedIdeographs}+)\\p{InCJKSymbolsAndPunctuation}+$"),
-										s1))
-								&& Util.groupCount(m1) > 0,
-						Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, "^（(\\p{InHiragana}+)）$"), s2))
-								&& Util.groupCount(m2) > 0)) {
+		if (Util.matches(m1 = Util.matcher(
+				PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)\\p{InCJKSymbolsAndPunctuation}+$"),
+				s1)) && Util.groupCount(m1) > 0) {
 			//
-			return Unit.with(ImmutableMultimap.of(Util.group(m1, 1), Util.group(m2, 1)));
-			//
+			if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, "^（(\\p{InHiragana}+)）$"), s2))
+					&& Util.groupCount(m2) > 0) {
+				//
+				return Unit.with(ImmutableMultimap.of(Util.group(m1, 1), Util.group(m2, 1)));
+				//
+			} else if (Util.matches(m2 = Util.matcher(
+					PatternMap.getPattern(patternMap, "^（(\\p{InHiragana}+)）\\s+（(\\p{InHiragana}+)）$"), s2))) {
+				//
+				for (int j = 1; j <= Util.groupCount(m2); j++) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(m1, 1), Util.group(m2, j));
+					//
+				} // for
+					//
+				return Unit.with(multimap);
+				//
+			} // if
+				//
 		} // if
 			//
 		return null;
