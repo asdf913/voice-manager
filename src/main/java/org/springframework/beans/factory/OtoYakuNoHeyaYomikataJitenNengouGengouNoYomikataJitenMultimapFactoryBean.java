@@ -42,11 +42,13 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 		//
 		Multimap<String, String> multimap = null;
 		//
-		String s1;
+		String s1, s2;
 		//
 		Matcher matcher = null;
 		//
 		int index;
+		//
+		boolean isCJKUnifiedIdeographs;
 		//
 		for (int i = 0; i < IterableUtils.size(trs); i++) {
 			//
@@ -57,21 +59,37 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 				//
 			} // if
 				//
-			if (Util.matches(
-					Util.matcher(
+			if (Boolean
+					.logicalAnd((isCJKUnifiedIdeographs = Util.matches(Util.matcher(
 							PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
 									"^\\p{InCJKUnifiedIdeographs}+$"),
 							s1 = ElementUtil.text(IterableUtils.get(tds,
-									index = (NodeUtil.hasAttr(IterableUtils.get(tds, 0), "rowspan")) ? 1 : 0))))
-					&& Util.matches(matcher = Util.matcher(
-							PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
-									"^（(\\p{InHiragana}+)）$"),
-							ElementUtil.text(IterableUtils.get(tds, index + 1))))
-					&& Util.groupCount(matcher) > 0) {
+									index = (NodeUtil.hasAttr(IterableUtils.get(tds, 0), "rowspan")) ? 1 : 0))))),
+							Util.matches(
+									matcher = Util
+											.matcher(
+													PatternMap
+															.getPattern(
+																	patternMap = ObjectUtils.getIfNull(patternMap,
+																			PatternMapImpl::new),
+																	"^（(\\p{InHiragana}+)）$"),
+													s2 = ElementUtil.text(IterableUtils.get(tds, index + 1))))
+									&& Util.groupCount(matcher) > 0)) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
 						Util.group(matcher, 1));
 				//
+			} else if (isCJKUnifiedIdeographs && Util.matches(matcher = Util
+					.matcher(PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
+							"^（(\\p{InHiragana}+)）\\s（(\\p{InHiragana}+)）$"), s2))) {
+				//
+				for (int j = 1; j <= Util.groupCount(matcher); j++) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+							Util.group(matcher, j));
+					//
+				} // for
+					//
 			} // if
 				//
 		} // for
