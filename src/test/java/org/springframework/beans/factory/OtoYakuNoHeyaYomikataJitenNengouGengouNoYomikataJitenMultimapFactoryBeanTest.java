@@ -187,6 +187,10 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 					MultimapUtil.entries(
 							IValue0Util.getValue0(toMultimap(patternMap, "朱鳥", "広辞苑（しゅちょう）／（すちょう）（あかみどり）ともとある")))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("神亀", "じんき", "神亀", "しんき")),
+					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "神亀", "広辞苑（じんき）／（しんき）ともとある")))));
+			//
 		} // if
 			//
 	}

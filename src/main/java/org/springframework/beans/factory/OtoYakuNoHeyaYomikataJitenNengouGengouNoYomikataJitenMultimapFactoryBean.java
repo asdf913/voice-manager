@@ -210,6 +210,19 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 				//
 			return Unit.with(multimap);
 			//
+		} else if (isCJKUnifiedIdeographs && Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+$"),
+				s2))) {
+			//
+			for (int j = 1; j <= Util.groupCount(m2); j++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+						Util.group(m2, j));
+				//
+			} // for
+				//
+			return Unit.with(multimap);
+			//
 		} // if
 			//
 		return null;
