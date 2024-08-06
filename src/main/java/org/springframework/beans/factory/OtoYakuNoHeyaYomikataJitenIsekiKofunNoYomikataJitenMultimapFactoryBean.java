@@ -122,18 +122,32 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 					//
 			} // for
 				//
-			if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
-					"^\\p{InCJKUnifiedIdeographs}+市(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InBasicLatin}|\\p{InCJKUnifiedIdeographs}|\\p{InHalfwidthAndFullwidthForms}]+$"),
-					ElementUtil.text(IterableUtils.get(tds, 2)))) && Util.groupCount(matcher) > 1) {
+			if ((iValue0 = toMultimap(patternMap, ElementUtil.text(IterableUtils.get(tds, 2)))) != null) {
 				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(matcher, 1), Util.group(matcher, 2));
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						IValue0Util.getValue0(iValue0));
 				//
 			} // if
 				//
 		} // for
 			//
 		return multimap;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap(final PatternMap patternMap, final String s) {
+		//
+		final Matcher matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^\\p{InCJKUnifiedIdeographs}+市(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InBasicLatin}|\\p{InCJKUnifiedIdeographs}|\\p{InHalfwidthAndFullwidthForms}]+$"),
+				s);
+		//
+		if (Util.matches(matcher) && Util.groupCount(matcher) > 1) {
+			//
+			return Unit.with(ImmutableMultimap.of(Util.group(matcher, 1), Util.group(matcher, 2)));
+			//
+		} // if
+			//
+		return null;
 		//
 	}
 
