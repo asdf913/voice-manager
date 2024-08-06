@@ -89,8 +89,6 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 		//
 		List<TriFunction<PatternMap, String, String, IValue0<Multimap<String, String>>>> functions = null;
 		//
-		Matcher matcher;
-		//
 		for (final Element tr : trs) {
 			//
 			if (IterableUtils.size(tds = ElementUtil.children(tr)) != 3 || (functions = ObjectUtils.getIfNull(functions,
