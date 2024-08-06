@@ -144,6 +144,13 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 			//
 			return Unit.with(ImmutableMultimap.of(Util.group(matcher, 1), Util.group(matcher, 2)));
 			//
+		} else if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^[\\p{InCJKUnifiedIdeographs}|\\p{InBasicLatin}]+\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\((\\p{InHiragana}+)\\)[\\p{InCJKSymbolsAndPunctuation}|\\p{InBasicLatin}]+[\\p{InCJKUnifiedIdeographs}+|\\p{InHiragana}]+子(\\p{InCJKUnifiedIdeographs}+)\\((\\p{InHiragana}+)）$"),
+				s)) && Util.groupCount(matcher) > 3) {
+			//
+			return Unit.with(ImmutableMultimap.of(Util.group(matcher, 1), Util.group(matcher, 2),
+					Util.group(matcher, 3), Util.group(matcher, 4)));
+			//
 		} // if
 			//
 		String[] ss;

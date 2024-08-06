@@ -337,6 +337,13 @@ class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBeanTest
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("天", "そら", "川", "かわ")),
 							MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
 			//
+			append(append(append(e = new Element("a"), "<b/>"), "<b/>"),
+					"<b>兵庫県豊岡市 関連用語：健児(こんでい)　 桓武天皇の皇子良岑安世(よしみねのやすよ）</b>");
+			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("健児", "こんでい", "良岑安世", "よしみねのやすよ")),
+					MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+			//
 		} // if
 			//
 	}
