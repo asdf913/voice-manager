@@ -44,7 +44,7 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 		//
 		String s1, s2;
 		//
-		Matcher matcher = null;
+		Matcher m1, m2 = null;
 		//
 		int index;
 		//
@@ -66,7 +66,7 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 							s1 = ElementUtil.text(IterableUtils.get(tds,
 									index = (NodeUtil.hasAttr(IterableUtils.get(tds, 0), "rowspan")) ? 1 : 0))))),
 							Util.matches(
-									matcher = Util
+									m2 = Util
 											.matcher(
 													PatternMap
 															.getPattern(
@@ -74,22 +74,35 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 																			PatternMapImpl::new),
 																	"^（(\\p{InHiragana}+)）$"),
 													s2 = ElementUtil.text(IterableUtils.get(tds, index + 1))))
-									&& Util.groupCount(matcher) > 0)) {
+									&& Util.groupCount(m2) > 0)) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
-						Util.group(matcher, 1));
+						Util.group(m2, 1));
 				//
-			} else if (isCJKUnifiedIdeographs && Util.matches(matcher = Util
+			} else if (isCJKUnifiedIdeographs && Util.matches(m2 = Util
 					.matcher(PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
 							"^（(\\p{InHiragana}+)）\\s（(\\p{InHiragana}+)）$"), s2))) {
 				//
-				for (int j = 1; j <= Util.groupCount(matcher); j++) {
+				for (int j = 1; j <= Util.groupCount(m2); j++) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
-							Util.group(matcher, j));
+							Util.group(m2, j));
 					//
 				} // for
 					//
+			} else if (Boolean.logicalAnd(
+					(Util.matches(m1 = Util.matcher(
+							PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
+									"^(\\p{InCJKUnifiedIdeographs}+)\\p{InCJKSymbolsAndPunctuation}+$"),
+							s1))) && Util.groupCount(m1) > 0,
+					Util.matches(m2 = Util.matcher(
+							PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
+									"^（(\\p{InHiragana}+)）$"),
+							s2)) && Util.groupCount(m2) > 0)) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m1, 1), Util.group(m2, 1));
+				//
 			} // if
 				//
 		} // for
