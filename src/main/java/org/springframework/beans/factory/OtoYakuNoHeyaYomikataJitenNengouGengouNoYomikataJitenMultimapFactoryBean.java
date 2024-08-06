@@ -46,26 +46,36 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 		//
 		Multimap<String, String> multimap = null;
 		//
-		int index;
+		int size, index;
 		//
 		IValue0<Multimap<String, String>> iValue0 = null;
 		//
 		Element td0;
 		//
+		String s;
+		//
 		for (int i = 0; i < IterableUtils.size(trs); i++) {
 			//
 			if (!ArrayUtils.contains(new int[] { 4, 5 },
-					IterableUtils.size(tds = ElementUtil.children(IterableUtils.get(trs, i))))) {
+					size = IterableUtils.size(tds = ElementUtil.children(IterableUtils.get(trs, i))))) {
 				//
 				continue;
 				//
 			} // if
 				//
 			if ((iValue0 = toMultimap(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
-					ElementUtil.text(IterableUtils.get(tds,
+					s = ElementUtil.text(IterableUtils.get(tds,
 							index = (NodeUtil.hasAttr(td0 = IterableUtils.get(tds, 0), "rowspan")
 									|| NodeUtil.hasAttr(td0, "bgcolor")) ? 1 : 0)),
 					ElementUtil.text(IterableUtils.get(tds, index + 1)))) != null) {
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						IValue0Util.getValue0(iValue0));
+				//
+			} // if
+				//
+			if ((iValue0 = toMultimap(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), s,
+					ElementUtil.text(IterableUtils.get(tds, size - 1)))) != null) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						IValue0Util.getValue0(iValue0));
@@ -132,6 +142,14 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 				//
 			} // if
 				//
+		} // if
+			//
+		if (isCJKUnifiedIdeographs && Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+$"),
+				s2)) && Util.groupCount(m2) > 0) {
+			//
+			return Unit.with(ImmutableMultimap.of(s1, Util.group(m2, 1)));
+			//
 		} // if
 			//
 		return null;
