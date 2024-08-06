@@ -89,6 +89,8 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 		//
 		List<TriFunction<PatternMap, String, String, IValue0<Multimap<String, String>>>> functions = null;
 		//
+		Matcher matcher;
+		//
 		for (final Element tr : trs) {
 			//
 			if (IterableUtils.size(tds = ElementUtil.children(tr)) != 3 || (functions = ObjectUtils.getIfNull(functions,
@@ -119,6 +121,15 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 				} // if
 					//
 			} // for
+				//
+			if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+					"^\\p{InCJKUnifiedIdeographs}+市(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InBasicLatin}|\\p{InCJKUnifiedIdeographs}|\\p{InHalfwidthAndFullwidthForms}]+$"),
+					ElementUtil.text(IterableUtils.get(tds, 2)))) && Util.groupCount(matcher) > 1) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, 1), Util.group(matcher, 2));
+				//
+			} // if
 				//
 		} // for
 			//
