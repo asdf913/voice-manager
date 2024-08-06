@@ -1,6 +1,7 @@
 package org.springframework.beans.factory;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -14,6 +15,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.function.TriFunction;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -92,6 +94,37 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 	private static IValue0<Multimap<String, String>> toMultimap(final PatternMap patternMap, final String s1,
 			final String s2) {
 		//
+		final List<TriFunction<PatternMap, String, String, IValue0<Multimap<String, String>>>> functions = Arrays
+				.asList(OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBean::toMultimap1,
+						OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBean::toMultimap2);
+		//
+		TriFunction<PatternMap, String, String, IValue0<Multimap<String, String>>> function = null;
+		//
+		IValue0<Multimap<String, String>> iValue0 = null;
+		//
+		for (int i = 0; i < IterableUtils.size(functions); i++) {
+			//
+			if ((function = IterableUtils.get(functions, i)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if ((iValue0 = function.apply(patternMap, s1, s2)) != null) {
+				//
+				return iValue0;
+				//
+			} // if
+				//
+		} // for
+			//
+		return null;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap1(final PatternMap patternMap, final String s1,
+			final String s2) {
+		//
 		final boolean isCJKUnifiedIdeographs = Util
 				.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+$"), s1));
 		//
@@ -144,9 +177,23 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 				//
 		} // if
 			//
-		if (isCJKUnifiedIdeographs && Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+		return null;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap2(final PatternMap patternMap, final String s1,
+			final String s2) {
+		//
+		final boolean isCJKUnifiedIdeographs = Util
+				.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+$"), s1));
+		//
+		Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+$"),
-				s2)) && Util.groupCount(m2) > 0) {
+				s2);
+		//
+		Multimap<String, String> multimap = null;
+		//
+		if (isCJKUnifiedIdeographs && Util.matches(m2) && Util.groupCount(m2) > 0) {
 			//
 			return Unit.with(ImmutableMultimap.of(s1, Util.group(m2, 1)));
 			//
