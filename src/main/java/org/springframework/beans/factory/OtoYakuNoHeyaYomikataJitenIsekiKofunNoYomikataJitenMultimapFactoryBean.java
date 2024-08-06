@@ -137,13 +137,24 @@ public class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryB
 
 	private static IValue0<Multimap<String, String>> toMultimap(final PatternMap patternMap, final String s) {
 		//
-		final Matcher matcher = Util.matcher(PatternMap.getPattern(patternMap,
+		Matcher matcher = Util.matcher(PatternMap.getPattern(patternMap,
 				"^\\p{InCJKUnifiedIdeographs}+市(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InBasicLatin}|\\p{InCJKUnifiedIdeographs}|\\p{InHalfwidthAndFullwidthForms}]+$"),
 				s);
 		//
 		if (Util.matches(matcher) && Util.groupCount(matcher) > 1) {
 			//
 			return Unit.with(ImmutableMultimap.of(Util.group(matcher, 1), Util.group(matcher, 2)));
+			//
+		} // if
+			//
+		String[] ss;
+		//
+		if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+				"^[\\p{InCJKUnifiedIdeographs}|\\p{InBasicLatin}]+\\p{InCJKSymbolsAndPunctuation}+(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+"),
+				s)) && Util.groupCount(matcher) > 3
+				&& (ss = StringUtils.split(Util.group(matcher, 4), Util.group(matcher, 2))) != null && ss.length == 2) {
+			//
+			return Unit.with(ImmutableMultimap.of(Util.group(matcher, 1), ss[0], Util.group(matcher, 3), ss[1]));
 			//
 		} // if
 			//

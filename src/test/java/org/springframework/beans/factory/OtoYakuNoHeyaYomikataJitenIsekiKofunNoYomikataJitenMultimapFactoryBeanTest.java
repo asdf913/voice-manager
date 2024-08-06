@@ -330,6 +330,13 @@ class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBeanTest
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("東熊堂", "ひがしくまんどう")),
 							MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
 			//
+			append(append(append(e = new Element("a"), "<b/>"), "<b/>"),
+					"<b>静岡県牧之原市静岡新聞08/6/14 高知県窪川町 　天の川（そらのかわ）遺跡あり</b>");
+			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("天", "そら", "川", "かわ")),
+							MultimapUtil.entries(toMultimap(patternMap, Collections.singleton(e)))));
+			//
 		} // if
 			//
 	}
