@@ -212,6 +212,11 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 					MultimapUtil.entries(IValue0Util.getValue0(
 							toMultimap(patternMap, "承徳", "日本国語大辞典（じょうとく）／（しょうとく）ともとある 広辞苑（じょうとく）／（しょうとく）ともとある")))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					Util.toList(Util.map(Stream.of("じしょう", "じじょう", "ちしょう"), x -> Pair.of("治承", x))),
+					MultimapUtil.entries(IValue0Util
+							.getValue0(toMultimap(patternMap, "治承", "広辞苑（じしょう）／（じじょう）ともとある 『日本史用語大辞典』は他に（ちしょう）の読み")))));
+			//
 		} // if
 			//
 	}
