@@ -199,52 +199,39 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 			//
 			return Unit.with(ImmutableMultimap.of(s1, Util.group(m2, 1)));
 			//
-		} else if (isCJKUnifiedIdeographs && ((Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-				"^\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）\\p{InHiragana}+$"),
-				s2)))
-				|| (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-						"^\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+$"),
-						s2)))
-				|| (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-						"^\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）\\p{InHiragana}+$"),
-						s2)))
-				|| (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-						"^\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）[\\p{InHiragana}|\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）\\p{InHiragana}+$"),
-						s2)))
-				|| (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-						"^\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）[\\p{InHiragana}|\\s\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）\\p{InHiragana}+$"),
-						s2)))
-				|| (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-						"^\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+$"),
-						s2)))
-				|| (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-						"^\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）[\\p{InHiragana}|\\s|\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）[\\p{InHiragana}|\\s|\\p{InCJKSymbolsAndPunctuation}||\\p{InCJKUnifiedIdeographs}]+$"),
-						s2)))
-				|| (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-						"^\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）[\\p{InHiragana}|\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+$"),
-						s2)))
-				|| (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-						"^[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}|\\p{InHalfwidthAndFullwidthForms}|\\p{InBasicLatin}|〜]+\\s\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+$"),
-						s2)))
-				|| (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-						"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}|\\p{InCJKSymbolsAndPunctuation}]+（(\\p{InHiragana}+)）\\p{InHiragana}+$"),
-						s2)))
-				|| (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-						"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）$"),
-						s2)))
-				|| (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-						"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+$"),
-						s2))))) {
+		} else if (isCJKUnifiedIdeographs) {
 			//
-			for (int j = 1; j <= Util.groupCount(m2); j++) {
+			final List<String> patterns = Arrays.asList(
+					"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+$",
+					"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}|\\p{InCJKSymbolsAndPunctuation}]+（(\\p{InHiragana}+)）\\p{InHiragana}+$",
+					"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）$",
+					"^[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}|\\p{InHalfwidthAndFullwidthForms}|\\p{InBasicLatin}|〜]+\\s\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+$",
+					"^\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）[\\p{InHiragana}|\\s\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）\\p{InHiragana}+$",
+					"^\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）[\\p{InHiragana}|\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+$",
+					"^\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）[\\p{InHiragana}|\\s|\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）[\\p{InHiragana}|\\s|\\p{InCJKSymbolsAndPunctuation}||\\p{InCJKUnifiedIdeographs}]+$",
+					"^\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）[\\p{InHiragana}|\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）\\p{InHiragana}+$",
+					"^\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+$",
+					"^\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+$",
+					"^\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）\\p{InHiragana}+$",
+					"^\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）\\p{InHiragana}+$");
+			//
+			for (final String pattern : patterns) {
 				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
-						Util.group(m2, j));
-				//
+				if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, pattern), s2))) {
+					//
+					for (int j = 1; j <= Util.groupCount(m2); j++) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+								Util.group(m2, j));
+						//
+					} // for
+						//
+					return Unit.with(multimap);
+					//
+				} // if
+					//
 			} // for
 				//
-			return Unit.with(multimap);
-			//
 		} // if
 			//
 		return null;
