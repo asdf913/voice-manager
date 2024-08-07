@@ -170,31 +170,30 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 					IValue0Util.getValue0(toMultimap(patternMap, "大化", "（たいか）")));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of("慶雲", "けいうん", "慶雲", "きょううん")),
+					Util.toList(Util.map(Stream.of("けいうん", "きょううん"), x -> Pair.of("慶雲", x))),
 					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "慶雲", "（けいうん） （きょううん）")))));
 			//
 			Assertions.assertEquals(ImmutableMultimap.of("元弘", "げんこう"),
 					IValue0Util.getValue0(toMultimap(patternMap, "元弘　　", "（げんこう）")));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of("正慶", "しょうけい", "正慶", "しょうきょう")),
+					Util.toList(Util.map(Stream.of("しょうけい", "しょうきょう"), x -> Pair.of("正慶", x))),
 					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "正慶　　", "（しょうけい） （しょうきょう）")))));
 			//
-			Assertions.assertTrue(CollectionUtils
-					.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("白雉", "びゃくち")), MultimapUtil
-							.entries(IValue0Util.getValue0(toMultimap(patternMap, "白雉", "『日本史用語大辞典』は他に（びゃくち）の読み")))));
+			Assertions.assertEquals(ImmutableMultimap.of("白雉", "びゃくち"),
+					IValue0Util.getValue0(toMultimap(patternMap, "白雉", "『日本史用語大辞典』は他に（びゃくち）の読み")));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of("朱鳥", "しゅちょう", "朱鳥", "すちょう", "朱鳥", "あかみどり")),
+					Util.toList(Util.map(Stream.of("しゅちょう", "すちょう", "あかみどり"), x -> Pair.of("朱鳥", x))),
 					MultimapUtil.entries(
 							IValue0Util.getValue0(toMultimap(patternMap, "朱鳥", "広辞苑（しゅちょう）／（すちょう）（あかみどり）ともとある")))));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of("神亀", "じんき", "神亀", "しんき")),
+					Util.toList(Util.map(Stream.of("じんき", "しんき"), x -> Pair.of("神亀", x))),
 					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "神亀", "広辞苑（じんき）／（しんき）ともとある")))));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of("寛平", "かんぴょう", "寛平", "かんべい", "寛平", "かんぺい", "寛平", "かんへい")),
+					Util.toList(Util.map(Stream.of("かんぴょう", "かんべい", "かんぺい", "かんへい"), x -> Pair.of("寛平", x))),
 					MultimapUtil.entries(IValue0Util
 							.getValue0(toMultimap(patternMap, "寛平", "広辞苑（かんぴょう）／（かんべい）（かんぺい）（かんへい）ともとある")))));
 			//
