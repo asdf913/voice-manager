@@ -252,6 +252,11 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "大宝",
 							"『現代こよみ読み解き事典』の表には（たいほう）とあるが文中には今日、 一般には（たいほう）と読んでいるが（だいほう）が正しいとある 広辞苑（たいほう）／（だいほう）ともとある")))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("宝暦暦", "ほうりゃくれき", "宝暦", "ほうれき", "宝暦", "ほうりゃく")),
+					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "宝暦",
+							"『現代こよみ読み解き事典』 上記（明暦）参照　 　参考：宝暦暦（ほうりゃくれき） 広辞苑（ほうれき）／（ほうりゃく）ともとある")))));
+			//
 		} // if
 			//
 	}
