@@ -186,21 +186,20 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 	private static IValue0<Multimap<String, String>> toMultimap2(final PatternMap patternMap, final String s1,
 			final String s2) {
 		//
-		final boolean isCJKUnifiedIdeographs = Util
-				.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+$"), s1));
-		//
-		Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap,
-				"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+$"),
-				s2);
-		//
 		Multimap<String, String> multimap = null;
 		//
-		if (isCJKUnifiedIdeographs && Util.matches(m2) && Util.groupCount(m2) > 0) {
+		if (Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+$"), s1))) {
 			//
-			return Unit.with(ImmutableMultimap.of(s1, Util.group(m2, 1)));
+			Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap,
+					"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+$"),
+					s2);
 			//
-		} else if (isCJKUnifiedIdeographs) {
-			//
+			if (Util.matches(m2) && Util.groupCount(m2) > 0) {
+				//
+				return Unit.with(ImmutableMultimap.of(s1, Util.group(m2, 1)));
+				//
+			} // if
+				//
 			final List<String> patterns = Arrays.asList(
 					"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+$",
 					"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}|\\p{InCJKSymbolsAndPunctuation}]+（(\\p{InHiragana}+)）\\p{InHiragana}+$",
