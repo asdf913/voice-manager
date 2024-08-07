@@ -9,11 +9,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 import java.util.Objects;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.tuple.Pair;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.junit.jupiter.api.Assertions;
@@ -193,7 +195,13 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("寛平", "かんぴょう", "寛平", "かんべい", "寛平", "かんぺい", "寛平", "かんへい")),
-					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "寛平", "広辞苑（かんぴょう）／（かんべい）（かんぺい）（かんへい）ともとある")))));
+					MultimapUtil.entries(IValue0Util
+							.getValue0(toMultimap(patternMap, "寛平", "広辞苑（かんぴょう）／（かんべい）（かんぺい）（かんへい）ともとある")))));
+			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					Util.toList(Util.map(Stream.of("じょうわ", "しょうわ", "そうわ"), x -> Pair.of("承和", x))),
+					MultimapUtil.entries(IValue0Util.getValue0(
+							toMultimap(patternMap, "承和", "日本国語大辞典（じょうわ）／（しょうわ）ともとある 広辞苑（じょうわ）／（しょうわ）（そうわ）ともとある")))));
 			//
 		} // if
 			//
