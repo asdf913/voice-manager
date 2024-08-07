@@ -225,6 +225,9 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 						s2)))
 				|| (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 						"^[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}|\\p{InHalfwidthAndFullwidthForms}|\\p{InBasicLatin}|〜]+\\s\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+$"),
+						s2)))
+				|| (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}|\\p{InCJKSymbolsAndPunctuation}]+（(\\p{InHiragana}+)）\\p{InHiragana}+$"),
 						s2))))) {
 			//
 			for (int j = 1; j <= Util.groupCount(m2); j++) {
