@@ -204,7 +204,7 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 							toMultimap(patternMap, "承和", "日本国語大辞典（じょうわ）／（しょうわ）ともとある 広辞苑（じょうわ）／（しょうわ）（そうわ）ともとある")))));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					Util.toList(Util.map(Stream.of("しょうりゃく", "じょうりゃく", "しょうりゃく", "しょうれき"), x -> Pair.of("正暦", x))),
+					Util.toList(Util.map(Stream.of("しょうりゃく", "じょうりゃく", "しょうれき"), x -> Pair.of("正暦", x))),
 					MultimapUtil.entries(IValue0Util.getValue0(
 							toMultimap(patternMap, "正暦", "日本国語大辞典（しょうりゃく）のみ 広辞苑（じょうりゃく）／（しょうりゃく）（しょうれき）ともとある")))));
 			//
