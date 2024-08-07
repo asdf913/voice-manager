@@ -237,6 +237,11 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "大永",
 							"『現代こよみ読み解き事典』（たいえい） 『朝日新聞の用語の手引き』（だいえい） 日本国語大辞典（だいえい）／（たいえい）ともとある 広辞苑（だいえい）")))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					Util.toList(Util.map(Stream.of("かけい", "かきょう"), x -> Pair.of("嘉慶", x))),
+					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "嘉慶",
+							"『現代こよみ読み解き事典』（かけい） 『朝日新聞の用語の手引き』（かけい） 日本国語大辞典（かけい） 広辞苑（かきょう）／（かけい）ともとある")))));
+			//
 		} // if
 			//
 	}
