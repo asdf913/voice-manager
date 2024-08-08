@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 
@@ -31,6 +32,8 @@ import com.google.common.collect.MultimapUtil;
 
 public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBean
 		implements FactoryBean<Multimap<String, String>> {
+
+	private static final Pattern PATTERN_IN_CJK_UNIFIED_IDEOGRAPHS = Pattern.compile("^\\p{InCJKUnifiedIdeographs}+$");
 
 	@URL("https://hiramatu-hifuka.com/onyak/rekisi/nenngo.html")
 	private String url = null;
@@ -128,7 +131,7 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 			final String s2) {
 		//
 		final boolean isCJKUnifiedIdeographs = Util
-				.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+$"), s1));
+				.matches(Util.matcher(PATTERN_IN_CJK_UNIFIED_IDEOGRAPHS, s1));
 		//
 		Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap, "^（(\\p{InHiragana}+)）$"), s2);
 		//
@@ -189,7 +192,7 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 		//
 		Multimap<String, String> multimap = null;
 		//
-		if (Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+$"), s1))) {
+		if (Util.matches(Util.matcher(PATTERN_IN_CJK_UNIFIED_IDEOGRAPHS, s1))) {
 			//
 			Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap,
 					"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+$"),
@@ -244,7 +247,7 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 	private static IValue0<Multimap<String, String>> toMultimap3(final PatternMap patternMap, final String s1,
 			final String s2) {
 		//
-		if (Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+$"), s1))) {
+		if (Util.matches(Util.matcher(PATTERN_IN_CJK_UNIFIED_IDEOGRAPHS, s1))) {
 			//
 			final Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap,
 					"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+\\s+\\p{InCJKUnifiedIdeographs}+（\\p{InCJKUnifiedIdeographs}+）\\p{InCJKUnifiedIdeographs}+[\\s|\\p{InCJKSymbolsAndPunctuation}]+\\p{InCJKUnifiedIdeographs}+：(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\s+\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+$"),
