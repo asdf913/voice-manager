@@ -130,8 +130,7 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 	private static IValue0<Multimap<String, String>> toMultimap1(final PatternMap patternMap, final String s1,
 			final String s2) {
 		//
-		final boolean isCJKUnifiedIdeographs = Util
-				.matches(Util.matcher(PATTERN_IN_CJK_UNIFIED_IDEOGRAPHS, s1));
+		final boolean isCJKUnifiedIdeographs = Util.matches(Util.matcher(PATTERN_IN_CJK_UNIFIED_IDEOGRAPHS, s1));
 		//
 		Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap, "^（(\\p{InHiragana}+)）$"), s2);
 		//
@@ -218,7 +217,8 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 					"^\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）\\p{InHiragana}+$",
 					"^\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）\\p{InHiragana}+$",
 					"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+\\((\\p{InHiragana}+)）[\\s|\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）[\\p{InHiragana}|\\s|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）\\p{InHiragana}+$",
-					"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}|\\p{InCJKSymbolsAndPunctuation}|\\s]+（(\\p{InHiragana}+)）[\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）[\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}|\\s]+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+$");
+					"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}|\\p{InCJKSymbolsAndPunctuation}|\\s]+（(\\p{InHiragana}+)）[\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）[\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}|\\s]+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+$",
+					"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+\\((\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}|\\s|\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+』（(\\p{InHiragana}+)）[\\s]+\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）[\\s]+\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）\\p{InHiragana}+$");
 			//
 			for (final String pattern : patterns) {
 				//
