@@ -92,8 +92,7 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 		} // for
 			//
 		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-				toMultimap(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
-						ElementUtil.select(document, "p")));
+				toMultimap(ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), ElementUtil.select(document, "p")));
 		//
 		return multimap;
 		//
