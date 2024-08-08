@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.TriFunction;
+import org.apache.commons.lang3.function.TriFunctionUtil;
 import org.apache.commons.validator.routines.IntegerValidator;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -356,18 +357,12 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			} // if
 				//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					apply(IterableUtils.get(functions, i), patternMap, s1, s2));
+					TriFunctionUtil.apply(IterableUtils.get(functions, i), patternMap, s1, s2));
 			//
 		} // for
 			//
 		return multimap;
 		//
-	}
-
-	@Nullable
-	private static <T, U, V, R> R apply(@Nullable final TriFunction<T, U, V, R> instance, final T t, final U u,
-			@Nullable final V v) {
-		return instance != null ? instance.apply(t, u, v) : null;
 	}
 
 	@Nullable

@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.TriFunction;
+import org.apache.commons.lang3.function.TriFunctionUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -137,19 +138,11 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 						OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBean::toMultimap2,
 						OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBean::toMultimap3);
 		//
-		TriFunction<PatternMap, String, String, IValue0<Multimap<String, String>>> function = null;
-		//
 		IValue0<Multimap<String, String>> iValue0 = null;
 		//
 		for (int i = 0; i < IterableUtils.size(functions); i++) {
 			//
-			if ((function = IterableUtils.get(functions, i)) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if ((iValue0 = function.apply(patternMap, s1, s2)) != null) {
+			if ((iValue0 = TriFunctionUtil.apply(IterableUtils.get(functions, i), patternMap, s1, s2)) != null) {
 				//
 				return iValue0;
 				//
