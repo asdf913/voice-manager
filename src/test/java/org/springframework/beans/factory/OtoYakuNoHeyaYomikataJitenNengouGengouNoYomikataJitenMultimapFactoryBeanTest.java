@@ -18,6 +18,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +33,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3 = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -42,7 +43,10 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
-		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", PatternMap.class, String.class, String.class))
+		(METHOD_TO_MULTI_MAP2 = clz.getDeclaredMethod("toMultimap", PatternMap.class, Iterable.class))
+				.setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP3 = clz.getDeclaredMethod("toMultimap", PatternMap.class, String.class, String.class))
 				.setAccessible(true);
 		//
 	}
@@ -71,7 +75,9 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(getObject(instance));
+		final Multimap<?, ?> multimap = ImmutableMultimap.of();
+		//
+		Assertions.assertEquals(multimap, getObject(instance));
 		//
 		final Entry<Field, Object> entry = TestUtil.getFieldWithUrlAnnotationAndValue(
 				OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBean.class);
@@ -80,11 +86,11 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 		//
 		Narcissus.setObjectField(instance, url, "");
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertEquals(multimap, getObject(instance));
 		//
 		Narcissus.setObjectField(instance, url, " ");
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertEquals(multimap, getObject(instance));
 		//
 		if (isSystemPropertiesContainsTestGetObject) {
 			//
@@ -161,6 +167,8 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 
 	@Test
 	void testToMultimap() throws Throwable {
+		//
+		Assertions.assertNull(toMultimap(null, Collections.singleton(null)));
 		//
 		if (!isSystemPropertiesContainsTestGetObject) {
 			//
@@ -283,14 +291,34 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "仁平",
 							"『現代こよみ読み解き事典』に（にんべい）とある 　同じ本の50音順の項には（にんぺい）になっている 日本国語大辞典（にんぺい）のみ 広辞苑には（にんぺい）／（にんびょう）（にんひょう）（にんへい）ともとある")))));
 			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("岡田芳朗", "おかだよしろう")),
+							MultimapUtil.entries(toMultimap(patternMap,
+									Collections.singleton(new Element("p").appendText("岡田芳朗（おかだよしろう）"))))));
+			//
 		} // if
 			//
+	}
+
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final Iterable<Element> es)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP2.invoke(null, patternMap, es);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static IValue0<Multimap<String, String>> toMultimap(final PatternMap patternMap, final String s1,
 			final String s2) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, patternMap, s1, s2);
+			final Object obj = METHOD_TO_MULTI_MAP3.invoke(null, patternMap, s1, s2);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IValue0) {

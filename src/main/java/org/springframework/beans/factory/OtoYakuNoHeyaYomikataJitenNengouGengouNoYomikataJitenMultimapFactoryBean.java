@@ -91,16 +91,25 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 				//
 		} // for
 			//
-		final List<Element> ps = ElementUtil.select(document, "p");
+		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+				toMultimap(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
+						ElementUtil.select(document, "p")));
+		//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final Iterable<Element> es) {
 		//
 		Matcher matcher = null;
 		//
-		for (int i = 0; i < IterableUtils.size(ps); i++) {
+		Multimap<String, String> multimap = null;
+		//
+		for (int i = 0; i < IterableUtils.size(es); i++) {
 			//
 			if ((matcher = Util.matcher(
-					PatternMap.getPattern((patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new)),
-							"(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"),
-					ElementUtil.text(IterableUtils.get(ps, i)))) == null) {
+					PatternMap.getPattern(patternMap, "(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"),
+					ElementUtil.text(IterableUtils.get(es, i)))) == null) {
 				//
 				continue;
 				//
