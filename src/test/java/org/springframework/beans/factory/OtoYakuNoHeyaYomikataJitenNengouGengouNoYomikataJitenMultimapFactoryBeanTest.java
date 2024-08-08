@@ -168,8 +168,6 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 	@Test
 	void testToMultimap() throws Throwable {
 		//
-		Assertions.assertNull(toMultimap(null, Collections.singleton(null)));
-		//
 		if (!isSystemPropertiesContainsTestGetObject) {
 			//
 			final PatternMap patternMap = new PatternMapImpl();
@@ -291,9 +289,20 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "仁平",
 							"『現代こよみ読み解き事典』に（にんべい）とある 　同じ本の50音順の項には（にんぺい）になっている 日本国語大辞典（にんぺい）のみ 広辞苑には（にんぺい）／（にんびょう）（にんひょう）（にんへい）ともとある")))));
 			//
+		} // if
+			//
+	}
+
+	@Test
+	void testToMultimap2() throws Throwable {
+		//
+		Assertions.assertNull(toMultimap(null, Collections.singleton(null)));
+		//
+		if (!isSystemPropertiesContainsTestGetObject) {
+			//
 			Assertions.assertTrue(
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("岡田芳朗", "おかだよしろう")),
-							MultimapUtil.entries(toMultimap(patternMap,
+							MultimapUtil.entries(toMultimap(new PatternMapImpl(),
 									Collections.singleton(new Element("p").appendText("岡田芳朗（おかだよしろう）"))))));
 			//
 		} // if
