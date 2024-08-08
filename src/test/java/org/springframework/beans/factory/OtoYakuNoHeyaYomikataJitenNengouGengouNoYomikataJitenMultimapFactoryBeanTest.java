@@ -272,6 +272,12 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "天平勝宝",
 							"『現代こよみ読み解き事典』(てんぴょうしょうほう） 『朝日新聞の用語の手引き』（てんぴょうしょうほう） 日本国語大辞典（てんぴょうしょうほう） 広辞苑（てんぴょうしょうほう）／ 　　　（てんびょうしょうぼう）（てんぺいしょうほう）ともとある")))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					Util.toList(Util.map(Stream.of("てんぴょうかんぽう", "てんびょうかんぽう", "てんぴょうかんほう", "てんぺいかんほう"),
+							x -> Pair.of("天平感宝", x))),
+					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "天平感宝",
+							"『現代こよみ読み解き事典』(てんぴょうかんぽう） 『朝日新聞の用語の手引き』（てんぴょうかんぽう） 日本国語大辞典（てんぴょうかんぽう） 広辞苑（てんぴょうかんぽう）／（てんびょうかんぽう）ともとある 『日本史用語大辞典』は他に 　　　（てんぴょうかんほう）（てんぺいかんほう）の読み")))));
+			//
 		} // if
 			//
 	}
