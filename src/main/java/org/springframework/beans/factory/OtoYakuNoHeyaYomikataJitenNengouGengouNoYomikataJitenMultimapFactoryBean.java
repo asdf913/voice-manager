@@ -41,9 +41,11 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
-		final List<Element> trs = ElementUtil.select(testAndApply(Objects::nonNull,
+		final Element document = testAndApply(Objects::nonNull,
 				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
-				null), "tr");
+				null);
+		//
+		final List<Element> trs = ElementUtil.select(document, "tr");
 		//
 		Iterable<Element> tds;
 		//
@@ -86,6 +88,30 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 						IValue0Util.getValue0(iValue0));
 				//
 			} // if
+				//
+		} // for
+			//
+		final List<Element> ps = ElementUtil.select(document, "p");
+		//
+		Matcher matcher = null;
+		//
+		for (int i = 0; i < IterableUtils.size(ps); i++) {
+			//
+			if ((matcher = Util.matcher(
+					PatternMap.getPattern((patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new)),
+							"(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"),
+					ElementUtil.text(IterableUtils.get(ps, i)))) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			while (Util.find(matcher) && Util.groupCount(matcher) > 1) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(matcher, 1), Util.group(matcher, 2));
+				//
+			} // while
 				//
 		} // for
 			//
