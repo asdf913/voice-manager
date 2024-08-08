@@ -263,6 +263,10 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "天平宝字",
 							"『現代こよみ読み解き事典』(てんぴょうほうじ） 『朝日新聞の用語の手引き』（てんぴょうほうじ） 日本国語大辞典（てんぴょうほうじ） 広辞苑（てんぴょうほうじ）／（てんびょうほうじ）（てんぺいほうじ）ともとある")))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("明徳", "めいとく")),
+					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "*", "北朝年号「明徳（めいとく）」を使用")))));
+			//
 		} // if
 			//
 	}
