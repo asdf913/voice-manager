@@ -267,6 +267,11 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 					MultimapUtil.entries(ImmutableMultimap.of("明徳", "めいとく")),
 					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "*", "北朝年号「明徳（めいとく）」を使用")))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					Util.toList(Util.map(Stream.of("てんぴょうしょうほう", "てんびょうしょうぼう", "てんぺいしょうほう"), x -> Pair.of("天平勝宝", x))),
+					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "天平勝宝",
+							"『現代こよみ読み解き事典』(てんぴょうしょうほう） 『朝日新聞の用語の手引き』（てんぴょうしょうほう） 日本国語大辞典（てんぴょうしょうほう） 広辞苑（てんぴょうしょうほう）／ 　　　（てんびょうしょうぼう）（てんぺいしょうほう）ともとある")))));
+			//
 		} // if
 			//
 	}
