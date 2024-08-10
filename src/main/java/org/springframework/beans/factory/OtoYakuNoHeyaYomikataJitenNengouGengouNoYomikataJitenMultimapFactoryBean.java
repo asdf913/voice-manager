@@ -32,7 +32,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
 public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBean
-		implements FactoryBean<Multimap<String, String>> {
+		extends StringMultiMapFromResourceFactoryBean {
 
 	private static final Pattern PATTERN_IN_CJK_UNIFIED_IDEOGRAPHS = Pattern.compile("^\\p{InCJKUnifiedIdeographs}+$");
 
@@ -46,6 +46,14 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
+		IValue0<Multimap<String, String>> iValue0 = getIvalue0();
+		//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
 		final Element document = testAndApply(Objects::nonNull,
 				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
 				null);
@@ -59,8 +67,6 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 		Multimap<String, String> multimap = null;
 		//
 		int size, index;
-		//
-		IValue0<Multimap<String, String>> iValue0 = null;
 		//
 		Element td0;
 		//
