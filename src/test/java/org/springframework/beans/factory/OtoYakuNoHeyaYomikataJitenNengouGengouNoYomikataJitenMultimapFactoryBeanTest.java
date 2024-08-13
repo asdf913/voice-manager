@@ -289,6 +289,11 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "仁平",
 							"『現代こよみ読み解き事典』に（にんべい）とある 　同じ本の50音順の項には（にんぺい）になっている 日本国語大辞典（にんぺい）のみ 広辞苑には（にんぺい）／（にんびょう）（にんひょう）（にんへい）ともとある")))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					Util.toList(Util.map(Stream.of("しゅちょう", "すちょう", "あかみどり"), x -> Pair.of("朱鳥", x))),
+					MultimapUtil.entries(
+							IValue0Util.getValue0(toMultimap(patternMap, "朱鳥", "広辞苑（しゅちょう）／（すちょう）（あかみどり）ともとある")))));
+			//
 		} // if
 			//
 	}
