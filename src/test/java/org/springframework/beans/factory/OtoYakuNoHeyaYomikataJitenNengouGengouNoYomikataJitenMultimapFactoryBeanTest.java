@@ -294,6 +294,12 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 					MultimapUtil.entries(
 							IValue0Util.getValue0(toMultimap(patternMap, "朱鳥", "広辞苑（しゅちょう）／（すちょう）（あかみどり）ともとある")))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					Util.toList(
+							Util.map(Stream.of("てんぴょうじんご", "てんびょうじんご", "てんへいじんご", "てんぺいじんご"), x -> Pair.of("天平神護", x))),
+					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "天平神護",
+							"『現代こよみ読み解き事典』(てんぴょうじんご） 『朝日新聞の用語の手引き』（てんぴょうじんご） 日本国語大辞典（てんぴょうじんご） 広辞苑（てんぴょうじんご）／（てんびょうじんご）（てんへいじんご）ともとある 『日本史用語大辞典』は他に（てんぺいじんご）の読み")))));
+			//
 		} // if
 			//
 	}
