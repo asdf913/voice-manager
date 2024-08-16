@@ -321,6 +321,28 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 			//
 		} // if
 			//
+		final Matcher m1 = Util.matcher(
+				PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)[^\\p{InCJKUnifiedIdeographs}]+$"),
+				s1);
+		//
+		if (Util.matches(m1) && Util.groupCount(m1) > 0 && Util.matches(m2 = Util.matcher(PatternMap.getPattern(
+				patternMap,
+				"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）\\s+[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）\\s\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InArrows}（(\\p{InHiragana}+)）\\p{InHiragana}+\\s\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+$"),
+				s2))) {
+			//
+			Multimap<String, String> multimap = null;
+			//
+			for (int j = 1; j <= Util.groupCount(m2); j++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m1, 1), Util.group(m2, j));
+				//
+			} // for
+				//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
 		return null;
 		//
 	}
