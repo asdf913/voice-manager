@@ -4,19 +4,19 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map.Entry;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
 import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
+import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.nodes.Element;
@@ -119,7 +119,9 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 		//
 		Method m = null;
 		//
-		Collection<Object> list = null;
+		Object invokeStaticMethod = null;
+		//
+		String toString = null;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
@@ -129,20 +131,24 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 				//
 			} // if
 				//
-			clear(list = ObjectUtils.getIfNull(list, ArrayList::new));
+			invokeStaticMethod = Narcissus.invokeStaticMethod(m,
+					toArray(Collections.nCopies(m.getParameterCount(), null)));
 			//
-			list.addAll(Collections.nCopies(m.getParameterCount(), null));
+			toString = Objects.toString(m);
 			//
-			Assertions.assertNull(Narcissus.invokeStaticMethod(m, toArray(list)), Objects.toString(m));
-			//
+			if (Objects.equals(Util.getName(m), "toMultimap") && Arrays.equals(m.getParameterTypes(),
+					new Class<?>[] { PatternMap.class, String.class, Matcher.class })) {
+				//
+				Assertions.assertEquals(Unit.with(null), invokeStaticMethod, toString);
+				//
+			} else {
+				//
+				Assertions.assertNull(invokeStaticMethod, toString);
+				//
+			} // if
+				//
 		} // for
 			//
-	}
-
-	private void clear(final Collection<Object> instance) {
-		if (instance != null) {
-			instance.clear();
-		}
 	}
 
 	private static Object[] toArray(final Collection<?> instance) {

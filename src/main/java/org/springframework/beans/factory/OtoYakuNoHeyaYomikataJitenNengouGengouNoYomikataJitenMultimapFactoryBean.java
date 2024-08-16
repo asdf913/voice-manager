@@ -322,88 +322,95 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 					"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\p{InHiragana}]+\\s+[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+(暦)[\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）[\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+[\\s|\\p{InCJKSymbolsAndPunctuation}]+\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)（(\\p{InHiragana}+)）\\s\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）\\p{InHiragana}+$"),
 					s2)) && Util.groupCount(m2) > 7) {
 				//
-				Multimap<String, String> multimap = null;
-				//
-				String group;
-				//
-				IValue0<String> hiragana = null;
-				//
-				List<String> ss1 = null;
-				//
-				String[] ss2;
-				//
-				Matcher m;
-				//
-				List<UnicodeBlock> ubs;
-				//
-				for (int i = 1; i <= Util.groupCount(m2); i++) {
-					//
-					group = Util.group(m2, i);
-					//
-					if (ArrayUtils.contains(new int[] { 1, 6, 7, 8 }, i)) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
-								group);
-						//
-					} else if (i == 3) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								Util.group(m2, i - 1), group);
-						//
-					} else if (i == 4) {
-						//
-						if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-								"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}+)$"),
-								group))) {
-							//
-							for (int j = 1; j <= Util.groupCount(m); j++) {
-								//
-								if (CollectionUtils.isEqualCollection(
-										Collections.singleton(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-										ubs = getUnicodeBlocks(group = Util.group(m, j)))) {
-									//
-									Util.add(ss1 = ObjectUtils.getIfNull(ss1, ArrayList::new), group);
-									//
-								} else if (CollectionUtils
-										.isEqualCollection(Collections.singleton(UnicodeBlock.HIRAGANA), ubs)) {
-									//
-									if (hiragana != null) {
-										//
-										throw new IllegalStateException();
-										//
-									} else {
-										//
-										hiragana = Unit.with(group);
-										//
-									} // if
-										//
-								} // if
-							} // for
-								//
-						} // if
-							//
-					} else if (i == 5) {
-						//
-						ss2 = hiragana != null ? StringUtils.split(group, IValue0Util.getValue0(hiragana)) : null;
-						//
-						for (int j = 0; ss2 != null && j < ss2.length; j++) {
-							//
-							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-									IterableUtils.get(ss1, Math.min(j, IterableUtils.size(ss1))), ss2[j]);
-							//
-						} // for
-							//
-					} // if
-						//
-				} // for
-					//
-				return Unit.with(multimap);
+				return toMultimap(patternMap, s1, m2);
 				//
 			} // if
 				//
 		} // if
 			//
 		return null;
+		//
+	}
+
+	private static Unit<Multimap<String, String>> toMultimap(final PatternMap patternMap, final String s1,
+			final Matcher m2) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		String group;
+		//
+		IValue0<String> hiragana = null;
+		//
+		List<String> ss1 = null;
+		//
+		String[] ss2;
+		//
+		Matcher m;
+		//
+		List<UnicodeBlock> ubs;
+		//
+		for (int i = 1; i <= Util.groupCount(m2); i++) {
+			//
+			group = Util.group(m2, i);
+			//
+			if (ArrayUtils.contains(new int[] { 1, 6, 7, 8 }, i)) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1, group);
+				//
+			} else if (i == 3) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m2, i - 1), group);
+				//
+			} else if (i == 4) {
+				//
+				if (Util.matches(m = Util.matcher(
+						PatternMap.getPattern(patternMap,
+								"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}+)$"),
+						group))) {
+					//
+					for (int j = 1; j <= Util.groupCount(m); j++) {
+						//
+						if (CollectionUtils.isEqualCollection(
+								Collections.singleton(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+								ubs = getUnicodeBlocks(group = Util.group(m, j)))) {
+							//
+							Util.add(ss1 = ObjectUtils.getIfNull(ss1, ArrayList::new), group);
+							//
+						} else if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.HIRAGANA),
+								ubs)) {
+							//
+							if (hiragana != null) {
+								//
+								throw new IllegalStateException();
+								//
+							} else {
+								//
+								hiragana = Unit.with(group);
+								//
+							} // if
+								//
+						} // if
+					} // for
+						//
+				} // if
+					//
+			} else if (i == 5) {
+				//
+				ss2 = hiragana != null ? StringUtils.split(group, IValue0Util.getValue0(hiragana)) : null;
+				//
+				for (int j = 0; ss2 != null && j < ss2.length; j++) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							IterableUtils.get(ss1, Math.min(j, IterableUtils.size(ss1))), ss2[j]);
+					//
+				} // for
+					//
+			} // if
+				//
+		} // for
+			//
+		return Unit.with(multimap);
 		//
 	}
 
