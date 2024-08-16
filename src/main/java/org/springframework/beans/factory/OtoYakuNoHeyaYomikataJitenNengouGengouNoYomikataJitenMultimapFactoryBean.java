@@ -4,8 +4,10 @@ import java.lang.Character.UnicodeBlock;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -25,6 +27,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.TriFunction;
 import org.apache.commons.lang3.function.TriFunctionUtil;
+import org.apache.commons.lang3.tuple.Pair;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -342,11 +345,9 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 		//
 		IValue0<String> hiragana = null;
 		//
-		List<String> ss1 = null;
+		Iterable<String> ss1 = null;
 		//
-		Matcher m;
-		//
-		List<UnicodeBlock> ubs;
+		Entry<Iterable<String>, IValue0<String>> entry = null;
 		//
 		for (int i = 1; i <= Util.groupCount(m2); i++) {
 			//
@@ -363,37 +364,10 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 				//
 			} else if (i == 4) {
 				//
-				if (Util.matches(m = Util.matcher(
-						PatternMap.getPattern(patternMap,
-								"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}+)$"),
-						group))) {
-					//
-					for (int j = 1; j <= Util.groupCount(m); j++) {
-						//
-						if (CollectionUtils.isEqualCollection(
-								Collections.singleton(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-								ubs = getUnicodeBlocks(group = Util.group(m, j)))) {
-							//
-							Util.add(ss1 = ObjectUtils.getIfNull(ss1, ArrayList::new), group);
-							//
-						} else if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.HIRAGANA),
-								ubs)) {
-							//
-							if (hiragana != null) {
-								//
-								throw new IllegalStateException();
-								//
-							} else {
-								//
-								hiragana = Unit.with(group);
-								//
-							} // if
-								//
-						} // if
-					} // for
-						//
-				} // if
-					//
+				ss1 = Util.getKey(entry = toCollectionAndIValue0Entry(patternMap, group));
+				//
+				hiragana = Util.getValue(entry);
+				//
 			} else if (i == 5) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
@@ -405,6 +379,51 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 		} // for
 			//
 		return Unit.with(multimap);
+		//
+	}
+
+	private static Entry<Iterable<String>, IValue0<String>> toCollectionAndIValue0Entry(final PatternMap patternMap,
+			final String string) {
+		//
+		final Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}+)$"), string);
+		//
+		Collection<String> ss1 = null;
+		//
+		IValue0<String> hiragana = null;
+		//
+		if (Util.matches(m)) {
+			//
+			String group = null;
+			//
+			List<UnicodeBlock> ubs;
+			//
+			for (int j = 1; j <= Util.groupCount(m); j++) {
+				//
+				if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+						ubs = getUnicodeBlocks(group = Util.group(m, j)))) {
+					//
+					Util.add(ss1 = ObjectUtils.getIfNull(ss1, ArrayList::new), group);
+					//
+				} else if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.HIRAGANA), ubs)) {
+					//
+					if (hiragana != null) {
+						//
+						throw new IllegalStateException();
+						//
+					} else {
+						//
+						hiragana = Unit.with(group);
+						//
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		return Pair.of(ss1, hiragana);
 		//
 	}
 

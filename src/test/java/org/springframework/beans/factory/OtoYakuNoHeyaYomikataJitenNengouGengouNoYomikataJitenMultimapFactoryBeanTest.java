@@ -119,6 +119,10 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 		//
 		Method m = null;
 		//
+		String name = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
 		Object invokeStaticMethod = null;
 		//
 		String toString = null;
@@ -136,10 +140,16 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 			//
 			toString = Objects.toString(m);
 			//
-			if (Objects.equals(Util.getName(m), "toMultimap") && Arrays.equals(m.getParameterTypes(),
-					new Class<?>[] { PatternMap.class, String.class, Matcher.class })) {
+			if (Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "toMultimap"),
+					Arrays.equals(parameterTypes = m.getParameterTypes(),
+							new Class<?>[] { PatternMap.class, String.class, Matcher.class }))) {
 				//
 				Assertions.assertEquals(Unit.with(null), invokeStaticMethod, toString);
+				//
+			} else if (Boolean.logicalAnd(Objects.equals(name, "toCollectionAndIValue0Entry"),
+					Arrays.equals(parameterTypes, new Class<?>[] { PatternMap.class, String.class }))) {
+				//
+				Assertions.assertEquals(Pair.of(null, null), invokeStaticMethod, toString);
 				//
 			} else {
 				//
