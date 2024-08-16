@@ -152,7 +152,8 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 		final List<TriFunction<PatternMap, String, String, IValue0<Multimap<String, String>>>> functions = Arrays
 				.asList(OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBean::toMultimap1,
 						OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBean::toMultimap2,
-						OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBean::toMultimap3);
+						OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBean::toMultimap3,
+						OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBean::toMultimap4);
 		//
 		IValue0<Multimap<String, String>> iValue0 = null;
 		//
@@ -408,14 +409,22 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 			//
 		} // if
 			//
+		return null;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap4(final PatternMap patternMap, final String s1,
+			final String s2) {
+		//
 		final Matcher m1 = Util.matcher(
 				PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)[^\\p{InCJKUnifiedIdeographs}]+$"),
 				s1);
 		//
-		if (Util.matches(m1) && Util.groupCount(m1) > 0 && Util.matches(m2 = Util.matcher(PatternMap.getPattern(
-				patternMap,
+		final Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）\\s+[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）\\s\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InArrows}（(\\p{InHiragana}+)）\\p{InHiragana}+\\s\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+$"),
-				s2))) {
+				s2);
+		//
+		if (Util.matches(m1) && Util.groupCount(m1) > 0 && Util.matches(m2)) {
 			//
 			Multimap<String, String> multimap = null;
 			//
