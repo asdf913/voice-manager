@@ -1,15 +1,21 @@
 package org.springframework.beans.factory;
 
+import java.lang.Character.UnicodeBlock;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -311,6 +317,87 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 				//
 				return Unit.with(ImmutableMultimap.of(s1, Util.group(m2, 1)));
 				//
+			} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+					"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）[\\p{InHiragana}]+\\s+[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+(暦)[\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)）[\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+[\\s|\\p{InCJKSymbolsAndPunctuation}]+\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}([\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+)（(\\p{InHiragana}+)）\\s\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）（(\\p{InHiragana}+)）\\p{InHiragana}+$"),
+					s2)) && Util.groupCount(m2) > 7) {
+				//
+				Multimap<String, String> multimap = null;
+				//
+				String group;
+				//
+				IValue0<String> hiragana = null;
+				//
+				List<String> ss1 = null;
+				//
+				String[] ss2;
+				//
+				Matcher m;
+				//
+				List<UnicodeBlock> ubs;
+				//
+				for (int i = 1; i <= Util.groupCount(m2); i++) {
+					//
+					group = Util.group(m2, i);
+					//
+					if (ArrayUtils.contains(new int[] { 1, 6, 7, 8 }, i)) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+								group);
+						//
+					} else if (i == 3) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								Util.group(m2, i - 1), group);
+						//
+					} else if (i == 4) {
+						//
+						if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+								"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}+)$"),
+								group))) {
+							//
+							for (int j = 1; j <= Util.groupCount(m); j++) {
+								//
+								if (CollectionUtils.isEqualCollection(
+										Collections.singleton(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+										ubs = getUnicodeBlocks(group = Util.group(m, j)))) {
+									//
+									Util.add(ss1 = ObjectUtils.getIfNull(ss1, ArrayList::new), group);
+									//
+								} else if (CollectionUtils
+										.isEqualCollection(Collections.singleton(UnicodeBlock.HIRAGANA), ubs)) {
+									//
+									if (hiragana != null) {
+										//
+										throw new IllegalStateException();
+										//
+									} else {
+										//
+										hiragana = Unit.with(group);
+										//
+									} // if
+										//
+								} // if
+							} // for
+								//
+						} // if
+							//
+					} else if (i == 5) {
+						//
+						ss2 = hiragana != null ? StringUtils.split(group, IValue0Util.getValue0(hiragana)) : null;
+						//
+						for (int j = 0; ss2 != null && j < ss2.length; j++) {
+							//
+							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+									IterableUtils.get(ss1, Math.min(j, IterableUtils.size(ss1))), ss2[j]);
+							//
+						} // for
+							//
+					} // if
+						//
+				} // for
+					//
+				return Unit.with(multimap);
+				//
 			} // if
 				//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
@@ -345,6 +432,37 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 			//
 		return null;
 		//
+	}
+
+	private static List<UnicodeBlock> getUnicodeBlocks(final String string) {
+		//
+		final char[] cs = Util.toCharArray(string);
+		//
+		if (cs != null) {
+			//
+			List<UnicodeBlock> unicodeBlocks = null;
+			//
+			for (final char c : cs) {
+				//
+				testAndAccept((a, b) -> b != null && !Util.contains(a, b),
+						unicodeBlocks = ObjectUtils.getIfNull(unicodeBlocks, ArrayList::new), UnicodeBlock.of(c),
+						Util::add);
+				//
+			} // for
+				//
+			return unicodeBlocks;
+			//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (Util.test(instance, t, u)) {
+			Util.accept(consumer, t, u);
+		} // if
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,

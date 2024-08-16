@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map.Entry;
@@ -290,6 +291,13 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 					Util.toList(Util.map(Stream.of("にんべい", "にんぺい", "にんびょう", "にんひょう", "にんへい"), x -> Pair.of("仁平", x))),
 					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "仁平",
 							"『現代こよみ読み解き事典』に（にんべい）とある 　同じ本の50音順の項には（にんぺい）になっている 日本国語大辞典（にんぺい）のみ 広辞苑には（にんぺい）／（にんびょう）（にんひょう）（にんへい）ともとある")))));
+			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					CollectionUtils.union(
+							Util.toList(Util.map(Stream.of("めいれき", "めいりゃく", "みょうりゃく"), x -> Pair.of("明暦", x))),
+							Arrays.asList(Pair.of("暦", "りゃく"), Pair.of("大火", "たいか"))),
+					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "明暦",
+							"『現代こよみ読み解き事典』の表は（めいれき）であるが 文中にはこの頃まで年号の暦の字は（りゃく）と読まれていたとある 　参考：明暦の大火（めいりゃくのたいか） 広辞苑（めいれき）／（みょうりゃく）（めいりゃく）ともとある")))));
 			//
 		} // if
 			//
