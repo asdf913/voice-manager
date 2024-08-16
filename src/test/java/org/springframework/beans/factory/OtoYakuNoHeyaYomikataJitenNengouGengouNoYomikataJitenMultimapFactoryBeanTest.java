@@ -292,13 +292,6 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "仁平",
 							"『現代こよみ読み解き事典』に（にんべい）とある 　同じ本の50音順の項には（にんぺい）になっている 日本国語大辞典（にんぺい）のみ 広辞苑には（にんぺい）／（にんびょう）（にんひょう）（にんへい）ともとある")))));
 			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					CollectionUtils.union(
-							Util.toList(Util.map(Stream.of("めいれき", "めいりゃく", "みょうりゃく"), x -> Pair.of("明暦", x))),
-							Arrays.asList(Pair.of("暦", "りゃく"), Pair.of("大火", "たいか"))),
-					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "明暦",
-							"『現代こよみ読み解き事典』の表は（めいれき）であるが 文中にはこの頃まで年号の暦の字は（りゃく）と読まれていたとある 　参考：明暦の大火（めいりゃくのたいか） 広辞苑（めいれき）／（みょうりゃく）（めいりゃく）ともとある")))));
-			//
 		} // if
 			//
 	}
@@ -355,6 +348,13 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 					Util.toList(Util.map(Stream.of("しょうけい", "しょうきょう"), x -> Pair.of("正慶", x))),
 					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "正慶　　",
 							"『現代こよみ読み解き事典』（しょうけい） 『朝日新聞の用語の手引き』（しょうきょう） 日本国語大辞典（しょうきょう）／（しょうけい）→（しょうきょう）とある 広辞苑（しょうきょう）／（しょうけい）ともとある")))));
+			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					CollectionUtils.union(
+							Util.toList(Util.map(Stream.of("めいれき", "めいりゃく", "みょうりゃく"), x -> Pair.of("明暦", x))),
+							Arrays.asList(Pair.of("暦", "りゃく"), Pair.of("大火", "たいか"))),
+					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "明暦",
+							"『現代こよみ読み解き事典』の表は（めいれき）であるが 文中にはこの頃まで年号の暦の字は（りゃく）と読まれていたとある 　参考：明暦の大火（めいりゃくのたいか） 広辞苑（めいれき）／（みょうりゃく）（めいりゃく）ともとある")))));
 			//
 		} // if
 			//
