@@ -332,7 +332,7 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 		//
 	}
 
-	private static Unit<Multimap<String, String>> toMultimap(final PatternMap patternMap, final String s1,
+	private static IValue0<Multimap<String, String>> toMultimap(final PatternMap patternMap, final String s1,
 			final Matcher m2) {
 		//
 		Multimap<String, String> multimap = null;
