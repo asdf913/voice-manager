@@ -401,12 +401,6 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 				//
 			} // if
 				//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-				"^[\\p{InCJKUnifiedIdeographs}]+\\p{InCJKSymbolsAndPunctuation}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InCJKSymbolsAndPunctuation}|\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+$"),
-				s2)) && Util.groupCount(m2) > 1) {
-			//
-			return Unit.with(ImmutableMultimap.of(Util.group(m2, 1), Util.group(m2, 2)));
-			//
 		} // if
 			//
 		return null;
@@ -417,15 +411,26 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 	private static IValue0<Multimap<String, String>> toMultimap4(final PatternMap patternMap, final String s1,
 			final String s2) {
 		//
+		Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^[\\p{InCJKUnifiedIdeographs}]+\\p{InCJKSymbolsAndPunctuation}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InCJKSymbolsAndPunctuation}|\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+$"),
+				s2);
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^[\\p{InCJKUnifiedIdeographs}]+\\p{InCJKSymbolsAndPunctuation}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InCJKSymbolsAndPunctuation}|\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+$"),
+				s2)) && Util.groupCount(m2) > 1) {
+			//
+			return Unit.with(ImmutableMultimap.of(Util.group(m2, 1), Util.group(m2, 2)));
+			//
+		} // if
+			//
 		final Matcher m1 = Util.matcher(
 				PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)[^\\p{InCJKUnifiedIdeographs}]+$"),
 				s1);
 		//
-		final Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap,
+		if (Util.matches(m1) && Util.groupCount(m1) > 0 && Util.matches(m2 = Util.matcher(PatternMap.getPattern(
+				patternMap,
 				"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）\\s+[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）\\s\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InArrows}（(\\p{InHiragana}+)）\\p{InHiragana}+\\s\\p{InCJKUnifiedIdeographs}+（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}（(\\p{InHiragana}+)）\\p{InHiragana}+$"),
-				s2);
-		//
-		if (Util.matches(m1) && Util.groupCount(m1) > 0 && Util.matches(m2)) {
+				s2))) {
 			//
 			Multimap<String, String> multimap = null;
 			//
