@@ -466,4 +466,52 @@ class NodeUtilTest {
 			//
 	}
 
+	@Test
+	void testNextSibling() throws Throwable {
+		//
+		final List<ClassInfo> classInfos = ClassInfoUtil.getClassInfos();
+		//
+		if (classInfos == null || classInfos.iterator() == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		String name = null;
+		//
+		Class<?> clz = null;
+		//
+		for (final ClassInfo classInfo : classInfos) {
+			//
+			if (classInfo == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			try {
+				//
+				if (isAssignableFrom(Node.class, Class.forName(name = HasNameUtil.getName(classInfo)))
+						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
+					//
+					final Node n = cast(Node.class, Narcissus.allocateInstance(clz));
+					//
+					System.out.println(name);
+					//
+					Assertions.assertDoesNotThrow(() -> NodeUtil.nextSibling(n), name);
+					//
+				} // if
+					//
+			} catch (final Throwable e) {
+				//
+				System.err.println(name);
+				//
+				throw e;
+				//
+			} // try
+				//
+		} // for
+			//
+	}
+
 }

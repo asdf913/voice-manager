@@ -55,7 +55,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 						PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
 								"^（\\p{InHiragana}）$"),
 						ElementUtil.text(Util.cast(Element.class, b))))
-						|| (nextSibling = nextSibling(b)) instanceof Element) {
+						|| (nextSibling = NodeUtil.nextSibling(b)) instanceof Element) {
 					//
 					continue;
 					//
@@ -83,10 +83,6 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 		return multimap;
 		//
-	}
-
-	private static Node nextSibling(final Node instance) {
-		return instance != null ? instance.nextSibling() : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,

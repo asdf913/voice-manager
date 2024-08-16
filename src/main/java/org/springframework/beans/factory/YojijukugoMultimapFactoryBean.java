@@ -228,7 +228,7 @@ public class YojijukugoMultimapFactoryBean implements FactoryBean<Multimap<Strin
 					//
 					// hiragana
 					//
-				if ((nextSibling = a.nextSibling()) != null
+				if ((nextSibling = NodeUtil.nextSibling(a)) != null
 						&& (pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("[ぁ-ん]+"))) != null
 						&& Util.find(matcher = Util.matcher(pattern, nextSibling.outerHtml()))) {
 					//

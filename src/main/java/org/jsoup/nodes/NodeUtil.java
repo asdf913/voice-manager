@@ -135,4 +135,8 @@ public class NodeUtil {
 		return instance != null ? instance.nodeStream() : null;
 	}
 
+	public static Node nextSibling(final Node instance) {
+		return instance != null ? instance.nextSibling() : null;
+	}
+
 }
