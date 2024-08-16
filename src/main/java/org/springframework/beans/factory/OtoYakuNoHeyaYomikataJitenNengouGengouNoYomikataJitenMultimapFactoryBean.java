@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -397,7 +398,8 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 					//
 			} else if (i == 5) {
 				//
-				ss2 = hiragana != null ? StringUtils.split(group, IValue0Util.getValue0(hiragana)) : null;
+				ss2 = testAndApply((a, b) -> b != null, group, hiragana,
+						(a, b) -> StringUtils.split(a, IValue0Util.getValue0(b)), null);
 				//
 				for (int j = 0; ss2 != null && j < ss2.length; j++) {
 					//
@@ -412,6 +414,11 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 			//
 		return Unit.with(multimap);
 		//
+	}
+
+	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) {
+		return Util.test(predicate, t, u) ? Util.apply(functionTrue, t, u) : Util.apply(functionFalse, t, u);
 	}
 
 	@Nullable
