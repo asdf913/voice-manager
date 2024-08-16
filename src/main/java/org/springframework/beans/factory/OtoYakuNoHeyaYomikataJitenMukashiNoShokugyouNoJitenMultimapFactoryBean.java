@@ -59,7 +59,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 					//
 				} // if
 					//
-				ss = StringUtils.split(Util.toString(nextSibling), '　');
+				ss = StringUtils.split(Util.toString(nextSibling), '\u3000');
 				//
 				for (int i = 0; ss != null && i < ss.length; i++) {
 					//
