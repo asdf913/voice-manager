@@ -1,11 +1,13 @@
 package org.springframework.beans.factory;
 
+import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
@@ -23,15 +25,19 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_UNICODE_BLOCKS, METHOD_CLEAR;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
 		//
-		(METHOD_TEST_AND_APPLY = OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean.class
-				.getDeclaredMethod("testAndApply", Predicate.class, Object.class, FailableFunction.class,
-						FailableFunction.class))
-				.setAccessible(true);
+		final Class<?> clz = OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean.class;
+		//
+		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
+				FailableFunction.class, FailableFunction.class)).setAccessible(true);
+		//
+		(METHOD_GET_UNICODE_BLOCKS = clz.getDeclaredMethod("getUnicodeBlocks", String.class)).setAccessible(true);
+		//
+		(METHOD_CLEAR = clz.getDeclaredMethod("clear", Collection.class)).setAccessible(true);
 		//
 	}
 
@@ -132,6 +138,50 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetUnicodeBlocks() throws Throwable {
+		//
+		if (!isSystemPropertiesContainsTestGetObject) {
+			//
+			Assertions.assertEquals(Collections.singletonList(UnicodeBlock.BASIC_LATIN), getUnicodeBlocks(" "));
+			//
+		} // if
+			//
+	}
+
+	private static List<UnicodeBlock> getUnicodeBlocks(final String string) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_UNICODE_BLOCKS.invoke(null, string);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testClear() {
+		//
+		if (!isSystemPropertiesContainsTestGetObject) {
+			//
+			Assertions.assertDoesNotThrow(() -> clear(Collections.emptyList()));
+			//
+		} // if
+			//
+	}
+
+	private static void clear(final Collection<?> instance) throws Throwable {
+		try {
+			METHOD_CLEAR.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
