@@ -1,22 +1,39 @@
 package org.springframework.beans.factory;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
 
+import org.apache.commons.lang3.function.FailableFunction;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.base.Predicates;
 import com.google.common.collect.Multimap;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest {
+
+	private static Method METHOD_TEST_AND_APPLY;
+
+	@BeforeAll
+	static void beforeClass() throws NoSuchMethodException {
+		//
+		(METHOD_TEST_AND_APPLY = OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean.class
+				.getDeclaredMethod("testAndApply", Predicate.class, Object.class, FailableFunction.class,
+						FailableFunction.class))
+				.setAccessible(true);
+		//
+	}
 
 	private OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean instance = null;
 
@@ -97,6 +114,27 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 
 	private static Object[] toArray(final Collection<?> instance) {
 		return instance != null ? instance.toArray() : null;
+	}
+
+	@Test
+	void testTestAndApply() throws Throwable {
+		//
+		if (!isSystemPropertiesContainsTestGetObject) {
+			//
+			Assertions.assertNull(testAndApply(Predicates.alwaysTrue(), null, null, null));
+			//
+		} // if
+			//
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
+			throws Throwable {
+		try {
+			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }

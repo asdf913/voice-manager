@@ -51,11 +51,11 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 			for (final Node b : bs) {
 				//
-				if (b == null
-						|| !Util.matches(Util.matcher(PatternMap.getPattern(
-								patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
-								"^（\\p{InHiragana}）$"), ElementUtil.text(Util.cast(Element.class, b))))
-						|| (nextSibling = b.nextSibling()) instanceof Element) {
+				if (!Util.matches(Util.matcher(
+						PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
+								"^（\\p{InHiragana}）$"),
+						ElementUtil.text(Util.cast(Element.class, b))))
+						|| (nextSibling = nextSibling(b)) instanceof Element) {
 					//
 					continue;
 					//
@@ -83,6 +83,10 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 		return multimap;
 		//
+	}
+
+	private static Node nextSibling(final Node instance) {
+		return instance != null ? instance.nextSibling() : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
