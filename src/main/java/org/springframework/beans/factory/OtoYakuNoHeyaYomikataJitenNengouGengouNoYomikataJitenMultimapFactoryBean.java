@@ -415,9 +415,7 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 				"^[\\p{InCJKUnifiedIdeographs}]+\\p{InCJKSymbolsAndPunctuation}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InCJKSymbolsAndPunctuation}|\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+$"),
 				s2);
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-				"^[\\p{InCJKUnifiedIdeographs}]+\\p{InCJKSymbolsAndPunctuation}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InCJKSymbolsAndPunctuation}|\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+$"),
-				s2)) && Util.groupCount(m2) > 1) {
+		if (Util.matches(m2) && Util.groupCount(m2) > 1) {
 			//
 			return Unit.with(ImmutableMultimap.of(Util.group(m2, 1), Util.group(m2, 2)));
 			//
