@@ -372,6 +372,10 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "明暦",
 							"『現代こよみ読み解き事典』の表は（めいれき）であるが 文中にはこの頃まで年号の暦の字は（りゃく）と読まれていたとある 　参考：明暦の大火（めいりゃくのたいか） 広辞苑（めいれき）／（みょうりゃく）（めいりゃく）ともとある")))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					Util.toList(Util.map(Stream.of("きょうほう", "きょうほ"), x -> Pair.of("享保", x))), MultimapUtil.entries(
+							IValue0Util.getValue0(toMultimap(patternMap, "享保", "日本国語大辞典（きょうほう）／（きょうほ）→（きょうほう）とある")))));
+			//
 		} // if
 			//
 	}
