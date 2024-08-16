@@ -328,6 +328,11 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 					MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "天平",
 							"『現代こよみ読み解き事典』の表には（てんぴょう）とあるが文中には 今日は誰でも(てんぴょう）と読むが正しくは（てんびょう）か（てんへい）とある 『朝日新聞の用語の手引き』（てんぴょう） 日本国語大辞典（てんぴょう）／（てんびょう）ともとある 広辞苑（てんぴょう）／（てんびょう）（てんへい）ともとある 『日本史用語大辞典』は他に（てんぺい）の読み")))));
 			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("神護景雲", "じんごけいうん")),
+							MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "神護景雲",
+									"『現代こよみ読み解き事典』に（じんごうんけい）とあるのは誤植とおもわれる 　同じ本の50音順の項には（じんごけいうん）になっている")))));
+			//
 		} // if
 			//
 	}

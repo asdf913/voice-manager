@@ -303,6 +303,12 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 				return Unit.with(ImmutableMultimap.of(Util.group(m2, 1), Util.group(m2, 2), s1, Util.group(m2, 3), s1,
 						Util.group(m2, 4)));
 				//
+			} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+					"^[\\p{InCJKSymbolsAndPunctuation}|\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}|\\p{InHalfwidthAndFullwidthForms}|\\s]+50[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）\\p{InHiragana}+$"),
+					s2)) && Util.groupCount(m2) > 0) {
+				//
+				return Unit.with(ImmutableMultimap.of(s1, Util.group(m2, 1)));
+				//
 			} // if
 				//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
