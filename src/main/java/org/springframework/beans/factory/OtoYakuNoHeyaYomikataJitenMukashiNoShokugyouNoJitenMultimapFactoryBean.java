@@ -51,11 +51,14 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 			for (final Node b : bs) {
 				//
-				if (!Util.matches(Util.matcher(
-						PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
-								"^（\\p{InHiragana}）$"),
-						ElementUtil.text(Util.cast(Element.class, b))))
-						|| (nextSibling = NodeUtil.nextSibling(b)) instanceof Element) {
+				if (Boolean
+						.logicalOr(
+								!Util.matches(
+										Util.matcher(
+												PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap,
+														PatternMapImpl::new), "^（\\p{InHiragana}）$"),
+												ElementUtil.text(Util.cast(Element.class, b)))),
+								(nextSibling = NodeUtil.nextSibling(b)) instanceof Element)) {
 					//
 					continue;
 					//
