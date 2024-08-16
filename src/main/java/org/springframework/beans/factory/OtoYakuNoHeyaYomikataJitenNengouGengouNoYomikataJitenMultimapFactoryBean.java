@@ -427,6 +427,7 @@ public class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactor
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap(@Nullable final Iterable<String> ss1,
 			@Nullable final String[] ss2) {
 		//
