@@ -36,7 +36,7 @@ import com.google.common.reflect.Reflection;
 class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_ACCEPT,
-			METHOD_TO_MULTI_MAP_ELEMENT, METHOD_TO_MULTI_MAP_STRING2, METHOD_TO_MULTI_MAP_STRING3, METHOD_LENGTH = null;
+			METHOD_TO_MULTI_MAP_ELEMENT, METHOD_TO_MULTI_MAP_STRING2, METHOD_TO_MULTI_MAP_STRING3 = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -59,8 +59,6 @@ class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TO_MULTI_MAP_STRING3 = clz.getDeclaredMethod("toMultimap", PatternMap.class, String.class, String.class,
 				String.class)).setAccessible(true);
-		//
-		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
 		//
 	}
 
@@ -412,25 +410,6 @@ class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 			//
 		Assertions.assertNull(getPattern != null ? getPattern.invoke(null, null, null) : null);
 		//
-	}
-
-	@Test
-	void testLength() throws Throwable {
-		//
-		Assertions.assertEquals(0, length(null));
-		//
-	}
-
-	private static int length(final Object[] instance) throws Throwable {
-		try {
-			final Object obj = METHOD_LENGTH.invoke(null, (Object) instance);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 }

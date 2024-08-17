@@ -831,7 +831,7 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 		//
 		final String[] ss1 = StringUtils.split(s1, "・");
 		//
-		final int length = length(ss1);
+		final int length = Util.length(ss1);
 		//
 		final int size = IterableUtils.size(ss2);
 		//
@@ -866,10 +866,6 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 	}
 
 	private static int length(@Nullable final char[] instance) {
-		return instance != null ? instance.length : 0;
-	}
-
-	private static int length(@Nullable final Object[] instance) {
 		return instance != null ? instance.length : 0;
 	}
 

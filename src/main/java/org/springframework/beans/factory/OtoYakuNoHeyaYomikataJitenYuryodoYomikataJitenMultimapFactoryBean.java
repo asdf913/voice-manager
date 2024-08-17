@@ -437,7 +437,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				//
 				ss2 = StringUtils.split(s2, group);
 				//
-				for (int j = 0; j < Math.min(length(ss1), length(ss2)); j++) {
+				for (int j = 0; j < Math.min(Util.length(ss1), Util.length(ss2)); j++) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							ss1 != null ? ss1[j] : null, ss2 != null ? ss2[j] : null);
@@ -674,7 +674,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 			Matcher m;
 			//
-			for (int i = 0; i < Math.min(length(ss1), length(ss2)); i++) {
+			for (int i = 0; i < Math.min(Util.length(ss1), Util.length(ss2)); i++) {
 				//
 				if (!Util.matches(m = Util.matcher(
 						p = ObjectUtils.getIfNull(p,
@@ -713,7 +713,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 			final String[] ss = StringUtils.splitByWholeSeparator(s2, Util.group(m1, 2));
 			//
-			final int length = length(ss);
+			final int length = Util.length(ss);
 			//
 			final int groupCount = Util.groupCount(m1);
 			//
@@ -834,7 +834,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		Multimap<String, String> multimap = null;
 		//
-		for (int j = 0; j < length(ss); j++) {
+		for (int j = 0; j < Util.length(ss); j++) {
 			//
 			if (j == 0) {
 				//
@@ -905,7 +905,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		Multimap<String, String> multimap = null;
 		//
-		for (int j = 0; j < length(ss); j++) {
+		for (int j = 0; j < Util.length(ss); j++) {
 			//
 			if (j == 0) {
 				//
@@ -957,8 +957,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 						StringUtils.substring(s2, 0, StringUtils.length(s2) - StringUtils.length(lastGroup)),
 						separator);
 				//
-				for (int i = 0; i < orElse(min(mapToInt(Stream.of(ss1, ss2),
-						OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean::length)), 0); i++) {
+				for (int i = 0; i < orElse(min(mapToInt(Stream.of(ss1, ss2), Util::length)), 0); i++) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), ss1[i],
 							ss2[i]);
@@ -980,8 +979,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 							StringUtils.length(s2) - StringUtils.length(Util.group(m1, Util.groupCount(m1)))),
 					separator);
 			//
-			for (int i = 0; i < orElse(min(mapToInt(Stream.of(ss1, ss2),
-					OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean::length)), 0); i++) {
+			for (int i = 0; i < orElse(min(mapToInt(Stream.of(ss1, ss2), Util::length)), 0); i++) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), ss1[i],
 						ss2[i]);
@@ -1028,10 +1026,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 					//
 					final String[] ss2 = StringUtils.split(m2i, Util.group(m1, Math.min(gc1, i + 3)));
 					//
-					for (int j = 0; j < orElse(
-							min(mapToInt(Stream.of(ss1, ss2),
-									OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean::length)),
-							0); j++) {
+					for (int j = 0; j < orElse(min(mapToInt(Stream.of(ss1, ss2), Util::length)), 0); j++) {
 						//
 						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), ss1[j],
 								ss2[j]);
@@ -1300,8 +1295,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 			//
 			Entry<String, String> entry = null;
 			//
-			for (int j = 0; j < orElse(min(mapToInt(Stream.of(ss1, ss2),
-					OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean::length)), 0); j++) {
+			for (int j = 0; j < orElse(min(mapToInt(Stream.of(ss1, ss2), Util::length)), 0); j++) {
 				//
 				if (!IterableUtils.contains(kanjiExcluded, Util.getKey(entry = Pair.of(ss1[j], ss2[j])))) {
 					//
@@ -1330,10 +1324,6 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 				? StringUtils.substringBetween(str, open, close)
 				: str;
 		//
-	}
-
-	private static int length(@Nullable final Object[] instance) {
-		return instance != null ? instance.length : 0;
 	}
 
 	@Nullable

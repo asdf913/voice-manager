@@ -253,7 +253,7 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 					//
 				}), Collectors.toMap(c -> c != null ? c.getParameterCount() : null, Functions.identity()));
 		//
-		final Constructor<?> constructor = MapUtils.getObject(constructorMap, Integer.valueOf(length(arguments)));
+		final Constructor<?> constructor = MapUtils.getObject(constructorMap, Integer.valueOf(Util.length(arguments)));
 		//
 		if (constructor == null) {
 			//
@@ -263,10 +263,6 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 			//
 		return Util.cast(MigLayout.class, constructor.newInstance((Object[]) arguments));
 		//
-	}
-
-	private static int length(@Nullable final Object[] instance) {
-		return instance != null ? instance.length : 0;
 	}
 
 	@Override

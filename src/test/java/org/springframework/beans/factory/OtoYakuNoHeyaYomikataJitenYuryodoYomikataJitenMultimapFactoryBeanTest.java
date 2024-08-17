@@ -44,10 +44,10 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_LENGTH, METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP1,
-			METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3, METHOD_TO_MULTI_MAP14, METHOD_TO_MULTI_MAP15, METHOD_TO_ENTRY,
-			METHOD_OR_ELSE, METHOD_MAX, METHOD_MIN, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP1,
-			METHOD_CREATE_MULTI_MAP2, METHOD_PUT = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP1, METHOD_TO_MULTI_MAP2,
+			METHOD_TO_MULTI_MAP3, METHOD_TO_MULTI_MAP14, METHOD_TO_MULTI_MAP15, METHOD_TO_ENTRY, METHOD_OR_ELSE,
+			METHOD_MAX, METHOD_MIN, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2,
+			METHOD_PUT = null;
 
 	private static int ZERO = 0;
 
@@ -60,8 +60,6 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
-		//
-		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
 		//
 		(METHOD_GET_UNICODE_BLOCKS = clz.getDeclaredMethod("getUnicodeBlocks", String.class)).setAccessible(true);
 		//
@@ -257,27 +255,6 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testLength() throws Throwable {
-		//
-		Assertions.assertEquals(ZERO, length((Object[]) null));
-		//
-		Assertions.assertEquals(ONE, length(new Object[ONE]));
-		//
-	}
-
-	private static int length(final Object[] instance) throws Throwable {
-		try {
-			final Object obj = METHOD_LENGTH.invoke(null, (Object) instance);
-			if (obj instanceof Integer) {
-				return (Integer) obj;
-			}
-			throw new Throwable(Util.getName(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

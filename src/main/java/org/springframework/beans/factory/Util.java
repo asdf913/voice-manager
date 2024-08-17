@@ -649,4 +649,8 @@ abstract class Util {
 		//
 	}
 
+	static int length(final Object[] instance) {
+		return instance != null ? instance.length : 0;
+	}
+
 }

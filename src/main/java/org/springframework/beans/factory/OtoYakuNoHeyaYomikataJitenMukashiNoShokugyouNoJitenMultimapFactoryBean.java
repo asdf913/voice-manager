@@ -99,7 +99,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 				//
 			ss1 = StringUtils.split(Util.toString(nextSibling), '\u3000');
 			//
-			for (int i = 0; i < length(ss1); i++) {
+			for (int i = 0; i < Util.length(ss1); i++) {
 				//
 				if (Util.matches(m = Util.matcher(
 						PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
@@ -156,10 +156,6 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 		return multimap;
 		//
-	}
-
-	private static int length(@Nullable final Object[] instance) {
-		return instance != null ? instance.length : 0;
 	}
 
 	private static void clear(@Nullable final Collection<?> instance) {

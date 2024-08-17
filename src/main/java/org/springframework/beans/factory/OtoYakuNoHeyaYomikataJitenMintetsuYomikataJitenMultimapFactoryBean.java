@@ -308,7 +308,7 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 					StringUtils.substring(s2, StringUtils.length(cp)));
 			//
 		} else if (Util.and(Objects.equals(getUnicodeBlocks(s1), Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)),
-				(ss = StringUtils.split(s2, ' ')) != null, length(ss) > 0)) {
+				(ss = StringUtils.split(s2, ' ')) != null, Util.length(ss) > 0)) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, TreeMultimap::create), s1,
 					ArrayUtils.get(ss, 0));
@@ -329,10 +329,6 @@ public class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean
 
 	private static <T, U> BiConsumer<T, U> createBiConsumer(final Multimap<T, U> multimap) {
 		return (t, u) -> MultimapUtil.put(multimap, t, u);
-	}
-
-	private static int length(@Nullable final Object[] instance) {
-		return instance != null ? instance.length : 0;
 	}
 
 	@Nullable

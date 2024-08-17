@@ -49,9 +49,8 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_GET_STRINGS, METHOD_TO_URL, METHOD_TEST_AND_APPLY, METHOD_LENGTH,
-			METHOD_TO_MULTI_MAP_ITERABLE, METHOD_TO_MULTI_MAP_STRING_STRING, METHOD_TO_MULTI_MAP2, METHOD_GET_OBJECTS,
-			METHOD_APPEND = null;
+	private static Method METHOD_GET_STRINGS, METHOD_TO_URL, METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP_ITERABLE,
+			METHOD_TO_MULTI_MAP_STRING_STRING, METHOD_TO_MULTI_MAP2, METHOD_GET_OBJECTS, METHOD_APPEND = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -65,8 +64,6 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
-		//
-		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
 		//
 		(METHOD_TO_MULTI_MAP_ITERABLE = clz.getDeclaredMethod("toMultimap", Iterable.class)).setAccessible(true);
 		//
@@ -357,27 +354,6 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testLength() throws Throwable {
-		//
-		Assertions.assertEquals(0, length(null));
-		//
-		Assertions.assertEquals(0, length(new Object[] {}));
-		//
-	}
-
-	private static int length(final Object[] instance) throws Throwable {
-		try {
-			final Object obj = METHOD_LENGTH.invoke(null, (Object) instance);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

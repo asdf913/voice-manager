@@ -478,4 +478,13 @@ class UtilTest {
 		//
 	}
 
+	@Test
+	void testLength() {
+		//
+		Assertions.assertEquals(0, Util.length(null));
+		//
+		Assertions.assertEquals(1, Util.length(new Object[] { 1 }));
+		//
+	}
+
 }
