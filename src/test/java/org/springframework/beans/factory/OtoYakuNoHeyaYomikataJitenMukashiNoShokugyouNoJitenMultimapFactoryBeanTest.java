@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -29,13 +27,11 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
-import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyUtil;
 
 class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP_ITERABLE,
-			METHOD_TO_MULTI_MAP_MATCHER;
+			METHOD_TO_MULTI_MAP_2;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -49,30 +45,9 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 		//
 		(METHOD_TO_MULTI_MAP_ITERABLE = clz.getDeclaredMethod("toMultimap", Iterable.class)).setAccessible(true);
 		//
-		(METHOD_TO_MULTI_MAP_MATCHER = clz.getDeclaredMethod("toMultimap", Matcher.class)).setAccessible(true);
+		(METHOD_TO_MULTI_MAP_2 = clz.getDeclaredMethod("toMultimap", PatternMap.class, String[].class))
+				.setAccessible(true);
 		//
-	}
-
-	private static class MH implements MethodHandler {
-
-		private Node nextSibling = null;
-
-		@Override
-		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
-				throws Throwable {
-			//
-			final String methodName = Util.getName(thisMethod);
-			//
-			if (Boolean.logicalAnd(self instanceof Node, Objects.equals(methodName, "nextSibling"))) {
-				//
-				return nextSibling;
-				//
-			} // if
-				//
-			throw new Throwable(methodName);
-			//
-		}
-
 	}
 
 	private OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean instance = null;
@@ -207,27 +182,20 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 		//
 		if (!isSystemPropertiesContainsTestGetObject) {
 			//
-			Assertions.assertDoesNotThrow(() -> toMultimap(Collections.singleton(null)));
+			final PatternMap patternMap = new PatternMapImpl();
 			//
-			final MH mh = new MH();
-			//
-			final Node node = ProxyUtil.createProxy(Node.class, mh);
-			//
-			final Iterable<Node> nodes = Collections.singleton(node);
-			//
-			Assertions.assertDoesNotThrow(() -> toMultimap(nodes));
-			//
-			mh.nextSibling = node;
-			//
-			Assertions.assertDoesNotThrow(() -> toMultimap(nodes));
-			//
-			Assertions.assertNull(toMultimap(Util.cast(Matcher.class, Narcissus.allocateInstance(Matcher.class))));
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("銅細工", "あかがねざいく")),
+					MultimapUtil.entries(toMultimap(patternMap, new String[] { "銅細工（あかがねざいく）" }))));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					Util.toList(Util.map(Stream.of("鉄屋", "金屋"), x -> Pair.of(x, "かなや"))),
-					MultimapUtil.entries(toMultimap(Util.matcher(Pattern.compile(
-							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
-							"鉄屋・金屋（かなや）")))));
+					MultimapUtil.entries(toMultimap(patternMap, new String[] { "鉄屋・金屋（かなや）" }))));
+			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					Util.toList(Util.map(Stream.of("こうや", "こんや"), x -> Pair.of("紺屋", x))),
+					MultimapUtil.entries(toMultimap(patternMap, new String[] { "紺屋（こうや・こんや）" }))));
+			//
+			Assertions.assertDoesNotThrow(() -> toMultimap(Collections.singleton(null)));
 			//
 		} // if
 			//
@@ -247,9 +215,10 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 		}
 	}
 
-	private static Multimap<String, String> toMultimap(final Matcher matcher) throws Throwable {
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String[] ss)
+			throws Throwable {
 		try {
-			final Object obj = METHOD_TO_MULTI_MAP_MATCHER.invoke(null, matcher);
+			final Object obj = METHOD_TO_MULTI_MAP_2.invoke(null, patternMap, ss);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {

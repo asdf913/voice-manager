@@ -67,19 +67,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 		//
 		PatternMap patternMap = null;
 		//
-		String[] ss1;
-		//
 		Node nextSibling;
-		//
-		Matcher m;
-		//
-		String s;
-		//
-		List<UnicodeBlock> ubs;
-		//
-		IValue0<String> kanji = null;
-		//
-		List<String> ss2 = null;
 		//
 		for (final Node node : nodes) {
 			//
@@ -94,63 +82,79 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 				//
 			} // if
 				//
-			ss1 = StringUtils.split(Util.toString(nextSibling), '\u3000');
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					toMultimap(patternMap, StringUtils.split(Util.toString(nextSibling), '\u3000')));
 			//
-			for (int i = 0; i < Util.length(ss1); i++) {
+		} // for
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String[] ss) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		Matcher m;
+		//
+		String s;
+		//
+		List<UnicodeBlock> ubs;
+		//
+		IValue0<String> kanji = null;
+		//
+		List<String> ss2 = null;
+		//
+		for (int i = 0; i < Util.length(ss); i++) {
+			//
+			if (Util.matches(m = Util.matcher(
+					PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
+					s = ArrayUtils.get(ss, i))) && Util.groupCount(m) > 1) {
 				//
-				if (Util.matches(m = Util.matcher(
-						PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
-								"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
-						s = ArrayUtils.get(ss1, i))) && Util.groupCount(m) > 1) {
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m, 1), Util.group(m, 2));
+				//
+			} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
+					s))) {
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						toMultimap(m));
+				//
+			} else if (Util.matches(m = Util.matcher(
+					PatternMap.getPattern(patternMap,
+							"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)）$"),
+					s))) {
+				//
+				for (int j = 1; j <= Util.groupCount(m); j++) {
 					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.group(m, 1), Util.group(m, 2));
-					//
-				} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(
-						patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
-						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
-						s))) {
-					//
-					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							toMultimap(m));
-					//
-				} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(
-						patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
-						"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)）$"), s))) {
-					//
-					for (int j = 1; j <= Util.groupCount(m); j++) {
+					if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+							ubs = getUnicodeBlocks(s = Util.group(m, j)))) {
 						//
-						if (CollectionUtils.isEqualCollection(
-								Collections.singleton(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-								ubs = getUnicodeBlocks(s = Util.group(m, j)))) {
+						if (kanji != null) {
 							//
-							if (kanji != null) {
-								//
-								throw new IllegalStateException();
-								//
-							} // if
-								//
-							kanji = Unit.with(s);
-							//
-						} else if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.HIRAGANA),
-								ubs)) {
-							//
-							Util.add(ss2 = ObjectUtils.getIfNull(ss2, ArrayList::new), s);
+							throw new IllegalStateException();
 							//
 						} // if
 							//
-					} // for
+						kanji = Unit.with(s);
 						//
-					for (int j = 0; Boolean.logicalAnd(kanji != null, j < IterableUtils.size(ss2)); j++) {
+					} else if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.HIRAGANA), ubs)) {
 						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								IValue0Util.getValue0(kanji), IterableUtils.get(ss2, j));
+						Util.add(ss2 = ObjectUtils.getIfNull(ss2, ArrayList::new), s);
 						//
-					} // for
+					} // if
 						//
-				} // if
+				} // for
 					//
-			} // for
+				for (int j = 0; Boolean.logicalAnd(kanji != null, j < IterableUtils.size(ss2)); j++) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							IValue0Util.getValue0(kanji), IterableUtils.get(ss2, j));
+					//
+				} // for
+					//
+			} // if
 				//
 		} // for
 			//
