@@ -8,11 +8,12 @@ import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableFunction;
+import org.jsoup.nodes.Node;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,10 +23,12 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Multimap;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyUtil;
 
 class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_UNICODE_BLOCKS, METHOD_CLEAR;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_UNICODE_BLOCKS, METHOD_CLEAR, METHOD_TO_MULTI_MAP;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -39,6 +42,34 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 		//
 		(METHOD_CLEAR = clz.getDeclaredMethod("clear", Collection.class)).setAccessible(true);
 		//
+		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", Iterable.class)).setAccessible(true);
+		//
+	}
+
+	private static class MH implements MethodHandler {
+
+		private Node nextSibling = null;
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			final String methodName = Util.getName(thisMethod);
+			//
+			if (self instanceof Node) {
+				//
+				if (Objects.equals(methodName, "nextSibling")) {
+					//
+					return nextSibling;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	private OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean instance = null;
@@ -182,6 +213,43 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 	private static void clear(final Collection<?> instance) throws Throwable {
 		try {
 			METHOD_CLEAR.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToMultimap() throws Throwable {
+		//
+		if (!isSystemPropertiesContainsTestGetObject) {
+			//
+			Assertions.assertDoesNotThrow(() -> toMultimap(Collections.singleton(null)));
+			//
+			final MH mh = new MH();
+			//
+			final Node node = ProxyUtil.createProxy(Node.class, mh);
+			//
+			final Iterable<Node> nodes = Collections.singleton(node);
+			//
+			Assertions.assertDoesNotThrow(() -> toMultimap(nodes));
+			//
+			mh.nextSibling = node;
+			//
+			Assertions.assertDoesNotThrow(() -> toMultimap(nodes));
+			//
+		} // if
+			//
+	}
+
+	private static Multimap<String, String> toMultimap(final Iterable<Node> nodes) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, nodes);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

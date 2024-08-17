@@ -42,108 +42,115 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
-		final Element document = testAndApply(Objects::nonNull,
-				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
-				null);
+		return toMultimap(
+				Util.toList(
+						Util.filter(
+								NodeUtil.nodeStream(
+										testAndApply(Objects::nonNull,
+												testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(),
+														null),
+												x -> Jsoup.parse(x, 0), null)),
+								x -> StringUtils.equals("b", ElementUtil.tagName(Util.cast(Element.class, x))))));
 		//
-		final Iterable<Node> bs = Util.toList(Util.filter(NodeUtil.nodeStream(document),
-				x -> StringUtils.equals("b", ElementUtil.tagName(Util.cast(Element.class, x)))));
+	}
+
+	private static Multimap<String, String> toMultimap(final Iterable<Node> nodes) {
 		//
+		if (Util.iterator(nodes) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
 		Multimap<String, String> multimap = null;
 		//
-		if (Util.iterator(bs) != null) {
+		PatternMap patternMap = null;
+		//
+		String[] ss1;
+		//
+		Node nextSibling;
+		//
+		Matcher m;
+		//
+		int groupCount;
+		//
+		List<UnicodeBlock> ubs;
+		//
+		List<String> ss2 = null;
+		//
+		String group = null;
+		//
+		IValue0<String> hiragana;
+		//
+		for (final Node node : nodes) {
 			//
-			PatternMap patternMap = null;
-			//
-			String[] ss1;
-			//
-			Node nextSibling;
-			//
-			Matcher m;
-			//
-			int groupCount;
-			//
-			List<UnicodeBlock> ubs;
-			//
-			List<String> ss2 = null;
-			//
-			String group = null;
-			//
-			IValue0<String> hiragana;
-			//
-			for (final Node b : bs) {
-				//
-				if (Boolean
-						.logicalOr(
-								!Util.matches(
-										Util.matcher(
-												PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap,
-														PatternMapImpl::new), "^（\\p{InHiragana}）$"),
-												ElementUtil.text(Util.cast(Element.class, b)))),
-								(nextSibling = NodeUtil.nextSibling(b)) instanceof Element)) {
-					//
-					continue;
-					//
-				} // if
-					//
-				ss1 = StringUtils.split(Util.toString(nextSibling), '\u3000');
-				//
-				for (int i = 0; ss1 != null && i < ss1.length; i++) {
-					//
-					if (Util.matches(m = Util.matcher(
+			if (Boolean.logicalOr(
+					!Util.matches(Util.matcher(
 							PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
-									"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
-							ss1[i])) && Util.groupCount(m) > 1) {
+									"^（\\p{InHiragana}）$"),
+							ElementUtil.text(Util.cast(Element.class, node)))),
+					(nextSibling = NodeUtil.nextSibling(node)) instanceof Element)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			ss1 = StringUtils.split(Util.toString(nextSibling), '\u3000');
+			//
+			for (int i = 0; ss1 != null && i < ss1.length; i++) {
+				//
+				if (Util.matches(m = Util.matcher(
+						PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
+								"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
+						ss1[i])) && Util.groupCount(m) > 1) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(m, 1), Util.group(m, 2));
+					//
+				} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(
+						patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
+						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
+						ss1[i])) && (groupCount = Util.groupCount(m)) > 2) {
+					//
+					clear(ss2 = ObjectUtils.getIfNull(ss2, ArrayList::new));
+					//
+					hiragana = null;
+					//
+					for (int j = 1; j <= groupCount; j++) {
 						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								Util.group(m, 1), Util.group(m, 2));
-						//
-					} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(
-							patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
-							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
-							ss1[i])) && (groupCount = Util.groupCount(m)) > 2) {
-						//
-						clear(ss2 = ObjectUtils.getIfNull(ss2, ArrayList::new));
-						//
-						hiragana = null;
-						//
-						for (int j = 1; j <= groupCount; j++) {
+						if (CollectionUtils.isEqualCollection(
+								Collections.singleton(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+								ubs = getUnicodeBlocks(group = Util.group(m, j)))) {
 							//
-							if (CollectionUtils.isEqualCollection(
-									Collections.singleton(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-									ubs = getUnicodeBlocks(group = Util.group(m, j)))) {
+							Util.add(ss2, group);
+							//
+						} else if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.HIRAGANA),
+								ubs)) {
+							//
+							if (hiragana != null) {
 								//
-								Util.add(ss2, group);
-								//
-							} else if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.HIRAGANA),
-									ubs)) {
-								//
-								if (hiragana != null) {
-									//
-									throw new IllegalStateException();
-									//
-								} // if
-									//
-								hiragana = Unit.with(group);
+								throw new IllegalStateException();
 								//
 							} // if
 								//
-						} // for
+							hiragana = Unit.with(group);
 							//
-						for (int j = 0; hiragana != null && j < IterableUtils.size(ss2); j++) {
+						} // if
 							//
-							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-									IterableUtils.get(ss2, j), IValue0Util.getValue0(hiragana));
-							//
-						} // for
-							//
-					} // if
+					} // for
 						//
-				} // for
+					for (int j = 0; hiragana != null && j < IterableUtils.size(ss2); j++) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								IterableUtils.get(ss2, j), IValue0Util.getValue0(hiragana));
+						//
+					} // for
+						//
+				} // if
 					//
 			} // for
 				//
-		} // if
+		} // for
 			//
 		return multimap;
 		//
