@@ -56,14 +56,10 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 			//
 			final String methodName = Util.getName(thisMethod);
 			//
-			if (self instanceof Node) {
+			if (Boolean.logicalAnd(self instanceof Node, Objects.equals(methodName, "nextSibling"))) {
 				//
-				if (Objects.equals(methodName, "nextSibling")) {
-					//
-					return nextSibling;
-					//
-				} // if
-					//
+				return nextSibling;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
