@@ -122,7 +122,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
 				s))) {
 			//
-			return toMultimap(m);
+			return toMultimap1(m);
 			//
 		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)）$"), s))) {
@@ -174,7 +174,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 	}
 
 	@Nullable
-	private static Multimap<String, String> toMultimap(final Matcher matcher) {
+	private static Multimap<String, String> toMultimap1(final Matcher matcher) {
 		//
 		String group;
 		//
