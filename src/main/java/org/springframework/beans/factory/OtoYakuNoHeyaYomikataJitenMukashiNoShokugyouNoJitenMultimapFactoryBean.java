@@ -54,6 +54,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap(final Iterable<Node> nodes) {
 		//
 		if (Util.iterator(nodes) == null) {
