@@ -649,7 +649,7 @@ abstract class Util {
 		//
 	}
 
-	static int length(final Object[] instance) {
+	static int length(@Nullable final Object[] instance) {
 		return instance != null ? instance.length : 0;
 	}
 
