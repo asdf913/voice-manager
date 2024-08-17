@@ -140,7 +140,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 							//
 					} // for
 						//
-					for (int j = 0; hiragana != null && j < IterableUtils.size(ss2); j++) {
+					for (int j = 0; Boolean.logicalAnd(hiragana != null, j < IterableUtils.size(ss2)); j++) {
 						//
 						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 								IterableUtils.get(ss2, j), IValue0Util.getValue0(hiragana));
