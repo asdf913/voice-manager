@@ -3,7 +3,6 @@ package org.springframework.beans.factory;
 import java.lang.Character.UnicodeBlock;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -74,15 +73,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 		//
 		Matcher m;
 		//
-		int groupCount;
-		//
-		List<UnicodeBlock> ubs;
-		//
-		List<String> ss2 = null;
-		//
-		String group, s = null;
-		//
-		IValue0<String> hiragana;
+		String s;
 		//
 		for (final Node node : nodes) {
 			//
@@ -112,42 +103,11 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 				} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(
 						patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
 						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
-						s)) && (groupCount = Util.groupCount(m)) > 2) {
+						s))) {
 					//
-					clear(ss2 = ObjectUtils.getIfNull(ss2, ArrayList::new));
+					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							toMultimap(m));
 					//
-					hiragana = null;
-					//
-					for (int j = 1; j <= groupCount; j++) {
-						//
-						if (CollectionUtils.isEqualCollection(
-								Collections.singleton(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-								ubs = getUnicodeBlocks(group = Util.group(m, j)))) {
-							//
-							Util.add(ss2, group);
-							//
-						} else if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.HIRAGANA),
-								ubs)) {
-							//
-							if (hiragana != null) {
-								//
-								throw new IllegalStateException();
-								//
-							} // if
-								//
-							hiragana = Unit.with(group);
-							//
-						} // if
-							//
-					} // for
-						//
-					for (int j = 0; Boolean.logicalAnd(hiragana != null, j < IterableUtils.size(ss2)); j++) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								IterableUtils.get(ss2, j), IValue0Util.getValue0(hiragana));
-						//
-					} // for
-						//
 				} // if
 					//
 			} // for
@@ -158,10 +118,48 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 		//
 	}
 
-	private static void clear(@Nullable final Collection<?> instance) {
-		if (instance != null) {
-			instance.clear();
-		}
+	private static Multimap<String, String> toMultimap(final Matcher matcher) {
+		//
+		String group;
+		//
+		List<UnicodeBlock> ubs;
+		//
+		List<String> ss2 = null;
+		//
+		IValue0<String> hiragana = null;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		for (int j = 1; Util.matches(matcher) && j <= Util.groupCount(matcher); j++) {
+			//
+			if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+					ubs = getUnicodeBlocks(group = Util.group(matcher, j)))) {
+				//
+				Util.add(ss2 = ObjectUtils.getIfNull(ss2, ArrayList::new), group);
+				//
+			} else if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.HIRAGANA), ubs)) {
+				//
+				if (hiragana != null) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				hiragana = Unit.with(group);
+				//
+			} // if
+				//
+		} // for
+			//
+		for (int j = 0; Boolean.logicalAnd(hiragana != null, j < IterableUtils.size(ss2)); j++) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					IterableUtils.get(ss2, j), IValue0Util.getValue0(hiragana));
+			//
+		} // for
+			//
+		return multimap;
+		//
 	}
 
 	@Nullable
