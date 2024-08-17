@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -129,6 +130,10 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 		//
 		Method m = null;
 		//
+		String toString;
+		//
+		Object invokeStaticMethod = null;
+		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ms[i]) == null || !Modifier.isStatic(m.getModifiers()) || m.isSynthetic()) {
@@ -137,10 +142,22 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 				//
 			} // if
 				//
-			Assertions.assertNull(
-					Narcissus.invokeStaticMethod(m, toArray(Collections.nCopies(m.getParameterCount(), null))),
-					Objects.toString(m));
+			invokeStaticMethod = Narcissus.invokeStaticMethod(m,
+					toArray(Collections.nCopies(m.getParameterCount(), null)));
 			//
+			toString = Objects.toString(m);
+			//
+			if (Objects.equals(Util.getName(m), "length")
+					&& Arrays.equals(m.getParameterTypes(), new Class<?>[] { Object[].class })) {
+				//
+				Assertions.assertEquals(Integer.valueOf(0), invokeStaticMethod, toString);
+				//
+			} else {
+				//
+				Assertions.assertNull(invokeStaticMethod, toString);
+				//
+			} // if
+				//
 		} // for
 			//
 	}

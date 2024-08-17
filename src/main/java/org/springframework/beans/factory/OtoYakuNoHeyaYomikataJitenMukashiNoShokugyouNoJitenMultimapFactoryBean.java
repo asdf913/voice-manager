@@ -16,6 +16,7 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -79,7 +80,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 		//
 		List<String> ss2 = null;
 		//
-		String group = null;
+		String group, s = null;
 		//
 		IValue0<String> hiragana;
 		//
@@ -98,12 +99,12 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 				//
 			ss1 = StringUtils.split(Util.toString(nextSibling), '\u3000');
 			//
-			for (int i = 0; ss1 != null && i < ss1.length; i++) {
+			for (int i = 0; i < length(ss1); i++) {
 				//
 				if (Util.matches(m = Util.matcher(
 						PatternMap.getPattern(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
 								"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
-						ss1[i])) && Util.groupCount(m) > 1) {
+						s = ArrayUtils.get(ss1, i))) && Util.groupCount(m) > 1) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							Util.group(m, 1), Util.group(m, 2));
@@ -111,7 +112,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 				} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(
 						patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
 						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
-						ss1[i])) && (groupCount = Util.groupCount(m)) > 2) {
+						s)) && (groupCount = Util.groupCount(m)) > 2) {
 					//
 					clear(ss2 = ObjectUtils.getIfNull(ss2, ArrayList::new));
 					//
@@ -155,6 +156,10 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 		return multimap;
 		//
+	}
+
+	private static int length(final Object[] instance) {
+		return instance != null ? instance.length : 0;
 	}
 
 	private static void clear(@Nullable final Collection<?> instance) {
