@@ -409,7 +409,31 @@ abstract class Util {
 	}
 
 	static int groupCount(@Nullable final MatchResult instance) {
-		return instance != null ? instance.groupCount() : 0;
+		//
+		if (instance == null) {
+			//
+			return 0;
+			//
+		} else if (instance instanceof Matcher) {
+			//
+			try {
+				//
+				if (Narcissus.getField(instance, Narcissus.findField(getClass(instance), "parentPattern")) == null) {
+					//
+					return 0;
+					//
+				} // if
+					//
+			} catch (final NoSuchFieldException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+		} // if
+			//
+		return instance.groupCount();
+		//
 	}
 
 	@Nullable
