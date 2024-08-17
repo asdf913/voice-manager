@@ -29,6 +29,7 @@ import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.NodeUtil;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
@@ -95,70 +96,78 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 		//
 		Multimap<String, String> multimap = null;
 		//
-		Matcher m;
-		//
-		String s;
-		//
-		List<UnicodeBlock> ubs;
-		//
-		IValue0<String> kanji = null;
-		//
-		List<String> ss2 = null;
-		//
 		for (int i = 0; i < Util.length(ss); i++) {
 			//
-			if (Util.matches(m = Util.matcher(
-					PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
-					s = ArrayUtils.get(ss, i))) && Util.groupCount(m) > 1) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(m, 1), Util.group(m, 2));
-				//
-			} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
-					s))) {
-				//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						toMultimap(m));
-				//
-			} else if (Util.matches(m = Util.matcher(
-					PatternMap.getPattern(patternMap,
-							"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)）$"),
-					s))) {
-				//
-				for (int j = 1; j <= Util.groupCount(m); j++) {
-					//
-					if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
-							ubs = getUnicodeBlocks(s = Util.group(m, j)))) {
-						//
-						if (kanji != null) {
-							//
-							throw new IllegalStateException();
-							//
-						} // if
-							//
-						kanji = Unit.with(s);
-						//
-					} else if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.HIRAGANA), ubs)) {
-						//
-						Util.add(ss2 = ObjectUtils.getIfNull(ss2, ArrayList::new), s);
-						//
-					} // if
-						//
-				} // for
-					//
-				for (int j = 0; Boolean.logicalAnd(kanji != null, j < IterableUtils.size(ss2)); j++) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							IValue0Util.getValue0(kanji), IterableUtils.get(ss2, j));
-					//
-				} // for
-					//
-			} // if
-				//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					toMultimap(patternMap, ArrayUtils.get(ss, i)));
+			//
 		} // for
 			//
 		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s) {
+		//
+		Matcher m = Util
+				.matcher(PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"), s);
+		//
+		if (Util.matches(m) && Util.groupCount(m) > 1) {
+			//
+			return ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 2));
+			//
+		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
+				s))) {
+			//
+			return toMultimap(m);
+			//
+		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)）$"), s))) {
+			//
+			Multimap<String, String> multimap = null;
+			//
+			List<UnicodeBlock> ubs;
+			//
+			IValue0<String> kanji = null;
+			//
+			List<String> ss2 = null;
+			//
+			String g;
+			//
+			for (int j = 1; j <= Util.groupCount(m); j++) {
+				//
+				if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+						ubs = getUnicodeBlocks(g = Util.group(m, j)))) {
+					//
+					if (kanji != null) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					kanji = Unit.with(g);
+					//
+				} else if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.HIRAGANA), ubs)) {
+					//
+					Util.add(ss2 = ObjectUtils.getIfNull(ss2, ArrayList::new), g);
+					//
+				} // if
+					//
+			} // for
+				//
+			for (int j = 0; Boolean.logicalAnd(kanji != null, j < IterableUtils.size(ss2)); j++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						IValue0Util.getValue0(kanji), IterableUtils.get(ss2, j));
+				//
+			} // for
+				//
+			return multimap;
+			//
+		} // if
+			//
+		return null;
 		//
 	}
 
