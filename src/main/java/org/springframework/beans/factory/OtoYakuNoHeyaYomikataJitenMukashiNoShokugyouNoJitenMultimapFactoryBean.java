@@ -180,6 +180,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap2(final Matcher matcher) {
 		//
 		Multimap<String, String> multimap = null;
