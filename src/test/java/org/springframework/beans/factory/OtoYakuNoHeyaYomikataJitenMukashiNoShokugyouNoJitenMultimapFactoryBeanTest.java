@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
+import org.javatuples.valueintf.IValue0;
 import org.jsoup.nodes.Node;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -32,7 +33,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP_ITERABLE,
-			METHOD_TO_MULTI_MAP_2;
+			METHOD_TO_MULTI_MAP_STRING_ARRAY, METHOD_TO_MULTI_MAP_STRING;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -46,7 +47,10 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 		//
 		(METHOD_TO_MULTI_MAP_ITERABLE = clz.getDeclaredMethod("toMultimap", Iterable.class)).setAccessible(true);
 		//
-		(METHOD_TO_MULTI_MAP_2 = clz.getDeclaredMethod("toMultimap", PatternMap.class, String[].class))
+		(METHOD_TO_MULTI_MAP_STRING_ARRAY = clz.getDeclaredMethod("toMultimap", PatternMap.class, String[].class))
+				.setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP_STRING = clz.getDeclaredMethod("toMultimap", PatternMap.class, String.class))
 				.setAccessible(true);
 		//
 	}
@@ -185,28 +189,34 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 			//
 			Assertions.assertDoesNotThrow(() -> toMultimap(Collections.singleton(null)));
 			//
+			Assertions.assertEquals(ImmutableMultimap.of(), toMultimap(null, new String[] { null }));
+			//
 			final PatternMap patternMap = new PatternMapImpl();
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("銅細工", "あかがねざいく")),
-					MultimapUtil.entries(toMultimap(patternMap, new String[] { "銅細工（あかがねざいく）" }))));
+					MultimapUtil.entries(toMultimap(patternMap, "銅細工（あかがねざいく）"))));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					Util.toList(Util.map(Stream.of("鉄屋", "金屋"), x -> Pair.of(x, "かなや"))),
-					MultimapUtil.entries(toMultimap(patternMap, new String[] { "鉄屋・金屋（かなや）" }))));
+					MultimapUtil.entries(toMultimap(patternMap, "鉄屋・金屋（かなや）"))));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					Util.toList(Util.map(Stream.of("こうや", "こんや"), x -> Pair.of("紺屋", x))),
-					MultimapUtil.entries(toMultimap(patternMap, new String[] { "紺屋（こうや・こんや）" }))));
+					MultimapUtil.entries(toMultimap(patternMap, "紺屋（こうや・こんや）"))));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("挽物職", "ひきものしょく", "挽物師", "ひきものし")),
-					MultimapUtil.entries(toMultimap(patternMap, new String[] { "挽物職・挽物師（ひきものしょく・ひきものし）" }))));
+					MultimapUtil.entries(toMultimap(patternMap, "挽物職・挽物師（ひきものしょく・ひきものし）"))));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("酒麹売", "しゅきくうり")),
-					MultimapUtil.entries(toMultimap(patternMap, new String[] { "酒麹売（しゅきくうり）＊麹の麦は麥" }))));
+					MultimapUtil.entries(toMultimap(patternMap, "酒麹売（しゅきくうり）＊麹の麦は麥"))));
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("馬買", "うまか")),
-					MultimapUtil.entries(toMultimap(patternMap, new String[] { "馬買おう（うまかおう）" }))));
+					MultimapUtil.entries(toMultimap(patternMap, "馬買おう（うまかおう）"))));
+			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					Util.toList(Util.map(Stream.of("桂庵", "慶庵", "慶安"), x -> Pair.of(x, "けいあん"))),
+					MultimapUtil.entries(toMultimap(patternMap, "桂庵・慶庵・慶安（けいあん）"))));
 			//
 		} // if
 			//
@@ -229,7 +239,21 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String[] ss)
 			throws Throwable {
 		try {
-			final Object obj = METHOD_TO_MULTI_MAP_2.invoke(null, patternMap, ss);
+			final Object obj = METHOD_TO_MULTI_MAP_STRING_ARRAY.invoke(null, patternMap, ss);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP_STRING.invoke(null, patternMap, s);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {

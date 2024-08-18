@@ -204,7 +204,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap2(final PatternMap patternMap, final String s) {
 		//
-		final Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
+		Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}{2,})（(\\p{InHiragana}+)）$"), s);
 		//
 		String g2, g3;
@@ -214,6 +214,12 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 			return Unit.with(ImmutableMultimap.of(Util.group(m, 1),
 					StringUtils.substring(g3, 0, StringUtils.length(g3) - StringUtils.length(g2))));
+			//
+		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
+				s))) {
+			//
+			return Unit.with(toMultimap1(m));
 			//
 		} // if
 			//
