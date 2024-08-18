@@ -3,10 +3,12 @@ package org.springframework.beans.factory;
 import java.lang.Character.UnicodeBlock;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -111,23 +113,45 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 	@Nullable
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s) {
 		//
+		final List<BiFunction<PatternMap, String, IValue0<Multimap<String, String>>>> functions = Arrays.asList(
+				OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean::toMultimap1,
+				OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean::toMultimap2);
+		//
+		IValue0<Multimap<String, String>> iValue0 = null;
+		//
+		for (int i = 0; i < IterableUtils.size(functions); i++) {
+			//
+			if ((iValue0 = Util.apply(IterableUtils.get(functions, i), patternMap, s)) != null) {
+				//
+				return IValue0Util.getValue0(iValue0);
+				//
+			} // if
+				//
+		} // for
+			//
+		return null;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap1(final PatternMap patternMap, final String s) {
+		//
 		Matcher m = Util
 				.matcher(PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"), s);
 		//
 		if (Util.matches(m) && Util.groupCount(m) > 1) {
 			//
-			return ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 2));
+			return Unit.with(ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 2)));
 			//
 		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
 				s))) {
 			//
-			return toMultimap1(m);
+			return Unit.with(toMultimap1(m));
 			//
 		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)）$"), s))) {
 			//
-			return toMultimap2(m);
+			return Unit.with(toMultimap2(m));
 			//
 		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)）$"),
@@ -163,24 +187,32 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 				//
 			} // for
 				//
-			return multimap;
+			return Unit.with(multimap);
 			//
 		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+$"),
 				s)) && Util.groupCount(m) > 1) {
 			//
-			return ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 2));
+			return Unit.with(ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 2)));
 			//
 		} // if
 			//
+		return null;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap2(final PatternMap patternMap, final String s) {
+		//
+		final Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}{2,})（(\\p{InHiragana}+)）$"), s);
+		//
 		String g2, g3;
 		//
-		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}{2,})（(\\p{InHiragana}+)）$"), s))
-				&& Util.groupCount(m) > 2 && StringUtils.endsWith(g3 = Util.group(m, 3), g2 = Util.group(m, 2))) {
+		if (Util.matches(m) && Util.groupCount(m) > 2
+				&& StringUtils.endsWith(g3 = Util.group(m, 3), g2 = Util.group(m, 2))) {
 			//
-			return ImmutableMultimap.of(Util.group(m, 1),
-					StringUtils.substring(g3, 0, StringUtils.length(g3) - StringUtils.length(g2)));
+			return Unit.with(ImmutableMultimap.of(Util.group(m, 1),
+					StringUtils.substring(g3, 0, StringUtils.length(g3) - StringUtils.length(g2))));
 			//
 		} // if
 			//
