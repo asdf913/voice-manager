@@ -129,9 +129,46 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 			return toMultimap2(m);
 			//
+		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)）$"),
+				s))) {
+			//
+			String g;
+			//
+			List<UnicodeBlock> ubs = null;
+			//
+			List<String> kanjiList = null, hiraganaList = null;
+			//
+			for (int i = 1; i <= Util.groupCount(m); i++) {
+				//
+				if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+						ubs = getUnicodeBlocks(g = Util.group(m, i)))) {
+					//
+					Util.add(kanjiList = ObjectUtils.getIfNull(kanjiList, ArrayList::new), g);
+					//
+				} else if (CollectionUtils.isEqualCollection(Collections.singleton(UnicodeBlock.HIRAGANA), ubs)) {
+					//
+					Util.add(hiraganaList = ObjectUtils.getIfNull(hiraganaList, ArrayList::new), g);
+					//
+				} // if
+					//
+			} // for
+				//
+			Multimap<String, String> multimap = null;
+			//
+			for (int i = 0; i < Math.min(IterableUtils.size(kanjiList), IterableUtils.size(hiraganaList)); i++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						IterableUtils.get(kanjiList, i), IterableUtils.get(hiraganaList, i));
+				//
+			} // for
+				//
+			return multimap;
+			//
 		} // if
 			//
 		return null;
+
 		//
 	}
 

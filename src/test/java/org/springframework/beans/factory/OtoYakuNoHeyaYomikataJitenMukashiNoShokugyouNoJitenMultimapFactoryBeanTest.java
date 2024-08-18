@@ -23,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
@@ -182,6 +183,8 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 		//
 		if (!isSystemPropertiesContainsTestGetObject) {
 			//
+			Assertions.assertDoesNotThrow(() -> toMultimap(Collections.singleton(null)));
+			//
 			final PatternMap patternMap = new PatternMapImpl();
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("銅細工", "あかがねざいく")),
@@ -195,7 +198,9 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 					Util.toList(Util.map(Stream.of("こうや", "こんや"), x -> Pair.of("紺屋", x))),
 					MultimapUtil.entries(toMultimap(patternMap, new String[] { "紺屋（こうや・こんや）" }))));
 			//
-			Assertions.assertDoesNotThrow(() -> toMultimap(Collections.singleton(null)));
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("挽物職", "ひきものしょく", "挽物師", "ひきものし")),
+					MultimapUtil.entries(toMultimap(patternMap, new String[] { "挽物職・挽物師（ひきものしょく・ひきものし）" }))));
 			//
 		} // if
 			//
