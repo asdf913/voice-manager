@@ -217,6 +217,9 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 					Util.toList(Util.map(Stream.of("桂庵", "慶庵", "慶安"), x -> Pair.of(x, "けいあん"))),
 					MultimapUtil.entries(toMultimap(patternMap, "桂庵・慶庵・慶安（けいあん）"))));
 			//
+			Assertions.assertEquals(ImmutableMultimap.of("酒師", "さけし"),
+					toMultimap(patternMap, "きき酒師（ききさけし）＊（きき）は口へんに利"));
+			//
 		} // if
 			//
 	}
