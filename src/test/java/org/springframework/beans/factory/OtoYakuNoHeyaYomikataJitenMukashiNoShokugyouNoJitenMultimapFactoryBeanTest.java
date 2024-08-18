@@ -220,6 +220,10 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 			Assertions.assertEquals(ImmutableMultimap.of("酒師", "さけし"),
 					toMultimap(patternMap, "きき酒師（ききさけし）＊（きき）は口へんに利"));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					MultimapUtil.entries(ImmutableMultimap.of("荏胡麻", "えごま", "油売", "あぶらうり")),
+					MultimapUtil.entries(toMultimap(patternMap, "荏胡麻の油売（えごまのあぶらうり）"))));
+			//
 		} // if
 			//
 	}

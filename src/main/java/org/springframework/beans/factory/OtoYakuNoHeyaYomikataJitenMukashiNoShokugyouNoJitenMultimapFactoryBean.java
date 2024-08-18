@@ -233,6 +233,23 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 		} // if
 			//
+		String g4;
+		//
+		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
+				s)) && Util.groupCount(m) > 3
+				&& StringUtils.countMatches(g4 = Util.group(m, 4), g2 = Util.group(m, 2)) == 1) {
+			//
+			final Multimap<String, String> multimap = LinkedHashMultimap.create();
+			//
+			MultimapUtil.put(multimap, Util.group(m, 1), StringUtils.substringBefore(g4, g2));
+			//
+			MultimapUtil.put(multimap, Util.group(m, 3), StringUtils.substringAfter(g4, g2));
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
 		return null;
 		//
 	}
