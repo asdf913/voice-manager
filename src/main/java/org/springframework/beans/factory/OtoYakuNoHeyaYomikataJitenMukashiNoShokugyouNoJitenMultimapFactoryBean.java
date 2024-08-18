@@ -165,10 +165,15 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 				//
 			return multimap;
 			//
+		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+$"),
+				s)) && Util.groupCount(m) > 1) {
+			//
+			return ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 2));
+			//
 		} // if
 			//
 		return null;
-
 		//
 	}
 

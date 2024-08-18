@@ -202,6 +202,9 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 					MultimapUtil.entries(ImmutableMultimap.of("挽物職", "ひきものしょく", "挽物師", "ひきものし")),
 					MultimapUtil.entries(toMultimap(patternMap, new String[] { "挽物職・挽物師（ひきものしょく・ひきものし）" }))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("酒麹売", "しゅきくうり")),
+					MultimapUtil.entries(toMultimap(patternMap, new String[] { "酒麹売（しゅきくうり）＊麹の麦は麥" }))));
+			//
 		} // if
 			//
 	}
