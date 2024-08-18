@@ -228,6 +228,9 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 					Util.toList(Util.map(Stream.of("医師", "薬師"), x -> Pair.of(x, "くすし"))),
 					MultimapUtil.entries(toMultimap(patternMap, "医師･薬師（くすし）"))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("坊主", "ぼうず")),
+					MultimapUtil.entries(toMultimap(patternMap, "すたすた坊主（すたすたぼうず）"))));
+			//
 		} // if
 			//
 	}
