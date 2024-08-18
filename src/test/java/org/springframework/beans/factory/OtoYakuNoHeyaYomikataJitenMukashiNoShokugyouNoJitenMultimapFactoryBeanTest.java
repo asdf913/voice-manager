@@ -224,6 +224,10 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 					MultimapUtil.entries(ImmutableMultimap.of("荏胡麻", "えごま", "油売", "あぶらうり")),
 					MultimapUtil.entries(toMultimap(patternMap, "荏胡麻の油売（えごまのあぶらうり）"))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					Util.toList(Util.map(Stream.of("医師", "薬師"), x -> Pair.of(x, "くすし"))),
+					MultimapUtil.entries(toMultimap(patternMap, "医師･薬師（くすし）"))));
+			//
 		} // if
 			//
 	}
