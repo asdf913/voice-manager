@@ -173,6 +173,17 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 		} // if
 			//
+		String g2, g3;
+		//
+		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}{2,})（(\\p{InHiragana}+)）$"), s))
+				&& Util.groupCount(m) > 2 && StringUtils.endsWith(g3 = Util.group(m, 3), g2 = Util.group(m, 2))) {
+			//
+			return ImmutableMultimap.of(Util.group(m, 1),
+					StringUtils.substring(g3, 0, StringUtils.length(g3) - StringUtils.length(g2)));
+			//
+		} // if
+			//
 		return null;
 		//
 	}
