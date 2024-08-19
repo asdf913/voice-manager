@@ -116,7 +116,8 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 		final List<BiFunction<PatternMap, String, IValue0<Multimap<String, String>>>> functions = Arrays.asList(
 				OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean::toMultimap1,
 				OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean::toMultimap2,
-				OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean::toMultimap3);
+				OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean::toMultimap3,
+				OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean::toMultimap4);
 		//
 		IValue0<Multimap<String, String>> iValue0 = null;
 		//
@@ -360,11 +361,19 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 		} // if
 			//
-		String g1;
+		return null;
 		//
-		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap4(final PatternMap patternMap, final String s) {
+		//
+		final Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^\\p{InCJKUnifiedIdeographs}+(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)売り\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)うり\\p{InHalfwidthAndFullwidthForms}$"),
-				s)) && Util.groupCount(m) > 2
+				s);
+		//
+		String g3, g1;
+		//
+		if (Util.matches(m) && Util.groupCount(m) > 2
 				&& StringUtils.countMatches(g3 = Util.group(m, 3), g1 = Util.group(m, 1)) == 1) {
 			//
 			return Unit.with(ImmutableMultimap.of(Util.group(m, 2), StringUtils.substringAfter(g3, g1)));
