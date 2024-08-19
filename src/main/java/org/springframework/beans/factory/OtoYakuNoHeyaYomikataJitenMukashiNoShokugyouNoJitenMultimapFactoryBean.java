@@ -279,9 +279,18 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 		} // if
 			//
-		final List<String> patterns = Arrays.asList(
+		return null;
+		//
+	}
+
+	@Nullable
+	private static IValue0<Multimap<String, String>> toMultimap3(final PatternMap patternMap, final String s) {
+		//
+		List<String> patterns = Arrays.asList(
 				"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）＊（(\\p{InHiragana}+)）[\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+\\p{InCJKSymbolsAndPunctuation}?$",
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InCJKUnifiedIdeographs}]+(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+$");
+		//
+		Matcher m = null;
 		//
 		for (int i = 0; i < IterableUtils.size(patterns); i++) {
 			//
@@ -293,14 +302,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 				//
 		} // for
 			//
-		return null;
-		//
-	}
-
-	@Nullable
-	private static IValue0<Multimap<String, String>> toMultimap3(final PatternMap patternMap, final String s) {
-		//
-		List<String> patterns = Arrays.asList("^(\\p{InCJKUnifiedIdeographs}+)作り（(\\p{InHiragana}+)づくり）$",
+		patterns = Arrays.asList("^(\\p{InCJKUnifiedIdeographs}+)作り（(\\p{InHiragana}+)づくり）$",
 				"^(\\p{InCJKUnifiedIdeographs}+)取り（(\\p{InHiragana}+)とり）$",
 				"^(\\p{InCJKUnifiedIdeographs}+)直し（(\\p{InHiragana}+)なおし）$",
 				"^(\\p{InCJKUnifiedIdeographs}+)磨き（(\\p{InHiragana}+)みがき）$",
@@ -312,8 +314,6 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 				"^(\\p{InCJKUnifiedIdeographs}+)舞い（(\\p{InHiragana}+)まい）$",
 				"^(\\p{InCJKUnifiedIdeographs}+)入れ（(\\p{InHiragana}+)いれ）$",
 				"^(\\p{InCJKUnifiedIdeographs}+)揚[\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+（(\\p{InHiragana}+)あ\\p{InHiragana}+）$");
-		//
-		Matcher m = null;
 		//
 		for (int i = 0; i < IterableUtils.size(patterns); i++) {
 			//
