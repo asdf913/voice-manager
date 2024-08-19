@@ -363,13 +363,6 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			return Unit.with(ImmutableMultimap.of(Util.group(m, 1), StringUtils.substringBeforeLast(g4, g2),
 					Util.group(m, 3), StringUtils.substringAfterLast(g4, g2)));
 			//
-		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)入れ(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)いれ(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InCJKUnifiedIdeographs}]+$"),
-				s)) && Util.groupCount(m) > 3) {
-			//
-			return Unit
-					.with(ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 3), Util.group(m, 2), Util.group(m, 4)));
-			//
 		} // if
 			//
 		return null;
@@ -380,12 +373,21 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 	private static IValue0<Multimap<String, String>> toMultimap4(final PatternMap patternMap, final String s) {
 		//
 		Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
-				"^\\p{InCJKUnifiedIdeographs}+(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)売り\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)うり\\p{InHalfwidthAndFullwidthForms}$"),
+				"^(\\p{InCJKUnifiedIdeographs}+)入れ(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)いれ(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InCJKUnifiedIdeographs}]+$"),
 				s);
 		//
+		if (Util.matches(m) && Util.groupCount(m) > 3) {
+			//
+			return Unit
+					.with(ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 3), Util.group(m, 2), Util.group(m, 4)));
+			//
+		} // if
+			//
 		String g3, g1;
 		//
-		if ((Util.matches(m) && Util.groupCount(m) > 2
+		if ((Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^\\p{InCJKUnifiedIdeographs}+(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)売り\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)うり\\p{InHalfwidthAndFullwidthForms}$"),
+				s)) && Util.groupCount(m) > 2
 				&& StringUtils.countMatches(g3 = Util.group(m, 3), g1 = Util.group(m, 1)) == 1)
 				|| (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 						"^(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}|\\p{InCJKSymbolsAndPunctuation}]+$"),
