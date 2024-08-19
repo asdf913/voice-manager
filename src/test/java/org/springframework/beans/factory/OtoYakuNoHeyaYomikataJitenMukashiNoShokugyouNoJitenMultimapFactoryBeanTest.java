@@ -316,6 +316,9 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 					Util.toList(Util.map(Stream.of("こころぶとうり", "ところてんうり"), x -> Pair.of("心太売", x))),
 					MultimapUtil.entries(toMultimap(patternMap, "心太売（こころぶとうり）日本国語大辞典＊（ところてんうり）に同じ"))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("歯", "は")),
+					MultimapUtil.entries(toMultimap(patternMap, "歯磨き売り（はみがきうり）"))));
+			//
 		} // if
 			//
 	}
