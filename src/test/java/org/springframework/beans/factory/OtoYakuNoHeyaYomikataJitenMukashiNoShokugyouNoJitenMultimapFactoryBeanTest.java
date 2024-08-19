@@ -306,6 +306,9 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("職", "しょく")),
 					MultimapUtil.entries(toMultimap(patternMap, "ぬいもの職（ぬいものしょく）＊（ぬいもの）は繍の旧字体か。"))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("下駄歯", "げたは")),
+					MultimapUtil.entries(toMultimap(patternMap, "下駄歯入れ（げたはいれ）"))));
+			//
 		} // if
 			//
 	}
