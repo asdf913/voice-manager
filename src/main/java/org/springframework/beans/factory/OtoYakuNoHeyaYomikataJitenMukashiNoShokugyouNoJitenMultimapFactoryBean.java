@@ -304,6 +304,12 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 			return Unit.with(ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 2)));
 			//
+		} else if (Util.matches(m = Util.matcher(
+				PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)直し（(\\p{InHiragana}+)なおし）$"), s))
+				&& Util.groupCount(m) > 1) {
+			//
+			return Unit.with(ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 2)));
+			//
 		} // if
 			//
 		String g3, g2;
