@@ -235,6 +235,9 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 					Util.toList(Util.map(Stream.of("やきものし", "すえものし"), x -> Pair.of("陶物師", x))),
 					MultimapUtil.entries(toMultimap(patternMap, "陶物師（やきものし）＊（すえものし）とも言う。"))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("赤蛙", "あかがえる")),
+					MultimapUtil.entries(toMultimap(patternMap, "赤蛙売り（あかがえるうり）"))));
+			//
 		} // if
 			//
 	}
