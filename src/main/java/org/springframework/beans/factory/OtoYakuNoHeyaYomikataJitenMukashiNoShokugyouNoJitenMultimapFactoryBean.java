@@ -295,7 +295,8 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 				"^(\\p{InCJKUnifiedIdeographs}+)取り（(\\p{InHiragana}+)とり）$",
 				"^(\\p{InCJKUnifiedIdeographs}+)直し（(\\p{InHiragana}+)なおし）$",
 				"^(\\p{InCJKUnifiedIdeographs}+)磨き（(\\p{InHiragana}+)みがき）$",
-				"^(\\p{InCJKUnifiedIdeographs}+)踊り（(\\p{InHiragana}+)おどり）$");
+				"^(\\p{InCJKUnifiedIdeographs}+)踊り（(\\p{InHiragana}+)おどり）$",
+				"^(\\p{InCJKUnifiedIdeographs}+)張り（(\\p{InHiragana}+)はり）$");
 		//
 		Matcher m = null;
 		//
