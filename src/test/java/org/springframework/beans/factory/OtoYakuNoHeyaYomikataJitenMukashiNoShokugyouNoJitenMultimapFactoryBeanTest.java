@@ -260,6 +260,9 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("印肉", "いんにく")),
 					MultimapUtil.entries(toMultimap(patternMap, "印肉の仕替へ（いんにくのしかえ）"))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("鏡", "かがみ")),
+					MultimapUtil.entries(toMultimap(patternMap, "鏡磨き（かがみみがき）"))));
+			//
 		} // if
 			//
 	}

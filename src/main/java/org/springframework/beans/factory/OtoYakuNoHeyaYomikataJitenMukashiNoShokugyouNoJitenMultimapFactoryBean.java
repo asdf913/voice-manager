@@ -293,7 +293,8 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 		//
 		List<String> patterns = Arrays.asList("^(\\p{InCJKUnifiedIdeographs}+)作り（(\\p{InHiragana}+)づくり）$",
 				"^(\\p{InCJKUnifiedIdeographs}+)取り（(\\p{InHiragana}+)とり）$",
-				"^(\\p{InCJKUnifiedIdeographs}+)直し（(\\p{InHiragana}+)なおし）$");
+				"^(\\p{InCJKUnifiedIdeographs}+)直し（(\\p{InHiragana}+)なおし）$",
+				"^(\\p{InCJKUnifiedIdeographs}+)磨き（(\\p{InHiragana}+)みがき）$");
 		//
 		Matcher m = null;
 		//
