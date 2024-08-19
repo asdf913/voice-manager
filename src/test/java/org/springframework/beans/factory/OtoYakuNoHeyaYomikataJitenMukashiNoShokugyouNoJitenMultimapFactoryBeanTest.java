@@ -273,6 +273,10 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 					MultimapUtil.entries(ImmutableMultimap.of("鋸", "のこぎり", "目立", "めたて")),
 					MultimapUtil.entries(toMultimap(patternMap, "鋸の目立（のこぎりのめたて）"))));
 			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("歯", "は", "屋", "や")),
+							MultimapUtil.entries(toMultimap(patternMap, "歯入れ屋（はいれや）＊下駄"))));
+			//
 		} // if
 			//
 	}
