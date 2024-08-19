@@ -291,7 +291,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap3(final PatternMap patternMap, final String s) {
 		//
-		final List<String> patterns = Arrays.asList("^(\\p{InCJKUnifiedIdeographs}+)作り（(\\p{InHiragana}+)づくり）$",
+		List<String> patterns = Arrays.asList("^(\\p{InCJKUnifiedIdeographs}+)作り（(\\p{InHiragana}+)づくり）$",
 				"^(\\p{InCJKUnifiedIdeographs}+)取り（(\\p{InHiragana}+)とり）$",
 				"^(\\p{InCJKUnifiedIdeographs}+)直し（(\\p{InHiragana}+)なおし）$");
 		//
@@ -319,21 +319,21 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 		String g3, g2;
 		//
-		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}{2,})[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）$"),
-				s)) && Util.groupCount(m) > 2
-				&& StringUtils.countMatches(g3 = Util.group(m, 3), g2 = Util.group(m, 2)) == 1) {
+		patterns = Arrays.asList(
+				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}{2,})[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）$",
+				"^(\\p{InCJKUnifiedIdeographs}+)(の)[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）$");
+		//
+		for (int i = 0; i < IterableUtils.size(patterns); i++) {
 			//
-			return Unit.with(ImmutableMultimap.of(Util.group(m, 1), StringUtils.substringBefore(g3, g2)));
-			//
-		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)(の)[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+（(\\p{InHiragana}+)）$"),
-				s)) && Util.groupCount(m) > 2
-				&& StringUtils.countMatches(g3 = Util.group(m, 3), g2 = Util.group(m, 2)) == 1) {
-			//
-			return Unit.with(ImmutableMultimap.of(Util.group(m, 1), StringUtils.substringBefore(g3, g2)));
-			//
-		} // if
+			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, IterableUtils.get(patterns, i)), s))
+					&& Util.groupCount(m) > 2
+					&& StringUtils.countMatches(g3 = Util.group(m, 3), g2 = Util.group(m, 2)) == 1) {
+				//
+				return Unit.with(ImmutableMultimap.of(Util.group(m, 1), StringUtils.substringBefore(g3, g2)));
+				//
+			} // if
+				//
+		} // for
 			//
 		return null;
 		//
