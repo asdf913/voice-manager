@@ -263,6 +263,12 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 			return Unit.with(ImmutableMultimap.of(g2, StringUtils.substring(g3, StringUtils.length(g1))));
 			//
+		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）＊（(\\p{InHiragana}+)）[\\p{InHiragana}|\\p{InCJKUnifiedIdeographs}]+\\p{InCJKSymbolsAndPunctuation}?$"),
+				s))) {
+			//
+			return Unit.with(toMultimap2(m));
+			//
 		} // if
 			//
 		return null;

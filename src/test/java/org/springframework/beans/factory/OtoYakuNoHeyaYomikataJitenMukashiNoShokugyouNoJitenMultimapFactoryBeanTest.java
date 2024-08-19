@@ -231,6 +231,10 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("坊主", "ぼうず")),
 					MultimapUtil.entries(toMultimap(patternMap, "すたすた坊主（すたすたぼうず）"))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					Util.toList(Util.map(Stream.of("やきものし", "すえものし"), x -> Pair.of("陶物師", x))),
+					MultimapUtil.entries(toMultimap(patternMap, "陶物師（やきものし）＊（すえものし）とも言う。"))));
+			//
 		} // if
 			//
 	}
