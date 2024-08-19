@@ -300,7 +300,8 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 				"^(\\p{InCJKUnifiedIdeographs}+)張り（(\\p{InHiragana}+)はり）$",
 				"^(\\p{InCJKUnifiedIdeographs}+)買い（(\\p{InHiragana}+)かい）$",
 				"^(\\p{InCJKUnifiedIdeographs}+)売り（（(\\p{InHiragana}+)うり）$",
-				"^(\\p{InCJKUnifiedIdeographs}+)替へ（(\\p{InHiragana}+)しかえ）$");
+				"^(\\p{InCJKUnifiedIdeographs}+)替へ（(\\p{InHiragana}+)しかえ）$",
+				"^(\\p{InCJKUnifiedIdeographs}+)舞い（(\\p{InHiragana}+)まい）$");
 		//
 		Matcher m = null;
 		//
