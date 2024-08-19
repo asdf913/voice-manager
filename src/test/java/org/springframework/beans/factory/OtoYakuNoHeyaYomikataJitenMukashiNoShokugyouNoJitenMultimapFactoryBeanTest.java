@@ -58,6 +58,8 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 
 	private boolean isSystemPropertiesContainsTestGetObject;
 
+	private PatternMap patternMap = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -65,6 +67,8 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 		//
 		isSystemPropertiesContainsTestGetObject = Util.containsKey(System.getProperties(),
 				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest.testGetObject");
+		//
+		patternMap = new PatternMapImpl();
 		//
 	}
 
@@ -182,15 +186,13 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 	}
 
 	@Test
-	void testToMultimap() throws Throwable {
+	void testToMultimap1() throws Throwable {
 		//
 		if (!isSystemPropertiesContainsTestGetObject) {
 			//
 			Assertions.assertDoesNotThrow(() -> toMultimap(Collections.singleton(null)));
 			//
 			Assertions.assertEquals(ImmutableMultimap.of(), toMultimap(null, new String[] { null }));
-			//
-			final PatternMap patternMap = new PatternMapImpl();
 			//
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("銅細工", "あかがねざいく")),
 					MultimapUtil.entries(toMultimap(patternMap, "銅細工（あかがねざいく）"))));
@@ -272,6 +274,15 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 			Assertions.assertTrue(CollectionUtils.isEqualCollection(
 					MultimapUtil.entries(ImmutableMultimap.of("鋸", "のこぎり", "目立", "めたて")),
 					MultimapUtil.entries(toMultimap(patternMap, "鋸の目立（のこぎりのめたて）"))));
+			//
+		} // if
+			//
+	}
+
+	@Test
+	void testToMultimap2() throws Throwable {
+		//
+		if (!isSystemPropertiesContainsTestGetObject) {
 			//
 			Assertions.assertTrue(
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("歯", "は", "屋", "や")),
