@@ -95,6 +95,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap1(final PatternMap patternMap, final String s) {
 		//
 		Iterable<String> patterns = Arrays.asList(
@@ -155,6 +156,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap2(final PatternMap patternMap, final String s) {
 		//
 		Iterable<String> patterns = Arrays.asList(
