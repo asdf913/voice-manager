@@ -160,6 +160,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("藍群青", "あいぐんじょう")),
 							MultimapUtil.entries(toMultimap(patternMap, "藍群青（あいぐんじょう）WEB"))));
 			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("藍鑞", "あいろう")),
+							MultimapUtil.entries(toMultimap(patternMap, "藍鑞（あいろう）ニコリ"))));
+			//
 		} // if
 			//
 	}
