@@ -5,7 +5,9 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -399,7 +401,97 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 		} // if
 			//
+		final Iterable<String> repeatedStrings = getRepatedStrings(s);
+		//
+		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+々)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+				s)) && IterableUtils.size(repeatedStrings) == 1 && Util.groupCount(m) > 1
+				&& StringUtils.endsWith(g1 = Util.group(m, 1), "々")) {
+			//
+			final StringBuilder sb = new StringBuilder(g1);
+			//
+			Multimap<String, String> multimap = null;
+			//
+			final int length = StringUtils.length(sb);
+			//
+			final String repeatedString = IterableUtils.get(repeatedStrings, 0);
+			//
+			for (int i = 0; i < length; i++) {
+				//
+				if (sb.charAt(i) == '々' && i < length && i > 0) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							new String(new char[] { sb.charAt(i - 1) }), repeatedString);
+					//
+					for (int j = i; j > 0; j--) {
+						//
+						sb.deleteCharAt(j);
+						//
+					} // for
+						//
+				} // for
+					//
+			} // for
+				//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.toString(sb),
+					StringUtils.remove(Util.group(m, 2), repeatedString));
+			//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
 		return null;
+		//
+	}
+
+	// https://gist.github.com/EasyG0ing1/f6e1d2c18d41850f80fa42bad469c9eb
+	private static Iterable<String> getRepatedStrings(final String userString) {
+		//
+		final int size = StringUtils.length(userString);
+		//
+		final String[] coreString = new String[size];
+		//
+		for (int x = 0; x < size; x++) {
+			//
+			coreString[x] = userString.substring(x, x + 1);
+			//
+		} // for
+			//
+		List<String> patterns = null;
+		//
+		String buildString;
+		//
+		for (int index = 0; index < size - 1; index++) {
+			//
+			buildString = coreString[index];
+			//
+			for (int x = index + 1; x < size; x++) {
+				//
+				Util.add(patterns = ObjectUtils.getIfNull(patterns, ArrayList::new),
+						StringUtils.join(buildString, coreString[x]));
+				//
+			} // for
+				//
+		} // for
+			//
+		Map<String, Integer> hitCountMap = null;
+		//
+		if (Util.iterator(patterns) != null) {
+			//
+			for (final String pattern : patterns) {
+				//
+				if (StringUtils.contains(userString.replaceFirst(pattern, ""), pattern)) {
+					//
+					Util.put(hitCountMap = ObjectUtils.getIfNull(hitCountMap, LinkedHashMap::new), pattern,
+							(size - userString.replaceAll(pattern, "").length()) / StringUtils.length(pattern));
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		return hitCountMap != null ? hitCountMap.keySet() : null;
 		//
 	}
 
