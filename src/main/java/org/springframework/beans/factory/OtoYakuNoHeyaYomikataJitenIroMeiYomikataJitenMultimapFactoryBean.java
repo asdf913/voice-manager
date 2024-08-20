@@ -4,8 +4,6 @@ import java.net.URI;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.ObjectUtils;
