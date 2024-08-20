@@ -47,7 +47,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			for (final Node node : nodes) {
 				//
 				if (node == null || !(node instanceof TextNode)
-						|| (ss = StringUtils.split(Util.toString(node), "　　")) == null) {
+						|| (ss = StringUtils.split(Util.toString(node), "\u3000")) == null) {
 					//
 					continue;
 					//
