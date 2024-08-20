@@ -41,7 +41,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
 public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean
-		implements FactoryBean<Multimap<String, String>> {
+		extends StringMultiMapFromResourceFactoryBean {
 
 	@URL("https://hiramatu-hifuka.com/onyak/syokmuka.html")
 	private String url = null;
@@ -53,6 +53,14 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
+		final IValue0<Multimap<String, String>> iValue0 = getIvalue0();
+		//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
 		return toMultimap(
 				Util.toList(
 						Util.filter(
