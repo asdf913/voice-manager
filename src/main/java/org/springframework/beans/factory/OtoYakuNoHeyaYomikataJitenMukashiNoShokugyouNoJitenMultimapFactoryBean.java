@@ -46,6 +46,10 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 	@URL("https://hiramatu-hifuka.com/onyak/syokmuka.html")
 	private String url = null;
 
+	public void setUrl(final String url) {
+		this.url = url;
+	}
+
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
