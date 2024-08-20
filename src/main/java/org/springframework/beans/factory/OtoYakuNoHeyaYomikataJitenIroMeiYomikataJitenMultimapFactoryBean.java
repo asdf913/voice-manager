@@ -1,6 +1,7 @@
 package org.springframework.beans.factory;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -15,6 +16,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
@@ -67,27 +69,24 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	@Nullable
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s) {
 		//
-		Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-				StringUtils.trim(s));
+		final Iterable<String> patterns = Arrays.asList(
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+$");
 		//
-		Multimap<String, String> multimap = null;
+		Matcher m = null;
 		//
-		if (Util.matches(m) && Util.groupCount(m) > 1) {
+		for (final String pattern : patterns) {
 			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m, 1),
-					Util.group(m, 2));
+			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, pattern), StringUtils.trim(s)))
+					&& Util.groupCount(m) > 1) {
+				//
+				return ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 2));
+				//
+			} // if
+				//
+		} // for
 			//
-		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+$"),
-				StringUtils.trim(s))) && Util.groupCount(m) > 1) {
-			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m, 1),
-					Util.group(m, 2));
-			//
-		} // if
-			//
-		return multimap;
+		return null;
 		//
 	}
 
