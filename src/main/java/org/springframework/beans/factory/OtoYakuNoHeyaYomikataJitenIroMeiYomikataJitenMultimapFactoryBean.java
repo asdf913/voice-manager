@@ -40,7 +40,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			String[] ss = null;
 			//
-			Pattern pattern = null;
+			PatternMap patternMap = null;
 			//
 			Matcher matcher = null;
 			//
@@ -54,9 +54,17 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 				for (final String s : ss) {
 					//
-					if (Util.matches(matcher = Util.matcher(
-							pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile(
-									"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$")),
+					if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(
+							patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
+							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+							StringUtils.trim(s))) && Util.groupCount(matcher) > 1) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								Util.group(matcher, 1), Util.group(matcher, 2));
+						//
+					} else if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(
+							patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
+							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+$"),
 							StringUtils.trim(s))) && Util.groupCount(matcher) > 1) {
 						//
 						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
