@@ -505,7 +505,8 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 				: applyAsInt(f, value, defaultValue);
 	}
 
-	private static int applyAsInt(final IntUnaryOperator instance, final int operand, final int defaultValue) {
+	private static int applyAsInt(@Nullable final IntUnaryOperator instance, final int operand,
+			final int defaultValue) {
 		return instance != null ? instance.applyAsInt(operand) : defaultValue;
 	}
 
