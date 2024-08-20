@@ -3,6 +3,7 @@ package org.springframework.beans.factory;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -221,26 +222,40 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InKatakana}|\\p{InCJKUnifiedIdeographs}|\\p{InHalfwidthAndFullwidthForms}]+$"),
-				StringUtils.trim(s))) && (groupCount = Util.groupCount(m)) > 3) {
+		patterns = Arrays.asList(
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InKatakana}|\\p{InCJKUnifiedIdeographs}|\\p{InHalfwidthAndFullwidthForms}]+$",
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$");
+		//
+		List<String> list = null;
+		//
+		for (final String pattern : patterns) {
 			//
-			List<String> list = null;
-			//
-			for (int i = 2; i <= groupCount; i++) {
+			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, pattern), StringUtils.trim(s)))) {
 				//
-				Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), Util.group(m, i));
+				clear(list = ObjectUtils.getIfNull(list, ArrayList::new));
 				//
-			} // for
+				for (int i = 2; i <= Util.groupCount(m); i++) {
+					//
+					Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), Util.group(m, i));
+					//
+				} // for
+					//
+				MultimapUtil.putAll(multimap = LinkedHashMultimap.create(), Util.group(m, 1), list);
 				//
-			MultimapUtil.putAll(multimap = LinkedHashMultimap.create(), Util.group(m, 1), list);
-			//
-			return Unit.with(multimap);
-			//
-		} // if
+				return Unit.with(multimap);
+				//
+			} // if
+				//
+		} // for
 			//
 		return null;
 		//
+	}
+
+	private static void clear(final Collection<?> instance) {
+		if (instance != null) {
+			instance.clear();
+		}
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
