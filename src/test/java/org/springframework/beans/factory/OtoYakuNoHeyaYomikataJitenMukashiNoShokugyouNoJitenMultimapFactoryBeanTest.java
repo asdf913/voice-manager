@@ -374,6 +374,9 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("舞", "まい", "曲", "くせ")),
 							MultimapUtil.entries(toMultimap(patternMap, "曲舞々（くせまいまい）"))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.singleton(Pair.of("犬", "いぬ")),
+					MultimapUtil.entries(toMultimap(patternMap, "犬拾ひ（いぬひろい）"))));
+			//
 		} // if
 			//
 	}
