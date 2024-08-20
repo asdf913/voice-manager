@@ -226,6 +226,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("真緋", "あけ")),
 							MultimapUtil.entries(toMultimap(patternMap, "真緋（あけ）日本語大辞典・色々な色"))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					Util.toList(Util.map(Stream.of("あやめいろ", "しょうぶいろ", "そうぶいろ"), x -> Pair.of("菖蒲色", x))),
+					MultimapUtil.entries(toMultimap(patternMap, "菖蒲色（あやめいろ・しょうぶいろ／そうぶいろ・大日本インキ）"))));
+			//
 		} // if
 			//
 	}

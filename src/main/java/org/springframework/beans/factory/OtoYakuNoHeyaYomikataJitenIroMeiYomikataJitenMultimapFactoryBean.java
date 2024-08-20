@@ -1,12 +1,14 @@
 package org.springframework.beans.factory;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
+
 import javax.annotation.Nullable;
 
 import org.apache.commons.collections4.IterableUtils;
@@ -209,6 +211,24 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			return Unit
 					.with(ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 3), Util.group(m, 2), Util.group(m, 4)));
+			//
+		} // if
+			//
+		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InKatakana}|\\p{InCJKUnifiedIdeographs}|\\p{InHalfwidthAndFullwidthForms}]+$"),
+				StringUtils.trim(s))) && (groupCount = Util.groupCount(m)) > 3) {
+			//
+			List<String> list = null;
+			//
+			for (int i = 2; i <= groupCount; i++) {
+				//
+				Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), Util.group(m, i));
+				//
+			} // for
+				//
+			MultimapUtil.putAll(multimap = LinkedHashMultimap.create(), Util.group(m, 1), list);
+			//
+			return Unit.with(multimap);
 			//
 		} // if
 			//
