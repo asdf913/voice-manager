@@ -89,12 +89,20 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		} // for
 			//
 		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}+(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}"),
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}"),
 				StringUtils.trim(s))) && Util.groupCount(m) > 2) {
 			//
 			final String g1 = Util.group(m, 1);
 			//
 			return ImmutableMultimap.of(g1, Util.group(m, 2), g1, Util.group(m, 3));
+			//
+		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+$"),
+				StringUtils.trim(s))) && Util.groupCount(m) > 2) {
+			//
+			final String g3 = Util.group(m, 3);
+			//
+			return ImmutableMultimap.of(Util.group(m, 1), g3, Util.group(m, 2), g3);
 			//
 		} // if
 			//
