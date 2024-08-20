@@ -3,7 +3,6 @@ package org.springframework.beans.factory;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -80,7 +79,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		final List<BiFunction<PatternMap, String, IValue0<Multimap<String, String>>>> functions = Arrays.asList(
 				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap1,
-				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap2);
+				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap2,
+				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap3);
 		//
 		IValue0<Multimap<String, String>> iValue0 = null;
 		//
@@ -222,17 +222,25 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		patterns = Arrays.asList(
+		return null;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap3(final PatternMap patternMap, final String s) {
+		//
+		final Iterable<String> patterns = Arrays.asList(
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InKatakana}|\\p{InCJKUnifiedIdeographs}|\\p{InHalfwidthAndFullwidthForms}]+$",
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$");
 		//
+		Matcher m;
+		//
 		List<String> list = null;
+		//
+		Multimap<String, String> multimap = null;
 		//
 		for (final String pattern : patterns) {
 			//
 			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, pattern), StringUtils.trim(s)))) {
-				//
-				clear(list = ObjectUtils.getIfNull(list, ArrayList::new));
 				//
 				for (int i = 2; i <= Util.groupCount(m); i++) {
 					//
@@ -250,12 +258,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		return null;
 		//
-	}
-
-	private static void clear(@Nullable final Collection<?> instance) {
-		if (instance != null) {
-			instance.clear();
-		}
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
