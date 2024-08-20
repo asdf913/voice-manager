@@ -12,6 +12,9 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.IntFunction;
+import java.util.function.IntPredicate;
+import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 
@@ -484,7 +487,8 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 				if (StringUtils.contains(userString.replaceFirst(pattern, ""), pattern)) {
 					//
 					Util.put(hitCountMap = ObjectUtils.getIfNull(hitCountMap, LinkedHashMap::new), pattern,
-							(size - userString.replaceAll(pattern, "").length()) / StringUtils.length(pattern));
+							(size - userString.replaceAll(pattern, "").length()) / testAndApplyAsInt(x -> x == 0,
+									StringUtils.length(pattern), x -> 1, IntUnaryOperator.identity(), 1));
 					//
 				} // if
 					//
@@ -494,6 +498,16 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 		return hitCountMap != null ? hitCountMap.keySet() : null;
 		//
+	}
+
+	private static int testAndApplyAsInt(final IntPredicate predicate, final int value, final IntUnaryOperator t,
+			final IntUnaryOperator f, final int defaultValue) {
+		return predicate != null && predicate.test(value) ? applyAsInt(t, value, defaultValue)
+				: applyAsInt(f, value, defaultValue);
+	}
+
+	private static int applyAsInt(final IntUnaryOperator instance, final int operand, final int defaultValue) {
+		return instance != null ? instance.applyAsInt(operand) : defaultValue;
 	}
 
 	@Nullable

@@ -5,15 +5,19 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.IntPredicate;
+import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jsoup.nodes.Node;
@@ -32,7 +36,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP_ITERABLE,
-			METHOD_TO_MULTI_MAP_STRING_ARRAY, METHOD_TO_MULTI_MAP_STRING;
+			METHOD_TO_MULTI_MAP_STRING_ARRAY, METHOD_TO_MULTI_MAP_STRING, METHOD_TEST_AND_APPLY_AS_INT;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -51,6 +55,9 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 		//
 		(METHOD_TO_MULTI_MAP_STRING = clz.getDeclaredMethod("toMultimap", PatternMap.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY_AS_INT = clz.getDeclaredMethod("testAndApplyAsInt", IntPredicate.class, Integer.TYPE,
+				IntUnaryOperator.class, IntUnaryOperator.class, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -117,7 +124,15 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 		final Method[] ms = OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean.class
 				.getDeclaredMethods();
 		//
-		Method m = null;
+		Method m;
+		//
+		Collection<Object> list = null;
+		//
+		Class<?>[] parameterTypes;
+		//
+		Object[] os;
+		//
+		String toString;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
@@ -127,12 +142,48 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 				//
 			} // if
 				//
-			Assertions.assertNull(
-					Narcissus.invokeStaticMethod(m, toArray(Collections.nCopies(m.getParameterCount(), null))),
-					Objects.toString(m));
+			clear(list = ObjectUtils.getIfNull(list, ArrayList::new));
 			//
+			if ((parameterTypes = m.getParameterTypes()) != null) {
+				//
+				for (final Class<?> clz : parameterTypes) {
+					//
+					if (Objects.equals(Integer.TYPE, clz)) {
+						//
+						list.add(Integer.valueOf(0));
+						//
+					} else {
+						//
+						list.add(null);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+			os = toArray(list);
+			//
+			toString = Util.toString(m);
+			//
+			if (Objects.equals(Integer.TYPE, m.getReturnType())) {
+				//
+				Assertions.assertEquals(0, Narcissus.invokeStaticIntMethod(m, os), toString);
+				//
+			} else {
+				//
+				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+				//
+			} // if
+				//
 		} // for
 			//
+	}
+
+	private void clear(final Collection<Object> instance) {
+		if (instance != null) {
+			instance.clear();
+		}
 	}
 
 	private static Object[] toArray(final Collection<?> instance) {
@@ -363,6 +414,28 @@ class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBeanTest
 				return null;
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndApplyAsInt() throws Throwable {
+		//
+		final int zero = 0;
+		//
+		Assertions.assertEquals(zero, testAndApplyAsInt(x -> x == zero, zero, null, null, zero));
+		//
+	}
+
+	private static int testAndApplyAsInt(final IntPredicate predicate, final int value, final IntUnaryOperator t,
+			final IntUnaryOperator f, final int defaultValue) throws Throwable {
+		try {
+			final Object obj = METHOD_TEST_AND_APPLY_AS_INT.invoke(null, predicate, value, t, f, defaultValue);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
