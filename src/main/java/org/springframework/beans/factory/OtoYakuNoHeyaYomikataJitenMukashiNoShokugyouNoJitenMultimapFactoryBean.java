@@ -432,7 +432,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 			for (int i = 0; i < length; i++) {
 				//
-				if (sb.charAt(i) == '々' && i < length && i > 0) {
+				if (sb.charAt(i) == '々' && i > 0) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							new String(new char[] { sb.charAt(i - 1) }), repeatedString);
