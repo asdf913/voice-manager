@@ -121,7 +121,8 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 				OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean::toMultimap1,
 				OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean::toMultimap2,
 				OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean::toMultimap3,
-				OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean::toMultimap4);
+				OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean::toMultimap4,
+				OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryBean::toMultimap5);
 		//
 		IValue0<Multimap<String, String>> iValue0 = null;
 		//
@@ -403,11 +404,21 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 			//
 		} // if
 			//
+		return null;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap5(final PatternMap patternMap, final String s) {
+		//
+		final Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+々)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+				s);
+		//
+		String g1;
+		//
 		final Iterable<String> repeatedStrings = getRepatedStrings(s);
 		//
-		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+々)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-				s)) && IterableUtils.size(repeatedStrings) == 1 && Util.groupCount(m) > 1
+		if (Util.matches(m) && IterableUtils.size(repeatedStrings) == 1 && Util.groupCount(m) > 1
 				&& StringUtils.endsWith(g1 = Util.group(m, 1), "々")) {
 			//
 			final StringBuilder sb = new StringBuilder(g1);
