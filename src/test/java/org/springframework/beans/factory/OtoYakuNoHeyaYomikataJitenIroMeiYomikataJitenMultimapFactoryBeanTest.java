@@ -174,6 +174,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 					Util.toList(Util.map(Stream.of("相生鼠", "藍生鼠"), x -> Pair.of(x, "あいおいねず"))),
 					MultimapUtil.entries(toMultimap(patternMap, "相生鼠・藍生鼠（あいおいねず）日本の色名"))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					Util.toList(Util.map(Stream.of("あいけねず", "あいけねずみ"), x -> Pair.of("藍気鼠", x))),
+					MultimapUtil.entries(toMultimap(patternMap, "藍気鼠（あいけねず・日本の色名/あいけねずみ・日本国語大辞典）"))));
+			//
 		} // if
 			//
 	}
