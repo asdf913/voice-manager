@@ -222,6 +222,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 					MultimapUtil.entries(ImmutableMultimap.of("赤蘇枋", "あかすおう", "赤蘇芳", "あかずおう")),
 					MultimapUtil.entries(toMultimap(patternMap, "赤蘇枋・赤蘇芳（あかすおう・あかずおう）"))));
 			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("真緋", "あけ")),
+							MultimapUtil.entries(toMultimap(patternMap, "真緋（あけ）日本語大辞典・色々な色"))));
+			//
 		} // if
 			//
 	}
