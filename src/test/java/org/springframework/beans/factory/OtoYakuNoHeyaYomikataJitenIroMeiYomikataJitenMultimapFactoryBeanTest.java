@@ -186,6 +186,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("文色", "あいろ")),
 							MultimapUtil.entries(toMultimap(patternMap, "＜文色（あいろ）広辞苑＞"))));
 			//
+			Assertions.assertTrue(CollectionUtils.isEqualCollection(
+					Util.toList(Util.map(Stream.of("あかがねいろ", "どうしょく"), x -> Pair.of("銅色", x))),
+					MultimapUtil.entries(toMultimap(patternMap, "銅色（あかがねいろ・どうしょく）日本国語大辞典"))));
+			//
 		} // if
 			//
 	}
