@@ -40,8 +40,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			PatternMap patternMap = null;
 			//
-			Matcher matcher = null;
-			//
 			for (final Node node : nodes) {
 				//
 				if (!(node instanceof TextNode) || (ss = StringUtils.split(Util.toString(node), "\u3000")) == null) {
@@ -52,28 +50,40 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 				for (final String s : ss) {
 					//
-					if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(
-							patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
-							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-							StringUtils.trim(s))) && Util.groupCount(matcher) > 1) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								Util.group(matcher, 1), Util.group(matcher, 2));
-						//
-					} else if (Util.matches(matcher = Util.matcher(PatternMap.getPattern(
-							patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
-							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+$"),
-							StringUtils.trim(s))) && Util.groupCount(matcher) > 1) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								Util.group(matcher, 1), Util.group(matcher, 2));
-						//
-					} // if
-						//
+					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							toMultimap(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
+									StringUtils.trim(s)));
+					//
 				} // for
 					//
 			} // for
 				//
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s) {
+		//
+		Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+				StringUtils.trim(s));
+		//
+		Multimap<String, String> multimap = null;
+		//
+		if (Util.matches(m) && Util.groupCount(m) > 1) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m, 1),
+					Util.group(m, 2));
+			//
+		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+$"),
+				StringUtils.trim(s))) && Util.groupCount(m) > 1) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m, 1),
+					Util.group(m, 2));
+			//
 		} // if
 			//
 		return multimap;
