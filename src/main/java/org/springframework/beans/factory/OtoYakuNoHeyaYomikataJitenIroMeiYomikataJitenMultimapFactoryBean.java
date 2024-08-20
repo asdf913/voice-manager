@@ -2,15 +2,21 @@ package org.springframework.beans.factory;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import javax.annotation.Nullable;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.NodeUtil;
@@ -69,6 +75,28 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	@Nullable
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s) {
 		//
+		final List<BiFunction<PatternMap, String, IValue0<Multimap<String, String>>>> functions = Arrays.asList(
+				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap1,
+				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap2);
+		//
+		IValue0<Multimap<String, String>> iValue0 = null;
+		//
+		for (int i = 0; i < IterableUtils.size(functions); i++) {
+			//
+			if ((iValue0 = Util.apply(IterableUtils.get(functions, i), patternMap, s)) != null) {
+				//
+				return IValue0Util.getValue0(iValue0);
+				//
+			} // if
+				//
+		} // for
+			//
+		return null;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap1(final PatternMap patternMap, final String s) {
+		//
 		Iterable<String> patterns = Arrays.asList(
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+$",
@@ -85,7 +113,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, pattern), StringUtils.trim(s)))
 					&& Util.groupCount(m) > 1) {
 				//
-				return ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 2));
+				return Unit.with(ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 2)));
 				//
 			} // if
 				//
@@ -107,7 +135,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, pattern), StringUtils.trim(s)))
 					&& Util.groupCount(m) > 2) {
 				//
-				return ImmutableMultimap.of(g1 = Util.group(m, 1), Util.group(m, 2), g1, Util.group(m, 3));
+				return Unit.with(ImmutableMultimap.of(g1 = Util.group(m, 1), Util.group(m, 2), g1, Util.group(m, 3)));
 				//
 			} // if
 				//
@@ -119,13 +147,21 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			final String g3 = Util.group(m, 3);
 			//
-			return ImmutableMultimap.of(Util.group(m, 1), g3, Util.group(m, 2), g3);
+			return Unit.with(ImmutableMultimap.of(Util.group(m, 1), g3, Util.group(m, 2), g3));
 			//
 		} // if
 			//
-		patterns = Arrays.asList(
+		return null;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap2(final PatternMap patternMap, final String s) {
+		//
+		Iterable<String> patterns = Arrays.asList(
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+$");
+		//
+		Matcher m;
 		//
 		int groupCount;
 		//
@@ -146,7 +182,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 				} // for
 					//
-				return multimap;
+				return Unit.with(multimap);
 				//
 			} // if
 				//
