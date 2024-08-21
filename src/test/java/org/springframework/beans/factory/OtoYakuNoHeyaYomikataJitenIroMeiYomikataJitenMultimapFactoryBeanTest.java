@@ -324,6 +324,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				Util.toList(Util.map(Stream.of("刈安", "苅安", "青茅"), x -> Pair.of(x, "かりやす"))),
 				MultimapUtil.entries(toMultimap(patternMap, "刈安・苅安・青茅（かりやす）日本の色名"))));
 		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				MultimapUtil.entries(ImmutableMultimap.of("木枯茶", "こがらしちゃ", "木枯茶", "こがれちゃ")),
+				MultimapUtil.entries(toMultimap(patternMap, "木枯茶（こがらしちゃ・日本の色名／こがれちゃ・こがらしちゃ・奇妙な色名事典"))));
+		//
 	}
 
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s) throws Throwable {
