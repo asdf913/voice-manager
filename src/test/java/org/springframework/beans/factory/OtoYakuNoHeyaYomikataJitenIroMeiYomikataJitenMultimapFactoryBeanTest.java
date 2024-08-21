@@ -46,6 +46,8 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 
 	private boolean isSystemPropertiesContainsTestGetObject;
 
+	private PatternMap patternMap;
+
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -53,6 +55,8 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		isSystemPropertiesContainsTestGetObject = Util.containsKey(System.getProperties(),
 				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest.testGetObject");
+		//
+		patternMap = new PatternMapImpl();
 		//
 	}
 
@@ -144,126 +148,134 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	}
 
 	@Test
-	void testToMultimap() throws Throwable {
+	void testToMultimap1() throws Throwable {
 		//
-		if (!isSystemPropertiesContainsTestGetObject) {
+		if (isSystemPropertiesContainsTestGetObject) {
 			//
-			final PatternMap patternMap = new PatternMapImpl();
-			//
-			Assertions
-					.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("藍", "あい")),
-							MultimapUtil.entries(toMultimap(patternMap, "藍（あい）"))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("藍色鳩羽", "あいいろはとば")),
-							MultimapUtil.entries(toMultimap(patternMap, "藍色鳩羽（あいいろはとば）日本の色名"))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("藍群青", "あいぐんじょう")),
-							MultimapUtil.entries(toMultimap(patternMap, "藍群青（あいぐんじょう）WEB"))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("藍鑞", "あいろう")),
-							MultimapUtil.entries(toMultimap(patternMap, "藍鑞（あいろう）ニコリ"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					Util.toList(Util.map(Stream.of("あおいろ", "せいしょく"), x -> Pair.of("青色", x))),
-					MultimapUtil.entries(toMultimap(patternMap, "青色（あおいろ・せいしょく）"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					Util.toList(Util.map(Stream.of("相生鼠", "藍生鼠"), x -> Pair.of(x, "あいおいねず"))),
-					MultimapUtil.entries(toMultimap(patternMap, "相生鼠・藍生鼠（あいおいねず）日本の色名"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					Util.toList(Util.map(Stream.of("あいけねず", "あいけねずみ"), x -> Pair.of("藍気鼠", x))),
-					MultimapUtil.entries(toMultimap(patternMap, "藍気鼠（あいけねず・日本の色名/あいけねずみ・日本国語大辞典）"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					Util.toList(Util.map(Stream.of("あいねず", "あいねずみ"), x -> Pair.of("藍鼠", x))),
-					MultimapUtil.entries(toMultimap(patternMap, "藍鼠（あいねず/あいねずみ）"))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("文色", "あいろ")),
-							MultimapUtil.entries(toMultimap(patternMap, "＜文色（あいろ）広辞苑＞"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					Util.toList(Util.map(Stream.of("あかがねいろ", "どうしょく"), x -> Pair.of("銅色", x))),
-					MultimapUtil.entries(toMultimap(patternMap, "銅色（あかがねいろ・どうしょく）日本国語大辞典"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					Util.toList(Util.map(Stream.of("あかきいろ", "せきおうしょく"), x -> Pair.of("赤黄色", x))),
-					MultimapUtil.entries(toMultimap(patternMap, "赤黄色（あかきいろ/せきおうしょく・WEB）"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					Util.toList(Util.map(Stream.of("うめねず", "うめねずみ"), x -> Pair.of("梅鼠", x))),
-					MultimapUtil.entries(toMultimap(patternMap, "梅鼠（うめねず／うめねずみ）"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					Util.toList(Util.map(Stream.of("あおはいいろ", "せいかいしょく"), x -> Pair.of("青灰色", x))),
-					MultimapUtil.entries(toMultimap(patternMap, "青灰色（あおはいいろ／せいかいしょく・日本国語大辞典）"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					Util.toList(Util.map(Stream.of("赤", "緋", "紅", "朱"), x -> Pair.of(x, "あか"))),
-					MultimapUtil.entries(toMultimap(patternMap, "赤・緋・紅・朱（あか）"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					Util.toList(Util.map(Stream.of("青青", "蒼蒼", "碧碧"), x -> Pair.of(x, "あおあお"))),
-					MultimapUtil.entries(toMultimap(patternMap, "青青・蒼蒼・碧碧（あおあお）日本国語大辞典"))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("薄青", "うすあお")),
-							MultimapUtil.entries(toMultimap(patternMap, "薄青(うすあお）日本の色名"))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("位", "くらい", "色", "いろ")),
-							MultimapUtil.entries(toMultimap(patternMap, "＜位の色（くらいのいろ）広辞苑＞"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					MultimapUtil.entries(ImmutableMultimap.of("赤蘇枋", "あかすおう", "赤蘇芳", "あかずおう")),
-					MultimapUtil.entries(toMultimap(patternMap, "赤蘇枋・赤蘇芳（あかすおう・あかずおう）"))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("真緋", "あけ")),
-							MultimapUtil.entries(toMultimap(patternMap, "真緋（あけ）日本語大辞典・色々な色"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					Util.toList(Util.map(Stream.of("あやめいろ", "しょうぶいろ", "そうぶいろ"), x -> Pair.of("菖蒲色", x))),
-					MultimapUtil.entries(toMultimap(patternMap, "菖蒲色（あやめいろ・しょうぶいろ／そうぶいろ・大日本インキ）"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					Util.toList(Util.map(Stream.of("薄藤色", "淡藤色"), x -> Pair.of(x, "うすふじいろ"))),
-					MultimapUtil.entries(toMultimap(patternMap, "薄藤色・淡藤色（うすふじいろ）"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					Util.toList(Util.map(Stream.of("うすきむらさき", "うすむらさき", "せんし"), x -> Pair.of("浅紫", x))),
-					MultimapUtil.entries(toMultimap(patternMap, "浅紫（うすきむらさき・うすむらさき・せんし）"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					Util.toList(Util.map(Stream.of("あかこういろ", "あかごういろ"), x -> Pair.of("赤香色", x))),
-					MultimapUtil.entries(toMultimap(patternMap, "赤香色（あかこういろ・日本の色辞典／あかごういろ・日本語大辞典資料）"))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("臙脂墨", "えんじずみ")),
-							MultimapUtil.entries(toMultimap(patternMap, "＜臙脂墨（えんじずみ）＞"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					Util.toList(Util.map(Stream.of("おうしょく", "おうしき", "きいろ", "こうしょく"), x -> Pair.of("黄色", x))),
-					MultimapUtil.entries(toMultimap(patternMap, "黄色（おうしょく・おうしき・きいろ・こうしょく）"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					Util.toList(Util.map(Stream.of("えんしゅうねず", "えんしゅうねずみ"), x -> Pair.of("遠州鼠", x))),
-					MultimapUtil.entries(toMultimap(patternMap, "遠州鼠（えんしゅうねず・日本の色名/えんしゅうねずみ・奇妙な色名事典）"))));
-			//
-			Assertions.assertTrue(
-					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("依毘染", "いびぞめ")),
-							MultimapUtil.entries(toMultimap(patternMap, "依毘染（いびぞめ）ＷＥＢ"))));
-			//
-			Assertions.assertTrue(CollectionUtils.isEqualCollection(
-					Util.toList(Util.map(Stream.of("うすき", "あさきき", "あさき"), x -> Pair.of("浅黄", x))),
-					MultimapUtil.entries(toMultimap(patternMap, "浅黄（うすき・あさきき・あさき）日本の色名"))));
+			return;
 			//
 		} // if
 			//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("藍", "あい")),
+				MultimapUtil.entries(toMultimap(patternMap, "藍（あい）"))));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("藍色鳩羽", "あいいろはとば")),
+						MultimapUtil.entries(toMultimap(patternMap, "藍色鳩羽（あいいろはとば）日本の色名"))));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("藍群青", "あいぐんじょう")),
+						MultimapUtil.entries(toMultimap(patternMap, "藍群青（あいぐんじょう）WEB"))));
+		//
+		Assertions
+				.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("藍鑞", "あいろう")),
+						MultimapUtil.entries(toMultimap(patternMap, "藍鑞（あいろう）ニコリ"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				Util.toList(Util.map(Stream.of("あおいろ", "せいしょく"), x -> Pair.of("青色", x))),
+				MultimapUtil.entries(toMultimap(patternMap, "青色（あおいろ・せいしょく）"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				Util.toList(Util.map(Stream.of("相生鼠", "藍生鼠"), x -> Pair.of(x, "あいおいねず"))),
+				MultimapUtil.entries(toMultimap(patternMap, "相生鼠・藍生鼠（あいおいねず）日本の色名"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				Util.toList(Util.map(Stream.of("あいけねず", "あいけねずみ"), x -> Pair.of("藍気鼠", x))),
+				MultimapUtil.entries(toMultimap(patternMap, "藍気鼠（あいけねず・日本の色名/あいけねずみ・日本国語大辞典）"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				Util.toList(Util.map(Stream.of("あいねず", "あいねずみ"), x -> Pair.of("藍鼠", x))),
+				MultimapUtil.entries(toMultimap(patternMap, "藍鼠（あいねず/あいねずみ）"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("文色", "あいろ")),
+				MultimapUtil.entries(toMultimap(patternMap, "＜文色（あいろ）広辞苑＞"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				Util.toList(Util.map(Stream.of("あかがねいろ", "どうしょく"), x -> Pair.of("銅色", x))),
+				MultimapUtil.entries(toMultimap(patternMap, "銅色（あかがねいろ・どうしょく）日本国語大辞典"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				Util.toList(Util.map(Stream.of("あかきいろ", "せきおうしょく"), x -> Pair.of("赤黄色", x))),
+				MultimapUtil.entries(toMultimap(patternMap, "赤黄色（あかきいろ/せきおうしょく・WEB）"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				Util.toList(Util.map(Stream.of("うめねず", "うめねずみ"), x -> Pair.of("梅鼠", x))),
+				MultimapUtil.entries(toMultimap(patternMap, "梅鼠（うめねず／うめねずみ）"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				Util.toList(Util.map(Stream.of("あおはいいろ", "せいかいしょく"), x -> Pair.of("青灰色", x))),
+				MultimapUtil.entries(toMultimap(patternMap, "青灰色（あおはいいろ／せいかいしょく・日本国語大辞典）"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				Util.toList(Util.map(Stream.of("赤", "緋", "紅", "朱"), x -> Pair.of(x, "あか"))),
+				MultimapUtil.entries(toMultimap(patternMap, "赤・緋・紅・朱（あか）"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				Util.toList(Util.map(Stream.of("青青", "蒼蒼", "碧碧"), x -> Pair.of(x, "あおあお"))),
+				MultimapUtil.entries(toMultimap(patternMap, "青青・蒼蒼・碧碧（あおあお）日本国語大辞典"))));
+		//
+		Assertions
+				.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("薄青", "うすあお")),
+						MultimapUtil.entries(toMultimap(patternMap, "薄青(うすあお）日本の色名"))));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("位", "くらい", "色", "いろ")),
+						MultimapUtil.entries(toMultimap(patternMap, "＜位の色（くらいのいろ）広辞苑＞"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				MultimapUtil.entries(ImmutableMultimap.of("赤蘇枋", "あかすおう", "赤蘇芳", "あかずおう")),
+				MultimapUtil.entries(toMultimap(patternMap, "赤蘇枋・赤蘇芳（あかすおう・あかずおう）"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("真緋", "あけ")),
+				MultimapUtil.entries(toMultimap(patternMap, "真緋（あけ）日本語大辞典・色々な色"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				Util.toList(Util.map(Stream.of("あやめいろ", "しょうぶいろ", "そうぶいろ"), x -> Pair.of("菖蒲色", x))),
+				MultimapUtil.entries(toMultimap(patternMap, "菖蒲色（あやめいろ・しょうぶいろ／そうぶいろ・大日本インキ）"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				Util.toList(Util.map(Stream.of("薄藤色", "淡藤色"), x -> Pair.of(x, "うすふじいろ"))),
+				MultimapUtil.entries(toMultimap(patternMap, "薄藤色・淡藤色（うすふじいろ）"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				Util.toList(Util.map(Stream.of("うすきむらさき", "うすむらさき", "せんし"), x -> Pair.of("浅紫", x))),
+				MultimapUtil.entries(toMultimap(patternMap, "浅紫（うすきむらさき・うすむらさき・せんし）"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				Util.toList(Util.map(Stream.of("あかこういろ", "あかごういろ"), x -> Pair.of("赤香色", x))),
+				MultimapUtil.entries(toMultimap(patternMap, "赤香色（あかこういろ・日本の色辞典／あかごういろ・日本語大辞典資料）"))));
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("臙脂墨", "えんじずみ")),
+						MultimapUtil.entries(toMultimap(patternMap, "＜臙脂墨（えんじずみ）＞"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				Util.toList(Util.map(Stream.of("おうしょく", "おうしき", "きいろ", "こうしょく"), x -> Pair.of("黄色", x))),
+				MultimapUtil.entries(toMultimap(patternMap, "黄色（おうしょく・おうしき・きいろ・こうしょく）"))));
+		//
+	}
+
+	@Test
+	void testToMultimap2() throws Throwable {
+		//
+		if (isSystemPropertiesContainsTestGetObject) {
+			//
+			return;
+			//
+		} // if
+			//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				Util.toList(Util.map(Stream.of("えんしゅうねず", "えんしゅうねずみ"), x -> Pair.of("遠州鼠", x))),
+				MultimapUtil.entries(toMultimap(patternMap, "遠州鼠（えんしゅうねず・日本の色名/えんしゅうねずみ・奇妙な色名事典）"))));
+		//
+		Assertions
+				.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("依毘染", "いびぞめ")),
+						MultimapUtil.entries(toMultimap(patternMap, "依毘染（いびぞめ）ＷＥＢ"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				Util.toList(Util.map(Stream.of("うすき", "あさきき", "あさき"), x -> Pair.of("浅黄", x))),
+				MultimapUtil.entries(toMultimap(patternMap, "浅黄（うすき・あさきき・あさき）日本の色名"))));
+		//
 	}
 
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s) throws Throwable {
