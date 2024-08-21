@@ -254,6 +254,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 					Util.toList(Util.map(Stream.of("えんしゅうねず", "えんしゅうねずみ"), x -> Pair.of("遠州鼠", x))),
 					MultimapUtil.entries(toMultimap(patternMap, "遠州鼠（えんしゅうねず・日本の色名/えんしゅうねずみ・奇妙な色名事典）"))));
 			//
+			Assertions.assertTrue(
+					CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("依毘染", "いびぞめ")),
+							MultimapUtil.entries(toMultimap(patternMap, "依毘染（いびぞめ）ＷＥＢ"))));
+			//
 		} // if
 			//
 	}
