@@ -359,7 +359,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 
 	private static IValue0<Multimap<String, String>> toMultimap5(final PatternMap patternMap, final String input) {
 		//
-		final Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
+		Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)(の)(\\p{InCJKUnifiedIdeographs}+)(の)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
 				StringUtils.trim(input));
 		//
@@ -368,6 +368,41 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		Multimap<String, String> multimap = null;
 		//
 		if (Util.matches(m) && Util.groupCount(m) > 5 && Objects.equals(g2 = Util.group(m, 2), Util.group(m, 4))
+				&& StringUtils.countMatches(g6 = Util.group(m, 6), g2) == 2) {
+			//
+			final String[] ss = StringUtils.split(g6, g2);
+			//
+			String s;
+			//
+			for (int i = 0; i < Util.length(ss); i++) {
+				//
+				s = ArrayUtils.get(ss, i);
+				//
+				if (i == 0) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(m, 1), s);
+					//
+				} else if (i == 1) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(m, 3), s);
+					//
+				} else if (i == 2) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(m, 5), s);
+					//
+				} // if
+					//
+			} // for
+				//
+			return Unit.with(multimap);
+			//
+		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)(の)(\\p{InCJKUnifiedIdeographs}+)(の)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+$"),
+				StringUtils.trim(input))) && Util.groupCount(m) > 5
+				&& Objects.equals(g2 = Util.group(m, 2), Util.group(m, 4))
 				&& StringUtils.countMatches(g6 = Util.group(m, 6), g2) == 2) {
 			//
 			final String[] ss = StringUtils.split(g6, g2);
