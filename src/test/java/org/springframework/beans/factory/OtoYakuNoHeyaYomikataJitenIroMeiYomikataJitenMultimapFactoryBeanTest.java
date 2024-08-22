@@ -400,7 +400,11 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(
 				Util.toList(Util.map(Stream.of("しいにびいろ", "しいにぶいろ"), x -> Pair.of("椎鈍色", x))),
 				MultimapUtil.entries(toMultimap(patternMap, "椎鈍色（しいにびいろ・日本の色名／しいにぶいろ・WEB）"))));
-	//
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				Util.toList(Util.map(Stream.of("端白", "爪白", "褄白"), x -> Pair.of(x, "つまじろ"))),
+				MultimapUtil.entries(toMultimap(patternMap, "＜端白・爪白・褄白（つまじろ）日本国語大辞典"))));
+		//
 	}
 
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s) throws Throwable {
