@@ -106,6 +106,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		Method m = null;
 		//
+		Object invokeStaticMethod;
+		//
+		String toString;
+		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ms[i]) == null || !Modifier.isStatic(m.getModifiers()) || m.isSynthetic()) {
@@ -114,10 +118,21 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				//
 			} // if
 				//
-			Assertions.assertNull(
-					Narcissus.invokeStaticMethod(m, toArray(Collections.nCopies(m.getParameterCount(), null))),
-					Objects.toString(m));
+			invokeStaticMethod = Narcissus.invokeStaticMethod(m,
+					toArray(Collections.nCopies(m.getParameterCount(), null)));
 			//
+			toString = Objects.toString(m);
+			//
+			if (Objects.equals(Boolean.TYPE, m.getReturnType())) {
+				//
+				Assertions.assertNotNull(invokeStaticMethod, toString);
+				//
+			} else {
+				//
+				Assertions.assertNull(invokeStaticMethod, toString);
+				//
+			} // if
+				//
 		} // for
 			//
 	}

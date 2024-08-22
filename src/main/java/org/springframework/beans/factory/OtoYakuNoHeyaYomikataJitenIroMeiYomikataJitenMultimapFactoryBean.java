@@ -265,9 +265,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						continue;
 						//
 					} // if
-
-					//
-					if (multimap.containsEntry(k = Util.getKey(entry), v = Util.getValue(entry))
+						//
+					if (containsEntry(multimap, k = Util.getKey(entry), v = Util.getValue(entry))
 							&& (multimap = LinkedHashMultimap.create(multimap)) != null) {
 						//
 						multimap.remove(k, v);
@@ -284,6 +283,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		return null;
 		//
+	}
+
+	private static boolean containsEntry(final Multimap<?, ?> instance, final Object key, final Object value) {
+		return instance != null && instance.containsEntry(key, value);
 	}
 
 	@Nullable
