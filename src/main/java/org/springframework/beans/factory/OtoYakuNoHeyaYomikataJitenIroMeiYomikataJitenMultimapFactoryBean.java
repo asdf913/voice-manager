@@ -434,6 +434,28 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)(つ)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+				StringUtils.trim(input))) && Util.groupCount(m) > 3
+				&& StringUtils.countMatches(g4 = Util.group(m, 4), g2 = Util.group(m, 2)) == 1) {
+			//
+			final String g1 = Util.group(m, 1);
+			//
+			final String g3 = Util.group(m, 3);
+			//
+			if (Objects.equals(g1, "二")) {
+				//
+				return Unit.with(ImmutableMultimap.of(g1, StringUtils.substringBefore(g4, g2), g3,
+						StringUtils.substringAfter(g4, g2)));
+				//
+			} else {
+				//
+				return Unit.with(ImmutableMultimap.of(g3, StringUtils.substringAfter(g4, g2)));
+				//
+			} // if
+				//
+		} // if
+			//
 		return null;
 		//
 	}
