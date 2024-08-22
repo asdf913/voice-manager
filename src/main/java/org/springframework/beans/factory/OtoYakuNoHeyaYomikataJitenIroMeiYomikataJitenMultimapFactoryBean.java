@@ -81,7 +81,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		final List<BiFunction<PatternMap, String, IValue0<Multimap<String, String>>>> functions = Arrays.asList(
 				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap1,
 				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap2,
-				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap3);
+				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap3,
+				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap4);
 		//
 		IValue0<Multimap<String, String>> iValue0 = null;
 		//
@@ -303,9 +304,17 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		return null;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap4(final PatternMap patternMap, final String s) {
+		//
+		Matcher m;
+		//
 		Object k, v;
 		//
-		String g2;
+		String g4, g2;
 		//
 		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)(の)(\\p{InCJKUnifiedIdeographs}+)\\（(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
@@ -315,9 +324,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			final Iterable<Entry<String, String>> unwantedEntries = MultimapUtil
 					.entries(ImmutableMultimap.of("根摺", "ねずり", "葡萄", "えび", "襲", "かさねめ"));
 			//
-			if ((multimap = ImmutableMultimap.of(Util.group(m, 1), StringUtils.substringBefore(g4, g2),
-					Util.group(m, 3), StringUtils.substringAfter(g4, g2))) != null
-					&& Util.iterator(unwantedEntries) != null) {
+			Multimap<String, String> multimap = ImmutableMultimap.of(Util.group(m, 1),
+					StringUtils.substringBefore(g4, g2), Util.group(m, 3), StringUtils.substringAfter(g4, g2));
+			//
+			if (multimap != null && Util.iterator(unwantedEntries) != null) {
 				//
 				for (final Entry<?, ?> entry : unwantedEntries) {
 					//
