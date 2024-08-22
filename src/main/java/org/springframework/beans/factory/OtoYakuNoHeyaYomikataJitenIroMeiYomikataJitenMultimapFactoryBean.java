@@ -244,37 +244,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		Object k, v;
-		//
-		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)(の)(\\p{InCJKUnifiedIdeographs}+)\\（(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-				StringUtils.trim(s))) && Util.groupCount(m) > 3
-				&& StringUtils.countMatches(g4 = Util.group(m, 4), g2 = Util.group(m, 2)) == 1) {
-			//
-			final Iterable<Entry<String, String>> unwantedEntries = MultimapUtil
-					.entries(ImmutableMultimap.of("根摺", "ねずり", "葡萄", "えび", "襲", "かさねめ"));
-			//
-			if ((multimap = ImmutableMultimap.of(Util.group(m, 1), StringUtils.substringBefore(g4, g2),
-					Util.group(m, 3), StringUtils.substringAfter(g4, g2))) != null
-					&& Util.iterator(unwantedEntries) != null) {
-				//
-				for (final Entry<?, ?> entry : unwantedEntries) {
-					//
-					if (containsEntry(multimap, k = Util.getKey(entry), v = Util.getValue(entry))
-							&& (multimap = LinkedHashMultimap.create(multimap)) != null) {
-						//
-						multimap.remove(k, v);
-						//
-					} // if
-						//
-				} // for
-					//
-			} // if
-				//
-			return Unit.with(multimap);
-			//
-		} // if
-			//
 		return null;
 		//
 	}
@@ -336,6 +305,39 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			return Unit.with(ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 2), Util.group(m, 3),
 					StringUtils.substringBefore(g6, g4), Util.group(m, 5), StringUtils.substringAfter(g6, g4)));
+			//
+		} // if
+			//
+		Object k, v;
+		//
+		String g2;
+		//
+		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)(の)(\\p{InCJKUnifiedIdeographs}+)\\（(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+				StringUtils.trim(s))) && Util.groupCount(m) > 3
+				&& StringUtils.countMatches(g4 = Util.group(m, 4), g2 = Util.group(m, 2)) == 1) {
+			//
+			final Iterable<Entry<String, String>> unwantedEntries = MultimapUtil
+					.entries(ImmutableMultimap.of("根摺", "ねずり", "葡萄", "えび", "襲", "かさねめ"));
+			//
+			if ((multimap = ImmutableMultimap.of(Util.group(m, 1), StringUtils.substringBefore(g4, g2),
+					Util.group(m, 3), StringUtils.substringAfter(g4, g2))) != null
+					&& Util.iterator(unwantedEntries) != null) {
+				//
+				for (final Entry<?, ?> entry : unwantedEntries) {
+					//
+					if (containsEntry(multimap, k = Util.getKey(entry), v = Util.getValue(entry))
+							&& (multimap = LinkedHashMultimap.create(multimap)) != null) {
+						//
+						multimap.remove(k, v);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+			return Unit.with(multimap);
 			//
 		} // if
 			//
