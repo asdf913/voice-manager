@@ -260,12 +260,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				for (final Entry<?, ?> entry : unwantedEntries) {
 					//
-					if (entry == null) {
-						//
-						continue;
-						//
-					} // if
-						//
 					if (containsEntry(multimap, k = Util.getKey(entry), v = Util.getValue(entry))
 							&& (multimap = LinkedHashMultimap.create(multimap)) != null) {
 						//
