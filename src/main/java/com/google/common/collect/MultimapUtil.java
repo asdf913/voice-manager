@@ -53,4 +53,8 @@ public interface MultimapUtil {
 		return instance == null || instance.isEmpty();
 	}
 
+	static boolean containsEntry(final Multimap<?, ?> instance, final Object key, final Object value) {
+		return instance != null && instance.containsEntry(key, value);
+	}
+
 }

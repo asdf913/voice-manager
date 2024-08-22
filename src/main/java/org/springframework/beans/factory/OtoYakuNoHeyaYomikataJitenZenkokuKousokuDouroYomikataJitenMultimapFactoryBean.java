@@ -262,7 +262,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		while (Util.find(matcher) && Util.groupCount(matcher) > 2) {
 			//
-			if (containsEntry(excluded, k = Util.group(matcher, 2), v = Util.group(matcher, 3))) {
+			if (MultimapUtil.containsEntry(excluded, k = Util.group(matcher, 2), v = Util.group(matcher, 3))) {
 				//
 				continue;
 				//
@@ -274,11 +274,6 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			//
 		return multimap;
 		//
-	}
-
-	private static boolean containsEntry(@Nullable final Multimap<?, ?> instance, final Object key,
-			final Object value) {
-		return instance != null && instance.containsEntry(key, value);
 	}
 
 	@Nullable

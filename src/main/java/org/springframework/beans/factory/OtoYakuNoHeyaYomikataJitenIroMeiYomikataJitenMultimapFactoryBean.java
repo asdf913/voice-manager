@@ -248,11 +248,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static boolean containsEntry(@Nullable final Multimap<?, ?> instance, final Object key,
-			final Object value) {
-		return instance != null && instance.containsEntry(key, value);
-	}
-
 	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap3(final PatternMap patternMap, final String s) {
 		//
@@ -326,7 +321,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				for (final Entry<?, ?> entry : unwantedEntries) {
 					//
-					if (containsEntry(multimap, k = Util.getKey(entry), v = Util.getValue(entry))
+					if (MultimapUtil.containsEntry(multimap, k = Util.getKey(entry), v = Util.getValue(entry))
 							&& (multimap = LinkedHashMultimap.create(multimap)) != null) {
 						//
 						multimap.remove(k, v);
