@@ -4,25 +4,29 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.function.IntUnaryOperator;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,24 +38,12 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class UtilTest {
 
-	private static Method METHOD_GET_NAME, METHOD_CAST, METHOD_IS_ASSIGNABLE_FROM, METHOD_ACCEPT,
-			METHOD_GET_DECLARED_FIELD = null;
+	private static Method METHOD_GET_DECLARED_FIELD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
-		final Class<?> clz = Util.class;
-		//
-		(METHOD_GET_NAME = clz.getDeclaredMethod("getName", Member.class)).setAccessible(true);
-		//
-		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_IS_ASSIGNABLE_FROM = clz.getDeclaredMethod("isAssignableFrom", Class.class, Class.class))
-				.setAccessible(true);
-		//
-		(METHOD_ACCEPT = clz.getDeclaredMethod("accept", Consumer.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_GET_DECLARED_FIELD = clz.getDeclaredMethod("getDeclaredField", Class.class, String.class))
+		(METHOD_GET_DECLARED_FIELD = Util.class.getDeclaredMethod("getDeclaredField", Class.class, String.class))
 				.setAccessible(true);
 		//
 	}
@@ -63,7 +55,7 @@ class UtilTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			final String methodName = method != null ? method.getName() : null;
+			final String methodName = Util.getName(method);
 			//
 			if (proxy instanceof Stream) {
 				//
@@ -115,39 +107,8 @@ class UtilTest {
 	@Test
 	void testCast() throws Throwable {
 		//
-		Assertions.assertNull(cast(null, null));
+		Assertions.assertNull(Util.cast(Object.class, null));
 		//
-		Assertions.assertNull(cast(Object.class, null));
-		//
-	}
-
-	private static <T> T cast(final Class<T> clz, final Object instance) throws Throwable {
-		try {
-			return (T) METHOD_CAST.invoke(null, clz, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetName() throws Throwable {
-		//
-		Assertions.assertNull(getName(null));
-		//
-	}
-
-	private static String getName(final Member instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_NAME.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private static Class<?> getClass(final Object instance) {
@@ -161,64 +122,11 @@ class UtilTest {
 	@Test
 	void testIsAssignableFrom() throws Throwable {
 		//
-		Assertions.assertFalse(isAssignableFrom(null, null));
+		Assertions.assertFalse(Util.isAssignableFrom(Object.class, null));
 		//
-		Assertions.assertFalse(isAssignableFrom(Object.class, null));
+		Assertions.assertTrue(Util.isAssignableFrom(Object.class, String.class));
 		//
-	}
-
-	private static boolean isAssignableFrom(final Class<?> a, final Class<?> b) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_ASSIGNABLE_FROM.invoke(null, a, b);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAccept() {
-		//
-		Assertions.assertDoesNotThrow(() -> accept(null, null));
-		//
-	}
-
-	private static <T> void accept(final Consumer<T> instance, final T value) throws Throwable {
-		try {
-			METHOD_ACCEPT.invoke(null, instance, value);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testContains() {
-		//
-		Assertions.assertFalse(Util.contains(null, null));
-		//
-	}
-
-	@Test
-	void testGetKey() {
-		//
-		Assertions.assertNull(Util.getKey(null));
-		//
-	}
-
-	@Test
-	void testGetValue() {
-		//
-		Assertions.assertNull(Util.getValue(null));
-		//
-	}
-
-	@Test
-	void testAdd() {
-		//
-		Assertions.assertDoesNotThrow(() -> Util.add(null, null));
+		Assertions.assertFalse(Util.isAssignableFrom(String.class, Object.class));
 		//
 	}
 
@@ -252,16 +160,7 @@ class UtilTest {
 	}
 
 	@Test
-	void testGetType() {
-		//
-		Assertions.assertNull(Util.getType(null));
-		//
-	}
-
-	@Test
 	void testMatcher() {
-		//
-		Assertions.assertNull(Util.matcher(null, null));
 		//
 		Assertions.assertNull(Util.matcher(Pattern.compile(""), null));
 		//
@@ -335,13 +234,6 @@ class UtilTest {
 	}
 
 	@Test
-	void testName() {
-		//
-		Assertions.assertNull(Util.name(null));
-		//
-	}
-
-	@Test
 	void testGroupCount() {
 		//
 		Assertions.assertEquals(0, Util.groupCount(null));
@@ -359,8 +251,6 @@ class UtilTest {
 
 	@Test
 	void testFind() {
-		//
-		Assertions.assertFalse(Util.find(null));
 		//
 		Assertions.assertFalse(Util.find(Util.cast(Matcher.class, Narcissus.allocateInstance(Matcher.class))));
 		//
@@ -383,9 +273,11 @@ class UtilTest {
 	}
 
 	@Test
-	void testIsStatic() {
+	void testIsStatic() throws Throwable {
 		//
-		Assertions.assertFalse(Util.isStatic(null));
+		Assertions.assertFalse(Util.isStatic(getDeclaredField(Boolean.class, "value")));
+		//
+		Assertions.assertTrue(Util.isStatic(getDeclaredField(Boolean.class, "TRUE")));
 		//
 	}
 
@@ -398,8 +290,6 @@ class UtilTest {
 
 	@Test
 	void testGetDeclaredField() throws Throwable {
-		//
-		Assertions.assertNull(getDeclaredField(null, null));
 		//
 		Assertions.assertNull(getDeclaredField(Object.class, null));
 		//
@@ -481,9 +371,102 @@ class UtilTest {
 	@Test
 	void testLength() {
 		//
-		Assertions.assertEquals(0, Util.length(null));
-		//
 		Assertions.assertEquals(1, Util.length(new Object[] { 1 }));
+		//
+	}
+
+	@Test
+	void testNull() {
+		//
+		final Method[] ms = Util.class.getDeclaredMethods();
+		//
+		Method m = null;
+		//
+		List<Object> list = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
+		Object invokeStaticMethod;
+		//
+		String toString;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			parameterTypes = (m = ms[i]) != null ? m.getParameterTypes() : null;
+			//
+			if (m == null || !Modifier.isStatic(m.getModifiers()) || m.isSynthetic()
+					|| (Objects.equals(Util.getName(m), "or") && Arrays
+							.equals(new Class<?>[] { Boolean.TYPE, Boolean.TYPE, boolean[].class }, parameterTypes))
+					|| (Objects.equals(Util.getName(m), "and") && Arrays
+							.equals(new Class<?>[] { Boolean.TYPE, Boolean.TYPE, boolean[].class }, parameterTypes))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			clear(list = ObjectUtils.getIfNull(list, ArrayList::new));
+			//
+			if (parameterTypes != null) {
+				//
+				for (final Class<?> clz : parameterTypes) {
+					//
+					if (Objects.equals(clz, Integer.TYPE)) {
+						//
+						list.add(Integer.valueOf(0));
+						//
+					} else if (Objects.equals(clz, Character.TYPE)) {
+						//
+						list.add(Character.valueOf(' '));
+						//
+					} else if (Objects.equals(clz, Long.TYPE)) {
+						//
+						list.add(Long.valueOf(0));
+						//
+					} else {
+						//
+						list.add(null);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+			invokeStaticMethod = Narcissus.invokeStaticMethod(m, toArray(list));
+			//
+			toString = Objects.toString(m);
+			//
+			if (ArrayUtils.contains(new Class<?>[] { Boolean.TYPE, Integer.TYPE, Long.TYPE, IValue0.class },
+					m.getReturnType())) {
+				//
+				Assertions.assertNotNull(invokeStaticMethod, toString);
+				//
+			} else {
+				//
+				Assertions.assertNull(invokeStaticMethod, toString);
+				//
+			} // if
+				//
+		} // for
+			//
+	}
+
+	private void clear(final Collection<Object> instance) {
+		if (instance != null) {
+			instance.clear();
+		}
+	}
+
+	private static Object[] toArray(final Collection<?> instance) {
+		return instance != null ? instance.toArray() : null;
+	}
+
+	@Test
+	void testApplyAsInt() {
+		//
+		final int zero = 0;
+		//
+		Assertions.assertEquals(0, Util.applyAsInt(IntUnaryOperator.identity(), zero, zero));
 		//
 	}
 

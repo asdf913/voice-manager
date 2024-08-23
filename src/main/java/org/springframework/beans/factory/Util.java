@@ -25,6 +25,7 @@ import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.MatchResult;
@@ -675,6 +676,10 @@ abstract class Util {
 
 	static int length(@Nullable final Object[] instance) {
 		return instance != null ? instance.length : 0;
+	}
+
+	static int applyAsInt(final IntUnaryOperator instance, final int operand, final int defaultValue) {
+		return instance != null ? instance.applyAsInt(operand) : defaultValue;
 	}
 
 }
