@@ -54,7 +54,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		final List<String> list = Util
 				.toList(Util.map(
 						Util.filter(testAndApply(Objects::nonNull, Util.spliterator(nodes),
-								x -> StreamSupport.stream(x, false), null), x -> x instanceof TextNode),
+								x -> StreamSupport.stream(x, false), null), TextNode.class::isInstance),
 						Util::toString));
 		//
 		String[] ss = null;
