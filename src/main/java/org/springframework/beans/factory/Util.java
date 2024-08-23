@@ -678,7 +678,7 @@ abstract class Util {
 		return instance != null ? instance.length : 0;
 	}
 
-	static int applyAsInt(final IntUnaryOperator instance, final int operand, final int defaultValue) {
+	static int applyAsInt(@Nullable final IntUnaryOperator instance, final int operand, final int defaultValue) {
 		return instance != null ? instance.applyAsInt(operand) : defaultValue;
 	}
 
