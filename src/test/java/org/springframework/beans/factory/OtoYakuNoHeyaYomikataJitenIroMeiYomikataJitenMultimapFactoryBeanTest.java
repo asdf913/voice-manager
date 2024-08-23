@@ -4,14 +4,18 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.IntPredicate;
+import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Assertions;
@@ -28,7 +32,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP, METHOD_TEST_AND_APPLY_AS_INT;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -39,6 +43,9 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", PatternMap.class, String.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY_AS_INT = clz.getDeclaredMethod("testAndApplyAsInt", IntPredicate.class, Integer.TYPE,
+				IntUnaryOperator.class, IntUnaryOperator.class, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -106,6 +113,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		Method m = null;
 		//
+		Collection<Object> list = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
 		Object invokeStaticMethod;
 		//
 		String toString;
@@ -118,12 +129,31 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				//
 			} // if
 				//
-			invokeStaticMethod = Narcissus.invokeStaticMethod(m,
-					toArray(Collections.nCopies(m.getParameterCount(), null)));
+			clear(list = ObjectUtils.getIfNull(list, ArrayList::new));
+			//
+			if ((parameterTypes = m.getParameterTypes()) != null) {
+				//
+				for (final Class<?> clz : parameterTypes) {
+					//
+					if (Objects.equals(Integer.TYPE, clz)) {
+						//
+						list.add(Integer.valueOf(0));
+						//
+					} else {
+						//
+						list.add(null);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+			invokeStaticMethod = Narcissus.invokeStaticMethod(m, toArray(list));
 			//
 			toString = Objects.toString(m);
 			//
-			if (Objects.equals(Boolean.TYPE, m.getReturnType())) {
+			if (Util.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE), m.getReturnType())) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
@@ -135,6 +165,12 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				//
 		} // for
 			//
+	}
+
+	private void clear(final Collection<Object> instance) {
+		if (instance != null) {
+			instance.clear();
+		}
 	}
 
 	private static Object[] toArray(final Collection<?> instance) {
@@ -423,6 +459,9 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("金糸雀色", "かなりあいろ")),
 						MultimapUtil.entries(toMultimap(patternMap, "金糸雀色・カナリア色（かなりあいろ）広辞苑"))));
 		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("茶", "ちゃ")),
+				MultimapUtil.entries(toMultimap(patternMap, "猩々茶（しょうじょうちゃ）"))));
+		//
 	}
 
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s) throws Throwable {
@@ -432,6 +471,28 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Multimap) {
 				return (Multimap) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndApplyAsInt() throws Throwable {
+		//
+		final int zero = 0;
+		//
+		Assertions.assertEquals(zero, testAndApplyAsInt(x -> x == zero, zero, null, null, zero));
+		//
+	}
+
+	private static int testAndApplyAsInt(final IntPredicate predicate, final int value, final IntUnaryOperator t,
+			final IntUnaryOperator f, final int defaultValue) throws Throwable {
+		try {
+			final Object obj = METHOD_TEST_AND_APPLY_AS_INT.invoke(null, predicate, value, t, f, defaultValue);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

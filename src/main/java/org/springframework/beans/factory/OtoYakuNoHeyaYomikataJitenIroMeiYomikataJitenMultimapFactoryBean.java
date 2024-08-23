@@ -3,10 +3,14 @@ package org.springframework.beans.factory;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.function.IntPredicate;
+import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 
@@ -477,8 +481,82 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		Iterable<String> repeatedStrings = null;
+		//
+		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs})(々)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+				StringUtils.trim(input))) && Util.groupCount(m) > 3
+				&& IterableUtils.size(repeatedStrings = getRepeatedStrings(g4 = Util.group(m, 4))) == 1) {
+			//
+			return Unit.with(ImmutableMultimap.of(Util.group(m, 3),
+					StringUtils.substringAfterLast(g4, IterableUtils.get(repeatedStrings, 0))));
+			//
+		} // if
+			//
 		return null;
 		//
+	}
+
+	// https://gist.github.com/EasyG0ing1/f6e1d2c18d41850f80fa42bad469c9eb
+	private static Iterable<String> getRepeatedStrings(final String userString) {
+		//
+		final int size = StringUtils.length(userString);
+		//
+		final String[] coreString = new String[size];
+		//
+		for (int x = 0; x < size; x++) {
+			//
+			coreString[x] = userString.substring(x, x + 1);
+			//
+		} // for
+			//
+		List<String> patterns = null;
+		//
+		String buildString;
+		//
+		for (int index = 0; index < size - 1; index++) {
+			//
+			buildString = coreString[index];
+			//
+			for (int x = index + 1; x < size; x++) {
+				//
+				Util.add(patterns = ObjectUtils.getIfNull(patterns, ArrayList::new),
+						StringUtils.join(buildString, coreString[x]));
+				//
+			} // for
+				//
+		} // for
+			//
+		Map<String, Integer> hitCountMap = null;
+		//
+		if (Util.iterator(patterns) != null) {
+			//
+			for (final String pattern : patterns) {
+				//
+				if (StringUtils.contains(userString.replaceFirst(pattern, ""), pattern)) {
+					//
+					Util.put(hitCountMap = ObjectUtils.getIfNull(hitCountMap, LinkedHashMap::new), pattern,
+							(size - userString.replaceAll(pattern, "").length()) / testAndApplyAsInt(x -> x == 0,
+									StringUtils.length(pattern), x -> 1, IntUnaryOperator.identity(), 1));
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		return hitCountMap != null ? hitCountMap.keySet() : null;
+		//
+	}
+
+	private static int testAndApplyAsInt(final IntPredicate predicate, final int value, final IntUnaryOperator t,
+			final IntUnaryOperator f, final int defaultValue) {
+		return predicate != null && predicate.test(value) ? applyAsInt(t, value, defaultValue)
+				: applyAsInt(f, value, defaultValue);
+	}
+
+	private static int applyAsInt(final IntUnaryOperator instance, final int operand, final int defaultValue) {
+		return instance != null ? instance.applyAsInt(operand) : defaultValue;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
