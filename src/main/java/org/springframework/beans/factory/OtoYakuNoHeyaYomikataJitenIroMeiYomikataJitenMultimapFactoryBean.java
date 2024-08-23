@@ -500,7 +500,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				StringUtils.trim(input)))
 				&& Util.groupCount(m) > 4 && Objects.equals(Util.group(m, 3), "々")
 				&& StringUtils.startsWith(Util.group(m, 1),
-						StringUtils.repeat(g2 = Util.group(m, 2), StringUtils.length(Util.group(m, 2))))
+						StringUtils.repeat(Util.group(m, 2), StringUtils.length(Util.group(m, 2))))
 				&& IterableUtils.size(repeatedStrings = getRepeatedStrings(g5 = Util.group(m, 5))) == 1) {
 			//
 			return Unit.with(ImmutableMultimap.of(Util.group(m, 4),
