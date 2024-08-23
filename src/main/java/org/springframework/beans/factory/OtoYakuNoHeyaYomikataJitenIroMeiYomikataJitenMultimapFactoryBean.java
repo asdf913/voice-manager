@@ -550,13 +550,14 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static int testAndApplyAsInt(@Nullable final IntPredicate predicate, final int value, final IntUnaryOperator t,
-			final IntUnaryOperator f, final int defaultValue) {
+	private static int testAndApplyAsInt(@Nullable final IntPredicate predicate, final int value,
+			final IntUnaryOperator t, final IntUnaryOperator f, final int defaultValue) {
 		return predicate != null && predicate.test(value) ? applyAsInt(t, value, defaultValue)
 				: applyAsInt(f, value, defaultValue);
 	}
 
-	private static int applyAsInt(@Nullable final IntUnaryOperator instance, final int operand, final int defaultValue) {
+	private static int applyAsInt(@Nullable final IntUnaryOperator instance, final int operand,
+			final int defaultValue) {
 		return instance != null ? instance.applyAsInt(operand) : defaultValue;
 	}
 
