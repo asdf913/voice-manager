@@ -476,16 +476,16 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		String g1, g3;
+		//
 		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)(つ)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
 				StringUtils.trim(input))) && Util.groupCount(m) > 3
 				&& StringUtils.countMatches(g4 = Util.group(m, 4), g2 = Util.group(m, 2)) == 1) {
 			//
-			final String g1 = Util.group(m, 1);
+			g3 = Util.group(m, 3);
 			//
-			final String g3 = Util.group(m, 3);
-			//
-			if (Objects.equals(g1, "二")) {
+			if (Objects.equals(g1 = Util.group(m, 1), "二")) {
 				//
 				return Unit.with(ImmutableMultimap.of(g1, StringUtils.substringBefore(g4, g2), g3,
 						StringUtils.substringAfter(g4, g2)));
@@ -532,6 +532,15 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			return Unit.with(ImmutableMultimap.of(Util.group(m, 4),
 					StringUtils.substringAfterLast(g5, IterableUtils.get(repeatedStrings, 0))));
+			//
+		} // if
+			//
+		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}[\\p{InHiragana}\\p{InCJKUnifiedIdeographs}\\p{InBasicLatin}\\p{InHalfwidthAndFullwidthForms}]+"),
+				StringUtils.trim(input))) && Util.groupCount(m) > 2
+				&& StringUtils.startsWith(g3 = Util.group(m, 3), g1 = Util.group(m, 1))) {
+			//
+			return Unit.with(ImmutableMultimap.of(Util.group(m, 2), StringUtils.substringAfter(g3, g1)));
 			//
 		} // if
 			//
