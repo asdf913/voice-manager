@@ -13,6 +13,7 @@ import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
 
@@ -50,31 +51,32 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		Multimap<String, String> multimap = null;
 		//
-		if (Util.iterator(nodes) != null) {
+		final List<String> list = Util
+				.toList(Util.map(
+						Util.filter(testAndApply(Objects::nonNull, Util.spliterator(nodes),
+								x -> StreamSupport.stream(x, false), null), x -> x instanceof TextNode),
+						Util::toString));
+		//
+		String[] ss = null;
+		//
+		PatternMap patternMap = null;
+		//
+		for (int i = 0; list != null && i < list.size(); i++) {
 			//
-			String[] ss = null;
-			//
-			PatternMap patternMap = null;
-			//
-			for (final Node node : nodes) {
+			if ((ss = StringUtils.split(list.get(i), "\u3000")) == null) {
 				//
-				if (!(node instanceof TextNode) || (ss = StringUtils.split(Util.toString(node), "\u3000")) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				for (final String s : ss) {
-					//
-					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							toMultimap(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
-									StringUtils.trim(s)));
-					//
-				} // for
-					//
+				continue;
+				//
+			} // if
+				//
+			for (final String s : ss) {
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), toMultimap(
+						patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), StringUtils.trim(s)));
+				//
 			} // for
 				//
-		} // if
+		} // for
 			//
 		return multimap;
 		//
