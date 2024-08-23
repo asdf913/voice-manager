@@ -579,7 +579,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				for (int i = StringUtils.length(g4) - 1 - StringUtils.length(g2); i >= 0; i--) {
 					//
-					if (StringUtils.equals(g4.substring(i - 1, i), g2)) {
+					if (StringUtils.equals(StringUtils.substring(g4, i - 1, i), g2)) {
 						//
 						index = Integer.valueOf(i);
 						//
