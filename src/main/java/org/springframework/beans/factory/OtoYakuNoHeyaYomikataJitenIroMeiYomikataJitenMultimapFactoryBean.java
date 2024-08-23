@@ -61,6 +61,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		PatternMap patternMap = null;
 		//
+		Matcher m1, m2;
+		//
+		String s;
+		//
 		for (int i = 0; list != null && i < list.size(); i++) {
 			//
 			if ((ss = StringUtils.split(list.get(i), "\u3000")) == null) {
@@ -69,8 +73,27 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
-			for (final String s : ss) {
+			for (int j = 0; j < ss.length; j++) {
 				//
+				if (Util.matches(m1 = Util.matcher(
+						PatternMap.getPattern(patternMap,
+								"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)"),
+						StringUtils.trim(s = ss[j])))
+						&& Util.groupCount(m1) > 1 && j < ss.length - 1
+						&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+								"^(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+$"),
+								StringUtils.trim(ss[j + 1])))
+						&& Util.groupCount(m2) > 0) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(m1, 1), Util.group(m1, 2) + Util.group(m2, 1));
+					//
+					j++;
+					//
+					continue;
+					//
+				} // if
+					//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), toMultimap(
 						patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), StringUtils.trim(s)));
 				//
