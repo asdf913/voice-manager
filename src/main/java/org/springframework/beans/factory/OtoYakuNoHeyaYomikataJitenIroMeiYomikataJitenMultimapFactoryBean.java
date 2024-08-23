@@ -552,7 +552,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap7(final PatternMap patternMap, final String input) {
 		//
-		final Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
+		Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+\\p{InCJKSymbolsAndPunctuation}(\\p{InHiragana}+)\\p{InCJKSymbolsAndPunctuation}[\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+"),
 				StringUtils.trim(input));
 		//
@@ -564,6 +564,41 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			return Unit.with(ImmutableMultimap.of(g1, g2, StringUtils.substring(g1, 0, 1), g3,
 					StringUtils.substring(g1, 1), StringUtils.substringAfter(g2, g3)));
 			//
+		} // if
+			//
+		String g4;
+		//
+		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InHalfwidthAndFullwidthForms}\\p{InHiragana}+[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
+				StringUtils.trim(input))) && Util.groupCount(m) > 2
+				&& StringUtils.countMatches(g4 = Util.group(m, 4), g2 = Util.group(m, 2)) > 0) {
+			//
+			if (StringUtils.endsWith(g4, g2)) {
+				//
+				Integer index = null;
+				//
+				for (int i = StringUtils.length(g4) - 1 - StringUtils.length(g2); i >= 0; i--) {
+					//
+					if (StringUtils.equals(g4.substring(i - 1, i), g2)) {
+						//
+						index = Integer.valueOf(i);
+						//
+						break;
+						//
+					} // if
+						//
+				} // for
+					//
+				if (index != null) {
+					//
+					return Unit.with(ImmutableMultimap.of(Util.group(m, 1),
+							StringUtils.substring(g4, 0, index.intValue() - StringUtils.length(g2)), Util.group(m, 3),
+							StringUtils.substring(g4, index.intValue())));
+					//
+				} // if
+					//
+			} // if
+				//
 		} // if
 			//
 		return null;
