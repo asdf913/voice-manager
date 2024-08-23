@@ -575,27 +575,19 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			if (StringUtils.endsWith(g4, g2)) {
 				//
-				Integer index = null;
-				//
 				for (int i = StringUtils.length(g4) - 1 - StringUtils.length(g2); i >= 0; i--) {
 					//
-					if (StringUtils.equals(StringUtils.substring(g4, i - 1, i), g2)) {
+					if (!StringUtils.equals(StringUtils.substring(g4, i - 1, i), g2)) {
 						//
-						index = Integer.valueOf(i);
-						//
-						break;
+						continue;
 						//
 					} // if
 						//
-				} // for
-					//
-				if (index != null) {
-					//
 					return Unit.with(ImmutableMultimap.of(Util.group(m, 1),
-							StringUtils.substring(g4, 0, index.intValue() - StringUtils.length(g2)), Util.group(m, 3),
-							StringUtils.substring(g4, index.intValue())));
+							StringUtils.substring(g4, 0, i - StringUtils.length(g2)), Util.group(m, 3),
+							StringUtils.substring(g4, i)));
 					//
-				} // if
+				} // for
 					//
 			} // if
 				//
