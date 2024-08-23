@@ -498,6 +498,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	}
 
 	// https://gist.github.com/EasyG0ing1/f6e1d2c18d41850f80fa42bad469c9eb
+	@Nullable
 	private static Iterable<String> getRepeatedStrings(final String userString) {
 		//
 		final int size = StringUtils.length(userString);
