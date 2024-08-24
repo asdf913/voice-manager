@@ -61,9 +61,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		PatternMap patternMap = null;
 		//
-		Matcher m1, m2;
+		String s;
 		//
-		String s, g4, g2;
+		IValue0<Multimap<String, String>> iValue0;
 		//
 		for (int i = 0; list != null && i < list.size(); i++) {
 			//
@@ -75,36 +75,14 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			for (int j = 0; j < ss.length; j++) {
 				//
-				if (Util.matches(m1 = Util.matcher(
-						PatternMap.getPattern(patternMap,
-								"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)"),
-						StringUtils.trim(s = ss[j])))
-						&& Util.groupCount(m1) > 1 && j < ss.length - 1
-						&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-								"^(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+$"),
-								StringUtils.trim(ss[j + 1])))
-						&& Util.groupCount(m2) > 0) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Util.group(m1, 1), Util.group(m1, 2) + Util.group(m2, 1));
-					//
-					j++;
-					//
-					continue;
-					//
-				} else if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
-						"^\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}{2,})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}"),
-						StringUtils.trim(s))) && Util.groupCount(m1) > 3
-						&& StringUtils.countMatches(g4 = Util.group(m1, 4), g2 = Util.group(m1, 2)) == 1
-						&& j < ss.length - 1
-						&& Util.matches(Util.matcher(
-								PatternMap.getPattern(patternMap,
-										"^\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}$"),
-								StringUtils.trim(ss[j + 1])))) {
+				s = ss[j];
+				//
+				if (j < ss.length - 1
+						&& (iValue0 = toMultimap(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), s,
+								ss[j + 1])) != null) {
 					//
 					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							ImmutableMultimap.of(Util.group(m1, 1), StringUtils.substringBefore(g4, g2),
-									Util.group(m1, 3), StringUtils.substringAfter(g4, g2)));
+							IValue0Util.getValue0(iValue0));
 					//
 					j++;
 					//
@@ -120,6 +98,45 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		} // for
 			//
 		return multimap;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap(final PatternMap patternMap, final String s1,
+			final String s2) {
+		//
+		Matcher m1 = Util.matcher(
+				PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)"),
+				StringUtils.trim(s1));
+		//
+		Matcher m2 = Util.matcher(
+				PatternMap.getPattern(patternMap,
+						"^(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+$"),
+				StringUtils.trim(s2));
+		//
+		if (Util.matches(m1) && Util.groupCount(m1) > 1 && Util.matches(m2) && Util.groupCount(m2) > 0) {
+			//
+			return Unit.with(ImmutableMultimap.of(Util.group(m1, 1), Util.group(m1, 2) + Util.group(m2, 1)));
+			//
+		} // if
+			//
+		String g4, g2;
+		//
+		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}{2,})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}"),
+				StringUtils.trim(s1))) && Util.groupCount(m1) > 3
+				&& StringUtils.countMatches(g4 = Util.group(m1, 4), g2 = Util.group(m1, 2)) == 1
+				&& Util.matches(Util.matcher(
+						PatternMap.getPattern(patternMap,
+								"^\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}$"),
+						StringUtils.trim(s2)))) {
+			//
+			return Unit.with(ImmutableMultimap.of(Util.group(m1, 1), StringUtils.substringBefore(g4, g2),
+					Util.group(m1, 3), StringUtils.substringAfter(g4, g2)));
+			//
+		} // if
+			//
+		return null;
 		//
 	}
 
