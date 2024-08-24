@@ -94,10 +94,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 				} else if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 						"^\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}{2,})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}"),
-						StringUtils.trim(s = ss[j]))) && Util.groupCount(m1) > 3
+						StringUtils.trim(s))) && Util.groupCount(m1) > 3
 						&& StringUtils.countMatches(g4 = Util.group(m1, 4), g2 = Util.group(m1, 2)) == 1
 						&& j < ss.length - 1
-						&& Util.matches(m2 = Util.matcher(
+						&& Util.matches(Util.matcher(
 								PatternMap.getPattern(patternMap,
 										"^\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}$"),
 								StringUtils.trim(ss[j + 1])))) {
