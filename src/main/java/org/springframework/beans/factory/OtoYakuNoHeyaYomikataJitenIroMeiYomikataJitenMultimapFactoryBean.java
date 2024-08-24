@@ -101,6 +101,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap(final PatternMap patternMap, final String s1,
 			final String s2) {
 		//
