@@ -571,25 +571,22 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InHalfwidthAndFullwidthForms}\\p{InHiragana}+[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
 				StringUtils.trim(input))) && Util.groupCount(m) > 2
-				&& StringUtils.countMatches(g4 = Util.group(m, 4), g2 = Util.group(m, 2)) > 0) {
+				&& StringUtils.countMatches(g4 = Util.group(m, 4), g2 = Util.group(m, 2)) > 0
+				&& StringUtils.endsWith(g4, g2)) {
 			//
-			if (StringUtils.endsWith(g4, g2)) {
+			for (int i = StringUtils.length(g4) - 1 - StringUtils.length(g2); i >= 0; i--) {
 				//
-				for (int i = StringUtils.length(g4) - 1 - StringUtils.length(g2); i >= 0; i--) {
+				if (!StringUtils.equals(StringUtils.substring(g4, i - 1, i), g2)) {
 					//
-					if (!StringUtils.equals(StringUtils.substring(g4, i - 1, i), g2)) {
-						//
-						continue;
-						//
-					} // if
-						//
-					return Unit.with(ImmutableMultimap.of(Util.group(m, 1),
-							StringUtils.substring(g4, 0, i - StringUtils.length(g2)), Util.group(m, 3),
-							StringUtils.substring(g4, i)));
+					continue;
 					//
-				} // for
+				} // if
 					//
-			} // if
+				return Unit.with(
+						ImmutableMultimap.of(Util.group(m, 1), StringUtils.substring(g4, 0, i - StringUtils.length(g2)),
+								Util.group(m, 3), StringUtils.substring(g4, i)));
+				//
+			} // for
 				//
 		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^\\p{InCJKUnifiedIdeographs}+(\\p{InHiragana}{2,})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}\\p{InKatakana}]+$"),
