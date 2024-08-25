@@ -517,6 +517,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("御色", "おいろ")),
 				MultimapUtil.entries(IValue0Util.getValue0(toMultimap(patternMap, "＜御色（おいろ）", "広辞苑＞")))));
 		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				MultimapUtil.entries(ImmutableMultimap.of("己", "おの", "色色", "いろいろ", "色", "いろ")),
+				MultimapUtil.entries(toMultimap(patternMap, "＜己が色色（おのがいろいろ）広辞苑＞"))));
+		//
 	}
 
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s) throws Throwable {

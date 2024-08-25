@@ -656,6 +656,25 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			return Unit.with(ImmutableMultimap.of(Util.group(m, 2), StringUtils.substringAfter(g3, g1)));
 			//
+		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+$"),
+				StringUtils.trim(input))) && Util.groupCount(m) > 3
+				&& StringUtils.countMatches(g4 = Util.group(m, 4), g2 = Util.group(m, 2)) == 1) {
+			//
+			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(Util.group(m, 1),
+					StringUtils.substringBefore(g4, g2), g3 = Util.group(m, 3), StringUtils.substringAfter(g4, g2)));
+			//
+			final int length = StringUtils.length(g3);
+			//
+			if (length == 2 && Objects.equals(StringUtils.substring(g3, 0, 1), StringUtils.substring(g3, 1, length))) {
+				//
+				MultimapUtil.put(multimap, StringUtils.substring(g3, 0, 1), testAndApply(
+						x -> IterableUtils.size(x) == 1, getRepeatedStrings(g4), x -> IterableUtils.get(x, 0), null));
+				//
+			} // if
+				//
+			return Unit.with(multimap);
+			//
 		} // if
 			//
 		return null;
