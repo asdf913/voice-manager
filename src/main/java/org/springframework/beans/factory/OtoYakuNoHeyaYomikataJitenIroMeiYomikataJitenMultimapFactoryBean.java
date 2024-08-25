@@ -139,7 +139,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				"^\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$"),
 				StringUtils.trim(s1)))
 				&& Util.groupCount(m1) > 1
-				&& Util.matches(m2 = Util.matcher(
+				&& Util.matches(Util.matcher(
 						PatternMap.getPattern(patternMap,
 								"^\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}$"),
 						StringUtils.trim(s2)))) {
