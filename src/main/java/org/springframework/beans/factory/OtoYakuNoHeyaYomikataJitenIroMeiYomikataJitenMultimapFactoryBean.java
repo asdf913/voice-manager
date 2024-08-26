@@ -653,23 +653,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		Iterable<String> repeatedStrings = null;
-		//
-		String g5;
-		//
-		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)(\\p{InCJKSymbolsAndPunctuation})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-				StringUtils.trim(input)))
-				&& Util.groupCount(m) > 4 && Objects.equals(Util.group(m, 3), "々")
-				&& StringUtils.startsWith(Util.group(m, 1),
-						StringUtils.repeat(Util.group(m, 2), StringUtils.length(Util.group(m, 2))))
-				&& IterableUtils.size(repeatedStrings = getRepeatedStrings(g5 = Util.group(m, 5))) == 1) {
-			//
-			return Unit.with(ImmutableMultimap.of(Util.group(m, 4),
-					StringUtils.substringAfterLast(g5, IterableUtils.get(repeatedStrings, 0))));
-			//
-		} // if
-			//
 		return null;
 		//
 	}
@@ -711,6 +694,23 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			final String g1 = Util.group(m, 1);
 			//
 			return Unit.with(ImmutableMultimap.of(g1, Util.group(m, 2), g1, Util.group(m, 3)));
+			//
+		} // if
+			//
+		Iterable<String> repeatedStrings = null;
+		//
+		String g5;
+		//
+		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)(\\p{InCJKSymbolsAndPunctuation})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+				StringUtils.trim(input)))
+				&& Util.groupCount(m) > 4 && Objects.equals(Util.group(m, 3), "々")
+				&& StringUtils.startsWith(Util.group(m, 1),
+						StringUtils.repeat(Util.group(m, 2), StringUtils.length(Util.group(m, 2))))
+				&& IterableUtils.size(repeatedStrings = getRepeatedStrings(g5 = Util.group(m, 5))) == 1) {
+			//
+			return Unit.with(ImmutableMultimap.of(Util.group(m, 4),
+					StringUtils.substringAfterLast(g5, IterableUtils.get(repeatedStrings, 0))));
 			//
 		} // if
 			//
