@@ -521,6 +521,17 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				MultimapUtil.entries(ImmutableMultimap.of("己", "おの", "色色", "いろいろ", "色", "いろ")),
 				MultimapUtil.entries(toMultimap(patternMap, "＜己が色色（おのがいろいろ）広辞苑＞"))));
 		//
+	}
+
+	@Test
+	void testToMultimap4() throws Throwable {
+		//
+		if (isSystemPropertiesContainsTestGetObject) {
+			//
+			return;
+			//
+		} // if
+			//
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(
 				Util.toList(Util.map(Stream.of("しんく", "しんこう"), x -> Pair.of("真紅", x))),
 				MultimapUtil.entries(toMultimap(patternMap, "真紅（しんく）＜注：（しんこう）と読むWEBあり＞"))));
