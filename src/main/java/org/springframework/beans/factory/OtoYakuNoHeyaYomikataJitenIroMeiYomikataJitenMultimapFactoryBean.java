@@ -664,15 +664,13 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				"^\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+$"),
 				StringUtils.trim(input));
 		//
-		String g4, g2;
+		String g4, g2, g3;
 		//
 		if (Util.matches(m) && Util.groupCount(m) > 3
 				&& StringUtils.countMatches(g4 = Util.group(m, 4), g2 = Util.group(m, 2)) == 1) {
 			//
-			final String g3 = Util.group(m, 3);
-			//
 			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(Util.group(m, 1),
-					StringUtils.substringBefore(g4, g2), g3, StringUtils.substringAfter(g4, g2)));
+					StringUtils.substringBefore(g4, g2), g3 = Util.group(m, 3), StringUtils.substringAfter(g4, g2)));
 			//
 			final int length = StringUtils.length(g3);
 			//
@@ -711,6 +709,17 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			return Unit.with(ImmutableMultimap.of(Util.group(m, 4),
 					StringUtils.substringAfterLast(g5, IterableUtils.get(repeatedStrings, 0))));
+			//
+		} // if
+			//
+		String g1;
+		//
+		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^\\p{InCJKUnifiedIdeographs}+([れ])(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+$"),
+				StringUtils.trim(input))) && Util.groupCount(m) > 2
+				&& StringUtils.countMatches(g3 = Util.group(m, 3), g1 = Util.group(m, 1)) == 1) {
+			//
+			return Unit.with(ImmutableMultimap.of(Util.group(m, 2), StringUtils.substringAfter(g3, g1)));
 			//
 		} // if
 			//
