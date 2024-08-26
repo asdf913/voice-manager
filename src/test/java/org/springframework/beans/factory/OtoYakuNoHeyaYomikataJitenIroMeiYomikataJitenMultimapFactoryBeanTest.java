@@ -525,6 +525,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				Util.toList(Util.map(Stream.of("しんく", "しんこう"), x -> Pair.of("真紅", x))),
 				MultimapUtil.entries(toMultimap(patternMap, "真紅（しんく）＜注：（しんこう）と読むWEBあり＞"))));
 		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				Util.toList(Util.map(Stream.of("せっかっしょく", "せきかっしょく"), x -> Pair.of("赤褐色", x))),
+				MultimapUtil.entries(toMultimap(patternMap, "赤褐色（①せっかっしょく・②せきかっしょく）日本の色名・大辞林"))));
+		//
 	}
 
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s) throws Throwable {
