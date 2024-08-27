@@ -35,6 +35,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
+import com.mariten.kanatools.KanaConverter;
 
 public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		implements FactoryBean<Multimap<String, String>> {
@@ -732,6 +733,14 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			return Unit.with(ImmutableMultimap.of(Util.group(m, 4),
 					StringUtils.substringAfterLast(g5, IterableUtils.get(repeatedStrings, 0))));
+			//
+		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InKatakana}+)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+				StringUtils.trim(input))) && Util.groupCount(m) > 1
+				&& StringUtils.countMatches(g3 = Util.group(m, 3),
+						g1 = KanaConverter.convertKana(Util.group(m, 1), KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA)) == 1) {
+			//
+			return Unit.with(ImmutableMultimap.of(Util.group(m, 2), StringUtils.substringAfter(g3, g1)));
 			//
 		} // if
 			//
