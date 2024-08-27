@@ -164,7 +164,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap5,
 				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap6,
 				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap7,
-				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap8);
+				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap8,
+				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap9);
 		//
 		IValue0<Multimap<String, String>> iValue0 = null;
 		//
@@ -747,11 +748,22 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			return Unit.with(ImmutableMultimap.of(Util.group(m, 4),
 					StringUtils.substringAfterLast(g5, IterableUtils.get(repeatedStrings, 0))));
 			//
-		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap9(final PatternMap patternMap, final String input) {
+		//
+		final Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InKatakana}+)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-				StringUtils.trim(input))) && Util.groupCount(m) > 1
-				&& StringUtils.countMatches(g3 = Util.group(m, 3),
-						g1 = KanaConverter.convertKana(Util.group(m, 1), KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA)) == 1) {
+				StringUtils.trim(input));
+		//
+		String g3, g1;
+		//
+		if (Util.matches(m) && Util.groupCount(m) > 1 && StringUtils.countMatches(g3 = Util.group(m, 3),
+				g1 = KanaConverter.convertKana(Util.group(m, 1), KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA)) == 1) {
 			//
 			return Unit.with(ImmutableMultimap.of(Util.group(m, 2), StringUtils.substringAfter(g3, g1)));
 			//
