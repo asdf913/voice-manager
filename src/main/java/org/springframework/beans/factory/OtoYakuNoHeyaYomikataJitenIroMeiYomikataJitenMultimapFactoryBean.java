@@ -114,11 +114,11 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static boolean contains(final IntList instance, final int o) {
+	private static boolean contains(@Nullable final IntList instance, final int o) {
 		return instance != null && instance.contains(o);
 	}
 
-	private static void removeValue(final IntList instance, final int o) {
+	private static void removeValue(@Nullable final IntList instance, final int o) {
 		if (instance != null) {
 			instance.removeValue(o);
 		}
