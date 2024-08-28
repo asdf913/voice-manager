@@ -25,6 +25,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.util.IntList;
 import org.apache.poi.util.IntListUtil;
 import org.javatuples.Unit;
@@ -70,13 +71,13 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		PatternMap patternMap = null;
 		//
-		String s, g4, g2;
+		String s;
 		//
 		IValue0<Multimap<String, String>> iValue0;
 		//
 		IntList intList = null;
 		//
-		Matcher m;
+		Entry<Multimap<String, String>, IntList> entry;
 		//
 		for (int i = 0; i < IterableUtils.size(list); i++) {
 			//
@@ -88,51 +89,19 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
-			s = IterableUtils.get(list, i);
-			//
-			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-					"^(\\p{InCJKUnifiedIdeographs}+)(つ)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-					StringUtils.trim(s))) && Util.groupCount(m) > 3
-					&& StringUtils.countMatches(g4 = Util.group(m, 4), g2 = Util.group(m, 2)) == 1
-					&& i < IterableUtils.size(list) - 2
-					&& Util.matches(Util.matcher(
-							PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}$"),
-							IterableUtils.get(list, i + 1)))
-					&& Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+$"),
-							IterableUtils.get(list, i + 2)))) {
+			if ((entry = toMultimapAndIntList(patternMap, list, i)) != null) {
 				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(m, 3), StringUtils.substringAfter(g4, g2));
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.getKey(entry));
 				//
-				for (int j = 1; j <= 2; j++) {
-					//
-					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i + j);
-					//
-				} // for
-					//
-			} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-					"^\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-					StringUtils.trim(s)))
-					&& Util.groupCount(m) > 1 && i < IterableUtils.size(list) - 2
-					&& Util.matches(Util.matcher(
-							PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}$"),
-							IterableUtils.get(list, i + 1)))
-					&& Util.matches(Util.matcher(
-							PatternMap.getPattern(patternMap,
-									"^\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}$"),
-							IterableUtils.get(list, i + 2)))) {
+				addAll(intList = ObjectUtils.getIfNull(intList, IntList::new), Util.getValue(entry));
 				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(m, 1), Util.group(m, 2));
+				continue;
 				//
-				for (int j = 1; j <= 2; j++) {
-					//
-					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i + j);
-					//
-				} // for
-					//
 			} // if
 				//
+			s = IterableUtils.get(list, i);
+			//
 			if (i < IterableUtils.size(list) - 1
 					&& (iValue0 = toMultimap(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), s,
 							IterableUtils.get(list, i + 1))) != null) {
@@ -152,6 +121,68 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		} // for
 			//
 		return multimap;
+		//
+	}
+
+	private static void addAll(final IntList a, final IntList b) {
+		if (a != null && b != null) {
+			a.addAll(b);
+		}
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList(final PatternMap patternMap,
+			final List<String> list, final int i) {
+		//
+		Matcher m;
+		//
+		final String s = testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null);
+		//
+		IntList intList = null;
+		//
+		String g4, g2;
+		//
+		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)(つ)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+				StringUtils.trim(s))) && Util.groupCount(m) > 3
+				&& StringUtils.countMatches(g4 = Util.group(m, 4), g2 = Util.group(m, 2)) == 1
+				&& i < IterableUtils.size(list) - 2
+				&& Util.matches(
+						Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}$"),
+								IterableUtils.get(list, i + 1)))
+				&& Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+$"),
+						IterableUtils.get(list, i + 2)))) {
+			//
+			for (int j = 1; j <= 2; j++) {
+				//
+				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i + j);
+				//
+			} // for
+				//
+			return Pair.of(ImmutableMultimap.of(Util.group(m, 3), StringUtils.substringAfter(g4, g2)), intList);
+			//
+		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+				StringUtils.trim(s)))
+				&& Util.groupCount(m) > 1 && i < IterableUtils.size(list) - 2
+				&& Util.matches(
+						Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}$"),
+								IterableUtils.get(list, i + 1)))
+				&& Util.matches(Util.matcher(
+						PatternMap.getPattern(patternMap,
+								"^\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}$"),
+						IterableUtils.get(list, i + 2)))) {
+			//
+			for (int j = 1; j <= 2; j++) {
+				//
+				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i + j);
+				//
+			} // for
+				//
+			return Pair.of(ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 2)), intList);
+			//
+		} // if
+			//
+		return null;
 		//
 	}
 

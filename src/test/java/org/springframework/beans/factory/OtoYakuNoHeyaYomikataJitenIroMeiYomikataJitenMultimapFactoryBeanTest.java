@@ -7,6 +7,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Function;
@@ -27,6 +28,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
@@ -39,7 +42,8 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	private static final int ZERO = 0;
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3,
-			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS, METHOD_REMOVE_VALUE, METHOD_FLAT_MAP;
+			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS, METHOD_REMOVE_VALUE, METHOD_FLAT_MAP, METHOD_ADD_ALL,
+			METHOD_TO_MULTI_MAP_AND_INT_LIST;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -63,6 +67,11 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		(METHOD_REMOVE_VALUE = clz.getDeclaredMethod("removeValue", IntList.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_FLAT_MAP = clz.getDeclaredMethod("flatMap", Stream.class, Function.class)).setAccessible(true);
+		//
+		(METHOD_ADD_ALL = clz.getDeclaredMethod("addAll", IntList.class, IntList.class)).setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP_AND_INT_LIST = clz.getDeclaredMethod("toMultimapAndIntList", PatternMap.class, List.class,
+				Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -728,6 +737,74 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddAll() throws Throwable {
+		//
+		final IntList intList = Util.cast(IntList.class, Narcissus.allocateInstance(IntList.class));
+		//
+		Assertions.assertDoesNotThrow(() -> addAll(intList, null));
+		//
+		if (isSystemPropertiesContainsTestGetObject) {
+			//
+			return;
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> addAll(intList, intList));
+		//
+	}
+
+	private static void addAll(final IntList a, final IntList b) throws Throwable {
+		try {
+			METHOD_ADD_ALL.invoke(null, a, b);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToMultimapAndIntList() throws Throwable {
+		//
+		if (isSystemPropertiesContainsTestGetObject) {
+			//
+			return;
+			//
+		} // if
+			//
+		final ObjectMapper objectMapper = new ObjectMapper();
+		//
+		Assertions.assertEquals("{\"{色=[いろ]}\":[1,2]}", ObjectMapperUtil.writeValueAsString(objectMapper,
+				convert(toMultimapAndIntList(patternMap, Arrays.asList("勝つ色（かついろ）", "逆引き", "熟語林"), 0))));
+		//
+		Assertions.assertEquals("{\"{小色=[こいろ]}\":[1,2]}", ObjectMapperUtil.writeValueAsString(objectMapper,
+				convert(toMultimapAndIntList(patternMap, Arrays.asList("＜小色（こいろ）", "逆引き", "熟語林＞"), 0))));
+		//
+	}
+
+	private static Entry<Multimap<String, String>, int[]> convert(
+			final Entry<Multimap<String, String>, IntList> instance) {
+		return Pair.of(Util.getKey(instance), toArray(Util.getValue(instance)));
+	}
+
+	private static int[] toArray(final IntList instance) {
+		return instance != null ? instance.toArray() : null;
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList(final PatternMap patternMap,
+			final List<String> list, final int i) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP_AND_INT_LIST.invoke(null, patternMap, list, i);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Entry) {
+				return (Entry) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
