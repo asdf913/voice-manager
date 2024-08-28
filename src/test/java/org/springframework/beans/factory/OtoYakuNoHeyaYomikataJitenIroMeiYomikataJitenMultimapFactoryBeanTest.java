@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
@@ -38,7 +39,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	private static final int ZERO = 0;
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3,
-			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS, METHOD_REMOVE_VALUE;
+			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS, METHOD_REMOVE_VALUE, METHOD_FLAT_MAP;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -60,6 +61,8 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		(METHOD_CONTAINS = clz.getDeclaredMethod("contains", IntList.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_REMOVE_VALUE = clz.getDeclaredMethod("removeValue", IntList.class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_FLAT_MAP = clz.getDeclaredMethod("flatMap", Stream.class, Function.class)).setAccessible(true);
 		//
 	}
 
@@ -701,6 +704,32 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	private static void removeValue(final IntList instance, final int o) throws Throwable {
 		try {
 			METHOD_REMOVE_VALUE.invoke(null, instance, o);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testFlatMap() throws Throwable {
+		//
+		final Stream<?> stream = Stream.empty();
+		//
+		Assertions.assertNull(flatMap(stream, null));
+		//
+		Assertions.assertNotNull(flatMap(stream, x -> null));
+		//
+	}
+
+	private static <T, R> Stream<R> flatMap(final Stream<T> instance,
+			final Function<? super T, ? extends Stream<? extends R>> mapper) throws Throwable {
+		try {
+			final Object obj = METHOD_FLAT_MAP.invoke(null, instance, mapper);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

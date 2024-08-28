@@ -9,10 +9,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
@@ -55,12 +57,16 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		Multimap<String, String> multimap = null;
 		//
 		final List<String> list = Util
-				.toList(Util.map(
-						Util.filter(testAndApply(Objects::nonNull, Util.spliterator(nodes),
-								x -> StreamSupport.stream(x, false), null), TextNode.class::isInstance),
-						Util::toString));
-		//
-		String[] ss = null;
+				.toList(flatMap(
+						Util.map(
+								Util.map(
+										Util.map(Util.filter(
+												testAndApply(Objects::nonNull, Util.spliterator(nodes),
+														x -> StreamSupport.stream(x, false), null),
+												TextNode.class::isInstance), Util::toString),
+										x -> StringUtils.split(x, "\u3000")),
+								x -> Arrays.asList(x)),
+						List::stream));
 		//
 		PatternMap patternMap = null;
 		//
@@ -70,48 +76,43 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		IntList intList = null;
 		//
-		for (int i = 0; list != null && i < list.size(); i++) {
+		for (int i = 0; i < IterableUtils.size(list); i++) {
 			//
-			if ((ss = StringUtils.split(list.get(i), "\u3000")) == null) {
+			if (contains(intList = ObjectUtils.getIfNull(intList, IntList::new), i)) {
+				//
+				removeValue(intList, i);
 				//
 				continue;
 				//
 			} // if
 				//
-			for (int j = 0; j < ss.length; j++) {
+			s = IterableUtils.get(list, i);
+			//
+			if (i < IterableUtils.size(list) - 1
+					&& (iValue0 = toMultimap(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), s,
+							IterableUtils.get(list, i + 1))) != null) {
 				//
-				if (contains(intList = ObjectUtils.getIfNull(intList, IntList::new), j)) {
-					//
-					removeValue(intList, j);
-					//
-					continue;
-					//
-				} // if
-					//
-				s = ss[j];
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						IValue0Util.getValue0(iValue0));
 				//
-				if (j < ss.length - 1
-						&& (iValue0 = toMultimap(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), s,
-								ss[j + 1])) != null) {
-					//
-					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							IValue0Util.getValue0(iValue0));
-					//
-					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), j + 1);
-					//
-					continue;
-					//
-				} // if
-					//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), toMultimap(
-						patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), StringUtils.trim(s)));
+				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i + 1);
 				//
-			} // for
+				continue;
 				//
+			} // if
+				//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), toMultimap(
+					patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), StringUtils.trim(s)));
+			//
 		} // for
 			//
 		return multimap;
 		//
+	}
+
+	private static <T, R> Stream<R> flatMap(final Stream<T> instance,
+			final Function<? super T, ? extends Stream<? extends R>> mapper) {
+		return instance != null && mapper != null ? instance.flatMap(mapper) : null;
 	}
 
 	private static boolean contains(@Nullable final IntList instance, final int o) {
