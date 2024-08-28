@@ -155,6 +155,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static <T, R> Stream<R> flatMap(@Nullable final Stream<T> instance,
 			@Nullable final Function<? super T, ? extends Stream<? extends R>> mapper) {
 		return instance != null && mapper != null ? instance.flatMap(mapper) : null;
