@@ -110,6 +110,27 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 				} // for
 					//
+			} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+					"^\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+					StringUtils.trim(s)))
+					&& Util.groupCount(m) > 1 && i < IterableUtils.size(list) - 2
+					&& Util.matches(Util.matcher(
+							PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}$"),
+							IterableUtils.get(list, i + 1)))
+					&& Util.matches(Util.matcher(
+							PatternMap.getPattern(patternMap,
+									"^\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}$"),
+							IterableUtils.get(list, i + 2)))) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m, 1), Util.group(m, 2));
+				//
+				for (int j = 1; j <= 2; j++) {
+					//
+					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i + j);
+					//
+				} // for
+					//
 			} // if
 				//
 			if (i < IterableUtils.size(list) - 1
