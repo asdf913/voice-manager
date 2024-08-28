@@ -191,6 +191,29 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		String g3, g1;
+		//
+		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^\\p{InCJKUnifiedIdeographs}+(\\p{InHiragana}{2,})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+				StringUtils.trim(s))) && Util.groupCount(m) > 2
+				&& StringUtils.countMatches(g3 = Util.group(m, 3), g1 = Util.group(m, 1)) == 1
+				&& i < IterableUtils.size(list) - 2
+				&& Util.matches(
+						Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}$"),
+								IterableUtils.get(list, i + 1)))
+				&& Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+$"),
+						IterableUtils.get(list, i + 2)))) {
+			//
+			for (int j = 1; j <= 2; j++) {
+				//
+				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i + j);
+				//
+			} // for
+				//
+			return Pair.of(ImmutableMultimap.of(Util.group(m, 2), StringUtils.substringAfter(g3, g1)), intList);
+			//
+		} // if
+			//
 		return null;
 		//
 	}
