@@ -65,7 +65,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 														x -> StreamSupport.stream(x, false), null),
 												TextNode.class::isInstance), Util::toString),
 										x -> StringUtils.split(x, "\u3000")),
-								x -> Arrays.asList(x)),
+								Arrays::asList),
 						List::stream));
 		//
 		PatternMap patternMap = null;
