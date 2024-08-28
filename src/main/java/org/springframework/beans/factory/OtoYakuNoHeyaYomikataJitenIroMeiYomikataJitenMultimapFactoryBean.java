@@ -220,14 +220,14 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		});
 	}
 
-	private static <R> R collect(final IntStream instance, final Supplier<R> supplier,
-			final ObjIntConsumer<R> accumulator, final BiConsumer<R, R> combiner) {
+	private static <R> R collect(@Nullable final IntStream instance, @Nullable final Supplier<R> supplier,
+			@Nullable final ObjIntConsumer<R> accumulator, @Nullable final BiConsumer<R, R> combiner) {
 		return instance != null && combiner != null && supplier != null && accumulator != null
 				? instance.collect(supplier, accumulator, combiner)
 				: null;
 	}
 
-	private static IntStream map(final IntStream instance, final IntUnaryOperator mapper) {
+	private static IntStream map(@Nullable final IntStream instance, @Nullable final IntUnaryOperator mapper) {
 		return instance != null && mapper != null ? instance.map(mapper) : instance;
 	}
 
