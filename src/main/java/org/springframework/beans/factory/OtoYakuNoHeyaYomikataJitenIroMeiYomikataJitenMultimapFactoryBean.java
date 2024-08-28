@@ -8,13 +8,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
+import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -148,8 +152,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		final String s = testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null);
 		//
-		IntList intList = null;
-		//
 		String g4, g2;
 		//
 		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
@@ -161,13 +163,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						IterableUtils.get(list, i + 1)))
 				&& Util.matches(Util.matcher(PATTERN_CJK_UNIFIED_IDEOGRAPHS_ONLY, IterableUtils.get(list, i + 2)))) {
 			//
-			for (int j = 1; j <= 2; j++) {
-				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i + j);
-				//
-			} // for
-				//
-			return Pair.of(ImmutableMultimap.of(Util.group(m, 3), StringUtils.substringAfter(g4, g2)), intList);
+			return Pair.of(ImmutableMultimap.of(Util.group(m, 3), StringUtils.substringAfter(g4, g2)),
+					toIntList(i, IntStream.rangeClosed(1, 2)));
 			//
 		} else if (i < IterableUtils.size(list) - 2
 				&& Util.matches(Util.matcher(PATTERN_MULTIPLE_CJK_UNIFIED_IDEOGRAPHS_AND_ENDS_WITH_HIRAGANA,
@@ -185,13 +182,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 								&& Util.matches(Util.matcher(PATTERN_CJK_UNIFIED_IDEOGRAPHS_ONLY,
 										IterableUtils.get(list, i + 2)))))) {
 			//
-			for (int j = 1; j <= 2; j++) {
-				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i + j);
-				//
-			} // for
-				//
-			return Pair.of(ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 2)), intList);
+			return Pair.of(ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 2)),
+					toIntList(i, IntStream.rangeClosed(1, 2)));
 			//
 		} // if
 			//
@@ -212,13 +204,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					&& Util.matches(
 							Util.matcher(PATTERN_CJK_UNIFIED_IDEOGRAPHS_ONLY, IterableUtils.get(list, i + 2)))) {
 				//
-				for (int j = 1; j <= 2; j++) {
-					//
-					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i + j);
-					//
-				} // for
-					//
-				return Pair.of(ImmutableMultimap.of(Util.group(m, 2), StringUtils.substringAfter(g3, g1)), intList);
+				return Pair.of(ImmutableMultimap.of(Util.group(m, 2), StringUtils.substringAfter(g3, g1)),
+						toIntList(i, IntStream.rangeClosed(1, 2)));
 				//
 			} // if
 				//
@@ -226,6 +213,22 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		return null;
 		//
+	}
+
+	private static IntList toIntList(final int initial, final IntStream is) {
+		return collect(map(is, x -> x + initial), IntList::new, (a, b) -> a.add(b), (a, b) -> {
+		});
+	}
+
+	private static <R> R collect(final IntStream instance, final Supplier<R> supplier,
+			final ObjIntConsumer<R> accumulator, final BiConsumer<R, R> combiner) {
+		return instance != null && combiner != null && supplier != null && accumulator != null
+				? instance.collect(supplier, accumulator, combiner)
+				: null;
+	}
+
+	private static IntStream map(final IntStream instance, final IntUnaryOperator mapper) {
+		return instance != null && mapper != null ? instance.map(mapper) : instance;
 	}
 
 	@Nullable

@@ -10,10 +10,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
+import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -43,7 +47,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3,
 			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS, METHOD_REMOVE_VALUE, METHOD_FLAT_MAP, METHOD_ADD_ALL,
-			METHOD_TO_MULTI_MAP_AND_INT_LIST;
+			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -72,6 +76,11 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TO_MULTI_MAP_AND_INT_LIST = clz.getDeclaredMethod("toMultimapAndIntList", PatternMap.class, List.class,
 				Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_COLLECT = clz.getDeclaredMethod("collect", IntStream.class, Supplier.class, ObjIntConsumer.class,
+				BiConsumer.class)).setAccessible(true);
+		//
+		(METHOD_MAP = clz.getDeclaredMethod("map", IntStream.class, IntUnaryOperator.class)).setAccessible(true);
 		//
 	}
 
@@ -814,6 +823,54 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Entry) {
 				return (Entry) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCollect() throws Throwable {
+		//
+		final IntStream intStream = IntStream.empty();
+		//
+		Assertions.assertNull(collect(intStream, null, null, null));
+		//
+		Assertions.assertNull(collect(intStream, null, null, (a, b) -> {
+		}));
+		//
+		Assertions.assertNull(collect(intStream, () -> null, null, (a, b) -> {
+		}));
+		//
+	}
+
+	private static <R> R collect(final IntStream instance, final Supplier<R> supplier,
+			final ObjIntConsumer<R> accumulator, final BiConsumer<R, R> combiner) throws Throwable {
+		try {
+			return (R) METHOD_COLLECT.invoke(null, instance, supplier, accumulator, combiner);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMap() throws Throwable {
+		//
+		final IntStream intStream = IntStream.empty();
+		//
+		Assertions.assertSame(intStream, map(intStream, null));
+		//
+	}
+
+	private static IntStream map(final IntStream instance, final IntUnaryOperator mapper)
+			throws IllegalAccessException, IllegalArgumentException, Throwable {
+		try {
+			final Object obj = METHOD_MAP.invoke(null, instance, mapper);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IntStream) {
+				return (IntStream) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
