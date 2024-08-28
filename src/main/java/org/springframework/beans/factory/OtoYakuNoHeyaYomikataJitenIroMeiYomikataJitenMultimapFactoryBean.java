@@ -774,6 +774,14 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)(\\p{InKatakana}+)\\p{InHalfwidthAndFullwidthForms}"),
+				input)) && Util.groupCount(m) > 3 && Objects.equals(Util.group(m, 2), Util.group(m, 4))) {
+			//
+			return Unit.with(ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 3)));
+			//
+		} // if
+			//
 		return null;
 		//
 	}
