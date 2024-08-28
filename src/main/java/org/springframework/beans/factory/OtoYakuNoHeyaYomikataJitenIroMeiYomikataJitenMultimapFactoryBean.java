@@ -124,7 +124,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static void addAll(final IntList a, final IntList b) {
+	private static void addAll(@Nullable final IntList a, @Nullable final IntList b) {
 		if (a != null && b != null) {
 			a.addAll(b);
 		}
