@@ -23,6 +23,8 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.poi.util.IntList;
+import org.apache.poi.util.IntListUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -66,6 +68,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		IValue0<Multimap<String, String>> iValue0;
 		//
+		IntList intList = null;
+		//
 		for (int i = 0; list != null && i < list.size(); i++) {
 			//
 			if ((ss = StringUtils.split(list.get(i), "\u3000")) == null) {
@@ -76,6 +80,14 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			for (int j = 0; j < ss.length; j++) {
 				//
+				if (contains(intList = ObjectUtils.getIfNull(intList, IntList::new), j)) {
+					//
+					removeValue(intList, j);
+					//
+					continue;
+					//
+				} // if
+					//
 				s = ss[j];
 				//
 				if (j < ss.length - 1
@@ -85,7 +97,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							IValue0Util.getValue0(iValue0));
 					//
-					j++;
+					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), j + 1);
 					//
 					continue;
 					//
@@ -100,6 +112,16 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		return multimap;
 		//
+	}
+
+	private static boolean contains(final IntList instance, final int o) {
+		return instance != null && instance.contains(o);
+	}
+
+	private static void removeValue(final IntList instance, final int o) {
+		if (instance != null) {
+			instance.removeValue(o);
+		}
 	}
 
 	@Nullable

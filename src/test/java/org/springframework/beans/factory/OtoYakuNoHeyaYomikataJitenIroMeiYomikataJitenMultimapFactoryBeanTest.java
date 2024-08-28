@@ -18,6 +18,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.poi.util.IntList;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.junit.jupiter.api.Assertions;
@@ -34,8 +35,10 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 
+	private static final int ZERO = 0;
+
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3,
-			METHOD_TEST_AND_APPLY_AS_INT;
+			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS, METHOD_REMOVE_VALUE;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -53,6 +56,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_APPLY_AS_INT = clz.getDeclaredMethod("testAndApplyAsInt", IntPredicate.class, Integer.TYPE,
 				IntUnaryOperator.class, IntUnaryOperator.class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_CONTAINS = clz.getDeclaredMethod("contains", IntList.class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_REMOVE_VALUE = clz.getDeclaredMethod("removeValue", IntList.class, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -128,7 +135,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		String toString;
 		//
-		for (int i = 0; ms != null && i < ms.length; i++) {
+		for (int i = ZERO; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ms[i]) == null || !Modifier.isStatic(m.getModifiers()) || m.isSynthetic()) {
 				//
@@ -144,7 +151,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 					//
 					if (Objects.equals(Integer.TYPE, clz)) {
 						//
-						list.add(Integer.valueOf(0));
+						list.add(Integer.valueOf(ZERO));
 						//
 					} else {
 						//
@@ -641,9 +648,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testTestAndApplyAsInt() throws Throwable {
 		//
-		final int zero = 0;
-		//
-		Assertions.assertEquals(zero, testAndApplyAsInt(x -> x == zero, zero, null, null, zero));
+		Assertions.assertEquals(ZERO, testAndApplyAsInt(x -> x == ZERO, ZERO, null, null, ZERO));
 		//
 	}
 
@@ -655,6 +660,47 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testContains() throws Throwable {
+		//
+		Assertions.assertFalse(contains(Util.cast(IntList.class, Narcissus.allocateInstance(IntList.class)), ZERO));
+		//
+		final IntList intList = new IntList();
+		//
+		intList.add(ZERO);
+		//
+		Assertions.assertTrue(contains(intList, ZERO));
+		//
+	}
+
+	private static boolean contains(final IntList instance, final int o) throws Throwable {
+		try {
+			final Object obj = METHOD_CONTAINS.invoke(null, instance, o);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testRemoveValue() {
+		//
+		Assertions.assertDoesNotThrow(
+				() -> removeValue(Util.cast(IntList.class, Narcissus.allocateInstance(IntList.class)), ZERO));
+		//
+	}
+
+	private static void removeValue(final IntList instance, final int o) throws Throwable {
+		try {
+			METHOD_REMOVE_VALUE.invoke(null, instance, o);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
