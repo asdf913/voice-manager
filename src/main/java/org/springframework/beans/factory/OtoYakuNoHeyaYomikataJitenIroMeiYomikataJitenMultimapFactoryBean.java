@@ -161,35 +161,25 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			return Pair.of(ImmutableMultimap.of(Util.group(m, 3), StringUtils.substringAfter(g4, g2)), intList);
 			//
-		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-				"^\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-				StringUtils.trim(s)))
-				&& Util.groupCount(m) > 1 && i < IterableUtils.size(list) - 2
+		} else if (i < IterableUtils.size(list) - 2
 				&& Util.matches(
 						Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}$"),
 								IterableUtils.get(list, i + 1)))
-				&& Util.matches(Util.matcher(
-						PatternMap.getPattern(patternMap,
-								"^\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}$"),
-						IterableUtils.get(list, i + 2)))) {
-			//
-			for (int j = 1; j <= 2; j++) {
-				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i + j);
-				//
-			} // for
-				//
-			return Pair.of(ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 2)), intList);
-			//
-		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-				StringUtils.trim(s)))
-				&& Util.groupCount(m) > 1 && i < IterableUtils.size(list) - 2
-				&& Util.matches(
-						Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}$"),
-								IterableUtils.get(list, i + 1)))
-				&& Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+$"),
-						IterableUtils.get(list, i + 2)))) {
+				&& ((Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+						"^\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+						StringUtils.trim(s)))
+						&& Util.groupCount(m) > 1
+						&& Util.matches(Util.matcher(
+								PatternMap.getPattern(patternMap,
+										"^\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}$"),
+								IterableUtils.get(list, i + 2))))
+						|| (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+								"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+								StringUtils.trim(s)))
+								&& Util.groupCount(m) > 1
+								&& Util.matches(Util.matcher(
+										PatternMap.getPattern(patternMap, "^\\p{InCJKUnifiedIdeographs}+$"),
+										IterableUtils.get(list, i + 2)))))) {
 			//
 			for (int j = 1; j <= 2; j++) {
 				//
