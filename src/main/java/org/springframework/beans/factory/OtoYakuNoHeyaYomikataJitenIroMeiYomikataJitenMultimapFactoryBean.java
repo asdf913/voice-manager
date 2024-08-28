@@ -215,6 +215,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static IntList toIntList(final int initial, final IntStream is) {
 		return collect(map(is, x -> x + initial), IntList::new, IntListUtil::add, (a, b) -> {
 		});
