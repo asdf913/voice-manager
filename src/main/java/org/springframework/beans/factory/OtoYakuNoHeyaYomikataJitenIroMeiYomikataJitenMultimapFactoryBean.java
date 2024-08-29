@@ -144,8 +144,39 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		}
 	}
 
+	private static interface BiObjectIntFunction<T, U, R> {
+
+		R apply(final T t, final U u, final int i);
+	}
+
 	@Nullable
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList(@Nullable final PatternMap patternMap,
+			final List<String> list, final int i) {
+		//
+		final List<BiObjectIntFunction<PatternMap, List<String>, Entry<Multimap<String, String>, IntList>>> functions = Arrays
+				.asList(OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList1,
+						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList2);
+		//
+		BiObjectIntFunction<PatternMap, List<String>, Entry<Multimap<String, String>, IntList>> function = null;
+		//
+		Entry<Multimap<String, String>, IntList> entry = null;
+		//
+		for (int j = 0; j < IterableUtils.size(functions); j++) {
+			//
+			if ((entry = (function = IterableUtils.get(functions, j)) != null ? function.apply(patternMap, list, i)
+					: null) != null) {
+				//
+				return entry;
+				//
+			} // if
+				//
+		} // for
+			//
+		return null;
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList1(final PatternMap patternMap,
 			final List<String> list, final int i) {
 		//
 		Matcher m1;
@@ -227,9 +258,18 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		int groupCount;
+		return null;
 		//
-		Matcher m2, m3;
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList2(final PatternMap patternMap,
+			final List<String> list, final int i) {
+		//
+		Matcher m1, m2, m3;
+		//
+		final String s = testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null);
+		//
+		int groupCount;
 		//
 		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InCJKUnifiedIdeographs}]+$"),
@@ -264,9 +304,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			if (entries != null) {
 				//
-				g1 = Util.group(m3, 1);
+				final String g1 = Util.group(m3, 1);
 				//
-				g2 = Util.group(m3, 2);
+				final String g2 = Util.group(m3, 2);
 				//
 				for (final Entry<String, String> en : entries) {
 					//
