@@ -211,6 +211,22 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 		} // for
 			//
+		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+				s)) && Util.groupCount(m) > 3
+				&& StringUtils.countMatches(g4 = Util.group(m, 4), g2 = Util.group(m, 2)) == 1
+				&& i < IterableUtils.size(list) - 2
+				&& Util.matches(Util.matcher(PATTERN_MULTIPLE_CJK_UNIFIED_IDEOGRAPHS_AND_ENDS_WITH_HIRAGANA,
+						IterableUtils.get(list, i + 1)))
+				&& Util.matches(Util.matcher(
+						PATTERN_MULTIPLE_CJK_UNIFIED_IDEOGRAPHS_AND_ENDS_WITH_HALFWIDTH_AND_FULL_WIDTH_FORMS,
+						IterableUtils.get(list, i + 2)))) {
+			//
+			return Pair.of(ImmutableMultimap.of(Util.group(m, 1), StringUtils.substringBefore(g4, g2), Util.group(m, 3),
+					StringUtils.substringAfter(g4, g2)), toIntList(i, IntStream.rangeClosed(1, 2)));
+			//
+		} // if
+			//
 		return null;
 		//
 	}
