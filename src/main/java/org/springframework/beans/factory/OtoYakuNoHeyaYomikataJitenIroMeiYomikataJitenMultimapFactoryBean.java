@@ -176,6 +176,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList1(final PatternMap patternMap,
 			final List<String> list, final int i) {
 		//
@@ -262,6 +263,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList2(final PatternMap patternMap,
 			final List<String> list, final int i) {
 		//
