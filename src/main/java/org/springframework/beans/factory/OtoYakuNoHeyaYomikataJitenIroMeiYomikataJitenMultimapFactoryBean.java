@@ -267,6 +267,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		Matcher m1, m2;
 		//
+		Multimap<String, String> multimap = null;
+		//
 		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}]+"),
 				StringUtils.trim(s)))
@@ -274,8 +276,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 						"^\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}]+$"),
 						IterableUtils.get(list, i + 1)))) {
-			//
-			Multimap<String, String> multimap = null;
 			//
 			final String kanji = Util.group(m1, 1);
 			//
@@ -313,6 +313,52 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				&& Util.groupCount(m3) > 1) {
 			//
 			return toMultimapAndIntList(i, m1, m2, m3);
+			//
+		} // if
+			//
+		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InCJKUnifiedIdeographs}]+"),
+				s))
+				&& Util.groupCount(m1) > 1 && i < IterableUtils.size(list) - 3
+				&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InHiragana}]+$"),
+						IterableUtils.get(list, i + 1)))
+				&& Util.groupCount(m2) > 0
+				&& Util.matches(Util.matcher(PatternMap.getPattern(patternMap, "^\\p{InHiragana}+$"),
+						IterableUtils.get(list, i + 2)))
+				&& Util.matches(Util.matcher(
+						PatternMap.getPattern(patternMap,
+								"^[\\p{InHiragana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+$"),
+						IterableUtils.get(list, i + 3)))) {
+			//
+			final int groupCount = Util.groupCount(m1);
+			//
+			String hiragana = Util.group(m1, groupCount);
+			//
+			for (int j = 1; j < groupCount; j++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m1, j), hiragana);
+				//
+			} // for
+				//
+			final Iterable<String> keySet = MultimapUtil
+					.keySet(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create));
+			//
+			if (Util.iterator(keySet) != null) {
+				//
+				hiragana = Util.group(m2, 1);
+				//
+				for (final String key : keySet) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), key,
+							hiragana);
+					//
+				} // for
+					//
+			} // if
+				//
+			return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(1, 3)));
 			//
 		} // if
 			//

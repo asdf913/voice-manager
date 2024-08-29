@@ -821,6 +821,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 										" 褐色（かっしょく・日本語大辞典／かっしょく・かちいろ・色々な色／かっしょく・かちいろ・かちんいろ・日本の色辞典）＜注：（かっしょく）は茶系",
 										"（かちいろ・かちんいろ）は青系＞"), 0))));
 		//
+		Assertions.assertEquals("{\"{端白=[つまじろ, つましろ], 爪白=[つまじろ, つましろ], 褄白=[つまじろ, つましろ]}\":[1,2,3]}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
+						Arrays.asList("＜端白・爪白・褄白（つまじろ）日本国語大辞典", "（つましろ）とも", "とあり", "はしが白いこと＞"), 0))));
+		//
 	}
 
 	private static Entry<Multimap<String, String>, int[]> convert(
