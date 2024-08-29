@@ -312,25 +312,21 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				for (final Entry<String, String> en : entries) {
 					//
-					if (en == null) {
+					if (StringUtils.countMatches(g1, Util.getKey(en)) != 1) {
 						//
 						continue;
 						//
 					} // if
 						//
-					if (StringUtils.countMatches(g1, Util.getKey(en)) == 1) {
+					if (entry == null) {
 						//
-						if (entry == null) {
-							//
-							entry = Pair.of(StringUtils.substringAfter(g1, Util.getKey(en)),
-									StringUtils.substringAfter(g2, Util.getValue(en)));
-							//
-						} else {
-							//
-							throw new IllegalStateException();
-							//
-						} // if
-							//
+						entry = Pair.of(StringUtils.substringAfter(g1, Util.getKey(en)),
+								StringUtils.substringAfter(g2, Util.getValue(en)));
+						//
+					} else {
+						//
+						throw new IllegalStateException();
+						//
 					} // if
 						//
 				} // for
