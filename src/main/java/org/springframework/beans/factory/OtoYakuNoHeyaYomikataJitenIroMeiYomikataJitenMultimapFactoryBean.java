@@ -170,6 +170,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static <T, U, R> R apply(@Nullable final ObjObjIntFunction<T, U, R> instance, @Nullable final T t,
 			final U u, final int i) {
 		return instance != null ? instance.apply(t, u, i) : null;
@@ -323,6 +324,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList3(final PatternMap patternMap,
 			final List<String> list, final int i) {
 		//
