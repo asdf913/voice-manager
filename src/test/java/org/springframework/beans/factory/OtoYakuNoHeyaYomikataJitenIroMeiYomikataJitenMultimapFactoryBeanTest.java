@@ -367,10 +367,6 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				MultimapUtil.entries(toMultimap(patternMap, "＜炎色・焔色（えんしょく）＞"))));
 		//
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(
-				Util.toList(Util.map(Stream.of("臙脂", "燕支", "燕脂", "烟脂"), x -> Pair.of(x, "えんじ"))),
-				MultimapUtil.entries(toMultimap(patternMap, "臙脂・燕支・燕脂・烟脂（えんじ）日本国語大辞典"))));
-		//
-		Assertions.assertTrue(CollectionUtils.isEqualCollection(
 				Util.toList(Util.map(Stream.of("こうはく", "おうびゃく"), x -> Pair.of("黄白", x))),
 				MultimapUtil.entries(toMultimap(patternMap, "黄白（こうはく・おうびゃく）日本国語大辞典＊黄色と白色"))));
 		//
@@ -810,6 +806,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertEquals("{\"{八入=[やしお], 色=[いろ]}\":[1,2]}", ObjectMapperUtil.writeValueAsString(objectMapper,
 				convert(toMultimapAndIntList(patternMap, Arrays.asList("＜八入の色（やしおのいろ）", "逆引き", "熟語林＞"), 0))));
+		//
+		Assertions.assertEquals("{\"{臙脂=[えんじ], 燕支=[えんじ], 燕脂=[えんじ], 烟脂=[えんじ], 烟子=[えんじ], 色=[いろ]}\":[1,2]}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
+						Arrays.asList("臙脂・燕支・燕脂・烟脂（えんじ）日本国語大辞典", "烟子（えんじ）WEB", "臙脂色（えんじいろ）＜注：臙が燕のWEBあり＞"), 0))));
 		//
 	}
 
