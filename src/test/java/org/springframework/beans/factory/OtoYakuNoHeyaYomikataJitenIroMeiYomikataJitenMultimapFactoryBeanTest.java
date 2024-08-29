@@ -17,6 +17,7 @@ import java.util.function.IntUnaryOperator;
 import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -188,7 +189,9 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 			//
 			toString = Objects.toString(m);
 			//
-			if (Util.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE), m.getReturnType())) {
+			if (Util.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE), m.getReturnType())
+					|| Objects.equals(Util.getName(m), "toMultimapAndIntList") && Arrays.equals(m.getParameterTypes(),
+							new Class<?>[] { Integer.TYPE, Matcher.class, Matcher.class, Matcher.class })) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//

@@ -271,12 +271,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		final String s = testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null);
 		//
-		int groupCount;
-		//
 		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}|\\p{InCJKUnifiedIdeographs}]+$"),
 				s))
-				&& (groupCount = Util.groupCount(m1)) > 1 && i < IterableUtils.size(list) - 2
+				&& Util.groupCount(m1) > 1 && i < IterableUtils.size(list) - 2
 				&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}]+$"),
 						IterableUtils.get(list, i + 1)))
@@ -286,65 +284,74 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						IterableUtils.get(list, i + 2)))
 				&& Util.groupCount(m3) > 1) {
 			//
-			Multimap<String, String> multimap = null;
-			//
-			String hiragana = Util.group(m1, groupCount);
-			//
-			for (int j = 1; j < groupCount; j++) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(m1, j), hiragana);
-				//
-			} // for
-				//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m2, 1),
-					Util.group(m2, 2));
-			//
-			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
-			//
-			Entry<String, String> entry = null;
-			//
-			if (entries != null) {
-				//
-				final String g1 = Util.group(m3, 1);
-				//
-				final String g2 = Util.group(m3, 2);
-				//
-				for (final Entry<String, String> en : entries) {
-					//
-					if (StringUtils.countMatches(g1, Util.getKey(en)) != 1) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (entry == null) {
-						//
-						entry = Pair.of(StringUtils.substringAfter(g1, Util.getKey(en)),
-								StringUtils.substringAfter(g2, Util.getValue(en)));
-						//
-					} else {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-				} // for
-					//
-			} // if
-				//
-			if (entry != null) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.getKey(entry), Util.getValue(entry));
-				//
-			} // if
-				//
-			return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(1, 2)));
+			return toMultimapAndIntList(i, m1, m2, m3);
 			//
 		} // if
 			//
 		return null;
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList(final int i, final Matcher m1,
+			final Matcher m2, final Matcher m3) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		final int groupCount = Util.groupCount(m1);
+		//
+		final String hiragana = Util.group(m1, groupCount);
+		//
+		for (int j = 1; j < groupCount; j++) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m1, j),
+					hiragana);
+			//
+		} // for
+			//
+		MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m2, 1),
+				Util.group(m2, 2));
+		//
+		final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
+		//
+		Entry<String, String> entry = null;
+		//
+		if (entries != null) {
+			//
+			final String g1 = Util.group(m3, 1);
+			//
+			final String g2 = Util.group(m3, 2);
+			//
+			for (final Entry<String, String> en : entries) {
+				//
+				if (StringUtils.countMatches(g1, Util.getKey(en)) != 1) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (entry == null) {
+					//
+					entry = Pair.of(StringUtils.substringAfter(g1, Util.getKey(en)),
+							StringUtils.substringAfter(g2, Util.getValue(en)));
+					//
+				} else {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		if (entry != null) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.getKey(entry),
+					Util.getValue(entry));
+			//
+		} // if
+			//
+		return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(1, 2)));
 		//
 	}
 
