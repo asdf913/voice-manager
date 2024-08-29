@@ -33,6 +33,7 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.util.IntList;
 import org.apache.poi.util.IntListUtil;
+import org.d2ab.function.ObjObjIntFunction;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -144,20 +145,15 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		}
 	}
 
-	private static interface BiObjectIntFunction<T, U, R> {
-
-		R apply(@Nullable final T t, final U u, final int i);
-	}
-
 	@Nullable
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList(@Nullable final PatternMap patternMap,
 			final List<String> list, final int i) {
 		//
-		final List<BiObjectIntFunction<PatternMap, List<String>, Entry<Multimap<String, String>, IntList>>> functions = Arrays
+		final List<ObjObjIntFunction<PatternMap, List<String>, Entry<Multimap<String, String>, IntList>>> functions = Arrays
 				.asList(OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList1,
 						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList2);
 		//
-		BiObjectIntFunction<PatternMap, List<String>, Entry<Multimap<String, String>, IntList>> function = null;
+		ObjObjIntFunction<PatternMap, List<String>, Entry<Multimap<String, String>, IntList>> function = null;
 		//
 		Entry<Multimap<String, String>, IntList> entry = null;
 		//
