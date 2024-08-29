@@ -1209,8 +1209,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				for (final Entry<String, String> entry : entries) {
 					//
-					if (StringUtils.countMatches(sb1, key = Util.getKey(entry)) == 1
-							&& StringUtils.countMatches(sb5, value = Util.getValue(entry)) == 1) {
+					if (Boolean.logicalAnd(StringUtils.countMatches(sb1, key = Util.getKey(entry)) == 1,
+							StringUtils.countMatches(sb5, value = Util.getValue(entry)) == 1)) {
 						//
 						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 								Util.toString(sb1.delete(StringUtils.indexOf(sb1, key),
