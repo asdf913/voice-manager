@@ -255,6 +255,38 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		Matcher m2;
+		//
+		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}]+"),
+				StringUtils.trim(s)))
+				&& Util.groupCount(m1) > 0 && i < IterableUtils.size(list) - 1
+				&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}]+$"),
+						IterableUtils.get(list, i + 1)))) {
+			//
+			Multimap<String, String> multimap = null;
+			//
+			final String kanji = Util.group(m1, 1);
+			//
+			for (int j = 2; j <= Util.groupCount(m1); j++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), kanji,
+						Util.group(m1, j));
+				//
+			} // for
+				//
+			for (int j = 1; j <= Util.groupCount(m2); j++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), kanji,
+						Util.group(m2, j));
+				//
+			} // for
+				//
+			return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(1, 2)));
+			//
+		} // if
+			//
 		return null;
 		//
 	}
