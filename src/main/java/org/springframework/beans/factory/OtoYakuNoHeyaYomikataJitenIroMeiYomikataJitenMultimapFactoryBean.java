@@ -380,6 +380,30 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}]+$"),
+				s))
+				&& Util.groupCount(m1) > 1 && i < IterableUtils.size(list) - 1
+				&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InBasicLatin}\\p{InHalfwidthAndFullwidthForms}]+$"),
+						IterableUtils.get(list, i + 1)))) {
+			//
+			final String kanji = Util.group(m1, 1);
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), kanji,
+					Util.group(m1, 2));
+			//
+			for (int j = 1; j <= Util.groupCount(m2); j++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), kanji,
+						Util.group(m2, j));
+				//
+			} // for
+				//
+			return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(1, 2)));
+			//
+		} // if
+			//
 		return null;
 		//
 	}
