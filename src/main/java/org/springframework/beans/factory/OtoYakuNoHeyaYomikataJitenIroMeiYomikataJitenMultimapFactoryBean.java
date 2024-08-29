@@ -146,7 +146,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 
 	private static interface BiObjectIntFunction<T, U, R> {
 
-		R apply(final T t, final U u, final int i);
+		R apply(@Nullable final T t, final U u, final int i);
 	}
 
 	@Nullable
