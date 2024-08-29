@@ -170,7 +170,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static <T, U, R> R apply(final ObjObjIntFunction<T, U, R> instance, final T t, final U u, final int i) {
+	private static <T, U, R> R apply(final ObjObjIntFunction<T, U, R> instance, @Nullable final T t, final U u,
+			final int i) {
 		return instance != null ? instance.apply(t, u, i) : null;
 	}
 
