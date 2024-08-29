@@ -1189,6 +1189,51 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}]+$"),
+				input)) && Util.groupCount(m) > 4
+				&& StringUtils.countMatches(g5 = Util.group(m, 5), g3 = Util.group(m, 3)) == 1) {
+			//
+			final StringBuilder sb1 = new StringBuilder(Util.group(m, 1));
+			//
+			final StringBuilder sb5 = new StringBuilder(Util.group(m, 5));
+			//
+			Multimap<String, String> multimap = LinkedHashMultimap
+					.create(ImmutableMultimap.of(Util.group(m, 4), StringUtils.substringAfter(g5, g3)));
+			//
+			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
+			//
+			if (Util.iterator(entries) != null) {
+				//
+				String key, value;
+				//
+				for (final Entry<String, String> entry : entries) {
+					//
+					if (entry == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (StringUtils.countMatches(sb1, key = Util.getKey(entry)) == 1
+							&& StringUtils.countMatches(sb5, value = Util.getValue(entry)) == 1) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								Util.toString(sb1.delete(StringUtils.indexOf(sb1, key),
+										StringUtils.indexOf(sb1, key) + StringUtils.length(key))),
+								Util.toString(sb5.delete(StringUtils.indexOf(sb5, value),
+										StringUtils.indexOf(sb5, value) + StringUtils.length(value))));
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+			return Unit.with(multimap);
+			//
+		} // if
+			//
 		return null;
 		//
 	}
