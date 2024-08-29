@@ -154,14 +154,11 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList2,
 						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList3);
 		//
-		ObjObjIntFunction<PatternMap, List<String>, Entry<Multimap<String, String>, IntList>> function = null;
-		//
 		Entry<Multimap<String, String>, IntList> entry = null;
 		//
 		for (int j = 0; j < IterableUtils.size(functions); j++) {
 			//
-			if ((entry = (function = IterableUtils.get(functions, j)) != null ? function.apply(patternMap, list, i)
-					: null) != null) {
+			if ((entry = apply(IterableUtils.get(functions, j), patternMap, list, i)) != null) {
 				//
 				return entry;
 				//
@@ -171,6 +168,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		return null;
 		//
+	}
+
+	private static <T, U, R> R apply(final ObjObjIntFunction<T, U, R> instance, final T t, final U u, final int i) {
+		return instance != null ? instance.apply(t, u, i) : null;
 	}
 
 	@Nullable
