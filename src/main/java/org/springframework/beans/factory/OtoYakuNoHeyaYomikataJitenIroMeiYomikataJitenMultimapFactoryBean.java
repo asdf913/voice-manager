@@ -1096,16 +1096,25 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			} // for
 				//
-		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}{2,})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InHiragana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+$"),
-				StringUtils.trim(input))) && Util.groupCount(m) > 2
-				&& StringUtils.endsWith(g3 = Util.group(m, 3), g2 = Util.group(m, 2))) {
-			//
-			return Unit.with(ImmutableMultimap.of(Util.group(m, 1), StringUtils.substringBefore(g3, g2)));
-			//
 		} // if
 			//
-		final Iterable<String> patterns = Arrays.asList(
+		Iterable<String> patterns = Arrays.asList(
+				"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}{2,})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InHiragana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+$",
+				"^(\\p{InCJKUnifiedIdeographs})([の])\\p{InCJKUnifiedIdeographs}+\\p{InKatakana}\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$");
+		//
+		for (final String pattern : patterns) {
+			//
+			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, pattern), StringUtils.trim(input)))
+					&& Util.groupCount(m) > 2
+					&& StringUtils.countMatches(g3 = Util.group(m, 3), g2 = Util.group(m, 2)) == 1) {
+				//
+				return Unit.with(ImmutableMultimap.of(Util.group(m, 1), StringUtils.substringBefore(g3, g2)));
+				//
+			} // if
+				//
+		} // for
+			//
+		patterns = Arrays.asList(
 				"^\\p{InCJKUnifiedIdeographs}+(\\p{InHiragana}{2,})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}\\p{InKatakana}]+$",
 				"^\\p{InCJKUnifiedIdeographs}+([れ])(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+$",
 				"^\\p{InCJKUnifiedIdeographs}+(\\p{InHiragana}{2})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+$",
