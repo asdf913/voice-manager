@@ -1317,7 +1317,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	}
 
 	// http://www.java2s.com/example/java-utility-method/collection-element-get/getcommonsuffix-collection-string-c-85a78.html
-	private static String getCommonSuffix(final String s1, final String s2) {
+	private static String getCommonSuffix(@Nullable final String s1, @Nullable final String s2) {
 		//
 		int i = 0;
 		//
