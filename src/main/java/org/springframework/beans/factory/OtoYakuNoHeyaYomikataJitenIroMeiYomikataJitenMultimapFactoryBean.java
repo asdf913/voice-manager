@@ -485,12 +485,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				for (final Entry<String, String> entry : entries) {
 					//
-					if (entry == null) {
-						//
-						continue;
-						//
-					} // if
-						//
 					if (StringUtils.isNotBlank(
 							StringUtils.getCommonPrefix(key = Util.getKey(entry), g1 = Util.group(m2, 1)))) {
 						//
