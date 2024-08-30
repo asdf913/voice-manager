@@ -1760,6 +1760,8 @@ class VoiceManagerTest {
 
 	private ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
+	private RandomStringUtils randomStringUtils;
+
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
@@ -1818,6 +1820,8 @@ class VoiceManagerTest {
 				.newProxy(OnlineNHKJapanesePronunciationsAccentFailableFunction.class, ih);
 		//
 		configurableListableBeanFactory = Reflection.newProxy(ConfigurableListableBeanFactory.class, ih);
+		//
+		randomStringUtils = RandomStringUtils.secureStrong();
 		//
 	}
 
@@ -4485,7 +4489,7 @@ class VoiceManagerTest {
 		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (v, m) -> {
 		}, null));
 		//
-		final File file = File.createTempFile(RandomStringUtils.randomAlphabetic(THREE), null);
+		final File file = File.createTempFile(nextAlphabetic(randomStringUtils, THREE), null);
 		//
 		if (file != null) {
 			//
@@ -4642,6 +4646,10 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));
 		//
+	}
+
+	private static String nextAlphabetic(final RandomStringUtils instance, final int count) {
+		return instance != null ? instance.nextAlphabetic(count) : null;
 	}
 
 	private void importVoice(final File file) throws Throwable {
@@ -5346,7 +5354,7 @@ class VoiceManagerTest {
 		Assertions.assertDoesNotThrow(() -> delete(null));
 		//
 		Assertions
-				.assertDoesNotThrow(() -> delete(File.createTempFile(RandomStringUtils.randomAlphabetic(THREE), null)));
+				.assertDoesNotThrow(() -> delete(File.createTempFile(nextAlphabetic(randomStringUtils, THREE), null)));
 		//
 	}
 
@@ -5364,7 +5372,7 @@ class VoiceManagerTest {
 		Assertions.assertDoesNotThrow(() -> deleteOnExit(null));
 		//
 		Assertions.assertDoesNotThrow(
-				() -> deleteOnExit(File.createTempFile(RandomStringUtils.randomAlphabetic(THREE), null)));
+				() -> deleteOnExit(File.createTempFile(nextAlphabetic(randomStringUtils, THREE), null)));
 		//
 	}
 
@@ -6118,8 +6126,7 @@ class VoiceManagerTest {
 		//
 		final File folder = new File(".");
 		//
-		File file = File.createTempFile(RandomStringUtils.randomAlphanumeric(tempFileMinimumPrefixLength), null,
-				folder);
+		File file = File.createTempFile(nextAlphanumeric(randomStringUtils, tempFileMinimumPrefixLength), null, folder);
 		//
 		deleteOnExit(file);
 		//
@@ -6140,12 +6147,16 @@ class VoiceManagerTest {
 		} // try
 			//
 		ZipUtil.removeEntry(file, "[Content_Types].xml", file = File
-				.createTempFile(RandomStringUtils.randomAlphanumeric(tempFileMinimumPrefixLength), null, folder));
+				.createTempFile(nextAlphanumeric(randomStringUtils, tempFileMinimumPrefixLength), null, folder));
 		//
 		deleteOnExit(file);
 		//
 		Assertions.assertNull(getWorkbook(file));
 		//
+	}
+
+	private static String nextAlphanumeric(final RandomStringUtils instance, final int count) {
+		return instance != null ? instance.nextAlphanumeric(count) : null;
 	}
 
 	private static Workbook getWorkbook(final File file) throws Throwable {
@@ -9320,7 +9331,7 @@ class VoiceManagerTest {
 		Assertions.assertNull(getPronunciationAudioFileByAudioFormat(pronunciation, null));
 		//
 		final File file = File.createTempFile(
-				RandomStringUtils.randomAlphanumeric(intValue(TEMP_FILE_MINIMUM_PREFIX_LENGTH, THREE)), null);
+				nextAlphanumeric(randomStringUtils, intValue(TEMP_FILE_MINIMUM_PREFIX_LENGTH, THREE)), null);
 		//
 		deleteOnExit(file);
 		//
