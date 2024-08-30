@@ -646,7 +646,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 						MultimapUtil.entries(toMultimap(patternMap, "ないき煤竹（ないきすすたけ）"))));
 		//
 	}
-	
+
 	@Test
 	void testToMultimap5() throws Throwable {
 		//
@@ -913,8 +913,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 	}
 
-	private static IntStream map(final IntStream instance, final IntUnaryOperator mapper)
-			throws IllegalAccessException, IllegalArgumentException, Throwable {
+	private static IntStream map(final IntStream instance, final IntUnaryOperator mapper) throws Throwable {
 		try {
 			final Object obj = METHOD_MAP.invoke(null, instance, mapper);
 			if (obj == null) {
