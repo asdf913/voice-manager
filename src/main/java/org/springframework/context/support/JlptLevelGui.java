@@ -588,13 +588,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				//
 		} // for
 			//
-		setSelectedIndices(jlJlptLevel, toArray(intList));
+		setSelectedIndices(jlJlptLevel, IntListUtil.toArray(intList));
 		//
-	}
-
-	@Nullable
-	private static int[] toArray(@Nullable final IntList instance) {
-		return instance != null ? instance.toArray() : null;
 	}
 
 	@Nullable

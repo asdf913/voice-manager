@@ -26,6 +26,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.util.IntList;
+import org.apache.poi.util.IntListUtil;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.junit.jupiter.api.Assertions;
@@ -880,11 +881,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 
 	private static Entry<Multimap<String, String>, int[]> convert(
 			final Entry<Multimap<String, String>, IntList> instance) {
-		return Pair.of(Util.getKey(instance), toArray(Util.getValue(instance)));
-	}
-
-	private static int[] toArray(final IntList instance) {
-		return instance != null ? instance.toArray() : null;
+		return Pair.of(Util.getKey(instance), IntListUtil.toArray(Util.getValue(instance)));
 	}
 
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList(final PatternMap patternMap,

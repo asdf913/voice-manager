@@ -8,4 +8,8 @@ public interface IntListUtil {
 		}
 	}
 
+	static int[] toArray(final IntList instance) {
+		return instance != null ? instance.toArray() : null;
+	}
+
 }

@@ -70,7 +70,6 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
-import org.apache.poi.util.IntList;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
@@ -93,10 +92,10 @@ class JlptLevelGuiTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_INT_LIST, METHOD_SET_PREFERRED_WIDTH,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_TEST_AND_APPLY, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER,
-			METHOD_INVOKE, METHOD_IIF, METHOD_GET_PARAMETER_TYPES, METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL,
-			METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM, METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE,
+	private static Method METHOD_TO_ARRAY_COLLECTION, METHOD_SET_PREFERRED_WIDTH, METHOD_GET_SYSTEM_CLIP_BOARD,
+			METHOD_TEST_AND_APPLY, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_INVOKE, METHOD_IIF,
+			METHOD_GET_PARAMETER_TYPES, METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL,
+			METHOD_FOR_EACH_STREAM, METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES,
 			METHOD_TO_URI, METHOD_REMOVE_ELEMENT_AT, METHOD_MAX = null;
 
@@ -107,8 +106,6 @@ class JlptLevelGuiTest {
 		//
 		(METHOD_TO_ARRAY_COLLECTION = clz.getDeclaredMethod("toArray", Collection.class, Object[].class))
 				.setAccessible(true);
-		//
-		(METHOD_TO_ARRAY_INT_LIST = clz.getDeclaredMethod("toArray", IntList.class)).setAccessible(true);
 		//
 		(METHOD_SET_PREFERRED_WIDTH = clz.getDeclaredMethod("setPreferredWidth", Integer.TYPE, Iterable.class))
 				.setAccessible(true);
@@ -600,8 +597,6 @@ class JlptLevelGuiTest {
 	@Test
 	void testToArray() throws Throwable {
 		//
-		Assertions.assertArrayEquals(new int[] {}, toArray(new IntList()));
-		//
 		Assertions.assertNull(toArray(Reflection.newProxy(Collection.class, ih), null));
 		//
 		Assertions.assertNull(toArray(Collections.emptyList(), null));
@@ -615,20 +610,6 @@ class JlptLevelGuiTest {
 				return null;
 			}
 			return (T[]) obj;
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static int[] toArray(final IntList instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_ARRAY_INT_LIST.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof int[]) {
-				return (int[]) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
