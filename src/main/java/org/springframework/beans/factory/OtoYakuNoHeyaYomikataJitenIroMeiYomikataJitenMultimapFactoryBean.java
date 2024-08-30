@@ -1253,7 +1253,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap10(final PatternMap patternMap, final String input) {
 		//
-		final Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
+		Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}]+$"),
 				input);
 		//
@@ -1296,7 +1296,44 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		String g1, g2, commonSuffix;
+		//
+		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^([\\p{InCJKUnifiedIdeographs}(\\p{InKatakana})]+)\\p{InHalfwidthAndFullwidthForms}([\\p{InHiragana}\\p{InKatakana}]+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InKatakana}]+$"),
+				input))
+				&& Util.groupCount(m) > 1
+				&& StringUtils.isNotEmpty(commonSuffix = getCommonSuffix(
+						KanaConverter.convertKana(g1 = Util.group(m, 1), KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA),
+						g2 = Util.group(m, 2)))) {
+			//
+			return Unit.with(ImmutableMultimap.of(
+					StringUtils.substring(g1, 0, StringUtils.length(g1) - StringUtils.length(commonSuffix)),
+					StringUtils.substringBefore(g2, commonSuffix)));
+			//
+		} // if
+			//
 		return null;
+		//
+	}
+
+	// http://www.java2s.com/example/java-utility-method/collection-element-get/getcommonsuffix-collection-string-c-85a78.html
+	private static String getCommonSuffix(final String s1, final String s2) {
+		//
+		int i = 0;
+		//
+		if (s1 == null || s2 == null || s1.length() == 0 || s2.length() == 0) {
+			//
+			return "";
+			//
+		} // if
+			//
+		while (i < s1.length() && i < s2.length() && s1.charAt(s1.length() - 1 - i) == s2.charAt(s2.length() - 1 - i)) {
+			//
+			i++;
+			//
+		} // if
+			//
+		return StringUtils.substring(s1, StringUtils.length(s1) - i);
 		//
 	}
 

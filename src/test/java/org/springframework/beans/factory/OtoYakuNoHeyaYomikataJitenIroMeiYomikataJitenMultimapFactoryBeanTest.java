@@ -155,7 +155,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		Object invokeStaticMethod;
 		//
-		String toString;
+		String toString, name;
 		//
 		for (int i = ZERO; ms != null && i < ms.length; i++) {
 			//
@@ -190,8 +190,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 			toString = Objects.toString(m);
 			//
 			if (Util.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE), m.getReturnType())
-					|| Objects.equals(Util.getName(m), "toMultimapAndIntList") && Arrays.equals(m.getParameterTypes(),
-							new Class<?>[] { Integer.TYPE, Matcher.class, Matcher.class, Matcher.class })) {
+					|| (Objects.equals(name = Util.getName(m), "toMultimapAndIntList") && Arrays.equals(parameterTypes,
+							new Class<?>[] { Integer.TYPE, Matcher.class, Matcher.class, Matcher.class }))
+					|| (Objects.equals(name, "getCommonSuffix")
+							&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
@@ -665,6 +667,9 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("色", "いろ")),
 				MultimapUtil.entries(toMultimap(patternMap, "移し色・移色（うつしいろ）広辞苑・日本の色名"))));
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("濃", "のう")),
+				MultimapUtil.entries(toMultimap(patternMap, "濃オリーブ（のうおりーぶ）原色ワイド図鑑"))));
 		//
 	}
 
