@@ -524,13 +524,16 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList6(final PatternMap patternMap,
 			final List<String> list, final int i) {
 		//
+		final String s1 = testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null);
+		//
 		Matcher m1, m2 = null;
 		//
 		String g1;
 		//
-		if (IterableUtils.size(list) - 1 > i && Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-				IterableUtils.get(list, i))) && Util.groupCount(m1) > 1
+				s1))
+				&& Util.groupCount(m1) > 1 && i < IterableUtils.size(list) - 1
 				&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+$"),
 						IterableUtils.get(list, i + 1)))
@@ -567,6 +570,28 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			} // if
 				//
 			return Pair.of(multimap, intList);
+			//
+		} // if
+			//
+		Matcher m5;
+		//
+		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^\\p{InHalfwidthAndFullwidthForms}([\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+$"),
+				s1))
+				&& Util.groupCount(m1) > 1 && i < IterableUtils.size(list) - 4
+				&& Util.matches(m5 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^\\p{InHalfwidthAndFullwidthForms}([\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+$"),
+						IterableUtils.get(list, i + 4)))
+				&& Util.groupCount(m5) > 1) {
+			//
+			final IntList intList = new IntList();
+			//
+			IntListUtil.add(intList, i);
+			//
+			IntListUtil.add(intList, i + 4);
+			//
+			return Pair.of(ImmutableMultimap.of(StringUtils.getCommonPrefix(Util.group(m1, 1), Util.group(m5, 1)),
+					StringUtils.getCommonPrefix(Util.group(m1, 2), Util.group(m5, 2))), intList);
 			//
 		} // if
 			//

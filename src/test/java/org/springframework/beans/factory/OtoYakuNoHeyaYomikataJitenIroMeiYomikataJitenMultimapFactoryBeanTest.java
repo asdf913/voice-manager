@@ -880,6 +880,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		Assertions.assertEquals("{\"{生壁鼠=[なまかべねず], 生=[なま]}\":[0,1]}", ObjectMapperUtil.writeValueAsString(objectMapper,
 				convert(toMultimapAndIntList(patternMap, Arrays.asList("生壁鼠（なまかべねず）", "生白い（なまじろい）日本国語大辞典"), 0))));
 		//
+		Assertions.assertEquals("{\"{黄=[き]}\":[0,4]}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
+						Arrays.asList("＜黄黒い・きぐろい・日本国語大辞典＞", null, null, null, "＜黄白い・きしろい・日本国語大辞典＞"), 0))));
+		//
 	}
 
 	private static Entry<Multimap<String, String>, int[]> convert(
