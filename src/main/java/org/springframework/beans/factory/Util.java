@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.concurrent.atomic.AtomicReference;
@@ -32,6 +33,7 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -680,6 +682,10 @@ abstract class Util {
 
 	static int applyAsInt(@Nullable final IntUnaryOperator instance, final int operand, final int defaultValue) {
 		return instance != null ? instance.applyAsInt(operand) : defaultValue;
+	}
+
+	static OptionalInt max(final IntStream instance) {
+		return instance != null ? instance.max() : null;
 	}
 
 }

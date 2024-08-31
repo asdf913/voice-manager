@@ -505,7 +505,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 								StringUtils.getCommonPrefix(key, g1),
 								StringUtils.getCommonPrefix(Util.getValue(entry), Util.group(m2, 2)));
 						//
-						IntListUtil.add(intList, Arrays.stream(IntListUtil.toArray(intList)).max().getAsInt() + 1);
+						IntListUtil.add(intList, Util.max(Arrays.stream(IntListUtil.toArray(intList))).getAsInt() + 1);
 						//
 					} // if
 						//
@@ -562,7 +562,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 								StringUtils.getCommonPrefix(key, g1),
 								StringUtils.getCommonPrefix(Util.getValue(entry), Util.group(m2, 2)));
 						//
-						IntListUtil.add(intList, Arrays.stream(IntListUtil.toArray(intList)).max().getAsInt() + 1);
+						IntListUtil.add(intList, Util.max(Arrays.stream(IntListUtil.toArray(intList))).getAsInt() + 1);
 						//
 					} // if
 						//

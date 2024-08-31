@@ -154,7 +154,7 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 		//
 		String s1, s2;
 		//
-		final int maxChildrenSize = orElse(max(mapToInt(Util.stream(es), ElementUtil::childrenSize)), 0);
+		final int maxChildrenSize = orElse(Util.max(mapToInt(Util.stream(es), ElementUtil::childrenSize)), 0);
 		//
 		for (int i = 0; i < IterableUtils.size(es); i++) {
 			//
@@ -339,11 +339,6 @@ public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
 
 	private static int orElse(@Nullable final OptionalInt instance, final int other) {
 		return instance != null ? instance.orElse(other) : other;
-	}
-
-	@Nullable
-	private static OptionalInt max(@Nullable final IntStream instance) {
-		return instance != null ? instance.max() : null;
 	}
 
 	@Nullable

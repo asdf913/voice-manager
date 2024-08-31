@@ -5,7 +5,6 @@ import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -46,8 +45,7 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_UNICODE_BLOCKS, METHOD_TO_MULTI_MAP1, METHOD_TO_MULTI_MAP2,
 			METHOD_TO_MULTI_MAP3, METHOD_TO_MULTI_MAP14, METHOD_TO_MULTI_MAP15, METHOD_TO_ENTRY, METHOD_OR_ELSE,
-			METHOD_MAX, METHOD_MIN, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2,
-			METHOD_PUT = null;
+			METHOD_MIN, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP1, METHOD_CREATE_MULTI_MAP2, METHOD_PUT = null;
 
 	private static int ZERO = 0;
 
@@ -79,8 +77,6 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", OptionalInt.class, Integer.TYPE)).setAccessible(true);
 		//
-		(METHOD_MAX = clz.getDeclaredMethod("max", IntStream.class)).setAccessible(true);
-		//
 		(METHOD_MIN = clz.getDeclaredMethod("min", IntStream.class)).setAccessible(true);
 		//
 		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
@@ -104,7 +100,7 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 			//
 			if (proxy instanceof IntStream) {
 				//
-				if (Util.contains(Arrays.asList("max", "min"), methodName)) {
+				if (Objects.equals(methodName, "min")) {
 					//
 					return null;
 					//
@@ -500,29 +496,6 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 			final Object obj = METHOD_OR_ELSE.invoke(null, instance, other);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(Util.getName(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMax() throws Throwable {
-		//
-		Assertions.assertNull(max(null));
-		//
-		Assertions.assertNull(max(Reflection.newProxy(IntStream.class, ih)));
-		//
-	}
-
-	private static OptionalInt max(final IntStream instance) throws Throwable {
-		try {
-			final Object obj = METHOD_MAX.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof OptionalInt) {
-				return (OptionalInt) obj;
 			}
 			throw new Throwable(Util.getName(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
