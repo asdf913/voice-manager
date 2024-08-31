@@ -1,8 +1,10 @@
 package org.springframework.beans.factory;
 
+import java.lang.Character.UnicodeBlock;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
 import java.util.function.ObjIntConsumer;
@@ -18,12 +21,14 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -480,10 +485,49 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
+			String commonSuffix, g22;
+			//
+			if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}([\\p{InKatakana}\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}$"),
+					s2)) && Util
+							.groupCount(m2) > 1
+					&& StringUtils
+							.isNotEmpty(commonSuffix = getCommonSuffix(Util.group(m1, 2), g22 = Util.group(m2, 2)))
+					&& CollectionUtils
+							.isEqualCollection(
+									Collections.singleton(UnicodeBlock.KATAKANA), Util
+											.collect(
+													distinct(
+															mapToObj(
+																	chars(StringUtils.substring(g22, 0,
+																			StringUtils.length(g22) - StringUtils
+																					.length(commonSuffix))),
+																	x -> UnicodeBlock.of(x))),
+													Collectors.toSet()))) {
+				//
+				final String g11 = Util.group(m1, 1);
+				//
+				return Pair.of(ImmutableMultimap.of(g11, Util.group(m1, 2), getCommonSuffix(g11, Util.group(m2, 1)),
+						commonSuffix), toIntList(i, IntStream.rangeClosed(0, 1)));
+				//
+			} // if
+				//
 		} // if
 			//
 		return null;
 		//
+	}
+
+	private static <T> Stream<T> distinct(final Stream<T> instance) {
+		return instance != null ? instance.distinct() : null;
+	}
+
+	private static IntStream chars(final CharSequence instance) {
+		return instance != null ? instance.chars() : null;
+	}
+
+	private static <U> Stream<U> mapToObj(final IntStream instance, final IntFunction<? extends U> mapper) {
+		return instance != null && mapper != null ? instance.mapToObj(mapper) : null;
 	}
 
 	@Nullable
