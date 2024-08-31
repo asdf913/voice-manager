@@ -684,7 +684,7 @@ abstract class Util {
 		return instance != null ? instance.applyAsInt(operand) : defaultValue;
 	}
 
-	static OptionalInt max(final IntStream instance) {
+	static OptionalInt max(@Nullable final IntStream instance) {
 		return instance != null ? instance.max() : null;
 	}
 
