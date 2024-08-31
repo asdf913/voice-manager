@@ -753,17 +753,13 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 								multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 								StringUtils.substringBetween(g11, key = Util.getKey(entry), commonSuffix1),
 								StringUtils.substringBetween(g12, value = Util.getValue(entry), commonSuffix1),
-								(a, b, c) -> {
-									MultimapUtil.put(a, b, c);
-								});
+								MultimapUtil::put);
 						//
 						testAndAccept(
 								(a, b, c) -> Boolean.logicalAnd(StringUtils.isNotBlank(b), StringUtils.isNotBlank(c)),
 								multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 								StringUtils.substringBetween(g21, key, commonSuffix2),
-								StringUtils.substringBetween(g22, value, commonSuffix2), (a, b, c) -> {
-									MultimapUtil.put(a, b, c);
-								});
+								StringUtils.substringBetween(g22, value, commonSuffix2), MultimapUtil::put);
 						//
 					} // for
 						//
