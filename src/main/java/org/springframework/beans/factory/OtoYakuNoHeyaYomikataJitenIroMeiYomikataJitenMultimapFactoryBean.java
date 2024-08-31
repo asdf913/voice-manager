@@ -468,15 +468,21 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList5(final PatternMap patternMap,
 			final List<String> list, final int i) {
 		//
-		Matcher m1, m2;
+		final String s1 = testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null);
 		//
-		if (IterableUtils.size(list) - 1 > i && Boolean.logicalAnd(Util.matches(m1 = Util.matcher(PatternMap.getPattern(
-				patternMap,
+		final String s2 = testAndApply(x -> IterableUtils.size(x) - 1 > i, list, x -> IterableUtils.get(x, i + 1),
+				null);
+		//
+		Matcher m1, m2 = null;
+		//
+		String g1;
+		//
+		if (Boolean.logicalAnd(Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+$"),
-				StringUtils.trim(IterableUtils.get(list, i)))) && Util.groupCount(m1) > 2,
-				Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				StringUtils.trim(s1))) && Util.groupCount(m1) > 2,
+				IterableUtils.size(list) - 1 > i && Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-						IterableUtils.get(list, i + 1))) && Util.groupCount(m2) > 1)) {
+						s2)) && Util.groupCount(m2) > 1)) {
 			//
 			final String g3 = Util.group(m1, 3);
 			//
@@ -485,13 +491,56 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			final IntList intList = new IntList();
 			//
-			IntListUtil.add(intList, i + 1);
+			IntListUtil.add(intList, i);
 			//
 			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
 			//
 			if (Util.iterator(entries) != null) {
 				//
-				String g1, key;
+				String key;
+				//
+				for (final Entry<String, String> entry : entries) {
+					//
+					if (StringUtils.isNotBlank(
+							StringUtils.getCommonPrefix(key = Util.getKey(entry), g1 = Util.group(m2, 1)))) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								StringUtils.getCommonPrefix(key, g1),
+								StringUtils.getCommonPrefix(Util.getValue(entry), Util.group(m2, 2)));
+						//
+						IntListUtil.add(intList, Arrays.stream(IntListUtil.toArray(intList)).max().getAsInt() + 1);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+			return Pair.of(multimap, intList);
+			//
+		} // if
+			//
+		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+				s1))
+				&& Util.groupCount(m1) > 1
+				&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+$"),
+						s2))
+				&& Util.groupCount(m2) > 1) {
+			//
+			Multimap<String, String> multimap = LinkedHashMultimap
+					.create(ImmutableMultimap.of(Util.group(m1, 1), Util.group(m1, 2)));
+			//
+			final IntList intList = new IntList();
+			//
+			IntListUtil.add(intList, i);
+			//
+			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
+			//
+			if (Util.iterator(entries) != null) {
+				//
+				String key;
 				//
 				for (final Entry<String, String> entry : entries) {
 					//

@@ -873,9 +873,12 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		Assertions.assertEquals("{\"{浅梔子=[あさくちなし], 浅=[あさ]}\":[1,2]}", ObjectMapperUtil.writeValueAsString(objectMapper,
 				convert(toMultimapAndIntList(patternMap, Arrays.asList("浅梔子（あさくちなし）", "浅黒い（あさぐろい）"), 0))));
 		//
-		Assertions.assertEquals("{\"{浅支子=[うすくちなし], 薄梔子=[うすくちなし], 薄=[うす]}\":[1,2]}", ObjectMapperUtil.writeValueAsString(
+		Assertions.assertEquals("{\"{浅支子=[うすくちなし], 薄梔子=[うすくちなし], 薄=[うす]}\":[0,1]}", ObjectMapperUtil.writeValueAsString(
 				objectMapper,
 				convert(toMultimapAndIntList(patternMap, Arrays.asList(" 浅支子・薄梔子（うすくちなし）日本国語大辞典", "薄黒い（うすぐろい）"), 0))));
+		//
+		Assertions.assertEquals("{\"{生壁鼠=[なまかべねず], 生=[なま]}\":[0,1]}", ObjectMapperUtil.writeValueAsString(objectMapper,
+				convert(toMultimapAndIntList(patternMap, Arrays.asList("生壁鼠（なまかべねず）", "生白い（なまじろい）日本国語大辞典"), 0))));
 		//
 	}
 
