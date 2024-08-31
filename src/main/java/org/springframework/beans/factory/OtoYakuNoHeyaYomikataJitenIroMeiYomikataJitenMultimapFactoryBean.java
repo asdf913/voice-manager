@@ -489,8 +489,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}([\\p{InKatakana}\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}$"),
-					s2)) && Util
-							.groupCount(m2) > 1
+					s2))
+					&& Util.groupCount(m2) > 1
 					&& StringUtils
 							.isNotEmpty(commonSuffix = getCommonSuffix(Util.group(m1, 2), g22 = Util.group(m2, 2)))
 					&& CollectionUtils
@@ -502,7 +502,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 																	chars(StringUtils.substring(g22, 0,
 																			StringUtils.length(g22) - StringUtils
 																					.length(commonSuffix))),
-																	x -> UnicodeBlock.of(x))),
+																	UnicodeBlock::of)),
 													Collectors.toSet()))) {
 				//
 				final String g11 = Util.group(m1, 1);
