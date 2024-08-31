@@ -447,19 +447,36 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-				StringUtils.trim(s1)))
-				&& Util.groupCount(m1) > 1
-				&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-						s2))
-				&& Util.groupCount(m2) > 1
-				&& StringUtils.isNotEmpty(commonxPrefix = StringUtils.getCommonPrefix(s1, s2))) {
+				StringUtils.trim(s1))) && Util.groupCount(m1) > 1) {
 			//
-			return Pair.of(
-					ImmutableMultimap.of(Util.group(m1, 1), Util.group(m1, 2), commonxPrefix,
-							StringUtils.getCommonPrefix(Util.group(m1, 2), Util.group(m2, 2))),
-					toIntList(i, IntStream.rangeClosed(0, 1)));
-			//
+			if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+					s2)) && Util.groupCount(m2) > 1
+					&& StringUtils.isNotEmpty(commonxPrefix = StringUtils.getCommonPrefix(s1, s2))) {
+				//
+				return Pair.of(
+						ImmutableMultimap.of(Util.group(m1, 1), Util.group(m1, 2), commonxPrefix,
+								StringUtils.getCommonPrefix(Util.group(m1, 2), Util.group(m2, 2))),
+						toIntList(i, IntStream.rangeClosed(0, 1)));
+				//
+			} // if
+				//
+			if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+					"^\\p{InCJKUnifiedIdeographs}{2,}\\p{InHiragana}+\\p{InCJKUnifiedIdeographs}\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+					StringUtils.trim(s2))) && Util.groupCount(m2) > 1
+					&& StringUtils.startsWith(Util.group(m2, 2), Util.group(m1, 2))) {
+				//
+				final String g1 = Util.group(m1, 1);
+				//
+				final String g2 = Util.group(m1, 2);
+				//
+				return Pair.of(
+						ImmutableMultimap.of(g1, g2, StringUtils.substringAfter(Util.group(m2, 1), g1),
+								StringUtils.substringAfter(Util.group(m2, 2), g2)),
+						toIntList(i, IntStream.rangeClosed(0, 1)));
+				//
+			} // if
+				//
 		} // if
 			//
 		return null;
