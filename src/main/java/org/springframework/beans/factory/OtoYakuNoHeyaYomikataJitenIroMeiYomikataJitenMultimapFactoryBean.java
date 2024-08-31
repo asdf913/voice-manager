@@ -588,28 +588,30 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			for (int j = i + 1; j < IterableUtils.size(list); j++) {
 				//
-				if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				if (!Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 						"^\\p{InHalfwidthAndFullwidthForms}([\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+$"),
-						IterableUtils.get(list, j))) && Util.groupCount(m) > 1) {
+						IterableUtils.get(list, j))) || Util.groupCount(m) <= 1) {
 					//
-					if (found) {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							StringUtils.getCommonPrefix(Util.group(m1, 1), Util.group(m, 1)),
-							StringUtils.getCommonPrefix(Util.group(m1, 2), Util.group(m, 2)));
-					//
-					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i);
-					//
-					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), j);
-					//
-					found = true;
+					continue;
 					//
 				} // if
 					//
+				if (found) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						StringUtils.getCommonPrefix(Util.group(m1, 1), Util.group(m, 1)),
+						StringUtils.getCommonPrefix(Util.group(m1, 2), Util.group(m, 2)));
+				//
+				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i);
+				//
+				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), j);
+				//
+				found = true;
+				//
 			} // for
 				//
 			return Pair.of(multimap, intList);
