@@ -724,7 +724,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 					for (final Entry<String, String> entry : entries) {
 						//
-						if (entry == null || StringUtils.isEmpty(
+						if (StringUtils.isEmpty(
 								commonPrefix1 = StringUtils.getCommonPrefix(g11, g21, Util.getKey(entry), g41))) {
 							//
 							continue;
@@ -748,7 +748,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 					for (final Entry<String, String> entry : entries) {
 						//
-						testAndAccept((a, b, c) -> StringUtils.isNotBlank(b) && StringUtils.isNotBlank(c),
+						testAndAccept(
+								(a, b, c) -> Boolean.logicalAnd(StringUtils.isNotBlank(b), StringUtils.isNotBlank(c)),
 								multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 								StringUtils.substringBetween(g11, key = Util.getKey(entry), commonSuffix1),
 								StringUtils.substringBetween(g12, value = Util.getValue(entry), commonSuffix1),
@@ -756,7 +757,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 									MultimapUtil.put(a, b, c);
 								});
 						//
-						testAndAccept((a, b, c) -> StringUtils.isNotBlank(b) && StringUtils.isNotBlank(c),
+						testAndAccept(
+								(a, b, c) -> Boolean.logicalAnd(StringUtils.isNotBlank(b), StringUtils.isNotBlank(c)),
 								multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 								StringUtils.substringBetween(g21, key, commonSuffix2),
 								StringUtils.substringBetween(g22, value, commonSuffix2), (a, b, c) -> {
