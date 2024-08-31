@@ -829,30 +829,30 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 			//
 		final ObjectMapper objectMapper = new ObjectMapper();
 		//
-		Assertions.assertEquals("{\"{色=[いろ]}\":[1,2]}", ObjectMapperUtil.writeValueAsString(objectMapper,
+		Assertions.assertEquals("{\"{色=[いろ]}\":[0,1]}", ObjectMapperUtil.writeValueAsString(objectMapper,
 				convert(toMultimapAndIntList(patternMap, Arrays.asList("勝つ色（かついろ）", "逆引き", "熟語林"), 0))));
 		//
-		Assertions.assertEquals("{\"{小色=[こいろ]}\":[1,2]}", ObjectMapperUtil.writeValueAsString(objectMapper,
+		Assertions.assertEquals("{\"{小色=[こいろ]}\":[0,1]}", ObjectMapperUtil.writeValueAsString(objectMapper,
 				convert(toMultimapAndIntList(patternMap, Arrays.asList("＜小色（こいろ）", "逆引き", "熟語林＞"), 0))));
 		//
-		Assertions.assertEquals("{\"{薄肉色=[うすにくいろ]}\":[1,2]}", ObjectMapperUtil.writeValueAsString(objectMapper,
+		Assertions.assertEquals("{\"{薄肉色=[うすにくいろ]}\":[0,1]}", ObjectMapperUtil.writeValueAsString(objectMapper,
 				convert(toMultimapAndIntList(patternMap, Arrays.asList("薄肉色（うすにくいろ）", "逆引き", "熟語林"), 0))));
 		//
-		Assertions.assertEquals("{\"{色=[いろ]}\":[1,2]}", ObjectMapperUtil.writeValueAsString(objectMapper,
+		Assertions.assertEquals("{\"{色=[いろ]}\":[0,1]}", ObjectMapperUtil.writeValueAsString(objectMapper,
 				convert(toMultimapAndIntList(patternMap, Arrays.asList("言わぬ色（いわぬいろ）", "逆引き", "熟語林"), 0))));
 		//
-		Assertions.assertEquals("{\"{色=[いろ]}\":[1,2]}", ObjectMapperUtil.writeValueAsString(objectMapper,
+		Assertions.assertEquals("{\"{色=[いろ]}\":[0,1]}", ObjectMapperUtil.writeValueAsString(objectMapper,
 				convert(toMultimapAndIntList(patternMap, Arrays.asList("焼け色（やけいろ）", "逆引き", "熟語林"), 0))));
 		//
-		Assertions.assertEquals("{\"{八入=[やしお], 色=[いろ]}\":[1,2]}", ObjectMapperUtil.writeValueAsString(objectMapper,
+		Assertions.assertEquals("{\"{八入=[やしお], 色=[いろ]}\":[0,1]}", ObjectMapperUtil.writeValueAsString(objectMapper,
 				convert(toMultimapAndIntList(patternMap, Arrays.asList("＜八入の色（やしおのいろ）", "逆引き", "熟語林＞"), 0))));
 		//
-		Assertions.assertEquals("{\"{臙脂=[えんじ], 燕支=[えんじ], 燕脂=[えんじ], 烟脂=[えんじ], 烟子=[えんじ], 色=[いろ]}\":[1,2]}",
+		Assertions.assertEquals("{\"{臙脂=[えんじ], 燕支=[えんじ], 燕脂=[えんじ], 烟脂=[えんじ], 烟子=[えんじ], 色=[いろ]}\":[0,1]}",
 				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
 						Arrays.asList("臙脂・燕支・燕脂・烟脂（えんじ）日本国語大辞典", "烟子（えんじ）WEB", "臙脂色（えんじいろ）＜注：臙が燕のWEBあり＞"), 0))));
 		//
 		Assertions
-				.assertEquals("{\"{褐色=[かっしょく, かちいろ, かちんいろ]}\":[1,2]}",
+				.assertEquals("{\"{褐色=[かっしょく, かちいろ, かちんいろ]}\":[0,1]}",
 						ObjectMapperUtil.writeValueAsString(objectMapper,
 								convert(toMultimapAndIntList(patternMap, Arrays.asList(
 										" 褐色（かっしょく・日本語大辞典／かっしょく・かちいろ・色々な色／かっしょく・かちいろ・かちんいろ・日本の色辞典）＜注：（かっしょく）は茶系",
@@ -862,15 +862,16 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
 						Arrays.asList("＜端白・爪白・褄白（つまじろ）日本国語大辞典", "（つましろ）とも", "とあり", "はしが白いこと＞"), 0))));
 		//
-		Assertions.assertEquals("{\"{濃藍色=[のうらんしょく, こあいいろ, こいあいいろ]}\":[1,2]}",
+		Assertions.assertEquals("{\"{濃藍色=[のうらんしょく, こあいいろ, こいあいいろ]}\":[0,1]}",
 				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
 						Arrays.asList("濃藍色（のうらんしょく・日本国語大辞典", "／のうらんしょく・こあいいろ・こいあいいろ・WEB）"), 0))));
 		//
-		Assertions.assertEquals("{\"{重色目=[かさねのいろめ], 襲=[かさね], 色目=[いろめ]}\":[1,2]}",
+		Assertions.assertEquals("{\"{重色目=[かさねのいろめ], 襲=[かさね], 色目=[いろめ]}\":[0,1]}",
 				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
 						Arrays.asList("＜重色目（かさねのいろめ）／襲の色目（かさねのいろめ）／参考WEB", "＞の説明に出てくる関連の言葉"), 0))));
 		//
-		Assertions.assertEquals("{\"{浅梔子=[あさくちなし], 浅=[あさ]}\":[1,2]}", ObjectMapperUtil.writeValueAsString(objectMapper,
+		Assertions.assertEquals(
+				"{\"{浅梔子=[あさくちなし], 浅=[あさ]}\":[0,1]}", ObjectMapperUtil.writeValueAsString(objectMapper,
 				convert(toMultimapAndIntList(patternMap, Arrays.asList("浅梔子（あさくちなし）", "浅黒い（あさぐろい）"), 0))));
 		//
 		Assertions.assertEquals("{\"{浅支子=[うすくちなし], 薄梔子=[うすくちなし], 薄=[うす]}\":[0,1]}", ObjectMapperUtil.writeValueAsString(
