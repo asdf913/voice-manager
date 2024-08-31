@@ -746,12 +746,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 					for (final Entry<String, String> entry : entries) {
 						//
-						if (entry == null) {
-							//
-							continue;
-							//
-						} // if
-							//
 						if (StringUtils.isNotEmpty(
 								sb1 = StringUtils.substringBetween(g11, key = Util.getKey(entry), commonSuffix1))
 								&& StringUtils.isNotEmpty(
