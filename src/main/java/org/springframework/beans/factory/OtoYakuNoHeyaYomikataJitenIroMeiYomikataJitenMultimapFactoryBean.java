@@ -526,7 +526,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		return instance != null ? instance.chars() : null;
 	}
 
-	private static <U> Stream<U> mapToObj(final IntStream instance, final IntFunction<? extends U> mapper) {
+	private static <U> Stream<U> mapToObj(@Nullable final IntStream instance,
+			@Nullable final IntFunction<? extends U> mapper) {
 		return instance != null && mapper != null ? instance.mapToObj(mapper) : null;
 	}
 
