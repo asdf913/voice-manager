@@ -518,14 +518,17 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static <T> Stream<T> distinct(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.distinct() : null;
 	}
 
+	@Nullable
 	private static IntStream chars(@Nullable final CharSequence instance) {
 		return instance != null ? instance.chars() : null;
 	}
 
+	@Nullable
 	private static <U> Stream<U> mapToObj(@Nullable final IntStream instance,
 			@Nullable final IntFunction<? extends U> mapper) {
 		return instance != null && mapper != null ? instance.mapToObj(mapper) : null;
