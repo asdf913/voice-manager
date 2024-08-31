@@ -198,7 +198,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				&& Util.matches(Util.matcher(PATTERN_CJK_UNIFIED_IDEOGRAPHS_ONLY, IterableUtils.get(list, i + 2)))) {
 			//
 			return Pair.of(ImmutableMultimap.of(Util.group(m1, 3), StringUtils.substringAfter(g4, g2)),
-					toIntList(i, IntStream.rangeClosed(0, 1)));
+					toIntList(i, IntStream.rangeClosed(0, 2)));
 			//
 		} else if (i < IterableUtils.size(list) - 2
 				&& Util.matches(Util.matcher(PATTERN_MULTIPLE_CJK_UNIFIED_IDEOGRAPHS_AND_ENDS_WITH_HIRAGANA,
@@ -217,7 +217,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 										IterableUtils.get(list, i + 2)))))) {
 			//
 			return Pair.of(ImmutableMultimap.of(Util.group(m1, 1), Util.group(m1, 2)),
-					toIntList(i, IntStream.rangeClosed(0, 1)));
+					toIntList(i, IntStream.rangeClosed(0, 2)));
 			//
 		} // if
 			//
@@ -239,7 +239,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							Util.matcher(PATTERN_CJK_UNIFIED_IDEOGRAPHS_ONLY, IterableUtils.get(list, i + 2)))) {
 				//
 				return Pair.of(ImmutableMultimap.of(Util.group(m1, 2), StringUtils.substringAfter(g3, g1)),
-						toIntList(i, IntStream.rangeClosed(0, 1)));
+						toIntList(i, IntStream.rangeClosed(0, 2)));
 				//
 			} // if
 				//
@@ -257,7 +257,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						IterableUtils.get(list, i + 2)))) {
 			//
 			return Pair.of(ImmutableMultimap.of(Util.group(m1, 1), StringUtils.substringBefore(g4, g2),
-					Util.group(m1, 3), StringUtils.substringAfter(g4, g2)), toIntList(i, IntStream.rangeClosed(0, 1)));
+					Util.group(m1, 3), StringUtils.substringAfter(g4, g2)), toIntList(i, IntStream.rangeClosed(0, 2)));
 			//
 		} // if
 			//
@@ -626,7 +626,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(0, 1)));
+		return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(0, 2)));
 		//
 	}
 
