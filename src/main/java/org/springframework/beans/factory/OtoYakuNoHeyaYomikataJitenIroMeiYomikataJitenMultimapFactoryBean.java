@@ -596,12 +596,13 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList7(final PatternMap patternMap,
 			final List<String> list, final int i) {
 		//
+		final String s1 = testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null);
+		//
 		Matcher m1 = null;
 		//
 		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^\\p{InHalfwidthAndFullwidthForms}([\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+$"),
-				testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null)))
-				&& Util.groupCount(m1) > 1) {
+				s1)) && Util.groupCount(m1) > 1) {
 			//
 			Multimap<String, String> multimap = null;
 			//
@@ -640,6 +641,31 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			} // for
 				//
 			return Pair.of(multimap, intList);
+			//
+		} // if
+			//
+		Matcher m2;
+		//
+		String g11, g12, g21, g22, commonPrefix1, commonPrefix2;
+		//
+		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^([\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+				s1))
+				&& Util.groupCount(m1) > 1
+				&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)+\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InHalfwidthAndFullwidthForms}$"),
+						testAndApply(x -> IterableUtils.size(x) - 1 > i, list, x -> IterableUtils.get(x, i + 1), null)))
+				&& Util.groupCount(m2) > 1
+				&& StringUtils.isNotEmpty(
+						commonPrefix1 = StringUtils.getCommonPrefix(g11 = Util.group(m1, 1), g21 = Util.group(m2, 1)))
+				&& StringUtils.isNotEmpty(
+						commonPrefix2 = StringUtils.getCommonPrefix(g12 = Util.group(m1, 2), g22 = Util.group(m2, 2)))
+				&& StringUtils.isNotEmpty(g11) && StringUtils.isNotEmpty(g12)
+				&& StringUtils.equals(StringUtils.substring(g11, StringUtils.length(g11) - 1),
+						StringUtils.substring(g12, StringUtils.length(g12) - 1))) {
+			//
+			return Pair.of(ImmutableMultimap.of(g21, g22, commonPrefix1, commonPrefix2),
+					toIntList(i, IntStream.rangeClosed(0, 1)));
 			//
 		} // if
 			//
