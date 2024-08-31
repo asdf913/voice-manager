@@ -672,11 +672,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		Entry<Multimap<String, String>, IntList> result = toMultimapAndIntList8(patternMap, s2, entry, i);
 		//
-		if (result != null) {
-			//
-			return result;
-			//
-		} else if ((result = toMultimapAndIntList8(patternMap, s2, entry, list, i)) != null) {
+		if (result != null || (result = toMultimapAndIntList8(patternMap, s2, entry, list, i)) != null) {
 			//
 			return result;
 			//
