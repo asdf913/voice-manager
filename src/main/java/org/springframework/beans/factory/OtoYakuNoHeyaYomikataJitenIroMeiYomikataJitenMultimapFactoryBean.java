@@ -720,8 +720,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				if (Util.iterator(entries) != null) {
 					//
-					String substringAfter = null;
-					//
 					for (final Entry<String, String> entry : entries) {
 						//
 						if (StringUtils.isEmpty(
@@ -735,13 +733,11 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 								commonPrefix1,
 								commonPrefix2 = StringUtils.getCommonPrefix(g12, g22, Util.getValue(entry), g42));
 						//
-						if (StringUtils.length(substringAfter = StringUtils.substringAfter(g41, commonPrefix1)) == 1) {
-							//
-							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-									substringAfter, StringUtils.substringAfter(g42, commonPrefix2));
-							//
-						} // if
-							//
+						testAndAccept((a, b, c) -> StringUtils.length(b) == 1,
+								multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								StringUtils.substringAfter(g41, commonPrefix1),
+								StringUtils.substringAfter(g42, commonPrefix2), MultimapUtil::put);
+						//
 					} // for
 						//
 					String key, value;
