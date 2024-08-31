@@ -41,6 +41,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
+import org.meeuw.functional.TriConsumer;
+import org.meeuw.functional.TriPredicate;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
@@ -742,29 +744,25 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							//
 					} // for
 						//
-					String key, sb1, sb2;
+					String key, value;
 					//
 					for (final Entry<String, String> entry : entries) {
 						//
-						if (StringUtils.isNotEmpty(
-								sb1 = StringUtils.substringBetween(g11, key = Util.getKey(entry), commonSuffix1))
-								&& StringUtils.isNotEmpty(
-										sb2 = StringUtils.substringBetween(g12, Util.getValue(entry), commonSuffix1))) {
-							//
-							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-									sb1, sb2);
-							//
-						} // if
-							//
-						if (StringUtils.isNotEmpty(sb1 = StringUtils.substringBetween(g21, key, commonSuffix2))
-								&& StringUtils.isNotEmpty(
-										sb2 = StringUtils.substringBetween(g22, Util.getValue(entry), commonSuffix2))) {
-							//
-							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-									sb1, sb2);
-							//
-						} // if
-							//
+						testAndAccept((a, b, c) -> StringUtils.isNotBlank(b) && StringUtils.isNotBlank(c),
+								multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								StringUtils.substringBetween(g11, key = Util.getKey(entry), commonSuffix1),
+								StringUtils.substringBetween(g12, value = Util.getValue(entry), commonSuffix1),
+								(a, b, c) -> {
+									MultimapUtil.put(a, b, c);
+								});
+						//
+						testAndAccept((a, b, c) -> StringUtils.isNotBlank(b) && StringUtils.isNotBlank(c),
+								multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								StringUtils.substringBetween(g21, key, commonSuffix2),
+								StringUtils.substringBetween(g22, value, commonSuffix2), (a, b, c) -> {
+									MultimapUtil.put(a, b, c);
+								});
+						//
 					} // for
 						//
 				} // if
@@ -777,6 +775,13 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		return null;
 		//
+	}
+
+	private static <A, B, C> void testAndAccept(final TriPredicate<A, B, C> predicate, final A a, final B b, final C c,
+			final TriConsumer<A, B, C> consumer) {
+		if (predicate != null && predicate.test(a, b, c) && consumer != null) {
+			consumer.accept(a, b, c);
+		}
 	}
 
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList(final int i, final Matcher m1,
