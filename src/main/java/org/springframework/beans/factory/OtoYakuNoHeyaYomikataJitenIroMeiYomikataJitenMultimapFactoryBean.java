@@ -153,7 +153,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				.asList(OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList1,
 						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList2,
 						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList3,
-						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList4);
+						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList4,
+						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList5);
 		//
 		Entry<Multimap<String, String>, IntList> entry = null;
 		//
@@ -459,12 +460,22 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		if (Boolean.logicalAnd(Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+		return null;
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList5(final PatternMap patternMap,
+			final List<String> list, final int i) {
+		//
+		Matcher m1, m2;
+		//
+		if (IterableUtils.size(list) - 1 > i && Boolean.logicalAnd(Util.matches(m1 = Util.matcher(PatternMap.getPattern(
+				patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}|\\p{InHiragana}]+$"),
-				StringUtils.trim(s1))) && Util.groupCount(m1) > 2,
+				StringUtils.trim(IterableUtils.get(list, i)))) && Util.groupCount(m1) > 2,
 				Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-						s2)) && Util.groupCount(m2) > 1)) {
+						IterableUtils.get(list, i + 1))) && Util.groupCount(m2) > 1)) {
 			//
 			final String g3 = Util.group(m1, 3);
 			//
