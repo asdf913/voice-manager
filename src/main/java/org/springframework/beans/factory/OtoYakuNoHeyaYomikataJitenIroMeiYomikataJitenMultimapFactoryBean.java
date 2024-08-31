@@ -730,7 +730,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		final String g2 = Util.getValue(entry);
 		//
-		if (Util.matches(m2) && Util.groupCount(m2) > 1
+		if (!(Util.matches(m2) && Util.groupCount(m2) > 1
 				&& StringUtils.isNotEmpty(commonSuffix1 = getCommonSuffix(g1, g2))
 				&& StringUtils
 						.isNotEmpty(commonSuffix2 = getCommonSuffix(g21 = Util.group(m2, 1), g22 = Util.group(m2, 2)))
@@ -742,73 +742,70 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$"),
 						StringUtils.trim(testAndApply(x -> IterableUtils.size(x) - 3 > i, list,
 								x -> IterableUtils.get(x, i + 3), null))))
-				&& Util.groupCount(m4) > 1) {
+				&& Util.groupCount(m4) > 1)) {
 			//
-			final String hiragana = Util.group(m3, groupCount);
-			//
-			Multimap<String, String> multimap = null;
-			//
-			for (int j = 1; j < groupCount; j++) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(m3, j), hiragana);
-				//
-			} // for
-				//
-			final String g41 = Util.group(m4, 1);
-			//
-			final String g42 = Util.group(m4, 2);
-			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g41, g42);
-			//
-			Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
-			//
-			if (Util.iterator(entries) != null) {
-				//
-				for (final Entry<String, String> en : entries) {
-					//
-					if (StringUtils
-							.isEmpty(commonPrefix1 = StringUtils.getCommonPrefix(g1, g21, Util.getKey(en), g41))) {
-						//
-						continue;
-						//
-					} // if
-						//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							commonPrefix1,
-							commonPrefix2 = StringUtils.getCommonPrefix(g2, g22, Util.getValue(en), g42));
-					//
-					testAndAccept((a, b, c) -> StringUtils.length(b) == 1,
-							multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							StringUtils.substringAfter(g41, commonPrefix1),
-							StringUtils.substringAfter(g42, commonPrefix2), MultimapUtil::put);
-					//
-				} // for
-					//
-				String key, value;
-				//
-				for (final Entry<String, String> en : entries) {
-					//
-					testAndAccept((a, b, c) -> Boolean.logicalAnd(StringUtils.isNotBlank(b), StringUtils.isNotBlank(c)),
-							multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							StringUtils.substringBetween(g1, key = Util.getKey(en), commonSuffix1),
-							StringUtils.substringBetween(g2, value = Util.getValue(en), commonSuffix1),
-							MultimapUtil::put);
-					//
-					testAndAccept((a, b, c) -> Boolean.logicalAnd(StringUtils.isNotBlank(b), StringUtils.isNotBlank(c)),
-							multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							StringUtils.substringBetween(g21, key, commonSuffix2),
-							StringUtils.substringBetween(g22, value, commonSuffix2), MultimapUtil::put);
-					//
-				} // for
-					//
-			} // if
-				//
-			return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(0, 3)));
+			return null;
 			//
 		} // if
 			//
-		return null;
+		final String hiragana = Util.group(m3, groupCount);
+		//
+		Multimap<String, String> multimap = null;
+		//
+		for (int j = 1; j < groupCount; j++) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m3, j),
+					hiragana);
+			//
+		} // for
+			//
+		final String g41 = Util.group(m4, 1);
+		//
+		final String g42 = Util.group(m4, 2);
+		//
+		MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g41, g42);
+		//
+		Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
+		//
+		if (Util.iterator(entries) != null) {
+			//
+			for (final Entry<String, String> en : entries) {
+				//
+				if (StringUtils.isEmpty(commonPrefix1 = StringUtils.getCommonPrefix(g1, g21, Util.getKey(en), g41))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), commonPrefix1,
+						commonPrefix2 = StringUtils.getCommonPrefix(g2, g22, Util.getValue(en), g42));
+				//
+				testAndAccept((a, b, c) -> StringUtils.length(b) == 1,
+						multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						StringUtils.substringAfter(g41, commonPrefix1), StringUtils.substringAfter(g42, commonPrefix2),
+						MultimapUtil::put);
+				//
+			} // for
+				//
+			String key, value;
+			//
+			for (final Entry<String, String> en : entries) {
+				//
+				testAndAccept((a, b, c) -> Boolean.logicalAnd(StringUtils.isNotBlank(b), StringUtils.isNotBlank(c)),
+						multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						StringUtils.substringBetween(g1, key = Util.getKey(en), commonSuffix1),
+						StringUtils.substringBetween(g2, value = Util.getValue(en), commonSuffix1), MultimapUtil::put);
+				//
+				testAndAccept((a, b, c) -> Boolean.logicalAnd(StringUtils.isNotBlank(b), StringUtils.isNotBlank(c)),
+						multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						StringUtils.substringBetween(g21, key, commonSuffix2),
+						StringUtils.substringBetween(g22, value, commonSuffix2), MultimapUtil::put);
+				//
+			} // for
+				//
+		} // if
+			//
+		return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(0, 3)));
 		//
 	}
 
