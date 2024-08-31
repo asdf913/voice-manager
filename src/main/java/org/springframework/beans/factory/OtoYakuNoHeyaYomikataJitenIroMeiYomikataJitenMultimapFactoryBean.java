@@ -518,11 +518,11 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static <T> Stream<T> distinct(final Stream<T> instance) {
+	private static <T> Stream<T> distinct(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.distinct() : null;
 	}
 
-	private static IntStream chars(final CharSequence instance) {
+	private static IntStream chars(@Nullable final CharSequence instance) {
 		return instance != null ? instance.chars() : null;
 	}
 
