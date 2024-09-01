@@ -7,6 +7,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -51,7 +52,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3,
 			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS, METHOD_REMOVE_VALUE, METHOD_FLAT_MAP, METHOD_ADD_ALL,
-			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT;
+			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT, METHOD_TO_ARRAY;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -88,6 +89,8 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", TriPredicate.class, Object.class, Object.class,
 				Object.class, TriConsumer.class)).setAccessible(true);
+		//
+		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class, Object[].class)).setAccessible(true);
 		//
 	}
 
@@ -918,6 +921,11 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
 						Arrays.asList(" 山葵色（わさびいろ）", "忘れ草（わすれぐさ）日本の色名", "勿忘草色（わすれなぐさいろ）"), 0))));
 		//
+		Assertions.assertEquals(
+				"{\"{鳩羽色=[はとばいろ], 鳩羽紫=[はとばむらさき], 鳩羽鼠=[はとばねず, はとばねずみ], 色=[いろ], 紫=[むらさき], 鼠=[ねず, ねずみ], 鳩羽=[はとば]}\":[0,1,2]}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
+						Arrays.asList("鳩羽色（はとばいろ）", "鳩羽鼠（はとばねず・色々な色/はとばねずみ・日本の色辞典）", "鳩羽紫（はとばむらさき）"), 0))));
+		//
 	}
 
 	private static Entry<Multimap<String, String>, int[]> convert(
@@ -998,6 +1006,21 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 			final TriConsumer<A, B, C> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, a, b, c, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToArray() throws Throwable {
+		//
+		Assertions.assertNull(toArray(Collections.emptyList(), null));
+		//
+	}
+
+	private static <T> T[] toArray(final Collection<T> instance, final T[] a) throws Throwable {
+		try {
+			return (T[]) METHOD_TO_ARRAY.invoke(null, instance, a);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

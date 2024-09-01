@@ -4,6 +4,7 @@ import java.lang.Character.UnicodeBlock;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -454,18 +455,17 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		String g11, g12;
+		//
 		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^\\p{InCJKUnifiedIdeographs}{2,}\\p{InHiragana}+\\p{InCJKUnifiedIdeographs}\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
 				StringUtils.trim(s2))) && Util.groupCount(m2) > 1
 				&& StringUtils.startsWith(Util.group(m2, 2), Util.group(m1, 2))) {
 			//
-			final String g1 = Util.group(m1, 1);
-			//
-			final String g2 = Util.group(m1, 2);
-			//
 			return Pair.of(
-					ImmutableMultimap.of(g1, g2, StringUtils.substringAfter(Util.group(m2, 1), g1),
-							StringUtils.substringAfter(Util.group(m2, 2), g2)),
+					ImmutableMultimap.of(g11 = Util.group(m1, 1), g12 = Util.group(m1, 2),
+							StringUtils.substringAfter(Util.group(m2, 1), g11),
+							StringUtils.substringAfter(Util.group(m2, 2), g12)),
 					toIntList(i, IntStream.rangeClosed(0, 1)));
 			//
 		} // if
@@ -489,14 +489,14 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 														UnicodeBlock::of)),
 												Collectors.toSet()))) {
 			//
-			final String g11 = Util.group(m1, 1);
-			//
-			return Pair.of(ImmutableMultimap.of(g11, Util.group(m1, 2), getCommonSuffix(g11, Util.group(m2, 1)),
-					commonSuffix1), toIntList(i, IntStream.rangeClosed(0, 1)));
+			return Pair.of(
+					ImmutableMultimap.of(g11 = Util.group(m1, 1), Util.group(m1, 2),
+							getCommonSuffix(g11, Util.group(m2, 1)), commonSuffix1),
+					toIntList(i, IntStream.rangeClosed(0, 1)));
 			//
 		} // if
 			//
-		String g11, g21, g12, g31, g32, commonPrefix2, commonSuffix2;
+		String g21, g31, g32, commonPrefix2, commonSuffix2;
 		//
 		Matcher m3;
 		//
@@ -514,15 +514,15 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				&& Util.groupCount(m3) > 1 && StringUtils
 						.isNotEmpty(commonPrefix1 = StringUtils.getCommonPrefix(g11, g21, g31 = Util.group(m3, 1)))) {
 			//
-			final Multimap<String, String> immutableMultimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
-					g21, g22, g31, g32 = Util.group(m3, 2), StringUtils.substringAfter(g21, g11),
+			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, g21, g22,
+					g31, g32 = Util.group(m3, 2), StringUtils.substringAfter(g21, g11),
 					StringUtils.substringAfter(g22, g12), StringUtils.substringAfter(g31, commonPrefix1),
 					StringUtils.substringAfter(g32, commonPrefix2 = StringUtils.getCommonPrefix(g12, g22, g32))));
 			//
-			MultimapUtil.put(immutableMultimap, StringUtils.substringAfter(g11, commonPrefix1),
+			MultimapUtil.put(multimap, StringUtils.substringAfter(g11, commonPrefix1),
 					StringUtils.substringAfter(g12, commonPrefix2));
 			//
-			return Pair.of(immutableMultimap, toIntList(i, IntStream.rangeClosed(0, 2)));
+			return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(0, 2)));
 			//
 		} // if
 			//
@@ -539,17 +539,17 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				&& StringUtils.isNotEmpty(commonPrefix2 = StringUtils.getCommonPrefix(g12 = Util.group(m1, 2),
 						Util.group(m2, 2), Util.group(m2, 3), g32 = Util.group(m3, 2)))) {
 			//
-			final Multimap<String, String> immutableMultimap = LinkedHashMultimap
+			final Multimap<String, String> multimap = LinkedHashMultimap
 					.create(ImmutableMultimap.of(g11, g12, g31, g32, commonPrefix1, commonPrefix2,
 							commonSuffix1 = getCommonSuffix(g11, g31), commonSuffix2 = getCommonSuffix(g12, g32)));
 			//
-			MultimapUtil.putAll(immutableMultimap,
+			MultimapUtil.putAll(multimap,
 					ImmutableMultimap.of(StringUtils.substringBefore(g11, commonSuffix1),
 							StringUtils.substringBefore(g12, commonSuffix2),
 							StringUtils.substringBetween(g31, commonPrefix1, commonSuffix1),
 							StringUtils.substringBetween(g32, commonPrefix2, commonSuffix2)));
 			//
-			return Pair.of(immutableMultimap, toIntList(i, IntStream.rangeClosed(0, 2)));
+			return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(0, 2)));
 			//
 		} // if
 			//
@@ -564,17 +564,78 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				&& StringUtils.isNotEmpty(commonSuffix1 = getCommonSuffix(Util.group(m1, 1), g31 = Util.group(m3, 1)))
 				&& StringUtils.isNotEmpty(commonSuffix2 = getCommonSuffix(Util.group(m1, 2), Util.group(m3, 2)))) {
 			//
-			final Multimap<String, String> immutableMultimap = LinkedHashMultimap.create(
+			return Pair.of(
 					ImmutableMultimap.of(g11 = Util.group(m1, 1), g12 = Util.group(m1, 2), g31, Util.group(m3, 2),
 							commonSuffix1, commonSuffix2, StringUtils.substringBefore(g11, commonSuffix1),
-							StringUtils.substringBefore(g12, commonSuffix2)));
+							StringUtils.substringBefore(g12, commonSuffix2)),
+					toIntList(i, IntStream.rangeClosed(0, 2)));
 			//
-			return Pair.of(immutableMultimap, toIntList(i, IntStream.rangeClosed(0, 2)));
+		} // if
+			//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}]+\\p{InBasicLatin}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}の\\p{InHalfwidthAndFullwidthForms}]+"),
+				s2))
+				&& Util.groupCount(m2) > 1
+				&& Util.matches(m3 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+						s3))
+				&& Util.groupCount(m3) > 1) {
+			//
+			final Multimap<String, String> multimap = LinkedHashMultimap
+					.create(ImmutableMultimap.of(g11 = Util.group(m1, 1), g12 = Util.group(m1, 2),
+							g31 = Util.group(m3, 1), g32 = Util.group(m3, 2)));
+			//
+			g21 = Util.group(m2, 1);
+			//
+			for (int j = 2; j <= Util.groupCount(m2); j++) {
+				//
+				MultimapUtil.put(multimap, g21, Util.group(m2, j));
+				//
+			} // for
+				//
+			final Entry<String, String> commonPrefix = Pair.of(
+					StringUtils.getCommonPrefix(toArray(MultimapUtil.keySet(multimap), new String[] {})),
+					StringUtils.getCommonPrefix(toArray(MultimapUtil.values(multimap), new String[] {})));
+			//
+			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
+			//
+			if (Util.iterator(entries) != null) {
+				//
+				String substringAfter1, substringAfter2;
+				//
+				for (final Entry<String, String> en : entries) {
+					//
+					if (en == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (StringUtils.isNotEmpty(
+							substringAfter1 = StringUtils.substringAfter(Util.getKey(en), Util.getKey(commonPrefix)))
+							&& StringUtils.isNotEmpty(substringAfter2 = StringUtils.substringAfter(Util.getValue(en),
+									Util.getValue(commonPrefix)))) {
+						//
+						MultimapUtil.put(multimap, substringAfter1, substringAfter2);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+			MultimapUtil.put(multimap, Util.getKey(commonPrefix), Util.getValue(commonPrefix));
+			//
+			return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(0, 2)));
 			//
 		} // if
 			//
 		return null;
 		//
+	}
+
+	private static <T> T[] toArray(final Collection<T> instance, final T[] a) {
+		return instance != null && a != null ? instance.toArray(a) : null;
 	}
 
 	@Nullable
