@@ -604,16 +604,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				for (final Entry<String, String> en : entries) {
 					//
-					if (en == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (StringUtils.isNotEmpty(
-							substringAfter1 = StringUtils.substringAfter(Util.getKey(en), Util.getKey(commonPrefix)))
-							&& StringUtils.isNotEmpty(substringAfter2 = StringUtils.substringAfter(Util.getValue(en),
-									Util.getValue(commonPrefix)))) {
+					if (Boolean.logicalAnd(StringUtils.isNotEmpty(
+							substringAfter1 = StringUtils.substringAfter(Util.getKey(en), Util.getKey(commonPrefix))),
+							StringUtils.isNotEmpty(substringAfter2 = StringUtils.substringAfter(Util.getValue(en),
+									Util.getValue(commonPrefix))))) {
 						//
 						MultimapUtil.put(multimap, substringAfter1, substringAfter2);
 						//
