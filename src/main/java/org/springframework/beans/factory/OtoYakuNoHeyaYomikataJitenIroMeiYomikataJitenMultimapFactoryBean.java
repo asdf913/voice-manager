@@ -633,7 +633,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static <T> T[] toArray(final Collection<T> instance, final T[] a) {
+	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] a) {
 		return instance != null && a != null ? instance.toArray(a) : null;
 	}
 
