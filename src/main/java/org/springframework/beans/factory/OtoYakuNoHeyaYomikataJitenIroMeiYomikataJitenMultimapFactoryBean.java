@@ -530,9 +530,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							StringUtils.trim(s3)))
 					&& Util.groupCount(m3) > 1
 					&& StringUtils.isNotEmpty(commonPrefix1 = StringUtils.getCommonPrefix(g11 = Util.group(m1, 1),
-							g21 = Util.group(m2, 1), g31 = Util.group(m3, 1)))
+							Util.group(m2, 1), g31 = Util.group(m3, 1)))
 					&& StringUtils.isNotEmpty(commonPrefix2 = StringUtils.getCommonPrefix(g12 = Util.group(m1, 2),
-							g22 = Util.group(m2, 2), Util.group(m2, 3), g32 = Util.group(m3, 2)))) {
+							Util.group(m2, 2), Util.group(m2, 3), g32 = Util.group(m3, 2)))) {
 				//
 				final Multimap<String, String> immutableMultimap = LinkedHashMultimap
 						.create(ImmutableMultimap.of(g11, g12, g31, g32, commonPrefix1, commonPrefix2,
