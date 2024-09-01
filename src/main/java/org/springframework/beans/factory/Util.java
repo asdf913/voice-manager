@@ -695,7 +695,7 @@ abstract class Util {
 		return instance != null ? instance.chars() : null;
 	}
 
-	static <U> Stream<U> mapToObj(final IntStream instance, final IntFunction<? extends U> mapper) {
+	static <U> Stream<U> mapToObj(@Nullable final IntStream instance, @Nullable final IntFunction<? extends U> mapper) {
 		return instance != null && mapper != null ? instance.mapToObj(mapper) : null;
 	}
 
