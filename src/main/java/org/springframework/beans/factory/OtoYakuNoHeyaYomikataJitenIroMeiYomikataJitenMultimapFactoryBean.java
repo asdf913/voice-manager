@@ -581,9 +581,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						s3))
 				&& Util.groupCount(m3) > 1) {
 			//
-			final Multimap<String, String> multimap = LinkedHashMultimap
-					.create(ImmutableMultimap.of(g11 = Util.group(m1, 1), g12 = Util.group(m1, 2),
-							g31 = Util.group(m3, 1), g32 = Util.group(m3, 2)));
+			final Multimap<String, String> multimap = LinkedHashMultimap.create(
+					ImmutableMultimap.of(Util.group(m1, 1), Util.group(m1, 2), Util.group(m3, 1), Util.group(m3, 2)));
 			//
 			g21 = Util.group(m2, 1);
 			//
