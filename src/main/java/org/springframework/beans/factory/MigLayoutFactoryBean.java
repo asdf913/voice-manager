@@ -107,8 +107,8 @@ public class MigLayoutFactoryBean implements FactoryBean<MigLayout> {
 			//
 			if (Objects.equals(componentType, Integer.TYPE)) {
 				//
-				result = Unit.with(
-						Util.toList(Arrays.stream((int[]) value).mapToObj(Integer::toString)).toArray(new String[] {}));
+				result = Unit.with(Util.toList(Util.mapToObj(Arrays.stream((int[]) value), Integer::toString))
+						.toArray(new String[] {}));
 				//
 			} else if (Objects.equals(componentType, Long.TYPE)) {
 				//

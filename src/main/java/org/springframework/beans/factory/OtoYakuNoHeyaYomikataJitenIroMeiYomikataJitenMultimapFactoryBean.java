@@ -13,7 +13,6 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
 import java.util.function.ObjIntConsumer;
@@ -498,7 +497,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 									Collections.singleton(UnicodeBlock.KATAKANA), Util
 											.collect(
 													distinct(
-															mapToObj(
+															Util.mapToObj(
 																	Util.chars(StringUtils.substring(g22, 0,
 																			StringUtils.length(g22) - StringUtils
 																					.length(commonSuffix))),
@@ -521,12 +520,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	@Nullable
 	private static <T> Stream<T> distinct(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.distinct() : null;
-	}
-
-	@Nullable
-	private static <U> Stream<U> mapToObj(@Nullable final IntStream instance,
-			@Nullable final IntFunction<? extends U> mapper) {
-		return instance != null && mapper != null ? instance.mapToObj(mapper) : null;
 	}
 
 	@Nullable

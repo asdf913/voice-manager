@@ -19,6 +19,7 @@ import java.util.function.IntUnaryOperator;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -519,6 +520,17 @@ class UtilTest {
 				//
 		} // for
 			//
+	}
+
+	@Test
+	void testMapToObj() {
+		//
+		final IntStream intStream = IntStream.empty();
+		//
+		Assertions.assertNull(Util.mapToObj(intStream, null));
+		//
+		Assertions.assertNotNull(Util.mapToObj(intStream, x -> null));
+		//
 	}
 
 }

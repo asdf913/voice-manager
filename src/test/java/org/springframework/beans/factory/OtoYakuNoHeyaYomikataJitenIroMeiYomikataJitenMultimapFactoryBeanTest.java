@@ -12,7 +12,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
 import java.util.function.ObjIntConsumer;
@@ -52,7 +51,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3,
 			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS, METHOD_REMOVE_VALUE, METHOD_FLAT_MAP, METHOD_ADD_ALL,
-			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT, METHOD_MAP_TO_OBJ;
+			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -89,8 +88,6 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", TriPredicate.class, Object.class, Object.class,
 				Object.class, TriConsumer.class)).setAccessible(true);
-		//
-		(METHOD_MAP_TO_OBJ = clz.getDeclaredMethod("mapToObj", IntStream.class, IntFunction.class)).setAccessible(true);
 		//
 	}
 
@@ -989,28 +986,6 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 			final TriConsumer<A, B, C> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, a, b, c, consumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMapToObj() throws Throwable {
-		//
-		Assertions.assertNull(mapToObj(IntStream.empty(), null));
-		//
-	}
-
-	private static <U> Stream<U> mapToObj(final IntStream instance, final IntFunction<? extends U> mapper)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_MAP_TO_OBJ.invoke(null, instance, mapper);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

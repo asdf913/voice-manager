@@ -26,6 +26,7 @@ import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -692,6 +693,10 @@ abstract class Util {
 	@Nullable
 	static IntStream chars(@Nullable final CharSequence instance) {
 		return instance != null ? instance.chars() : null;
+	}
+
+	static <U> Stream<U> mapToObj(final IntStream instance, final IntFunction<? extends U> mapper) {
+		return instance != null && mapper != null ? instance.mapToObj(mapper) : null;
 	}
 
 }
