@@ -689,7 +689,7 @@ abstract class Util {
 		return instance != null ? instance.max() : null;
 	}
 
-	static IntStream chars(final CharSequence instance) {
+	static IntStream chars(@Nullable final CharSequence instance) {
 		return instance != null ? instance.chars() : null;
 	}
 
