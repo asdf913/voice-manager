@@ -305,16 +305,20 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 
 	private static boolean allMatch(@Nullable final String string, final UnicodeBlock unicodeBlock) {
 		//
-		return string != null && string.chars().allMatch(
+		return string != null && Util.chars(string).allMatch(
 				x -> Boolean.logicalOr(unicodeBlock == null, Objects.equals(unicodeBlock, UnicodeBlock.of(x))));
 		//
 	}
 
 	private static String getStringByUnicodeBlock(@Nullable final String string, final UnicodeBlock unicodeBlock) {
 		//
-		return Util.toString(string != null ? string.chars()
-				.filter(x -> Boolean.logicalOr(unicodeBlock == null, Objects.equals(unicodeBlock, UnicodeBlock.of(x))))
-				.collect(StringBuilder::new, (a, b) -> Util.append(a, (char) b), StringBuilder::append) : null);
+		return Util
+				.toString(string != null
+						? Util.chars(string)
+								.filter(x -> Boolean.logicalOr(unicodeBlock == null,
+										Objects.equals(unicodeBlock, UnicodeBlock.of(x))))
+								.collect(StringBuilder::new, (a, b) -> Util.append(a, (char) b), StringBuilder::append)
+						: null);
 		//
 	}
 

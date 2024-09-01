@@ -105,7 +105,7 @@ public class JouYouKanJiListFactoryBean implements FactoryBean<List<String>> {
 				//
 				if (string != null) {
 					//
-					return Unit.with(Util.toList(string.chars().mapToObj(c -> String.valueOf((char) c))));
+					return Unit.with(Util.toList(Util.chars(string).mapToObj(c -> String.valueOf((char) c))));
 					//
 				} // if
 					//

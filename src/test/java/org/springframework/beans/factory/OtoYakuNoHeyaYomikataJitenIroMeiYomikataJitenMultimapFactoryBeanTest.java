@@ -44,9 +44,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
-import io.github.classgraph.ClassInfo;
-import io.github.classgraph.ClassInfoUtil;
-import io.github.classgraph.HasNameUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 
 class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
@@ -55,7 +52,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3,
 			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS, METHOD_REMOVE_VALUE, METHOD_FLAT_MAP, METHOD_ADD_ALL,
-			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT, METHOD_CHARS,
+			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT,
 			METHOD_MAP_TO_OBJ;
 
 	@BeforeAll
@@ -93,8 +90,6 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", TriPredicate.class, Object.class, Object.class,
 				Object.class, TriConsumer.class)).setAccessible(true);
-		//
-		(METHOD_CHARS = clz.getDeclaredMethod("chars", CharSequence.class)).setAccessible(true);
 		//
 		(METHOD_MAP_TO_OBJ = clz.getDeclaredMethod("mapToObj", IntStream.class, IntFunction.class)).setAccessible(true);
 		//
@@ -991,70 +986,6 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 			final TriConsumer<A, B, C> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, a, b, c, consumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testChars() throws Throwable {
-		//
-		final Iterable<ClassInfo> classInfos = ClassInfoUtil.getClassInfos();
-		//
-		if (classInfos == null || classInfos.iterator() == null) {
-			//
-			return;
-			//
-		} // if
-			//
-		String name = null;
-		//
-		Class<?> clz = null;
-		//
-		for (final ClassInfo classInfo : classInfos) {
-			//
-			if (classInfo == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			try {
-				//
-				if (Util.isAssignableFrom(CharSequence.class, Class.forName(name = HasNameUtil.getName(classInfo)))
-						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
-					//
-					final CharSequence cs = Util.cast(CharSequence.class, Narcissus.allocateInstance(clz));
-					//
-					System.out.println(name);
-					//
-					Assertions.assertDoesNotThrow(() -> chars(cs), name);
-					//
-				} // if
-					//
-			} catch (final Throwable e) {
-				//
-				System.err.println(name);
-				//
-				throw e;
-				//
-			} // try
-				//
-		} // for
-			//
-		Assertions.assertNull(mapToObj(IntStream.empty(), null));
-		//
-	}
-
-	private static IntStream chars(final CharSequence instance) throws Throwable {
-		try {
-			final Object obj = METHOD_CHARS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof IntStream) {
-				return (IntStream) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

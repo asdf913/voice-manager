@@ -499,7 +499,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 											.collect(
 													distinct(
 															mapToObj(
-																	chars(StringUtils.substring(g22, 0,
+																	Util.chars(StringUtils.substring(g22, 0,
 																			StringUtils.length(g22) - StringUtils
 																					.length(commonSuffix))),
 																	UnicodeBlock::of)),
@@ -521,11 +521,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	@Nullable
 	private static <T> Stream<T> distinct(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.distinct() : null;
-	}
-
-	@Nullable
-	private static IntStream chars(@Nullable final CharSequence instance) {
-		return instance != null ? instance.chars() : null;
 	}
 
 	@Nullable

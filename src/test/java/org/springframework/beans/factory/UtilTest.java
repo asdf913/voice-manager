@@ -34,6 +34,9 @@ import org.junit.jupiter.api.Test;
 
 import com.google.common.reflect.Reflection;
 
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ClassInfoUtil;
+import io.github.classgraph.HasNameUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 
 class UtilTest {
@@ -468,6 +471,54 @@ class UtilTest {
 		//
 		Assertions.assertEquals(0, Util.applyAsInt(IntUnaryOperator.identity(), zero, zero));
 		//
+	}
+
+	@Test
+	void testChars() throws Throwable {
+		//
+		final Iterable<ClassInfo> classInfos = ClassInfoUtil.getClassInfos();
+		//
+		if (classInfos == null || classInfos.iterator() == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		String name = null;
+		//
+		Class<?> clz = null;
+		//
+		for (final ClassInfo classInfo : classInfos) {
+			//
+			if (classInfo == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			try {
+				//
+				if (Util.isAssignableFrom(CharSequence.class, Class.forName(name = HasNameUtil.getName(classInfo)))
+						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
+					//
+					final CharSequence cs = Util.cast(CharSequence.class, Narcissus.allocateInstance(clz));
+					//
+					System.out.println(name);
+					//
+					Assertions.assertDoesNotThrow(() -> Util.chars(cs), name);
+					//
+				} // if
+					//
+			} catch (final Throwable e) {
+				//
+				System.err.println(name);
+				//
+				throw e;
+				//
+			} // try
+				//
+		} // for
+			//
 	}
 
 }
