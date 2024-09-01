@@ -906,6 +906,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
 						Arrays.asList("灰黄（はいき）WEB", "灰黄色（はいきいろ）WEB", "灰黒し（はいぐろし）"), 0))));
 		//
+		Assertions.assertEquals("{\"{濃茶=[こいちゃ], 濃茶色=[こいちゃいろ], 濃納戸=[こいなんど], 色=[いろ], 納戸=[なんど], 茶=[ちゃ]}\":[0,1,2]}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
+						Arrays.asList("濃茶（こいちゃ）", " 濃い茶色・濃茶色（こいちゃいろ）", "濃納戸（こいなんど）"), 0))));
+		//
 	}
 
 	private static Entry<Multimap<String, String>, int[]> convert(
