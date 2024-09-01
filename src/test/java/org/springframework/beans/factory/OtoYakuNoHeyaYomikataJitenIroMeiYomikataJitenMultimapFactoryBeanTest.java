@@ -52,8 +52,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3,
 			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS, METHOD_REMOVE_VALUE, METHOD_FLAT_MAP, METHOD_ADD_ALL,
-			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT,
-			METHOD_MAP_TO_OBJ;
+			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT, METHOD_MAP_TO_OBJ;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -905,6 +904,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertEquals("{\"{琥珀色=[こはくいろ], 色=[いろ]}\":[0,1]}", ObjectMapperUtil.writeValueAsString(objectMapper,
 				convert(toMultimapAndIntList(patternMap, Arrays.asList("琥珀色（こはくいろ）", "珈琲色（コーヒーいろ）"), 0))));
+		//
+		Assertions.assertEquals("{\"{灰黄=[はいき], 灰黄色=[はいきいろ], 色=[いろ], 灰=[はい], 黄=[き]}\":[0,1,2]}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
+						Arrays.asList("灰黄（はいき）WEB", "灰黄色（はいきいろ）WEB", "灰黒し（はいぐろし）"), 0))));
 		//
 	}
 
