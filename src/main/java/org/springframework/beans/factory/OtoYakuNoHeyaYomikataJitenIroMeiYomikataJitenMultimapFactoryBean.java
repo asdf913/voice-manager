@@ -628,87 +628,86 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InBasicLatin}]+(\\p{InHiragana}+)[\\p{InKatakana}]+\\p{InHalfwidthAndFullwidthForms}$"),
 				s2);
 		//
-		if (Util.matches(m2) && Util.groupCount(m2) > 1) {
+		if (!Util.matches(m2) || Util.groupCount(m2) <= 1) {
 			//
-			final String g1 = Util.getKey(entry);
-			//
-			final String g2 = Util.getValue(entry);
-			//
-			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g1, g2));
-			//
-			final String g21 = Util.group(m2, 1);
-			//
-			final Matcher m = m2;
-			//
-			forEach(IntStream.rangeClosed(2, Util.groupCount(m2)),
-					x -> MultimapUtil.put(multimap, g21, Util.group(m, x)));
-			//
-			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
-			//
-			String commonPrefix2, key;
-			//
-			Entry<String, String> keyValue = null;
-			//
-			if (Util.iterator(entries) != null) {
-				//
-				String value, commonPrefix1;
-				//
-				for (final Entry<String, String> en : entries) {
-					//
-					if (Util.or(
-							Boolean.logicalAnd(Objects.equals(key = Util.getKey(en), g1),
-									Objects.equals(value = Util.getValue(en), g2)),
-							StringUtils.isEmpty(commonPrefix1 = StringUtils.getCommonPrefix(g1, key)),
-							StringUtils.isEmpty(commonPrefix2 = StringUtils.getCommonPrefix(g2, value)))) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (keyValue == null) {
-						//
-						keyValue = Pair.of(commonPrefix1, commonPrefix2);
-						//
-					} else if (Boolean.logicalOr(!Objects.equals(Util.getKey(keyValue), commonPrefix1),
-							!Objects.equals(Util.getValue(keyValue), commonPrefix2))) {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-				} // for
-					//
-			} // if
-				//
-			if (keyValue != null) {
-				//
-				final String value = Util.getValue(keyValue);
-				//
-				MultimapUtil.putAll(multimap, ImmutableMultimap.of(key = Util.getKey(keyValue), value));
-				//
-				String substringAfter2;
-				//
-				for (final Entry<String, String> en : entries) {
-					//
-					if (StringUtils.isEmpty(substringAfter2 = StringUtils.substringAfter(Util.getValue(en), value))) {
-						//
-						continue;
-						//
-					} // if
-						//
-					MultimapUtil.put(multimap, StringUtils.substringAfter(Util.getKey(en), key), substringAfter2);
-					//
-				} // for
-					//
-			} // if
-				//
-			MultimapUtil.remove(multimap, "緋", "きあけ");
-			//
-			return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(0, 1)));
+			return null;
 			//
 		} // if
 			//
-		return null;
+		final String g1 = Util.getKey(entry);
+		//
+		final String g2 = Util.getValue(entry);
+		//
+		final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g1, g2));
+		//
+		final String g21 = Util.group(m2, 1);
+		//
+		final Matcher m = m2;
+		//
+		forEach(IntStream.rangeClosed(2, Util.groupCount(m2)), x -> MultimapUtil.put(multimap, g21, Util.group(m, x)));
+		//
+		final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
+		//
+		String commonPrefix2, key;
+		//
+		Entry<String, String> keyValue = null;
+		//
+		if (Util.iterator(entries) != null) {
+			//
+			String value, commonPrefix1;
+			//
+			for (final Entry<String, String> en : entries) {
+				//
+				if (Util.or(
+						Boolean.logicalAnd(Objects.equals(key = Util.getKey(en), g1),
+								Objects.equals(value = Util.getValue(en), g2)),
+						StringUtils.isEmpty(commonPrefix1 = StringUtils.getCommonPrefix(g1, key)),
+						StringUtils.isEmpty(commonPrefix2 = StringUtils.getCommonPrefix(g2, value)))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (keyValue == null) {
+					//
+					keyValue = Pair.of(commonPrefix1, commonPrefix2);
+					//
+				} else if (Boolean.logicalOr(!Objects.equals(Util.getKey(keyValue), commonPrefix1),
+						!Objects.equals(Util.getValue(keyValue), commonPrefix2))) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		if (keyValue != null) {
+			//
+			final String value = Util.getValue(keyValue);
+			//
+			MultimapUtil.putAll(multimap, ImmutableMultimap.of(key = Util.getKey(keyValue), value));
+			//
+			String substringAfter2;
+			//
+			for (final Entry<String, String> en : entries) {
+				//
+				if (StringUtils.isEmpty(substringAfter2 = StringUtils.substringAfter(Util.getValue(en), value))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				MultimapUtil.put(multimap, StringUtils.substringAfter(Util.getKey(en), key), substringAfter2);
+				//
+			} // for
+				//
+		} // if
+			//
+		MultimapUtil.remove(multimap, "緋", "きあけ");
+		//
+		return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(0, 1)));
 		//
 	}
 
