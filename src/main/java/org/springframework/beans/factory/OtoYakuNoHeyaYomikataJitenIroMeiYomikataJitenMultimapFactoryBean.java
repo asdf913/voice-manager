@@ -623,8 +623,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						//
 						keyValue = Pair.of(commonPrefix1, commonPrefix2);
 						//
-					} else if (!Objects.equals(Util.getKey(keyValue), commonPrefix1)
-							|| !Objects.equals(Util.getValue(keyValue), commonPrefix2)) {
+					} else if (Boolean.logicalOr(!Objects.equals(Util.getKey(keyValue), commonPrefix1),
+							!Objects.equals(Util.getValue(keyValue), commonPrefix2))) {
 						//
 						throw new IllegalStateException();
 						//
