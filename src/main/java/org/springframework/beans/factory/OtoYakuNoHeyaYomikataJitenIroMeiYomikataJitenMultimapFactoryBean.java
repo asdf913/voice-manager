@@ -452,35 +452,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		Matcher m2;
+		Matcher m2, m3;
 		//
-		String commonPrefix1, commonSuffix1, g22;
-		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}([\\p{InKatakana}\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}$"),
-				s2))
-				&& Util.groupCount(m2) > 1
-				&& StringUtils.isNotEmpty(
-						commonSuffix1 = getCommonSuffix(Util.group(m1, 2), g22 = Util.group(m2, 2)))
-				&& CollectionUtils
-						.isEqualCollection(
-								Collections.singleton(UnicodeBlock.KATAKANA), Util
-										.collect(
-												distinct(Util.mapToObj(
-														Util.chars(StringUtils.substring(g22, 0,
-																StringUtils.length(g22)
-																		- StringUtils.length(commonSuffix1))),
-														UnicodeBlock::of)),
-												Collectors.toSet()))) {
-			//
-			return Pair.of(ImmutableMultimap.of(g11, Util.group(m1, 2), getCommonSuffix(g11, Util.group(m2, 1)),
-					commonSuffix1), toIntList(i, IntStream.rangeClosed(0, 1)));
-			//
-		} // if
-			//
-		String g21, g31, g32, commonPrefix2, commonSuffix2;
-		//
-		Matcher m3;
+		String commonPrefix1, commonSuffix1, g22, g21, g31, g32, commonPrefix2, commonSuffix2;
 		//
 		final String s3 = testAndApply(x -> IterableUtils.size(x) - 2 > i, list, x -> IterableUtils.get(x, i + 2),
 				null);
@@ -636,6 +610,30 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			return Pair.of(
 					ImmutableMultimap.of(g1, g2, StringUtils.substringAfter(Util.group(m2, 1), g1),
 							StringUtils.substringAfter(Util.group(m2, 2), g2)),
+					toIntList(i, IntStream.rangeClosed(0, 1)));
+			//
+		} // if
+			//
+		String commonSuffix1, g22;
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}([\\p{InKatakana}\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}$"),
+				s2))
+				&& Util.groupCount(m2) > 1
+				&& StringUtils
+						.isNotEmpty(commonSuffix1 = getCommonSuffix(g2, g22 = Util.group(m2, 2)))
+				&& CollectionUtils
+						.isEqualCollection(
+								Collections.singleton(UnicodeBlock.KATAKANA), Util
+										.collect(
+												distinct(Util.mapToObj(
+														Util.chars(StringUtils.substring(g22, 0,
+																StringUtils.length(g22)
+																		- StringUtils.length(commonSuffix1))),
+														UnicodeBlock::of)),
+												Collectors.toSet()))) {
+			//
+			return Pair.of(ImmutableMultimap.of(g1, g2, getCommonSuffix(g1, Util.group(m2, 1)), commonSuffix1),
 					toIntList(i, IntStream.rangeClosed(0, 1)));
 			//
 		} // if
