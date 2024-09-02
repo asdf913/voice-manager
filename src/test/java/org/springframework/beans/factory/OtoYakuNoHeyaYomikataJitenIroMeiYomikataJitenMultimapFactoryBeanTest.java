@@ -104,6 +104,8 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 
 	private PatternMap patternMap;
 
+	private ObjectMapper objectMapper = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -113,6 +115,8 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest.testGetObject");
 		//
 		patternMap = new PatternMapImpl();
+		//
+		objectMapper = new ObjectMapper();
 		//
 	}
 
@@ -839,8 +843,6 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		final ObjectMapper objectMapper = new ObjectMapper();
-		//
 		Assertions.assertEquals("{\"{色=[いろ]}\":[0,1,2]}", ObjectMapperUtil.writeValueAsString(objectMapper,
 				convert(toMultimapAndIntList(patternMap, Arrays.asList("勝つ色（かついろ）", "逆引き", "熟語林"), 0))));
 		//
@@ -946,11 +948,13 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		final ObjectMapper objectMapper = new ObjectMapper();
-		//
 		Assertions.assertEquals("{\"{青苔=[あおごけ], 青磁=[あおじ], 青瓷=[せいじ], 青=[あお], 苔=[ごけ], 磁=[じ]}\":[0,1]}",
 				ObjectMapperUtil.writeValueAsString(objectMapper, convert(
 						toMultimapAndIntList(patternMap, Arrays.asList("青苔（あおごけ）日本の色名", " 青磁・青瓷（あおじ／せいじ・日本の色名）"), 0))));
+		//
+		Assertions.assertEquals("{\"{青墨=[あおずみ], 青白い=[あおじろい], 蒼白い=[あおじろい], 青=[あお]}\":[0,1]}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
+						Arrays.asList("青白い・蒼白い（あおじろい）広辞苑・日本語大辞典・大辞林", " 青墨（あおずみ）"), 0))));
 		//
 	}
 
