@@ -14,6 +14,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
 import java.util.function.ObjIntConsumer;
@@ -480,12 +481,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			g21 = Util.group(m2, 1);
 			//
-			for (int j = 2; j <= Util.groupCount(m2); j++) {
-				//
-				MultimapUtil.put(multimap, g21, Util.group(m2, j));
-				//
-			} // for
-				//
+			forEach(IntStream.rangeClosed(2, Util.groupCount(m2)),
+					x -> MultimapUtil.put(multimap, g21, Util.group(m2, x)));
+			//
 			final Entry<String, String> commonPrefix = Pair.of(
 					StringUtils.getCommonPrefix(toArray(MultimapUtil.keySet(multimap), new String[] {})),
 					StringUtils.getCommonPrefix(toArray(MultimapUtil.values(multimap), new String[] {})));
@@ -521,6 +519,12 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		return null;
 		//
+	}
+
+	private static void forEach(final IntStream instance, final IntConsumer action) {
+		if (instance != null && action != null) {
+			instance.forEach(action);
+		}
 	}
 
 	@Nullable

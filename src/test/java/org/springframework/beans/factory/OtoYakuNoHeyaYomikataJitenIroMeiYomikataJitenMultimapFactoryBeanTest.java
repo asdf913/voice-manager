@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
 import java.util.function.ObjIntConsumer;
@@ -52,7 +53,8 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3,
 			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS, METHOD_REMOVE_VALUE, METHOD_FLAT_MAP, METHOD_ADD_ALL,
-			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT, METHOD_TO_ARRAY;
+			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT, METHOD_TO_ARRAY,
+			METHOD_FOR_EACH;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -91,6 +93,8 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				Object.class, TriConsumer.class)).setAccessible(true);
 		//
 		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class, Object[].class)).setAccessible(true);
+		//
+		(METHOD_FOR_EACH = clz.getDeclaredMethod("forEach", IntStream.class, IntConsumer.class)).setAccessible(true);
 		//
 	}
 
@@ -1021,6 +1025,21 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	private static <T> T[] toArray(final Collection<T> instance, final T[] a) throws Throwable {
 		try {
 			return (T[]) METHOD_TO_ARRAY.invoke(null, instance, a);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testForEach() {
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(IntStream.empty(), null));
+		//
+	}
+
+	private static void forEach(final IntStream instance, final IntConsumer action) throws Throwable {
+		try {
+			METHOD_FOR_EACH.invoke(null, instance, action);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
