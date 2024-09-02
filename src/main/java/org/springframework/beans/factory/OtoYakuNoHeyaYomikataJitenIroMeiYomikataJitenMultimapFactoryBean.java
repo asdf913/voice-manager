@@ -527,9 +527,42 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		}
 	}
 
+	private static interface IntTripleObjectFunction<A, B, C, R> {
+
+		R apply(final int i, final A a, final B b, final C c);
+
+	}
+
 	@Nullable
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList4(final PatternMap patternMap,
 			final int i, final Entry<String, String> entry, final String s2) {
+		//
+		final List<IntTripleObjectFunction<PatternMap, Entry<String, String>, String, Entry<Multimap<String, String>, IntList>>> functions = Arrays
+				.asList(OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList4a,
+						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList4b);
+		//
+		Entry<Multimap<String, String>, IntList> multimapAndIntList = null;
+		//
+		IntTripleObjectFunction<PatternMap, Entry<String, String>, String, Entry<Multimap<String, String>, IntList>> function;
+		//
+		for (int j = 0; j < IterableUtils.size(functions); j++) {
+			//
+			if ((multimapAndIntList = (function = IterableUtils.get(functions, j)) != null
+					? function.apply(i, patternMap, entry, s2)
+					: null) != null) {
+				//
+				return multimapAndIntList;
+				//
+			} // if
+				//
+		} // for
+			//
+		return null;
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList4a(final int i,
+			final PatternMap patternMap, final Entry<String, String> entry, final String s2) {
 		//
 		Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
@@ -584,6 +617,23 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		return null;
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList4b(final int i,
+			final PatternMap patternMap, final Entry<String, String> entry, final String s2) {
+		//
+		Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+				s2);
+		//
+		final String g1 = Util.getKey(entry);
+		//
+		final String g2 = Util.getValue(entry);
+		//
+		String commonPrefix1;
+		//
 		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InBasicLatin}]+(\\p{InHiragana}+)[\\p{InKatakana}]+\\p{InHalfwidthAndFullwidthForms}$"),
 				s2)) && Util.groupCount(m2) > 1) {
