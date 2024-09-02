@@ -831,7 +831,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	}
 
 	@Test
-	void testToMultimapAndIntList() throws Throwable {
+	void testToMultimapAndIntList1() throws Throwable {
 		//
 		if (isSystemPropertiesContainsTestGetObject) {
 			//
@@ -934,6 +934,19 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				"{\"{浅縹=[あさはなだ], 浅緋=[あさひ, うすあけ, あさあけ, せんぴ, あさきあけ], 浅=[あさ], 縹=[はなだ], 緋=[ひ, あけ]}\":[0,1]}",
 				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
 						Arrays.asList("浅縹（あさはなだ）", "浅緋（あさひ・うすあけ・あさあけ・せんぴ・日本国語大辞典/あさきあけ・ニコリ）"), 0))));
+		//
+	}
+
+	@Test
+	void testToMultimapAndIntList2() throws Throwable {
+		//
+		if (isSystemPropertiesContainsTestGetObject) {
+			//
+			return;
+			//
+		} // if
+			//
+		final ObjectMapper objectMapper = new ObjectMapper();
 		//
 		Assertions.assertEquals("{\"{青苔=[あおごけ], 青磁=[あおじ], 青瓷=[せいじ], 青=[あお], 苔=[ごけ], 磁=[じ]}\":[0,1]}",
 				ObjectMapperUtil.writeValueAsString(objectMapper, convert(
