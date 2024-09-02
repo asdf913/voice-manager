@@ -609,9 +609,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				for (final Entry<String, String> en : entries) {
 					//
-					if (Boolean.logicalAnd(Objects.equals(key = Util.getKey(en), g1),
-							Objects.equals(value = Util.getValue(en), g2))
-							|| StringUtils.isEmpty(commonPrefix1 = StringUtils.getCommonPrefix(g1, key))
+					if (Boolean.logicalOr(
+							Boolean.logicalAnd(Objects.equals(key = Util.getKey(en), g1),
+									Objects.equals(value = Util.getValue(en), g2)),
+							StringUtils.isEmpty(commonPrefix1 = StringUtils.getCommonPrefix(g1, key)))
 							|| StringUtils.isEmpty(commonPrefix2 = StringUtils.getCommonPrefix(g2, value))) {
 						//
 						continue;
