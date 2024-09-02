@@ -521,7 +521,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static void forEach(final IntStream instance, final IntConsumer action) {
+	private static void forEach(@Nullable final IntStream instance, @Nullable final IntConsumer action) {
 		if (instance != null && action != null) {
 			instance.forEach(action);
 		}
