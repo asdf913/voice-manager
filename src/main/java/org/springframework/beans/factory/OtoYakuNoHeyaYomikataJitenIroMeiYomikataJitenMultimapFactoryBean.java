@@ -1114,9 +1114,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				for (final Entry<String, String> entry : entries) {
 					//
-					if (StringUtils.isEmpty(commonPrefix1 = StringUtils.getCommonPrefix(g21, Util.getKey(entry)))
-							|| StringUtils
-									.isEmpty(commonPrefix2 = StringUtils.getCommonPrefix(g22, Util.getValue(entry)))) {
+					if (Boolean.logicalOr(
+							StringUtils.isEmpty(commonPrefix1 = StringUtils.getCommonPrefix(g21, Util.getKey(entry))),
+							StringUtils
+									.isEmpty(commonPrefix2 = StringUtils.getCommonPrefix(g22, Util.getValue(entry))))) {
 						//
 						continue;
 						//
