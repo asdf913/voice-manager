@@ -57,7 +57,7 @@ public interface MultimapUtil {
 		return instance != null && instance.containsEntry(key, value);
 	}
 
-	static void remove(final Multimap<?, ?> instance, final Object key, final Object value) {
+	static void remove(@Nullable final Multimap<?, ?> instance, final Object key, final Object value) {
 		if (instance != null) {
 			instance.remove(key, value);
 		}
