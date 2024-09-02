@@ -1291,7 +1291,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^([\\p{InHiragana}\\p{InCJKUnifiedIdeographs}]+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
 				s1))
-				&& (groupCount = Util.groupCount(m1)) > 1
+				&& Util.groupCount(m1) > 1
 				&& StringUtils.isNotEmpty(
 						commonPrefix = StringUtils.getCommonPrefix(g11 = Util.group(m1, 1), g12 = Util.group(m1, 2)))
 				&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
