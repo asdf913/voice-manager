@@ -624,19 +624,15 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList4b(final int i,
 			final PatternMap patternMap, final Entry<String, String> entry, final String s2) {
 		//
-		Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+		final Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InBasicLatin}]+(\\p{InHiragana}+)[\\p{InKatakana}]+\\p{InHalfwidthAndFullwidthForms}$"),
 				s2);
 		//
-		final String g1 = Util.getKey(entry);
-		//
-		final String g2 = Util.getValue(entry);
-		//
-		String commonPrefix1;
-		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InBasicLatin}]+(\\p{InHiragana}+)[\\p{InKatakana}]+\\p{InHalfwidthAndFullwidthForms}$"),
-				s2)) && Util.groupCount(m2) > 1) {
+		if (Util.matches(m2) && Util.groupCount(m2) > 1) {
+			//
+			final String g1 = Util.getKey(entry);
+			//
+			final String g2 = Util.getValue(entry);
 			//
 			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g1, g2));
 			//
@@ -655,7 +651,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			if (Util.iterator(entries) != null) {
 				//
-				String value;
+				String value, commonPrefix1;
 				//
 				for (final Entry<String, String> en : entries) {
 					//
