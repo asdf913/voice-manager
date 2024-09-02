@@ -1228,18 +1228,14 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList9(final PatternMap patternMap,
 			final List<String> list, final int i) {
 		//
-		final String s1 = testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null);
-		//
-		final String s2 = testAndApply(x -> IterableUtils.size(x) - 1 > i, list, x -> IterableUtils.get(x, i + 1),
-				null);
-		//
 		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^([\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+)\\p{InKatakana}([\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InKatakana}]+$"),
-				s1);
+				testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null));
 		//
 		final Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-				StringUtils.trim(s2));
+				StringUtils.trim(testAndApply(x -> IterableUtils.size(x) - 1 > i, list,
+						x -> IterableUtils.get(x, i + 1), null)));
 		//
 		int groupCount;
 		//
