@@ -1,5 +1,6 @@
 package com.google.common.collect;
 
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
@@ -10,9 +11,36 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.reflect.Reflection;
+
 import io.github.toolfactory.narcissus.Narcissus;
 
 class MultimapUtilTest {
+
+	private static class IH implements InvocationHandler {
+
+		private Boolean remove = null;
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = method != null ? method.getName() : null;
+			//
+			if (proxy instanceof Multimap) {
+				//
+				if (Objects.equals(methodName, "remove")) {
+					//
+					return remove;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+	}
 
 	@Test
 	void testPutAll() {
@@ -82,6 +110,17 @@ class MultimapUtilTest {
 
 	private static Object[] toArray(final Collection<?> instance) {
 		return instance != null ? instance.toArray() : null;
+	}
+
+	@Test
+	void testRemove() {
+		///
+		final IH ih = new IH();
+		//
+		ih.remove = Boolean.FALSE;
+		//
+		Assertions.assertDoesNotThrow(() -> MultimapUtil.remove(Reflection.newProxy(Multimap.class, ih), null, null));
+		//
 	}
 
 }

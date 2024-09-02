@@ -292,7 +292,7 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 			//
 			for (final Entry<String, String> entry : entries) {
 				//
-				remove(multimap, Util.getKey(entry), Util.getValue(entry));
+				MultimapUtil.remove(multimap, Util.getKey(entry), Util.getValue(entry));
 				//
 			} // for
 				//
@@ -300,12 +300,6 @@ public class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean
 			//
 		return multimap;
 		//
-	}
-
-	private static void remove(@Nullable final Multimap<?, ?> instance, final Object key, final Object value) {
-		if (instance != null) {
-			instance.remove(key, value);
-		}
 	}
 
 	@Nullable

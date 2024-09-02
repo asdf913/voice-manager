@@ -43,7 +43,6 @@ import org.springframework.core.io.ClassPathResource;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 import com.google.common.reflect.Reflection;
@@ -55,7 +54,7 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_CREATE_MULTI_MAP, METHOD_CREATE_MULTI_MAP2, METHOD_TO_URL, METHOD_TEST_AND_APPLY,
-			METHOD_REMOVE, METHOD_TO_MULTI_MAP_MAP, METHOD_TO_MULTI_MAP_ITERABLE = null;
+			METHOD_TO_MULTI_MAP_MAP, METHOD_TO_MULTI_MAP_ITERABLE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -72,9 +71,6 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
-		(METHOD_REMOVE = clz.getDeclaredMethod("remove", Multimap.class, Object.class, Object.class))
-				.setAccessible(true);
-		//
 		(METHOD_TO_MULTI_MAP_MAP = clz.getDeclaredMethod("toMultimap", Map.class)).setAccessible(true);
 		//
 		(METHOD_TO_MULTI_MAP_ITERABLE = clz.getDeclaredMethod("toMultimap", Iterable.class)).setAccessible(true);
@@ -83,8 +79,6 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 
 	private static class IH implements InvocationHandler {
 
-		private Boolean remove = null;
-
 		private Set<Entry<?, ?>> entrySet = null;
 
 		@Override
@@ -92,15 +86,7 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			//
 			final String methodName = Util.getName(method);
 			//
-			if (proxy instanceof Multimap) {
-				//
-				if (Objects.equals(methodName, "remove")) {
-					//
-					return remove;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Link) {
+			if (proxy instanceof Link) {
 				//
 				if (Objects.equals(methodName, "getText")) {
 					//
@@ -501,29 +487,6 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testRemove() {
-		//
-		Assertions.assertDoesNotThrow(() -> remove(null, null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> remove(LinkedHashMultimap.create(), null, null));
-		//
-		final IH ih = new IH();
-		//
-		ih.remove = Boolean.TRUE;
-		//
-		Assertions.assertDoesNotThrow(() -> remove(Reflection.newProxy(Multimap.class, ih), null, null));
-		//
-	}
-
-	private static void remove(final Multimap<?, ?> instance, final Object key, final Object value) throws Throwable {
-		try {
-			METHOD_REMOVE.invoke(null, instance, key, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

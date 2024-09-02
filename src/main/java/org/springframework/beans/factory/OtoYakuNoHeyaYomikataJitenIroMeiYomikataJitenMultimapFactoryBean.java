@@ -656,12 +656,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 			} // if
 				//
-			if (multimap != null) {
-				//
-				multimap.remove("緋", "きあけ");
-				//
-			} // if
-				//
+			MultimapUtil.remove(multimap, "緋", "きあけ");
+			//
 			return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(0, 1)));
 			//
 		} // if
@@ -1573,10 +1569,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				for (final Entry<?, ?> entry : unwantedEntries) {
 					//
-					if (MultimapUtil.containsEntry(multimap, k = Util.getKey(entry), v = Util.getValue(entry))
-							&& (multimap = LinkedHashMultimap.create(multimap)) != null) {
+					if (MultimapUtil.containsEntry(multimap, k = Util.getKey(entry), v = Util.getValue(entry))) {
 						//
-						multimap.remove(k, v);
+						MultimapUtil.remove(multimap = LinkedHashMultimap.create(multimap), k, v);
 						//
 					} // if
 						//

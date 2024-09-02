@@ -465,12 +465,12 @@ public class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFac
 			for (final Entry<Entry<String, String>, Entry<String, String>> entry : entrySet) {
 				//
 				if (MultimapUtil.containsEntry(mm, k = Util.getKey(key = Util.getKey(entry)), v = Util.getValue(key))
-						&& (value = Util.getValue(entry)) != null
-						&& (result = ObjectUtils.getIfNull(result, () -> LinkedHashMultimap.create(mm))) != null) {
+						&& (value = Util.getValue(entry)) != null) {
 					//
-					result.remove(k, v);
+					MultimapUtil.remove(result = ObjectUtils.getIfNull(result, () -> LinkedHashMultimap.create(mm)), k,
+							v);
 					//
-					result.put(Util.getKey(value), Util.getValue(value));
+					MultimapUtil.put(result, Util.getKey(value), Util.getValue(value));
 					//
 				} // if
 					//
