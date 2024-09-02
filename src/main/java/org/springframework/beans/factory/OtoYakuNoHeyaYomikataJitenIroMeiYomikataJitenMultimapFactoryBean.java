@@ -648,13 +648,50 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
 		//
-		String commonPrefix2, key;
+		Entry<String, String> keyValue = toEntryForToMultimapAndIntList4b(entries, entry);
+		//
+		if (keyValue != null) {
+			//
+			String key;
+			//
+			final String value = Util.getValue(keyValue);
+			//
+			MultimapUtil.putAll(multimap, ImmutableMultimap.of(key = Util.getKey(keyValue), value));
+			//
+			String substringAfter2;
+			//
+			for (final Entry<String, String> en : entries) {
+				//
+				if (StringUtils.isEmpty(substringAfter2 = StringUtils.substringAfter(Util.getValue(en), value))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				MultimapUtil.put(multimap, StringUtils.substringAfter(Util.getKey(en), key), substringAfter2);
+				//
+			} // for
+				//
+		} // if
+			//
+		MultimapUtil.remove(multimap, "緋", "きあけ");
+		//
+		return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(0, 1)));
+		//
+	}
+
+	private static Entry<String, String> toEntryForToMultimapAndIntList4b(final Iterable<Entry<String, String>> entries,
+			final Entry<String, String> entry) {
 		//
 		Entry<String, String> keyValue = null;
 		//
 		if (Util.iterator(entries) != null) {
 			//
-			String value, commonPrefix1;
+			String key, value, commonPrefix1, commonPrefix2;
+			//
+			final String g1 = Util.getKey(entry);
+			//
+			final String g2 = Util.getValue(entry);
 			//
 			for (final Entry<String, String> en : entries) {
 				//
@@ -683,31 +720,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 		} // if
 			//
-		if (keyValue != null) {
-			//
-			final String value = Util.getValue(keyValue);
-			//
-			MultimapUtil.putAll(multimap, ImmutableMultimap.of(key = Util.getKey(keyValue), value));
-			//
-			String substringAfter2;
-			//
-			for (final Entry<String, String> en : entries) {
-				//
-				if (StringUtils.isEmpty(substringAfter2 = StringUtils.substringAfter(Util.getValue(en), value))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				MultimapUtil.put(multimap, StringUtils.substringAfter(Util.getKey(en), key), substringAfter2);
-				//
-			} // for
-				//
-		} // if
-			//
-		MultimapUtil.remove(multimap, "緋", "きあけ");
-		//
-		return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(0, 1)));
+		return keyValue;
 		//
 	}
 
