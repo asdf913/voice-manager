@@ -584,22 +584,19 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		int groupCount;
-		//
 		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InBasicLatin}]+(\\p{InHiragana}+)[\\p{InKatakana}]+\\p{InHalfwidthAndFullwidthForms}$"),
-				s2)) && (groupCount = Util.groupCount(m2)) > 1) {
+				s2)) && Util.groupCount(m2) > 1) {
 			//
 			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g1, g2));
 			//
 			final String g21 = Util.group(m2, 1);
 			//
-			for (int j = 2; j < groupCount; j++) {
-				//
-				MultimapUtil.put(multimap, g21, Util.group(m2, j));
-				//
-			} // for
-				//
+			final Matcher m = m2;
+			//
+			forEach(IntStream.rangeClosed(2, Util.groupCount(m2)),
+					x -> MultimapUtil.put(multimap, g21, Util.group(m, x)));
+			//
 			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
 			//
 			String commonPrefix2, key;
@@ -657,6 +654,12 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 				} // for
 					//
+			} // if
+				//
+			if (multimap != null) {
+				//
+				multimap.remove("緋", "きあけ");
+				//
 			} // if
 				//
 			return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(0, 1)));
