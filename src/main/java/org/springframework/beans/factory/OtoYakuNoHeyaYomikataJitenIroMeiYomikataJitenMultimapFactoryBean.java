@@ -443,8 +443,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		final String g12 = Util.group(m1, 2);
 		//
-		final Entry<Multimap<String, String>, IntList> entry = toMultimapAndIntList4(patternMap, list, i,
-				Pair.of(g11, g12), s2);
+		final Entry<Multimap<String, String>, IntList> entry = toMultimapAndIntList4(patternMap, i, Pair.of(g11, g12),
+				s2);
 		//
 		if (entry != null) {
 			//
@@ -608,7 +608,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	}
 
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList4(final PatternMap patternMap,
-			final List<String> list, final int i, final Entry<String, String> entry, final String s2) {
+			final int i, final Entry<String, String> entry, final String s2) {
 		//
 		Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
