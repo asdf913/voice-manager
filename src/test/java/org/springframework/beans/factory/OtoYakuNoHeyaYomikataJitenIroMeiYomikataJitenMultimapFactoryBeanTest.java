@@ -691,6 +691,11 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		Assertions.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("砥", "と")),
 				MultimapUtil.entries(toMultimap(patternMap, "砥の粉色・砥粉色（とのこいろ）"))));
 		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(
+				MultimapUtil.entries(ImmutableMultimap.of("重色目", "かさねのいろめ", "襲", "かさね", "色目", "いろめ")),
+				MultimapUtil.entries(toMultimap(patternMap,
+						"重色目（かさねのいろめ・「色々な色」より）／襲の色目（かさねのいろめ・「日本の色辞典」より）についても読み方を調べましたので付け足しておきます。"))));
+		//
 	}
 
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s) throws Throwable {
