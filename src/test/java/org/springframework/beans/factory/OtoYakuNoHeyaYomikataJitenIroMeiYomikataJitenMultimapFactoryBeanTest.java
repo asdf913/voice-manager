@@ -930,9 +930,14 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
 						Arrays.asList("鳩羽色（はとばいろ）", "鳩羽鼠（はとばねず・色々な色/はとばねずみ・日本の色辞典）", "鳩羽紫（はとばむらさき）"), 0))));
 		//
-		Assertions.assertEquals("{\"{浅縹=[あさはなだ], 浅緋=[あさひ, うすあけ, あさあけ, せんぴ, あさきあけ], 浅=[あさ], 縹=[はなだ], 緋=[ひ, あけ]}\":[0,1]}",
+		Assertions.assertEquals(
+				"{\"{浅縹=[あさはなだ], 浅緋=[あさひ, うすあけ, あさあけ, せんぴ, あさきあけ], 浅=[あさ], 縹=[はなだ], 緋=[ひ, あけ]}\":[0,1]}",
 				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
 						Arrays.asList("浅縹（あさはなだ）", "浅緋（あさひ・うすあけ・あさあけ・せんぴ・日本国語大辞典/あさきあけ・ニコリ）"), 0))));
+		//
+		Assertions.assertEquals("{\"{青苔=[あおごけ], 青磁=[あおじ], 青瓷=[せいじ], 青=[あお], 苔=[ごけ], 磁=[じ]}\":[0,1]}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, convert(
+						toMultimapAndIntList(patternMap, Arrays.asList("青苔（あおごけ）日本の色名", " 青磁・青瓷（あおじ／せいじ・日本の色名）"), 0))));
 		//
 	}
 
