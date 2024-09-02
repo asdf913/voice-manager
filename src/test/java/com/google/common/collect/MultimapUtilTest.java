@@ -26,14 +26,10 @@ class MultimapUtilTest {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
-			if (proxy instanceof Multimap) {
+			if (proxy instanceof Multimap && Objects.equals(methodName, "remove")) {
 				//
-				if (Objects.equals(methodName, "remove")) {
-					//
-					return remove;
-					//
-				} // if
-					//
+				return remove;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
