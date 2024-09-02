@@ -648,7 +648,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
 		//
-		Entry<String, String> keyValue = toEntryForToMultimapAndIntList4b(entries, entry);
+		final Entry<String, String> keyValue = toEntryForToMultimapAndIntList4b(entries, entry);
 		//
 		if (keyValue != null) {
 			//
