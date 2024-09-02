@@ -584,6 +584,85 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		int groupCount;
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InBasicLatin}]+(\\p{InHiragana}+)[\\p{InKatakana}]+\\p{InHalfwidthAndFullwidthForms}$"),
+				s2)) && (groupCount = Util.groupCount(m2)) > 1) {
+			//
+			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g1, g2));
+			//
+			final String g21 = Util.group(m2, 1);
+			//
+			for (int j = 2; j < groupCount; j++) {
+				//
+				MultimapUtil.put(multimap, g21, Util.group(m2, j));
+				//
+			} // for
+				//
+			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
+			//
+			String commonPrefix2;
+			//
+			if (Util.iterator(entries) != null) {
+				//
+				String key;
+				//
+				Entry<String, String> keyValue = null;
+				//
+				for (final Entry<String, String> en : entries) {
+					//
+					if (en == null
+							|| (Objects.equals(key = Util.getKey(en), g1) && Objects.equals(Util.getValue(en), g2))
+							|| StringUtils.isEmpty(commonPrefix1 = StringUtils.getCommonPrefix(g1, key)) || StringUtils
+									.isEmpty(commonPrefix2 = StringUtils.getCommonPrefix(g2, Util.getValue(en)))) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (keyValue == null) {
+						//
+						keyValue = Pair.of(commonPrefix1, commonPrefix2);
+						//
+					} else if (!Objects.equals(Util.getKey(keyValue), commonPrefix1)
+							|| !Objects.equals(Util.getValue(keyValue), commonPrefix2)) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+				} // for
+					//
+				if (keyValue != null) {
+					//
+					final String value = Util.getValue(keyValue);
+					//
+					MultimapUtil.putAll(multimap, ImmutableMultimap.of(key = Util.getKey(keyValue), value));
+					//
+					String substringAfter2;
+					//
+					for (final Entry<String, String> en : entries) {
+						//
+						if (StringUtils
+								.isEmpty(substringAfter2 = StringUtils.substringAfter(Util.getValue(en), value))) {
+							//
+							continue;
+							//
+						} // if
+							//
+						MultimapUtil.put(multimap, StringUtils.substringAfter(Util.getKey(en), key), substringAfter2);
+						//
+					} // for
+						//
+				} // if
+					//
+			} // if
+				//
+			return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(0, 1)));
+			//
+		} // if
+			//
 		return null;
 		//
 	}
