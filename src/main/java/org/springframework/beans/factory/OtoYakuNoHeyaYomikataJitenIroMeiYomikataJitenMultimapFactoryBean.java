@@ -44,6 +44,9 @@ import org.javatuples.Quartet;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.javatuples.valueintf.IValue1;
+import org.javatuples.valueintf.IValue2;
+import org.javatuples.valueintf.IValue3;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.NodeUtil;
@@ -684,9 +687,11 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			for (int j = 0; j < IterableUtils.size(quartets); j++) {
 				//
-				if ((quartet = IterableUtils.get(quartets, j)) == null || Util.or(
-						Boolean.logicalAnd(Objects.equals(a = IValue0Util.getValue0(quartet), c = quartet.getValue2()),
-								Objects.equals(b = quartet.getValue1(), d = quartet.getValue3())),
+				if (Util.or(
+						Boolean.logicalAnd(
+								Objects.equals(a = IValue0Util.getValue0(quartet = IterableUtils.get(quartets, j)),
+										c = getValue2(quartet)),
+								Objects.equals(b = getValue1(quartet), d = getValue3(quartet))),
 						!StringUtils.startsWith(a, c), !StringUtils.startsWith(b, d))) {
 					//
 					continue;
@@ -704,6 +709,18 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		return null;
 		//
+	}
+
+	private static <X> X getValue1(final IValue1<X> instance) {
+		return instance != null ? instance.getValue1() : null;
+	}
+
+	private static <X> X getValue2(final IValue2<X> instance) {
+		return instance != null ? instance.getValue2() : null;
+	}
+
+	private static <X> X getValue3(final IValue3<X> instance) {
+		return instance != null ? instance.getValue3() : null;
 	}
 
 	@Nullable
