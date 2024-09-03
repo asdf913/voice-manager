@@ -653,7 +653,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				testAndAccept((a, b, c) -> Boolean.logicalAnd(StringUtils.isNoneEmpty(b), StringUtils.isNoneEmpty(c)),
 						multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						StringUtils.getCommonPrefix(g1, Util.group(m2, j)), StringUtils.getCommonPrefix(g2, groupLast),
-						(a, b, c) -> MultimapUtil.put(a, b, c));
+						MultimapUtil::put);
 				//
 			} // for
 				//
