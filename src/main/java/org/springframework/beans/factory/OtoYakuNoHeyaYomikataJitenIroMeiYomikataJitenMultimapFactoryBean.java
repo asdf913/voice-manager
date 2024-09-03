@@ -166,7 +166,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList6,
 						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList7,
 						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList8,
-						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList9);
+						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList9,
+						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList10);
 		//
 		Entry<Multimap<String, String>, IntList> entry = null;
 		//
@@ -1286,7 +1287,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		String g11, g12, commonPrefix, commonSuffix1, commonSuffix2;
+		String g11, g12, commonPrefix;
 		//
 		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^([\\p{InHiragana}\\p{InCJKUnifiedIdeographs}]+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
@@ -1299,38 +1300,51 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						s2))
 				&& Util.groupCount(m2) > 1) {
 			//
+			final String commonSuffix1 = getCommonSuffix(g21 = Util.group(m2, 1), g11);
+			//
+			final String commonSuffix2 = getCommonSuffix(g22 = Util.group(m2, 2), g12);
+			//
 			return Pair.of(ImmutableMultimap.of(StringUtils.substringAfter(g11, commonPrefix),
-					StringUtils.substringAfter(g12, commonPrefix), g21 = Util.group(m2, 1), g22 = Util.group(m2, 2),
-					StringUtils.substringBefore(g21, commonSuffix1 = getCommonSuffix(g21, g11)),
-					StringUtils.substringBefore(g22, commonSuffix2 = getCommonSuffix(g22, g12)), commonSuffix1,
-					commonSuffix2, StringUtils.substringBetween(g11, commonPrefix, commonSuffix1),
+					StringUtils.substringAfter(g12, commonPrefix), g21, g22,
+					StringUtils.substringBefore(g21, commonSuffix1), StringUtils.substringBefore(g22, commonSuffix2),
+					commonSuffix1, commonSuffix2, StringUtils.substringBetween(g11, commonPrefix, commonSuffix1),
 					StringUtils.substringBetween(g12, commonPrefix, commonSuffix2)),
 					toIntList(i, IntStream.rangeClosed(0, 1)));
 			//
 		} // if
 			//
-		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+		return null;
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList10(final PatternMap patternMap,
+			final List<String> list, final int i) {
+		//
+		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)$"),
-				s1))
-				&& Util.groupCount(m1) > 2
-				&& Util.matches(Util.matcher(
-						PatternMap.getPattern(patternMap,
-								"^[\\p{InHiragana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+$"),
-						s2))) {
+				testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null));
+		//
+		if (Util.matches(m1) && Util.groupCount(m1) > 2 && Util.matches(Util.matcher(
+				PatternMap.getPattern(patternMap,
+						"^[\\p{InHiragana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+$"),
+				testAndApply(x -> IterableUtils.size(x) - 1 > i, list, x -> IterableUtils.get(x, i + 1), null)))) {
 			//
 			Multimap<String, String> multimap = null;
 			//
-			final String g13 = Util.group(m1, 3);
-			//
 			Matcher m;
 			//
-			String line, g1, g2;
+			final String g12 = Util.group(m1, 2);
 			//
-			commonSuffix1 = g12 = Util.group(m1, 2);
+			final String commonSuffix1 = g12;
 			//
-			commonSuffix2 = StringUtils.substringAfter(g13, StringUtils.getCommonPrefix(Util.group(m1, 1), g13));
+			final String g13 = Util.group(m1, 3);
+			//
+			final String commonSuffix2 = StringUtils.substringAfter(g13,
+					StringUtils.getCommonPrefix(Util.group(m1, 1), g13));
 			//
 			IntList intList = toIntList(i, IntStream.rangeClosed(0, 1));
+			//
+			String line, g1, g2;
 			//
 			for (int j = i + 1; j < IterableUtils.size(list); j++) {
 				//
