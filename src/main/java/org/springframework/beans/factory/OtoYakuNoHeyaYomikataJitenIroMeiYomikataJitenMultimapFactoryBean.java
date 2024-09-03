@@ -40,6 +40,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.util.IntList;
 import org.apache.poi.util.IntListUtil;
 import org.d2ab.function.ObjObjIntFunction;
+import org.javatuples.Quartet;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -52,6 +53,7 @@ import org.meeuw.functional.TriPredicate;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 import com.mariten.kanatools.KanaConverter;
@@ -663,31 +665,44 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					.collect(Util.filter(StreamSupport.stream(Util.spliterator(entries), false),
 							x -> StringUtils.length(Util.getKey(x)) == 1), Collectors.toSet());
 			//
-			if (Boolean.logicalAnd(Util.iterator(entries) != null, Util.iterator(commonPrefixes) != null)) {
+			final List<Quartet<String, String, String, String>> quartets = Util.toList(Util.map(Util.stream(
+					Lists.cartesianProduct(IterableUtils.toList(entries), IterableUtils.toList(commonPrefixes))), x -> {
+						//
+						final Entry<String, String> a = testAndApply(y -> IterableUtils.size(y) > 0, x,
+								y -> IterableUtils.get(x, 0), null);
+						//
+						final Entry<String, String> b = testAndApply(y -> IterableUtils.size(y) > 1, x,
+								y -> IterableUtils.get(x, 1), null);
+						//
+						return Quartet.with(Util.getKey(a), Util.getValue(a), Util.getKey(b), Util.getValue(b));
+						//
+					}));
+			//
+			Quartet<String, String, String, String> quartet = null;
+			//
+			String a, b, c, d;
+			//
+			for (int j = 0; j < IterableUtils.size(quartets); j++) {
 				//
-				String ka, kb, va, vb;
+				if ((quartet = IterableUtils.get(quartets, j)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (Util.or(
+						Boolean.logicalAnd(Objects.equals(a = IValue0Util.getValue0(quartet), c = quartet.getValue2()),
+								Objects.equals(b = quartet.getValue1(), d = quartet.getValue3())),
+						!StringUtils.startsWith(a, c), !StringUtils.startsWith(b, d))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						StringUtils.substringAfter(a, c), StringUtils.substringAfter(b, d));
 				//
-				for (final Entry<String, String> a : entries) {
-					//
-					for (final Entry<String, String> b : commonPrefixes) {
-						//
-						if (Util.or(
-								Boolean.logicalAnd(Objects.equals(ka = Util.getKey(a), kb = Util.getKey(b)),
-										Objects.equals(va = Util.getValue(a), vb = Util.getValue(b))),
-								!StringUtils.startsWith(ka, kb), !StringUtils.startsWith(va, vb))) {
-							//
-							continue;
-							//
-						} // if
-							//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								StringUtils.substringAfter(ka, kb), StringUtils.substringAfter(va, vb));
-						//
-					} // for
-						//
-				} // for
-					//
-			} // if
+			} // for
 				//
 			return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(0, 1)));
 			//
