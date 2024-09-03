@@ -2352,9 +2352,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					StringUtils.substring(g1, 0, StringUtils.length(g1) - StringUtils.length(commonSuffix)),
 					StringUtils.substringBefore(g2, commonSuffix)));
 			//
-		} // if
-			//
-		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InCJKSymbolsAndPunctuation}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+\\p{InHalfwidthAndFullwidthForms}+(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKSymbolsAndPunctuation}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}]+$"),
 				input)) && Util.groupCount(m) > 5) {
 			//
@@ -2364,6 +2362,33 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			return Unit.with(ImmutableMultimap.of(Util.group(m, 1), Util.group(m, 2), Util.group(m, 3),
 					StringUtils.substringBefore(g6, g4), Util.group(m, 5), StringUtils.substringAfter(g6, g4)));
+			//
+		} // if
+			//
+		int groupCount;
+		//
+		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^([\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}\\p{InKatakana}]+$"),
+				input)) && (groupCount = Util.groupCount(m)) > 0) {
+			//
+			g1 = Util.group(m, 1);
+			//
+			Multimap<String, String> multimap = null;
+			//
+			String commonPrefix, g;
+			//
+			for (int i = 2; i <= groupCount; i++) {
+				//
+				if (StringUtils.isNotEmpty(commonPrefix = StringUtils.getCommonPrefix(g1, g = Util.group(m, i)))) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							StringUtils.substringAfter(g1, commonPrefix), StringUtils.substringAfter(g, commonPrefix));
+					//
+				} // if
+					//
+			} // for
+				//
+			return Unit.with(multimap);
 			//
 		} // if
 			//
