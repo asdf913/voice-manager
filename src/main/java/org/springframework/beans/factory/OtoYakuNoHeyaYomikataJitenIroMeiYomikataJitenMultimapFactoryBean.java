@@ -635,6 +635,72 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		int groupCount;
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
+				s2)) && (groupCount = Util.groupCount(m2)) > 0) {
+			//
+			final String groupLast = Util.group(m2, groupCount);
+			//
+			Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g1, g2));
+			//
+			for (int j = 1; j < groupCount; j++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m2, j), groupLast);
+				//
+				if (StringUtils.isNoneEmpty(commonPrefix1 = StringUtils.getCommonPrefix(g1, Util.group(m2, j)))) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							commonPrefix1, StringUtils.getCommonPrefix(g2, groupLast));
+					//
+				} // if
+					//
+			} // for
+				//
+			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
+			//
+			if (Util.iterator(entries) != null) {
+				//
+				final Iterable<Entry<String, String>> commonPrefixes = Util
+						.collect(Util.filter(StreamSupport.stream(Util.spliterator(entries), false),
+								x -> StringUtils.length(Util.getKey(x)) == 1), Collectors.toSet());
+				//
+				String ka, kb, va, vb;
+				//
+				for (final Entry<String, String> a : entries) {
+					//
+					if (a == null || Util.iterator(commonPrefixes) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					for (final Entry<String, String> b : commonPrefixes) {
+						//
+						if (b == null
+								|| Boolean.logicalAnd(Objects.equals(ka = Util.getKey(a), kb = Util.getKey(b)),
+										Objects.equals(va = Util.getValue(a), vb = Util.getValue(b)))
+								|| !StringUtils.startsWith(ka, kb) || !StringUtils.startsWith(va, vb)) {
+							//
+							continue;
+							//
+						} // if
+							//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								StringUtils.substringAfter(ka, kb), StringUtils.substringAfter(va, vb));
+						//
+					} // for
+						//
+				} // for
+					//
+			} // if
+				//
+			return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(0, 1)));
+			//
+		} // if
+			//
 		return null;
 		//
 	}
@@ -1571,7 +1637,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			} // if
 				//
 		} // for
-		//
+			//
 		return null;
 		//
 	}
