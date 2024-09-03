@@ -1286,7 +1286,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		String g11, g12, commonPrefix;
+		String g11, g12, commonPrefix, commonSuffix1, commonSuffix2;
 		//
 		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^([\\p{InHiragana}\\p{InCJKUnifiedIdeographs}]+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
@@ -1299,16 +1299,69 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						s2))
 				&& Util.groupCount(m2) > 1) {
 			//
-			final String commonSuffix1 = getCommonSuffix(g21 = Util.group(m2, 1), g11);
-			//
-			final String commonSuffix2 = getCommonSuffix(g22 = Util.group(m2, 2), g12);
-			//
 			return Pair.of(ImmutableMultimap.of(StringUtils.substringAfter(g11, commonPrefix),
-					StringUtils.substringAfter(g12, commonPrefix), g21, g22,
-					StringUtils.substringBefore(g21, commonSuffix1), StringUtils.substringBefore(g22, commonSuffix2),
-					commonSuffix1, commonSuffix2, StringUtils.substringBetween(g11, commonPrefix, commonSuffix1),
+					StringUtils.substringAfter(g12, commonPrefix), g21 = Util.group(m2, 1), g22 = Util.group(m2, 2),
+					StringUtils.substringBefore(g21, commonSuffix1 = getCommonSuffix(g21, g11)),
+					StringUtils.substringBefore(g22, commonSuffix2 = getCommonSuffix(g22, g12)), commonSuffix1,
+					commonSuffix2, StringUtils.substringBetween(g11, commonPrefix, commonSuffix1),
 					StringUtils.substringBetween(g12, commonPrefix, commonSuffix2)),
 					toIntList(i, IntStream.rangeClosed(0, 1)));
+			//
+		} // if
+			//
+		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)$"),
+				s1))
+				&& Util.groupCount(m1) > 2
+				&& Util.matches(Util.matcher(
+						PatternMap.getPattern(patternMap,
+								"^[\\p{InHiragana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+$"),
+						s2))) {
+			//
+			Multimap<String, String> multimap = null;
+			//
+			final String g13 = Util.group(m1, 3);
+			//
+			Matcher m;
+			//
+			String line, g1, g2;
+			//
+			commonSuffix1 = g12 = Util.group(m1, 2);
+			//
+			commonSuffix2 = StringUtils.substringAfter(g13, StringUtils.getCommonPrefix(g11 = Util.group(m1, 1), g13));
+			//
+			IntList intList = toIntList(i, IntStream.rangeClosed(0, 1));
+			//
+			for (int j = i + 1; j < IterableUtils.size(list); j++) {
+				//
+				if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
+						StringUtils.trim(line = IterableUtils.get(list, j))))
+						&& StringUtils.endsWith(g1 = Util.group(m, 1), g12)) {
+					//
+					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							ImmutableMultimap.of(g1, g2 = Util.group(m, 2),
+									StringUtils.substringBefore(g1, commonSuffix1),
+									StringUtils.substringBefore(g2, commonSuffix2)));
+					//
+					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), j);
+					//
+				} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+						line)) && StringUtils.startsWith(g1 = Util.group(m, 1), g12)) {
+					//
+					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							ImmutableMultimap.of(g1, g2 = Util.group(m, 2),
+									StringUtils.substringAfter(g1, commonSuffix1),
+									StringUtils.substringAfter(g2, commonSuffix2)));
+					//
+					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), j);
+					//
+				} // if
+					//
+			} // for
+				//
+			return Pair.of(multimap, intList);
 			//
 		} // if
 			//
