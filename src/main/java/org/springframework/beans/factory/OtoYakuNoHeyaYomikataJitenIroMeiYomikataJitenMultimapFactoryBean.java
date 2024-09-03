@@ -684,13 +684,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			for (int j = 0; j < IterableUtils.size(quartets); j++) {
 				//
-				if ((quartet = IterableUtils.get(quartets, j)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (Util.or(
+				if ((quartet = IterableUtils.get(quartets, j)) == null || Util.or(
 						Boolean.logicalAnd(Objects.equals(a = IValue0Util.getValue0(quartet), c = quartet.getValue2()),
 								Objects.equals(b = quartet.getValue1(), d = quartet.getValue3())),
 						!StringUtils.startsWith(a, c), !StringUtils.startsWith(b, d))) {
