@@ -1328,7 +1328,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			commonSuffix1 = g12 = Util.group(m1, 2);
 			//
-			commonSuffix2 = StringUtils.substringAfter(g13, StringUtils.getCommonPrefix(g11 = Util.group(m1, 1), g13));
+			commonSuffix2 = StringUtils.substringAfter(g13, StringUtils.getCommonPrefix(Util.group(m1, 1), g13));
 			//
 			IntList intList = toIntList(i, IntStream.rangeClosed(0, 1));
 			//
