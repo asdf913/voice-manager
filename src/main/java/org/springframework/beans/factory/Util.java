@@ -701,7 +701,7 @@ abstract class Util {
 		return instance != null && mapper != null ? instance.mapToObj(mapper) : null;
 	}
 
-	static <X> X getValue1(final IValue1<X> instance) {
+	static <X> X getValue1(@Nullable final IValue1<X> instance) {
 		return instance != null ? instance.getValue1() : null;
 	}
 
