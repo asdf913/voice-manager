@@ -427,13 +427,13 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList4(final PatternMap patternMap,
 			final List<String> list, final int i) {
 		//
-		final String s1 = testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null);
-		//
 		Matcher m1;
 		//
 		if (!Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-				StringUtils.trim(s1))) || Util.groupCount(m1) <= 1) {
+				StringUtils
+						.trim(testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null))))
+				|| Util.groupCount(m1) <= 1) {
 			//
 			return null;
 			//
