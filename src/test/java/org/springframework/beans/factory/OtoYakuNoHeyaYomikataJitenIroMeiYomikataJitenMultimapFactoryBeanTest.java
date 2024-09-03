@@ -973,6 +973,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 										"練色（ねりいろ）"),
 								0))));
 		//
+		Assertions.assertEquals("{\"{朽葉鼠=[くちばねず], 鼠=[ねず], 朽葉=[くちば], 雲井鼠=[くもいねず], 雲井=[くもい]}\":[0,1]}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
+						Arrays.asList("朽葉鼠（くちばねず）", "雲井鼠・雲居？鼠（くもいねず）日本の色名*資料に？あり"), 0))));
+		//
 	}
 
 	private static Entry<Multimap<String, String>, int[]> convert(
