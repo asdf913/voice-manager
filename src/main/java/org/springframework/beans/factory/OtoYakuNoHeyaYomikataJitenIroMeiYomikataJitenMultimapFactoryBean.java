@@ -645,15 +645,18 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g1, g2));
 			//
+			String commonPrefix2;
+			//
 			for (int j = 1; j < groupCount; j++) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(m2, j), groupLast);
 				//
-				if (StringUtils.isNoneEmpty(commonPrefix1 = StringUtils.getCommonPrefix(g1, Util.group(m2, j)))) {
+				if (StringUtils.isNoneEmpty(commonPrefix1 = StringUtils.getCommonPrefix(g1, Util.group(m2, j)))
+						&& StringUtils.isNoneEmpty(commonPrefix2 = StringUtils.getCommonPrefix(g2, groupLast))) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							commonPrefix1, StringUtils.getCommonPrefix(g2, groupLast));
+							commonPrefix1, commonPrefix2);
 					//
 				} // if
 					//
