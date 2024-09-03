@@ -665,7 +665,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					.collect(Util.filter(StreamSupport.stream(Util.spliterator(entries), false),
 							x -> StringUtils.length(Util.getKey(x)) == 1), Collectors.toSet());
 			//
-			if (Util.iterator(entries) != null && Util.iterator(commonPrefixes) != null) {
+			if (Boolean.logicalAnd(Util.iterator(entries) != null, Util.iterator(commonPrefixes) != null)) {
 				//
 				String ka, kb, va, vb;
 				//
