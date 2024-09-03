@@ -546,7 +546,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		final List<IntTripleObjectFunction<PatternMap, Entry<String, String>, String, Entry<Multimap<String, String>, IntList>>> functions = Arrays
 				.asList(OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList4a,
-						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList4b);
+						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList4b,
+						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList4c);
 		//
 		Entry<Multimap<String, String>, IntList> multimapAndIntList = null;
 		//
@@ -637,73 +638,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					StringUtils.substringBefore(g1, commonSuffix1), StringUtils.substringBefore(g2, commonSuffix2), g21,
 					g22 = Util.group(m2, 2), StringUtils.substringBefore(g21, commonSuffix1),
 					StringUtils.substringBefore(g22, commonSuffix2)), toIntList(i, IntStream.rangeClosed(0, 1)));
-			//
-		} // if
-			//
-		int groupCount;
-		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
-				s2)) && (groupCount = Util.groupCount(m2)) > 0) {
-			//
-			final String groupLast = Util.group(m2, groupCount);
-			//
-			Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g1, g2));
-			//
-			for (int j = 1; j < groupCount; j++) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(m2, j), groupLast);
-				//
-				testAndAccept((a, b, c) -> Boolean.logicalAnd(StringUtils.isNoneEmpty(b), StringUtils.isNoneEmpty(c)),
-						multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						StringUtils.getCommonPrefix(g1, Util.group(m2, j)), StringUtils.getCommonPrefix(g2, groupLast),
-						MultimapUtil::put);
-				//
-			} // for
-				//
-			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
-			//
-			final Iterable<Entry<String, String>> commonPrefixes = Util
-					.collect(Util.filter(StreamSupport.stream(Util.spliterator(entries), false),
-							x -> StringUtils.length(Util.getKey(x)) == 1), Collectors.toSet());
-			//
-			final List<Quartet<String, String, String, String>> quartets = Util.toList(Util.map(Util.stream(
-					Lists.cartesianProduct(IterableUtils.toList(entries), IterableUtils.toList(commonPrefixes))), x -> {
-						//
-						final Entry<String, String> a = testAndApply(y -> IterableUtils.size(y) > 0, x,
-								y -> IterableUtils.get(x, 0), null);
-						//
-						final Entry<String, String> b = testAndApply(y -> IterableUtils.size(y) > 1, x,
-								y -> IterableUtils.get(x, 1), null);
-						//
-						return Quartet.with(Util.getKey(a), Util.getValue(a), Util.getKey(b), Util.getValue(b));
-						//
-					}));
-			//
-			Quartet<String, String, String, String> quartet = null;
-			//
-			String a, b, c, d;
-			//
-			for (int j = 0; j < IterableUtils.size(quartets); j++) {
-				//
-				if (Util.or(
-						Boolean.logicalAnd(
-								Objects.equals(a = IValue0Util.getValue0(quartet = IterableUtils.get(quartets, j)),
-										c = getValue2(quartet)),
-								Objects.equals(b = getValue1(quartet), d = getValue3(quartet))),
-						!StringUtils.startsWith(a, c), !StringUtils.startsWith(b, d))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						StringUtils.substringAfter(a, c), StringUtils.substringAfter(b, d));
-				//
-			} // for
-				//
-			return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(0, 1)));
 			//
 		} // if
 			//
@@ -828,6 +762,89 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		} // if
 			//
 		return keyValue;
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList4c(final int i,
+			final PatternMap patternMap, final Entry<String, String> entry, final String s2) {
+		//
+		final Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
+				s2);
+		//
+		final String g1 = Util.getKey(entry);
+		//
+		final String g2 = Util.getValue(entry);
+		//
+		int groupCount;
+		//
+		if (Util.matches(m2) && (groupCount = Util.groupCount(m2)) > 0) {
+			//
+			final String groupLast = Util.group(m2, groupCount);
+			//
+			Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g1, g2));
+			//
+			for (int j = 1; j < groupCount; j++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m2, j), groupLast);
+				//
+				testAndAccept((a, b, c) -> Boolean.logicalAnd(StringUtils.isNoneEmpty(b), StringUtils.isNoneEmpty(c)),
+						multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						StringUtils.getCommonPrefix(g1, Util.group(m2, j)), StringUtils.getCommonPrefix(g2, groupLast),
+						MultimapUtil::put);
+				//
+			} // for
+				//
+			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
+			//
+			final List<Quartet<String, String, String, String>> quartets = Util
+					.toList(Util
+							.map(Util.stream(Lists.cartesianProduct(IterableUtils.toList(entries),
+									Util.collect(
+											Util.filter(StreamSupport.stream(Util.spliterator(entries), false),
+													x -> StringUtils.length(Util.getKey(x)) == 1),
+											Collectors.toList()))),
+									x -> {
+										//
+										final Entry<String, String> a = testAndApply(y -> IterableUtils.size(y) > 0, x,
+												y -> IterableUtils.get(x, 0), null);
+										//
+										final Entry<String, String> b = testAndApply(y -> IterableUtils.size(y) > 1, x,
+												y -> IterableUtils.get(x, 1), null);
+										//
+										return Quartet.with(Util.getKey(a), Util.getValue(a), Util.getKey(b),
+												Util.getValue(b));
+										//
+									}));
+			//
+			Quartet<String, String, String, String> quartet = null;
+			//
+			String a, b, c, d;
+			//
+			for (int j = 0; j < IterableUtils.size(quartets); j++) {
+				//
+				if (Util.or(
+						Boolean.logicalAnd(
+								Objects.equals(a = IValue0Util.getValue0(quartet = IterableUtils.get(quartets, j)),
+										c = getValue2(quartet)),
+								Objects.equals(b = getValue1(quartet), d = getValue3(quartet))),
+						!StringUtils.startsWith(a, c), !StringUtils.startsWith(b, d))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						StringUtils.substringAfter(a, c), StringUtils.substringAfter(b, d));
+				//
+			} // for
+				//
+			return Pair.of(multimap, toIntList(i, IntStream.rangeClosed(0, 1)));
+			//
+		} // if
+			//
+		return null;
 		//
 	}
 
