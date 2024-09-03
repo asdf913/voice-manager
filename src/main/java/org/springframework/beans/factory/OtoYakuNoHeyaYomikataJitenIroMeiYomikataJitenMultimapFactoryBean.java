@@ -624,10 +624,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InBasicLatin}\\p{InHalfwidthAndFullwidthForms}]+$"),
 				s2)) && Util.groupCount(m2) > 1) {
 			//
-			System.out.println(entry);
-			//
-			System.out.println(s2);
-			//
 			final String g21 = Util.group(m2, 1);
 			//
 			final String commonSuffix2 = getCommonSuffix(g2, Util.group(m2, 2));
@@ -1575,7 +1571,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			} // if
 				//
 		} // for
-			//
+		//
 		return null;
 		//
 	}
