@@ -45,6 +45,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.javatuples.valueintf.IValue1;
 import org.jsoup.nodes.TextNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -698,6 +699,10 @@ abstract class Util {
 	@Nullable
 	static <U> Stream<U> mapToObj(@Nullable final IntStream instance, @Nullable final IntFunction<? extends U> mapper) {
 		return instance != null && mapper != null ? instance.mapToObj(mapper) : null;
+	}
+
+	static <X> X getValue1(final IValue1<X> instance) {
+		return instance != null ? instance.getValue1() : null;
 	}
 
 }

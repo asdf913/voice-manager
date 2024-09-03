@@ -646,11 +646,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	}
 
 	@Nullable
-	private static <X> X getValue1(@Nullable final IValue1<X> instance) {
-		return instance != null ? instance.getValue1() : null;
-	}
-
-	@Nullable
 	private static <X> X getValue2(@Nullable final IValue2<X> instance) {
 		return instance != null ? instance.getValue2() : null;
 	}
@@ -829,7 +824,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						Boolean.logicalAnd(
 								Objects.equals(a = IValue0Util.getValue0(quartet = IterableUtils.get(quartets, j)),
 										c = getValue2(quartet)),
-								Objects.equals(b = getValue1(quartet), d = getValue3(quartet))),
+								Objects.equals(b = Util.getValue1(quartet), d = getValue3(quartet))),
 						!StringUtils.startsWith(a, c), !StringUtils.startsWith(b, d))) {
 					//
 					continue;

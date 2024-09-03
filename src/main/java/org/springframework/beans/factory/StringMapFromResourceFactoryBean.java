@@ -407,7 +407,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		//
 		Cell cell = null;
 		//
-		final Integer index = valueColumnNameAndIndex != null ? valueColumnNameAndIndex.getValue1() : null;
+		final Integer index = Util.getValue1(valueColumnNameAndIndex);
 		//
 		if ((cell = testAndApply((a, b) -> b != null && ObjectIntMap.containsKey(a, IValue0Util.getValue0(b)),
 				objectIntMap, valueColumnNameAndIndex, (a, b) -> RowUtil.getCell(row, a.get(IValue0Util.getValue0(b))),

@@ -139,7 +139,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromRe
 					//
 				} // if
 					//
-				Util.put(map, key, pair.getValue1());
+				Util.put(map, key, Util.getValue1(pair));
 				//
 			} // while
 				//
