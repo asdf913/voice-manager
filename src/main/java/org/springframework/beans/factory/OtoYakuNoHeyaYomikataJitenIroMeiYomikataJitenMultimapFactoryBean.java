@@ -679,10 +679,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						//
 					for (final Entry<String, String> b : commonPrefixes) {
 						//
-						if (Boolean.logicalOr(
+						if (Util.or(
 								Boolean.logicalAnd(Objects.equals(ka = Util.getKey(a), kb = Util.getKey(b)),
 										Objects.equals(va = Util.getValue(a), vb = Util.getValue(b))),
-								!StringUtils.startsWith(ka, kb)) || !StringUtils.startsWith(va, vb)) {
+								!StringUtils.startsWith(ka, kb), !StringUtils.startsWith(va, vb))) {
 							//
 							continue;
 							//
