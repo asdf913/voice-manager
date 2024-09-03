@@ -711,15 +711,15 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static <X> X getValue1(final IValue1<X> instance) {
+	private static <X> X getValue1(@Nullable final IValue1<X> instance) {
 		return instance != null ? instance.getValue1() : null;
 	}
 
-	private static <X> X getValue2(final IValue2<X> instance) {
+	private static <X> X getValue2(@Nullable final IValue2<X> instance) {
 		return instance != null ? instance.getValue2() : null;
 	}
 
-	private static <X> X getValue3(final IValue3<X> instance) {
+	private static <X> X getValue3(@Nullable final IValue3<X> instance) {
 		return instance != null ? instance.getValue3() : null;
 	}
 
