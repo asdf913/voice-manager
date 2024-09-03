@@ -1657,7 +1657,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap7,
 				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap8,
 				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap9,
-				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap10);
+				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap10,
+				OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimap11);
 		//
 		IValue0<Multimap<String, String>> iValue0 = null;
 		//
@@ -2365,13 +2366,21 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		return null;
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap11(final PatternMap patternMap, final String input) {
+		//
+		final Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^([\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}\\p{InKatakana}]+$"),
+				input);
+		//
 		int groupCount;
 		//
-		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-				"^([\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}\\p{InKatakana}]+$"),
-				input)) && (groupCount = Util.groupCount(m)) > 0) {
+		if (Util.matches(m) && (groupCount = Util.groupCount(m)) > 0) {
 			//
-			g1 = Util.group(m, 1);
+			final String g1 = Util.group(m, 1);
 			//
 			Multimap<String, String> multimap = null;
 			//
