@@ -671,7 +671,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				for (final Entry<String, String> a : entries) {
 					//
-					if (a == null || Util.iterator(commonPrefixes) == null) {
+					if (Util.iterator(commonPrefixes) == null) {
 						//
 						continue;
 						//
