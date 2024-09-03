@@ -661,22 +661,16 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
 			//
-			if (Util.iterator(entries) != null) {
-				//
-				final Iterable<Entry<String, String>> commonPrefixes = Util
-						.collect(Util.filter(StreamSupport.stream(Util.spliterator(entries), false),
-								x -> StringUtils.length(Util.getKey(x)) == 1), Collectors.toSet());
+			final Iterable<Entry<String, String>> commonPrefixes = Util
+					.collect(Util.filter(StreamSupport.stream(Util.spliterator(entries), false),
+							x -> StringUtils.length(Util.getKey(x)) == 1), Collectors.toSet());
+			//
+			if (Util.iterator(entries) != null && Util.iterator(commonPrefixes) != null) {
 				//
 				String ka, kb, va, vb;
 				//
 				for (final Entry<String, String> a : entries) {
 					//
-					if (Util.iterator(commonPrefixes) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
 					for (final Entry<String, String> b : commonPrefixes) {
 						//
 						if (Util.or(
