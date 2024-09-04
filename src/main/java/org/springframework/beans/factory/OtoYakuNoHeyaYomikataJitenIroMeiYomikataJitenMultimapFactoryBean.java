@@ -37,6 +37,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.text.TextStringBuilder;
 import org.apache.poi.util.IntList;
 import org.apache.poi.util.IntListUtil;
 import org.d2ab.function.ObjObjIntFunction;
@@ -1434,18 +1435,24 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList10(final PatternMap patternMap,
 			final List<String> list, final int i) {
 		//
-		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
+		final String s1 = testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null);
+		//
+		Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)$"),
-				testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null));
+				s1);
+		//
+		Multimap<String, String> multimap = null;
+		//
+		IntList intList;
+		//
+		Matcher m;
+		//
+		String g1, g2;
 		//
 		if (Util.matches(m1) && Util.groupCount(m1) > 2 && Util.matches(Util.matcher(
 				PatternMap.getPattern(patternMap,
 						"^[\\p{InHiragana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+$"),
 				testAndApply(x -> IterableUtils.size(x) - 1 > i, list, x -> IterableUtils.get(x, i + 1), null)))) {
-			//
-			Multimap<String, String> multimap = null;
-			//
-			Matcher m;
 			//
 			final String g12 = Util.group(m1, 2);
 			//
@@ -1456,9 +1463,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			final String commonSuffix2 = StringUtils.substringAfter(g13,
 					StringUtils.getCommonPrefix(Util.group(m1, 1), g13));
 			//
-			IntList intList = toIntList(i, IntStream.rangeClosed(0, 1));
+			intList = toIntList(i, IntStream.rangeClosed(0, 1));
 			//
-			String line, g1, g2;
+			String line;
 			//
 			for (int j = i + 1; j < IterableUtils.size(list); j++) {
 				//
@@ -1493,8 +1500,148 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		return null;
+		int groupCount;
 		//
+		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+[\\p{InCJKUnifiedIdeographs}\\p{InKatakana}]+\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}]+$"),
+				s1)) && (groupCount = Util.groupCount(m1)) > 0) {
+			//
+			intList = toIntList(i, IntStream.rangeClosed(0, 0));
+			//
+			final String g11 = Util.group(m1, 1);
+			//
+			for (int j = 2; j < groupCount; j++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g11,
+						Util.group(m1, j));
+				//
+			} // for
+				//
+			final List<Entry<TextStringBuilder, TextStringBuilder>> tsbs = testAndApply(Objects::nonNull,
+					Util.toList(Util.map(Util.stream(MultimapUtil.entries(multimap)), x -> Pair
+							.of(new TextStringBuilder(Util.getKey(x)), new TextStringBuilder(Util.getValue(x))))),
+					ArrayList::new, null);
+			//
+			for (int j = 0; j < IterableUtils.size(list); j++) {
+				//
+				if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+						IterableUtils.get(list, j))) && Util.groupCount(m) > 1
+						&& StringUtils.contains(g11, g1 = Util.group(m, 1))) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g1,
+							Util.group(m, 2));
+					//
+					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), j);
+					//
+				} // if
+					//
+			} // for
+				//
+			String s;
+			//
+			Iterable<String> strings = null;
+			//
+			TextStringBuilder key, value;
+			//
+			for (int j = 0; j < StringUtils.length(g11) && Util.iterator(tsbs) != null; j++) {
+				//
+				for (final Entry<TextStringBuilder, TextStringBuilder> en : tsbs) {
+					//
+					if (en == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (StringUtils.startsWith(key = Util.getKey(en), s = StringUtils.substring(g11, j, j + 1))) {
+						//
+						if (StringUtils.length(key) > 1) {
+							//
+							replaceFirst(key, s, "");
+							//
+						} // if
+							//
+						if (Util.iterator(strings = MultimapUtil.get(multimap, s)) != null) {
+							//
+							for (final String string : strings) {
+								//
+								if (StringUtils.startsWith(value = Util.getValue(en), string)) {
+									//
+									replaceFirst(value, string, "");
+									//
+								} // if
+									//
+							} // for
+								//
+						} // if
+							//
+					} // if
+						//
+				} // for
+					//
+			} // for
+				//
+			if (StringUtils.isNotEmpty(s = testAndApply(x -> IterableUtils.size(x) == 1,
+					strings = tsbs.stream().map(x -> Util.toString(Util.getKey(x))).collect(Collectors.toSet()),
+					x -> IterableUtils.get(x, 0), null)) && IterableUtils.size(strings) == 1) {
+				//
+				if (IterableUtils.size(strings = Util
+						.toList(Util.map(Util.stream(tsbs), x -> Util.toString(Util.getValue(x))))) == 2) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s,
+							getCommonSuffix(IterableUtils.get(strings, 0), IterableUtils.get(strings, 1)));
+					//
+				} // if
+					//
+			} // if
+				//
+			final Collection<Entry<String, String>> entries = MultimapUtil.entries(multimap);
+			//
+			if (Util.iterator(entries) != null) {
+				//
+				String k;
+				//
+				Collection<String> ss1, ss2;
+				//
+				int length;
+				//
+				for (final Entry<String, String> en : entries) {
+					//
+					if (en == null || StringUtils.length(k = Util.getKey(en)) < 2) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (IterableUtils.size(ss1 = MultimapUtil.get(multimap, StringUtils.substring(k, 0, 1))) == 1
+							&& IterableUtils.size(ss2 = MultimapUtil.get(multimap,
+									StringUtils.substring(k, (length = StringUtils.length(k)) - 1, length))) == 1) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								StringUtils.substring(k, 1, length - 1), StringUtils.substringBetween(Util.getValue(en),
+										IterableUtils.get(ss1, 0), IterableUtils.get(ss2, 0)));
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+			return Pair.of(multimap, intList);
+			//
+		} // if
+			//
+		return null;
+
+		//
+	}
+
+	private static void replaceFirst(final TextStringBuilder instance, final String searchStr,
+			final String replaceStr) {
+		if (instance != null) {
+			instance.replaceFirst(searchStr, replaceStr);
+		}
 	}
 
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList(final int i, final Matcher m1,
