@@ -220,7 +220,9 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 					|| (Objects.equals(name, "toMultimapAndIntList") && Arrays.equals(parameterTypes,
 							new Class<?>[] { PatternMap.class, List.class, Integer.TYPE }))
 					|| (Objects.equals(name, "toMultimapAndIntList11") && Arrays.equals(parameterTypes,
-							new Class<?>[] { PatternMap.class, List.class, Integer.TYPE }))) {
+							new Class<?>[] { PatternMap.class, List.class, Integer.TYPE }))
+					|| (Objects.equals(name, "toMultimapAndIntList11") && Arrays.equals(parameterTypes,
+							new Class<?>[] { PatternMap.class, List.class, String.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//

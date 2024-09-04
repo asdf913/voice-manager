@@ -1524,7 +1524,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+[\\p{InCJKUnifiedIdeographs}\\p{InKatakana}]+\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}]+$"),
 				testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null)), i);
 		//
-		final IntList intList = Util.getValue1(triplet);
+		IntList intList = Util.getValue1(triplet);
 		//
 		Multimap<String, String> multimap = IValue0Util.getValue0(triplet);
 		//
@@ -1533,28 +1533,14 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						x -> Pair.of(new TextStringBuilder(Util.getKey(x)), new TextStringBuilder(Util.getValue(x))))),
 				ArrayList::new, null);
 		//
-		Matcher m;
-		//
-		String g1;
-		//
 		final String g11 = getValue2(triplet);
 		//
-		for (int j = 0; j < IterableUtils.size(list); j++) {
-			//
-			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-					"^(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-					IterableUtils.get(list, j))) && Util.groupCount(m) > 1
-					&& StringUtils.contains(g11, g1 = Util.group(m, 1))) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g1,
-						Util.group(m, 2));
-				//
-				IntListUtil.add(intList, j);
-				//
-			} // if
-				//
-		} // for
-			//
+		final Entry<Multimap<String, String>, IntList> entry = toMultimapAndIntList11(patternMap, list, g11);
+		//
+		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.getKey(entry));
+		//
+		addAll(intList = ObjectUtils.getIfNull(intList, IntList::new), Util.getValue(entry));
+		//
 		String s;
 		//
 		TextStringBuilder key;
@@ -1630,6 +1616,37 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			} // for
 				//
 		} // if
+			//
+		return Pair.of(multimap, intList);
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList11(final PatternMap patternMap,
+			final List<String> list, final String string) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		IntList intList = null;
+		//
+		Matcher m;
+		//
+		String g1;
+		//
+		for (int j = 0; j < IterableUtils.size(list); j++) {
+			//
+			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+					"^(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+					IterableUtils.get(list, j))) && Util.groupCount(m) > 1
+					&& StringUtils.contains(string, g1 = Util.group(m, 1))) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g1,
+						Util.group(m, 2));
+				//
+				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), j);
+				//
+			} // if
+				//
+		} // for
 			//
 		return Pair.of(multimap, intList);
 		//
