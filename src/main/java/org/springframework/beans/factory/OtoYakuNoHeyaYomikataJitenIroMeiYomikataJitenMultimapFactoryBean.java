@@ -1612,9 +1612,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						//
 					} // if
 						//
-					if (IterableUtils.size(ss1 = MultimapUtil.get(multimap, StringUtils.substring(k, 0, 1))) == 1
-							&& IterableUtils.size(ss2 = MultimapUtil.get(multimap,
-									StringUtils.substring(k, (length = StringUtils.length(k)) - 1, length))) == 1) {
+					if (Boolean.logicalAnd(
+							IterableUtils.size(ss1 = MultimapUtil.get(multimap, StringUtils.substring(k, 0, 1))) == 1,
+							IterableUtils.size(ss2 = MultimapUtil.get(multimap,
+									StringUtils.substring(k, (length = StringUtils.length(k)) - 1, length))) == 1)) {
 						//
 						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 								StringUtils.substring(k, 1, length - 1), StringUtils.substringBetween(Util.getValue(en),
