@@ -1544,7 +1544,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			TextStringBuilder key, value;
 			//
-			for (int j = 0; j < StringUtils.length(g11) && Util.iterator(tsbs) != null; j++) {
+			for (int j = 0; Boolean.logicalAnd(j < StringUtils.length(g11), Util.iterator(tsbs) != null); j++) {
 				//
 				for (final Entry<TextStringBuilder, TextStringBuilder> en : tsbs) {
 					//
