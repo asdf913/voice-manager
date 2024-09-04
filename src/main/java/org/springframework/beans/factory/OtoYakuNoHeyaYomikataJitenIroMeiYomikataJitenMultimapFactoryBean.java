@@ -45,6 +45,7 @@ import org.apache.poi.util.IntList;
 import org.apache.poi.util.IntListUtil;
 import org.d2ab.function.ObjObjIntFunction;
 import org.javatuples.Quartet;
+import org.javatuples.Triplet;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -1519,14 +1520,14 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList11(final PatternMap patternMap,
 			final List<String> list, final int i) {
 		//
-		final Triple<Multimap<String, String>, IntList, String> triple = toMultimapAndIntListString11(Util.matcher(
+		final Triplet<Multimap<String, String>, IntList, String> triplet = toMultimapAndIntListString11(Util.matcher(
 				PatternMap.getPattern(patternMap,
 						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+[\\p{InCJKUnifiedIdeographs}\\p{InKatakana}]+\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}]+$"),
 				testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null)), i);
 		//
-		final IntList intList = triple != null ? triple.getMiddle() : null;
+		final IntList intList = Util.getValue1(triplet);
 		//
-		Multimap<String, String> multimap = triple != null ? triple.getLeft() : null;
+		Multimap<String, String> multimap = IValue0Util.getValue0(triplet);
 		//
 		final List<Entry<TextStringBuilder, TextStringBuilder>> tsbs = testAndApply(Objects::nonNull,
 				Util.toList(Util.map(Util.stream(MultimapUtil.entries(multimap)),
@@ -1537,7 +1538,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		String g1;
 		//
-		final String g11 = triple != null ? triple.getRight() : null;
+		final String g11 = getValue2(triplet);
 		//
 		for (int j = 0; j < IterableUtils.size(list); j++) {
 			//
@@ -1636,7 +1637,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	}
 
 	@Nullable
-	private static Triple<Multimap<String, String>, IntList, String> toMultimapAndIntListString11(final Matcher m,
+	private static Triplet<Multimap<String, String>, IntList, String> toMultimapAndIntListString11(final Matcher m,
 			final int i) {
 		//
 		int groupCount;
@@ -1660,7 +1661,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // for
 			//
-		return Triple.of(multimap, intList, g11);
+		return Triplet.with(multimap, intList, g11);
 		//
 	}
 
