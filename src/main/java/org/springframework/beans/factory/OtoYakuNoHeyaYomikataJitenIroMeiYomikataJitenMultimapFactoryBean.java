@@ -1566,12 +1566,14 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							//
 							for (final String string : strings) {
 								//
-								if (StringUtils.startsWith(value = Util.getValue(en), string)) {
+								if (!StringUtils.startsWith(value = Util.getValue(en), string)) {
 									//
-									replaceFirst(value, string, "");
+									continue;
 									//
 								} // if
 									//
+								replaceFirst(value, string, "");
+								//
 							} // for
 								//
 						} // if
