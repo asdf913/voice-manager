@@ -86,7 +86,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
 				null)));
 		//
-		Multimap<String, String> multimap = null;
+		Multimap<String, String> multimap = null, key;
 		//
 		final List<String> list = Util
 				.toList(flatMap(
@@ -120,10 +120,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
-			if ((entry = toMultimapAndIntList(patternMap, list, i)) != null) {
+			if (!MultimapUtil.isEmpty(key = Util.getKey(entry = toMultimapAndIntList(patternMap, list, i)))) {
 				//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.getKey(entry));
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), key);
 				//
 				addAll(intList = ObjectUtils.getIfNull(intList, IntList::new), Util.getValue(entry));
 				//
