@@ -1647,7 +1647,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) {
+	private static <T> void forEach(@Nullable final Iterable<T> instance, @Nullable final Consumer<? super T> action) {
 		if (instance != null && action != null) {
 			instance.forEach(action);
 		}
