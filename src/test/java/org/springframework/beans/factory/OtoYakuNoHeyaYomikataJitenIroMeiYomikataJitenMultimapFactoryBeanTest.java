@@ -216,7 +216,11 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 					|| (Objects.equals(name = Util.getName(m), "toMultimapAndIntList") && Arrays.equals(parameterTypes,
 							new Class<?>[] { Integer.TYPE, Matcher.class, Matcher.class, Matcher.class }))
 					|| (Objects.equals(name, "getCommonSuffix")
-							&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class }))) {
+							&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class }))
+					|| (Objects.equals(name, "toMultimapAndIntList") && Arrays.equals(parameterTypes,
+							new Class<?>[] { PatternMap.class, List.class, Integer.TYPE }))
+					|| (Objects.equals(name, "toMultimapAndIntList11") && Arrays.equals(parameterTypes,
+							new Class<?>[] { PatternMap.class, List.class, Integer.TYPE }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//

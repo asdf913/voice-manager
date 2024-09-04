@@ -39,6 +39,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.apache.commons.text.TextStringBuilder;
 import org.apache.poi.util.IntList;
 import org.apache.poi.util.IntListUtil;
@@ -1518,31 +1519,15 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList11(final PatternMap patternMap,
 			final List<String> list, final int i) {
 		//
-		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+[\\p{InCJKUnifiedIdeographs}\\p{InKatakana}]+\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}]+$"),
-				testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null));
+		final Triple<Multimap<String, String>, IntList, String> triple = toMultimapAndIntListString11(Util.matcher(
+				PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+[\\p{InCJKUnifiedIdeographs}\\p{InKatakana}]+\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}]+$"),
+				testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null)), i);
 		//
-		int groupCount;
+		final IntList intList = triple != null ? triple.getMiddle() : null;
 		//
-		if (!Util.matches(m1) || (groupCount = Util.groupCount(m1)) < 1) {
-			//
-			return null;
-			//
-		} // if
-			//
-		final IntList intList = toIntList(i, IntStream.rangeClosed(0, 0));
+		Multimap<String, String> multimap = triple != null ? triple.getLeft() : null;
 		//
-		final String g11 = Util.group(m1, 1);
-		//
-		Multimap<String, String> multimap = null;
-		//
-		for (int j = 2; j < groupCount; j++) {
-			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g11,
-					Util.group(m1, j));
-			//
-		} // for
-			//
 		final List<Entry<TextStringBuilder, TextStringBuilder>> tsbs = testAndApply(Objects::nonNull,
 				Util.toList(Util.map(Util.stream(MultimapUtil.entries(multimap)),
 						x -> Pair.of(new TextStringBuilder(Util.getKey(x)), new TextStringBuilder(Util.getValue(x))))),
@@ -1551,6 +1536,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		Matcher m;
 		//
 		String g1;
+		//
+		final String g11 = triple != null ? triple.getRight() : null;
 		//
 		for (int j = 0; j < IterableUtils.size(list); j++) {
 			//
@@ -1645,6 +1632,34 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		} // if
 			//
 		return Pair.of(multimap, intList);
+		//
+	}
+
+	private static Triple<Multimap<String, String>, IntList, String> toMultimapAndIntListString11(final Matcher m,
+			final int i) {
+		//
+		int groupCount;
+		//
+		if (!Util.matches(m) || (groupCount = Util.groupCount(m)) < 1) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final IntList intList = toIntList(i, IntStream.rangeClosed(0, 0));
+		//
+		final String g11 = Util.group(m, 1);
+		//
+		Multimap<String, String> multimap = null;
+		//
+		for (int j = 2; j < groupCount; j++) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g11,
+					Util.group(m, j));
+			//
+		} // for
+			//
+		return Triple.of(multimap, intList, g11);
 		//
 	}
 
