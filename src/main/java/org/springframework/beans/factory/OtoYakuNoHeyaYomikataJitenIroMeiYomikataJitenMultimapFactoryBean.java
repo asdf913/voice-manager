@@ -1582,18 +1582,16 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 			} // for
 				//
-			if (StringUtils.isNotEmpty(s = testAndApply(x -> IterableUtils.size(x) == 1,
-					strings = tsbs.stream().map(x -> Util.toString(Util.getKey(x))).collect(Collectors.toSet()),
-					x -> IterableUtils.get(x, 0), null)) && IterableUtils.size(strings) == 1) {
+			if (StringUtils
+					.isNotEmpty(s = testAndApply(x -> IterableUtils.size(x) == 1,
+							strings = tsbs.stream().map(x -> Util.toString(Util.getKey(x))).collect(Collectors.toSet()),
+							x -> IterableUtils.get(x, 0), null))
+					&& IterableUtils.size(strings) == 1 && IterableUtils.size(strings = Util
+							.toList(Util.map(Util.stream(tsbs), x -> Util.toString(Util.getValue(x))))) == 2) {
 				//
-				if (IterableUtils.size(strings = Util
-						.toList(Util.map(Util.stream(tsbs), x -> Util.toString(Util.getValue(x))))) == 2) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s,
-							getCommonSuffix(IterableUtils.get(strings, 0), IterableUtils.get(strings, 1)));
-					//
-				} // if
-					//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s,
+						getCommonSuffix(IterableUtils.get(strings, 0), IterableUtils.get(strings, 1)));
+				//
 			} // if
 				//
 			final Collection<Entry<String, String>> entries = MultimapUtil.entries(multimap);
