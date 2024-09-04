@@ -1548,39 +1548,35 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				for (final Entry<TextStringBuilder, TextStringBuilder> en : tsbs) {
 					//
-					if (en == null) {
+					if (!StringUtils.startsWith(key = Util.getKey(en), s = StringUtils.substring(g11, j, j + 1))) {
 						//
 						continue;
 						//
 					} // if
 						//
-					if (StringUtils.startsWith(key = Util.getKey(en), s = StringUtils.substring(g11, j, j + 1))) {
+					if (StringUtils.length(key) > 1) {
 						//
-						if (StringUtils.length(key) > 1) {
-							//
-							replaceFirst(key, s, "");
-							//
-						} // if
-							//
-						if (Util.iterator(strings = MultimapUtil.get(multimap, s)) == null) {
+						replaceFirst(key, s, "");
+						//
+					} // if
+						//
+					if (Util.iterator(strings = MultimapUtil.get(multimap, s)) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					for (final String string : strings) {
+						//
+						if (!StringUtils.startsWith(value = Util.getValue(en), string)) {
 							//
 							continue;
 							//
 						} // if
 							//
-						for (final String string : strings) {
-							//
-							if (!StringUtils.startsWith(value = Util.getValue(en), string)) {
-								//
-								continue;
-								//
-							} // if
-								//
-							replaceFirst(value, string, "");
-							//
-						} // for
-							//
-					} // if
+						replaceFirst(value, string, "");
+						//
+					} // for
 						//
 				} // for
 					//
