@@ -1635,6 +1635,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Triple<Multimap<String, String>, IntList, String> toMultimapAndIntListString11(final Matcher m,
 			final int i) {
 		//
