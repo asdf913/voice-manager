@@ -1632,7 +1632,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	}
 
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList11(final PatternMap patternMap,
-			final List<String> list, final String string) {
+			final List<String> list, @Nullable final String string) {
 		//
 		Multimap<String, String> multimap = null;
 		//
