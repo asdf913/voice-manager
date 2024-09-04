@@ -1582,13 +1582,12 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 			} // for
 				//
-			if (Boolean
-					.logicalAnd(
-							StringUtils.isNotEmpty(s = testAndApply(x -> IterableUtils.size(x) == 1,
-									strings = tsbs.stream().map(x -> Util.toString(Util.getKey(x)))
-											.collect(Collectors.toSet()),
-									x -> IterableUtils.get(x, 0), null)),
-							IterableUtils.size(strings) == 1)
+			if (Boolean.logicalAnd(
+					StringUtils.isNotEmpty(s = testAndApply(x -> IterableUtils.size(x) == 1,
+							strings = Util.collect(Util.map(Util.stream(tsbs), x -> Util.toString(Util.getKey(x))),
+									Collectors.toSet()),
+							x -> IterableUtils.get(x, 0), null)),
+					IterableUtils.size(strings) == 1)
 					&& IterableUtils.size(strings = Util
 							.toList(Util.map(Util.stream(tsbs), x -> Util.toString(Util.getValue(x))))) == 2) {
 				//
