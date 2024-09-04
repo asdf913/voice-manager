@@ -1606,7 +1606,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				for (final Entry<String, String> en : entries) {
 					//
-					if (en == null || StringUtils.length(k = Util.getKey(en)) < 2) {
+					if (StringUtils.length(k = Util.getKey(en)) < 2) {
 						//
 						continue;
 						//
