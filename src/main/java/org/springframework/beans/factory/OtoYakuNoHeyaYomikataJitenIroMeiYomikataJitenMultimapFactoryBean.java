@@ -1637,7 +1637,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static void replaceFirst(final TextStringBuilder instance, final String searchStr,
+	private static void replaceFirst(@Nullable final TextStringBuilder instance, final String searchStr,
 			final String replaceStr) {
 		if (instance != null) {
 			instance.replaceFirst(searchStr, replaceStr);
