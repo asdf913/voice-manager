@@ -1562,21 +1562,23 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							//
 						} // if
 							//
-						if (Util.iterator(strings = MultimapUtil.get(multimap, s)) != null) {
+						if (Util.iterator(strings = MultimapUtil.get(multimap, s)) == null) {
 							//
-							for (final String string : strings) {
-								//
-								if (!StringUtils.startsWith(value = Util.getValue(en), string)) {
-									//
-									continue;
-									//
-								} // if
-									//
-								replaceFirst(value, string, "");
-								//
-							} // for
-								//
+							continue;
+							//
 						} // if
+							//
+						for (final String string : strings) {
+							//
+							if (!StringUtils.startsWith(value = Util.getValue(en), string)) {
+								//
+								continue;
+								//
+							} // if
+								//
+							replaceFirst(value, string, "");
+							//
+						} // for
 							//
 					} // if
 						//
