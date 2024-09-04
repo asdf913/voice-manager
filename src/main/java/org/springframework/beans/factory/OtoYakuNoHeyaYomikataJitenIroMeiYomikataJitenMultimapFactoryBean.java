@@ -172,7 +172,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList7,
 						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList8,
 						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList9,
-						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList10);
+						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList10,
+						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList11);
 		//
 		Entry<Multimap<String, String>, IntList> entry = null;
 		//
@@ -1500,15 +1501,33 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		return null;
+		//
+	}
+
+	private static void replaceFirst(@Nullable final TextStringBuilder instance, final String searchStr,
+			final String replaceStr) {
+		if (instance != null) {
+			instance.replaceFirst(searchStr, replaceStr);
+		}
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList11(final PatternMap patternMap,
+			final List<String> list, final int i) {
+		//
+		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+[\\p{InCJKUnifiedIdeographs}\\p{InKatakana}]+\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}]+$"),
+				testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null));
+		//
 		int groupCount;
 		//
-		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+[\\p{InCJKUnifiedIdeographs}\\p{InKatakana}]+\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}]+$"),
-				s1)) && (groupCount = Util.groupCount(m1)) > 0) {
+		if (Util.matches(m1) && (groupCount = Util.groupCount(m1)) > 0) {
 			//
-			intList = toIntList(i, IntStream.rangeClosed(0, 0));
+			final IntList intList = toIntList(i, IntStream.rangeClosed(0, 0));
 			//
 			final String g11 = Util.group(m1, 1);
+			//
+			Multimap<String, String> multimap = null;
 			//
 			for (int j = 2; j < groupCount; j++) {
 				//
@@ -1522,6 +1541,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							.of(new TextStringBuilder(Util.getKey(x)), new TextStringBuilder(Util.getValue(x))))),
 					ArrayList::new, null);
 			//
+			Matcher m;
+			//
+			String g1;
+			//
 			for (int j = 0; j < IterableUtils.size(list); j++) {
 				//
 				if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
@@ -1532,7 +1555,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g1,
 							Util.group(m, 2));
 					//
-					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), j);
+					IntListUtil.add(intList, j);
 					//
 				} // if
 					//
@@ -1629,15 +1652,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		} // if
 			//
 		return null;
-
 		//
-	}
-
-	private static void replaceFirst(@Nullable final TextStringBuilder instance, final String searchStr,
-			final String replaceStr) {
-		if (instance != null) {
-			instance.replaceFirst(searchStr, replaceStr);
-		}
 	}
 
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList(final int i, final Matcher m1,
