@@ -1606,10 +1606,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				for (final Entry<String, String> en : entries) {
 					//
-					if (Boolean.logicalOr(StringUtils.length(k = Util.getKey(en)) < 2,
-							IterableUtils.size(ss1 = MultimapUtil.get(multimap, StringUtils.substring(k, 0, 1))) != 1)
-							|| IterableUtils.size(ss2 = MultimapUtil.get(multimap,
-									StringUtils.substring(k, (length = StringUtils.length(k)) - 1, length))) != 1) {
+					if (Util.or(StringUtils.length(k = Util.getKey(en)) < 2,
+							IterableUtils.size(ss1 = MultimapUtil.get(multimap, StringUtils.substring(k, 0, 1))) != 1,
+							IterableUtils.size(ss2 = MultimapUtil.get(multimap,
+									StringUtils.substring(k, (length = StringUtils.length(k)) - 1, length))) != 1)) {
 						//
 						continue;
 						//
