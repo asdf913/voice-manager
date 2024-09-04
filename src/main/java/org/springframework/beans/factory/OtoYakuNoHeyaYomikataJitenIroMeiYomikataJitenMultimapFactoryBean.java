@@ -14,6 +14,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
@@ -1564,9 +1565,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			String s;
 			//
-			Iterable<String> strings = null;
-			//
-			TextStringBuilder key, value;
+			TextStringBuilder key;
 			//
 			for (int j = 0; Boolean.logicalAnd(j < StringUtils.length(g11), Util.iterator(tsbs) != null); j++) {
 				//
@@ -1580,28 +1579,24 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						//
 					testAndAccept((a, b) -> StringUtils.length(a) > 1, key, s, (a, b) -> replaceFirst(a, b, ""));
 					//
-					if (Util.iterator(strings = MultimapUtil.get(multimap, s)) == null) {
+					forEach(MultimapUtil.get(multimap, s), x -> {
 						//
-						continue;
+						final TextStringBuilder tsb = Util.getValue(en);
 						//
-					} // if
-						//
-					for (final String string : strings) {
-						//
-						if (!StringUtils.startsWith(value = Util.getValue(en), string)) {
+						if (StringUtils.startsWith(tsb, x)) {
 							//
-							continue;
+							replaceFirst(tsb, x, "");
 							//
 						} // if
 							//
-						replaceFirst(value, string, "");
-						//
-					} // for
-						//
+					});
+					//
 				} // for
 					//
 			} // for
 				//
+			Iterable<String> strings = null;
+			//
 			if (Util.and(
 					StringUtils.isNotEmpty(s = testAndApply(x -> IterableUtils.size(x) == 1,
 							strings = Util.collect(Util.map(Util.stream(tsbs), x -> Util.toString(Util.getKey(x))),
@@ -1650,6 +1645,12 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		return null;
 		//
+	}
+
+	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) {
+		if (instance != null && action != null) {
+			instance.forEach(action);
+		}
 	}
 
 	private static <A, B> void testAndAccept(final BiPredicate<A, B> predicate, final A a, final B b,

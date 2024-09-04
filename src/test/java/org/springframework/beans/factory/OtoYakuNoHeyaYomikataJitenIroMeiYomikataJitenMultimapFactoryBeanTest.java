@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
@@ -29,6 +30,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.util.IntList;
 import org.apache.poi.util.IntListUtil;
+import org.d2ab.collection.Iterables;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.junit.jupiter.api.Assertions;
@@ -54,7 +56,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3,
 			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS, METHOD_REMOVE_VALUE, METHOD_FLAT_MAP, METHOD_ADD_ALL,
 			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT, METHOD_TO_ARRAY,
-			METHOD_FOR_EACH;
+			METHOD_FOR_EACH_INT_STREAM, METHOD_FOR_EACH_ITERABLE;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -94,7 +96,11 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class, Object[].class)).setAccessible(true);
 		//
-		(METHOD_FOR_EACH = clz.getDeclaredMethod("forEach", IntStream.class, IntConsumer.class)).setAccessible(true);
+		(METHOD_FOR_EACH_INT_STREAM = clz.getDeclaredMethod("forEach", IntStream.class, IntConsumer.class))
+				.setAccessible(true);
+		//
+		(METHOD_FOR_EACH_ITERABLE = clz.getDeclaredMethod("forEach", Iterable.class, Consumer.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -1098,11 +1104,21 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertDoesNotThrow(() -> forEach(IntStream.empty(), null));
 		//
+		Assertions.assertDoesNotThrow(() -> forEach(Iterables.empty(), null));
+		//
 	}
 
 	private static void forEach(final IntStream instance, final IntConsumer action) throws Throwable {
 		try {
-			METHOD_FOR_EACH.invoke(null, instance, action);
+			METHOD_FOR_EACH_INT_STREAM.invoke(null, instance, action);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) throws Throwable {
+		try {
+			METHOD_FOR_EACH_ITERABLE.invoke(null, instance, action);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
