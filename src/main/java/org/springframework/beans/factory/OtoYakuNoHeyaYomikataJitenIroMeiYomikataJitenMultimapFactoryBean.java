@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
@@ -1577,12 +1578,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						//
 					} // if
 						//
-					if (StringUtils.length(key) > 1) {
-						//
-						replaceFirst(key, s, "");
-						//
-					} // if
-						//
+					testAndAccept((a, b) -> StringUtils.length(a) > 1, key, s, (a, b) -> replaceFirst(a, b, ""));
+					//
 					if (Util.iterator(strings = MultimapUtil.get(multimap, s)) == null) {
 						//
 						continue;
@@ -1653,6 +1650,13 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		return null;
 		//
+	}
+
+	private static <A, B> void testAndAccept(final BiPredicate<A, B> predicate, final A a, final B b,
+			final BiConsumer<A, B> consumer) {
+		if (Util.test(predicate, a, b)) {
+			Util.accept(consumer, a, b);
+		}
 	}
 
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList(final int i, final Matcher m1,
