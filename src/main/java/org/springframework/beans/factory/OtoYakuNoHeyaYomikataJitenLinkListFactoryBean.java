@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -391,7 +389,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkListFactoryBean implements
 				getElement(testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), title), "tr")),
 				x -> ElementUtil.childrenSize(x) >= 3)));
 		//
-		forEach(links, x -> {
+		Util.forEach(links, x -> {
 			//
 			final String u = Link.getUrl(x);
 			//
@@ -632,12 +630,6 @@ public class OtoYakuNoHeyaYomikataJitenLinkListFactoryBean implements
 			//
 		return org.apache.poi.ss.usermodel.CellUtil.getCellType(cell) != null ? instance.formatCellValue(cell) : null;
 		//
-	}
-
-	private static <T> void forEach(@Nullable final Iterable<T> instance, @Nullable final Consumer<? super T> action) {
-		if (instance != null && (action != null || Proxy.isProxyClass(Util.getClass(instance)))) {
-			instance.forEach(action);
-		}
 	}
 
 	@Nullable

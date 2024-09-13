@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,7 +44,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.meeuw.functional.Consumers;
 import org.meeuw.functional.Predicates;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
 import org.springframework.core.io.ByteArrayResource;
@@ -66,8 +64,8 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 	private static Class<?> CLASS_IH = null;
 
 	private static Method METHOD_GET_LINKS, METHOD_VALUE_OF, METHOD_TRIM, METHOD_TEST_AND_APPLY, METHOD_APPLY,
-			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS, METHOD_IIF, METHOD_GET_IMG, METHOD_FOR_EACH,
-			METHOD_TO_MAP, METHOD_FORMAT_CELL_VALUE, METHOD_TO_INT_STRING_MAP, METHOD_TO_LINK, METHOD_GET_FIELDS = null;
+			METHOD_SET_DESCRIPTION_AND_TEXT_AND_URL, METHOD_ADD_LINKS, METHOD_IIF, METHOD_GET_IMG, METHOD_TO_MAP,
+			METHOD_FORMAT_CELL_VALUE, METHOD_TO_INT_STRING_MAP, METHOD_TO_LINK, METHOD_GET_FIELDS = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -100,8 +98,6 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_IMG = clz.getDeclaredMethod("getImg", Element.class)).setAccessible(true);
-		//
-		(METHOD_FOR_EACH = clz.getDeclaredMethod("forEach", Iterable.class, Consumer.class)).setAccessible(true);
 		//
 		(METHOD_TO_MAP = clz.getDeclaredMethod("toMap", Sheet.class, FormulaEvaluator.class)).setAccessible(true);
 		//
@@ -696,27 +692,6 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 				return (Element) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testForEach() {
-		//
-		final Iterable<Object> iterable = Collections.emptyList();
-		//
-		Assertions.assertDoesNotThrow(() -> forEach(iterable, null));
-		//
-		Assertions.assertDoesNotThrow(() -> forEach(iterable, Consumers.nop()));
-		//
-		Assertions.assertDoesNotThrow(() -> forEach(Reflection.newProxy(Iterable.class, ih), null));
-		//
-	}
-
-	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) throws Throwable {
-		try {
-			METHOD_FOR_EACH.invoke(null, instance, action);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

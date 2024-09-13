@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
@@ -568,6 +569,84 @@ class UtilTest {
 					//
 					Assertions.assertDoesNotThrow(() -> Util.getValue1(iValue1), name);
 					//
+				} // if
+					//
+			} catch (final Throwable e) {
+				//
+				System.err.println(name);
+				//
+				throw e;
+				//
+			} // try
+				//
+		} // for
+			//
+	}
+
+	@Test
+	void testForEach() throws Throwable {
+		//
+		final Iterable<ClassInfo> classInfos = ClassInfoUtil.getClassInfos();
+		//
+		if (classInfos == null || classInfos.iterator() == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		String name = null;
+		//
+		Class<?> clz = null;
+		//
+		List<Consumer<?>> consumers = null;
+		//
+		for (final ClassInfo classInfo : classInfos) {
+			//
+			try {
+				//
+				if (Util.isAssignableFrom(Consumer.class, Class.forName(name = HasNameUtil.getName(classInfo)))
+						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
+					//
+					System.out.println(name);
+					//
+					Util.add(consumers = ObjectUtils.getIfNull(consumers, ArrayList::new),
+							Util.cast(Consumer.class, Narcissus.allocateInstance(clz)));
+					//
+				} // if
+					//
+			} catch (final Throwable e) {
+				//
+				System.err.println(name);
+				//
+				throw e;
+				//
+			} // try
+				//
+		} // for
+			//
+		for (final ClassInfo classInfo : classInfos) {
+			//
+			if (classInfo == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			try {
+				//
+				if (Util.isAssignableFrom(Iterable.class, Class.forName(name = HasNameUtil.getName(classInfo)))
+						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
+					//
+					final Iterable<?> iterable = Util.cast(Iterable.class, Narcissus.allocateInstance(clz));
+					//
+					System.out.println(name);
+					//
+					for (final Consumer<?> consumer : consumers) {
+						//
+						Assertions.assertDoesNotThrow(() -> Util.forEach(iterable, (Consumer) consumer), name);
+						//
+					} // for
+						//
 				} // if
 					//
 			} catch (final Throwable e) {

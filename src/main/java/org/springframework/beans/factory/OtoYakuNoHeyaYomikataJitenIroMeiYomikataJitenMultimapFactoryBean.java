@@ -14,7 +14,6 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
@@ -1556,7 +1555,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 				testAndAccept((a, b) -> StringUtils.length(a) > 1, key, s, (a, b) -> replaceFirst(a, b, ""));
 				//
-				forEach(MultimapUtil.get(multimap, s), x -> {
+				Util.forEach(MultimapUtil.get(multimap, s), x -> {
 					//
 					final TextStringBuilder tsb = Util.getValue(en);
 					//
@@ -1689,12 +1688,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		return Triplet.with(multimap, intList, g11);
 		//
-	}
-
-	private static <T> void forEach(@Nullable final Iterable<T> instance, @Nullable final Consumer<? super T> action) {
-		if (instance != null && action != null) {
-			instance.forEach(action);
-		}
 	}
 
 	private static <A, B> void testAndAccept(final BiPredicate<A, B> predicate, final A a, final B b,
