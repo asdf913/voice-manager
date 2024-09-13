@@ -777,9 +777,8 @@ abstract class Util {
 					final String fieldName = gf.getFieldName(cpg);
 					//
 					put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP,
-							LinkedHashMap::new), name, function = a -> {
-								return FieldUtils.readDeclaredField(a, fieldName, true);
-							});
+							LinkedHashMap::new), name,
+							function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
 					//
 					if (function.apply(instance) == null) {
 						//
@@ -858,9 +857,7 @@ abstract class Util {
 								//
 								put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
 										.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new), name,
-										function = a -> {
-											return FieldUtils.readDeclaredField(a, fieldName, true);
-										});
+										function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
 								//
 								if (function.apply(instance) == null) {
 									//
@@ -879,9 +876,7 @@ abstract class Util {
 								//
 								put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
 										.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new), name,
-										function = a -> {
-											return FieldUtils.readDeclaredField(a, fieldName, true);
-										});
+										function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
 								//
 								if (function.apply(instance) == null) {
 									//
@@ -896,9 +891,7 @@ abstract class Util {
 								//
 								put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
 										.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new), name,
-										function = a -> {
-											return FieldUtils.readDeclaredField(a, fieldName, true);
-										});
+										function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
 								//
 								if (function.apply(instance) == null) {
 									//
@@ -915,9 +908,7 @@ abstract class Util {
 								//
 								put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
 										.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new), name,
-										function = a -> {
-											return FieldUtils.readDeclaredField(a, fieldName, true);
-										});
+										function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
 								//
 								if (function.apply(instance) == null) {
 									//
