@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -40,8 +41,28 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ClassParserUtil;
+import org.apache.bcel.classfile.ConstantPool;
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.JavaClassUtil;
+import org.apache.bcel.classfile.Method;
+import org.apache.bcel.generic.ALOAD;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.GETFIELD;
+import org.apache.bcel.generic.INVOKEINTERFACE;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.ObjectType;
+import org.apache.bcel.generic.RETURN;
+import org.apache.bcel.generic.Type;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableBiFunction;
+import org.apache.commons.lang3.function.FailableBiPredicate;
+import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.javatuples.Unit;
@@ -49,10 +70,12 @@ import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.javatuples.valueintf.IValue1;
 import org.jsoup.nodes.TextNode;
+import org.meeuw.functional.TriPredicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 
+import com.google.common.collect.Table;
 import com.j256.simplemagic.ContentInfo;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -708,6 +731,8 @@ abstract class Util {
 		return instance != null ? instance.getValue1() : null;
 	}
 
+	private static Map<String, FailableFunction<Object, Object, Exception>> STRING_FAILABLE_BI_FUNCTION_MAP = null;
+
 	static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) {
 		//
 		if (instance == null) {
@@ -720,6 +745,60 @@ abstract class Util {
 		//
 		final String name = getName(clz);
 		//
+		FailableFunction<Object, Object, Exception> function = get(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
+				.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new), name);
+		//
+		try (final InputStream is = clz != null
+				? clz.getResourceAsStream("/" + StringUtils.replace(name, ".", "/") + ".class")
+				: null) {
+			//
+			if (function != null && function.apply(instance) == null) {
+				//
+				return;
+				//
+			} // if
+				//
+			final List<Method> ms = toList(Arrays
+					.stream(JavaClassUtil
+							.getMethods(ClassParserUtil.parse(is != null ? new ClassParser(is, null) : null)))
+					.filter(m -> m != null && Objects.equals(m.getName(), "forEach")
+							&& Arrays.equals(m.getArgumentTypes(),
+									new Type[] { ObjectType.getInstance("java.util.function.Consumer") })));
+			//
+			if (IterableUtils.size(ms) == 1) {
+				//
+				final Method method = IterableUtils.get(ms, 0);
+				//
+				final ConstantPoolGen cpg = new ConstantPoolGen(method.getConstantPool());
+				//
+				final Instruction[] instructions = InstructionListUtil
+						.getInstructions(new MethodGen(method, null, cpg).getInstructionList());
+				//
+				if (instructions != null && instructions.length == 5 && instructions[0] instanceof ALOAD
+						&& instructions[1] instanceof GETFIELD gf && instructions[2] instanceof ALOAD
+						&& instructions[3] instanceof INVOKEINTERFACE && instructions[4] instanceof RETURN) {
+					//
+					put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP,
+							LinkedHashMap::new), name, function = (a) -> {
+								return FieldUtils.readDeclaredField(a, gf.getFieldName(cpg), true);
+							});
+					//
+					if (function.apply(instance) == null) {
+						//
+						return;
+						//
+					} // if
+						//
+				} // if
+					//
+			} // if
+				//
+		} catch (final Exception e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
 		try {
 			//
 			if (Objects.equals(name, "com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap")) {
@@ -800,7 +879,7 @@ abstract class Util {
 					"org.d2ab.collection.FilteredList", "org.d2ab.collection.MappedList$RandomAccessList",
 					"org.d2ab.collection.MappedList$SequentialList", "org.d2ab.collection.chars.CharList$SubList",
 					"org.d2ab.collection.doubles.DoubleList$SubList", "org.d2ab.collection.ints.IntList$SubList",
-					"org.d2ab.collection.longs.LongList$SubList", "org.d2ab.sequence.ListSequence"), name)) {
+					"org.d2ab.collection.longs.LongList$SubList"), name)) {
 				//
 				if (FieldUtils.readDeclaredField(instance, "list", true) == null) {
 					//
@@ -1426,9 +1505,7 @@ abstract class Util {
 					//
 				} // if
 					//
-			} else if (contains(
-					Arrays.asList("org.apache.commons.collections4.FluentIterable", "org.d2ab.collection.IterableList"),
-					name)) {
+			} else if (Objects.equals(name, "org.apache.commons.collections4.FluentIterable")) {
 				//
 				if (FieldUtils.readDeclaredField(instance, "iterable", true) == null) {
 					//
