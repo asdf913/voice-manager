@@ -2217,6 +2217,7 @@ abstract class Util {
 			//
 	}
 
+	@Nullable
 	private static Method getForEachMethod(final JavaClass javaClass) {
 		//
 		final Method[] ms = JavaClassUtil.getMethods(javaClass);
