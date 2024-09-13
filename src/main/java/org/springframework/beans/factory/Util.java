@@ -777,7 +777,7 @@ abstract class Util {
 					final String fieldName = gf.getFieldName(cpg);
 					//
 					put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP,
-							LinkedHashMap::new), name, function = (a) -> {
+							LinkedHashMap::new), name, function = a -> {
 								return FieldUtils.readDeclaredField(a, fieldName, true);
 							});
 					//
@@ -858,7 +858,7 @@ abstract class Util {
 								//
 								put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
 										.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new), name,
-										function = (a) -> {
+										function = a -> {
 											return FieldUtils.readDeclaredField(a, fieldName, true);
 										});
 								//
@@ -879,7 +879,7 @@ abstract class Util {
 								//
 								put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
 										.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new), name,
-										function = (a) -> {
+										function = a -> {
 											return FieldUtils.readDeclaredField(a, fieldName, true);
 										});
 								//
@@ -896,7 +896,7 @@ abstract class Util {
 								//
 								put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
 										.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new), name,
-										function = (a) -> {
+										function = a -> {
 											return FieldUtils.readDeclaredField(a, fieldName, true);
 										});
 								//
@@ -915,7 +915,7 @@ abstract class Util {
 								//
 								put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
 										.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new), name,
-										function = (a) -> {
+										function = a -> {
 											return FieldUtils.readDeclaredField(a, fieldName, true);
 										});
 								//
