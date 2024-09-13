@@ -842,27 +842,51 @@ abstract class Util {
 								//
 						} // for
 							//
-						if (m != null
-								&& (instructions = InstructionListUtil.getInstructions(
-										new MethodGen(m, null, cpg = new ConstantPoolGen(m.getConstantPool()))
-												.getInstructionList())) != null
-								&& length(instructions) == 4 && instructions[0] instanceof ALOAD
-								&& instructions[1] instanceof GETFIELD gf
-								&& instructions[2] instanceof INVOKEINTERFACE ii
-								&& Objects.equals(ii.getMethodName(cpg), methodName)
-								&& instructions[3] instanceof ARETURN) {
+						if (m != null && (instructions = InstructionListUtil
+								.getInstructions(new MethodGen(m, null, cpg = new ConstantPoolGen(m.getConstantPool()))
+										.getInstructionList())) != null) {
 							//
-							final String fieldName = gf.getFieldName(cpg);
-							//
-							put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP,
-									LinkedHashMap::new), name, function = (a) -> {
-										return FieldUtils.readDeclaredField(a, fieldName, true);
-									});
-							//
-							if (function.apply(instance) == null) {
+							if (length(instructions) == 4 && instructions[0] instanceof ALOAD
+									&& instructions[1] instanceof GETFIELD gf
+									&& instructions[2] instanceof INVOKEINTERFACE ii
+									&& Objects.equals(ii.getMethodName(cpg), methodName)
+									&& instructions[3] instanceof ARETURN) {
 								//
-								return;
+								final String fieldName = gf.getFieldName(cpg);
 								//
+								put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
+										.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new), name,
+										function = (a) -> {
+											return FieldUtils.readDeclaredField(a, fieldName, true);
+										});
+								//
+								if (function.apply(instance) == null) {
+									//
+									return;
+									//
+								} // if
+									//
+							} else if (length(instructions) == 5 && instructions[0] instanceof ALOAD
+									&& instructions[1] instanceof GETFIELD gf
+									&& instructions[2] instanceof INVOKEINTERFACE
+									&& instructions[3] instanceof INVOKEINTERFACE ii
+									&& Objects.equals(ii.getMethodName(cpg), methodName)
+									&& instructions[4] instanceof ARETURN) {
+								//
+								final String fieldName = gf.getFieldName(cpg);
+								//
+								put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
+										.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new), name,
+										function = (a) -> {
+											return FieldUtils.readDeclaredField(a, fieldName, true);
+										});
+								//
+								if (function.apply(instance) == null) {
+									//
+									return;
+									//
+								} // if
+									//
 							} // if
 								//
 						} // if
@@ -1114,14 +1138,6 @@ abstract class Util {
 			} else if (Objects.equals(name, "com.healthmarketscience.jackcess.impl.PropertyMapImpl")) {
 				//
 				if (FieldUtils.readDeclaredField(instance, "_props", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.healthmarketscience.jackcess.impl.PropertyMaps")) {
-				//
-				if (FieldUtils.readDeclaredField(instance, "_maps", true) == null) {
 					//
 					return;
 					//
