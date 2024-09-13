@@ -1256,15 +1256,6 @@ abstract class Util {
 					//
 				} // if
 					//
-			} else if (contains(Arrays.asList("org.apache.bcel.classfile.RuntimeInvisibleParameterAnnotations",
-					"org.apache.bcel.classfile.RuntimeVisibleParameterAnnotations"), name)) {
-				//
-				if (FieldUtils.readField(instance, "parameterAnnotationTable", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
 			} else if (Objects.equals(name, "org.apache.commons.collections.CursorableLinkedList")) {
 				//
 				if (FieldUtils.readDeclaredField(instance, "_head", true) == null) {
