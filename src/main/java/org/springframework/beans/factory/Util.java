@@ -44,10 +44,13 @@ import javax.annotation.Nullable;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.ConstantPool;
+import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.classfile.Method;
+import org.apache.bcel.classfile.Utility;
 import org.apache.bcel.generic.ALOAD;
+import org.apache.bcel.generic.ARETURN;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.GETFIELD;
 import org.apache.bcel.generic.INVOKEINTERFACE;
@@ -58,6 +61,7 @@ import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.RETURN;
 import org.apache.bcel.generic.Type;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableBiFunction;
@@ -758,29 +762,28 @@ abstract class Util {
 				//
 			} // if
 				//
-			final List<Method> ms = toList(Arrays
-					.stream(JavaClassUtil
-							.getMethods(ClassParserUtil.parse(is != null ? new ClassParser(is, null) : null)))
-					.filter(m -> m != null && Objects.equals(m.getName(), "forEach")
-							&& Arrays.equals(m.getArgumentTypes(),
-									new Type[] { ObjectType.getInstance("java.util.function.Consumer") })));
+			final JavaClass javaClass = ClassParserUtil.parse(is != null ? new ClassParser(is, null) : null);
 			//
-			if (IterableUtils.size(ms) == 1) {
+			Method method = getForEachMethod(javaClass);
+			//
+			ConstantPoolGen cpg = null;
+			//
+			Instruction[] instructions = null;
+			//
+			if (method != null) {
 				//
-				final Method method = IterableUtils.get(ms, 0);
-				//
-				final ConstantPoolGen cpg = new ConstantPoolGen(method.getConstantPool());
-				//
-				final Instruction[] instructions = InstructionListUtil
-						.getInstructions(new MethodGen(method, null, cpg).getInstructionList());
-				//
-				if (instructions != null && instructions.length == 5 && instructions[0] instanceof ALOAD
+				if ((instructions = InstructionListUtil.getInstructions(
+						new MethodGen(method, null, cpg = new ConstantPoolGen(method.getConstantPool()))
+								.getInstructionList())) != null
+						&& instructions.length == 5 && instructions[0] instanceof ALOAD
 						&& instructions[1] instanceof GETFIELD gf && instructions[2] instanceof ALOAD
 						&& instructions[3] instanceof INVOKEINTERFACE && instructions[4] instanceof RETURN) {
 					//
+					final String fieldName = gf.getFieldName(cpg);
+					//
 					put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP,
 							LinkedHashMap::new), name, function = (a) -> {
-								return FieldUtils.readDeclaredField(a, gf.getFieldName(cpg), true);
+								return FieldUtils.readDeclaredField(a, fieldName, true);
 							});
 					//
 					if (function.apply(instance) == null) {
@@ -788,6 +791,90 @@ abstract class Util {
 						return;
 						//
 					} // if
+						//
+				} // if
+					//
+			} else if (Objects.equals(javaClass != null ? javaClass.getSuperclassName() : null, "java.lang.Object")) {
+				//
+				final JavaClass[] interfaces = javaClass.getInterfaces();
+				//
+				if (interfaces != null) {
+					//
+					String methodName = null;
+					//
+					final Method[] ms = JavaClassUtil.getMethods(javaClass);
+					//
+					Method m = null;
+					//
+					for (final JavaClass interfaceJc : interfaces) {
+						//
+						if ((method = getForEachMethod(interfaceJc)) == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						instructions = InstructionListUtil.getInstructions(
+								new MethodGen(method, null, cpg = new ConstantPoolGen(method.getConstantPool()))
+										.getInstructionList());
+						//
+						for (int i = 0; i < length(instructions) - 1; i++) {
+							//
+							if (instructions[i] instanceof ALOAD al && al.getIndex() == 0
+									&& instructions[i + 1] instanceof INVOKEINTERFACE ii) {
+								//
+								methodName = ii.getMethodName(cpg);
+								//
+								for (int j = 0; j < length(ms); j++) {
+									//
+									if (!Objects.equals(FieldOrMethodUtil.getName(ms[j]), methodName)) {
+										//
+										continue;
+										//
+									} // if
+										//
+									if (m == null) {
+										//
+										m = ms[j];
+										//
+									} else {
+										//
+										throw new IllegalStateException();
+										//
+									} // if
+										//
+								} // for
+									//
+							} // if
+								//
+						} // for
+							//
+						if (m != null
+								&& (instructions = InstructionListUtil.getInstructions(
+										new MethodGen(m, null, cpg = new ConstantPoolGen(m.getConstantPool()))
+												.getInstructionList())) != null
+								&& length(instructions) == 4 && instructions[0] instanceof ALOAD
+								&& instructions[1] instanceof GETFIELD gf
+								&& instructions[2] instanceof INVOKEINTERFACE ii
+								&& Objects.equals(ii.getMethodName(cpg), methodName)
+								&& instructions[3] instanceof ARETURN) {
+							//
+							final String fieldName = gf.getFieldName(cpg);
+							//
+							put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP,
+									LinkedHashMap::new), name, function = (a) -> {
+										return FieldUtils.readDeclaredField(a, fieldName, true);
+									});
+							//
+							if (function.apply(instance) == null) {
+								//
+								return;
+								//
+							} // if
+								//
+						} // if
+							//
+					} // for
 						//
 				} // if
 					//
@@ -827,9 +914,7 @@ abstract class Util {
 					//
 				} // if
 					//
-			} else if (contains(
-					Arrays.asList("com.github.andrewoma.dexx.collection.ArrayList", "org.apache.poi.util.IntMapper"),
-					name)) {
+			} else if (Objects.equals(name, "com.github.andrewoma.dexx.collection.ArrayList")) {
 				//
 				if (FieldUtils.readDeclaredField(instance, "elements", true) == null) {
 					//
@@ -873,7 +958,6 @@ abstract class Util {
 					//
 			} else if (contains(Arrays.asList("com.github.andrewoma.dexx.collection.internal.adapter.ListAdapater",
 					"org.apache.logging.log4j.spi.MutableThreadContextStack",
-					"org.apache.commons.math3.geometry.partitioning.NodesSet",
 					"org.d2ab.collection.BiMappedList$RandomAccessList",
 					"org.d2ab.collection.BiMappedList$SequentialList", "org.d2ab.collection.FilteredList",
 					"org.d2ab.collection.FilteredList", "org.d2ab.collection.MappedList$RandomAccessList",
@@ -1505,14 +1589,6 @@ abstract class Util {
 					//
 				} // if
 					//
-			} else if (Objects.equals(name, "org.apache.commons.collections4.FluentIterable")) {
-				//
-				if (FieldUtils.readDeclaredField(instance, "iterable", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
 			} else if (Objects.equals(name, "org.apache.commons.collections4.iterators.IteratorIterable")) {
 				//
 				if (FieldUtils.readDeclaredField(instance, "typeSafeIterator", true) == null) {
@@ -1544,14 +1620,6 @@ abstract class Util {
 			} else if (Objects.equals(name, "org.apache.commons.io.IOExceptionList")) {
 				//
 				if (FieldUtils.readDeclaredField(instance, "causeList", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.commons.lang3.builder.DiffResult")) {
-				//
-				if (FieldUtils.readDeclaredField(instance, "diffList", true) == null) {
 					//
 					return;
 					//
@@ -1788,14 +1856,6 @@ abstract class Util {
 					//
 				} // if
 					//
-			} else if (Objects.equals(name, "org.apache.poi.sl.draw.geom.CustomGeometry")) {
-				//
-				if (FieldUtils.readDeclaredField(instance, "paths", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
 			} else if (Objects.equals(name, "org.apache.poi.ss.util.SSCellRange")) {
 				//
 				if (FieldUtils.readDeclaredField(instance, "_flattenedArray", true) == null) {
@@ -1805,8 +1865,7 @@ abstract class Util {
 				} // if
 					//
 			} else if (contains(Arrays.asList("org.apache.poi.xddf.usermodel.text.XDDFTextParagraph",
-					"org.apache.poi.xslf.usermodel.XSLFTextParagraph",
-					"org.apache.poi.xssf.usermodel.XSSFTextParagraph"), name)) {
+					"org.apache.poi.xslf.usermodel.XSLFTextParagraph"), name)) {
 				//
 				if (FieldUtils.readDeclaredField(instance, "_runs", true) == null) {
 					//
@@ -1860,8 +1919,7 @@ abstract class Util {
 					//
 				} // if
 					//
-			} else if (contains(Arrays.asList("org.apache.poi.xslf.usermodel.XSLFTableRow",
-					"org.apache.poi.xssf.streaming.SXSSFRow"), name)) {
+			} else if (Objects.equals(name, "org.apache.poi.xssf.streaming.SXSSFRow")) {
 				//
 				if (FieldUtils.readDeclaredField(instance, "_cells", true) == null) {
 					//
@@ -2019,15 +2077,6 @@ abstract class Util {
 					//
 				} // if
 					//
-			} else if (contains(Arrays.asList("org.eclipse.jetty.http.MultiPartByteRanges$Parts",
-					"org.eclipse.jetty.http.MultiPartFormData$Parts"), name)) {
-				//
-				if (FieldUtils.readDeclaredField(instance, "parts", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
 			} else if (contains(Arrays.asList("org.javatuples.Decade", "org.javatuples.Ennead",
 					"org.javatuples.KeyValue", "org.javatuples.LabelValue", "org.javatuples.Octet",
 					"org.javatuples.Pair", "org.javatuples.Quartet", "org.javatuples.Quintet", "org.javatuples.Septet",
@@ -2035,22 +2084,6 @@ abstract class Util {
 					name)) {
 				//
 				if (FieldUtils.readField(instance, "valueList", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.logevents.observers.batch.LogEventBatch")) {
-				//
-				if (FieldUtils.readDeclaredField(instance, "batch", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.openjdk.nashorn.internal.codegen.Compiler$CompilationPhases")) {
-				//
-				if (FieldUtils.readDeclaredField(instance, "phases", true) == null) {
 					//
 					return;
 					//
@@ -2099,14 +2132,6 @@ abstract class Util {
 			} else if (Objects.equals(name, "org.springframework.beans.MutablePropertyValues")) {
 				//
 				if (FieldUtils.readDeclaredField(instance, "propertyValueList", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.springframework.beans.factory.aot.AotServices")) {
-				//
-				if (FieldUtils.readDeclaredField(instance, "services", true) == null) {
 					//
 					return;
 					//
@@ -2168,6 +2193,18 @@ abstract class Util {
 			//
 		} // if
 			//
+	}
+
+	private static Method getForEachMethod(final JavaClass javaClass) {
+		//
+		final Method[] ms = JavaClassUtil.getMethods(javaClass);
+		//
+		final List<Method> list = toList(filter(ms != null ? Arrays.stream(ms) : null,
+				m -> m != null && Objects.equals(m.getName(), "forEach") && Arrays.equals(m.getArgumentTypes(),
+						new Type[] { ObjectType.getInstance("java.util.function.Consumer") })));
+		//
+		return IterableUtils.size(list) == 1 ? IterableUtils.get(list, 0) : null;
+		//
 	}
 
 }
