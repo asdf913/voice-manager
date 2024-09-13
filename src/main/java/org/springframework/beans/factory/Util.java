@@ -49,9 +49,11 @@ import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ALOAD;
 import org.apache.bcel.generic.ARETURN;
+import org.apache.bcel.generic.CHECKCAST;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.GETFIELD;
 import org.apache.bcel.generic.INVOKEINTERFACE;
+import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.MethodGen;
@@ -904,6 +906,25 @@ abstract class Util {
 									//
 								} // if
 									//
+							} else if (length(instructions) == 6 && instructions[0] instanceof ALOAD
+									&& instructions[1] instanceof GETFIELD gf && instructions[2] instanceof CHECKCAST
+									&& instructions[3] instanceof ALOAD && instructions[4] instanceof INVOKEVIRTUAL
+									&& instructions[5] instanceof ARETURN) {
+								//
+								final String fieldName = gf.getFieldName(cpg);
+								//
+								put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
+										.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new), name,
+										function = (a) -> {
+											return FieldUtils.readDeclaredField(a, fieldName, true);
+										});
+								//
+								if (function.apply(instance) == null) {
+									//
+									return;
+									//
+								} // if
+									//
 							} // if
 								//
 						} // if
@@ -1189,23 +1210,6 @@ abstract class Util {
 					"com.healthmarketscience.jackcess.impl.complex.MultiValueColumnPropertyMap")) {
 				//
 				if (FieldUtils.readDeclaredField(instance, "_primary", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("com.healthmarketscience.jackcess.util.EntryIterableBuilder",
-					"com.healthmarketscience.jackcess.util.IterableBuilder"), name)) {
-				//
-				if (FieldUtils.readDeclaredField(instance, "_cursor", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.healthmarketscience.jackcess.util.TableIterableBuilder")) {
-				//
-				if (FieldUtils.readDeclaredField(instance, "_db", true) == null) {
 					//
 					return;
 					//
