@@ -293,7 +293,7 @@ abstract class Util {
 	}
 
 	@Nullable
-	static <V> V get(@Nullable final Map<?, V> instance, final Object key) {
+	static <V> V get(@Nullable final Map<?, V> instance, @Nullable final Object key) {
 		return instance != null ? instance.get(key) : null;
 	}
 
