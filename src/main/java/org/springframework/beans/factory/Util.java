@@ -887,6 +887,23 @@ abstract class Util {
 									//
 								} // if
 									//
+							} else if (length(instructions) == 3 && instructions[0] instanceof ALOAD
+									&& instructions[1] instanceof GETFIELD gf && instructions[2] instanceof ARETURN) {
+								//
+								final String fieldName = gf.getFieldName(cpg);
+								//
+								put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
+										.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new), name,
+										function = (a) -> {
+											return FieldUtils.readDeclaredField(a, fieldName, true);
+										});
+								//
+								if (function.apply(instance) == null) {
+									//
+									return;
+									//
+								} // if
+									//
 							} // if
 								//
 						} // if
@@ -1601,14 +1618,6 @@ abstract class Util {
 			} else if (Objects.equals(name, "org.apache.commons.collections4.iterators.IteratorIterable")) {
 				//
 				if (FieldUtils.readDeclaredField(instance, "typeSafeIterator", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.commons.csv.CSVParser")) {
-				//
-				if (FieldUtils.readDeclaredField(instance, "csvRecordIterator", true) == null) {
 					//
 					return;
 					//
