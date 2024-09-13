@@ -934,74 +934,49 @@ abstract class Util {
 			//
 		try {
 			//
-			if (Objects.equals(name, "com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap")) {
+			if (Objects.equals(name, "com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap")
+					&& FieldUtils.readDeclaredField(instance, "_hashArea", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "_hashArea", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
 			} else if (contains(Arrays.asList("com.fasterxml.jackson.databind.node.ArrayNode",
 					"com.fasterxml.jackson.databind.node.ObjectNode",
-					"org.apache.poi.poifs.property.DirectoryProperty"), name)) {
+					"org.apache.poi.poifs.property.DirectoryProperty"), name)
+					&& FieldUtils.readDeclaredField(instance, "_children", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "_children", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.fasterxml.jackson.databind.util.ArrayIterator")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "_a", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.github.andrewoma.dexx.collection.ArrayList")) {
+			} else if (Objects.equals(name, "com.fasterxml.jackson.databind.util.ArrayIterator")
+					&& FieldUtils.readDeclaredField(instance, "_a", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "elements", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
+			} else if (Objects.equals(name, "com.github.andrewoma.dexx.collection.ArrayList")
+					&& FieldUtils.readDeclaredField(instance, "elements", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(Arrays.asList("com.github.andrewoma.dexx.collection.DerivedKeyHashMap",
 					"com.github.andrewoma.dexx.collection.HashMap", "com.github.andrewoma.dexx.collection.HashSet"),
-					name)) {
+					name) && FieldUtils.readDeclaredField(instance, "compactHashMap", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "compactHashMap", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.github.andrewoma.dexx.collection.TreeMap")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "tree", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.github.andrewoma.dexx.collection.TreeSet")) {
+			} else if (Objects.equals(name, "com.github.andrewoma.dexx.collection.TreeMap")
+					&& FieldUtils.readDeclaredField(instance, "tree", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "redBlackTree", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.github.andrewoma.dexx.collection.Vector")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "pointer", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+			} else if (Objects.equals(name, "com.github.andrewoma.dexx.collection.TreeSet")
+					&& FieldUtils.readDeclaredField(instance, "redBlackTree", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "com.github.andrewoma.dexx.collection.Vector")
+					&& FieldUtils.readDeclaredField(instance, "pointer", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(Arrays.asList("com.github.andrewoma.dexx.collection.internal.adapter.ListAdapater",
 					"org.apache.logging.log4j.spi.MutableThreadContextStack",
 					"org.d2ab.collection.BiMappedList$RandomAccessList",
@@ -1009,57 +984,39 @@ abstract class Util {
 					"org.d2ab.collection.FilteredList", "org.d2ab.collection.MappedList$RandomAccessList",
 					"org.d2ab.collection.MappedList$SequentialList", "org.d2ab.collection.chars.CharList$SubList",
 					"org.d2ab.collection.doubles.DoubleList$SubList", "org.d2ab.collection.ints.IntList$SubList",
-					"org.d2ab.collection.longs.LongList$SubList"), name)) {
+					"org.d2ab.collection.longs.LongList$SubList"), name)
+					&& FieldUtils.readDeclaredField(instance, "list", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "list", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
 			} else if (contains(Arrays.asList("com.github.andrewoma.dexx.collection.internal.adapter.SetAdapater",
 					"com.github.andrewoma.dexx.collection.internal.adapter.SortedSetAdapter",
-					"org.springframework.cglib.beans.FixedKeySet"), name)) {
+					"org.springframework.cglib.beans.FixedKeySet"), name)
+					&& FieldUtils.readDeclaredField(instance, "set", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "set", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.github.andrewoma.dexx.collection.internal.base.MappedIterable")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "from", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+			} else if (Objects.equals(name, "com.github.andrewoma.dexx.collection.internal.base.MappedIterable")
+					&& FieldUtils.readDeclaredField(instance, "from", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(Arrays.asList("com.google.common.collect.ConcurrentHashMultiset",
-					"org.apache.jena.ext.com.google.common.collect.ConcurrentHashMultiset"), name)) {
+					"org.apache.jena.ext.com.google.common.collect.ConcurrentHashMultiset"), name)
+					&& FieldUtils.readDeclaredField(instance, "countMap", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "countMap", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.google.common.collect.EnumMultiset")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "enumConstants", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.google.common.collect.EvictingQueue")) {
+			} else if (Objects.equals(name, "com.google.common.collect.EnumMultiset")
+					&& FieldUtils.readDeclaredField(instance, "enumConstants", true) == null) {
 				//
-				if (MethodUtils.invokeMethod(instance, true, "delegate") == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
+			} else if (Objects.equals(name, "com.google.common.collect.EvictingQueue")
+					&& MethodUtils.invokeMethod(instance, true, "delegate") == null) {
+				//
+				return;
+				//
 			} else if (contains(Arrays.asList("com.google.common.collect.ForwardingMap$StandardKeySet",
 					"com.google.common.collect.ForwardingMap$StandardValues",
 					"com.google.common.collect.ForwardingNavigableMap$StandardNavigableKeySet",
@@ -1070,33 +1027,23 @@ abstract class Util {
 					"org.apache.jena.ext.com.google.common.collect.ForwardingMap$StandardKeySet",
 					"org.apache.jena.ext.com.google.common.collect.ForwardingMap$StandardValues",
 					"org.apache.jena.ext.com.google.common.collect.ForwardingNavigableMap$StandardNavigableKeySet",
-					"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMap$StandardKeySet"), name)) {
+					"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMap$StandardKeySet"), name)
+					&& FieldUtils.readField(instance, "map", true) == null) {
 				//
-				if (FieldUtils.readField(instance, "map", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
 			} else if (contains(Arrays.asList("com.helger.commons.collection.impl.CommonsHashSet",
-					"com.helger.commons.collection.impl.CommonsLinkedHashSet"), name)) {
+					"com.helger.commons.collection.impl.CommonsLinkedHashSet"), name)
+					&& Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
 				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
 			} else if (contains(Arrays.asList(
-					"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMultiset$StandardElementSet"),
-					name)) {
+					"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMultiset$StandardElementSet"), name)
+					&& FieldUtils.readField(instance, "multiset", true) == null) {
 				//
-				if (FieldUtils.readField(instance, "multiset", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
 			} else if (contains(
 					Arrays.asList("com.google.common.collect.ForwardingMultiset$StandardElementSet",
 							"com.google.common.collect.ForwardingSortedMultiset$StandardElementSet",
@@ -1110,222 +1057,142 @@ abstract class Util {
 				} // if
 					//
 			} else if (contains(Arrays.asList("com.google.common.collect.ForwardingNavigableSet$StandardDescendingSet",
-					"org.apache.jena.ext.com.google.common.collect.ForwardingNavigableSet$StandardDescendingSet"),
-					name)) {
+					"org.apache.jena.ext.com.google.common.collect.ForwardingNavigableSet$StandardDescendingSet"), name)
+					&& FieldUtils.readField(instance, "forward", true) == null) {
 				//
-				if (FieldUtils.readField(instance, "forward", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
 			} else if (contains(Arrays.asList("com.google.common.collect.HashMultiset",
 					"com.google.common.collect.LinkedHashMultiset",
 					"org.apache.jena.ext.com.google.common.collect.HashMultiset",
-					"org.apache.jena.ext.com.google.common.collect.LinkedHashMultiset"), name)) {
+					"org.apache.jena.ext.com.google.common.collect.LinkedHashMultiset"), name)
+					&& FieldUtils.readField(instance, "backingMap", true) == null) {
 				//
-				if (FieldUtils.readField(instance, "backingMap", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
 			} else if (contains(Arrays.asList("com.google.common.collect.TreeMultiset",
-					"org.apache.jena.ext.com.google.common.collect.TreeMultiset"), name)) {
+					"org.apache.jena.ext.com.google.common.collect.TreeMultiset"), name)
+					&& FieldUtils.readDeclaredField(instance, "rootReference", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "rootReference", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
 			} else if (contains(Arrays.asList("com.google.common.reflect.TypeToken$TypeSet",
-					"org.apache.jena.ext.com.google.common.reflect.TypeToken$TypeSet"), name)) {
+					"org.apache.jena.ext.com.google.common.reflect.TypeToken$TypeSet"), name)
+					&& FieldUtils.readDeclaredField(instance, "types", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "types", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.healthmarketscience.jackcess.impl.DatabaseImpl")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "_tableFinder", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.healthmarketscience.jackcess.impl.IndexCursorImpl")) {
+			} else if (Objects.equals(name, "com.healthmarketscience.jackcess.impl.DatabaseImpl")
+					&& FieldUtils.readDeclaredField(instance, "_tableFinder", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "_entryCursor", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.healthmarketscience.jackcess.impl.PropertyMapImpl")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "_props", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableDefinitionImpl"), name)) {
+			} else if (Objects.equals(name, "com.healthmarketscience.jackcess.impl.IndexCursorImpl")
+					&& FieldUtils.readDeclaredField(instance, "_entryCursor", true) == null) {
 				//
-				if (Narcissus.invokeMethod(instance,
-						Narcissus.findMethod(clz, "createRowState", new Class<?>[] {})) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.healthmarketscience.jackcess.impl.TableImpl")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "_columns", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.healthmarketscience.jackcess.impl.TableScanCursor")) {
+			} else if (Objects.equals(name, "com.healthmarketscience.jackcess.impl.PropertyMapImpl")
+					&& FieldUtils.readDeclaredField(instance, "_props", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "_ownedPagesCursor", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name,
-					"com.healthmarketscience.jackcess.impl.complex.MultiValueColumnPropertyMap")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "_primary", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.helger.commons.callback.CallbackList")) {
+			} else if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableDefinitionImpl"), name)
+					&& Narcissus.invokeMethod(instance,
+							Narcissus.findMethod(clz, "createRowState", new Class<?>[] {})) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "m_aRWLock", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.helger.commons.collection.impl.CommonsCopyOnWriteArrayList")) {
+				return;
 				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "array")) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.helger.commons.collection.impl.CommonsCopyOnWriteArraySet")) {
+			} else if (Objects.equals(name, "com.healthmarketscience.jackcess.impl.TableImpl")
+					&& FieldUtils.readDeclaredField(instance, "_columns", true) == null) {
 				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "al")) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.helger.commons.collection.impl.CommonsTreeSet")) {
+				return;
 				//
-				if (Narcissus.getField(instance, Narcissus.findField(clz, "m")) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.helger.commons.collection.iterate.ArrayIterator")) {
+			} else if (Objects.equals(name, "com.healthmarketscience.jackcess.impl.TableScanCursor")
+					&& FieldUtils.readDeclaredField(instance, "_ownedPagesCursor", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "m_aArray", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.helger.commons.collection.iterate.IterableIterator")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "m_aIter", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.helger.commons.collection.iterate.MapperIterator")) {
+			} else if (Objects.equals(name, "com.healthmarketscience.jackcess.impl.complex.MultiValueColumnPropertyMap")
+					&& FieldUtils.readDeclaredField(instance, "_primary", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "m_aBaseIter", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.helger.commons.collection.map.LRUSet")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "m_aMap", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.helger.commons.http.HttpHeaderMap")) {
+			} else if (Objects.equals(name, "com.helger.commons.callback.CallbackList")
+					&& FieldUtils.readDeclaredField(instance, "m_aRWLock", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "m_aHeaders", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.helger.commons.io.file.FileSystemIterator")) {
+				return;
 				//
-				if (FieldUtils.readField(instance, "m_aIter", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.helger.commons.io.file.FileSystemRecursiveIterator")) {
+			} else if (Objects.equals(name, "com.helger.commons.collection.impl.CommonsCopyOnWriteArrayList")
+					&& Narcissus.getField(instance, Narcissus.findField(clz, "array")) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "m_aFilesLeft", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.helger.commons.log.InMemoryLogger")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "m_aMessages", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.helger.commons.math.CombinationGenerator")) {
+			} else if (Objects.equals(name, "com.helger.commons.collection.impl.CommonsCopyOnWriteArraySet")
+					&& Narcissus.getField(instance, Narcissus.findField(clz, "al")) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "m_aCombinationsLeft", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("com.opencsv.CSVReader", "com.opencsv.CSVReaderHeaderAware"), name)) {
+				return;
 				//
-				if (FieldUtils.readField(instance, "peekedLines", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.opencsv.bean.CsvToBean")) {
+			} else if (Objects.equals(name, "com.helger.commons.collection.impl.CommonsTreeSet")
+					&& Narcissus.getField(instance, Narcissus.findField(clz, "m")) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "mappingStrategy", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
+			} else if (Objects.equals(name, "com.helger.commons.collection.iterate.ArrayIterator")
+					&& FieldUtils.readDeclaredField(instance, "m_aArray", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "com.helger.commons.collection.iterate.IterableIterator")
+					&& FieldUtils.readDeclaredField(instance, "m_aIter", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "com.helger.commons.collection.iterate.MapperIterator")
+					&& FieldUtils.readDeclaredField(instance, "m_aBaseIter", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "com.helger.commons.collection.map.LRUSet")
+					&& FieldUtils.readDeclaredField(instance, "m_aMap", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "com.helger.commons.http.HttpHeaderMap")
+					&& FieldUtils.readDeclaredField(instance, "m_aHeaders", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "com.helger.commons.io.file.FileSystemIterator")
+					&& FieldUtils.readField(instance, "m_aIter", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "com.helger.commons.io.file.FileSystemRecursiveIterator")
+					&& FieldUtils.readDeclaredField(instance, "m_aFilesLeft", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "com.helger.commons.log.InMemoryLogger")
+					&& FieldUtils.readDeclaredField(instance, "m_aMessages", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "com.helger.commons.math.CombinationGenerator")
+					&& FieldUtils.readDeclaredField(instance, "m_aCombinationsLeft", true) == null) {
+				//
+				return;
+				//
+			} else if (contains(Arrays.asList("com.opencsv.CSVReader", "com.opencsv.CSVReaderHeaderAware"), name)
+					&& FieldUtils.readField(instance, "peekedLines", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "com.opencsv.bean.CsvToBean")
+					&& FieldUtils.readDeclaredField(instance, "mappingStrategy", true) == null) {
+				//
+				return;
+				//
 			} else if (Objects.equals(name, "com.opencsv.bean.FieldMapByPosition")) {
 				//
 				if (FieldUtils.readField(instance, "complexMapList", true) == null) {
@@ -1334,130 +1201,84 @@ abstract class Util {
 					//
 				} // if
 					//
-			} else if (Objects.equals(name, "com.opencsv.bean.PositionToBeanField")) {
+			} else if (Objects.equals(name, "com.opencsv.bean.PositionToBeanField")
+					&& FieldUtils.readDeclaredField(instance, "ranges", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "ranges", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.sun.jna.platform.win32.Advapi32Util$EventLogIterator")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "_buffer", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "freemarker.core._SortedArraySet")) {
+			} else if (Objects.equals(name, "com.sun.jna.platform.win32.Advapi32Util$EventLogIterator")
+					&& FieldUtils.readDeclaredField(instance, "_buffer", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "array", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "freemarker.core._UnmodifiableCompositeSet")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "set1", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.bcel.classfile.BootstrapMethods")) {
+			} else if (Objects.equals(name, "freemarker.core._SortedArraySet")
+					&& FieldUtils.readDeclaredField(instance, "array", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "bootstrapMethods", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.bcel.classfile.ConstantPool")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "constantPool", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.bcel.classfile.InnerClasses")) {
+			} else if (Objects.equals(name, "freemarker.core._UnmodifiableCompositeSet")
+					&& FieldUtils.readDeclaredField(instance, "set1", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "innerClasses", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.bcel.classfile.LineNumberTable")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "lineNumberTable", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.bcel.classfile.LocalVariableTable")) {
+			} else if (Objects.equals(name, "org.apache.bcel.classfile.BootstrapMethods")
+					&& FieldUtils.readDeclaredField(instance, "bootstrapMethods", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "localVariableTable", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.bcel.classfile.LocalVariableTypeTable")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "localVariableTypeTable", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.bcel.classfile.MethodParameters")) {
+			} else if (Objects.equals(name, "org.apache.bcel.classfile.ConstantPool")
+					&& FieldUtils.readDeclaredField(instance, "constantPool", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "parameters", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.bcel.classfile.InnerClasses")
+					&& FieldUtils.readDeclaredField(instance, "innerClasses", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.bcel.classfile.LineNumberTable")
+					&& FieldUtils.readDeclaredField(instance, "lineNumberTable", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.bcel.classfile.LocalVariableTable")
+					&& FieldUtils.readDeclaredField(instance, "localVariableTable", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.bcel.classfile.LocalVariableTypeTable")
+					&& FieldUtils.readDeclaredField(instance, "localVariableTypeTable", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.bcel.classfile.MethodParameters")
+					&& FieldUtils.readDeclaredField(instance, "parameters", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(Arrays.asList("org.apache.bcel.classfile.RuntimeInvisibleAnnotations",
-					"org.apache.bcel.classfile.RuntimeVisibleAnnotations"), name)) {
+					"org.apache.bcel.classfile.RuntimeVisibleAnnotations"), name)
+					&& FieldUtils.readField(instance, "annotationTable", true) == null) {
 				//
-				if (FieldUtils.readField(instance, "annotationTable", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
 			} else if (contains(Arrays.asList("org.apache.bcel.classfile.RuntimeInvisibleParameterAnnotations",
-					"org.apache.bcel.classfile.RuntimeVisibleParameterAnnotations"), name)) {
+					"org.apache.bcel.classfile.RuntimeVisibleParameterAnnotations"), name)
+					&& FieldUtils.readField(instance, "parameterAnnotationTable", true) == null) {
 				//
-				if (FieldUtils.readField(instance, "parameterAnnotationTable", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.commons.collections.CursorableLinkedList")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "_head", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+			} else if (Objects.equals(name, "org.apache.commons.collections.CursorableLinkedList")
+					&& FieldUtils.readDeclaredField(instance, "_head", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(
 					Arrays.asList("org.apache.commons.collections.HashBag", "org.apache.commons.collections.TreeBag"),
-					name)) {
+					name) && FieldUtils.readField(instance, "_map", true) == null) {
 				//
-				if (FieldUtils.readField(instance, "_map", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
 			} else if (contains(Arrays.asList("org.apache.commons.collections.bag.PredicatedBag",
 					"org.apache.commons.collections.bag.PredicatedSortedBag",
 					"org.apache.commons.collections.bag.SynchronizedBag",
@@ -1536,37 +1357,29 @@ abstract class Util {
 					"org.apache.commons.collections4.set.UnmodifiableNavigableSet",
 					"org.apache.commons.collections4.set.UnmodifiableSet",
 					"org.apache.commons.collections4.set.UnmodifiableSortedSet",
-					"org.d2ab.collection.BiMappedCollection"), name)) {
+					"org.d2ab.collection.BiMappedCollection"), name)
+					&& FieldUtils.readField(instance, "collection", true) == null) {
 				//
-				if (FieldUtils.readField(instance, "collection", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Util.contains(Arrays.asList("org.apache.commons.collections.collection.CompositeCollection",
-					"org.apache.commons.collections4.collection.CompositeCollection",
-					"org.apache.commons.collections4.set.CompositeSet"), name)) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "all", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+			} else if (Util
+					.contains(Arrays.asList("org.apache.commons.collections.collection.CompositeCollection",
+							"org.apache.commons.collections4.collection.CompositeCollection",
+							"org.apache.commons.collections4.set.CompositeSet"), name)
+					&& FieldUtils.readDeclaredField(instance, "all", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(Arrays.asList("org.apache.commons.collections.collection.SynchronizedCollection",
 					"org.apache.commons.collections4.collection.SynchronizedCollection",
 					"org.d2ab.collection.CollectionList", "org.d2ab.collection.FilteredCollection",
 					"org.d2ab.collection.MappedCollection", "org.d2ab.collection.chars.CollectionCharList",
 					"org.d2ab.collection.doubles.CollectionDoubleList", "org.d2ab.collection.ints.CollectionIntList",
-					"org.d2ab.collection.longs.CollectionLongList", "org.d2ab.sequence.CollectionSequence"), name)) {
+					"org.d2ab.collection.longs.CollectionLongList", "org.d2ab.sequence.CollectionSequence"), name)
+					&& FieldUtils.readDeclaredField(instance, "collection", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "collection", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
 			} else if (contains(Arrays.asList("org.apache.commons.collections.list.AbstractLinkedList$LinkedSubList",
 					"org.apache.commons.collections.map.AbstractHashedMap$EntrySet",
 					"org.apache.commons.collections.map.AbstractHashedMap$KeySet",
@@ -1576,343 +1389,222 @@ abstract class Util {
 					"org.apache.commons.collections4.map.AbstractHashedMap$KeySet",
 					"org.apache.commons.collections4.map.AbstractHashedMap$Values",
 					"org.apache.commons.collections4.multiset.AbstractMultiSet$EntrySet",
-					"org.apache.commons.collections4.multiset.AbstractMultiSet$UniqueSet"), name)) {
+					"org.apache.commons.collections4.multiset.AbstractMultiSet$UniqueSet"), name)
+					&& FieldUtils.readDeclaredField(instance, "parent", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "parent", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.commons.collections.set.CompositeSet")) {
+				return;
 				//
-				if (FieldUtils.readField(instance, "all", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+			} else if (Objects.equals(name, "org.apache.commons.collections.set.CompositeSet")
+					&& FieldUtils.readField(instance, "all", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(Arrays.asList("org.apache.commons.collections.set.ListOrderedSet",
-					"org.apache.commons.collections4.set.ListOrderedSet"), name)) {
+					"org.apache.commons.collections4.set.ListOrderedSet"), name)
+					&& FieldUtils.readDeclaredField(instance, "setOrder", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "setOrder", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
 			} else if (contains(Arrays.asList("org.apache.commons.collections.set.MapBackedSet",
-					"org.apache.commons.collections4.set.MapBackedSet"), name)) {
+					"org.apache.commons.collections4.set.MapBackedSet"), name)
+					&& FieldUtils.readDeclaredField(instance, "map", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "map", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.commons.collections4.iterators.IteratorIterable")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "typeSafeIterator", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+			} else if (Objects.equals(name, "org.apache.commons.collections4.iterators.IteratorIterable")
+					&& FieldUtils.readDeclaredField(instance, "typeSafeIterator", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(
 					Arrays.asList("org.apache.commons.csv.CSVRecord", "org.d2ab.collection.chars.BitCharSet",
 							"org.d2ab.collection.doubles.RawDoubleSet",
 							"org.d2ab.collection.doubles.SortedListDoubleSet", "org.d2ab.collection.ints.BitIntSet"),
-					name)) {
+					name) && FieldUtils.readDeclaredField(instance, "values", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "values", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.commons.io.IOExceptionList")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "causeList", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.commons.math3.genetics.ElitisticListPopulation")) {
+			} else if (Objects.equals(name, "org.apache.commons.io.IOExceptionList")
+					&& FieldUtils.readDeclaredField(instance, "causeList", true) == null) {
 				//
-				if (FieldUtils.readField(instance, "chromosomes", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.commons.math3.genetics.ElitisticListPopulation")
+					&& FieldUtils.readField(instance, "chromosomes", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(Arrays.asList("org.apache.commons.math3.geometry.euclidean.oned.IntervalsSet",
-					"org.apache.commons.math3.geometry.spherical.oned.ArcsSet"), name)) {
-
-				if (FieldUtils.readField(instance, "tree", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.commons.math3.ml.neuralnet.Network")) {
+					"org.apache.commons.math3.geometry.spherical.oned.ArcsSet"), name)
+					&& FieldUtils.readField(instance, "tree", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "neuronMap", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.commons.math3.ml.neuralnet.twod.NeuronSquareMesh2D")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "network", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.commons.math3.util.IntegerSequence$Range")) {
+			} else if (Objects.equals(name, "org.apache.commons.math3.ml.neuralnet.Network")
+					&& FieldUtils.readDeclaredField(instance, "neuronMap", true) == null) {
 				//
-				if (Objects.equals(FieldUtils.readDeclaredField(instance, "step", true), Integer.valueOf(0))) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.commons.math3.util.MultidimensionalCounter")) {
+				return;
 				//
-				if (Objects.equals(FieldUtils.readDeclaredField(instance, "last", true),
-						FieldUtils.readDeclaredField(instance, "dimension", true))) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.ibatis.cursor.defaults.DefaultCursor")) {
+			} else if (Objects.equals(name, "org.apache.commons.math3.ml.neuralnet.twod.NeuronSquareMesh2D")
+					&& FieldUtils.readDeclaredField(instance, "network", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "cursorIterator", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.jena.atlas.lib.Map2")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "map2", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.jena.atlas.lib.tuple.TupleN")) {
+			} else if (Objects.equals(name, "org.apache.commons.math3.util.IntegerSequence$Range")
+					&& Objects.equals(FieldUtils.readDeclaredField(instance, "step", true), Integer.valueOf(0))) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "tuple", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.jena.ext.com.google.common.collect.EnumMultiset")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "enumConstants", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.jena.ext.com.google.common.collect.EvictingQueue")) {
+			} else if (Objects.equals(name, "org.apache.commons.math3.util.MultidimensionalCounter")
+					&& Objects.equals(FieldUtils.readDeclaredField(instance, "last", true),
+							FieldUtils.readDeclaredField(instance, "dimension", true))) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "delegate", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.ibatis.cursor.defaults.DefaultCursor")
+					&& FieldUtils.readDeclaredField(instance, "cursorIterator", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.jena.atlas.lib.Map2")
+					&& FieldUtils.readDeclaredField(instance, "map2", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.jena.atlas.lib.tuple.TupleN")
+					&& FieldUtils.readDeclaredField(instance, "tuple", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.jena.ext.com.google.common.collect.EnumMultiset")
+					&& FieldUtils.readDeclaredField(instance, "enumConstants", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.jena.ext.com.google.common.collect.EvictingQueue")
+					&& FieldUtils.readDeclaredField(instance, "delegate", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(Arrays.asList("org.apache.jena.ext.xerces.impl.dv.util.ByteListImpl",
-					"org.apache.xerces.impl.dv.util.ByteListImpl"), name)) {
+					"org.apache.xerces.impl.dv.util.ByteListImpl"), name)
+					&& FieldUtils.readDeclaredField(instance, "data", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "data", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.logging.log4j.message.StructuredDataCollectionMessage")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "structuredDataMessageList", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.ddf.EscherArrayProperty")) {
+			} else if (Objects.equals(name, "org.apache.logging.log4j.message.StructuredDataCollectionMessage")
+					&& FieldUtils.readDeclaredField(instance, "structuredDataMessageList", true) == null) {
 				//
-				if (Objects.equals(FieldUtils.readDeclaredField(instance, "emptyComplexPart", true), Boolean.FALSE)
-						&& FieldUtils.readField(instance, "complexData", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.ddf.EscherContainerRecord")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "_childRecords", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate")) {
+			} else if (Objects.equals(name, "org.apache.poi.ddf.EscherArrayProperty")
+					&& Objects.equals(FieldUtils.readDeclaredField(instance, "emptyComplexPart", true), Boolean.FALSE)
+					&& FieldUtils.readField(instance, "complexData", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "records", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.poi.ddf.EscherContainerRecord")
+					&& FieldUtils.readDeclaredField(instance, "_childRecords", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate")
+					&& FieldUtils.readDeclaredField(instance, "records", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(Arrays.asList("org.apache.poi.hssf.usermodel.HSSFPatriarch",
-					"org.apache.poi.xslf.usermodel.XSLFGroupShape"), name)) {
+					"org.apache.poi.xslf.usermodel.XSLFGroupShape"), name)
+					&& FieldUtils.readDeclaredField(instance, "_shapes", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "_shapes", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.hssf.usermodel.HSSFRow")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "cells", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.hssf.usermodel.HSSFShapeGroup")) {
+			} else if (Objects.equals(name, "org.apache.poi.hssf.usermodel.HSSFRow")
+					&& FieldUtils.readDeclaredField(instance, "cells", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "shapes", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.poi.hssf.usermodel.HSSFShapeGroup")
+					&& FieldUtils.readDeclaredField(instance, "shapes", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(Arrays.asList("org.apache.poi.hssf.usermodel.HSSFSheet",
-					"org.apache.poi.xslf.usermodel.XSLFTable", "org.apache.poi.xssf.usermodel.XSSFSheet"), name)) {
+					"org.apache.poi.xslf.usermodel.XSLFTable", "org.apache.poi.xssf.usermodel.XSSFSheet"), name)
+					&& FieldUtils.readDeclaredField(instance, "_rows", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "_rows", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.hssf.usermodel.HSSFWorkbook")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "_sheets", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.openxml4j.opc.PackageRelationshipCollection")) {
+			} else if (Objects.equals(name, "org.apache.poi.hssf.usermodel.HSSFWorkbook")
+					&& FieldUtils.readDeclaredField(instance, "_sheets", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "relationshipsByID", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.poi.openxml4j.opc.PackageRelationshipCollection")
+					&& FieldUtils.readDeclaredField(instance, "relationshipsByID", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(Arrays.asList("org.apache.poi.poifs.crypt.temp.SXSSFWorkbookWithCustomZipEntrySource",
-					"org.apache.poi.xssf.streaming.DeferredSXSSFWorkbook"), name)) {
+					"org.apache.poi.xssf.streaming.DeferredSXSSFWorkbook"), name)
+					&& FieldUtils.readField(instance, "_wb", true) == null) {
 				//
-				if (FieldUtils.readField(instance, "_wb", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.poifs.filesystem.DirectoryNode")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "_entries", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.poifs.filesystem.FilteringDirectoryNode")) {
+			} else if (Objects.equals(name, "org.apache.poi.poifs.filesystem.DirectoryNode")
+					&& FieldUtils.readDeclaredField(instance, "_entries", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "directory", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.poifs.filesystem.POIFSDocument")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "_property", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.poifs.filesystem.POIFSStream")) {
+			} else if (Objects.equals(name, "org.apache.poi.poifs.filesystem.FilteringDirectoryNode")
+					&& FieldUtils.readDeclaredField(instance, "directory", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "blockStore", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.poifs.property.RootProperty")) {
+				return;
 				//
-				if (FieldUtils.readField(instance, "_children", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.ss.util.SSCellRange")) {
+			} else if (Objects.equals(name, "org.apache.poi.poifs.filesystem.POIFSDocument")
+					&& FieldUtils.readDeclaredField(instance, "_property", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "_flattenedArray", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.poi.poifs.filesystem.POIFSStream")
+					&& FieldUtils.readDeclaredField(instance, "blockStore", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.poi.poifs.property.RootProperty")
+					&& FieldUtils.readField(instance, "_children", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.poi.ss.util.SSCellRange")
+					&& FieldUtils.readDeclaredField(instance, "_flattenedArray", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(Arrays.asList("org.apache.poi.xddf.usermodel.text.XDDFTextParagraph",
-					"org.apache.poi.xslf.usermodel.XSLFTextParagraph"), name)) {
+					"org.apache.poi.xslf.usermodel.XSLFTextParagraph"), name)
+					&& FieldUtils.readDeclaredField(instance, "_runs", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "_runs", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
 			} else if (contains(Arrays.asList("org.apache.poi.xslf.usermodel.XSLFAutoShape",
 					"org.apache.poi.xslf.usermodel.XSLFFreeformShape", "org.apache.poi.xslf.usermodel.XSLFTableCell",
 					"org.apache.poi.xslf.usermodel.XSLFTextBox", "org.apache.poi.xssf.usermodel.XSSFObjectData",
-					"org.apache.poi.xssf.usermodel.XSSFTextBox"), name)) {
+					"org.apache.poi.xssf.usermodel.XSSFTextBox"), name)
+					&& FieldUtils.readField(instance, "_paragraphs", true) == null) {
 				//
-				if (FieldUtils.readField(instance, "_paragraphs", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.xslf.usermodel.XSLFDiagram$XSLFDiagramGroupShape")) {
+				return;
 				//
-				if (FieldUtils.readField(instance, "_shapes", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.xslf.usermodel.XSLFNotes")) {
+			} else if (Objects.equals(name, "org.apache.poi.xslf.usermodel.XSLFDiagram$XSLFDiagramGroupShape")
+					&& FieldUtils.readField(instance, "_shapes", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "_notes", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.poi.xslf.usermodel.XSLFNotes")
+					&& FieldUtils.readDeclaredField(instance, "_notes", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(
 					Arrays.asList("org.apache.poi.xslf.usermodel.XSLFNotesMaster",
 							"org.apache.poi.xslf.usermodel.XSLFSlide", "org.apache.poi.xslf.usermodel.XSLFSlideMaster"),
@@ -1924,260 +1616,170 @@ abstract class Util {
 					//
 				} // if
 					//
-			} else if (Objects.equals(name, "org.apache.poi.xslf.usermodel.XSLFSlideLayout")) {
+			} else if (Objects.equals(name, "org.apache.poi.xslf.usermodel.XSLFSlideLayout")
+					&& FieldUtils.readDeclaredField(instance, "_layout", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "_layout", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.xssf.streaming.SXSSFRow")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "_cells", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.xslf.usermodel.XSLFTableStyles")) {
+			} else if (Objects.equals(name, "org.apache.poi.xssf.streaming.SXSSFRow")
+					&& FieldUtils.readDeclaredField(instance, "_cells", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "_styles", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.poi.xslf.usermodel.XSLFTableStyles")
+					&& FieldUtils.readDeclaredField(instance, "_styles", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(Arrays.asList("org.apache.poi.xssf.streaming.DeferredSXSSFSheet",
 					"org.apache.poi.xssf.streaming.SXSSFSheet", "org.apache.poi.xssf.usermodel.XSSFChartSheet",
-					"org.apache.poi.xssf.usermodel.XSSFDialogsheet"), name)) {
+					"org.apache.poi.xssf.usermodel.XSSFDialogsheet"), name)
+					&& FieldUtils.readField(instance, "_rows", true) == null) {
 				//
-				if (FieldUtils.readField(instance, "_rows", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.xssf.streaming.SXSSFDrawing")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "_drawing", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.xssf.streaming.SXSSFWorkbook")) {
+			} else if (Objects.equals(name, "org.apache.poi.xssf.streaming.SXSSFDrawing")
+					&& FieldUtils.readDeclaredField(instance, "_drawing", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "_wb", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.poi.xssf.streaming.SXSSFWorkbook")
+					&& FieldUtils.readDeclaredField(instance, "_wb", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(Arrays.asList("org.apache.poi.xssf.usermodel.XSSFDrawing",
-					"org.apache.poi.xssf.usermodel.XSSFShapeGroup"), name)) {
+					"org.apache.poi.xssf.usermodel.XSSFShapeGroup"), name)
+					&& FieldUtils.readField(instance, "drawing", true) == null) {
 				//
-				if (FieldUtils.readField(instance, "drawing", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.xssf.usermodel.XSSFRow")) {
+				return;
 				//
-				if (FieldUtils.readField(instance, "_cells", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.xssf.usermodel.XSSFSimpleShape")) {
+			} else if (Objects.equals(name, "org.apache.poi.xssf.usermodel.XSSFRow")
+					&& FieldUtils.readField(instance, "_cells", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "_paragraphs", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.xssf.usermodel.XSSFWorkbook")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "sheets", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+			} else if (Objects.equals(name, "org.apache.poi.xssf.usermodel.XSSFSimpleShape")
+					&& FieldUtils.readDeclaredField(instance, "_paragraphs", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.poi.xssf.usermodel.XSSFWorkbook")
+					&& FieldUtils.readDeclaredField(instance, "sheets", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(Arrays.asList("org.apache.poi.xwpf.usermodel.XWPFEndnote",
-					"org.apache.poi.xwpf.usermodel.XWPFFootnote"), name)) {
+					"org.apache.poi.xwpf.usermodel.XWPFFootnote"), name)
+					&& FieldUtils.readField(instance, "paragraphs", true) == null) {
 				//
-				if (FieldUtils.readField(instance, "paragraphs", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.xmlbeans.XmlSimpleList")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "underlying", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+			} else if (Objects.equals(name, "org.apache.xmlbeans.XmlSimpleList")
+					&& FieldUtils.readDeclaredField(instance, "underlying", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(Arrays.asList("org.apache.xmlbeans.impl.values.JavaListObject",
-					"org.apache.xmlbeans.impl.values.JavaListXmlObject"), name)) {
+					"org.apache.xmlbeans.impl.values.JavaListXmlObject"), name)
+					&& FieldUtils.readDeclaredField(instance, "sizer", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "sizer", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.d2ab.collection.ChainedCollection")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "collections", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.d2ab.collection.ChainedList")) {
+			} else if (Objects.equals(name, "org.d2ab.collection.ChainedCollection")
+					&& FieldUtils.readDeclaredField(instance, "collections", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "lists", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
+			} else if (Objects.equals(name, "org.d2ab.collection.ChainedList")
+					&& FieldUtils.readDeclaredField(instance, "lists", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(Arrays.asList("org.d2ab.collection.ChainingIterable",
 					"org.d2ab.collection.chars.ChainingCharIterable",
 					"org.d2ab.collection.doubles.ChainingDoubleIterable",
 					"org.d2ab.collection.ints.ChainingIntIterable", "org.d2ab.collection.longs.ChainingLongIterable"),
-					name)) {
+					name) && FieldUtils.readDeclaredField(instance, "iterables", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "iterables", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
 			} else if (contains(
-					Arrays.asList("org.d2ab.collection.ReverseList", "org.d2ab.sequence.EquivalentSizeSequence"),
-					name)) {
+					Arrays.asList("org.d2ab.collection.ReverseList", "org.d2ab.sequence.EquivalentSizeSequence"), name)
+					&& FieldUtils.readDeclaredField(instance, "original", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "original", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.d2ab.collection.longs.BitLongSet")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "negatives", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+			} else if (Objects.equals(name, "org.d2ab.collection.longs.BitLongSet")
+					&& FieldUtils.readDeclaredField(instance, "negatives", true) == null) {
+				//
+				return;
+				//
 			} else if (contains(
 					Arrays.asList("org.eclipse.jetty.http.MetaData$ConnectRequest",
 							"org.eclipse.jetty.http.MetaData$Request", "org.eclipse.jetty.http.MetaData$Response"),
-					name)) {
+					name) && FieldUtils.readField(instance, "_httpFields", true) == null) {
 				//
-				if (FieldUtils.readField(instance, "_httpFields", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
 			} else if (contains(Arrays.asList("org.javatuples.Decade", "org.javatuples.Ennead",
 					"org.javatuples.KeyValue", "org.javatuples.LabelValue", "org.javatuples.Octet",
 					"org.javatuples.Pair", "org.javatuples.Quartet", "org.javatuples.Quintet", "org.javatuples.Septet",
 					"org.javatuples.Sextet", "org.javatuples.Triplet", "org.javatuples.Triplet", "org.javatuples.Unit"),
-					name)) {
+					name) && FieldUtils.readField(instance, "valueList", true) == null) {
 				//
-				if (FieldUtils.readField(instance, "valueList", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.openjdk.nashorn.internal.runtime.JSONListAdapter")) {
+				return;
 				//
-				if (FieldUtils.readField(instance, "obj", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.openjdk.nashorn.internal.runtime.ListAdapter")) {
+			} else if (Objects.equals(name, "org.openjdk.nashorn.internal.runtime.JSONListAdapter")
+					&& FieldUtils.readField(instance, "obj", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "obj", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.openjdk.nashorn.internal.runtime.PropertyMap")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "properties", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.openjdk.nashorn.internal.runtime.SharedPropertyMap")) {
+			} else if (Objects.equals(name, "org.openjdk.nashorn.internal.runtime.ListAdapter")
+					&& FieldUtils.readDeclaredField(instance, "obj", true) == null) {
 				//
-				if (FieldUtils.readField(instance, "properties", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.oxbow.swingbits.action.ActionGroup")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "actions", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.springframework.beans.MutablePropertyValues")) {
+			} else if (Objects.equals(name, "org.openjdk.nashorn.internal.runtime.PropertyMap")
+					&& FieldUtils.readDeclaredField(instance, "properties", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "propertyValueList", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.springframework.beans.factory.support.ManagedSet")) {
+				return;
 				//
-				if (Narcissus.getObjectField(instance, Narcissus.findField(clz, "map")) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.springframework.core.env.MutablePropertySources")) {
+			} else if (Objects.equals(name, "org.openjdk.nashorn.internal.runtime.SharedPropertyMap")
+					&& FieldUtils.readField(instance, "properties", true) == null) {
 				//
-				if (FieldUtils.readDeclaredField(instance, "propertySourceList", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.springframework.util.AutoPopulatingList")) {
+				return;
 				//
-				if (FieldUtils.readDeclaredField(instance, "backingList", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
+			} else if (Objects.equals(name, "org.oxbow.swingbits.action.ActionGroup")
+					&& FieldUtils.readDeclaredField(instance, "actions", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "org.springframework.beans.MutablePropertyValues")
+					&& FieldUtils.readDeclaredField(instance, "propertyValueList", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "org.springframework.beans.factory.support.ManagedSet")
+					&& Narcissus.getObjectField(instance, Narcissus.findField(clz, "map")) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "org.springframework.core.env.MutablePropertySources")
+					&& FieldUtils.readDeclaredField(instance, "propertySourceList", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "org.springframework.util.AutoPopulatingList")
+					&& FieldUtils.readDeclaredField(instance, "backingList", true) == null) {
+				//
+				return;
+				//
 			} // if
 				//
-		} catch (final IllegalAccessException | NoSuchMethodException | InvocationTargetException
-				| NoSuchFieldException e) {
+		} catch (final IllegalAccessException | NoSuchMethodException | InvocationTargetException |
+
+				NoSuchFieldException e) {
 			//
 			throw new RuntimeException(e);
 			//
