@@ -788,7 +788,7 @@ abstract class Util {
 						//
 				} // if
 					//
-			} else if (Objects.equals(javaClass != null ? javaClass.getSuperclassName() : null, "java.lang.Object")) {
+			} else if (Objects.equals(getSuperclassName(javaClass), "java.lang.Object")) {
 				//
 				final JavaClass[] interfaces = javaClass.getInterfaces();
 				//
@@ -2206,6 +2206,10 @@ abstract class Util {
 			//
 		} // if
 			//
+	}
+
+	private static String getSuperclassName(final JavaClass instance) {
+		return instance != null ? instance.getSuperclassName() : null;
 	}
 
 	@Nullable
