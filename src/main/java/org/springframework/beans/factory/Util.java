@@ -1810,6 +1810,7 @@ abstract class Util {
 			//
 	}
 
+	@Nullable
 	private static String getSuperclassName(@Nullable final JavaClass instance) {
 		return instance != null ? instance.getSuperclassName() : null;
 	}
