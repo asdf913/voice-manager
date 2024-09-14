@@ -66,6 +66,7 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableBiPredicate;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -988,16 +989,13 @@ abstract class Util {
 		//
 		try {
 			//
-			for (final Entry<String, String> entry : Util.entrySet(map)) {
+			if (!executeForEachMethod(map, name, instance, (a, b) -> {
+				return FieldUtils.readDeclaredField(a, b, true) == null;
+			})) {
 				//
-				if (Objects.equals(name, getKey(entry))
-						&& FieldUtils.readDeclaredField(instance, getValue(entry), true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} // for
+				return;
+				//
+			} // if
 				//
 			map.clear();
 			//
@@ -1180,16 +1178,13 @@ abstract class Util {
 							"org.javatuples.Sextet", "org.javatuples.Triplet", "org.javatuples.Unit"),
 							Collectors.toMap(Function.identity(), x -> "valueList")));
 			//
-			for (final Entry<String, String> entry : Util.entrySet(map)) {
+			if (!executeForEachMethod(map, name, instance, (a, b) -> {
+				return FieldUtils.readField(a, b, true) == null;
+			})) {
 				//
-				if (Objects.equals(name, getKey(entry))
-						&& FieldUtils.readField(instance, getValue(entry), true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} // for
+				return;
+				//
+			} // if
 				//
 			map.clear();
 			//
@@ -1206,16 +1201,13 @@ abstract class Util {
 							"com.helger.commons.collection.impl.CommonsLinkedHashSet"),
 							Collectors.toMap(Function.identity(), x -> "map")));
 			//
-			for (final Entry<String, String> entry : Util.entrySet(map)) {
+			if (!executeForEachMethod(map, name, instance, (a, b) -> {
+				return Narcissus.getField(a, Narcissus.findField(clz, b)) == null;
+			})) {
 				//
-				if (Objects.equals(name, getKey(entry))
-						&& Narcissus.getField(instance, Narcissus.findField(clz, getValue(entry))) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} // for
+				return;
+				//
+			} // if
 				//
 			if (!executeForEachMethod(instance, name)) {
 				//
@@ -1223,9 +1215,7 @@ abstract class Util {
 				//
 			} // if
 				//
-		} catch (final IllegalAccessException | NoSuchMethodException | InvocationTargetException |
-
-				NoSuchFieldException e) {
+		} catch (final ReflectiveOperationException e) {
 			//
 			throw new RuntimeException(e);
 			//
@@ -1254,6 +1244,31 @@ abstract class Util {
 			//
 		} // if
 			//
+	}
+
+	private static boolean executeForEachMethod(final Map<String, String> map, final String name, final Object instance,
+			final FailableBiPredicate<Object, String, ReflectiveOperationException> predicate)
+			throws ReflectiveOperationException {
+		//
+		final Iterable<Entry<String, String>> entrySet = entrySet(map);
+		//
+		if (entrySet != null) {
+			//
+			for (final Entry<String, String> entry : entrySet) {
+				//
+				if (Objects.equals(name, getKey(entry))
+						&& (predicate != null && predicate.test(instance, getValue(entry)))) {
+					//
+					return false;
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		return true;
+		//
 	}
 
 	private static boolean executeForEachMethod(final Object instance, @Nullable final String name)

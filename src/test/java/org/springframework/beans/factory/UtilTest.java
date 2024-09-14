@@ -33,6 +33,7 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.function.FailableBiPredicate;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
@@ -52,7 +53,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class UtilTest {
 
-	private static Method METHOD_GET_DECLARED_FIELD, METHOD_EXECUTE_FOR_EACH_METHOD, METHOD_GET_RESOURCE_AS_STREAM;
+	private static Method METHOD_GET_DECLARED_FIELD, METHOD_EXECUTE_FOR_EACH_METHOD4, METHOD_EXECUTE_FOR_EACH_METHOD5,
+			METHOD_GET_RESOURCE_AS_STREAM;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -62,7 +64,10 @@ class UtilTest {
 		(METHOD_GET_DECLARED_FIELD = clz.getDeclaredMethod("getDeclaredField", Class.class, String.class))
 				.setAccessible(true);
 		//
-		(METHOD_EXECUTE_FOR_EACH_METHOD = clz.getDeclaredMethod("executeForEachMethod", Object.class, String.class,
+		(METHOD_EXECUTE_FOR_EACH_METHOD4 = clz.getDeclaredMethod("executeForEachMethod", Map.class, String.class,
+				Object.class, FailableBiPredicate.class)).setAccessible(true);
+		//
+		(METHOD_EXECUTE_FOR_EACH_METHOD5 = clz.getDeclaredMethod("executeForEachMethod", Object.class, String.class,
 				Map.class, Instruction[].class, ConstantPoolGen.class)).setAccessible(true);
 		//
 		(METHOD_GET_RESOURCE_AS_STREAM = clz.getDeclaredMethod("getResourceAsStream", Class.class, String.class))
@@ -680,6 +685,10 @@ class UtilTest {
 	@Test
 	void testExecuteForEachMethod() throws Throwable {
 		//
+		Assertions.assertTrue(executeForEachMethod(Collections.singletonMap(null, null), null, null, null));
+		//
+		Assertions.assertTrue(executeForEachMethod(Collections.singletonMap(null, null), null, null, (a, b) -> false));
+		//
 		final List<Instruction> instructions = new ArrayList<>(
 				Arrays.asList(new ALOAD(0), new GETFIELD(0), new ALOAD(0), new INVOKEINTERFACE(0, 1), null));
 		//
@@ -694,11 +703,24 @@ class UtilTest {
 			//
 	}
 
+	private static boolean executeForEachMethod(final Map<String, String> map, final String name, final Object instance,
+			final FailableBiPredicate<Object, String, ReflectiveOperationException> predicate) throws Throwable {
+		try {
+			final Object obj = METHOD_EXECUTE_FOR_EACH_METHOD4.invoke(null, map, name, instance, predicate);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 	private static boolean executeForEachMethod(final Object instance, final String name,
 			final Map<String, FailableFunction<Object, Object, Exception>> map, final Instruction[] instructions,
 			final ConstantPoolGen cpg) throws Throwable {
 		try {
-			final Object obj = METHOD_EXECUTE_FOR_EACH_METHOD.invoke(null, instance, name, map, instructions, cpg);
+			final Object obj = METHOD_EXECUTE_FOR_EACH_METHOD5.invoke(null, instance, name, map, instructions, cpg);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
