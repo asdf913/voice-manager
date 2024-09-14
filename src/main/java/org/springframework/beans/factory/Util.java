@@ -757,9 +757,10 @@ abstract class Util {
 				//
 			} // if
 				//
-			final JavaClass javaClass = ClassParserUtil.parse(is != null ? new ClassParser(is, null) : null);
+			final JavaClass javaClass = ClassParserUtil
+					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
 			//
-			Method method = getForEachMethod(javaClass);
+			final Method method = getForEachMethod(javaClass);
 			//
 			ConstantPoolGen cpg = null;
 			//
@@ -1279,6 +1280,15 @@ abstract class Util {
 			//
 		} // if
 			//
+	}
+
+	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,
+			final Function<T, R> functionFalse) {
+		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
+	}
+
+	private static <T, R> R apply(final Function<T, R> instance, final T value) {
+		return instance != null ? instance.apply(value) : null;
 	}
 
 	private static boolean executeForEachMethod(final Method[] ms, final JavaClass[] interfaces, final Object instance,
