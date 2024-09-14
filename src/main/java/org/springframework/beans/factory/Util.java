@@ -1154,31 +1154,11 @@ abstract class Util {
 					"org.apache.commons.math3.genetics.ElitisticListPopulation", "chromosomes",
 					"org.apache.poi.xssf.usermodel.XSSFRow", "_cells",
 					"org.openjdk.nashorn.internal.runtime.JSONListAdapter", "obj",
-					"org.openjdk.nashorn.internal.runtime.SharedPropertyMap", "properties"));
+					"org.openjdk.nashorn.internal.runtime.SharedPropertyMap", "properties",
+					"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMultiset$StandardElementSet",
+					"multiset"));
 			//
-			for (final Entry<String, String> entry : Util.entrySet(map)) {
-				//
-				if (Objects.equals(name, getKey(entry))
-						&& FieldUtils.readField(instance, getValue(entry), true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} // for
-				//
-			if (Objects.equals(name, "org.apache.commons.math3.util.MultidimensionalCounter")
-					&& Objects.equals(FieldUtils.readDeclaredField(instance, "last", true),
-							FieldUtils.readDeclaredField(instance, "dimension", true))) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.commons.math3.util.IntegerSequence$Range")
-					&& Objects.equals(FieldUtils.readDeclaredField(instance, "step", true), Integer.valueOf(0))) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("com.google.common.collect.ForwardingMap$StandardKeySet",
+			putAll(map, collect(Stream.of("com.google.common.collect.ForwardingMap$StandardKeySet",
 					"com.google.common.collect.ForwardingMap$StandardValues",
 					"com.google.common.collect.ForwardingNavigableMap$StandardNavigableKeySet",
 					"com.google.common.collect.ForwardingSortedMap$StandardKeySet",
@@ -1188,94 +1168,38 @@ abstract class Util {
 					"org.apache.jena.ext.com.google.common.collect.ForwardingMap$StandardKeySet",
 					"org.apache.jena.ext.com.google.common.collect.ForwardingMap$StandardValues",
 					"org.apache.jena.ext.com.google.common.collect.ForwardingNavigableMap$StandardNavigableKeySet",
-					"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMap$StandardKeySet"), name)
-					&& FieldUtils.readField(instance, "map", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("com.helger.commons.collection.impl.CommonsHashSet",
-					"com.helger.commons.collection.impl.CommonsLinkedHashSet"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList(
-					"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMultiset$StandardElementSet"), name)
-					&& FieldUtils.readField(instance, "multiset", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(
-					Arrays.asList("com.google.common.collect.ForwardingMultiset$StandardElementSet",
-							"com.google.common.collect.ForwardingSortedMultiset$StandardElementSet",
-							"org.apache.jena.ext.com.google.common.collect.ForwardingMultiset$StandardElementSet"),
-					name)) {
-				//
-				if (MethodUtils.invokeMethod(instance, true, "multiset") == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (contains(Arrays.asList("com.google.common.collect.ForwardingNavigableSet$StandardDescendingSet",
-					"org.apache.jena.ext.com.google.common.collect.ForwardingNavigableSet$StandardDescendingSet"), name)
-					&& FieldUtils.readField(instance, "forward", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("com.google.common.collect.HashMultiset",
-					"com.google.common.collect.LinkedHashMultiset",
-					"org.apache.jena.ext.com.google.common.collect.HashMultiset",
-					"org.apache.jena.ext.com.google.common.collect.LinkedHashMultiset"), name)
-					&& FieldUtils.readField(instance, "backingMap", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableDefinitionImpl"), name)
-					&& Narcissus.invokeMethod(instance,
-							Narcissus.findMethod(clz, "createRowState", new Class<?>[] {})) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.helger.commons.collection.impl.CommonsCopyOnWriteArrayList")
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "array")) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.helger.commons.collection.impl.CommonsCopyOnWriteArraySet")
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "al")) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.helger.commons.collection.impl.CommonsTreeSet")
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "m")) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("com.opencsv.CSVReader", "com.opencsv.CSVReaderHeaderAware"), name)
-					&& FieldUtils.readField(instance, "peekedLines", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("org.apache.bcel.classfile.RuntimeInvisibleAnnotations",
-					"org.apache.bcel.classfile.RuntimeVisibleAnnotations"), name)
-					&& FieldUtils.readField(instance, "annotationTable", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("org.apache.bcel.classfile.RuntimeInvisibleParameterAnnotations",
-					"org.apache.bcel.classfile.RuntimeVisibleParameterAnnotations"), name)
-					&& FieldUtils.readField(instance, "parameterAnnotationTable", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(
-					Arrays.asList("org.apache.commons.collections.HashBag", "org.apache.commons.collections.TreeBag"),
-					name) && FieldUtils.readField(instance, "_map", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("org.apache.commons.collections.bag.PredicatedBag",
+					"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMap$StandardKeySet"),
+					Collectors.toMap(Function.identity(), x -> "map")));
+			//
+			putAll(map, collect(Stream.of("com.google.common.collect.ForwardingNavigableSet$StandardDescendingSet",
+					"org.apache.jena.ext.com.google.common.collect.ForwardingNavigableSet$StandardDescendingSet"),
+					Collectors.toMap(Function.identity(), x -> "forward")));
+			//
+			putAll(map, collect(
+					Stream.of("com.google.common.collect.HashMultiset", "com.google.common.collect.LinkedHashMultiset",
+							"org.apache.jena.ext.com.google.common.collect.HashMultiset",
+							"org.apache.jena.ext.com.google.common.collect.LinkedHashMultiset"),
+					Collectors.toMap(Function.identity(), x -> "backingMap")));
+			//
+			putAll(map, collect(Stream.of("com.opencsv.CSVReader", "com.opencsv.CSVReaderHeaderAware"),
+					Collectors.toMap(Function.identity(), x -> "peekedLines")));
+			//
+			putAll(map,
+					collect(Stream.of("org.apache.bcel.classfile.RuntimeInvisibleAnnotations",
+							"org.apache.bcel.classfile.RuntimeVisibleAnnotations"),
+							Collectors.toMap(Function.identity(), x -> "annotationTable")));
+			//
+			putAll(map,
+					collect(Stream.of("org.apache.bcel.classfile.RuntimeInvisibleParameterAnnotations",
+							"org.apache.bcel.classfile.RuntimeVisibleParameterAnnotations"),
+							Collectors.toMap(Function.identity(), x -> "parameterAnnotationTable")));
+			//
+			putAll(map,
+					collect(Stream.of("org.apache.commons.collections.HashBag",
+							"org.apache.commons.collections.TreeBag"),
+							Collectors.toMap(Function.identity(), x -> "_map")));
+			//
+			putAll(map, collect(Stream.of("org.apache.commons.collections.bag.PredicatedBag",
 					"org.apache.commons.collections.bag.PredicatedSortedBag",
 					"org.apache.commons.collections.bag.SynchronizedBag",
 					"org.apache.commons.collections.bag.SynchronizedSortedBag",
@@ -1353,68 +1277,112 @@ abstract class Util {
 					"org.apache.commons.collections4.set.UnmodifiableNavigableSet",
 					"org.apache.commons.collections4.set.UnmodifiableSet",
 					"org.apache.commons.collections4.set.UnmodifiableSortedSet",
-					"org.d2ab.collection.BiMappedCollection"), name)
-					&& FieldUtils.readField(instance, "collection", true) == null) {
+					"org.d2ab.collection.BiMappedCollection"),
+					Collectors.toMap(Function.identity(), x -> "collection")));
+			//
+			putAll(map,
+					collect(Stream.of("org.apache.commons.math3.geometry.euclidean.oned.IntervalsSet",
+							"org.apache.commons.math3.geometry.spherical.oned.ArcsSet"),
+							Collectors.toMap(Function.identity(), x -> "tree")));
+			//
+			putAll(map,
+					collect(Stream.of("org.apache.poi.poifs.crypt.temp.SXSSFWorkbookWithCustomZipEntrySource",
+							"org.apache.poi.xssf.streaming.DeferredSXSSFWorkbook"),
+							Collectors.toMap(Function.identity(), x -> "_wb")));
+			//
+			putAll(map, collect(Stream.of("org.apache.poi.xslf.usermodel.XSLFAutoShape",
+					"org.apache.poi.xslf.usermodel.XSLFFreeformShape", "org.apache.poi.xslf.usermodel.XSLFTableCell",
+					"org.apache.poi.xslf.usermodel.XSLFTextBox", "org.apache.poi.xssf.usermodel.XSSFObjectData",
+					"org.apache.poi.xssf.usermodel.XSSFTextBox"),
+					Collectors.toMap(Function.identity(), x -> "_paragraphs")));
+			//
+			putAll(map,
+					collect(Stream.of("org.apache.poi.xssf.streaming.DeferredSXSSFSheet",
+							"org.apache.poi.xssf.streaming.SXSSFSheet", "org.apache.poi.xssf.usermodel.XSSFChartSheet",
+							"org.apache.poi.xssf.usermodel.XSSFDialogsheet"),
+							Collectors.toMap(Function.identity(), x -> "_rows")));
+			//
+			putAll(map,
+					collect(Stream.of("org.apache.poi.xssf.usermodel.XSSFDrawing",
+							"org.apache.poi.xssf.usermodel.XSSFShapeGroup"),
+							Collectors.toMap(Function.identity(), x -> "drawing")));
+			//
+			putAll(map,
+					collect(Stream.of("org.apache.poi.xwpf.usermodel.XWPFEndnote",
+							"org.apache.poi.xwpf.usermodel.XWPFFootnote"),
+							Collectors.toMap(Function.identity(), x -> "paragraphs")));
+			//
+			putAll(map,
+					collect(Stream.of("org.eclipse.jetty.http.MetaData$ConnectRequest",
+							"org.eclipse.jetty.http.MetaData$Request", "org.eclipse.jetty.http.MetaData$Response"),
+							Collectors.toMap(Function.identity(), x -> "_httpFields")));
+			//
+			putAll(map,
+					collect(Stream.of("org.javatuples.Decade", "org.javatuples.Ennead", "org.javatuples.KeyValue",
+							"org.javatuples.LabelValue", "org.javatuples.Octet", "org.javatuples.Pair",
+							"org.javatuples.Quartet", "org.javatuples.Quintet", "org.javatuples.Septet",
+							"org.javatuples.Sextet", "org.javatuples.Triplet", "org.javatuples.Unit"),
+							Collectors.toMap(Function.identity(), x -> "valueList")));
+			//
+			for (final Entry<String, String> entry : Util.entrySet(map)) {
 				//
-				return;
+				if (Objects.equals(name, getKey(entry))
+						&& FieldUtils.readField(instance, getValue(entry), true) == null) {
+					//
+					return;
+					//
+				} // if
+					//
+			} // for
 				//
-			} else if (contains(Arrays.asList("org.apache.commons.math3.geometry.euclidean.oned.IntervalsSet",
-					"org.apache.commons.math3.geometry.spherical.oned.ArcsSet"), name)
-					&& FieldUtils.readField(instance, "tree", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.poi.ddf.EscherArrayProperty")
+			if (Objects.equals(name, "org.apache.poi.ddf.EscherArrayProperty")
 					&& Objects.equals(FieldUtils.readDeclaredField(instance, "emptyComplexPart", true), Boolean.FALSE)
 					&& FieldUtils.readField(instance, "complexData", true) == null) {
 				//
 				return;
 				//
-			} else if (contains(Arrays.asList("org.apache.poi.poifs.crypt.temp.SXSSFWorkbookWithCustomZipEntrySource",
-					"org.apache.poi.xssf.streaming.DeferredSXSSFWorkbook"), name)
-					&& FieldUtils.readField(instance, "_wb", true) == null) {
+			} else if (Objects.equals(name, "org.apache.commons.math3.util.MultidimensionalCounter")
+					&& Objects.equals(FieldUtils.readDeclaredField(instance, "last", true),
+							FieldUtils.readDeclaredField(instance, "dimension", true))) {
 				//
 				return;
 				//
-			} else if (contains(Arrays.asList("org.apache.poi.xslf.usermodel.XSLFAutoShape",
-					"org.apache.poi.xslf.usermodel.XSLFFreeformShape", "org.apache.poi.xslf.usermodel.XSLFTableCell",
-					"org.apache.poi.xslf.usermodel.XSLFTextBox", "org.apache.poi.xssf.usermodel.XSSFObjectData",
-					"org.apache.poi.xssf.usermodel.XSSFTextBox"), name)
-					&& FieldUtils.readField(instance, "_paragraphs", true) == null) {
+			} else if (Objects.equals(name, "org.apache.commons.math3.util.IntegerSequence$Range")
+					&& Objects.equals(FieldUtils.readDeclaredField(instance, "step", true), Integer.valueOf(0))) {
 				//
 				return;
-				//
-			} else if (contains(Arrays.asList("org.apache.poi.xssf.streaming.DeferredSXSSFSheet",
-					"org.apache.poi.xssf.streaming.SXSSFSheet", "org.apache.poi.xssf.usermodel.XSSFChartSheet",
-					"org.apache.poi.xssf.usermodel.XSSFDialogsheet"), name)
-					&& FieldUtils.readField(instance, "_rows", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("org.apache.poi.xssf.usermodel.XSSFDrawing",
-					"org.apache.poi.xssf.usermodel.XSSFShapeGroup"), name)
-					&& FieldUtils.readField(instance, "drawing", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("org.apache.poi.xwpf.usermodel.XWPFEndnote",
-					"org.apache.poi.xwpf.usermodel.XWPFFootnote"), name)
-					&& FieldUtils.readField(instance, "paragraphs", true) == null) {
+			} else if (contains(Arrays.asList("com.helger.commons.collection.impl.CommonsHashSet",
+					"com.helger.commons.collection.impl.CommonsLinkedHashSet"), name)
+					&& Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
 				//
 				return;
 				//
 			} else if (contains(
-					Arrays.asList("org.eclipse.jetty.http.MetaData$ConnectRequest",
-							"org.eclipse.jetty.http.MetaData$Request", "org.eclipse.jetty.http.MetaData$Response"),
-					name) && FieldUtils.readField(instance, "_httpFields", true) == null) {
+					Arrays.asList("com.google.common.collect.ForwardingMultiset$StandardElementSet",
+							"com.google.common.collect.ForwardingSortedMultiset$StandardElementSet",
+							"org.apache.jena.ext.com.google.common.collect.ForwardingMultiset$StandardElementSet"),
+					name) && MethodUtils.invokeMethod(instance, true, "multiset") == null) {
 				//
 				return;
 				//
-			} else if (contains(Arrays.asList("org.javatuples.Decade", "org.javatuples.Ennead",
-					"org.javatuples.KeyValue", "org.javatuples.LabelValue", "org.javatuples.Octet",
-					"org.javatuples.Pair", "org.javatuples.Quartet", "org.javatuples.Quintet", "org.javatuples.Septet",
-					"org.javatuples.Sextet", "org.javatuples.Triplet", "org.javatuples.Triplet", "org.javatuples.Unit"),
-					name) && FieldUtils.readField(instance, "valueList", true) == null) {
+			} else if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableDefinitionImpl"), name)
+					&& Narcissus.invokeMethod(instance,
+							Narcissus.findMethod(clz, "createRowState", new Class<?>[] {})) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "com.helger.commons.collection.impl.CommonsCopyOnWriteArrayList")
+					&& Narcissus.getField(instance, Narcissus.findField(clz, "array")) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "com.helger.commons.collection.impl.CommonsCopyOnWriteArraySet")
+					&& Narcissus.getField(instance, Narcissus.findField(clz, "al")) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "com.helger.commons.collection.impl.CommonsTreeSet")
+					&& Narcissus.getField(instance, Narcissus.findField(clz, "m")) == null) {
 				//
 				return;
 				//
