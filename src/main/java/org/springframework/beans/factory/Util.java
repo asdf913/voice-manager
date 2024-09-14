@@ -829,7 +829,7 @@ abstract class Util {
 			//
 	}
 
-	private static boolean executeForEachMethod2(final Object instance, final String name)
+	private static boolean executeForEachMethod2(final Object instance, @Nullable final String name)
 			throws ReflectiveOperationException {
 		//
 		// org.apache.commons.lang3.reflect.FieldUtils.readDeclaredField(java.lang.Object,java.lang.String,boolean)
@@ -1474,7 +1474,7 @@ abstract class Util {
 		return instance != null && name != null ? instance.getResourceAsStream(name) : null;
 	}
 
-	private static boolean executeForEachMethod(final Object instance, final String name,
+	private static boolean executeForEachMethod(final Object instance, @Nullable final String name,
 			final Map<String, FailableFunction<Object, Object, Exception>> map,
 			@Nullable final Instruction[] instructions, final ConstantPoolGen cpg) throws Exception {
 		//
