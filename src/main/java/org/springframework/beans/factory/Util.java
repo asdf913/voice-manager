@@ -790,8 +790,50 @@ abstract class Util {
 			//
 		} // try
 			//
-			// org.apache.commons.lang3.reflect.FieldUtils.readDeclaredField(java.lang.Object,java.lang.String,boolean)
+		try {
 			//
+			if (!executeForEachMethod2(instance, name)) {
+				//
+				return;
+				//
+			} // if
+				//
+		} catch (final ReflectiveOperationException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} catch (final NullPointerException e) {
+			//
+			try {
+				//
+				if (Objects.equals("com.healthmarketscience.jackcess.impl.TableDefinitionImpl", getName(clz))
+						&& Narcissus.getField(instance, Narcissus.findField(clz, "_database")) == null) {
+					//
+					return;
+					//
+				} // if
+					//
+			} catch (final NoSuchFieldException nsfe) {
+				//
+				throw new RuntimeException(nsfe);
+				//
+			} // try
+				//
+		} // try
+			//
+		if (action != null) {
+			//
+			instance.forEach(action);
+			//
+		} // if
+			//
+	}
+
+	private static boolean executeForEachMethod2(final Object instance, final String name)
+			throws ReflectiveOperationException {
+		//
+		// org.apache.commons.lang3.reflect.FieldUtils.readDeclaredField(java.lang.Object,java.lang.String,boolean)
+		//
 		final Map<String, String> map = new LinkedHashMap<>(Map.of(
 				"com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap", "_hashArea",
 				"com.fasterxml.jackson.databind.util.ArrayIterator", "_a",
@@ -987,259 +1029,228 @@ abstract class Util {
 		putAll(map, collect(Stream.of("org.d2ab.collection.ReverseList", "org.d2ab.sequence.EquivalentSizeSequence"),
 				Collectors.toMap(Function.identity(), x -> "original")));
 		//
-		try {
+		if (!executeForEachMethod(map, name, instance, (a, b) -> FieldUtils.readDeclaredField(a, b, true) == null)) {
 			//
-			if (!executeForEachMethod(map, name, instance,
-					(a, b) -> FieldUtils.readDeclaredField(a, b, true) == null)) {
-				//
-				return;
-				//
-			} // if
-				//
-			map.clear();
-			//
-			// org.apache.commons.lang3.reflect.FieldUtils.readField(java.lang.Object,java.lang.String,boolean)
-			//
-			putAll(map, Map.of("org.apache.poi.poifs.property.RootProperty", "_children",
-					"org.apache.poi.xslf.usermodel.XSLFDiagram$XSLFDiagramGroupShape", "_shapes",
-					"com.helger.commons.io.file.FileSystemIterator", "m_aIter", "com.opencsv.bean.FieldMapByPosition",
-					"complexMapList", "org.apache.commons.collections.set.CompositeSet", "all",
-					"org.apache.commons.math3.genetics.ElitisticListPopulation", "chromosomes",
-					"org.apache.poi.xssf.usermodel.XSSFRow", "_cells",
-					"org.openjdk.nashorn.internal.runtime.JSONListAdapter", "obj",
-					"org.openjdk.nashorn.internal.runtime.SharedPropertyMap", "properties",
-					"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMultiset$StandardElementSet",
-					"multiset"));
-			//
-			putAll(map, collect(Stream.of("com.google.common.collect.ForwardingMap$StandardKeySet",
-					"com.google.common.collect.ForwardingMap$StandardValues",
-					"com.google.common.collect.ForwardingNavigableMap$StandardNavigableKeySet",
-					"com.google.common.collect.ForwardingSortedMap$StandardKeySet",
-					"org.apache.commons.collections.bag.HashBag", "org.apache.commons.collections.bag.TreeBag",
-					"org.apache.commons.collections4.bag.HashBag", "org.apache.commons.collections4.bag.TreeBag",
-					"org.apache.commons.collections4.multiset.HashMultiSet",
-					"org.apache.jena.ext.com.google.common.collect.ForwardingMap$StandardKeySet",
-					"org.apache.jena.ext.com.google.common.collect.ForwardingMap$StandardValues",
-					"org.apache.jena.ext.com.google.common.collect.ForwardingNavigableMap$StandardNavigableKeySet",
-					"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMap$StandardKeySet"),
-					Collectors.toMap(Function.identity(), x -> "map")));
-			//
-			putAll(map, collect(Stream.of("com.google.common.collect.ForwardingNavigableSet$StandardDescendingSet",
-					"org.apache.jena.ext.com.google.common.collect.ForwardingNavigableSet$StandardDescendingSet"),
-					Collectors.toMap(Function.identity(), x -> "forward")));
-			//
-			putAll(map, collect(
-					Stream.of("com.google.common.collect.HashMultiset", "com.google.common.collect.LinkedHashMultiset",
-							"org.apache.jena.ext.com.google.common.collect.HashMultiset",
-							"org.apache.jena.ext.com.google.common.collect.LinkedHashMultiset"),
-					Collectors.toMap(Function.identity(), x -> "backingMap")));
-			//
-			putAll(map, collect(Stream.of("com.opencsv.CSVReader", "com.opencsv.CSVReaderHeaderAware"),
-					Collectors.toMap(Function.identity(), x -> "peekedLines")));
-			//
-			putAll(map,
-					collect(Stream.of("org.apache.bcel.classfile.RuntimeInvisibleAnnotations",
-							"org.apache.bcel.classfile.RuntimeVisibleAnnotations"),
-							Collectors.toMap(Function.identity(), x -> "annotationTable")));
-			//
-			putAll(map,
-					collect(Stream.of("org.apache.bcel.classfile.RuntimeInvisibleParameterAnnotations",
-							"org.apache.bcel.classfile.RuntimeVisibleParameterAnnotations"),
-							Collectors.toMap(Function.identity(), x -> "parameterAnnotationTable")));
-			//
-			putAll(map,
-					collect(Stream.of("org.apache.commons.collections.HashBag",
-							"org.apache.commons.collections.TreeBag"),
-							Collectors.toMap(Function.identity(), x -> "_map")));
-			//
-			putAll(map, collect(Stream.of("org.apache.commons.collections.bag.PredicatedBag",
-					"org.apache.commons.collections.bag.PredicatedSortedBag",
-					"org.apache.commons.collections.bag.SynchronizedBag",
-					"org.apache.commons.collections.bag.SynchronizedSortedBag",
-					"org.apache.commons.collections.bag.TransformedBag",
-					"org.apache.commons.collections.bag.TransformedSortedBag",
-					"org.apache.commons.collections.bag.UnmodifiableBag",
-					"org.apache.commons.collections.bag.UnmodifiableSortedBag",
-					"org.apache.commons.collections.bidimap.AbstractDualBidiMap$EntrySet",
-					"org.apache.commons.collections.bidimap.AbstractDualBidiMap$KeySet",
-					"org.apache.commons.collections.bidimap.AbstractDualBidiMap$Values",
-					"org.apache.commons.collections.buffer.BlockingBuffer",
-					"org.apache.commons.collections.buffer.BoundedBuffer",
-					"org.apache.commons.collections.buffer.PredicatedBuffer",
-					"org.apache.commons.collections.buffer.SynchronizedBuffer",
-					"org.apache.commons.collections.buffer.TransformedBuffer",
-					"org.apache.commons.collections.buffer.UnmodifiableBuffer",
-					"org.apache.commons.collections.collection.PredicatedCollection",
-					"org.apache.commons.collections.collection.TransformedCollection",
-					"org.apache.commons.collections.collection.UnmodifiableBoundedCollection",
-					"org.apache.commons.collections.collection.UnmodifiableCollection",
-					"org.apache.commons.collections.list.FixedSizeList",
-					"org.apache.commons.collections.list.GrowthList", "org.apache.commons.collections.list.LazyList",
-					"org.apache.commons.collections.list.PredicatedList",
-					"org.apache.commons.collections.list.SetUniqueList",
-					"org.apache.commons.collections.list.SynchronizedList",
-					"org.apache.commons.collections.list.TransformedList",
-					"org.apache.commons.collections.list.UnmodifiableList",
-					"org.apache.commons.collections.map.UnmodifiableEntrySet",
-					"org.apache.commons.collections.set.PredicatedSet",
-					"org.apache.commons.collections.set.PredicatedSortedSet",
-					"org.apache.commons.collections.set.SynchronizedSet",
-					"org.apache.commons.collections.set.SynchronizedSortedSet",
-					"org.apache.commons.collections.set.TransformedSet",
-					"org.apache.commons.collections.set.TransformedSortedSet",
-					"org.apache.commons.collections.set.UnmodifiableSet",
-					"org.apache.commons.collections.set.UnmodifiableSortedSet",
-					"org.apache.commons.collections4.bag.CollectionBag",
-					"org.apache.commons.collections4.bag.CollectionSortedBag",
-					"org.apache.commons.collections4.bag.PredicatedBag",
-					"org.apache.commons.collections4.bag.PredicatedSortedBag",
-					"org.apache.commons.collections4.bag.SynchronizedBag",
-					"org.apache.commons.collections4.bag.SynchronizedSortedBag",
-					"org.apache.commons.collections4.bag.TransformedBag",
-					"org.apache.commons.collections4.bag.TransformedSortedBag",
-					"org.apache.commons.collections4.bag.UnmodifiableBag",
-					"org.apache.commons.collections4.bag.UnmodifiableSortedBag",
-					"org.apache.commons.collections4.bidimap.AbstractDualBidiMap$EntrySet",
-					"org.apache.commons.collections4.bidimap.AbstractDualBidiMap$KeySet",
-					"org.apache.commons.collections4.bidimap.AbstractDualBidiMap$Values",
-					"org.apache.commons.collections4.collection.IndexedCollection",
-					"org.apache.commons.collections4.collection.PredicatedCollection",
-					"org.apache.commons.collections4.collection.TransformedCollection",
-					"org.apache.commons.collections4.collection.UnmodifiableBoundedCollection",
-					"org.apache.commons.collections4.collection.UnmodifiableCollection",
-					"org.apache.commons.collections4.list.FixedSizeList",
-					"org.apache.commons.collections4.list.GrowthList", "org.apache.commons.collections4.list.LazyList",
-					"org.apache.commons.collections4.list.PredicatedList",
-					"org.apache.commons.collections4.list.SetUniqueList",
-					"org.apache.commons.collections4.list.TransformedList",
-					"org.apache.commons.collections4.list.UnmodifiableList",
-					"org.apache.commons.collections4.map.UnmodifiableEntrySet",
-					"org.apache.commons.collections4.multiset.PredicatedMultiSet",
-					"org.apache.commons.collections4.multiset.SynchronizedMultiSet",
-					"org.apache.commons.collections4.multiset.UnmodifiableMultiSet",
-					"org.apache.commons.collections4.queue.PredicatedQueue",
-					"org.apache.commons.collections4.queue.SynchronizedQueue",
-					"org.apache.commons.collections4.queue.TransformedQueue",
-					"org.apache.commons.collections4.queue.UnmodifiableQueue",
-					"org.apache.commons.collections4.set.PredicatedNavigableSet",
-					"org.apache.commons.collections4.set.PredicatedSet",
-					"org.apache.commons.collections4.set.PredicatedSortedSet",
-					"org.apache.commons.collections4.set.TransformedNavigableSet",
-					"org.apache.commons.collections4.set.TransformedSet",
-					"org.apache.commons.collections4.set.TransformedSortedSet",
-					"org.apache.commons.collections4.set.UnmodifiableNavigableSet",
-					"org.apache.commons.collections4.set.UnmodifiableSet",
-					"org.apache.commons.collections4.set.UnmodifiableSortedSet",
-					"org.d2ab.collection.BiMappedCollection"),
-					Collectors.toMap(Function.identity(), x -> "collection")));
-			//
-			putAll(map,
-					collect(Stream.of("org.apache.commons.math3.geometry.euclidean.oned.IntervalsSet",
-							"org.apache.commons.math3.geometry.spherical.oned.ArcsSet"),
-							Collectors.toMap(Function.identity(), x -> "tree")));
-			//
-			putAll(map,
-					collect(Stream.of("org.apache.poi.poifs.crypt.temp.SXSSFWorkbookWithCustomZipEntrySource",
-							"org.apache.poi.xssf.streaming.DeferredSXSSFWorkbook"),
-							Collectors.toMap(Function.identity(), x -> "_wb")));
-			//
-			putAll(map, collect(Stream.of("org.apache.poi.xslf.usermodel.XSLFAutoShape",
-					"org.apache.poi.xslf.usermodel.XSLFFreeformShape", "org.apache.poi.xslf.usermodel.XSLFTableCell",
-					"org.apache.poi.xslf.usermodel.XSLFTextBox", "org.apache.poi.xssf.usermodel.XSSFObjectData",
-					"org.apache.poi.xssf.usermodel.XSSFTextBox"),
-					Collectors.toMap(Function.identity(), x -> "_paragraphs")));
-			//
-			putAll(map,
-					collect(Stream.of("org.apache.poi.xssf.streaming.DeferredSXSSFSheet",
-							"org.apache.poi.xssf.streaming.SXSSFSheet", "org.apache.poi.xssf.usermodel.XSSFChartSheet",
-							"org.apache.poi.xssf.usermodel.XSSFDialogsheet"),
-							Collectors.toMap(Function.identity(), x -> "_rows")));
-			//
-			putAll(map,
-					collect(Stream.of("org.apache.poi.xssf.usermodel.XSSFDrawing",
-							"org.apache.poi.xssf.usermodel.XSSFShapeGroup"),
-							Collectors.toMap(Function.identity(), x -> "drawing")));
-			//
-			putAll(map,
-					collect(Stream.of("org.apache.poi.xwpf.usermodel.XWPFEndnote",
-							"org.apache.poi.xwpf.usermodel.XWPFFootnote"),
-							Collectors.toMap(Function.identity(), x -> "paragraphs")));
-			//
-			putAll(map,
-					collect(Stream.of("org.eclipse.jetty.http.MetaData$ConnectRequest",
-							"org.eclipse.jetty.http.MetaData$Request", "org.eclipse.jetty.http.MetaData$Response"),
-							Collectors.toMap(Function.identity(), x -> "_httpFields")));
-			//
-			putAll(map,
-					collect(Stream.of("org.javatuples.Decade", "org.javatuples.Ennead", "org.javatuples.KeyValue",
-							"org.javatuples.LabelValue", "org.javatuples.Octet", "org.javatuples.Pair",
-							"org.javatuples.Quartet", "org.javatuples.Quintet", "org.javatuples.Septet",
-							"org.javatuples.Sextet", "org.javatuples.Triplet", "org.javatuples.Unit"),
-							Collectors.toMap(Function.identity(), x -> "valueList")));
-			//
-			if (!executeForEachMethod(map, name, instance, (a, b) -> FieldUtils.readField(a, b, true) == null)) {
-				//
-				return;
-				//
-			} // if
-				//
-			map.clear();
-			//
-			// io.github.toolfactory.narcissus.Narcissus.getField(java.lang.Object,java.lang.reflect.Field)
-			//
-			putAll(map,
-					Map.of("com.helger.commons.collection.impl.CommonsCopyOnWriteArrayList", "array",
-							"com.helger.commons.collection.impl.CommonsCopyOnWriteArraySet", "al",
-							"com.helger.commons.collection.impl.CommonsTreeSet", "m",
-							"org.springframework.beans.factory.support.ManagedSet", "map"));
-			//
-			putAll(map,
-					collect(Stream.of("com.helger.commons.collection.impl.CommonsHashSet",
-							"com.helger.commons.collection.impl.CommonsLinkedHashSet"),
-							Collectors.toMap(Function.identity(), x -> "map")));
-			//
-			if (!executeForEachMethod(map, name, instance,
-					(a, b) -> Narcissus.getField(a, Narcissus.findField(clz, b)) == null)) {
-				//
-				return;
-				//
-			} // if
-				//
-			if (!executeForEachMethod(instance, name)) {
-				//
-				return;
-				//
-			} // if
-				//
-		} catch (final ReflectiveOperationException e) {
-			//
-			throw new RuntimeException(e);
-			//
-		} catch (final NullPointerException e) {
-			//
-			try {
-				//
-				if (Objects.equals("com.healthmarketscience.jackcess.impl.TableDefinitionImpl", getName(clz))
-						&& Narcissus.getField(instance, Narcissus.findField(clz, "_database")) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} catch (final NoSuchFieldException nsfe) {
-				//
-				throw new RuntimeException(nsfe);
-				//
-			} // try
-				//
-		} // try
-			//
-		if (action != null) {
-			//
-			instance.forEach(action);
+			return false;
 			//
 		} // if
 			//
+		map.clear();
+		//
+		// org.apache.commons.lang3.reflect.FieldUtils.readField(java.lang.Object,java.lang.String,boolean)
+		//
+		putAll(map, Map.of("org.apache.poi.poifs.property.RootProperty", "_children",
+				"org.apache.poi.xslf.usermodel.XSLFDiagram$XSLFDiagramGroupShape", "_shapes",
+				"com.helger.commons.io.file.FileSystemIterator", "m_aIter", "com.opencsv.bean.FieldMapByPosition",
+				"complexMapList", "org.apache.commons.collections.set.CompositeSet", "all",
+				"org.apache.commons.math3.genetics.ElitisticListPopulation", "chromosomes",
+				"org.apache.poi.xssf.usermodel.XSSFRow", "_cells",
+				"org.openjdk.nashorn.internal.runtime.JSONListAdapter", "obj",
+				"org.openjdk.nashorn.internal.runtime.SharedPropertyMap", "properties",
+				"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMultiset$StandardElementSet",
+				"multiset"));
+		//
+		putAll(map,
+				collect(Stream.of("com.google.common.collect.ForwardingMap$StandardKeySet",
+						"com.google.common.collect.ForwardingMap$StandardValues",
+						"com.google.common.collect.ForwardingNavigableMap$StandardNavigableKeySet",
+						"com.google.common.collect.ForwardingSortedMap$StandardKeySet",
+						"org.apache.commons.collections.bag.HashBag", "org.apache.commons.collections.bag.TreeBag",
+						"org.apache.commons.collections4.bag.HashBag", "org.apache.commons.collections4.bag.TreeBag",
+						"org.apache.commons.collections4.multiset.HashMultiSet",
+						"org.apache.jena.ext.com.google.common.collect.ForwardingMap$StandardKeySet",
+						"org.apache.jena.ext.com.google.common.collect.ForwardingMap$StandardValues",
+						"org.apache.jena.ext.com.google.common.collect.ForwardingNavigableMap$StandardNavigableKeySet",
+						"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMap$StandardKeySet"),
+						Collectors.toMap(Function.identity(), x -> "map")));
+		//
+		putAll(map,
+				collect(Stream.of("com.google.common.collect.ForwardingNavigableSet$StandardDescendingSet",
+						"org.apache.jena.ext.com.google.common.collect.ForwardingNavigableSet$StandardDescendingSet"),
+						Collectors.toMap(Function.identity(), x -> "forward")));
+		//
+		putAll(map, collect(
+				Stream.of("com.google.common.collect.HashMultiset", "com.google.common.collect.LinkedHashMultiset",
+						"org.apache.jena.ext.com.google.common.collect.HashMultiset",
+						"org.apache.jena.ext.com.google.common.collect.LinkedHashMultiset"),
+				Collectors.toMap(Function.identity(), x -> "backingMap")));
+		//
+		putAll(map, collect(Stream.of("com.opencsv.CSVReader", "com.opencsv.CSVReaderHeaderAware"),
+				Collectors.toMap(Function.identity(), x -> "peekedLines")));
+		//
+		putAll(map,
+				collect(Stream.of("org.apache.bcel.classfile.RuntimeInvisibleAnnotations",
+						"org.apache.bcel.classfile.RuntimeVisibleAnnotations"),
+						Collectors.toMap(Function.identity(), x -> "annotationTable")));
+		//
+		putAll(map,
+				collect(Stream.of("org.apache.bcel.classfile.RuntimeInvisibleParameterAnnotations",
+						"org.apache.bcel.classfile.RuntimeVisibleParameterAnnotations"),
+						Collectors.toMap(Function.identity(), x -> "parameterAnnotationTable")));
+		//
+		putAll(map,
+				collect(Stream.of("org.apache.commons.collections.HashBag", "org.apache.commons.collections.TreeBag"),
+						Collectors.toMap(Function.identity(), x -> "_map")));
+		//
+		putAll(map, collect(Stream.of("org.apache.commons.collections.bag.PredicatedBag",
+				"org.apache.commons.collections.bag.PredicatedSortedBag",
+				"org.apache.commons.collections.bag.SynchronizedBag",
+				"org.apache.commons.collections.bag.SynchronizedSortedBag",
+				"org.apache.commons.collections.bag.TransformedBag",
+				"org.apache.commons.collections.bag.TransformedSortedBag",
+				"org.apache.commons.collections.bag.UnmodifiableBag",
+				"org.apache.commons.collections.bag.UnmodifiableSortedBag",
+				"org.apache.commons.collections.bidimap.AbstractDualBidiMap$EntrySet",
+				"org.apache.commons.collections.bidimap.AbstractDualBidiMap$KeySet",
+				"org.apache.commons.collections.bidimap.AbstractDualBidiMap$Values",
+				"org.apache.commons.collections.buffer.BlockingBuffer",
+				"org.apache.commons.collections.buffer.BoundedBuffer",
+				"org.apache.commons.collections.buffer.PredicatedBuffer",
+				"org.apache.commons.collections.buffer.SynchronizedBuffer",
+				"org.apache.commons.collections.buffer.TransformedBuffer",
+				"org.apache.commons.collections.buffer.UnmodifiableBuffer",
+				"org.apache.commons.collections.collection.PredicatedCollection",
+				"org.apache.commons.collections.collection.TransformedCollection",
+				"org.apache.commons.collections.collection.UnmodifiableBoundedCollection",
+				"org.apache.commons.collections.collection.UnmodifiableCollection",
+				"org.apache.commons.collections.list.FixedSizeList", "org.apache.commons.collections.list.GrowthList",
+				"org.apache.commons.collections.list.LazyList", "org.apache.commons.collections.list.PredicatedList",
+				"org.apache.commons.collections.list.SetUniqueList",
+				"org.apache.commons.collections.list.SynchronizedList",
+				"org.apache.commons.collections.list.TransformedList",
+				"org.apache.commons.collections.list.UnmodifiableList",
+				"org.apache.commons.collections.map.UnmodifiableEntrySet",
+				"org.apache.commons.collections.set.PredicatedSet",
+				"org.apache.commons.collections.set.PredicatedSortedSet",
+				"org.apache.commons.collections.set.SynchronizedSet",
+				"org.apache.commons.collections.set.SynchronizedSortedSet",
+				"org.apache.commons.collections.set.TransformedSet",
+				"org.apache.commons.collections.set.TransformedSortedSet",
+				"org.apache.commons.collections.set.UnmodifiableSet",
+				"org.apache.commons.collections.set.UnmodifiableSortedSet",
+				"org.apache.commons.collections4.bag.CollectionBag",
+				"org.apache.commons.collections4.bag.CollectionSortedBag",
+				"org.apache.commons.collections4.bag.PredicatedBag",
+				"org.apache.commons.collections4.bag.PredicatedSortedBag",
+				"org.apache.commons.collections4.bag.SynchronizedBag",
+				"org.apache.commons.collections4.bag.SynchronizedSortedBag",
+				"org.apache.commons.collections4.bag.TransformedBag",
+				"org.apache.commons.collections4.bag.TransformedSortedBag",
+				"org.apache.commons.collections4.bag.UnmodifiableBag",
+				"org.apache.commons.collections4.bag.UnmodifiableSortedBag",
+				"org.apache.commons.collections4.bidimap.AbstractDualBidiMap$EntrySet",
+				"org.apache.commons.collections4.bidimap.AbstractDualBidiMap$KeySet",
+				"org.apache.commons.collections4.bidimap.AbstractDualBidiMap$Values",
+				"org.apache.commons.collections4.collection.IndexedCollection",
+				"org.apache.commons.collections4.collection.PredicatedCollection",
+				"org.apache.commons.collections4.collection.TransformedCollection",
+				"org.apache.commons.collections4.collection.UnmodifiableBoundedCollection",
+				"org.apache.commons.collections4.collection.UnmodifiableCollection",
+				"org.apache.commons.collections4.list.FixedSizeList", "org.apache.commons.collections4.list.GrowthList",
+				"org.apache.commons.collections4.list.LazyList", "org.apache.commons.collections4.list.PredicatedList",
+				"org.apache.commons.collections4.list.SetUniqueList",
+				"org.apache.commons.collections4.list.TransformedList",
+				"org.apache.commons.collections4.list.UnmodifiableList",
+				"org.apache.commons.collections4.map.UnmodifiableEntrySet",
+				"org.apache.commons.collections4.multiset.PredicatedMultiSet",
+				"org.apache.commons.collections4.multiset.SynchronizedMultiSet",
+				"org.apache.commons.collections4.multiset.UnmodifiableMultiSet",
+				"org.apache.commons.collections4.queue.PredicatedQueue",
+				"org.apache.commons.collections4.queue.SynchronizedQueue",
+				"org.apache.commons.collections4.queue.TransformedQueue",
+				"org.apache.commons.collections4.queue.UnmodifiableQueue",
+				"org.apache.commons.collections4.set.PredicatedNavigableSet",
+				"org.apache.commons.collections4.set.PredicatedSet",
+				"org.apache.commons.collections4.set.PredicatedSortedSet",
+				"org.apache.commons.collections4.set.TransformedNavigableSet",
+				"org.apache.commons.collections4.set.TransformedSet",
+				"org.apache.commons.collections4.set.TransformedSortedSet",
+				"org.apache.commons.collections4.set.UnmodifiableNavigableSet",
+				"org.apache.commons.collections4.set.UnmodifiableSet",
+				"org.apache.commons.collections4.set.UnmodifiableSortedSet", "org.d2ab.collection.BiMappedCollection"),
+				Collectors.toMap(Function.identity(), x -> "collection")));
+		//
+		putAll(map,
+				collect(Stream.of("org.apache.commons.math3.geometry.euclidean.oned.IntervalsSet",
+						"org.apache.commons.math3.geometry.spherical.oned.ArcsSet"),
+						Collectors.toMap(Function.identity(), x -> "tree")));
+		//
+		putAll(map,
+				collect(Stream.of("org.apache.poi.poifs.crypt.temp.SXSSFWorkbookWithCustomZipEntrySource",
+						"org.apache.poi.xssf.streaming.DeferredSXSSFWorkbook"),
+						Collectors.toMap(Function.identity(), x -> "_wb")));
+		//
+		putAll(map,
+				collect(Stream.of("org.apache.poi.xslf.usermodel.XSLFAutoShape",
+						"org.apache.poi.xslf.usermodel.XSLFFreeformShape",
+						"org.apache.poi.xslf.usermodel.XSLFTableCell", "org.apache.poi.xslf.usermodel.XSLFTextBox",
+						"org.apache.poi.xssf.usermodel.XSSFObjectData", "org.apache.poi.xssf.usermodel.XSSFTextBox"),
+						Collectors.toMap(Function.identity(), x -> "_paragraphs")));
+		//
+		putAll(map,
+				collect(Stream.of("org.apache.poi.xssf.streaming.DeferredSXSSFSheet",
+						"org.apache.poi.xssf.streaming.SXSSFSheet", "org.apache.poi.xssf.usermodel.XSSFChartSheet",
+						"org.apache.poi.xssf.usermodel.XSSFDialogsheet"),
+						Collectors.toMap(Function.identity(), x -> "_rows")));
+		//
+		putAll(map,
+				collect(Stream.of("org.apache.poi.xssf.usermodel.XSSFDrawing",
+						"org.apache.poi.xssf.usermodel.XSSFShapeGroup"),
+						Collectors.toMap(Function.identity(), x -> "drawing")));
+		//
+		putAll(map,
+				collect(Stream.of("org.apache.poi.xwpf.usermodel.XWPFEndnote",
+						"org.apache.poi.xwpf.usermodel.XWPFFootnote"),
+						Collectors.toMap(Function.identity(), x -> "paragraphs")));
+		//
+		putAll(map,
+				collect(Stream.of("org.eclipse.jetty.http.MetaData$ConnectRequest",
+						"org.eclipse.jetty.http.MetaData$Request", "org.eclipse.jetty.http.MetaData$Response"),
+						Collectors.toMap(Function.identity(), x -> "_httpFields")));
+		//
+		putAll(map,
+				collect(Stream.of("org.javatuples.Decade", "org.javatuples.Ennead", "org.javatuples.KeyValue",
+						"org.javatuples.LabelValue", "org.javatuples.Octet", "org.javatuples.Pair",
+						"org.javatuples.Quartet", "org.javatuples.Quintet", "org.javatuples.Septet",
+						"org.javatuples.Sextet", "org.javatuples.Triplet", "org.javatuples.Unit"),
+						Collectors.toMap(Function.identity(), x -> "valueList")));
+		//
+		if (!executeForEachMethod(map, name, instance, (a, b) -> FieldUtils.readField(a, b, true) == null)) {
+			//
+			return false;
+			//
+		} // if
+			//
+		map.clear();
+		//
+		// io.github.toolfactory.narcissus.Narcissus.getField(java.lang.Object,java.lang.reflect.Field)
+		//
+		putAll(map,
+				Map.of("com.helger.commons.collection.impl.CommonsCopyOnWriteArrayList", "array",
+						"com.helger.commons.collection.impl.CommonsCopyOnWriteArraySet", "al",
+						"com.helger.commons.collection.impl.CommonsTreeSet", "m",
+						"org.springframework.beans.factory.support.ManagedSet", "map"));
+		//
+		putAll(map,
+				collect(Stream.of("com.helger.commons.collection.impl.CommonsHashSet",
+						"com.helger.commons.collection.impl.CommonsLinkedHashSet"),
+						Collectors.toMap(Function.identity(), x -> "map")));
+		//
+		if (!executeForEachMethod(map, name, instance,
+				(a, b) -> Narcissus.getField(a, Narcissus.findField(getClass(instance), b)) == null)) {
+			//
+			return false;
+			//
+		} // if
+			//
+		if (!executeForEachMethod(instance, name)) {
+			//
+			return false;
+			//
+		} // if
+			//
+		return true;
+		//
 	}
 
 	private static boolean executeForEachMethod(final Map<String, String> map, @Nullable final String name,
