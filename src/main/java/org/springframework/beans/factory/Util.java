@@ -1308,32 +1308,34 @@ abstract class Util {
 			//
 			for (int j = 0; j < length(instructions) - 1; j++) {
 				//
-				if (ArrayUtils.get(instructions, j) instanceof ALOAD al && al.getIndex() == 0
-						&& instructions[j + 1] instanceof INVOKEINTERFACE ii) {
+				if (!(ArrayUtils.get(instructions, j) instanceof ALOAD al && al.getIndex() == 0)
+						|| !(instructions[j + 1] instanceof INVOKEINTERFACE ii)) {
 					//
-					methodName = ii.getMethodName(cpg);
+					continue;
 					//
-					for (int k = 0; k < length(ms); k++) {
-						//
-						if (!Objects.equals(FieldOrMethodUtil.getName(ms[k]), methodName)) {
-							//
-							continue;
-							//
-						} // if
-							//
-						if (m == null) {
-							//
-							m = ms[k];
-							//
-						} else {
-							//
-							throw new IllegalStateException();
-							//
-						} // if
-							//
-					} // for
-						//
 				} // if
+					//
+				methodName = ii.getMethodName(cpg);
+				//
+				for (int k = 0; k < length(ms); k++) {
+					//
+					if (!Objects.equals(FieldOrMethodUtil.getName(ms[k]), methodName)) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (m == null) {
+						//
+						m = ms[k];
+						//
+					} else {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+				} // for
 					//
 			} // for
 				//
