@@ -1389,7 +1389,7 @@ abstract class Util {
 				//
 			if (length(instructions) == 4 && instructions[0] instanceof ALOAD && instructions[1] instanceof GETFIELD gf
 					&& instructions[2] instanceof INVOKEINTERFACE ii
-					&& Objects.equals(ii.getMethodName(cpg), methodName) && instructions[3] instanceof ARETURN) {
+					&& Objects.equals(getMethodName(ii, cpg), methodName) && instructions[3] instanceof ARETURN) {
 				//
 				final String fieldName = gf.getFieldName(cpg);
 				//
@@ -1405,7 +1405,7 @@ abstract class Util {
 			} else if (length(instructions) == 5 && instructions[0] instanceof ALOAD
 					&& instructions[1] instanceof GETFIELD gf && instructions[2] instanceof INVOKEINTERFACE
 					&& instructions[3] instanceof INVOKEINTERFACE ii
-					&& Objects.equals(ii.getMethodName(cpg), methodName) && instructions[4] instanceof ARETURN) {
+					&& Objects.equals(getMethodName(ii, cpg), methodName) && instructions[4] instanceof ARETURN) {
 				//
 				final String fieldName = gf.getFieldName(cpg);
 				//
