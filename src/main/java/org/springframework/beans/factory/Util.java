@@ -1216,34 +1216,7 @@ abstract class Util {
 					//
 			} // for
 				//
-			if (Objects.equals(name, "org.apache.poi.ddf.EscherArrayProperty")
-					&& Objects.equals(FieldUtils.readDeclaredField(instance, "emptyComplexPart", true), Boolean.FALSE)
-					&& FieldUtils.readField(instance, "complexData", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.commons.math3.util.MultidimensionalCounter")
-					&& Objects.equals(FieldUtils.readDeclaredField(instance, "last", true),
-							FieldUtils.readDeclaredField(instance, "dimension", true))) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.commons.math3.util.IntegerSequence$Range")
-					&& Objects.equals(FieldUtils.readDeclaredField(instance, "step", true), Integer.valueOf(0))) {
-				//
-				return;
-				//
-			} else if (contains(
-					Arrays.asList("com.google.common.collect.ForwardingMultiset$StandardElementSet",
-							"com.google.common.collect.ForwardingSortedMultiset$StandardElementSet",
-							"org.apache.jena.ext.com.google.common.collect.ForwardingMultiset$StandardElementSet"),
-					name) && MethodUtils.invokeMethod(instance, true, "multiset") == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableDefinitionImpl"), name)
-					&& Narcissus.invokeMethod(instance,
-							Narcissus.findMethod(clz, "createRowState", new Class<?>[] {})) == null) {
+			if (!executeForEachMethod(instance, name)) {
 				//
 				return;
 				//
@@ -1280,6 +1253,45 @@ abstract class Util {
 			//
 		} // if
 			//
+	}
+
+	private static boolean executeForEachMethod(final Object instance, final String name)
+			throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+		//
+		if (Objects.equals(name, "org.apache.poi.ddf.EscherArrayProperty")
+				&& Objects.equals(FieldUtils.readDeclaredField(instance, "emptyComplexPart", true), Boolean.FALSE)
+				&& FieldUtils.readField(instance, "complexData", true) == null) {
+			//
+			return false;
+			//
+		} else if (Objects.equals(name, "org.apache.commons.math3.util.MultidimensionalCounter")
+				&& Objects.equals(FieldUtils.readDeclaredField(instance, "last", true),
+						FieldUtils.readDeclaredField(instance, "dimension", true))) {
+			//
+			return false;
+			//
+		} else if (Objects.equals(name, "org.apache.commons.math3.util.IntegerSequence$Range")
+				&& Objects.equals(FieldUtils.readDeclaredField(instance, "step", true), Integer.valueOf(0))) {
+			//
+			return false;
+			//
+		} else if (contains(Arrays.asList("com.google.common.collect.ForwardingMultiset$StandardElementSet",
+				"com.google.common.collect.ForwardingSortedMultiset$StandardElementSet",
+				"org.apache.jena.ext.com.google.common.collect.ForwardingMultiset$StandardElementSet"), name)
+				&& MethodUtils.invokeMethod(instance, true, "multiset") == null) {
+			//
+			return false;
+			//
+		} else if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableDefinitionImpl"), name)
+				&& Narcissus.invokeMethod(instance,
+						Narcissus.findMethod(getClass(instance), "createRowState", new Class<?>[] {})) == null) {
+			//
+			return false;
+			//
+		} // if
+			//
+		return true;
+		//
 	}
 
 	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,
