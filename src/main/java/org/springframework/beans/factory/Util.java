@@ -1309,7 +1309,7 @@ abstract class Util {
 			for (int j = 0; j < length(instructions) - 1; j++) {
 				//
 				if (!(ArrayUtils.get(instructions, j) instanceof ALOAD al && al.getIndex() == 0)
-						|| !(instructions[j + 1] instanceof INVOKEINTERFACE ii)) {
+						|| !(ArrayUtils.get(instructions, j + 1) instanceof INVOKEINTERFACE ii)) {
 					//
 					continue;
 					//
