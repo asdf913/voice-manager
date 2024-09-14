@@ -772,15 +772,12 @@ abstract class Util {
 				//
 			} // if
 				//
-			if (Objects.equals(getSuperclassName(javaClass), "java.lang.Object")) {
+			if (Objects.equals(getSuperclassName(javaClass), "java.lang.Object")
+					&& !executeForEachMethod(JavaClassUtil.getMethods(javaClass), javaClass.getInterfaces(), instance,
+							name)) {
 				//
-				if (!executeForEachMethod(JavaClassUtil.getMethods(javaClass), javaClass.getInterfaces(), instance,
-						name)) {
-					//
-					return;
-					//
-				} // if
-					//
+				return;
+				//
 			} // if
 				//
 		} catch (final Exception e) {
