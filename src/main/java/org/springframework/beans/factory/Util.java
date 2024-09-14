@@ -1456,6 +1456,7 @@ abstract class Util {
 		//
 	}
 
+	@Nullable
 	private static String getMethodName(@Nullable final InvokeInstruction instance, final ConstantPoolGen cpg) {
 		return instance != null ? instance.getMethodName(cpg) : null;
 	}
