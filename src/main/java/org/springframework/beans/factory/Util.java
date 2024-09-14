@@ -1143,12 +1143,31 @@ abstract class Util {
 					//
 			} // for
 				//
-			if (Objects.equals(name, "org.apache.poi.poifs.property.RootProperty")
-					&& FieldUtils.readField(instance, "_children", true) == null) {
+			map.clear();
+			//
+			// org.apache.commons.lang3.reflect.FieldUtils.readField(java.lang.Object,java.lang.String,boolean)
+			//
+			putAll(map, Map.of("org.apache.poi.poifs.property.RootProperty", "_children",
+					"org.apache.poi.xslf.usermodel.XSLFDiagram$XSLFDiagramGroupShape", "_shapes",
+					"com.helger.commons.io.file.FileSystemIterator", "m_aIter", "com.opencsv.bean.FieldMapByPosition",
+					"complexMapList", "org.apache.commons.collections.set.CompositeSet", "all",
+					"org.apache.commons.math3.genetics.ElitisticListPopulation", "chromosomes",
+					"org.apache.poi.xssf.usermodel.XSSFRow", "_cells",
+					"org.openjdk.nashorn.internal.runtime.JSONListAdapter", "obj",
+					"org.openjdk.nashorn.internal.runtime.SharedPropertyMap", "properties"));
+			//
+			for (final Entry<String, String> entry : Util.entrySet(map)) {
 				//
-				return;
+				if (Objects.equals(name, getKey(entry))
+						&& FieldUtils.readField(instance, getValue(entry), true) == null) {
+					//
+					return;
+					//
+				} // if
+					//
+			} // for
 				//
-			} else if (Objects.equals(name, "org.apache.commons.math3.util.MultidimensionalCounter")
+			if (Objects.equals(name, "org.apache.commons.math3.util.MultidimensionalCounter")
 					&& Objects.equals(FieldUtils.readDeclaredField(instance, "last", true),
 							FieldUtils.readDeclaredField(instance, "dimension", true))) {
 				//
@@ -1156,11 +1175,6 @@ abstract class Util {
 				//
 			} else if (Objects.equals(name, "org.apache.commons.math3.util.IntegerSequence$Range")
 					&& Objects.equals(FieldUtils.readDeclaredField(instance, "step", true), Integer.valueOf(0))) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.poi.xslf.usermodel.XSLFDiagram$XSLFDiagramGroupShape")
-					&& FieldUtils.readField(instance, "_shapes", true) == null) {
 				//
 				return;
 				//
@@ -1238,18 +1252,8 @@ abstract class Util {
 				//
 				return;
 				//
-			} else if (Objects.equals(name, "com.helger.commons.io.file.FileSystemIterator")
-					&& FieldUtils.readField(instance, "m_aIter", true) == null) {
-				//
-				return;
-				//
 			} else if (contains(Arrays.asList("com.opencsv.CSVReader", "com.opencsv.CSVReaderHeaderAware"), name)
 					&& FieldUtils.readField(instance, "peekedLines", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.opencsv.bean.FieldMapByPosition")
-					&& FieldUtils.readField(instance, "complexMapList", true) == null) {
 				//
 				return;
 				//
@@ -1354,16 +1358,6 @@ abstract class Util {
 				//
 				return;
 				//
-			} else if (Objects.equals(name, "org.apache.commons.collections.set.CompositeSet")
-					&& FieldUtils.readField(instance, "all", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.commons.math3.genetics.ElitisticListPopulation")
-					&& FieldUtils.readField(instance, "chromosomes", true) == null) {
-				//
-				return;
-				//
 			} else if (contains(Arrays.asList("org.apache.commons.math3.geometry.euclidean.oned.IntervalsSet",
 					"org.apache.commons.math3.geometry.spherical.oned.ArcsSet"), name)
 					&& FieldUtils.readField(instance, "tree", true) == null) {
@@ -1403,11 +1397,6 @@ abstract class Util {
 				//
 				return;
 				//
-			} else if (Objects.equals(name, "org.apache.poi.xssf.usermodel.XSSFRow")
-					&& FieldUtils.readField(instance, "_cells", true) == null) {
-				//
-				return;
-				//
 			} else if (contains(Arrays.asList("org.apache.poi.xwpf.usermodel.XWPFEndnote",
 					"org.apache.poi.xwpf.usermodel.XWPFFootnote"), name)
 					&& FieldUtils.readField(instance, "paragraphs", true) == null) {
@@ -1426,16 +1415,6 @@ abstract class Util {
 					"org.javatuples.Pair", "org.javatuples.Quartet", "org.javatuples.Quintet", "org.javatuples.Septet",
 					"org.javatuples.Sextet", "org.javatuples.Triplet", "org.javatuples.Triplet", "org.javatuples.Unit"),
 					name) && FieldUtils.readField(instance, "valueList", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.openjdk.nashorn.internal.runtime.JSONListAdapter")
-					&& FieldUtils.readField(instance, "obj", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.openjdk.nashorn.internal.runtime.SharedPropertyMap")
-					&& FieldUtils.readField(instance, "properties", true) == null) {
 				//
 				return;
 				//
