@@ -1322,6 +1322,27 @@ abstract class Util {
 					//
 			} // for
 				//
+			map.clear();
+			//
+			// io.github.toolfactory.narcissus.Narcissus.getField(java.lang.Object,java.lang.reflect.Field)
+			//
+			putAll(map,
+					Map.of("com.helger.commons.collection.impl.CommonsCopyOnWriteArrayList", "array",
+							"com.helger.commons.collection.impl.CommonsCopyOnWriteArraySet", "al",
+							"com.helger.commons.collection.impl.CommonsTreeSet", "m",
+							"org.springframework.beans.factory.support.ManagedSet", "map"));
+			//
+			for (final Entry<String, String> entry : Util.entrySet(map)) {
+				//
+				if (Objects.equals(name, getKey(entry))
+						&& Narcissus.getField(instance, Narcissus.findField(clz, getValue(entry))) == null) {
+					//
+					return;
+					//
+				} // if
+					//
+			} // for
+				//
 			if (Objects.equals(name, "org.apache.poi.ddf.EscherArrayProperty")
 					&& Objects.equals(FieldUtils.readDeclaredField(instance, "emptyComplexPart", true), Boolean.FALSE)
 					&& FieldUtils.readField(instance, "complexData", true) == null) {
@@ -1355,26 +1376,6 @@ abstract class Util {
 			} else if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableDefinitionImpl"), name)
 					&& Narcissus.invokeMethod(instance,
 							Narcissus.findMethod(clz, "createRowState", new Class<?>[] {})) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.helger.commons.collection.impl.CommonsCopyOnWriteArrayList")
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "array")) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.helger.commons.collection.impl.CommonsCopyOnWriteArraySet")
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "al")) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.helger.commons.collection.impl.CommonsTreeSet")
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "m")) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.springframework.beans.factory.support.ManagedSet")
-					&& Narcissus.getObjectField(instance, Narcissus.findField(clz, "map")) == null) {
 				//
 				return;
 				//
