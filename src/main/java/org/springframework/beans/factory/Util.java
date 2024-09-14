@@ -932,10 +932,116 @@ abstract class Util {
 			//
 		} // try
 			//
+			// org.apache.commons.lang3.reflect.FieldUtils.readDeclaredField(java.lang.Object,java.lang.String,boolean)
+			//
+		final Map<String, String> map = new LinkedHashMap<>(Map.of(
+				"com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap", "_hashArea",
+				"com.fasterxml.jackson.databind.util.ArrayIterator", "_a",
+				"com.github.andrewoma.dexx.collection.ArrayList", "elements",
+				"com.github.andrewoma.dexx.collection.TreeMap", "tree", "com.github.andrewoma.dexx.collection.TreeSet",
+				"redBlackTree", "com.github.andrewoma.dexx.collection.Vector", "pointer",
+				"com.github.andrewoma.dexx.collection.internal.base.MappedIterable", "from",
+				"com.google.common.collect.EnumMultiset", "enumConstants", "com.google.common.collect.EvictingQueue",
+				"delegate", "com.healthmarketscience.jackcess.impl.DatabaseImpl", "_tableFinder"));
+		//
+		putAll(map,
+				Map.of("com.healthmarketscience.jackcess.impl.IndexCursorImpl", "_entryCursor",
+						"com.healthmarketscience.jackcess.impl.PropertyMapImpl", "_props",
+						"com.healthmarketscience.jackcess.impl.TableImpl", "_columns",
+						"com.healthmarketscience.jackcess.impl.TableScanCursor", "_ownedPagesCursor",
+						"com.healthmarketscience.jackcess.impl.complex.MultiValueColumnPropertyMap", "_primary",
+						"com.helger.commons.callback.CallbackList", "m_aRWLock",
+						"com.helger.commons.collection.iterate.ArrayIterator", "m_aArray",
+						"com.helger.commons.collection.iterate.IterableIterator", "m_aIter",
+						"com.helger.commons.collection.iterate.MapperIterator", "m_aBaseIter",
+						"com.helger.commons.collection.map.LRUSet", "m_aMap"));
+		//
+		putAll(map,
+				Map.of("com.helger.commons.http.HttpHeaderMap", "m_aHeaders",
+						"com.helger.commons.io.file.FileSystemRecursiveIterator", "m_aFilesLeft",
+						"com.helger.commons.log.InMemoryLogger", "m_aMessages",
+						"com.helger.commons.math.CombinationGenerator", "m_aCombinationsLeft",
+						"com.opencsv.bean.CsvToBean", "mappingStrategy", "com.opencsv.bean.PositionToBeanField",
+						"ranges", "com.sun.jna.platform.win32.Advapi32Util$EventLogIterator", "_buffer",
+						"freemarker.core._SortedArraySet", "array", "freemarker.core._UnmodifiableCompositeSet", "set1",
+						"org.apache.bcel.classfile.BootstrapMethods", "bootstrapMethods"));
+		//
+		putAll(map, Map.of("org.apache.bcel.classfile.ConstantPool", "constantPool",
+				"org.apache.bcel.classfile.InnerClasses", "innerClasses", "org.apache.bcel.classfile.LineNumberTable",
+				"lineNumberTable", "org.apache.bcel.classfile.LocalVariableTable", "localVariableTable",
+				"org.apache.bcel.classfile.LocalVariableTypeTable", "localVariableTypeTable",
+				"org.apache.bcel.classfile.MethodParameters", "parameters",
+				"org.apache.commons.collections.CursorableLinkedList", "_head",
+				"org.apache.commons.collections4.iterators.IteratorIterable", "typeSafeIterator",
+				"org.apache.commons.io.IOExceptionList", "causeList", "org.apache.commons.math3.ml.neuralnet.Network",
+				"neuronMap"));
+		//
+		putAll(map,
+				Map.of("org.apache.commons.math3.ml.neuralnet.twod.NeuronSquareMesh2D", "network",
+						"org.apache.ibatis.cursor.defaults.DefaultCursor", "cursorIterator",
+						"org.apache.jena.atlas.lib.Map2", "map2", "org.apache.jena.atlas.lib.tuple.TupleN", "tuple",
+						"org.apache.jena.ext.com.google.common.collect.EnumMultiset", "enumConstants",
+						"org.apache.jena.ext.com.google.common.collect.EvictingQueue", "delegate",
+						"org.apache.logging.log4j.message.StructuredDataCollectionMessage", "structuredDataMessageList",
+						"org.apache.poi.ddf.EscherContainerRecord", "_childRecords",
+						"org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate", "records",
+						"org.apache.poi.hssf.usermodel.HSSFRow", "cells"));
+		//
+		putAll(map, Map.of("org.apache.poi.hssf.usermodel.HSSFShapeGroup", "shapes",
+				"org.apache.poi.hssf.usermodel.HSSFWorkbook", "_sheets",
+				"org.apache.poi.openxml4j.opc.PackageRelationshipCollection", "relationshipsByID",
+				"org.apache.poi.poifs.filesystem.DirectoryNode", "_entries",
+				"org.apache.poi.poifs.filesystem.FilteringDirectoryNode", "directory",
+				"org.apache.poi.poifs.filesystem.POIFSDocument", "_property",
+				"org.apache.poi.poifs.filesystem.POIFSStream", "blockStore", "org.apache.poi.ss.util.SSCellRange",
+				"_flattenedArray", "org.apache.poi.xslf.usermodel.XSLFNotes", "_notes",
+				"org.apache.poi.xslf.usermodel.XSLFSlideLayout", "_layout"));
+		//
+		putAll(map, Map.of("org.apache.poi.xssf.streaming.SXSSFRow", "_cells",
+				"org.apache.poi.xslf.usermodel.XSLFTableStyles", "_styles",
+				"org.apache.poi.xssf.streaming.SXSSFDrawing", "_drawing", "org.apache.poi.xssf.streaming.SXSSFWorkbook",
+				"_wb", "org.apache.poi.xssf.usermodel.XSSFSimpleShape", "_paragraphs",
+				"org.apache.poi.xssf.usermodel.XSSFWorkbook", "sheets", "org.apache.xmlbeans.XmlSimpleList",
+				"underlying", "org.d2ab.collection.ChainedCollection", "collections", "org.d2ab.collection.ChainedList",
+				"lists", "org.d2ab.collection.longs.BitLongSet", "negatives"));
+		//
+		putAll(map, Map.of("org.openjdk.nashorn.internal.runtime.ListAdapter", "obj",
+				"org.openjdk.nashorn.internal.runtime.PropertyMap", "properties",
+				"org.oxbow.swingbits.action.ActionGroup", "actions", "org.springframework.beans.MutablePropertyValues",
+				"propertyValueList", "org.springframework.core.env.MutablePropertySources", "propertySourceList",
+				"org.springframework.util.AutoPopulatingList", "backingList"));
+		//
 		try {
 			//
-			if (Objects.equals(name, "com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap")
-					&& FieldUtils.readDeclaredField(instance, "_hashArea", true) == null) {
+			for (final Entry<String, String> entry : Util.entrySet(map)) {
+				//
+				if (Objects.equals(name, getKey(entry))
+						&& FieldUtils.readDeclaredField(instance, getValue(entry), true) == null) {
+					//
+					return;
+					//
+				} // if
+					//
+			} // for
+				//
+			if (Objects.equals(name, "org.apache.poi.poifs.property.RootProperty")
+					&& FieldUtils.readField(instance, "_children", true) == null) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.commons.math3.util.MultidimensionalCounter")
+					&& Objects.equals(FieldUtils.readDeclaredField(instance, "last", true),
+							FieldUtils.readDeclaredField(instance, "dimension", true))) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.commons.math3.util.IntegerSequence$Range")
+					&& Objects.equals(FieldUtils.readDeclaredField(instance, "step", true), Integer.valueOf(0))) {
+				//
+				return;
+				//
+			} else if (Objects.equals(name, "org.apache.poi.xslf.usermodel.XSLFDiagram$XSLFDiagramGroupShape")
+					&& FieldUtils.readField(instance, "_shapes", true) == null) {
 				//
 				return;
 				//
@@ -946,34 +1052,9 @@ abstract class Util {
 				//
 				return;
 				//
-			} else if (Objects.equals(name, "com.fasterxml.jackson.databind.util.ArrayIterator")
-					&& FieldUtils.readDeclaredField(instance, "_a", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.github.andrewoma.dexx.collection.ArrayList")
-					&& FieldUtils.readDeclaredField(instance, "elements", true) == null) {
-				//
-				return;
-				//
 			} else if (contains(Arrays.asList("com.github.andrewoma.dexx.collection.DerivedKeyHashMap",
 					"com.github.andrewoma.dexx.collection.HashMap", "com.github.andrewoma.dexx.collection.HashSet"),
 					name) && FieldUtils.readDeclaredField(instance, "compactHashMap", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.github.andrewoma.dexx.collection.TreeMap")
-					&& FieldUtils.readDeclaredField(instance, "tree", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.github.andrewoma.dexx.collection.TreeSet")
-					&& FieldUtils.readDeclaredField(instance, "redBlackTree", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.github.andrewoma.dexx.collection.Vector")
-					&& FieldUtils.readDeclaredField(instance, "pointer", true) == null) {
 				//
 				return;
 				//
@@ -996,24 +1077,9 @@ abstract class Util {
 				//
 				return;
 				//
-			} else if (Objects.equals(name, "com.github.andrewoma.dexx.collection.internal.base.MappedIterable")
-					&& FieldUtils.readDeclaredField(instance, "from", true) == null) {
-				//
-				return;
-				//
 			} else if (contains(Arrays.asList("com.google.common.collect.ConcurrentHashMultiset",
 					"org.apache.jena.ext.com.google.common.collect.ConcurrentHashMultiset"), name)
 					&& FieldUtils.readDeclaredField(instance, "countMap", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.google.common.collect.EnumMultiset")
-					&& FieldUtils.readDeclaredField(instance, "enumConstants", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.google.common.collect.EvictingQueue")
-					&& MethodUtils.invokeMethod(instance, true, "delegate") == null) {
 				//
 				return;
 				//
@@ -1082,44 +1148,9 @@ abstract class Util {
 				//
 				return;
 				//
-			} else if (Objects.equals(name, "com.healthmarketscience.jackcess.impl.DatabaseImpl")
-					&& FieldUtils.readDeclaredField(instance, "_tableFinder", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.healthmarketscience.jackcess.impl.IndexCursorImpl")
-					&& FieldUtils.readDeclaredField(instance, "_entryCursor", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.healthmarketscience.jackcess.impl.PropertyMapImpl")
-					&& FieldUtils.readDeclaredField(instance, "_props", true) == null) {
-				//
-				return;
-				//
 			} else if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableDefinitionImpl"), name)
 					&& Narcissus.invokeMethod(instance,
 							Narcissus.findMethod(clz, "createRowState", new Class<?>[] {})) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.healthmarketscience.jackcess.impl.TableImpl")
-					&& FieldUtils.readDeclaredField(instance, "_columns", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.healthmarketscience.jackcess.impl.TableScanCursor")
-					&& FieldUtils.readDeclaredField(instance, "_ownedPagesCursor", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.healthmarketscience.jackcess.impl.complex.MultiValueColumnPropertyMap")
-					&& FieldUtils.readDeclaredField(instance, "_primary", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.helger.commons.callback.CallbackList")
-					&& FieldUtils.readDeclaredField(instance, "m_aRWLock", true) == null) {
 				//
 				return;
 				//
@@ -1138,48 +1169,8 @@ abstract class Util {
 				//
 				return;
 				//
-			} else if (Objects.equals(name, "com.helger.commons.collection.iterate.ArrayIterator")
-					&& FieldUtils.readDeclaredField(instance, "m_aArray", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.helger.commons.collection.iterate.IterableIterator")
-					&& FieldUtils.readDeclaredField(instance, "m_aIter", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.helger.commons.collection.iterate.MapperIterator")
-					&& FieldUtils.readDeclaredField(instance, "m_aBaseIter", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.helger.commons.collection.map.LRUSet")
-					&& FieldUtils.readDeclaredField(instance, "m_aMap", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.helger.commons.http.HttpHeaderMap")
-					&& FieldUtils.readDeclaredField(instance, "m_aHeaders", true) == null) {
-				//
-				return;
-				//
 			} else if (Objects.equals(name, "com.helger.commons.io.file.FileSystemIterator")
 					&& FieldUtils.readField(instance, "m_aIter", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.helger.commons.io.file.FileSystemRecursiveIterator")
-					&& FieldUtils.readDeclaredField(instance, "m_aFilesLeft", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.helger.commons.log.InMemoryLogger")
-					&& FieldUtils.readDeclaredField(instance, "m_aMessages", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.helger.commons.math.CombinationGenerator")
-					&& FieldUtils.readDeclaredField(instance, "m_aCombinationsLeft", true) == null) {
 				//
 				return;
 				//
@@ -1188,71 +1179,8 @@ abstract class Util {
 				//
 				return;
 				//
-			} else if (Objects.equals(name, "com.opencsv.bean.CsvToBean")
-					&& FieldUtils.readDeclaredField(instance, "mappingStrategy", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.opencsv.bean.FieldMapByPosition")) {
-				//
-				if (FieldUtils.readField(instance, "complexMapList", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "com.opencsv.bean.PositionToBeanField")
-					&& FieldUtils.readDeclaredField(instance, "ranges", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "com.sun.jna.platform.win32.Advapi32Util$EventLogIterator")
-					&& FieldUtils.readDeclaredField(instance, "_buffer", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "freemarker.core._SortedArraySet")
-					&& FieldUtils.readDeclaredField(instance, "array", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "freemarker.core._UnmodifiableCompositeSet")
-					&& FieldUtils.readDeclaredField(instance, "set1", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.bcel.classfile.BootstrapMethods")
-					&& FieldUtils.readDeclaredField(instance, "bootstrapMethods", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.bcel.classfile.ConstantPool")
-					&& FieldUtils.readDeclaredField(instance, "constantPool", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.bcel.classfile.InnerClasses")
-					&& FieldUtils.readDeclaredField(instance, "innerClasses", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.bcel.classfile.LineNumberTable")
-					&& FieldUtils.readDeclaredField(instance, "lineNumberTable", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.bcel.classfile.LocalVariableTable")
-					&& FieldUtils.readDeclaredField(instance, "localVariableTable", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.bcel.classfile.LocalVariableTypeTable")
-					&& FieldUtils.readDeclaredField(instance, "localVariableTypeTable", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.bcel.classfile.MethodParameters")
-					&& FieldUtils.readDeclaredField(instance, "parameters", true) == null) {
+			} else if (Objects.equals(name, "com.opencsv.bean.FieldMapByPosition")
+					&& FieldUtils.readField(instance, "complexMapList", true) == null) {
 				//
 				return;
 				//
@@ -1265,11 +1193,6 @@ abstract class Util {
 			} else if (contains(Arrays.asList("org.apache.bcel.classfile.RuntimeInvisibleParameterAnnotations",
 					"org.apache.bcel.classfile.RuntimeVisibleParameterAnnotations"), name)
 					&& FieldUtils.readField(instance, "parameterAnnotationTable", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.commons.collections.CursorableLinkedList")
-					&& FieldUtils.readDeclaredField(instance, "_head", true) == null) {
 				//
 				return;
 				//
@@ -1362,10 +1285,9 @@ abstract class Util {
 				//
 				return;
 				//
-			} else if (Util
-					.contains(Arrays.asList("org.apache.commons.collections.collection.CompositeCollection",
-							"org.apache.commons.collections4.collection.CompositeCollection",
-							"org.apache.commons.collections4.set.CompositeSet"), name)
+			} else if (contains(Arrays.asList("org.apache.commons.collections.collection.CompositeCollection",
+					"org.apache.commons.collections4.collection.CompositeCollection",
+					"org.apache.commons.collections4.set.CompositeSet"), name)
 					&& FieldUtils.readDeclaredField(instance, "all", true) == null) {
 				//
 				return;
@@ -1411,21 +1333,11 @@ abstract class Util {
 				//
 				return;
 				//
-			} else if (Objects.equals(name, "org.apache.commons.collections4.iterators.IteratorIterable")
-					&& FieldUtils.readDeclaredField(instance, "typeSafeIterator", true) == null) {
-				//
-				return;
-				//
 			} else if (contains(
 					Arrays.asList("org.apache.commons.csv.CSVRecord", "org.d2ab.collection.chars.BitCharSet",
 							"org.d2ab.collection.doubles.RawDoubleSet",
 							"org.d2ab.collection.doubles.SortedListDoubleSet", "org.d2ab.collection.ints.BitIntSet"),
 					name) && FieldUtils.readDeclaredField(instance, "values", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.commons.io.IOExceptionList")
-					&& FieldUtils.readDeclaredField(instance, "causeList", true) == null) {
 				//
 				return;
 				//
@@ -1440,60 +1352,9 @@ abstract class Util {
 				//
 				return;
 				//
-			} else if (Objects.equals(name, "org.apache.commons.math3.ml.neuralnet.Network")
-					&& FieldUtils.readDeclaredField(instance, "neuronMap", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.commons.math3.ml.neuralnet.twod.NeuronSquareMesh2D")
-					&& FieldUtils.readDeclaredField(instance, "network", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.commons.math3.util.IntegerSequence$Range")
-					&& Objects.equals(FieldUtils.readDeclaredField(instance, "step", true), Integer.valueOf(0))) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.commons.math3.util.MultidimensionalCounter")
-					&& Objects.equals(FieldUtils.readDeclaredField(instance, "last", true),
-							FieldUtils.readDeclaredField(instance, "dimension", true))) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.ibatis.cursor.defaults.DefaultCursor")
-					&& FieldUtils.readDeclaredField(instance, "cursorIterator", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.jena.atlas.lib.Map2")
-					&& FieldUtils.readDeclaredField(instance, "map2", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.jena.atlas.lib.tuple.TupleN")
-					&& FieldUtils.readDeclaredField(instance, "tuple", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.jena.ext.com.google.common.collect.EnumMultiset")
-					&& FieldUtils.readDeclaredField(instance, "enumConstants", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.jena.ext.com.google.common.collect.EvictingQueue")
-					&& FieldUtils.readDeclaredField(instance, "delegate", true) == null) {
-				//
-				return;
-				//
 			} else if (contains(Arrays.asList("org.apache.jena.ext.xerces.impl.dv.util.ByteListImpl",
 					"org.apache.xerces.impl.dv.util.ByteListImpl"), name)
 					&& FieldUtils.readDeclaredField(instance, "data", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.logging.log4j.message.StructuredDataCollectionMessage")
-					&& FieldUtils.readDeclaredField(instance, "structuredDataMessageList", true) == null) {
 				//
 				return;
 				//
@@ -1503,29 +1364,9 @@ abstract class Util {
 				//
 				return;
 				//
-			} else if (Objects.equals(name, "org.apache.poi.ddf.EscherContainerRecord")
-					&& FieldUtils.readDeclaredField(instance, "_childRecords", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate")
-					&& FieldUtils.readDeclaredField(instance, "records", true) == null) {
-				//
-				return;
-				//
 			} else if (contains(Arrays.asList("org.apache.poi.hssf.usermodel.HSSFPatriarch",
 					"org.apache.poi.xslf.usermodel.XSLFGroupShape"), name)
 					&& FieldUtils.readDeclaredField(instance, "_shapes", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.poi.hssf.usermodel.HSSFRow")
-					&& FieldUtils.readDeclaredField(instance, "cells", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.poi.hssf.usermodel.HSSFShapeGroup")
-					&& FieldUtils.readDeclaredField(instance, "shapes", true) == null) {
 				//
 				return;
 				//
@@ -1535,49 +1376,9 @@ abstract class Util {
 				//
 				return;
 				//
-			} else if (Objects.equals(name, "org.apache.poi.hssf.usermodel.HSSFWorkbook")
-					&& FieldUtils.readDeclaredField(instance, "_sheets", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.poi.openxml4j.opc.PackageRelationshipCollection")
-					&& FieldUtils.readDeclaredField(instance, "relationshipsByID", true) == null) {
-				//
-				return;
-				//
 			} else if (contains(Arrays.asList("org.apache.poi.poifs.crypt.temp.SXSSFWorkbookWithCustomZipEntrySource",
 					"org.apache.poi.xssf.streaming.DeferredSXSSFWorkbook"), name)
 					&& FieldUtils.readField(instance, "_wb", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.poi.poifs.filesystem.DirectoryNode")
-					&& FieldUtils.readDeclaredField(instance, "_entries", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.poi.poifs.filesystem.FilteringDirectoryNode")
-					&& FieldUtils.readDeclaredField(instance, "directory", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.poi.poifs.filesystem.POIFSDocument")
-					&& FieldUtils.readDeclaredField(instance, "_property", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.poi.poifs.filesystem.POIFSStream")
-					&& FieldUtils.readDeclaredField(instance, "blockStore", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.poi.poifs.property.RootProperty")
-					&& FieldUtils.readField(instance, "_children", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.poi.ss.util.SSCellRange")
-					&& FieldUtils.readDeclaredField(instance, "_flattenedArray", true) == null) {
 				//
 				return;
 				//
@@ -1595,39 +1396,10 @@ abstract class Util {
 				//
 				return;
 				//
-			} else if (Objects.equals(name, "org.apache.poi.xslf.usermodel.XSLFDiagram$XSLFDiagramGroupShape")
-					&& FieldUtils.readField(instance, "_shapes", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.poi.xslf.usermodel.XSLFNotes")
-					&& FieldUtils.readDeclaredField(instance, "_notes", true) == null) {
-				//
-				return;
-				//
 			} else if (contains(
 					Arrays.asList("org.apache.poi.xslf.usermodel.XSLFNotesMaster",
 							"org.apache.poi.xslf.usermodel.XSLFSlide", "org.apache.poi.xslf.usermodel.XSLFSlideMaster"),
-					name)) {
-				//
-				if (FieldUtils.readDeclaredField(instance, "_slide", true) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} else if (Objects.equals(name, "org.apache.poi.xslf.usermodel.XSLFSlideLayout")
-					&& FieldUtils.readDeclaredField(instance, "_layout", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.poi.xssf.streaming.SXSSFRow")
-					&& FieldUtils.readDeclaredField(instance, "_cells", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.poi.xslf.usermodel.XSLFTableStyles")
-					&& FieldUtils.readDeclaredField(instance, "_styles", true) == null) {
+					name) && FieldUtils.readDeclaredField(instance, "_slide", true) == null) {
 				//
 				return;
 				//
@@ -1635,16 +1407,6 @@ abstract class Util {
 					"org.apache.poi.xssf.streaming.SXSSFSheet", "org.apache.poi.xssf.usermodel.XSSFChartSheet",
 					"org.apache.poi.xssf.usermodel.XSSFDialogsheet"), name)
 					&& FieldUtils.readField(instance, "_rows", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.poi.xssf.streaming.SXSSFDrawing")
-					&& FieldUtils.readDeclaredField(instance, "_drawing", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.poi.xssf.streaming.SXSSFWorkbook")
-					&& FieldUtils.readDeclaredField(instance, "_wb", true) == null) {
 				//
 				return;
 				//
@@ -1659,40 +1421,15 @@ abstract class Util {
 				//
 				return;
 				//
-			} else if (Objects.equals(name, "org.apache.poi.xssf.usermodel.XSSFSimpleShape")
-					&& FieldUtils.readDeclaredField(instance, "_paragraphs", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.apache.poi.xssf.usermodel.XSSFWorkbook")
-					&& FieldUtils.readDeclaredField(instance, "sheets", true) == null) {
-				//
-				return;
-				//
 			} else if (contains(Arrays.asList("org.apache.poi.xwpf.usermodel.XWPFEndnote",
 					"org.apache.poi.xwpf.usermodel.XWPFFootnote"), name)
 					&& FieldUtils.readField(instance, "paragraphs", true) == null) {
 				//
 				return;
 				//
-			} else if (Objects.equals(name, "org.apache.xmlbeans.XmlSimpleList")
-					&& FieldUtils.readDeclaredField(instance, "underlying", true) == null) {
-				//
-				return;
-				//
 			} else if (contains(Arrays.asList("org.apache.xmlbeans.impl.values.JavaListObject",
 					"org.apache.xmlbeans.impl.values.JavaListXmlObject"), name)
 					&& FieldUtils.readDeclaredField(instance, "sizer", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.d2ab.collection.ChainedCollection")
-					&& FieldUtils.readDeclaredField(instance, "collections", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.d2ab.collection.ChainedList")
-					&& FieldUtils.readDeclaredField(instance, "lists", true) == null) {
 				//
 				return;
 				//
@@ -1707,11 +1444,6 @@ abstract class Util {
 			} else if (contains(
 					Arrays.asList("org.d2ab.collection.ReverseList", "org.d2ab.sequence.EquivalentSizeSequence"), name)
 					&& FieldUtils.readDeclaredField(instance, "original", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.d2ab.collection.longs.BitLongSet")
-					&& FieldUtils.readDeclaredField(instance, "negatives", true) == null) {
 				//
 				return;
 				//
@@ -1735,43 +1467,13 @@ abstract class Util {
 				//
 				return;
 				//
-			} else if (Objects.equals(name, "org.openjdk.nashorn.internal.runtime.ListAdapter")
-					&& FieldUtils.readDeclaredField(instance, "obj", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.openjdk.nashorn.internal.runtime.PropertyMap")
-					&& FieldUtils.readDeclaredField(instance, "properties", true) == null) {
-				//
-				return;
-				//
 			} else if (Objects.equals(name, "org.openjdk.nashorn.internal.runtime.SharedPropertyMap")
 					&& FieldUtils.readField(instance, "properties", true) == null) {
 				//
 				return;
 				//
-			} else if (Objects.equals(name, "org.oxbow.swingbits.action.ActionGroup")
-					&& FieldUtils.readDeclaredField(instance, "actions", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.springframework.beans.MutablePropertyValues")
-					&& FieldUtils.readDeclaredField(instance, "propertyValueList", true) == null) {
-				//
-				return;
-				//
 			} else if (Objects.equals(name, "org.springframework.beans.factory.support.ManagedSet")
 					&& Narcissus.getObjectField(instance, Narcissus.findField(clz, "map")) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.springframework.core.env.MutablePropertySources")
-					&& FieldUtils.readDeclaredField(instance, "propertySourceList", true) == null) {
-				//
-				return;
-				//
-			} else if (Objects.equals(name, "org.springframework.util.AutoPopulatingList")
-					&& FieldUtils.readDeclaredField(instance, "backingList", true) == null) {
 				//
 				return;
 				//
