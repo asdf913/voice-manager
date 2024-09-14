@@ -766,30 +766,17 @@ abstract class Util {
 			//
 			Instruction[] instructions = null;
 			//
-			if (method != null) {
+			if (method != null && !executeForEachMethod(instance, name, STRING_FAILABLE_BI_FUNCTION_MAP,
+					instructions = InstructionListUtil.getInstructions(
+							new MethodGen(method, null, cpg = new ConstantPoolGen(method.getConstantPool()))
+									.getInstructionList()),
+					cpg)) {
 				//
-				if ((instructions = InstructionListUtil.getInstructions(
-						new MethodGen(method, null, cpg = new ConstantPoolGen(method.getConstantPool()))
-								.getInstructionList())) != null
-						&& instructions.length == 5 && instructions[0] instanceof ALOAD
-						&& instructions[1] instanceof GETFIELD gf && instructions[2] instanceof ALOAD
-						&& instructions[3] instanceof INVOKEINTERFACE && instructions[4] instanceof RETURN) {
-					//
-					final String fieldName = gf.getFieldName(cpg);
-					//
-					put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP,
-							LinkedHashMap::new), name,
-							function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
-					//
-					if (function.apply(instance) == null) {
-						//
-						return;
-						//
-					} // if
-						//
-				} // if
-					//
-			} else if (Objects.equals(getSuperclassName(javaClass), "java.lang.Object")) {
+				return;
+				//
+			} // if
+				//
+			if (Objects.equals(getSuperclassName(javaClass), "java.lang.Object")) {
 				//
 				final JavaClass[] interfaces = javaClass.getInterfaces();
 				//
@@ -1424,6 +1411,32 @@ abstract class Util {
 			//
 		} // if
 			//
+	}
+
+	private static boolean executeForEachMethod(final Object instance, final String name,
+			final Map<String, FailableFunction<Object, Object, Exception>> map, final Instruction[] instructions,
+			final ConstantPoolGen cpg) throws Exception {
+		//
+		if (instructions != null && instructions.length == 5 && instructions[0] instanceof ALOAD
+				&& instructions[1] instanceof GETFIELD gf && instructions[2] instanceof ALOAD
+				&& instructions[3] instanceof INVOKEINTERFACE && instructions[4] instanceof RETURN) {
+			//
+			final FailableFunction<Object, Object, Exception> function = a -> FieldUtils.readDeclaredField(a,
+					gf.getFieldName(cpg), true);
+			//
+			put(map, name, function);
+			//
+			if (function.apply(instance) == null) {
+				//
+				return false;
+				//
+			} // if
+				//
+		} // if
+			//
+		return true;
+		//
+
 	}
 
 	@Nullable
