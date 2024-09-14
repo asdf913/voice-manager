@@ -1281,7 +1281,7 @@ abstract class Util {
 	}
 
 	private static boolean executeForEachMethod(final Method[] ms, final JavaClass[] interfaces, final Object instance,
-			final String name) throws Exception {
+			@Nullable final String name) throws Exception {
 		//
 		if (interfaces != null) {
 			//
