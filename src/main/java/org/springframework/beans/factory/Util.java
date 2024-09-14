@@ -1415,8 +1415,8 @@ abstract class Util {
 	}
 
 	private static boolean executeForEachMethod(final Object instance, final String name,
-			final Map<String, FailableFunction<Object, Object, Exception>> map, final Instruction[] instructions,
-			final ConstantPoolGen cpg) throws Exception {
+			final Map<String, FailableFunction<Object, Object, Exception>> map,
+			@Nullable final Instruction[] instructions, final ConstantPoolGen cpg) throws Exception {
 		//
 		if (instructions != null && instructions.length == 5 && instructions[0] instanceof ALOAD
 				&& instructions[1] instanceof GETFIELD gf && instructions[2] instanceof ALOAD
