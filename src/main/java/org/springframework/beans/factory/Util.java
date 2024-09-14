@@ -36,6 +36,7 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -1011,6 +1012,124 @@ abstract class Util {
 				"propertyValueList", "org.springframework.core.env.MutablePropertySources", "propertySourceList",
 				"org.springframework.util.AutoPopulatingList", "backingList"));
 		//
+		putAll(map, collect(Stream.of("com.fasterxml.jackson.databind.node.ArrayNode",
+				"com.fasterxml.jackson.databind.node.ObjectNode", "org.apache.poi.poifs.property.DirectoryProperty"),
+				Collectors.toMap(Function.identity(), x -> "_children")));
+		//
+		putAll(map,
+				collect(Stream.of("com.github.andrewoma.dexx.collection.DerivedKeyHashMap",
+						"com.github.andrewoma.dexx.collection.HashMap", "com.github.andrewoma.dexx.collection.HashSet"),
+						Collectors.toMap(Function.identity(), x -> "compactHashMap")));
+		//
+		putAll(map, collect(Stream.of("com.github.andrewoma.dexx.collection.internal.adapter.ListAdapater",
+				"org.apache.logging.log4j.spi.MutableThreadContextStack",
+				"org.d2ab.collection.BiMappedList$RandomAccessList", "org.d2ab.collection.BiMappedList$SequentialList",
+				"org.d2ab.collection.FilteredList", "org.d2ab.collection.MappedList$RandomAccessList",
+				"org.d2ab.collection.MappedList$SequentialList", "org.d2ab.collection.chars.CharList$SubList",
+				"org.d2ab.collection.doubles.DoubleList$SubList", "org.d2ab.collection.ints.IntList$SubList",
+				"org.d2ab.collection.longs.LongList$SubList"), Collectors.toMap(Function.identity(), x -> "list")));
+		//
+		putAll(map,
+				collect(Stream.of("com.github.andrewoma.dexx.collection.internal.adapter.SetAdapater",
+						"com.github.andrewoma.dexx.collection.internal.adapter.SortedSetAdapter",
+						"org.springframework.cglib.beans.FixedKeySet"),
+						Collectors.toMap(Function.identity(), x -> "set")));
+		//
+		putAll(map,
+				collect(Stream.of("com.google.common.collect.ConcurrentHashMultiset",
+						"org.apache.jena.ext.com.google.common.collect.ConcurrentHashMultiset"),
+						Collectors.toMap(Function.identity(), x -> "countMap")));
+		//
+		putAll(map,
+				collect(Stream.of("com.google.common.collect.TreeMultiset",
+						"org.apache.jena.ext.com.google.common.collect.TreeMultiset"),
+						Collectors.toMap(Function.identity(), x -> "rootReference")));
+		//
+		putAll(map,
+				collect(Stream.of("com.google.common.reflect.TypeToken$TypeSet",
+						"org.apache.jena.ext.com.google.common.reflect.TypeToken$TypeSet"),
+						Collectors.toMap(Function.identity(), x -> "types")));
+		//
+		putAll(map,
+				collect(Stream.of("org.apache.commons.collections.collection.CompositeCollection",
+						"org.apache.commons.collections4.collection.CompositeCollection",
+						"org.apache.commons.collections4.set.CompositeSet"),
+						Collectors.toMap(Function.identity(), x -> "all")));
+		//
+		putAll(map, collect(Stream.of("org.apache.commons.collections.collection.SynchronizedCollection",
+				"org.apache.commons.collections4.collection.SynchronizedCollection",
+				"org.d2ab.collection.CollectionList", "org.d2ab.collection.FilteredCollection",
+				"org.d2ab.collection.MappedCollection", "org.d2ab.collection.chars.CollectionCharList",
+				"org.d2ab.collection.doubles.CollectionDoubleList", "org.d2ab.collection.ints.CollectionIntList",
+				"org.d2ab.collection.longs.CollectionLongList", "org.d2ab.sequence.CollectionSequence"),
+				Collectors.toMap(Function.identity(), x -> "collection")));
+		//
+		putAll(map,
+				collect(Stream.of("org.apache.commons.collections.list.AbstractLinkedList$LinkedSubList",
+						"org.apache.commons.collections.map.AbstractHashedMap$EntrySet",
+						"org.apache.commons.collections.map.AbstractHashedMap$KeySet",
+						"org.apache.commons.collections.map.AbstractHashedMap$Values",
+						"org.apache.commons.collections4.list.AbstractLinkedList$LinkedSubList",
+						"org.apache.commons.collections4.map.AbstractHashedMap$EntrySet",
+						"org.apache.commons.collections4.map.AbstractHashedMap$KeySet",
+						"org.apache.commons.collections4.map.AbstractHashedMap$Values",
+						"org.apache.commons.collections4.multiset.AbstractMultiSet$EntrySet",
+						"org.apache.commons.collections4.multiset.AbstractMultiSet$UniqueSet"),
+						Collectors.toMap(Function.identity(), x -> "parent")));
+		//
+		putAll(map,
+				collect(Stream.of("org.apache.commons.collections.set.ListOrderedSet",
+						"org.apache.commons.collections4.set.ListOrderedSet"),
+						Collectors.toMap(Function.identity(), x -> "setOrder")));
+		//
+		putAll(map,
+				collect(Stream.of("org.apache.commons.collections.set.MapBackedSet",
+						"org.apache.commons.collections4.set.MapBackedSet"),
+						Collectors.toMap(Function.identity(), x -> "map")));
+		//
+		putAll(map,
+				collect(Stream.of("org.apache.commons.csv.CSVRecord", "org.d2ab.collection.chars.BitCharSet",
+						"org.d2ab.collection.doubles.RawDoubleSet", "org.d2ab.collection.doubles.SortedListDoubleSet",
+						"org.d2ab.collection.ints.BitIntSet"), Collectors.toMap(Function.identity(), x -> "values")));
+		//
+		putAll(map,
+				collect(Stream.of("org.apache.jena.ext.xerces.impl.dv.util.ByteListImpl",
+						"org.apache.xerces.impl.dv.util.ByteListImpl"),
+						Collectors.toMap(Function.identity(), x -> "data")));
+		//
+		putAll(map,
+				collect(Stream.of("org.apache.poi.hssf.usermodel.HSSFPatriarch",
+						"org.apache.poi.xslf.usermodel.XSLFGroupShape"),
+						Collectors.toMap(Function.identity(), x -> "_shapes")));
+		//
+		putAll(map,
+				collect(Stream.of("org.apache.poi.hssf.usermodel.HSSFSheet", "org.apache.poi.xslf.usermodel.XSLFTable",
+						"org.apache.poi.xssf.usermodel.XSSFSheet"),
+						Collectors.toMap(Function.identity(), x -> "_rows")));
+		//
+		putAll(map,
+				collect(Stream.of("org.apache.poi.xddf.usermodel.text.XDDFTextParagraph",
+						"org.apache.poi.xslf.usermodel.XSLFTextParagraph"),
+						Collectors.toMap(Function.identity(), x -> "_runs")));
+		//
+		putAll(map,
+				collect(Stream.of("org.apache.xmlbeans.impl.values.JavaListObject",
+						"org.apache.xmlbeans.impl.values.JavaListXmlObject"),
+						Collectors.toMap(Function.identity(), x -> "sizer")));
+		//
+		putAll(map,
+				collect(Stream.of("org.apache.poi.xslf.usermodel.XSLFNotesMaster",
+						"org.apache.poi.xslf.usermodel.XSLFSlide", "org.apache.poi.xslf.usermodel.XSLFSlideMaster"),
+						Collectors.toMap(Function.identity(), x -> "_slide")));
+		//
+		putAll(map, collect(Stream.of("org.d2ab.collection.ChainingIterable",
+				"org.d2ab.collection.chars.ChainingCharIterable", "org.d2ab.collection.doubles.ChainingDoubleIterable",
+				"org.d2ab.collection.ints.ChainingIntIterable", "org.d2ab.collection.longs.ChainingLongIterable"),
+				Collectors.toMap(Function.identity(), x -> "iterables")));
+		//
+		putAll(map, collect(Stream.of("org.d2ab.collection.ReverseList", "org.d2ab.sequence.EquivalentSizeSequence"),
+				Collectors.toMap(Function.identity(), x -> "original")));
+		//
 		try {
 			//
 			for (final Entry<String, String> entry : Util.entrySet(map)) {
@@ -1042,44 +1161,6 @@ abstract class Util {
 				//
 			} else if (Objects.equals(name, "org.apache.poi.xslf.usermodel.XSLFDiagram$XSLFDiagramGroupShape")
 					&& FieldUtils.readField(instance, "_shapes", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("com.fasterxml.jackson.databind.node.ArrayNode",
-					"com.fasterxml.jackson.databind.node.ObjectNode",
-					"org.apache.poi.poifs.property.DirectoryProperty"), name)
-					&& FieldUtils.readDeclaredField(instance, "_children", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("com.github.andrewoma.dexx.collection.DerivedKeyHashMap",
-					"com.github.andrewoma.dexx.collection.HashMap", "com.github.andrewoma.dexx.collection.HashSet"),
-					name) && FieldUtils.readDeclaredField(instance, "compactHashMap", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("com.github.andrewoma.dexx.collection.internal.adapter.ListAdapater",
-					"org.apache.logging.log4j.spi.MutableThreadContextStack",
-					"org.d2ab.collection.BiMappedList$RandomAccessList",
-					"org.d2ab.collection.BiMappedList$SequentialList", "org.d2ab.collection.FilteredList",
-					"org.d2ab.collection.FilteredList", "org.d2ab.collection.MappedList$RandomAccessList",
-					"org.d2ab.collection.MappedList$SequentialList", "org.d2ab.collection.chars.CharList$SubList",
-					"org.d2ab.collection.doubles.DoubleList$SubList", "org.d2ab.collection.ints.IntList$SubList",
-					"org.d2ab.collection.longs.LongList$SubList"), name)
-					&& FieldUtils.readDeclaredField(instance, "list", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("com.github.andrewoma.dexx.collection.internal.adapter.SetAdapater",
-					"com.github.andrewoma.dexx.collection.internal.adapter.SortedSetAdapter",
-					"org.springframework.cglib.beans.FixedKeySet"), name)
-					&& FieldUtils.readDeclaredField(instance, "set", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("com.google.common.collect.ConcurrentHashMultiset",
-					"org.apache.jena.ext.com.google.common.collect.ConcurrentHashMultiset"), name)
-					&& FieldUtils.readDeclaredField(instance, "countMap", true) == null) {
 				//
 				return;
 				//
@@ -1133,18 +1214,6 @@ abstract class Util {
 					"org.apache.jena.ext.com.google.common.collect.HashMultiset",
 					"org.apache.jena.ext.com.google.common.collect.LinkedHashMultiset"), name)
 					&& FieldUtils.readField(instance, "backingMap", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("com.google.common.collect.TreeMultiset",
-					"org.apache.jena.ext.com.google.common.collect.TreeMultiset"), name)
-					&& FieldUtils.readDeclaredField(instance, "rootReference", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("com.google.common.reflect.TypeToken$TypeSet",
-					"org.apache.jena.ext.com.google.common.reflect.TypeToken$TypeSet"), name)
-					&& FieldUtils.readDeclaredField(instance, "types", true) == null) {
 				//
 				return;
 				//
@@ -1285,59 +1354,8 @@ abstract class Util {
 				//
 				return;
 				//
-			} else if (contains(Arrays.asList("org.apache.commons.collections.collection.CompositeCollection",
-					"org.apache.commons.collections4.collection.CompositeCollection",
-					"org.apache.commons.collections4.set.CompositeSet"), name)
-					&& FieldUtils.readDeclaredField(instance, "all", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("org.apache.commons.collections.collection.SynchronizedCollection",
-					"org.apache.commons.collections4.collection.SynchronizedCollection",
-					"org.d2ab.collection.CollectionList", "org.d2ab.collection.FilteredCollection",
-					"org.d2ab.collection.MappedCollection", "org.d2ab.collection.chars.CollectionCharList",
-					"org.d2ab.collection.doubles.CollectionDoubleList", "org.d2ab.collection.ints.CollectionIntList",
-					"org.d2ab.collection.longs.CollectionLongList", "org.d2ab.sequence.CollectionSequence"), name)
-					&& FieldUtils.readDeclaredField(instance, "collection", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("org.apache.commons.collections.list.AbstractLinkedList$LinkedSubList",
-					"org.apache.commons.collections.map.AbstractHashedMap$EntrySet",
-					"org.apache.commons.collections.map.AbstractHashedMap$KeySet",
-					"org.apache.commons.collections.map.AbstractHashedMap$Values",
-					"org.apache.commons.collections4.list.AbstractLinkedList$LinkedSubList",
-					"org.apache.commons.collections4.map.AbstractHashedMap$EntrySet",
-					"org.apache.commons.collections4.map.AbstractHashedMap$KeySet",
-					"org.apache.commons.collections4.map.AbstractHashedMap$Values",
-					"org.apache.commons.collections4.multiset.AbstractMultiSet$EntrySet",
-					"org.apache.commons.collections4.multiset.AbstractMultiSet$UniqueSet"), name)
-					&& FieldUtils.readDeclaredField(instance, "parent", true) == null) {
-				//
-				return;
-				//
 			} else if (Objects.equals(name, "org.apache.commons.collections.set.CompositeSet")
 					&& FieldUtils.readField(instance, "all", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("org.apache.commons.collections.set.ListOrderedSet",
-					"org.apache.commons.collections4.set.ListOrderedSet"), name)
-					&& FieldUtils.readDeclaredField(instance, "setOrder", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("org.apache.commons.collections.set.MapBackedSet",
-					"org.apache.commons.collections4.set.MapBackedSet"), name)
-					&& FieldUtils.readDeclaredField(instance, "map", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(
-					Arrays.asList("org.apache.commons.csv.CSVRecord", "org.d2ab.collection.chars.BitCharSet",
-							"org.d2ab.collection.doubles.RawDoubleSet",
-							"org.d2ab.collection.doubles.SortedListDoubleSet", "org.d2ab.collection.ints.BitIntSet"),
-					name) && FieldUtils.readDeclaredField(instance, "values", true) == null) {
 				//
 				return;
 				//
@@ -1352,27 +1370,9 @@ abstract class Util {
 				//
 				return;
 				//
-			} else if (contains(Arrays.asList("org.apache.jena.ext.xerces.impl.dv.util.ByteListImpl",
-					"org.apache.xerces.impl.dv.util.ByteListImpl"), name)
-					&& FieldUtils.readDeclaredField(instance, "data", true) == null) {
-				//
-				return;
-				//
 			} else if (Objects.equals(name, "org.apache.poi.ddf.EscherArrayProperty")
 					&& Objects.equals(FieldUtils.readDeclaredField(instance, "emptyComplexPart", true), Boolean.FALSE)
 					&& FieldUtils.readField(instance, "complexData", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("org.apache.poi.hssf.usermodel.HSSFPatriarch",
-					"org.apache.poi.xslf.usermodel.XSLFGroupShape"), name)
-					&& FieldUtils.readDeclaredField(instance, "_shapes", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("org.apache.poi.hssf.usermodel.HSSFSheet",
-					"org.apache.poi.xslf.usermodel.XSLFTable", "org.apache.poi.xssf.usermodel.XSSFSheet"), name)
-					&& FieldUtils.readDeclaredField(instance, "_rows", true) == null) {
 				//
 				return;
 				//
@@ -1382,24 +1382,11 @@ abstract class Util {
 				//
 				return;
 				//
-			} else if (contains(Arrays.asList("org.apache.poi.xddf.usermodel.text.XDDFTextParagraph",
-					"org.apache.poi.xslf.usermodel.XSLFTextParagraph"), name)
-					&& FieldUtils.readDeclaredField(instance, "_runs", true) == null) {
-				//
-				return;
-				//
 			} else if (contains(Arrays.asList("org.apache.poi.xslf.usermodel.XSLFAutoShape",
 					"org.apache.poi.xslf.usermodel.XSLFFreeformShape", "org.apache.poi.xslf.usermodel.XSLFTableCell",
 					"org.apache.poi.xslf.usermodel.XSLFTextBox", "org.apache.poi.xssf.usermodel.XSSFObjectData",
 					"org.apache.poi.xssf.usermodel.XSSFTextBox"), name)
 					&& FieldUtils.readField(instance, "_paragraphs", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(
-					Arrays.asList("org.apache.poi.xslf.usermodel.XSLFNotesMaster",
-							"org.apache.poi.xslf.usermodel.XSLFSlide", "org.apache.poi.xslf.usermodel.XSLFSlideMaster"),
-					name) && FieldUtils.readDeclaredField(instance, "_slide", true) == null) {
 				//
 				return;
 				//
@@ -1424,26 +1411,6 @@ abstract class Util {
 			} else if (contains(Arrays.asList("org.apache.poi.xwpf.usermodel.XWPFEndnote",
 					"org.apache.poi.xwpf.usermodel.XWPFFootnote"), name)
 					&& FieldUtils.readField(instance, "paragraphs", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("org.apache.xmlbeans.impl.values.JavaListObject",
-					"org.apache.xmlbeans.impl.values.JavaListXmlObject"), name)
-					&& FieldUtils.readDeclaredField(instance, "sizer", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(Arrays.asList("org.d2ab.collection.ChainingIterable",
-					"org.d2ab.collection.chars.ChainingCharIterable",
-					"org.d2ab.collection.doubles.ChainingDoubleIterable",
-					"org.d2ab.collection.ints.ChainingIntIterable", "org.d2ab.collection.longs.ChainingLongIterable"),
-					name) && FieldUtils.readDeclaredField(instance, "iterables", true) == null) {
-				//
-				return;
-				//
-			} else if (contains(
-					Arrays.asList("org.d2ab.collection.ReverseList", "org.d2ab.sequence.EquivalentSizeSequence"), name)
-					&& FieldUtils.readDeclaredField(instance, "original", true) == null) {
 				//
 				return;
 				//
