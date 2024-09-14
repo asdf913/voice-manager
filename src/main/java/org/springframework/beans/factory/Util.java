@@ -748,9 +748,7 @@ abstract class Util {
 		FailableFunction<Object, Object, Exception> function = get(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
 				.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new), name);
 		//
-		try (final InputStream is = clz != null
-				? clz.getResourceAsStream("/" + StringUtils.replace(name, ".", "/") + ".class")
-				: null) {
+		try (final InputStream is = getResourceAsStream(clz, "/" + StringUtils.replace(name, ".", "/") + ".class")) {
 			//
 			if (function != null && function.apply(instance) == null) {
 				//
@@ -1412,6 +1410,10 @@ abstract class Util {
 			//
 		} // if
 			//
+	}
+
+	private static InputStream getResourceAsStream(final Class<?> instance, final String name) {
+		return instance != null && name != null ? instance.getResourceAsStream(name) : null;
 	}
 
 	private static boolean executeForEachMethod(final Object instance, final String name,

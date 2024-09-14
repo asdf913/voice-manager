@@ -1,6 +1,7 @@
 package org.springframework.beans.factory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -51,7 +52,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class UtilTest {
 
-	private static Method METHOD_GET_DECLARED_FIELD, METHOD_EXECUTE_FOR_EACH_METHOD;
+	private static Method METHOD_GET_DECLARED_FIELD, METHOD_EXECUTE_FOR_EACH_METHOD, METHOD_GET_RESOURCE_AS_STREAM;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -63,6 +64,9 @@ class UtilTest {
 		//
 		(METHOD_EXECUTE_FOR_EACH_METHOD = clz.getDeclaredMethod("executeForEachMethod", Object.class, String.class,
 				Map.class, Instruction[].class, ConstantPoolGen.class)).setAccessible(true);
+		//
+		(METHOD_GET_RESOURCE_AS_STREAM = clz.getDeclaredMethod("getResourceAsStream", Class.class, String.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -697,6 +701,27 @@ class UtilTest {
 			final Object obj = METHOD_EXECUTE_FOR_EACH_METHOD.invoke(null, instance, name, map, instructions, cpg);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetResourceAsStream() throws Throwable {
+		//
+		Assertions.assertNull(getResourceAsStream(getClass(), null));
+		//
+	}
+
+	private static InputStream getResourceAsStream(final Class<?> instance, final String name) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_RESOURCE_AS_STREAM.invoke(null, instance, name);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof InputStream) {
+				return (InputStream) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
