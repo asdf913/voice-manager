@@ -1255,7 +1255,7 @@ abstract class Util {
 			//
 	}
 
-	private static boolean executeForEachMethod(final Object instance, final String name)
+	private static boolean executeForEachMethod(final Object instance, @Nullable final String name)
 			throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		//
 		if (Objects.equals(name, "org.apache.poi.ddf.EscherArrayProperty")
@@ -1294,8 +1294,8 @@ abstract class Util {
 		//
 	}
 
-	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,
-			final Function<T, R> functionFalse) {
+	private static <T, R> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
+			final Function<T, R> functionTrue, final Function<T, R> functionFalse) {
 		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
 	}
 
