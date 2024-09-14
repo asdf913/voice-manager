@@ -989,9 +989,8 @@ abstract class Util {
 		//
 		try {
 			//
-			if (!executeForEachMethod(map, name, instance, (a, b) -> {
-				return FieldUtils.readDeclaredField(a, b, true) == null;
-			})) {
+			if (!executeForEachMethod(map, name, instance,
+					(a, b) -> FieldUtils.readDeclaredField(a, b, true) == null)) {
 				//
 				return;
 				//
@@ -1178,9 +1177,7 @@ abstract class Util {
 							"org.javatuples.Sextet", "org.javatuples.Triplet", "org.javatuples.Unit"),
 							Collectors.toMap(Function.identity(), x -> "valueList")));
 			//
-			if (!executeForEachMethod(map, name, instance, (a, b) -> {
-				return FieldUtils.readField(a, b, true) == null;
-			})) {
+			if (!executeForEachMethod(map, name, instance, (a, b) -> FieldUtils.readField(a, b, true) == null)) {
 				//
 				return;
 				//
@@ -1201,9 +1198,8 @@ abstract class Util {
 							"com.helger.commons.collection.impl.CommonsLinkedHashSet"),
 							Collectors.toMap(Function.identity(), x -> "map")));
 			//
-			if (!executeForEachMethod(map, name, instance, (a, b) -> {
-				return Narcissus.getField(a, Narcissus.findField(clz, b)) == null;
-			})) {
+			if (!executeForEachMethod(map, name, instance,
+					(a, b) -> Narcissus.getField(a, Narcissus.findField(clz, b)) == null)) {
 				//
 				return;
 				//
