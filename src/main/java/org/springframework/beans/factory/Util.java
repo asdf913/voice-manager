@@ -1243,7 +1243,8 @@ abstract class Util {
 	}
 
 	private static boolean executeForEachMethod(final Map<String, String> map, @Nullable final String name,
-			final Object instance, final FailableBiPredicate<Object, String, ReflectiveOperationException> predicate)
+			final Object instance,
+			@Nullable final FailableBiPredicate<Object, String, ReflectiveOperationException> predicate)
 			throws ReflectiveOperationException {
 		//
 		final Iterable<Entry<String, String>> entrySet = entrySet(map);
