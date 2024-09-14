@@ -1332,6 +1332,11 @@ abstract class Util {
 							"com.helger.commons.collection.impl.CommonsTreeSet", "m",
 							"org.springframework.beans.factory.support.ManagedSet", "map"));
 			//
+			putAll(map,
+					collect(Stream.of("com.helger.commons.collection.impl.CommonsHashSet",
+							"com.helger.commons.collection.impl.CommonsLinkedHashSet"),
+							Collectors.toMap(Function.identity(), x -> "map")));
+			//
 			for (final Entry<String, String> entry : Util.entrySet(map)) {
 				//
 				if (Objects.equals(name, getKey(entry))
@@ -1357,11 +1362,6 @@ abstract class Util {
 				//
 			} else if (Objects.equals(name, "org.apache.commons.math3.util.IntegerSequence$Range")
 					&& Objects.equals(FieldUtils.readDeclaredField(instance, "step", true), Integer.valueOf(0))) {
-				//
-				return;
-			} else if (contains(Arrays.asList("com.helger.commons.collection.impl.CommonsHashSet",
-					"com.helger.commons.collection.impl.CommonsLinkedHashSet"), name)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "map")) == null) {
 				//
 				return;
 				//
