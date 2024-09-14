@@ -762,10 +762,8 @@ abstract class Util {
 			//
 			ConstantPoolGen cpg = null;
 			//
-			Instruction[] instructions = null;
-			//
 			if (method != null && !executeForEachMethod(instance, name, STRING_FAILABLE_BI_FUNCTION_MAP,
-					instructions = InstructionListUtil.getInstructions(
+					InstructionListUtil.getInstructions(
 							new MethodGen(method, null, cpg = new ConstantPoolGen(method.getConstantPool()))
 									.getInstructionList()),
 					cpg)) {
@@ -776,138 +774,11 @@ abstract class Util {
 				//
 			if (Objects.equals(getSuperclassName(javaClass), "java.lang.Object")) {
 				//
-				final JavaClass[] interfaces = javaClass.getInterfaces();
-				//
-				if (interfaces != null) {
+				if (!executeForEachMethod(JavaClassUtil.getMethods(javaClass), javaClass.getInterfaces(), instance,
+						name)) {
 					//
-					String methodName = null;
+					return;
 					//
-					final Method[] ms = JavaClassUtil.getMethods(javaClass);
-					//
-					Method m = null;
-					//
-					for (final JavaClass interfaceJc : interfaces) {
-						//
-						if ((method = getForEachMethod(interfaceJc)) == null) {
-							//
-							continue;
-							//
-						} // if
-							//
-						instructions = InstructionListUtil.getInstructions(
-								new MethodGen(method, null, cpg = new ConstantPoolGen(method.getConstantPool()))
-										.getInstructionList());
-						//
-						for (int i = 0; i < length(instructions) - 1; i++) {
-							//
-							if (instructions[i] instanceof ALOAD al && al.getIndex() == 0
-									&& instructions[i + 1] instanceof INVOKEINTERFACE ii) {
-								//
-								methodName = ii.getMethodName(cpg);
-								//
-								for (int j = 0; j < length(ms); j++) {
-									//
-									if (!Objects.equals(FieldOrMethodUtil.getName(ms[j]), methodName)) {
-										//
-										continue;
-										//
-									} // if
-										//
-									if (m == null) {
-										//
-										m = ms[j];
-										//
-									} else {
-										//
-										throw new IllegalStateException();
-										//
-									} // if
-										//
-								} // for
-									//
-							} // if
-								//
-						} // for
-							//
-						if (m != null && (instructions = InstructionListUtil
-								.getInstructions(new MethodGen(m, null, cpg = new ConstantPoolGen(m.getConstantPool()))
-										.getInstructionList())) != null) {
-							//
-							if (length(instructions) == 4 && instructions[0] instanceof ALOAD
-									&& instructions[1] instanceof GETFIELD gf
-									&& instructions[2] instanceof INVOKEINTERFACE ii
-									&& Objects.equals(ii.getMethodName(cpg), methodName)
-									&& instructions[3] instanceof ARETURN) {
-								//
-								final String fieldName = gf.getFieldName(cpg);
-								//
-								put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
-										.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new), name,
-										function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
-								//
-								if (function.apply(instance) == null) {
-									//
-									return;
-									//
-								} // if
-									//
-							} else if (length(instructions) == 5 && instructions[0] instanceof ALOAD
-									&& instructions[1] instanceof GETFIELD gf
-									&& instructions[2] instanceof INVOKEINTERFACE
-									&& instructions[3] instanceof INVOKEINTERFACE ii
-									&& Objects.equals(ii.getMethodName(cpg), methodName)
-									&& instructions[4] instanceof ARETURN) {
-								//
-								final String fieldName = gf.getFieldName(cpg);
-								//
-								put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
-										.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new), name,
-										function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
-								//
-								if (function.apply(instance) == null) {
-									//
-									return;
-									//
-								} // if
-									//
-							} else if (length(instructions) == 3 && instructions[0] instanceof ALOAD
-									&& instructions[1] instanceof GETFIELD gf && instructions[2] instanceof ARETURN) {
-								//
-								final String fieldName = gf.getFieldName(cpg);
-								//
-								put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
-										.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new), name,
-										function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
-								//
-								if (function.apply(instance) == null) {
-									//
-									return;
-									//
-								} // if
-									//
-							} else if (length(instructions) == 6 && instructions[0] instanceof ALOAD
-									&& instructions[1] instanceof GETFIELD gf && instructions[2] instanceof CHECKCAST
-									&& instructions[3] instanceof ALOAD && instructions[4] instanceof INVOKEVIRTUAL
-									&& instructions[5] instanceof ARETURN) {
-								//
-								final String fieldName = gf.getFieldName(cpg);
-								//
-								put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
-										.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new), name,
-										function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
-								//
-								if (function.apply(instance) == null) {
-									//
-									return;
-									//
-								} // if
-									//
-							} // if
-								//
-						} // if
-							//
-					} // for
-						//
 				} // if
 					//
 			} // if
@@ -1410,6 +1281,147 @@ abstract class Util {
 			//
 		} // if
 			//
+	}
+
+	private static boolean executeForEachMethod(final Method[] ms, final JavaClass[] interfaces, final Object instance,
+			final String name) throws Exception {
+		//
+		if (interfaces != null) {
+			//
+			String methodName = null;
+			//
+			Method method, m = null;
+			//
+			Instruction[] instructions;
+			//
+			ConstantPoolGen cpg;
+			//
+			FailableFunction<Object, Object, Exception> function;
+			//
+			for (final JavaClass interfaceJc : interfaces) {
+				//
+				if ((method = getForEachMethod(interfaceJc)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				instructions = InstructionListUtil.getInstructions(
+						new MethodGen(method, null, cpg = new ConstantPoolGen(method.getConstantPool()))
+								.getInstructionList());
+				//
+				for (int i = 0; i < length(instructions) - 1; i++) {
+					//
+					if (instructions[i] instanceof ALOAD al && al.getIndex() == 0
+							&& instructions[i + 1] instanceof INVOKEINTERFACE ii) {
+						//
+						methodName = ii.getMethodName(cpg);
+						//
+						for (int j = 0; j < length(ms); j++) {
+							//
+							if (!Objects.equals(FieldOrMethodUtil.getName(ms[j]), methodName)) {
+								//
+								continue;
+								//
+							} // if
+								//
+							if (m == null) {
+								//
+								m = ms[j];
+								//
+							} else {
+								//
+								throw new IllegalStateException();
+								//
+							} // if
+								//
+						} // for
+							//
+					} // if
+						//
+				} // for
+					//
+				if (m != null && (instructions = InstructionListUtil
+						.getInstructions(new MethodGen(m, null, cpg = new ConstantPoolGen(m.getConstantPool()))
+								.getInstructionList())) != null) {
+					//
+					if (length(instructions) == 4 && instructions[0] instanceof ALOAD
+							&& instructions[1] instanceof GETFIELD gf && instructions[2] instanceof INVOKEINTERFACE ii
+							&& Objects.equals(ii.getMethodName(cpg), methodName)
+							&& instructions[3] instanceof ARETURN) {
+						//
+						final String fieldName = gf.getFieldName(cpg);
+						//
+						put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP,
+								LinkedHashMap::new), name,
+								function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
+						//
+						if (function.apply(instance) == null) {
+							//
+							return false;
+							//
+						} // if
+							//
+					} else if (length(instructions) == 5 && instructions[0] instanceof ALOAD
+							&& instructions[1] instanceof GETFIELD gf && instructions[2] instanceof INVOKEINTERFACE
+							&& instructions[3] instanceof INVOKEINTERFACE ii
+							&& Objects.equals(ii.getMethodName(cpg), methodName)
+							&& instructions[4] instanceof ARETURN) {
+						//
+						final String fieldName = gf.getFieldName(cpg);
+						//
+						put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP,
+								LinkedHashMap::new), name,
+								function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
+						//
+						if (function.apply(instance) == null) {
+							//
+							return false;
+							//
+						} // if
+							//
+					} else if (length(instructions) == 3 && instructions[0] instanceof ALOAD
+							&& instructions[1] instanceof GETFIELD gf && instructions[2] instanceof ARETURN) {
+						//
+						final String fieldName = gf.getFieldName(cpg);
+						//
+						put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP,
+								LinkedHashMap::new), name,
+								function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
+						//
+						if (function.apply(instance) == null) {
+							//
+							return false;
+							//
+						} // if
+							//
+					} else if (length(instructions) == 6 && instructions[0] instanceof ALOAD
+							&& instructions[1] instanceof GETFIELD gf && instructions[2] instanceof CHECKCAST
+							&& instructions[3] instanceof ALOAD && instructions[4] instanceof INVOKEVIRTUAL
+							&& instructions[5] instanceof ARETURN) {
+						//
+						final String fieldName = gf.getFieldName(cpg);
+						//
+						put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP,
+								LinkedHashMap::new), name,
+								function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
+						//
+						if (function.apply(instance) == null) {
+							//
+							return false;
+							//
+						} // if
+							//
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		return true;
+		//
 	}
 
 	private static InputStream getResourceAsStream(final Class<?> instance, final String name) {
