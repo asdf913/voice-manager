@@ -62,6 +62,7 @@ import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.RETURN;
 import org.apache.bcel.generic.Type;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -1307,7 +1308,7 @@ abstract class Util {
 			//
 			for (int j = 0; j < length(instructions) - 1; j++) {
 				//
-				if (instructions[j] instanceof ALOAD al && al.getIndex() == 0
+				if (ArrayUtils.get(instructions, j) instanceof ALOAD al && al.getIndex() == 0
 						&& instructions[j + 1] instanceof INVOKEINTERFACE ii) {
 					//
 					methodName = ii.getMethodName(cpg);
