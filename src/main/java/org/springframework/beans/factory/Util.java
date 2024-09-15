@@ -1360,7 +1360,7 @@ abstract class Util {
 			} // if
 				//
 			if ((m = getFirstInvokeInterfaceMethod(ms,
-					instructions = InstructionListUtil.getInstructions(
+					InstructionListUtil.getInstructions(
 							new MethodGen(method, null, cpg = new ConstantPoolGen(method.getConstantPool()))
 									.getInstructionList()),
 					cpg)) == null
