@@ -1359,51 +1359,21 @@ abstract class Util {
 				//
 			} // if
 				//
-			instructions = InstructionListUtil
-					.getInstructions(new MethodGen(method, null, cpg = new ConstantPoolGen(method.getConstantPool()))
-							.getInstructionList());
-			//
-			for (int j = 0; j < length(instructions) - 1; j++) {
-				//
-				if (Boolean.logicalOr(!(ArrayUtils.get(instructions, j) instanceof ALOAD al && al.getIndex() == 0),
-						!(ArrayUtils.get(instructions, j + 1) instanceof INVOKEINTERFACE))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				methodName = getMethodName((INVOKEINTERFACE) ArrayUtils.get(instructions, j + 1), cpg);
-				//
-				for (int k = 0; k < length(ms); k++) {
-					//
-					if (!Objects.equals(FieldOrMethodUtil.getName(ms[k]), methodName)) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (m == null) {
-						//
-						m = ms[k];
-						//
-					} else {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-				} // for
-					//
-			} // for
-				//
-			if (m == null || (instructions = InstructionListUtil
-					.getInstructions(new MethodGen(m, null, cpg = new ConstantPoolGen(m.getConstantPool()))
-							.getInstructionList())) == null) {
+			if ((m = getFirstInvokeInterfaceMethod(ms,
+					instructions = InstructionListUtil.getInstructions(
+							new MethodGen(method, null, cpg = new ConstantPoolGen(method.getConstantPool()))
+									.getInstructionList()),
+					cpg)) == null
+					|| (instructions = InstructionListUtil
+							.getInstructions(new MethodGen(m, null, cpg = new ConstantPoolGen(m.getConstantPool()))
+									.getInstructionList())) == null) {
 				//
 				continue;
 				//
 			} // if
 				//
+			methodName = FieldOrMethodUtil.getName(m);
+			//
 			if (length(instructions) == 4 && instructions[0] instanceof ALOAD && instructions[1] instanceof GETFIELD gf
 					&& instructions[2] instanceof INVOKEINTERFACE ii
 					&& Objects.equals(getMethodName(ii, cpg), methodName) && instructions[3] instanceof ARETURN) {
@@ -1470,6 +1440,50 @@ abstract class Util {
 		} // for
 			//
 		return true;
+		//
+	}
+
+	private static Method getFirstInvokeInterfaceMethod(final Method[] ms, final Instruction[] instructions,
+			final ConstantPoolGen cpg) {
+		//
+		String methodName;
+		//
+		Method method = null;
+		//
+		for (int i = 0; i < length(instructions) - 1; i++) {
+			//
+			if (Boolean.logicalOr(!(ArrayUtils.get(instructions, i) instanceof ALOAD al && al.getIndex() == 0),
+					!(ArrayUtils.get(instructions, i + 1) instanceof INVOKEINTERFACE))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			methodName = getMethodName((INVOKEINTERFACE) ArrayUtils.get(instructions, i + 1), cpg);
+			//
+			for (int j = 0; j < length(ms); j++) {
+				//
+				if (!Objects.equals(FieldOrMethodUtil.getName(ms[j]), methodName)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (method == null) {
+					//
+					method = ms[j];
+					//
+				} else {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+		return method;
 		//
 	}
 
