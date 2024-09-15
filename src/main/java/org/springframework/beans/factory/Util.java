@@ -1443,6 +1443,7 @@ abstract class Util {
 		//
 	}
 
+	@Nullable
 	private static Method getFirstInvokeInterfaceMethod(final Method[] ms, final Instruction[] instructions,
 			final ConstantPoolGen cpg) {
 		//
