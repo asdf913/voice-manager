@@ -804,20 +804,11 @@ abstract class Util {
 			//
 		} catch (final NullPointerException e) {
 			//
-			try {
+			if (!executeForEachMethodForNullPointerException(instance)) {
 				//
-				if (Objects.equals("com.healthmarketscience.jackcess.impl.TableDefinitionImpl", getName(clz))
-						&& Narcissus.getField(instance, Narcissus.findField(clz, "_database")) == null) {
-					//
-					return;
-					//
-				} // if
-					//
-			} catch (final NoSuchFieldException nsfe) {
+				return;
 				//
-				throw new RuntimeException(nsfe);
-				//
-			} // try
+			} // if
 				//
 		} // try
 			//
@@ -827,6 +818,30 @@ abstract class Util {
 			//
 		} // if
 			//
+	}
+
+	private static boolean executeForEachMethodForNullPointerException(final Object instance) {
+		//
+		try {
+			//
+			final Class<?> clz = getClass(instance);
+			//
+			if (Objects.equals("com.healthmarketscience.jackcess.impl.TableDefinitionImpl", getName(clz))
+					&& Narcissus.getField(instance, Narcissus.findField(clz, "_database")) == null) {
+				//
+				return false;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException nsfe) {
+			//
+			throw new RuntimeException(nsfe);
+			//
+		} // try
+			//
+		return true;
+		//
+
 	}
 
 	private static boolean executeForEachMethod2(final Object instance, @Nullable final String name)
