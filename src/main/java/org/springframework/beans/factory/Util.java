@@ -1243,13 +1243,7 @@ abstract class Util {
 			//
 		} // if
 			//
-		if (!executeForEachMethod(instance, name)) {
-			//
-			return false;
-			//
-		} // if
-			//
-		return true;
+		return executeForEachMethod(instance, name);
 		//
 	}
 
