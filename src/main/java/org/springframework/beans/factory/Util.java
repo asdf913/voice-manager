@@ -1294,7 +1294,7 @@ abstract class Util {
 	private static boolean executeForEachMethod(final Object instance, @Nullable final String name)
 			throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		//
-		if ((Objects.equals(name, "org.apache.poi.ddf.EscherArrayProperty")
+		return !((Objects.equals(name, "org.apache.poi.ddf.EscherArrayProperty")
 				&& Objects.equals(FieldUtils.readDeclaredField(instance, "emptyComplexPart", true), Boolean.FALSE)
 				&& FieldUtils.readField(instance, "complexData", true) == null)
 				|| (Objects.equals(name, "org.apache.commons.math3.util.MultidimensionalCounter")
@@ -1309,13 +1309,7 @@ abstract class Util {
 						name) && MethodUtils.invokeMethod(instance, true, "multiset") == null)
 				|| (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableDefinitionImpl"), name)
 						&& Narcissus.invokeMethod(instance, Narcissus.findMethod(getClass(instance), "createRowState",
-								new Class<?>[] {})) == null)) {
-			//
-			return false;
-			//
-		} // if
-			//
-		return true;
+								new Class<?>[] {})) == null));
 		//
 	}
 
