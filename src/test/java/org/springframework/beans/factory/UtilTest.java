@@ -57,7 +57,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class UtilTest {
 
 	private static Method METHOD_GET_DECLARED_FIELD, METHOD_EXECUTE_FOR_EACH_METHOD4, METHOD_EXECUTE_FOR_EACH_METHOD5,
-			METHOD_GET_RESOURCE_AS_STREAM, METHOD_EXECUTE_FOR_EACH_METHOD_3, METHOD_GET_FIELD_NAME;
+			METHOD_GET_RESOURCE_AS_STREAM, METHOD_EXECUTE_FOR_EACH_METHOD_3A, METHOD_GET_FIELD_NAME,
+			METHOD_EXECUTE_FOR_EACH_METHOD_3B;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -76,11 +77,14 @@ class UtilTest {
 		(METHOD_GET_RESOURCE_AS_STREAM = clz.getDeclaredMethod("getResourceAsStream", Class.class, String.class))
 				.setAccessible(true);
 		//
-		(METHOD_EXECUTE_FOR_EACH_METHOD_3 = clz.getDeclaredMethod("executeForEachMethod3", Instruction[].class,
+		(METHOD_EXECUTE_FOR_EACH_METHOD_3A = clz.getDeclaredMethod("executeForEachMethod3a", Instruction[].class,
 				ConstantPoolGen.class, Entry.class, String.class, Map.class)).setAccessible(true);
 		//
 		(METHOD_GET_FIELD_NAME = clz.getDeclaredMethod("getFieldName", FieldInstruction.class, ConstantPoolGen.class))
 				.setAccessible(true);
+		//
+		(METHOD_EXECUTE_FOR_EACH_METHOD_3B = clz.getDeclaredMethod("executeForEachMethod3b", Instruction[].class,
+				ConstantPoolGen.class, Entry.class, String.class, Map.class)).setAccessible(true);
 		//
 	}
 
@@ -133,10 +137,26 @@ class UtilTest {
 
 	private IH ih = null;
 
+	private ALOAD aLoad = null;
+
+	private GETFIELD getField = null;
+
+	private INVOKEINTERFACE invokeInterface = null;
+
+	private ARETURN aReturn = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		stream = Reflection.newProxy(Stream.class, ih = new IH());
+		//
+		aLoad = new ALOAD(0);
+		//
+		getField = new GETFIELD(0);
+		//
+		invokeInterface = new INVOKEINTERFACE(0, 1);
+		//
+		aReturn = new ARETURN();
 		//
 	}
 
@@ -699,7 +719,7 @@ class UtilTest {
 		Assertions.assertTrue(executeForEachMethod(Collections.singletonMap(null, null), null, null, (a, b) -> false));
 		//
 		final List<Instruction> instructions = new ArrayList<>(
-				Arrays.asList(new ALOAD(0), new GETFIELD(0), new ALOAD(0), new INVOKEINTERFACE(0, 1), null));
+				Arrays.asList(aLoad, getField, aLoad, invokeInterface, null));
 		//
 		for (int i = IterableUtils.size(instructions) - 1; i >= 0; i--) {
 			//
@@ -763,28 +783,26 @@ class UtilTest {
 	@Test
 	void testExecuteForEachMethod3a() throws Throwable {
 		//
-		Assertions.assertFalse(executeForEachMethod3(
-				new Instruction[] { new ALOAD(0), new GETFIELD(0), new INVOKEINTERFACE(0, 1), new ARETURN() }, null,
+		Assertions.assertFalse(executeForEachMethod3a(new Instruction[] { aLoad, getField, invokeInterface, aReturn },
+				null, null, null, null));
+		//
+		Assertions.assertTrue(executeForEachMethod3a(new Instruction[] { aLoad, getField, invokeInterface, aReturn },
+				null, null, "", null));
+		//
+		Assertions.assertTrue(executeForEachMethod3a(new Instruction[] { aLoad, getField, invokeInterface, null }, null,
 				null, null, null));
 		//
-		Assertions.assertTrue(executeForEachMethod3(
-				new Instruction[] { new ALOAD(0), new GETFIELD(0), new INVOKEINTERFACE(0, 1), new ARETURN() }, null,
-				null, "", null));
-		//
-		Assertions.assertTrue(executeForEachMethod3(
-				new Instruction[] { new ALOAD(0), new GETFIELD(0), new INVOKEINTERFACE(0, 1), null }, null, null, null,
-				null));
-		//
 		Assertions.assertTrue(
-				executeForEachMethod3(new Instruction[] { null, null, null, null }, null, null, null, null));
+				executeForEachMethod3a(new Instruction[] { null, null, null, null }, null, null, null, null));
 		//
 	}
 
-	private static boolean executeForEachMethod3(final Instruction[] instructions, final ConstantPoolGen cpg,
+	private static boolean executeForEachMethod3a(final Instruction[] instructions, final ConstantPoolGen cpg,
 			final Entry<String, Object> entry, final String methodName,
 			final Map<String, FailableFunction<Object, Object, Exception>> map) throws Throwable {
 		try {
-			final Object obj = METHOD_EXECUTE_FOR_EACH_METHOD_3.invoke(null, instructions, cpg, entry, methodName, map);
+			final Object obj = METHOD_EXECUTE_FOR_EACH_METHOD_3A.invoke(null, instructions, cpg, entry, methodName,
+					map);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
@@ -797,7 +815,7 @@ class UtilTest {
 	@Test
 	void testGetFieldName() throws Throwable {
 		//
-		Assertions.assertNull(getFieldName(new GETFIELD(0), null));
+		Assertions.assertNull(getFieldName(getField, null));
 		//
 	}
 
@@ -808,6 +826,46 @@ class UtilTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testExecuteForEachMethod3b() throws Throwable {
+		//
+		Assertions.assertFalse(
+				executeForEachMethod3b(new Instruction[] { aLoad, getField, invokeInterface, invokeInterface, aReturn },
+						null, null, null, null));
+		//
+		Assertions.assertTrue(executeForEachMethod3b(
+				new Instruction[] { aLoad, null, invokeInterface, invokeInterface, aReturn }, null, null, null, null));
+		//
+		Assertions.assertTrue(executeForEachMethod3b(
+				new Instruction[] { aLoad, getField, invokeInterface, null, aReturn }, null, null, null, null));
+		//
+		Assertions.assertTrue(
+				executeForEachMethod3b(new Instruction[] { aLoad, getField, invokeInterface, invokeInterface, aReturn },
+						null, null, "", null));
+		//
+		Assertions.assertTrue(executeForEachMethod3b(
+				new Instruction[] { aLoad, getField, invokeInterface, invokeInterface, null }, null, null, null, null));
+		//
+		Assertions.assertTrue(
+				executeForEachMethod3b(new Instruction[] { null, null, null, null, null }, null, null, null, null));
+		//
+	}
+
+	private static boolean executeForEachMethod3b(final Instruction[] instructions, final ConstantPoolGen cpg,
+			final Entry<String, Object> entry, final String methodName,
+			final Map<String, FailableFunction<Object, Object, Exception>> map) throws Throwable {
+		try {
+			final Object obj = METHOD_EXECUTE_FOR_EACH_METHOD_3B.invoke(null, instructions, cpg, entry, methodName,
+					map);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -1355,6 +1355,8 @@ abstract class Util {
 		//
 		FailableFunction<Object, Object, Exception> function;
 		//
+		Entry<String, Object> entry;
+		//
 		for (int i = 0; i < length(interfaces); i++) {
 			//
 			if ((method = getForEachMethod(interfaces[i])) == null) {
@@ -1376,26 +1378,15 @@ abstract class Util {
 				//
 			} // if
 				//
-			if (!executeForEachMethod3(instructions, cpg, Pair.of(name, instance),
+			if (!executeForEachMethod3a(instructions, cpg, entry = Pair.of(name, instance),
 					methodName = FieldOrMethodUtil.getName(m), map)) {
 				//
 				return false;
 				//
-			} else if (length(instructions) == 5 && instructions[0] instanceof ALOAD
-					&& instructions[1] instanceof GETFIELD gf && instructions[2] instanceof INVOKEINTERFACE
-					&& instructions[3] instanceof INVOKEINTERFACE ii
-					&& Objects.equals(getMethodName(ii, cpg), methodName) && instructions[4] instanceof ARETURN) {
+			} else if (!executeForEachMethod3b(instructions, cpg, entry, methodName, map)) {
 				//
-				final String fieldName = gf.getFieldName(cpg);
+				return false;
 				//
-				put(map, name, function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
-				//
-				if (function.apply(instance) == null) {
-					//
-					return false;
-					//
-				} // if
-					//
 			} else if (length(instructions) == 3 && instructions[0] instanceof ALOAD
 					&& instructions[1] instanceof GETFIELD gf && instructions[2] instanceof ARETURN) {
 				//
@@ -1432,7 +1423,7 @@ abstract class Util {
 		//
 	}
 
-	private static boolean executeForEachMethod3(final Instruction[] instructions, final ConstantPoolGen cpg,
+	private static boolean executeForEachMethod3a(final Instruction[] instructions, final ConstantPoolGen cpg,
 			final Entry<String, Object> entry, final String methodName,
 			final Map<String, FailableFunction<Object, Object, Exception>> map) throws Exception {
 		//
@@ -1460,6 +1451,32 @@ abstract class Util {
 
 	private static String getFieldName(@Nullable final FieldInstruction instance, @Nullable final ConstantPoolGen cpg) {
 		return instance != null && cpg != null ? instance.getFieldName(cpg) : null;
+	}
+
+	private static boolean executeForEachMethod3b(final Instruction[] instructions, final ConstantPoolGen cpg,
+			final Entry<String, Object> entry, final String methodName,
+			final Map<String, FailableFunction<Object, Object, Exception>> map) throws Exception {
+		//
+		if (length(instructions) == 5 && instructions[0] instanceof ALOAD && instructions[1] instanceof GETFIELD gf
+				&& instructions[2] instanceof INVOKEINTERFACE && instructions[3] instanceof INVOKEINTERFACE ii
+				&& Objects.equals(getMethodName(ii, cpg), methodName) && instructions[4] instanceof ARETURN) {
+			//
+			final FailableFunction<Object, Object, Exception> function = a -> a != null
+					? FieldUtils.readDeclaredField(a, getFieldName(gf, cpg), true)
+					: null;
+			//
+			put(map, getKey(entry), function);
+			//
+			if (function.apply(getValue(entry)) == null) {
+				//
+				return false;
+				//
+			} // if
+				//
+		} // if
+			//
+		return true;
+		//
 	}
 
 	@Nullable
