@@ -1387,7 +1387,7 @@ abstract class Util {
 				//
 				return false;
 				//
-			} else if (!executeForEachMethod3c(instructions, cpg, entry, methodName, map)) {
+			} else if (!executeForEachMethod3c(instructions, cpg, entry, map)) {
 				//
 				return false;
 				//
@@ -1472,8 +1472,8 @@ abstract class Util {
 	}
 
 	private static boolean executeForEachMethod3c(final Instruction[] instructions, final ConstantPoolGen cpg,
-			final Entry<String, Object> entry, final String methodName,
-			final Map<String, FailableFunction<Object, Object, Exception>> map) throws Exception {
+			final Entry<String, Object> entry, final Map<String, FailableFunction<Object, Object, Exception>> map)
+			throws Exception {
 		//
 		if (length(instructions) == 3 && instructions[0] instanceof ALOAD && instructions[1] instanceof GETFIELD gf
 				&& instructions[2] instanceof ARETURN) {

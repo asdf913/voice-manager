@@ -87,7 +87,7 @@ class UtilTest {
 				ConstantPoolGen.class, Entry.class, String.class, Map.class)).setAccessible(true);
 		//
 		(METHOD_EXECUTE_FOR_EACH_METHOD_3C = clz.getDeclaredMethod("executeForEachMethod3c", Instruction[].class,
-				ConstantPoolGen.class, Entry.class, String.class, Map.class)).setAccessible(true);
+				ConstantPoolGen.class, Entry.class, Map.class)).setAccessible(true);
 		//
 	}
 
@@ -879,20 +879,17 @@ class UtilTest {
 	@Test
 	void testExecuteForEachMethod3c() throws Throwable {
 		//
-		Assertions.assertTrue(
-				executeForEachMethod3c(new Instruction[] { aLoad, getField, null }, null, null, null, null));
+		Assertions.assertTrue(executeForEachMethod3c(new Instruction[] { aLoad, getField, null }, null, null, null));
 		//
-		Assertions.assertTrue(
-				executeForEachMethod3c(new Instruction[] { null, getField, aReturn }, null, null, null, null));
+		Assertions.assertTrue(executeForEachMethod3c(new Instruction[] { null, getField, aReturn }, null, null, null));
 		//
 	}
 
 	private static boolean executeForEachMethod3c(final Instruction[] instructions, final ConstantPoolGen cpg,
-			final Entry<String, Object> entry, final String methodName,
-			final Map<String, FailableFunction<Object, Object, Exception>> map) throws Throwable {
+			final Entry<String, Object> entry, final Map<String, FailableFunction<Object, Object, Exception>> map)
+			throws Throwable {
 		try {
-			final Object obj = METHOD_EXECUTE_FOR_EACH_METHOD_3C.invoke(null, instructions, cpg, entry, methodName,
-					map);
+			final Object obj = METHOD_EXECUTE_FOR_EACH_METHOD_3C.invoke(null, instructions, cpg, entry, map);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
