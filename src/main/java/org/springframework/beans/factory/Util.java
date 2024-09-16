@@ -1458,7 +1458,7 @@ abstract class Util {
 		//
 	}
 
-	private static String getFieldName(final FieldInstruction instance, final ConstantPoolGen cpg) {
+	private static String getFieldName(@Nullable final FieldInstruction instance, @Nullable final ConstantPoolGen cpg) {
 		return instance != null && cpg != null ? instance.getFieldName(cpg) : null;
 	}
 
@@ -1508,7 +1508,8 @@ abstract class Util {
 	}
 
 	@Nullable
-	private static String getMethodName(@Nullable final InvokeInstruction instance, final ConstantPoolGen cpg) {
+	private static String getMethodName(@Nullable final InvokeInstruction instance,
+			@Nullable final ConstantPoolGen cpg) {
 		return instance != null && cpg != null ? instance.getMethodName(cpg) : null;
 	}
 
