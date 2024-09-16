@@ -58,7 +58,7 @@ class UtilTest {
 
 	private static Method METHOD_GET_DECLARED_FIELD, METHOD_EXECUTE_FOR_EACH_METHOD4, METHOD_EXECUTE_FOR_EACH_METHOD5,
 			METHOD_GET_RESOURCE_AS_STREAM, METHOD_EXECUTE_FOR_EACH_METHOD_3A, METHOD_GET_FIELD_NAME,
-			METHOD_EXECUTE_FOR_EACH_METHOD_3B;
+			METHOD_EXECUTE_FOR_EACH_METHOD_3B, METHOD_EXECUTE_FOR_EACH_METHOD_3C;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -84,6 +84,9 @@ class UtilTest {
 				.setAccessible(true);
 		//
 		(METHOD_EXECUTE_FOR_EACH_METHOD_3B = clz.getDeclaredMethod("executeForEachMethod3b", Instruction[].class,
+				ConstantPoolGen.class, Entry.class, String.class, Map.class)).setAccessible(true);
+		//
+		(METHOD_EXECUTE_FOR_EACH_METHOD_3C = clz.getDeclaredMethod("executeForEachMethod3c", Instruction[].class,
 				ConstantPoolGen.class, Entry.class, String.class, Map.class)).setAccessible(true);
 		//
 	}
@@ -863,6 +866,32 @@ class UtilTest {
 			final Map<String, FailableFunction<Object, Object, Exception>> map) throws Throwable {
 		try {
 			final Object obj = METHOD_EXECUTE_FOR_EACH_METHOD_3B.invoke(null, instructions, cpg, entry, methodName,
+					map);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testExecuteForEachMethod3c() throws Throwable {
+		//
+		Assertions.assertTrue(
+				executeForEachMethod3c(new Instruction[] { aLoad, getField, null }, null, null, null, null));
+		//
+		Assertions.assertTrue(
+				executeForEachMethod3c(new Instruction[] { null, getField, aReturn }, null, null, null, null));
+		//
+	}
+
+	private static boolean executeForEachMethod3c(final Instruction[] instructions, final ConstantPoolGen cpg,
+			final Entry<String, Object> entry, final String methodName,
+			final Map<String, FailableFunction<Object, Object, Exception>> map) throws Throwable {
+		try {
+			final Object obj = METHOD_EXECUTE_FOR_EACH_METHOD_3C.invoke(null, instructions, cpg, entry, methodName,
 					map);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();

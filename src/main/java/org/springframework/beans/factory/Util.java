@@ -1387,19 +1387,10 @@ abstract class Util {
 				//
 				return false;
 				//
-			} else if (length(instructions) == 3 && instructions[0] instanceof ALOAD
-					&& instructions[1] instanceof GETFIELD gf && instructions[2] instanceof ARETURN) {
+			} else if (!executeForEachMethod3c(instructions, cpg, entry, methodName, map)) {
 				//
-				final String fieldName = gf.getFieldName(cpg);
+				return false;
 				//
-				put(map, name, function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
-				//
-				if (function.apply(instance) == null) {
-					//
-					return false;
-					//
-				} // if
-					//
 			} else if (length(instructions) == 6 && instructions[0] instanceof ALOAD
 					&& instructions[1] instanceof GETFIELD gf && instructions[2] instanceof CHECKCAST
 					&& instructions[3] instanceof ALOAD && instructions[4] instanceof INVOKEVIRTUAL
@@ -1460,6 +1451,31 @@ abstract class Util {
 		if (length(instructions) == 5 && instructions[0] instanceof ALOAD && instructions[1] instanceof GETFIELD gf
 				&& instructions[2] instanceof INVOKEINTERFACE && instructions[3] instanceof INVOKEINTERFACE ii
 				&& Objects.equals(getMethodName(ii, cpg), methodName) && instructions[4] instanceof ARETURN) {
+			//
+			final FailableFunction<Object, Object, Exception> function = a -> a != null
+					? FieldUtils.readDeclaredField(a, getFieldName(gf, cpg), true)
+					: null;
+			//
+			put(map, getKey(entry), function);
+			//
+			if (function.apply(getValue(entry)) == null) {
+				//
+				return false;
+				//
+			} // if
+				//
+		} // if
+			//
+		return true;
+		//
+	}
+
+	private static boolean executeForEachMethod3c(final Instruction[] instructions, final ConstantPoolGen cpg,
+			final Entry<String, Object> entry, final String methodName,
+			final Map<String, FailableFunction<Object, Object, Exception>> map) throws Exception {
+		//
+		if (length(instructions) == 3 && instructions[0] instanceof ALOAD && instructions[1] instanceof GETFIELD gf
+				&& instructions[2] instanceof ARETURN) {
 			//
 			final FailableFunction<Object, Object, Exception> function = a -> a != null
 					? FieldUtils.readDeclaredField(a, getFieldName(gf, cpg), true)
