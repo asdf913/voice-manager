@@ -1306,13 +1306,10 @@ abstract class Util {
 						Arrays.asList("com.google.common.collect.ForwardingMultiset$StandardElementSet",
 								"com.google.common.collect.ForwardingSortedMultiset$StandardElementSet",
 								"org.apache.jena.ext.com.google.common.collect.ForwardingMultiset$StandardElementSet"),
-						name) && MethodUtils.invokeMethod(instance, true, "multiset") == null)) {
-			//
-			return false;
-			//
-		} else if (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableDefinitionImpl"), name)
-				&& Narcissus.invokeMethod(instance,
-						Narcissus.findMethod(getClass(instance), "createRowState", new Class<?>[] {})) == null) {
+						name) && MethodUtils.invokeMethod(instance, true, "multiset") == null)
+				|| (contains(Arrays.asList("com.healthmarketscience.jackcess.impl.TableDefinitionImpl"), name)
+						&& Narcissus.invokeMethod(instance, Narcissus.findMethod(getClass(instance), "createRowState",
+								new Class<?>[] {})) == null)) {
 			//
 			return false;
 			//
