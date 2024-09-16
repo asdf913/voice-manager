@@ -1440,6 +1440,7 @@ abstract class Util {
 		//
 	}
 
+	@Nullable
 	private static String getFieldName(@Nullable final FieldInstruction instance, @Nullable final ConstantPoolGen cpg) {
 		return instance != null && cpg != null ? instance.getFieldName(cpg) : null;
 	}
