@@ -1299,12 +1299,9 @@ abstract class Util {
 				&& FieldUtils.readField(instance, "complexData", true) == null)
 				|| (Objects.equals(name, "org.apache.commons.math3.util.MultidimensionalCounter")
 						&& Objects.equals(FieldUtils.readDeclaredField(instance, "last", true),
-								FieldUtils.readDeclaredField(instance, "dimension", true)))) {
-			//
-			return false;
-			//
-		} else if (Objects.equals(name, "org.apache.commons.math3.util.IntegerSequence$Range")
-				&& Objects.equals(FieldUtils.readDeclaredField(instance, "step", true), Integer.valueOf(0))) {
+								FieldUtils.readDeclaredField(instance, "dimension", true)))
+				|| (Objects.equals(name, "org.apache.commons.math3.util.IntegerSequence$Range")
+						&& Objects.equals(FieldUtils.readDeclaredField(instance, "step", true), Integer.valueOf(0)))) {
 			//
 			return false;
 			//
