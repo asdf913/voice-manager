@@ -1294,15 +1294,12 @@ abstract class Util {
 	private static boolean executeForEachMethod(final Object instance, @Nullable final String name)
 			throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 		//
-		if (Objects.equals(name, "org.apache.poi.ddf.EscherArrayProperty")
+		if ((Objects.equals(name, "org.apache.poi.ddf.EscherArrayProperty")
 				&& Objects.equals(FieldUtils.readDeclaredField(instance, "emptyComplexPart", true), Boolean.FALSE)
-				&& FieldUtils.readField(instance, "complexData", true) == null) {
-			//
-			return false;
-			//
-		} else if (Objects.equals(name, "org.apache.commons.math3.util.MultidimensionalCounter")
-				&& Objects.equals(FieldUtils.readDeclaredField(instance, "last", true),
-						FieldUtils.readDeclaredField(instance, "dimension", true))) {
+				&& FieldUtils.readField(instance, "complexData", true) == null)
+				|| (Objects.equals(name, "org.apache.commons.math3.util.MultidimensionalCounter")
+						&& Objects.equals(FieldUtils.readDeclaredField(instance, "last", true),
+								FieldUtils.readDeclaredField(instance, "dimension", true)))) {
 			//
 			return false;
 			//
