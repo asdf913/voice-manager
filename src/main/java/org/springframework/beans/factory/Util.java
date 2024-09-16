@@ -52,6 +52,7 @@ import org.apache.bcel.generic.ALOAD;
 import org.apache.bcel.generic.ARETURN;
 import org.apache.bcel.generic.CHECKCAST;
 import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.FieldInstruction;
 import org.apache.bcel.generic.GETFIELD;
 import org.apache.bcel.generic.INVOKEINTERFACE;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
@@ -70,6 +71,7 @@ import org.apache.commons.lang3.function.FailableBiPredicate;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -778,7 +780,8 @@ abstract class Util {
 				//
 			if (Objects.equals(getSuperclassName(javaClass), "java.lang.Object")
 					&& !executeForEachMethod(JavaClassUtil.getMethods(javaClass), javaClass.getInterfaces(), instance,
-							name)) {
+							name, STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
+									.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new))) {
 				//
 				return;
 				//
@@ -1339,7 +1342,8 @@ abstract class Util {
 	}
 
 	private static boolean executeForEachMethod(final Method[] ms, final JavaClass[] interfaces, final Object instance,
-			@Nullable final String name) throws Exception {
+			@Nullable final String name, final Map<String, FailableFunction<Object, Object, Exception>> map)
+			throws Exception {
 		//
 		String methodName = null;
 		//
@@ -1372,23 +1376,11 @@ abstract class Util {
 				//
 			} // if
 				//
-			methodName = FieldOrMethodUtil.getName(m);
-			//
-			if (length(instructions) == 4 && instructions[0] instanceof ALOAD && instructions[1] instanceof GETFIELD gf
-					&& instructions[2] instanceof INVOKEINTERFACE ii
-					&& Objects.equals(getMethodName(ii, cpg), methodName) && instructions[3] instanceof ARETURN) {
+			if (!executeForEachMethod3(instructions, cpg, Pair.of(name, instance),
+					methodName = FieldOrMethodUtil.getName(m), map)) {
 				//
-				final String fieldName = gf.getFieldName(cpg);
+				return false;
 				//
-				put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP,
-						LinkedHashMap::new), name, function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
-				//
-				if (function.apply(instance) == null) {
-					//
-					return false;
-					//
-				} // if
-					//
 			} else if (length(instructions) == 5 && instructions[0] instanceof ALOAD
 					&& instructions[1] instanceof GETFIELD gf && instructions[2] instanceof INVOKEINTERFACE
 					&& instructions[3] instanceof INVOKEINTERFACE ii
@@ -1396,8 +1388,7 @@ abstract class Util {
 				//
 				final String fieldName = gf.getFieldName(cpg);
 				//
-				put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP,
-						LinkedHashMap::new), name, function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
+				put(map, name, function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
 				//
 				if (function.apply(instance) == null) {
 					//
@@ -1410,8 +1401,7 @@ abstract class Util {
 				//
 				final String fieldName = gf.getFieldName(cpg);
 				//
-				put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP,
-						LinkedHashMap::new), name, function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
+				put(map, name, function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
 				//
 				if (function.apply(instance) == null) {
 					//
@@ -1426,8 +1416,7 @@ abstract class Util {
 				//
 				final String fieldName = gf.getFieldName(cpg);
 				//
-				put(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP,
-						LinkedHashMap::new), name, function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
+				put(map, name, function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
 				//
 				if (function.apply(instance) == null) {
 					//
@@ -1441,6 +1430,36 @@ abstract class Util {
 			//
 		return true;
 		//
+	}
+
+	private static boolean executeForEachMethod3(final Instruction[] instructions, final ConstantPoolGen cpg,
+			final Entry<String, Object> entry, final String methodName,
+			final Map<String, FailableFunction<Object, Object, Exception>> map) throws Exception {
+		//
+		if (length(instructions) == 4 && instructions[0] instanceof ALOAD && instructions[1] instanceof GETFIELD gf
+				&& instructions[2] instanceof INVOKEINTERFACE ii && Objects.equals(getMethodName(ii, cpg), methodName)
+				&& instructions[3] instanceof ARETURN) {
+			//
+			final FailableFunction<Object, Object, Exception> function = a -> a != null
+					? FieldUtils.readDeclaredField(a, getFieldName(gf, cpg), true)
+					: null;
+			//
+			put(map, getKey(entry), function);
+			//
+			if (function.apply(getValue(entry)) == null) {
+				//
+				return false;
+				//
+			} // if
+				//
+		} // if
+			//
+		return true;
+		//
+	}
+
+	private static String getFieldName(final FieldInstruction instance, final ConstantPoolGen cpg) {
+		return instance != null && cpg != null ? instance.getFieldName(cpg) : null;
 	}
 
 	@Nullable
@@ -1490,7 +1509,7 @@ abstract class Util {
 
 	@Nullable
 	private static String getMethodName(@Nullable final InvokeInstruction instance, final ConstantPoolGen cpg) {
-		return instance != null ? instance.getMethodName(cpg) : null;
+		return instance != null && cpg != null ? instance.getMethodName(cpg) : null;
 	}
 
 	@Nullable
