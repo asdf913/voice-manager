@@ -1301,14 +1301,12 @@ abstract class Util {
 						&& Objects.equals(FieldUtils.readDeclaredField(instance, "last", true),
 								FieldUtils.readDeclaredField(instance, "dimension", true)))
 				|| (Objects.equals(name, "org.apache.commons.math3.util.IntegerSequence$Range")
-						&& Objects.equals(FieldUtils.readDeclaredField(instance, "step", true), Integer.valueOf(0)))) {
-			//
-			return false;
-			//
-		} else if (contains(Arrays.asList("com.google.common.collect.ForwardingMultiset$StandardElementSet",
-				"com.google.common.collect.ForwardingSortedMultiset$StandardElementSet",
-				"org.apache.jena.ext.com.google.common.collect.ForwardingMultiset$StandardElementSet"), name)
-				&& MethodUtils.invokeMethod(instance, true, "multiset") == null) {
+						&& Objects.equals(FieldUtils.readDeclaredField(instance, "step", true), Integer.valueOf(0)))
+				|| (contains(
+						Arrays.asList("com.google.common.collect.ForwardingMultiset$StandardElementSet",
+								"com.google.common.collect.ForwardingSortedMultiset$StandardElementSet",
+								"org.apache.jena.ext.com.google.common.collect.ForwardingMultiset$StandardElementSet"),
+						name) && MethodUtils.invokeMethod(instance, true, "multiset") == null)) {
 			//
 			return false;
 			//
