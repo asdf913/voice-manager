@@ -1,6 +1,5 @@
 package org.apache.bcel.generic;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
@@ -51,7 +50,7 @@ class InvokeInstructionUtilTest {
 	}
 
 	@Test
-	void testNull() throws IllegalAccessException, InvocationTargetException {
+	void testNull() {
 		//
 		final Method[] ms = InvokeInstructionUtil.class.getDeclaredMethods();
 		//
