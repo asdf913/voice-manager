@@ -531,8 +531,11 @@ class UtilTest {
 							"org.d2ab.collection.doubles.SortedListDoubleSet", "org.d2ab.collection.ints.BitIntSet",
 							"org.d2ab.collection.ints.ChainingIntIterable", "org.d2ab.collection.ints.IntList$SubList",
 							"org.d2ab.collection.longs.ChainingLongIterable",
-							"org.d2ab.collection.longs.LongList$SubList", "org.d2ab.sequence.EquivalentSizeSequence"),
-							name)) {
+							"org.d2ab.collection.longs.LongList$SubList", "org.d2ab.sequence.EquivalentSizeSequence",
+							"org.d2ab.collection.chars.CollectionCharList",
+							"org.d2ab.collection.doubles.CollectionDoubleList",
+							"org.d2ab.collection.ints.CollectionIntList",
+							"org.d2ab.collection.longs.CollectionLongList"), name)) {
 						//
 						Assertions.assertThrows(NullPointerException.class, () -> Util.iterator(it), name);
 						//
