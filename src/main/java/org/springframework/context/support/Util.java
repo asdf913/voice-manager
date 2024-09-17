@@ -991,9 +991,9 @@ public abstract class Util {
 										Collectors.joining(",")),
 								"java.lang.Object[]")
 						&& Objects.equals(InvokeInstructionUtil.getMethodName(invokeInterface, cpg), "iterator")
-						&& Objects
-								.equals(Util.map(Arrays.stream(getArgumentTypes(invokeInterface, cpg)), Util::toString)
-										.collect(Collectors.joining(",")), "")) {
+						&& Objects.equals(Util.collect(
+								Util.map(Arrays.stream(getArgumentTypes(invokeInterface, cpg)), Util::toString),
+								Collectors.joining(",")), "")) {
 					//
 					return getFieldName(getField, cpg);
 					//
