@@ -38,14 +38,10 @@ class InvokeInstructionUtilTest {
 					//
 				} // if
 					//
-			} else if (self instanceof InvokeInstruction) {
+			} else if (self instanceof InvokeInstruction && Objects.equals(methodName, "getMethodName")) {
 				//
-				if (Objects.equals(methodName, "getMethodName")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
