@@ -14,9 +14,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Map.Entry;
 import java.util.function.Consumer;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Supplier;
@@ -28,7 +28,6 @@ import java.util.stream.Stream;
 import org.apache.bcel.generic.ALOAD;
 import org.apache.bcel.generic.ARETURN;
 import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.FieldInstruction;
 import org.apache.bcel.generic.GETFIELD;
 import org.apache.bcel.generic.INVOKEINTERFACE;
 import org.apache.bcel.generic.Instruction;
@@ -57,8 +56,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class UtilTest {
 
 	private static Method METHOD_GET_DECLARED_FIELD, METHOD_EXECUTE_FOR_EACH_METHOD4, METHOD_EXECUTE_FOR_EACH_METHOD5,
-			METHOD_GET_RESOURCE_AS_STREAM, METHOD_EXECUTE_FOR_EACH_METHOD_3A, METHOD_GET_FIELD_NAME,
-			METHOD_EXECUTE_FOR_EACH_METHOD_3B, METHOD_EXECUTE_FOR_EACH_METHOD_3C;
+			METHOD_GET_RESOURCE_AS_STREAM, METHOD_EXECUTE_FOR_EACH_METHOD_3A, METHOD_EXECUTE_FOR_EACH_METHOD_3B,
+			METHOD_EXECUTE_FOR_EACH_METHOD_3C;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -79,9 +78,6 @@ class UtilTest {
 		//
 		(METHOD_EXECUTE_FOR_EACH_METHOD_3A = clz.getDeclaredMethod("executeForEachMethod3a", Instruction[].class,
 				ConstantPoolGen.class, Entry.class, String.class, Map.class)).setAccessible(true);
-		//
-		(METHOD_GET_FIELD_NAME = clz.getDeclaredMethod("getFieldName", FieldInstruction.class, ConstantPoolGen.class))
-				.setAccessible(true);
 		//
 		(METHOD_EXECUTE_FOR_EACH_METHOD_3B = clz.getDeclaredMethod("executeForEachMethod3b", Instruction[].class,
 				ConstantPoolGen.class, Entry.class, String.class, Map.class)).setAccessible(true);
@@ -808,27 +804,6 @@ class UtilTest {
 					map);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetFieldName() throws Throwable {
-		//
-		Assertions.assertNull(getFieldName(getField, null));
-		//
-	}
-
-	private static String getFieldName(final FieldInstruction instance, final ConstantPoolGen cpg) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_FIELD_NAME.invoke(null, instance, cpg);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

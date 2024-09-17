@@ -41,7 +41,7 @@ import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.generic.ALOAD;
 import org.apache.bcel.generic.ARETURN;
 import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.FieldInstruction;
+import org.apache.bcel.generic.FieldInstructionUtil;
 import org.apache.bcel.generic.FieldOrMethod;
 import org.apache.bcel.generic.GETFIELD;
 import org.apache.bcel.generic.INVOKEINTERFACE;
@@ -995,7 +995,7 @@ public abstract class Util {
 								Util.map(Arrays.stream(getArgumentTypes(invokeInterface, cpg)), Util::toString),
 								Collectors.joining(",")), "")) {
 					//
-					return getFieldName(getField, cpg);
+					return FieldInstructionUtil.getFieldName(getField, cpg);
 					//
 				} // if
 					//
@@ -1150,7 +1150,8 @@ public abstract class Util {
 				//
 			if (CollectionUtils.isNotEmpty(booleans) && booleans.first() != null && booleans.first().booleanValue()) {
 				//
-				return getFieldName(getField, new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(m)));
+				return FieldInstructionUtil.getFieldName(getField,
+						new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(m)));
 				//
 			} // if
 				//
@@ -1158,11 +1159,6 @@ public abstract class Util {
 			//
 		return null;
 		//
-	}
-
-	@Nullable
-	private static String getFieldName(@Nullable final FieldInstruction instance, final ConstantPoolGen cpg) {
-		return instance != null ? instance.getFieldName(cpg) : null;
 	}
 
 	@Nullable

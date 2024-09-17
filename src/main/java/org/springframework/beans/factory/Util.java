@@ -52,7 +52,7 @@ import org.apache.bcel.generic.ALOAD;
 import org.apache.bcel.generic.ARETURN;
 import org.apache.bcel.generic.CHECKCAST;
 import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.FieldInstruction;
+import org.apache.bcel.generic.FieldInstructionUtil;
 import org.apache.bcel.generic.GETFIELD;
 import org.apache.bcel.generic.INVOKEINTERFACE;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
@@ -1379,7 +1379,7 @@ abstract class Util {
 					&& instructions[3] instanceof ALOAD && instructions[4] instanceof INVOKEVIRTUAL
 					&& instructions[5] instanceof ARETURN) {
 				//
-				final String fieldName = gf.getFieldName(cpg);
+				final String fieldName = FieldInstructionUtil.getFieldName(gf, cpg);
 				//
 				put(map, name, function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
 				//
@@ -1407,7 +1407,7 @@ abstract class Util {
 				&& instructions[3] instanceof ARETURN) {
 			//
 			final FailableFunction<Object, Object, Exception> function = a -> a != null
-					? FieldUtils.readDeclaredField(a, getFieldName(gf, cpg), true)
+					? FieldUtils.readDeclaredField(a, FieldInstructionUtil.getFieldName(gf, cpg), true)
 					: null;
 			//
 			put(map, getKey(entry), function);
@@ -1424,11 +1424,6 @@ abstract class Util {
 		//
 	}
 
-	@Nullable
-	private static String getFieldName(@Nullable final FieldInstruction instance, @Nullable final ConstantPoolGen cpg) {
-		return instance != null && cpg != null ? instance.getFieldName(cpg) : null;
-	}
-
 	private static boolean executeForEachMethod3b(final Instruction[] instructions, final ConstantPoolGen cpg,
 			final Entry<String, Object> entry, final String methodName,
 			final Map<String, FailableFunction<Object, Object, Exception>> map) throws Exception {
@@ -1439,7 +1434,7 @@ abstract class Util {
 				&& instructions[4] instanceof ARETURN) {
 			//
 			final FailableFunction<Object, Object, Exception> function = a -> a != null
-					? FieldUtils.readDeclaredField(a, getFieldName(gf, cpg), true)
+					? FieldUtils.readDeclaredField(a, FieldInstructionUtil.getFieldName(gf, cpg), true)
 					: null;
 			//
 			put(map, getKey(entry), function);
@@ -1464,7 +1459,7 @@ abstract class Util {
 				&& instructions[2] instanceof ARETURN) {
 			//
 			final FailableFunction<Object, Object, Exception> function = a -> a != null
-					? FieldUtils.readDeclaredField(a, getFieldName(gf, cpg), true)
+					? FieldUtils.readDeclaredField(a, FieldInstructionUtil.getFieldName(gf, cpg), true)
 					: null;
 			//
 			put(map, getKey(entry), function);
@@ -1541,7 +1536,7 @@ abstract class Util {
 				&& instructions[3] instanceof INVOKEINTERFACE && instructions[4] instanceof RETURN) {
 			//
 			final FailableFunction<Object, Object, Exception> function = a -> FieldUtils.readDeclaredField(a,
-					gf.getFieldName(cpg), true);
+					FieldInstructionUtil.getFieldName(gf, cpg), true);
 			//
 			put(map, name, function);
 			//

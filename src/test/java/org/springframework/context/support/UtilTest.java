@@ -28,7 +28,6 @@ import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.generic.ConstantPoolGen;
-import org.apache.bcel.generic.FieldInstruction;
 import org.apache.bcel.generic.FieldOrMethod;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.InvokeInstruction;
@@ -61,9 +60,8 @@ class UtilTest {
 
 	private static Method METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD, METHOD_TEST, METHOD_IS_STATIC,
 			METHOD_GET_FIELD_NMAE_IF_SINGLE_LINE_RETURN_METHOD, METHOD_GET_FIELD_NMAE_FOR_STREAM_OF_AND_ITERATOR,
-			METHOD_GET_FIELD_NAME, METHOD_GET_ARGUMENT_TYPES, METHOD_COLLECT, METHOD_GET_RESOURCE_AS_STREAM,
-			METHOD_PUT_ALL, METHOD_GET_REFERENCE_TYPE, METHOD_ITERATOR2, METHOD_ITERATOR3,
-			METHOD_HANDLE_ITERATOR_THROWABLE = null;
+			METHOD_GET_ARGUMENT_TYPES, METHOD_COLLECT, METHOD_GET_RESOURCE_AS_STREAM, METHOD_PUT_ALL,
+			METHOD_GET_REFERENCE_TYPE, METHOD_ITERATOR2, METHOD_ITERATOR3, METHOD_HANDLE_ITERATOR_THROWABLE = null;
 
 	private static List<ClassInfo> CLASS_INFOS = null;
 
@@ -84,9 +82,6 @@ class UtilTest {
 		//
 		(METHOD_GET_FIELD_NMAE_FOR_STREAM_OF_AND_ITERATOR = clz.getDeclaredMethod("getFieldNmaeForStreamOfAndIterator",
 				Method.class)).setAccessible(true);
-		//
-		(METHOD_GET_FIELD_NAME = clz.getDeclaredMethod("getFieldName", FieldInstruction.class, ConstantPoolGen.class))
-				.setAccessible(true);
 		//
 		(METHOD_GET_ARGUMENT_TYPES = clz.getDeclaredMethod("getArgumentTypes", InvokeInstruction.class,
 				ConstantPoolGen.class)).setAccessible(true);
@@ -640,27 +635,6 @@ class UtilTest {
 	private static String getFieldNmaeForStreamOfAndIterator(final Method method) throws Throwable {
 		try {
 			final Object obj = METHOD_GET_FIELD_NMAE_FOR_STREAM_OF_AND_ITERATOR.invoke(null, method);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetFieldNmae() throws Throwable {
-		//
-		Assertions.assertNull(getFieldName(null, null));
-		//
-	}
-
-	private static String getFieldName(final FieldInstruction instance, final ConstantPoolGen cpg) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_FIELD_NAME.invoke(null, instance, cpg);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {
