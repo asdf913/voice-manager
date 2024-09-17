@@ -1586,6 +1586,35 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHiragana}$"),
+				StringUtils
+						.trim(testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null)));
+		//
+		final Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap, "^(\\p{InHiragana}+)$"), StringUtils
+				.trim(testAndApply(x -> IterableUtils.size(x) > i + 1, list, x -> IterableUtils.get(x, i + 1), null)));
+		//
+		if (Util.matches(m1) && Util.groupCount(m1) > 2 && Util.matches(m2)
+				&& Util.matches(Util.matcher(PatternMap.getPattern(patternMap,
+						"^\\p{InHiragana}+\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}$"),
+						StringUtils.trim(testAndApply(x -> IterableUtils.size(x) > i + 2, list,
+								x -> IterableUtils.get(x, i + 2), null))))) {
+			//
+			final Iterable<String> ss = Arrays.asList(Util.group(m1, 3), Util.group(m1, 4));
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(m1, 1), ss);
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.group(m1, 2), ss);
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m1, 3),
+					Util.group(m2, 0));
+			//
+			addAll(intList, toIntList(i, IntStream.rangeClosed(0, 2)));
+			//
+		} // if
+			//
 		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 				toMultimap11(multimap, MultimapUtil.entries(multimap)));
 		//

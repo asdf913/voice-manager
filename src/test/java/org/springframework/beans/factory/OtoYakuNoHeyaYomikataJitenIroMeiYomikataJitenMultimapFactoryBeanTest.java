@@ -1000,6 +1000,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 										"青（あお）", null, null, "白（しろ）"),
 								0))));
 		//
+		Assertions.assertEquals("{\"{退紅=[あらそめ, あらぞめ], 褪染=[あらそめ, あらぞめ], あらそめ=[たいこう]}\":[0,1,2]}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
+						Arrays.asList(" 退紅・褪染（あらそめ・あらぞめ・退紅は", "たいこう", "とも）日本の色名・色々な色"), 0))));
+		//
 	}
 
 	private static Entry<Multimap<String, String>, int[]> convert(
