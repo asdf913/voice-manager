@@ -58,7 +58,7 @@ import org.apache.bcel.generic.INVOKEINTERFACE;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
-import org.apache.bcel.generic.InvokeInstruction;
+import org.apache.bcel.generic.InvokeInstructionUtil;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.RETURN;
@@ -1402,7 +1402,8 @@ abstract class Util {
 			final Map<String, FailableFunction<Object, Object, Exception>> map) throws Exception {
 		//
 		if (length(instructions) == 4 && instructions[0] instanceof ALOAD && instructions[1] instanceof GETFIELD gf
-				&& instructions[2] instanceof INVOKEINTERFACE ii && Objects.equals(getMethodName(ii, cpg), methodName)
+				&& instructions[2] instanceof INVOKEINTERFACE ii
+				&& Objects.equals(InvokeInstructionUtil.getMethodName(ii, cpg), methodName)
 				&& instructions[3] instanceof ARETURN) {
 			//
 			final FailableFunction<Object, Object, Exception> function = a -> a != null
@@ -1434,7 +1435,8 @@ abstract class Util {
 		//
 		if (length(instructions) == 5 && instructions[0] instanceof ALOAD && instructions[1] instanceof GETFIELD gf
 				&& instructions[2] instanceof INVOKEINTERFACE && instructions[3] instanceof INVOKEINTERFACE ii
-				&& Objects.equals(getMethodName(ii, cpg), methodName) && instructions[4] instanceof ARETURN) {
+				&& Objects.equals(InvokeInstructionUtil.getMethodName(ii, cpg), methodName)
+				&& instructions[4] instanceof ARETURN) {
 			//
 			final FailableFunction<Object, Object, Exception> function = a -> a != null
 					? FieldUtils.readDeclaredField(a, getFieldName(gf, cpg), true)
@@ -1496,7 +1498,8 @@ abstract class Util {
 				//
 			} // if
 				//
-			methodName = getMethodName((INVOKEINTERFACE) ArrayUtils.get(instructions, i + 1), cpg);
+			methodName = InvokeInstructionUtil.getMethodName((INVOKEINTERFACE) ArrayUtils.get(instructions, i + 1),
+					cpg);
 			//
 			for (int j = 0; j < length(ms); j++) {
 				//
@@ -1522,12 +1525,6 @@ abstract class Util {
 			//
 		return method;
 		//
-	}
-
-	@Nullable
-	private static String getMethodName(@Nullable final InvokeInstruction instance,
-			@Nullable final ConstantPoolGen cpg) {
-		return instance != null && cpg != null ? instance.getMethodName(cpg) : null;
 	}
 
 	@Nullable

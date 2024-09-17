@@ -61,9 +61,9 @@ class UtilTest {
 
 	private static Method METHOD_GET_JAVA_IO_FILE_SYSTEM_FIELD, METHOD_TEST, METHOD_IS_STATIC,
 			METHOD_GET_FIELD_NMAE_IF_SINGLE_LINE_RETURN_METHOD, METHOD_GET_FIELD_NMAE_FOR_STREAM_OF_AND_ITERATOR,
-			METHOD_GET_FIELD_NAME, METHOD_GET_METHOD_NAME, METHOD_GET_ARGUMENT_TYPES, METHOD_COLLECT,
-			METHOD_GET_RESOURCE_AS_STREAM, METHOD_PUT_ALL, METHOD_GET_REFERENCE_TYPE, METHOD_ITERATOR2,
-			METHOD_ITERATOR3, METHOD_HANDLE_ITERATOR_THROWABLE = null;
+			METHOD_GET_FIELD_NAME, METHOD_GET_ARGUMENT_TYPES, METHOD_COLLECT, METHOD_GET_RESOURCE_AS_STREAM,
+			METHOD_PUT_ALL, METHOD_GET_REFERENCE_TYPE, METHOD_ITERATOR2, METHOD_ITERATOR3,
+			METHOD_HANDLE_ITERATOR_THROWABLE = null;
 
 	private static List<ClassInfo> CLASS_INFOS = null;
 
@@ -87,9 +87,6 @@ class UtilTest {
 		//
 		(METHOD_GET_FIELD_NAME = clz.getDeclaredMethod("getFieldName", FieldInstruction.class, ConstantPoolGen.class))
 				.setAccessible(true);
-		//
-		(METHOD_GET_METHOD_NAME = clz.getDeclaredMethod("getMethodName", InvokeInstruction.class,
-				ConstantPoolGen.class)).setAccessible(true);
 		//
 		(METHOD_GET_ARGUMENT_TYPES = clz.getDeclaredMethod("getArgumentTypes", InvokeInstruction.class,
 				ConstantPoolGen.class)).setAccessible(true);
@@ -528,16 +525,12 @@ class UtilTest {
 							"org.d2ab.collection.MappedList$SequentialList", "org.d2ab.collection.ReverseList",
 							"org.d2ab.collection.chars.BitCharSet", "org.d2ab.collection.chars.ChainingCharIterable",
 							"org.d2ab.collection.chars.CharList$SubList",
-							"org.d2ab.collection.chars.CollectionCharList",
 							"org.d2ab.collection.doubles.ChainingDoubleIterable",
-							"org.d2ab.collection.doubles.CollectionDoubleList",
 							"org.d2ab.collection.doubles.DoubleList$SubList",
 							"org.d2ab.collection.doubles.RawDoubleSet",
 							"org.d2ab.collection.doubles.SortedListDoubleSet", "org.d2ab.collection.ints.BitIntSet",
-							"org.d2ab.collection.ints.ChainingIntIterable",
-							"org.d2ab.collection.ints.CollectionIntList", "org.d2ab.collection.ints.IntList$SubList",
+							"org.d2ab.collection.ints.ChainingIntIterable", "org.d2ab.collection.ints.IntList$SubList",
 							"org.d2ab.collection.longs.ChainingLongIterable",
-							"org.d2ab.collection.longs.CollectionLongList",
 							"org.d2ab.collection.longs.LongList$SubList", "org.d2ab.sequence.EquivalentSizeSequence"),
 							name)) {
 						//
@@ -665,54 +658,6 @@ class UtilTest {
 	private static String getFieldName(final FieldInstruction instance, final ConstantPoolGen cpg) throws Throwable {
 		try {
 			final Object obj = METHOD_GET_FIELD_NAME.invoke(null, instance, cpg);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetMethodName() throws Throwable {
-		//
-		Assertions.assertNull(getMethodName(null, null));
-		//
-		Assertions.assertNull(getMethodName(invokeInstruction, null));
-		//
-		final Class<?> clz = Method.class;
-		//
-		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(
-						String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))
-				: null) {
-			//
-			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
-					ClassParserUtil.parse(new ClassParser(is, null)),
-					clz != null ? clz.getDeclaredMethod("toString") : null);
-			//
-			Assertions
-					.assertNull(getMethodName(
-							Util.map(
-									Util.filter(Arrays.stream(InstructionListUtil
-											.getInstructions(MethodGenUtil.getInstructionList(new MethodGen(m, null,
-													m != null
-															? new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(m))
-															: null)))),
-											x -> x instanceof InvokeInstruction),
-									x -> Util.cast(InvokeInstruction.class, x)).findFirst().orElse(null),
-							null));
-			//
-		} // try
-			//
-	}
-
-	private static String getMethodName(final InvokeInstruction instance, final ConstantPoolGen cpg) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_METHOD_NAME.invoke(null, instance, cpg);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {

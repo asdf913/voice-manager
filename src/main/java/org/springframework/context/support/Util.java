@@ -49,6 +49,7 @@ import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.InvokeInstruction;
+import org.apache.bcel.generic.InvokeInstructionUtil;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.ReferenceType;
@@ -984,12 +985,12 @@ public abstract class Util {
 				//
 				if (Objects.equals(TypeUtil.getClassName(getReferenceType(invokeStatic, cpg)),
 						"java.util.stream.Stream")
-						&& Objects.equals(getMethodName(invokeStatic, cpg), "of")
+						&& Objects.equals(InvokeInstructionUtil.getMethodName(invokeStatic, cpg), "of")
 						&& Objects.equals(
 								collect(Util.map(Arrays.stream(getArgumentTypes(invokeStatic, cpg)), Util::toString),
 										Collectors.joining(",")),
 								"java.lang.Object[]")
-						&& Objects.equals(getMethodName(invokeInterface, cpg), "iterator")
+						&& Objects.equals(InvokeInstructionUtil.getMethodName(invokeInterface, cpg), "iterator")
 						&& Objects
 								.equals(Util.map(Arrays.stream(getArgumentTypes(invokeInterface, cpg)), Util::toString)
 										.collect(Collectors.joining(",")), "")) {
@@ -1066,24 +1067,6 @@ public abstract class Util {
 		} // if
 			//
 		return cpg != null ? instance.getReferenceType(cpg) : null;
-		//
-	}
-
-	@Nullable
-	private static String getMethodName(@Nullable final InvokeInstruction instance,
-			@Nullable final ConstantPoolGen cpg) {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} else if (ProxyFactory.isProxyClass(getClass(instance))) {
-			//
-			return instance.getMethodName(cpg);
-			//
-		} // if
-			//
-		return cpg != null ? instance.getMethodName(cpg) : null;
 		//
 	}
 

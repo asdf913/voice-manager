@@ -37,6 +37,7 @@ import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.InvokeInstruction;
+import org.apache.bcel.generic.InvokeInstructionUtil;
 import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
@@ -649,7 +650,7 @@ class MainTest {
 							//
 							final ConstantPoolGen cpg = new ConstantPoolGen(method.getConstantPool());
 							//
-							if (!Objects.equals(invokestatic.getMethodName(cpg),
+							if (!Objects.equals(InvokeInstructionUtil.getMethodName(invokestatic, cpg),
 									"createConfigurableApplicationContext")) {
 								//
 								continue;
@@ -674,7 +675,7 @@ class MainTest {
 							//
 							className = invokespecial.getClassName(cpg);
 							//
-							if (!Objects.equals(invokespecial.getMethodName(cpg), "<init>")) {
+							if (!Objects.equals(InvokeInstructionUtil.getMethodName(invokespecial, cpg), "<init>")) {
 								//
 								continue;
 								//
@@ -785,7 +786,7 @@ class MainTest {
 						//
 						final ConstantPoolGen cpg = new ConstantPoolGen(method.getConstantPool());
 						//
-						if (!Objects.equals(invokespecial.getMethodName(cpg), "<init>")) {
+						if (!Objects.equals(InvokeInstructionUtil.getMethodName(invokespecial, cpg), "<init>")) {
 							//
 							continue;
 							//
