@@ -707,6 +707,9 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("冬", "とう")), MultimapUtil
 						.entries(toMultimap(patternMap, "かん冬（かんとう・やまぶき・日本語大辞典資料／かんとう・つわぶき・日本の色名）＊かん・やま・つわは疑の右側が欠"))));
 		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(MultimapUtil.entries(ImmutableMultimap.of("紫", "むらさき")),
+				MultimapUtil.entries(toMultimap(patternMap, "薄色・浅紫（うすき）日本の色名*浅紫は（うすきむらさき）とも"))));
+		//
 	}
 
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final String s) throws Throwable {

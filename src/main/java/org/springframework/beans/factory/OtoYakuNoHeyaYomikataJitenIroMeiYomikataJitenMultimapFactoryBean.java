@@ -2602,7 +2602,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap11(final PatternMap patternMap, final String input) {
 		//
-		final Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
+		Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^([\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}\\p{InKatakana}]+$"),
 				input);
 		//
@@ -2628,6 +2628,21 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			} // for
 				//
 			return Unit.with(multimap);
+			//
+		} // if
+			//
+		String g3, g4, g2;
+		//
+		int l3;
+		//
+		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^\\p{InCJKUnifiedIdeographs}+\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+\\p{InBasicLatin}(\\p{InCJKUnifiedIdeographs}+)\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InHiragana}+$"),
+				input)) && (groupCount = Util.groupCount(m)) > 3
+				&& Objects.equals(Util.group(m, 1), g3 = Util.group(m, 3)) && (l3 = StringUtils.length(g3)) == 2
+				&& StringUtils.startsWith(g4 = Util.group(m, 4), g2 = Util.group(m, 2))) {
+			//
+			return Unit.with(
+					ImmutableMultimap.of(StringUtils.substring(g3, l3 - 1, l3), StringUtils.substringAfter(g4, g2)));
 			//
 		} // if
 			//
