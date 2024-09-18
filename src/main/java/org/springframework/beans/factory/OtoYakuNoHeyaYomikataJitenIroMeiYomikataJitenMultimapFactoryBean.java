@@ -1706,15 +1706,15 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			for (int j = 0; j < IterableUtils.size(quartets); j++) {
 				//
-				if ((quartet = IterableUtils.get(quartets, j)) == null
-						|| Objects.equals(v1 = quartet.getValue1(), v2 = quartet.getValue3())) {
+				if (Objects.equals(v1 = Util.getValue1(quartet = IterableUtils.get(quartets, j)),
+						v2 = getValue3(quartet))) {
 					//
 					continue;
 					//
 				} // if
 					//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						lcsk = longestCommonSubstring(k1 = quartet.getValue0(), quartet.getValue2()),
+						lcsk = longestCommonSubstring(k1 = IValue0Util.getValue0(quartet), getValue2(quartet)),
 						lcsv = longestCommonSubstring(v1, v2));
 				//
 				if (Boolean.logicalAnd(StringUtils.endsWith(k1, lcsk), StringUtils.endsWith(v1, lcsv))) {
