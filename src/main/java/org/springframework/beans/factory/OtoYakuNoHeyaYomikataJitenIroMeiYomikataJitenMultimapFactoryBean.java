@@ -1690,9 +1690,11 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			final List<Quartet<String, String, String, String>> quartets = Util
 					.toList(Util.map(Util.stream(Lists.cartesianProduct(entries, entries)), x -> {
 						//
-						final Entry<String, String> a = IterableUtils.size(x) > 0 ? IterableUtils.get(x, 0) : null;
+						final Entry<String, String> a = testAndApply(y -> IterableUtils.size(y) > 0, x,
+								y -> IterableUtils.get(y, 0), null);
 						//
-						final Entry<String, String> b = IterableUtils.size(x) > 1 ? IterableUtils.get(x, 1) : null;
+						final Entry<String, String> b = testAndApply(y -> IterableUtils.size(y) > 1, x,
+								y -> IterableUtils.get(y, 1), null);
 						//
 						return Quartet.with(Util.getKey(a), Util.getValue(a), Util.getKey(b), Util.getValue(b));
 						//
