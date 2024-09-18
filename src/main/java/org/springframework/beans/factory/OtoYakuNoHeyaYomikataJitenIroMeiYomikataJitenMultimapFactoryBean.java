@@ -194,7 +194,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static boolean isEmpty(final IntList instance) {
+	private static boolean isEmpty(@Nullable final IntList instance) {
 		return instance == null || instance.isEmpty();
 	}
 
