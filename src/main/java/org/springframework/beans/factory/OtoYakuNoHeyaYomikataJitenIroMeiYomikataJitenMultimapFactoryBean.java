@@ -1628,6 +1628,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList12(final PatternMap patternMap,
 			final List<String> list, final int i) {
 		//
@@ -1738,6 +1739,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap12(
 			final Iterable<Quartet<String, String, String, String>> quartets) {
 		//
