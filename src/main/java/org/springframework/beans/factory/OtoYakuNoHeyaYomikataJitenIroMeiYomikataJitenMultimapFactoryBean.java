@@ -1715,12 +1715,12 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						lcsk = longestCommonSubstring(k1 = quartet.getValue0(), quartet.getValue2()),
 						lcsv = longestCommonSubstring(v1, v2));
 				//
-				if (StringUtils.endsWith(k1, lcsk) && StringUtils.endsWith(v1, lcsv)) {
+				if (Boolean.logicalAnd(StringUtils.endsWith(k1, lcsk), StringUtils.endsWith(v1, lcsv))) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							StringUtils.substringBefore(k1, lcsk), StringUtils.substringBefore(v1, lcsv));
 					//
-				} else if (StringUtils.startsWith(k1, lcsk) && StringUtils.startsWith(v1, lcsv)) {
+				} else if (Boolean.logicalAnd(StringUtils.startsWith(k1, lcsk), StringUtils.startsWith(v1, lcsv))) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							StringUtils.substringAfter(k1, lcsk), StringUtils.substringAfter(v1, lcsv));
