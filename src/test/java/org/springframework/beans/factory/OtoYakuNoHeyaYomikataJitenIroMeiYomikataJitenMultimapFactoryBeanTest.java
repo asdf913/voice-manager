@@ -54,7 +54,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3,
 			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS, METHOD_REMOVE_VALUE, METHOD_FLAT_MAP, METHOD_ADD_ALL,
 			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT, METHOD_TO_ARRAY,
-			METHOD_FOR_EACH_INT_STREAM;
+			METHOD_FOR_EACH_INT_STREAM, METHOD_IS_EMPTY;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -96,6 +96,8 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_FOR_EACH_INT_STREAM = clz.getDeclaredMethod("forEach", IntStream.class, IntConsumer.class))
 				.setAccessible(true);
+		//
+		(METHOD_IS_EMPTY = clz.getDeclaredMethod("isEmpty", IntList.class)).setAccessible(true);
 		//
 	}
 
@@ -212,8 +214,6 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 							new Class<?>[] { Integer.TYPE, Matcher.class, Matcher.class, Matcher.class }))
 					|| (Objects.equals(name, "getCommonSuffix")
 							&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class }))
-					|| (Objects.equals(name, "toMultimapAndIntList") && Arrays.equals(parameterTypes,
-							new Class<?>[] { PatternMap.class, List.class, Integer.TYPE }))
 					|| (Objects.equals(name, "toMultimapAndIntList11") && Arrays.equals(parameterTypes,
 							new Class<?>[] { PatternMap.class, List.class, Integer.TYPE }))
 					|| (Objects.equals(name, "toMultimapAndIntList11") && Arrays.equals(parameterTypes,
@@ -1010,6 +1010,8 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
 						Arrays.asList(" 退紅・褪染（あらそめ・あらぞめ・退紅は", "たいこう", "とも）日本の色名・色々な色"), 0))));
 		//
+		System.out.println("L1013");
+		//
 		Assertions.assertEquals("{\"{瓶覗=[かめのぞき], 甕覗=[かめのぞき], 覗色=[のぞきいろ], 覗=[のぞき], 瓶=[かめ], 甕=[かめ], 色=[いろ]}\":[0,1,2]}",
 				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
 						Arrays.asList("瓶覗・瓶覗き（かめのぞき）日本語大辞典・色々な色", "甕覗（かめのぞき）日本の色辞典", "覗色・覗き色（のぞきいろ）"), 0))));
@@ -1124,6 +1126,27 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	private static void forEach(final IntStream instance, final IntConsumer action) throws Throwable {
 		try {
 			METHOD_FOR_EACH_INT_STREAM.invoke(null, instance, action);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsEmpty() throws Throwable {
+		//
+		Assertions.assertTrue(isEmpty(new IntList()));
+		//
+		Assertions.assertTrue(isEmpty(Util.cast(IntList.class, Narcissus.allocateInstance(IntList.class))));
+		//
+	}
+
+	private static boolean isEmpty(final IntList instance) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_EMPTY.invoke(null, instance);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

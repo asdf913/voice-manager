@@ -174,13 +174,15 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList8,
 						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList9,
 						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList10,
-						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList11);
+						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList11,
+						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList12);
 		//
 		Entry<Multimap<String, String>, IntList> entry = null;
 		//
 		for (int j = 0; j < IterableUtils.size(functions); j++) {
 			//
-			if ((entry = apply(IterableUtils.get(functions, j), patternMap, list, i)) != null) {
+			if ((entry = apply(IterableUtils.get(functions, j), patternMap, list, i)) != null
+					&& !MultimapUtil.isEmpty(Util.getKey(entry)) && !isEmpty(Util.getValue(entry))) {
 				//
 				return entry;
 				//
@@ -190,6 +192,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		return null;
 		//
+	}
+
+	private static boolean isEmpty(final IntList instance) {
+		return instance == null || instance.isEmpty();
 	}
 
 	@Nullable
@@ -1615,10 +1621,25 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+				toMultimap11(multimap, MultimapUtil.entries(multimap)));
+		//
+		return Pair.of(multimap, intList);
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList12(final PatternMap patternMap,
+			final List<String> list, final int i) {
+		//
+		IntList intList = null;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+\\p{InHiragana})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InKatakana}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}]+$"),
-				testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null)))
-				&& Util.groupCount(m1) > 2) {
+				testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null));
+		//
+		if (Util.matches(m1) && Util.groupCount(m1) > 2) {
 			//
 			final String g1 = Util.group(m1, 1);
 			//
@@ -1628,6 +1649,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i);
 			//
 			char c;
+			//
+			String s;
 			//
 			Matcher m;
 			//
@@ -1709,10 +1732,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-				toMultimap11(multimap, MultimapUtil.entries(multimap)));
-		//
-		return Pair.of(multimap, intList);
+		return null;
 		//
 	}
 
