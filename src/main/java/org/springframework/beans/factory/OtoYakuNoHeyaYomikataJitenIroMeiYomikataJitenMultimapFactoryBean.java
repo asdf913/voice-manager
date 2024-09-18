@@ -1586,7 +1586,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
+		Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHiragana}$"),
 				StringUtils
 						.trim(testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null)));
@@ -1615,10 +1615,142 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
+		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+\\p{InHiragana})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InKatakana}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}]+$"),
+				testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null)))
+				&& Util.groupCount(m1) > 2) {
+			//
+			final String g1 = Util.group(m1, 1);
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g1,
+					Util.group(m1, 3));
+			//
+			IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i);
+			//
+			char c;
+			//
+			Matcher m;
+			//
+			for (int j = 0; j < StringUtils.length(g1); j++) {
+				//
+				c = g1.charAt(j);
+				//
+				for (int k = i + 1; k < IterableUtils.size(list); k++) {
+					//
+					if (!StringUtils.contains(s = IterableUtils.get(list, k), c)) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
+							s)) && Util.groupCount(m) > 1) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								Util.group(m, 1), Util.group(m, 2));
+						//
+						IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
+						//
+					} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+							s)) && Util.groupCount(m) > 1) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								Util.group(m, 1), Util.group(m, 2));
+						//
+						IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // for
+				//
+			final Iterable<Entry<String, String>> entries = testAndApply(Objects::nonNull,
+					MultimapUtil.entries(multimap), ArrayList::new, null);
+			//
+			String k1, v1, v2, lcsk, lcsv;
+			//
+			for (int j = 0; j < IterableUtils.size(entries); j++) {
+				//
+				for (int k = 0; k < IterableUtils.size(entries); k++) {
+					//
+					if (j == k || Objects.equals(v1 = Util.getValue(IterableUtils.get(entries, j)),
+							v2 = Util.getValue(IterableUtils.get(entries, k)))) {
+						//
+						continue;
+						//
+					} // if
+						//
+					MultimapUtil
+							.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+									lcsk = longestCommonSubstring(k1 = Util.getKey(IterableUtils.get(entries, j)),
+											Util.getKey(IterableUtils.get(entries, k))),
+									lcsv = longestCommonSubstring(v1, v2));
+					//
+					if (StringUtils.endsWith(k1, lcsk) && StringUtils.endsWith(v1, lcsv)) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								StringUtils.substringBefore(k1, lcsk), StringUtils.substringBefore(v1, lcsv));
+						//
+					} else if (StringUtils.startsWith(k1, lcsk) && StringUtils.startsWith(v1, lcsv)) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								StringUtils.substringAfter(k1, lcsk), StringUtils.substringAfter(v1, lcsv));
+						//
+					} // if
+						//
+				} // for
+					//
+			} // for
+				//
+			return Pair.of(multimap, intList);
+			//
+		} // if
+			//
 		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 				toMultimap11(multimap, MultimapUtil.entries(multimap)));
 		//
 		return Pair.of(multimap, intList);
+		//
+	}
+
+	private static String longestCommonSubstring(final String a, final String b) {
+		//
+		int start = 0, max = 0;
+		//
+		for (int i = 0; i < StringUtils.length(a); i++) {
+			//
+			for (int j = 0; j < b.length(); j++) {
+				//
+				int x = 0;
+				//
+				while (a.charAt(i + x) == b.charAt(j + x)) {
+					//
+					x++;
+					//
+					if (((i + x) >= a.length()) || ((j + x) >= b.length())) {
+						//
+						break;
+						//
+					} // if
+						//
+				} // while
+					//
+				if (x > max) {
+					//
+					max = x;
+					//
+					start = i;
+					//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+		return StringUtils.substring(a, start, start + max);
 		//
 	}
 

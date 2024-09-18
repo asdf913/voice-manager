@@ -1010,6 +1010,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
 						Arrays.asList(" 退紅・褪染（あらそめ・あらぞめ・退紅は", "たいこう", "とも）日本の色名・色々な色"), 0))));
 		//
+		Assertions.assertEquals("{\"{瓶覗=[かめのぞき], 甕覗=[かめのぞき], 覗色=[のぞきいろ], 覗=[のぞき], 瓶=[かめ], 甕=[かめ], 色=[いろ]}\":[0,1,2]}",
+				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
+						Arrays.asList("瓶覗・瓶覗き（かめのぞき）日本語大辞典・色々な色", "甕覗（かめのぞき）日本の色辞典", "覗色・覗き色（のぞきいろ）"), 0))));
+		//
 	}
 
 	private static Entry<Multimap<String, String>, int[]> convert(
