@@ -2651,7 +2651,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana}+)\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}[\\p{InHiragana}\\p{InCJKUnifiedIdeographs}\\p{InBasicLatin}\\p{InHalfwidthAndFullwidthForms}]+$"),
 				input)) && Util.groupCount(m) > 2
-				&& (index = StringUtils.indexOf(g3 = Util.group(m, 3), g2 = Util.group(m, 2))) >= 0) {
+				&& (index = StringUtils.indexOf(g3 = Util.group(m, 3), Util.group(m, 2))) >= 0) {
 			//
 			return Unit.with(ImmutableMultimap.of(Util.group(m, 1), StringUtils.substring(g3, 0, index)));
 			//
