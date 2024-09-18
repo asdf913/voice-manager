@@ -1687,8 +1687,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			final List<Entry<String, String>> entries = testAndApply(Objects::nonNull, MultimapUtil.entries(multimap),
 					ArrayList::new, null);
 			//
-			final List<Quartet<String, String, String, String>> quartets = Util
-					.toList(Util.map(Util.stream(Lists.cartesianProduct(entries, entries)), x -> {
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					toMultimap12(Util.toList(Util.map(Util.stream(Lists.cartesianProduct(entries, entries)), x -> {
 						//
 						final Entry<String, String> a = testAndApply(y -> IterableUtils.size(y) > 0, x,
 								y -> IterableUtils.get(y, 0), null);
@@ -1698,44 +1698,53 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						//
 						return Quartet.with(Util.getKey(a), Util.getValue(a), Util.getKey(b), Util.getValue(b));
 						//
-					}));
+					}))));
 			//
-			Quartet<String, String, String, String> quartet = null;
-			//
-			String k1, v1, v2, lcsk, lcsv;
-			//
-			for (int j = 0; j < IterableUtils.size(quartets); j++) {
-				//
-				if (Objects.equals(v1 = Util.getValue1(quartet = IterableUtils.get(quartets, j)),
-						v2 = getValue3(quartet))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						lcsk = longestCommonSubstring(k1 = IValue0Util.getValue0(quartet), getValue2(quartet)),
-						lcsv = longestCommonSubstring(v1, v2));
-				//
-				if (Boolean.logicalAnd(StringUtils.endsWith(k1, lcsk), StringUtils.endsWith(v1, lcsv))) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							StringUtils.substringBefore(k1, lcsk), StringUtils.substringBefore(v1, lcsv));
-					//
-				} else if (Boolean.logicalAnd(StringUtils.startsWith(k1, lcsk), StringUtils.startsWith(v1, lcsv))) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							StringUtils.substringAfter(k1, lcsk), StringUtils.substringAfter(v1, lcsv));
-					//
-				} // if
-					//
-			} // for
-				//
 			return Pair.of(multimap, intList);
 			//
 		} // if
 			//
 		return null;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap12(
+			final Iterable<Quartet<String, String, String, String>> quartets) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		Quartet<String, String, String, String> quartet = null;
+		//
+		String k1, v1, v2, lcsk, lcsv;
+		//
+		for (int j = 0; j < IterableUtils.size(quartets); j++) {
+			//
+			if (Objects.equals(v1 = Util.getValue1(quartet = IterableUtils.get(quartets, j)),
+					v2 = getValue3(quartet))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					lcsk = longestCommonSubstring(k1 = IValue0Util.getValue0(quartet), getValue2(quartet)),
+					lcsv = longestCommonSubstring(v1, v2));
+			//
+			if (Boolean.logicalAnd(StringUtils.endsWith(k1, lcsk), StringUtils.endsWith(v1, lcsv))) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						StringUtils.substringBefore(k1, lcsk), StringUtils.substringBefore(v1, lcsv));
+				//
+			} else if (Boolean.logicalAnd(StringUtils.startsWith(k1, lcsk), StringUtils.startsWith(v1, lcsv))) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						StringUtils.substringAfter(k1, lcsk), StringUtils.substringAfter(v1, lcsv));
+				//
+			} // if
+				//
+		} // for
+			//
+		return multimap;
 		//
 	}
 
