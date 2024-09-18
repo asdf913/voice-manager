@@ -1786,7 +1786,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		for (int i = 0; i < StringUtils.length(a); i++) {
 			//
-			for (int j = 0; j < b.length(); j++) {
+			for (int j = 0; j < StringUtils.length(b); j++) {
 				//
 				int x = 0;
 				//
