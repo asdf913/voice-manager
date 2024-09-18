@@ -195,6 +195,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 						//
 						list.add(Integer.valueOf(ZERO));
 						//
+					} else if (Objects.equals(Character.TYPE, clz)) {
+						//
+						list.add(Character.valueOf(' '));
+						//
 					} else {
 						//
 						list.add(null);
@@ -217,7 +221,9 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 					|| (Objects.equals(name, "toMultimapAndIntList11") && Arrays.equals(parameterTypes,
 							new Class<?>[] { PatternMap.class, List.class, Integer.TYPE }))
 					|| (Objects.equals(name, "toMultimapAndIntList11") && Arrays.equals(parameterTypes,
-							new Class<?>[] { PatternMap.class, List.class, String.class }))) {
+							new Class<?>[] { PatternMap.class, List.class, String.class }))
+					|| (Objects.equals(name, "toMultimapAndIntList12") && Arrays.equals(parameterTypes,
+							new Class<?>[] { PatternMap.class, List.class, Integer.TYPE, Character.TYPE }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
