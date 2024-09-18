@@ -1666,18 +1666,12 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						//
 					} // if
 						//
-					if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+					if ((Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
-							s)) && Util.groupCount(m) > 1) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								Util.group(m, 1), Util.group(m, 2));
-						//
-						IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
-						//
-					} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-							s)) && Util.groupCount(m) > 1) {
+							s)) && Util.groupCount(m) > 1)
+							|| (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+									"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+									s)) && Util.groupCount(m) > 1)) {
 						//
 						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 								Util.group(m, 1), Util.group(m, 2));
