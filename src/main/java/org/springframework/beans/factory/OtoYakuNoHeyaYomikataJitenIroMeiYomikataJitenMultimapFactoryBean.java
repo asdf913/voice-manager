@@ -2637,8 +2637,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 				"^\\p{InCJKUnifiedIdeographs}+\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+\\p{InBasicLatin}(\\p{InCJKUnifiedIdeographs}+)\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InHiragana}+$"),
-				input)) && (groupCount = Util.groupCount(m)) > 3
-				&& Objects.equals(Util.group(m, 1), g3 = Util.group(m, 3)) && (l3 = StringUtils.length(g3)) == 2
+				input)) && Util.groupCount(m) > 3 && Objects.equals(Util.group(m, 1), g3 = Util.group(m, 3))
+				&& (l3 = StringUtils.length(g3)) == 2
 				&& StringUtils.startsWith(g4 = Util.group(m, 4), g2 = Util.group(m, 2))) {
 			//
 			return Unit.with(
