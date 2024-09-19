@@ -1814,9 +1814,13 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 				} // for
 					//
-			} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+			} else if ((Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+$"),
-					s)) && (groupCount = Util.groupCount(m)) > 1 && StringUtils.isNotBlank(g11 = Util.group(m, 1))) {
+					s)) && (groupCount = Util.groupCount(m)) > 1 && StringUtils.isNotBlank(g11 = Util.group(m, 1)))
+					|| (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+							StringUtils.trim(s))) && (groupCount = Util.groupCount(m)) > 1
+							&& StringUtils.isNotBlank(g11 = Util.group(m, 1)))) {
 				//
 				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
 				//
@@ -1838,20 +1842,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							Util.group(m, x), gLast);
-					//
-				} // for
-					//
-			} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-					StringUtils.trim(s))) && (groupCount = Util.groupCount(m)) > 1
-					&& StringUtils.isNotBlank(g11 = Util.group(m, 1))) {
-				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
-				//
-				for (int x = 2; x <= groupCount; x++) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g11,
-							Util.group(m, x));
 					//
 				} // for
 					//
