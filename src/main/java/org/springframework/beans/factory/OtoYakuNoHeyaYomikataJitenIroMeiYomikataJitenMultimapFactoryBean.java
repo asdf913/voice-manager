@@ -1636,16 +1636,18 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		IntList intList = null;
 		//
-		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
+		final String s1 = testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null);
+		//
+		Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+\\p{InHiragana})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InKatakana}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}]+$"),
-				testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null));
+				s1);
+		//
+		String g1;
 		//
 		if (Util.matches(m1) && Util.groupCount(m1) > 2) {
 			//
-			final String g1 = Util.group(m1, 1);
-			//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g1,
-					Util.group(m1, 3));
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					g1 = Util.group(m1, 1), Util.group(m1, 3));
 			//
 			IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i);
 			//
@@ -1692,6 +1694,171 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						//
 					}))));
 			//
+			return Pair.of(multimap, intList);
+			//
+		} // if
+			//
+		int groupCount;
+		//
+		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InCJKSymbolsAndPunctuation}]+\\p{InHalfwidthAndFullwidthForms}+(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}]+$"),
+				s1)) && (groupCount = Util.groupCount(m1)) > 4 && StringUtils.length(g1 = Util.group(m1, 1)) == 1) {
+			//
+			IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i);
+			//
+			for (int k = 2; k <= groupCount; k++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g1,
+						Util.group(m1, k));
+				//
+			} // for
+				//
+			String s, g11, g, gLast;
+			//
+			Matcher m;
+			//
+			int length;
+			//
+			List<String> ss = null;
+			//
+			for (int k = 0; k < IterableUtils.size(list); k++) {
+				//
+				if (i == k || !StringUtils.contains(s = IterableUtils.get(list, k), g1)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+						s)) && Util.groupCount(m) > 1) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(m, 1), Util.group(m, 2));
+					//
+					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
+					//
+				} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+$"),
+						s)) && (groupCount = Util.groupCount(m)) > 1
+						&& StringUtils.isNotBlank(g11 = Util.group(m, 1))) {
+					//
+					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
+					//
+					for (int x = 2; x <= groupCount; x++) {
+						//
+						Util.add(ss = ObjectUtils.getIfNull(ss, ArrayList::new), g = Util.group(m, x));
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g11,
+								g);
+						//
+					} // for
+						//
+					if ((length = StringUtils.length(g11)) == 2) {
+
+					} // if
+						//
+				} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+$"),
+						s)) && (groupCount = Util.groupCount(m)) > 1
+						&& StringUtils.isNotBlank(g11 = Util.group(m, 1))) {
+					//
+					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
+					//
+					for (int x = 2; x <= groupCount; x++) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g11,
+								Util.group(m, x));
+						//
+					} // for
+						//
+				} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
+						StringUtils.trim(s))) && (groupCount = Util.groupCount(m)) > 2
+						&& StringUtils.isNotBlank(gLast = Util.group(m, groupCount))) {
+					//
+					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
+					//
+					for (int x = 1; x < groupCount; x++) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								Util.group(m, x), gLast);
+						//
+					} // for
+						//
+				} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+						StringUtils.trim(s))) && (groupCount = Util.groupCount(m)) > 1
+						&& StringUtils.isNotBlank(g1 = Util.group(m, 1))) {
+					//
+					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
+					//
+					for (int x = 2; x <= groupCount; x++) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g1,
+								Util.group(m, x));
+						//
+					} // for
+						//
+				} // if
+					//
+			} // for
+				//
+			final List<Entry<String, String>> entries = testAndApply(Objects::nonNull, MultimapUtil.entries(multimap),
+					ArrayList::new, null);
+			//
+			String k1, k2, v1, v2;
+			//
+			Entry<String, String> e1, e2 = null;
+			//
+			String[] ssk, ssv;
+			//
+			for (int j = 0; j < IterableUtils.size(entries); j++) {
+				//
+				if (StringUtils.length(k1 = Util.getKey(e1 = IterableUtils.get(entries, j))) != 1) {
+					//
+					continue;
+					//
+				} // if
+					//
+				for (int k = 0; k < IterableUtils.size(entries); k++) {
+					//
+					if ((length = StringUtils.length(k2 = Util.getKey(e2 = IterableUtils.get(entries, k)))) == 1) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (Boolean.logicalAnd(StringUtils.startsWith(k2, k1),
+							StringUtils.startsWith(v2 = Util.getValue(e2), v1 = Util.getValue(e1)))) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								StringUtils.substringAfter(k2, k1), StringUtils.substringAfter(v2, v1));
+						//
+					} else if (length > 2 && StringUtils.indexOf(k2, k1) > 0 && StringUtils.indexOf(v2, v1) > 0
+							&& Util.length(ssk = StringUtils.splitByWholeSeparator(k2, k1)) == 2
+							&& Util.length(ssv = StringUtils.splitByWholeSeparator(v2, v1)) == 2) {
+						//
+						for (int x = 0; x < Math.min(Util.length(ssk), Util.length(ssv)); x++) {
+							//
+							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+									ssk[x], ssv[x]);
+							//
+						} // for
+							//
+					} // for
+						//
+				} // for
+					//
+			} // for
+				//
+			if (MultimapUtil.containsEntry(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), "土",
+					"に")) {
+				//
+				MultimapUtil.remove(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), "土", "に");
+				//
+			} // if
+				//
 			return Pair.of(multimap, intList);
 			//
 		} // if

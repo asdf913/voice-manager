@@ -1020,11 +1020,18 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
 						Arrays.asList(" 退紅・褪染（あらそめ・あらぞめ・退紅は", "たいこう", "とも）日本の色名・色々な色"), 0))));
 		//
-		System.out.println("L1013");
-		//
 		Assertions.assertEquals("{\"{瓶覗=[かめのぞき], 甕覗=[かめのぞき], 覗色=[のぞきいろ], 覗=[のぞき], 瓶=[かめ], 甕=[かめ], 色=[いろ]}\":[0,1,2]}",
 				ObjectMapperUtil.writeValueAsString(objectMapper, convert(toMultimapAndIntList(patternMap,
 						Arrays.asList("瓶覗・瓶覗き（かめのぞき）日本語大辞典・色々な色", "甕覗（かめのぞき）日本の色辞典", "覗色・覗き色（のぞきいろ）"), 0))));
+		//
+		Assertions.assertEquals(
+				"{\"{赭=[そほ, そお, しゃ], 暗赭色=[あんしゃしょく], 赭色=[しゃいろ, しゃしょく], 赭黄=[しゃおう], 柘黄=[しゃおう], 赭褐色=[しゃかっしょく], 赭紅=[しゃこう], 赭黒=[しゃこく], 赭黒色=[しゃこくしょく], 赭土=[そおに, そほに], 暗=[あん], 色=[しょく, いろ], 黄=[おう], 褐色=[かっしょく], 紅=[こう], 黒=[こく], 黒色=[こくしょく]}\":[0,1,2,3,4,5,6,7,8,9,10]}",
+				ObjectMapperUtil.writeValueAsString(objectMapper,
+						convert(toMultimapAndIntList(patternMap,
+								Arrays.asList("赭（そほ）日本の色辞典／（そほ・そお・しゃ）日本国語大辞典）", "暗赭色（あんしゃしょく）", "赭（しゃ・そお・そほ）日本国語大辞典",
+										"赭色（しゃいろ・しゃしょく）日本国語大辞典", " 赭黄・柘黄（しゃおう）日本の色名", "赭褐色（しゃかっしょく）", "赭紅（しゃこう）",
+										"赭黒（しゃこく）", "赭黒色（しゃこくしょく）", "赭（そお・そほ・しゃ）日本国語大辞典", "赭土（そおに・そほに）"),
+								0))));
 		//
 	}
 
