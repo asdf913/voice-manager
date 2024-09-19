@@ -1823,7 +1823,36 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 				} // for
 					//
-			} else if ((Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+			} // if
+				//
+		} // for
+			//
+		return Pair.of(multimap, intList);
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList13b(final PatternMap patternMap,
+			final List<String> list, final int i, final String g1) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		IntList intList = null;
+		//
+		String s, g11, gLast;
+		//
+		Matcher m;
+		//
+		int groupCount;
+		//
+		for (int k = 0; k < IterableUtils.size(list); k++) {
+			//
+			if (i == k || !StringUtils.contains(s = IterableUtils.get(list, k), g1)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if ((Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+$"),
 					s)) && (groupCount = Util.groupCount(m)) > 1 && StringUtils.isNotBlank(g11 = Util.group(m, 1)))
 					|| (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
@@ -1840,36 +1869,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 				} // for
 					//
-			} // if
-				//
-		} // for
-			//
-		return Pair.of(multimap, intList);
-		//
-	}
-
-	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList13b(final PatternMap patternMap,
-			final List<String> list, final int i, final String g1) {
-		//
-		Multimap<String, String> multimap = null;
-		//
-		IntList intList = null;
-		//
-		String s, gLast;
-		//
-		Matcher m;
-		//
-		int groupCount;
-		//
-		for (int k = 0; k < IterableUtils.size(list); k++) {
-			//
-			if (i == k || !StringUtils.contains(s = IterableUtils.get(list, k), g1)) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+			} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
 					StringUtils.trim(s))) && (groupCount = Util.groupCount(m)) > 2
 					&& StringUtils.isNotBlank(gLast = Util.group(m, groupCount))) {
