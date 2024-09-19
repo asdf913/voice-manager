@@ -1754,7 +1754,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						//
 					} // for
 						//
-					if ((length = StringUtils.length(g11)) == 2) {
+					if ((StringUtils.length(g11)) == 2) {
 
 					} // if
 						//
