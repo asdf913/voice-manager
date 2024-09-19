@@ -1825,7 +1825,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						final Entry<String, String> b = testAndApply(y -> IterableUtils.size(y) > 1, x,
 								y -> IterableUtils.get(y, 1), null);
 						//
-						return testAndApply((ka, kb) -> StringUtils.length(ka) == 1 && StringUtils.length(kb) != 1,
+						return testAndApply(
+								(ka, kb) -> Boolean.logicalAnd(StringUtils.length(ka) == 1,
+										StringUtils.length(kb) != 1),
 								Util.getKey(a), Util.getKey(b),
 								(ka, kb) -> Quartet.with(ka, Util.getValue(a), kb, Util.getValue(b)), null);
 						//
