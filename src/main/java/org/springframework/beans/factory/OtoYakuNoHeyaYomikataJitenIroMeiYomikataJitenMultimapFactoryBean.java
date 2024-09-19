@@ -1863,9 +1863,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 			} // for
 				//
-			testAndAccept((a, b, c) -> MultimapUtil.containsEntry(a, b, c),
+			testAndAccept(MultimapUtil::containsEntry,
 					multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), "土", "に",
-					(a, b, c) -> MultimapUtil.remove(a, b, c));
+					MultimapUtil::remove);
 			//
 			return Pair.of(multimap, intList);
 			//
