@@ -1816,8 +1816,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			final List<Entry<String, String>> entries = testAndApply(Objects::nonNull, MultimapUtil.entries(multimap),
 					ArrayList::new, null);
 			//
-			final List<Quartet<String, String, String, String>> quartets = Util
-					.toList(Util.map(Util.stream(Lists.cartesianProduct(entries, entries)), x -> {
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					toMultimap13(Util.toList(Util.map(Util.stream(Lists.cartesianProduct(entries, entries)), x -> {
 						//
 						final Entry<String, String> a = testAndApply(y -> IterableUtils.size(y) > 0, x,
 								y -> IterableUtils.get(y, 0), null);
@@ -1829,45 +1829,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 								Util.getKey(a), Util.getKey(b),
 								(ka, kb) -> Quartet.with(ka, Util.getValue(a), kb, Util.getValue(b)), null);
 						//
-					}));
+					}))));
 			//
-			Quartet<String, String, String, String> quartet = null;
-			//
-			String k1, k2, v1, v2;
-			//
-			String[] ssk, ssv;
-			//
-			for (int j = 0; j < IterableUtils.size(quartets); j++) {
-				//
-				if ((quartet = IterableUtils.get(quartets, j)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (Boolean.logicalAnd(
-						StringUtils.startsWith(k2 = getValue2(quartet), k1 = IValue0Util.getValue0(quartet)),
-						StringUtils.startsWith(v2 = getValue3(quartet), v1 = Util.getValue1(quartet)))) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							StringUtils.substringAfter(k2, k1), StringUtils.substringAfter(v2, v1));
-					//
-				} else if (StringUtils.length(k2) > 2 && StringUtils.indexOf(k2, k1) > 0
-						&& StringUtils.indexOf(v2, v1) > 0
-						&& Util.length(ssk = StringUtils.splitByWholeSeparator(k2, k1)) == 2
-						&& Util.length(ssv = StringUtils.splitByWholeSeparator(v2, v1)) == 2) {
-					//
-					for (int x = 0; x < Math.min(Util.length(ssk), Util.length(ssv)); x++) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), ssk[x],
-								ssv[x]);
-						//
-					} // for
-						//
-				} // for
-					//
-			} // for
-				//
 			testAndAccept(MultimapUtil::containsEntry,
 					multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), "土", "に",
 					MultimapUtil::remove);
@@ -1877,6 +1840,50 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		} // if
 			//
 		return null;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap13(
+			final Iterable<Quartet<String, String, String, String>> quartets) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		Quartet<String, String, String, String> quartet;
+		//
+		String k1, k2, v1, v2;
+		//
+		String[] ssk, ssv;
+		//
+		for (int j = 0; j < IterableUtils.size(quartets); j++) {
+			//
+			if ((quartet = IterableUtils.get(quartets, j)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Boolean.logicalAnd(StringUtils.startsWith(k2 = getValue2(quartet), k1 = IValue0Util.getValue0(quartet)),
+					StringUtils.startsWith(v2 = getValue3(quartet), v1 = Util.getValue1(quartet)))) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						StringUtils.substringAfter(k2, k1), StringUtils.substringAfter(v2, v1));
+				//
+			} else if (StringUtils.length(k2) > 2 && StringUtils.indexOf(k2, k1) > 0 && StringUtils.indexOf(v2, v1) > 0
+					&& Util.length(ssk = StringUtils.splitByWholeSeparator(k2, k1)) == 2
+					&& Util.length(ssv = StringUtils.splitByWholeSeparator(v2, v1)) == 2) {
+				//
+				for (int x = 0; x < Math.min(Util.length(ssk), Util.length(ssv)); x++) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), ssk[x],
+							ssv[x]);
+					//
+				} // for
+					//
+			} // for
+				//
+		} // for
+			//
+		return multimap;
 		//
 	}
 
