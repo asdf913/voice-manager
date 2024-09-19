@@ -53,6 +53,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
+import org.meeuw.functional.QuadriFunction;
 import org.meeuw.functional.TriConsumer;
 import org.meeuw.functional.TriPredicate;
 
@@ -1729,13 +1730,21 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			} // for
 				//
-			final Entry<Multimap<String, String>, IntList> entry = toMultimapAndIntList13a(patternMap, list, i, g1);
+			Entry<Multimap<String, String>, IntList> entry = null;
 			//
-			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					Util.getKey(entry));
+			final List<QuadriFunction<PatternMap, List<String>, Integer, String, Entry<Multimap<String, String>, IntList>>> functions = Arrays
+					.asList(OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList13a,
+							OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList13b);
 			//
-			addAll(intList = ObjectUtils.getIfNull(intList, IntList::new), Util.getValue(entry));
-			//
+			for (final QuadriFunction<PatternMap, List<String>, Integer, String, Entry<Multimap<String, String>, IntList>> function : functions) {
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.getKey(entry = function.apply(patternMap, list, Integer.valueOf(i), g1)));
+				//
+				addAll(intList = ObjectUtils.getIfNull(intList, IntList::new), Util.getValue(entry));
+				//
+			} // for
+				//
 			final List<Entry<String, String>> entries = testAndApply(Objects::nonNull, MultimapUtil.entries(multimap),
 					ArrayList::new, null);
 			//
@@ -1775,7 +1784,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		IntList intList = null;
 		//
-		String s, g, g11, gLast;
+		String s, g, g11;
 		//
 		Matcher m;
 		//
@@ -1831,7 +1840,36 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 				} // for
 					//
-			} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+			} // if
+				//
+		} // for
+			//
+		return Pair.of(multimap, intList);
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList13b(final PatternMap patternMap,
+			final List<String> list, final int i, final String g1) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		IntList intList = null;
+		//
+		String s, gLast;
+		//
+		Matcher m;
+		//
+		int groupCount;
+		//
+		for (int k = 0; k < IterableUtils.size(list); k++) {
+			//
+			if (i == k || !StringUtils.contains(s = IterableUtils.get(list, k), g1)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
 					StringUtils.trim(s))) && (groupCount = Util.groupCount(m)) > 2
 					&& StringUtils.isNotBlank(gLast = Util.group(m, groupCount))) {

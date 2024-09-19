@@ -224,8 +224,9 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 							new Class<?>[] { PatternMap.class, List.class, String.class }))
 					|| (Objects.equals(name, "toMultimapAndIntList12") && Arrays.equals(parameterTypes,
 							new Class<?>[] { PatternMap.class, List.class, Integer.TYPE, Character.TYPE }))
-					|| (Objects.equals(name, "toMultimapAndIntList13a") && Arrays.equals(parameterTypes,
-							new Class<?>[] { PatternMap.class, List.class, Integer.TYPE, String.class }))) {
+					|| (Util.contains(Arrays.asList("toMultimapAndIntList13a", "toMultimapAndIntList13b"), name)
+							&& Arrays.equals(parameterTypes,
+									new Class<?>[] { PatternMap.class, List.class, Integer.TYPE, String.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
@@ -1027,7 +1028,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 						Arrays.asList("瓶覗・瓶覗き（かめのぞき）日本語大辞典・色々な色", "甕覗（かめのぞき）日本の色辞典", "覗色・覗き色（のぞきいろ）"), 0))));
 		//
 		Assertions.assertEquals(
-				"{\"{赭=[そほ, そお, しゃ], 暗赭色=[あんしゃしょく], 赭色=[しゃいろ, しゃしょく], 赭黄=[しゃおう], 柘黄=[しゃおう], 赭褐色=[しゃかっしょく], 赭紅=[しゃこう], 赭黒=[しゃこく], 赭黒色=[しゃこくしょく], 赭土=[そおに, そほに], 暗=[あん], 色=[しょく, いろ], 黄=[おう], 褐色=[かっしょく], 紅=[こう], 黒=[こく], 黒色=[こくしょく]}\":[0,1,2,3,4,5,6,7,8,9,10]}",
+				"{\"{赭=[そほ, そお, しゃ], 暗赭色=[あんしゃしょく], 赭色=[しゃいろ, しゃしょく], 赭褐色=[しゃかっしょく], 赭紅=[しゃこう], 赭黒=[しゃこく], 赭黒色=[しゃこくしょく], 赭土=[そおに, そほに], 赭黄=[しゃおう], 柘黄=[しゃおう], 暗=[あん], 色=[しょく, いろ], 褐色=[かっしょく], 紅=[こう], 黒=[こく], 黒色=[こくしょく], 黄=[おう]}\":[0,1,2,3,5,6,7,8,9,10,4]}",
 				ObjectMapperUtil.writeValueAsString(objectMapper,
 						convert(toMultimapAndIntList(patternMap,
 								Arrays.asList("赭（そほ）日本の色辞典／（そほ・そお・しゃ）日本国語大辞典）", "暗赭色（あんしゃしょく）", "赭（しゃ・そお・そほ）日本国語大辞典",
