@@ -1843,6 +1843,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap13(
 			final Iterable<Quartet<String, String, String, String>> quartets) {
 		//
