@@ -1732,11 +1732,11 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			Entry<Multimap<String, String>, IntList> entry = null;
 			//
-			final List<QuadriFunction<PatternMap, List<String>, Integer, String, Entry<Multimap<String, String>, IntList>>> functions = Arrays
+			final List<QuadriFunction<PatternMap, Iterable<String>, Integer, String, Entry<Multimap<String, String>, IntList>>> functions = Arrays
 					.asList(OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList13a,
 							OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList13b);
 			//
-			for (final QuadriFunction<PatternMap, List<String>, Integer, String, Entry<Multimap<String, String>, IntList>> function : functions) {
+			for (final QuadriFunction<PatternMap, Iterable<String>, Integer, String, Entry<Multimap<String, String>, IntList>> function : functions) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.getKey(entry = function.apply(patternMap, list, Integer.valueOf(i), g1)));
@@ -1778,7 +1778,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	}
 
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList13a(final PatternMap patternMap,
-			final List<String> list, final int i, final String g1) {
+			final Iterable<String> list, final int i, final String g1) {
 		//
 		Multimap<String, String> multimap = null;
 		//
@@ -1832,7 +1832,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	}
 
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList13b(final PatternMap patternMap,
-			final List<String> list, final int i, final String g1) {
+			final Iterable<String> list, final int i, final String g1) {
 		//
 		Multimap<String, String> multimap = null;
 		//
