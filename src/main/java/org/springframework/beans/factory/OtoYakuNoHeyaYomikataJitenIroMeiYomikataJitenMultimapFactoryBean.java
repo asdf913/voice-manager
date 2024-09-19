@@ -1825,17 +1825,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						final Entry<String, String> b = testAndApply(y -> IterableUtils.size(y) > 1, x,
 								y -> IterableUtils.get(y, 1), null);
 						//
-						final String ka = Util.getKey(a);
-						//
-						final String kb = Util.getKey(b);
-						//
-						if (StringUtils.length(ka) == 1 && StringUtils.length(kb) != 1) {
-							//
-							return Quartet.with(ka, Util.getValue(a), kb, Util.getValue(b));
-							//
-						} // if
-							//
-						return null;
+						return testAndApply((ka, kb) -> StringUtils.length(ka) == 1 && StringUtils.length(kb) != 1,
+								Util.getKey(a), Util.getKey(b),
+								(ka, kb) -> Quartet.with(ka, Util.getValue(a), kb, Util.getValue(b)), null);
 						//
 					}));
 			//
@@ -1886,6 +1878,12 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		return null;
 		//
+	}
+
+	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) {
+		return predicate != null && predicate.test(t, u) ? Util.apply(functionTrue, t, u)
+				: Util.apply(functionFalse, t, u);
 	}
 
 	private static Pair<Multimap<String, String>, IntList> toMultimapAndIntList12(final PatternMap patternMap,
