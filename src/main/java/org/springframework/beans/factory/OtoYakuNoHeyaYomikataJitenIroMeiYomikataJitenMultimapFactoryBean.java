@@ -1734,7 +1734,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			final List<QuadriFunction<PatternMap, Iterable<String>, Integer, String, Entry<Multimap<String, String>, IntList>>> functions = Arrays
 					.asList(OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList13a,
-							OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList13b);
+							OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList13b,
+							OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList13c);
 			//
 			for (final QuadriFunction<PatternMap, Iterable<String>, Integer, String, Entry<Multimap<String, String>, IntList>> function : functions) {
 				//
@@ -1838,7 +1839,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		IntList intList = null;
 		//
-		String s, g11, gLast;
+		String s, g11;
 		//
 		Matcher m;
 		//
@@ -1869,7 +1870,36 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 				} // for
 					//
-			} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+			} // if
+				//
+		} // for
+			//
+		return Pair.of(multimap, intList);
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList13c(final PatternMap patternMap,
+			final Iterable<String> list, final int i, final String g1) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		IntList intList = null;
+		//
+		String s, gLast;
+		//
+		Matcher m;
+		//
+		int groupCount;
+		//
+		for (int k = 0; k < IterableUtils.size(list); k++) {
+			//
+			if (i == k || !StringUtils.contains(s = IterableUtils.get(list, k), g1)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
 					StringUtils.trim(s))) && (groupCount = Util.groupCount(m)) > 2
 					&& StringUtils.isNotBlank(gLast = Util.group(m, groupCount))) {
