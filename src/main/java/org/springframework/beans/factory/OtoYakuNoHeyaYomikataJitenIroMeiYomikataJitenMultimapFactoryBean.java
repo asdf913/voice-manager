@@ -1754,10 +1754,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						//
 					} // for
 						//
-					if ((StringUtils.length(g11)) == 2) {
-
-					} // if
-						//
 				} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+$"),
 						s)) && (groupCount = Util.groupCount(m)) > 1
