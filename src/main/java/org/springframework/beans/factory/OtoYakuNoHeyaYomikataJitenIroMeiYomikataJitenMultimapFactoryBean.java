@@ -3142,6 +3142,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap12(final PatternMap patternMap, final String input) {
 		//
 		final Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
