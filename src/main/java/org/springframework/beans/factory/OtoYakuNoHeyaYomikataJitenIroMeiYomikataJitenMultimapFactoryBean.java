@@ -1875,10 +1875,19 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 			} // if
 				//
-				//
 		} // for
 			//
-		final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
+		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+				toMultimap14(MultimapUtil.entries(multimap), g1));
+		//
+		return Pair.of(multimap, intList);
+		//
+	}
+
+	private static Multimap<String, String> toMultimap14(final Iterable<Entry<String, String>> entries,
+			final String g1) {
+		//
+		Multimap<String, String> multimap = null;
 		//
 		if (Util.iterator(entries) != null) {
 			//
@@ -1934,7 +1943,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 		} // if
 			//
-		return Pair.of(multimap, intList);
+		return multimap;
 		//
 	}
 
