@@ -1912,7 +1912,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		}
 	}
 
-	private static <T> T orElseThrow(final Optional<T> instance) {
+	private static <T> T orElseThrow(@Nullable final Optional<T> instance) {
 		return instance != null ? instance.orElseThrow() : null;
 	}
 
