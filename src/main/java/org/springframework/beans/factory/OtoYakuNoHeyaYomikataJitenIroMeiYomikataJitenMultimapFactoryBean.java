@@ -1819,11 +1819,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		Matcher m;
 		//
-		String s, g11, g12, cs;
+		String s, g11, g12;
 		//
 		final Iterable<String> gs = Arrays.asList(Util.group(m1, 3), Util.group(m1, 4));
-		//
-		Collection<String> ss = null;
 		//
 		Multimap<String, String> multimap = null;
 		//
@@ -1853,26 +1851,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						g11 = Util.group(m, 1), g12 = Util.group(m, 2));
 				//
-				if (Boolean.logicalAnd(StringUtils.isNotBlank(cs = getCommonSuffix(g11, g2)), gs != null)) {
-					//
-					clear(ss = ObjectUtils.getIfNull(ss, ArrayList::new));
-					//
-					for (final String g : gs) {
-						//
-						Util.add(ss = ObjectUtils.getIfNull(ss, ArrayList::new), getCommonSuffix(g12, g));
-						//
-					} // for
-						//
-					if (CollectionUtils.isNotEmpty(ss)) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cs,
-								orElseThrow(max(Util.stream(ss),
-										(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b)))));
-						//
-					} // if
-						//
-				} // if
-					//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						toMultimap14(getCommonSuffix(g11, g2), gs, g12));
+				//
 			} // if
 				//
 		} // for
@@ -1881,6 +1862,36 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				toMultimap14(MultimapUtil.entries(multimap), g1));
 		//
 		return Pair.of(multimap, intList);
+		//
+	}
+
+	private static Multimap<String, String> toMultimap14(final String cs, final Iterable<String> gs, final String g2) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		if (Boolean.logicalAnd(StringUtils.isNotBlank(cs), gs != null)) {
+			//
+			Collection<String> ss = null;
+			//
+			clear(ss = ObjectUtils.getIfNull(ss, ArrayList::new));
+			//
+			for (final String g : gs) {
+				//
+				Util.add(ss = ObjectUtils.getIfNull(ss, ArrayList::new), getCommonSuffix(g2, g));
+				//
+			} // for
+				//
+			if (CollectionUtils.isNotEmpty(ss)) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cs,
+						orElseThrow(max(Util.stream(ss),
+								(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b)))));
+				//
+			} // if
+				//
+		} // if
+			//
+		return multimap;
 		//
 	}
 
