@@ -8,12 +8,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
+import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
 import java.util.function.ObjIntConsumer;
@@ -53,8 +56,8 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3,
 			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS, METHOD_REMOVE_VALUE, METHOD_FLAT_MAP, METHOD_ADD_ALL,
-			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT, METHOD_TO_ARRAY,
-			METHOD_FOR_EACH_INT_STREAM, METHOD_IS_EMPTY;
+			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT,
+			METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM, METHOD_FOR_EACH_INT_STREAM, METHOD_IS_EMPTY, METHOD_MAX;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -92,12 +95,18 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", TriPredicate.class, Object.class, Object.class,
 				Object.class, TriConsumer.class)).setAccessible(true);
 		//
-		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class, Object[].class)).setAccessible(true);
+		(METHOD_TO_ARRAY_COLLECTION = clz.getDeclaredMethod("toArray", Collection.class, Object[].class))
+				.setAccessible(true);
+		//
+		(METHOD_TO_ARRAY_STREAM = clz.getDeclaredMethod("toArray", Stream.class, IntFunction.class))
+				.setAccessible(true);
 		//
 		(METHOD_FOR_EACH_INT_STREAM = clz.getDeclaredMethod("forEach", IntStream.class, IntConsumer.class))
 				.setAccessible(true);
 		//
 		(METHOD_IS_EMPTY = clz.getDeclaredMethod("isEmpty", IntList.class)).setAccessible(true);
+		//
+		(METHOD_MAX = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
 		//
 	}
 
@@ -1042,6 +1051,11 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 										"赭黒（しゃこく）", "赭黒色（しゃこくしょく）", "赭（そお・そほ・しゃ）日本国語大辞典", "赭土（そおに・そほに）"),
 								0))));
 		//
+		Assertions.assertEquals("{\"{搗染=[かちそめ], 染=[そめ], 桑色=[くわいろ], 桑茶=[くわちゃ], 桑=[くわ], 色=[いろ], 茶=[ちゃ]}\":[0,1,2,3,4]}",
+				ObjectMapperUtil.writeValueAsString(objectMapper,
+						convert(toMultimapAndIntList(patternMap, Arrays.asList("桑・桑染（くわそめ・日本の色名／くわぞめ・日本国語大辞典）",
+								"搗染（かちそめ）色々な色", "桑色（くわいろ）", "桑茶（くわちゃ）", "搗染（かちそめ）色々な色"), 0))));
+		//
 	}
 
 	private static Entry<Multimap<String, String>, int[]> convert(
@@ -1132,11 +1146,21 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(toArray(Collections.emptyList(), null));
 		//
+		Assertions.assertNull(toArray(Stream.empty(), null));
+		//
 	}
 
 	private static <T> T[] toArray(final Collection<T> instance, final T[] a) throws Throwable {
 		try {
-			return (T[]) METHOD_TO_ARRAY.invoke(null, instance, a);
+			return (T[]) METHOD_TO_ARRAY_COLLECTION.invoke(null, instance, a);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <A> A[] toArray(final Stream<?> instance, final IntFunction<A[]> generator) throws Throwable {
+		try {
+			return (A[]) METHOD_TO_ARRAY_STREAM.invoke(null, instance, generator);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -1171,6 +1195,28 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 			final Object obj = METHOD_IS_EMPTY.invoke(null, instance);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMax() throws Throwable {
+		//
+		Assertions.assertNull(max(Stream.empty(), null));
+		//
+	}
+
+	private static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_MAX.invoke(null, instance, comparator);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Optional) {
+				return (Optional) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
