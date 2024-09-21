@@ -1829,7 +1829,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		final PatternMap patternMap = IValue0Util.getValue0(triplet);
 		//
-		final List<String> list = triplet != null ? triplet.getValue1() : null;
+		final List<String> list = Util.getValue1(triplet);
 		//
 		for (int k = 0; k < IterableUtils.size(list); k++) {
 			//
