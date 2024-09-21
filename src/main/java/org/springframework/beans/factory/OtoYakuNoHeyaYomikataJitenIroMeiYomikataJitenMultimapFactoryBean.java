@@ -1916,11 +1916,13 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		return instance != null ? instance.orElseThrow() : null;
 	}
 
+	@Nullable
 	private static <T> Optional<T> max(@Nullable final Stream<T> instance,
 			@Nullable final Comparator<? super T> comparator) {
 		return instance != null && comparator != null ? instance.max(comparator) : null;
 	}
 
+	@Nullable
 	private static <A> A[] toArray(@Nullable final Stream<?> instance, @Nullable final IntFunction<A[]> generator) {
 		return instance != null && generator != null ? instance.toArray(generator) : null;
 	}
