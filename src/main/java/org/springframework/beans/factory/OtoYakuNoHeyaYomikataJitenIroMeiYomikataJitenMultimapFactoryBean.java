@@ -1907,12 +1907,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			for (final Entry<String, String> entry : entries) {
 				//
-				if (entry == null) {
-					//
-					continue;
-					//
-				} // if
-					//
 				if (StringUtils.startsWith(Util.getKey(entry), g1)) {
 					//
 					Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), entry);
