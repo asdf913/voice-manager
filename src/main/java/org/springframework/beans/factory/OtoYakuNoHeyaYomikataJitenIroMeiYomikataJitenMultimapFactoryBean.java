@@ -1830,7 +1830,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						if (CollectionUtils.isNotEmpty(ss)) {
 							//
 							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cs,
-									get(max(Util.stream(ss),
+									orElseThrow(max(Util.stream(ss),
 											(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b)))));
 							//
 						} // if
@@ -1912,8 +1912,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		}
 	}
 
-	private static <T> T get(final Optional<T> instance) {
-		return instance != null ? instance.get() : null;
+	private static <T> T orElseThrow(final Optional<T> instance) {
+		return instance != null ? instance.orElseThrow() : null;
 	}
 
 	private static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator) {
