@@ -1886,8 +1886,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						//
 					} // if
 						//
-					if (Boolean.logicalAnd(StringUtils.length(k = Util.getKey(entry)) == 2,
-							StringUtils.startsWith(k, cpk)) && StringUtils.startsWith(v = Util.getValue(entry), cpv)) {
+					if (Util.and(StringUtils.length(k = Util.getKey(entry)) == 2, StringUtils.startsWith(k, cpk),
+							StringUtils.startsWith(v = Util.getValue(entry), cpv))) {
 						//
 						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 								StringUtils.substringAfter(k, cpk), StringUtils.substringAfter(v, cpv));
