@@ -1870,9 +1870,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							cpk = StringUtils.getCommonPrefix(
-									toArray(Util.map(Util.stream(collection), x -> Util.getKey(x)), String[]::new)),
+									toArray(Util.map(Util.stream(collection), Util::getKey), String[]::new)),
 							cpv = StringUtils.getCommonPrefix(
-									toArray(Util.map(Util.stream(collection), x -> Util.getValue(x)), String[]::new)));
+									toArray(Util.map(Util.stream(collection), Util::getValue), String[]::new)));
 					//
 				} // if
 					//
