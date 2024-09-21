@@ -1906,7 +1906,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static void clear(final Collection<?> instance) {
+	private static void clear(@Nullable final Collection<?> instance) {
 		if (instance != null) {
 			instance.clear();
 		}
@@ -1916,11 +1916,12 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		return instance != null ? instance.orElseThrow() : null;
 	}
 
-	private static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator) {
+	private static <T> Optional<T> max(@Nullable final Stream<T> instance,
+			@Nullable final Comparator<? super T> comparator) {
 		return instance != null && comparator != null ? instance.max(comparator) : null;
 	}
 
-	private static <A> A[] toArray(final Stream<?> instance, final IntFunction<A[]> generator) {
+	private static <A> A[] toArray(@Nullable final Stream<?> instance, @Nullable final IntFunction<A[]> generator) {
 		return instance != null && generator != null ? instance.toArray(generator) : null;
 	}
 
