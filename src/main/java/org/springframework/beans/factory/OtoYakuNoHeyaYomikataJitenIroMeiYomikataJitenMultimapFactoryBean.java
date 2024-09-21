@@ -1817,7 +1817,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							g11 = Util.group(m, 1), g12 = Util.group(m, 2));
 					//
-					if (StringUtils.isNotBlank(cs = getCommonSuffix(g11, g2)) && gs != null) {
+					if (Boolean.logicalAnd(StringUtils.isNotBlank(cs = getCommonSuffix(g11, g2)), gs != null)) {
 						//
 						clear(ss = ObjectUtils.getIfNull(ss, ArrayList::new));
 						//
