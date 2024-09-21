@@ -1781,7 +1781,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}$"),
-				s1)) && (groupCount = Util.groupCount(m1)) > 3 && StringUtils.length(g1 = Util.group(m1, 1)) == 1) {
+				s1)) && Util.groupCount(m1) > 3 && StringUtils.length(g1 = Util.group(m1, 1)) == 1) {
 			//
 			IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i);
 			//
@@ -1799,7 +1799,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 						"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-						g1)), s = IterableUtils.get(list, k))) && (groupCount = Util.groupCount(m)) > 1) {
+						g1)), s = IterableUtils.get(list, k))) && Util.groupCount(m) > 1) {
 					//
 					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
 					//
@@ -1810,7 +1810,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						String.format(
 								"^(\\p{InCJKUnifiedIdeographs}%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+",
 								StringUtils.substring(g2, 1, 2))),
-						s)) && (groupCount = Util.groupCount(m)) > 1) {
+						s)) && Util.groupCount(m) > 1) {
 					//
 					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
 					//
