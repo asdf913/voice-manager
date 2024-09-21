@@ -1795,7 +1795,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList14(
 			final Triplet<PatternMap, List<String>, Matcher> triplet, final int i) {
 		//
-		final Matcher m1 = triplet != null ? triplet.getValue2() : null;
+		final Matcher m1 = getValue2(triplet);
 		//
 		if (!Util.matches(m1) || Util.groupCount(m1) <= 3) {
 			//
