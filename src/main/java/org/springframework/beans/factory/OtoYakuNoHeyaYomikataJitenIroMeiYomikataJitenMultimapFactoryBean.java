@@ -1926,12 +1926,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			for (final Entry<String, String> entry : entries) {
 				//
-				if (entry == null) {
-					//
-					continue;
-					//
-				} // if
-					//
 				if (Util.and(StringUtils.length(k = Util.getKey(entry)) == 2, StringUtils.startsWith(k, cpk),
 						StringUtils.startsWith(v = Util.getValue(entry), cpv))) {
 					//
