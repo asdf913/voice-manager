@@ -1827,7 +1827,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		Multimap<String, String> multimap = null;
 		//
-		final PatternMap patternMap = triplet != null ? triplet.getValue0() : null;
+		final PatternMap patternMap = IValue0Util.getValue0(triplet);
 		//
 		final List<String> list = triplet != null ? triplet.getValue1() : null;
 		//
