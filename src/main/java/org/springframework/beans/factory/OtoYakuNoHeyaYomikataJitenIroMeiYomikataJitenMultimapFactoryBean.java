@@ -1808,7 +1808,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 				} else if (StringUtils.length(g2) > 1 && Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 						String.format(
-								"^(\\p{InCJKUnifiedIdeographs}染)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+",
+								"^(\\p{InCJKUnifiedIdeographs}%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+",
 								StringUtils.substring(g2, 1, 2))),
 						s)) && (groupCount = Util.groupCount(m)) > 1) {
 					//
