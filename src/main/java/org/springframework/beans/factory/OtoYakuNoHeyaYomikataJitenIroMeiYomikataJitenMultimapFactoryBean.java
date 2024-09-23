@@ -1819,66 +1819,89 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		Multimap<String, String> multimap = LinkedHashMultimap
 				.create(ImmutableMultimap.of(g1, g2, g3, Util.group(m1, 4)));
 		//
-		String s, csk, csv = null, g11, g12 = null, lcsk, lcsv, lcs;
+		Entry<Multimap<String, String>, IntList> entry = null;
 		//
-		Matcher m;
+		for (int k = 0; k < IterableUtils.size(list); k++) {
+			//
+			if ((entry = toMultimapAndIntList15(k, IterableUtils.get(list, k), patternMap, g1, g2, g3)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			addAll(intList, Util.getValue(entry));
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.getKey(entry));
+			//
+		} // for
+			//
+		return Pair.of(multimap, intList);
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList15(final int index, final String line,
+			final PatternMap patternMap, final String g1, final String g2, final String g3) {
+		//
+		String csk, csv, g11, g12, lcs, lcsk, lcsv;
 		//
 		String[] ssk, ssv;
 		//
 		int lk, lv;
 		//
-		for (int k = 0; k < IterableUtils.size(list); k++) {
+		Matcher m;
+		//
+		IntList intList = null;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		if (StringUtils.isNotBlank(csk = StringUtils.getCommonPrefix(line, g1)) && !StringUtils.equals(csk, g1)) {
 			//
-			if (StringUtils.isNotBlank(csk = StringUtils.getCommonPrefix(s = IterableUtils.get(list, k), g1))
-					&& !StringUtils.equals(csk, g1)) {
+			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+					line)) && Util.groupCount(m) > 1
+					&& StringUtils.isNotBlank(csv = StringUtils.getCommonPrefix(g12 = Util.group(m, 2), g2))) {
 				//
-				if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-						s)) && Util.groupCount(m) > 1
-						&& StringUtils.isNotBlank(csv = StringUtils.getCommonPrefix(g12 = Util.group(m, 2), g2))) {
-					//
-					IntListUtil.add(intList, k);
-					//
-					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							ImmutableMultimap.of(g11 = Util.group(m, 1), g12, csk, csv,
-									StringUtils.substringAfter(g11, csk), StringUtils.substringAfter(g12, csv),
-									StringUtils.substringAfter(g1, csk), StringUtils.substringAfter(g2, csv)));
-					//
-				} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-						"^([(\\p{InCJKUnifiedIdeographs}|(\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-						s))
-						&& Util.groupCount(m) > 1
-						&& StringUtils.isNotBlank(
-								lcs = longestCommonSubstring(g11 = Util.group(m, 1), g12 = Util.group(m, 2)))
-						&& (lk = Util.length(ssk = StringUtils.split(g11, lcs))) == (lv = Util
-								.length(ssv = StringUtils.split(g12, lcs)))) {
-					//
-					IntListUtil.add(intList, k);
-					//
-					for (int j = 0; j < Math.min(lk, lv); j++) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), ssk[j],
-								ssv[j]);
-						//
-					} // for
-						//
-				} // if
-					//
-			} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-					"^(\\p{InCJKUnifiedIdeographs}{2}%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+$",
-					g3)), s)) && Util.groupCount(m) > 1) {
-				//
-				IntListUtil.add(intList, k);
+				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), index);
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						ImmutableMultimap.of(g11 = Util.group(m, 1), g12 = Util.group(m, 2),
-								lcsk = longestCommonSubstring(Util.group(m, 1), g1),
-								lcsv = longestCommonSubstring(Util.group(m, 2), g2),
-								StringUtils.substringBefore(g11, lcsk), StringUtils.substringBefore(g12, lcsv)));
+						ImmutableMultimap.of(g11 = Util.group(m, 1), g12, csk, csv,
+								StringUtils.substringAfter(g11, csk), StringUtils.substringAfter(g12, csv),
+								StringUtils.substringAfter(g1, csk), StringUtils.substringAfter(g2, csv)));
 				//
+			} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+					"^([(\\p{InCJKUnifiedIdeographs}|(\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+					line))
+					&& Util.groupCount(m) > 1
+					&& StringUtils
+							.isNotBlank(lcs = longestCommonSubstring(g11 = Util.group(m, 1), g12 = Util.group(m, 2)))
+					&& (lk = Util.length(ssk = StringUtils.split(g11, lcs))) == (lv = Util
+							.length(ssv = StringUtils.split(g12, lcs)))) {
+				//
+				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), index);
+				//
+				for (int j = 0; j < Math.min(lk, lv); j++) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), ssk[j],
+							ssv[j]);
+					//
+				} // for
+					//
 			} // if
 				//
-		} // for
+		} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(\\p{InCJKUnifiedIdeographs}{2}%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+$",
+				g3)), line)) && Util.groupCount(m) > 1) {
+			//
+			IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), index);
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					ImmutableMultimap.of(g11 = Util.group(m, 1), g12 = Util.group(m, 2),
+							lcsk = longestCommonSubstring(Util.group(m, 1), g1),
+							lcsv = longestCommonSubstring(Util.group(m, 2), g2), StringUtils.substringBefore(g11, lcsk),
+							StringUtils.substringBefore(g12, lcsv)));
+			//
+		} // if
 			//
 		return Pair.of(multimap, intList);
 		//
