@@ -1785,6 +1785,90 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList14(final PatternMap patternMap,
 			final List<String> list, final int i) {
 		//
+		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InHiragana}\\p{InCJKUnifiedIdeographs}\\p{InBasicLatin}\\p{InHalfwidthAndFullwidthForms}]+$"),
+				testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null));
+		//
+		if (Util.matches(m1) && Util.groupCount(m1) > 3) {
+			//
+			final IntList intList = new IntList();
+			//
+			IntListUtil.add(intList, i);
+			//
+			final String g1 = Util.group(m1, 1);
+			//
+			final String g2 = Util.group(m1, 2);
+			//
+			final String g3 = Util.group(m1, 3);
+			//
+			Multimap<String, String> multimap = LinkedHashMultimap
+					.create(ImmutableMultimap.of(g1, g2, g3, Util.group(m1, 4)));
+			//
+			String s, csk, csv = null, g11, g12 = null, lcsk, lcsv, lcs;
+			//
+			Matcher m;
+			//
+			String[] ssk, ssv;
+			//
+			int lk, lv;
+			//
+			for (int k = 0; k < IterableUtils.size(list); k++) {
+				//
+				if (StringUtils.isNotBlank(csk = StringUtils.getCommonPrefix(s = IterableUtils.get(list, k), g1))
+						&& !StringUtils.equals(csk, g1)) {
+					//
+					if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+							s)) && Util.groupCount(m) > 1
+							&& StringUtils.isNotBlank(csv = StringUtils.getCommonPrefix(g12 = Util.group(m, 2), g2))) {
+						//
+						IntListUtil.add(intList, k);
+						//
+						MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								ImmutableMultimap.of(g11 = Util.group(m, 1), g12, csk, csv,
+										StringUtils.substringAfter(g11, csk), StringUtils.substringAfter(g12, csv),
+										StringUtils.substringAfter(g1, csk), StringUtils.substringAfter(g2, csv)));
+						//
+					} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+							"^([(\\p{InCJKUnifiedIdeographs}|(\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+							s))
+							&& Util.groupCount(m) > 1
+							&& StringUtils.isNotBlank(
+									lcs = longestCommonSubstring(g11 = Util.group(m, 1), g12 = Util.group(m, 2)))
+							&& (lk = Util.length(ssk = StringUtils.split(g11, lcs))) == (lv = Util
+									.length(ssv = StringUtils.split(g12, lcs)))) {
+						//
+						IntListUtil.add(intList, k);
+						//
+						for (int j = 0; j < Math.min(lk, lv); j++) {
+							//
+							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+									ssk[j], ssv[j]);
+							//
+						} // for
+							//
+					} // if
+						//
+				} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+						"^(\\p{InCJKUnifiedIdeographs}{2}%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+$",
+						g3)), s)) && Util.groupCount(m) > 1) {
+					//
+					IntListUtil.add(intList, k);
+					//
+					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							ImmutableMultimap.of(g11 = Util.group(m, 1), g12 = Util.group(m, 2),
+									lcsk = longestCommonSubstring(Util.group(m, 1), g1),
+									lcsv = longestCommonSubstring(Util.group(m, 2), g2),
+									StringUtils.substringBefore(g11, lcsk), StringUtils.substringBefore(g12, lcsv)));
+					//
+				} // if
+					//
+			} // for
+				//
+			return Pair.of(multimap, intList);
+			//
+		} // if
+			//
 		return toMultimapAndIntList14(Triplet.with(patternMap, list, Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}$"),
 				testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null))), i);
