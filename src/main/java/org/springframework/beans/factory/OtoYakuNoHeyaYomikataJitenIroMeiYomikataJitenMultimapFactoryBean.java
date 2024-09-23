@@ -1843,7 +1843,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList15(final int index, final String line,
 			final PatternMap patternMap, final String g1, final String g2, final String g3) {
 		//
-		String csk, csv, g11, g12, lcs, lcsk, lcsv;
+		String csk, csv, g11, g12, lcs;
 		//
 		String[] ssk, ssv;
 		//
@@ -1895,11 +1895,13 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), index);
 			//
+			final String lcsk = longestCommonSubstring(Util.group(m, 1), g1);
+			//
+			final String lcsv = longestCommonSubstring(Util.group(m, 2), g2);
+			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					ImmutableMultimap.of(g11 = Util.group(m, 1), g12 = Util.group(m, 2),
-							lcsk = longestCommonSubstring(Util.group(m, 1), g1),
-							lcsv = longestCommonSubstring(Util.group(m, 2), g2), StringUtils.substringBefore(g11, lcsk),
-							StringUtils.substringBefore(g12, lcsv)));
+					ImmutableMultimap.of(g11 = Util.group(m, 1), g12 = Util.group(m, 2), lcsk, lcsv,
+							StringUtils.substringBefore(g11, lcsk), StringUtils.substringBefore(g12, lcsv)));
 			//
 		} // if
 			//
