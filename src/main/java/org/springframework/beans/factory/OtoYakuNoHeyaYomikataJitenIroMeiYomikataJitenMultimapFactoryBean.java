@@ -2018,60 +2018,58 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 				} // if
 					//
-				if (Util.iterator(ps2 = ObjectUtils.getIfNull(ps2, () -> Arrays.asList(
-						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$",
-						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+$",
-						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}]+",
-						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}]+$"))) != null) {
+			} // if
+				//
+			if (Util.iterator(ps2 = ObjectUtils.getIfNull(ps2, () -> Arrays.asList(
+					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$",
+					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+$",
+					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}]+",
+					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}]+$"))) != null) {
+				//
+				for (final String pattern : ps2) {
 					//
-					for (final String pattern : ps2) {
+					if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, pattern), StringUtils.trim(s)))
+							&& Util.groupCount(m) > 1) {
 						//
-						if (Util.matches(
-								m = Util.matcher(PatternMap.getPattern(patternMap, pattern), StringUtils.trim(s)))
-								&& Util.groupCount(m) > 1) {
-							//
-							if (!contains(intList, k)) {
-								//
-								IntListUtil.add(intList, k);
-								//
-							} // if
-								//
-							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-									Util.group(m, 1), Util.group(m, 2));
-							//
-						} // if
-							//
-					} // for
-						//
-				} // if
-					//
-				if (Util.iterator(ps3 = ObjectUtils.getIfNull(ps3, () -> Arrays.asList(
-						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InBasicLatin}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"))) != null) {
-					//
-					for (final String pattern : ps3) {
-						//
-						if (Util.matches(
-								m = Util.matcher(PatternMap.getPattern(patternMap, pattern), StringUtils.trim(s)))
-								&& Util.groupCount(m) > 1) {
+						if (!contains(intList, k)) {
 							//
 							IntListUtil.add(intList, k);
 							//
-							g11 = Util.group(m, 1);
-							//
-							for (int z = 2; z <= Util.groupCount(m); z++) {
-								//
-								MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-										g11, Util.group(m, z));
-								//
-							} // for
-								//
 						} // if
 							//
-					} // for
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								Util.group(m, 1), Util.group(m, 2));
 						//
-				} // if
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+			if (Util.iterator(ps3 = ObjectUtils.getIfNull(ps3, () -> Arrays.asList(
+					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InBasicLatin}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"))) != null) {
+				//
+				for (final String pattern : ps3) {
+					//
+					if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, pattern), StringUtils.trim(s)))
+							&& Util.groupCount(m) > 1) {
+						//
+						IntListUtil.add(intList, k);
+						//
+						g11 = Util.group(m, 1);
+						//
+						for (int z = 2; z <= Util.groupCount(m); z++) {
+							//
+							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+									g11, Util.group(m, z));
+							//
+						} // for
+							//
+					} // if
+						//
+				} // for
 					//
 			} // if
 				//
