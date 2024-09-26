@@ -2068,58 +2068,57 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			final Iterable<String> patterns, final int index, final Matcher m1,
 			final Quartet<String, String, String, String> quartet) {
 		//
-		if (Util.iterator(patterns) != null) {
+		if (Util.iterator(patterns) == null) {
 			//
-			Matcher m = null;
+			return null;
 			//
-			IntList intList = null;
+		} // if
 			//
-			Multimap<String, String> multimap = null;
+		Matcher m = null;
+		//
+		IntList intList = null;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		String g11, g12, cs, sbv;
+		//
+		final String s = IValue0Util.getValue0(quartet);
+		//
+		final String lcsk = Util.getValue1(quartet);
+		//
+		final String g3 = getValue2(quartet);
+		//
+		final String g4 = getValue3(quartet);
+		//
+		for (final String pattern : patterns) {
 			//
-			String g11, g12, cs, sbv;
-			//
-			final String s = IValue0Util.getValue0(quartet);
-			//
-			final String lcsk = Util.getValue1(quartet);
-			//
-			final String g3 = getValue2(quartet);
-			//
-			final String g4 = getValue3(quartet);
-			//
-			for (final String pattern : patterns) {
+			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, pattern), StringUtils.trim(s)))
+					&& Util.groupCount(m1) > 1) {
 				//
-				if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, pattern), StringUtils.trim(s)))
-						&& Util.groupCount(m1) > 1) {
+				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), index);
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						ImmutableMultimap.of(g11 = Util.group(m, 1), g12 = Util.group(m, 2)));
+				//
+				if (StringUtils.isNotBlank(cs = getCommonSuffix(g12, g3))
+						|| StringUtils.isNotBlank(cs = getCommonSuffix(g12, g4))) {
 					//
-					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), index);
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), lcsk, cs);
 					//
-					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							ImmutableMultimap.of(g11 = Util.group(m, 1), g12 = Util.group(m, 2)));
-					//
-					if (StringUtils.isNotBlank(cs = getCommonSuffix(g12, g3))
-							|| StringUtils.isNotBlank(cs = getCommonSuffix(g12, g4))) {
+					if (StringUtils.isNotBlank(sbv = StringUtils.substringBefore(g12, cs))) {
 						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), lcsk,
-								cs);
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								StringUtils.substringBefore(g11, lcsk), sbv);
 						//
-						if (StringUtils.isNotBlank(sbv = StringUtils.substringBefore(g12, cs))) {
-							//
-							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-									StringUtils.substringBefore(g11, lcsk), sbv);
-							//
-						} // if
-							//
 					} // if
 						//
 				} // if
 					//
-			} // for
+			} // if
 				//
-			return Pair.of(multimap, intList);
+		} // for
 			//
-		} // if
-			//
-		return null;
+		return Pair.of(multimap, intList);
 		//
 	}
 
