@@ -2064,6 +2064,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
+	@Nullable
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList16A(final PatternMap patternMap,
 			final Iterable<String> patterns, final int index, final Matcher m1,
 			final Quartet<String, String, String, String> quartet) {
