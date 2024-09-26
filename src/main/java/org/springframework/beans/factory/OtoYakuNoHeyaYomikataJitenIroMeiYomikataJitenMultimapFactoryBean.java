@@ -2084,7 +2084,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			final String g3 = getValue2(quartet);
 			//
-			final String g4 = quartet != null ? quartet.getValue3() : null;
+			final String g4 = getValue3(quartet);
 			//
 			for (final String pattern : patterns) {
 				//
