@@ -1914,8 +1914,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 								//
 						} // if
 							//
-						continue;
-						//
 					} // if
 						//
 				} // for
@@ -2041,8 +2039,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 								//
 							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 									Util.group(m, 1), Util.group(m, 2));
-							//
-							continue;
 							//
 						} // if
 							//
