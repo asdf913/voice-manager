@@ -1910,9 +1910,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							s, k, m1, lcsk, list)));
 			//
 			forEach(testAndApply(Objects::nonNull, IntListUtil.toArray(Util.getValue(entry)), IntStream::of, null),
-					x -> {
-						IntListUtil.add(intList, x);
-					});
+					x -> IntListUtil.add(intList, x));
 			//
 			// ps2
 			//
