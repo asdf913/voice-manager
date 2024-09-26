@@ -2050,7 +2050,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							s, k)));
 			//
 			forEach(testAndApply(Objects::nonNull, IntListUtil.toArray(Util.getValue(entry)), IntStream::of, null),
-					x -> intList.add(x));
+					x -> IntListUtil.add(intList, x));
 			//
 		} // for
 			//
