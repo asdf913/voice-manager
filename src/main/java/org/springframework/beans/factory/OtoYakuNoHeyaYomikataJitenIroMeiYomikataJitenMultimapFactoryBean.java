@@ -1968,7 +1968,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		final String g4 = Util.group(m1, 4);
 		//
-		final Entry<Multimap<String, String>, IntList> entry = toMultimapAndIntList16A(patternMap, patterns, index, m1,
+		final Entry<Multimap<String, String>, IntList> entry = toMultimapAndIntList16A1(patternMap, patterns, index, m1,
 				Quartet.with(s, lcsk, g3, g4));
 		//
 		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.getKey(entry));
@@ -2065,7 +2065,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	}
 
 	@Nullable
-	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList16A(final PatternMap patternMap,
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList16A1(final PatternMap patternMap,
 			final Iterable<String> patterns, final int index, final Matcher m1,
 			final Quartet<String, String, String, String> quartet) {
 		//
