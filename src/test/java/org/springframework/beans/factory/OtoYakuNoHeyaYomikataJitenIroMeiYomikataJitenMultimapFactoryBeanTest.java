@@ -1066,6 +1066,15 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 						convert(toMultimapAndIntList(patternMap, Arrays.asList("牡丹色（ぼたんいろ）＜注：牡丹（ぼうたん）とも読むWEBあり＞",
 								"蛍光牡丹（けいこうぼたん）WEB", "牡丹鼠（ぼたんねず）", "牡丹紫（ぼたんむらさき）", "牡丹の襲（ぼたんのかさね）"), 0))));
 		//
+		Assertions.assertEquals(
+				"{\"{丼鼠=[どぶねず, どぶねずみ], 溝鼠=[どぶねず, どぶねずみ], 藍鼠=[あいねず, あいねずみ], 青鼠=[あおねず], 鼠=[ねず], 青=[あお], 薄鼠=[うすねず, うすねずみ], 濃鼠色=[こいねずみいろ, こねずみいろ], 色=[いろ]}\":[0,1,2,5]}",
+				ObjectMapperUtil
+						.writeValueAsString(objectMapper,
+								convert(toMultimapAndIntList(patternMap,
+										Arrays.asList("丼鼠・溝鼠（どぶねず・日本の色名／どぶねずみ・日本の色辞典）", "藍鼠（あいねず/あいねずみ）", "青鼠（あおねず）",
+												"薄鼠（うすねず・うすねずみ）", "濃鼠色（こいねずみいろ・こねずみいろ）", "むささび色（むささびいろ）＜むささびは鼠+吾と鼠＞"),
+										0))));
+		//
 	}
 
 	private static Entry<Multimap<String, String>, int[]> convert(
