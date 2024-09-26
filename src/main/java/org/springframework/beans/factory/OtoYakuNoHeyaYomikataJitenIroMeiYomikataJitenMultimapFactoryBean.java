@@ -2034,30 +2034,24 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}]+$")),
 							s, k)));
 			//
-			if (Util.getValue(entry) != null) {
-				//
-				IntStream.of(IntListUtil.toArray(Util.getValue(entry))).forEach(x -> {
-					if (!contains(intList, x)) {
-						intList.add(x);
-					}
-				});
-				//
-			} // if
-				//
-				// ps3
-				//
+			forEach(testAndApply(Objects::nonNull, IntListUtil.toArray(Util.getValue(entry)), IntStream::of, null),
+					x -> {
+						if (!contains(intList, x)) {
+							intList.add(x);
+						}
+					});
+			//
+			// ps3
+			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.getKey(
 					entry = toMultimapAndIntList16C(patternMap, ps3 = ObjectUtils.getIfNull(ps3, () -> Arrays.asList(
 							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InBasicLatin}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$")),
 							s, k)));
 			//
-			if (Util.getValue(entry) != null) {
-				//
-				IntStream.of(IntListUtil.toArray(Util.getValue(entry))).forEach(x -> intList.add(x));
-				//
-			} // if
-				//
+			forEach(testAndApply(Objects::nonNull, IntListUtil.toArray(Util.getValue(entry)), IntStream::of, null),
+					x -> intList.add(x));
+			//
 		} // for
 			//
 		return Pair.of(multimap, intList);
