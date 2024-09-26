@@ -1972,9 +1972,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 									//
 									MultimapUtil.put(
 											multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cp,
-											Stream.of(StringUtils.getCommonPrefix(Util.group(m2, 2), g12),
-													StringUtils.getCommonPrefix(Util.group(m2, 2), g13))
-													.max(Comparator.comparingInt(String::length)).get());
+											orElseThrow(Stream
+													.of(StringUtils.getCommonPrefix(Util.group(m2, 2), g12),
+															StringUtils.getCommonPrefix(Util.group(m2, 2), g13))
+													.max(Comparator.comparingInt(String::length))));
 									//
 									break;
 									//
