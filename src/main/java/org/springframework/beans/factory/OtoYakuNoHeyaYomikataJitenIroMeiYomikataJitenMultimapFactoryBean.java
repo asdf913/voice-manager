@@ -1903,7 +1903,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							StringUtils.trim(s))) && Util.groupCount(m1) > 2) {
 						//
 						MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								g11 = Util.group(m, 1), Arrays.asList(g12 = Util.group(m, 2), g13 = Util.group(m, 3)));
+								Util.group(m, 1), Arrays.asList(g12 = Util.group(m, 2), g13 = Util.group(m, 3)));
 						//
 						if (StringUtils.length(g11 = Util.group(m, 1)) == 2) {
 							//
@@ -1962,9 +1962,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 								//
 								if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 										"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+$"),
-										StringUtils.trim(temp = IterableUtils.get(list, z)))) && Util.groupCount(m2) > 1
-										&& StringUtils.isNotBlank(
-												cp = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))) {
+										StringUtils.trim(IterableUtils.get(list, z)))) && Util.groupCount(m2) > 1
+										&& StringUtils
+												.isNotBlank(cp = StringUtils.getCommonPrefix(g11, Util.group(m2, 1)))) {
 									//
 									IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
 									//
