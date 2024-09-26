@@ -2117,32 +2117,32 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 			} // for
 				//
-		} else {
+			return Pair.of(multimap, intList);
 			//
-			for (int z = 0; z < IterableUtils.size(list); z++) {
-				//
-				if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+$"),
-						StringUtils.trim(IterableUtils.get(list, z)))) && Util.groupCount(m2) > 1
-						&& StringUtils.isNotBlank(cp = StringUtils.getCommonPrefix(g11, Util.group(m2, 1)))) {
-					//
-					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), index);
-					//
-					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), z);
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cp,
-							orElseThrow(Stream
-									.of(StringUtils.getCommonPrefix(Util.group(m2, 2), g12),
-											StringUtils.getCommonPrefix(Util.group(m2, 2), g13))
-									.max(Comparator.comparingInt(String::length))));
-					//
-					break;
-					//
-				} // if
-					//
-			} // for
-				//
 		} // if
+			//
+		for (int z = 0; z < IterableUtils.size(list); z++) {
+			//
+			if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+$"),
+					StringUtils.trim(IterableUtils.get(list, z)))) && Util.groupCount(m2) > 1
+					&& StringUtils.isNotBlank(cp = StringUtils.getCommonPrefix(g11, Util.group(m2, 1)))) {
+				//
+				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), index);
+				//
+				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), z);
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cp,
+						orElseThrow(Stream
+								.of(StringUtils.getCommonPrefix(Util.group(m2, 2), g12),
+										StringUtils.getCommonPrefix(Util.group(m2, 2), g13))
+								.max(Comparator.comparingInt(String::length))));
+				//
+				break;
+				//
+			} // if
+				//
+		} // for
 			//
 		return Pair.of(multimap, intList);
 		//
