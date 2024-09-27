@@ -2074,7 +2074,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		final boolean isG11L2 = StringUtils.length(g11) == 2;
 		//
-		for (int z = 0; isG11L2 && z < IterableUtils.size(list); z++) {
+		for (int z = 0; Boolean.logicalAnd(isG11L2, z < IterableUtils.size(list)); z++) {
 			//
 			if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+$"),
