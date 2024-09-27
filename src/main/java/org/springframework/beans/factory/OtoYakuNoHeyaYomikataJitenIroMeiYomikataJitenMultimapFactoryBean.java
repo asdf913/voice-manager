@@ -54,6 +54,7 @@ import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.javatuples.valueintf.IValue2;
 import org.javatuples.valueintf.IValue3;
+import org.javatuples.valueintf.IValue4;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.NodeUtil;
@@ -2111,8 +2112,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						Quintet.with(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g21, temp,
 								cp2, cs2),
 						x -> MultimapUtil.put(IValue0Util.getValue0(x), StringUtils.substring(Util.getValue1(x), 1, 2),
-								StringUtils.substringBetween(getValue2(x), getValue3(x),
-										x != null ? x.getValue4() : null)));
+								StringUtils.substringBetween(getValue2(x), getValue3(x), getValue4(x))));
 				//
 			} // for
 				//
@@ -2147,6 +2147,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		return Pair.of(multimap, intList);
 		//
+	}
+
+	private static <X> X getValue4(final IValue4<X> instance) {
+		return instance != null ? instance.getValue4() : null;
 	}
 
 	private static <T> void testAndAccept(final Predicate<T> predicate, final T value,
