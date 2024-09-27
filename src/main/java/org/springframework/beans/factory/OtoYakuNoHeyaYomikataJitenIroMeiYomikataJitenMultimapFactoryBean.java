@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
@@ -46,6 +47,7 @@ import org.apache.poi.util.IntList;
 import org.apache.poi.util.IntListUtil;
 import org.d2ab.function.ObjObjIntFunction;
 import org.javatuples.Quartet;
+import org.javatuples.Quintet;
 import org.javatuples.Triplet;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -2105,13 +2107,13 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cs1, cs2);
 				//
-				if (StringUtils.length(g21) == 3) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							StringUtils.substring(g21, 1, 2), StringUtils.substringBetween(temp, cp2, cs2));
-					//
-				} // if
-					//
+				testAndAccept(x -> StringUtils.length(Util.getValue1(x)) == 3,
+						Quintet.with(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g21, temp,
+								cp2, cs2),
+						x -> MultimapUtil.put(IValue0Util.getValue0(x), StringUtils.substring(Util.getValue1(x), 1, 2),
+								StringUtils.substringBetween(getValue2(x), getValue3(x),
+										x != null ? x.getValue4() : null)));
+				//
 			} // for
 				//
 			break;
@@ -2145,6 +2147,12 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		return Pair.of(multimap, intList);
 		//
+	}
+
+	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer) {
+		if (Util.test(predicate, value) && consumer != null) {
+			consumer.accept(value);
+		}
 	}
 
 	@Nullable
