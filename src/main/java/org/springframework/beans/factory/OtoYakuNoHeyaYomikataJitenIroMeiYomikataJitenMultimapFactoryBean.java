@@ -41,6 +41,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.TextStringBuilder;
 import org.apache.poi.util.IntList;
@@ -2998,9 +2999,38 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	}
 
 	private static void removeValue(@Nullable final IntList instance, final int o) {
-		if (instance != null) {
-			instance.removeValue(o);
-		}
+		//
+		if (instance == null || !instance.contains(o)) {
+			//
+			return;
+			//
+		} // if
+			//
+		try {
+			//
+			final Integer _limit = Util.cast(Integer.class, FieldUtils.readDeclaredField(instance, "_limit", true));
+			//
+			final int[] _array = Util.cast(int[].class, FieldUtils.readDeclaredField(instance, "_array", true));
+			//
+			if (instance.lastIndexOf(o) < instance.size() - 1 && _limit != null && _array != null
+					&& _limit.intValue() == _array.length) {
+				//
+				final int[] ints = new int[_array.length + 1];
+				//
+				System.arraycopy(_array, 0, ints, o, 0);
+				//
+				FieldUtils.writeDeclaredField(instance, "_array", ints, true);
+				//
+			} // if
+				//
+		} catch (final IllegalAccessException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
+		instance.removeValue(o);
+		//
 	}
 
 	@Nullable

@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.util.IntList;
 import org.apache.poi.util.IntListUtil;
@@ -827,10 +828,30 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	}
 
 	@Test
-	void testRemoveValue() {
+	void testRemoveValue() throws Throwable {
 		//
 		Assertions.assertDoesNotThrow(
 				() -> removeValue(Util.cast(IntList.class, Narcissus.allocateInstance(IntList.class)), ZERO));
+		//
+		final IntList il1 = new IntList();
+		//
+		final Field field = IntList.class.getDeclaredField("_array");
+		//
+		final int[] _array = Util.cast(int[].class, FieldUtils.readField(field, il1, true));
+		//
+		final int length = _array != null ? _array.length : 0;
+		//
+		forEach(IntStream.range(0, length), x -> IntListUtil.add(il1, x));
+		//
+		removeValue(il1, -1);
+		//
+		removeValue(il1, length - 2);
+		//
+		final IntList il2 = new IntList();
+		//
+		forEach(IntStream.range(0, length), x -> IntListUtil.add(il2, x));
+		//
+		removeValue(il2, length - 1);
 		//
 	}
 
