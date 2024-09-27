@@ -2149,7 +2149,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static <X> X getValue4(final IValue4<X> instance) {
+	private static <X> X getValue4(@Nullable final IValue4<X> instance) {
 		return instance != null ? instance.getValue4() : null;
 	}
 
