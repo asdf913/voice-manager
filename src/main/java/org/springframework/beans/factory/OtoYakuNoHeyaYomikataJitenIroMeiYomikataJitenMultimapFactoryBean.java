@@ -3017,7 +3017,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				final int[] ints = new int[_array.length + 1];
 				//
-				System.arraycopy(_array, 0, ints, o, 0);
+				System.arraycopy(_array, 0, ints, 0, _array.length);
 				//
 				FieldUtils.writeDeclaredField(instance, "_array", ints, true);
 				//
