@@ -2092,7 +2092,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				for (final String g : Arrays.asList(g12, g13)) {
 					//
-					if (StringUtils.isBlank(cs1) || StringUtils.isBlank(cs2 = getCommonSuffix(Util.group(m2, 2), g))) {
+					if (Boolean.logicalOr(StringUtils.isBlank(cs1),
+							StringUtils.isBlank(cs2 = getCommonSuffix(Util.group(m2, 2), g)))) {
 						//
 						continue;
 						//
