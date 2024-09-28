@@ -2412,7 +2412,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 			} // for
 				//
-			final String g1c2 = StringUtils.length(g1) > 1 ? StringUtils.substring(g1, 1, 2) : null;
+			final String g1c2 = testAndApply(x -> StringUtils.length(x) > 1, g1, x -> StringUtils.substring(x, 1, 2),
+					null);
 			//
 			String lcs;
 			//
