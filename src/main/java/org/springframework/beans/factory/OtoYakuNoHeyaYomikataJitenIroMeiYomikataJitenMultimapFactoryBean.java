@@ -2417,7 +2417,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			String lcs;
 			//
-			for (int k = 0; k < IterableUtils.size(list) && StringUtils.isNotBlank(g1c2); k++) {
+			for (int k = 0; Boolean.logicalAnd(k < IterableUtils.size(list), StringUtils.isNotBlank(g1c2)); k++) {
 				//
 				if (k == i) {
 					//
