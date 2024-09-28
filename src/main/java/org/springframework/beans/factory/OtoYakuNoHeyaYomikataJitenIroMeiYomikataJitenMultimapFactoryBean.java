@@ -2441,13 +2441,11 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		Matcher m;
 		//
-		String s, t1, t2, cp2, csk, csv, key, value;
+		String s, t1, t2, csk, csv, key, value;
 		//
 		Multimap<String, String> multimap = null;
 		//
 		IntList intList = null;
-		//
-		Iterable<String> ss;
 		//
 		Iterable<Entry<String, String>> entries = null;
 		//
@@ -2468,19 +2466,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
 			//
-			ss = MultimapUtil.get(mm, StringUtils.substring(t1, 0, 1));
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					toMultimap17C1(MultimapUtil.get(mm, StringUtils.substring(t1, 0, 1)), Pair.of(t1, t2), cp1));
 			//
-			for (int j = 0; j < IterableUtils.size(ss); j++) {
-				//
-				if (StringUtils.isNotBlank(cp2 = StringUtils.getCommonPrefix(IterableUtils.get(ss, j), t2))) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							StringUtils.substringAfter(t1, cp1), StringUtils.substringAfter(t2, cp2));
-					//
-				} // if
-					//
-			} // for
-				//
 			if (Util.iterator(entries = MultimapUtil.entries(multimap)) != null) {
 				//
 				for (final Entry<String, String> en : entries) {
@@ -2514,6 +2502,32 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		} // for
 			//
 		return Pair.of(multimap, intList);
+		//
+	}
+
+	private static Multimap<String, String> toMultimap17C1(final Iterable<String> ss, final Entry<String, String> entry,
+			final String cp1) {
+		//
+		String cp2;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		final String t1 = Util.getKey(entry);
+		//
+		final String t2 = Util.getValue(entry);
+		//
+		for (int j = 0; j < IterableUtils.size(ss); j++) {
+			//
+			if (StringUtils.isNotBlank(cp2 = StringUtils.getCommonPrefix(IterableUtils.get(ss, j), t2))) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						StringUtils.substringAfter(t1, cp1), StringUtils.substringAfter(t2, cp2));
+				//
+			} // if
+				//
+		} // for
+			//
+		return multimap;
 		//
 	}
 
