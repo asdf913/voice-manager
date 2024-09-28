@@ -2386,10 +2386,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 								//
 							} // if
 								//
-							if (Boolean.logicalAnd(
-									StringUtils.isNotBlank(csk = getCommonSuffix(t1, key = Util.getKey(en))),
-									StringUtils.length(csk) == 1)
-									&& StringUtils.isNotBlank(csv = getCommonSuffix(t2, value = Util.getValue(en)))) {
+							if (Util.and(StringUtils.isNotBlank(csk = getCommonSuffix(t1, key = Util.getKey(en))),
+									StringUtils.length(csk) == 1,
+									StringUtils.isNotBlank(csv = getCommonSuffix(t2, value = Util.getValue(en))))) {
 								//
 								MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 										csk, csv);
