@@ -2297,6 +2297,13 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		addAll(intList, Util.getValue(entry));
 		//
+		// C
+		//
+		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+				Util.getKey(entry = toMultimapAndIntList17C(patternMap, list, i, cp1, multimap)));
+		//
+		addAll(intList, Util.getValue(entry));
+		//
 		String s, t1, t2;
 		//
 		Matcher m;
@@ -2425,9 +2432,24 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 		} // for
 			//
-		Iterable<Entry<String, String>> entries = null;
+		return Pair.of(multimap, intList);
 		//
-		String csk, csv, key, value;
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList17C(final PatternMap patternMap,
+			final Iterable<String> list, final int index, final String cp1, final Multimap<String, String> mm) {
+		//
+		Matcher m;
+		//
+		String s, t1, t2, cp2, csk, csv, key, value;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		IntList intList = null;
+		//
+		Iterable<String> ss;
+		//
+		Iterable<Entry<String, String>> entries = null;
 		//
 		for (int k = 0; k < IterableUtils.size(list); k++) {
 			//
