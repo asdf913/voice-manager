@@ -1101,6 +1101,15 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 										"薄藍鼠（うすあいねずみ）WEB", "濃鶯茶（こいうぐいすちゃ）WEB"),
 								0))));
 		//
+		Assertions.assertEquals(
+				"{\"{紺村濃=[こんむらご, こうむらご, こむらご], 紺斑濃=[こんむらご, こうむらご, こむらご], 紺=[こん], 紺藍=[こんあい], 藍=[あい], 紺藍色=[こんあいいろ], 藍色=[あいいろ], 紺青色=[こんじょういろ], 青色=[じょういろ], 色=[いろ], 紫=[むらさき], 村濃=[むらご]}\":[0,1,2,3,4]}",
+				ObjectMapperUtil
+						.writeValueAsString(objectMapper,
+								convert(toMultimapAndIntList(
+										patternMap, Arrays.asList("紺村濃・紺斑濃（こんむらご・こうむらご・こむらご）日本国語大辞典", "紺（こん）",
+												"紺藍（こんあい）", "紺藍色（こんあいいろ）", "紺青色（こんじょういろ）", "紫の村濃（むらさきのむらご）", "村濃（むらご）"),
+										0))));
+		//
 	}
 
 	private static Entry<Multimap<String, String>, int[]> convert(
