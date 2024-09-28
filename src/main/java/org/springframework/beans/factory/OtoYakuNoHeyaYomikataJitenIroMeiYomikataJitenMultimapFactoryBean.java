@@ -2297,80 +2297,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		addAll(intList, Util.getValue(entry));
 		//
-		Iterable<String> ss;
-		//
-		String s, t1, t2, cp2;
+		String s, t1, t2;
 		//
 		Matcher m;
 		//
-		Iterable<Entry<String, String>> entries = null;
-		//
-		String csk, csv, key;
-		//
-		for (int k = 0; k < IterableUtils.size(list); k++) {
-			//
-			if (Boolean.logicalOr(!StringUtils.startsWith(s = IterableUtils.get(list, k), cp1), k == i)) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-					s)) && Util.groupCount(m) > 1 && StringUtils.length(t1 = Util.group(m, 1)) > 2) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), t1,
-						t2 = Util.group(m, 2));
-				//
-				IntListUtil.add(intList, k);
-				//
-				ss = multimap.get(StringUtils.substring(t1, 0, 1));
-				//
-				for (int j = 0; j < IterableUtils.size(ss); j++) {
-					//
-					if (StringUtils.isNotBlank(cp2 = StringUtils.getCommonPrefix(IterableUtils.get(ss, j), t2))) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								StringUtils.substringAfter(t1, cp1), StringUtils.substringAfter(t2, cp2));
-						//
-					} // if
-						//
-				} // for
-					//
-				if (Util.iterator(entries = MultimapUtil.entries(multimap)) != null) {
-					//
-					for (final Entry<String, String> en : entries) {
-						//
-						if (en == null) {
-							//
-							continue;
-							//
-						} // if
-							//
-						if (Util.and(StringUtils.isNotBlank(csk = getCommonSuffix(t1, key = Util.getKey(en))),
-								StringUtils.length(csk) == 1,
-								StringUtils.isNotBlank(csv = getCommonSuffix(t2, value = Util.getValue(en))))) {
-							//
-							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-									csk, csv);
-							//
-							if (StringUtils.length(key) == 2) {
-								//
-								MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-										StringUtils.substringBefore(key, csk), StringUtils.substringBefore(value, csv));
-								//
-							} // if
-								//
-						} // if
-							//
-					} // for
-						//
-				} // if
-					//
-			} // if
-				//
-		} // for
-			//
 		final String g1c2 = testAndApply(x -> StringUtils.length(x) > 1, g1, x -> StringUtils.substring(x, 1, 2), null);
 		//
 		String lcs;
@@ -2490,6 +2420,74 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					} // if
 						//
 				} // for
+					//
+			} // if
+				//
+		} // for
+			//
+		Iterable<Entry<String, String>> entries = null;
+		//
+		String csk, csv, key, value;
+		//
+		for (int k = 0; k < IterableUtils.size(list); k++) {
+			//
+			if (Boolean.logicalOr(!StringUtils.startsWith(s = IterableUtils.get(list, k), cp1), k == index)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+					s)) && Util.groupCount(m) > 1 && StringUtils.length(t1 = Util.group(m, 1)) > 2) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), t1,
+						t2 = Util.group(m, 2));
+				//
+				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
+				//
+				ss = MultimapUtil.get(mm, StringUtils.substring(t1, 0, 1));
+				//
+				for (int j = 0; j < IterableUtils.size(ss); j++) {
+					//
+					if (StringUtils.isNotBlank(cp2 = StringUtils.getCommonPrefix(IterableUtils.get(ss, j), t2))) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								StringUtils.substringAfter(t1, cp1), StringUtils.substringAfter(t2, cp2));
+						//
+					} // if
+						//
+				} // for
+					//
+				if (Util.iterator(entries = MultimapUtil.entries(multimap)) != null) {
+					//
+					for (final Entry<String, String> en : entries) {
+						//
+						if (en == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						if (Util.and(StringUtils.isNotBlank(csk = getCommonSuffix(t1, key = Util.getKey(en))),
+								StringUtils.length(csk) == 1,
+								StringUtils.isNotBlank(csv = getCommonSuffix(t2, value = Util.getValue(en))))) {
+							//
+							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+									csk, csv);
+							//
+							if (StringUtils.length(key) == 2) {
+								//
+								MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+										StringUtils.substringBefore(key, csk), StringUtils.substringBefore(value, csv));
+								//
+							} // if
+								//
+						} // if
+							//
+					} // for
+						//
+				} // if
 					//
 			} // if
 				//
