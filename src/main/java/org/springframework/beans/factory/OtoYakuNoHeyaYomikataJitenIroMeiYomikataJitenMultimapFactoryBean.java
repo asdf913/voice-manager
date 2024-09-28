@@ -2282,36 +2282,19 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		final String cp1 = longestCommonSubstring(g1, g2);
 		//
-		String s;
+		// A
 		//
-		Matcher m;
+		final Entry<Multimap<String, String>, IntList> entry = toMultimapAndIntList17A(patternMap, list, i, cp1);
 		//
-		String t1;
+		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.getKey(entry));
 		//
-		for (int k = 0; k < IterableUtils.size(list); k++) {
-			//
-			if (Boolean.logicalOr(!StringUtils.startsWith(s = IterableUtils.get(list, k), cp1), k == i)) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-					s)) && Util.groupCount(m) > 1 && StringUtils.length(t1 = Util.group(m, 1)) == 1) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), t1,
-						Util.group(m, 2));
-				//
-				IntListUtil.add(intList, k);
-				//
-			} // if
-				//
-		} // for
-			//
+		addAll(intList, Util.getValue(entry));
+		//
 		Iterable<String> ss;
 		//
-		String t2, cp2;
+		String s, t1, t2, cp2;
+		//
+		Matcher m;
 		//
 		for (int k = 0; k < IterableUtils.size(list); k++) {
 			//
@@ -2447,6 +2430,42 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						ImmutableMultimap.of(StringUtils.substringBefore(t1, lcs), StringUtils.substringBefore(t2, lcs),
 								StringUtils.substringAfter(t1, lcs), StringUtils.substringAfter(t2, lcs)));
+				//
+			} // if
+				//
+		} // for
+			//
+		return Pair.of(multimap, intList);
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList17A(final PatternMap patternMap,
+			final Iterable<String> list, final int index, final String cp1) {
+		//
+		Matcher m;
+		//
+		String s, t1;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		IntList intList = null;
+		//
+		for (int k = 0; k < IterableUtils.size(list); k++) {
+			//
+			if (Boolean.logicalOr(!StringUtils.startsWith(s = IterableUtils.get(list, k), cp1), k == index)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+					s)) && Util.groupCount(m) > 1 && StringUtils.length(t1 = Util.group(m, 1)) == 1) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), t1,
+						Util.group(m, 2));
+				//
+				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
 				//
 			} // if
 				//
