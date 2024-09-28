@@ -2329,8 +2329,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 					for (int j = 0; j < IterableUtils.size(ss); j++) {
 						//
-						if (StringUtils
-								.isNotBlank(cp2 = StringUtils.getCommonPrefix(s = IterableUtils.get(ss, j), t2))) {
+						if (StringUtils.isNotBlank(cp2 = StringUtils.getCommonPrefix(IterableUtils.get(ss, j), t2))) {
 							//
 							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 									StringUtils.substringAfter(t1, cp1), StringUtils.substringAfter(t2, cp2));
@@ -2368,8 +2367,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 					for (int j = 0; j < IterableUtils.size(ss); j++) {
 						//
-						if (StringUtils
-								.isNotBlank(cp2 = StringUtils.getCommonPrefix(s = IterableUtils.get(ss, j), t2))) {
+						if (StringUtils.isNotBlank(cp2 = StringUtils.getCommonPrefix(IterableUtils.get(ss, j), t2))) {
 							//
 							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 									StringUtils.substringAfter(t1, cp1), StringUtils.substringAfter(t2, cp2));
