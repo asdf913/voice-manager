@@ -60,7 +60,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS, METHOD_REMOVE_VALUE, METHOD_FLAT_MAP, METHOD_ADD_ALL,
 			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT3,
 			METHOD_TEST_AND_ACCEPT5, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM, METHOD_FOR_EACH_INT_STREAM,
-			METHOD_IS_EMPTY, METHOD_MAX;
+			METHOD_IS_EMPTY, METHOD_MAX, METHOD_TO_MULTI_MAP_17_C_2;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -113,6 +113,9 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		(METHOD_IS_EMPTY = clz.getDeclaredMethod("isEmpty", IntList.class)).setAccessible(true);
 		//
 		(METHOD_MAX = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP_17_C_2 = clz.getDeclaredMethod("toMultimap17C2", Iterable.class, Entry.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -1288,6 +1291,28 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				return null;
 			} else if (obj instanceof Optional) {
 				return (Optional) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToMultimap17C2() throws Throwable {
+		//
+		Assertions.assertNull(toMultimap17C2(Collections.singleton(null), null));
+		//
+	}
+
+	private static Multimap<String, String> toMultimap17C2(final Iterable<Entry<String, String>> entries,
+			final Entry<String, String> entry) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP_17_C_2.invoke(null, entries, entry);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

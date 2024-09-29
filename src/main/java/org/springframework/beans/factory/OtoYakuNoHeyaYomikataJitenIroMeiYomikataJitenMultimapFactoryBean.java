@@ -2441,13 +2441,11 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		Matcher m;
 		//
-		String s, t1, t2, csk, csv, key, value;
+		String s, t1, t2;
 		//
 		Multimap<String, String> multimap = null;
 		//
 		IntList intList = null;
-		//
-		Iterable<Entry<String, String>> entries = null;
 		//
 		for (int k = 0; k < IterableUtils.size(list); k++) {
 			//
@@ -2469,37 +2467,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					toMultimap17C1(MultimapUtil.get(mm, StringUtils.substring(t1, 0, 1)), Pair.of(t1, t2), cp1));
 			//
-			if (Util.iterator(entries = MultimapUtil.entries(multimap)) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			for (final Entry<String, String> en : entries) {
-				//
-				if (en == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (Util.and(StringUtils.isNotBlank(csk = getCommonSuffix(t1, key = Util.getKey(en))),
-						StringUtils.length(csk) == 1,
-						StringUtils.isNotBlank(csv = getCommonSuffix(t2, value = Util.getValue(en))))) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), csk, csv);
-					//
-					if (StringUtils.length(key) == 2) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								StringUtils.substringBefore(key, csk), StringUtils.substringBefore(value, csv));
-						//
-					} // if
-						//
-				} // if
-					//
-			} // for
-				//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					toMultimap17C2(MultimapUtil.entries(multimap), Pair.of(t1, t2)));
+			//
 		} // for
 			//
 		return Pair.of(multimap, intList);
@@ -2529,6 +2499,54 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		} // for
 			//
 		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap17C2(final Iterable<Entry<String, String>> entries,
+			final Entry<String, String> entry) {
+		//
+		if (Util.iterator(entries) != null) {
+			//
+			String key, value;
+			//
+			Multimap<String, String> multimap = null;
+			//
+			final String t1 = Util.getKey(entry);
+			//
+			final String t2 = Util.getValue(entry);
+			//
+			String csk, csv;
+			//
+			for (final Entry<String, String> en : entries) {
+				//
+				if (en == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (Util.and(StringUtils.isNotBlank(csk = getCommonSuffix(t1, key = Util.getKey(en))),
+						StringUtils.length(csk) == 1,
+						StringUtils.isNotBlank(csv = getCommonSuffix(t2, value = Util.getValue(en))))) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), csk, csv);
+					//
+					if (StringUtils.length(key) == 2) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								StringUtils.substringBefore(key, csk), StringUtils.substringBefore(value, csv));
+						//
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+			return multimap;
+			//
+		} // if
+			//
+		return null;
 		//
 	}
 
