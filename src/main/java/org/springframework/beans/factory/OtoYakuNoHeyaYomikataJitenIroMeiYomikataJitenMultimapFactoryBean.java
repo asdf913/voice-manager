@@ -2469,35 +2469,36 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					toMultimap17C1(MultimapUtil.get(mm, StringUtils.substring(t1, 0, 1)), Pair.of(t1, t2), cp1));
 			//
-			if (Util.iterator(entries = MultimapUtil.entries(multimap)) != null) {
+			if (Util.iterator(entries = MultimapUtil.entries(multimap)) == null) {
 				//
-				for (final Entry<String, String> en : entries) {
-					//
-					if (en == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (Util.and(StringUtils.isNotBlank(csk = getCommonSuffix(t1, key = Util.getKey(en))),
-							StringUtils.length(csk) == 1,
-							StringUtils.isNotBlank(csv = getCommonSuffix(t2, value = Util.getValue(en))))) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), csk,
-								csv);
-						//
-						if (StringUtils.length(key) == 2) {
-							//
-							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-									StringUtils.substringBefore(key, csk), StringUtils.substringBefore(value, csv));
-							//
-						} // if
-							//
-					} // if
-						//
-				} // for
-					//
+				continue;
+				//
 			} // if
+				//
+			for (final Entry<String, String> en : entries) {
+				//
+				if (en == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (Util.and(StringUtils.isNotBlank(csk = getCommonSuffix(t1, key = Util.getKey(en))),
+						StringUtils.length(csk) == 1,
+						StringUtils.isNotBlank(csv = getCommonSuffix(t2, value = Util.getValue(en))))) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), csk, csv);
+					//
+					if (StringUtils.length(key) == 2) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								StringUtils.substringBefore(key, csk), StringUtils.substringBefore(value, csv));
+						//
+					} // if
+						//
+				} // if
+					//
+			} // for
 				//
 		} // for
 			//
