@@ -124,7 +124,7 @@ class MapReportGuiTest {
 		(METHOD_CREATE_MULTIMAP = clz.getDeclaredMethod("createMultimap", Multimap.class, BiPredicate.class))
 				.setAccessible(true);
 		//
-		(METHOD_CLEAR = clz.getDeclaredMethod("clear", IntList.class)).setAccessible(true);
+		(METHOD_CLEAR = clz.getDeclaredMethod("clear", Collection.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT3 = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
 				Consumer.class)).setAccessible(true);
@@ -920,7 +920,7 @@ class MapReportGuiTest {
 		//
 	}
 
-	private static void clear(final IntList instance) throws Throwable {
+	private static void clear(final Collection<?> instance) throws Throwable {
 		try {
 			METHOD_CLEAR.invoke(null, instance);
 		} catch (final InvocationTargetException e) {

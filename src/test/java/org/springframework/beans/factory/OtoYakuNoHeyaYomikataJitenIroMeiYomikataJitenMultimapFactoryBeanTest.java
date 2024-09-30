@@ -32,7 +32,7 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
-import org.d2ab.collection.ints.IntCollection;
+import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntList;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -60,7 +60,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS, METHOD_REMOVE_INT, METHOD_FLAT_MAP,
 			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT3,
 			METHOD_TEST_AND_ACCEPT5, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM, METHOD_FOR_EACH_INT_STREAM,
-			METHOD_IS_EMPTY, METHOD_MAX, METHOD_TO_MULTI_MAP_17_C_2, METHOD_TO_INT_ARRAY, METHOD_ADD_INT;
+			METHOD_IS_EMPTY, METHOD_MAX, METHOD_TO_MULTI_MAP_17_C_2;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -114,10 +114,6 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TO_MULTI_MAP_17_C_2 = clz.getDeclaredMethod("toMultimap17C2", Iterable.class, Entry.class))
 				.setAccessible(true);
-		//
-		(METHOD_TO_INT_ARRAY = clz.getDeclaredMethod("toIntArray", IntCollection.class)).setAccessible(true);
-		//
-		(METHOD_ADD_INT = clz.getDeclaredMethod("addInt", IntList.class, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -818,20 +814,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		final IntList intList = IntList.create();
 		//
-		addInt(intList, ZERO);
+		IntCollectionUtil.addInt(intList, ZERO);
 		//
 		Assertions.assertTrue(contains(intList, ZERO));
 		//
-	}
-
-	private static void addInt(final IntList a, final int i) {
-		try {
-			METHOD_ADD_INT.invoke(null, a, i);
-		} catch (final IllegalAccessException e) {
-			throw new RuntimeException(e);
-		} catch (final InvocationTargetException e) {
-			throw new RuntimeException(e.getTargetException());
-		}
 	}
 
 	private static boolean contains(final IntList instance, final int o) throws Throwable {
@@ -1108,21 +1094,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 
 	private static Entry<Multimap<String, String>, int[]> convert(
 			final Entry<Multimap<String, String>, IntList> instance) throws Throwable {
-		return Pair.of(Util.getKey(instance), toIntArray(Util.getValue(instance)));
-	}
-
-	private static int[] toIntArray(final IntCollection instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_INT_ARRAY.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof int[]) {
-				return (int[]) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
+		return Pair.of(Util.getKey(instance), IntCollectionUtil.toIntArray(Util.getValue(instance)));
 	}
 
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList(final PatternMap patternMap,
