@@ -182,7 +182,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList14,
 						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList15,
 						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList16,
-						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList17);
+						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList17,
+						OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean::toMultimapAndIntList18);
 		//
 		Entry<Multimap<String, String>, IntList> entry = null;
 		//
@@ -2541,6 +2542,93 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			} // for
 				//
 			return multimap;
+			//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList18(final PatternMap patternMap,
+			final List<String> list, final int i) {
+		//
+		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+$"),
+				testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null));
+		//
+		if (Util.matches(m1) && Util.groupCount(m1) > 1) {
+			//
+			IntList intList = null;
+			//
+			Multimap<String, String> multimap = null;
+			//
+			final String g1 = Util.group(m1, 1);
+			//
+			final String g2 = Util.group(m1, 2);
+			//
+			String cpk, cpv;
+			//
+			Matcher m;
+			//
+			String g11, g12;
+			//
+			Multimap<String, String> mm = null;
+			//
+			for (int k = 0; k < IterableUtils.size(list); k++) {
+				//
+				if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+						IterableUtils.get(list, k))) && Util.groupCount(m) > 1
+						&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11 = Util.group(m, 1), g1))
+						&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12 = Util.group(m, 2), g2))) {
+					//
+					if (!containsInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i)) {
+						//
+						IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i);
+						//
+					} // if
+						//
+					IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cpk, cpv);
+					//
+					MultimapUtil.put(mm = ObjectUtils.getIfNull(mm, LinkedHashMultimap::create),
+							StringUtils.substringAfter(g11, cpk), StringUtils.substringAfter(g12, cpv));
+					//
+				} // if
+					//
+			} // for
+				//
+			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(mm);
+			//
+			Entry<String, String> e1, e2;
+			//
+			String k1, k2, v1, v2;
+			//
+			for (int k = 0; k < IterableUtils.size(entries) - 1; k++) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						cpk = StringUtils.getCommonPrefix(k1 = Util.getKey(e1 = IterableUtils.get(entries, k)),
+								k2 = Util.getKey(e2 = IterableUtils.get(entries, k + 1))),
+						cpv = StringUtils.getCommonPrefix(v1 = Util.getValue(e1), v2 = Util.getValue(e2)));
+				//
+				if (StringUtils.length(k1) == 2) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							StringUtils.substringAfter(k1, cpk), StringUtils.substringAfter(v1, cpv));
+					//
+				} // if
+					//
+				if (StringUtils.length(k2) == 2) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							StringUtils.substringAfter(k2, cpk), StringUtils.substringAfter(v2, cpv));
+					//
+				} // if
+					//
+			} // for
+				//
+			return Pair.of(multimap, intList);
 			//
 		} // if
 			//
