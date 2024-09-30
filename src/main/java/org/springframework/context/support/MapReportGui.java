@@ -54,8 +54,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.poi.util.IntList;
-import org.apache.poi.util.IntListUtil;
+import org.d2ab.collection.ints.IntCollectionUtil;
+import org.d2ab.collection.ints.IntList;
 import org.meeuw.functional.Predicates;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.springframework.beans.config.Title;
@@ -348,14 +348,14 @@ public class MapReportGui extends JFrame
 			//
 			Object[] os = null;
 			//
-			clear(jTableRowColumnCount = ObjectUtils.getIfNull(jTableRowColumnCount, IntList::new));
+			clear(jTableRowColumnCount = ObjectUtils.getIfNull(jTableRowColumnCount, IntList::create));
 			//
 			for (final Object key : keySet) {
 				//
 				addRow(dtm,
 						os = ArrayUtils.addAll(new Object[] { key }, MultimapUtil.get((Multimap) mm, key).toArray()));
 				//
-				IntListUtil.add(jTableRowColumnCount, length(os));
+				IntCollectionUtil.addInt(jTableRowColumnCount, length(os));
 				//
 			} // for
 				//
@@ -365,7 +365,7 @@ public class MapReportGui extends JFrame
 		//
 	}
 
-	private static void clear(@Nullable final IntList instance) {
+	private static void clear(@Nullable final Collection<?> instance) {
 		if (instance != null) {
 			instance.clear();
 		}

@@ -64,8 +64,8 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.poi.util.IntList;
-import org.apache.poi.util.IntListUtil;
+import org.d2ab.collection.ints.IntCollectionUtil;
+import org.d2ab.collection.ints.IntList;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -582,13 +582,13 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 			if (StringUtils.equalsAnyIgnoreCase(jlJlptLevel.getModel().getElementAt(i), level)) {
 				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i);
+				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i);
 				//
 			} // if
 				//
 		} // for
 			//
-		setSelectedIndices(jlJlptLevel, IntListUtil.toArray(intList));
+		setSelectedIndices(jlJlptLevel, IntCollectionUtil.toIntArray(intList));
 		//
 	}
 

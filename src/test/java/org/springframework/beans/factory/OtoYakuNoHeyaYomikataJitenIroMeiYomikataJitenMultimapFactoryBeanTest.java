@@ -28,12 +28,12 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.poi.util.IntList;
-import org.apache.poi.util.IntListUtil;
+import org.d2ab.collection.ints.IntCollection;
+import org.d2ab.collection.ints.IntList;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.junit.jupiter.api.Assertions;
@@ -57,10 +57,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	private static final int ZERO = 0;
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3,
-			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS, METHOD_REMOVE_VALUE, METHOD_FLAT_MAP, METHOD_ADD_ALL,
+			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS, METHOD_REMOVE_INT, METHOD_FLAT_MAP,
 			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT3,
 			METHOD_TEST_AND_ACCEPT5, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM, METHOD_FOR_EACH_INT_STREAM,
-			METHOD_IS_EMPTY, METHOD_MAX, METHOD_TO_MULTI_MAP_17_C_2;
+			METHOD_IS_EMPTY, METHOD_MAX, METHOD_TO_MULTI_MAP_17_C_2, METHOD_TO_INT_ARRAY, METHOD_ADD_INT;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -81,11 +81,9 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_CONTAINS = clz.getDeclaredMethod("contains", IntList.class, Integer.TYPE)).setAccessible(true);
 		//
-		(METHOD_REMOVE_VALUE = clz.getDeclaredMethod("removeValue", IntList.class, Integer.TYPE)).setAccessible(true);
+		(METHOD_REMOVE_INT = clz.getDeclaredMethod("removeInt", IntList.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_FLAT_MAP = clz.getDeclaredMethod("flatMap", Stream.class, Function.class)).setAccessible(true);
-		//
-		(METHOD_ADD_ALL = clz.getDeclaredMethod("addAll", IntList.class, IntList.class)).setAccessible(true);
 		//
 		(METHOD_TO_MULTI_MAP_AND_INT_LIST = clz.getDeclaredMethod("toMultimapAndIntList", PatternMap.class, List.class,
 				Integer.TYPE)).setAccessible(true);
@@ -116,6 +114,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TO_MULTI_MAP_17_C_2 = clz.getDeclaredMethod("toMultimap17C2", Iterable.class, Entry.class))
 				.setAccessible(true);
+		//
+		(METHOD_TO_INT_ARRAY = clz.getDeclaredMethod("toIntArray", IntCollection.class)).setAccessible(true);
+		//
+		(METHOD_ADD_INT = clz.getDeclaredMethod("addInt", IntList.class, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -814,14 +816,22 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testContains() throws Throwable {
 		//
-		Assertions.assertFalse(contains(Util.cast(IntList.class, Narcissus.allocateInstance(IntList.class)), ZERO));
+		final IntList intList = IntList.create();
 		//
-		final IntList intList = new IntList();
-		//
-		intList.add(ZERO);
+		addInt(intList, ZERO);
 		//
 		Assertions.assertTrue(contains(intList, ZERO));
 		//
+	}
+
+	private static void addInt(final IntList a, final int i) {
+		try {
+			METHOD_ADD_INT.invoke(null, a, i);
+		} catch (final IllegalAccessException e) {
+			throw new RuntimeException(e);
+		} catch (final InvocationTargetException e) {
+			throw new RuntimeException(e.getTargetException());
+		}
 	}
 
 	private static boolean contains(final IntList instance, final int o) throws Throwable {
@@ -839,34 +849,17 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testRemoveValue() throws Throwable {
 		//
-		Assertions.assertDoesNotThrow(
-				() -> removeValue(Util.cast(IntList.class, Narcissus.allocateInstance(IntList.class)), ZERO));
+		final IntList il2 = IntList.create();
 		//
-		final IntList il1 = new IntList();
+		forEach(IntStream.range(0, IterableUtils.size(il2)), x -> il2.add(x));
 		//
-		final Field field = IntList.class.getDeclaredField("_array");
-		//
-		final int[] _array = Util.cast(int[].class, FieldUtils.readField(field, il1, true));
-		//
-		final int length = _array != null ? _array.length : 0;
-		//
-		forEach(IntStream.range(0, length), x -> IntListUtil.add(il1, x));
-		//
-		removeValue(il1, -1);
-		//
-		removeValue(il1, length - 2);
-		//
-		final IntList il2 = new IntList();
-		//
-		forEach(IntStream.range(0, length), x -> IntListUtil.add(il2, x));
-		//
-		removeValue(il2, length - 1);
+		removeValue(il2, IterableUtils.size(il2) - 1);
 		//
 	}
 
 	private static void removeValue(final IntList instance, final int o) throws Throwable {
 		try {
-			METHOD_REMOVE_VALUE.invoke(null, instance, o);
+			METHOD_REMOVE_INT.invoke(null, instance, o);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -901,9 +894,9 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testAddAll() throws Throwable {
 		//
-		final IntList intList = Util.cast(IntList.class, Narcissus.allocateInstance(IntList.class));
+		final IntList intList = IntList.create();
 		//
-		Assertions.assertDoesNotThrow(() -> addAll(intList, null));
+		Assertions.assertDoesNotThrow(() -> Util.addAll(intList, null));
 		//
 		if (isSystemPropertiesContainsTestGetObject) {
 			//
@@ -911,16 +904,8 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> addAll(intList, intList));
+		Assertions.assertDoesNotThrow(() -> Util.addAll(intList, intList));
 		//
-	}
-
-	private static void addAll(final IntList a, final IntList b) throws Throwable {
-		try {
-			METHOD_ADD_ALL.invoke(null, a, b);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -1122,8 +1107,22 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	}
 
 	private static Entry<Multimap<String, String>, int[]> convert(
-			final Entry<Multimap<String, String>, IntList> instance) {
-		return Pair.of(Util.getKey(instance), IntListUtil.toArray(Util.getValue(instance)));
+			final Entry<Multimap<String, String>, IntList> instance) throws Throwable {
+		return Pair.of(Util.getKey(instance), toIntArray(Util.getValue(instance)));
+	}
+
+	private static int[] toIntArray(final IntCollection instance) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_INT_ARRAY.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof int[]) {
+				return (int[]) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList(final PatternMap patternMap,
@@ -1258,9 +1257,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testIsEmpty() throws Throwable {
 		//
-		Assertions.assertTrue(isEmpty(new IntList()));
-		//
-		Assertions.assertTrue(isEmpty(Util.cast(IntList.class, Narcissus.allocateInstance(IntList.class))));
+		Assertions.assertTrue(isEmpty(IntList.create()));
 		//
 	}
 

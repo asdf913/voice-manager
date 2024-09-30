@@ -41,7 +41,7 @@ import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.poi.util.IntList;
+import org.d2ab.collection.ints.IntList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -916,7 +916,7 @@ class MapReportGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> clear(null));
 		//
-		Assertions.assertDoesNotThrow(() -> clear(new IntList()));
+		Assertions.assertDoesNotThrow(() -> clear(IntList.create()));
 		//
 	}
 

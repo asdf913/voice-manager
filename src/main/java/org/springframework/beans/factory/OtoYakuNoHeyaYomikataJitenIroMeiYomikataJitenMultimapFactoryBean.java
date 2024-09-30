@@ -44,8 +44,9 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.TextStringBuilder;
-import org.apache.poi.util.IntList;
-import org.apache.poi.util.IntListUtil;
+import org.d2ab.collection.ints.IntCollection;
+import org.d2ab.collection.ints.IntCollectionUtil;
+import org.d2ab.collection.ints.IntList;
 import org.d2ab.function.ObjObjIntFunction;
 import org.javatuples.Quartet;
 import org.javatuples.Quintet;
@@ -119,9 +120,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		for (int i = 0; i < IterableUtils.size(list); i++) {
 			//
-			if (contains(intList = ObjectUtils.getIfNull(intList, IntList::new), i)) {
+			if (contains(intList = ObjectUtils.getIfNull(intList, IntList::create), i)) {
 				//
-				removeValue(intList, i);
+				removeInt(intList, i);
 				//
 				continue;
 				//
@@ -131,7 +132,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), key);
 				//
-				addAll(intList = ObjectUtils.getIfNull(intList, IntList::new), Util.getValue(entry));
+				Util.addAll(intList = ObjectUtils.getIfNull(intList, IntList::create), Util.getValue(entry));
 				//
 				continue;
 				//
@@ -146,7 +147,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						IValue0Util.getValue0(iValue0));
 				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i + 1);
+				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i + 1);
 				//
 				continue;
 				//
@@ -159,12 +160,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		return multimap;
 		//
-	}
-
-	private static void addAll(@Nullable final IntList a, @Nullable final IntList b) {
-		if (a != null && b != null) {
-			a.addAll(b);
-		}
 	}
 
 	@Nullable
@@ -983,9 +978,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			Multimap<String, String> multimap = LinkedHashMultimap
 					.create(ImmutableMultimap.of(Util.group(m1, 1), g3, Util.group(m1, 2), g3));
 			//
-			final IntList intList = new IntList();
+			final IntList intList = IntList.create();
 			//
-			IntListUtil.add(intList, i);
+			IntCollectionUtil.addInt(intList, i);
 			//
 			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
 			//
@@ -1002,7 +997,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 								StringUtils.getCommonPrefix(key, g1),
 								StringUtils.getCommonPrefix(Util.getValue(entry), Util.group(m2, 2)));
 						//
-						IntListUtil.add(intList, Util.max(Arrays.stream(IntListUtil.toArray(intList))).getAsInt() + 1);
+						IntCollectionUtil.addInt(intList,
+								Util.max(Arrays.stream(IntCollectionUtil.toIntArray(intList))).getAsInt() + 1);
 						//
 					} // if
 						//
@@ -1057,9 +1053,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			Multimap<String, String> multimap = LinkedHashMultimap
 					.create(ImmutableMultimap.of(Util.group(m1, 1), Util.group(m1, 2)));
 			//
-			final IntList intList = new IntList();
+			final IntList intList = IntList.create();
 			//
-			IntListUtil.add(intList, i);
+			IntCollectionUtil.addInt(intList, i);
 			//
 			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
 			//
@@ -1076,7 +1072,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 								StringUtils.getCommonPrefix(key, g1),
 								StringUtils.getCommonPrefix(Util.getValue(entry), Util.group(m2, 2)));
 						//
-						IntListUtil.add(intList, Util.max(Arrays.stream(IntListUtil.toArray(intList))).getAsInt() + 1);
+						IntCollectionUtil.addInt(intList,
+								Util.max(Arrays.stream(IntCollectionUtil.toIntArray(intList))).getAsInt() + 1);
 						//
 					} // if
 						//
@@ -1132,9 +1129,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						StringUtils.getCommonPrefix(Util.group(m1, 1), Util.group(m, 1)),
 						StringUtils.getCommonPrefix(Util.group(m1, 2), Util.group(m, 2)));
 				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i);
+				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i);
 				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), j);
+				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), j);
 				//
 				found = true;
 				//
@@ -1500,7 +1497,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 									StringUtils.substringBefore(g1, commonSuffix1),
 									StringUtils.substringBefore(g2, commonSuffix2)));
 					//
-					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), j);
+					IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), j);
 					//
 				} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
@@ -1511,7 +1508,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 									StringUtils.substringAfter(g1, commonSuffix1),
 									StringUtils.substringAfter(g2, commonSuffix2)));
 					//
-					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), j);
+					IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), j);
 					//
 				} // if
 					//
@@ -1556,7 +1553,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.getKey(entry));
 		//
-		addAll(intList = ObjectUtils.getIfNull(intList, IntList::new), Util.getValue(entry));
+		Util.addAll(intList = ObjectUtils.getIfNull(intList, IntList::create), Util.getValue(entry));
 		//
 		String s;
 		//
@@ -1630,7 +1627,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m1, 3),
 					Util.group(m2, 0));
 			//
-			addAll(intList, toIntList(i, IntStream.rangeClosed(0, 2)));
+			Util.addAll(intList, toIntList(i, IntStream.rangeClosed(0, 2)));
 			//
 		} // if
 			//
@@ -1660,7 +1657,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					g1 = Util.group(m1, 1), Util.group(m1, 3));
 			//
-			IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i);
+			IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i);
 			//
 			Entry<Multimap<String, String>, IntList> entry;
 			//
@@ -1677,11 +1674,11 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.getKey(entry));
 				//
-				if ((ints = IntListUtil.toArray(Util.getValue(entry))) != null) {
+				if ((ints = IntCollectionUtil.toIntArray(Util.getValue(entry))) != null) {
 					//
 					for (int k : ints) {
 						//
-						IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
+						IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);
 						//
 					} // for
 						//
@@ -1730,7 +1727,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			IntList intList = null;
 			//
-			IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i);
+			IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i);
 			//
 			Multimap<String, String> multimap = null;
 			//
@@ -1753,7 +1750,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.getKey(entry = function.apply(patternMap, list, Integer.valueOf(i), g1)));
 				//
-				addAll(intList = ObjectUtils.getIfNull(intList, IntList::new), Util.getValue(entry));
+				Util.addAll(intList = ObjectUtils.getIfNull(intList, IntList::create), Util.getValue(entry));
 				//
 			} // for
 				//
@@ -1808,9 +1805,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		if (Util.matches(m1) && Util.groupCount(m1) > 3) {
 			//
-			final IntList intList = new IntList();
+			final IntList intList = IntList.create();
 			//
-			IntListUtil.add(intList, i);
+			IntCollectionUtil.addInt(intList, i);
 			//
 			final String g1 = Util.group(m1, 1);
 			//
@@ -1831,7 +1828,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 				} // if
 					//
-				addAll(intList, Util.getValue(entry));
+				Util.addAll(intList, Util.getValue(entry));
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.getKey(entry));
@@ -1860,9 +1857,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		final IntList intList = new IntList();
+		final IntList intList = IntList.create();
 		//
-		IntListUtil.add(intList, i);
+		IntCollectionUtil.addInt(intList, i);
 		//
 		final String g1 = Util.group(m1, 1);
 		//
@@ -1899,7 +1896,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					&& StringUtils.isNotBlank(
 							cp = StringUtils.getCommonPrefix(g11 = Util.group(m, 1), g12 = Util.group(m, 2)))) {
 				//
-				IntListUtil.add(intList, k);
+				IntCollectionUtil.addInt(intList, k);
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						StringUtils.substringAfter(g11, cp), StringUtils.substringAfter(g12, cp));
@@ -1914,8 +1911,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							"^(\\p{InCJKUnifiedIdeographs}鼠)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$")),
 							s, k, m1, lcsk, list)));
 			//
-			forEach(testAndApply(Objects::nonNull, IntListUtil.toArray(Util.getValue(entry)), IntStream::of, null),
-					x -> IntListUtil.add(intList, x));
+			forEach(testAndApply(Objects::nonNull, IntCollectionUtil.toIntArray(Util.getValue(entry)), IntStream::of,
+					null), x -> IntCollectionUtil.addInt(intList, x));
 			//
 			// ps2
 			//
@@ -1928,8 +1925,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}]+$")),
 							s, k)));
 			//
-			forEach(testAndApply(Objects::nonNull, IntListUtil.toArray(Util.getValue(entry)), IntStream::of, null),
-					x -> {
+			forEach(testAndApply(Objects::nonNull, IntCollectionUtil.toIntArray(Util.getValue(entry)), IntStream::of,
+					null), x -> {
 						if (!contains(intList, x)) {
 							intList.add(x);
 						}
@@ -1943,8 +1940,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$")),
 							s, k)));
 			//
-			forEach(testAndApply(Objects::nonNull, IntListUtil.toArray(Util.getValue(entry)), IntStream::of, null),
-					x -> IntListUtil.add(intList, x));
+			forEach(testAndApply(Objects::nonNull, IntCollectionUtil.toIntArray(Util.getValue(entry)), IntStream::of,
+					null), x -> IntCollectionUtil.addInt(intList, x));
 			//
 		} // for
 			//
@@ -1974,14 +1971,14 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.getKey(entry));
 		//
-		addAll(intList = ObjectUtils.getIfNull(intList, IntList::new), Util.getValue(entry));
+		Util.addAll(intList = ObjectUtils.getIfNull(intList, IntList::create), Util.getValue(entry));
 		//
 		// A2
 		//
 		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 				Util.getKey(entry = toMultimapAndIntList16A2(patternMap, list, index, s)));
 		//
-		addAll(intList = ObjectUtils.getIfNull(intList, IntList::new), Util.getValue(entry));
+		Util.addAll(intList = ObjectUtils.getIfNull(intList, IntList::create), Util.getValue(entry));
 		//
 		return Pair.of(multimap, intList);
 		//
@@ -2019,7 +2016,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, pattern), StringUtils.trim(s)))
 					&& Util.groupCount(m1) > 1) {
 				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), index);
+				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), index);
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						ImmutableMultimap.of(g11 = Util.group(m, 1), g12 = Util.group(m, 2)));
@@ -2090,9 +2087,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
-			IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), index);
+			IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), index);
 			//
-			IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), z);
+			IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), z);
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cp,
 					cp2 = StringUtils.getCommonPrefix(Util.group(m2, 2), g12, g13));
@@ -2133,9 +2130,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
-			IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), index);
+			IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), index);
 			//
-			IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), z);
+			IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), z);
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cp,
 					orElseThrow(Stream
@@ -2180,9 +2177,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, pattern), StringUtils.trim(s)))
 						&& Util.groupCount(m) > 1) {
 					//
-					if (!contains(intList = ObjectUtils.getIfNull(intList, IntList::new), index)) {
+					if (!contains(intList = ObjectUtils.getIfNull(intList, IntList::create), index)) {
 						//
-						IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), index);
+						IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), index);
 						//
 					} // if
 						//
@@ -2220,7 +2217,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, pattern), StringUtils.trim(s)))
 						&& Util.groupCount(m) > 1) {
 					//
-					IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), index);
+					IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), index);
 					//
 					g11 = Util.group(m, 1);
 					//
@@ -2259,9 +2256,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		final IntList intList = new IntList();
+		final IntList intList = IntList.create();
 		//
-		IntListUtil.add(intList, i);
+		IntCollectionUtil.addInt(intList, i);
 		//
 		Multimap<String, String> multimap = null;
 		//
@@ -2288,21 +2285,21 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.getKey(entry));
 		//
-		addAll(intList, Util.getValue(entry));
+		Util.addAll(intList, Util.getValue(entry));
 		//
 		// B
 		//
 		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 				Util.getKey(entry = toMultimapAndIntList17B(patternMap, list, i, cp1, multimap)));
 		//
-		addAll(intList, Util.getValue(entry));
+		Util.addAll(intList, Util.getValue(entry));
 		//
 		// C
 		//
 		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 				Util.getKey(entry = toMultimapAndIntList17C(patternMap, list, i, cp1, multimap)));
 		//
-		addAll(intList, Util.getValue(entry));
+		Util.addAll(intList, Util.getValue(entry));
 		//
 		String s, t1, t2;
 		//
@@ -2375,7 +2372,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), t1,
 						Util.group(m, 2));
 				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
+				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);
 				//
 			} // if
 				//
@@ -2413,7 +2410,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), t1,
 						t2 = Util.group(m, 2));
 				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
+				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);
 				//
 				ss = MultimapUtil.get(mm, StringUtils.substring(t1, 0, 1));
 				//
@@ -2462,7 +2459,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), t1,
 					t2 = Util.group(m, 2));
 			//
-			IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
+			IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					toMultimap17C1(MultimapUtil.get(mm, StringUtils.substring(t1, 0, 1)), Pair.of(t1, t2), cp1));
@@ -2574,7 +2571,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					line)) && Util.groupCount(m) > 1
 					&& StringUtils.isNotBlank(csv = StringUtils.getCommonPrefix(g12 = Util.group(m, 2), g2))) {
 				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), index);
+				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), index);
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						ImmutableMultimap.of(g11 = Util.group(m, 1), g12, csk, csv,
@@ -2590,7 +2587,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					&& (lk = Util.length(ssk = StringUtils.split(g11, lcs))) == (lv = Util
 							.length(ssv = StringUtils.split(g12, lcs)))) {
 				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), index);
+				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), index);
 				//
 				for (int j = 0; j < Math.min(lk, lv); j++) {
 					//
@@ -2605,7 +2602,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				"^(\\p{InCJKUnifiedIdeographs}{2}%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+$",
 				g3)), line)) && Util.groupCount(m) > 1) {
 			//
-			IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), index);
+			IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), index);
 			//
 			final String lcsk = longestCommonSubstring(Util.group(m, 1), g1);
 			//
@@ -2643,7 +2640,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		IntList intList = null;
 		//
-		IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i);
+		IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i);
 		//
 		final String g2 = Util.group(m1, 2);
 		//
@@ -2665,7 +2662,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 					g1)), s = IterableUtils.get(list, k))) && Util.groupCount(m) > 1) {
 				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
+				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(m, 1), Util.group(m, 2));
@@ -2676,7 +2673,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							StringUtils.substring(g2, 1, 2))),
 					s)) && Util.groupCount(m) > 1) {
 				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
+				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						g11 = Util.group(m, 1), g12 = Util.group(m, 2));
@@ -2830,13 +2827,13 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(m, 1), Util.group(m, 2));
 				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
+				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);
 				//
 			} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+$"),
 					s)) && (groupCount = Util.groupCount(m)) > 1 && StringUtils.isNotBlank(g11 = Util.group(m, 1))) {
 				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
+				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);
 				//
 				for (int x = 2; x <= groupCount; x++) {
 					//
@@ -2883,7 +2880,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							StringUtils.trim(s))) && (groupCount = Util.groupCount(m)) > 1
 							&& StringUtils.isNotBlank(g11 = Util.group(m, 1)))) {
 				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
+				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);
 				//
 				for (int x = 2; x <= groupCount; x++) {
 					//
@@ -2926,7 +2923,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					StringUtils.trim(s))) && (groupCount = Util.groupCount(m)) > 2
 					&& StringUtils.isNotBlank(gLast = Util.group(m, groupCount))) {
 				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
+				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);
 				//
 				for (int x = 1; x < groupCount; x++) {
 					//
@@ -3023,7 +3020,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.group(m, 1), Util.group(m, 2));
 				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), k);
+				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);
 				//
 			} // if
 				//
@@ -3170,7 +3167,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g1,
 						Util.group(m, 2));
 				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), j);
+				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), j);
 				//
 			} // if
 				//
@@ -3281,7 +3278,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 
 	@Nullable
 	private static IntList toIntList(final int initial, final IntStream is) {
-		return collect(map(is, x -> x + initial), IntList::new, IntListUtil::add, (a, b) -> {
+		return collect(map(is, x -> x + initial), IntList::create, IntCollectionUtil::addInt, (a, b) -> {
 		});
 	}
 
@@ -3308,7 +3305,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		return instance != null && instance.contains(o);
 	}
 
-	private static void removeValue(@Nullable final IntList instance, final int o) {
+	private static void removeInt(final IntList instance, final int o) {
 		//
 		if (instance == null || !instance.contains(o)) {
 			//
@@ -3316,30 +3313,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		} // if
 			//
-		try {
-			//
-			final Integer _limit = Util.cast(Integer.class, FieldUtils.readDeclaredField(instance, "_limit", true));
-			//
-			final int[] _array = Util.cast(int[].class, FieldUtils.readDeclaredField(instance, "_array", true));
-			//
-			if (instance.lastIndexOf(o) < instance.size() - 1 && _limit != null && _array != null
-					&& _limit.intValue() == _array.length) {
-				//
-				final int[] ints = new int[_array.length + 1];
-				//
-				System.arraycopy(_array, 0, ints, 0, _array.length);
-				//
-				FieldUtils.writeDeclaredField(instance, "_array", ints, true);
-				//
-			} // if
-				//
-		} catch (final IllegalAccessException e) {
-			//
-			throw new RuntimeException(e);
-			//
-		} // try
-			//
-		instance.removeValue(o);
+		instance.removeInt(o);
 		//
 	}
 

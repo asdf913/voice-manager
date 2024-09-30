@@ -284,11 +284,10 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
-import org.apache.poi.util.IntList;
-import org.apache.poi.util.IntListUtil;
 import org.apache.poi.util.LocaleID;
 import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.d2ab.collection.ints.IntList;
 import org.eclipse.jetty.http.HttpStatus;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -8877,7 +8876,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (StringUtils.equalsAnyIgnoreCase(getElementAt(cbm, i), string)) {
 				//
-				IntListUtil.add(intList = ObjectUtils.getIfNull(intList, IntList::new), i);
+				add(intList = ObjectUtils.getIfNull(intList, IntList::create), i);
 				//
 			} // if
 				//
@@ -8895,6 +8894,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
+	}
+
+	private static void add(final IntList a, final int i) {
+		if (a != null) {
+			a.add(i);
+		}
 	}
 
 	@Nullable
