@@ -287,6 +287,7 @@ import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.util.LocaleID;
 import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntList;
 import org.eclipse.jetty.http.HttpStatus;
 import org.javatuples.Unit;
@@ -8876,7 +8877,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (StringUtils.equalsAnyIgnoreCase(getElementAt(cbm, i), string)) {
 				//
-				add(intList = ObjectUtils.getIfNull(intList, IntList::create), i);
+				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i);
 				//
 			} // if
 				//
@@ -8894,12 +8895,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-	}
-
-	private static void add(final IntList a, final int i) {
-		if (a != null) {
-			a.add(i);
-		}
 	}
 
 	@Nullable

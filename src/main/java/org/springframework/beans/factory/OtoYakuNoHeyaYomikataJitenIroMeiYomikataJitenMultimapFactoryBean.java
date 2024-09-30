@@ -3303,7 +3303,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		return instance != null && instance.contains(o);
 	}
 
-	private static void removeInt(final IntList instance, final int o) {
+	private static void removeInt(@Nullable final IntList instance, final int o) {
 		//
 		if (instance == null || !instance.contains(o)) {
 			//
