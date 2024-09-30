@@ -837,9 +837,9 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		final IntList il2 = IntList.create();
 		//
-		forEach(IntStream.range(0, IterableUtils.size(il2)), x -> il2.add(x));
+		forEach(IntStream.range(0, IterableUtils.size(il2)), x -> IntCollectionUtil.addInt(il2, x));
 		//
-		removeValue(il2, IterableUtils.size(il2) - 1);
+		Assertions.assertDoesNotThrow(() -> removeValue(il2, IterableUtils.size(il2) - 1));
 		//
 	}
 
