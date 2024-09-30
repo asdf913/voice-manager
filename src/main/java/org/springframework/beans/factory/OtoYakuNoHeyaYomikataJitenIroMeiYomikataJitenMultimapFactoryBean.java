@@ -2605,6 +2605,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			String k1, k2, v1, v2;
 			//
+			Entry<String, String> entry = null;
+			//
 			for (int k = 0; k < IterableUtils.size(entries) - 1; k++) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
@@ -2612,16 +2614,14 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 								k2 = Util.getKey(e2 = IterableUtils.get(entries, k + 1))),
 						cpv = StringUtils.getCommonPrefix(v1 = Util.getValue(e1), v2 = Util.getValue(e2)));
 				//
-				if (StringUtils.length(k1) == 2) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							StringUtils.substringAfter(k1, cpk), StringUtils.substringAfter(v1, cpv));
-					//
-				} // if
-					//
 				testAndAccept((a, b, c) -> StringUtils.length(Util.getKey(b)) == 2,
-						multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Pair.of(k2, v2),
-						Pair.of(cpk, cpv),
+						multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Pair.of(k1, v1),
+						entry = Pair.of(cpk, cpv),
+						(a, b, c) -> MultimapUtil.put(a, StringUtils.substringAfter(Util.getKey(b), Util.getKey(c)),
+								StringUtils.substringAfter(Util.getValue(b), Util.getValue(c))));
+				//
+				testAndAccept((a, b, c) -> StringUtils.length(Util.getKey(b)) == 2,
+						multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Pair.of(k2, v2), entry,
 						(a, b, c) -> MultimapUtil.put(a, StringUtils.substringAfter(Util.getKey(b), Util.getKey(c)),
 								StringUtils.substringAfter(Util.getValue(b), Util.getValue(c))));
 				//
