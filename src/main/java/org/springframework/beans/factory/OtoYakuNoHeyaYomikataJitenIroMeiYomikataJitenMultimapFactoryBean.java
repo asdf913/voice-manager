@@ -2619,13 +2619,12 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 				} // if
 					//
-				if (StringUtils.length(k2) == 2) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							StringUtils.substringAfter(k2, cpk), StringUtils.substringAfter(v2, cpv));
-					//
-				} // if
-					//
+				testAndAccept((a, b, c) -> StringUtils.length(Util.getKey(b)) == 2,
+						multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Pair.of(k2, v2),
+						Pair.of(cpk, cpv),
+						(a, b, c) -> MultimapUtil.put(a, StringUtils.substringAfter(Util.getKey(b), Util.getKey(c)),
+								StringUtils.substringAfter(Util.getValue(b), Util.getValue(c))));
+				//
 			} // for
 				//
 			return Pair.of(multimap, intList);
