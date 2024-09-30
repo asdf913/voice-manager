@@ -33,6 +33,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
 import org.d2ab.collection.ints.IntCollectionUtil;
+import org.d2ab.collection.ints.IntIterable;
 import org.d2ab.collection.ints.IntList;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -57,7 +58,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	private static final int ZERO = 0;
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3,
-			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS, METHOD_REMOVE_INT, METHOD_FLAT_MAP,
+			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS_INT, METHOD_REMOVE_INT, METHOD_FLAT_MAP,
 			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT3,
 			METHOD_TEST_AND_ACCEPT5, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM, METHOD_FOR_EACH_INT_STREAM,
 			METHOD_IS_EMPTY, METHOD_MAX, METHOD_TO_MULTI_MAP_17_C_2;
@@ -79,7 +80,8 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		(METHOD_TEST_AND_APPLY_AS_INT = clz.getDeclaredMethod("testAndApplyAsInt", IntPredicate.class, Integer.TYPE,
 				IntUnaryOperator.class, IntUnaryOperator.class, Integer.TYPE)).setAccessible(true);
 		//
-		(METHOD_CONTAINS = clz.getDeclaredMethod("contains", IntList.class, Integer.TYPE)).setAccessible(true);
+		(METHOD_CONTAINS_INT = clz.getDeclaredMethod("containsInt", IntIterable.class, Integer.TYPE))
+				.setAccessible(true);
 		//
 		(METHOD_REMOVE_INT = clz.getDeclaredMethod("removeInt", IntList.class, Integer.TYPE)).setAccessible(true);
 		//
@@ -810,19 +812,19 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	}
 
 	@Test
-	void testContains() throws Throwable {
+	void testContainsInt() throws Throwable {
 		//
 		final IntList intList = IntList.create();
 		//
 		IntCollectionUtil.addInt(intList, ZERO);
 		//
-		Assertions.assertTrue(contains(intList, ZERO));
+		Assertions.assertTrue(containsInt(intList, ZERO));
 		//
 	}
 
-	private static boolean contains(final IntList instance, final int o) throws Throwable {
+	private static boolean containsInt(final IntIterable instance, final int o) throws Throwable {
 		try {
-			final Object obj = METHOD_CONTAINS.invoke(null, instance, o);
+			final Object obj = METHOD_CONTAINS_INT.invoke(null, instance, o);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}

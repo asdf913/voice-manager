@@ -44,6 +44,7 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.TextStringBuilder;
 import org.d2ab.collection.ints.IntCollectionUtil;
+import org.d2ab.collection.ints.IntIterable;
 import org.d2ab.collection.ints.IntList;
 import org.d2ab.function.ObjObjIntFunction;
 import org.javatuples.Quartet;
@@ -118,7 +119,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		for (int i = 0; i < IterableUtils.size(list); i++) {
 			//
-			if (contains(intList = ObjectUtils.getIfNull(intList, IntList::create), i)) {
+			if (containsInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i)) {
 				//
 				removeInt(intList, i);
 				//
@@ -1925,7 +1926,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			forEach(testAndApply(Objects::nonNull, IntCollectionUtil.toIntArray(Util.getValue(entry)), IntStream::of,
 					null), x -> {
-						if (!contains(intList, x)) {
+						if (!containsInt(intList, x)) {
 							intList.add(x);
 						}
 					});
@@ -2175,7 +2176,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, pattern), StringUtils.trim(s)))
 						&& Util.groupCount(m) > 1) {
 					//
-					if (!contains(intList = ObjectUtils.getIfNull(intList, IntList::create), index)) {
+					if (!containsInt(intList = ObjectUtils.getIfNull(intList, IntList::create), index)) {
 						//
 						IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), index);
 						//
@@ -3299,8 +3300,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		return instance != null && mapper != null ? instance.flatMap(mapper) : null;
 	}
 
-	private static boolean contains(@Nullable final IntList instance, final int o) {
-		return instance != null && instance.contains(o);
+	private static boolean containsInt(@Nullable final IntIterable instance, final int o) {
+		return instance != null && instance.containsInt(o);
 	}
 
 	private static void removeInt(@Nullable final IntList instance, final int o) {
