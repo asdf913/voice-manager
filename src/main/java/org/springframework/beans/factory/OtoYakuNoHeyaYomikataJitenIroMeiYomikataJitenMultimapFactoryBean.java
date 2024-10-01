@@ -2759,12 +2759,12 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 					for (final Entry<String, String> entry : entries) {
 						//
-						if (Boolean.logicalAnd(
+						if (Util.and(
 								StringUtils
 										.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, key = Util.getKey(entry))),
 								StringUtils.isNotBlank(
-										cpv = StringUtils.getCommonPrefix(g12, value = Util.getValue(entry))))
-								&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, key))
+										cpv = StringUtils.getCommonPrefix(g12, value = Util.getValue(entry))),
+								StringUtils.isNotBlank(csk = getCommonSuffix(g11, key)))
 								&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, value))
 								&& !Objects.equals(key, StringUtils.replace(g11, lcs, ""))) {
 							//
