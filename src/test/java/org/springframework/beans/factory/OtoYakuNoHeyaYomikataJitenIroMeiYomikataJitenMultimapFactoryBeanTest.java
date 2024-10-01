@@ -32,6 +32,7 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
+import org.d2ab.collection.ints.IntCollection;
 import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntIterable;
 import org.d2ab.collection.ints.IntList;
@@ -62,7 +63,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS_INT, METHOD_REMOVE_INT, METHOD_FLAT_MAP,
 			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT3,
 			METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM,
-			METHOD_FOR_EACH_INT_STREAM, METHOD_IS_EMPTY, METHOD_MAX, METHOD_TO_MULTI_MAP_17_C_2;
+			METHOD_FOR_EACH_INT_STREAM, METHOD_IS_EMPTY, METHOD_MAX, METHOD_TO_MULTI_MAP_17_C_2, METHOD_ADD_ALL_INTS;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -119,6 +120,9 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		(METHOD_MAX = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
 		//
 		(METHOD_TO_MULTI_MAP_17_C_2 = clz.getDeclaredMethod("toMultimap17C2", Iterable.class, Entry.class))
+				.setAccessible(true);
+		//
+		(METHOD_ADD_ALL_INTS = clz.getDeclaredMethod("addAllInts", IntCollection.class, IntCollection.class))
 				.setAccessible(true);
 		//
 	}
@@ -258,8 +262,11 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 					|| (Objects.equals(name, "toMultimapAndIntList17A") && Arrays.equals(parameterTypes,
 							new Class<?>[] { PatternMap.class, Iterable.class, Integer.TYPE, String.class }))
 					|| (Util.contains(Arrays.asList("toMultimapAndIntList17B", "toMultimapAndIntList17C"), name)
-							&& Arrays.equals(parameterTypes, new Class<?>[] { PatternMap.class, Iterable.class,
-									Integer.TYPE, String.class, Multimap.class }))) {
+							&& Arrays.equals(parameterTypes,
+									new Class<?>[] { PatternMap.class, Iterable.class, Integer.TYPE, String.class,
+											Multimap.class }))
+					|| (Objects.equals(name, "toMultimapAndIntList19A") && Arrays.equals(parameterTypes,
+							new Class<?>[] { PatternMap.class, Iterable.class, Integer.TYPE, Entry.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
@@ -1313,6 +1320,21 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				return (Multimap) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddAllInts() {
+		//
+		Assertions.assertDoesNotThrow(() -> addAllInts(IntList.create(), null));
+		//
+	}
+
+	private static void addAllInts(final IntCollection a, final IntCollection b) throws Throwable {
+		try {
+			METHOD_ADD_ALL_INTS.invoke(null, a, b);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
