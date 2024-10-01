@@ -2675,7 +2675,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			for (int k = 0; k < IterableUtils.size(list); k++) {
 				//
-				if (k == i || StringUtils.isBlank(StringUtils.getCommonPrefix(s = IterableUtils.get(list, k), g2))) {
+				if (Boolean.logicalOr(k == i,
+						StringUtils.isBlank(StringUtils.getCommonPrefix(s = IterableUtils.get(list, k), g2)))) {
 					//
 					continue;
 					//
