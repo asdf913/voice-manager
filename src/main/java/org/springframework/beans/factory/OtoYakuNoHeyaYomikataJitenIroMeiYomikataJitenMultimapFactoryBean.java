@@ -2740,12 +2740,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 								&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, Util.getValue(entry)))
 								&& !Objects.equals(key, StringUtils.replace(g11, lcs, ""))) {
 							//
-							if (!containsInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k)) {
-								//
-								IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);
-								//
-							} // if
-								//
+							testAndAccept((a, b) -> !containsInt(a, b),
+									intList = ObjectUtils.getIfNull(intList, IntList::create), k,
+									IntCollectionUtil::addInt);
+							//
 							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 									cpk, cpv);
 							//
