@@ -2712,9 +2712,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			for (int k = 0; k < IterableUtils.size(list); k++) {
 				//
-				if (Boolean.logicalOr(k == i,
-						StringUtils.isBlank(StringUtils.getCommonPrefix(s = IterableUtils.get(list, k), g2)))
-						|| containsInt(intList, k)) {
+				if (Util.or(k == i,
+						StringUtils.isBlank(StringUtils.getCommonPrefix(s = IterableUtils.get(list, k), g2)),
+						containsInt(intList, k))) {
 					//
 					continue;
 					//
