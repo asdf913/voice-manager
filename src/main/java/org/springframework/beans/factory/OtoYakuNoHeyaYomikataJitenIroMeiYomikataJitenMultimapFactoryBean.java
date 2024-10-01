@@ -2758,7 +2758,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static void addAllInts(final IntCollection a, final IntCollection b) {
+	private static void addAllInts(@Nullable final IntCollection a, @Nullable final IntCollection b) {
 		if (a != null && b != null) {
 			a.addAllInts(b);
 		}
