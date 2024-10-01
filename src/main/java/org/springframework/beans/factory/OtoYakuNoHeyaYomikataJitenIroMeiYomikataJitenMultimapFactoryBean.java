@@ -2736,8 +2736,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 					for (final Entry<String, String> entry : entries) {
 						//
-						if (StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, key = Util.getKey(entry)))
-								&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, Util.getValue(entry)))
+						if (Boolean.logicalAnd(
+								StringUtils
+										.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, key = Util.getKey(entry))),
+								StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, Util.getValue(entry))))
 								&& !Objects.equals(key, StringUtils.replace(g11, lcs, ""))) {
 							//
 							testAndAccept((a, b) -> !containsInt(a, b),
