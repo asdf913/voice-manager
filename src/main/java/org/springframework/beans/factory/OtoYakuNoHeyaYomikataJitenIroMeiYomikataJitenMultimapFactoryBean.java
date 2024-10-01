@@ -2699,7 +2699,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							g11 = Util.group(m, 1), g12 = Util.group(m, 2));
+							Util.group(m, 1), Util.group(m, 2));
 					//
 				} // if
 					//
@@ -2725,7 +2725,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							g11 = Util.group(m, 1), g12 = Util.group(m, 2));
+							Util.group(m, 1), Util.group(m, 2));
 					//
 				} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 						"^([\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
@@ -2757,10 +2757,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						s)) && Util.groupCount(m) > 1
 						&& (Util.iterator(entries = MultimapUtil.entries(multimap))) != null && StringUtils.isNotBlank(
 								lcs = longestCommonSubstring(g11 = Util.group(m, 1), g12 = Util.group(m, 2)))) {
-					//
-					g11 = Util.group(m, 1);
-					//
-					g12 = Util.group(m, 2);
 					//
 					for (final Entry<String, String> entry : entries) {
 						//
