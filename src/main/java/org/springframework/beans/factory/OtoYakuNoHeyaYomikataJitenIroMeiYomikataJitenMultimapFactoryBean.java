@@ -2669,92 +2669,19 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		// A
 		//
-		final Entry<Multimap<String, String>, IntList> entry = toMultimapAndIntList19A(patternMap, list, i,
-				Pair.of(g2, g3));
+		Entry<Multimap<String, String>, IntList> entry = toMultimapAndIntList19A(patternMap, list, i, Pair.of(g2, g3));
 		//
 		addAllInts(intList = ObjectUtils.getIfNull(intList, IntList::create), Util.getValue(entry));
 		//
 		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.getKey(entry));
 		//
-		Iterable<Entry<String, String>> entries;
+		// B
 		//
-		String csk, csv, key, value, lcs, s, cpk, cpv, g11, g12;
+		addAllInts(intList = ObjectUtils.getIfNull(intList, IntList::create),
+				Util.getValue(entry = toMultimapAndIntList19B(patternMap, list, i, g2, multimap)));
 		//
-		Matcher m;
+		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.getKey(entry));
 		//
-		for (int k = 0; k < IterableUtils.size(list); k++) {
-			//
-			if (Util.or(k == i, StringUtils.isBlank(StringUtils.getCommonPrefix(s = IterableUtils.get(list, k), g2)),
-					containsInt(intList, k))) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
-					s)) && Util.groupCount(m) > 1) {
-				//
-				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(m, 1), Util.group(m, 2));
-				//
-			} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-					"^([\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
-					s)) && Util.groupCount(m) > 1 && (Util.iterator(entries = MultimapUtil.entries(multimap))) != null
-					&& StringUtils
-							.isNotBlank(lcs = longestCommonSubstring(g11 = Util.group(m, 1), g12 = Util.group(m, 2)))) {
-				//
-				for (final Entry<String, String> en : entries) {
-					//
-					if (Util.and(StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, key = Util.getKey(en))),
-							StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, Util.getValue(en))),
-							!Objects.equals(key, StringUtils.replace(g11, lcs, "")))) {
-						//
-						testAndAccept((a, b) -> !containsInt(a, b),
-								intList = ObjectUtils.getIfNull(intList, IntList::create), k,
-								IntCollectionUtil::addInt);
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cpk,
-								cpv);
-						//
-					} // if
-						//
-				} // for
-					//
-			} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-					"^([\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}]+$"),
-					s)) && Util.groupCount(m) > 1 && (Util.iterator(entries = MultimapUtil.entries(multimap))) != null
-					&& StringUtils
-							.isNotBlank(lcs = longestCommonSubstring(g11 = Util.group(m, 1), g12 = Util.group(m, 2)))) {
-				//
-				for (final Entry<String, String> en : entries) {
-					//
-					if (Util.and(StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, key = Util.getKey(en))),
-							StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, value = Util.getValue(en))),
-							StringUtils.isNotBlank(csk = getCommonSuffix(g11, key)),
-							StringUtils.isNotBlank(csv = getCommonSuffix(g12, value)),
-							!Objects.equals(key, StringUtils.replace(g11, lcs, "")))) {
-						//
-						testAndAccept((a, b) -> !containsInt(a, b),
-								intList = ObjectUtils.getIfNull(intList, IntList::create), k,
-								IntCollectionUtil::addInt);
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cpk,
-								cpv);
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), csk,
-								csv);
-						//
-					} // if
-						//
-				} // for
-					//
-			} // if
-				//
-		} // for
-			//
 		return Pair.of(multimap, intList);
 		//
 	}
@@ -2823,6 +2750,96 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		if (predicate != null && predicate.test(o, i) && consumer != null) {
 			consumer.accept(o, i);
 		}
+	}
+
+	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList19B(final PatternMap patternMap,
+			final Iterable<String> list, final int i, final String g2, final Multimap<String, String> mm) {
+		//
+		IntList intList = null;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		Iterable<Entry<String, String>> entries;
+		//
+		String csk, csv, key, value, lcs, s, cpk, cpv, g11, g12;
+		//
+		Matcher m;
+		//
+		for (int k = 0; k < IterableUtils.size(list); k++) {
+			//
+			if (Util.or(k == i, StringUtils.isBlank(StringUtils.getCommonPrefix(s = IterableUtils.get(list, k), g2)),
+					containsInt(intList, k))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
+					s)) && Util.groupCount(m) > 1) {
+				//
+				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m, 1), Util.group(m, 2));
+				//
+			} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+					"^([\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
+					s)) && Util.groupCount(m) > 1 && (Util.iterator(entries = MultimapUtil.entries(mm))) != null
+					&& StringUtils
+							.isNotBlank(lcs = longestCommonSubstring(g11 = Util.group(m, 1), g12 = Util.group(m, 2)))) {
+				//
+				for (final Entry<String, String> en : entries) {
+					//
+					if (Util.and(StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, key = Util.getKey(en))),
+							StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, Util.getValue(en))),
+							!Objects.equals(key, StringUtils.replace(g11, lcs, "")))) {
+						//
+						testAndAccept((a, b) -> !containsInt(a, b),
+								intList = ObjectUtils.getIfNull(intList, IntList::create), k,
+								IntCollectionUtil::addInt);
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cpk,
+								cpv);
+						//
+					} // if
+						//
+				} // for
+					//
+			} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+					"^([\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}]+$"),
+					s)) && Util.groupCount(m) > 1 && (Util.iterator(entries = MultimapUtil.entries(mm))) != null
+					&& StringUtils
+							.isNotBlank(lcs = longestCommonSubstring(g11 = Util.group(m, 1), g12 = Util.group(m, 2)))) {
+				//
+				for (final Entry<String, String> en : entries) {
+					//
+					if (Util.and(StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, key = Util.getKey(en))),
+							StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, value = Util.getValue(en))),
+							StringUtils.isNotBlank(csk = getCommonSuffix(g11, key)),
+							StringUtils.isNotBlank(csv = getCommonSuffix(g12, value)),
+							!Objects.equals(key, StringUtils.replace(g11, lcs, "")))) {
+						//
+						testAndAccept((a, b) -> !containsInt(a, b),
+								intList = ObjectUtils.getIfNull(intList, IntList::create), k,
+								IntCollectionUtil::addInt);
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cpk,
+								cpv);
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), csk,
+								csv);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+		} // for
+			//
+		return Pair.of(multimap, intList);
+		//
 	}
 
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList15(final int index, final String line,
