@@ -267,9 +267,11 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 											Multimap.class }))
 					|| (Objects.equals(name, "toMultimapAndIntList19A") && Arrays.equals(parameterTypes,
 							new Class<?>[] { PatternMap.class, Iterable.class, Integer.TYPE, Entry.class }))
-					|| (Objects.equals(name, "toMultimapAndIntList19B")
-							&& Arrays.equals(parameterTypes, new Class<?>[] { PatternMap.class, Iterable.class,
-									Integer.TYPE, String.class, Multimap.class }))) {
+					|| (Objects.equals(name, "toMultimapAndIntList19B") && Arrays.equals(parameterTypes,
+							new Class<?>[] { PatternMap.class, Iterable.class, Integer.TYPE, String.class,
+									Multimap.class }))
+					|| (Objects.equals(name, "toMultimapAndIntList19B1") && Arrays.equals(parameterTypes,
+							new Class<?>[] { PatternMap.class, String.class, Integer.TYPE }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//

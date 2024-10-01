@@ -2765,6 +2765,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		Matcher m;
 		//
+		Entry<Multimap<String, String>, IntList> entry = null;
+		//
 		for (int k = 0; k < IterableUtils.size(list); k++) {
 			//
 			if (Util.or(k == i, StringUtils.isBlank(StringUtils.getCommonPrefix(s = IterableUtils.get(list, k), g2)),
@@ -2774,16 +2776,13 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
+			addAllInts(intList = ObjectUtils.getIfNull(intList, IntList::create),
+					Util.getValue(entry = toMultimapAndIntList19B1(patternMap, s, k)));
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.getKey(entry));
+			//
 			if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
-					s)) && Util.groupCount(m) > 1) {
-				//
-				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.group(m, 1), Util.group(m, 2));
-				//
-			} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 					"^([\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
 					s)) && Util.groupCount(m) > 1 && (Util.iterator(entries = MultimapUtil.entries(mm))) != null
 					&& StringUtils
@@ -2837,6 +2836,30 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			} // if
 				//
 		} // for
+			//
+		return Pair.of(multimap, intList);
+		//
+	}
+
+	private static Pair<Multimap<String, String>, IntList> toMultimapAndIntList19B1(final PatternMap patternMap,
+			final String s, final int index) {
+		//
+		IntList intList = null;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		final Matcher m = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
+				s);
+		//
+		if (Util.matches(m) && Util.groupCount(m) > 1) {
+			//
+			IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), index);
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m, 1),
+					Util.group(m, 2));
+			//
+		} // if
 			//
 		return Pair.of(multimap, intList);
 		//
