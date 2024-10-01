@@ -2794,8 +2794,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static <T> void testAndAccept(final ObjIntPredicate<T> predicate, final T o, final int i,
-			final ObjIntConsumer<T> consumer) {
+	private static <T> void testAndAccept(@Nullable final ObjIntPredicate<T> predicate, final T o, final int i,
+			@Nullable final ObjIntConsumer<T> consumer) {
 		if (predicate != null && predicate.test(o, i) && consumer != null) {
 			consumer.accept(o, i);
 		}
