@@ -2658,20 +2658,14 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			final String g2 = Util.group(m1, 2);
 			//
-			String cpk, cpv, g11, g12;
+			testAndAccept((a, b) -> StringUtils.isNotBlank(b),
+					multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					longestCommonSubstring(g2, g3), (a, b) -> MultimapUtil.put(a, StringUtils.substringAfter(g2, b),
+							StringUtils.substringAfter(g3, b)));
+
+			String s, cpk, cpv, g11, g12;
 			//
 			Matcher m;
-			//
-			String lcs = longestCommonSubstring(g2, g3);
-			//
-			if (StringUtils.isNotBlank(lcs)) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						StringUtils.substringAfter(g2, lcs), StringUtils.substringAfter(g3, lcs));
-				//
-			} // if
-				//
-			String s;
 			//
 			for (int k = 0; k < IterableUtils.size(list); k++) {
 				//
@@ -2709,7 +2703,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			Iterable<Entry<String, String>> entries;
 			//
-			String csk, csv, key, value;
+			String csk, csv, key, value, lcs;
 			//
 			for (int k = 0; k < IterableUtils.size(list); k++) {
 				//
