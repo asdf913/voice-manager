@@ -35,6 +35,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntIterable;
 import org.d2ab.collection.ints.IntList;
+import org.d2ab.function.ObjIntPredicate;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.junit.jupiter.api.Assertions;
@@ -60,8 +61,8 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3,
 			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS_INT, METHOD_REMOVE_INT, METHOD_FLAT_MAP,
 			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT3,
-			METHOD_TEST_AND_ACCEPT5, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM, METHOD_FOR_EACH_INT_STREAM,
-			METHOD_IS_EMPTY, METHOD_MAX, METHOD_TO_MULTI_MAP_17_C_2;
+			METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM,
+			METHOD_FOR_EACH_INT_STREAM, METHOD_IS_EMPTY, METHOD_MAX, METHOD_TO_MULTI_MAP_17_C_2;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -97,6 +98,9 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_ACCEPT3 = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
 				Consumer.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT4 = clz.getDeclaredMethod("testAndAccept", ObjIntPredicate.class, Object.class,
+				Integer.TYPE, ObjIntConsumer.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT5 = clz.getDeclaredMethod("testAndAccept", TriPredicate.class, Object.class,
 				Object.class, Object.class, TriConsumer.class)).setAccessible(true);
@@ -1176,6 +1180,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysTrue(), null, null));
 		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept((a, b) -> true, null, 0, null));
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept((a, b) -> false, null, 0, null));
+		//
 		Assertions.assertDoesNotThrow(() -> testAndAccept((a, b, c) -> true, null, null, null, null));
 		//
 	}
@@ -1184,6 +1192,15 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 			throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT3.invoke(null, predicate, value, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T> void testAndAccept(final ObjIntPredicate<T> predicate, final T o, final int i,
+			final ObjIntConsumer<T> consumer) throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT4.invoke(null, predicate, o, i, consumer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

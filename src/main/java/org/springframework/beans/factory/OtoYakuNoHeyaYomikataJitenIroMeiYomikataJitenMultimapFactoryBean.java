@@ -46,6 +46,7 @@ import org.apache.commons.text.TextStringBuilder;
 import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntIterable;
 import org.d2ab.collection.ints.IntList;
+import org.d2ab.function.ObjIntPredicate;
 import org.d2ab.function.ObjObjIntFunction;
 import org.javatuples.Quartet;
 import org.javatuples.Quintet;
@@ -2767,12 +2768,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 								&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, value))
 								&& !Objects.equals(key, StringUtils.replace(g11, lcs, ""))) {
 							//
-							if (!containsInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k)) {
-								//
-								IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k);
-								//
-							} // if
-								//
+							testAndAccept((a, b) -> !containsInt(a, b),
+									intList = ObjectUtils.getIfNull(intList, IntList::create), k,
+									IntCollectionUtil::addInt);
+							//
 							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 									cpk, cpv);
 							//
@@ -2793,6 +2792,13 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		return null;
 		//
+	}
+
+	private static <T> void testAndAccept(final ObjIntPredicate<T> predicate, final T o, final int i,
+			final ObjIntConsumer<T> consumer) {
+		if (predicate != null && predicate.test(o, i) && consumer != null) {
+			consumer.accept(o, i);
+		}
 	}
 
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList15(final int index, final String line,
