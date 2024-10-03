@@ -3052,7 +3052,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 
 		private V value;
 
-		private static <V> V getValue(final IntObj<V> instance) {
+		private static <V> V getValue(@Nullable final IntObj<V> instance) {
 			return instance != null ? instance.value : null;
 		}
 
