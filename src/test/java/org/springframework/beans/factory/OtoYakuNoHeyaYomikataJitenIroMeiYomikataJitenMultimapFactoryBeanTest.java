@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
@@ -273,7 +274,9 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 					|| (Objects.equals(name, "toMultimapAndIntList19B1") && Arrays.equals(parameterTypes,
 							new Class<?>[] { PatternMap.class, String.class, Integer.TYPE }))
 					|| (Objects.equals(name, "toMultimapAndIntList19B2") && Arrays.equals(parameterTypes,
-							new Class<?>[] { PatternMap.class, String.class, Integer.TYPE, Multimap.class }))) {
+							new Class<?>[] { PatternMap.class, String.class, Integer.TYPE, Multimap.class }))
+					|| (Objects.equals(name, "toMultimapAndIntList20A") && Arrays.equals(parameterTypes,
+							new Class<?>[] { PatternMap.class, Iterable.class, Integer.TYPE, Map.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
