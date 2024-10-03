@@ -3111,13 +3111,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							&& StringUtils.isNotBlank(csk = getCommonSuffix(k1, k2))
 							&& StringUtils.isNotBlank(csv = getCommonSuffix(v1, v2))) {
 						//
-						if (StringUtils.isNotBlank(sbk = StringUtils.substringBetween(k1, cpk, csk))
-								&& StringUtils.isNotBlank(sbv = StringUtils.substringBetween(v1, cpv, csv))) {
-							//
-							MultimapUtil.put(multimap, sbk, sbv);
-							//
-						} else if (StringUtils.isNotBlank(sbk = StringUtils.substringBetween(k2, cpk, csk))
-								&& StringUtils.isNotBlank(sbv = StringUtils.substringBetween(v2, cpv, csv))) {
+						if ((StringUtils.isNotBlank(sbk = StringUtils.substringBetween(k1, cpk, csk))
+								&& StringUtils.isNotBlank(sbv = StringUtils.substringBetween(v1, cpv, csv)))
+								|| (StringUtils.isNotBlank(sbk = StringUtils.substringBetween(k2, cpk, csk))
+										&& StringUtils.isNotBlank(sbv = StringUtils.substringBetween(v2, cpv, csv)))) {
 							//
 							MultimapUtil.put(multimap, sbk, sbv);
 							//
