@@ -3699,7 +3699,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static String longestCommonSubstring(final String a, @Nullable final String b) {
+	private static String longestCommonSubstring(@Nullable final String a, @Nullable final String b) {
 		//
 		int start = 0, max = 0;
 		//
