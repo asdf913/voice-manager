@@ -3178,9 +3178,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				if (Boolean.logicalAnd(StringUtils.isNotBlank(sak = StringUtils.substringAfter(k1, lcsk)),
 						StringUtils.isNotBlank(sav = StringUtils.substringAfter(v1, lcsv)))) {
 					//
-					if (Objects.equals("ん", StringUtils.substring(sav, 0, 1))
-							&& MultimapUtil.containsEntry(mm, StringUtils.substring(k1, 1, 2),
-									StringUtils.substringAfter(v1, lcsv + StringUtils.substring(sav, 0, 1)))) {
+					if (Boolean.logicalAnd(Objects.equals("ん", StringUtils.substring(sav, 0, 1)),
+							MultimapUtil.containsEntry(mm, StringUtils.substring(k1, 1, 2),
+									StringUtils.substringAfter(v1, lcsv + StringUtils.substring(sav, 0, 1))))) {
 						//
 						continue;
 						//
