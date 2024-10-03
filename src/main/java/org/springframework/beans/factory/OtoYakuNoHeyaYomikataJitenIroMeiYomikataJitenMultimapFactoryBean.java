@@ -3058,17 +3058,15 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						//
 					if (StringUtils.isNotBlank(cpk) && StringUtils.isNotBlank(cpv)
 							&& StringUtils.isNotBlank(csk = getCommonSuffix(k1, k2))
-							&& StringUtils.isNotBlank(csv = getCommonSuffix(v1, v2))) {
+							&& StringUtils.isNotBlank(csv = getCommonSuffix(v1, v2))
+							&& ((StringUtils.isNotBlank(sbk = StringUtils.substringBetween(k1, cpk, csk))
+									&& StringUtils.isNotBlank(sbv = StringUtils.substringBetween(v1, cpv, csv)))
+									|| (StringUtils.isNotBlank(sbk = StringUtils.substringBetween(k2, cpk, csk))
+											&& StringUtils
+													.isNotBlank(sbv = StringUtils.substringBetween(v2, cpv, csv))))) {
 						//
-						if ((StringUtils.isNotBlank(sbk = StringUtils.substringBetween(k1, cpk, csk))
-								&& StringUtils.isNotBlank(sbv = StringUtils.substringBetween(v1, cpv, csv)))
-								|| (StringUtils.isNotBlank(sbk = StringUtils.substringBetween(k2, cpk, csk))
-										&& StringUtils.isNotBlank(sbv = StringUtils.substringBetween(v2, cpv, csv)))) {
-							//
-							MultimapUtil.put(multimap, sbk, sbv);
-							//
-						} // if
-							//
+						MultimapUtil.put(multimap, sbk, sbv);
+						//
 					} // if
 						//
 				} // for
