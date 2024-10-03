@@ -3204,84 +3204,96 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	private static Multimap<String, String> toMultimap20C(final Iterable<Entry<String, String>> entriesA2,
 			final Iterable<Entry<String, String>> entries, final String g2) {
 		//
-		String k1, k2, v1, v2, sl, cpk, cpv, s, csk, csv, sbk, sbv;
-		//
-		Entry<String, String> e1, e2;
-		//
-		int kl1, kl2;
-		//
 		Multimap<String, String> multimap = null;
 		//
 		for (int k = 0; k < IterableUtils.size(entriesA2); k++) {
 			//
 			for (int j = 0; j < IterableUtils.size(entries); j++) {
 				//
-				if (Objects.equals(k1 = Util.getKey(e1 = IterableUtils.get(entriesA2, k)),
-						k2 = Util.getKey(e2 = IterableUtils.get(entries, j)))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if ((kl2 = StringUtils.length(k2)) == 2 && (kl1 = StringUtils.length(k1)) - kl2 == 1
-						&& Objects.equals(StringUtils.substring(k1, 0, 1), StringUtils.substring(k2, 0, 1))
-						&& Objects.equals(sl = StringUtils.substring(k1, kl1 - 1, kl1),
-								StringUtils.substring(k2, kl2 - 1, kl2))) {
-					//
-					if (StringUtils.isNotBlank(csv = getCommonSuffix(v1 = Util.getValue(e1), v2 = Util.getValue(e2)))) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), sl,
-								csv);
-						//
-					} else {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (StringUtils
-							.isNotBlank(s = StringUtils.replace(
-									StringUtils.replace(v1, StringUtils.getCommonPrefix(
-											StringUtils.replace(v1, csv, ""), StringUtils.replace(v2, csv, "")), ""),
-									csv, ""))) {
-						//
-						MultimapUtil.put(multimap, StringUtils.substring(k1, 1, 2), s);
-						//
-						continue;
-						//
-					} // if
-						//
-				} // if
-					//
-				if (Util.and(StringUtils.length(k2 = Util.getKey(e2)) > 1, !Objects.equals(g2, k2),
-						StringUtils.length(cpk = StringUtils.getCommonPrefix(Util.getKey(e1), k2)) == 1,
-						StringUtils.isNotBlank(
-								cpv = StringUtils.getCommonPrefix(v1 = Util.getValue(e1), v2 = Util.getValue(e2))))) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cpk, cpv);
-					//
-				} else if (Boolean.logicalAnd(StringUtils.length(csk = getCommonSuffix(k1, k2)) == 1,
-						StringUtils.isNotBlank(csv = getCommonSuffix(v1, v2)))) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), csk, csv);
-					//
-				} // if
-					//
-				if (StringUtils.isNotBlank(cpk) && StringUtils.isNotBlank(cpv)
-						&& StringUtils.isNotBlank(csk = getCommonSuffix(k1, k2))
-						&& StringUtils.isNotBlank(csv = getCommonSuffix(v1, v2))
-						&& ((StringUtils.isNotBlank(sbk = StringUtils.substringBetween(k1, cpk, csk))
-								&& StringUtils.isNotBlank(sbv = StringUtils.substringBetween(v1, cpv, csv)))
-								|| (StringUtils.isNotBlank(sbk = StringUtils.substringBetween(k2, cpk, csk))
-										&& StringUtils.isNotBlank(sbv = StringUtils.substringBetween(v2, cpv, csv))))) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), sbk, sbv);
-					//
-				} // if
-					//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						toMultimap20C1(IterableUtils.get(entriesA2, k), IterableUtils.get(entries, j), g2));
+				//
 			} // for
 				//
 		} // for
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap20C1(final Entry<String, String> e1,
+			final Entry<String, String> e2, final String g2) {
+		//
+		String v1, v2, sl, cpk, cpv, s, csk, csv, sbk, sbv;
+		//
+		int kl1, kl2;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		final String k1 = Util.getKey(e1);
+		//
+		final String k2 = Util.getKey(e2);
+		//
+		if (Objects.equals(k1, k2)) {
+			//
+			return null;
+			//
+		} // if
+			//
+		if ((kl2 = StringUtils.length(k2)) == 2 && (kl1 = StringUtils.length(k1)) - kl2 == 1
+				&& Objects.equals(StringUtils.substring(k1, 0, 1), StringUtils.substring(k2, 0, 1)) && Objects.equals(
+						sl = StringUtils.substring(k1, kl1 - 1, kl1), StringUtils.substring(k2, kl2 - 1, kl2))) {
+			//
+			if (StringUtils.isNotBlank(csv = getCommonSuffix(v1 = Util.getValue(e1), v2 = Util.getValue(e2)))) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), sl, csv);
+				//
+			} else {
+				//
+				return null;
+				//
+			} // if
+				//
+			if (StringUtils
+					.isNotBlank(
+							s = StringUtils.replace(
+									StringUtils.replace(v1, StringUtils.getCommonPrefix(
+											StringUtils.replace(v1, csv, ""), StringUtils.replace(v2, csv, "")), ""),
+									csv, ""))) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						StringUtils.substring(k1, 1, 2), s);
+				//
+				return multimap;
+				//
+			} // if
+				//
+		} // if
+			//
+		if (Util.and(StringUtils.length(k2) > 1, !Objects.equals(g2, k2),
+				StringUtils.length(cpk = StringUtils.getCommonPrefix(Util.getKey(e1), k2)) == 1, StringUtils.isNotBlank(
+						cpv = StringUtils.getCommonPrefix(v1 = Util.getValue(e1), v2 = Util.getValue(e2))))) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cpk, cpv);
+			//
+		} else if (Boolean.logicalAnd(StringUtils.length(csk = getCommonSuffix(k1, k2)) == 1,
+				StringUtils.isNotBlank(csv = getCommonSuffix(v1, v2)))) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), csk, csv);
+			//
+		} // if
+			//
+		if (StringUtils.isNotBlank(cpk) && StringUtils.isNotBlank(cpv)
+				&& StringUtils.isNotBlank(csk = getCommonSuffix(k1, k2))
+				&& StringUtils.isNotBlank(csv = getCommonSuffix(v1, v2))
+				&& ((StringUtils.isNotBlank(sbk = StringUtils.substringBetween(k1, cpk, csk))
+						&& StringUtils.isNotBlank(sbv = StringUtils.substringBetween(v1, cpv, csv)))
+						|| (StringUtils.isNotBlank(sbk = StringUtils.substringBetween(k2, cpk, csk))
+								&& StringUtils.isNotBlank(sbv = StringUtils.substringBetween(v2, cpv, csv))))) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), sbk, sbv);
+			//
+		} // if
 			//
 		return multimap;
 		//
