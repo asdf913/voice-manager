@@ -2946,20 +2946,15 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 					MultimapUtil.put(multimap, g11 = Util.group(m, 1), g12 = Util.group(m, 2));
 					//
-					if (StringUtils.length(g11) == 2) {
+					if (StringUtils.length(g11) == 2 && StringUtils.isNotBlank(lcsk = longestCommonSubstring(g11, g1))
+							&& StringUtils.isNotBlank(lcsv = longestCommonSubstring(g12, g3))
+							&& StringUtils.length(s) - StringUtils.indexOf(s, lcsv) - StringUtils.length(lcsv) == 1) {
 						//
-						if (StringUtils.isNotBlank(lcsk = longestCommonSubstring(g11, g1))
-								&& StringUtils.isNotBlank(lcsv = longestCommonSubstring(g12, g3))
-								&& StringUtils.length(s) - StringUtils.indexOf(s, lcsv)
-										- StringUtils.length(lcsv) == 1) {
-							//
-							MultimapUtil.put(multimap, StringUtils.substringBefore(g11, lcsk),
-									StringUtils.substringBefore(g12, lcsv));
-							//
-							MultimapUtil.put(multimap, lcsk, lcsv);
-							//
-						} // if
-							//
+						MultimapUtil.put(multimap, StringUtils.substringBefore(g11, lcsk),
+								StringUtils.substringBefore(g12, lcsv));
+						//
+						MultimapUtil.put(multimap, lcsk, lcsv);
+						//
 					} // if
 						//
 				} else if ((Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
@@ -3020,22 +3015,19 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							&& StringUtils.startsWith(k1, lcsk) && StringUtils.startsWith(v1, lcsv)
 							&& StringUtils.endsWith(v2, lcsv)) {
 						//
-						if (StringUtils.isNotBlank(sak = StringUtils.substringAfter(k1, lcsk))) {
+						if (StringUtils.isNotBlank(sak = StringUtils.substringAfter(k1, lcsk))
+								&& StringUtils.isNotBlank(sav = StringUtils.substringAfter(v1, lcsv))) {
 							//
-							if (StringUtils.isNotBlank(sav = StringUtils.substringAfter(v1, lcsv))) {
+							if (Objects.equals("ん", StringUtils.substring(sav, 0, 1))
+									&& MultimapUtil.containsEntry(multimap, StringUtils.substring(k1, 1, 2),
+											StringUtils.substringAfter(v1, lcsv + StringUtils.substring(sav, 0, 1)))) {
 								//
-								if (Objects.equals("ん", StringUtils.substring(sav, 0, 1)) && MultimapUtil.containsEntry(
-										multimap, StringUtils.substring(k1, 1, 2),
-										StringUtils.substringAfter(v1, lcsv + StringUtils.substring(sav, 0, 1)))) {
-									//
-									continue;
-									//
-								} // if
-									//
-								MultimapUtil.put(multimap, sak, StringUtils.substringAfter(v1, lcsv));
+								continue;
 								//
 							} // if
 								//
+							MultimapUtil.put(multimap, sak, StringUtils.substringAfter(v1, lcsv));
+							//
 						} // if
 							//
 						MultimapUtil.put(multimap, lcsk, lcsv);
