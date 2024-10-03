@@ -3132,7 +3132,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		for (int k = 0; k < IterableUtils.size(list); k++) {
 			//
-			if (!StringUtils.contains(s = IterableUtils.get(list, k), g1s1) || k == i) {
+			if (Boolean.logicalOr(!StringUtils.contains(s = IterableUtils.get(list, k), g1s1), k == i)) {
 				//
 				continue;
 				//
