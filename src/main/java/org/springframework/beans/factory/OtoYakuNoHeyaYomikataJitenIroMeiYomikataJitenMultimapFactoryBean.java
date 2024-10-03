@@ -3057,7 +3057,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			return instance != null ? instance.value : null;
 		}
 
-		private static boolean equals(final IntObj<?> instance, final int value) {
+		private static boolean equals(@Nullable final IntObj<?> instance, final int value) {
 			return instance != null && instance.integer == value;
 		}
 
