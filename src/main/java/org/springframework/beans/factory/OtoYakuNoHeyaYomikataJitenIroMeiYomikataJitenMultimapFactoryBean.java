@@ -3131,7 +3131,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	}
 
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList20A1(final PatternMap patternMap,
-			final IntObj<String> intObj, final Map<String, String> map) {
+			@Nullable final IntObj<String> intObj, final Map<String, String> map) {
 		//
 		Matcher m;
 		//
