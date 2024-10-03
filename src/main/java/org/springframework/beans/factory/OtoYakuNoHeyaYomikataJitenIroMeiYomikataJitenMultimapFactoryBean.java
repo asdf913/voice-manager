@@ -3052,6 +3052,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 
 		private V value;
 
+		private static <V> V getValue(final IntObj<V> instance) {
+			return instance != null ? instance.value : null;
+		}
+
 	}
 
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList20A1(final PatternMap patternMap,
@@ -3065,7 +3069,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		Multimap<String, String> multimap = null;
 		//
-		final String s = intObj != null ? intObj.value : null;
+		final String s = IntObj.getValue(intObj);
 		//
 		final String g1 = MapUtils.getString(map, "g1");
 		//
@@ -3134,7 +3138,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		String k1, k2, v1, v2, csk, csv, sbk, lcsk, lcsv, sak, sav;
 		//
-		final Entry<String, String> e1 = intObj != null ? intObj.value : null;
+		final Entry<String, String> e1 = IntObj.getValue(intObj);
 		//
 		Entry<String, String> e2;
 		//
