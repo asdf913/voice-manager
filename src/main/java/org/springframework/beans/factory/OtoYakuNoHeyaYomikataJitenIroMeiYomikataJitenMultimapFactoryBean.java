@@ -3056,6 +3056,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			return instance != null ? instance.value : null;
 		}
 
+		private static boolean equals(final IntObj<?> instance, final int value) {
+			return instance != null && instance.integer == value;
+		}
+
 	}
 
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList20A1(final PatternMap patternMap,
@@ -3147,7 +3151,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		for (int j = 0; j < IterableUtils.size(entries2); j++) {
 			//
-			if (intObj != null && intObj.integer == j) {
+			if (IntObj.equals(intObj, j)) {
 				//
 				continue;
 				//

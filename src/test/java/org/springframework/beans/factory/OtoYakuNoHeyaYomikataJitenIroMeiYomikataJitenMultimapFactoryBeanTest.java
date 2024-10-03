@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
@@ -192,7 +193,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testNull() throws ClassNotFoundException {
 		//
-		final Method[] ms = OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean.class.getDeclaredMethods();
+		final Method[] ms = ArrayUtils.addAll(
+				getDeclaredMethods(OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean.class),
+				getDeclaredMethods(Class.forName(
+						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean$IntObj")));
 		//
 		Method m = null;
 		//
@@ -292,6 +296,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				//
 		} // for
 			//
+	}
+
+	private static Method[] getDeclaredMethods(final Class<?> instance) {
+		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
 	private void clear(final Collection<Object> instance) {
