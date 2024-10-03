@@ -3153,13 +3153,12 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					StringUtils.isNotBlank(csv = getCommonSuffix(v1 = Util.getValue(e1), v2 = Util.getValue(e2))))
 					&& !Objects.equals(k1, k2)) {
 				//
-				if (StringUtils.isNotBlank(sbk = StringUtils.substringBefore(k1, csk))) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), sbk,
-							StringUtils.substringBefore(v1, csv));
-					//
-				} // if
-					//
+				testAndAccept((a, b) -> StringUtils.isNotBlank(IValue0Util.getValue0(b)),
+						multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Triplet.with(sbk = StringUtils.substringBefore(k1, csk), v1, csv),
+						(a, b) -> MultimapUtil.put(a, IValue0Util.getValue0(b),
+								StringUtils.substringBefore(Util.getValue1(b), getValue2(b))));
+				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), csk, csv);
 				//
 			} else if (StringUtils.isNotBlank(lcsk = longestCommonSubstring(k1, k2))
