@@ -2962,23 +2962,13 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							//
 					} // if
 						//
-				} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+				} else if ((Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}\\p{InEnclosedAlphanumerics}(\\p{InHiragana}+)\\p{InKatakana}\\p{InEnclosedAlphanumerics}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InKatakana}]+$"),
-						s)) && (groupCount = Util.groupCount(m)) > 2
-						&& StringUtils.isNotBlank(g11 = Util.group(m, 1))) {
-					//
-					IntCollectionUtil.addInt(intList, k);
-					//
-					for (int j = 2; j <= groupCount; j++) {
-						//
-						MultimapUtil.put(multimap, g11, Util.group(m, j));
-						//
-					} // for
-						//
-				} else if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
-						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}]+\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}+(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}]+$"),
-						StringUtils.trim(s))) && (groupCount = Util.groupCount(m)) > 0
-						&& StringUtils.isNotBlank(g11 = Util.group(m, 1))) {
+						s)) && (groupCount = Util.groupCount(m)) > 2 && StringUtils.isNotBlank(g11 = Util.group(m, 1)))
+						|| (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+								"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}\\p{InCJKUnifiedIdeographs}+\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}]+\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}+(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}]+$"),
+								StringUtils.trim(s))) && (groupCount = Util.groupCount(m)) > 0
+								&& StringUtils.isNotBlank(g11 = Util.group(m, 1)))) {
 					//
 					IntCollectionUtil.addInt(intList, k);
 					//
