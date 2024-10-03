@@ -190,7 +190,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	}
 
 	@Test
-	void testNull() {
+	void testNull() throws ClassNotFoundException {
 		//
 		final Method[] ms = OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean.class.getDeclaredMethods();
 		//
@@ -276,7 +276,11 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 					|| (Objects.equals(name, "toMultimapAndIntList19B2") && Arrays.equals(parameterTypes,
 							new Class<?>[] { PatternMap.class, String.class, Integer.TYPE, Multimap.class }))
 					|| (Objects.equals(name, "toMultimapAndIntList20A") && Arrays.equals(parameterTypes,
-							new Class<?>[] { PatternMap.class, Iterable.class, Integer.TYPE, Map.class }))) {
+							new Class<?>[] { PatternMap.class, Iterable.class, Integer.TYPE, Map.class }))
+					|| (Objects.equals(name, "toMultimapAndIntList20A1") && Arrays.equals(parameterTypes,
+							new Class<?>[] { PatternMap.class, Class.forName(
+									"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean$IntObj"),
+									Map.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
