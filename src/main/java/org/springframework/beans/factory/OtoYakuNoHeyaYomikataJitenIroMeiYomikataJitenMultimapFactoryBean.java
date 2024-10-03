@@ -2926,75 +2926,23 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			addAllInts(intList, Util.getValue(entry));
 			//
+			// B
+			//
 			Iterable<Entry<String, String>> entries2 = Util.toList(Util
 					.filter(Util.stream(MultimapUtil.entries(multimap)), x -> StringUtils.length(Util.getKey(x)) == 2));
 			//
-			Entry<String, String> e1, e2;
+			MultimapUtil.putAll(multimap, toMultimap20B(entries2));
 			//
-			String s, lcsk, lcsv, csk, csv, k1, k2, v1, v2, sbk, sbv, sak, sav;
-			//
-			for (int k = 0; k < IterableUtils.size(entries2); k++) {
-				//
-				for (int j = 0; j < IterableUtils.size(entries2); j++) {
-					//
-					if (k == j) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (Boolean.logicalAnd(
-							StringUtils.isNotBlank(
-									csk = getCommonSuffix(k1 = Util.getKey(e1 = IterableUtils.get(entries2, k)),
-											k2 = Util.getKey(e2 = IterableUtils.get(entries2, j)))),
-							StringUtils
-									.isNotBlank(csv = getCommonSuffix(v1 = Util.getValue(e1), v2 = Util.getValue(e2))))
-							&& !Objects.equals(k1, k2)) {
-						//
-						if (StringUtils.isNotBlank(sbk = StringUtils.substringBefore(k1, csk))) {
-							//
-							MultimapUtil.put(multimap, sbk, StringUtils.substringBefore(v1, csv));
-							//
-						} // if
-							//
-						MultimapUtil.put(multimap, csk, csv);
-						//
-					} else if (StringUtils.isNotBlank(lcsk = longestCommonSubstring(k1, k2))
-							&& StringUtils.isNotBlank(lcsv = longestCommonSubstring(v1, v2))
-							&& StringUtils.startsWith(k1, lcsk) && StringUtils.startsWith(v1, lcsv)
-							&& StringUtils.endsWith(v2, lcsv)) {
-						//
-						if (StringUtils.isNotBlank(sak = StringUtils.substringAfter(k1, lcsk))
-								&& StringUtils.isNotBlank(sav = StringUtils.substringAfter(v1, lcsv))) {
-							//
-							if (Objects.equals("ん", StringUtils.substring(sav, 0, 1))
-									&& MultimapUtil.containsEntry(multimap, StringUtils.substring(k1, 1, 2),
-											StringUtils.substringAfter(v1, lcsv + StringUtils.substring(sav, 0, 1)))) {
-								//
-								continue;
-								//
-							} // if
-								//
-							MultimapUtil.put(multimap, sak, StringUtils.substringAfter(v1, lcsv));
-							//
-						} // if
-							//
-						MultimapUtil.put(multimap, lcsk, lcsv);
-						//
-					} // if
-						//
-				} // for
-					//
-			} // for
-				//
 			final Iterable<Entry<String, String>> entriesA2 = Util.toList(Util
 					.filter(Util.stream(MultimapUtil.entries(multimap)), x -> StringUtils.length(Util.getKey(x)) > 2));
 			//
 			final Iterable<Entry<String, String>> entries = Util.toList(Util.stream(MultimapUtil.entries(multimap)));
 			//
-			String cpk, cpv, sl;
+			String s, csk, csv, k1, k2, v1, v2, sbk, sbv, cpk, cpv, sl;
 			//
 			int kl1, kl2;
+			//
+			Entry<String, String> e1, e2;
 			//
 			for (int k = 0; k < IterableUtils.size(entriesA2); k++) {
 				//
@@ -3234,6 +3182,75 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		return Pair.of(multimap, intList);
 		//
 	}//
+
+	private static Multimap<String, String> toMultimap20B(final Iterable<Entry<String, String>> entries2) {
+		//
+		String k1, k2, v1, v2, csk, csv, sbk, lcsk, lcsv, sak, sav;
+		//
+		Entry<String, String> e1, e2;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		for (int k = 0; k < IterableUtils.size(entries2); k++) {
+			//
+			for (int j = 0; j < IterableUtils.size(entries2); j++) {
+				//
+				if (k == j) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (Boolean.logicalAnd(
+						StringUtils
+								.isNotBlank(csk = getCommonSuffix(k1 = Util.getKey(e1 = IterableUtils.get(entries2, k)),
+										k2 = Util.getKey(e2 = IterableUtils.get(entries2, j)))),
+						StringUtils.isNotBlank(csv = getCommonSuffix(v1 = Util.getValue(e1), v2 = Util.getValue(e2))))
+						&& !Objects.equals(k1, k2)) {
+					//
+					if (StringUtils.isNotBlank(sbk = StringUtils.substringBefore(k1, csk))) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), sbk,
+								StringUtils.substringBefore(v1, csv));
+						//
+					} // if
+						//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), csk, csv);
+					//
+				} else if (StringUtils.isNotBlank(lcsk = longestCommonSubstring(k1, k2))
+						&& StringUtils.isNotBlank(lcsv = longestCommonSubstring(v1, v2))
+						&& StringUtils.startsWith(k1, lcsk) && StringUtils.startsWith(v1, lcsv)
+						&& StringUtils.endsWith(v2, lcsv)) {
+					//
+					if (StringUtils.isNotBlank(sak = StringUtils.substringAfter(k1, lcsk))
+							&& StringUtils.isNotBlank(sav = StringUtils.substringAfter(v1, lcsv))) {
+						//
+						if (Objects.equals("ん", StringUtils.substring(sav, 0, 1)) && MultimapUtil.containsEntry(
+								multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								StringUtils.substring(k1, 1, 2),
+								StringUtils.substringAfter(v1, lcsv + StringUtils.substring(sav, 0, 1)))) {
+							//
+							continue;
+							//
+						} // if
+							//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), sak,
+								StringUtils.substringAfter(v1, lcsv));
+						//
+					} // if
+						//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), lcsk,
+							lcsv);
+					//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+		return multimap;
+		//
+	}
 
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList15(final int index, final String line,
 			final PatternMap patternMap, final String g1, final String g2, final String g3) {
