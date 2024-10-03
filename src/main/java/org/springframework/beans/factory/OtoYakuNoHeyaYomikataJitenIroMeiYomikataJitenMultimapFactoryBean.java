@@ -88,6 +88,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 
 	@URL("https://hiramatu-hifuka.com/onyak/sikime01.html")
 	private String url = null;
+	
+	public void setUrl(final String url) {
+		this.url = url;
+	}
 
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
