@@ -75,7 +75,7 @@ import com.google.common.collect.MultimapUtil;
 import com.mariten.kanatools.KanaConverter;
 
 public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
-		implements FactoryBean<Multimap<String, String>> {
+		extends StringMultiMapFromResourceFactoryBean {
 
 	private static final Pattern PATTERN_CJK_UNIFIED_IDEOGRAPHS_ONLY = Pattern
 			.compile("^\\p{InCJKUnifiedIdeographs}+$");
@@ -88,7 +88,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 
 	@URL("https://hiramatu-hifuka.com/onyak/sikime01.html")
 	private String url = null;
-	
+
 	public void setUrl(final String url) {
 		this.url = url;
 	}
@@ -96,6 +96,14 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	@Override
 	public Multimap<String, String> getObject() throws Exception {
 		//
+		IValue0<Multimap<String, String>> iValue0 = getIvalue0();
+		//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
 		final Iterable<Node> nodes = Util.toList(NodeUtil.nodeStream(testAndApply(Objects::nonNull,
 				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
 				null)));
@@ -117,8 +125,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		PatternMap patternMap = null;
 		//
 		String s;
-		//
-		IValue0<Multimap<String, String>> iValue0;
 		//
 		IntList intList = null;
 		//
