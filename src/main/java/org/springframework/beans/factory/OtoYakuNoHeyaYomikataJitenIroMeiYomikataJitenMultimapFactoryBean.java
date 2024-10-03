@@ -3137,7 +3137,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	private static Multimap<String, String> toMultimap20B1(final Iterable<Entry<String, String>> entries2,
 			final IntObj<Entry<String, String>> intObj, final Multimap<String, String> mm) {
 		//
-		String k1, k2, v1, v2, csk, csv, sbk, lcsk, lcsv, sak, sav;
+		String k1, k2, v1, v2, csk, csv, lcsk, lcsv, sak, sav;
 		//
 		final Entry<String, String> e1 = IntObj.getValue(intObj);
 		//
@@ -3160,7 +3160,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				testAndAccept((a, b) -> StringUtils.isNotBlank(IValue0Util.getValue0(b)),
 						multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Triplet.with(sbk = StringUtils.substringBefore(k1, csk), v1, csv),
+						Triplet.with(StringUtils.substringBefore(k1, csk), v1, csv),
 						(a, b) -> MultimapUtil.put(a, IValue0Util.getValue0(b),
 								StringUtils.substringBefore(Util.getValue1(b), getValue2(b))));
 				//
