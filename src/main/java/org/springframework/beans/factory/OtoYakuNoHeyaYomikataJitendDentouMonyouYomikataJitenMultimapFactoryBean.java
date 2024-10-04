@@ -78,6 +78,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final IntObj<String> intObj,
 			final Iterable<String> lines) {
 		//
