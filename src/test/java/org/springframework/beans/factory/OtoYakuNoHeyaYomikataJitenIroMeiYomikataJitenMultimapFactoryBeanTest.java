@@ -29,7 +29,6 @@ import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
@@ -55,6 +54,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import it.unimi.dsi.fastutil.ints.IntObjectPair;
 
 class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 
@@ -190,10 +190,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testNull() throws ClassNotFoundException {
 		//
-		final Method[] ms = ArrayUtils.addAll(
-				getDeclaredMethods(OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean.class),
-				getDeclaredMethods(Class.forName(
-						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean$IntObj")));
+		final Method[] ms = getDeclaredMethods(OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean.class);
 		//
 		Method m = null;
 		//
@@ -279,9 +276,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 					|| (Objects.equals(name, "toMultimapAndIntList20A") && Arrays.equals(parameterTypes,
 							new Class<?>[] { PatternMap.class, Iterable.class, Integer.TYPE, Map.class }))
 					|| (Objects.equals(name, "toMultimapAndIntList20A1") && Arrays.equals(parameterTypes,
-							new Class<?>[] { PatternMap.class, Class.forName(
-									"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean$IntObj"),
-									Map.class }))) {
+							new Class<?>[] { PatternMap.class, IntObjectPair.class, Map.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//

@@ -73,6 +73,8 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 import com.mariten.kanatools.KanaConverter;
 
+import it.unimi.dsi.fastutil.ints.IntObjectPair;
+
 public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		extends StringMultiMapFromResourceFactoryBean {
 
@@ -3008,7 +3010,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		Entry<Multimap<String, String>, IntList> entry = null;
 		//
-		IntObj<String> intObj = null;
+		IntObjectPair<String> iop = null;
 		//
 		for (int k = 0; k < IterableUtils.size(list); k++) {
 			//
@@ -3020,12 +3022,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				// 1
 				//
-			(intObj = new IntObj<>()).integer = k;
-			//
-			intObj.value = s;
+			iop = IntObjectPair.of(k, s);
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					Util.getKey(entry = toMultimapAndIntList20A1(patternMap, intObj, map)));
+					Util.getKey(entry = toMultimapAndIntList20A1(patternMap, IntObjectPair.of(k, s), map)));
 			//
 			addAllInts(intList = ObjectUtils.getIfNull(intList, IntList::create), Util.getValue(entry));
 			//
@@ -3086,25 +3086,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 	}
 
-	private static class IntObj<V> {
-
-		private int integer;
-
-		private V value;
-
-		@Nullable
-		private static <V> V getValue(@Nullable final IntObj<V> instance) {
-			return instance != null ? instance.value : null;
-		}
-
-		private static boolean equals(@Nullable final IntObj<?> instance, final int value) {
-			return instance != null && instance.integer == value;
-		}
-
-	}
-
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList20A1(final PatternMap patternMap,
-			@Nullable final IntObj<String> intObj, final Map<String, String> map) {
+			@Nullable final IntObjectPair<String> iop, final Map<String, String> map) {
 		//
 		Matcher m;
 		//
@@ -3114,7 +3097,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		Multimap<String, String> multimap = null;
 		//
-		final String s = IntObj.getValue(intObj);
+		final String s = iop != null ? iop.right() : null;
 		//
 		final String g1 = MapUtils.getString(map, "g1");
 		//
@@ -3130,9 +3113,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$"),
 						s)) && Util.groupCount(m) > 1)) {
 			//
-			if (intObj != null) {
+			if (iop != null) {
 				//
-				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), intObj.integer);
+				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), iop.keyInt());
 				//
 			} // if
 				//
@@ -3161,16 +3144,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		Multimap<String, String> multimap = null;
 		//
-		IntObj<Entry<String, String>> intObj;
-		//
 		for (int k = 0; k < IterableUtils.size(entries2); k++) {
 			//
-			(intObj = new IntObj<>()).integer = k;
-			//
-			intObj.value = IterableUtils.get(entries2, k);
-			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					toMultimap20B1(entries2, intObj, multimap));
+					toMultimap20B1(entries2, IntObjectPair.of(k, IterableUtils.get(entries2, k)), multimap));
 			//
 		} // for
 			//
@@ -3180,11 +3157,11 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 
 	@Nullable
 	private static Multimap<String, String> toMultimap20B1(final Iterable<Entry<String, String>> entries2,
-			final IntObj<Entry<String, String>> intObj, final Multimap<String, String> mm) {
+			final IntObjectPair<Entry<String, String>> iop, final Multimap<String, String> mm) {
 		//
 		String k1, k2, v1, v2, csk, csv, lcsk, lcsv, sak, sav;
 		//
-		final Entry<String, String> e1 = IntObj.getValue(intObj);
+		final Entry<String, String> e1 = iop != null ? iop.right() : null;
 		//
 		Entry<String, String> e2;
 		//
@@ -3192,7 +3169,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		for (int j = 0; j < IterableUtils.size(entries2); j++) {
 			//
-			if (IntObj.equals(intObj, j)) {
+			if (iop != null && iop.keyInt() == j) {
 				//
 				continue;
 				//

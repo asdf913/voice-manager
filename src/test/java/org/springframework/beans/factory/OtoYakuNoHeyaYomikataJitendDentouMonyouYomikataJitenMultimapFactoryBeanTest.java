@@ -13,7 +13,6 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +22,7 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Multimap;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import it.unimi.dsi.fastutil.ints.IntObjectPair;
 
 class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTest {
 
@@ -45,8 +45,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		(METHOD_GET_COMMON_SUFFIX = clz.getDeclaredMethod("getCommonSuffix", String.class, String.class))
 				.setAccessible(true);
 		//
-		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", PatternMap.class, Class.forName(
-				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean$IntObj"),
+		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", PatternMap.class, IntObjectPair.class,
 				Iterable.class)).setAccessible(true);
 		//
 	}
@@ -188,8 +187,6 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		}
 	}
 
-
-
 	@Test
 	void testGetCommonSuffix() throws Throwable {
 		//
@@ -234,22 +231,17 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		//
 		Assertions.assertNull(toMultimap(patternMap, null, null));
 		//
-		final Object intObj = Narcissus.allocateInstance(Class.forName(
-				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean$IntObj"));
+		Assertions.assertNull(toMultimap(patternMap, IntObjectPair.of(ZERO, null), null));
 		//
-		Assertions.assertNull(toMultimap(patternMap, intObj, null));
-		//
-		FieldUtils.writeDeclaredField(intObj, "value", "日本の伝統文様（もんよう）は美しく、心が和みます｡", true);
-		//
-		Assertions.assertEquals("{家形文様=[いえがたもんよう], 文様=[もんよう], 家形=[いえがた]}",
-				Objects.toString(toMultimap(patternMap, intObj, Arrays.asList(null, "家形文様（いえがたもんよう）"))));
+		Assertions.assertEquals("{家形文様=[いえがたもんよう], 文様=[もんよう], 家形=[いえがた]}", Objects.toString(toMultimap(patternMap,
+				IntObjectPair.of(ZERO, "日本の伝統文様（もんよう）は美しく、心が和みます｡"), Arrays.asList(null, "家形文様（いえがたもんよう）"))));
 		//
 	}
 
-	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final Object intObj,
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final IntObjectPair<String> iop,
 			final Iterable<String> lines) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, patternMap, intObj, lines);
+			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, patternMap, iop, lines);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Multimap) {

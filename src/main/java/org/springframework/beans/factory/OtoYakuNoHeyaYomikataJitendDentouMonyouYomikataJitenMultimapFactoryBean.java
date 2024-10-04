@@ -24,6 +24,8 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
+import it.unimi.dsi.fastutil.ints.IntObjectPair;
+
 public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean
 		implements FactoryBean<Multimap<String, String>> {
 
@@ -51,16 +53,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final int size = IterableUtils.size(lines);
 		//
-		IntObj<String> intObj = null;
-		//
 		for (int i = 0; i < size; i++) {
 			//
-			(intObj = new IntObj<>()).integer = i;
-			//
-			intObj.value = IterableUtils.get(lines, i);
-			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					toMultimap(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new), intObj, lines));
+					toMultimap(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
+							IntObjectPair.of(i, IterableUtils.get(lines, i)), lines));
 			//
 		} // for
 			//
@@ -68,23 +65,15 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static class IntObj<V> {
-
-		private int integer;
-
-		private V value;
-
-	}
-
 	@Nullable
-	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final IntObj<String> intObj,
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final IntObjectPair<String> iop,
 			final Iterable<String> lines) {
 		//
 		Multimap<String, String> multimap = null;
 		//
 		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InHiragana}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InCJKSymbolsAndPunctuation}\\p{InHalfwidthAndFullwidthForms}]+$"),
-				intObj != null ? intObj.value : null);
+				iop != null ? iop.right() : null);
 		//
 		if (Util.matches(m1) && Util.groupCount(m1) > 1) {
 			//
@@ -96,7 +85,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			for (int j = 0; j < IterableUtils.size(lines); j++) {
 				//
-				if (intObj != null && intObj.integer == j) {
+				if (iop != null && iop.keyInt() == j) {
 					//
 					continue;
 					//
