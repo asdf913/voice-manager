@@ -7,12 +7,9 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -23,7 +20,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -36,7 +32,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 
 	private static final String SPACE = " ";
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_FLAT_MAP, METHOD_GET_COMMON_SUFFIX, METHOD_TO_MULTI_MAP;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_COMMON_SUFFIX, METHOD_TO_MULTI_MAP;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
@@ -45,8 +41,6 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
-		//
-		(METHOD_FLAT_MAP = clz.getDeclaredMethod("flatMap", Stream.class, Function.class)).setAccessible(true);
 		//
 		(METHOD_GET_COMMON_SUFFIX = clz.getDeclaredMethod("getCommonSuffix", String.class, String.class))
 				.setAccessible(true);
@@ -194,31 +188,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		}
 	}
 
-	@Test
-	void testFlatMap() throws Throwable {
-		//
-		final Stream<?> stream = Stream.empty();
-		//
-		Assertions.assertNull(flatMap(stream, null));
-		//
-		Assertions.assertNotNull(flatMap(stream, x -> null));
-		//
-	}
 
-	private static <T, R> Stream<R> flatMap(final Stream<T> instance,
-			final Function<? super T, ? extends Stream<? extends R>> mapper) throws Throwable {
-		try {
-			final Object obj = METHOD_FLAT_MAP.invoke(null, instance, mapper);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
 
 	@Test
 	void testGetCommonSuffix() throws Throwable {

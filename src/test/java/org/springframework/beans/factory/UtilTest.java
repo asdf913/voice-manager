@@ -215,6 +215,15 @@ class UtilTest {
 	}
 
 	@Test
+	void testFlatMap() {
+		//
+		Assertions.assertNull(Util.flatMap(stream, null));
+		//
+		Assertions.assertNotNull(Util.flatMap(Stream.empty(), x -> Stream.of(x)));
+		//
+	}
+
+	@Test
 	void testMatcher() {
 		//
 		Assertions.assertNull(Util.matcher(Pattern.compile(""), null));

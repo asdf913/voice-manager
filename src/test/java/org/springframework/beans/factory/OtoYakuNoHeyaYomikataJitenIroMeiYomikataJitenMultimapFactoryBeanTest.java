@@ -16,7 +16,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
@@ -62,10 +61,10 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	private static final int ZERO = 0;
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3,
-			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS_INT, METHOD_REMOVE_INT, METHOD_FLAT_MAP,
-			METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT3,
-			METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM,
-			METHOD_FOR_EACH_INT_STREAM, METHOD_IS_EMPTY, METHOD_MAX, METHOD_TO_MULTI_MAP_17_C_2, METHOD_ADD_ALL_INTS;
+			METHOD_TEST_AND_APPLY_AS_INT, METHOD_CONTAINS_INT, METHOD_REMOVE_INT, METHOD_TO_MULTI_MAP_AND_INT_LIST,
+			METHOD_COLLECT, METHOD_MAP, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5,
+			METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM, METHOD_FOR_EACH_INT_STREAM, METHOD_IS_EMPTY, METHOD_MAX,
+			METHOD_TO_MULTI_MAP_17_C_2, METHOD_ADD_ALL_INTS;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -88,8 +87,6 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				.setAccessible(true);
 		//
 		(METHOD_REMOVE_INT = clz.getDeclaredMethod("removeInt", IntList.class, Integer.TYPE)).setAccessible(true);
-		//
-		(METHOD_FLAT_MAP = clz.getDeclaredMethod("flatMap", Stream.class, Function.class)).setAccessible(true);
 		//
 		(METHOD_TO_MULTI_MAP_AND_INT_LIST = clz.getDeclaredMethod("toMultimapAndIntList", PatternMap.class, List.class,
 				Integer.TYPE)).setAccessible(true);
@@ -881,32 +878,6 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	private static void removeValue(final IntList instance, final int o) throws Throwable {
 		try {
 			METHOD_REMOVE_INT.invoke(null, instance, o);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testFlatMap() throws Throwable {
-		//
-		final Stream<?> stream = Stream.empty();
-		//
-		Assertions.assertNull(flatMap(stream, null));
-		//
-		Assertions.assertNotNull(flatMap(stream, x -> null));
-		//
-	}
-
-	private static <T, R> Stream<R> flatMap(final Stream<T> instance,
-			final Function<? super T, ? extends Stream<? extends R>> mapper) throws Throwable {
-		try {
-			final Object obj = METHOD_FLAT_MAP.invoke(null, instance, mapper);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Stream) {
-				return (Stream) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -274,6 +274,11 @@ abstract class Util {
 		//
 	}
 
+	static <T, R> Stream<R> flatMap(final Stream<T> instance,
+			final Function<? super T, ? extends Stream<? extends R>> mapper) {
+		return instance != null && mapper != null ? instance.flatMap(mapper) : null;
+	}
+
 	@Nullable
 	static <T, R, A> R collect(@Nullable final Stream<T> instance,
 			@Nullable final Collector<? super T, A, R> collector) {

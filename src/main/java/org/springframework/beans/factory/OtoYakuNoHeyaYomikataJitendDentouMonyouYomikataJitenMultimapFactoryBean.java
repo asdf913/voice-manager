@@ -36,7 +36,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	public Multimap<String, String> getObject() throws Exception {
 		//
 		final List<String> lines = Util
-				.toList(flatMap(Util.map(Util.map(
+				.toList(Util.flatMap(Util.map(Util.map(
 						Util.map(
 								Util.filter(testAndApply(Objects::nonNull,
 										Util.spliterator(Util.toList(NodeUtil.nodeStream(testAndApply(Objects::nonNull,
@@ -143,12 +143,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		return StringUtils.substring(s1, StringUtils.length(s1) - i);
 		//
-	}
-
-	@Nullable
-	private static <T, R> Stream<R> flatMap(@Nullable final Stream<T> instance,
-			@Nullable final Function<? super T, ? extends Stream<? extends R>> mapper) {
-		return instance != null && mapper != null ? instance.flatMap(mapper) : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,

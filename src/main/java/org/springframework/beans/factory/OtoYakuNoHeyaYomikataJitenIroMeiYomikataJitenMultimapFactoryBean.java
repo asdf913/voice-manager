@@ -111,16 +111,15 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		Multimap<String, String> multimap = null, key;
 		//
 		final List<String> list = Util
-				.toList(flatMap(
-						Util.map(
-								Util.map(
+				.toList(Util
+						.flatMap(
+								Util.map(Util.map(
 										Util.map(Util.filter(
 												testAndApply(Objects::nonNull, Util.spliterator(nodes),
 														x -> StreamSupport.stream(x, false), null),
 												TextNode.class::isInstance), Util::toString),
-										x -> StringUtils.split(x, "\u3000")),
-								Arrays::asList),
-						List::stream));
+										x -> StringUtils.split(x, "\u3000")), Arrays::asList),
+								List::stream));
 		//
 		PatternMap patternMap = null;
 		//
@@ -4087,12 +4086,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	@Nullable
 	private static IntStream map(@Nullable final IntStream instance, @Nullable final IntUnaryOperator mapper) {
 		return instance != null && mapper != null ? instance.map(mapper) : instance;
-	}
-
-	@Nullable
-	private static <T, R> Stream<R> flatMap(@Nullable final Stream<T> instance,
-			@Nullable final Function<? super T, ? extends Stream<? extends R>> mapper) {
-		return instance != null && mapper != null ? instance.flatMap(mapper) : null;
 	}
 
 	private static boolean containsInt(@Nullable final IntIterable instance, final int o) {
