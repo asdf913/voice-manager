@@ -104,7 +104,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 	}
 
 	@Test
-	void testNull() throws ClassNotFoundException {
+	void testNull() {
 		//
 		final Method[] ms = getDeclaredMethods(
 				OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean.class);
