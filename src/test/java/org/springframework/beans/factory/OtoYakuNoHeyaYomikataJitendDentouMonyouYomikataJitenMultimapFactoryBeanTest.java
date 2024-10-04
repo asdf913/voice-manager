@@ -25,7 +25,7 @@ import com.google.common.collect.Multimap;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
-public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTest {
+class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTest {
 
 	private static final int ZERO = 0;
 
