@@ -7,6 +7,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Function;
@@ -15,12 +16,14 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -33,10 +36,10 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 
 	private static final String SPACE = " ";
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_FLAT_MAP, METHOD_GET_COMMON_SUFFIX;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_FLAT_MAP, METHOD_GET_COMMON_SUFFIX, METHOD_TO_MULTI_MAP;
 
 	@BeforeAll
-	static void beforeClass() throws NoSuchMethodException {
+	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
 		//
 		final Class<?> clz = OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean.class;
 		//
@@ -47,6 +50,10 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		//
 		(METHOD_GET_COMMON_SUFFIX = clz.getDeclaredMethod("getCommonSuffix", String.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", PatternMap.class, Class.forName(
+				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean$IntObj"),
+				Iterable.class)).setAccessible(true);
 		//
 	}
 
@@ -237,6 +244,46 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToMultimap() throws Throwable {
+		//
+		if (isSystemPropertiesContainsTestGetObject) {
+			//
+			return;
+			//
+		} // if
+			//
+		final PatternMap patternMap = new PatternMapImpl();
+		//
+		Assertions.assertNull(toMultimap(patternMap, null, null));
+		//
+		final Object intObj = Narcissus.allocateInstance(Class.forName(
+				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean$IntObj"));
+		//
+		Assertions.assertNull(toMultimap(patternMap, intObj, null));
+		//
+		FieldUtils.writeDeclaredField(intObj, "value", "日本の伝統文様（もんよう）は美しく、心が和みます｡", true);
+		//
+		Assertions.assertEquals("{家形文様=[いえがたもんよう], 文様=[もんよう], 家形=[いえがた]}",
+				Objects.toString(toMultimap(patternMap, intObj, Arrays.asList(null, "家形文様（いえがたもんよう）"))));
+		//
+	}
+
+	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final Object intObj,
+			final Iterable<String> lines) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, patternMap, intObj, lines);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Multimap) {
+				return (Multimap) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
