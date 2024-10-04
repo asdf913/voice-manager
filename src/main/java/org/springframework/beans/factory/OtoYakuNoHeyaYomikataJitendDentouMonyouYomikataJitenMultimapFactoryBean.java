@@ -101,7 +101,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	// http://www.java2s.com/example/java-utility-method/collection-element-get/getcommonsuffix-collection-string-c-85a78.html
-	private static String getCommonSuffix(final String s1, final String s2) {
+	private static String getCommonSuffix(@Nullable final String s1, @Nullable final String s2) {
 		//
 		if (s1 == null || s2 == null || s1.length() == 0 || s2.length() == 0) {
 			//
@@ -121,8 +121,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static <T, R> Stream<R> flatMap(final Stream<T> instance,
-			final Function<? super T, ? extends Stream<? extends R>> mapper) {
+	private static <T, R> Stream<R> flatMap(@Nullable final Stream<T> instance,
+			@Nullable final Function<? super T, ? extends Stream<? extends R>> mapper) {
 		return instance != null && mapper != null ? instance.flatMap(mapper) : null;
 	}
 
