@@ -3012,7 +3012,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		IntObj<String> intObj = null;
 		//
-		for (int k = 0; k < IterableUtils.size(list); k++) {
+		final int size = IterableUtils.size(list);
+		//
+		for (int k = 0; k < size; k++) {
 			//
 			if (Boolean.logicalOr(!StringUtils.contains(s = IterableUtils.get(list, k), g1s1), k == i)) {
 				//
@@ -3047,6 +3049,21 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							Util.group(m, j));
 					//
 				} // for
+					//
+				if (k < size - 1 && Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
+						"^\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}]+$"),
+						IterableUtils.get(list, k + 1)))) {
+					//
+					IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), k + 1);
+					//
+					for (int j = 1; j <= Util.groupCount(m); j++) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g11,
+								Util.group(m, j));
+						//
+					} // for
+						//
+				} // if
 					//
 			} // if
 				//
