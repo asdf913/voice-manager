@@ -783,6 +783,8 @@ public abstract class Util {
 			Util.put(map, "net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$TokenizedGenericType",
 					"genericTypeToken");
 			//
+			Util.put(map, "it.unimi.dsi.fastutil.booleans.AbstractBooleanBigList$BooleanRandomAccessSubList", "l");
+			//
 			if ((iValue0 = iterator(clz, instance, map)) != null) {
 				//
 				return IValue0Util.getValue0(iValue0);
