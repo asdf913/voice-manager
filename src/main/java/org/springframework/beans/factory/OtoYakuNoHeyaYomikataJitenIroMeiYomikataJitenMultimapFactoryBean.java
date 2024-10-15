@@ -3010,8 +3010,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		Entry<Multimap<String, String>, IntList> entry = null;
 		//
-		IntObjectPair<String> iop = null;
-		//
 		for (int k = 0; k < IterableUtils.size(list); k++) {
 			//
 			if (Boolean.logicalOr(!StringUtils.contains(s = IterableUtils.get(list, k), g1s1), k == i)) {
@@ -3022,8 +3020,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				// 1
 				//
-			iop = IntObjectPair.of(k, s);
-			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.getKey(entry = toMultimapAndIntList20A1(patternMap, IntObjectPair.of(k, s), map)));
 			//
