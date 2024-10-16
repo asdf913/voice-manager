@@ -73,6 +73,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 import com.mariten.kanatools.KanaConverter;
 
+import it.unimi.dsi.fastutil.PairUtil;
 import it.unimi.dsi.fastutil.ints.IntObjectPair;
 
 public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
@@ -3093,7 +3094,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		Multimap<String, String> multimap = null;
 		//
-		final String s = iop != null ? iop.right() : null;
+		final String s = PairUtil.right(iop);
 		//
 		final String g1 = MapUtils.getString(map, "g1");
 		//
@@ -3157,7 +3158,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		String k1, k2, v1, v2, csk, csv, lcsk, lcsv, sak, sav;
 		//
-		final Entry<String, String> e1 = iop != null ? iop.right() : null;
+		final Entry<String, String> e1 = PairUtil.right(iop);
 		//
 		Entry<String, String> e2;
 		//
