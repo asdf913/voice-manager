@@ -3186,8 +3186,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), csk, csv);
 				//
 			} else if (Util.and(StringUtils.isNotBlank(lcsk = longestCommonSubstring(k1, k2)),
-					StringUtils.isNotBlank(lcsv = longestCommonSubstring(v1, v2)), StringUtils.startsWith(k1, lcsk))
-					&& StringUtils.startsWith(v1, lcsv) && StringUtils.endsWith(v2, lcsv)) {
+					StringUtils.isNotBlank(lcsv = longestCommonSubstring(v1, v2)), StringUtils.startsWith(k1, lcsk),
+					StringUtils.startsWith(v1, lcsv)) && StringUtils.endsWith(v2, lcsv)) {
 				//
 				if (Boolean.logicalAnd(StringUtils.isNotBlank(sak = StringUtils.substringAfter(k1, lcsk)),
 						StringUtils.isNotBlank(sav = StringUtils.substringAfter(v1, lcsv)))) {
