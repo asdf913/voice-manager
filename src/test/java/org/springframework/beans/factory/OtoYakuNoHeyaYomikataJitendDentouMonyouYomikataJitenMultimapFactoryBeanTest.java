@@ -36,7 +36,8 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 
 	private static final String SPACE = " ";
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_COMMON_SUFFIX, METHOD_TO_MULTI_MAP, METHOD_TEST_AND_ACCEPT;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_COMMON_SUFFIX, METHOD_TO_MULTI_MAP_AND_INT_COLLECTION,
+			METHOD_TEST_AND_ACCEPT;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -49,8 +50,8 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		(METHOD_GET_COMMON_SUFFIX = clz.getDeclaredMethod("getCommonSuffix", String.class, String.class))
 				.setAccessible(true);
 		//
-		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", PatternMap.class, IntObjectPair.class,
-				Iterable.class)).setAccessible(true);
+		(METHOD_TO_MULTI_MAP_AND_INT_COLLECTION = clz.getDeclaredMethod("toMultimapAndIntCollection", PatternMap.class,
+				IntObjectPair.class, Iterable.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", ObjIntPredicate.class, Object.class,
 				Integer.TYPE, ObjIntConsumer.class)).setAccessible(true);
@@ -122,7 +123,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		//
 		Object invokeStaticMethod;
 		//
-		String toString, name;
+		String toString;
 		//
 		Class<?>[] parameterTypes;
 		//
@@ -154,10 +155,8 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 			//
 			toString = Objects.toString(m);
 			//
-			if ((Objects.equals(name = Util.getName(m), "getCommonSuffix")
-					&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class }))
-					|| (Objects.equals(name, "toMultimap") && Arrays.equals(parameterTypes,
-							new Class<?>[] { PatternMap.class, IntObjectPair.class, Iterable.class }))) {
+			if ((Objects.equals(Util.getName(m), "getCommonSuffix")
+					&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
@@ -238,7 +237,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 	}
 
 	@Test
-	void testToMultimap() throws Throwable {
+	void testToMultimapAndIntCollection() throws Throwable {
 		//
 		if (isSystemPropertiesContainsTestGetObject) {
 			//
@@ -248,25 +247,27 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 			//
 		final PatternMap patternMap = new PatternMapImpl();
 		//
-		Assertions.assertEquals(Pair.of(null, null), toMultimap(patternMap, null, null));
+		Assertions.assertNull(toMultimapAndIntCollection(patternMap, null, null));
 		//
-		Assertions.assertEquals(Pair.of(null, null), toMultimap(patternMap, IntObjectPair.of(ZERO, null), null));
+		Assertions.assertNull(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, null), null));
 		//
 		Assertions.assertEquals("({家形文様=[いえがたもんよう], 文様=[もんよう], 家形=[いえがた]},[0, 1])",
-				Objects.toString(toMultimap(patternMap, IntObjectPair.of(ZERO, "日本の伝統文様（もんよう）は美しく、心が和みます｡"),
-						Arrays.asList(null, "家形文様（いえがたもんよう）"))));
+				Objects.toString(toMultimapAndIntCollection(patternMap,
+						IntObjectPair.of(ZERO, "日本の伝統文様（もんよう）は美しく、心が和みます｡"), Arrays.asList(null, "家形文様（いえがたもんよう）"))));
 		//
 		Assertions.assertEquals(
 				"({青貝塗=[あおがいぬり], 漆工=[しっこう], 青木間道=[あおきかんとう], 名物裂=[めいぶつぎれ], 工字文=[こうじもん], 工=[こう], 青=[あお], 愛染明王図文=[あいぜんみょうおうずもん], 文=[もん]},[0, 1, 2, 3])",
-				Objects.toString(toMultimap(patternMap, IntObjectPair.of(ZERO, "青貝塗（あおがいぬり）＊漆工（しっこう）技法"),
+				Objects.toString(toMultimapAndIntCollection(patternMap,
+						IntObjectPair.of(ZERO, "青貝塗（あおがいぬり）＊漆工（しっこう）技法"),
 						Arrays.asList(null, "青木間道（あおきかんとう）＊名物裂（めいぶつぎれ）", "工字文（こうじもん）", "愛染明王図文（あいぜんみょうおうずもん）"))));
 		//
 	}
 
-	private static Entry<Multimap<String, String>, IntCollection> toMultimap(final PatternMap patternMap,
-			final IntObjectPair<String> iop, final Iterable<String> lines) throws Throwable {
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection(
+			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines)
+			throws Throwable {
 		try {
-			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, patternMap, iop, lines);
+			final Object obj = METHOD_TO_MULTI_MAP_AND_INT_COLLECTION.invoke(null, patternMap, iop, lines);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Entry) {
