@@ -15,7 +15,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class IntIterableUtilTest {
 
 	@Test
-	void testToIntArray() {
+	void testContainsInt() {
 		//
 		final IntCollection intCollection = IntList.create();
 		//
