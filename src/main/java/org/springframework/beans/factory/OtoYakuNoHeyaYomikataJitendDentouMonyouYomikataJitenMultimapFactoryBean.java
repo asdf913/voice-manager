@@ -149,7 +149,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			} // if
 				//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m1, 1),
-					g12 = Util.group(m1, 2));
+					Util.group(m1, 2));
 			//
 			final String g13 = Util.group(m1, 3);
 			//
@@ -200,7 +200,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 						if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 								"^(\\p{InCJKUnifiedIdeographs}{6})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-								line = IterableUtils.get(lines, j)))
+								IterableUtils.get(lines, j)))
 								&& Util.groupCount(m2) > 1
 								&& StringUtils
 										.isNotBlank(csk = getCommonSuffix(g21 = Util.group(m2, 1), Util.getKey(e1)))
