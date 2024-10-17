@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -90,7 +88,7 @@ class IntCollectionUtilTest {
 			//
 	}
 
-	private static int length(@Nullable final Object[] instance) {
+	private static int length(final Object[] instance) {
 		return instance != null ? instance.length : 0;
 	}
 
