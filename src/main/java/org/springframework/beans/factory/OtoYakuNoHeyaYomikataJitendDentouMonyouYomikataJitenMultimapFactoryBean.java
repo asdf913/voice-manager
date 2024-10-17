@@ -1,6 +1,7 @@
 package org.springframework.beans.factory;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
@@ -25,12 +26,15 @@ import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntIterableUtil;
 import org.d2ab.collection.ints.IntList;
 import org.d2ab.function.ObjIntPredicate;
+import org.javatuples.Quartet;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 
@@ -235,25 +239,54 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 		} // for
 			//
-		final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
+		final List<Entry<String, String>> list = testAndApply(Objects::nonNull, MultimapUtil.entries(multimap),
+				ArrayList::new, null);
 		//
-		if (Util.iterator(entries) == null) {
-			//
-			return Pair.of(multimap, intCollection);
-			//
-		} // if
-			//
+		final List<Quartet<String, String, String, String>> quartets = Util
+				.toList(Util.map(Util.stream(Lists.cartesianProduct(list, list)), x -> {
+					//
+					final int size = IterableUtils.size(x);
+					//
+					if (size > 1) {
+						//
+						final Entry<String, String> e1 = IterableUtils.get(x, 0);
+						//
+						final Entry<String, String> e2 = IterableUtils.get(x, 1);
+						//
+						return Quartet.with(Util.getKey(e1), Util.getValue(e1), Util.getKey(e2), Util.getValue(e2));
+						//
+					} // if
+						//
+					return null;
+					//
+				}));
+		//
+		Quartet<String, String, String, String> quartet = null;
+		//
 		String cpk, cpv;
 		//
-		for (final Entry<String, String> e1 : entries) {
+		String s1, s2;
+		//
+		for (int i = 0; i < IterableUtils.size(quartets); i++) {
 			//
+			if ((quartet = IterableUtils.get(quartets, i)) == null
+					|| Boolean.logicalAnd(Objects.equals(s1 = IValue0Util.getValue0(quartet), quartet.getValue2()),
+							Objects.equals(s2 = Util.getValue1(quartet), quartet.getValue3()))) {
+				//
+				continue;
+				//
+			} // if
+				//
 			for (int j = 0; j < IterableUtils.size(lines); j++) {
 				//
 				if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 						"^(\\p{InCJKUnifiedIdeographs}{6})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-						IterableUtils.get(lines, j))) && Util.groupCount(m2) > 1
-						&& StringUtils.isNotBlank(csk = getCommonSuffix(g21 = Util.group(m2, 1), Util.getKey(e1)))
-						&& StringUtils.isNotBlank(csv = getCommonSuffix(g22 = Util.group(m2, 2), Util.getValue(e1)))) {
+						IterableUtils.get(lines, j)))
+						&& Util.groupCount(m2) > 1
+						&& StringUtils.isNotBlank(
+								csk = getCommonSuffix(g21 = Util.group(m2, 1), IValue0Util.getValue0(quartet)))
+						&& StringUtils
+								.isNotBlank(csv = getCommonSuffix(g22 = Util.group(m2, 2), Util.getValue1(quartet)))) {
 					//
 					MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g22, csk, csv));
 					//
@@ -267,24 +300,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 			} // for
 				//
-			for (final Entry<String, String> e2 : entries) {
+			if (Boolean.logicalAnd(StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(s1, quartet.getValue2())),
+					StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(s2, quartet.getValue3())))) {
 				//
-				if (Objects.equals(e1, e2)) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (Boolean.logicalAnd(
-						StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(Util.getKey(e1), Util.getKey(e2))),
-						StringUtils
-								.isNotBlank(cpv = StringUtils.getCommonPrefix(Util.getValue(e1), Util.getValue(e2))))) {
-					//
-					MultimapUtil.put(multimap, cpk, cpv);
-					//
-				} // if
-					//
-			} // for
+				MultimapUtil.put(multimap, cpk, cpv);
+				//
+			} // if
 				//
 		} // for
 			//
