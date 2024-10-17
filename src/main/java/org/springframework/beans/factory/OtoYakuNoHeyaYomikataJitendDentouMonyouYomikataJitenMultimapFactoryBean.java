@@ -263,14 +263,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		Quartet<String, String, String, String> quartet = null;
 		//
-		String cpk, cpv;
-		//
-		String s1, s2;
+		String cpk, cpv, s1, s2;
 		//
 		for (int i = 0; i < IterableUtils.size(quartets); i++) {
 			//
 			if ((quartet = IterableUtils.get(quartets, i)) == null
-					|| Boolean.logicalAnd(Objects.equals(s1 = IValue0Util.getValue0(quartet), quartet.getValue2()),
+					|| Boolean.logicalAnd(Objects.equals(s1 = IValue0Util.getValue0(quartet), Util.getValue2(quartet)),
 							Objects.equals(s2 = Util.getValue1(quartet), quartet.getValue3()))) {
 				//
 				continue;
@@ -300,7 +298,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 			} // for
 				//
-			if (Boolean.logicalAnd(StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(s1, quartet.getValue2())),
+			if (Boolean.logicalAnd(
+					StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(s1, Util.getValue2(quartet))),
 					StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(s2, quartet.getValue3())))) {
 				//
 				MultimapUtil.put(multimap, cpk, cpv);

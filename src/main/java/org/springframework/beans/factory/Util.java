@@ -76,6 +76,7 @@ import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.javatuples.valueintf.IValue1;
+import org.javatuples.valueintf.IValue2;
 import org.jsoup.nodes.TextNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -740,6 +741,10 @@ abstract class Util {
 	@Nullable
 	static <X> X getValue1(@Nullable final IValue1<X> instance) {
 		return instance != null ? instance.getValue1() : null;
+	}
+
+	static <X> X getValue2(final IValue2<X> instance) {
+		return instance != null ? instance.getValue2() : null;
 	}
 
 	private static Map<String, FailableFunction<Object, Object, Exception>> STRING_FAILABLE_BI_FUNCTION_MAP = null;
