@@ -210,35 +210,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		MultimapUtil.put(multimap, g13, g14);
 		//
-		Matcher m2;
+		final Entry<Multimap<String, String>, IntCollection> entry = toMultimapAndIntCollection2(patternMap, lines,
+				Pair.of(g13, g14));
 		//
-		String g21, g22, csk, csv, line, lcsk, lcsv;
+		MultimapUtil.putAll(multimap, Util.getKey(entry));
 		//
-		for (int j = 0; j < IterableUtils.size(lines); j++) {
-			//
-			if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-					line = IterableUtils.get(lines, j))) && Util.groupCount(m2) > 3) {
-				//
-				MultimapUtil.putAll(multimap, ImmutableMultimap.of(Util.group(m2, 1), Util.group(m2, 2),
-						Util.group(m2, 3), Util.group(m2, 4)));
-				//
-				IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), j);
-				//
-			} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-					line)) && Util.groupCount(m2) > 1
-					&& StringUtils.isNotBlank(lcsk = longestCommonSubstring(g21 = Util.group(m2, 1), g13))
-					&& StringUtils.isNotBlank(lcsv = longestCommonSubstring(g22 = Util.group(m2, 2), g14))) {
-				//
-				MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g22, lcsk, lcsv));
-				//
-				IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), j);
-				//
-			} // if
-				//
-		} // for
-			//
+		IntCollectionUtil.addAllInts(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
+				Util.getValue(entry));
+		//
 		final List<Entry<String, String>> list = testAndApply(Objects::nonNull, MultimapUtil.entries(multimap),
 				ArrayList::new, null);
 		//
@@ -247,7 +226,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		Quartet<String, String, String, String> quartet = null;
 		//
-		String cpk, cpv, s1, s2, s3, s4;
+		String g21, g22, csk, csv, cpk, cpv, s1, s2, s3, s4;
+		//
+		Matcher m2;
 		//
 		for (int i = 0; i < IterableUtils.size(quartets); i++) {
 			//
@@ -284,6 +265,52 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(s2, s4)))) {
 				//
 				MultimapUtil.put(multimap, cpk, cpv);
+				//
+			} // if
+				//
+		} // for
+			//
+		return Pair.of(multimap, intCollection);
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection2(
+			final PatternMap patternMap, final Iterable<String> lines, final Entry<String, String> entry) {
+		//
+		Matcher m2;
+		//
+		String line, lcsk, lcsv, g21, g22;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		IntCollection intCollection = null;
+		//
+		final String g13 = Util.getKey(entry);
+		//
+		final String g14 = Util.getValue(entry);
+		//
+		for (int j = 0; j < IterableUtils.size(lines); j++) {
+			//
+			if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+					line = IterableUtils.get(lines, j))) && Util.groupCount(m2) > 3) {
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						ImmutableMultimap.of(Util.group(m2, 1), Util.group(m2, 2), Util.group(m2, 3),
+								Util.group(m2, 4)));
+				//
+				IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), j);
+				//
+			} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+					line)) && Util.groupCount(m2) > 1
+					&& StringUtils.isNotBlank(lcsk = longestCommonSubstring(g21 = Util.group(m2, 1), g13))
+					&& StringUtils.isNotBlank(lcsv = longestCommonSubstring(g22 = Util.group(m2, 2), g14))) {
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						ImmutableMultimap.of(g21, g22, lcsk, lcsv));
+				//
+				IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), j);
 				//
 			} // if
 				//

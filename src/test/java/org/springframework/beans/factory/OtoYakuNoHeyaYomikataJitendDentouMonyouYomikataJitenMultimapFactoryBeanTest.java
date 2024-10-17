@@ -167,8 +167,10 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 			//
 			toString = Objects.toString(m);
 			//
-			if (Objects.equals(name, "getCommonSuffix")
-					&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class })) {
+			if ((Objects.equals(name, "getCommonSuffix")
+					&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class }))
+					|| (Objects.equals(name, "toMultimapAndIntCollection2") && Arrays.equals(parameterTypes,
+							new Class<?>[] { PatternMap.class, Iterable.class, Entry.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
