@@ -212,7 +212,7 @@ abstract class Util {
 		}
 	}
 
-	static <T> void accept(final ObjIntConsumer<T> instance, final T t, final int value) {
+	static <T> void accept(@Nullable final ObjIntConsumer<T> instance, final T t, final int value) {
 		if (instance != null) {
 			instance.accept(t, value);
 		}
