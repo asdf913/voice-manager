@@ -16,6 +16,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.d2ab.collection.ints.IntCollection;
 import org.d2ab.function.ObjIntPredicate;
+import org.javatuples.Quartet;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -170,7 +171,9 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 			if ((Objects.equals(name, "getCommonSuffix")
 					&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class }))
 					|| (Objects.equals(name, "toMultimapAndIntCollection2") && Arrays.equals(parameterTypes,
-							new Class<?>[] { PatternMap.class, Iterable.class, Entry.class }))) {
+							new Class<?>[] { PatternMap.class, Iterable.class, Entry.class }))
+					|| (Objects.equals(name, "toMultimapAndIntCollection4A") && Arrays.equals(parameterTypes,
+							new Class<?>[] { PatternMap.class, IntObjectPair.class, Iterable.class, Quartet.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
