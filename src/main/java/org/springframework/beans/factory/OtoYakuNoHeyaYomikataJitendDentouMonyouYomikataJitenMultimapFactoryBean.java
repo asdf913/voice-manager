@@ -214,7 +214,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							//
 							testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b),
 									intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), j,
-									(a, b) -> IntCollectionUtil.addInt(a, b));
+									IntCollectionUtil::addInt);
 							//
 							break;
 							//
