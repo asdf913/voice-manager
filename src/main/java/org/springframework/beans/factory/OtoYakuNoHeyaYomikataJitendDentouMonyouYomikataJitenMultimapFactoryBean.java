@@ -410,14 +410,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
-		final String g11 = Util.group(m1, 1);
-		//
-		final String g12 = Util.group(m1, 2);
-		//
-		final String g13 = Util.group(m1, 3);
-		//
-		final String g14 = Util.group(m1, 4);
-		//
 		Matcher m2;
 		//
 		IntCollection intCollection = null;
@@ -425,7 +417,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		Multimap<String, String> multimap = null;
 		//
 		final Entry<Multimap<String, String>, IntCollection> entry = toMultimapAndIntCollection4A(patternMap, iop,
-				lines, Quartet.with(g11, g12, g13, g14));
+				lines, Quartet.with(Util.group(m1, 1), Util.group(m1, 2), Util.group(m1, 3), Util.group(m1, 4)));
 		//
 		IntCollectionUtil.addAllInts(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
 				Util.getValue(entry));
