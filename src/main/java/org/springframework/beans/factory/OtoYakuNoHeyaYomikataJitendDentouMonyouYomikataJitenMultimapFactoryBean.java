@@ -418,8 +418,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String g14 = Util.group(m1, 4);
 		//
-		String line;
-		//
 		Matcher m2;
 		//
 		IntCollection intCollection = null;
