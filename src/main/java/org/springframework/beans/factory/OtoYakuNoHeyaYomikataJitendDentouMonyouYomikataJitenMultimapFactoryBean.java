@@ -377,13 +377,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					testAndAccept((a, b) -> StringUtils.length(IValue0Util.getValue0(b)) == 2,
 							multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							Quartet.with(Util.group(m2, 3), g24, cpk, cpv), (a, b) -> {
-								//
-								MultimapUtil.put(a,
-										StringUtils.substringAfter(IValue0Util.getValue0(b), Util.getValue2(b)),
-										StringUtils.substringAfter(Util.getValue1(b), Util.getValue3(b)));
-								//
-							});
+							Quartet.with(Util.group(m2, 3), g24, cpk, cpv),
+							(a, b) -> MultimapUtil.put(a,
+									StringUtils.substringAfter(IValue0Util.getValue0(b), Util.getValue2(b)),
+									StringUtils.substringAfter(Util.getValue1(b), Util.getValue3(b))));
 					//
 				} // if
 					//
