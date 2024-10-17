@@ -12,4 +12,10 @@ public interface IntCollectionUtil {
 		return instance != null ? instance.toIntArray() : null;
 	}
 
+	static void addAllInts(final IntCollection a, final IntCollection b) {
+		if (a != null && b != null) {
+			a.addAllInts(b);
+		}
+	}
+
 }

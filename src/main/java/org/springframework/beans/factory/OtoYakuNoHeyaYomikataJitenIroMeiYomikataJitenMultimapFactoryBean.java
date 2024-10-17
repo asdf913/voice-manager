@@ -2684,25 +2684,19 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		Entry<Multimap<String, String>, IntList> entry = toMultimapAndIntList19A(patternMap, list, i, Pair.of(g2, g3));
 		//
-		addAllInts(intList = ObjectUtils.getIfNull(intList, IntList::create), Util.getValue(entry));
+		IntCollectionUtil.addAllInts(intList = ObjectUtils.getIfNull(intList, IntList::create), Util.getValue(entry));
 		//
 		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.getKey(entry));
 		//
 		// B
 		//
-		addAllInts(intList = ObjectUtils.getIfNull(intList, IntList::create),
+		IntCollectionUtil.addAllInts(intList = ObjectUtils.getIfNull(intList, IntList::create),
 				Util.getValue(entry = toMultimapAndIntList19B(patternMap, list, i, g2, multimap)));
 		//
 		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.getKey(entry));
 		//
 		return Pair.of(multimap, intList);
 		//
-	}
-
-	private static void addAllInts(@Nullable final IntCollection a, @Nullable final IntCollection b) {
-		if (a != null && b != null) {
-			a.addAllInts(b);
-		}
 	}
 
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList19A(final PatternMap patternMap,
@@ -2791,7 +2785,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 				// B1
 				//
-			addAllInts(intList = ObjectUtils.getIfNull(intList, IntList::create),
+			IntCollectionUtil.addAllInts(intList = ObjectUtils.getIfNull(intList, IntList::create),
 					Util.getValue(entry = toMultimapAndIntList19B1(patternMap, s, k)));
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
@@ -2799,7 +2793,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			// B2
 			//
-			addAllInts(intList = ObjectUtils.getIfNull(intList, IntList::create),
+			IntCollectionUtil.addAllInts(intList = ObjectUtils.getIfNull(intList, IntList::create),
 					Util.getValue(entry = toMultimapAndIntList19B2(patternMap, s, k, mm)));
 			//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
@@ -2935,7 +2929,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			MultimapUtil.putAll(multimap, Util.getKey(entry));
 			//
-			addAllInts(intList, Util.getValue(entry));
+			IntCollectionUtil.addAllInts(intList, Util.getValue(entry));
 			//
 			// B
 			//
@@ -3024,7 +3018,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.getKey(entry = toMultimapAndIntList20A1(patternMap, IntObjectPair.of(k, s), map)));
 			//
-			addAllInts(intList = ObjectUtils.getIfNull(intList, IntList::create), Util.getValue(entry));
+			IntCollectionUtil.addAllInts(intList = ObjectUtils.getIfNull(intList, IntList::create),
+					Util.getValue(entry));
 			//
 			if ((Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap,
 					"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}\\p{InEnclosedAlphanumerics}(\\p{InHiragana}+)\\p{InKatakana}\\p{InEnclosedAlphanumerics}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InKatakana}]+$"),
@@ -3046,7 +3041,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Util.getKey(entry = toMultimapAndIntList20A1(patternMap, list, k, g11)));
 				//
-				addAllInts(intList = ObjectUtils.getIfNull(intList, IntList::create), Util.getValue(entry));
+				IntCollectionUtil.addAllInts(intList = ObjectUtils.getIfNull(intList, IntList::create),
+						Util.getValue(entry));
 				//
 			} // if
 				//

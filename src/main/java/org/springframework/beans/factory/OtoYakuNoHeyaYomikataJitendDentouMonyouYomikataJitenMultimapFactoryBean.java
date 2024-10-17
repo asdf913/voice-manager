@@ -75,18 +75,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					Util.getKey(entry = toMultimap(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
 							IntObjectPair.of(i, IterableUtils.get(lines, i)), lines)));
 			//
-			addAllInts(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), Util.getValue(entry));
+			IntCollectionUtil.addAllInts(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
+					Util.getValue(entry));
 			//
 		} // for
 			//
 		return multimap;
 		//
-	}
-
-	private static void addAllInts(final IntCollection a, final IntCollection b) {
-		if (a != null && b != null) {
-			a.addAllInts(b);
-		}
 	}
 
 	@Nullable
