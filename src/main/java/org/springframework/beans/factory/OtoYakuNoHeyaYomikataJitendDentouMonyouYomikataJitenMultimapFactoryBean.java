@@ -237,55 +237,56 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
 		//
-		if (Util.iterator(entries) != null) {
+		if (Util.iterator(entries) == null) {
 			//
-			String cpk, cpv;
+			return Pair.of(multimap, intCollection);
 			//
-			for (final Entry<String, String> e1 : entries) {
+		} // if
+			//
+		String cpk, cpv;
+		//
+		for (final Entry<String, String> e1 : entries) {
+			//
+			for (int j = 0; j < IterableUtils.size(lines); j++) {
 				//
-				for (int j = 0; j < IterableUtils.size(lines); j++) {
+				if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}{6})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+						IterableUtils.get(lines, j))) && Util.groupCount(m2) > 1
+						&& StringUtils.isNotBlank(csk = getCommonSuffix(g21 = Util.group(m2, 1), Util.getKey(e1)))
+						&& StringUtils.isNotBlank(csv = getCommonSuffix(g22 = Util.group(m2, 2), Util.getValue(e1)))) {
 					//
-					if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-							"^(\\p{InCJKUnifiedIdeographs}{6})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-							IterableUtils.get(lines, j))) && Util.groupCount(m2) > 1
-							&& StringUtils.isNotBlank(csk = getCommonSuffix(g21 = Util.group(m2, 1), Util.getKey(e1)))
-							&& StringUtils
-									.isNotBlank(csv = getCommonSuffix(g22 = Util.group(m2, 2), Util.getValue(e1)))) {
-						//
-						MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g22, csk, csv));
-						//
-						testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b),
-								intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), j,
-								IntCollectionUtil::addInt);
-						//
-						break;
-						//
-					} // if
-						//
-				} // for
+					MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g22, csk, csv));
 					//
-				for (final Entry<String, String> e2 : entries) {
+					testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b),
+							intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), j,
+							IntCollectionUtil::addInt);
 					//
-					if (Objects.equals(e1, e2)) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (Boolean.logicalAnd(
-							StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(Util.getKey(e1), Util.getKey(e2))),
-							StringUtils.isNotBlank(
-									cpv = StringUtils.getCommonPrefix(Util.getValue(e1), Util.getValue(e2))))) {
-						//
-						MultimapUtil.put(multimap, cpk, cpv);
-						//
-					} // if
-						//
-				} // for
+					break;
+					//
+				} // if
 					//
 			} // for
 				//
-		} // if
+			for (final Entry<String, String> e2 : entries) {
+				//
+				if (Objects.equals(e1, e2)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (Boolean.logicalAnd(
+						StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(Util.getKey(e1), Util.getKey(e2))),
+						StringUtils
+								.isNotBlank(cpv = StringUtils.getCommonPrefix(Util.getValue(e1), Util.getValue(e2))))) {
+					//
+					MultimapUtil.put(multimap, cpk, cpv);
+					//
+				} // if
+					//
+			} // for
+				//
+		} // for
 			//
 		return Pair.of(multimap, intCollection);
 		//
