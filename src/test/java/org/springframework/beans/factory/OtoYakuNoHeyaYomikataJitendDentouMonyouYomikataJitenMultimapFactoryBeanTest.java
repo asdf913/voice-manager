@@ -13,6 +13,8 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.tuple.Pair;
+import org.d2ab.collection.ints.IntCollection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -233,23 +235,24 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 			//
 		final PatternMap patternMap = new PatternMapImpl();
 		//
-		Assertions.assertNull(toMultimap(patternMap, null, null));
+		Assertions.assertEquals(Pair.of(null, null), toMultimap(patternMap, null, null));
 		//
-		Assertions.assertNull(toMultimap(patternMap, IntObjectPair.of(ZERO, null), null));
+		Assertions.assertEquals(Pair.of(null, null), toMultimap(patternMap, IntObjectPair.of(ZERO, null), null));
 		//
-		Assertions.assertEquals("{家形文様=[いえがたもんよう], 文様=[もんよう], 家形=[いえがた]}", Objects.toString(toMultimap(patternMap,
-				IntObjectPair.of(ZERO, "日本の伝統文様（もんよう）は美しく、心が和みます｡"), Arrays.asList(null, "家形文様（いえがたもんよう）"))));
+		Assertions.assertEquals("({家形文様=[いえがたもんよう], 文様=[もんよう], 家形=[いえがた]},[0, 1])",
+				Objects.toString(toMultimap(patternMap, IntObjectPair.of(ZERO, "日本の伝統文様（もんよう）は美しく、心が和みます｡"),
+						Arrays.asList(null, "家形文様（いえがたもんよう）"))));
 		//
 	}
 
-	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final IntObjectPair<String> iop,
-			final Iterable<String> lines) throws Throwable {
+	private static Entry<Multimap<String, String>, IntCollection> toMultimap(final PatternMap patternMap,
+			final IntObjectPair<String> iop, final Iterable<String> lines) throws Throwable {
 		try {
 			final Object obj = METHOD_TO_MULTI_MAP.invoke(null, patternMap, iop, lines);
 			if (obj == null) {
 				return null;
-			} else if (obj instanceof Multimap) {
-				return (Multimap) obj;
+			} else if (obj instanceof Entry) {
+				return (Entry) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
