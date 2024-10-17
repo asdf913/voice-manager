@@ -338,8 +338,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 
 	private static <T> void testAndAccept(@Nullable final ObjIntPredicate<T> predicate, final T a, final int b,
 			@Nullable final ObjIntConsumer<T> consumer) {
-		if (predicate != null && predicate.test(a, b) && consumer != null) {
-			consumer.accept(a, b);
+		if (predicate != null && predicate.test(a, b)) {
+			Util.accept(consumer, a, b);
 		}
 	}
 

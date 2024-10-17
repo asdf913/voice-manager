@@ -883,4 +883,15 @@ class UtilTest {
 		}
 	}
 
+	@Test
+	void testAccept() {
+		//
+		Assertions.assertDoesNotThrow(() -> Util.accept((a, b) -> {
+		}, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> Util.accept((a, b) -> {
+		}, null, 0));
+		//
+	}
+
 }

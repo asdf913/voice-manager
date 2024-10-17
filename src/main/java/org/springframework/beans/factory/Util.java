@@ -30,6 +30,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.IntUnaryOperator;
+import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.MatchResult;
@@ -208,6 +209,12 @@ abstract class Util {
 	static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, final T t, final U u) {
 		if (instance != null) {
 			instance.accept(t, u);
+		}
+	}
+
+	static <T> void accept(final ObjIntConsumer<T> instance, final T t, final int value) {
+		if (instance != null) {
+			instance.accept(t, value);
 		}
 	}
 
