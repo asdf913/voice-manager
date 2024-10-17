@@ -122,7 +122,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		//
 		Object invokeStaticMethod;
 		//
-		String toString;
+		String name, toString;
 		//
 		Class<?>[] parameterTypes;
 		//
@@ -150,12 +150,25 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 					//
 			} // for
 				//
+			if (Objects.equals(name = Util.getName(m), "toQuartet")
+					&& Arrays.equals(parameterTypes, new Class<?>[] { Iterable.class })) {
+				//
+				final Method m1 = m;
+				//
+				final Object[] array = toArray(list);
+				//
+				Assertions.assertThrows(IllegalStateException.class, () -> Narcissus.invokeStaticMethod(m1, array));
+				//
+				continue;
+				//
+			} // if
+				//
 			invokeStaticMethod = Narcissus.invokeStaticMethod(m, toArray(list));
 			//
 			toString = Objects.toString(m);
 			//
-			if ((Objects.equals(Util.getName(m), "getCommonSuffix")
-					&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class }))) {
+			if (Objects.equals(name, "getCommonSuffix")
+					&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class })) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//

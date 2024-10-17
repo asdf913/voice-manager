@@ -243,23 +243,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				ArrayList::new, null);
 		//
 		final List<Quartet<String, String, String, String>> quartets = Util
-				.toList(Util.map(Util.stream(Lists.cartesianProduct(list, list)), x -> {
-					//
-					final int size = IterableUtils.size(x);
-					//
-					if (size > 1) {
-						//
-						final Entry<String, String> e1 = IterableUtils.get(x, 0);
-						//
-						final Entry<String, String> e2 = IterableUtils.get(x, 1);
-						//
-						return Quartet.with(Util.getKey(e1), Util.getValue(e1), Util.getKey(e2), Util.getValue(e2));
-						//
-					} // if
-						//
-					return null;
-					//
-				}));
+				.toList(Util.map(Util.stream(Lists.cartesianProduct(list, list)), x -> toQuartet(x)));
 		//
 		Quartet<String, String, String, String> quartet = null;
 		//
@@ -306,6 +290,22 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		} // for
 			//
 		return Pair.of(multimap, intCollection);
+		//
+	}
+
+	private static <K, V> Quartet<K, V, K, V> toQuartet(final Iterable<Entry<K, V>> entries) {
+		//
+		if (IterableUtils.size(entries) != 2) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Entry<K, V> e1 = IterableUtils.get(entries, 0);
+		//
+		final Entry<K, V> e2 = IterableUtils.get(entries, 1);
+		//
+		return Quartet.with(Util.getKey(e1), Util.getValue(e1), Util.getKey(e2), Util.getValue(e2));
 		//
 	}
 
