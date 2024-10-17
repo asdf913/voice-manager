@@ -44,7 +44,7 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.TextStringBuilder;
 import org.d2ab.collection.ints.IntCollectionUtil;
-import org.d2ab.collection.ints.IntIterable;
+import org.d2ab.collection.ints.IntIterableUtil;
 import org.d2ab.collection.ints.IntList;
 import org.d2ab.function.ObjIntPredicate;
 import org.d2ab.function.ObjObjIntFunction;
@@ -132,7 +132,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		for (int i = 0; i < IterableUtils.size(list); i++) {
 			//
-			if (containsInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i)) {
+			if (IntIterableUtil.containsInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i)) {
 				//
 				removeInt(intList, i);
 				//
@@ -1942,7 +1942,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			forEach(testAndApply(Objects::nonNull, IntCollectionUtil.toIntArray(Util.getValue(entry)), IntStream::of,
 					null), x -> {
-						if (!containsInt(intList, x)) {
+						if (!IntIterableUtil.containsInt(intList, x)) {
 							intList.add(x);
 						}
 					});
@@ -2192,7 +2192,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				if (Util.matches(m = Util.matcher(PatternMap.getPattern(patternMap, pattern), StringUtils.trim(s)))
 						&& Util.groupCount(m) > 1) {
 					//
-					if (!containsInt(intList = ObjectUtils.getIfNull(intList, IntList::create), index)) {
+					if (!IntIterableUtil.containsInt(intList = ObjectUtils.getIfNull(intList, IntList::create),
+							index)) {
 						//
 						IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), index);
 						//
@@ -2595,7 +2596,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11 = Util.group(m, 1), g1))
 						&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12 = Util.group(m, 2), g2))) {
 					//
-					if (!containsInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i)) {
+					if (!IntIterableUtil.containsInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i)) {
 						//
 						IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i);
 						//
@@ -2776,7 +2777,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		for (int k = 0; k < IterableUtils.size(list); k++) {
 			//
 			if (Util.or(k == i, StringUtils.isBlank(StringUtils.getCommonPrefix(s = IterableUtils.get(list, k), g2)),
-					containsInt(intList, k))) {
+					IntIterableUtil.containsInt(intList, k))) {
 				//
 				continue;
 				//
@@ -2812,7 +2813,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							StringUtils.isNotBlank(csv = getCommonSuffix(g12, value)),
 							!Objects.equals(key, StringUtils.replace(g11, lcs, "")))) {
 						//
-						testAndAccept((a, b) -> !containsInt(a, b),
+						testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b),
 								intList = ObjectUtils.getIfNull(intList, IntList::create), k,
 								IntCollectionUtil::addInt);
 						//
@@ -2884,7 +2885,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, Util.getValue(en))),
 						!Objects.equals(key, StringUtils.replace(g11, lcs, "")))) {
 					//
-					testAndAccept((a, b) -> !containsInt(a, b),
+					testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b),
 							intList = ObjectUtils.getIfNull(intList, IntList::create), index,
 							IntCollectionUtil::addInt);
 					//
@@ -4054,10 +4055,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	@Nullable
 	private static IntStream map(@Nullable final IntStream instance, @Nullable final IntUnaryOperator mapper) {
 		return instance != null && mapper != null ? instance.map(mapper) : instance;
-	}
-
-	private static boolean containsInt(@Nullable final IntIterable instance, final int o) {
-		return instance != null && instance.containsInt(o);
 	}
 
 	private static void removeInt(@Nullable final IntList instance, final int o) {

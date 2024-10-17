@@ -19,6 +19,7 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.d2ab.collection.ints.IntCollection;
 import org.d2ab.collection.ints.IntCollectionUtil;
+import org.d2ab.collection.ints.IntIterableUtil;
 import org.d2ab.collection.ints.IntList;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.NodeUtil;
@@ -65,7 +66,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		for (int i = 0; i < size; i++) {
 			//
-			if (intCollection != null && intCollection.containsInt(i)) {
+			if (IntIterableUtil.containsInt(intCollection, i)) {
 				//
 				continue;
 				//
