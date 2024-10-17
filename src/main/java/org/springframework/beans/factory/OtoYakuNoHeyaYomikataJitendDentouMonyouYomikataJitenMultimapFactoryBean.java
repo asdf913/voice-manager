@@ -398,7 +398,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection4(
-			final PatternMap patternMap,  final IntObjectPair<String> iop, final Iterable<String> lines) {
+			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines) {
 		//
 		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
@@ -518,10 +518,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 				if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 						"^\\p{InKatakana}+(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-						line = IterableUtils.get(lines, i)))
+						IterableUtils.get(lines, i)))
 						&& Util.groupCount(m2) > 4
 						&& StringUtils.isNotBlank(sb = StringUtils.substringBetween(g25 = Util.group(m2, 5),
-								g21 = Util.group(m2, 1), Util.group(m2, 3)))
+								Util.group(m2, 1), Util.group(m2, 3)))
 						&& Util.iterator(entries = MultimapUtil.entries(multimap)) != null) {
 					//
 					for (final Entry<String, String> entry : entries) {
