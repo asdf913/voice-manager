@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -332,7 +334,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			final String g11 = Util.group(m1, 1);
 			//
-			String line, cpk, cpv, g12, g13, g14, g23, g24;
+			String line, cpk, cpv, g12, g13, g14, g24;
 			//
 			Matcher m2;
 			//
@@ -373,13 +375,16 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 									StringUtils.substringAfter(g13, cpk), StringUtils.substringAfter(g14, cpv), cpk,
 									cpv));
 					//
-					if (StringUtils.length(g23 = Util.group(m2, 3)) == 2) {
-						//
-						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-								StringUtils.substringAfter(g23, cpk), StringUtils.substringAfter(g24, cpv));
-						//
-					} // if
-						//
+					testAndAccept((a, b) -> StringUtils.length(IValue0Util.getValue0(b)) == 2,
+							multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Quartet.with(Util.group(m2, 3), g24, cpk, cpv), (a, b) -> {
+								//
+								MultimapUtil.put(a,
+										StringUtils.substringAfter(IValue0Util.getValue0(b), Util.getValue2(b)),
+										StringUtils.substringAfter(Util.getValue1(b), Util.getValue3(b)));
+								//
+							});
+					//
 				} // if
 					//
 			} // for
@@ -390,6 +395,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		return null;
 		//
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (Util.test(instance, t, u)) {
+			Util.accept(consumer, t, u);
+		} // if
 	}
 
 	private static <K, V> Quartet<K, V, K, V> toQuartet(final Iterable<Entry<K, V>> entries) {
