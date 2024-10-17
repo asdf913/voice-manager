@@ -15,6 +15,7 @@ import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -109,7 +110,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		for (int j = 0; j < IterableUtils.size(functions); j++) {
 			//
-			if ((entry = TriFunctionUtil.apply(IterableUtils.get(functions, j), patternMap, iop, lines)) != null) {
+			if ((entry = TriFunctionUtil.apply(IterableUtils.get(functions, j), patternMap, iop, lines)) != null
+					&& !MultimapUtil.isEmpty(Util.getKey(entry)) && CollectionUtils.isNotEmpty(Util.getValue(entry))) {
 				//
 				return entry;
 				//
