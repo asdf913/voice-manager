@@ -677,11 +677,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	}
 
 	@Nullable
-	private static <X> X getValue3(@Nullable final IValue3<X> instance) {
-		return instance != null ? instance.getValue3() : null;
-	}
-
-	@Nullable
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList4b(final int i,
 			final PatternMap patternMap, final Entry<String, String> entry, final String s2) {
 		//
@@ -850,7 +845,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						Boolean.logicalAnd(
 								Objects.equals(a = IValue0Util.getValue0(quartet = IterableUtils.get(quartets, j)),
 										c = Util.getValue2(quartet)),
-								Objects.equals(b = Util.getValue1(quartet), d = getValue3(quartet))),
+								Objects.equals(b = Util.getValue1(quartet), d = Util.getValue3(quartet))),
 						!StringUtils.startsWith(a, c), !StringUtils.startsWith(b, d))) {
 					//
 					continue;
@@ -2019,7 +2014,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		final String g3 = Util.getValue2(quartet);
 		//
-		final String g4 = getValue3(quartet);
+		final String g4 = Util.getValue3(quartet);
 		//
 		for (final String pattern : patterns) {
 			//
@@ -2121,7 +2116,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						Quintet.with(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g21, temp,
 								cp2, cs2),
 						x -> MultimapUtil.put(IValue0Util.getValue0(x), StringUtils.substring(Util.getValue1(x), 1, 2),
-								StringUtils.substringBetween(Util.getValue2(x), getValue3(x), getValue4(x))));
+								StringUtils.substringBetween(Util.getValue2(x), Util.getValue3(x), getValue4(x))));
 				//
 			} // for
 				//
@@ -3719,7 +3714,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			if (Boolean.logicalAnd(
 					StringUtils.startsWith(k2 = Util.getValue2(quartet), k1 = IValue0Util.getValue0(quartet)),
-					StringUtils.startsWith(v2 = getValue3(quartet), v1 = Util.getValue1(quartet)))) {
+					StringUtils.startsWith(v2 = Util.getValue3(quartet), v1 = Util.getValue1(quartet)))) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						StringUtils.substringAfter(k2, k1), StringUtils.substringAfter(v2, v1));
@@ -3801,7 +3796,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		for (int j = 0; j < IterableUtils.size(quartets); j++) {
 			//
 			if (Objects.equals(v1 = Util.getValue1(quartet = IterableUtils.get(quartets, j)),
-					v2 = getValue3(quartet))) {
+					v2 = Util.getValue3(quartet))) {
 				//
 				continue;
 				//

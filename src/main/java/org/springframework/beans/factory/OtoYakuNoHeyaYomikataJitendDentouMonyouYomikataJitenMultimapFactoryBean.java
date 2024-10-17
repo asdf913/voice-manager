@@ -263,13 +263,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		Quartet<String, String, String, String> quartet = null;
 		//
-		String cpk, cpv, s1, s2;
+		String cpk, cpv, s1, s2, s3, s4;
 		//
 		for (int i = 0; i < IterableUtils.size(quartets); i++) {
 			//
-			if ((quartet = IterableUtils.get(quartets, i)) == null
-					|| Boolean.logicalAnd(Objects.equals(s1 = IValue0Util.getValue0(quartet), Util.getValue2(quartet)),
-							Objects.equals(s2 = Util.getValue1(quartet), quartet.getValue3()))) {
+			if (Boolean.logicalAnd(
+					Objects.equals(s1 = IValue0Util.getValue0(quartet = IterableUtils.get(quartets, i)),
+							s3 = Util.getValue2(quartet)),
+					Objects.equals(s2 = Util.getValue1(quartet), s4 = Util.getValue3(quartet)))) {
 				//
 				continue;
 				//
@@ -279,12 +280,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 						"^(\\p{InCJKUnifiedIdeographs}{6})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-						IterableUtils.get(lines, j)))
-						&& Util.groupCount(m2) > 1
-						&& StringUtils.isNotBlank(
-								csk = getCommonSuffix(g21 = Util.group(m2, 1), IValue0Util.getValue0(quartet)))
-						&& StringUtils
-								.isNotBlank(csv = getCommonSuffix(g22 = Util.group(m2, 2), Util.getValue1(quartet)))) {
+						IterableUtils.get(lines, j))) && Util.groupCount(m2) > 1
+						&& StringUtils.isNotBlank(csk = getCommonSuffix(g21 = Util.group(m2, 1), s1))
+						&& StringUtils.isNotBlank(csv = getCommonSuffix(g22 = Util.group(m2, 2), s2))) {
 					//
 					MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g22, csk, csv));
 					//
@@ -298,9 +296,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 			} // for
 				//
-			if (Boolean.logicalAnd(
-					StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(s1, Util.getValue2(quartet))),
-					StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(s2, quartet.getValue3())))) {
+			if (Boolean.logicalAnd(StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(s1, s3)),
+					StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(s2, s4)))) {
 				//
 				MultimapUtil.put(multimap, cpk, cpv);
 				//
