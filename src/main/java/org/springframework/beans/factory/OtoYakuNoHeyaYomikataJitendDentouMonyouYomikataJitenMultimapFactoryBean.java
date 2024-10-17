@@ -490,9 +490,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cpk,
 								cpv);
 						//
-					} else if (Boolean.logicalAnd(StringUtils.isNotBlank(cpk),
-							StringUtils.isNotBlank(csk = getCommonSuffix(g13, g21)))
-							&& StringUtils.isNotBlank(csv = getCommonSuffix(g14, g22))) {
+					} else if (Util.and(StringUtils.isNotBlank(cpk),
+							StringUtils.isNotBlank(csk = getCommonSuffix(g13, g21)),
+							StringUtils.isNotBlank(csv = getCommonSuffix(g14, g22)))) {
 						//
 						MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 								ImmutableMultimap.of(csk, csv, StringUtils.substringBefore(g21, csk),
@@ -503,7 +503,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				} // if
 					//
 			} // for
-				//
 				//
 			Iterable<Entry<String, String>> entries = null;
 			//
