@@ -485,7 +485,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 								StringUtils.substringAfter(g13, cpk), StringUtils.substringAfter(g14, cpv));
 						//
-					} else if (StringUtils.isNotBlank(cpk) && StringUtils.isNotBlank(cpv)) {
+					} else if (Boolean.logicalAnd(StringUtils.isNotBlank(cpk), StringUtils.isNotBlank(cpv))) {
 						//
 						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cpk,
 								cpv);
