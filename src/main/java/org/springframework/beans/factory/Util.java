@@ -748,7 +748,7 @@ abstract class Util {
 		return instance != null ? instance.getValue2() : null;
 	}
 
-	static <X> X getValue3(final IValue3<X> instance) {
+	static <X> X getValue3(@Nullable final IValue3<X> instance) {
 		return instance != null ? instance.getValue3() : null;
 	}
 
