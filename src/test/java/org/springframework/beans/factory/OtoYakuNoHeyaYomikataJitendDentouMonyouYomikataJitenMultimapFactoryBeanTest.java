@@ -14,7 +14,6 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
-import org.apache.commons.lang3.tuple.Pair;
 import org.d2ab.collection.ints.IntCollection;
 import org.d2ab.function.ObjIntPredicate;
 import org.junit.jupiter.api.Assertions;
