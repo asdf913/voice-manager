@@ -232,9 +232,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							//
 						} // if
 							//
-						if (StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(Util.getKey(e1), Util.getKey(e2)))
-								&& StringUtils.isNotBlank(
-										cpv = StringUtils.getCommonPrefix(Util.getValue(e1), Util.getValue(e2)))) {
+						if (Boolean.logicalAnd(
+								StringUtils.isNotBlank(
+										cpk = StringUtils.getCommonPrefix(Util.getKey(e1), Util.getKey(e2))),
+								StringUtils.isNotBlank(
+										cpv = StringUtils.getCommonPrefix(Util.getValue(e1), Util.getValue(e2))))) {
 							//
 							MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 									cpk, cpv);
