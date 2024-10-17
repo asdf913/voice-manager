@@ -115,7 +115,9 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		//
 		Object invokeStaticMethod;
 		//
-		String toString;
+		String toString, name;
+		//
+		Class<?>[] parameterTypes;
 		//
 		for (int i = ZERO; ms != null && i < ms.length; i++) {
 			//
@@ -127,7 +129,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 				//
 			clear(list = ObjectUtils.getIfNull(list, ArrayList::new));
 			//
-			for (int j = 0; j < Util.length(m.getParameterTypes()); j++) {
+			for (int j = 0; j < Util.length(parameterTypes = m.getParameterTypes()); j++) {
 				//
 				list.add(null);
 				//
@@ -137,8 +139,10 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 			//
 			toString = Objects.toString(m);
 			//
-			if (Objects.equals(Util.getName(m), "getCommonSuffix")
-					&& Arrays.equals(m.getParameterTypes(), new Class<?>[] { String.class, String.class })) {
+			if ((Objects.equals(name = Util.getName(m), "getCommonSuffix")
+					&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class }))
+					|| (Objects.equals(name, "toMultimap") && Arrays.equals(parameterTypes,
+							new Class<?>[] { PatternMap.class, IntObjectPair.class, Iterable.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//

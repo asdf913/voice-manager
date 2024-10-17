@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Map.Entry;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.stream.StreamSupport;
@@ -15,6 +16,10 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.tuple.Pair;
+import org.d2ab.collection.ints.IntCollection;
+import org.d2ab.collection.ints.IntCollectionUtil;
+import org.d2ab.collection.ints.IntList;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
@@ -54,11 +59,23 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final int size = IterableUtils.size(lines);
 		//
+		Entry<Multimap<String, String>, IntCollection> entry = null;
+		//
+		IntCollection intCollection = null;
+		//
 		for (int i = 0; i < size; i++) {
 			//
+			if (intCollection != null && intCollection.containsInt(i)) {
+				//
+				continue;
+				//
+			} // if
+				//
 			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					toMultimap(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
-							IntObjectPair.of(i, IterableUtils.get(lines, i)), lines));
+					Util.getKey(entry = toMultimap(patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
+							IntObjectPair.of(i, IterableUtils.get(lines, i)), lines)));
+			//
+			addAllInts(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), Util.getValue(entry));
 			//
 		} // for
 			//
@@ -66,11 +83,19 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
+	private static void addAllInts(final IntCollection a, final IntCollection b) {
+		if (a != null && b != null) {
+			a.addAllInts(b);
+		}
+	}
+
 	@Nullable
-	private static Multimap<String, String> toMultimap(final PatternMap patternMap, final IntObjectPair<String> iop,
-			final Iterable<String> lines) {
+	private static Entry<Multimap<String, String>, IntCollection> toMultimap(final PatternMap patternMap,
+			final IntObjectPair<String> iop, final Iterable<String> lines) {
 		//
 		Multimap<String, String> multimap = null;
+		//
+		IntCollection intCollection = null;
 		//
 		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InHiragana}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InCJKSymbolsAndPunctuation}\\p{InHalfwidthAndFullwidthForms}]+$"),
@@ -78,6 +103,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		if (Util.matches(m1) && Util.groupCount(m1) > 1) {
 			//
+			if (iop != null) {
+				//
+				IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
+						iop.keyInt());
+				//
+			} // if
+				//
 			final String g12 = Util.group(m1, 2);
 			//
 			Matcher m2 = null;
@@ -101,6 +133,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 									csk = getCommonSuffix(Util.group(m1, 1), g21), csv = getCommonSuffix(g12, g22),
 									StringUtils.substringBefore(g21, csk), StringUtils.substringBefore(g22, csv)));
 					//
+					IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), j);
+					//
 				} // if
 					//
 			} // for
@@ -109,7 +143,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		MultimapUtil.remove(multimap, "入替", "いれかわり");
 		//
-		return multimap;
+		return Pair.of(multimap, intCollection);
 		//
 	}
 
