@@ -9,12 +9,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
 import org.d2ab.collection.ints.IntCollection;
+import org.d2ab.function.ObjIntPredicate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +36,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 
 	private static final String SPACE = " ";
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_COMMON_SUFFIX, METHOD_TO_MULTI_MAP;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_COMMON_SUFFIX, METHOD_TO_MULTI_MAP, METHOD_TEST_AND_ACCEPT;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -49,6 +51,9 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		//
 		(METHOD_TO_MULTI_MAP = clz.getDeclaredMethod("toMultimap", PatternMap.class, IntObjectPair.class,
 				Iterable.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", ObjIntPredicate.class, Object.class,
+				Integer.TYPE, ObjIntConsumer.class)).setAccessible(true);
 		//
 	}
 
@@ -133,8 +138,16 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 			//
 			for (int j = 0; j < Util.length(parameterTypes = m.getParameterTypes()); j++) {
 				//
-				list.add(null);
-				//
+				if (Objects.equals(Integer.TYPE, parameterTypes[j])) {
+					//
+					list.add(Integer.valueOf(0));
+					//
+				} else {
+					//
+					list.add(null);
+					//
+				} // if
+					//
 			} // for
 				//
 			invokeStaticMethod = Narcissus.invokeStaticMethod(m, toArray(list));
@@ -260,6 +273,22 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 				return (Entry) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndAccept() {
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept((a, b) -> true, null, ZERO, null));
+		//
+	}
+
+	private static <T> void testAndAccept(final ObjIntPredicate<T> predicate, final T a, final int b,
+			final ObjIntConsumer<T> consumer) throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, a, b, consumer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

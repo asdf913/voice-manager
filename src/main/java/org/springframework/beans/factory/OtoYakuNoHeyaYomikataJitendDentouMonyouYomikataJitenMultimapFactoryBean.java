@@ -3,8 +3,9 @@ package org.springframework.beans.factory;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.stream.StreamSupport;
@@ -21,6 +22,7 @@ import org.d2ab.collection.ints.IntCollection;
 import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntIterableUtil;
 import org.d2ab.collection.ints.IntList;
+import org.d2ab.function.ObjIntPredicate;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
@@ -210,14 +212,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 									ImmutableMultimap.of(g21, g22, csk, csv));
 							//
-							if (!IntIterableUtil.containsInt(
-									intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), j)) {
-								//
-								IntCollectionUtil.addInt(
-										intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), j);
-								//
-							} // if
-								//
+							testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b),
+									intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), j,
+									(a, b) -> IntCollectionUtil.addInt(a, b));
+							//
 							break;
 							//
 						} // if
@@ -255,6 +253,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		return Pair.of(multimap, intCollection);
 		//
+	}
+
+	private static <T> void testAndAccept(final ObjIntPredicate<T> predicate, final T a, final int b,
+			final ObjIntConsumer<T> consumer) {
+		if (predicate != null && predicate.test(a, b) && consumer != null) {
+			consumer.accept(a, b);
+		}
 	}
 
 	private static String longestCommonSubstring(final String a, final String b) {
