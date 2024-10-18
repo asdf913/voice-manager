@@ -717,42 +717,18 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 										x -> StreamSupport.stream(x, false), null),
 								x -> StringUtils.length(Util.getKey(x)) == 2))));
 		//
+		// C
+		//
 		final List<Entry<String, String>> es3 = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.spliterator(entries), x -> StreamSupport.stream(x, false), null),
 				x -> StringUtils.length(Util.getKey(x)) == 3));
 		//
-		String k1, k2, v1, v2, cpk, cpv;
+		MultimapUtil.putAll(multimap, toMultimap5C(es3));
 		//
-		Entry<String, String> e1, e2;
+		String k1;
 		//
-		for (int i = 0; i < IterableUtils.size(es3); i++) {
-			//
-			for (int j = 0; j < IterableUtils.size(es3); j++) {
-				//
-				if (i == j) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (StringUtils
-						.isNotBlank(cpk = StringUtils.getCommonPrefix(k1 = Util.getKey(e1 = IterableUtils.get(es3, i)),
-								Util.getKey(e2 = IterableUtils.get(es3, j))))
-						&& StringUtils.isNotBlank(
-								cpv = StringUtils.getCommonPrefix(v1 = Util.getValue(e1), Util.getValue(e2)))) {
-					//
-					MultimapUtil.put(multimap, cpk, cpv);
-					//
-					testAndAccept((a, b, c) -> StringUtils.length(b) == 1, multimap,
-							StringUtils.substringAfter(k1, cpk), Pair.of(v1, cpv), (a, b, c) -> MultimapUtil.put(a, b,
-									StringUtils.substringAfter(Util.getKey(c), Util.getValue(c))));
-					//
-				} // if
-					//
-			} // for
-				//
-		} // for
-			//
+		Entry<String, String> e1;
+		//
 		int lk1, ltsb;
 		//
 		Iterable<String> ik, iv;
@@ -813,7 +789,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				testAndApply(Objects::nonNull, Util.spliterator(entries), x -> StreamSupport.stream(x, false), null),
 				x -> StringUtils.length(Util.getKey(x)) == 4));
 		//
-		String csk, csv;
+		String k2, v1, v2, csk, csv;
+		//
+		Entry<String, String> e2;
 		//
 		for (int i = 0; i < IterableUtils.size(es4); i++) {
 			//
@@ -978,6 +956,47 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						(a, b, c) -> MultimapUtil.put(a, StringUtils.substringAfter(Util.getKey(b), Util.getKey(c)),
 								StringUtils.substringAfter(Util.getValue(b), Util.getValue(c))));
 				//
+			} // for
+				//
+		} // for
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap5C(final Iterable<Entry<String, String>> es3) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		Entry<String, String> e1, e2;
+		//
+		String k1, v1, cpk, cpv;
+		//
+		for (int i = 0; i < IterableUtils.size(es3); i++) {
+			//
+			for (int j = 0; j < IterableUtils.size(es3); j++) {
+				//
+				if (i == j) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (StringUtils
+						.isNotBlank(cpk = StringUtils.getCommonPrefix(k1 = Util.getKey(e1 = IterableUtils.get(es3, i)),
+								Util.getKey(e2 = IterableUtils.get(es3, j))))
+						&& StringUtils.isNotBlank(
+								cpv = StringUtils.getCommonPrefix(v1 = Util.getValue(e1), Util.getValue(e2)))) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cpk, cpv);
+					//
+					testAndAccept((a, b, c) -> StringUtils.length(b) == 1,
+							multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							StringUtils.substringAfter(k1, cpk), Pair.of(v1, cpv), (a, b, c) -> MultimapUtil.put(a, b,
+									StringUtils.substringAfter(Util.getKey(c), Util.getValue(c))));
+					//
+				} // if
+					//
 			} // for
 				//
 		} // for
