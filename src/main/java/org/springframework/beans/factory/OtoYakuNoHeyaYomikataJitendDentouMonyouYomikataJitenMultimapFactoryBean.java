@@ -881,7 +881,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		Entry<String, String> e1;
 		//
-		String k1, v1, cpk, cpv;
+		String k1, cpk, cpv, v2, v3, v4;
 		//
 		final List<Entry<String, String>> list = testAndApply(Objects::nonNull, es3, IterableUtils::toList, null);
 		//
@@ -894,11 +894,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		for (int i = 0; i < IterableUtils.size(quartets); i++) {
 			//
 			if (Util.or(
-					StringUtils.isBlank(cpk = StringUtils.getCommonPrefix(
-							k1 = IValue0Util.getValue0(quartet = IterableUtils.get(quartets, i)),
-							Util.getValue2(quartet))),
-					StringUtils.isBlank(cpv = StringUtils.getCommonPrefix(v1 = Util.getValue1(quartet),
-							Util.getValue3(quartet))))) {
+					Boolean.logicalAnd(
+							Objects.equals(k1 = IValue0Util.getValue0(quartet = IterableUtils.get(quartets, i)),
+									v3 = Util.getValue2(quartet)),
+							Objects.equals(v2 = Util.getValue1(quartet), v4 = Util.getValue3(quartet))),
+					StringUtils.isBlank(cpk = StringUtils.getCommonPrefix(k1, v3)),
+					StringUtils.isBlank(cpv = StringUtils.getCommonPrefix(v2, v4)))) {
 				//
 				continue;
 				//
@@ -908,7 +909,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			testAndAccept((a, b, c) -> StringUtils.length(b) == 1,
 					multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					StringUtils.substringAfter(k1, cpk), Pair.of(v1, cpv),
+					StringUtils.substringAfter(k1, cpk), Pair.of(v2, cpv),
 					(a, b, c) -> MultimapUtil.put(a, b, StringUtils.substringAfter(Util.getKey(c), Util.getValue(c))));
 			//
 		} // for
