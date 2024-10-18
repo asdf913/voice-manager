@@ -11,6 +11,7 @@ import java.util.function.BiPredicate;
 import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
@@ -42,7 +43,6 @@ import org.jsoup.nodes.TextNode;
 import org.meeuw.functional.TriPredicate;
 
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -956,14 +956,23 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			if (Boolean
 					.logicalOr(
 							IterableUtils
-									.isEmpty(ik = Iterables.concat(MultimapUtil.get(mm,
-											StringUtils.substring(k1 = Util.getKey(e1 = IterableUtils.get(es3, i)), 0,
-													1)),
-											MultimapUtil.get(multimap, StringUtils.substring(k1, 0, 1)))),
-							IterableUtils.isEmpty(iv = Iterables.concat(
-									MultimapUtil.get(mm,
-											StringUtils.substring(k1, (lk1 = StringUtils.length(k1)) - 1, lk1)),
-									MultimapUtil.get(multimap, StringUtils.substring(k1, lk1 - 1, lk1)))))) {
+									.isEmpty(
+											ik = Util
+													.toList(Stream.concat(
+															Util.stream(MultimapUtil.get(mm,
+																	StringUtils.substring(
+																			k1 = Util.getKey(
+																					e1 = IterableUtils.get(es3, i)),
+																			0, 1))),
+															Util.stream(MultimapUtil.get(multimap,
+																	StringUtils.substring(k1, 0, 1)))))),
+							IterableUtils
+									.isEmpty(iv = Util.toList(Stream.concat(
+											Util.stream(MultimapUtil.get(mm,
+													StringUtils.substring(k1, (lk1 = StringUtils.length(k1)) - 1,
+															lk1))),
+											Util.stream(MultimapUtil.get(multimap,
+													StringUtils.substring(k1, lk1 - 1, lk1)))))))) {
 				//
 				continue;
 				//
