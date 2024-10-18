@@ -781,7 +781,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection5A(
-			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines,
+			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop, final Iterable<String> lines,
 			final Sextet<String, String, String, String, String, String> sextet) {
 		//
 		final String g14 = Util.getValue3(sextet);
