@@ -927,9 +927,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 			} // for
 				//
-			Util.forEach(MultimapUtil.entries(ImmutableMultimap.of("車", "ぐるま", "手", "で", "天宮", "てんぐう")), x -> {
-				MultimapUtil.remove(multimap, Util.getKey(x), Util.getValue(x));
-			});
+			Util.forEach(MultimapUtil.entries(ImmutableMultimap.of("車", "ぐるま", "手", "で", "天宮", "てんぐう")),
+					x -> MultimapUtil.remove(multimap, Util.getKey(x), Util.getValue(x)));
 			//
 			if (StringUtils.isNotBlank(tsbk) && StringUtils.isNotBlank(tsbv)) {
 				//
