@@ -930,7 +930,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			Util.forEach(MultimapUtil.entries(ImmutableMultimap.of("車", "ぐるま", "手", "で", "天宮", "てんぐう")),
 					x -> MultimapUtil.remove(multimap, Util.getKey(x), Util.getValue(x)));
 			//
-			if (StringUtils.isNotBlank(tsbk) && StringUtils.isNotBlank(tsbv)) {
+			if (Boolean.logicalAnd(StringUtils.isNotBlank(tsbk), StringUtils.isNotBlank(tsbv))) {
 				//
 				MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
 				//
