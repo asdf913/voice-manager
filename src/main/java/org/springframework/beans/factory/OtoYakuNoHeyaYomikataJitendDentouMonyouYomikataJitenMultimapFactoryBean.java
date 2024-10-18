@@ -669,7 +669,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 
 	@Nullable
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection5(
-			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines) {
+			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop, final Iterable<String> lines) {
 		//
 		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{5})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
