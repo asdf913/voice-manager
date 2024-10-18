@@ -2,10 +2,8 @@ package org.apache.commons.text;
 
 public interface TextStringBuilderUtil {
 
-	static void clear(final TextStringBuilder instance) {
-		if (instance != null) {
-			instance.clear();
-		}
+	static TextStringBuilder clear(final TextStringBuilder instance) {
+		return instance != null ? instance.clear() : instance;
 	}
 
 }

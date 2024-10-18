@@ -10,10 +10,12 @@ class TextStringBuilderUtilTest {
 	@Test
 	void testClear() {
 		//
-		Assertions.assertDoesNotThrow(() -> TextStringBuilderUtil.clear(null));
+		Assertions.assertNull(TextStringBuilderUtil.clear(null));
 		//
-		Assertions.assertDoesNotThrow(() -> TextStringBuilderUtil
-				.clear(cast(TextStringBuilder.class, Narcissus.allocateInstance(TextStringBuilder.class))));
+		final TextStringBuilder tsb = cast(TextStringBuilder.class,
+				Narcissus.allocateInstance(TextStringBuilder.class));
+		//
+		Assertions.assertSame(tsb, TextStringBuilderUtil.clear(tsb));
 		//
 	}
 
