@@ -884,8 +884,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						MultimapUtil.put(multimap, StringUtils.substringBefore(k1, csk),
 								StringUtils.substringBefore(v1, csv));
 						//
-						if (StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(k1, k2))
-								&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(v1, v2))) {
+						if (Boolean.logicalAnd(StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(k1, k2)),
+								StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(v1, v2)))) {
 							//
 							MultimapUtil.put(multimap, StringUtils.substringBetween(k1, cpk, csk),
 									StringUtils.substringBetween(v1, cpv, csv));
