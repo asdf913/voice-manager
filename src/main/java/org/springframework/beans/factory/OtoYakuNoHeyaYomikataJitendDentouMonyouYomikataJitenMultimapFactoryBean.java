@@ -954,6 +954,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap5B(final Iterable<Entry<String, String>> es1,
 			final Iterable<Entry<String, String>> es2) {
 		//
