@@ -485,17 +485,16 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop1, final IntObjectPair<String> iop2,
 			final Quartet<String, String, String, String> quartet) {
 		//
-		IntCollection intCollection = null;
+		final IntCollection intCollection = IntList.create();
 		//
-		Multimap<String, String> multimap = null;
+		final Multimap<String, String> multimap = LinkedHashMultimap.create();
 		//
 		final Entry<Multimap<String, String>, IntCollection> entry = toMultimapAndIntCollection4A11(patternMap, iop1,
 				iop2, quartet);
 		//
-		IntCollectionUtil.addAllInts(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
-				Util.getValue(entry));
+		IntCollectionUtil.addAllInts(intCollection, Util.getValue(entry));
 		//
-		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.getKey(entry));
+		MultimapUtil.putAll(multimap, Util.getKey(entry));
 		//
 		Matcher m2;
 		//
@@ -511,31 +510,25 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				"^(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
 				line)) && Util.groupCount(m2) > 1) {
 			//
-			if (iop1 != null && !IntIterableUtil.containsInt(
-					intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), iop1.keyInt())) {
+			if (iop1 != null && !IntIterableUtil.containsInt(intCollection, iop1.keyInt())) {
 				//
-				IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
-						iop1.keyInt());
+				IntCollectionUtil.addInt(intCollection, iop1.keyInt());
 				//
 			} // if
 				//
-			if (iop2 != null && !IntIterableUtil.containsInt(
-					intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), iop2.keyInt())) {
+			if (iop2 != null && !IntIterableUtil.containsInt(intCollection, iop2.keyInt())) {
 				//
-				IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
-						iop2.keyInt());
+				IntCollectionUtil.addInt(intCollection, iop2.keyInt());
 				//
 			} // if
 				//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					g21 = Util.group(m2, 1), g22 = StringUtils.trim(Util.group(m2, 2)));
+			MultimapUtil.put(multimap, g21 = Util.group(m2, 1), g22 = StringUtils.trim(Util.group(m2, 2)));
 			//
 			if (StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21))
 					&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g14, g22))) {
 				//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						ImmutableMultimap.of(cpk, cpv, StringUtils.substringAfter(g21, cpk),
-								StringUtils.substringAfter(g22, cpv)));
+				MultimapUtil.putAll(multimap, ImmutableMultimap.of(cpk, cpv, StringUtils.substringAfter(g21, cpk),
+						StringUtils.substringAfter(g22, cpv)));
 				//
 			} // if
 				//
