@@ -688,7 +688,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			final String g15 = Util.group(m1, 5);
 			//
-			String line, cpk, cpv, g22;
+			String line, cpk, g22;
 			//
 			Matcher m2;
 			//
@@ -712,7 +712,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						MultimapUtil.put(multimap, Util.group(m2, 1), g22 = Util.group(m2, 2));
 						//
 						testAndAccept((a, b, c) -> StringUtils.isNotBlank(c), multimap, cpk,
-								cpv = StringUtils.getCommonPrefix(StringUtils.substringAfter(g16, g14), g22),
+								StringUtils.getCommonPrefix(StringUtils.substringAfter(g16, g14), g22),
 								(a, b, c) -> MultimapUtil.put(a, b, c));
 						//
 					} // if
@@ -737,7 +737,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			Entry<String, String> e1, e2;
 			//
-			String k2, v2;
+			String k2, v2, cpv;
 			//
 			for (int i = 0; i < IterableUtils.size(es2); i++) {
 				//
