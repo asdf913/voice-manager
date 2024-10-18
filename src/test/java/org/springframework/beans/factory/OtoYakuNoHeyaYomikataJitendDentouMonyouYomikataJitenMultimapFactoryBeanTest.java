@@ -14,6 +14,7 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.text.TextStringBuilder;
 import org.d2ab.collection.ints.IntCollection;
 import org.d2ab.function.ObjIntPredicate;
 import org.javatuples.Quartet;
@@ -37,7 +38,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 	private static final String SPACE = " ";
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_COMMON_SUFFIX, METHOD_TO_MULTI_MAP_AND_INT_COLLECTION,
-			METHOD_TEST_AND_ACCEPT;
+			METHOD_TEST_AND_ACCEPT, METHOD_APPEND;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -55,6 +56,8 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", ObjIntPredicate.class, Object.class,
 				Integer.TYPE, ObjIntConsumer.class)).setAccessible(true);
+		//
+		(METHOD_APPEND = clz.getDeclaredMethod("append", TextStringBuilder.class, String.class)).setAccessible(true);
 		//
 	}
 
@@ -304,6 +307,17 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "梅に松林文（うめにまつばやしもん）"),
 						Arrays.asList(null, "梅文（うめもん）", "松文（まつもん）", "アメリカ・インディアンの魚と鳥文（---のうおととりもん）"))));
 		//
+		Assertions.assertEquals("({梅文=[うめもん], 梅=[うめ], 文=[もん], 松文=[まつもん], 松=[まつ], 魚=[うお], 鳥=[とり]},[0, 1, 2, 3])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "梅に松林文（うめにまつばやしもん）"),
+						Arrays.asList(null, "梅文（うめもん）", "松文（まつもん）", "アメリカ・インディアンの魚と鳥文（---のうおととりもん）"))));
+		//
+		Assertions.assertEquals(
+				"({葦=[あし], 雁=[がん], 水仙花文=[すいせんかもん], 水=[すい], 水天宮文=[すいてんぐうもん], 水辺文=[すいへんもん], 水辺=[すいへん], 水手絵=[みずでえ], 水波文=[すいはもん], 水手文=[みずでもん], 辺=[へん], 水手=[みずで], 絵=[え], 文=[もん], 波=[は], 水仙花=[すいせんか], 仙花=[せんか], 水天宮=[すいてんぐう], 風景=[ふうけい]},[0, 1, 2, 3, 4, 5, 6, 7])",
+				Objects.toString(
+						toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "葦に雁の水辺風景文（あしにがんのすいへんふうけいもん）"),
+								Arrays.asList(null, "水仙花文（すいせんかもん）", "水天宮文（すいてんぐうもん）", "水辺文（すいへんもん）", "水手絵（みずでえ）",
+										"水波文（すいはもん）", "水手文（みずでもん）", "水辺文（すいへんもん）"))));
+		//
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection(
@@ -333,6 +347,33 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 			final ObjIntConsumer<T> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, a, b, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAppend() throws Throwable {
+		//
+		TextStringBuilder tsb = new TextStringBuilder();
+		//
+		Assertions.assertSame(tsb, append(tsb, Util.cast(String.class, Narcissus.allocateInstance(String.class))));
+		//
+		Assertions.assertSame(
+				tsb = Util.cast(TextStringBuilder.class, Narcissus.allocateInstance(TextStringBuilder.class)),
+				append(tsb, Util.cast(String.class, Narcissus.allocateInstance(String.class))));
+		//
+	}
+
+	private static TextStringBuilder append(final TextStringBuilder instance, final String str) throws Throwable {
+		try {
+			final Object obj = METHOD_APPEND.invoke(null, instance, str);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof TextStringBuilder) {
+				return (TextStringBuilder) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
