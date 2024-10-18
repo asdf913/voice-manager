@@ -19,6 +19,7 @@ import org.apache.commons.text.TextStringBuilder;
 import org.d2ab.collection.ints.IntCollection;
 import org.d2ab.function.ObjIntPredicate;
 import org.javatuples.Quartet;
+import org.javatuples.Sextet;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -187,9 +188,11 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 									Quartet.class }))
 					|| (Objects.equals(name, "toMultimapAndIntCollection4B") && Arrays.equals(parameterTypes,
 							new Class<?>[] { PatternMap.class, IntObjectPair.class, Iterable.class, Multimap.class }))
-					|| (Objects.equals(name, "toMultimapAndIntCollection4A11")
-							&& Arrays.equals(parameterTypes, new Class<?>[] { PatternMap.class, IntObjectPair.class,
-									IntObjectPair.class, Quartet.class }))) {
+					|| (Objects.equals(name, "toMultimapAndIntCollection4A11") && Arrays.equals(parameterTypes,
+							new Class<?>[] { PatternMap.class, IntObjectPair.class, IntObjectPair.class,
+									Quartet.class }))
+					|| (Objects.equals(name, "toMultimapAndIntCollection5A") && Arrays.equals(parameterTypes,
+							new Class<?>[] { PatternMap.class, IntObjectPair.class, Iterable.class, Sextet.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
