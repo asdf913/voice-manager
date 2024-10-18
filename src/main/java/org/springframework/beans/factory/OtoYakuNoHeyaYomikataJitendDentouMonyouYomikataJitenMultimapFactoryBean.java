@@ -33,6 +33,7 @@ import org.d2ab.collection.ints.IntIterableUtil;
 import org.d2ab.collection.ints.IntList;
 import org.d2ab.function.ObjIntPredicate;
 import org.javatuples.Quartet;
+import org.javatuples.Triplet;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.NodeUtil;
@@ -742,17 +743,16 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				for (int j = 0; j < IterableUtils.size(es1); j++) {
 					//
-					if (StringUtils
-							.isNotBlank(cpk = StringUtils.getCommonPrefix(Util.getKey(e1 = IterableUtils.get(es1, j)),
-									k2 = Util.getKey(e2 = IterableUtils.get(es2, i))))
-							&& StringUtils.isNotBlank(
-									cpv = StringUtils.getCommonPrefix(Util.getValue(e1), v2 = Util.getValue(e2)))) {
-						//
-						MultimapUtil.put(multimap, StringUtils.substringAfter(k2, cpk),
-								StringUtils.substringAfter(v2, cpv));
-						//
-					} // if
-						//
+					testAndAccept(
+							(a, b, c) -> StringUtils.isNotBlank(Util.getKey(c))
+									&& StringUtils.isNotBlank(Util.getValue(c)),
+							multimap, Pair.of(k2 = Util.getKey(e2 = IterableUtils.get(es2, i)), v2 = Util.getValue(e2)),
+							Pair.of(cpk = StringUtils.getCommonPrefix(Util.getKey(e1 = IterableUtils.get(es1, j)), k2),
+									cpv = StringUtils.getCommonPrefix(Util.getValue(e1), v2)),
+							(a, b, c) -> MultimapUtil.put(multimap,
+									StringUtils.substringAfter(Util.getKey(b), Util.getKey(c)),
+									StringUtils.substringAfter(Util.getValue(b), Util.getValue(c))));
+					//
 				} // for
 					//
 			} // for
@@ -763,7 +763,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 									x -> StreamSupport.stream(x, false), null),
 							x -> StringUtils.length(Util.getKey(x)) == 3));
 			//
-			String k1, v1, sak;
+			String k1, v1;
 			//
 			for (int i = 0; i < IterableUtils.size(es3); i++) {
 				//
@@ -783,12 +783,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 						MultimapUtil.put(multimap, cpk, cpv);
 						//
-						if (StringUtils.length(sak = StringUtils.substringAfter(k1, cpk)) == 1) {
-							//
-							MultimapUtil.put(multimap, sak, StringUtils.substringAfter(v1, cpv));
-							//
-						} // if
-							//
+						testAndAccept((a, b, c) -> StringUtils.length(b) == 1, multimap,
+								StringUtils.substringAfter(k1, cpk), Pair.of(v1, cpv), (a, b, c) -> MultimapUtil.put(a,
+										b, StringUtils.substringAfter(Util.getKey(c), Util.getValue(c))));
+						//
 					} // if
 						//
 				} // for
@@ -880,14 +878,20 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						MultimapUtil.put(multimap, StringUtils.substringBefore(k1, csk),
 								StringUtils.substringBefore(v1, csv));
 						//
-						if (Boolean.logicalAnd(StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(k1, k2)),
-								StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(v1, v2)))) {
-							//
-							MultimapUtil.put(multimap, StringUtils.substringBetween(k1, cpk, csk),
-									StringUtils.substringBetween(v1, cpv, csv));
-							//
-						} // if
-							//
+						testAndAccept(
+								(a, b) -> Boolean.logicalAnd(StringUtils.isNotBlank(Util.getKey(Util.getValue1(b))),
+										StringUtils.isNotBlank(Util.getValue(Util.getValue1(b)))),
+								multimap,
+								Triplet.with(Pair.of(k1, v1),
+										Pair.of(StringUtils.getCommonPrefix(k1, k2),
+												StringUtils.getCommonPrefix(v1, v2)),
+										Pair.of(csk, csv)),
+								(a, b) -> MultimapUtil.put(multimap,
+										StringUtils.substringBetween(Util.getKey(IValue0Util.getValue0(b)),
+												Util.getKey(Util.getValue1(b)), Util.getKey(Util.getValue2(b))),
+										StringUtils.substringBetween(Util.getValue(IValue0Util.getValue0(b)),
+												Util.getValue(Util.getValue1(b)), Util.getValue(Util.getValue2(b)))));
+						//
 					} // if
 						//
 				} // for
@@ -917,7 +921,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					delete(tsbk, (lk = StringUtils.length(tsbk)) - StringUtils.length(k1), lk);
 					//
-					delete(tsbv,(lv = StringUtils.length(tsbv)) - StringUtils.length(v1), lv);
+					delete(tsbv, (lv = StringUtils.length(tsbv)) - StringUtils.length(v1), lv);
 					//
 				} // if
 					//
