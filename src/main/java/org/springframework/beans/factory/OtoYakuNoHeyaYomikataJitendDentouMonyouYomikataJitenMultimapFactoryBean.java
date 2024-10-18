@@ -814,9 +814,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 				} // if
 					//
-				ltsb = StringUtils.length(tsbv = append(
-						TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
-						Util.getValue(e1)));
+				ltsb = StringUtils.length(
+						tsbv = append(TextStringBuilderUtil.clear(ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
+								Util.getValue(e1)));
 				//
 				for (final String s : ik) {
 					//
