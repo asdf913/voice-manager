@@ -489,17 +489,21 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		Multimap<String, String> multimap = null;
 		//
+		final Entry<Multimap<String, String>, IntCollection> entry = toMultimapAndIntCollection4A11(patternMap, iop1,
+				iop2, quartet);
+		//
+		IntCollectionUtil.addAllInts(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
+				Util.getValue(entry));
+		//
+		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.getKey(entry));
+		//
 		Matcher m2;
 		//
 		final String g11 = IValue0Util.getValue0(quartet);
 		//
-		final String g12 = Util.getValue1(quartet);
-		//
-		final String g13 = Util.getValue2(quartet);
-		//
 		final String g14 = Util.getValue3(quartet);
 		//
-		String g21, g22, cpk, cpv, csk, csv;
+		String g21, g22, cpk, cpv;
 		//
 		final String line = PairUtil.right(iop2);
 		//
@@ -535,7 +539,33 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-		} else if (StringUtils.isNotBlank(StringUtils.getCommonPrefix(line, g13)) && Util.matches(m2 = Util.matcher(
+		} // if
+			//
+		return Pair.of(multimap, intCollection);
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection4A11(
+			final PatternMap patternMap, final IntObjectPair<String> iop1, final IntObjectPair<String> iop2,
+			final Quartet<String, String, String, String> quartet) {
+		//
+		IntCollection intCollection = null;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		Matcher m2;
+		//
+		final String g12 = Util.getValue1(quartet);
+		//
+		final String g13 = Util.getValue2(quartet);
+		//
+		final String g14 = Util.getValue3(quartet);
+		//
+		String g21, g22, cpk, cpv, csk, csv;
+		//
+		final String line = PairUtil.right(iop2);
+		//
+		if (StringUtils.isNotBlank(StringUtils.getCommonPrefix(line, g13)) && Util.matches(m2 = Util.matcher(
 				PatternMap.getPattern(patternMap,
 						"^(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
 				line)) && Util.groupCount(m2) > 1) {

@@ -177,9 +177,11 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 					|| (Objects.equals(name, "toMultimapAndIntCollection4A1") && Arrays.equals(parameterTypes,
 							new Class<?>[] { PatternMap.class, IntObjectPair.class, IntObjectPair.class,
 									Quartet.class }))
-					|| (Objects.equals(name, "toMultimapAndIntCollection4B")
+					|| (Objects.equals(name, "toMultimapAndIntCollection4B") && Arrays.equals(parameterTypes,
+							new Class<?>[] { PatternMap.class, IntObjectPair.class, Iterable.class, Multimap.class }))
+					|| (Objects.equals(name, "toMultimapAndIntCollection4A11")
 							&& Arrays.equals(parameterTypes, new Class<?>[] { PatternMap.class, IntObjectPair.class,
-									Iterable.class, Multimap.class }))) {
+									IntObjectPair.class, Quartet.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
