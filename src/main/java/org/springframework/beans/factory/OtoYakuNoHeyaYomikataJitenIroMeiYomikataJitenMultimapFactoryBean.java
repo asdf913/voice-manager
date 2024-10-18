@@ -132,7 +132,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			if (IntIterableUtil.containsInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i)) {
 				//
-				removeInt(intList, i);
+				IntIterableUtil.removeInt(intList, i);
 				//
 				continue;
 				//
@@ -4044,18 +4044,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	@Nullable
 	private static IntStream map(@Nullable final IntStream instance, @Nullable final IntUnaryOperator mapper) {
 		return instance != null && mapper != null ? instance.map(mapper) : instance;
-	}
-
-	private static void removeInt(@Nullable final IntList instance, final int o) {
-		//
-		if (instance == null || !instance.contains(o)) {
-			//
-			return;
-			//
-		} // if
-			//
-		instance.removeInt(o);
-		//
 	}
 
 	@Nullable

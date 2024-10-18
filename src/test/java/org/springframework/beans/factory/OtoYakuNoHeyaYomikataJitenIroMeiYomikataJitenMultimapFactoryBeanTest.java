@@ -28,7 +28,6 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
@@ -59,10 +58,9 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	private static final int ZERO = 0;
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3,
-			METHOD_TEST_AND_APPLY_AS_INT, METHOD_REMOVE_INT, METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT,
-			METHOD_MAP, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5,
-			METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM, METHOD_FOR_EACH_INT_STREAM, METHOD_IS_EMPTY, METHOD_MAX,
-			METHOD_TO_MULTI_MAP_17_C_2;
+			METHOD_TEST_AND_APPLY_AS_INT, METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP,
+			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_TO_ARRAY_COLLECTION,
+			METHOD_TO_ARRAY_STREAM, METHOD_FOR_EACH_INT_STREAM, METHOD_IS_EMPTY, METHOD_MAX, METHOD_TO_MULTI_MAP_17_C_2;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -80,8 +78,6 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 		//
 		(METHOD_TEST_AND_APPLY_AS_INT = clz.getDeclaredMethod("testAndApplyAsInt", IntPredicate.class, Integer.TYPE,
 				IntUnaryOperator.class, IntUnaryOperator.class, Integer.TYPE)).setAccessible(true);
-		//
-		(METHOD_REMOVE_INT = clz.getDeclaredMethod("removeInt", IntList.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_TO_MULTI_MAP_AND_INT_LIST = clz.getDeclaredMethod("toMultimapAndIntList", PatternMap.class, List.class,
 				Integer.TYPE)).setAccessible(true);
@@ -823,25 +819,6 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testRemoveValue() throws Throwable {
-		//
-		final IntList il2 = IntList.create();
-		//
-		forEach(IntStream.range(0, IterableUtils.size(il2)), x -> IntCollectionUtil.addInt(il2, x));
-		//
-		Assertions.assertDoesNotThrow(() -> removeValue(il2, IterableUtils.size(il2) - 1));
-		//
-	}
-
-	private static void removeValue(final IntList instance, final int o) throws Throwable {
-		try {
-			METHOD_REMOVE_INT.invoke(null, instance, o);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

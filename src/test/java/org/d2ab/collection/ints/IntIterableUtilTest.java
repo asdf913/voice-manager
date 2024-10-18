@@ -14,18 +14,25 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class IntIterableUtilTest {
 
+	private static final int ZERO = 0;
+
 	@Test
 	void testContainsInt() {
 		//
 		final IntCollection intCollection = IntList.create();
 		//
-		final int zero = 0;
+		Assertions.assertFalse(IntIterableUtil.containsInt(intCollection, ZERO));
 		//
-		Assertions.assertFalse(IntIterableUtil.containsInt(intCollection, zero));
+		IntCollectionUtil.addInt(intCollection, ZERO);
 		//
-		IntCollectionUtil.addInt(intCollection, zero);
+		Assertions.assertTrue(IntIterableUtil.containsInt(intCollection, ZERO));
 		//
-		Assertions.assertTrue(IntIterableUtil.containsInt(intCollection, zero));
+	}
+
+	@Test
+	void testRemoveInt() {
+		//
+		Assertions.assertDoesNotThrow(() -> IntIterableUtil.removeInt(IntList.create(), ZERO));
 		//
 	}
 

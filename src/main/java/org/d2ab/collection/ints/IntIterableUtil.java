@@ -6,4 +6,14 @@ public interface IntIterableUtil {
 		return instance != null && instance.containsInt(o);
 	}
 
+	static void removeInt(final IntIterable instance, final int o) {
+		//
+		if (instance != null) {
+			//
+			instance.removeInt(o);
+			//
+		} // if
+			//
+	}
+
 }
