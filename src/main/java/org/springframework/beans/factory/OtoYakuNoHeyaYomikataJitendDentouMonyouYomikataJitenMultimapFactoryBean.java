@@ -721,7 +721,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			for (int j = 0; j < IterableUtils.size(es1); j++) {
 				//
 				testAndAccept(
-						(a, b, c) -> StringUtils.isNotBlank(Util.getKey(c)) && StringUtils.isNotBlank(Util.getValue(c)),
+						(a, b, c) -> Boolean.logicalAnd(StringUtils.isNotBlank(Util.getKey(c)),
+								StringUtils.isNotBlank(Util.getValue(c))),
 						multimap, Pair.of(k2 = Util.getKey(e2 = IterableUtils.get(es2, i)), v2 = Util.getValue(e2)),
 						Pair.of(StringUtils.getCommonPrefix(Util.getKey(e1 = IterableUtils.get(es1, j)), k2),
 								StringUtils.getCommonPrefix(Util.getValue(e1), v2)),
