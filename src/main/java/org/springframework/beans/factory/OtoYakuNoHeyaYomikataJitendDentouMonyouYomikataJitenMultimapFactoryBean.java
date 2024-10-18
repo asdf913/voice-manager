@@ -804,11 +804,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			for (int i = 0; i < IterableUtils.size(es3); i++) {
 				//
-				if (IterableUtils
-						.isEmpty(ik = MultimapUtil.get(multimap,
-								StringUtils.substring(k1 = Util.getKey(e1 = IterableUtils.get(es3, i)), 0, 1)))
-						|| IterableUtils.isEmpty(iv = MultimapUtil.get(multimap,
-								StringUtils.substring(k1, (lk1 = StringUtils.length(k1)) - 1, lk1)))) {
+				if (Boolean.logicalOr(
+						IterableUtils.isEmpty(ik = MultimapUtil.get(multimap,
+								StringUtils.substring(k1 = Util.getKey(e1 = IterableUtils.get(es3, i)), 0, 1))),
+						IterableUtils.isEmpty(iv = MultimapUtil.get(multimap,
+								StringUtils.substring(k1, (lk1 = StringUtils.length(k1)) - 1, lk1))))) {
 					//
 					continue;
 					//
