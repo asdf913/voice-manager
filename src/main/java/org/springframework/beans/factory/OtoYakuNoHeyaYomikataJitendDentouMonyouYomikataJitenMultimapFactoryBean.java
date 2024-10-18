@@ -727,55 +727,22 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 										x -> StreamSupport.stream(x, false), null),
 								x -> StringUtils.length(Util.getKey(x)) == 3)), multimap));
 		//
-		final List<Entry<String, String>> es4 = Util.toList(Util.filter(
-				testAndApply(Objects::nonNull, Util.spliterator(entries), x -> StreamSupport.stream(x, false), null),
-				x -> StringUtils.length(Util.getKey(x)) == 4));
+		// D
 		//
-		String k1, k2, v1, v2, csk, csv;
+		MultimapUtil
+				.putAll(multimap,
+						toMultimap5D(Util.toList(Util.filter(
+								testAndApply(Objects::nonNull, Util.spliterator(entries),
+										x -> StreamSupport.stream(x, false), null),
+								x -> StringUtils.length(Util.getKey(x)) == 4))));
 		//
-		Entry<String, String> e1, e2;
-		//
-		for (int i = 0; i < IterableUtils.size(es4); i++) {
-			//
-			for (int j = 0; j < IterableUtils.size(es4); j++) {
-				//
-				if (i == j) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (Boolean.logicalAnd(
-						StringUtils.isNotBlank(csk = getCommonSuffix(k1 = Util.getKey(e1 = IterableUtils.get(es4, i)),
-								k2 = Util.getKey(e2 = IterableUtils.get(es4, j)))),
-						StringUtils
-								.isNotBlank(csv = getCommonSuffix(v1 = Util.getValue(e1), v2 = Util.getValue(e2))))) {
-					//
-					MultimapUtil.put(multimap, StringUtils.substringBefore(k1, csk),
-							StringUtils.substringBefore(v1, csv));
-					//
-					testAndAccept(
-							(a, b) -> Boolean.logicalAnd(StringUtils.isNotBlank(Util.getKey(Util.getValue1(b))),
-									StringUtils.isNotBlank(Util.getValue(Util.getValue1(b)))),
-							multimap,
-							Triplet.with(Pair.of(k1, v1),
-									Pair.of(StringUtils.getCommonPrefix(k1, k2), StringUtils.getCommonPrefix(v1, v2)),
-									Pair.of(csk, csv)),
-							(a, b) -> MultimapUtil.put(multimap,
-									StringUtils.substringBetween(Util.getKey(IValue0Util.getValue0(b)),
-											Util.getKey(Util.getValue1(b)), Util.getKey(Util.getValue2(b))),
-									StringUtils.substringBetween(Util.getValue(IValue0Util.getValue0(b)),
-											Util.getValue(Util.getValue1(b)), Util.getValue(Util.getValue2(b)))));
-					//
-				} // if
-					//
-			} // for
-				//
-		} // for
-			//
 		final List<Entry<String, String>> es1 = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.spliterator(entries), x -> StreamSupport.stream(x, false), null),
 				x -> StringUtils.length(Util.getKey(x)) == 1));
+		//
+		String k1, v1;
+		//
+		Entry<String, String> e1;
 		//
 		final TextStringBuilder tsbk = new TextStringBuilder(g15);
 		//
@@ -1015,6 +982,56 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			MultimapUtil.put(multimap, StringUtils.substring(k1, lk1 - 2, lk1 - 1), Util.toString(tsbv));
 			//
+		} // for
+			//
+		return multimap;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap5D(final Iterable<Entry<String, String>> es4) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		Entry<String, String> e1, e2;
+		//
+		String k1, k2, v1, v2, csk, csv;
+		//
+		for (int i = 0; i < IterableUtils.size(es4); i++) {
+			//
+			for (int j = 0; j < IterableUtils.size(es4); j++) {
+				//
+				if (i == j) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (Boolean.logicalAnd(
+						StringUtils.isNotBlank(csk = getCommonSuffix(k1 = Util.getKey(e1 = IterableUtils.get(es4, i)),
+								k2 = Util.getKey(e2 = IterableUtils.get(es4, j)))),
+						StringUtils
+								.isNotBlank(csv = getCommonSuffix(v1 = Util.getValue(e1), v2 = Util.getValue(e2))))) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							StringUtils.substringBefore(k1, csk), StringUtils.substringBefore(v1, csv));
+					//
+					testAndAccept(
+							(a, b) -> Boolean.logicalAnd(StringUtils.isNotBlank(Util.getKey(Util.getValue1(b))),
+									StringUtils.isNotBlank(Util.getValue(Util.getValue1(b)))),
+							multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Triplet.with(Pair.of(k1, v1),
+									Pair.of(StringUtils.getCommonPrefix(k1, k2), StringUtils.getCommonPrefix(v1, v2)),
+									Pair.of(csk, csv)),
+							(a, b) -> MultimapUtil.put(a,
+									StringUtils.substringBetween(Util.getKey(IValue0Util.getValue0(b)),
+											Util.getKey(Util.getValue1(b)), Util.getKey(Util.getValue2(b))),
+									StringUtils.substringBetween(Util.getValue(IValue0Util.getValue0(b)),
+											Util.getValue(Util.getValue1(b)), Util.getValue(Util.getValue2(b)))));
+					//
+				} // if
+					//
+			} // for
+				//
 		} // for
 			//
 		return multimap;
