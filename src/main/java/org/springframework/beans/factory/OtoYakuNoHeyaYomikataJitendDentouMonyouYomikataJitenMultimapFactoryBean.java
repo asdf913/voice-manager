@@ -692,7 +692,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String g15 = Util.group(m1, 5);
 		//
-		String line, cpk, g22;
+		String line, cpk, g22, g24;
 		//
 		Matcher m2;
 		//
@@ -716,6 +716,17 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					testAndAccept((a, b, c) -> StringUtils.isNotBlank(c), multimap, cpk,
 							StringUtils.getCommonPrefix(StringUtils.substringAfter(g16, g14), g22), MultimapUtil::put);
+					//
+				} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+						line)) && Util.groupCount(m2) > 3) {
+					//
+					IntCollectionUtil.addInt(intCollection, i);
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(Util.group(m2, 1),
+									StringUtils.substringBefore(g24 = Util.group(m2, 4), g22 = Util.group(m2, 2)),
+									Util.group(m2, 3), StringUtils.substringAfter(g24, g22)));
 					//
 				} // if
 					//
