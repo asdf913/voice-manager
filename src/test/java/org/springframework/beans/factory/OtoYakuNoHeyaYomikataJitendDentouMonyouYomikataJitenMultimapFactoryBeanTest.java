@@ -14,6 +14,7 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.TriConsumer;
 import org.apache.commons.text.TextStringBuilder;
 import org.d2ab.collection.ints.IntCollection;
 import org.d2ab.function.ObjIntPredicate;
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.meeuw.functional.TriPredicate;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Multimap;
@@ -38,7 +40,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 	private static final String SPACE = " ";
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_COMMON_SUFFIX, METHOD_TO_MULTI_MAP_AND_INT_COLLECTION,
-			METHOD_TEST_AND_ACCEPT, METHOD_APPEND;
+			METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_APPEND;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -54,8 +56,11 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		(METHOD_TO_MULTI_MAP_AND_INT_COLLECTION = clz.getDeclaredMethod("toMultimapAndIntCollection", PatternMap.class,
 				IntObjectPair.class, Iterable.class)).setAccessible(true);
 		//
-		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", ObjIntPredicate.class, Object.class,
+		(METHOD_TEST_AND_ACCEPT4 = clz.getDeclaredMethod("testAndAccept", ObjIntPredicate.class, Object.class,
 				Integer.TYPE, ObjIntConsumer.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT5 = clz.getDeclaredMethod("testAndAccept", TriPredicate.class, Object.class,
+				Object.class, Object.class, TriConsumer.class)).setAccessible(true);
 		//
 		(METHOD_APPEND = clz.getDeclaredMethod("append", TextStringBuilder.class, String.class)).setAccessible(true);
 		//
@@ -341,12 +346,25 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		//
 		Assertions.assertDoesNotThrow(() -> testAndAccept((a, b) -> true, null, ZERO, null));
 		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept((a, b, c) -> false, null, null, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept((a, b, c) -> true, null, null, null, null));
+		//
 	}
 
 	private static <T> void testAndAccept(final ObjIntPredicate<T> predicate, final T a, final int b,
 			final ObjIntConsumer<T> consumer) throws Throwable {
 		try {
-			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, a, b, consumer);
+			METHOD_TEST_AND_ACCEPT4.invoke(null, predicate, a, b, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T, U, V> void testAndAccept(final TriPredicate<T, U, V> instance, final T t, final U u, final V v,
+			final TriConsumer<T, U, V> consumer) throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT5.invoke(null, instance, t, u, v, consumer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

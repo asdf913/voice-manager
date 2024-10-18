@@ -21,6 +21,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.function.TriConsumer;
 import org.apache.commons.lang3.function.TriFunction;
 import org.apache.commons.lang3.function.TriFunctionUtil;
 import org.apache.commons.lang3.tuple.Pair;
@@ -36,6 +37,7 @@ import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
+import org.meeuw.functional.TriPredicate;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
@@ -708,13 +710,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 						MultimapUtil.put(multimap, Util.group(m2, 1), g22 = Util.group(m2, 2));
 						//
-						if (StringUtils.isNotBlank(
-								cpv = StringUtils.getCommonPrefix(StringUtils.substringAfter(g16, g14), g22))) {
-							//
-							MultimapUtil.put(multimap, cpk, cpv);
-							//
-						} // if
-							//
+						testAndAccept((a, b, c) -> StringUtils.isNotBlank(c), multimap, cpk,
+								cpv = StringUtils.getCommonPrefix(StringUtils.substringAfter(g16, g14), g22),
+								(a, b, c) -> MultimapUtil.put(a, b, c));
+						//
 					} // if
 						//
 				} // if
@@ -820,12 +819,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				for (final String s : ik) {
 					//
-					if (StringUtils.startsWith(tsbv, s)) {
-						//
-						tsbv.delete(0, StringUtils.length(s));
-						//
-					} // if
-						//
+					testAndAccept((a, b) -> StringUtils.startsWith(a, b), tsbv, s,
+							(a, b) -> delete(a, 0, StringUtils.length(b)));
+					//
 				} // for
 					//
 				if (ltsb == StringUtils.length(tsbv)) {
@@ -840,7 +836,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					if (StringUtils.endsWith(tsbv, s)) {
 						//
-						tsbv.delete(ltsb - StringUtils.length(s), ltsb);
+						delete(tsbv, ltsb - StringUtils.length(s), ltsb);
 						//
 					} // if
 						//
@@ -913,15 +909,15 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				if (StringUtils.startsWith(tsbv, v1 = Util.getValue(e1))) {
 					//
-					tsbk.delete(0, StringUtils.length(k1));
+					delete(tsbk, 0, StringUtils.length(k1));
 					//
-					tsbv.delete(0, StringUtils.length(v1));
+					delete(tsbv, 0, StringUtils.length(v1));
 					//
 				} else if (StringUtils.endsWith(tsbv, v1)) {
 					//
-					tsbk.delete((lk = StringUtils.length(tsbk)) - StringUtils.length(k1), lk);
+					delete(tsbk, (lk = StringUtils.length(tsbk)) - StringUtils.length(k1), lk);
 					//
-					tsbv.delete((lv = StringUtils.length(tsbv)) - StringUtils.length(v1), lv);
+					delete(tsbv,(lv = StringUtils.length(tsbv)) - StringUtils.length(v1), lv);
 					//
 				} // if
 					//
@@ -930,18 +926,21 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			Util.forEach(MultimapUtil.entries(ImmutableMultimap.of("車", "ぐるま", "手", "で", "天宮", "てんぐう")),
 					x -> MultimapUtil.remove(multimap, Util.getKey(x), Util.getValue(x)));
 			//
-			if (Boolean.logicalAnd(StringUtils.isNotBlank(tsbk), StringUtils.isNotBlank(tsbv))) {
-				//
-				MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
-				//
-			} // if
-				//
+			testAndAccept((a, b, c) -> Boolean.logicalAnd(StringUtils.isNotBlank(b), StringUtils.isNotBlank(c)),
+					multimap, tsbk, tsbv, (a, b, c) -> MultimapUtil.put(a, Util.toString(b), Util.toString(c)));
+			//
 			return Pair.of(multimap, intCollection);
 			//
 		} // if
 			//
 		return null;
 		//
+	}
+
+	private static void delete(final TextStringBuilder instance, final int startIndex, final int endIndex) {
+		if (instance != null) {
+			instance.delete(startIndex, endIndex);
+		}
 	}
 
 	@Nullable
@@ -963,6 +962,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		return instance.append(str);
 		//
+	}
+
+	private static <T, U, V> void testAndAccept(final TriPredicate<T, U, V> instance, final T t, final U u, final V v,
+			final TriConsumer<T, U, V> consumer) {
+		if (instance != null && instance.test(t, u, v) && consumer != null) {
+			consumer.accept(t, u, v);
+		} // if
 	}
 
 	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
