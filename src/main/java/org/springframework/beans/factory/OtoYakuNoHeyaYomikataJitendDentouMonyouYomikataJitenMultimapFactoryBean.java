@@ -713,7 +713,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 						testAndAccept((a, b, c) -> StringUtils.isNotBlank(c), multimap, cpk,
 								StringUtils.getCommonPrefix(StringUtils.substringAfter(g16, g14), g22),
-								(a, b, c) -> MultimapUtil.put(a, b, c));
+								MultimapUtil::put);
 						//
 					} // if
 						//
@@ -817,8 +817,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				for (final String s : ik) {
 					//
-					testAndAccept((a, b) -> StringUtils.startsWith(a, b), tsbv, s,
-							(a, b) -> delete(a, 0, StringUtils.length(b)));
+					testAndAccept(StringUtils::startsWith, tsbv, s, (a, b) -> delete(a, 0, StringUtils.length(b)));
 					//
 				} // for
 					//
