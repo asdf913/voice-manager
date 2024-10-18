@@ -887,10 +887,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			for (int j = 0; j < IterableUtils.size(es3); j++) {
 				//
-				if (i == j
-						|| StringUtils.isBlank(
+				if (Boolean.logicalOr(i == j,
+						StringUtils.isBlank(
 								cpk = StringUtils.getCommonPrefix(k1 = Util.getKey(e1 = IterableUtils.get(es3, i)),
-										Util.getKey(e2 = IterableUtils.get(es3, j))))
+										Util.getKey(e2 = IterableUtils.get(es3, j)))))
 						|| StringUtils.isBlank(
 								cpv = StringUtils.getCommonPrefix(v1 = Util.getValue(e1), Util.getValue(e2)))) {
 					//
