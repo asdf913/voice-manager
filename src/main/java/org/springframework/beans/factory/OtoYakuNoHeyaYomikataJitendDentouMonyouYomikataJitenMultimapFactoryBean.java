@@ -672,271 +672,258 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				"^(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{5})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
 				PairUtil.right(iop));
 		//
-		if (Util.matches(m1) && Util.groupCount(m1) > 5) {
+		if (!Util.matches(m1) || Util.groupCount(m1) <= 5) {
 			//
-			final IntCollection intCollection = iop != null ? IntList.create(iop.keyInt()) : IntList.create();
+			return null;
 			//
-			final String g12 = Util.group(m1, 2);
+		} // if
 			//
-			final String g14 = Util.group(m1, 4);
+		final IntCollection intCollection = iop != null ? IntList.create(iop.keyInt()) : IntList.create();
+		//
+		final String g12 = Util.group(m1, 2);
+		//
+		final String g14 = Util.group(m1, 4);
+		//
+		final String g16 = Util.group(m1, 6);
+		//
+		final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(Util.group(m1, 1),
+				StringUtils.substringBefore(g16, g12), Util.group(m1, 3), StringUtils.substringBetween(g16, g12, g14)));
+		//
+		final String g15 = Util.group(m1, 5);
+		//
+		String line, cpk, g22;
+		//
+		Matcher m2;
+		//
+		for (int i = 0; i < IterableUtils.size(lines); i++) {
 			//
-			final String g16 = Util.group(m1, 6);
-			//
-			final Multimap<String, String> multimap = LinkedHashMultimap
-					.create(ImmutableMultimap.of(Util.group(m1, 1), StringUtils.substringBefore(g16, g12),
-							Util.group(m1, 3), StringUtils.substringBetween(g16, g12, g14)));
-			//
-			final String g15 = Util.group(m1, 5);
-			//
-			String line, cpk, g22;
-			//
-			Matcher m2;
-			//
-			for (int i = 0; i < IterableUtils.size(lines); i++) {
+			if (iop != null && iop.keyInt() == i) {
 				//
-				if (iop != null && iop.keyInt() == i) {
+				continue;
+				//
+			} // if
+				//
+			if (StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g15, line = IterableUtils.get(lines, i)))) {
+				//
+				if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+						line)) && Util.groupCount(m2) > 1) {
+					//
+					IntCollectionUtil.addInt(intCollection, i);
+					//
+					MultimapUtil.put(multimap, Util.group(m2, 1), g22 = Util.group(m2, 2));
+					//
+					testAndAccept((a, b, c) -> StringUtils.isNotBlank(c), multimap, cpk,
+							StringUtils.getCommonPrefix(StringUtils.substringAfter(g16, g14), g22), MultimapUtil::put);
+					//
+				} // if
+					//
+			} // if
+				//
+		} // for
+			//
+		final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
+		//
+		List<Entry<String, String>> es1 = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.spliterator(entries), x -> StreamSupport.stream(x, false), null),
+				x -> StringUtils.length(Util.getKey(x)) == 1));
+		//
+		final List<Entry<String, String>> es2 = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.spliterator(entries), x -> StreamSupport.stream(x, false), null),
+				x -> StringUtils.length(Util.getKey(x)) == 2));
+		//
+		Entry<String, String> e1, e2;
+		//
+		String k2, v2, cpv;
+		//
+		for (int i = 0; i < IterableUtils.size(es2); i++) {
+			//
+			for (int j = 0; j < IterableUtils.size(es1); j++) {
+				//
+				testAndAccept(
+						(a, b, c) -> StringUtils.isNotBlank(Util.getKey(c)) && StringUtils.isNotBlank(Util.getValue(c)),
+						multimap, Pair.of(k2 = Util.getKey(e2 = IterableUtils.get(es2, i)), v2 = Util.getValue(e2)),
+						Pair.of(StringUtils.getCommonPrefix(Util.getKey(e1 = IterableUtils.get(es1, j)), k2),
+								StringUtils.getCommonPrefix(Util.getValue(e1), v2)),
+						(a, b, c) -> MultimapUtil.put(multimap,
+								StringUtils.substringAfter(Util.getKey(b), Util.getKey(c)),
+								StringUtils.substringAfter(Util.getValue(b), Util.getValue(c))));
+				//
+			} // for
+				//
+		} // for
+			//
+		final List<Entry<String, String>> es3 = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.spliterator(entries), x -> StreamSupport.stream(x, false), null),
+				x -> StringUtils.length(Util.getKey(x)) == 3));
+		//
+		String k1, v1;
+		//
+		for (int i = 0; i < IterableUtils.size(es3); i++) {
+			//
+			for (int j = 0; j < IterableUtils.size(es3); j++) {
+				//
+				if (i == j) {
 					//
 					continue;
 					//
 				} // if
 					//
 				if (StringUtils
-						.isNotBlank(cpk = StringUtils.getCommonPrefix(g15, line = IterableUtils.get(lines, i)))) {
+						.isNotBlank(cpk = StringUtils.getCommonPrefix(k1 = Util.getKey(e1 = IterableUtils.get(es3, i)),
+								Util.getKey(e2 = IterableUtils.get(es3, j))))
+						&& StringUtils.isNotBlank(
+								cpv = StringUtils.getCommonPrefix(v1 = Util.getValue(e1), Util.getValue(e2)))) {
 					//
-					if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-							line)) && Util.groupCount(m2) > 1) {
-						//
-						IntCollectionUtil.addInt(intCollection, i);
-						//
-						MultimapUtil.put(multimap, Util.group(m2, 1), g22 = Util.group(m2, 2));
-						//
-						testAndAccept((a, b, c) -> StringUtils.isNotBlank(c), multimap, cpk,
-								StringUtils.getCommonPrefix(StringUtils.substringAfter(g16, g14), g22),
-								MultimapUtil::put);
-						//
-					} // if
-						//
+					MultimapUtil.put(multimap, cpk, cpv);
+					//
+					testAndAccept((a, b, c) -> StringUtils.length(b) == 1, multimap,
+							StringUtils.substringAfter(k1, cpk), Pair.of(v1, cpv), (a, b, c) -> MultimapUtil.put(a, b,
+									StringUtils.substringAfter(Util.getKey(c), Util.getValue(c))));
+					//
 				} // if
 					//
 			} // for
 				//
-			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
+		} // for
 			//
-			List<Entry<String, String>> es1 = Util
-					.toList(Util.filter(
-							testAndApply(Objects::nonNull, Util.spliterator(entries),
-									x -> StreamSupport.stream(x, false), null),
-							x -> StringUtils.length(Util.getKey(x)) == 1));
+		int lk1, ltsb;
+		//
+		Iterable<String> ik, iv;
+		//
+		TextStringBuilder tsbv = null;
+		//
+		for (int i = 0; i < IterableUtils.size(es3); i++) {
 			//
-			final List<Entry<String, String>> es2 = Util
-					.toList(Util.filter(
-							testAndApply(Objects::nonNull, Util.spliterator(entries),
-									x -> StreamSupport.stream(x, false), null),
-							x -> StringUtils.length(Util.getKey(x)) == 2));
-			//
-			Entry<String, String> e1, e2;
-			//
-			String k2, v2, cpv;
-			//
-			for (int i = 0; i < IterableUtils.size(es2); i++) {
+			if (Boolean.logicalOr(
+					IterableUtils.isEmpty(ik = MultimapUtil.get(multimap,
+							StringUtils.substring(k1 = Util.getKey(e1 = IterableUtils.get(es3, i)), 0, 1))),
+					IterableUtils.isEmpty(iv = MultimapUtil.get(multimap,
+							StringUtils.substring(k1, (lk1 = StringUtils.length(k1)) - 1, lk1))))) {
 				//
-				for (int j = 0; j < IterableUtils.size(es1); j++) {
+				continue;
+				//
+			} // if
+				//
+			ltsb = StringUtils.length(
+					tsbv = append(TextStringBuilderUtil.clear(ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
+							Util.getValue(e1)));
+			//
+			for (final String s : ik) {
+				//
+				testAndAccept(StringUtils::startsWith, tsbv, s, (a, b) -> delete(a, 0, StringUtils.length(b)));
+				//
+			} // for
+				//
+			if (ltsb == StringUtils.length(tsbv)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			ltsb = StringUtils.length(tsbv);
+			//
+			for (final String s : iv) {
+				//
+				if (StringUtils.endsWith(tsbv, s)) {
+					//
+					delete(tsbv, ltsb - StringUtils.length(s), ltsb);
+					//
+				} // if
+					//
+			} // for
+				//
+			if (ltsb == StringUtils.length(tsbv)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			MultimapUtil.put(multimap, StringUtils.substring(k1, lk1 - 2, lk1 - 1), Util.toString(tsbv));
+			//
+		} // for
+			//
+		final List<Entry<String, String>> es4 = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.spliterator(entries), x -> StreamSupport.stream(x, false), null),
+				x -> StringUtils.length(Util.getKey(x)) == 4));
+		//
+		String csk, csv;
+		//
+		for (int i = 0; i < IterableUtils.size(es4); i++) {
+			//
+			for (int j = 0; j < IterableUtils.size(es4); j++) {
+				//
+				if (i == j) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (Boolean.logicalAnd(
+						StringUtils.isNotBlank(csk = getCommonSuffix(k1 = Util.getKey(e1 = IterableUtils.get(es4, i)),
+								k2 = Util.getKey(e2 = IterableUtils.get(es4, j)))),
+						StringUtils
+								.isNotBlank(csv = getCommonSuffix(v1 = Util.getValue(e1), v2 = Util.getValue(e2))))) {
+					//
+					MultimapUtil.put(multimap, StringUtils.substringBefore(k1, csk),
+							StringUtils.substringBefore(v1, csv));
 					//
 					testAndAccept(
-							(a, b, c) -> StringUtils.isNotBlank(Util.getKey(c))
-									&& StringUtils.isNotBlank(Util.getValue(c)),
-							multimap, Pair.of(k2 = Util.getKey(e2 = IterableUtils.get(es2, i)), v2 = Util.getValue(e2)),
-							Pair.of(StringUtils.getCommonPrefix(Util.getKey(e1 = IterableUtils.get(es1, j)), k2),
-									StringUtils.getCommonPrefix(Util.getValue(e1), v2)),
-							(a, b, c) -> MultimapUtil.put(multimap,
-									StringUtils.substringAfter(Util.getKey(b), Util.getKey(c)),
-									StringUtils.substringAfter(Util.getValue(b), Util.getValue(c))));
-					//
-				} // for
-					//
-			} // for
-				//
-			final List<Entry<String, String>> es3 = Util
-					.toList(Util.filter(
-							testAndApply(Objects::nonNull, Util.spliterator(entries),
-									x -> StreamSupport.stream(x, false), null),
-							x -> StringUtils.length(Util.getKey(x)) == 3));
-			//
-			String k1, v1;
-			//
-			for (int i = 0; i < IterableUtils.size(es3); i++) {
-				//
-				for (int j = 0; j < IterableUtils.size(es3); j++) {
-					//
-					if (i == j) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (StringUtils.isNotBlank(
-							cpk = StringUtils.getCommonPrefix(k1 = Util.getKey(e1 = IterableUtils.get(es3, i)),
-									Util.getKey(e2 = IterableUtils.get(es3, j))))
-							&& StringUtils.isNotBlank(
-									cpv = StringUtils.getCommonPrefix(v1 = Util.getValue(e1), Util.getValue(e2)))) {
-						//
-						MultimapUtil.put(multimap, cpk, cpv);
-						//
-						testAndAccept((a, b, c) -> StringUtils.length(b) == 1, multimap,
-								StringUtils.substringAfter(k1, cpk), Pair.of(v1, cpv), (a, b, c) -> MultimapUtil.put(a,
-										b, StringUtils.substringAfter(Util.getKey(c), Util.getValue(c))));
-						//
-					} // if
-						//
-				} // for
-					//
-			} // for
-				//
-			int lk1, ltsb;
-			//
-			Iterable<String> ik, iv;
-			//
-			TextStringBuilder tsbv = null;
-			//
-			for (int i = 0; i < IterableUtils.size(es3); i++) {
-				//
-				if (Boolean.logicalOr(
-						IterableUtils.isEmpty(ik = MultimapUtil.get(multimap,
-								StringUtils.substring(k1 = Util.getKey(e1 = IterableUtils.get(es3, i)), 0, 1))),
-						IterableUtils.isEmpty(iv = MultimapUtil.get(multimap,
-								StringUtils.substring(k1, (lk1 = StringUtils.length(k1)) - 1, lk1))))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				ltsb = StringUtils.length(
-						tsbv = append(TextStringBuilderUtil.clear(ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
-								Util.getValue(e1)));
-				//
-				for (final String s : ik) {
-					//
-					testAndAccept(StringUtils::startsWith, tsbv, s, (a, b) -> delete(a, 0, StringUtils.length(b)));
-					//
-				} // for
-					//
-				if (ltsb == StringUtils.length(tsbv)) {
-					//
-					continue;
-					//
-				} // if
-					//
-				ltsb = StringUtils.length(tsbv);
-				//
-				for (final String s : iv) {
-					//
-					if (StringUtils.endsWith(tsbv, s)) {
-						//
-						delete(tsbv, ltsb - StringUtils.length(s), ltsb);
-						//
-					} // if
-						//
-				} // for
-					//
-				if (ltsb == StringUtils.length(tsbv)) {
-					//
-					continue;
-					//
-				} // if
-					//
-				MultimapUtil.put(multimap, StringUtils.substring(k1, lk1 - 2, lk1 - 1), Util.toString(tsbv));
-				//
-			} // for
-				//
-			final List<Entry<String, String>> es4 = Util
-					.toList(Util.filter(
-							testAndApply(Objects::nonNull, Util.spliterator(entries),
-									x -> StreamSupport.stream(x, false), null),
-							x -> StringUtils.length(Util.getKey(x)) == 4));
-			//
-			String csk, csv;
-			//
-			for (int i = 0; i < IterableUtils.size(es4); i++) {
-				//
-				for (int j = 0; j < IterableUtils.size(es4); j++) {
-					//
-					if (i == j) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (Boolean.logicalAnd(
-							StringUtils
-									.isNotBlank(csk = getCommonSuffix(k1 = Util.getKey(e1 = IterableUtils.get(es4, i)),
-											k2 = Util.getKey(e2 = IterableUtils.get(es4, j)))),
-							StringUtils.isNotBlank(
-									csv = getCommonSuffix(v1 = Util.getValue(e1), v2 = Util.getValue(e2))))) {
-						//
-						MultimapUtil.put(multimap, StringUtils.substringBefore(k1, csk),
-								StringUtils.substringBefore(v1, csv));
-						//
-						testAndAccept(
-								(a, b) -> Boolean.logicalAnd(StringUtils.isNotBlank(Util.getKey(Util.getValue1(b))),
-										StringUtils.isNotBlank(Util.getValue(Util.getValue1(b)))),
-								multimap,
-								Triplet.with(Pair.of(k1, v1),
-										Pair.of(StringUtils.getCommonPrefix(k1, k2),
-												StringUtils.getCommonPrefix(v1, v2)),
-										Pair.of(csk, csv)),
-								(a, b) -> MultimapUtil.put(multimap,
-										StringUtils.substringBetween(Util.getKey(IValue0Util.getValue0(b)),
-												Util.getKey(Util.getValue1(b)), Util.getKey(Util.getValue2(b))),
-										StringUtils.substringBetween(Util.getValue(IValue0Util.getValue0(b)),
-												Util.getValue(Util.getValue1(b)), Util.getValue(Util.getValue2(b)))));
-						//
-					} // if
-						//
-				} // for
-					//
-			} // for
-				//
-			es1 = Util.toList(Util.filter(testAndApply(Objects::nonNull, Util.spliterator(entries),
-					x -> StreamSupport.stream(x, false), null), x -> StringUtils.length(Util.getKey(x)) == 1));
-			//
-			append(TextStringBuilderUtil.clear(tsbv), StringUtils.substringAfter(g16, g14));
-			//
-			final TextStringBuilder tsbk = new TextStringBuilder(g15);
-			//
-			int lk, lv;
-			//
-			for (int i = 0; i < IterableUtils.size(es1); i++) {
-				//
-				k1 = Util.getKey(e1 = IterableUtils.get(es1, i));
-				//
-				if (StringUtils.startsWith(tsbv, v1 = Util.getValue(e1))) {
-					//
-					delete(tsbk, 0, StringUtils.length(k1));
-					//
-					delete(tsbv, 0, StringUtils.length(v1));
-					//
-				} else if (StringUtils.endsWith(tsbv, v1)) {
-					//
-					delete(tsbk, (lk = StringUtils.length(tsbk)) - StringUtils.length(k1), lk);
-					//
-					delete(tsbv, (lv = StringUtils.length(tsbv)) - StringUtils.length(v1), lv);
+							(a, b) -> Boolean.logicalAnd(StringUtils.isNotBlank(Util.getKey(Util.getValue1(b))),
+									StringUtils.isNotBlank(Util.getValue(Util.getValue1(b)))),
+							multimap,
+							Triplet.with(Pair.of(k1, v1),
+									Pair.of(StringUtils.getCommonPrefix(k1, k2), StringUtils.getCommonPrefix(v1, v2)),
+									Pair.of(csk, csv)),
+							(a, b) -> MultimapUtil.put(multimap,
+									StringUtils.substringBetween(Util.getKey(IValue0Util.getValue0(b)),
+											Util.getKey(Util.getValue1(b)), Util.getKey(Util.getValue2(b))),
+									StringUtils.substringBetween(Util.getValue(IValue0Util.getValue0(b)),
+											Util.getValue(Util.getValue1(b)), Util.getValue(Util.getValue2(b)))));
 					//
 				} // if
 					//
 			} // for
 				//
-			Util.forEach(MultimapUtil.entries(ImmutableMultimap.of("車", "ぐるま", "手", "で", "天宮", "てんぐう")),
-					x -> MultimapUtil.remove(multimap, Util.getKey(x), Util.getValue(x)));
+		} // for
 			//
-			testAndAccept((a, b, c) -> Boolean.logicalAnd(StringUtils.isNotBlank(b), StringUtils.isNotBlank(c)),
-					multimap, tsbk, tsbv, (a, b, c) -> MultimapUtil.put(a, Util.toString(b), Util.toString(c)));
+		es1 = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.spliterator(entries), x -> StreamSupport.stream(x, false), null),
+				x -> StringUtils.length(Util.getKey(x)) == 1));
+		//
+		append(TextStringBuilderUtil.clear(tsbv), StringUtils.substringAfter(g16, g14));
+		//
+		final TextStringBuilder tsbk = new TextStringBuilder(g15);
+		//
+		int lk, lv;
+		//
+		for (int i = 0; i < IterableUtils.size(es1); i++) {
 			//
-			return Pair.of(multimap, intCollection);
+			k1 = Util.getKey(e1 = IterableUtils.get(es1, i));
 			//
-		} // if
+			if (StringUtils.startsWith(tsbv, v1 = Util.getValue(e1))) {
+				//
+				delete(tsbk, 0, StringUtils.length(k1));
+				//
+				delete(tsbv, 0, StringUtils.length(v1));
+				//
+			} else if (StringUtils.endsWith(tsbv, v1)) {
+				//
+				delete(tsbk, (lk = StringUtils.length(tsbk)) - StringUtils.length(k1), lk);
+				//
+				delete(tsbv, (lv = StringUtils.length(tsbv)) - StringUtils.length(v1), lv);
+				//
+			} // if
+				//
+		} // for
 			//
-		return null;
+		Util.forEach(MultimapUtil.entries(ImmutableMultimap.of("車", "ぐるま", "手", "で", "天宮", "てんぐう")),
+				x -> MultimapUtil.remove(multimap, Util.getKey(x), Util.getValue(x)));
+		//
+		testAndAccept((a, b, c) -> Boolean.logicalAnd(StringUtils.isNotBlank(b), StringUtils.isNotBlank(c)), multimap,
+				tsbk, tsbv, (a, b, c) -> MultimapUtil.put(a, Util.toString(b), Util.toString(c)));
+		//
+		return Pair.of(multimap, intCollection);
 		//
 	}
 
