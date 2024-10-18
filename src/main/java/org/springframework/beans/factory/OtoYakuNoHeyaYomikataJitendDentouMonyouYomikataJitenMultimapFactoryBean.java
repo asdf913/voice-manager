@@ -887,28 +887,24 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			for (int j = 0; j < IterableUtils.size(es3); j++) {
 				//
-				if (i == j) {
+				if (i == j
+						|| StringUtils.isBlank(
+								cpk = StringUtils.getCommonPrefix(k1 = Util.getKey(e1 = IterableUtils.get(es3, i)),
+										Util.getKey(e2 = IterableUtils.get(es3, j))))
+						|| StringUtils.isBlank(
+								cpv = StringUtils.getCommonPrefix(v1 = Util.getValue(e1), Util.getValue(e2)))) {
 					//
 					continue;
 					//
 				} // if
 					//
-				if (Boolean.logicalAnd(
-						StringUtils.isNotBlank(
-								cpk = StringUtils.getCommonPrefix(k1 = Util.getKey(e1 = IterableUtils.get(es3, i)),
-										Util.getKey(e2 = IterableUtils.get(es3, j)))),
-						StringUtils.isNotBlank(
-								cpv = StringUtils.getCommonPrefix(v1 = Util.getValue(e1), Util.getValue(e2))))) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cpk, cpv);
-					//
-					testAndAccept((a, b, c) -> StringUtils.length(b) == 1,
-							multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							StringUtils.substringAfter(k1, cpk), Pair.of(v1, cpv), (a, b, c) -> MultimapUtil.put(a, b,
-									StringUtils.substringAfter(Util.getKey(c), Util.getValue(c))));
-					//
-				} // if
-					//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cpk, cpv);
+				//
+				testAndAccept((a, b, c) -> StringUtils.length(b) == 1,
+						multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						StringUtils.substringAfter(k1, cpk), Pair.of(v1, cpv), (a, b, c) -> MultimapUtil.put(a, b,
+								StringUtils.substringAfter(Util.getKey(c), Util.getValue(c))));
+				//
 			} // for
 				//
 		} // for
