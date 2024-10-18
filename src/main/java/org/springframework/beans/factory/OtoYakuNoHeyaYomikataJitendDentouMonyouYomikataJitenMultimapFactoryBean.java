@@ -411,57 +411,26 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
-		Matcher m2;
-		//
 		final IntCollection intCollection = IntList.create();
 		//
 		final Multimap<String, String> multimap = LinkedHashMultimap.create();
 		//
-		final Entry<Multimap<String, String>, IntCollection> entry = toMultimapAndIntCollection4A(patternMap, iop,
-				lines, Quartet.with(Util.group(m1, 1), Util.group(m1, 2), Util.group(m1, 3), Util.group(m1, 4)));
+		// A
+		//
+		Entry<Multimap<String, String>, IntCollection> entry = toMultimapAndIntCollection4A(patternMap, iop, lines,
+				Quartet.with(Util.group(m1, 1), Util.group(m1, 2), Util.group(m1, 3), Util.group(m1, 4)));
 		//
 		IntCollectionUtil.addAllInts(intCollection, Util.getValue(entry));
 		//
 		MultimapUtil.putAll(multimap, Util.getKey(entry));
 		//
-		Iterable<Entry<String, String>> entries = null;
+		// B
 		//
-		String sb, g25;
+		IntCollectionUtil.addAllInts(intCollection,
+				Util.getValue(entry = toMultimapAndIntCollection4B(patternMap, iop, lines, multimap)));
 		//
-		for (int i = 0; i < IterableUtils.size(lines); i++) {
-			//
-			if (iop != null && iop.keyInt() == i) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-					"^\\p{InKatakana}+(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-					IterableUtils.get(lines, i)))
-					&& Util.groupCount(m2) > 4
-					&& StringUtils.isNotBlank(sb = StringUtils.substringBetween(g25 = Util.group(m2, 5),
-							Util.group(m2, 1), Util.group(m2, 3)))
-					&& Util.iterator(entries = MultimapUtil.entries(multimap)) != null) {
-				//
-				for (final Entry<String, String> en : entries) {
-					// //
-					if (StringUtils.endsWith(g25, Util.getValue(en))) {
-						//
-						IntCollectionUtil.addInt(intCollection, i);
-						//
-						MultimapUtil.putAll(multimap, ImmutableMultimap.of(Util.group(m2, 2), sb,
-								StringUtils.substringBefore(Util.group(m2, 4), Util.getKey(en)),
-								StringUtils.substringBetween(Util.group(m2, 5), Util.group(m2, 3), Util.getValue(en))));
-						//
-					} // if
-						//
-				} // for
-					//
-			} // if
-				//
-		} // for
-			//
+		MultimapUtil.putAll(multimap, Util.getKey(entry));
+		//
 		return Pair.of(multimap, intCollection);
 		//
 	}
@@ -610,6 +579,57 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			} // if
 				//
 		} // if
+			//
+		return Pair.of(multimap, intCollection);
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection4B(
+			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines,
+			final Multimap<String, String> multimap) {
+		//
+		Matcher m2;
+		//
+		String sb, g25;
+		//
+		Iterable<Entry<String, String>> entries;
+		//
+		IntCollection intCollection = null;
+		//
+		for (int i = 0; i < IterableUtils.size(lines); i++) {
+			//
+			if (iop != null && iop.keyInt() == i) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+					"^\\p{InKatakana}+(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+					IterableUtils.get(lines, i)))
+					&& Util.groupCount(m2) > 4
+					&& StringUtils.isNotBlank(sb = StringUtils.substringBetween(g25 = Util.group(m2, 5),
+							Util.group(m2, 1), Util.group(m2, 3)))
+					&& Util.iterator(entries = MultimapUtil.entries(multimap)) != null) {
+				//
+				for (final Entry<String, String> en : entries) {
+					// //
+					if (StringUtils.endsWith(g25, Util.getValue(en))) {
+						//
+						IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
+								i);
+						//
+						MultimapUtil.putAll(multimap, ImmutableMultimap.of(Util.group(m2, 2), sb,
+								StringUtils.substringBefore(Util.group(m2, 4), Util.getKey(en)),
+								StringUtils.substringBetween(Util.group(m2, 5), Util.group(m2, 3), Util.getValue(en))));
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+		} // for
 			//
 		return Pair.of(multimap, intCollection);
 		//
