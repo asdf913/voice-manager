@@ -879,34 +879,38 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		Multimap<String, String> multimap = null;
 		//
-		Entry<String, String> e1, e2;
+		Entry<String, String> e1;
 		//
 		String k1, v1, cpk, cpv;
 		//
-		for (int i = 0; i < IterableUtils.size(es3); i++) {
+		final List<Entry<String, String>> list = testAndApply(Objects::nonNull, es3, IterableUtils::toList, null);
+		//
+		final List<Quartet<String, String, String, String>> quartets = Util.toList(
+				Util.map(Util.stream(testAndApply(Objects::nonNull, list, x -> Lists.cartesianProduct(x, x), null)),
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toQuartet));
+		//
+		Quartet<String, String, String, String> quartet = null;
+		//
+		for (int i = 0; i < IterableUtils.size(quartets); i++) {
 			//
-			for (int j = 0; j < IterableUtils.size(es3); j++) {
+			if (Util.or(
+					StringUtils.isBlank(cpk = StringUtils.getCommonPrefix(
+							k1 = IValue0Util.getValue0(quartet = IterableUtils.get(quartets, i)),
+							Util.getValue2(quartet))),
+					StringUtils.isBlank(cpv = StringUtils.getCommonPrefix(v1 = Util.getValue1(quartet),
+							Util.getValue3(quartet))))) {
 				//
-				if (Util.or(i == j,
-						StringUtils.isBlank(
-								cpk = StringUtils.getCommonPrefix(k1 = Util.getKey(e1 = IterableUtils.get(es3, i)),
-										Util.getKey(e2 = IterableUtils.get(es3, j)))),
-						StringUtils.isBlank(
-								cpv = StringUtils.getCommonPrefix(v1 = Util.getValue(e1), Util.getValue(e2))))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cpk, cpv);
+				continue;
 				//
-				testAndAccept((a, b, c) -> StringUtils.length(b) == 1,
-						multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						StringUtils.substringAfter(k1, cpk), Pair.of(v1, cpv), (a, b, c) -> MultimapUtil.put(a, b,
-								StringUtils.substringAfter(Util.getKey(c), Util.getValue(c))));
+			} // if
 				//
-			} // for
-				//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cpk, cpv);
+			//
+			testAndAccept((a, b, c) -> StringUtils.length(b) == 1,
+					multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					StringUtils.substringAfter(k1, cpk), Pair.of(v1, cpv),
+					(a, b, c) -> MultimapUtil.put(a, b, StringUtils.substringAfter(Util.getKey(c), Util.getValue(c))));
+			//
 		} // for
 			//
 		int lk1, ltsb;
