@@ -702,43 +702,28 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		MultimapUtil.putAll(multimap, Util.getKey(entry));
 		//
+		// B
+		//
 		final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
 		//
-		List<Entry<String, String>> es1 = Util.toList(Util.filter(
-				testAndApply(Objects::nonNull, Util.spliterator(entries), x -> StreamSupport.stream(x, false), null),
-				x -> StringUtils.length(Util.getKey(x)) == 1));
+		MultimapUtil.putAll(multimap,
+				toMultimap5B(
+						Util.toList(Util.filter(
+								testAndApply(Objects::nonNull, Util.spliterator(entries),
+										x -> StreamSupport.stream(x, false), null),
+								x -> StringUtils.length(Util.getKey(x)) == 1)),
+						Util.toList(Util.filter(
+								testAndApply(Objects::nonNull, Util.spliterator(entries),
+										x -> StreamSupport.stream(x, false), null),
+								x -> StringUtils.length(Util.getKey(x)) == 2))));
 		//
-		final List<Entry<String, String>> es2 = Util.toList(Util.filter(
-				testAndApply(Objects::nonNull, Util.spliterator(entries), x -> StreamSupport.stream(x, false), null),
-				x -> StringUtils.length(Util.getKey(x)) == 2));
-		//
-		Entry<String, String> e1, e2;
-		//
-		String k2, v2, cpv;
-		//
-		for (int i = 0; i < IterableUtils.size(es2); i++) {
-			//
-			for (int j = 0; j < IterableUtils.size(es1); j++) {
-				//
-				testAndAccept(
-						(a, b, c) -> Boolean.logicalAnd(StringUtils.isNotBlank(Util.getKey(c)),
-								StringUtils.isNotBlank(Util.getValue(c))),
-						multimap, Pair.of(k2 = Util.getKey(e2 = IterableUtils.get(es2, i)), v2 = Util.getValue(e2)),
-						Pair.of(StringUtils.getCommonPrefix(Util.getKey(e1 = IterableUtils.get(es1, j)), k2),
-								StringUtils.getCommonPrefix(Util.getValue(e1), v2)),
-						(a, b, c) -> MultimapUtil.put(multimap,
-								StringUtils.substringAfter(Util.getKey(b), Util.getKey(c)),
-								StringUtils.substringAfter(Util.getValue(b), Util.getValue(c))));
-				//
-			} // for
-				//
-		} // for
-			//
 		final List<Entry<String, String>> es3 = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.spliterator(entries), x -> StreamSupport.stream(x, false), null),
 				x -> StringUtils.length(Util.getKey(x)) == 3));
 		//
-		String k1, v1, cpk;
+		String k1, k2, v1, v2, cpk, cpv;
+		//
+		Entry<String, String> e1, e2;
 		//
 		for (int i = 0; i < IterableUtils.size(es3); i++) {
 			//
@@ -868,7 +853,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 		} // for
 			//
-		es1 = Util.toList(Util.filter(
+		final List<Entry<String, String>> es1 = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.spliterator(entries), x -> StreamSupport.stream(x, false), null),
 				x -> StringUtils.length(Util.getKey(x)) == 1));
 		//
@@ -966,6 +951,37 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		} // for
 			//
 		return Pair.of(multimap, intCollection);
+		//
+	}
+
+	private static Multimap<String, String> toMultimap5B(final Iterable<Entry<String, String>> es1,
+			final Iterable<Entry<String, String>> es2) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		Entry<String, String> e1, e2;
+		//
+		String k2, v2;
+		//
+		for (int i = 0; i < IterableUtils.size(es2); i++) {
+			//
+			for (int j = 0; j < IterableUtils.size(es1); j++) {
+				//
+				testAndAccept(
+						(a, b, c) -> Boolean.logicalAnd(StringUtils.isNotBlank(Util.getKey(c)),
+								StringUtils.isNotBlank(Util.getValue(c))),
+						multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Pair.of(k2 = Util.getKey(e2 = IterableUtils.get(es2, i)), v2 = Util.getValue(e2)),
+						Pair.of(StringUtils.getCommonPrefix(Util.getKey(e1 = IterableUtils.get(es1, j)), k2),
+								StringUtils.getCommonPrefix(Util.getValue(e1), v2)),
+						(a, b, c) -> MultimapUtil.put(a, StringUtils.substringAfter(Util.getKey(b), Util.getKey(c)),
+								StringUtils.substringAfter(Util.getValue(b), Util.getValue(c))));
+				//
+			} // for
+				//
+		} // for
+			//
+		return multimap;
 		//
 	}
 
