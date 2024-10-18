@@ -940,7 +940,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static void delete(final TextStringBuilder instance, final int startIndex, final int endIndex) {
+	private static void delete(@Nullable final TextStringBuilder instance, final int startIndex, final int endIndex) {
 		if (instance != null) {
 			instance.delete(startIndex, endIndex);
 		}
@@ -967,8 +967,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static <T, U, V> void testAndAccept(final TriPredicate<T, U, V> instance, final T t, final U u, final V v,
-			final TriConsumer<T, U, V> consumer) {
+	private static <T, U, V> void testAndAccept(@Nullable final TriPredicate<T, U, V> instance, final T t, final U u,
+			final V v, @Nullable final TriConsumer<T, U, V> consumer) {
 		if (instance != null && instance.test(t, u, v) && consumer != null) {
 			consumer.accept(t, u, v);
 		} // if
