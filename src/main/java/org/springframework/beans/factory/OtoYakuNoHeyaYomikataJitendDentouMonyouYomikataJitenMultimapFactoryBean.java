@@ -926,11 +926,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 				} // if
 					//
-				if (StringUtils
-						.isNotBlank(cpk = StringUtils.getCommonPrefix(k1 = Util.getKey(e1 = IterableUtils.get(es3, i)),
-								Util.getKey(e2 = IterableUtils.get(es3, j))))
-						&& StringUtils.isNotBlank(
-								cpv = StringUtils.getCommonPrefix(v1 = Util.getValue(e1), Util.getValue(e2)))) {
+				if (Boolean.logicalAnd(
+						StringUtils.isNotBlank(
+								cpk = StringUtils.getCommonPrefix(k1 = Util.getKey(e1 = IterableUtils.get(es3, i)),
+										Util.getKey(e2 = IterableUtils.get(es3, j)))),
+						StringUtils.isNotBlank(
+								cpv = StringUtils.getCommonPrefix(v1 = Util.getValue(e1), Util.getValue(e2))))) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cpk, cpv);
 					//
