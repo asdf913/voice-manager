@@ -42,6 +42,7 @@ import org.jsoup.nodes.TextNode;
 import org.meeuw.functional.TriPredicate;
 
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -719,79 +720,20 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		// C
 		//
-		final List<Entry<String, String>> es3 = Util.toList(Util.filter(
-				testAndApply(Objects::nonNull, Util.spliterator(entries), x -> StreamSupport.stream(x, false), null),
-				x -> StringUtils.length(Util.getKey(x)) == 3));
+		MultimapUtil
+				.putAll(multimap,
+						toMultimap5C(Util.toList(Util.filter(
+								testAndApply(Objects::nonNull, Util.spliterator(entries),
+										x -> StreamSupport.stream(x, false), null),
+								x -> StringUtils.length(Util.getKey(x)) == 3)), multimap));
 		//
-		MultimapUtil.putAll(multimap, toMultimap5C(es3));
-		//
-		String k1;
-		//
-		Entry<String, String> e1;
-		//
-		int lk1, ltsb;
-		//
-		Iterable<String> ik, iv;
-		//
-		TextStringBuilder tsbv = null;
-		//
-		for (int i = 0; i < IterableUtils.size(es3); i++) {
-			//
-			if (Boolean.logicalOr(
-					IterableUtils.isEmpty(ik = MultimapUtil.get(multimap,
-							StringUtils.substring(k1 = Util.getKey(e1 = IterableUtils.get(es3, i)), 0, 1))),
-					IterableUtils.isEmpty(iv = MultimapUtil.get(multimap,
-							StringUtils.substring(k1, (lk1 = StringUtils.length(k1)) - 1, lk1))))) {
-				//
-				continue;
-				//
-			} // if
-				//
-			ltsb = StringUtils.length(
-					tsbv = append(TextStringBuilderUtil.clear(ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
-							Util.getValue(e1)));
-			//
-			for (final String s : ik) {
-				//
-				testAndAccept(StringUtils::startsWith, tsbv, s, (a, b) -> delete(a, 0, StringUtils.length(b)));
-				//
-			} // for
-				//
-			if (ltsb == StringUtils.length(tsbv)) {
-				//
-				continue;
-				//
-			} // if
-				//
-			ltsb = StringUtils.length(tsbv);
-			//
-			for (final String s : iv) {
-				//
-				if (StringUtils.endsWith(tsbv, s)) {
-					//
-					delete(tsbv, ltsb - StringUtils.length(s), ltsb);
-					//
-				} // if
-					//
-			} // for
-				//
-			if (ltsb == StringUtils.length(tsbv)) {
-				//
-				continue;
-				//
-			} // if
-				//
-			MultimapUtil.put(multimap, StringUtils.substring(k1, lk1 - 2, lk1 - 1), Util.toString(tsbv));
-			//
-		} // for
-			//
 		final List<Entry<String, String>> es4 = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.spliterator(entries), x -> StreamSupport.stream(x, false), null),
 				x -> StringUtils.length(Util.getKey(x)) == 4));
 		//
-		String k2, v1, v2, csk, csv;
+		String k1, k2, v1, v2, csk, csv;
 		//
-		Entry<String, String> e2;
+		Entry<String, String> e1, e2;
 		//
 		for (int i = 0; i < IterableUtils.size(es4); i++) {
 			//
@@ -835,9 +777,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				testAndApply(Objects::nonNull, Util.spliterator(entries), x -> StreamSupport.stream(x, false), null),
 				x -> StringUtils.length(Util.getKey(x)) == 1));
 		//
-		append(TextStringBuilderUtil.clear(tsbv), StringUtils.substringAfter(g16, g14));
-		//
 		final TextStringBuilder tsbk = new TextStringBuilder(g15);
+		//
+		final TextStringBuilder tsbv = new TextStringBuilder(StringUtils.substringAfter(g16, g14));
 		//
 		int lk, lv;
 		//
@@ -965,7 +907,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	@Nullable
-	private static Multimap<String, String> toMultimap5C(final Iterable<Entry<String, String>> es3) {
+	private static Multimap<String, String> toMultimap5C(final Iterable<Entry<String, String>> es3,
+			final Multimap<String, String> mm) {
 		//
 		Multimap<String, String> multimap = null;
 		//
@@ -1000,6 +943,68 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 			} // for
 				//
+		} // for
+			//
+		int lk1, ltsb;
+		//
+		Iterable<String> ik, iv;
+		//
+		TextStringBuilder tsbv = null;
+		//
+		for (int i = 0; i < IterableUtils.size(es3); i++) {
+			//
+			if (Boolean
+					.logicalOr(
+							IterableUtils
+									.isEmpty(ik = Iterables.concat(MultimapUtil.get(mm,
+											StringUtils.substring(k1 = Util.getKey(e1 = IterableUtils.get(es3, i)), 0,
+													1)),
+											MultimapUtil.get(multimap, StringUtils.substring(k1, 0, 1)))),
+							IterableUtils.isEmpty(iv = Iterables.concat(
+									MultimapUtil.get(mm,
+											StringUtils.substring(k1, (lk1 = StringUtils.length(k1)) - 1, lk1)),
+									MultimapUtil.get(multimap, StringUtils.substring(k1, lk1 - 1, lk1)))))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			ltsb = StringUtils.length(
+					tsbv = append(TextStringBuilderUtil.clear(ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
+							Util.getValue(e1)));
+			//
+			for (final String s : ik) {
+				//
+				testAndAccept(StringUtils::startsWith, tsbv, s, (a, b) -> delete(a, 0, StringUtils.length(b)));
+				//
+			} // for
+				//
+			if (ltsb == StringUtils.length(tsbv)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			ltsb = StringUtils.length(tsbv);
+			//
+			for (final String s : iv) {
+				//
+				if (StringUtils.endsWith(tsbv, s)) {
+					//
+					delete(tsbv, ltsb - StringUtils.length(s), ltsb);
+					//
+				} // if
+					//
+			} // for
+				//
+			if (ltsb == StringUtils.length(tsbv)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			MultimapUtil.put(multimap, StringUtils.substring(k1, lk1 - 2, lk1 - 1), Util.toString(tsbv));
+			//
 		} // for
 			//
 		return multimap;
