@@ -482,8 +482,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection4A1(
-			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop1, final IntObjectPair<String> iop2,
-			final Quartet<String, String, String, String> quartet) {
+			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop1,
+			@Nullable final IntObjectPair<String> iop2, final Quartet<String, String, String, String> quartet) {
 		//
 		final IntCollection intCollection = IntList.create();
 		//
