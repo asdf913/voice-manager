@@ -1343,7 +1343,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		Iterable<String> cs;
 		//
-		int l, lengthBefore;
+		int lengthBefore;
 		//
 		for (int i = 0; i < IterableUtils.size(entries); i++) {
 			//
@@ -1384,7 +1384,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					for (final String s : cs) {
 						//
 						testAndAccept((a, b) -> StringUtils.endsWith(Util.getKey(a), Util.getValue(a)),
-								Pair.of(tsbv, s), l = StringUtils.length(tsbv),
+								Pair.of(tsbv, s), StringUtils.length(tsbv),
 								(a, b) -> delete(Util.getKey(a), b - StringUtils.length(Util.getValue(a)), b));
 						//
 					} // for
