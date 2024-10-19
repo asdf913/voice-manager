@@ -1067,7 +1067,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		final String hiragana = StringUtils.substringAfter(g13, g11);
 		//
 		final Triplet<Multimap<String, String>, IntCollection, Entry<String, String>> triplet = toMultimapAndIntCollectionAndTriplet6A(
-				patternMap, iop, lines, Triplet.with(g11, Util.group(m1, 2), g13), hiragana);
+				iop, lines, Triplet.with(g11, Util.group(m1, 2), g13), hiragana);
 		//
 		IntCollectionUtil.addAllInts(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
 				Util.getValue1(triplet));
@@ -1115,7 +1115,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	private static Triplet<Multimap<String, String>, IntCollection, Entry<String, String>> toMultimapAndIntCollectionAndTriplet6A(
-			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines,
+			final IntObjectPair<String> iop, final Iterable<String> lines,
 			final Triplet<String, String, String> triplet, final String hiragana) {
 		//
 		final String g12 = Util.getValue1(triplet);
