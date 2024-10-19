@@ -1272,8 +1272,135 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 									StringUtils.substringAfter(g21, cpk), StringUtils.substringAfter(g22, cpv),
 									StringUtils.substringAfter(g11, cpk), StringUtils.substringAfter(g12, cpv)));
 					//
+				} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{3,}$"),
+						line)) && Util.groupCount(m2) > 1) {
+					//
+					IntCollectionUtil.addInt(intCollection, i);
+					//
+					MultimapUtil.put(multimap, Util.group(m2, 1), Util.group(m2, 2));
+					//
 				} // if
 					//
+			} // if
+				//
+		} // for
+			//
+		final Iterable<Entry<String, String>> entries = Util.toList(
+				Util.filter(Util.stream(MultimapUtil.entries(multimap)), x -> StringUtils.length(Util.getKey(x)) == 3));
+		//
+		String k, v, kLast, csk, csv;
+		//
+		int lk;
+		//
+		Entry<String, String> e;
+		//
+		for (int i = 0; i < IterableUtils.size(entries); i++) {
+			//
+			if (!multimap
+					.containsValue(kLast = StringUtils.substring(k = Util.getKey(e = IterableUtils.get(entries, i)),
+							(lk = StringUtils.length(k)) - 1, lk))) {
+				//
+				for (int j = 0; j < IterableUtils.size(lines); j++) {
+					//
+					if (iop != null && iop.keyInt() == j) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (StringUtils.contains(line = IterableUtils.get(lines, j), kLast)
+							&& Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA, line)) && Util.groupCount(m2) > 1
+							&& StringUtils.length(g21 = Util.group(m2, 1)) == 2) {
+						//
+						IntCollectionUtil.addInt(intCollection, j);
+						//
+						MultimapUtil.put(multimap, g21, g22 = Util.group(m2, 2));
+						//
+						if (StringUtils.isNotBlank(csk = getCommonSuffix(g21, k))
+								&& StringUtils.isNotBlank(csv = getCommonSuffix(g22, v = Util.getValue(e)))) {
+							//
+							MultimapUtil.putAll(multimap,
+									ImmutableMultimap.of(StringUtils.substringBefore(g21, csk),
+											StringUtils.substringBefore(g22, csv), csk, csv,
+											StringUtils.substringBefore(k, csk), StringUtils.substringBefore(v, csv)));
+							//
+						} // if
+							//
+						break;
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+		} // for
+			//
+		String kFirst;
+		//
+		TextStringBuilder tsbk, tsbv;
+		//
+		Iterable<String> cs;
+		//
+		int l, lengthBefore;
+		//
+		for (int i = 0; i < IterableUtils.size(entries); i++) {
+			//
+			if (StringUtils.length(k = Util.getKey(e = IterableUtils.get(entries, i))) == 3
+					&& multimap.containsKey(kFirst = StringUtils.substring(k, 0, 1))
+					&& multimap.containsKey(kLast = StringUtils.substring(k, (lk = StringUtils.length(k)) - 1, lk))) {
+				//
+				delete(delete(tsbk = new TextStringBuilder(k), lk - 1, lk), 0, 1);
+				//
+				tsbv = new TextStringBuilder(Util.getValue(e));
+				//
+				lengthBefore = StringUtils.length(tsbv);
+				//
+				if (Util.iterator(cs = MultimapUtil.get(multimap, kFirst)) != null) {
+					//
+					for (final String s : cs) {
+						//
+						if (StringUtils.startsWith(tsbv, s)) {
+							//
+							delete(tsbv, 0, StringUtils.length(s));
+							//
+						} // if
+							//
+					} // for
+						//
+				} // if
+					//
+				if (lengthBefore == StringUtils.length(tsbv)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				lengthBefore = StringUtils.length(tsbv);
+				//
+				if (Util.iterator(cs = MultimapUtil.get(multimap, kLast)) != null) {
+					//
+					for (final String s : cs) {
+						//
+						if (StringUtils.endsWith(tsbv, s)) {
+							//
+							delete(tsbv, (l = StringUtils.length(tsbv)) - StringUtils.length(s), l);
+							//
+						} // if
+							//
+					} // for
+						//
+				} // if
+					//
+				if (lengthBefore == StringUtils.length(tsbv)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
+				//
 			} // if
 				//
 		} // for
@@ -1282,10 +1409,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static void delete(@Nullable final TextStringBuilder instance, final int startIndex, final int endIndex) {
-		if (instance != null) {
-			instance.delete(startIndex, endIndex);
-		}
+	private static TextStringBuilder delete(@Nullable final TextStringBuilder instance, final int startIndex,
+			final int endIndex) {
+		return instance != null ? instance.delete(startIndex, endIndex) : instance;
 	}
 
 	@Nullable

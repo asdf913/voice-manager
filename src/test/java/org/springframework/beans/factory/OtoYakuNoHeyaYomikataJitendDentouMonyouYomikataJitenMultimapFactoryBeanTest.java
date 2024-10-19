@@ -339,9 +339,10 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "苺裂（いちごぎれ）＊名物裂"),
 						Arrays.asList(null, "古裂（こぎれ）"))));
 		//
-		Assertions.assertEquals("({印籠=[いんろう], 印金=[いんきん], 印=[いん], 金=[きん], 籠=[ろう]},[0, 1])",
+		Assertions.assertEquals(
+				"({印籠=[いんろう], 印金=[いんきん], 印=[いん], 金=[きん], 籠=[ろう], 印花文=[いんかもん], 葵文=[あおいもん], 葵=[あおい], 文=[もん], 印花=[いんか], 花=[か]},[0, 1, 2, 3])",
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "印籠（いんろう）＊薬入れ"),
-						Arrays.asList(null, "印金（いんきん）＊名物裂、技法"))));
+						Arrays.asList(null, "印金（いんきん）＊名物裂、技法", "印花文（いんかもん）＊文様装飾技法", "葵文（あおいもん）"))));
 		//
 	}
 
