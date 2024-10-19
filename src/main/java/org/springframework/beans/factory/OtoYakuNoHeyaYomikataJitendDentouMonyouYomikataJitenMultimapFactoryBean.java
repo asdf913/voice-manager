@@ -323,8 +323,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), j);
 				//
-			} else if (Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA,
-					line)) && Util.groupCount(m2) > 1
+			} else if (Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA, line)) && Util.groupCount(m2) > 1
 					&& StringUtils.isNotBlank(lcsk = longestCommonSubstring(g21 = Util.group(m2, 1), g13))
 					&& StringUtils.isNotBlank(lcsv = longestCommonSubstring(g22 = Util.group(m2, 2), g14))) {
 				//
@@ -814,8 +813,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			if (StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g15, line = IterableUtils.get(lines, i)))) {
 				//
-				if (Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA,
-						line)) && Util.groupCount(m2) > 1) {
+				if (Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA, line)) && Util.groupCount(m2) > 1) {
 					//
 					IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), i);
 					//
@@ -1049,87 +1047,87 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				"^\\p{InKatakana}+(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
 				PairUtil.right(iop));
 		//
-		if (Util.matches(m1) && Util.groupCount(m1) > 2) {
+		if (!Util.matches(m1) || Util.groupCount(m1) <= 2) {
 			//
-			final String g12 = Util.group(m1, 2);
-			//
-			final String hiragana = StringUtils.substringAfter(Util.group(m1, 3), Util.group(m1, 1));
-			//
-			String g21, g22, csk, csv, tk = null, tv = null;
-			//
-			Matcher m2;
-			//
-			IntCollection intCollection = null;
-			//
-			Multimap<String, String> multimap = null;
-			//
-			for (int i = 0; i < IterableUtils.size(lines); i++) {
-				//
-				if (iop != null && iop.keyInt() == i) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA,
-						IterableUtils.get(lines, i))) && Util.groupCount(m2) > 1
-						&& StringUtils.isNotBlank(csk = getCommonSuffix(g21 = Util.group(m2, 1), g12))
-						&& StringUtils.length(g21) == 2
-						&& StringUtils.isNotBlank(csv = getCommonSuffix(g22 = Util.group(m2, 2), hiragana))) {
-					//
-					if (iop != null) {
-						//
-						IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
-								iop.keyInt());
-						//
-					} // if
-						//
-					IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), i);
-					//
-					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							ImmutableMultimap.of(tk = StringUtils.substringBefore(g12, csk),
-									tv = StringUtils.substringBefore(hiragana, csv), g21, g22,
-									StringUtils.substringBefore(g21, csk), StringUtils.substringBefore(g22, csv), csk,
-									csv));
-					//
-					break;
-					//
-				} // if
-					//
-			} // for
-				//
-			String cpk, cpv;
-			//
-			for (int i = 0; i < IterableUtils.size(lines); i++) {
-				//
-				if (iop != null && iop.keyInt() == i) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA,
-						IterableUtils.get(lines, i))) && Util.groupCount(m2) > 1
-						&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g21 = Util.group(m2, 1), tk))
-						&& StringUtils.length(g21) == 2 && !Objects.equals(g21, tk) && StringUtils
-								.isNotBlank(cpv = StringUtils.getCommonPrefix(g22 = Util.group(m2, 2), hiragana))) {
-					//
-					IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), i);
-					//
-					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							ImmutableMultimap.of(g21, g22, cpk, cpv, StringUtils.substringAfter(g21, cpk),
-									StringUtils.substringAfter(g22, cpv), StringUtils.substringAfter(tk, cpk),
-									StringUtils.substringAfter(tv, cpv)));
-					//
-				} // if
-					//
-			} // for
-				//
-			return Pair.of(multimap, intCollection);
+			return null;
 			//
 		} // if
 			//
-		return null;
+		final String g12 = Util.group(m1, 2);
+		//
+		final String hiragana = StringUtils.substringAfter(Util.group(m1, 3), Util.group(m1, 1));
+		//
+		String g21, g22, csk, csv, tk = null, tv = null;
+		//
+		Matcher m2;
+		//
+		IntCollection intCollection = null;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		for (int i = 0; i < IterableUtils.size(lines); i++) {
+			//
+			if (iop != null && iop.keyInt() == i) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA, IterableUtils.get(lines, i)))
+					&& Util.groupCount(m2) > 1
+					&& StringUtils.isNotBlank(csk = getCommonSuffix(g21 = Util.group(m2, 1), g12))
+					&& StringUtils.length(g21) == 2
+					&& StringUtils.isNotBlank(csv = getCommonSuffix(g22 = Util.group(m2, 2), hiragana))) {
+				//
+				if (iop != null) {
+					//
+					IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
+							iop.keyInt());
+					//
+				} // if
+					//
+				IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), i);
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						ImmutableMultimap.of(tk = StringUtils.substringBefore(g12, csk),
+								tv = StringUtils.substringBefore(hiragana, csv), g21, g22,
+								StringUtils.substringBefore(g21, csk), StringUtils.substringBefore(g22, csv), csk,
+								csv));
+				//
+				break;
+				//
+			} // if
+				//
+		} // for
+			//
+		String cpk, cpv;
+		//
+		for (int i = 0; i < IterableUtils.size(lines); i++) {
+			//
+			if (iop != null && iop.keyInt() == i) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA, IterableUtils.get(lines, i)))
+					&& Util.groupCount(m2) > 1
+					&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g21 = Util.group(m2, 1), tk))
+					&& StringUtils.length(g21) == 2 && !Objects.equals(g21, tk)
+					&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g22 = Util.group(m2, 2), hiragana))) {
+				//
+				IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), i);
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						ImmutableMultimap.of(g21, g22, cpk, cpv, StringUtils.substringAfter(g21, cpk),
+								StringUtils.substringAfter(g22, cpv), StringUtils.substringAfter(tk, cpk),
+								StringUtils.substringAfter(tv, cpv)));
+				//
+			} // if
+				//
+		} // for
+			//
+		return Pair.of(multimap, intCollection);
 		//
 	}
 
