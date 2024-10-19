@@ -1054,9 +1054,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
-		IntCollection intCollection = null;
+		final IntCollection intCollection = IntList.create();
 		//
-		Multimap<String, String> multimap = null;
+		final Multimap<String, String> multimap = LinkedHashMultimap.create();
 		//
 		// A
 		//
@@ -1069,11 +1069,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		final Triplet<Multimap<String, String>, IntCollection, Entry<String, String>> triplet = toMultimapAndIntCollectionAndTriplet6A(
 				iop, lines, Triplet.with(g11, Util.group(m1, 2), g13), hiragana);
 		//
-		IntCollectionUtil.addAllInts(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
-				Util.getValue1(triplet));
+		IntCollectionUtil.addAllInts(intCollection, Util.getValue1(triplet));
 		//
-		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-				IValue0Util.getValue0(triplet));
+		MultimapUtil.putAll(multimap, IValue0Util.getValue0(triplet));
 		//
 		final Entry<String, String> entry = Util.getValue2(triplet);
 		//
@@ -1099,9 +1097,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					&& StringUtils.length(g21) == 2 && !Objects.equals(g21, tk)
 					&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g22 = Util.group(m2, 2), hiragana))) {
 				//
-				IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), i);
+				IntCollectionUtil.addInt(intCollection, i);
 				//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+				MultimapUtil.putAll(multimap,
 						ImmutableMultimap.of(g21, g22, cpk, cpv, StringUtils.substringAfter(g21, cpk),
 								StringUtils.substringAfter(g22, cpv), StringUtils.substringAfter(tk, cpk),
 								StringUtils.substringAfter(tv, cpv)));
