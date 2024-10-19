@@ -121,7 +121,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection3,
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection4,
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection5,
-						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection6);
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection6,
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection7);
 		//
 		Entry<Multimap<String, String>, IntCollection> entry = null;
 		//
@@ -1157,6 +1158,63 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		} // for
 			//
 		return Triplet.with(multimap, intCollection, Pair.of(tk, tv));
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection7(
+			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines) {
+		//
+		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{3}$"),
+				PairUtil.right(iop));
+		//
+		if (Util.matches(m1) && Util.groupCount(m1) > 1) {
+			//
+			final IntCollection intCollection = iop != null ? IntList.create(iop.keyInt()) : IntList.create();
+			//
+			final String g11 = Util.group(m1, 1);
+			//
+			final String g12 = Util.group(m1, 2);
+			//
+			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
+			//
+			String line, g21, g22, csk, csv;
+			//
+			int l;
+			//
+			Matcher m2;
+			//
+			for (int i = 0; i < IterableUtils.size(lines); i++) {
+				//
+				if (iop != null && iop.keyInt() == i) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if ((l = StringUtils.length(g11)) == 2
+						&& StringUtils.contains(line = IterableUtils.get(lines, i), StringUtils.substring(g11, 1, l))
+						&& Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA, line)) && Util.groupCount(m2) > 1
+						&& StringUtils.isNotBlank(csk = getCommonSuffix(g21 = Util.group(m2, 1), g11))
+						&& StringUtils.isNotBlank(csv = getCommonSuffix(g22 = Util.group(m2, 2), g12))
+						&& StringUtils.length(g21) == 2) {
+					//
+					IntCollectionUtil.addInt(intCollection, i);
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(g21, g22, StringUtils.substringBefore(g21, csk),
+									StringUtils.substringBefore(g22, csv), csk, csv,
+									StringUtils.substringBefore(g11, csk), StringUtils.substringBefore(g12, csv)));
+					//
+				} // if
+					//
+			} // for
+				//
+			return Pair.of(multimap, intCollection);
+			//
+		} // if
+			//
+		return null;
 		//
 	}
 
