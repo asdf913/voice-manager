@@ -122,7 +122,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection4,
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection5,
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection6,
-						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection7);
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection7,
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection8);
 		//
 		Entry<Multimap<String, String>, IntCollection> entry = null;
 		//
@@ -1168,26 +1169,25 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection7(
 			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines) {
 		//
-		final String right = PairUtil.right(iop);
-		//
-		Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
+		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{3}$"),
-				right);
-		//
-		String g11, g12, line, g21, g22;
-		//
-		Matcher m2;
+				PairUtil.right(iop));
 		//
 		if (Util.matches(m1) && Util.groupCount(m1) > 1) {
 			//
 			final IntCollection intCollection = ObjectUtils.getIfNull(createIntCollection(iop), IntList::create);
 			//
-			final Multimap<String, String> multimap = LinkedHashMultimap
-					.create(ImmutableMultimap.of(g11 = Util.group(m1, 1), g12 = Util.group(m1, 2)));
+			final String g11 = Util.group(m1, 1);
 			//
-			String csk, csv;
+			final String g12 = Util.group(m1, 2);
+			//
+			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
+			//
+			String line, g21, g22, csk, csv;
 			//
 			int l;
+			//
+			Matcher m2;
 			//
 			for (int i = 0; i < IterableUtils.size(lines); i++) {
 				//
@@ -1217,16 +1217,32 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			return Pair.of(multimap, intCollection);
 			//
-		} else if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection8(
+			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines) {
+		//
+		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}$"),
-				right)) && Util.groupCount(m1) > 1) {
+				PairUtil.right(iop));
+		//
+		if (Util.matches(m1) && Util.groupCount(m1) > 1) {
 			//
 			final IntCollection intCollection = ObjectUtils.getIfNull(createIntCollection(iop), IntList::create);
 			//
-			final Multimap<String, String> multimap = LinkedHashMultimap
-					.create(ImmutableMultimap.of(g11 = Util.group(m1, 1), g12 = Util.group(m1, 2)));
+			final String g11 = Util.group(m1, 1);
 			//
-			String cpk, cpv;
+			final String g12 = Util.group(m1, 2);
+			//
+			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
+			//
+			String line, g21, g22, cpk, cpv;
+			//
+			Matcher m2;
 			//
 			for (int i = 0; i < IterableUtils.size(lines); i++) {
 				//
