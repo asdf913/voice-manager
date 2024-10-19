@@ -687,7 +687,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
-		final IntCollection intCollection = iop != null ? IntList.create(iop.keyInt()) : IntList.create();
+		final IntCollection intCollection = ObjectUtils.getIfNull(createIntCollection(iop), IntList::create);
 		//
 		final String g12 = Util.group(m1, 2);
 		//
@@ -784,6 +784,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		return Pair.of(multimap, intCollection);
 		//
+	}
+
+	private static IntCollection createIntCollection(final IntObjectPair<?> instance) {
+		return instance != null ? IntList.create(instance.keyInt()) : null;
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection5A(
@@ -1176,7 +1180,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		if (Util.matches(m1) && Util.groupCount(m1) > 1) {
 			//
-			final IntCollection intCollection = iop != null ? IntList.create(iop.keyInt()) : IntList.create();
+			final IntCollection intCollection = ObjectUtils.getIfNull(createIntCollection(iop), IntList::create);
 			//
 			final Multimap<String, String> multimap = LinkedHashMultimap
 					.create(ImmutableMultimap.of(g11 = Util.group(m1, 1), g12 = Util.group(m1, 2)));
@@ -1217,7 +1221,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}$"),
 				right)) && Util.groupCount(m1) > 1) {
 			//
-			final IntCollection intCollection = iop != null ? IntList.create(iop.keyInt()) : IntList.create();
+			final IntCollection intCollection = ObjectUtils.getIfNull(createIntCollection(iop), IntList::create);
 			//
 			final Multimap<String, String> multimap = LinkedHashMultimap
 					.create(ImmutableMultimap.of(g11 = Util.group(m1, 1), g12 = Util.group(m1, 2)));
