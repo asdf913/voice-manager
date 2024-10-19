@@ -787,7 +787,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static IntCollection createIntCollection(final IntObjectPair<?> instance) {
+	private static IntCollection createIntCollection(@Nullable final IntObjectPair<?> instance) {
 		return instance != null ? IntList.create(instance.keyInt()) : null;
 	}
 
