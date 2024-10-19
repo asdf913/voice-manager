@@ -1383,12 +1383,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					for (final String s : cs) {
 						//
-						if (StringUtils.endsWith(tsbv, s)) {
-							//
-							delete(tsbv, (l = StringUtils.length(tsbv)) - StringUtils.length(s), l);
-							//
-						} // if
-							//
+						testAndAccept((a, b) -> StringUtils.endsWith(Util.getKey(a), Util.getValue(a)),
+								Pair.of(tsbv, s), l = StringUtils.length(tsbv),
+								(a, b) -> delete(Util.getKey(a), b - StringUtils.length(Util.getValue(a)), b));
+						//
 					} // for
 						//
 				} // if
