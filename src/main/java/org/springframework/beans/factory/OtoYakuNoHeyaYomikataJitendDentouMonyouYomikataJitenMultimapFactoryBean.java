@@ -1409,6 +1409,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
+	@Nullable
 	private static TextStringBuilder delete(@Nullable final TextStringBuilder instance, final int startIndex,
 			final int endIndex) {
 		return instance != null ? instance.delete(startIndex, endIndex) : instance;
