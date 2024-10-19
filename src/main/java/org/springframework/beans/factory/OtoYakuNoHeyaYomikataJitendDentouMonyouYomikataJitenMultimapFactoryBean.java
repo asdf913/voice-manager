@@ -1362,8 +1362,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				for (final String s : cs) {
 					//
-					testAndAccept((a, b) -> StringUtils.startsWith(a, b), tsbv, s,
-							(a, b) -> delete(a, 0, StringUtils.length(b)));
+					testAndAccept(StringUtils::startsWith, tsbv, s, (a, b) -> delete(a, 0, StringUtils.length(b)));
 					//
 				} // for
 					//
