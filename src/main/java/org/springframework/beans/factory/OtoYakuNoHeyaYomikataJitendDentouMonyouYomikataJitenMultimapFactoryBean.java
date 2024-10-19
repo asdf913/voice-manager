@@ -1113,7 +1113,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	private static Triplet<Multimap<String, String>, IntCollection, Entry<String, String>> toMultimapAndIntCollectionAndTriplet6A(
-			final IntObjectPair<String> iop, final Iterable<String> lines,
+			@Nullable final IntObjectPair<String> iop, final Iterable<String> lines,
 			final Triplet<String, String, String> triplet, final String hiragana) {
 		//
 		final String g12 = Util.getValue1(triplet);
