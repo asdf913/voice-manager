@@ -1054,9 +1054,69 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
-		final String g12 = Util.group(m1, 2);
+		IntCollection intCollection = null;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		// A
+		//
+		final Triplet<Multimap<String, String>, IntCollection, Entry<String, String>> triplet = toMultimapAndIntCollectionAndTriplet6A(
+				patternMap, iop, lines, Triplet.with(Util.group(m1, 1), Util.group(m1, 2), Util.group(m1, 3)));
+		//
+		IntCollectionUtil.addAllInts(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
+				Util.getValue1(triplet));
+		//
+		MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+				IValue0Util.getValue0(triplet));
+		//
+		final Entry<String, String> entry = Util.getValue2(triplet);
+		//
+		final String tk = Util.getKey(entry);
+		//
+		final String tv = Util.getValue(entry);
 		//
 		final String hiragana = StringUtils.substringAfter(Util.group(m1, 3), Util.group(m1, 1));
+		//
+		String g21, g22, cpk, cpv;
+		//
+		Matcher m2;
+		//
+		for (int i = 0; i < IterableUtils.size(lines); i++) {
+			//
+			if (iop != null && iop.keyInt() == i) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA, IterableUtils.get(lines, i)))
+					&& Util.groupCount(m2) > 1
+					&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g21 = Util.group(m2, 1), tk))
+					&& StringUtils.length(g21) == 2 && !Objects.equals(g21, tk)
+					&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g22 = Util.group(m2, 2), hiragana))) {
+				//
+				IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), i);
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						ImmutableMultimap.of(g21, g22, cpk, cpv, StringUtils.substringAfter(g21, cpk),
+								StringUtils.substringAfter(g22, cpv), StringUtils.substringAfter(tk, cpk),
+								StringUtils.substringAfter(tv, cpv)));
+				//
+			} // if
+				//
+		} // for
+			//
+		return Pair.of(multimap, intCollection);
+		//
+	}
+
+	private static Triplet<Multimap<String, String>, IntCollection, Entry<String, String>> toMultimapAndIntCollectionAndTriplet6A(
+			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines,
+			final Triplet<String, String, String> triplet) {
+		//
+		final String g12 = Util.getValue1(triplet);
+		//
+		final String hiragana = StringUtils.substringAfter(Util.getValue2(triplet), IValue0Util.getValue0(triplet));
 		//
 		String g21, g22, csk, csv, tk = null, tv = null;
 		//
@@ -1101,34 +1161,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 		} // for
 			//
-		String cpk, cpv;
-		//
-		for (int i = 0; i < IterableUtils.size(lines); i++) {
-			//
-			if (iop != null && iop.keyInt() == i) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if (Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA, IterableUtils.get(lines, i)))
-					&& Util.groupCount(m2) > 1
-					&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g21 = Util.group(m2, 1), tk))
-					&& StringUtils.length(g21) == 2 && !Objects.equals(g21, tk)
-					&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g22 = Util.group(m2, 2), hiragana))) {
-				//
-				IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), i);
-				//
-				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						ImmutableMultimap.of(g21, g22, cpk, cpv, StringUtils.substringAfter(g21, cpk),
-								StringUtils.substringAfter(g22, cpv), StringUtils.substringAfter(tk, cpk),
-								StringUtils.substringAfter(tv, cpv)));
-				//
-			} // if
-				//
-		} // for
-			//
-		return Pair.of(multimap, intCollection);
+		return Triplet.with(multimap, intCollection, Pair.of(tk, tv));
 		//
 	}
 

@@ -20,6 +20,7 @@ import org.d2ab.collection.ints.IntCollection;
 import org.d2ab.function.ObjIntPredicate;
 import org.javatuples.Quartet;
 import org.javatuples.Sextet;
+import org.javatuples.Triplet;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -192,7 +193,9 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 							new Class<?>[] { PatternMap.class, IntObjectPair.class, IntObjectPair.class,
 									Quartet.class }))
 					|| (Objects.equals(name, "toMultimapAndIntCollection5A") && Arrays.equals(parameterTypes,
-							new Class<?>[] { PatternMap.class, IntObjectPair.class, Iterable.class, Sextet.class }))) {
+							new Class<?>[] { PatternMap.class, IntObjectPair.class, Iterable.class, Sextet.class }))
+					|| (Objects.equals(name, "toMultimapAndIntCollectionAndTriplet6A") && Arrays.equals(parameterTypes,
+							new Class<?>[] { PatternMap.class, IntObjectPair.class, Iterable.class, Triplet.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
