@@ -1265,74 +1265,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		MultimapUtil.putAll(multimap, Util.getKey(entry));
 		//
-		int lk;
+		// C
 		//
-		Entry<String, String> e;
+		IntCollectionUtil.addAllInts(intCollection,
+				Util.getValue(entry = toMultimapAndIntCollection8C(entries, multimap)));
 		//
-		String k, kFirst, kLast;
+		MultimapUtil.putAll(multimap, Util.getKey(entry));
 		//
-		TextStringBuilder tsbk, tsbv;
-		//
-		Iterable<String> cs;
-		//
-		int lengthBefore;
-		//
-		for (int i = 0; i < IterableUtils.size(entries); i++) {
-			//
-			if (StringUtils.length(k = Util.getKey(e = IterableUtils.get(entries, i))) != 3
-					|| !multimap.containsKey(kFirst = StringUtils.substring(k, 0, 1))
-					|| !multimap.containsKey(kLast = StringUtils.substring(k, (lk = StringUtils.length(k)) - 1, lk))) {
-				//
-				continue;
-				//
-			} // if
-				//
-			delete(delete(tsbk = new TextStringBuilder(k), lk - 1, lk), 0, 1);
-			//
-			tsbv = new TextStringBuilder(Util.getValue(e));
-			//
-			lengthBefore = StringUtils.length(tsbv);
-			//
-			if (Util.iterator(cs = MultimapUtil.get(multimap, kFirst)) != null) {
-				//
-				for (final String s : cs) {
-					//
-					testAndAccept(StringUtils::startsWith, tsbv, s, (a, b) -> delete(a, 0, StringUtils.length(b)));
-					//
-				} // for
-					//
-			} // if
-				//
-			if (lengthBefore == StringUtils.length(tsbv)) {
-				//
-				continue;
-				//
-			} // if
-				//
-			lengthBefore = StringUtils.length(tsbv);
-			//
-			if (Util.iterator(cs = MultimapUtil.get(multimap, kLast)) != null) {
-				//
-				for (final String s : cs) {
-					//
-					testAndAccept((a, b) -> StringUtils.endsWith(Util.getKey(a), Util.getValue(a)), Pair.of(tsbv, s),
-							StringUtils.length(tsbv),
-							(a, b) -> delete(Util.getKey(a), b - StringUtils.length(Util.getValue(a)), b));
-					//
-				} // for
-					//
-			} // if
-				//
-			if (lengthBefore == StringUtils.length(tsbv)) {
-				//
-				continue;
-				//
-			} // if
-				//
-			MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
-			//
-		} // for
-			//
 		return Pair.of(multimap, intCollection);
 		//
 	}
@@ -1454,6 +1393,88 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		return Pair.of(multimap, intCollection);
 		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection8C(
+			final Iterable<Entry<String, String>> entries, final Multimap<String, String> mm) {
+		//
+		IntCollection intCollection = null;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		int lk;
+		//
+		Entry<String, String> e;
+		//
+		String k, kFirst, kLast;
+		//
+		TextStringBuilder tsbk, tsbv;
+		//
+		Iterable<String> cs;
+		//
+		int lengthBefore;
+		//
+		for (int i = 0; i < IterableUtils.size(entries); i++) {
+			//
+			if (StringUtils.length(k = Util.getKey(e = IterableUtils.get(entries, i))) != 3
+					|| !containsKey(mm, kFirst = StringUtils.substring(k, 0, 1))
+					|| !containsKey(mm, kLast = StringUtils.substring(k, (lk = StringUtils.length(k)) - 1, lk))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			delete(delete(tsbk = new TextStringBuilder(k), lk - 1, lk), 0, 1);
+			//
+			lengthBefore = StringUtils.length(tsbv = new TextStringBuilder(Util.getValue(e)));
+			//
+			if (Util.iterator(cs = MultimapUtil.get(mm, kFirst)) != null) {
+				//
+				for (final String s : cs) {
+					//
+					testAndAccept(StringUtils::startsWith, tsbv, s, (a, b) -> delete(a, 0, StringUtils.length(b)));
+					//
+				} // for
+					//
+			} // if
+				//
+			if (lengthBefore == StringUtils.length(tsbv)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			lengthBefore = StringUtils.length(tsbv);
+			//
+			if (Util.iterator(cs = MultimapUtil.get(mm, kLast)) != null) {
+				//
+				for (final String s : cs) {
+					//
+					testAndAccept((a, b) -> StringUtils.endsWith(Util.getKey(a), Util.getValue(a)), Pair.of(tsbv, s),
+							StringUtils.length(tsbv),
+							(a, b) -> delete(Util.getKey(a), b - StringUtils.length(Util.getValue(a)), b));
+					//
+				} // for
+					//
+			} // if
+				//
+			if (lengthBefore == StringUtils.length(tsbv)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					Util.toString(tsbk), Util.toString(tsbv));
+			//
+		} // for
+			//
+		return Pair.of(multimap, intCollection);
+		//
+	}
+
+	private static boolean containsKey(final Multimap<?, ?> instance, final Object key) {
+		return instance != null && instance.containsKey(key);
 	}
 
 	@Nullable

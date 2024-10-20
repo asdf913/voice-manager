@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.meeuw.functional.TriPredicate;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -42,7 +43,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 	private static final String SPACE = " ";
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_COMMON_SUFFIX, METHOD_TO_MULTI_MAP_AND_INT_COLLECTION,
-			METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_APPEND;
+			METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_APPEND, METHOD_CONTAINS_KEY;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -65,6 +66,8 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 				Object.class, Object.class, TriConsumer.class)).setAccessible(true);
 		//
 		(METHOD_APPEND = clz.getDeclaredMethod("append", TextStringBuilder.class, String.class)).setAccessible(true);
+		//
+		(METHOD_CONTAINS_KEY = clz.getDeclaredMethod("containsKey", Multimap.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -199,7 +202,11 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 					|| (Objects.equals(name, "toMultimapAndIntCollection8A") && Arrays.equals(parameterTypes,
 							new Class<?>[] { PatternMap.class, IntObjectPair.class, Iterable.class, Entry.class }))
 					|| (Objects.equals(name, "toMultimapAndIntCollection8B") && Arrays.equals(parameterTypes,
-							new Class<?>[] { IntObjectPair.class, Iterable.class, Iterable.class }))) {
+							new Class<?>[] { IntObjectPair.class, Iterable.class, Iterable.class }))
+					|| (Objects.equals(name, "toMultimapAndIntCollection8C")
+							&& Arrays.equals(parameterTypes, new Class<?>[] { Iterable.class, Multimap.class }))
+					|| (Objects.equals(name, "containsKey")
+							&& Arrays.equals(parameterTypes, new Class<?>[] { Multimap.class, Object.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
@@ -415,6 +422,25 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 				return null;
 			} else if (obj instanceof TextStringBuilder) {
 				return (TextStringBuilder) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testContainsKey() throws Throwable {
+		//
+		Assertions.assertFalse(containsKey(ImmutableMultimap.of(), null));
+		//
+	}
+
+	private static boolean containsKey(final Multimap<?, ?> instance, final Object key) throws Throwable {
+		try {
+			final Object obj = METHOD_CONTAINS_KEY.invoke(null, instance, key);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
