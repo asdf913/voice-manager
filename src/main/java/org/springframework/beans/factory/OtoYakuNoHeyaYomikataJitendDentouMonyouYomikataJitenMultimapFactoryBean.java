@@ -1261,7 +1261,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				Util.filter(Util.stream(MultimapUtil.entries(multimap)), x -> StringUtils.length(Util.getKey(x)) == 3));
 		//
 		IntCollectionUtil.addAllInts(intCollection,
-				Util.getValue(entry = toMultimapAndIntCollection8B(patternMap, iop, lines, entries)));
+				Util.getValue(entry = toMultimapAndIntCollection8B(iop, lines, entries)));
 		//
 		MultimapUtil.putAll(multimap, Util.getKey(entry));
 		//
@@ -1395,7 +1395,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection8B(
-			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines,
+			final IntObjectPair<String> iop, final Iterable<String> lines,
 			final Iterable<Entry<String, String>> entries) {
 		//
 		IntCollection intCollection = null;
