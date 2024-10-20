@@ -37,6 +37,8 @@ import org.d2ab.function.ObjIntPredicate;
 import org.javatuples.Quartet;
 import org.javatuples.Sextet;
 import org.javatuples.Triplet;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.NodeUtil;
@@ -1402,74 +1404,102 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		Multimap<String, String> multimap = null;
 		//
-		int lk;
-		//
-		Entry<String, String> e;
-		//
-		String k, kFirst, kLast;
-		//
-		TextStringBuilder tsbk, tsbv;
-		//
-		Iterable<String> cs;
-		//
-		int lengthBefore;
+		IValue0<Multimap<String, String>> iValue0;
 		//
 		for (int i = 0; i < IterableUtils.size(entries); i++) {
 			//
-			if (StringUtils.length(k = Util.getKey(e = IterableUtils.get(entries, i))) != 3
-					|| !containsKey(mm, kFirst = StringUtils.substring(k, 0, 1))
-					|| !containsKey(mm, kLast = StringUtils.substring(k, (lk = StringUtils.length(k)) - 1, lk))) {
+			if ((iValue0 = toMultimap8C(IterableUtils.get(entries, i), mm)) == null) {
 				//
-				continue;
+				return null;
 				//
 			} // if
 				//
-			delete(delete(tsbk = new TextStringBuilder(k), lk - 1, lk), 0, 1);
-			//
-			lengthBefore = StringUtils.length(tsbv = new TextStringBuilder(Util.getValue(e)));
-			//
-			if (Util.iterator(cs = MultimapUtil.get(mm, kFirst)) != null) {
-				//
-				for (final String s : cs) {
-					//
-					testAndAccept(StringUtils::startsWith, tsbv, s, (a, b) -> delete(a, 0, StringUtils.length(b)));
-					//
-				} // for
-					//
-			} // if
-				//
-			if (lengthBefore == StringUtils.length(tsbv)) {
-				//
-				continue;
-				//
-			} // if
-				//
-			lengthBefore = StringUtils.length(tsbv);
-			//
-			if (Util.iterator(cs = MultimapUtil.get(mm, kLast)) != null) {
-				//
-				for (final String s : cs) {
-					//
-					testAndAccept((a, b) -> StringUtils.endsWith(Util.getKey(a), Util.getValue(a)), Pair.of(tsbv, s),
-							StringUtils.length(tsbv),
-							(a, b) -> delete(Util.getKey(a), b - StringUtils.length(Util.getValue(a)), b));
-					//
-				} // for
-					//
-			} // if
-				//
-			if (lengthBefore == StringUtils.length(tsbv)) {
-				//
-				continue;
-				//
-			} // if
-				//
-			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					Util.toString(tsbk), Util.toString(tsbv));
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(
+					multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), LinkedHashMultimap::create),
+					IValue0Util.getValue0(iValue0));
 			//
 		} // for
 			//
 		return Pair.of(multimap, intCollection);
+		//
+	}
+
+	private static IValue0<Multimap<String, String>> toMultimap8C(final Entry<String, String> entry,
+			final Multimap<String, String> mm) {
+		//
+		final String key = Util.getKey(entry);
+		//
+		if (StringUtils.length(key) != 3) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final String kFirst = StringUtils.substring(key, 0, 1);
+		//
+		if (!containsKey(mm, kFirst)) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final int lk = StringUtils.length(key);
+		//
+		final String kLast = StringUtils.substring(key, lk - 1, lk);
+		//
+		if (!containsKey(mm, kLast)) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final TextStringBuilder tsbk = new TextStringBuilder(key);
+		//
+		delete(delete(tsbk, lk - 1, lk), 0, 1);
+		//
+		final TextStringBuilder tsbv = new TextStringBuilder(Util.getValue(entry));
+		//
+		int lengthBefore = StringUtils.length(tsbv);
+		//
+		Iterable<String> cs = MultimapUtil.get(mm, kFirst);
+		//
+		if (Util.iterator(cs) != null) {
+			//
+			for (final String s : cs) {
+				//
+				testAndAccept(StringUtils::startsWith, tsbv, s, (a, b) -> delete(a, 0, StringUtils.length(b)));
+				//
+			} // for
+				//
+		} // if
+			//
+		if (lengthBefore == StringUtils.length(tsbv)) {
+			//
+			return null;
+			//
+		} // if
+			//
+		lengthBefore = StringUtils.length(tsbv);
+		//
+		if (Util.iterator(cs = MultimapUtil.get(mm, kLast)) != null) {
+			//
+			for (final String s : cs) {
+				//
+				testAndAccept((a, b) -> StringUtils.endsWith(Util.getKey(a), Util.getValue(a)), Pair.of(tsbv, s),
+						StringUtils.length(tsbv),
+						(a, b) -> delete(Util.getKey(a), b - StringUtils.length(Util.getValue(a)), b));
+				//
+			} // for
+				//
+		} // if
+			//
+		if (lengthBefore == StringUtils.length(tsbv)) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return Unit.with(LinkedHashMultimap.create(ImmutableMultimap.of(Util.toString(tsbk), Util.toString(tsbv))));
 		//
 	}
 
