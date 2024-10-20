@@ -1269,10 +1269,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		// C
 		//
-		IntCollectionUtil.addAllInts(intCollection,
-				Util.getValue(entry = toMultimapAndIntCollection8C(entries, multimap)));
-		//
-		MultimapUtil.putAll(multimap, Util.getKey(entry));
+		MultimapUtil.putAll(multimap, toMultimapAnd8C(entries, multimap));
 		//
 		return Pair.of(multimap, intCollection);
 		//
@@ -1397,10 +1394,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection8C(
-			final Iterable<Entry<String, String>> entries, final Multimap<String, String> mm) {
-		//
-		IntCollection intCollection = null;
+	private static Multimap<String, String> toMultimapAnd8C(final Iterable<Entry<String, String>> entries,
+			final Multimap<String, String> mm) {
 		//
 		Multimap<String, String> multimap = null;
 		//
@@ -1420,7 +1415,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // for
 			//
-		return Pair.of(multimap, intCollection);
+		return multimap;
 		//
 	}
 

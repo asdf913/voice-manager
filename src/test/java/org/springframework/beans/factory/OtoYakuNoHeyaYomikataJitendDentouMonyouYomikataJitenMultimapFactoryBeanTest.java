@@ -203,8 +203,6 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 							new Class<?>[] { PatternMap.class, IntObjectPair.class, Iterable.class, Entry.class }))
 					|| (Objects.equals(name, "toMultimapAndIntCollection8B") && Arrays.equals(parameterTypes,
 							new Class<?>[] { IntObjectPair.class, Iterable.class, Iterable.class }))
-					|| (Objects.equals(name, "toMultimapAndIntCollection8C")
-							&& Arrays.equals(parameterTypes, new Class<?>[] { Iterable.class, Multimap.class }))
 					|| (Objects.equals(name, "containsKey")
 							&& Arrays.equals(parameterTypes, new Class<?>[] { Multimap.class, Object.class }))) {
 				//
