@@ -1473,7 +1473,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static boolean containsKey(final Multimap<?, ?> instance, final Object key) {
+	private static boolean containsKey(@Nullable final Multimap<?, ?> instance, final Object key) {
 		return instance != null && instance.containsKey(key);
 	}
 
