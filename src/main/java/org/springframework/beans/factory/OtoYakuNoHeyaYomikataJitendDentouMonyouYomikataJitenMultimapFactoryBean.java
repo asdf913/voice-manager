@@ -1277,7 +1277,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection8A(
-			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines,
+			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop, final Iterable<String> lines,
 			final Entry<String, String> entry) {
 		//
 		IntCollection intCollection = null;
@@ -1334,7 +1334,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection8B(
-			final IntObjectPair<String> iop, final Iterable<String> lines,
+			@Nullable final IntObjectPair<String> iop, final Iterable<String> lines,
 			final Iterable<Entry<String, String>> entries) {
 		//
 		IntCollection intCollection = null;
