@@ -1409,8 +1409,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(
-					multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), LinkedHashMultimap::create),
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					IValue0Util.getValue0(iValue0));
 			//
 		} // for
