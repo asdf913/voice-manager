@@ -1419,6 +1419,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
+	@Nullable
 	private static IValue0<Multimap<String, String>> toMultimap8C(final Entry<String, String> entry,
 			final Multimap<String, String> mm) {
 		//
