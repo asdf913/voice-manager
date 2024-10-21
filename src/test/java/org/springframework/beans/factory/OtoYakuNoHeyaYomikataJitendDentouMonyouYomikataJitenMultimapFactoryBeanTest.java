@@ -353,6 +353,26 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		Assertions.assertEquals("({卯=[う], 文=[もん]},[0])",
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "卯の文（うのもん）"), null)));
 		//
+		Assertions.assertEquals("({桜川=[さくらがわ], 桜文=[さくらもん], 桜=[さくら], 川=[がわ], 文=[もん]},[0, 1])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 桜川（さくらがわ）"),
+						Arrays.asList(null, "桜文（さくらもん）"))));
+		//
+		Assertions.assertEquals("({中形=[ちゅうがた], 中柄=[ちゅうがら], 中=[ちゅう], 形=[がた], 柄=[がら]},[0, 1])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 中形（ちゅうがた）"),
+						Arrays.asList(null, "中柄（ちゅうがら）"))));
+		//
+		Assertions.assertEquals("({羯磨=[かつま], 達磨=[だるま], 磨=[ま], 羯=[かつ]},[0, 1])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 羯磨（かつま）"),
+						Arrays.asList(null, "達磨（だるま）"))));
+		//
+		Assertions.assertEquals("({空間=[あきま], 欄間=[らんま], 欄=[らん], 間=[ま]},[0, 1])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 空間（あきま）"),
+						Arrays.asList(null, "欄間（らんま）"))));
+		//
+		Assertions.assertEquals("({水文=[みずもん, すいもん], 文=[もん], 水=[みず, すい]},[0, 1])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 水文（みずもん）"),
+						Arrays.asList(null, "水文（すいもん）"))));
+		//
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection(

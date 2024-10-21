@@ -1504,9 +1504,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection9(
 			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines) {
 		//
-		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
+		final String right = PairUtil.right(iop);
+		//
+		Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs})(の)(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-				PairUtil.right(iop));
+				right);
 		//
 		String g12, g14;
 		//
@@ -1518,6 +1520,154 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							.create(ImmutableMultimap.of(Util.group(m1, 1), StringUtils.substringBefore(g14, g12),
 									Util.group(m1, 3), StringUtils.substringAfter(g14, g12))),
 					createIntCollection(iop));
+			//
+		} // if
+			//
+		if (!StringUtils.equals(StringUtils.trim(right), right)) {
+			//
+			String g11;
+			//
+			if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+					"^(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+					StringUtils.trim(right))) && Util.groupCount(m1) > 1
+					&& StringUtils.length(g11 = Util.group(m1, 1)) == 2) {
+				//
+				final IntCollection intCollection = ObjectUtils.getIfNull(createIntCollection(iop), IntList::create);
+				//
+				final Multimap<String, String> multimap = LinkedHashMultimap
+						.create(ImmutableMultimap.of(g11, g12 = Util.group(m1, 2)));
+				//
+				final String kFirst = StringUtils.substring(g11, 0, 1);
+				//
+				String line, cpk, cpv, g21, g22, sak, sav, csk, csv;
+				//
+				Matcher m2;
+				//
+				int length;
+				//
+				for (int i = 0; i < IterableUtils.size(lines); i++) {
+					//
+					if (iop != null && iop.keyInt() == i) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (StringUtils.startsWith(line = IterableUtils.get(lines, i), kFirst)
+							&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+									"^(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+									line))
+							&& Util.groupCount(m2) > 1) {
+						//
+						IntCollectionUtil.addInt(intCollection, i);
+						//
+						MultimapUtil.put(multimap, g21 = Util.group(m2, 1), g22 = Util.group(m2, 2));
+						//
+						if (StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21))
+								&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22))) {
+							//
+							MultimapUtil.put(multimap, cpk, cpv);
+							//
+							if (StringUtils.isNotBlank(sak = StringUtils.substringAfter(g11, cpk))
+									&& StringUtils.isNotBlank(sav = StringUtils.substringAfter(g12, cpv))) {
+								//
+								MultimapUtil.put(multimap, sak, sav);
+								//
+							} // if
+								//
+							if (StringUtils.isNotBlank(sak = StringUtils.substringAfter(g21, cpk))
+									&& StringUtils.isNotBlank(sav = StringUtils.substringAfter(g22, cpv))) {
+								//
+								MultimapUtil.put(multimap, sak, sav);
+								//
+							} // if
+								//
+						} else if (StringUtils.isNotBlank(csk = getCommonSuffix(g11, g21))
+								&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g22))) {
+							//
+							if (StringUtils.equals(csk, g11) && StringUtils.length(csk) == 2) {
+								//
+								MultimapUtil.putAll(multimap, ImmutableMultimap.of(
+										csk = StringUtils.substring(csk, (length = StringUtils.length(csk)) - 1,
+												length),
+										csv, StringUtils.substringBefore(g11, csk),
+										StringUtils.substringBefore(g12, csv), StringUtils.substringBefore(g21, csk),
+										StringUtils.substringBefore(g22, csv)));
+								//
+							} // if
+								//
+						} // if
+							//
+					} // if
+						//
+				} // for
+					//
+				if (MultimapUtil.size(multimap) == 1) {
+					//
+					final String kLast = StringUtils.substring(g11, 1, 2);
+					//
+					for (int i = 0; i < IterableUtils.size(lines); i++) {
+						//
+						if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+								"^(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+								line = IterableUtils.get(lines, i))) && Util.groupCount(m2) > 1
+								&& StringUtils.endsWith(g21 = Util.group(m2, 1), kLast)
+								&& StringUtils.length(g21) == 2) {
+							//
+							IntCollectionUtil.addInt(intCollection, i);
+							//
+							MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g22 = Util.group(m2, 2),
+									StringUtils.substringBefore(g21, kLast),
+									StringUtils.substringBefore(g22, csv = getCommonSuffix(g12, g22)), kLast, csv,
+									StringUtils.substringBefore(g11, kLast), StringUtils.substringBefore(g12, csv)));
+							//
+							break;
+							//
+						} // if
+							//
+					} // for
+						//
+				} // if
+					//
+				if (MultimapUtil.containsEntry(multimap, "中", "ちゅうが")) {
+					//
+					MultimapUtil.remove(multimap, "中", "ちゅうが");
+					//
+					MultimapUtil.put(multimap, "中", "ちゅう");
+					//
+					if (MultimapUtil.containsEntry(multimap, "形", "た")) {
+						//
+						MultimapUtil.remove(multimap, "形", "た");
+						//
+						MultimapUtil.put(multimap, "形", "がた");
+						//
+					} // if
+						//
+					if (MultimapUtil.containsEntry(multimap, "柄", "ら")) {
+						//
+						MultimapUtil.remove(multimap, "柄", "ら");
+						//
+						MultimapUtil.put(multimap, "柄", "がら");
+						//
+					} // if
+						//
+				} // if
+					//
+				if (MultimapUtil.containsEntry(multimap, "達", "だる")) {
+					//
+					MultimapUtil.remove(multimap, "達", "だる");
+					//
+				} else if (MultimapUtil.containsEntry(multimap, "空", "あき")) {
+					//
+					MultimapUtil.remove(multimap, "空", "あき");
+					//
+				} // if
+					//
+				return Pair.of(multimap, intCollection);
+				//
+			} // if
+				//
+			return null;
 			//
 		} // if
 			//
