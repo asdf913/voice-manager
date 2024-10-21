@@ -1579,7 +1579,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 									(a, b, c) -> Boolean.logicalAnd(StringUtils.isNotBlank(b),
 											StringUtils.isNotBlank(b)),
 									multimap, StringUtils.substringAfter(g21, cpk),
-									StringUtils.substringAfter(g22, cpv), (a, b, c) -> MultimapUtil.put(a, b, c));
+									StringUtils.substringAfter(g22, cpv), MultimapUtil::put);
 							//
 						} else if (Boolean.logicalAnd(StringUtils.isNotBlank(csk = getCommonSuffix(g11, g21)),
 								StringUtils.isNotBlank(csv = getCommonSuffix(g12, g22)))) {
