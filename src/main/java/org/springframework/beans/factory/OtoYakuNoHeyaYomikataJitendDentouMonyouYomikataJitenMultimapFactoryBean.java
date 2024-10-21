@@ -1585,7 +1585,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						} else if (StringUtils.isNotBlank(csk = getCommonSuffix(g11, g21))
 								&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g22))) {
 							//
-							if (StringUtils.equals(csk, g11) && StringUtils.length(csk) == 2) {
+							if (Boolean.logicalAnd(StringUtils.equals(csk, g11), StringUtils.length(csk) == 2)) {
 								//
 								MultimapUtil.putAll(multimap, ImmutableMultimap.of(
 										csk = StringUtils.substring(csk, (length = StringUtils.length(csk)) - 1,
