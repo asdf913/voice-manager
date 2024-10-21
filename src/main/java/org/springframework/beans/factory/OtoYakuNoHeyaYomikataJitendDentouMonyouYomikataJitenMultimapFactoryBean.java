@@ -1568,8 +1568,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							//
 							MultimapUtil.put(multimap, cpk, cpv);
 							//
-							if (StringUtils.isNotBlank(sak = StringUtils.substringAfter(g11, cpk))
-									&& StringUtils.isNotBlank(sav = StringUtils.substringAfter(g12, cpv))) {
+							if (Boolean.logicalAnd(StringUtils.isNotBlank(sak = StringUtils.substringAfter(g11, cpk)),
+									StringUtils.isNotBlank(sav = StringUtils.substringAfter(g12, cpv)))) {
 								//
 								MultimapUtil.put(multimap, sak, sav);
 								//
