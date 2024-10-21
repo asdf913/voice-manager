@@ -1635,7 +1635,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String g12 = Util.getValue(entry);
 		//
-		final String kFirst = StringUtils.isNotEmpty(g11) ? StringUtils.substring(g11, 0, 1) : null;
+		final String kFirst = testAndApply(x -> StringUtils.isNotEmpty(x), g11, x -> StringUtils.substring(x, 0, 1),
+				null);
 		//
 		String line, g21, g22, cpk, cpv, csk, csv;
 		//
