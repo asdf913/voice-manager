@@ -1575,13 +1575,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 								//
 							} // if
 								//
-							if (Boolean.logicalAnd(StringUtils.isNotBlank(sak = StringUtils.substringAfter(g21, cpk)),
-									StringUtils.isNotBlank(sav = StringUtils.substringAfter(g22, cpv)))) {
-								//
-								MultimapUtil.put(multimap, sak, sav);
-								//
-							} // if
-								//
+							testAndAccept(
+									(a, b, c) -> Boolean.logicalAnd(StringUtils.isNotBlank(b),
+											StringUtils.isNotBlank(b)),
+									multimap, sak = StringUtils.substringAfter(g21, cpk),
+									sav = StringUtils.substringAfter(g22, cpv), (a, b, c) -> MultimapUtil.put(a, b, c));
+							//
 						} else if (Boolean.logicalAnd(StringUtils.isNotBlank(csk = getCommonSuffix(g11, g21)),
 								StringUtils.isNotBlank(csv = getCommonSuffix(g12, g22)))) {
 							//
