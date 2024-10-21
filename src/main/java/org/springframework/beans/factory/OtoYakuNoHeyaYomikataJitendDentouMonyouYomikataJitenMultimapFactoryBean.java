@@ -1635,14 +1635,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					MultimapUtil.put(multimap, "中", "ちゅう");
 					//
-					if (MultimapUtil.containsEntry(multimap, "形", "た")) {
+					testAndAccept(MultimapUtil::containsEntry, multimap, "形", "た", (a, b, c) -> {
 						//
-						MultimapUtil.remove(multimap, "形", "た");
+						MultimapUtil.remove(a, b, c);
 						//
-						MultimapUtil.put(multimap, "形", "がた");
+						MultimapUtil.put(a, b, StringUtils.join("が", c));
 						//
-					} // if
-						//
+					});
+					//
 					testAndAccept(MultimapUtil::containsEntry, multimap, "柄", "ら", (a, b, c) -> {
 						//
 						MultimapUtil.remove(a, b, c);
