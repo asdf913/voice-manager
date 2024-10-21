@@ -125,7 +125,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection5,
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection6,
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection7,
-						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection8);
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection8,
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection9);
 		//
 		Entry<Multimap<String, String>, IntCollection> entry = null;
 		//
@@ -1496,6 +1497,30 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		} // if
 			//
 		return Unit.with(LinkedHashMultimap.create(ImmutableMultimap.of(Util.toString(tsbk), Util.toString(tsbv))));
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection9(
+			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines) {
+		//
+		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs})(の)(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+				PairUtil.right(iop));
+		//
+		String g12, g14;
+		//
+		if (Util.matches(m1) && Util.groupCount(m1) > 2
+				&& StringUtils.countMatches(g14 = Util.group(m1, 4), g12 = Util.group(m1, 2)) == 1) {
+			//
+			return Pair.of(
+					LinkedHashMultimap
+							.create(ImmutableMultimap.of(Util.group(m1, 1), StringUtils.substringBefore(g14, g12),
+									Util.group(m1, 3), StringUtils.substringAfter(g14, g12))),
+					createIntCollection(iop));
+			//
+		} // if
+			//
+		return null;
 		//
 	}
 
