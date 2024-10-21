@@ -1610,7 +1610,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 						if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 								"^(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-								line = IterableUtils.get(lines, i))) && Util.groupCount(m2) > 1
+								IterableUtils.get(lines, i))) && Util.groupCount(m2) > 1
 								&& StringUtils.endsWith(g21 = Util.group(m2, 1), kLast)
 								&& StringUtils.length(g21) == 2) {
 							//
