@@ -1531,7 +1531,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String right = PairUtil.right(iop);
 		//
-		if (!StringUtils.equals(StringUtils.trim(right), right)) {
+		if (StringUtils.equals(StringUtils.trim(right), right)) {
 			//
 			return null;
 			//
@@ -1539,7 +1539,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
-				StringUtils.trim(PairUtil.right(iop)));
+				StringUtils.trim(right));
 		//
 		String g11;
 		//
