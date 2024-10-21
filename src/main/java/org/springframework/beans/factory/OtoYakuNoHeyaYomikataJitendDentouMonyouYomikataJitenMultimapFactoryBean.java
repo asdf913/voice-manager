@@ -1629,30 +1629,30 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 				} // if
 					//
-				if (MultimapUtil.containsEntry(multimap, "中", "ちゅうが")) {
+				testAndAccept(MultimapUtil::containsEntry, multimap, "中", "ちゅうが", (a, b, c) -> {
 					//
-					MultimapUtil.remove(multimap, "中", "ちゅうが");
+					MultimapUtil.remove(a, b, c);
 					//
-					MultimapUtil.put(multimap, "中", "ちゅう");
+					MultimapUtil.put(a, b, StringUtils.substringBefore(c, "が"));
 					//
-					testAndAccept(MultimapUtil::containsEntry, multimap, "形", "た", (a, b, c) -> {
+					testAndAccept(MultimapUtil::containsEntry, multimap, "形", "た", (x, y, z) -> {
 						//
-						MultimapUtil.remove(a, b, c);
+						MultimapUtil.remove(x, y, z);
 						//
-						MultimapUtil.put(a, b, StringUtils.join("が", c));
-						//
-					});
-					//
-					testAndAccept(MultimapUtil::containsEntry, multimap, "柄", "ら", (a, b, c) -> {
-						//
-						MultimapUtil.remove(a, b, c);
-						//
-						MultimapUtil.put(a, b, StringUtils.join("が", c));
+						MultimapUtil.put(x, y, StringUtils.join("が", z));
 						//
 					});
 					//
-				} // if
+					testAndAccept(MultimapUtil::containsEntry, multimap, "柄", "ら", (x, y, z) -> {
+						//
+						MultimapUtil.remove(x, y, z);
+						//
+						MultimapUtil.put(x, y, StringUtils.join("が", z));
+						//
+					});
 					//
+				});
+				//
 				testAndAccept(MultimapUtil::containsEntry, multimap, "達", "だる", MultimapUtil::remove);
 				//
 				testAndAccept(MultimapUtil::containsEntry, multimap, "空", "あき", MultimapUtil::remove);
