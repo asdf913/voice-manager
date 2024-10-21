@@ -1563,8 +1563,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 						MultimapUtil.put(multimap, g21 = Util.group(m2, 1), g22 = Util.group(m2, 2));
 						//
-						if (StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21))
-								&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22))) {
+						if (Boolean.logicalAnd(StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21)),
+								StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22)))) {
 							//
 							MultimapUtil.put(multimap, cpk, cpv);
 							//
