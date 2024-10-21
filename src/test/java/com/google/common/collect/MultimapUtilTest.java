@@ -17,6 +17,10 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class MultimapUtilTest {
 
+	private static final String KEY = "KEY";
+
+	private static final String VALUE = "VALUE";
+
 	private static class IH implements InvocationHandler {
 
 		private Boolean remove = null;
@@ -56,13 +60,22 @@ class MultimapUtilTest {
 	@Test
 	void testContainsEntry() {
 		//
-		final Object k = "k", v = "v";
-		//
-		final Multimap<?, ?> multimap = ImmutableMultimap.of(k, v);
+		final Multimap<?, ?> multimap = ImmutableMultimap.of(KEY, VALUE);
 		//
 		Assertions.assertFalse(MultimapUtil.containsEntry(multimap, null, null));
 		//
-		Assertions.assertTrue(MultimapUtil.containsEntry(multimap, k, v));
+		Assertions.assertTrue(MultimapUtil.containsEntry(multimap, KEY, VALUE));
+		//
+	}
+
+	@Test
+	void testContainsValue() {
+		//
+		final Multimap<?, ?> multimap = ImmutableMultimap.of(KEY, VALUE);
+		//
+		Assertions.assertFalse(MultimapUtil.containsKey(multimap, null));
+		//
+		Assertions.assertTrue(MultimapUtil.containsKey(multimap, KEY));
 		//
 	}
 

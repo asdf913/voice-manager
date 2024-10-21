@@ -1433,7 +1433,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		final String kFirst = StringUtils.substring(key, 0, 1);
 		//
-		if (!containsKey(mm, kFirst)) {
+		if (!MultimapUtil.containsKey(mm, kFirst)) {
 			//
 			return null;
 			//
@@ -1443,7 +1443,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String kLast = StringUtils.substring(key, lk - 1, lk);
 		//
-		if (!containsKey(mm, kLast)) {
+		if (!MultimapUtil.containsKey(mm, kLast)) {
 			//
 			return null;
 			//
@@ -1497,10 +1497,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		return Unit.with(LinkedHashMultimap.create(ImmutableMultimap.of(Util.toString(tsbk), Util.toString(tsbv))));
 		//
-	}
-
-	private static boolean containsKey(@Nullable final Multimap<?, ?> instance, final Object key) {
-		return instance != null && instance.containsKey(key);
 	}
 
 	@Nullable

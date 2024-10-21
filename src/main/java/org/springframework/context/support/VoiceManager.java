@@ -6490,7 +6490,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (final Multimap multimap : multimaps) {
 			//
-			if (containsKey(multimap, key)) {
+			if (MultimapUtil.containsKey(multimap, key)) {
 				//
 				final Collection<?> collection = MultimapUtil.get(multimap, key);
 				//
@@ -6592,10 +6592,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return vs;
 		//
-	}
-
-	private static boolean containsKey(@Nullable final Multimap<?, ?> instance, @Nullable final Object key) {
-		return instance != null && instance.containsKey(key);
 	}
 
 	@Nullable
