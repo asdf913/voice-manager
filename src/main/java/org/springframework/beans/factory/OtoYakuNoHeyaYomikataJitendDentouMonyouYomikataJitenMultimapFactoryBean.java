@@ -1949,12 +1949,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 
 	@Nullable
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection11A(
-			final PatternMap patternMap, final IntObjectPair<String> iop1, final int i, final String line,
-			final Map<String, String> map
-	// final Entry<String, String> pair, final String g11, final String g12
-	) {
+			final PatternMap patternMap, final IntObjectPair<String> iop, final int i, final String line,
+			final Map<String, String> map) {
 		//
-		if ((iop1 != null && iop1.keyInt() == i) || StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop1)))) {
+		if ((iop != null && iop.keyInt() == i) || StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop)))) {
 			//
 			return null;
 			//
