@@ -2919,29 +2919,25 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 				} // for
 					//
-				final List<Triplet<String, String, String>> triplets = Arrays.asList(Triplet.with("絣", "がすり", "かすり"),
-						Triplet.with("甲", "っこう", "こう"), Triplet.with("賦", "ぶ", "ふ"), Triplet.with("葉", "ば", "は"),
-						Triplet.with("菱", "びし", "ひし"), Triplet.with("飛", "び", "ひ"), Triplet.with("鳥", "どり", "とり"),
-						Triplet.with("箔", "ぱく", "はく"), Triplet.with("木", "も", "もく"), Triplet.with("士", "じ", "し"),
-						Triplet.with("珠", "じゅ", "しゅ"), Triplet.with("嵌", "がん", "かん"), Triplet.with("本", "ぼん", "ほん"),
-						Triplet.with("手", "で", "て"), Triplet.with("珠", "じゅ", "しゅ"));
-				//
-				for (int i = 0; i < IterableUtils.size(triplets); i++) {
-					//
-					testAndAccept(x -> x != null
-							&& MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(x), Util.getValue1(x)),
-							IterableUtils.get(triplets, i), x -> {
-								//
-								final String s1 = IValue0Util.getValue0(x);
-								//
-								MultimapUtil.remove(multimap, s1, Util.getValue1(x));
-								//
-								MultimapUtil.put(multimap, s1, Util.getValue2(x));
-								//
-							});
-					//
-				} // for
-					//
+				Util.forEach(Arrays.asList(Triplet.with("絣", "がすり", "かすり"), Triplet.with("甲", "っこう", "こう"),
+						Triplet.with("賦", "ぶ", "ふ"), Triplet.with("葉", "ば", "は"), Triplet.with("菱", "びし", "ひし"),
+						Triplet.with("飛", "び", "ひ"), Triplet.with("鳥", "どり", "とり"), Triplet.with("箔", "ぱく", "はく"),
+						Triplet.with("木", "も", "もく"), Triplet.with("士", "じ", "し"), Triplet.with("珠", "じゅ", "しゅ"),
+						Triplet.with("嵌", "がん", "かん"), Triplet.with("本", "ぼん", "ほん"), Triplet.with("手", "で", "て"),
+						Triplet.with("珠", "じゅ", "しゅ")), a -> {
+							//
+							testAndAccept(b -> b != null && MultimapUtil.containsEntry(multimap,
+									IValue0Util.getValue0(b), Util.getValue1(b)), a, b -> {
+										//
+										final String s1 = IValue0Util.getValue0(b);
+										//
+										MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+										//
+										MultimapUtil.put(multimap, s1, Util.getValue2(b));
+										//
+									});
+							//
+						});
 				testAndAccept(x -> Boolean.logicalAnd(
 						MultimapUtil.containsEntry(x, "網", "あ") && MultimapUtil.containsEntry(x, "代", "じろ"),
 						MultimapUtil.containsEntry(x, "目", "みめ")), multimap, x -> {
