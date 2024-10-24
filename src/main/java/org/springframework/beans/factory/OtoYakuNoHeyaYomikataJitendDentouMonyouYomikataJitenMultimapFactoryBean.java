@@ -1757,6 +1757,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 
 	}
 
+	private static interface ObjObjIntObjObjFunction<A, B, D, E, R> {
+
+		R apply(final A a, final B b, final int c, final D d, final E e);
+	}
+
 	@Nullable
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection11(
 			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines) {
@@ -1805,12 +1810,30 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			));
 			//
-			for (int i = 0; i < IterableUtils.size(lines); i++) {
+			final List<ObjObjIntObjObjFunction<PatternMap, IntObjectPair<String>, String, Map<String, String>, Entry<Multimap<String, String>, IntCollection>>> functions = Arrays
+					.asList(OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection11A);
+			//
+			for (int i = 0; i < IterableUtils.size(lines) && Util.iterator(functions) != null; i++) {
 				//
-				IntCollectionUtil.addAllInts(intCollection, Util.getValue(
-						entry = toMultimapAndIntCollection11A(patternMap, iop, i, IterableUtils.get(lines, i), map)));
-				//
-				MultimapUtil.putAll(multimap, Util.getKey(entry));
+				for (final ObjObjIntObjObjFunction<PatternMap, IntObjectPair<String>, String, Map<String, String>, Entry<Multimap<String, String>, IntCollection>> function : functions) {
+					//
+					if (function == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if ((entry = function.apply(patternMap, iop, i, IterableUtils.get(lines, i), map)) != null) {
+						//
+						IntCollectionUtil.addAllInts(intCollection, Util.getValue(entry));
+						//
+						MultimapUtil.putAll(multimap, Util.getKey(entry));
+						//
+						break;
+						//
+					} // if
+						//
+				} // for
 				//
 			} // for
 				//
