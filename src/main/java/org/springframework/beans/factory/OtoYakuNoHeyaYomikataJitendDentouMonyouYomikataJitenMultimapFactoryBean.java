@@ -3026,18 +3026,15 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				for (int i = 0; i < IterableUtils.size(entries); i++) {
 					//
-					if ((entry = IterableUtils.get(entries, i)) == null) {
+					if ((entry = IterableUtils.get(entries, i)) == null || !MultimapUtil.containsEntry(multimap,
+							key = Util.getKey(entry), value = Util.getValue(entry))) {
 						//
 						continue;
 						//
 					} // if
 						//
-					if (MultimapUtil.containsEntry(multimap, key = Util.getKey(entry), value = Util.getValue(entry))) {
-						//
-						MultimapUtil.remove(multimap, key, value);
-						//
-					} // if
-						//
+					MultimapUtil.remove(multimap, key, value);
+					//
 				} // for
 					//
 				return Pair.of(multimap, intCollection);
