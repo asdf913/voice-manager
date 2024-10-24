@@ -1787,31 +1787,26 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			Entry<Multimap<String, String>, IntCollection> entry = null;
 			//
-			Map<String, String> map = null;
+			final Map<String, String> map = Reflection.newProxy(Map.class, new IH());
+			//
+			Util.putAll(map, Map.of(
+					//
+					"kFirst", testAndApply(StringUtils::isNotEmpty, g11, x -> StringUtils.substring(x, 0, 1), null)
+					//
+					, "kLast", testAndApply(StringUtils::isNotEmpty, g11, x -> {
+						//
+						final int length = StringUtils.length(x);
+						//
+						return StringUtils.substring(x, length - 1, length);
+						//
+					}, null)
+					//
+					, "g11", g11, "g12", g12
+			//
+			));
 			//
 			for (int i = 0; i < IterableUtils.size(lines); i++) {
 				//
-				if (map == null) {
-					//
-					Util.putAll(map = Reflection.newProxy(Map.class, new IH()), Map.of(
-							//
-							"kFirst",
-							testAndApply(StringUtils::isNotEmpty, g11, x -> StringUtils.substring(x, 0, 1), null)
-							//
-							, "kLast", testAndApply(StringUtils::isNotEmpty, g11, x -> {
-								//
-								final int length = StringUtils.length(x);
-								//
-								return StringUtils.substring(x, length - 1, length);
-								//
-							}, null)
-							//
-							, "g11", g11, "g12", g12
-					//
-					));
-					//
-				} // if
-					//
 				IntCollectionUtil.addAllInts(intCollection, Util.getValue(
 						entry = toMultimapAndIntCollection11A(patternMap, iop, i, IterableUtils.get(lines, i), map)));
 				//
