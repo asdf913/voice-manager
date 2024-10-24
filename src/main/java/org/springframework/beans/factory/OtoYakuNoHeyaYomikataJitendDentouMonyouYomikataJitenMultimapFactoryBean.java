@@ -1714,7 +1714,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							//
 						} else if (StringUtils.isNotBlank(cpk)
 								&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, g21))
-								&& StringUtils.isBlank(cpv = StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2)))
+								&& StringUtils.isBlank(StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2)))
 								&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g22))) {
 							//
 							if (StringUtils.length(g21) == (countMatches = StringUtils.countMatches(g22, 'ん'))) {
@@ -2061,8 +2061,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 							"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 							kFirst)), line)) && Util.groupCount(m2) > 3
-							&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, g23 = Util.group(m2, 3)))
-							&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g24 = Util.group(m2, 4)))) {
+							&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, Util.group(m2, 3)))
+							&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, Util.group(m2, 4)))) {
 						//
 						IntCollectionUtil.addInt(intCollection, i);
 						//
@@ -2672,7 +2672,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						} // if
 							//
 						append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)),
-								g21 = Util.group(m2, 1));
+								Util.group(m2, 1));
 						//
 						tsbv.deleteCharAt(StringUtils.indexOf(g24, Util.group(m2, 2)));
 						//
@@ -2869,10 +2869,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							kFirst)), line))
 							&& Util.groupCount(m2) > 5
 							&& StringUtils.isNotBlank(
-									lcsk = longestCommonSubstring(g21 = Util.group(m2, 1), g23 = Util.group(m2, 3)))
+									lcsk = longestCommonSubstring(g21 = Util.group(m2, 1), Util.group(m2, 3)))
 							&& StringUtils.isNotBlank(lcsv = longestCommonSubstring(
 									StringUtils.substringBefore(g26 = Util.group(m2, 6), g22 = Util.group(m2, 2)),
-									StringUtils.substringBetween(g26, g22, g24 = Util.group(m2, 4))))) {
+									StringUtils.substringBetween(g26, g22, Util.group(m2, 4))))) {
 						//
 						IntCollectionUtil.addInt(intCollection, i);
 						//
@@ -3156,7 +3156,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	@Nullable
-	private static String substring(@Nullable final TextStringBuilder instance, final int startIndex, final int endIndex) {
+	private static String substring(@Nullable final TextStringBuilder instance, final int startIndex,
+			final int endIndex) {
 		//
 		try {
 			//
