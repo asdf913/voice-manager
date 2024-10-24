@@ -3018,14 +3018,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				MultimapUtil.putAll(mm, ImmutableMultimap.of("繋", "つな"));
 				//
-				Util.forEach(IterableUtils.toList(MultimapUtil.entries(mm)), entry -> {
-					//
-					testAndAccept(
-							(a, b) -> b != null
-									&& MultimapUtil.containsEntry(multimap, Util.getKey(b), Util.getValue(b)),
-							multimap, entry, (a, b) -> MultimapUtil.remove(a, Util.getKey(b), Util.getValue(b)));
-					//
-				});
+				Util.forEach(IterableUtils.toList(MultimapUtil.entries(mm)), entry -> testAndAccept(
+						(a, b) -> b != null && MultimapUtil.containsEntry(multimap, Util.getKey(b), Util.getValue(b)),
+						multimap, entry, (a, b) -> MultimapUtil.remove(a, Util.getKey(b), Util.getValue(b))));
 				//
 				return Pair.of(multimap, intCollection);
 				//
