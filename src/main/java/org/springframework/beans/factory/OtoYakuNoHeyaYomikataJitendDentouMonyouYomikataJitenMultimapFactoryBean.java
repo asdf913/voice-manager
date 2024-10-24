@@ -1721,6 +1721,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			return map = ObjectUtils.getIfNull(map, LinkedHashMap::new);
 		}
 
+		@Nullable
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
