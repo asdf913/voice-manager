@@ -72,6 +72,8 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 
 	private boolean isSystemPropertiesContainsTestGetObject;
 
+	private PatternMap patternMap = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -79,6 +81,8 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		//
 		isSystemPropertiesContainsTestGetObject = Util.containsKey(System.getProperties(),
 				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTest.testGetObject");
+		//
+		patternMap = new PatternMapImpl();
 		//
 	}
 
@@ -284,7 +288,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 	}
 
 	@Test
-	void testToMultimapAndIntCollection() throws Throwable {
+	void testToMultimapAndIntCollection1() throws Throwable {
 		//
 		if (isSystemPropertiesContainsTestGetObject) {
 			//
@@ -292,8 +296,6 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 			//
 		} // if
 			//
-		final PatternMap patternMap = new PatternMapImpl();
-		//
 		Assertions.assertNull(toMultimapAndIntCollection(patternMap, null, null));
 		//
 		Assertions.assertNull(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, null), null));
@@ -408,6 +410,17 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 笠松文（かさまつもん）"),
 						Arrays.asList(null, "笠扇面繋ぎ文（かさせんめんつなぎもん）"))));
 		//
+	}
+
+	@Test
+	void testToMultimapAndIntCollection2() throws Throwable {
+		//
+		if (isSystemPropertiesContainsTestGetObject) {
+			//
+			return;
+			//
+		} // if
+			//
 		Assertions.assertEquals("({亀背文=[きはいもん], 亀=[かめ], 文=[もん], 亀蛇文=[かめへびもん]},[0, 1, 2])",
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 亀背文（きはいもん）"),
 						Arrays.asList(null, "亀文（かめもん）", "亀蛇文（かめへびもん）"))));
@@ -431,7 +444,8 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 瑞雲文（ずいうんもん）"),
 						Arrays.asList(null, "瑞垣文・瑞籬文・水垣文（みずがきもん）"))));
 		//
-		Assertions.assertEquals("({鳥樹文=[ちょうじゅもん], 鳥=[とり], 唐草文=[からくさもん], 唐草=[からくさ], 文=[もん], 鳥獣連珠文=[ちょうじゅうれんじゅもん], 連=[れん], 鳥獣=[ちょうじゅう], 珠=[しゅ]},[0, 1, 2])",
+		Assertions.assertEquals(
+				"({鳥樹文=[ちょうじゅもん], 鳥=[とり], 唐草文=[からくさもん], 唐草=[からくさ], 文=[もん], 鳥獣連珠文=[ちょうじゅうれんじゅもん], 連=[れん], 鳥獣=[ちょうじゅう], 珠=[しゅ]},[0, 1, 2])",
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 鳥樹文（ちょうじゅもん）"),
 						Arrays.asList(null, "鳥に唐草文（とりにからくさもん）", "鳥獣連珠文（ちょうじゅうれんじゅもん）"))));
 		//
