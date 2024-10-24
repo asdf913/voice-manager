@@ -2969,9 +2969,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 				} // if
 					//
-				if (Boolean.logicalOr(MultimapUtil.containsEntry(multimap, "網", "あ"),
-						MultimapUtil.containsEntry(multimap, "網", "あみ"))
-						&& MultimapUtil.containsEntry(multimap, "干", "ぼし")
+				if (Boolean.logicalAnd(
+						Boolean.logicalOr(MultimapUtil.containsEntry(multimap, "網", "あ"),
+								MultimapUtil.containsEntry(multimap, "網", "あみ")),
+						MultimapUtil.containsEntry(multimap, "干", "ぼし"))
 						&& MultimapUtil.containsEntry(multimap, "目", "みめ")) {
 					//
 					if (MultimapUtil.containsEntry(multimap, "網", "あ")) {
