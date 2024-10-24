@@ -2159,7 +2159,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}+$",
 							kFirst)), line)) && Util.groupCount(m2) > 1
 							&& Stream.of(g21 = Util.group(m2, 1), g22 = Util.group(m2, 2), g23 = Util.group(m2, 3))
-									.mapToInt(x -> StringUtils.length(x)).distinct().max().orElse(0) == 2) {
+									.mapToInt(StringUtils::length).distinct().max().orElse(0) == 2) {
 						//
 						IntCollectionUtil.addInt(intCollection, i);
 						//
