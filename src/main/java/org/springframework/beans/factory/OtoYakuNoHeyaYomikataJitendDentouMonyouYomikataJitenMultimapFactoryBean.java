@@ -1759,20 +1759,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 								//
 								IntCollectionUtil.addInt(intCollection, i);
 								//
-								if (StringUtils.length(g22) - StringUtils.length(g21) == 1) {
-									//
-									MultimapUtil.putAll(multimap,
-											ImmutableMultimap.of(g21, g22, StringUtils.substringBefore(g21, csk),
-													StringUtils.substringBefore(g22, csv), csk, csv));
-									//
-								} else {
-									//
-									MultimapUtil.putAll(multimap,
-											ImmutableMultimap.of(g21, g22, StringUtils.substringBefore(g21, csk),
-													StringUtils.substringBefore(g22, csv), csk, csv));
-									//
-								} // if
-									//
+								MultimapUtil.putAll(multimap,
+										ImmutableMultimap.of(g21, g22, StringUtils.substringBefore(g21, csk),
+												StringUtils.substringBefore(g22, csv), csk, csv));
+								//
 							} // if
 								//
 						} else if (StringUtils.countMatches(g22 = Util.group(m2, 2), 'ん') == 2) {
