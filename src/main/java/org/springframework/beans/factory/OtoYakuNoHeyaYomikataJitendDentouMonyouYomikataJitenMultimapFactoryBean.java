@@ -2943,17 +2943,19 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			tsbv.deleteCharAt(StringUtils.indexOf(g24, Util.group(m2, 2)));
 			//
-			if (StringUtils.length(tsbv) - StringUtils.lastIndexOf(tsbv, "ん") > 2) {
+			testAndAccept((a, b) -> StringUtils.length(b) - StringUtils.lastIndexOf(b, "ん") > 2, tsbk, tsbv, (a, b) -> {
 				//
-				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
+				int l;
 				//
-				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
+				MultimapUtil.put(multimap, substring(a, (l = StringUtils.length(a)) - 1, l),
+						substring(b, (l = StringUtils.length(b)) - 2, l));
 				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+				delete(a, (l = StringUtils.length(a)) - 1, l);
 				//
-			} // if
+				delete(b, (l = StringUtils.length(b)) - 2, l);
 				//
+			});
+			//
 			testAndAccept((a, b) -> StringUtils.length(b) - StringUtils.lastIndexOf(b, "ん") == 1, tsbk, tsbv,
 					(a, b) -> {
 						//
