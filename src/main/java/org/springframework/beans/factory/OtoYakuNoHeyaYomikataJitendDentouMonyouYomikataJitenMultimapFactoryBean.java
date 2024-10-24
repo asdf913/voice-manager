@@ -3155,6 +3155,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
+	@Nullable
 	private static String substring(@Nullable final TextStringBuilder instance, final int startIndex, final int endIndex) {
 		//
 		try {
