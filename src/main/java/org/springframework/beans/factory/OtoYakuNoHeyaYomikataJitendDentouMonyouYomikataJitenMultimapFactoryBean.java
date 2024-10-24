@@ -2926,18 +2926,24 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
 					g24 = Util.group(m2, 4));
 			//
-			if (StringUtils.length(tsbk) > 0 && (length = StringUtils.length(tsbv)) > 0
-					&& tsbv.charAt(length - 1) == 'ん') {
+			testAndAccept((a, b) -> {
 				//
-				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
+				final int l = StringUtils.length(b);
 				//
-				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
+				return StringUtils.length(a) > 0 && l > 0 && b.charAt(l - 1) == 'ん';
 				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+			}, tsbk, tsbv, (a, b) -> {
 				//
-			} // if
+				int l;
 				//
+				MultimapUtil.put(multimap, substring(a, (l = StringUtils.length(a)) - 1, l),
+						substring(b, (l = StringUtils.length(b)) - 2, l));
+				//
+				delete(a, (l = StringUtils.length(a)) - 1, l);
+				//
+				delete(b, (l = StringUtils.length(b)) - 2, l);
+				//
+			});
 			append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)),
 					Util.group(m2, 1));
 			//
