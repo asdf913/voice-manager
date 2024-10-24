@@ -1986,7 +1986,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final IntCollection intCollection = IntList.create();
 		//
-		Multimap<String, String> multimap = LinkedHashMultimap.create();
+		final Multimap<String, String> multimap = LinkedHashMultimap.create();
 		//
 		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
