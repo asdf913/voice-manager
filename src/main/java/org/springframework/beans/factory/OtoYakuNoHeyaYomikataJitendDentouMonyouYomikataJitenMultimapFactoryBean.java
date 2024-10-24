@@ -2932,21 +2932,17 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				for (int i = 0; i < IterableUtils.size(triplets); i++) {
 					//
-					if ((triplet = IterableUtils.get(triplets, i)) == null) {
+					if ((triplet = IterableUtils.get(triplets, i)) == null || !MultimapUtil.containsEntry(multimap,
+							s1 = IValue0Util.getValue0(triplet), s2 = Util.getValue1(triplet))) {
 						//
 						continue;
 						//
 					} // if
 						//
-					if (MultimapUtil.containsEntry(multimap, s1 = IValue0Util.getValue0(triplet),
-							s2 = Util.getValue1(triplet))) {
-						//
-						MultimapUtil.remove(multimap, s1, s2);
-						//
-						MultimapUtil.put(multimap, s1, Util.getValue2(triplet));
-						//
-					} // if
-						//
+					MultimapUtil.remove(multimap, s1, s2);
+					//
+					MultimapUtil.put(multimap, s1, Util.getValue2(triplet));
+					//
 				} // for
 					//
 				testAndAccept(x -> Boolean.logicalAnd(
