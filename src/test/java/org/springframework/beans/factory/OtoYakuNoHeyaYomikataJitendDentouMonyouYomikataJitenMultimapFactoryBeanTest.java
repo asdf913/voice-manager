@@ -375,6 +375,116 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 水文（みずもん）"),
 						Arrays.asList(null, "水文（すいもん）"))));
 		//
+		Assertions.assertEquals("({上松縞=[あげまつじま], 上絵=[うわえ], 上文=[うわもん], 上=[うわ], 文=[もん]},[0, 1, 2])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 上松縞（あげまつじま）"),
+						Arrays.asList(null, "上絵（うわえ）＊工芸用語", "上文（うわもん）"))));
+		//
+		Assertions.assertEquals(
+				"({網目文=[あみめもん], 網=[あみ], 文=[もん], 魚=[うお], 様=[よう], 網目=[あみめ], 網目七曜文=[あみめしちようもん], 七曜=[しちよう], 網文=[あみもん], 目=[め], 代=[しろ], 網代=[あじろ], 干=[ほし], 網干=[あぼし]},[0, 1, 2, 3, 4, 5, 6])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 網目文（あみめもん）"),
+						Arrays.asList(null, "網に魚文様（あみにうおもんよう）", "網目（あみめ）", "網目七曜文（あみめしちようもん）", "網文（あみもん）", "網代文（あじろもん）",
+								"網干文（あぼしもん）"))));
+		//
+		Assertions.assertEquals(
+				"({大内菱=[おおうちびし], 文=[もん], 根=[こん], 大=[だい, おお], 大燈金襴=[だいとうきんらん], 襴=[らん], 金=[きん], 大徳寺牡丹文=[だいとくじぼたんもん], 丹=[たん], 大文字文=[だいもんじもん], 字=[じ], 大内=[おおうち], 大絣=[おおがすり], 絣=[かすり], 菱=[ひし]},[0, 2, 3, 4, 5, 6, 7])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 大内菱（おおうちびし）"),
+						Arrays.asList(null, "網大牡丹文（おおぼたんもん）", "大根文（だいこんもん）", "大燈金襴（だいとうきんらん）＊名物裂の一種",
+								"大徳寺牡丹文（だいとくじぼたんもん）", "大文字文（だいもんじもん）", "大内桐金襴（おおうちきりきんらん）", "大絣（おおがすり）"))));
+		//
+		Assertions.assertEquals(
+				"({海馬文=[かいまもん], 海辺=[うみべ], 松=[まつ], 海老文=[えびもん], 海老=[えび], 文=[もん], 海=[かい], 桐=[きり], 賦=[ふ], 海賦文=[かいぶもん, みるもん], 海賦=[かいぶ], 海賦文様=[かいふもんよう], 様=[よう], 海松文=[みるもん], 海松=[みる]},[0, 1, 2, 3, 4, 5])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 海馬文（かいまもん）"),
+						Arrays.asList(null, "海辺の松（うみべのまつ）", "海老文（えびもん）", "海賦に桐文（かいぶにきりもん）",
+								"海賦文（かいぶもん）＊海部・海浦とも書く/海賦文様（かいふもんよう）", "海松文・海賦文（みるもん）"))));
+		//
+		Assertions.assertEquals(
+				"({金輪文=[かなわもん], 金華布=[きんかふ], 金=[きん, こん, かね, かな], 魚=[ぎょ], 文=[もん], 金銭文=[きんせんもん], 銭=[せん], 金通=[きんつう], 通=[つう], 金襴=[きんらん], 襴=[らん], 金襴手文様=[きんらんでもんよう], 様=[よう], 金襴牡丹唐草文=[きんらんぼたんからくさもん], 牡丹=[ぼたん], 唐草文=[からくさもん], 金剛杵文=[こんごうしょもん], 金剛鈴=[こんごうれい], 手=[て], 函=[はこ], 金函=[かねばこ], 輪=[わ]},[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 金輪文（かなわもん）"),
+						Arrays.asList(null, "金華布（きんかふ）＊更紗", "金魚文（きんぎょもん）", "金銭文（きんせんもん）", "金通（きんつう）", "金襴（きんらん）＊織物の一種",
+								"金襴手文様（きんらんでもんよう）", "金襴牡丹唐草文（きんらんぼたんからくさもん）", "金剛杵文（こんごうしょもん）", "金剛鈴（こんごうれい）＊密教法具の一種",
+								"金函文（かねばこもん）"))));
+		//
+		Assertions.assertEquals("({笠松文=[かさまつもん], 文=[もん], 面=[めん], 扇=[せん], 笠=[かさ]},[0, 1])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 笠松文（かさまつもん）"),
+						Arrays.asList(null, "笠扇面繋ぎ文（かさせんめんつなぎもん）"))));
+		//
+		Assertions.assertEquals("({亀背文=[きはいもん], 亀=[かめ], 文=[もん], 亀蛇文=[かめへびもん]},[0, 1, 2])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 亀背文（きはいもん）"),
+						Arrays.asList(null, "亀文（かめもん）", "亀蛇文（かめへびもん）"))));
+		//
+		Assertions.assertEquals(
+				"({小葵文=[こあおいもん], 小草文=[おぐさもん, こくさもん], 文=[もん], 小草=[おぐさ], 小紋=[こもん], 小=[こ], 紋=[もん], 草=[くさ]},[0, 1, 2, 3])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 小葵文（こあおいもん）"),
+						Arrays.asList(null, "小草文（おぐさもん・こくさもん）", "小紋（こもん）＊小紋染の略", "小草文（こくさもん・おぐさもん）"))));
+		//
+		Assertions.assertEquals("({小飛文=[ことびもん]},[0])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 小飛文（ことびもん）"), null)));
+		//
+		Assertions.assertEquals("({河骨文=[こうほねもん]},[0])", Objects.toString(toMultimapAndIntCollection(patternMap,
+				IntObjectPair.of(ZERO, " 河骨文（こうほねもん）"), Arrays.asList(null, " 河骨文（こうほねもん）"))));
+		//
+		Assertions.assertEquals("({鮫市松=[さめいちまつ], 鮫=[さめ], 市松=[いちまつ], 鮫小紋=[さめこもん], 小紋=[こもん]},[0, 1])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 鮫市松（さめいちまつ）"),
+						Arrays.asList(null, "鮫小紋（さめこもん）＊小紋型の一種"))));
+		//
+		Assertions.assertEquals("({瑞雲文=[ずいうんもん], 瑞垣文=[みずがきもん], 文=[もん], 瑞籬文=[みずがきもん], 水垣文=[みずがきもん]},[0, 1])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 瑞雲文（ずいうんもん）"),
+						Arrays.asList(null, "瑞垣文・瑞籬文・水垣文（みずがきもん）"))));
+		//
+		Assertions.assertEquals("({鳥樹文=[ちょうじゅもん], 鳥=[とり], 唐草文=[からくさもん], 唐草=[からくさ], 文=[もん], 鳥獣連珠文=[ちょうじゅうれんじゅもん], 連=[れん], 鳥獣=[ちょうじゅう], 珠=[しゅ]},[0, 1, 2])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 鳥樹文（ちょうじゅもん）"),
+						Arrays.asList(null, "鳥に唐草文（とりにからくさもん）", "鳥獣連珠文（ちょうじゅうれんじゅもん）"))));
+		//
+		Assertions.assertEquals(
+				"({花筏文=[はないかだもん], 花=[か, はな], 瓶=[びん], 文=[もん], 花布=[かふ], 布=[ふ], 華布=[かふ], 華=[か], 花麒麟金襴=[はなきりんきんらん], 襴=[らん], 金=[きん], 麟=[りん], 麒=[き], 鳥=[とり], 花字文=[かじもん], 字=[じ]},[0, 1, 2, 3, 4, 5, 6, 7])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 花筏文（はないかだもん）"),
+						Arrays.asList(null, "花瓶文（かびんもん）", "花布・華布（かふ）＊更紗", "花麒麟金襴（はなきりんきんらん）＊名物裂の一種", "花麒麟文（はなきりんもん）",
+								"花つかみ鳥文（はなつかみとりもん）", "花に遊ぶ鳥文（はなにあそぶとりもん）", "花字文（かじもん）"))));
+		//
+		Assertions.assertEquals("({花喰鳥=[はなくいどり], 花文=[かもん], 花=[か, はな], 文=[もん], 鳥=[とり]},[0, 1, 2])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 花喰鳥（はなくいどり）"),
+						Arrays.asList(null, "花文（かもん）", "花つかみ鳥文（はなつかみとりもん）"))));
+		//
+		Assertions.assertEquals("({虎杖文=[いたどりもん], 虎絣=[とらがすり]},[0, 1])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 虎杖文（いたどりもん）"),
+						Arrays.asList(null, "虎絣（とらがすり）＊絣織物の一種"))));
+		//
+		Assertions.assertEquals("({菱藤文=[ひしふじもん], 文=[もん], 字=[じ], 万=[まん], 菱=[ひし], 連=[れん], 珠=[しゅ]},[0, 1, 2])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 菱藤文（ひしふじもん）"),
+						Arrays.asList(null, "菱万字文（ひしまんじもん）", "菱連珠文（ひしれんじゅもん）"))));
+		//
+		Assertions.assertEquals(
+				"({三重襷=[みえだすき], 三纈=[さんけち], 三=[さん, み], 纈=[けち], 三段十字=[さんだんじゅうじ], 三段=[さんだん], 十字=[じゅうじ], 文=[もん], 吉祥=[きっしょう], 大島=[おおしま], 臈纈=[ろうけち], 臈=[ろう], 夾纈=[きょうけち], 夾=[きょう], 纐纈=[こうけち], 纐=[こう], 多=[た], 三本立葵文=[さんぼんたちあおいもん], 本=[ほん]},[0, 1, 2, 3, 4, 5, 6, 7, 8])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 三重襷（みえだすき）"),
+						Arrays.asList(null, "三纈（さんけち）染色法の名称", "三段十字と十字崩し文（さんだんじゅうじとじゅうじくずしもん）", "三の吉祥文（さんのきっしょうもん）",
+								"三つ鱗文（みつうろこもん）", "三つ大島（みつおおしま）＊縞柄の一種", "三纈（さんけち）--臈纈（ろうけち）夾纈（きょうけち）纐纈（こうけち）",
+								"三多文（さんたもん）", "三本立葵文（さんぼんたちあおいもん）"))));
+		//
+		Assertions.assertEquals(
+				"({木菟文=[みみづくもん], 木地蒔絵=[きじまきえ], 木画=[もくが], 木=[もく], 画=[が], 木象嵌=[もくぞうがん], 象=[ぞう], 文=[もん], 嵌=[かん]},[0, 1, 2, 3])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 木菟文（みみづくもん）"),
+						Arrays.asList(null, "木地蒔絵（きじまきえ）＊漆工蒔絵の一種", "木画（もくが）／木象嵌（もくぞうがん）＊現代の寄木細工のこと。",
+								"木こう文（もっこうもん）＊（こう）は穴かんむりに果"))));
+		//
+		Assertions.assertEquals(
+				"({結綿文=[ゆいわたもん], 結綿=[ゆいわた], 結束文様=[けっそくもんよう], 結束=[けっそく], 文=[もん], 様=[よう], 文様=[もんよう], 亀甲文=[きっこうもん], 亀甲=[きっこう]},[0, 1, 2, 3])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 結綿文（ゆいわたもん）"),
+						Arrays.asList(null, "結束文様（けっそくもんよう）", "結び文（むすびもん）", "結び亀甲文（むすびきっこうもん）"))));
+		//
+		Assertions.assertEquals("({雷雨文=[らいうもん], 雷文菱=[らいもんびし], 雷=[らい], 文=[もん], 雲文=[くももん], 雲=[くも], 菱=[ひし]},[0, 1])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 雷雨文（らいうもん）"),
+						Arrays.asList(null, "雷文菱に雲文（らいもんびしにくももん）"))));
+		//
+		Assertions.assertEquals("({蘆辺文=[あしべもん], 蘆=[あし], 雁=[かり], 文=[もん]},[0, 1])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 蘆辺文（あしべもん）"),
+						Arrays.asList(null, "蘆に雁文（あしにかりもん）"))));
+		//
+		Assertions.assertEquals(
+				"({印半纏=[しるしばんてん], 印花文=[いんかもん], 印金=[いんきん], 印伝革=[いんでんがわ], 印度=[いんど], 印籠=[いんろう], 鳥=[とり]},[0, 1, 2, 3, 4, 5])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 印半纏（しるしばんてん）"),
+						Arrays.asList(null, "印花文（いんかもん）＊文様装飾技法", "印金（いんきん）＊名物裂、技法", "印伝革（いんでんがわ）＊染革",
+								"印度の花食い鳥（いんどのはなくいどり）", "印籠（いんろう）＊薬入れ"))));
+		//
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection(
