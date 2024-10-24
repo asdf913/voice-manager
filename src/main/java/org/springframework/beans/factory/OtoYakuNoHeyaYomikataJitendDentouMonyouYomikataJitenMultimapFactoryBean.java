@@ -2985,28 +2985,30 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					MultimapUtil.putAll(multimap, ImmutableMultimap.of("網", "あみ", "干", "ほし", "目", "め", "網干", "あぼし"));
 					//
-				} else if (MultimapUtil.containsEntry(multimap, "金", "か")) {
-					//
-					MultimapUtil.remove(multimap, "金", "か");
-					//
-					testAndAccept(x -> MultimapUtil.containsEntry(x, "函", "ねばこ"), multimap, x -> {
-						//
-						MultimapUtil.remove(x, "函", "ねばこ");
-						//
-						MultimapUtil.putAll(x, ImmutableMultimap.of("金", "かね", "函", "はこ", "金函", "かねばこ"));
-						//
-					});
-					//
-					testAndAccept(x -> MultimapUtil.containsEntry(x, "輪", "なわ"), multimap, x -> {
-						//
-						MultimapUtil.remove(x, "輪", "なわ");
-						//
-						MultimapUtil.putAll(x, ImmutableMultimap.of("金", "かな", "輪", "わ"));
-						//
-					});
-					//
 				} // if
 					//
+				testAndAccept(a -> MultimapUtil.containsEntry(a, "金", "か"), multimap, a -> {
+					//
+					MultimapUtil.remove(a, "金", "か");
+					//
+					testAndAccept(b -> MultimapUtil.containsEntry(b, "函", "ねばこ"), multimap, b -> {
+						//
+						MultimapUtil.remove(b, "函", "ねばこ");
+						//
+						MultimapUtil.putAll(b, ImmutableMultimap.of("金", "かね", "函", "はこ", "金函", "かねばこ"));
+						//
+					});
+					//
+					testAndAccept(b -> MultimapUtil.containsEntry(b, "輪", "なわ"), multimap, b -> {
+						//
+						MultimapUtil.remove(b, "輪", "なわ");
+						//
+						MultimapUtil.putAll(b, ImmutableMultimap.of("金", "かな", "輪", "わ"));
+						//
+					});
+					//
+				});
+				//
 				testAndAccept(x -> MultimapUtil.containsEntry(x, "花字", "かじ"), multimap,
 						x -> MultimapUtil.putAll(x, ImmutableMultimap.of("花", "か", "字", "じ")));
 				//
