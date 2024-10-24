@@ -1,9 +1,13 @@
 package org.springframework.beans.factory;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiConsumer;
@@ -20,6 +24,7 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -51,6 +56,7 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
+import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import it.unimi.dsi.fastutil.PairUtil;
@@ -1707,6 +1713,49 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
+	private static class IH implements InvocationHandler {
+
+		private Map<Object, Object> map = null;
+
+		private Map<Object, Object> getMap() {
+			return map = ObjectUtils.getIfNull(map, LinkedHashMap::new);
+		}
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String name = Util.getName(method);
+			//
+			if (proxy instanceof Map) {
+				//
+				if (Objects.equals(name, "putAll") && args != null && args.length > 0) {
+					//
+					Util.putAll(getMap(), (Map) args[0]);
+					//
+					return null;
+					//
+				} else if (Objects.equals(name, "get") && args != null && args.length > 0) {
+					//
+					final Object arg = args[0];
+					//
+					if (!Util.containsKey(getMap(), arg)) {
+						//
+						throw new Throwable(Util.toString(arg));
+						//
+					} // if
+						//
+					return MapUtils.getObject(getMap(), args[0]);
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(name);
+			//
+		}
+
+	}
+
 	@Nullable
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection11(
 			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines) {
@@ -1733,25 +1782,37 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
 			//
-			final String kFirst = testAndApply(StringUtils::isNotEmpty, g11, x -> StringUtils.substring(x, 0, 1), null);
-			//
-			final String kLast = testAndApply(StringUtils::isNotEmpty, g11, x -> {
-				//
-				final int length = StringUtils.length(x);
-				//
-				return StringUtils.substring(x, length - 1, length);
-				//
-			}, null);
-			//
 			// A
 			//
 			Entry<Multimap<String, String>, IntCollection> entry = null;
 			//
+			Map<String, String> map = null;
+			//
 			for (int i = 0; i < IterableUtils.size(lines); i++) {
 				//
-				IntCollectionUtil.addAllInts(intCollection,
-						Util.getValue(entry = toMultimapAndIntCollection11A(patternMap, iop, i,
-								IterableUtils.get(lines, i), Pair.of(kFirst, kLast), g11, g12)));
+				if (map == null) {
+					//
+					Util.putAll(map = Reflection.newProxy(Map.class, new IH()), Map.of(
+							//
+							"kFirst",
+							testAndApply(StringUtils::isNotEmpty, g11, x -> StringUtils.substring(x, 0, 1), null)
+							//
+							, "kLast", testAndApply(StringUtils::isNotEmpty, g11, x -> {
+								//
+								final int length = StringUtils.length(x);
+								//
+								return StringUtils.substring(x, length - 1, length);
+								//
+							}, null)
+							//
+							, "g11", g11, "g12", g12
+					//
+					));
+					//
+				} // if
+					//
+				IntCollectionUtil.addAllInts(intCollection, Util.getValue(
+						entry = toMultimapAndIntCollection11A(patternMap, iop, i, IterableUtils.get(lines, i), map)));
 				//
 				MultimapUtil.putAll(multimap, Util.getKey(entry));
 				//
@@ -1869,7 +1930,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	@Nullable
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection11A(
 			final PatternMap patternMap, final IntObjectPair<String> iop1, final int i, final String line,
-			final Entry<String, String> pair, final String g11, final String g12) {
+			final Map<String, String> map
+	// final Entry<String, String> pair, final String g11, final String g12
+	) {
 		//
 		if ((iop1 != null && iop1.keyInt() == i) || StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop1)))) {
 			//
@@ -1879,9 +1942,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		Matcher m2;
 		//
-		final String kFirst = Util.getKey(pair);
+		final String kFirst = MapUtils.getObject(map, "kFirst");
 		//
-		final String kLast = Util.getValue(pair);
+		final String kLast = MapUtils.getObject(map, "kLast");
+		//
+		final String g11 = MapUtils.getObject(map, "g11");
+		//
+		final String g12 = MapUtils.getObject(map, "g12");
 		//
 		String g21, g22, cpk, csk, cpv, csv;
 		//

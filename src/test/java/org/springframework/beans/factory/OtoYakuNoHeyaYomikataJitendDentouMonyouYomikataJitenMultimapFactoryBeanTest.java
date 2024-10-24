@@ -1,12 +1,15 @@
 package org.springframework.beans.factory;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -613,6 +616,43 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testIH() throws Throwable {
+		//
+		final Class<?> clz = Class.forName(
+				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean$IH");
+		//
+		final InvocationHandler ih = Util.cast(InvocationHandler.class, Narcissus.allocateInstance(clz));
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, null, null, null));
+		//
+		final Map<?, ?> map = new LinkedHashMap<>();
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, map, null, null));
+		//
+		final Method putAll = Map.class.getDeclaredMethod("putAll", Map.class);
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, map, putAll, null));
+		//
+		final Object[] emptyArray = new Object[] {};
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, map, putAll, emptyArray));
+		//
+		final Method get = Map.class.getDeclaredMethod("get", Object.class);
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, map, get, null));
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, map, get, emptyArray));
+		//
+		Assertions.assertThrows(Throwable.class, () -> invoke(ih, map, get, new Object[] { null }));
+		//
+	}
+
+	private static Object invoke(final InvocationHandler instance, final Object proxy, final Method method,
+			final Object[] args) throws Throwable {
+		return instance != null ? instance.invoke(proxy, method, args) : null;
 	}
 
 }
