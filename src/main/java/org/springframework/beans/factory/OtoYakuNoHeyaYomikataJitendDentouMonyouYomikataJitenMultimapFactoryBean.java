@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -3004,12 +3005,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 					} // if
 						//
-				} else if (MultimapUtil.containsEntry(multimap, "花字", "かじ")) {
-					//
-					MultimapUtil.putAll(multimap, ImmutableMultimap.of("花", "か", "字", "じ"));
-					//
 				} // if
 					//
+				testAndAccept(x -> MultimapUtil.containsEntry(x, "花字", "かじ"), multimap,
+						x -> MultimapUtil.putAll(x, ImmutableMultimap.of("花", "か", "字", "じ")));
+				//
 				final Multimap<String, String> mm = LinkedHashMultimap
 						.create(ImmutableMultimap.of("曝", "ざらし", "包", "づつみ", "重", "がさね", "小草", "こくさ", "寓生", "ほや"));
 				//
@@ -3030,6 +3030,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		return null;
 		//
+	}
+
+	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer) {
+		if (predicate != null && predicate.test(value) && consumer != null) {
+			consumer.accept(value);
+		}
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection10A(
