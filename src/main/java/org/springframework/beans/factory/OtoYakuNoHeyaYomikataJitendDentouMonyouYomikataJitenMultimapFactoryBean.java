@@ -2997,14 +2997,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 					} // if
 						//
-					if (MultimapUtil.containsEntry(multimap, "輪", "なわ")) {
+					testAndAccept(x -> MultimapUtil.containsEntry(x, "輪", "なわ"), multimap, x -> {
 						//
-						MultimapUtil.remove(multimap, "輪", "なわ");
+						MultimapUtil.remove(x, "輪", "なわ");
 						//
-						MultimapUtil.putAll(multimap, ImmutableMultimap.of("金", "かな", "輪", "わ"));
+						MultimapUtil.putAll(x, ImmutableMultimap.of("金", "かな", "輪", "わ"));
 						//
-					} // if
-						//
+					});
+					//
 				} // if
 					//
 				testAndAccept(x -> MultimapUtil.containsEntry(x, "花字", "かじ"), multimap,
