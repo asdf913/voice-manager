@@ -1864,8 +1864,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		);
 		//
-		testAndAccept(x -> Boolean.logicalAnd(
-				MultimapUtil.containsEntry(x, "網", "あ") && MultimapUtil.containsEntry(x, "代", "じろ"),
+		testAndAccept(x -> Util.and(MultimapUtil.containsEntry(x, "網", "あ"), MultimapUtil.containsEntry(x, "代", "じろ"),
 				MultimapUtil.containsEntry(x, "目", "みめ")), multimap, x -> {
 					//
 					MultimapUtil.remove(x, "網", "あ");
