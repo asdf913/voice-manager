@@ -1778,8 +1778,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							if ((lastIndexOf = StringUtils.lastIndexOf(tsbv, 'ん')) == StringUtils.length(tsbv) - 1) {
 								//
 								MultimapUtil.put(multimap,
-										tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-										tsbv.substring(lastIndexOf - 1, StringUtils.length(tsbv)));
+										substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+										substring(tsbv, lastIndexOf - 1, StringUtils.length(tsbv)));
 								//
 								delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 								//
@@ -1792,8 +1792,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 								if (lastIndexOf - indexOf == 2) {
 									//
 									MultimapUtil.put(multimap,
-											tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-											tsbv.substring(indexOf - 1, StringUtils.length(tsbv)));
+											substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+											substring(tsbv, indexOf - 1, StringUtils.length(tsbv)));
 									//
 									delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 									//
@@ -1808,8 +1808,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 								} else if (lastIndexOf - indexOf == 3) {
 									//
 									MultimapUtil.put(multimap,
-											tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-											tsbv.substring((length = StringUtils.length(tsbv)) - 1, length));
+											substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+											substring(tsbv, (length = StringUtils.length(tsbv)) - 1, length));
 									//
 									delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 									//
@@ -2214,15 +2214,15 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							append(TextStringBuilderUtil
 									.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
 							delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
@@ -2245,22 +2245,22 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							append(TextStringBuilderUtil
 									.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
 							delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 1, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 1, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
 							delete(tsbv, (length = StringUtils.length(tsbv)) - 1, length);
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
@@ -2279,22 +2279,22 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							append(TextStringBuilderUtil
 									.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
 							delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
 							delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
@@ -2335,15 +2335,15 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
 								g22);
 						//
-						MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-								tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+						MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+								substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 						//
 						delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 						//
 						delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
 						//
-						MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-								tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+						MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+								substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 						//
 						delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 						//
@@ -2470,7 +2470,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 						if (StringUtils.length(tsbk) > 0 && StringUtils.length(tsbv) > 1 && tsbv.charAt(1) == 'ん') {
 							//
-							MultimapUtil.put(multimap, tsbk.substring(0, 1), tsbv.substring(0, 2));
+							MultimapUtil.put(multimap, substring(tsbk, 0, 1), substring(tsbv, 0, 2));
 							//
 							delete(tsbk, 0, 1);
 							//
@@ -2480,7 +2480,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							//
 						if (StringUtils.length(tsbk) > 0 && StringUtils.length(tsbv) > 1 && tsbv.charAt(1) == 'ん') {
 							//
-							MultimapUtil.put(multimap, tsbk.substring(0, 1), tsbv.substring(0, 2));
+							MultimapUtil.put(multimap, substring(tsbk, 0, 1), substring(tsbv, 0, 2));
 							//
 							delete(tsbk, 0, 1);
 							//
@@ -2541,7 +2541,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 						if (StringUtils.length(tsbk) > 0 && StringUtils.length(tsbv) > 1 && tsbv.charAt(1) == 'ん') {
 							//
-							MultimapUtil.put(multimap, tsbk.substring(0, 1), tsbv.substring(0, 2));
+							MultimapUtil.put(multimap, substring(tsbk, 0, 1), substring(tsbv, 0, 2));
 							//
 							delete(tsbk, 0, 1);
 							//
@@ -2551,7 +2551,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							//
 						if (StringUtils.length(tsbk) > 0 && StringUtils.length(tsbv) > 1 && tsbv.charAt(1) == 'ん') {
 							//
-							MultimapUtil.put(multimap, tsbk.substring(0, 1), tsbv.substring(0, 2));
+							MultimapUtil.put(multimap, substring(tsbk, 0, 1), substring(tsbv, 0, 2));
 							//
 							delete(tsbk, 0, 1);
 							//
@@ -2561,7 +2561,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							//
 						if (StringUtils.length(tsbk) > 1 && StringUtils.length(tsbv) > 2 && tsbv.charAt(2) == 'ん') {
 							//
-							MultimapUtil.put(multimap, tsbk.substring(0, 2), tsbv.substring(0, 3));
+							MultimapUtil.put(multimap, substring(tsbk, 0, 2), substring(tsbv, 0, 3));
 							//
 							delete(tsbk, 0, 2);
 							//
@@ -2574,8 +2574,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						if (StringUtils.length(tsbk) > 0 && StringUtils.length(tsbv) > 1
 								&& StringUtils.endsWith(tsbv, "ん")) {
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 						} // if
 							//
@@ -2612,8 +2612,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						if (StringUtils.length(tsbk) > 0 && (length = StringUtils.length(tsbv)) > 0
 								&& tsbv.charAt(length - 1) == 'ん') {
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
@@ -2624,8 +2624,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						if (StringUtils.length(tsbk) > 0 && (length = StringUtils.length(tsbv)) > 1
 								&& tsbv.charAt(length - 2) == 'ん') {
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 1, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 1, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
@@ -2636,8 +2636,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						if (StringUtils.length(tsbk) > 0 && (length = StringUtils.length(tsbv)) > 0
 								&& tsbv.charAt(length - 1) == 'ん') {
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
@@ -2662,8 +2662,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						if (StringUtils.length(tsbk) > 0 && (length = StringUtils.length(tsbv)) > 0
 								&& tsbv.charAt(length - 1) == 'ん') {
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
@@ -2678,8 +2678,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 						if (StringUtils.length(tsbv) - StringUtils.lastIndexOf(tsbv, "ん") > 2) {
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
@@ -2689,8 +2689,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							//
 						if (StringUtils.length(tsbv) - StringUtils.lastIndexOf(tsbv, "ん") == 1) {
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
@@ -2700,8 +2700,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							//
 						if (StringUtils.length(tsbv) - StringUtils.lastIndexOf(tsbv, "ん") == 1) {
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
@@ -2729,8 +2729,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						if (StringUtils.length(tsbk) > 0 && (length = StringUtils.length(tsbv)) > 0
 								&& tsbv.charAt(length - 1) == 'ん') {
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
@@ -2771,8 +2771,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						if (StringUtils.length(tsbk) > 0 && (length = StringUtils.length(tsbv)) > 0
 								&& tsbv.charAt(length - 1) == 'ん') {
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
@@ -2783,8 +2783,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						if (StringUtils.length(tsbk) > 0 && (length = StringUtils.length(tsbv)) > 0
 								&& tsbv.charAt(length - 1) == 'ん') {
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
@@ -2795,8 +2795,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						if (StringUtils.length(tsbk) > 0 && (length = StringUtils.length(tsbv)) > 0
 								&& tsbv.charAt(length - 1) == 'ん') {
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
@@ -2824,8 +2824,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						if (StringUtils.length(tsbk) > 0 && (length = StringUtils.length(tsbv)) > 0
 								&& tsbv.charAt(length - 1) == 'ん') {
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
@@ -2836,8 +2836,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						if (StringUtils.length(tsbk) > 0 && (length = StringUtils.length(tsbv)) > 0
 								&& tsbv.charAt(length - 1) == 'ん') {
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
@@ -2846,15 +2846,15 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						} else if (StringUtils.length(tsbk) > 1 && (length = StringUtils.length(tsbv)) > 2
 								&& tsbv.charAt(length - 3) == 'ん') {
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
 							delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
 							//
-							MultimapUtil.put(multimap, tsbk.substring((length = StringUtils.length(tsbk)) - 1, length),
-									tsbv.substring((length = StringUtils.length(tsbv)) - 2, length));
+							MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+									substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 							//
 							delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 							//
@@ -3152,6 +3152,27 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		} // try
 			//
 		return instance.append(str);
+		//
+	}
+
+	private static String substring(final TextStringBuilder instance, final int startIndex, final int endIndex) {
+		//
+		try {
+			//
+			if (instance == null
+					|| Narcissus.getField(instance, TextStringBuilder.class.getDeclaredField("buffer")) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
+		return instance.substring(startIndex, endIndex);
 		//
 	}
 

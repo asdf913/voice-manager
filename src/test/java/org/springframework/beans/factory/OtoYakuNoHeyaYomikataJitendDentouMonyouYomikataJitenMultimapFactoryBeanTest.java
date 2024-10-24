@@ -42,7 +42,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 	private static final String SPACE = " ";
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_COMMON_SUFFIX, METHOD_TO_MULTI_MAP_AND_INT_COLLECTION,
-			METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_APPEND;
+			METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_APPEND, METHOD_SUB_STRING;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -65,6 +65,9 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 				Object.class, Object.class, TriConsumer.class)).setAccessible(true);
 		//
 		(METHOD_APPEND = clz.getDeclaredMethod("append", TextStringBuilder.class, String.class)).setAccessible(true);
+		//
+		(METHOD_SUB_STRING = clz.getDeclaredMethod("substring", TextStringBuilder.class, Integer.TYPE, Integer.TYPE))
+				.setAccessible(true);
 		//
 	}
 
@@ -566,6 +569,29 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 				return null;
 			} else if (obj instanceof TextStringBuilder) {
 				return (TextStringBuilder) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSubstring() throws Throwable {
+		//
+		Assertions.assertNull(substring(
+				Util.cast(TextStringBuilder.class, Narcissus.allocateInstance(TextStringBuilder.class)), 0, 1));
+		//
+	}
+
+	private static String substring(final TextStringBuilder instance, final int startIndex, final int endIndex)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_SUB_STRING.invoke(null, instance, startIndex, endIndex);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
