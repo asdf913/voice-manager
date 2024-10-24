@@ -1661,20 +1661,22 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						Triplet.with("飛", "び", "ひ"), Triplet.with("鳥", "どり", "とり"), Triplet.with("箔", "ぱく", "はく"),
 						Triplet.with("木", "も", "もく"), Triplet.with("士", "じ", "し"), Triplet.with("珠", "じゅ", "しゅ"),
 						Triplet.with("嵌", "がん", "かん"), Triplet.with("本", "ぼん", "ほん"), Triplet.with("手", "で", "て"),
-						Triplet.with("珠", "じゅ", "しゅ")), a -> {
-							//
-							testAndAccept(b -> b != null && MultimapUtil.containsEntry(multimap,
-									IValue0Util.getValue0(b), Util.getValue1(b)), a, b -> {
-										//
-										final String s1 = IValue0Util.getValue0(b);
-										//
-										MultimapUtil.remove(multimap, s1, Util.getValue1(b));
-										//
-										MultimapUtil.put(multimap, s1, Util.getValue2(b));
-										//
-									});
-							//
-						});
+						Triplet.with("珠", "じゅ", "しゅ")),
+						//
+						a -> testAndAccept(b -> b != null
+								&& MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+								b -> {
+									//
+									final String s1 = IValue0Util.getValue0(b);
+									//
+									MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+									//
+									MultimapUtil.put(multimap, s1, Util.getValue2(b));
+									//
+								})
+				//
+				);
+				//
 				testAndAccept(x -> Boolean.logicalAnd(
 						MultimapUtil.containsEntry(x, "網", "あ") && MultimapUtil.containsEntry(x, "代", "じろ"),
 						MultimapUtil.containsEntry(x, "目", "みめ")), multimap, x -> {
