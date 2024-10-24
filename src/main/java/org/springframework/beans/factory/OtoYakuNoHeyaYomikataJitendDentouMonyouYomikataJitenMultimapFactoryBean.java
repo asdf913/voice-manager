@@ -2926,22 +2926,19 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						Triplet.with("珠", "じゅ", "しゅ"), Triplet.with("嵌", "がん", "かん"), Triplet.with("本", "ぼん", "ほん"),
 						Triplet.with("手", "で", "て"), Triplet.with("珠", "じゅ", "しゅ"));
 				//
-				Triplet<String, String, String> triplet = null;
-				//
-				String s1, s2;
-				//
 				for (int i = 0; i < IterableUtils.size(triplets); i++) {
 					//
-					if ((triplet = IterableUtils.get(triplets, i)) == null || !MultimapUtil.containsEntry(multimap,
-							s1 = IValue0Util.getValue0(triplet), s2 = Util.getValue1(triplet))) {
-						//
-						continue;
-						//
-					} // if
-						//
-					MultimapUtil.remove(multimap, s1, s2);
-					//
-					MultimapUtil.put(multimap, s1, Util.getValue2(triplet));
+					testAndAccept(x -> x != null
+							&& MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(x), Util.getValue1(x)),
+							IterableUtils.get(triplets, i), x -> {
+								//
+								final String s1 = IValue0Util.getValue0(x);
+								//
+								MultimapUtil.remove(multimap, s1, Util.getValue1(x));
+								//
+								MultimapUtil.put(multimap, s1, Util.getValue2(x));
+								//
+							});
 					//
 				} // for
 					//
