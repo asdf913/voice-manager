@@ -3110,27 +3110,36 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
 				//
-			} else if (StringUtils.length(tsbk) > 1 && (length = StringUtils.length(tsbv)) > 2
-					&& tsbv.charAt(length - 3) == 'ん') {
-				//
-				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
-				//
-				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
-				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
-				//
-				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
-				//
-				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
-				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
-				//
-				MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
-				//
 			} // if
 				//
+			testAndAccept((a, b) -> {
+				//
+				final int l = StringUtils.length(b);
+				//
+				return StringUtils.length(a) > 1 && l > 2 && b.charAt(l - 3) == 'ん';
+				//
+			}, tsbk, tsbv, (a, b) -> {
+				//
+				int l;
+				//
+				MultimapUtil.put(multimap, substring(a, (l = StringUtils.length(a)) - 1, l),
+						substring(b, (l = StringUtils.length(b)) - 2, l));
+				//
+				delete(a, (l = StringUtils.length(a)) - 1, l);
+				//
+				delete(b, (l = StringUtils.length(b)) - 2, l);
+				//
+				MultimapUtil.put(multimap, substring(a, (l = StringUtils.length(a)) - 1, l),
+						substring(b, (l = StringUtils.length(b)) - 2, l));
+				//
+				delete(a, (l = StringUtils.length(a)) - 1, l);
+				//
+				delete(b, (l = StringUtils.length(b)) - 2, l);
+				//
+				MultimapUtil.put(multimap, Util.toString(a), Util.toString(b));
+				//
+			});
+			//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
 				kFirst)), line)) && Util.groupCount(m2) > 5
