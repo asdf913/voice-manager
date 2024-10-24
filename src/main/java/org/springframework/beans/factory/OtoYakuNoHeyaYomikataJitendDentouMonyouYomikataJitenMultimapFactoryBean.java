@@ -3020,20 +3020,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				final List<Entry<String, String>> entries = IterableUtils.toList(MultimapUtil.entries(mm));
 				//
-				Entry<String, String> entry = null;
-				//
-				String key, value;
-				//
 				for (int i = 0; i < IterableUtils.size(entries); i++) {
 					//
-					if ((entry = IterableUtils.get(entries, i)) == null || !MultimapUtil.containsEntry(multimap,
-							key = Util.getKey(entry), value = Util.getValue(entry))) {
-						//
-						continue;
-						//
-					} // if
-						//
-					MultimapUtil.remove(multimap, key, value);
+					testAndAccept(
+							(a, b) -> b != null
+									&& MultimapUtil.containsEntry(multimap, Util.getKey(b), Util.getValue(b)),
+							multimap, IterableUtils.get(entries, i), (a, b) -> {
+								MultimapUtil.remove(a, Util.getKey(b), Util.getValue(b));
+							});
 					//
 				} // for
 					//
