@@ -1933,9 +1933,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 										StringUtils.substringAfter(g21, cpk),
 										StringUtils.substringBetween(g24, cpv, Util.group(m2, 2))));
 						//
-					} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-							kFirst, kLast)), line)) && Util.groupCount(m2) > 1
+					} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+							line)) && Util.groupCount(m2) > 1
 							&& StringUtils.length(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1))) == 2
 							&& StringUtils
 									.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2)))) {
