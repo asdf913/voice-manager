@@ -3012,18 +3012,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			});
 			//
-//			if (StringUtils.length(tsbk) > 0 && (length = StringUtils.length(tsbv)) > 0
-//					&& tsbv.charAt(length - 1) == 'ん') {
-//				//
-//				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-//						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
-//				//
-//				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
-//				//
-//				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
-//				//
-//			} // if
-			//
 			MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
 			//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
