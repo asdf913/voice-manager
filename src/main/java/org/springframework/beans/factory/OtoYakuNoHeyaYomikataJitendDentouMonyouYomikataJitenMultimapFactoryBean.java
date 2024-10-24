@@ -2199,8 +2199,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 								//
 								tsbv.deleteCharAt(j);
 								//
-								continue;
-								//
 							} // if
 								//
 						} // for
