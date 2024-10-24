@@ -3159,7 +3159,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				return StringUtils.length(a) == 1 && l > 0 && Objects.equals(StringUtils.substring(b, l - 1, l), "ん");
 				//
-			}, g25 = Util.group(m2, 5), g26, (a, b) -> {
+			}, Util.group(m2, 5), g26, (a, b) -> {
 				//
 				final int l = StringUtils.length(b);
 				//
