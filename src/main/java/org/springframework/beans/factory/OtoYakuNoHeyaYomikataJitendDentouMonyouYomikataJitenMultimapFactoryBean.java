@@ -1834,7 +1834,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					} // if
 						//
 				} // for
-				//
+					//
 			} // for
 				//
 			Util.forEach(
@@ -3142,13 +3142,20 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, StringUtils.substringBefore(g26, g22),
 					StringUtils.substringBefore(g21, lcsk), StringUtils.substringBefore(g26, lcsv), lcsk, lcsv));
 			//
-			if (StringUtils.length(g25 = Util.group(m2, 5)) == 1 && (length = StringUtils.length(g26)) > 0
-					&& Objects.equals(StringUtils.substring(g26, length - 1, length), "ん")) {
+			testAndAccept((a, b) -> {
 				//
-				MultimapUtil.put(multimap, g25, StringUtils.substring(g26, length - 2, length));
+				final int l = StringUtils.length(b);
 				//
-			} // if
+				return StringUtils.length(a) == 1 && l > 0 && Objects.equals(StringUtils.substring(b, l - 1, l), "ん");
 				//
+			}, g25 = Util.group(m2, 5), g26, (a, b) -> {
+				//
+				final int l = StringUtils.length(b);
+				//
+				MultimapUtil.put(multimap, a, StringUtils.substring(b, l - 2, l));
+				//
+			});
+			//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s)(\\p{InHiragana}{3})(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
 				kFirst)), line)) && Util.groupCount(m2) > 3
