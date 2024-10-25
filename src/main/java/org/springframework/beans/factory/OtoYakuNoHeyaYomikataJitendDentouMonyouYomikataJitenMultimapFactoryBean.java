@@ -3681,7 +3681,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
 				//
-				int lastIndexOf, length;
+				int lastIndexOf;
 				//
 				lastIndexOf = StringUtils.lastIndexOf(tsbv, 'ん');
 				//
