@@ -2154,8 +2154,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 								StringUtils.substringBefore(g23, csk),
 								StringUtils.substringBefore(StringUtils.substringAfter(g24, g22), csv), csk, csv));
 				//
-			} else if (StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, Util.group(m2, 1)))
-					&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24))) {
+			} else if (Boolean.logicalAnd(
+					StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, Util.group(m2, 1))),
+					StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24)))) {
 				//
 				IntCollectionUtil.addInt(intCollection, i);
 				//
