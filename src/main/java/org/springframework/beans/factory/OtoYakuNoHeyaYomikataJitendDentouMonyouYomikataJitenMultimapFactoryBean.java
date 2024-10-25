@@ -213,7 +213,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static boolean keyIntEquals(final IntObjectPair<?> iop, final int i) {
+	private static boolean keyIntEquals(@Nullable final IntObjectPair<?> iop, final int i) {
 		return iop != null && iop.keyInt() == i;
 	}
 
