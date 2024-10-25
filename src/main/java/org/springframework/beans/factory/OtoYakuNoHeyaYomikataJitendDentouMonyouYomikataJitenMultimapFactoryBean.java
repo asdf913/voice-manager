@@ -3326,6 +3326,115 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
+		int lastIndexOf, indexOf, length;
+		//
+		String cpk, cpv;
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+				kFirst)), line)) && Util.groupCount(m2) > 1
+				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
+				&& StringUtils.countMatches(Util.group(m2, 2), 'ん') == 2 && StringUtils.isNotBlank(
+						cpv = StringUtils.getCommonPrefix(MapUtils.getObject(map, "g12"), g22 = Util.group(m2, 2)))) {
+			//
+			if ((lastIndexOf = StringUtils.lastIndexOf(g22, 'ん')) - (indexOf = StringUtils.indexOf(g22, 'ん')) == 2
+					&& lastIndexOf == StringUtils.length(g22) - 1) {
+				//
+				IntCollectionUtil.addInt(intCollection, i);
+				//
+				append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
+				//
+				append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
+				//
+				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
+				//
+				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
+				//
+				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+				//
+				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
+				//
+				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
+				//
+				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+				//
+				MultimapUtil.putAll(multimap,
+						ImmutableMultimap.of(cpk, cpv,
+								StringUtils.substring(g21, StringUtils.indexOf(g21, cpk) + StringUtils.length(cpk),
+										StringUtils.indexOf(g21, cpk) + StringUtils.length(cpk) + 1),
+								StringUtils.substring(g22, StringUtils.indexOf(g22, cpv) + StringUtils.length(cpv),
+										indexOf - 1)));
+				//
+			} else if ((lastIndexOf = StringUtils.lastIndexOf(g22, 'ん')) - StringUtils.indexOf(g22, 'ん') == 3
+					&& lastIndexOf == StringUtils.length(g22) - 1) {
+				//
+				IntCollectionUtil.addInt(intCollection, i);
+				//
+				append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
+				//
+				append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
+				//
+				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
+				//
+				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
+				//
+				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+				//
+				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+						substring(tsbv, (length = StringUtils.length(tsbv)) - 1, length));
+				//
+				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
+				//
+				delete(tsbv, (length = StringUtils.length(tsbv)) - 1, length);
+				//
+				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
+				//
+				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
+				//
+				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+				//
+				MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
+				//
+			} else if ((lastIndexOf = StringUtils.lastIndexOf(g22, 'ん')) - StringUtils.indexOf(g22, 'ん') == 4
+					&& lastIndexOf == StringUtils.length(g22) - 1) {
+				//
+				IntCollectionUtil.addInt(intCollection, i);
+				//
+				append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
+				//
+				append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
+				//
+				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
+				//
+				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
+				//
+				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+				//
+				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
+				//
+				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
+				//
+				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+				//
+				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
+				//
+				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
+				//
+				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+				//
+				MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
+				//
+			} // if
+				//
+		} // if
+			//
 		return Pair.of(multimap, intCollection);
 		//
 	}
@@ -3510,109 +3619,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			MultimapUtil.put(multimap, Util.group(m2, 1), Util.group(m2, 2));
 			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line)) && Util.groupCount(m2) > 1
-				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
-				&& StringUtils.countMatches(Util.group(m2, 2), 'ん') == 2
-				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2)))) {
-			//
-			if ((lastIndexOf = StringUtils.lastIndexOf(g22, 'ん')) - (indexOf = StringUtils.indexOf(g22, 'ん')) == 2
-					&& lastIndexOf == StringUtils.length(g22) - 1) {
-				//
-				IntCollectionUtil.addInt(intCollection, i);
-				//
-				append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
-				//
-				append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
-				//
-				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
-				//
-				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
-				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
-				//
-				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
-				//
-				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
-				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
-				//
-				MultimapUtil.putAll(multimap,
-						ImmutableMultimap.of(cpk, cpv,
-								StringUtils.substring(g21, StringUtils.indexOf(g21, cpk) + StringUtils.length(cpk),
-										StringUtils.indexOf(g21, cpk) + StringUtils.length(cpk) + 1),
-								StringUtils.substring(g22, StringUtils.indexOf(g22, cpv) + StringUtils.length(cpv),
-										indexOf - 1)));
-				//
-			} else if ((lastIndexOf = StringUtils.lastIndexOf(g22, 'ん')) - StringUtils.indexOf(g22, 'ん') == 3
-					&& lastIndexOf == StringUtils.length(g22) - 1) {
-				//
-				IntCollectionUtil.addInt(intCollection, i);
-				//
-				append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
-				//
-				append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
-				//
-				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
-				//
-				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
-				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
-				//
-				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-						substring(tsbv, (length = StringUtils.length(tsbv)) - 1, length));
-				//
-				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
-				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 1, length);
-				//
-				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
-				//
-				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
-				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
-				//
-				MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
-				//
-			} else if ((lastIndexOf = StringUtils.lastIndexOf(g22, 'ん')) - StringUtils.indexOf(g22, 'ん') == 4
-					&& lastIndexOf == StringUtils.length(g22) - 1) {
-				//
-				IntCollectionUtil.addInt(intCollection, i);
-				//
-				append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
-				//
-				append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
-				//
-				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
-				//
-				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
-				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
-				//
-				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
-				//
-				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
-				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
-				//
-				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
-				//
-				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
-				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
-				//
-				MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
-				//
-			} // if
-				//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 				kFirst)), line)) && Util.groupCount(m2) > 1
