@@ -2830,16 +2830,20 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-			if (StringUtils.length(tsbk) > 1 && StringUtils.length(tsbv) > 2 && tsbv.charAt(2) == 'ん') {
+			testAndAccept((a, b) -> {
 				//
-				MultimapUtil.put(multimap, substring(tsbk, 0, 2), substring(tsbv, 0, 3));
+				return StringUtils.length(a) > 1 && StringUtils.length(b) > 2 && b.charAt(2) == 'ん';
 				//
-				delete(tsbk, 0, 2);
+			}, tsbk, tsbv, (a, b) -> {
 				//
-				delete(tsbv, 0, 3);
+				MultimapUtil.put(multimap, substring(a, 0, 2), substring(b, 0, 3));
 				//
-			} // if
+				delete(a, 0, 2);
 				//
+				delete(b, 0, 3);
+				//
+			});
+			//
 			MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
 			//
 			testAndAccept((a, b) -> {
