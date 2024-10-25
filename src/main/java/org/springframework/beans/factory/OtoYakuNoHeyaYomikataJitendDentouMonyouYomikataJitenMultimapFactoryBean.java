@@ -2336,6 +2336,19 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							StringUtils.substringBefore(g26 = Util.group(m2, 6), Util.group(m2, 2)), Util.group(m2, 5),
 							StringUtils.substringAfterLast(g26, Util.group(m2, 4))));
 			//
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}+$",
+				kFirst)), line)) && Util.groupCount(m2) > 1
+				&& Stream.of(g21 = Util.group(m2, 1), g22 = Util.group(m2, 2), g23 = Util.group(m2, 3))
+						.mapToInt(StringUtils::length).distinct().max().orElse(0) == 2) {
+			//
+			IntCollectionUtil.addInt(intCollection, i);
+			//
+			MultimapUtil.putAll(multimap,
+					ImmutableMultimap.of(g21, g23, StringUtils.substring(g21, 0, 1), StringUtils.substring(g23, 0, 1),
+							StringUtils.substring(g21, 1, 2), StringUtils.substring(g23, 1, 2), g22, g23,
+							StringUtils.substring(g22, 0, 1), StringUtils.substring(g23, 0, 1)));
+			//
 		} // if
 			//
 		return Pair.of(multimap, intCollection);
@@ -2607,19 +2620,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			IntCollectionUtil.addInt(intCollection, i);
 			//
 			MultimapUtil.put(multimap, Util.group(m2, 1), Util.group(m2, 2));
-			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}+$",
-				kFirst)), line)) && Util.groupCount(m2) > 1
-				&& Stream.of(g21 = Util.group(m2, 1), g22 = Util.group(m2, 2), g23 = Util.group(m2, 3))
-						.mapToInt(StringUtils::length).distinct().max().orElse(0) == 2) {
-			//
-			IntCollectionUtil.addInt(intCollection, i);
-			//
-			MultimapUtil.putAll(multimap,
-					ImmutableMultimap.of(g21, g23, StringUtils.substring(g21, 0, 1), StringUtils.substring(g23, 0, 1),
-							StringUtils.substring(g21, 1, 2), StringUtils.substring(g23, 1, 2), g22, g23,
-							StringUtils.substring(g22, 0, 1), StringUtils.substring(g23, 0, 1)));
 			//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
