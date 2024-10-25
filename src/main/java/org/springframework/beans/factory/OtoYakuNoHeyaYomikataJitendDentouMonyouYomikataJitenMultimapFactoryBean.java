@@ -2201,6 +2201,36 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
+		String g25, g26, g27, g28;
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+				kFirst)), line))
+				&& Util.groupCount(m2) > 7
+				&& StringUtils
+						.isNotBlank(csk = getCommonSuffix(
+								getCommonSuffix(getCommonSuffix(g21 = Util.group(m2, 1), g23 = Util.group(m2, 3)),
+										g25 = Util.group(m2, 5)),
+								g27 = Util.group(m2, 7)))
+				&& StringUtils.isNotBlank(csv = getCommonSuffix(
+						getCommonSuffix(getCommonSuffix(g22 = Util.group(m2, 2), g24 = Util.group(m2, 4)),
+								g26 = Util.group(m2, 6)),
+						g28 = Util.group(m2, 8)))) {
+			//
+			IntCollectionUtil.addInt(intCollection, i);
+			//
+			MultimapUtil.putAll(multimap,
+					ImmutableMultimap.of(g21, g22, StringUtils.substringBefore(g21, csk),
+							StringUtils.substringBefore(g22, csv), csk, csv, g23, g24,
+							StringUtils.substringBefore(g23, csk), StringUtils.substringBefore(g24, csv)));
+			//
+			MultimapUtil.putAll(multimap,
+					ImmutableMultimap.of(g25, g26, StringUtils.substringBefore(g25, csk),
+							StringUtils.substringBefore(g26, csv), g27, g28, StringUtils.substringBefore(g27, csk),
+							StringUtils.substringBefore(g28, csv)));
+			//
+		} // if
+			//
 		return Pair.of(multimap, intCollection);
 		//
 	}
@@ -2237,7 +2267,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		String g23, g24;
 		//
-		String g25, g26, g27, g28;
+		String g25, g26;
 		//
 		String lcsk, lcsv;
 		//
@@ -2439,32 +2469,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line))
-				&& Util.groupCount(m2) > 7
-				&& StringUtils
-						.isNotBlank(csk = getCommonSuffix(
-								getCommonSuffix(getCommonSuffix(g21 = Util.group(m2, 1), g23 = Util.group(m2, 3)),
-										g25 = Util.group(m2, 5)),
-								g27 = Util.group(m2, 7)))
-				&& StringUtils.isNotBlank(csv = getCommonSuffix(
-						getCommonSuffix(getCommonSuffix(g22 = Util.group(m2, 2), g24 = Util.group(m2, 4)),
-								g26 = Util.group(m2, 6)),
-						g28 = Util.group(m2, 8)))) {
-			//
-			IntCollectionUtil.addInt(intCollection, i);
-			//
-			MultimapUtil.putAll(multimap,
-					ImmutableMultimap.of(g21, g22, StringUtils.substringBefore(g21, csk),
-							StringUtils.substringBefore(g22, csv), csk, csv, g23, g24,
-							StringUtils.substringBefore(g23, csk), StringUtils.substringBefore(g24, csv)));
-			//
-			MultimapUtil.putAll(multimap,
-					ImmutableMultimap.of(g25, g26, StringUtils.substringBefore(g25, csk),
-							StringUtils.substringBefore(g26, csv), g27, g28, StringUtils.substringBefore(g27, csk),
-							StringUtils.substringBefore(g28, csv)));
-			//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{2}%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 				kFirst, kLast)), line)) && Util.groupCount(m2) > 3
