@@ -1932,12 +1932,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		testAndAccept(x -> MultimapUtil.containsEntry(x, "花字", "かじ"), multimap,
 				x -> MultimapUtil.putAll(x, ImmutableMultimap.of("花", "か", "字", "じ")));
 		//
-		if (mm != null) {
-			//
-			mm.clear();
-			//
-		} // if
-			//
+		clear(mm);
+		//
 		MultimapUtil.putAll(mm, ImmutableMultimap.of("曝", "ざらし", "包", "づつみ", "重", "がさね", "小草", "こくさ", "寓生", "ほや"));
 		//
 		MultimapUtil.putAll(mm,
@@ -1952,6 +1948,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		return Pair.of(multimap, intCollection);
 		//
+	}
+
+	private static void clear(final Multimap<String, String> instance) {
+		if (instance != null) {
+			instance.clear();
+		}
 	}
 
 	@Nullable
