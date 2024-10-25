@@ -3350,7 +3350,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String g12 = MapUtils.getObject(map, "g12");
 		//
-		String g21, g22, g24, cpk, csk, cpv, csv;
+		String g21, g22, cpk, csk, cpv, csv;
 		//
 		int countMatches, indexOf;
 		//
