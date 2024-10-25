@@ -2888,18 +2888,25 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-			if (StringUtils.length(tsbk) > 0 && (length = StringUtils.length(tsbv)) > 1
-					&& tsbv.charAt(length - 2) == 'ん') {
+			testAndAccept((a, b) -> {
 				//
-				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-						substring(tsbv, (length = StringUtils.length(tsbv)) - 1, length));
+				final int l = StringUtils.length(b);
 				//
-				delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
+				return StringUtils.length(a) > 0 && l > 1 && b.charAt(l - 2) == 'ん';
 				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 1, length);
+			}, tsbk, tsbv, (a, b) -> {
 				//
-			} // if
+				int l;
 				//
+				MultimapUtil.put(multimap, substring(a, (l = StringUtils.length(a)) - 1, l),
+						substring(b, (l = StringUtils.length(b)) - 1, l));
+				//
+				delete(a, (l = StringUtils.length(a)) - 1, l);
+				//
+				delete(b, (l = StringUtils.length(b)) - 1, l);
+				//
+			});
+			//
 			testAndAccept((a, b) -> {
 				//
 				final int l = StringUtils.length(b);
