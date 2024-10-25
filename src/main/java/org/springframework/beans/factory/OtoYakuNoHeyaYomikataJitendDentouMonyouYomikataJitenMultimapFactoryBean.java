@@ -2687,6 +2687,35 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
+		final String csk, csv;
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{2}%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+				kFirst, kLast)), line)) && Util.groupCount(m2) > 3
+				&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, Util.group(m2, 3)))
+				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g24 = Util.group(m2, 4)))) {
+			//
+			IntCollectionUtil.addInt(intCollection, i);
+			//
+			if (Objects.equals(g22 = Util.group(m2, 2), "び")) {
+				//
+				MultimapUtil.putAll(multimap,
+						ImmutableMultimap.of(g23 = Util.group(m2, 3), StringUtils.substringAfter(g24, g22),
+								StringUtils.substringBefore(g23, csk), StringUtils.substringBetween(g24, g22, csv), csk,
+								csv));
+				//
+			} else {
+				//
+				MultimapUtil.putAll(multimap,
+						ImmutableMultimap.of(Util.group(m2, 1), StringUtils.substringBefore(g24, g22),
+								g23 = Util.group(m2, 3), StringUtils.substringAfter(g24, g22),
+								StringUtils.substringBefore(g23, csk), StringUtils.substringBetween(g24, g22, csv), csk,
+								csv));
+				//
+			} // if
+				//
+		} // if
+			//
 		return Pair.of(multimap, intCollection);
 		//
 	}
@@ -2706,8 +2735,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		Matcher m2;
 		//
 		final String kFirst = MapUtils.getObject(map, "kFirst");
-		//
-		final String kLast = MapUtils.getObject(map, "kLast");
 		//
 		final String g11 = MapUtils.getObject(map, "g11");
 		//
@@ -2899,31 +2926,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 				} // if
 					//
-			} // if
-				//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{2}%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst, kLast)), line)) && Util.groupCount(m2) > 3
-				&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, Util.group(m2, 3)))
-				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g24 = Util.group(m2, 4)))) {
-			//
-			IntCollectionUtil.addInt(intCollection, i);
-			//
-			if (Objects.equals(g22 = Util.group(m2, 2), "び")) {
-				//
-				MultimapUtil.putAll(multimap,
-						ImmutableMultimap.of(g23 = Util.group(m2, 3), StringUtils.substringAfter(g24, g22),
-								StringUtils.substringBefore(g23, csk), StringUtils.substringBetween(g24, g22, csv), csk,
-								csv));
-				//
-			} else {
-				//
-				MultimapUtil.putAll(multimap,
-						ImmutableMultimap.of(Util.group(m2, 1), StringUtils.substringBefore(g24, g22),
-								g23 = Util.group(m2, 3), StringUtils.substringAfter(g24, g22),
-								StringUtils.substringBefore(g23, csk), StringUtils.substringBetween(g24, g22, csv), csk,
-								csv));
-				//
 			} // if
 				//
 		} else if ((Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
