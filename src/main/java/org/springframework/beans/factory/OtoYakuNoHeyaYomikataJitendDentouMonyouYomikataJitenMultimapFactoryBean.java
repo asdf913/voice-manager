@@ -2436,6 +2436,24 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
+		final String csk, csv, g24;
+		//
+		final String g12 = MapUtils.getObject(map, "g12");
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{Inkatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{Inkatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+				kFirst)), line))
+				&& Util.groupCount(m2) > 3
+				&& StringUtils.isNotBlank(csk = getCommonSuffix(
+						getCommonSuffix(g21 = Util.group(m2, 1), g22 = Util.group(m2, 2)), g23 = Util.group(m2, 3)))
+				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g24 = Util.group(m2, 4)))) {
+			//
+			IntCollectionUtil.addInt(intCollection, i);
+			//
+			MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g24, csk, csv, g22, g24, g23, g24));
+			//
+		} // if
+			//
 		return Pair.of(multimap, intCollection);
 		//
 	}
@@ -2856,18 +2874,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 			//
 			delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
-			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{Inkatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{Inkatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line))
-				&& Util.groupCount(m2) > 3
-				&& StringUtils.isNotBlank(csk = getCommonSuffix(
-						getCommonSuffix(g21 = Util.group(m2, 1), g22 = Util.group(m2, 2)), g23 = Util.group(m2, 3)))
-				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g24 = Util.group(m2, 4)))) {
-			//
-			IntCollectionUtil.addInt(intCollection, i);
-			//
-			MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g24, csk, csv, g22, g24, g23, g24));
 			//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{Inkatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
