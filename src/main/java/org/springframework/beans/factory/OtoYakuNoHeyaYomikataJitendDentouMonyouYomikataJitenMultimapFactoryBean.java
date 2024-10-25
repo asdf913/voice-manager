@@ -3618,11 +3618,21 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String kFirst = MapUtils.getObject(map, "kFirst");
 		//
+		final String g21;
+		//
+		if (!Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+				kFirst)), line)) || Util.groupCount(m2) <= 1 || StringUtils.length(g21 = Util.group(m2, 1)) != 3) {
+			//
+			return null;
+			//
+		} // if
+			//
 		final IntCollection intCollection = IntList.create();
 		//
 		final Multimap<String, String> multimap = LinkedHashMultimap.create();
 		//
-		String g21, g22;
+		String g22, cpk, cpv, csk, csv;
 		//
 		TextStringBuilder tsbk = null, tsbv = null;
 		//
@@ -3630,154 +3640,145 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String g12 = MapUtils.getObject(map, "g12");
 		//
-		String cpk, cpv, csk, csv;
+		int indexOf;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line)) && Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 3) {
+		if (Util.and(StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21)),
+				StringUtils.isNotBlank(csk = getCommonSuffix(g11, g21)),
+				StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2))),
+				StringUtils.isNotBlank(csv = getCommonSuffix(g12, g22)))) {
 			//
-			int indexOf;
+			IntCollectionUtil.addInt(intCollection, i);
 			//
-			if (Util.and(StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21)),
-					StringUtils.isNotBlank(csk = getCommonSuffix(g11, g21)),
-					StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2))),
-					StringUtils.isNotBlank(csv = getCommonSuffix(g12, g22)))) {
+			MultimapUtil.putAll(multimap,
+					ImmutableMultimap.of(g11, g12, cpk, cpv, StringUtils.substringBetween(g21, cpk, csk),
+							StringUtils.substringBetween(g22, cpv, csv), csk, csv,
+							StringUtils.substringBetween(g11, cpk, csk), StringUtils.substringBetween(g12, cpv, csv)));
+			//
+		} else if (Util.and(StringUtils.isNotBlank(cpk), StringUtils.isNotBlank(csk = getCommonSuffix(g11, g21)),
+				StringUtils.isBlank(StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2))),
+				StringUtils.isNotBlank(csv = getCommonSuffix(g12, g22)))) {
+			//
+			int countMatches;
+			//
+			if (StringUtils.length(g21) == (countMatches = StringUtils.countMatches(g22, 'ん'))) {
 				//
 				IntCollectionUtil.addInt(intCollection, i);
 				//
-				MultimapUtil.putAll(multimap, ImmutableMultimap.of(g11, g12, cpk, cpv,
-						StringUtils.substringBetween(g21, cpk, csk), StringUtils.substringBetween(g22, cpv, csv), csk,
-						csv, StringUtils.substringBetween(g11, cpk, csk), StringUtils.substringBetween(g12, cpv, csv)));
+				MultimapUtil.put(multimap, g21, g22);
 				//
-			} else if (Util.and(StringUtils.isNotBlank(cpk), StringUtils.isNotBlank(csk = getCommonSuffix(g11, g21)),
-					StringUtils.isBlank(StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2))),
-					StringUtils.isNotBlank(csv = getCommonSuffix(g12, g22)))) {
+				for (int j = 0; j < countMatches; j++) {
+					//
+					MultimapUtil.put(multimap, StringUtils.substring(g21, j, j + 1),
+							StringUtils.substring(g22, j * 2, j * 2 + 2));
+					//
+				} // for
+					//
+			} else if (countMatches == 2) {
 				//
-				int countMatches;
-				//
-				if (StringUtils.length(g21) == (countMatches = StringUtils.countMatches(g22, 'ん'))) {
+				if ((indexOf = StringUtils.indexOf(g22, 'ん')) == 2) {
 					//
 					IntCollectionUtil.addInt(intCollection, i);
 					//
-					MultimapUtil.put(multimap, g21, g22);
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(StringUtils.substring(g21, 0, 1),
+									StringUtils.substring(g22, 0, indexOf - 1), StringUtils.substring(g21, 1, 2),
+									StringUtils.substring(g22, indexOf - 1, indexOf + 1)));
 					//
-					for (int j = 0; j < countMatches; j++) {
-						//
-						MultimapUtil.put(multimap, StringUtils.substring(g21, j, j + 1),
-								StringUtils.substring(g22, j * 2, j * 2 + 2));
-						//
-					} // for
-						//
-				} else if (countMatches == 2) {
-					//
-					if ((indexOf = StringUtils.indexOf(g22, 'ん')) == 2) {
-						//
-						IntCollectionUtil.addInt(intCollection, i);
-						//
-						MultimapUtil.putAll(multimap,
-								ImmutableMultimap.of(StringUtils.substring(g21, 0, 1),
-										StringUtils.substring(g22, 0, indexOf - 1), StringUtils.substring(g21, 1, 2),
-										StringUtils.substring(g22, indexOf - 1, indexOf + 1)));
-						//
-					} else if (indexOf == 1) {
-						//
-						IntCollectionUtil.addInt(intCollection, i);
-						//
-						MultimapUtil.putAll(multimap,
-								ImmutableMultimap.of(StringUtils.substring(g21, 0, 1),
-										StringUtils.substring(g22, 0, indexOf + 1), StringUtils.substring(g21, 1, 2),
-										StringUtils.substring(g22, indexOf + 1,
-												StringUtils.length(g22) - StringUtils.length(csv))));
-						//
-					} // if
-						//
-					MultimapUtil.put(multimap, csk, csv);
-					//
-				} else if (countMatches == 1) {
+				} else if (indexOf == 1) {
 					//
 					IntCollectionUtil.addInt(intCollection, i);
 					//
-					MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g22, StringUtils.substringBefore(g21, csk),
-							StringUtils.substringBefore(g22, csv), csk, csv));
+					MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substring(g21, 0, 1),
+							StringUtils.substring(g22, 0, indexOf + 1), StringUtils.substring(g21, 1, 2), StringUtils
+									.substring(g22, indexOf + 1, StringUtils.length(g22) - StringUtils.length(csv))));
 					//
 				} // if
 					//
-			} else if (StringUtils.countMatches(g22 = Util.group(m2, 2), 'ん') == 2) {
+				MultimapUtil.put(multimap, csk, csv);
+				//
+			} else if (countMatches == 1) {
 				//
 				IntCollectionUtil.addInt(intCollection, i);
 				//
-				append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
+				MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g22, StringUtils.substringBefore(g21, csk),
+						StringUtils.substringBefore(g22, csv), csk, csv));
 				//
-				append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
+			} // if
 				//
-				int lastIndexOf;
+		} else if (StringUtils.countMatches(g22 = Util.group(m2, 2), 'ん') == 2) {
+			//
+			IntCollectionUtil.addInt(intCollection, i);
+			//
+			append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
+			//
+			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
+			//
+			int lastIndexOf;
+			//
+			lastIndexOf = StringUtils.lastIndexOf(tsbv, 'ん');
+			//
+			testAndAccept((k, v) -> StringUtils.lastIndexOf(v, 'ん') == StringUtils.length(v) - 1, tsbk, tsbv,
+					(k, v) -> {
+						//
+						int lk = StringUtils.length(k);
+						//
+						final int liov = StringUtils.lastIndexOf(v, 'ん');
+						//
+						MultimapUtil.put(multimap, substring(k, lk - 1, lk),
+								substring(v, liov - 1, StringUtils.length(v)));
+						//
+						delete(k, (lk = StringUtils.length(k)) - 1, lk);
+						//
+						delete(v, liov - 1, StringUtils.length(v));
+						//
+					});
+			//
+			if ((indexOf = StringUtils.indexOf(tsbv, 'ん')) > 0) {
 				//
-				lastIndexOf = StringUtils.lastIndexOf(tsbv, 'ん');
-				//
-				testAndAccept((k, v) -> StringUtils.lastIndexOf(v, 'ん') == StringUtils.length(v) - 1, tsbk, tsbv,
-						(k, v) -> {
-							//
-							int lk = StringUtils.length(k);
-							//
-							final int liov = StringUtils.lastIndexOf(v, 'ん');
-							//
-							MultimapUtil.put(multimap, substring(k, lk - 1, lk),
-									substring(v, liov - 1, StringUtils.length(v)));
-							//
-							delete(k, (lk = StringUtils.length(k)) - 1, lk);
-							//
-							delete(v, liov - 1, StringUtils.length(v));
-							//
-						});
-				//
-				if ((indexOf = StringUtils.indexOf(tsbv, 'ん')) > 0) {
+				testAndAccept((a, b) -> b == 2, Pair.of(tsbk, tsbv), lastIndexOf - indexOf, (a, b) -> {
 					//
-					testAndAccept((a, b) -> b == 2, Pair.of(tsbk, tsbv), lastIndexOf - indexOf, (a, b) -> {
+					final TextStringBuilder k = Util.getKey(a);
+					//
+					final TextStringBuilder v = Util.getValue(a);
+					//
+					int l;
+					//
+					MultimapUtil.put(multimap, substring(k, (l = StringUtils.length(k)) - 1, l),
+							substring(v, indexOf - 1, StringUtils.length(v)));
+					//
+					delete(k, (l = StringUtils.length(k)) - 1, l);
+					//
+					testAndAccept((x, y) -> StringUtils.length(x) == 1, k, v, (x, y) -> {
 						//
-						final TextStringBuilder k = Util.getKey(a);
+						final int ly = StringUtils.length(y);
 						//
-						final TextStringBuilder v = Util.getValue(a);
-						//
-						int l;
-						//
-						MultimapUtil.put(multimap, substring(k, (l = StringUtils.length(k)) - 1, l),
-								substring(v, indexOf - 1, StringUtils.length(v)));
-						//
-						delete(k, (l = StringUtils.length(k)) - 1, l);
-						//
-						testAndAccept((x, y) -> StringUtils.length(x) == 1, k, v, (x, y) -> {
-							//
-							final int ly = StringUtils.length(y);
-							//
-							delete(y, ly - 2, ly);
-							//
-						});
-						//
-						MultimapUtil.put(multimap, Util.toString(k), Util.toString(v));
+						delete(y, ly - 2, ly);
 						//
 					});
 					//
-					testAndAccept((a, b) -> b == 3, Pair.of(tsbk, tsbv), lastIndexOf - indexOf, (a, b) -> {
-						//
-						final TextStringBuilder k = Util.getKey(a);
-						//
-						final TextStringBuilder v = Util.getValue(a);
-						//
-						int l;
-						//
-						MultimapUtil.put(multimap, substring(k, (l = StringUtils.length(k)) - 1, l),
-								substring(v, (l = StringUtils.length(v)) - 1, l));
-						//
-						delete(k, (l = StringUtils.length(k)) - 1, l);
-						//
-						delete(v, (l = StringUtils.length(v)) - 1, l);
-						//
-						MultimapUtil.put(multimap, Util.toString(k), Util.toString(v));
-						//
-					});
+					MultimapUtil.put(multimap, Util.toString(k), Util.toString(v));
 					//
-				} // if
+				});
+				//
+				testAndAccept((a, b) -> b == 3, Pair.of(tsbk, tsbv), lastIndexOf - indexOf, (a, b) -> {
 					//
+					final TextStringBuilder k = Util.getKey(a);
+					//
+					final TextStringBuilder v = Util.getValue(a);
+					//
+					int l;
+					//
+					MultimapUtil.put(multimap, substring(k, (l = StringUtils.length(k)) - 1, l),
+							substring(v, (l = StringUtils.length(v)) - 1, l));
+					//
+					delete(k, (l = StringUtils.length(k)) - 1, l);
+					//
+					delete(v, (l = StringUtils.length(v)) - 1, l);
+					//
+					MultimapUtil.put(multimap, Util.toString(k), Util.toString(v));
+					//
+				});
+				//
 			} // if
 				//
 		} // if
