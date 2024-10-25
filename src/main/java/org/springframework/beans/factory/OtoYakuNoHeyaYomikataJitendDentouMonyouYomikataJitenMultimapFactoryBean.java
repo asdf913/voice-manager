@@ -2063,8 +2063,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				"^(%1$s\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 				kFirst)), line)) && Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 3) {
 			//
-			if (StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21))
-					&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, g21))
+			if (Boolean.logicalAnd(StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21)),
+					StringUtils.isNotBlank(csk = getCommonSuffix(g11, g21)))
 					&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2)))
 					&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g22))) {
 				//
