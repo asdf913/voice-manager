@@ -2014,6 +2014,23 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
+		String g23, g24, lcsk, lcsv, sav;
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}%2$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+				kFirst, kLast)), line)) && Util.groupCount(m2) > 3
+				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24 = Util.group(m2, 4)))) {
+			//
+			IntCollectionUtil.addInt(intCollection, i);
+			//
+			MultimapUtil.putAll(multimap, ImmutableMultimap.of(Util.group(m2, 1), cpv,
+					lcsk = longestCommonSubstring(g11, g23 = Util.group(m2, 3)),
+					lcsv = longestCommonSubstring(g12, sav = StringUtils.substringAfter(g24, Util.group(m2, 2))),
+					StringUtils.substringBefore(g23, lcsk), StringUtils.substringBefore(sav, lcsv),
+					StringUtils.substringAfter(g23, lcsk), StringUtils.substringAfter(sav, lcsv)));
+			//
+		} // if
+			//
 		return Pair.of(multimap, intCollection);
 		//
 	}
@@ -2206,19 +2223,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}%2$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst, kLast)), line)) && Util.groupCount(m2) > 3
-				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24 = Util.group(m2, 4)))) {
-			//
-			IntCollectionUtil.addInt(intCollection, i);
-			//
-			MultimapUtil.putAll(multimap, ImmutableMultimap.of(Util.group(m2, 1), cpv,
-					lcsk = longestCommonSubstring(g11, g23 = Util.group(m2, 3)),
-					lcsv = longestCommonSubstring(g12, sav = StringUtils.substringAfter(g24, Util.group(m2, 2))),
-					StringUtils.substringBefore(g23, lcsk), StringUtils.substringBefore(sav, lcsv),
-					StringUtils.substringAfter(g23, lcsk), StringUtils.substringAfter(sav, lcsv)));
-			//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 				kFirst, kLast)), line)) && Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
