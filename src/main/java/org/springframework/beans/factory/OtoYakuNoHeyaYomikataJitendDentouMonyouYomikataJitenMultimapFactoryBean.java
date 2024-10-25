@@ -2845,12 +2845,18 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 					});
 			//
-			if (StringUtils.endsWith(tsbv, "ん")) {
+			testAndAccept((a, b) -> StringUtils.endsWith(a, "ん"), tsbv, Pair.of(g21, g22), (a, b) -> {
 				//
-				MultimapUtil.put(multimap, StringUtils.substring(g21, (length = StringUtils.length(g21)) - 1, length),
-						StringUtils.substring(g22, (length = StringUtils.length(g22)) - 2, length));
+				final String k = Util.getKey(b);
 				//
-			}
+				final String v = Util.getValue(b);
+				//
+				int l;
+				//
+				MultimapUtil.put(multimap, StringUtils.substring(k, (l = StringUtils.length(k)) - 1, l),
+						StringUtils.substring(v, (l = StringUtils.length(v)) - 2, l));
+				//
+			});
 			//
 			testAndAccept(
 					(a, b, c) -> Boolean.logicalAnd(StringUtils.isNotBlank(Util.getKey(c)),
