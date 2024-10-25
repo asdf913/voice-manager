@@ -619,7 +619,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 	}
 
 	@Test
-	void testIH() throws Throwable {
+	void testIH() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = Class.forName(
 				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean$IH");
