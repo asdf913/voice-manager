@@ -3662,13 +3662,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				MultimapUtil.put(multimap, g21, g22);
 				//
-				for (int j = 0; j < countMatches; j++) {
-					//
-					MultimapUtil.put(multimap, StringUtils.substring(g21, j, j + 1),
-							StringUtils.substring(g22, j * 2, j * 2 + 2));
-					//
-				} // for
-					//
+				MultimapUtil.putAll(multimap, toMultimap11A13(countMatches, Pair.of(g21, g22)));
+				//
 			} else if (countMatches == 2) {
 				//
 				if ((indexOf = StringUtils.indexOf(g22, 'ん')) == 2) {
@@ -3780,6 +3775,25 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		} // if
 			//
 		return Pair.of(multimap, intCollection);
+		//
+	}
+
+	private static Multimap<String, String> toMultimap11A13(final int countMatches, final Entry<String, String> entry) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		final String g21 = Util.getKey(entry);
+		//
+		final String g22 = Util.getValue(entry);
+		//
+		for (int i = 0; i < countMatches; i++) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					StringUtils.substring(g21, i, i + 1), StringUtils.substring(g22, i * 2, i * 2 + 2));
+			//
+		} // for
+			//
+		return multimap;
 		//
 	}
 
