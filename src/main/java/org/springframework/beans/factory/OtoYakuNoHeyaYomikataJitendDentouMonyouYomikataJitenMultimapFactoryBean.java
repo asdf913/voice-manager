@@ -2682,12 +2682,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g22, cpk, cpv));
 			//
-			if (StringUtils.length(g21) == 2) {
-				//
-				MultimapUtil.put(multimap, StringUtils.substringAfter(g21, cpk), StringUtils.substringAfter(g22, cpv));
-				//
-			} // if
-				//
+			testAndAccept((a, b) -> StringUtils.length(Util.getKey(a)) == 2, Pair.of(g21, g22), Pair.of(cpk, cpv),
+					(a, b) -> MultimapUtil.put(multimap, StringUtils.substringAfter(Util.getKey(a), Util.getKey(b)),
+							StringUtils.substringAfter(Util.getValue(a), Util.getValue(b))));
+			//
 			MultimapUtil.put(multimap, g23, g24);
 			//
 			testAndAccept((a, b) -> {
