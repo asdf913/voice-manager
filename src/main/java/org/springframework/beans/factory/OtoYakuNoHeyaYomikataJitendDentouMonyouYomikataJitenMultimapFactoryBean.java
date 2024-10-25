@@ -1832,9 +1832,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			for (final ObjObjIntObjObjFunction<PatternMap, IntObjectPair<String>, String, Map<String, String>, Entry<Multimap<String, String>, IntCollection>> function : functions) {
 				//
-				if ((entry = ObjObjIntObjObjFunction.apply(function, patternMap, iop, i, IterableUtils.get(lines, i),
-						map)) != null && !MultimapUtil.isEmpty(mm = Util.getKey(entry))
-						&& (ic = Util.getValue(entry)) != null && !ic.isEmpty()) {
+				if (Boolean.logicalAnd(
+						(entry = ObjObjIntObjObjFunction.apply(function, patternMap, iop, i,
+								IterableUtils.get(lines, i), map)) != null,
+						!MultimapUtil.isEmpty(mm = Util.getKey(entry))) && (ic = Util.getValue(entry)) != null
+						&& !ic.isEmpty()) {
 					//
 					IntCollectionUtil.addAllInts(intCollection, ic);
 					//
