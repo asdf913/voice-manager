@@ -1760,6 +1760,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	private static interface ObjObjIntObjObjFunction<A, B, D, E, R> {
 
 		R apply(final A a, final B b, final int c, final D d, final E e);
+
+		private static <A, B, D, E, R> R apply(final ObjObjIntObjObjFunction<A, B, D, E, R> instance, final A a,
+				final B b, final int c, final D d, final E e) {
+			return instance != null ? instance.apply(a, b, c, d, e) : null;
+		}
+
 	}
 
 	@Nullable
@@ -1826,10 +1832,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			for (final ObjObjIntObjObjFunction<PatternMap, IntObjectPair<String>, String, Map<String, String>, Entry<Multimap<String, String>, IntCollection>> function : functions) {
 				//
-				if (function != null
-						&& (entry = function.apply(patternMap, iop, i, IterableUtils.get(lines, i), map)) != null
-						&& !MultimapUtil.isEmpty(mm = Util.getKey(entry)) && (ic = Util.getValue(entry)) != null
-						&& !ic.isEmpty()) {
+				if ((entry = ObjObjIntObjObjFunction.apply(function, patternMap, iop, i, IterableUtils.get(lines, i),
+						map)) != null && !MultimapUtil.isEmpty(mm = Util.getKey(entry))
+						&& (ic = Util.getValue(entry)) != null && !ic.isEmpty()) {
 					//
 					IntCollectionUtil.addAllInts(intCollection, ic);
 					//
