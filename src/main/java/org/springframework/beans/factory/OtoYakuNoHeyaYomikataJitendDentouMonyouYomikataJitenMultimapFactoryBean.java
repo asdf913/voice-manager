@@ -2842,13 +2842,21 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
 			//
-			if (StringUtils.length(tsbk) > 0 && StringUtils.length(tsbv) > 1 && StringUtils.endsWith(tsbv, "ん")) {
+			testAndAccept((a, b) -> {
 				//
-				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
+				final int l = StringUtils.length(b);
 				//
-			} // if
+				return StringUtils.length(a) > 0 && l > 0 && b.charAt(l - 1) == 'ん';
 				//
+			}, tsbk, tsbv, (a, b) -> {
+				//
+				int l;
+				//
+				MultimapUtil.put(multimap, substring(a, (l = StringUtils.length(a)) - 1, l),
+						substring(b, (l = StringUtils.length(b)) - 2, l));
+				//
+			});
+			//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$",
 				kFirst)), line)) && Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
