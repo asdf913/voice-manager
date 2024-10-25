@@ -2325,6 +2325,17 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g22, cpk, cpv, StringUtils.substringAfter(g21, cpk),
 					StringUtils.substringAfter(g22, cpv)));
 			//
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{2})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+				kFirst)), line)) && Util.groupCount(m2) > 5) {
+			//
+			IntCollectionUtil.addInt(intCollection, i);
+			//
+			MultimapUtil.putAll(multimap,
+					ImmutableMultimap.of(Util.group(m2, 1),
+							StringUtils.substringBefore(g26 = Util.group(m2, 6), Util.group(m2, 2)), Util.group(m2, 5),
+							StringUtils.substringAfterLast(g26, Util.group(m2, 4))));
+			//
 		} // if
 			//
 		return Pair.of(multimap, intCollection);
@@ -2596,17 +2607,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			IntCollectionUtil.addInt(intCollection, i);
 			//
 			MultimapUtil.put(multimap, Util.group(m2, 1), Util.group(m2, 2));
-			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{2})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line)) && Util.groupCount(m2) > 5) {
-			//
-			IntCollectionUtil.addInt(intCollection, i);
-			//
-			MultimapUtil.putAll(multimap,
-					ImmutableMultimap.of(Util.group(m2, 1),
-							StringUtils.substringBefore(g26 = Util.group(m2, 6), Util.group(m2, 2)), Util.group(m2, 5),
-							StringUtils.substringAfterLast(g26, Util.group(m2, 4))));
 			//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}+$",
