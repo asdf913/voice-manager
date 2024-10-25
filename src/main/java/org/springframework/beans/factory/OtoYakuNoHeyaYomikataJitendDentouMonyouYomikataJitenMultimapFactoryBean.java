@@ -3780,6 +3780,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
+	@Nullable
 	private static Multimap<String, String> toMultimap11A13(final int countMatches, final Entry<String, String> entry) {
 		//
 		Multimap<String, String> multimap = null;
