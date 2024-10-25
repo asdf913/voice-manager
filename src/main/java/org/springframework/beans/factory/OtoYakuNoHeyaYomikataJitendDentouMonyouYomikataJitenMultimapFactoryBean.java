@@ -2944,6 +2944,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				delete(b, (l = StringUtils.length(b)) - 2, l);
 				//
 			});
+			//
 			append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)),
 					Util.group(m2, 1));
 			//
