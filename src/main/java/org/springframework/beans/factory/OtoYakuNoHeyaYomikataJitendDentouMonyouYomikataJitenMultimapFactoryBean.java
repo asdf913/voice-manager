@@ -2632,6 +2632,31 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 		} // if
 			//
+		final String kLast = MapUtils.getObject(map, "kLast");
+		//
+		TextStringBuilder tsbv = null;
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s)(\\p{InHiragana}+)(%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{3}\\p{InHiragana}{2}[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$",
+				kFirst, kLast)), line)) && Util.groupCount(m2) > 2) {
+			//
+			IntCollectionUtil.addInt(intCollection, i);
+			//
+			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
+					StringUtils.substringBefore(g24 = Util.group(m2, 4), g22 = Util.group(m2, 2)));
+			//
+			for (int j = StringUtils.length(tsbv) - 1; j >= 0; j--) {
+				//
+				testAndAccept((a, b) -> StringUtils.startsWith(Character.getName(a.charAt(b)), "HIRAGANA LETTER SMALL"),
+						tsbv, j, (a, b) -> a.deleteCharAt(b));
+				//
+			} // for
+				//
+			MultimapUtil.putAll(multimap, ImmutableMultimap.of(Util.group(m2, 1), Util.toString(tsbv),
+					Util.group(m2, 3), StringUtils.substringAfter(g24, g22)));
+			//
+		} // if
+			//
 		return Pair.of(multimap, intCollection);
 		//
 	}
@@ -2897,25 +2922,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			IntCollectionUtil.addInt(intCollection, i);
 			//
 			MultimapUtil.put(multimap, Util.group(m2, 1), Util.group(m2, 2));
-			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s)(\\p{InHiragana}+)(%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{3}\\p{InHiragana}{2}[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$",
-				kFirst, kLast)), line)) && Util.groupCount(m2) > 2) {
-			//
-			IntCollectionUtil.addInt(intCollection, i);
-			//
-			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
-					StringUtils.substringBefore(g24 = Util.group(m2, 4), g22 = Util.group(m2, 2)));
-			//
-			for (int j = StringUtils.length(tsbv) - 1; j >= 0; j--) {
-				//
-				testAndAccept((a, b) -> StringUtils.startsWith(Character.getName(a.charAt(b)), "HIRAGANA LETTER SMALL"),
-						tsbv, j, (a, b) -> a.deleteCharAt(b));
-				//
-			} // for
-				//
-			MultimapUtil.putAll(multimap, ImmutableMultimap.of(Util.group(m2, 1), Util.toString(tsbv),
-					Util.group(m2, 3), StringUtils.substringAfter(g24, g22)));
 			//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
