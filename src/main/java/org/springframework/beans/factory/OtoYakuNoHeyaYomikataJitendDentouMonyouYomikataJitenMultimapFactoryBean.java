@@ -2887,7 +2887,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String g12 = MapUtils.getObject(map, "g12");
 		//
-		final String g21, cpk, cpv, csk, csv;
+		final String csk, csv;
+		//
+		String g21, cpk, cpv;
 		//
 		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
@@ -2917,6 +2919,81 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 			} // if
 				//
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{4})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{3}\\p{InHiragana}+\\p{InCJKUnifiedIdeographs}{2}$",
+				kFirst)), line)) && Util.groupCount(m2) > 1
+				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
+				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2)))) {
+			//
+			IntCollectionUtil.addInt(intCollection, i);
+			//
+			MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g22, cpk, cpv));
+			//
+			append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)),
+					StringUtils.substringAfter(g21, cpk));
+			//
+			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
+					StringUtils.substringAfter(g22, cpv));
+			//
+			testAndAccept((a, b) -> {
+				//
+				final int l = StringUtils.length(b);
+				//
+				return StringUtils.length(a) > 0 && l > 0 && b.charAt(l - 1) == 'ん';
+				//
+			}, tsbk, tsbv, (a, b) -> {
+				//
+				int l;
+				//
+				MultimapUtil.put(multimap, substring(a, (l = StringUtils.length(a)) - 1, l),
+						substring(b, (l = StringUtils.length(b)) - 2, l));
+				//
+				delete(a, (l = StringUtils.length(a)) - 1, l);
+				//
+				delete(b, (l = StringUtils.length(b)) - 2, l);
+				//
+			});
+			//
+			testAndAccept((a, b) -> {
+				//
+				final int l = StringUtils.length(b);
+				//
+				return StringUtils.length(a) > 0 && l > 0 && b.charAt(l - 1) == 'ん';
+				//
+			}, tsbk, tsbv, (a, b) -> {
+				//
+				int l;
+				//
+				MultimapUtil.put(multimap, substring(a, (l = StringUtils.length(a)) - 1, l),
+						substring(b, (l = StringUtils.length(b)) - 2, l));
+				//
+				delete(a, (l = StringUtils.length(a)) - 1, l);
+				//
+				delete(b, (l = StringUtils.length(b)) - 2, l);
+				//
+			});
+			//
+			testAndAccept((a, b) -> {
+				//
+				final int l = StringUtils.length(b);
+				//
+				return StringUtils.length(a) > 0 && l > 0 && b.charAt(l - 1) == 'ん';
+				//
+			}, tsbk, tsbv, (a, b) -> {
+				//
+				int l;
+				//
+				MultimapUtil.put(multimap, substring(a, (l = StringUtils.length(a)) - 1, l),
+						substring(b, (l = StringUtils.length(b)) - 2, l));
+				//
+				delete(a, (l = StringUtils.length(a)) - 1, l);
+				//
+				delete(b, (l = StringUtils.length(b)) - 2, l);
+				//
+			});
+			//
+			MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
+			//
 		} // if
 			//
 		return Pair.of(multimap, intCollection);
@@ -3532,81 +3609,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						delete(b, (l = StringUtils.length(b)) - 2, l);
 						//
 					});
-			//
-			MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
-			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{4})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{3}\\p{InHiragana}+\\p{InCJKUnifiedIdeographs}{2}$",
-				kFirst)), line)) && Util.groupCount(m2) > 1
-				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
-				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2)))) {
-			//
-			IntCollectionUtil.addInt(intCollection, i);
-			//
-			MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g22, cpk, cpv));
-			//
-			append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)),
-					StringUtils.substringAfter(g21, cpk));
-			//
-			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
-					StringUtils.substringAfter(g22, cpv));
-			//
-			testAndAccept((a, b) -> {
-				//
-				final int l = StringUtils.length(b);
-				//
-				return StringUtils.length(a) > 0 && l > 0 && b.charAt(l - 1) == 'ん';
-				//
-			}, tsbk, tsbv, (a, b) -> {
-				//
-				int l;
-				//
-				MultimapUtil.put(multimap, substring(a, (l = StringUtils.length(a)) - 1, l),
-						substring(b, (l = StringUtils.length(b)) - 2, l));
-				//
-				delete(a, (l = StringUtils.length(a)) - 1, l);
-				//
-				delete(b, (l = StringUtils.length(b)) - 2, l);
-				//
-			});
-			//
-			testAndAccept((a, b) -> {
-				//
-				final int l = StringUtils.length(b);
-				//
-				return StringUtils.length(a) > 0 && l > 0 && b.charAt(l - 1) == 'ん';
-				//
-			}, tsbk, tsbv, (a, b) -> {
-				//
-				int l;
-				//
-				MultimapUtil.put(multimap, substring(a, (l = StringUtils.length(a)) - 1, l),
-						substring(b, (l = StringUtils.length(b)) - 2, l));
-				//
-				delete(a, (l = StringUtils.length(a)) - 1, l);
-				//
-				delete(b, (l = StringUtils.length(b)) - 2, l);
-				//
-			});
-			//
-			testAndAccept((a, b) -> {
-				//
-				final int l = StringUtils.length(b);
-				//
-				return StringUtils.length(a) > 0 && l > 0 && b.charAt(l - 1) == 'ん';
-				//
-			}, tsbk, tsbv, (a, b) -> {
-				//
-				int l;
-				//
-				MultimapUtil.put(multimap, substring(a, (l = StringUtils.length(a)) - 1, l),
-						substring(b, (l = StringUtils.length(b)) - 2, l));
-				//
-				delete(a, (l = StringUtils.length(a)) - 1, l);
-				//
-				delete(b, (l = StringUtils.length(b)) - 2, l);
-				//
-			});
 			//
 			MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
 			//
