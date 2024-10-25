@@ -2066,8 +2066,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			if (Util.and(StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21)),
 					StringUtils.isNotBlank(csk = getCommonSuffix(g11, g21)),
-					StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2))))
-					&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g22))) {
+					StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2))),
+					StringUtils.isNotBlank(csv = getCommonSuffix(g12, g22)))) {
 				//
 				IntCollectionUtil.addInt(intCollection, i);
 				//
