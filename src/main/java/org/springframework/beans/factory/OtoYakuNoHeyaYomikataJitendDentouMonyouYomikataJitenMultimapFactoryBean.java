@@ -1835,8 +1835,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				if (Boolean.logicalAnd(
 						(entry = ObjObjIntObjObjFunction.apply(function, patternMap, iop, i,
 								IterableUtils.get(lines, i), map)) != null,
-						!MultimapUtil.isEmpty(mm = Util.getKey(entry))) && (ic = Util.getValue(entry)) != null
-						&& !ic.isEmpty()) {
+						!MultimapUtil.isEmpty(mm = Util.getKey(entry)))
+						&& !IterableUtils.isEmpty(ic = Util.getValue(entry))) {
 					//
 					IntCollectionUtil.addAllInts(intCollection, ic);
 					//
