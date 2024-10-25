@@ -3738,7 +3738,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 
 	@Nullable
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection11A13(
-			final PatternMap patternMap, final IntObjectPair<String> iop, final int i, final String line,
+			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop, final int i, final String line,
 			final Map<String, String> map) {
 		//
 		if (Boolean.logicalOr((iop != null && iop.keyInt() == i),
