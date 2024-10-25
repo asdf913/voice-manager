@@ -2600,7 +2600,36 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				MultimapUtil.put(multimap, a, StringUtils.substring(b, l - 2, l));
 				//
 			});
+		} // if
 			//
+		final int length;
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s)(\\p{InHiragana}{3})(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
+				kFirst)), line)) && Util.groupCount(m2) > 3
+				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, Util.group(m2, 1)))
+				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24 = Util.group(m2, 4)))) {
+			//
+			IntCollectionUtil.addInt(intCollection, i);
+			//
+			MultimapUtil.put(multimap, cpk, cpv);
+			//
+			if ((length = StringUtils.length(g24)) > 0
+					&& Objects.equals(StringUtils.substring(g24, length - 1, length), "ん")
+					&& StringUtils.length(g23 = Util.group(m2, 3)) == 2) {
+				//
+				MultimapUtil
+						.putAll(multimap,
+								ImmutableMultimap.of(StringUtils.substring(g23, 0, 1),
+										StringUtils.substring(g24,
+												StringUtils.indexOf(g24, g22 = Util.group(m2, 2))
+														+ StringUtils.length(g22),
+												StringUtils.length(g24) - 2),
+										StringUtils.substring(g23, 1, 2),
+										StringUtils.substring(g24, length - 2, length)));
+				//
+			} // if
+				//
 		} // if
 			//
 		return Pair.of(multimap, intCollection);
@@ -3537,32 +3566,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			});
 			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s)(\\p{InHiragana}{3})(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
-				kFirst)), line)) && Util.groupCount(m2) > 3
-				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, Util.group(m2, 1)))
-				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24 = Util.group(m2, 4)))) {
-			//
-			IntCollectionUtil.addInt(intCollection, i);
-			//
-			MultimapUtil.put(multimap, cpk, cpv);
-			//
-			if ((length = StringUtils.length(g24)) > 0
-					&& Objects.equals(StringUtils.substring(g24, length - 1, length), "ん")
-					&& StringUtils.length(g23 = Util.group(m2, 3)) == 2) {
-				//
-				MultimapUtil
-						.putAll(multimap,
-								ImmutableMultimap.of(StringUtils.substring(g23, 0, 1),
-										StringUtils.substring(g24,
-												StringUtils.indexOf(g24, g22 = Util.group(m2, 2))
-														+ StringUtils.length(g22),
-												StringUtils.length(g24) - 2),
-										StringUtils.substring(g23, 1, 2),
-										StringUtils.substring(g24, length - 2, length)));
-				//
-			} // if
-				//
 		} // if
 			//
 		return Pair.of(multimap, intCollection);
