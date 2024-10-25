@@ -2830,47 +2830,38 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
 			//
-			testAndAccept((a, b) -> {
-				//
-				return StringUtils.length(a) > 1 && StringUtils.length(b) > 1 && b.charAt(1) == 'ん';
-				//
-			}, tsbk, tsbv, (a, b) -> {
-				//
-				MultimapUtil.put(multimap, substring(a, 0, 1), substring(b, 0, 2));
-				//
-				delete(a, 0, 1);
-				//
-				delete(b, 0, 2);
-				//
-			});
+			testAndAccept((a, b) -> StringUtils.length(a) > 1 && StringUtils.length(b) > 1 && b.charAt(1) == 'ん', tsbk,
+					tsbv, (a, b) -> {
+						//
+						MultimapUtil.put(multimap, substring(a, 0, 1), substring(b, 0, 2));
+						//
+						delete(a, 0, 1);
+						//
+						delete(b, 0, 2);
+						//
+					});
 			//
-			testAndAccept((a, b) -> {
-				//
-				return StringUtils.length(a) > 1 && StringUtils.length(b) > 1 && b.charAt(1) == 'ん';
-				//
-			}, tsbk, tsbv, (a, b) -> {
-				//
-				MultimapUtil.put(multimap, substring(a, 0, 1), substring(b, 0, 2));
-				//
-				delete(a, 0, 1);
-				//
-				delete(b, 0, 2);
-				//
-			});
+			testAndAccept((a, b) -> StringUtils.length(a) > 1 && StringUtils.length(b) > 1 && b.charAt(1) == 'ん', tsbk,
+					tsbv, (a, b) -> {
+						//
+						MultimapUtil.put(multimap, substring(a, 0, 1), substring(b, 0, 2));
+						//
+						delete(a, 0, 1);
+						//
+						delete(b, 0, 2);
+						//
+					});
 			//
-			testAndAccept((a, b) -> {
-				//
-				return StringUtils.length(a) > 1 && StringUtils.length(b) > 2 && b.charAt(2) == 'ん';
-				//
-			}, tsbk, tsbv, (a, b) -> {
-				//
-				MultimapUtil.put(multimap, substring(a, 0, 2), substring(b, 0, 3));
-				//
-				delete(a, 0, 2);
-				//
-				delete(b, 0, 3);
-				//
-			});
+			testAndAccept((a, b) -> StringUtils.length(a) > 1 && StringUtils.length(b) > 2 && b.charAt(2) == 'ん', tsbk,
+					tsbv, (a, b) -> {
+						//
+						MultimapUtil.put(multimap, substring(a, 0, 2), substring(b, 0, 3));
+						//
+						delete(a, 0, 2);
+						//
+						delete(b, 0, 3);
+						//
+					});
 			//
 			MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
 			//
