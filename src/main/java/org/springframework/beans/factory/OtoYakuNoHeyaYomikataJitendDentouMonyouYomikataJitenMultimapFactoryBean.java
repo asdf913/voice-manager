@@ -3172,8 +3172,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String g11 = MapUtils.getObject(map, "g11");
 		//
-		final String g12 = MapUtils.getObject(map, "g12");
-		//
 		String g21, g22;
 		//
 		TextStringBuilder tsbk = null, tsbv = null;
