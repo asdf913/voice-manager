@@ -2776,6 +2776,45 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 		} // if
 			//
+		final int lastIndexOf;
+		//
+		int length;
+		//
+		final String g21;
+		//
+		TextStringBuilder tsbk = null, tsbv = null;
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{3}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}{2}$",
+				kFirst)), line)) && Util.groupCount(m2) > 1
+				&& StringUtils.countMatches(g22 = Util.group(m2, 2), 'ん') == 2
+				&& (lastIndexOf = StringUtils.lastIndexOf(g22, 'ん')) == StringUtils.length(g22) - 1
+				&& lastIndexOf - StringUtils.indexOf(g22, 'ん') == 2) {
+			//
+			IntCollectionUtil.addInt(intCollection, i);
+			//
+			MultimapUtil.put(multimap, g21 = Util.group(m2, 1), g22);
+			//
+			append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
+			//
+			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
+			//
+			MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+					substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
+			//
+			delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
+			//
+			delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+			//
+			MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+					substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
+			//
+			delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
+			//
+			delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+			//
+		} // if
+			//
 		return Pair.of(multimap, intCollection);
 		//
 	}
@@ -3093,35 +3132,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{3}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}{2}$",
-				kFirst)), line)) && Util.groupCount(m2) > 1
-				&& StringUtils.countMatches(g22 = Util.group(m2, 2), 'ん') == 2
-				&& (lastIndexOf = StringUtils.lastIndexOf(g22, 'ん')) == StringUtils.length(g22) - 1
-				&& lastIndexOf - StringUtils.indexOf(g22, 'ん') == 2) {
-			//
-			IntCollectionUtil.addInt(intCollection, i);
-			//
-			MultimapUtil.put(multimap, g21 = Util.group(m2, 1), g22);
-			//
-			append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
-			//
-			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
-			//
-			MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-					substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
-			//
-			delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
-			//
-			delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
-			//
-			MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-					substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
-			//
-			delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
-			//
-			delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
-			//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{2}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+[\\p{InHiragana}\\p{InCJKSymbolsAndPunctuation}]+$",
 				kFirst)), line))
