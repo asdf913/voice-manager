@@ -2176,6 +2176,16 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							StringUtils.substringAfter(g12, cpv), g21, g22, StringUtils.substringAfter(g21, cpk),
 							StringUtils.substringAfter(g22, cpv)));
 			//
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+				kFirst)), line)) && Util.groupCount(m2) > 3
+				&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, Util.group(m2, 3)))
+				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, Util.group(m2, 4)))) {
+			//
+			IntCollectionUtil.addInt(intCollection, i);
+			//
+			MultimapUtil.put(multimap, csk, csv);
+			//
 		} // if
 			//
 		return Pair.of(multimap, intCollection);
@@ -2467,16 +2477,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line)) && Util.groupCount(m2) > 3
-				&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, Util.group(m2, 3)))
-				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, Util.group(m2, 4)))) {
-			//
-			IntCollectionUtil.addInt(intCollection, i);
-			//
-			MultimapUtil.put(multimap, csk, csv);
-			//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{2}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}{2}$",
 				kFirst)), line)) && Util.groupCount(m2) > 3
