@@ -1827,7 +1827,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection11A3,
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection11A4,
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection11A5,
-						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection11A6);
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection11A6,
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection11A7);
 		//
 		Multimap<String, String> mm = null;
 		//
@@ -2602,6 +2603,35 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			});
 		} // if
 			//
+		return Pair.of(multimap, intCollection);
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection11A6(
+			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop, final int i, final String line,
+			final Map<String, String> map) {
+		//
+		if (Boolean.logicalOr((iop != null && iop.keyInt() == i),
+				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
+			//
+			return null;
+			//
+		} // if
+			//
+		Matcher m2;
+		//
+		final String kFirst = MapUtils.getObject(map, "kFirst");
+		//
+		final IntCollection intCollection = IntList.create();
+		//
+		final Multimap<String, String> multimap = LinkedHashMultimap.create();
+		//
+		final String g11 = MapUtils.getObject(map, "g11");
+		//
+		final String g12 = MapUtils.getObject(map, "g12");
+		//
+		String g22, g23, g24, cpk, cpv;
+		//
 		final int length;
 		//
 		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
@@ -2662,7 +2692,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	@Nullable
-	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection11A6(
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection11A7(
 			final PatternMap patternMap, final IntObjectPair<String> iop, final int i, final String line,
 			final Map<String, String> map) {
 		//
