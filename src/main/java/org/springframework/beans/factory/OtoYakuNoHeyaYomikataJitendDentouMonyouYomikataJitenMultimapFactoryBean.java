@@ -3683,17 +3683,24 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				int lastIndexOf, length;
 				//
-				if ((lastIndexOf = StringUtils.lastIndexOf(tsbv, 'ん')) == StringUtils.length(tsbv) - 1) {
-					//
-					MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-							substring(tsbv, lastIndexOf - 1, StringUtils.length(tsbv)));
-					//
-					delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
-					//
-					delete(tsbv, lastIndexOf - 1, StringUtils.length(tsbv));
-					//
-				} // if
-					//
+				lastIndexOf = StringUtils.lastIndexOf(tsbv, 'ん');
+				//
+				testAndAccept((k, v) -> StringUtils.lastIndexOf(v, 'ん') == StringUtils.length(v) - 1, tsbk, tsbv,
+						(k, v) -> {
+							//
+							int lk = StringUtils.length(k);
+							//
+							final int liov = StringUtils.lastIndexOf(v, 'ん');
+							//
+							MultimapUtil.put(multimap, substring(k, lk - 1, lk),
+									substring(v, liov - 1, StringUtils.length(v)));
+							//
+							delete(k, (lk = StringUtils.length(k)) - 1, lk);
+							//
+							delete(v, liov - 1, StringUtils.length(v));
+							//
+						});
+				//
 				if ((indexOf = StringUtils.indexOf(tsbv, 'ん')) > 0) {
 					//
 					if (lastIndexOf - indexOf == 2) {
