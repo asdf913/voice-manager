@@ -3703,25 +3703,31 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				if ((indexOf = StringUtils.indexOf(tsbv, 'ん')) > 0) {
 					//
-					if (lastIndexOf - indexOf == 2) {
+					testAndAccept((a, b) -> b == 2, Pair.of(tsbk, tsbv), lastIndexOf - indexOf, (a, b) -> {
 						//
-						MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-								substring(tsbv, indexOf - 1, StringUtils.length(tsbv)));
+						final TextStringBuilder k = Util.getKey(a);
 						//
-						delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
+						final TextStringBuilder v = Util.getValue(a);
 						//
-						testAndAccept((a, b) -> StringUtils.length(a) == 1, tsbk, tsbv, (a, b) -> {
+						int l;
+						//
+						MultimapUtil.put(multimap, substring(k, (l = StringUtils.length(k)) - 1, l),
+								substring(v, indexOf - 1, StringUtils.length(v)));
+						//
+						delete(k, (l = StringUtils.length(k)) - 1, l);
+						//
+						testAndAccept((x, y) -> StringUtils.length(x) == 1, k, v, (x, y) -> {
 							//
-							final int lb = StringUtils.length(b);
+							final int ly = StringUtils.length(y);
 							//
-							delete(b, lb - 2, lb);
+							delete(y, ly - 2, ly);
 							//
 						});
 						//
-						MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
+						MultimapUtil.put(multimap, Util.toString(k), Util.toString(v));
 						//
-					} // if
-						//
+					});
+					//
 					testAndAccept((a, b) -> b == 3, Pair.of(tsbk, tsbv), lastIndexOf - indexOf, (a, b) -> {
 						//
 						final TextStringBuilder k = Util.getKey(a);
