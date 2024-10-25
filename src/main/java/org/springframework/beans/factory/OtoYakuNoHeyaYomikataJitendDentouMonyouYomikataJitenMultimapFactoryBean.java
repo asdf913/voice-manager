@@ -2474,12 +2474,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			for (int j = StringUtils.length(tsbv) - 1; j >= 0; j--) {
 				//
-				if (StringUtils.startsWith(Character.getName(tsbv.charAt(j)), "HIRAGANA LETTER SMALL")) {
-					//
-					tsbv.deleteCharAt(j);
-					//
-				} // if
-					//
+				testAndAccept((a, b) -> StringUtils.startsWith(Character.getName(a.charAt(b)), "HIRAGANA LETTER SMALL"),
+						tsbv, j, (a, b) -> a.deleteCharAt(b));
+				//
 			} // for
 				//
 			MultimapUtil.putAll(multimap, ImmutableMultimap.of(Util.group(m2, 1), Util.toString(tsbv),
