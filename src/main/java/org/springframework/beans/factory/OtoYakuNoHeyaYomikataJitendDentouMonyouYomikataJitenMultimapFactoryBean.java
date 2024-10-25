@@ -182,7 +182,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			for (int j = 0; j < IterableUtils.size(lines); j++) {
 				//
-				if (iop != null && iop.keyInt() == j) {
+				if (keyIntEquals(iop, j)) {
 					//
 					continue;
 					//
@@ -211,6 +211,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		return null;
 		//
+	}
+
+	private static boolean keyIntEquals(final IntObjectPair<?> iop, final int i) {
+		return iop != null && iop.keyInt() == i;
 	}
 
 	@Nullable
@@ -380,7 +384,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		for (int i = 0; i < IterableUtils.size(lines); i++) {
 			//
-			if (iop != null && iop.keyInt() == i) {
+			if (keyIntEquals(iop, i)) {
 				//
 				continue;
 				//
@@ -477,7 +481,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		for (int i = 0; i < IterableUtils.size(lines); i++) {
 			//
-			if (iop != null && iop.keyInt() == i) {
+			if (keyIntEquals(iop, i)) {
 				//
 				continue;
 				//
@@ -649,7 +653,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		for (int i = 0; i < IterableUtils.size(lines); i++) {
 			//
-			if (iop != null && iop.keyInt() == i) {
+			if (keyIntEquals(iop, i)) {
 				//
 				continue;
 				//
@@ -824,7 +828,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		for (int i = 0; i < IterableUtils.size(lines); i++) {
 			//
-			if (iop != null && iop.keyInt() == i) {
+			if (keyIntEquals(iop, i)) {
 				//
 				continue;
 				//
@@ -1104,7 +1108,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		for (int i = 0; i < IterableUtils.size(lines); i++) {
 			//
-			if (iop != null && iop.keyInt() == i) {
+			if (keyIntEquals(iop, i)) {
 				//
 				continue;
 				//
@@ -1147,7 +1151,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		for (int i = 0; i < IterableUtils.size(lines); i++) {
 			//
-			if ((iop == null || iop.keyInt() != i)
+			if (!keyIntEquals(iop, i)
 					&& Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA, IterableUtils.get(lines, i)))
 					&& Util.groupCount(m2) > 1
 					&& StringUtils.isNotBlank(csk = getCommonSuffix(g21 = Util.group(m2, 1), g12))
@@ -1204,7 +1208,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			for (int i = 0; i < IterableUtils.size(lines); i++) {
 				//
-				if (iop != null && iop.keyInt() == i) {
+				if (keyIntEquals(iop, i)) {
 					//
 					continue;
 					//
@@ -1303,7 +1307,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		for (int i = 0; i < IterableUtils.size(lines); i++) {
 			//
-			if (iop != null && iop.keyInt() == i) {
+			if (keyIntEquals(iop, i)) {
 				//
 				continue;
 				//
@@ -1370,8 +1374,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			for (int j = 0; j < IterableUtils.size(lines); j++) {
 				//
-				if ((iop != null && iop.keyInt() == j)
-						|| !StringUtils.contains(line = IterableUtils.get(lines, j), kLast)
+				if (keyIntEquals(iop, j) || !StringUtils.contains(line = IterableUtils.get(lines, j), kLast)
 						|| !Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA, line)) || Util.groupCount(m2) <= 1
 						|| StringUtils.length(g21 = Util.group(m2, 1)) != 2) {
 					//
@@ -1657,7 +1660,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		for (int i = 0; i < IterableUtils.size(lines); i++) {
 			//
-			if (iop != null && iop.keyInt() == i) {
+			if (keyIntEquals(iop, i)) {
 				//
 				continue;
 				//
@@ -1981,7 +1984,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop, final int i, final String line,
 			final Map<String, String> map) {
 		//
-		if (Boolean.logicalOr((iop != null && iop.keyInt() == i),
+		if (Boolean.logicalOr((keyIntEquals(iop, i)),
 				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
@@ -2104,7 +2107,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop, final int i, final String line,
 			final Map<String, String> map) {
 		//
-		if (Boolean.logicalOr((iop != null && iop.keyInt() == i),
+		if (Boolean.logicalOr((keyIntEquals(iop, i)),
 				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
@@ -2221,7 +2224,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final PatternMap patternMap, final IntObjectPair<String> iop, final int i, final String line,
 			final Map<String, String> map) {
 		//
-		if (Boolean.logicalOr((iop != null && iop.keyInt() == i),
+		if (Boolean.logicalOr((keyIntEquals(iop, i)),
 				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
@@ -2346,7 +2349,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final PatternMap patternMap, final IntObjectPair<String> iop, final int i, final String line,
 			final Map<String, String> map) {
 		//
-		if (Boolean.logicalOr((iop != null && iop.keyInt() == i),
+		if (Boolean.logicalOr((keyIntEquals(iop, i)),
 				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
@@ -2474,7 +2477,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop, final int i, final String line,
 			final Map<String, String> map) {
 		//
-		if (Boolean.logicalOr((iop != null && iop.keyInt() == i),
+		if (Boolean.logicalOr((keyIntEquals(iop, i)),
 				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
@@ -2619,7 +2622,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop, final int i, final String line,
 			final Map<String, String> map) {
 		//
-		if (Boolean.logicalOr((iop != null && iop.keyInt() == i),
+		if (Boolean.logicalOr((keyIntEquals(iop, i)),
 				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
@@ -2704,7 +2707,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final PatternMap patternMap, final IntObjectPair<String> iop, final int i, final String line,
 			final Map<String, String> map) {
 		//
-		if (Boolean.logicalOr((iop != null && iop.keyInt() == i),
+		if (Boolean.logicalOr((keyIntEquals(iop, i)),
 				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
@@ -2831,7 +2834,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop, final int i, final String line,
 			final Map<String, String> map) {
 		//
-		if (Boolean.logicalOr((iop != null && iop.keyInt() == i),
+		if (Boolean.logicalOr((keyIntEquals(iop, i)),
 				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
@@ -2935,7 +2938,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop, final int i, final String line,
 			final Map<String, String> map) {
 		//
-		if (Boolean.logicalOr((iop != null && iop.keyInt() == i),
+		if (Boolean.logicalOr((keyIntEquals(iop, i)),
 				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
@@ -3159,7 +3162,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop, final int i, final String line,
 			final Map<String, String> map) {
 		//
-		if (Boolean.logicalOr((iop != null && iop.keyInt() == i),
+		if (Boolean.logicalOr((keyIntEquals(iop, i)),
 				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
@@ -3338,7 +3341,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop, final int i, final String line,
 			final Map<String, String> map) {
 		//
-		if (Boolean.logicalOr((iop != null && iop.keyInt() == i),
+		if (Boolean.logicalOr((keyIntEquals(iop, i)),
 				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
@@ -3502,7 +3505,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop, final int i, final String line,
 			final Map<String, String> map) {
 		//
-		if (Boolean.logicalOr((iop != null && iop.keyInt() == i),
+		if (Boolean.logicalOr((keyIntEquals(iop, i)),
 				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
@@ -3613,8 +3616,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String g21;
 		//
-		if (Boolean.logicalOr((iop != null && iop.keyInt() == i),
-				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))
+		if (Boolean.logicalOr((keyIntEquals(iop, i)), StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))
 				|| !Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 						"^(%1$s\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 						kFirst)), line))
@@ -3802,7 +3804,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop, final int i, final String line,
 			final Map<String, String> map) {
 		//
-		if (Boolean.logicalOr((iop != null && iop.keyInt() == i),
+		if (Boolean.logicalOr((keyIntEquals(iop, i)),
 				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
