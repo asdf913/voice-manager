@@ -2742,16 +2742,17 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
 			//
-			if (StringUtils.length(tsbk) > 0 && StringUtils.length(tsbv) > 1 && tsbv.charAt(1) == 'ん') {
-				//
-				MultimapUtil.put(multimap, substring(tsbk, 0, 1), substring(tsbv, 0, 2));
-				//
-				delete(tsbk, 0, 1);
-				//
-				delete(tsbv, 0, 2);
-				//
-			} // if
-				//
+			testAndAccept((a, b) -> StringUtils.length(a) > 0 && StringUtils.length(b) > 1 && b.charAt(1) == 'ん', tsbk,
+					tsbv, (a, b) -> {
+						//
+						MultimapUtil.put(multimap, substring(a, 0, 1), substring(b, 0, 2));
+						//
+						delete(a, 0, 1);
+						//
+						delete(b, 0, 2);
+						//
+					});
+			//
 			testAndAccept((a, b) -> StringUtils.length(a) > 0 && StringUtils.length(b) > 1 && b.charAt(1) == 'ん', tsbk,
 					tsbv, (a, b) -> {
 						//
