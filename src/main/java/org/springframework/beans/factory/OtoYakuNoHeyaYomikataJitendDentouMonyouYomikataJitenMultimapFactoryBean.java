@@ -2008,9 +2008,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g22, cpk, cpv));
 			//
 			testAndAccept((a, b) -> Boolean.logicalAnd(StringUtils.isNotBlank(a), StringUtils.isNotBlank(b)),
-					StringUtils.substringAfter(g21, cpk), StringUtils.substringAfter(g22, cpv), (a, b) -> {
-						MultimapUtil.put(multimap, a, b);
-					});
+					StringUtils.substringAfter(g21, cpk), StringUtils.substringAfter(g22, cpv),
+					(a, b) -> MultimapUtil.put(multimap, a, b));
 			//
 		} // if
 			//
