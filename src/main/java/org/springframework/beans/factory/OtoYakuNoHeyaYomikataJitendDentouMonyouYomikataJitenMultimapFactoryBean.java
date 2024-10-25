@@ -3670,7 +3670,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	@Nullable
-	private static TextStringBuilder append(@Nullable final TextStringBuilder instance, final String str) {
+	private static TextStringBuilder append(@Nullable final TextStringBuilder instance, @Nullable final String str) {
 		//
 		try {
 			//
