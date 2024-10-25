@@ -2690,17 +2690,30 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			MultimapUtil.put(multimap, g23, g24);
 			//
-			if (StringUtils.countMatches(g24, 'ん') == 1
-					&& (indexOf = StringUtils.indexOf(g24, 'ん')) == StringUtils.length(g24) - 1) {
+			testAndAccept((a, b) -> {
+				//
+				final String v = Util.getValue(a);
+				//
+				return StringUtils.countMatches(v, 'ん') == 1
+						&& StringUtils.indexOf(v, 'ん') == StringUtils.length(v) - 1;
+				//
+			}, Pair.of(g23, g24), cpv, (a, b) -> {
+				//
+				final String k = Util.getKey(a);
+				//
+				final int lk = StringUtils.length(k);
+				//
+				final String v = Util.getValue(a);
+				//
+				final int iv = StringUtils.indexOf(v, 'ん');
 				//
 				MultimapUtil.putAll(multimap,
-						ImmutableMultimap.of(StringUtils.substring(g23, 1, 2),
-								StringUtils.substring(g24, StringUtils.length(cpv), indexOf - 1),
-								StringUtils.substring(g23, (length = StringUtils.length(g23)) - 1, length),
-								StringUtils.substring(g24, indexOf - 1)));
+						ImmutableMultimap.of(StringUtils.substring(k, 1, 2),
+								StringUtils.substring(v, StringUtils.length(b), iv - 1),
+								StringUtils.substring(k, lk - 1, lk), StringUtils.substring(v, iv - 1)));
 				//
-			} // if
-				//
+			});
+			//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{4}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}+$",
 				kFirst)), line)) && Util.groupCount(m2) > 1
