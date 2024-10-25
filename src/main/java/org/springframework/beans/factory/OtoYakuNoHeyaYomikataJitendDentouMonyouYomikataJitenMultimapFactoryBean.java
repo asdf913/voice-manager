@@ -2075,8 +2075,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						csv, StringUtils.substringBetween(g11, cpk, csk), StringUtils.substringBetween(g12, cpv, csv)));
 				//
 			} else if (Util.and(StringUtils.isNotBlank(cpk), StringUtils.isNotBlank(csk = getCommonSuffix(g11, g21)),
-					StringUtils.isBlank(StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2))))
-					&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g22))) {
+					StringUtils.isBlank(StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2))),
+					StringUtils.isNotBlank(csv = getCommonSuffix(g12, g22)))) {
 				//
 				if (StringUtils.length(g21) == (countMatches = StringUtils.countMatches(g22, 'ん'))) {
 					//
