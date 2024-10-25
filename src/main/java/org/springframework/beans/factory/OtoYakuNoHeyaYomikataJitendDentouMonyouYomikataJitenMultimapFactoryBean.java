@@ -2416,6 +2416,25 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
+		final int lastIndexOf, length;
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+				kFirst)), line)) && Util.groupCount(m2) > 1
+				&& StringUtils.countMatches(g22 = Util.group(m2, 2), 'ん') == 2
+				&& (lastIndexOf = StringUtils.lastIndexOf(g22, 'ん')) == StringUtils.length(g22) - 1
+				&& (indexOf = StringUtils.indexOf(g22, 'ん')) == 1) {
+			//
+			IntCollectionUtil.addInt(intCollection, i);
+			//
+			MultimapUtil.putAll(multimap,
+					ImmutableMultimap.of(g21 = Util.group(m2, 1), g22, StringUtils.substring(g21, 0, 1),
+							StringUtils.substring(g22, 0, indexOf + 1),
+							StringUtils.substring(g21, (length = StringUtils.length(g21)) - 1, length),
+							StringUtils.substring(g22, lastIndexOf - 1)));
+			//
+		} // if
+			//
 		return Pair.of(multimap, intCollection);
 		//
 	}
@@ -2836,21 +2855,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 			//
 			delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
-			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line)) && Util.groupCount(m2) > 1
-				&& StringUtils.countMatches(g22 = Util.group(m2, 2), 'ん') == 2
-				&& (lastIndexOf = StringUtils.lastIndexOf(g22, 'ん')) == StringUtils.length(g22) - 1
-				&& (indexOf = StringUtils.indexOf(g22, 'ん')) == 1) {
-			//
-			IntCollectionUtil.addInt(intCollection, i);
-			//
-			MultimapUtil.putAll(multimap,
-					ImmutableMultimap.of(g21 = Util.group(m2, 1), g22, StringUtils.substring(g21, 0, 1),
-							StringUtils.substring(g22, 0, indexOf + 1),
-							StringUtils.substring(g21, (length = StringUtils.length(g21)) - 1, length),
-							StringUtils.substring(g22, lastIndexOf - 1)));
 			//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{Inkatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{Inkatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
