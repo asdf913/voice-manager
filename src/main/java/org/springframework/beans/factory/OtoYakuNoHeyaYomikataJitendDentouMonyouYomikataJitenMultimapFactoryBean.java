@@ -1952,7 +1952,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final PatternMap patternMap, final IntObjectPair<String> iop, final int i, final String line,
 			final Map<String, String> map) {
 		//
-		if ((iop != null && iop.keyInt() == i) || StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop)))) {
+		if (Boolean.logicalOr((iop != null && iop.keyInt() == i),
+				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
 			//
 			return null;
 			//
