@@ -3417,7 +3417,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		} // if
 	}
 
-	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, @Nullable final T t, final U u,
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, @Nullable final T t, @Nullable final U u,
 			final BiConsumer<T, U> consumer) {
 		if (Util.test(instance, t, u)) {
 			Util.accept(consumer, t, u);
