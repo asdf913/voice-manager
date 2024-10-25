@@ -2154,12 +2154,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 						delete(tsbk, (length = StringUtils.length(tsbk)) - 1, length);
 						//
-						if (StringUtils.length(tsbk) == 1) {
+						testAndAccept((a, b) -> StringUtils.length(a) == 1, tsbk, tsbv, (a, b) -> {
 							//
-							delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+							final int lb = StringUtils.length(b);
 							//
-						} // if
+							delete(b, lb - 2, lb);
 							//
+						});
+						//
 						MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
 						//
 					} else if (lastIndexOf - indexOf == 3) {
