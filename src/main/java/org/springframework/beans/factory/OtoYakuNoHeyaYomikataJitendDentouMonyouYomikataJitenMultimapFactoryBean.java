@@ -1822,7 +1822,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final List<ObjObjIntObjObjFunction<PatternMap, IntObjectPair<String>, String, Map<String, String>, Entry<Multimap<String, String>, IntCollection>>> functions = Arrays
 				.asList(OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection11A1,
-						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection11A2);
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection11A2,
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection11A3);
 		//
 		Multimap<String, String> mm = null;
 		//
@@ -2080,7 +2081,40 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							StringUtils.substringBetween(g21, cpk, csk), StringUtils.substringBetween(g24, cpv, csv),
 							StringUtils.substringAfter(g23, csk), StringUtils.substringAfter(g24, csv)));
 			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+		} // if
+			//
+		return Pair.of(multimap, intCollection);
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection11A2(
+			final PatternMap patternMap, final IntObjectPair<String> iop, final int i, final String line,
+			final Map<String, String> map) {
+		//
+		if (Boolean.logicalOr((iop != null && iop.keyInt() == i),
+				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
+			//
+			return null;
+			//
+		} // if
+			//
+		Matcher m2;
+		//
+		final String kFirst = MapUtils.getObject(map, "kFirst");
+		//
+		final String kLast = MapUtils.getObject(map, "kLast");
+		//
+		final String g11 = MapUtils.getObject(map, "g11");
+		//
+		final String g12 = MapUtils.getObject(map, "g12");
+		//
+		String g23, g24, cpk, csk, cpv, csv;
+		//
+		final IntCollection intCollection = IntList.create();
+		//
+		final Multimap<String, String> multimap = LinkedHashMultimap.create();
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s)(\\p{InHiragana}{3})(\\p{InCJKUnifiedIdeographs}+%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 				kFirst, kLast)), line)) && Util.groupCount(m2) > 3
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, Util.group(m2, 1)))
@@ -2095,12 +2129,30 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
+		final String g21;
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs})(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+				kFirst, kLast)), line)) && Util.groupCount(m2) > 3
+				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
+				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24 = Util.group(m2, 4)))
+				&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, g23 = Util.group(m2, 3)))
+				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g24))) {
+			//
+			IntCollectionUtil.addInt(intCollection, i);
+			//
+			MultimapUtil.putAll(multimap, ImmutableMultimap.of(cpk, cpv, StringUtils.substringBefore(g23, csk),
+					StringUtils.substringBetween(g24, Util.group(m2, 2), csv), csk, csv,
+					StringUtils.substringAfter(g21, cpk), StringUtils.substringBetween(g24, cpv, Util.group(m2, 2))));
+			//
+		} // if
+			//
 		return Pair.of(multimap, intCollection);
 		//
 	}
 
 	@Nullable
-	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection11A2(
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection11A3(
 			final PatternMap patternMap, final IntObjectPair<String> iop, final int i, final String line,
 			final Map<String, String> map) {
 		//
@@ -2287,20 +2339,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs})(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst, kLast)), line)) && Util.groupCount(m2) > 3
-				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
-				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24 = Util.group(m2, 4)))
-				&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, g23 = Util.group(m2, 3)))
-				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g24))) {
-			//
-			IntCollectionUtil.addInt(intCollection, i);
-			//
-			MultimapUtil.putAll(multimap, ImmutableMultimap.of(cpk, cpv, StringUtils.substringBefore(g23, csk),
-					StringUtils.substringBetween(g24, Util.group(m2, 2), csv), csk, csv,
-					StringUtils.substringAfter(g21, cpk), StringUtils.substringBetween(g24, cpv, Util.group(m2, 2))));
-			//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
 				line)) && Util.groupCount(m2) > 1
