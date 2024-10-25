@@ -2518,9 +2518,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
-		final String g25, g26;
+		final String g25;
 		//
-		String cpv;
+		String g26, cpv;
 		//
 		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
@@ -2572,6 +2572,37 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
+		final String lcsk, lcsv;
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
+				kFirst)), line)) && Util.groupCount(m2) > 5
+				&& StringUtils.isNotBlank(lcsk = longestCommonSubstring(g21 = Util.group(m2, 1), Util.group(m2, 3)))
+				&& StringUtils.isNotBlank(lcsv = longestCommonSubstring(
+						StringUtils.substringBefore(g26 = Util.group(m2, 6), g22 = Util.group(m2, 2)),
+						StringUtils.substringBetween(g26, g22, Util.group(m2, 4))))) {
+			//
+			IntCollectionUtil.addInt(intCollection, i);
+			//
+			MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, StringUtils.substringBefore(g26, g22),
+					StringUtils.substringBefore(g21, lcsk), StringUtils.substringBefore(g26, lcsv), lcsk, lcsv));
+			//
+			testAndAccept((a, b) -> {
+				//
+				final int l = StringUtils.length(b);
+				//
+				return StringUtils.length(a) == 1 && l > 0 && Objects.equals(StringUtils.substring(b, l - 1, l), "ん");
+				//
+			}, Util.group(m2, 5), g26, (a, b) -> {
+				//
+				final int l = StringUtils.length(b);
+				//
+				MultimapUtil.put(multimap, a, StringUtils.substring(b, l - 2, l));
+				//
+			});
+			//
+		} // if
+			//
 		return Pair.of(multimap, intCollection);
 		//
 	}
@@ -2607,10 +2638,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		int lastIndexOf, length;
 		//
 		String g23, g24;
-		//
-		String g26;
-		//
-		String lcsk, lcsv;
 		//
 		final IntCollection intCollection = IntList.create();
 		//
@@ -3507,33 +3534,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				delete(b, (l = StringUtils.length(b)) - 2, l);
 				//
 				MultimapUtil.put(multimap, Util.toString(a), Util.toString(b));
-				//
-			});
-			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
-				kFirst)), line)) && Util.groupCount(m2) > 5
-				&& StringUtils.isNotBlank(lcsk = longestCommonSubstring(g21 = Util.group(m2, 1), Util.group(m2, 3)))
-				&& StringUtils.isNotBlank(lcsv = longestCommonSubstring(
-						StringUtils.substringBefore(g26 = Util.group(m2, 6), g22 = Util.group(m2, 2)),
-						StringUtils.substringBetween(g26, g22, Util.group(m2, 4))))) {
-			//
-			IntCollectionUtil.addInt(intCollection, i);
-			//
-			MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, StringUtils.substringBefore(g26, g22),
-					StringUtils.substringBefore(g21, lcsk), StringUtils.substringBefore(g26, lcsv), lcsk, lcsv));
-			//
-			testAndAccept((a, b) -> {
-				//
-				final int l = StringUtils.length(b);
-				//
-				return StringUtils.length(a) == 1 && l > 0 && Objects.equals(StringUtils.substring(b, l - 1, l), "ん");
-				//
-			}, Util.group(m2, 5), g26, (a, b) -> {
-				//
-				final int l = StringUtils.length(b);
-				//
-				MultimapUtil.put(multimap, a, StringUtils.substring(b, l - 2, l));
 				//
 			});
 			//
