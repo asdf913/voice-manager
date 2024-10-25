@@ -2028,6 +2028,23 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					StringUtils.substringBefore(g23, lcsk), StringUtils.substringBefore(sav, lcsv),
 					StringUtils.substringAfter(g23, lcsk), StringUtils.substringAfter(sav, lcsv)));
 			//
+		} //
+			//
+		int indexOf;
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$",
+				kFirst)), line)) && Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
+				&& StringUtils.countMatches(g22 = Util.group(m2, 2), 'ん') == 1
+				&& (indexOf = StringUtils.indexOf(g22, "ん")) == 1) {
+			//
+			IntCollectionUtil.addInt(intCollection, i);
+			//
+			MultimapUtil.putAll(multimap,
+					ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
+							StringUtils.substring(g22, 0, indexOf + 1), StringUtils.substring(g21, 1, 2),
+							StringUtils.substring(g22, indexOf + 1)));
+			//
 		} // if
 			//
 		return Pair.of(multimap, intCollection);
@@ -2927,19 +2944,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						substring(b, (l = StringUtils.length(b)) - 2, l));
 				//
 			});
-			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$",
-				kFirst)), line)) && Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
-				&& StringUtils.countMatches(g22 = Util.group(m2, 2), 'ん') == 1
-				&& (indexOf = StringUtils.indexOf(g22, "ん")) == 1) {
-			//
-			IntCollectionUtil.addInt(intCollection, i);
-			//
-			MultimapUtil.putAll(multimap,
-					ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
-							StringUtils.substring(g22, 0, indexOf + 1), StringUtils.substring(g21, 1, 2),
-							StringUtils.substring(g22, indexOf + 1)));
 			//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
