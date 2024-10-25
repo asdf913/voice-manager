@@ -1950,7 +1950,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static void clear(final Multimap<String, String> instance) {
+	private static void clear(@Nullable final Multimap<String, String> instance) {
 		if (instance != null) {
 			instance.clear();
 		}
