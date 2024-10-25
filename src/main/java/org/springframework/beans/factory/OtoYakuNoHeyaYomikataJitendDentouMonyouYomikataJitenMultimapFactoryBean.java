@@ -2483,9 +2483,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String g12 = MapUtils.getObject(map, "g12");
 		//
-		final String g23, csk, csv;
-		//
-		String g21, g22;
+		String g21, g22, g23, csk, csv;
 		//
 		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{Inkatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
@@ -2520,7 +2518,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
-		final String g25, g26, cpv;
+		final String g25, g26;
+		//
+		String cpv;
 		//
 		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s)(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
@@ -2536,6 +2536,28 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					ImmutableMultimap.of(cpk, cpv, StringUtils.substring(g25, 0, 1),
 							StringUtils.substring(g26, StringUtils.indexOf(g26, Util.group(m2, 4)) + 1, indexOf - 1),
 							StringUtils.substring(g25, 1, 2), StringUtils.substring(g26, indexOf - 1)));
+			//
+		} // if
+			//
+		final String g24;
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{2})(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
+				kFirst)), line)) && Util.groupCount(m2) > 3
+				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
+				&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, g23 = Util.group(m2, 3)))
+				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24 = Util.group(m2, 4)))
+				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g24))) {
+			//
+			IntCollectionUtil.addInt(intCollection, i);
+			//
+			MultimapUtil.putAll(multimap,
+					ImmutableMultimap.of(g21, StringUtils.substringBefore(g24, Util.group(m2, 2)), cpk, cpv, csk, csv,
+							StringUtils.substringAfter(g21, csk),
+							StringUtils.substringBetween(g24, csv, g22 = Util.group(m2, 2))));
+			//
+			MultimapUtil.putAll(multimap, ImmutableMultimap.of(g23, StringUtils.substringAfter(g24, g22),
+					StringUtils.substringBefore(g23, csk), StringUtils.substringBetween(g24, g22, csv)));
 			//
 		} // if
 			//
@@ -3070,24 +3092,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 										StringUtils.substringAfter(Util.toString(b), v)));
 						//
 					});
-			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{2})(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
-				kFirst)), line)) && Util.groupCount(m2) > 3
-				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
-				&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, g23 = Util.group(m2, 3)))
-				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24 = Util.group(m2, 4)))
-				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g24))) {
-			//
-			IntCollectionUtil.addInt(intCollection, i);
-			//
-			MultimapUtil.putAll(multimap,
-					ImmutableMultimap.of(g21, StringUtils.substringBefore(g24, Util.group(m2, 2)), cpk, cpv, csk, csv,
-							StringUtils.substringAfter(g21, csk),
-							StringUtils.substringBetween(g24, csv, g22 = Util.group(m2, 2))));
-			//
-			MultimapUtil.putAll(multimap, ImmutableMultimap.of(g23, StringUtils.substringAfter(g24, g22),
-					StringUtils.substringBefore(g23, csk), StringUtils.substringBetween(g24, g22, csv)));
 			//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs}{6})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
