@@ -3607,22 +3607,18 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final PatternMap patternMap, final IntObjectPair<String> iop, final int i, final String line,
 			final Map<String, String> map) {
 		//
-		if (Boolean.logicalOr((iop != null && iop.keyInt() == i),
-				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))) {
-			//
-			return null;
-			//
-		} // if
-			//
 		Matcher m2;
 		//
 		final String kFirst = MapUtils.getObject(map, "kFirst");
 		//
 		final String g21;
 		//
-		if (!Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line)) || Util.groupCount(m2) <= 1 || StringUtils.length(g21 = Util.group(m2, 1)) != 3) {
+		if (Boolean.logicalOr((iop != null && iop.keyInt() == i),
+				StringUtils.equals(line, StringUtils.trim(PairUtil.right(iop))))
+				|| !Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+						"^(%1$s\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+						kFirst)), line))
+				|| Util.groupCount(m2) <= 1 || StringUtils.length(g21 = Util.group(m2, 1)) != 3) {
 			//
 			return null;
 			//
