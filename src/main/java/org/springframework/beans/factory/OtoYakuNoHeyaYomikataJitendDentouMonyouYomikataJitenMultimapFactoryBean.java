@@ -1761,6 +1761,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 
 		R apply(final A a, final B b, final int c, final D d, final E e);
 
+		@Nullable
 		private static <A, B, D, E, R> R apply(@Nullable final ObjObjIntObjObjFunction<A, B, D, E, R> instance,
 				final A a, final B b, final int c, final D d, final E e) {
 			return instance != null ? instance.apply(a, b, c, d, e) : null;
@@ -2087,6 +2088,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
+	@Nullable
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection11A2(
 			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop, final int i, final String line,
 			final Map<String, String> map) {
