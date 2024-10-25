@@ -3144,6 +3144,70 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 					});
 			//
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{6})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+				kFirst)), line)) && Util.groupCount(m2) > 1
+				&& StringUtils.isNotBlank(StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
+				&& StringUtils.countMatches(g22 = Util.group(m2, 2), 'ん') == 4) {
+			//
+			IntCollectionUtil.addInt(intCollection, i);
+			//
+			MultimapUtil.put(multimap, g21, g22);
+			//
+			append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
+			//
+			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
+			//
+			testAndAccept((a, b) -> StringUtils.length(a) > 1 && StringUtils.length(b) > 1 && b.charAt(1) == 'ん', tsbk,
+					tsbv, (a, b) -> {
+						//
+						MultimapUtil.put(multimap, substring(a, 0, 1), substring(b, 0, 2));
+						//
+						delete(a, 0, 1);
+						//
+						delete(b, 0, 2);
+						//
+					});
+			//
+			testAndAccept((a, b) -> StringUtils.length(a) > 1 && StringUtils.length(b) > 1 && b.charAt(1) == 'ん', tsbk,
+					tsbv, (a, b) -> {
+						//
+						MultimapUtil.put(multimap, substring(a, 0, 1), substring(b, 0, 2));
+						//
+						delete(a, 0, 1);
+						//
+						delete(b, 0, 2);
+						//
+					});
+			//
+			testAndAccept((a, b) -> StringUtils.length(a) > 1 && StringUtils.length(b) > 2 && b.charAt(2) == 'ん', tsbk,
+					tsbv, (a, b) -> {
+						//
+						MultimapUtil.put(multimap, substring(a, 0, 2), substring(b, 0, 3));
+						//
+						delete(a, 0, 2);
+						//
+						delete(b, 0, 3);
+						//
+					});
+			//
+			MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
+			//
+			testAndAccept((a, b) -> {
+				//
+				final int l = StringUtils.length(b);
+				//
+				return StringUtils.length(a) > 0 && l > 0 && b.charAt(l - 1) == 'ん';
+				//
+			}, tsbk, tsbv, (a, b) -> {
+				//
+				int l;
+				//
+				MultimapUtil.put(multimap, substring(a, (l = StringUtils.length(a)) - 1, l),
+						substring(b, (l = StringUtils.length(b)) - 2, l));
+				//
+			});
+			//
 		} // if
 			//
 		return Pair.of(multimap, intCollection);
@@ -3433,70 +3497,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{6})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line)) && Util.groupCount(m2) > 1
-				&& StringUtils.isNotBlank(StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
-				&& StringUtils.countMatches(g22 = Util.group(m2, 2), 'ん') == 4) {
-			//
-			IntCollectionUtil.addInt(intCollection, i);
-			//
-			MultimapUtil.put(multimap, g21, g22);
-			//
-			append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
-			//
-			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
-			//
-			testAndAccept((a, b) -> StringUtils.length(a) > 1 && StringUtils.length(b) > 1 && b.charAt(1) == 'ん', tsbk,
-					tsbv, (a, b) -> {
-						//
-						MultimapUtil.put(multimap, substring(a, 0, 1), substring(b, 0, 2));
-						//
-						delete(a, 0, 1);
-						//
-						delete(b, 0, 2);
-						//
-					});
-			//
-			testAndAccept((a, b) -> StringUtils.length(a) > 1 && StringUtils.length(b) > 1 && b.charAt(1) == 'ん', tsbk,
-					tsbv, (a, b) -> {
-						//
-						MultimapUtil.put(multimap, substring(a, 0, 1), substring(b, 0, 2));
-						//
-						delete(a, 0, 1);
-						//
-						delete(b, 0, 2);
-						//
-					});
-			//
-			testAndAccept((a, b) -> StringUtils.length(a) > 1 && StringUtils.length(b) > 2 && b.charAt(2) == 'ん', tsbk,
-					tsbv, (a, b) -> {
-						//
-						MultimapUtil.put(multimap, substring(a, 0, 2), substring(b, 0, 3));
-						//
-						delete(a, 0, 2);
-						//
-						delete(b, 0, 3);
-						//
-					});
-			//
-			MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
-			//
-			testAndAccept((a, b) -> {
-				//
-				final int l = StringUtils.length(b);
-				//
-				return StringUtils.length(a) > 0 && l > 0 && b.charAt(l - 1) == 'ん';
-				//
-			}, tsbk, tsbv, (a, b) -> {
-				//
-				int l;
-				//
-				MultimapUtil.put(multimap, substring(a, (l = StringUtils.length(a)) - 1, l),
-						substring(b, (l = StringUtils.length(b)) - 2, l));
-				//
-			});
-			//
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 				kFirst)), line)) && Util.groupCount(m2) > 1
