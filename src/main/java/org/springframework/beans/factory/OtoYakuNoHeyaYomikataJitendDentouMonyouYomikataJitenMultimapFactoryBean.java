@@ -3990,7 +3990,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							//
 						} // if
 							//
-					} else if (lastIndexOf == lv - 1 && lastIndexOf - indexOf == 4) {
+					} else if (Boolean.logicalAnd(lastIndexOf == lv - 1, lastIndexOf - indexOf == 4)) {
 						//
 						MultimapUtil.putAll(multimap,
 								ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
