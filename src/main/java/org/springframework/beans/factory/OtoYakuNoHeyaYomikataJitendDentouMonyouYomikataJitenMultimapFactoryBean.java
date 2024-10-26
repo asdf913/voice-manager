@@ -2815,14 +2815,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			deleteLastCharacter(tsbk);
 			//
-			delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+			deleteLast2Characters(tsbv);
 			//
 			MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
 					substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 			//
 			deleteLastCharacter(tsbk);
 			//
-			delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+			deleteLast2Characters(tsbv);
 			//
 		} // if
 			//
@@ -2884,7 +2884,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				deleteLastCharacter(a);
 				//
-				delete(b, (l = StringUtils.length(b)) - 2, l);
+				deleteLast2Characters(b);
 				//
 			});
 			//
@@ -2993,7 +2993,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				deleteLastCharacter(a);
 				//
-				delete(b, (l = StringUtils.length(b)) - 2, l);
+				deleteLast2Characters(b);
 				//
 			});
 			//
@@ -3012,7 +3012,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				deleteLastCharacter(a);
 				//
-				delete(b, (l = StringUtils.length(b)) - 2, l);
+				deleteLast2Characters(b);
 				//
 			});
 			//
@@ -3031,7 +3031,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				deleteLastCharacter(a);
 				//
-				delete(b, (l = StringUtils.length(b)) - 2, l);
+				deleteLast2Characters(b);
 				//
 			});
 			//
@@ -3279,7 +3279,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				deleteLastCharacter(a);
 				//
-				delete(b, (l = StringUtils.length(b)) - 2, l);
+				deleteLast2Characters(b);
 				//
 			});
 			//
@@ -3297,7 +3297,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				deleteLastCharacter(a);
 				//
-				delete(b, (l = StringUtils.length(b)) - 2, l);
+				deleteLast2Characters(b);
 				//
 			});
 			//
@@ -3311,7 +3311,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 						deleteLastCharacter(a);
 						//
-						delete(b, (l = StringUtils.length(b)) - 2, l);
+						deleteLast2Characters(b);
 						//
 					});
 			//
@@ -3325,7 +3325,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 						deleteLastCharacter(a);
 						//
-						delete(b, (l = StringUtils.length(b)) - 2, l);
+						deleteLast2Characters(b);
 						//
 					});
 			//
@@ -3386,14 +3386,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				deleteLastCharacter(tsbk);
 				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+				deleteLast2Characters(tsbv);
 				//
 				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
 						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 				//
 				deleteLastCharacter(tsbk);
 				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+				deleteLast2Characters(tsbv);
 				//
 				MultimapUtil.putAll(multimap,
 						ImmutableMultimap.of(cpk, cpv,
@@ -3416,21 +3416,21 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				deleteLastCharacter(tsbk);
 				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+				deleteLast2Characters(tsbv);
 				//
 				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
 						substring(tsbv, (length = StringUtils.length(tsbv)) - 1, length));
 				//
 				deleteLastCharacter(tsbk);
 				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 1, length);
+				deleteLastCharacter(tsbv);
 				//
 				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
 						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 				//
 				deleteLastCharacter(tsbk);
 				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+				deleteLast2Characters(tsbv);
 				//
 				MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
 				//
@@ -3448,21 +3448,21 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				deleteLastCharacter(tsbk);
 				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+				deleteLast2Characters(tsbv);
 				//
 				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
 						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 				//
 				deleteLastCharacter(tsbk);
 				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+				deleteLast2Characters(tsbv);
 				//
 				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
 						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 				//
 				deleteLastCharacter(tsbk);
 				//
-				delete(tsbv, (length = StringUtils.length(tsbv)) - 2, length);
+				deleteLast2Characters(tsbv);
 				//
 				MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
 				//
@@ -3556,7 +3556,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				deleteLastCharacter(a);
 				//
-				delete(b, (l = StringUtils.length(b)) - 2, l);
+				deleteLast2Characters(b);
 				//
 			});
 			//
@@ -3594,7 +3594,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				deleteLastCharacter(a);
 				//
-				delete(b, (l = StringUtils.length(b)) - 2, l);
+				deleteLast2Characters(b);
 				//
 			});
 			//
@@ -3767,7 +3767,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					deleteLastCharacter(k);
 					//
-					delete(v, (l = StringUtils.length(v)) - 1, l);
+					deleteLastCharacter(v);
 					//
 					MultimapUtil.put(multimap, Util.toString(k), Util.toString(v));
 					//
@@ -3853,7 +3853,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				deleteLastCharacter(a);
 				//
-				delete(b, (l = StringUtils.length(b)) - 2, l);
+				deleteLast2Characters(b);
 				//
 			});
 			//
@@ -3872,7 +3872,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				deleteLastCharacter(a);
 				//
-				delete(b, (l = StringUtils.length(b)) - 2, l);
+				deleteLast2Characters(b);
 				//
 			});
 			//
@@ -3891,14 +3891,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				deleteLastCharacter(a);
 				//
-				delete(b, (l = StringUtils.length(b)) - 2, l);
+				deleteLast2Characters(b);
 				//
 				MultimapUtil.put(multimap, substring(a, (l = StringUtils.length(a)) - 1, l),
 						substring(b, (l = StringUtils.length(b)) - 2, l));
 				//
 				deleteLastCharacter(a);
 				//
-				delete(b, (l = StringUtils.length(b)) - 2, l);
+				deleteLast2Characters(b);
 				//
 				MultimapUtil.put(multimap, Util.toString(a), Util.toString(b));
 				//
@@ -4048,6 +4048,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		final int length = StringUtils.length(instance);
 		//
 		return length > 0 ? delete(instance, length - 1, length) : instance;
+		//
+	}
+
+	private static TextStringBuilder deleteLast2Characters(final TextStringBuilder instance) {
+		//
+		final int length = StringUtils.length(instance);
+		//
+		return length > 1 ? delete(instance, length - 2, length) : instance;
 		//
 	}
 
