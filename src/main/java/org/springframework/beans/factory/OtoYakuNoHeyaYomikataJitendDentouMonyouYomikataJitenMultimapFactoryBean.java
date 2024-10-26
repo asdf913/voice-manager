@@ -3927,7 +3927,59 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		if (Util.matches(m1) && Util.groupCount(m1) > 1) {
 			//
-			return Pair.of(ImmutableMultimap.of(Util.group(m1, 1), Util.group(m1, 2)), createIntCollection(iop));
+			final String g11 = Util.group(m1, 1);
+			//
+			final String g12 = Util.group(m1, 2);
+			//
+			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
+			//
+			final int lastIndexOf = StringUtils.lastIndexOf(g12, 'ん');
+			//
+			final int indexOf = StringUtils.indexOf(g12, 'ん');
+			//
+			final int length = StringUtils.length(g11);
+			//
+			if (length == 4 && StringUtils.countMatches(g12, 'ん') == 2 && lastIndexOf - indexOf == 2) {
+				//
+				if (lastIndexOf == StringUtils.length(g12) - 1) {
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(StringUtils.substring(g11, 0, length - 2),
+									StringUtils.substring(g12, 0, indexOf - 1),
+									StringUtils.substring(g11, length - 2, length - 1),
+									StringUtils.substring(g12, indexOf - 1, indexOf + 1),
+									StringUtils.substring(g11, length - 1, length),
+									StringUtils.substring(g12, lastIndexOf - 1, lastIndexOf + 1)));
+					//
+				} else if (indexOf == 1) {
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
+									StringUtils.substring(g12, 0, indexOf + 1), StringUtils.substring(g11, 1, 2),
+									StringUtils.substring(g12, indexOf + 1, lastIndexOf + 1),
+									StringUtils.substring(g11, 2), StringUtils.substring(g12, lastIndexOf + 1)));
+					//
+				} // if
+					//
+				Util.forEach(Arrays.asList(Triplet.with("寸", "ずん", "すん")),
+						//
+						a -> testAndAccept(b -> b != null
+								&& MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+								b -> {
+									//
+									final String s1 = IValue0Util.getValue0(b);
+									//
+									MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+									//
+									MultimapUtil.put(multimap, s1, Util.getValue2(b));
+									//
+								})
+				//
+				);
+				//
+			} // if
+				//
+			return Pair.of(multimap, createIntCollection(iop));
 			//
 		} // if
 			//
