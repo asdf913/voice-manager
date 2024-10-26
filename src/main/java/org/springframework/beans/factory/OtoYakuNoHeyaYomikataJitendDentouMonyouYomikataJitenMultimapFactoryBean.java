@@ -3958,16 +3958,15 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							StringUtils.substring(g11, lk - 1, lk),
 							StringUtils.substring(g12, lastIndexOf - 1, lastIndexOf + 1)));
 					//
-				} else if (indexOf == 1) {
-					//
-					MultimapUtil.putAll(multimap,
-							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
-									StringUtils.substring(g12, 0, indexOf + 1), StringUtils.substring(g11, 1, 2),
-									StringUtils.substring(g12, indexOf + 1, lastIndexOf + 1),
-									StringUtils.substring(g11, 2), StringUtils.substring(g12, lastIndexOf + 1)));
-					//
 				} // if
 					//
+				testAndRun(indexOf == 1,
+						() -> MultimapUtil.putAll(multimap,
+								ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
+										StringUtils.substring(g12, 0, indexOf + 1), StringUtils.substring(g11, 1, 2),
+										StringUtils.substring(g12, indexOf + 1, lastIndexOf + 1),
+										StringUtils.substring(g11, 2), StringUtils.substring(g12, lastIndexOf + 1))));
+				//
 			} else {
 				//
 				if (Boolean.logicalAnd(indexOf == 2, lastIndexOf == lv - 1)) {
@@ -4027,6 +4026,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		return Pair.of(multimap, createIntCollection(iop));
 		//
+	}
+
+	private static void testAndRun(final boolean b,  final Runnable runnable) {
+		if (b && runnable != null) {
+			runnable.run();
+		}
 	}
 
 	private static <T> void testAndAccept(@Nullable final Predicate<T> predicate, final T value,

@@ -47,7 +47,8 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 	private static final String SPACE = " ";
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_COMMON_SUFFIX, METHOD_TO_MULTI_MAP_AND_INT_COLLECTION,
-			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_APPEND, METHOD_SUB_STRING;
+			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_APPEND, METHOD_SUB_STRING,
+			METHOD_TEST_AND_RUN;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -76,6 +77,8 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		//
 		(METHOD_SUB_STRING = clz.getDeclaredMethod("substring", TextStringBuilder.class, Integer.TYPE, Integer.TYPE))
 				.setAccessible(true);
+		//
+		(METHOD_TEST_AND_RUN = clz.getDeclaredMethod("testAndRun", Boolean.TYPE, Runnable.class)).setAccessible(true);
 		//
 	}
 
@@ -154,6 +157,8 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		//
 		Class<?>[] parameterTypes;
 		//
+		Class<?> parameterType;
+		//
 		for (int i = ZERO; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ms[i]) == null || !Modifier.isStatic(m.getModifiers()) || m.isSynthetic()) {
@@ -166,9 +171,13 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 			//
 			for (int j = 0; j < Util.length(parameterTypes = m.getParameterTypes()); j++) {
 				//
-				if (Objects.equals(Integer.TYPE, parameterTypes[j])) {
+				if (Objects.equals(parameterType = parameterTypes[j], Integer.TYPE)) {
 					//
 					list.add(Integer.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Boolean.TYPE)) {
+					//
+					list.add(Boolean.FALSE);
 					//
 				} else {
 					//
@@ -630,6 +639,21 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndRun() {
+		//
+		Assertions.assertDoesNotThrow(() -> testAndRun(true, null));
+		//
+	}
+
+	private static void testAndRun(final boolean b, final Runnable runnable) throws Throwable {
+		try {
+			METHOD_TEST_AND_RUN.invoke(null, b, runnable);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
