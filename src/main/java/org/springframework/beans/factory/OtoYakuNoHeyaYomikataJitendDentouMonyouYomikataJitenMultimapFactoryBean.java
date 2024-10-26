@@ -3940,7 +3940,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			final int lk = StringUtils.length(g11);
 			//
-			if (lk == 4 && StringUtils.countMatches(g12, 'ん') == 2) {
+			if (Boolean.logicalAnd(lk == 4, StringUtils.countMatches(g12, 'ん') == 2)) {
 				//
 				final int lv = StringUtils.length(g12);
 				//
