@@ -3950,16 +3950,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			if (lastIndexOf - indexOf == 2) {
 				//
-				if (lastIndexOf == lv - 1) {
-					//
-					MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substring(g11, 0, lk - 2),
-							StringUtils.substring(g12, 0, indexOf - 1), StringUtils.substring(g11, lk - 2, lk - 1),
-							StringUtils.substring(g12, indexOf - 1, indexOf + 1),
-							StringUtils.substring(g11, lk - 1, lk),
-							StringUtils.substring(g12, lastIndexOf - 1, lastIndexOf + 1)));
-					//
-				} // if
-					//
+				testAndRun(lastIndexOf == lv - 1,
+						() -> MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substring(g11, 0, lk - 2),
+								StringUtils.substring(g12, 0, indexOf - 1), StringUtils.substring(g11, lk - 2, lk - 1),
+								StringUtils.substring(g12, indexOf - 1, indexOf + 1),
+								StringUtils.substring(g11, lk - 1, lk),
+								StringUtils.substring(g12, lastIndexOf - 1, lastIndexOf + 1))));
+				//
 				testAndRun(indexOf == 1,
 						() -> MultimapUtil.putAll(multimap,
 								ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
@@ -4028,7 +4025,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static void testAndRun(final boolean b,  final Runnable runnable) {
+	private static void testAndRun(final boolean b, final Runnable runnable) {
 		if (b && runnable != null) {
 			runnable.run();
 		}
