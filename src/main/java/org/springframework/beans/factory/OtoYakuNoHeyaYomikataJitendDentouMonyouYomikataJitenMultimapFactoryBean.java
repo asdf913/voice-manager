@@ -4038,6 +4038,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		}
 	}
 
+	@Nullable
 	private static TextStringBuilder deleteLastCharacter(@Nullable final TextStringBuilder instance) {
 		//
 		final int length = StringUtils.length(instance);
