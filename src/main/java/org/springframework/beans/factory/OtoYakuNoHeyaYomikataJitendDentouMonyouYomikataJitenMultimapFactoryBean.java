@@ -4025,7 +4025,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static void testAndRun(final boolean b, final Runnable runnable) {
+	private static void testAndRun(final boolean b, @Nullable final Runnable runnable) {
 		if (b && runnable != null) {
 			runnable.run();
 		}
