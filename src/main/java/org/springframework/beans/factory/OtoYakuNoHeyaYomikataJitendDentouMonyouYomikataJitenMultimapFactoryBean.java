@@ -3926,108 +3926,106 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				"^(\\p{InCJKUnifiedIdeographs}{4})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
 				StringUtils.trim(right));
 		//
-		if (Util.matches(m1) && Util.groupCount(m1) > 1) {
+		if (!Util.matches(m1) || Util.groupCount(m1) <= 1) {
 			//
-			final String g11 = Util.group(m1, 1);
+			return null;
 			//
-			final String g12 = Util.group(m1, 2);
+		} // if
 			//
-			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
+		final String g11 = Util.group(m1, 1);
+		//
+		final String g12 = Util.group(m1, 2);
+		//
+		final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
+		//
+		final int lastIndexOf = StringUtils.lastIndexOf(g12, 'ん');
+		//
+		final int indexOf = StringUtils.indexOf(g12, 'ん');
+		//
+		final int lk = StringUtils.length(g11);
+		//
+		if (Boolean.logicalAnd(lk == 4, StringUtils.countMatches(g12, 'ん') == 2)) {
 			//
-			final int lastIndexOf = StringUtils.lastIndexOf(g12, 'ん');
+			final int lv = StringUtils.length(g12);
 			//
-			final int indexOf = StringUtils.indexOf(g12, 'ん');
-			//
-			final int lk = StringUtils.length(g11);
-			//
-			if (Boolean.logicalAnd(lk == 4, StringUtils.countMatches(g12, 'ん') == 2)) {
+			if (lastIndexOf - indexOf == 2) {
 				//
-				final int lv = StringUtils.length(g12);
-				//
-				if (lastIndexOf - indexOf == 2) {
+				if (lastIndexOf == lv - 1) {
 					//
-					if (lastIndexOf == lv - 1) {
+					MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substring(g11, 0, lk - 2),
+							StringUtils.substring(g12, 0, indexOf - 1), StringUtils.substring(g11, lk - 2, lk - 1),
+							StringUtils.substring(g12, indexOf - 1, indexOf + 1),
+							StringUtils.substring(g11, lk - 1, lk),
+							StringUtils.substring(g12, lastIndexOf - 1, lastIndexOf + 1)));
+					//
+				} else if (indexOf == 1) {
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
+									StringUtils.substring(g12, 0, indexOf + 1), StringUtils.substring(g11, 1, 2),
+									StringUtils.substring(g12, indexOf + 1, lastIndexOf + 1),
+									StringUtils.substring(g11, 2), StringUtils.substring(g12, lastIndexOf + 1)));
+					//
+				} // if
+					//
+			} else {
+				//
+				if (Boolean.logicalAnd(indexOf == 2, lastIndexOf == lv - 1)) {
+					//
+					MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
+							StringUtils.substring(g12, 0, 1), StringUtils.substring(g11, 1, 2),
+							StringUtils.substring(g12, indexOf - 1, indexOf + 1), StringUtils.substring(g11, 2, 3),
+							StringUtils.substring(g12, indexOf + 1, lastIndexOf - 1), StringUtils.substring(g11, 3),
+							StringUtils.substring(g12, lastIndexOf - 1, lastIndexOf + 1)));
+					//
+				} else if (Boolean.logicalAnd(indexOf == 1, lastIndexOf == lv - 1)) {
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
+									StringUtils.substring(g12, indexOf - 1, indexOf + 1), StringUtils.substring(g11, 3),
+									StringUtils.substring(g12, lastIndexOf - 1, lastIndexOf + 1)));
+					//
+					if (lastIndexOf - indexOf == lk) {
 						//
-						MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substring(g11, 0, lk - 2),
-								StringUtils.substring(g12, 0, indexOf - 1), StringUtils.substring(g11, lk - 2, lk - 1),
-								StringUtils.substring(g12, indexOf - 1, indexOf + 1),
-								StringUtils.substring(g11, lk - 1, lk),
-								StringUtils.substring(g12, lastIndexOf - 1, lastIndexOf + 1)));
-						//
-					} else if (indexOf == 1) {
-						//
-						MultimapUtil.putAll(multimap,
-								ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
-										StringUtils.substring(g12, 0, indexOf + 1), StringUtils.substring(g11, 1, 2),
-										StringUtils.substring(g12, indexOf + 1, lastIndexOf + 1),
-										StringUtils.substring(g11, 2), StringUtils.substring(g12, lastIndexOf + 1)));
+						MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substring(g11, 1, 2),
+								StringUtils.substring(g12, indexOf + 1, indexOf + 2), StringUtils.substring(g11, 2, 3),
+								StringUtils.substring(g12, indexOf + 2, indexOf + 3)));
 						//
 					} // if
 						//
-				} else {
+				} else if (Boolean.logicalAnd(lastIndexOf == lv - 1, lastIndexOf - indexOf == 4)) {
 					//
-					if (Boolean.logicalAnd(indexOf == 2, lastIndexOf == lv - 1)) {
-						//
-						MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
-								StringUtils.substring(g12, 0, 1), StringUtils.substring(g11, 1, 2),
-								StringUtils.substring(g12, indexOf - 1, indexOf + 1), StringUtils.substring(g11, 2, 3),
-								StringUtils.substring(g12, indexOf + 1, lastIndexOf - 1), StringUtils.substring(g11, 3),
-								StringUtils.substring(g12, lastIndexOf - 1, lastIndexOf + 1)));
-						//
-					} else if (Boolean.logicalAnd(indexOf == 1, lastIndexOf == lv - 1)) {
-						//
-						MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
-								StringUtils.substring(g12, indexOf - 1, indexOf + 1), StringUtils.substring(g11, 3),
-								StringUtils.substring(g12, lastIndexOf - 1, lastIndexOf + 1)));
-						//
-						if (lastIndexOf - indexOf == lk) {
-							//
-							MultimapUtil.putAll(multimap,
-									ImmutableMultimap.of(StringUtils.substring(g11, 1, 2),
-											StringUtils.substring(g12, indexOf + 1, indexOf + 2),
-											StringUtils.substring(g11, 2, 3),
-											StringUtils.substring(g12, indexOf + 2, indexOf + 3)));
-							//
-						} // if
-							//
-					} else if (Boolean.logicalAnd(lastIndexOf == lv - 1, lastIndexOf - indexOf == 4)) {
-						//
-						MultimapUtil.putAll(multimap,
-								ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
-										StringUtils.substring(g12, 0, indexOf - 1), StringUtils.substring(g11, 1, 2),
-										StringUtils.substring(g12, indexOf - 1, indexOf + 1),
-										StringUtils.substring(g11, 2, lk - 1),
-										StringUtils.substring(g12, indexOf + 1, lastIndexOf - 1),
-										StringUtils.substring(g11, lk - 1),
-										StringUtils.substring(g12, lastIndexOf - 1, lastIndexOf + 1)));
-						//
-					} // if
-						//
+					MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
+							StringUtils.substring(g12, 0, indexOf - 1), StringUtils.substring(g11, 1, 2),
+							StringUtils.substring(g12, indexOf - 1, indexOf + 1), StringUtils.substring(g11, 2, lk - 1),
+							StringUtils.substring(g12, indexOf + 1, lastIndexOf - 1),
+							StringUtils.substring(g11, lk - 1),
+							StringUtils.substring(g12, lastIndexOf - 1, lastIndexOf + 1)));
+					//
 				} // if
 					//
 			} // if
 				//
-			Util.forEach(Arrays.asList(Triplet.with("寸", "ずん", "すん")),
-					//
-					a -> testAndAccept(b -> b != null
-							&& MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
-							b -> {
-								//
-								final String s1 = IValue0Util.getValue0(b);
-								//
-								MultimapUtil.remove(multimap, s1, Util.getValue1(b));
-								//
-								MultimapUtil.put(multimap, s1, Util.getValue2(b));
-								//
-							})
-			//
-			);
-			//
-			return Pair.of(multimap, createIntCollection(iop));
-			//
 		} // if
 			//
-		return null;
+		Util.forEach(Arrays.asList(Triplet.with("寸", "ずん", "すん")),
+				//
+				a -> testAndAccept(
+						b -> b != null
+								&& MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
+						a, b -> {
+							//
+							final String s1 = IValue0Util.getValue0(b);
+							//
+							MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+							//
+							MultimapUtil.put(multimap, s1, Util.getValue2(b));
+							//
+						})
+		//
+		);
+		//
+		return Pair.of(multimap, createIntCollection(iop));
 		//
 	}
 
