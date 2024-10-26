@@ -3968,15 +3968,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			if (lastIndexOf - indexOf != 2) {
 				//
-				testAndRun(Boolean.logicalAnd(indexOf == 2, lastIndexOf == lv - 1), () -> {
-					//
-					MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
-							StringUtils.substring(g12, 0, 1), StringUtils.substring(g11, 1, 2),
-							StringUtils.substring(g12, indexOf - 1, indexOf + 1), StringUtils.substring(g11, 2, 3),
-							StringUtils.substring(g12, indexOf + 1, lastIndexOf - 1), StringUtils.substring(g11, 3),
-							StringUtils.substring(g12, lastIndexOf - 1, lastIndexOf + 1)));
-					//
-				});
+				testAndRun(Boolean.logicalAnd(indexOf == 2, lastIndexOf == lv - 1),
+						() -> MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
+								StringUtils.substring(g12, 0, 1), StringUtils.substring(g11, 1, 2),
+								StringUtils.substring(g12, indexOf - 1, indexOf + 1), StringUtils.substring(g11, 2, 3),
+								StringUtils.substring(g12, indexOf + 1, lastIndexOf - 1), StringUtils.substring(g11, 3),
+								StringUtils.substring(g12, lastIndexOf - 1, lastIndexOf + 1))));
 				//
 				if (Boolean.logicalAnd(indexOf == 1, lastIndexOf == lv - 1)) {
 					//
