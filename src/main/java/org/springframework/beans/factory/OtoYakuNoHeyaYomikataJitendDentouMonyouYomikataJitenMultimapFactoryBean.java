@@ -3932,6 +3932,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
+		final IntCollection intCollection = createIntCollection(iop);
+		//
 		final String g11 = Util.group(m1, 1);
 		//
 		final String g12 = Util.group(m1, 2);
@@ -4005,7 +4007,34 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 		} // if
 			//
-		Util.forEach(Arrays.asList(Triplet.with("寸", "ずん", "すん")),
+		final Entry<String, String> entry = testAndApply(x -> IterableUtils.size(x) == 1,
+				Util.toList(Util.filter(StreamSupport.stream(Util.spliterator(MultimapUtil.entries(multimap)), false),
+						x -> StringUtils.length(Util.getKey(x)) == 2)),
+				x -> IterableUtils.get(x, 0), null);
+		//
+		String g21, g22, cpk, cpv;
+		//
+		Matcher m2;
+		//
+		for (int i = 0; i < IterableUtils.size(lines) && entry != null; i++) {
+			//
+			if (Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA, IterableUtils.get(lines, i)))
+					&& Util.groupCount(m2) > 1
+					&& StringUtils
+							.isNotBlank(cpk = StringUtils.getCommonPrefix(g21 = Util.group(m2, 1), Util.getKey(entry)))
+					&& StringUtils.length(g21) == 2 && StringUtils.isNotBlank(
+							cpv = StringUtils.getCommonPrefix(g22 = Util.group(m2, 2), Util.getValue(entry)))) {
+				//
+				IntCollectionUtil.addInt(intCollection, i);
+				//
+				MultimapUtil.putAll(multimap, ImmutableMultimap.of(cpk, cpv, StringUtils.substringAfter(g21, cpk),
+						StringUtils.substringAfter(g22, cpv)));
+				//
+			} // if
+				//
+		} // for
+			//
+		Util.forEach(Arrays.asList(Triplet.with("寸", "ずん", "すん"), Triplet.with("高", "だか", "たか")),
 				//
 				a -> testAndAccept(
 						b -> b != null
@@ -4022,7 +4051,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		);
 		//
-		return Pair.of(multimap, createIntCollection(iop));
+		return Pair.of(multimap, intCollection);
 		//
 	}
 
