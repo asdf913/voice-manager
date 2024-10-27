@@ -51,6 +51,7 @@ import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 import org.meeuw.functional.TriPredicate;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
@@ -195,8 +196,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							ImmutableMultimap.of(g21 = Util.group(m2, 1), g22 = Util.group(m2, 2),
-									csk = getCommonSuffix(Util.group(m1, 1), g21), csv = getCommonSuffix(g12, g22),
-									StringUtils.substringBefore(g21, csk), StringUtils.substringBefore(g22, csv)));
+									csk = Strings.commonSuffix(Util.group(m1, 1), g21),
+									csv = Strings.commonSuffix(g12, g22), StringUtils.substringBefore(g21, csk),
+									StringUtils.substringBefore(g22, csv)));
 					//
 					IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), j);
 					//
@@ -287,8 +289,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 						"^(\\p{InCJKUnifiedIdeographs}{6})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
 						IterableUtils.get(lines, j))) && Util.groupCount(m2) > 1
-						&& StringUtils.isNotBlank(csk = getCommonSuffix(g21 = Util.group(m2, 1), s1))
-						&& StringUtils.isNotBlank(csv = getCommonSuffix(g22 = Util.group(m2, 2), s2))) {
+						&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g21 = Util.group(m2, 1), s1))
+						&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g22 = Util.group(m2, 2), s2))) {
 					//
 					MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g22, csk, csv));
 					//
@@ -625,8 +627,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cpk, cpv);
 				//
-			} else if (Util.and(StringUtils.isNotBlank(cpk), StringUtils.isNotBlank(csk = getCommonSuffix(g13, g21)),
-					StringUtils.isNotBlank(csv = getCommonSuffix(g14, g22)))) {
+			} else if (Util.and(StringUtils.isNotBlank(cpk),
+					StringUtils.isNotBlank(csk = Strings.commonSuffix(g13, g21)),
+					StringUtils.isNotBlank(csv = Strings.commonSuffix(g14, g22)))) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						ImmutableMultimap.of(csk, csv, StringUtils.substringBefore(g21, csk),
@@ -1033,10 +1036,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				} // if
 					//
 				if (Boolean.logicalAnd(
-						StringUtils.isNotBlank(csk = getCommonSuffix(k1 = Util.getKey(e1 = IterableUtils.get(es4, i)),
-								k2 = Util.getKey(e2 = IterableUtils.get(es4, j)))),
 						StringUtils
-								.isNotBlank(csv = getCommonSuffix(v1 = Util.getValue(e1), v2 = Util.getValue(e2))))) {
+								.isNotBlank(csk = Strings.commonSuffix(k1 = Util.getKey(e1 = IterableUtils.get(es4, i)),
+										k2 = Util.getKey(e2 = IterableUtils.get(es4, j)))),
+						StringUtils.isNotBlank(
+								csv = Strings.commonSuffix(v1 = Util.getValue(e1), v2 = Util.getValue(e2))))) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							StringUtils.substringBefore(k1, csk), StringUtils.substringBefore(v1, csv));
@@ -1155,9 +1159,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			if (!keyIntEquals(iop, i)
 					&& Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA, IterableUtils.get(lines, i)))
 					&& Util.groupCount(m2) > 1
-					&& StringUtils.isNotBlank(csk = getCommonSuffix(g21 = Util.group(m2, 1), g12))
+					&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g21 = Util.group(m2, 1), g12))
 					&& StringUtils.length(g21) == 2
-					&& StringUtils.isNotBlank(csv = getCommonSuffix(g22 = Util.group(m2, 2), hiragana))) {
+					&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g22 = Util.group(m2, 2), hiragana))) {
 				//
 				if (iop != null) {
 					//
@@ -1218,8 +1222,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				if ((l = StringUtils.length(g11)) == 2
 						&& StringUtils.contains(line = IterableUtils.get(lines, i), StringUtils.substring(g11, 1, l))
 						&& Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA, line)) && Util.groupCount(m2) > 1
-						&& StringUtils.isNotBlank(csk = getCommonSuffix(g21 = Util.group(m2, 1), g11))
-						&& StringUtils.isNotBlank(csv = getCommonSuffix(g22 = Util.group(m2, 2), g12))
+						&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g21 = Util.group(m2, 1), g11))
+						&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g22 = Util.group(m2, 2), g12))
 						&& StringUtils.length(g21) == 2) {
 					//
 					IntCollectionUtil.addInt(intCollection, i);
@@ -1388,8 +1392,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g21,
 						g22 = Util.group(m2, 2));
 				//
-				if (Boolean.logicalAnd(StringUtils.isNotBlank(csk = getCommonSuffix(g21, k)),
-						StringUtils.isNotBlank(csv = getCommonSuffix(g22, v = Util.getValue(e))))) {
+				if (Boolean.logicalAnd(StringUtils.isNotBlank(csk = Strings.commonSuffix(g21, k)),
+						StringUtils.isNotBlank(csv = Strings.commonSuffix(g22, v = Util.getValue(e))))) {
 					//
 					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							ImmutableMultimap.of(StringUtils.substringBefore(g21, csk),
@@ -1592,7 +1596,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 						MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g22 = Util.group(m2, 2),
 								StringUtils.substringBefore(g21, kLast),
-								StringUtils.substringBefore(g22, csv = getCommonSuffix(g12, g22)), kLast, csv,
+								StringUtils.substringBefore(g22, csv = Strings.commonSuffix(g12, g22)), kLast, csv,
 								StringUtils.substringBefore(g11, kLast), StringUtils.substringBefore(g12, csv)));
 						//
 						break;
@@ -1692,8 +1696,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							StringUtils.substringAfter(g21, cpk), StringUtils.substringAfter(g22, cpv),
 							MultimapUtil::put);
 					//
-				} else if (Boolean.logicalAnd(StringUtils.isNotBlank(csk = getCommonSuffix(g11, g21)),
-						StringUtils.isNotBlank(csv = getCommonSuffix(g12, g22)))) {
+				} else if (Boolean.logicalAnd(StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21)),
+						StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22)))) {
 					//
 					if (Boolean.logicalAnd(StringUtils.equals(csk, g11), StringUtils.length(csk) == 2)) {
 						//
@@ -2012,9 +2016,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				"^(%1$s%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 				kFirst, kLast)), line)) && Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21))
-				&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, g21))
+				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21))
 				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2)))
-				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g22))) {
+				&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22))) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
@@ -2072,8 +2076,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 				kFirst, kLast)), line)) && Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
-				&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, Util.group(m2, 1)))
-				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g22 = Util.group(m2, 2)))) {
+				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, Util.group(m2, 1)))
+				&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22 = Util.group(m2, 2)))) {
 			//
 			testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b), intCollection, i,
 					(a, b) -> IntCollectionUtil.addInt(intCollection, i));
@@ -2086,8 +2090,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				kFirst, kLast)), line)) && Util.groupCount(m2) > 3
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
 				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2)))
-				&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, g21))
-				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g22))) {
+				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21))
+				&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22))) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
@@ -2136,8 +2140,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				kFirst, kLast)), line)) && Util.groupCount(m2) > 3
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, Util.group(m2, 1)))
 				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24 = Util.group(m2, 4)))
-				&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, g23 = Util.group(m2, 3)))
-				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g24))) {
+				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g23 = Util.group(m2, 3)))
+				&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g24))) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
@@ -2153,8 +2157,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				kFirst, kLast)), line)) && Util.groupCount(m2) > 3
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
 				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24 = Util.group(m2, 4)))
-				&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, g23 = Util.group(m2, 3)))
-				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g24))) {
+				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g23 = Util.group(m2, 3)))
+				&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g24))) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
@@ -2196,8 +2200,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 				kFirst)), line)) && Util.groupCount(m2) > 3
-				&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, Util.group(m2, 3)))
-				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, Util.group(m2, 4)))) {
+				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, Util.group(m2, 3)))
+				&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, Util.group(m2, 4)))) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
@@ -2253,8 +2257,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				kFirst, kLast)), line)) && Util.groupCount(m2) > 3
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, Util.group(m2, 1)))
 				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24 = Util.group(m2, 4)))
-				&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, g23 = Util.group(m2, 3)))
-				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g24))) {
+				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g23 = Util.group(m2, 3)))
+				&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g24))) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
@@ -2267,15 +2271,17 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InBasicLatin}+(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				kFirst)), line))
-				&& Util.groupCount(m2) > 7
+				kFirst)), line)) && Util
+						.groupCount(m2) > 7
 				&& StringUtils
-						.isNotBlank(csk = getCommonSuffix(
-								getCommonSuffix(getCommonSuffix(g21 = Util.group(m2, 1), g23 = Util.group(m2, 3)),
-										g25 = Util.group(m2, 5)),
-								g27 = Util.group(m2, 7)))
-				&& StringUtils.isNotBlank(csv = getCommonSuffix(
-						getCommonSuffix(getCommonSuffix(g22 = Util.group(m2, 2), g24 = Util.group(m2, 4)),
+						.isNotBlank(
+								csk = Strings
+										.commonSuffix(
+												Strings.commonSuffix(Strings.commonSuffix(g21 = Util.group(m2, 1),
+														g23 = Util.group(m2, 3)), g25 = Util.group(m2, 5)),
+												g27 = Util.group(m2, 7)))
+				&& StringUtils.isNotBlank(csv = Strings.commonSuffix(
+						Strings.commonSuffix(Strings.commonSuffix(g22 = Util.group(m2, 2), g24 = Util.group(m2, 4)),
 								g26 = Util.group(m2, 6)),
 						g28 = Util.group(m2, 8)))) {
 			//
@@ -2295,9 +2301,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				"^(%1$s\\p{InCJKUnifiedIdeographs}%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 				kFirst, kLast)), line)) && Util.groupCount(m2) > 2
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
-				&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, g21))
-				&& StringUtils.isNotBlank(csv = getCommonSuffix(getCommonSuffix(g12, g22 = Util.group(m2, 2)),
-						g23 = Util.group(m2, 3)))) {
+				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21)) && StringUtils.isNotBlank(csv = Strings
+						.commonSuffix(Strings.commonSuffix(g12, g22 = Util.group(m2, 2)), g23 = Util.group(m2, 3)))) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
@@ -2459,9 +2464,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{Inkatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{Inkatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 				kFirst)), line))
 				&& Util.groupCount(m2) > 3
-				&& StringUtils.isNotBlank(csk = getCommonSuffix(
-						getCommonSuffix(g21 = Util.group(m2, 1), g22 = Util.group(m2, 2)), g23 = Util.group(m2, 3)))
-				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g24 = Util.group(m2, 4)))) {
+				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(
+						Strings.commonSuffix(g21 = Util.group(m2, 1), g22 = Util.group(m2, 2)),
+						g23 = Util.group(m2, 3)))
+				&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g24 = Util.group(m2, 4)))) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
@@ -2500,8 +2506,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{Inkatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 				kFirst)), line)) && Util.groupCount(m2) > 2
-				&& StringUtils.isNotBlank(csk = getCommonSuffix(g21 = Util.group(m2, 1), g22 = Util.group(m2, 2)))
-				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g23 = Util.group(m2, 3)))) {
+				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g21 = Util.group(m2, 1), g22 = Util.group(m2, 2)))
+				&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g23 = Util.group(m2, 3)))) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
@@ -2557,9 +2563,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				"^(%1$s\\p{InCJKUnifiedIdeographs}{2})(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
 				kFirst)), line)) && Util.groupCount(m2) > 3
 				&& StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21 = Util.group(m2, 1)))
-				&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, g23 = Util.group(m2, 3)))
+				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g23 = Util.group(m2, 3)))
 				&& StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g24 = Util.group(m2, 4)))
-				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g24))) {
+				&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g24))) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
@@ -2734,8 +2740,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{2}%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 				kFirst, kLast)), line)) && Util.groupCount(m2) > 3
-				&& StringUtils.isNotBlank(csk = getCommonSuffix(g11, Util.group(m2, 3)))
-				&& StringUtils.isNotBlank(csv = getCommonSuffix(g12, g24 = Util.group(m2, 4)))) {
+				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, Util.group(m2, 3)))
+				&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g24 = Util.group(m2, 4)))) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
@@ -2764,8 +2770,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				"^(%1$s)(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 				kFirst)), line)) && Util.groupCount(m2) > 3) {
 			//
-			if (Boolean.logicalAnd(StringUtils.isNotBlank(csk = getCommonSuffix(g11, g23 = Util.group(m2, 3))),
-					StringUtils.isNotBlank(csv = getCommonSuffix(g12, g24 = Util.group(m2, 4))))) {
+			if (Boolean.logicalAnd(StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g23 = Util.group(m2, 3))),
+					StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g24 = Util.group(m2, 4))))) {
 				//
 				IntCollectionUtil.addInt(intCollection, i);
 				//
@@ -2908,11 +2914,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
-			if (StringUtils.isNotBlank(csk = getCommonSuffix(g11, g21))) {
+			if (StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21))) {
 				//
 				MultimapUtil.putAll(multimap,
 						ImmutableMultimap.of(g21, g22, cpk, cpv, StringUtils.substringBetween(g21, cpk, csk),
-								StringUtils.substringBetween(g22, cpv, csv = getCommonSuffix(g12, g22)), csk, csv));
+								StringUtils.substringBetween(g22, cpv, csv = Strings.commonSuffix(g12, g22)), csk,
+								csv));
 				//
 			} else {
 				//
@@ -3642,9 +3649,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		int indexOf;
 		//
 		if (Util.and(StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, g21)),
-				StringUtils.isNotBlank(csk = getCommonSuffix(g11, g21)),
+				StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21)),
 				StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2))),
-				StringUtils.isNotBlank(csv = getCommonSuffix(g12, g22)))) {
+				StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22)))) {
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
@@ -3653,9 +3660,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							StringUtils.substringBetween(g22, cpv, csv), csk, csv,
 							StringUtils.substringBetween(g11, cpk, csk), StringUtils.substringBetween(g12, cpv, csv)));
 			//
-		} else if (Util.and(StringUtils.isNotBlank(cpk), StringUtils.isNotBlank(csk = getCommonSuffix(g11, g21)),
+		} else if (Util.and(StringUtils.isNotBlank(cpk), StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21)),
 				StringUtils.isBlank(StringUtils.getCommonPrefix(g12, g22 = Util.group(m2, 2))),
-				StringUtils.isNotBlank(csv = getCommonSuffix(g12, g22)))) {
+				StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22)))) {
 			//
 			int countMatches;
 			//
@@ -4263,28 +4270,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		} // for
 			//
 		return StringUtils.substring(a, start, start + max);
-		//
-	}
-
-	// http://www.java2s.com/example/java-utility-method/collection-element-get/getcommonsuffix-collection-string-c-85a78.html
-
-	private static String getCommonSuffix(@Nullable final String s1, @Nullable final String s2) {
-		//
-		if (s1 == null || s2 == null || s1.length() == 0 || s2.length() == 0) {
-			//
-			return "";
-			//
-		} // if
-			//
-		int i = 0;
-		//
-		while (i < s1.length() && i < s2.length() && s1.charAt(s1.length() - 1 - i) == s2.charAt(s2.length() - 1 - i)) {
-			//
-			i++;
-			//
-		} // if
-			//
-		return StringUtils.substring(s1, StringUtils.length(s1) - i);
 		//
 	}
 

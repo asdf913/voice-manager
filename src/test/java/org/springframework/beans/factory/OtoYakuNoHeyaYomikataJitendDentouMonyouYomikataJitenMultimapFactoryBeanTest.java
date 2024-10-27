@@ -46,9 +46,8 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 
 	private static final String SPACE = " ";
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_COMMON_SUFFIX, METHOD_TO_MULTI_MAP_AND_INT_COLLECTION,
-			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_APPEND, METHOD_SUB_STRING,
-			METHOD_TEST_AND_RUN;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP_AND_INT_COLLECTION, METHOD_TEST_AND_ACCEPT3,
+			METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_APPEND, METHOD_SUB_STRING, METHOD_TEST_AND_RUN;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -57,9 +56,6 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
-		//
-		(METHOD_GET_COMMON_SUFFIX = clz.getDeclaredMethod("getCommonSuffix", String.class, String.class))
-				.setAccessible(true);
 		//
 		(METHOD_TO_MULTI_MAP_AND_INT_COLLECTION = clz.getDeclaredMethod("toMultimapAndIntCollection", PatternMap.class,
 				IntObjectPair.class, Iterable.class)).setAccessible(true);
@@ -274,37 +270,6 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetCommonSuffix() throws Throwable {
-		//
-		if (!isSystemPropertiesContainsTestGetObject) {
-			//
-			Assertions.assertEquals(EMPTY, getCommonSuffix(EMPTY, null));
-			//
-			Assertions.assertEquals(EMPTY, getCommonSuffix(EMPTY, EMPTY));
-			//
-			Assertions.assertEquals(EMPTY, getCommonSuffix(SPACE, EMPTY));
-			//
-			Assertions.assertEquals(SPACE, getCommonSuffix(SPACE, SPACE));
-			//
-		} // if
-			//
-	}
-
-	private static String getCommonSuffix(final String s1, final String s2) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_COMMON_SUFFIX.invoke(null, s1, s2);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
