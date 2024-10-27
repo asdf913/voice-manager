@@ -3948,7 +3948,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		Matcher m2;
 		//
-		String line, cpk, cpv, g22;
+		String cpk, cpv, g22;
 		//
 		if (Boolean.logicalAnd(length == 4, countMatches == 0)) {
 			//
@@ -3964,8 +3964,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 							"^(%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-							substring(tsbk, i, i + 1))), line = IterableUtils.get(lines, j)))
-							&& Util.groupCount(m2) > 1) {
+							substring(tsbk, i, i + 1))), IterableUtils.get(lines, j))) && Util.groupCount(m2) > 1) {
 						//
 						deleteLastCharacter(tsbk);
 						//
