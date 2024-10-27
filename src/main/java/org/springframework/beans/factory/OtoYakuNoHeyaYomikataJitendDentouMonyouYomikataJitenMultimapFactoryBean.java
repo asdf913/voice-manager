@@ -3988,7 +3988,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 		} // if
 			//
-
 		final Entry<String, String> entry = testAndApply(x -> IterableUtils.size(x) == 1,
 				Util.toList(Util.filter(StreamSupport.stream(Util.spliterator(MultimapUtil.entries(multimap)), false),
 						x -> StringUtils.length(Util.getKey(x)) == 2)),
