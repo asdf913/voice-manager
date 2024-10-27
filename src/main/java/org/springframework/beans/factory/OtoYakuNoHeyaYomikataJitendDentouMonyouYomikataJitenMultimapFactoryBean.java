@@ -4005,6 +4005,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 			} // if
 				//
+		} else {
+			//
+			MultimapUtil.put(multimap, g11, g12);
+			//
 		} // if
 			//
 		final Entry<String, String> entry = testAndApply(x -> IterableUtils.size(x) == 1,
