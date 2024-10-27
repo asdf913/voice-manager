@@ -3942,20 +3942,60 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		MultimapUtil.putAll(multimap, toMultimap12(g11, g12));
 		//
-		if (!Boolean.logicalAnd(StringUtils.length(g11) == 4, StringUtils.countMatches(g12, 'ん') == 2)) {
+		final int length = StringUtils.length(g11);
+		//
+		final int countMatches = StringUtils.countMatches(g12, 'ん');
+		//
+		Matcher m2;
+		//
+		String line, cpk, cpv, g22;
+		//
+		if (Boolean.logicalAnd(length == 4, countMatches == 0)) {
 			//
 			MultimapUtil.put(multimap, g11, g12);
 			//
+			final TextStringBuilder tsbk = new TextStringBuilder(g11);
+			//
+			final TextStringBuilder tsbv = new TextStringBuilder(g12);
+			//
+			for (int i = StringUtils.length(tsbk) - 1; i >= 0; i--) {
+				//
+				for (int j = 0; j < IterableUtils.size(lines); j++) {
+					//
+					if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+							"^(%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+							substring(tsbk, i, i + 1))), line = IterableUtils.get(lines, j)))
+							&& Util.groupCount(m2) > 1) {
+						//
+						deleteLastCharacter(tsbk);
+						//
+						g22 = Util.group(m2, 2);
+						//
+						for (int x = 0; x < StringUtils.length(g22); x++) {
+							//
+							deleteLastCharacter(tsbv);
+							//
+						} // for
+							//
+						IntCollectionUtil.addInt(intCollection, j);
+						//
+						MultimapUtil.put(multimap, Util.group(m2, 1), g22);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // for
+				//
 		} // if
 			//
+
 		final Entry<String, String> entry = testAndApply(x -> IterableUtils.size(x) == 1,
 				Util.toList(Util.filter(StreamSupport.stream(Util.spliterator(MultimapUtil.entries(multimap)), false),
 						x -> StringUtils.length(Util.getKey(x)) == 2)),
 				x -> IterableUtils.get(x, 0), null);
 		//
-		String g21, g22, cpk, cpv;
-		//
-		Matcher m2;
+		String g21;
 		//
 		for (int i = 0; i < IterableUtils.size(lines) && entry != null; i++) {
 			//
@@ -3977,7 +4017,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		Util.forEach(Arrays.asList(Triplet.with("寸", "ずん", "すん"), Triplet.with("高", "だか", "たか")),
 				//
-				a -> testAndAccept(
+				a ->
+
+				testAndAccept(
 						b -> b != null
 								&& MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
 						a, b -> {
