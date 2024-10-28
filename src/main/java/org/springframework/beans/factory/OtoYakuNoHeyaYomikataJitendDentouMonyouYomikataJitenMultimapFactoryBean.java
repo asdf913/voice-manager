@@ -57,6 +57,7 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
+import com.google.common.primitives.Chars;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -3947,7 +3948,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
 		//
-		MultimapUtil.putAll(multimap, toMultimap12(g11, g12));
+		MultimapUtil.putAll(multimap, toMultimap12A(g11, g12));
 		//
 		final int length = StringUtils.length(g11);
 		//
@@ -4043,7 +4044,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static Multimap<String, String> toMultimap12(final String g1, final String g2) {
+	private static Multimap<String, String> toMultimap12A(final String g1, final String g2) {
 		//
 		final Multimap<String, String> multimap = LinkedHashMultimap.create();
 		//
