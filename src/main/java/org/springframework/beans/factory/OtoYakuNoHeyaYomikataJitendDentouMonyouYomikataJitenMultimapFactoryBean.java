@@ -4158,15 +4158,20 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					MultimapUtil.put(multimap, cpk, cpv);
 					//
-					if (StringUtils.length(g21) == 2) {
-						//
-						IntCollectionUtil.addInt(intCollection, j);
-						//
-						MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g22,
-								StringUtils.substringAfter(g21, cpk), StringUtils.substringAfter(g22, cpv)));
-						//
-					} // if
-						//
+					testAndAccept((a, b) -> StringUtils.length(MapUtils.getObject(a, "g21")) == 2,
+							Map.of("g21", g21, "g22", g22, "cpk", cpk, "cpv", cpv), j, (a, b) -> {
+								//
+								IntCollectionUtil.addInt(intCollection, b);
+								//
+								MultimapUtil.putAll(multimap,
+										ImmutableMultimap.of(MapUtils.getObject(a, "g21"), MapUtils.getObject(a, "g22"),
+												StringUtils.substringAfter(MapUtils.getObject(a, "g21"),
+														MapUtils.getObject(a, "cpk")),
+												StringUtils.substringAfter(MapUtils.getObject(a, "g22"),
+														MapUtils.getObject(a, "cpv"))));
+								//
+							});
+					//
 				} // if
 					//
 			} // for
