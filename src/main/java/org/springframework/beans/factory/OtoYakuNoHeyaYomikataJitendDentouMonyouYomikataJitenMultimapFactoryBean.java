@@ -1744,6 +1744,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					return null;
 					//
+				} else if (Objects.equals(name, "put") && args != null && args.length > 1) {
+					//
+					Util.put(getMap(), args[0], args[1]);
+					//
+					return null;
+					//
 				} else if (Objects.equals(name, "get") && args != null && args.length > 0) {
 					//
 					final Object arg = args[0];
@@ -4116,9 +4122,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final IntCollection intCollection = IntList.create();
 		//
-		String line, s, g21, g22, cpk, cpv, lcsk, lcsv;
+		Entry<Multimap<String, String>, IntCollection> temp = null;
 		//
-		Matcher m2;
+		Map<String, String> map = null;
+		//
+		int[] intArray = null;
 		//
 		for (int i = StringUtils.length(g11) - 1; i >= 0; i--) {
 			//
@@ -4130,58 +4138,101 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 				} // if
 					//
-				if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-						"^(%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-						s = StringUtils.substring(g11, i, i + 1))), line = IterableUtils.get(lines, j)))
-						&& Util.groupCount(m2) > 1) {
+				if (map == null) {
 					//
-					IntCollectionUtil.addInt(intCollection, j);
+					Util.putAll(map = Reflection.newProxy(Map.class, new IH()), Map.of("g11", g11, "g12", g12));
 					//
-					MultimapUtil.put(multimap, Util.group(m2, 1), Util.group(m2, 2));
+				} // if
 					//
-				} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-						"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-						s)), line)) && Util.groupCount(m2) > 1) {
+				Util.put(map, "s", StringUtils.substring(g11, i, i + 1));
+				//
+				MultimapUtil.putAll(multimap, Util.getKey(
+						temp = toMultimapAndIntCollection12B1(patternMap, j, IterableUtils.get(lines, j), map)));
+				//
+				if ((intArray = IntCollectionUtil.toIntArray(Util.getValue(temp))) != null) {
 					//
-					if (Boolean.logicalAnd(
-							StringUtils.length(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1))) == 1,
-							StringUtils.isNotBlank(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2))))) {
+					for (final int x : intArray) {
 						//
-						MultimapUtil.put(multimap, cpk, cpv);
-						//
-						testAndAccept((a, b) -> StringUtils.length(MapUtils.getObject(a, "g21")) == 2,
-								Map.of("g21", g21, "g22", g22, "cpk", cpk, "cpv", cpv), j, (a, b) -> {
-									//
-									IntCollectionUtil.addInt(intCollection, b);
-									//
-									MultimapUtil.putAll(multimap,
-											ImmutableMultimap.of(MapUtils.getObject(a, "g21"),
-													MapUtils.getObject(a, "g22"),
-													StringUtils.substringAfter(MapUtils.getObject(a, "g21"),
-															MapUtils.getObject(a, "cpk")),
-													StringUtils.substringAfter(MapUtils.getObject(a, "g22"),
-															MapUtils.getObject(a, "cpv"))));
-									//
-								});
-						//
-					} else if (StringUtils.length(g21) == 2) {
-						//
-						IntCollectionUtil.addInt(intCollection, j);
-						//
-						MultimapUtil.put(multimap, g21, g22);
-						//
-					} else if (StringUtils.length(lcsk = longestCommonSubstring(g11, g21)) == 1
-							&& StringUtils.isNotBlank(lcsv = longestCommonSubstring(g12, g22))) {
-						//
-						MultimapUtil.put(multimap, lcsk, lcsv);
-						//
-					} // if
+						if (!IntIterableUtil.containsInt(intCollection, x)) {
+							//
+							IntCollectionUtil.addInt(intCollection, x);
+							//
+						} // if
+							//
+					} // for
 						//
 				} // if
 					//
 			} // for
 				//
 		} // for
+			//
+		return Pair.of(multimap, intCollection);
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection12B1(
+			final PatternMap patternMap, final int index, final String line, final Map<String, String> map) {
+		//
+		final Multimap<String, String> multimap = LinkedHashMultimap.create();
+		//
+		final IntCollection intCollection = IntList.create();
+		//
+		final String s = MapUtils.getObject(map, "s");
+		//
+		Matcher m2;
+		//
+		final String g11 = MapUtils.getObject(map, "g11");
+		//
+		final String g12 = MapUtils.getObject(map, "g12");
+		//
+		String g21, g22, cpk, cpv, lcsk, lcsv;
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$", s)),
+				line)) && Util.groupCount(m2) > 1) {
+			//
+			IntCollectionUtil.addInt(intCollection, index);
+			//
+			MultimapUtil.put(multimap, Util.group(m2, 1), Util.group(m2, 2));
+			//
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+				s)), line)) && Util.groupCount(m2) > 1) {
+			//
+			if (Boolean.logicalAnd(StringUtils.length(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1))) == 1,
+					StringUtils.isNotBlank(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2))))) {
+				//
+				MultimapUtil.put(multimap, cpk, cpv);
+				//
+				testAndAccept((a, b) -> StringUtils.length(MapUtils.getObject(a, "g21")) == 2,
+						Map.of("g21", g21, "g22", g22, "cpk", cpk, "cpv", cpv), index, (a, b) -> {
+							//
+							IntCollectionUtil.addInt(intCollection, b);
+							//
+							MultimapUtil.putAll(multimap,
+									ImmutableMultimap.of(MapUtils.getObject(a, "g21"), MapUtils.getObject(a, "g22"),
+											StringUtils.substringAfter(MapUtils.getObject(a, "g21"),
+													MapUtils.getObject(a, "cpk")),
+											StringUtils.substringAfter(MapUtils.getObject(a, "g22"),
+													MapUtils.getObject(a, "cpv"))));
+							//
+						});
+				//
+			} else if (StringUtils.length(g21) == 2) {
+				//
+				IntCollectionUtil.addInt(intCollection, index);
+				//
+				MultimapUtil.put(multimap, g21, g22);
+				//
+			} else if (StringUtils.length(lcsk = longestCommonSubstring(g11, g21)) == 1
+					&& StringUtils.isNotBlank(lcsv = longestCommonSubstring(g12, g22))) {
+				//
+				MultimapUtil.put(multimap, lcsk, lcsv);
+				//
+			} // if
+				//
+		} // if
 			//
 		return Pair.of(multimap, intCollection);
 		//

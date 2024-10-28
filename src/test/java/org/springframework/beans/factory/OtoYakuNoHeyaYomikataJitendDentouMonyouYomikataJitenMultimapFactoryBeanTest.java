@@ -226,6 +226,8 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 							new Class<?>[] { PatternMap.class, IntObjectPair.class, Iterable.class, Entry.class }))
 					|| (Objects.equals(name, "toMultimap12A")
 							&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class }))
+					|| (Objects.equals(name, "toMultimapAndIntCollection12B1") && Arrays.equals(parameterTypes,
+							new Class<?>[] { PatternMap.class, Integer.TYPE, String.class, Map.class }))
 					|| Objects.equals(Boolean.TYPE, m.getReturnType())) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
