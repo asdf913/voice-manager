@@ -4009,7 +4009,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		);
 		//
-		final Multimap<String, String> mm = ImmutableMultimap.of("祝", "いわい");
+		final Multimap<String, String> mm = LinkedHashMultimap
+				.create(ImmutableMultimap.of("祝", "いわい", "唐", "う", "唐", "からくさ", "大", "う", "大", "き"));
+		//
+		MultimapUtil.putAll(mm, ImmutableMultimap.of("大", "ま", "大", "ょう", "持", "もち", "間", "ょう"));
 		//
 		Util.forEach(IterableUtils.toList(MultimapUtil.entries(mm)),
 				x -> testAndAccept(
@@ -4113,7 +4116,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final IntCollection intCollection = IntList.create();
 		//
-		String line, s, g21, g22, cpk, cpv;
+		String line, s, g21, g22, cpk, cpv, lcsk, lcsv;
 		//
 		Matcher m2;
 		//
@@ -4166,6 +4169,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						IntCollectionUtil.addInt(intCollection, j);
 						//
 						MultimapUtil.put(multimap, g21, g22);
+						//
+					} else if (StringUtils.length(lcsk = longestCommonSubstring(g11, g21)) == 1
+							&& StringUtils.isNotBlank(lcsv = longestCommonSubstring(g12, g22))) {
+						//
+						MultimapUtil.put(multimap, lcsk, lcsv);
 						//
 					} // if
 						//
