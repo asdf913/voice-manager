@@ -13,10 +13,12 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -4126,8 +4128,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		Map<String, String> map = null;
 		//
-		int[] intArray = null;
-		//
 		for (int i = StringUtils.length(g11) - 1; i >= 0; i--) {
 			//
 			for (int j = 0; j < IterableUtils.size(lines); j++) {
@@ -4149,26 +4149,23 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				MultimapUtil.putAll(multimap, Util.getKey(
 						temp = toMultimapAndIntCollection12B1(patternMap, j, IterableUtils.get(lines, j), map)));
 				//
-				if ((intArray = IntCollectionUtil.toIntArray(Util.getValue(temp))) != null) {
-					//
-					for (final int x : intArray) {
-						//
-						if (!IntIterableUtil.containsInt(intCollection, x)) {
-							//
-							IntCollectionUtil.addInt(intCollection, x);
-							//
-						} // if
-							//
-					} // for
-						//
-				} // if
-					//
+				forEach(testAndApply(Objects::nonNull, IntCollectionUtil.toIntArray(Util.getValue(temp)), IntStream::of,
+						null),
+						x -> testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b), intCollection, x,
+								(a, b) -> IntCollectionUtil.addInt(a, b)));
+				//
 			} // for
 				//
 		} // for
 			//
 		return Pair.of(multimap, intCollection);
 		//
+	}
+
+	private static void forEach(final IntStream intStream, final IntConsumer intConsumer) {
+		if (intStream != null && intConsumer != null) {
+			intStream.forEach(intConsumer);
+		}
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection12B1(
