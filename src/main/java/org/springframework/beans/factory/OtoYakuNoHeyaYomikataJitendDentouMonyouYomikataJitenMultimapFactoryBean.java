@@ -4113,10 +4113,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final IntCollection intCollection = IntList.create();
 		//
-		final TextStringBuilder tsbk = new TextStringBuilder(g11);
-		//
-		final TextStringBuilder tsbv = new TextStringBuilder(g12);
-		//
 		String line, s, g21, g22, cpk, cpv;
 		//
 		Matcher m2;
@@ -4136,19 +4132,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						s = StringUtils.substring(g11, i, i + 1))), line = IterableUtils.get(lines, j)))
 						&& Util.groupCount(m2) > 1) {
 					//
-					deleteLastCharacter(tsbk);
-					//
-					g22 = Util.group(m2, 2);
-					//
-					for (int x = 0; x < StringUtils.length(g22); x++) {
-						//
-						deleteLastCharacter(tsbv);
-						//
-					} // for
-						//
 					IntCollectionUtil.addInt(intCollection, j);
 					//
-					MultimapUtil.put(multimap, Util.group(m2, 1), g22);
+					MultimapUtil.put(multimap, Util.group(m2, 1), Util.group(m2, 2));
 					//
 				} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 						"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
