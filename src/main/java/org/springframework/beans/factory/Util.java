@@ -28,6 +28,7 @@ import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
 import java.util.function.IntUnaryOperator;
 import java.util.function.ObjIntConsumer;
@@ -846,6 +847,12 @@ abstract class Util {
 			//
 		} // if
 			//
+	}
+
+	static void forEach(final IntStream intStream, final IntConsumer intConsumer) {
+		if (intStream != null && intConsumer != null) {
+			intStream.forEach(intConsumer);
+		}
 	}
 
 	private static boolean executeForEachMethodForNullPointerException(final Object instance) {

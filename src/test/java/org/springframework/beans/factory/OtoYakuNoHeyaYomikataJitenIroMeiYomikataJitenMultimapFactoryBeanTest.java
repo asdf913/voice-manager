@@ -16,7 +16,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
@@ -60,7 +59,7 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP2, METHOD_TO_MULTI_MAP3,
 			METHOD_TEST_AND_APPLY_AS_INT, METHOD_TO_MULTI_MAP_AND_INT_LIST, METHOD_COLLECT, METHOD_MAP,
 			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_TO_ARRAY_COLLECTION,
-			METHOD_TO_ARRAY_STREAM, METHOD_FOR_EACH_INT_STREAM, METHOD_IS_EMPTY, METHOD_MAX, METHOD_TO_MULTI_MAP_17_C_2;
+			METHOD_TO_ARRAY_STREAM, METHOD_IS_EMPTY, METHOD_MAX, METHOD_TO_MULTI_MAP_17_C_2;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -100,9 +99,6 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 				.setAccessible(true);
 		//
 		(METHOD_TO_ARRAY_STREAM = clz.getDeclaredMethod("toArray", Stream.class, IntFunction.class))
-				.setAccessible(true);
-		//
-		(METHOD_FOR_EACH_INT_STREAM = clz.getDeclaredMethod("forEach", IntStream.class, IntConsumer.class))
 				.setAccessible(true);
 		//
 		(METHOD_IS_EMPTY = clz.getDeclaredMethod("isEmpty", IntList.class)).setAccessible(true);
@@ -1186,21 +1182,6 @@ class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBeanTest {
 	private static <A> A[] toArray(final Stream<?> instance, final IntFunction<A[]> generator) throws Throwable {
 		try {
 			return (A[]) METHOD_TO_ARRAY_STREAM.invoke(null, instance, generator);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testForEach() {
-		//
-		Assertions.assertDoesNotThrow(() -> forEach(IntStream.empty(), null));
-		//
-	}
-
-	private static void forEach(final IntStream instance, final IntConsumer action) throws Throwable {
-		try {
-			METHOD_FOR_EACH_INT_STREAM.invoke(null, instance, action);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

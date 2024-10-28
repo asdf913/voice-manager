@@ -17,7 +17,6 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
-import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
 import java.util.function.IntPredicate;
 import java.util.function.IntUnaryOperator;
@@ -517,7 +516,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			g21 = Util.group(m2, 1);
 			//
-			forEach(IntStream.rangeClosed(2, Util.groupCount(m2)),
+			Util.forEach(IntStream.rangeClosed(2, Util.groupCount(m2)),
 					x -> MultimapUtil.put(multimap, g21, Util.group(m2, x)));
 			//
 			final Entry<String, String> commonPrefix = Pair.of(
@@ -555,12 +554,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 		return null;
 		//
-	}
-
-	private static void forEach(@Nullable final IntStream instance, @Nullable final IntConsumer action) {
-		if (instance != null && action != null) {
-			instance.forEach(action);
-		}
 	}
 
 	private static interface IntTripleObjectFunction<A, B, C, R> {
@@ -698,7 +691,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		final Matcher m = m2;
 		//
-		forEach(IntStream.rangeClosed(2, Util.groupCount(m2)), x -> MultimapUtil.put(multimap, g21, Util.group(m, x)));
+		Util.forEach(IntStream.rangeClosed(2, Util.groupCount(m2)),
+				x -> MultimapUtil.put(multimap, g21, Util.group(m, x)));
 		//
 		final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
 		//
@@ -1914,8 +1908,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							"^(\\p{InCJKUnifiedIdeographs}鼠)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$")),
 							s, k, m1, lcsk, list)));
 			//
-			forEach(testAndApply(Objects::nonNull, IntCollectionUtil.toIntArray(Util.getValue(entry)), IntStream::of,
-					null), x -> IntCollectionUtil.addInt(intList, x));
+			IntStream intStream = testAndApply(Objects::nonNull, IntCollectionUtil.toIntArray(Util.getValue(entry)),
+					IntStream::of, null);
+			//
+			Util.forEach(intStream, x -> IntCollectionUtil.addInt(intList, x));
 			//
 			// ps2
 			//
@@ -1928,8 +1924,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}]+$")),
 							s, k)));
 			//
-			forEach(testAndApply(Objects::nonNull, IntCollectionUtil.toIntArray(Util.getValue(entry)), IntStream::of,
-					null), x -> {
+			Util.forEach(intStream = testAndApply(Objects::nonNull, IntCollectionUtil.toIntArray(Util.getValue(entry)),
+					IntStream::of, null), x -> {
 						if (!IntIterableUtil.containsInt(intList, x)) {
 							intList.add(x);
 						}
@@ -1943,8 +1939,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$")),
 							s, k)));
 			//
-			forEach(testAndApply(Objects::nonNull, IntCollectionUtil.toIntArray(Util.getValue(entry)), IntStream::of,
-					null), x -> IntCollectionUtil.addInt(intList, x));
+			Util.forEach(intStream = testAndApply(Objects::nonNull, IntCollectionUtil.toIntArray(Util.getValue(entry)),
+					IntStream::of, null), x -> IntCollectionUtil.addInt(intList, x));
 			//
 		} // for
 			//
