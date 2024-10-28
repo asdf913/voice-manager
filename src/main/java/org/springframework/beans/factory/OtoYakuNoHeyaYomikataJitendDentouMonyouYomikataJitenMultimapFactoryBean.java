@@ -4152,7 +4152,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				forEach(testAndApply(Objects::nonNull, IntCollectionUtil.toIntArray(Util.getValue(temp)), IntStream::of,
 						null),
 						x -> testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b), intCollection, x,
-								(a, b) -> IntCollectionUtil.addInt(a, b)));
+								IntCollectionUtil::addInt));
 				//
 			} // for
 				//
