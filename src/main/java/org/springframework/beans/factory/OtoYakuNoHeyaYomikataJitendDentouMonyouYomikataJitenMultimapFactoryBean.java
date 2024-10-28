@@ -4356,7 +4356,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		}
 	}
 
-	private static String longestCommonSubstring(@Nullable final String a, final String b) {
+	private static String longestCommonSubstring(@Nullable final String a, @Nullable final String b) {
 		//
 		int start = 0, max = 0;
 		//
