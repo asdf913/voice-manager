@@ -4102,77 +4102,77 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String g12 = Util.getValue(entry);
 		//
-		if (Boolean.logicalAnd(StringUtils.length(g11) == 4, StringUtils.countMatches(g12, 'ん') == 0)) {
+		if (!Boolean.logicalAnd(StringUtils.length(g11) == 4, StringUtils.countMatches(g12, 'ん') == 0)) {
 			//
-			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
-			//
-			final IntCollection intCollection = IntList.create();
-			//
-			final TextStringBuilder tsbk = new TextStringBuilder(g11);
-			//
-			final TextStringBuilder tsbv = new TextStringBuilder(g12);
-			//
-			String line, s, g21, g22, cpk, cpv;
-			//
-			Matcher m2;
-			//
-			for (int i = StringUtils.length(g11) - 1; i >= 0; i--) {
-				//
-				for (int j = 0; j < IterableUtils.size(lines); j++) {
-					//
-					if (keyIntEquals(iop, j)) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-							"^(%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-							s = StringUtils.substring(g11, i, i + 1))), line = IterableUtils.get(lines, j)))
-							&& Util.groupCount(m2) > 1) {
-						//
-						deleteLastCharacter(tsbk);
-						//
-						g22 = Util.group(m2, 2);
-						//
-						for (int x = 0; x < StringUtils.length(g22); x++) {
-							//
-							deleteLastCharacter(tsbv);
-							//
-						} // for
-							//
-						IntCollectionUtil.addInt(intCollection, j);
-						//
-						MultimapUtil.put(multimap, Util.group(m2, 1), g22);
-						//
-					} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-							"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-							s)), line)) && Util.groupCount(m2) > 1
-							&& StringUtils.length(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1))) == 1
-							&& StringUtils.isNotBlank(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2)))) {
-						//
-						MultimapUtil.put(multimap, cpk, cpv);
-						//
-						if (StringUtils.length(g21) == 2) {
-							//
-							IntCollectionUtil.addInt(intCollection, j);
-							//
-							MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g22,
-									StringUtils.substringAfter(g21, cpk), StringUtils.substringAfter(g22, cpv)));
-							//
-						} // if
-							//
-					} // if
-						//
-				} // for
-					//
-			} // for
-				//
-			return Pair.of(multimap, intCollection);
+			return null;
 			//
 		} // if
 			//
-		return null;
+		final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
+		//
+		final IntCollection intCollection = IntList.create();
+		//
+		final TextStringBuilder tsbk = new TextStringBuilder(g11);
+		//
+		final TextStringBuilder tsbv = new TextStringBuilder(g12);
+		//
+		String line, s, g21, g22, cpk, cpv;
+		//
+		Matcher m2;
+		//
+		for (int i = StringUtils.length(g11) - 1; i >= 0; i--) {
+			//
+			for (int j = 0; j < IterableUtils.size(lines); j++) {
+				//
+				if (keyIntEquals(iop, j)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+						"^(%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+						s = StringUtils.substring(g11, i, i + 1))), line = IterableUtils.get(lines, j)))
+						&& Util.groupCount(m2) > 1) {
+					//
+					deleteLastCharacter(tsbk);
+					//
+					g22 = Util.group(m2, 2);
+					//
+					for (int x = 0; x < StringUtils.length(g22); x++) {
+						//
+						deleteLastCharacter(tsbv);
+						//
+					} // for
+						//
+					IntCollectionUtil.addInt(intCollection, j);
+					//
+					MultimapUtil.put(multimap, Util.group(m2, 1), g22);
+					//
+				} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+						"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+						s)), line)) && Util.groupCount(m2) > 1
+						&& StringUtils.length(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1))) == 1
+						&& StringUtils.isNotBlank(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2)))) {
+					//
+					MultimapUtil.put(multimap, cpk, cpv);
+					//
+					if (StringUtils.length(g21) == 2) {
+						//
+						IntCollectionUtil.addInt(intCollection, j);
+						//
+						MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g22,
+								StringUtils.substringAfter(g21, cpk), StringUtils.substringAfter(g22, cpv)));
+						//
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+		return Pair.of(multimap, intCollection);
 		//
 	}
 
