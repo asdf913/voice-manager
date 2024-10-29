@@ -4234,7 +4234,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
 						StringUtils.substringAfter(g22, lcsv));
 				//
-				if (StringUtils.length(tsbk) == 2 && (length = StringUtils.length(tsbv)) > 1) {
+				if (Boolean.logicalAnd(StringUtils.length(tsbk) == 2, (length = StringUtils.length(tsbv)) > 1)) {
 					//
 					MultimapUtil.put(multimap, substring(tsbk, 1, 2), substring(tsbv, length - 2, length));
 					//
