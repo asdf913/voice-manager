@@ -12,6 +12,7 @@ import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -270,8 +271,10 @@ public class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFa
 			//
 		Multimap<String, String> multimap = null;
 		//
+		final Supplier<StringBuilder> supplier = StringBuilder::new;
+		//
 		final Matcher matcher = Util.matcher(Pattern.compile(String.format("((%1$s)+)（(\\p{InHiragana}+)）",
-				Util.collect(Stream.of("CJKUnifiedIdeographs", "Hiragana"), StringBuilder::new, (a, b) -> {
+				Util.collect(Stream.of("CJKUnifiedIdeographs", "Hiragana"), supplier, (a, b) -> {
 					//
 					if (StringUtils.isNotBlank(a)) {
 						//
