@@ -97,10 +97,6 @@ public final class ClassInfoUtil {
 				//
 				throw new IllegalStateException();
 				//
-			} else if (Objects.equals(cof, ContinueOrFalse.CONTINUE)) {
-				//
-				continue;
-				//
 			} else if (Objects.equals(cof, ContinueOrFalse.FALSE)) {
 				//
 				return false;
