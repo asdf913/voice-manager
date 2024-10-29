@@ -154,14 +154,6 @@ class SpeechApiSystemSpeechImplTest {
 			//
 	}
 
-	private static <T> T castX(final Class<T> clz, final Object value) throws Throwable {
-		try {
-			return (T) METHOD_CAST.invoke(null, clz, value);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
 	@Test
 	void testTestAndApply() throws Throwable {
 		//

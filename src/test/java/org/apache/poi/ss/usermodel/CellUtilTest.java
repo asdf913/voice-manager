@@ -325,40 +325,6 @@ class CellUtilTest {
 		}
 	}
 
-	private static String toString(final Cell instance, final FormulaEvaluator formulaEvaluator) throws Throwable {
-		//
-		final CellValue cellValue = FormulaEvaluatorUtil.evaluate(formulaEvaluator, instance);
-		//
-		final CellType cellValueType = CellValueUtil.getCellType(cellValue);
-		//
-		if (Objects.equals(CellType.ERROR, cellValueType)) {
-			//
-			return Byte.toString(cellValue.getErrorValue());
-			//
-		} else if (Objects.equals(CellType.BOOLEAN, cellValueType)) {
-			//
-			return Boolean.toString(cellValue.getBooleanValue());
-			//
-		} else if (Objects.equals(CellType.NUMERIC, cellValueType)) {
-			//
-			return Double.toString(cellValue.getNumberValue());
-			//
-		} else if (Objects.equals(CellType.STRING, cellValueType)) {
-			//
-			return cellValue.getStringValue();
-			//
-		} // if
-			//
-		if (cellValue != null) {
-			//
-			throw new IllegalStateException(toString(cellValueType));
-			//
-		} // if
-			//
-		return instance != null ? instance.getCellFormula() : null;
-		//
-	}
-
 	@Test
 	void testTestAndApply() throws Throwable {
 		//

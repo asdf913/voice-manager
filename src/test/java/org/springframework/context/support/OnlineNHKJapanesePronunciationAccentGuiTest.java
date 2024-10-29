@@ -869,12 +869,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 	}
 
-	private static Object createPronounicatio2n() {
-		//
-		return new Pronunciation();
-		//
-	}
-
 	private static void setPitchAccentImageToSystemClipboardContents(final Object pronunciation) throws Throwable {
 		try {
 			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS.invoke(null, pronunciation);

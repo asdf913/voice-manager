@@ -532,10 +532,6 @@ class MainTest {
 		}
 	}
 
-	private static Object createWindow(final Window target) throws HeadlessException {
-		throw new HeadlessException();
-	}
-
 	@Test
 	void testErrorOrPrintStackTrace() throws Throwable {
 		//
