@@ -258,7 +258,7 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 			final Sheet sheet = WorkbookUtil.createSheet(wb);
 			//
-			IntStream.range(0, 2).forEach(x -> {
+			Util.forEach(IntStream.range(0, 2), x -> {
 				//
 				if (sheet != null) {
 					//
@@ -286,7 +286,7 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 			final Sheet sheet = WorkbookUtil.createSheet(wb);
 			//
-			IntStream.range(0, 2).forEach(x -> {
+			Util.forEach(IntStream.range(0, 2), x -> {
 				//
 				final Row row = sheet != null ? sheet.createRow(sheet.getPhysicalNumberOfRows()) : null;
 				//
@@ -312,7 +312,7 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 			final Sheet sheet = WorkbookUtil.createSheet(wb);
 			//
-			IntStream.range(0, 2).forEach(x -> {
+			Util.forEach(IntStream.range(0, 2), x -> {
 				//
 				final Row row = sheet != null ? sheet.createRow(sheet.getPhysicalNumberOfRows()) : null;
 				//

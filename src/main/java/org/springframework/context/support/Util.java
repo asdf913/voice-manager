@@ -25,9 +25,11 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.Function;
+import java.util.function.IntConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -125,6 +127,12 @@ public abstract class Util {
 				? instance.filter(predicate)
 				: null;
 		//
+	}
+
+	static void forEach(final IntStream intStream, final IntConsumer intConsumer) {
+		if (intStream != null && intConsumer != null) {
+			intStream.forEach(intConsumer);
+		}
 	}
 
 	@Nullable

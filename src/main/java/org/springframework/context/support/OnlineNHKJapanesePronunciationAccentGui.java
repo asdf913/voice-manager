@@ -644,11 +644,11 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 			// Remove all element(s) in "mcbmPronounication"
 			//
-			forEach(reverseRange(0, getSize(mcbmPronounication)), i -> removeElementAt(mcbmPronounication, i));
+			Util.forEach(reverseRange(0, getSize(mcbmPronounication)), i -> removeElementAt(mcbmPronounication, i));
 			//
 			// Remove all element(s) in "mcbmAudioFormat"
 			//
-			forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
+			Util.forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
 			//
 			try {
 				//
@@ -934,7 +934,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	private static void pronounicationChanged(@Nullable final Pronunciation pronunciation,
 			final MutableComboBoxModel<String> mcbmAudioFormat) {
 		//
-		forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
+		Util.forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
 		//
 		final Map<String, String> audioUrls = pronunciation != null ? pronunciation.getAudioUrls() : null;
 		//
@@ -955,12 +955,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	}
 
 	private static <T> void forEach(@Nullable final Iterable<T> instance, @Nullable final Consumer<? super T> action) {
-		if (instance != null && (action != null || Proxy.isProxyClass(Util.getClass(instance)))) {
-			instance.forEach(action);
-		}
-	}
-
-	private static void forEach(@Nullable final IntStream instance, @Nullable final IntConsumer action) {
 		if (instance != null && (action != null || Proxy.isProxyClass(Util.getClass(instance)))) {
 			instance.forEach(action);
 		}

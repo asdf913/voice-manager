@@ -107,7 +107,6 @@ import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
 import java.util.function.IntUnaryOperator;
 import java.util.function.LongBinaryOperator;
@@ -5588,7 +5587,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final MutableComboBoxModel<String> mcbmAudioFormat, final String preferredPronunciationAudioFormat,
 			final JTextComponent jtc) {
 		//
-		forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
+		Util.forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
 		//
 		setSelectedItem(mcbmAudioFormat, null);
 		//
@@ -7210,11 +7209,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		// Remove all element(s) in "mcbmPronounication"
 		//
-		forEach(reverseRange(0, getSize(mcbmPronunciation)), i -> removeElementAt(mcbmPronunciation, i));
+		Util.forEach(reverseRange(0, getSize(mcbmPronunciation)), i -> removeElementAt(mcbmPronunciation, i));
 		//
 		// Remove all element(s) in "mcbmPronounicationAudioFormat"
 		//
-		forEach(reverseRange(0, getSize(mcbmPronounicationAudioFormat)),
+		Util.forEach(reverseRange(0, getSize(mcbmPronounicationAudioFormat)),
 				i -> removeElementAt(mcbmPronounicationAudioFormat, i));
 		//
 		try {
@@ -8763,7 +8762,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			// Remove all element(s) in "mcbmPronounication"
 			//
-			forEach(reverseRange(0, getSize(mcbmPronunciation)), i -> removeElementAt(mcbmPronunciation, i));
+			Util.forEach(reverseRange(0, getSize(mcbmPronunciation)), i -> removeElementAt(mcbmPronunciation, i));
 			//
 		} // if
 			//
@@ -8778,7 +8777,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			// Remove all element(s) in "mcbmPronounication"
 			//
-			forEach(reverseRange(0, getSize(mcbmPronunciation)), i -> removeElementAt(mcbmPronunciation, i));
+			Util.forEach(reverseRange(0, getSize(mcbmPronunciation)), i -> removeElementAt(mcbmPronunciation, i));
 			//
 		} // if
 			//
@@ -11566,12 +11565,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
-	}
-
-	private static void forEach(@Nullable final IntStream instance, @Nullable final IntConsumer action) {
-		if (instance != null && (action != null || Proxy.isProxyClass(Util.getClass(instance)))) {
-			instance.forEach(action);
-		}
 	}
 
 	private static class ExportTask implements Runnable {

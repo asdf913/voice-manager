@@ -125,9 +125,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_FOR_EACH_ITERABLE = clz.getDeclaredMethod("forEach", Iterable.class, Consumer.class))
 				.setAccessible(true);
 		//
-		(METHOD_FOR_EACH_INT_STREAM = clz.getDeclaredMethod("forEach", IntStream.class, IntConsumer.class))
-				.setAccessible(true);
-		//
 		(METHOD_MAP_INT_STREAM = clz.getDeclaredMethod("map", IntStream.class, IntUnaryOperator.class))
 				.setAccessible(true);
 		//
@@ -817,25 +814,11 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		Assertions.assertDoesNotThrow(() -> forEach(Collections.emptyList(), null));
 		//
-		Assertions.assertDoesNotThrow(() -> forEach(null, (IntConsumer) null));
-		//
-		Assertions.assertDoesNotThrow(() -> forEach(IntStream.empty(), null));
-		//
-		Assertions.assertDoesNotThrow(() -> forEach(Reflection.newProxy(IntStream.class, ih), null));
-		//
 	}
 
 	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) throws Throwable {
 		try {
 			METHOD_FOR_EACH_ITERABLE.invoke(null, instance, action);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static void forEach(final IntStream instance, final IntConsumer action) throws Throwable {
-		try {
-			METHOD_FOR_EACH_INT_STREAM.invoke(null, instance, action);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

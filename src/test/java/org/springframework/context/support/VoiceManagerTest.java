@@ -85,7 +85,6 @@ import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
 import java.util.function.IntUnaryOperator;
 import java.util.function.LongBinaryOperator;
@@ -307,10 +306,10 @@ class VoiceManagerTest {
 			METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_GET_VALUE, METHOD_GET_SOURCE_VOICE, METHOD_EXPORT,
 			METHOD_MAP_STREAM, METHOD_MAP_INT_STREAM, METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG, METHOD_MAX_STREAM,
 			METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE,
-			METHOD_FOR_EACH_INT_STREAM, METHOD_CREATE_WORK_BOOK_LIST, METHOD_CREATE_VOICE_OBJECT_MAPPER,
-			METHOD_CREATE_VOICE_OBJECT_MAP, METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST,
-			METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER,
-			METHOD_IMPORT_VOICE_OBJECT_MAP_FILE, METHOD_IMPORT_VOICE5, METHOD_IMPORT_VOICE_BY_SPEECH_API,
+			METHOD_CREATE_WORK_BOOK_LIST, METHOD_CREATE_VOICE_OBJECT_MAPPER, METHOD_CREATE_VOICE_OBJECT_MAP,
+			METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1,
+			METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER, METHOD_IMPORT_VOICE_OBJECT_MAP_FILE, METHOD_IMPORT_VOICE5,
+			METHOD_IMPORT_VOICE_BY_SPEECH_API,
 			METHOD_IMPORT_VOICE_BY_ONLINE_NHK_JAPANESE_PRONUNCIATIONS_ACCENT_FAILABLE_FUNCTION, METHOD_ADD_CONTAINER2,
 			METHOD_ADD_CONTAINER3, METHOD_ADD_LIST, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_ANY_MATCH,
 			METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_MATCHER, METHOD_MATCHES, METHOD_SET_VALUE_J_PROGRESS_BAR,
@@ -455,9 +454,6 @@ class VoiceManagerTest {
 		(METHOD_FOR_EACH_STREAM = clz.getDeclaredMethod("forEach", Stream.class, Consumer.class)).setAccessible(true);
 		//
 		(METHOD_FOR_EACH_ITERABLE = clz.getDeclaredMethod("forEach", Iterable.class, FailableConsumer.class))
-				.setAccessible(true);
-		//
-		(METHOD_FOR_EACH_INT_STREAM = clz.getDeclaredMethod("forEach", IntStream.class, IntConsumer.class))
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_WORK_BOOK_LIST = clz.getDeclaredMethod("createWorkbook", List.class,
@@ -4157,8 +4153,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> forEach((Stream<?>) null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> forEach((IntStream) null, null));
-		//
 		Assertions.assertDoesNotThrow(() -> forEach(Stream.empty(), null));
 		//
 		Assertions.assertDoesNotThrow(() -> forEach(Stream.empty(), x -> {
@@ -4175,8 +4169,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> forEach(iterable, null));
 		//
-		Assertions.assertDoesNotThrow(() -> forEach(Reflection.newProxy(IntStream.class, ih), null));
-		//
 	}
 
 	private static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) throws Throwable {
@@ -4191,14 +4183,6 @@ class VoiceManagerTest {
 			final FailableConsumer<? super T, E> action) throws Throwable {
 		try {
 			METHOD_FOR_EACH_ITERABLE.invoke(null, instance, action);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static void forEach(final IntStream instance, final IntConsumer action) throws Throwable {
-		try {
-			METHOD_FOR_EACH_INT_STREAM.invoke(null, instance, action);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
