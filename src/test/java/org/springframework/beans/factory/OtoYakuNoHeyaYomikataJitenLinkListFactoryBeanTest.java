@@ -211,8 +211,6 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 
 	private IH ih = null;
 
-	private ObjectMapper objectMapper = null;
-
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -221,8 +219,6 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 		element = Util.cast(Element.class, Narcissus.allocateInstance(Element.class));
 		//
 		ih = new IH();
-		//
-		objectMapper = new ObjectMapper();
 		//
 	}
 
