@@ -1908,8 +1908,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							"^(\\p{InCJKUnifiedIdeographs}鼠)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$")),
 							s, k, m1, lcsk, list)));
 			//
-			IntStream intStream = testAndApply(Objects::nonNull, IntCollectionUtil.toIntArray(Util.getValue(entry)),
-					IntStream::of, null);
+			final IntStream intStream = testAndApply(Objects::nonNull,
+					IntCollectionUtil.toIntArray(Util.getValue(entry)), IntStream::of, null);
 			//
 			Util.forEach(intStream, x -> IntCollectionUtil.addInt(intList, x));
 			//
@@ -1924,8 +1924,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InCJKSymbolsAndPunctuation}\\p{InHiragana}]+$")),
 							s, k)));
 			//
-			Util.forEach(intStream = testAndApply(Objects::nonNull, IntCollectionUtil.toIntArray(Util.getValue(entry)),
-					IntStream::of, null), x -> {
+			Util.forEach(Util.cast(IntStream.class, testAndApply(Objects::nonNull,
+					IntCollectionUtil.toIntArray(Util.getValue(entry)), IntStream::of, null)), x -> {
 						if (!IntIterableUtil.containsInt(intList, x)) {
 							intList.add(x);
 						}
@@ -1939,8 +1939,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 							"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InKatakana}[\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$")),
 							s, k)));
 			//
-			Util.forEach(intStream = testAndApply(Objects::nonNull, IntCollectionUtil.toIntArray(Util.getValue(entry)),
-					IntStream::of, null), x -> IntCollectionUtil.addInt(intList, x));
+			Util.forEach(
+					Util.cast(IntStream.class, testAndApply(Objects::nonNull,
+							IntCollectionUtil.toIntArray(Util.getValue(entry)), IntStream::of, null)),
+					x -> IntCollectionUtil.addInt(intList, x));
 			//
 		} // for
 			//
