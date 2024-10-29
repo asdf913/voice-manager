@@ -4179,6 +4179,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		String g21, g22, cpk, cpv, lcsk, lcsv;
 		//
+		TextStringBuilder tsbk = null, tsbv = null;
+		//
+		int length;
+		//
 		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$", s)),
 				line)) && Util.groupCount(m2) > 1) {
@@ -4221,6 +4225,27 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				MultimapUtil.put(multimap, lcsk, lcsv);
 				//
+			} else if (StringUtils.endsWith(g22, "ん")
+					&& StringUtils.isNotBlank(lcsv = longestCommonSubstring(g12, g22))) {
+				//
+				append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)),
+						StringUtils.substringAfter(g21, lcsk));
+				//
+				append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
+						StringUtils.substringAfter(g22, lcsv));
+				//
+				if (StringUtils.length(tsbk) == 2 && (length = StringUtils.length(tsbv)) > 1) {
+					//
+					MultimapUtil.put(multimap, substring(tsbk, 1, 2), substring(tsbv, length - 2, length));
+					//
+					deleteLastCharacter(tsbk);
+					//
+					deleteLast2Characters(tsbv);
+					//
+					MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
+					//
+				} // if
+					//
 			} // if
 				//
 		} // if
