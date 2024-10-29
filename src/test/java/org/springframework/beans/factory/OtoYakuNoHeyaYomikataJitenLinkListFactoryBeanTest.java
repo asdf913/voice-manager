@@ -49,13 +49,17 @@ import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFacto
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.util.ReflectionUtils;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.fasterxml.jackson.databind.cfg.MapperBuilder;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import com.fasterxml.jackson.databind.json.JsonMapper.Builder;
 
 class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 
@@ -251,10 +255,9 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 			//
 			new FailableStream<>(ObjectUtils.getIfNull(Util.stream(links), Stream::empty)).forEach(x -> {
 				//
-				System.out.println(ObjectMapperUtil.writeValueAsString(
-						objectMapper != null ? objectMapper.setDefaultPropertyInclusion(Include.NON_NULL)
-								.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true) : null,
-						x));
+				System.out.println(ObjectMapperUtil.writeValueAsString(setDefaultPropertyInclusion(
+						build(configure(JsonMapper.builder(), MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true)),
+						Include.NON_NULL), x));
 				//
 			});
 			//
@@ -324,10 +327,9 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 		} // if
 			//
 		Assertions.assertEquals("[{\"number\":1,\"text\":\"\"}]",
-				ObjectMapperUtil.writeValueAsString(objectMapper != null
-						? objectMapper = objectMapper.setDefaultPropertyInclusion(Include.NON_NULL)
-								.configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true)
-						: null, getObject(instance)));
+				ObjectMapperUtil.writeValueAsString(setDefaultPropertyInclusion(
+						build(configure(JsonMapper.builder(), MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true)),
+						Include.NON_NULL), getObject(instance)));
 		//
 		if (instance != null) {
 			//
@@ -359,6 +361,20 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 			//
 		Assertions.assertNull(getObject(instance));
 		//
+	}
+
+	private static ObjectMapper setDefaultPropertyInclusion(final ObjectMapper instance,
+			final JsonInclude.Include incl) {
+		return instance != null ? instance.setDefaultPropertyInclusion(incl) : null;
+	}
+
+	private static JsonMapper build(final MapperBuilder<JsonMapper, Builder> instance) {
+		return instance != null ? instance.build() : null;
+	}
+
+	private static MapperBuilder<JsonMapper, Builder> configure(final MapperBuilder<JsonMapper, Builder> instance,
+			final MapperFeature feature, final boolean state) {
+		return instance != null ? instance.configure(feature, state) : instance;
 	}
 
 	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
