@@ -129,7 +129,7 @@ public abstract class Util {
 		//
 	}
 
-	static void forEach(final IntStream intStream, final IntConsumer intConsumer) {
+	static void forEach(@Nullable final IntStream intStream, @Nullable final IntConsumer intConsumer) {
 		if (intStream != null && intConsumer != null) {
 			intStream.forEach(intConsumer);
 		}
