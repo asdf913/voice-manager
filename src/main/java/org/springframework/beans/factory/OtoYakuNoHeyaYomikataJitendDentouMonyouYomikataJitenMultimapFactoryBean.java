@@ -4244,11 +4244,18 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
 					//
-				} else if (StringUtils.length(tsbk) == 1 && StringUtils.length(tsbv) == 1
-						&& (length = StringUtils.length(g22)) > 1) {
+				} else if (StringUtils.length(tsbk) == 1) {
 					//
-					MultimapUtil.put(multimap, Util.toString(tsbk), StringUtils.substring(g22, length - 2, length));
-					//
+					if (StringUtils.length(tsbv) == 1 && (length = StringUtils.length(g22)) > 1) {
+						//
+						MultimapUtil.put(multimap, Util.toString(tsbk), StringUtils.substring(g22, length - 2, length));
+						//
+					} else if (StringUtils.length(tsbv) == 2) {
+						//
+						MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
+						//
+					} // if
+						//
 				} // if
 					//
 			} // if
