@@ -48,7 +48,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 			METHOD_TO_URL = null;
 
 	@BeforeAll
-	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
+	static void beforeClass() throws NoSuchMethodException {
 		//
 		final Class<?> clz = TiZuKiGouKanjiHiraganaMapFactoryBean.class;
 		//

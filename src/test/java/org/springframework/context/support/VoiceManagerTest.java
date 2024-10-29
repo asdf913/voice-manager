@@ -45,7 +45,6 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
@@ -2116,7 +2115,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testAfterPropertiesSet() throws IOException, IllegalAccessException, URISyntaxException {
+	void testAfterPropertiesSet() throws IOException, IllegalAccessException {
 		//
 		if (instance == null) {
 			//
@@ -5307,7 +5306,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testDelete() throws Exception {
+	void testDelete() {
 		//
 		Assertions.assertDoesNotThrow(() -> delete(null));
 		//
@@ -5325,7 +5324,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testDeleteOnExit() throws Exception {
+	void testDeleteOnExit() {
 		//
 		Assertions.assertDoesNotThrow(() -> deleteOnExit(null));
 		//
@@ -10649,8 +10648,7 @@ class VoiceManagerTest {
 			//
 	}
 
-	private static InvocationHandler createVoiceManagerIH() throws InstantiationException, IllegalAccessException,
-			IllegalArgumentException, InvocationTargetException, Throwable {
+	private static InvocationHandler createVoiceManagerIH() throws IllegalArgumentException, Throwable {
 		//
 		final Constructor<?> constructor = getDeclaredConstructor(CLASS_IH);
 		//

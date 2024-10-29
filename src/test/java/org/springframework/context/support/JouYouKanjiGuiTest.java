@@ -441,8 +441,7 @@ class JouYouKanjiGuiTest {
 		//
 	}
 
-	private static void setEcssVersion(final JouYouKanjiGui instance, final Object object)
-			throws NoSuchFieldException, IllegalAccessException {
+	private static void setEcssVersion(final JouYouKanjiGui instance, final Object object) {
 		if (instance != null) {
 			instance.setEcssVersion(object);
 		}

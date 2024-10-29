@@ -345,8 +345,7 @@ class CustomBeanFactoryPostProcessorTest {
 	}
 
 	@Test
-	void testOnApplicationEvent()
-			throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+	void testOnApplicationEvent() {
 		//
 		Assertions.assertDoesNotThrow(() -> onApplicationEvent(instance, null));
 		//
@@ -503,7 +502,7 @@ class CustomBeanFactoryPostProcessorTest {
 	}
 
 	@Test
-	void testErrorOrPrintStackTrace() throws IllegalAccessException, NoSuchFieldException {
+	void testErrorOrPrintStackTrace() throws NoSuchFieldException {
 		//
 		Assertions.assertDoesNotThrow(() -> errorOrPrintStackTrace(null, null, null));
 		//

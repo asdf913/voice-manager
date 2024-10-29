@@ -683,8 +683,7 @@ class StringMapFromResourceFactoryBeanTest {
 	}
 
 	@Test
-	void testObjectIntMap()
-			throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+	void testObjectIntMap() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		//
 		final Method containsKey = CLASS_OBJECT_INT_MAP != null
 				? CLASS_OBJECT_INT_MAP.getDeclaredMethod("containsKey", CLASS_OBJECT_INT_MAP, Object.class)

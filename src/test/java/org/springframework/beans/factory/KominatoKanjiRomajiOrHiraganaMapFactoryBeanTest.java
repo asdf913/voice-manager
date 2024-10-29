@@ -188,8 +188,7 @@ class KominatoKanjiRomajiOrHiraganaMapFactoryBeanTest {
 	}
 
 	@Test
-	void testAccumulate() throws NoSuchMethodException, NoSuchFieldException, InstantiationException,
-			IllegalAccessException, InvocationTargetException {
+	void testAccumulate() throws NoSuchMethodException, NoSuchFieldException {
 		//
 		Assertions.assertDoesNotThrow(() -> accumulate(null, null));
 		//

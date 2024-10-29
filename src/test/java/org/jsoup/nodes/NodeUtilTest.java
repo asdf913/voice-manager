@@ -137,8 +137,7 @@ class NodeUtilTest {
 	}
 
 	@Test
-	void testAbsUrl()
-			throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+	void testAbsUrl() {
 		//
 		Assertions.assertNull(NodeUtil.absUrl(null, null));
 		//

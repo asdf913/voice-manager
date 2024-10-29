@@ -446,8 +446,7 @@ class StringMultiMapFromResourceFactoryBeanTest {
 	}
 
 	@Test
-	void testObjectIntMap()
-			throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+	void testObjectIntMap() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		//
 		final Method containsKey = CLASS_OBJECT_INT_MAP != null
 				? CLASS_OBJECT_INT_MAP.getDeclaredMethod("containsKey", CLASS_OBJECT_INT_MAP, Object.class)
@@ -462,8 +461,7 @@ class StringMultiMapFromResourceFactoryBeanTest {
 	}
 
 	@Test
-	void testIH()
-			throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+	void testIH() throws ClassNotFoundException, NoSuchMethodException {
 		//
 		final Class<?> clz = Class
 				.forName("org.springframework.beans.factory.StringMultiMapFromResourceFactoryBean$IH");
