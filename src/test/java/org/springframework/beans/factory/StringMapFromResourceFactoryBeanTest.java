@@ -219,7 +219,7 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 		try (final Workbook wb = new XSSFWorkbook(); final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			//
-			IntStream.range(0, 2).forEach(x -> WorkbookUtil.createSheet(wb));
+			Util.forEach(IntStream.range(0, 2), x -> WorkbookUtil.createSheet(wb));
 			//
 			wb.write(baos);
 			//
@@ -291,7 +291,7 @@ class StringMapFromResourceFactoryBeanTest {
 				//
 				final Row row = sheet != null ? sheet.createRow(sheet.getPhysicalNumberOfRows()) : null;
 				//
-				IntStream.range(0, 1).forEach(y -> RowUtil.createCell(row, y));
+				Util.forEach(IntStream.range(0, 1), y -> RowUtil.createCell(row, y));
 				//
 			});
 			//
@@ -317,7 +317,7 @@ class StringMapFromResourceFactoryBeanTest {
 				//
 				final Row row = sheet != null ? sheet.createRow(sheet.getPhysicalNumberOfRows()) : null;
 				//
-				IntStream.range(0, 2).forEach(y -> RowUtil.createCell(row, y));
+				Util.forEach(IntStream.range(0, 2), y -> RowUtil.createCell(row, y));
 				//
 			});
 			//

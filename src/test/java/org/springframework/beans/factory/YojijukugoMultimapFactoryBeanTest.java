@@ -120,7 +120,7 @@ class YojijukugoMultimapFactoryBeanTest {
 			//
 			if (row != null) {
 				//
-				IntStream.range(0, 2).forEach(row::createCell);
+				Util.forEach(IntStream.range(0, 2), row::createCell);
 				//
 			} // if
 				//
@@ -128,7 +128,7 @@ class YojijukugoMultimapFactoryBeanTest {
 				//
 			if ((row = sheet != null ? sheet.createRow(sheet.getPhysicalNumberOfRows()) : null) != null) {
 				//
-				IntStream.range(0, 2).forEach(row::createCell);
+				Util.forEach(IntStream.range(0, 2), row::createCell);
 				//
 			} // if
 				//
