@@ -38,7 +38,7 @@ import com.google.common.reflect.Reflection;
 
 class StringMapFromResourceFactoryBeanTest {
 
-	private static Method METHOD_TEST_AND_ACCEPT, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS, METHOD_TEST, METHOD_CREATE_MAP,
+	private static Method METHOD_TEST_AND_ACCEPT, METHOD_GET_PHYSICAL_NUMBER_OF_CELLS, METHOD_CREATE_MAP,
 			METHOD_GET_VALUE_CELL_AND_FORMULA_EVALUATOR, METHOD_GET_VALUE_CELL = null;
 
 	private static Class<?> CLASS_OBJECT_INT_MAP = null;
