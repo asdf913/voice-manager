@@ -47,8 +47,8 @@ public class UrlAnnotationResource implements Resource {
 
 	private static final Logger LOG = LoggerFactory.getLogger(UrlAnnotationResource.class);
 
-	@Override
 	@Nullable
+	@Override
 	public InputStream getInputStream() throws IOException {
 		//
 		Properties properties = null;
