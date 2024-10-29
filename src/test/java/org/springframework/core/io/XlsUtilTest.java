@@ -35,7 +35,7 @@ class XlsUtilTest {
 			METHOD_GET_RESOURCE_AS_STREAM, METHOD_GET_ENTRY_NAMES = null;
 
 	@BeforeAll
-	static void beforeClass() throws NoSuchMethodException, ClassNotFoundException {
+	static void beforeClass() throws NoSuchMethodException {
 		//
 		final Class<?> clz = XlsUtil.class;
 		//

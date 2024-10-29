@@ -340,7 +340,7 @@ class IniAsPropertiesResourceTest {
 	}
 
 	@Test
-	void testGetFilename() throws IOException {
+	void testGetFilename() {
 		//
 		Assertions.assertNull(new IniAsPropertiesResource(null).getFilename());
 		//

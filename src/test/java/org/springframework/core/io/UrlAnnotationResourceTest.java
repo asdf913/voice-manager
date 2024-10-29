@@ -395,7 +395,7 @@ class UrlAnnotationResourceTest {
 	}
 
 	@Test
-	void testGetInputStream() throws IOException {
+	void testGetInputStream() {
 		//
 		Assertions.assertDoesNotThrow(() -> {
 			//
