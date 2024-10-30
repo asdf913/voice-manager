@@ -4296,77 +4296,78 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection12B2(
 			final PatternMap patternMap, final int index, final String line, final Map<String, String> map) {
 		//
+		Matcher m2;
+		//
+		if (!Util.matches(m2 = toMatcher12B1(MapUtils.getObject(map, "s"), patternMap, line))
+				|| Util.groupCount(m2) <= 1) {
+			//
+			return null;
+			//
+		} // if
+			//
 		final Multimap<String, String> multimap = LinkedHashMultimap.create();
 		//
 		final IntCollection intCollection = IntList.create();
 		//
-		Matcher m2;
+		final String g11 = MapUtils.getObject(map, "g11");
 		//
-		if (Util.matches(m2 = toMatcher12B1(MapUtils.getObject(map, "s"), patternMap, line))
-				&& Util.groupCount(m2) > 1) {
+		final String g12 = MapUtils.getObject(map, "g12");
+		//
+		final String g21 = Util.group(m2, 1);
+		//
+		final String g22 = Util.group(m2, 2);
+		//
+		String lcsk, lcsv;
+		//
+		int length;
+		//
+		if (Boolean.logicalAnd(StringUtils.endsWith(g22, "ん"),
+				StringUtils.isNotBlank(lcsv = longestCommonSubstring(g12, g22)))) {
 			//
-			final String g11 = MapUtils.getObject(map, "g11");
+			final TextStringBuilder tsbk = new TextStringBuilder(
+					StringUtils.substringAfter(g21, longestCommonSubstring(g11, g21)));
 			//
-			final String g12 = MapUtils.getObject(map, "g12");
+			final TextStringBuilder tsbv = new TextStringBuilder(StringUtils.substringAfter(g22, lcsv));
 			//
-			final String g21 = Util.group(m2, 1);
-			//
-			final String g22 = Util.group(m2, 2);
-			//
-			String lcsk, lcsv;
-			//
-			int length;
-			//
-			if (Boolean.logicalAnd(StringUtils.endsWith(g22, "ん"),
-					StringUtils.isNotBlank(lcsv = longestCommonSubstring(g12, g22)))) {
+			if (Boolean.logicalAnd(StringUtils.length(tsbk) == 2, (length = StringUtils.length(tsbv)) > 1)) {
 				//
-				final TextStringBuilder tsbk = new TextStringBuilder(
-						StringUtils.substringAfter(g21, longestCommonSubstring(g11, g21)));
+				MultimapUtil.put(multimap, substring(tsbk, 1, 2), substring(tsbv, length - 2, length));
 				//
-				final TextStringBuilder tsbv = new TextStringBuilder(StringUtils.substringAfter(g22, lcsv));
+				deleteLastCharacter(tsbk);
 				//
-				if (Boolean.logicalAnd(StringUtils.length(tsbk) == 2, (length = StringUtils.length(tsbv)) > 1)) {
+				deleteLast2Characters(tsbv);
+				//
+				MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
+				//
+			} else if (StringUtils.length(tsbk) == 1) {
+				//
+				if (Boolean.logicalAnd(StringUtils.length(tsbv) == 1, (length = StringUtils.length(g22)) > 1)) {
 					//
-					MultimapUtil.put(multimap, substring(tsbk, 1, 2), substring(tsbv, length - 2, length));
+					MultimapUtil.put(multimap, Util.toString(tsbk), StringUtils.substring(g22, length - 2, length));
 					//
-					deleteLastCharacter(tsbk);
-					//
-					deleteLast2Characters(tsbv);
+				} else if (StringUtils.length(tsbv) == 2) {
 					//
 					MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
 					//
-				} else if (StringUtils.length(tsbk) == 1) {
-					//
-					if (Boolean.logicalAnd(StringUtils.length(tsbv) == 1, (length = StringUtils.length(g22)) > 1)) {
-						//
-						MultimapUtil.put(multimap, Util.toString(tsbk), StringUtils.substring(g22, length - 2, length));
-						//
-					} else if (StringUtils.length(tsbv) == 2) {
-						//
-						MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
-						//
-					} // if
-						//
 				} // if
 					//
-			} else if (Boolean.logicalAnd(
-					StringUtils.length(lcsk = longestCommonSubstring(g11, Util.group(m2, 1))) == 1,
-					StringUtils.isNotBlank(lcsv))) {
-				//
-				MultimapUtil.put(multimap, lcsk, lcsv);
-				//
-			} else if (StringUtils.length(g21) == StringUtils.length(g22)) {
-				//
-				MultimapUtil.put(multimap, g21, g22);
-				//
-			} else if (Boolean.logicalAnd((length = StringUtils.length(g22)) > 1,
-					StringUtils.startsWith(getCharacterName(g22, length - 2), "HIRAGANA LETTER SMALL"))) {
-				//
-				MultimapUtil.put(multimap, StringUtils.substring(g21, StringUtils.length(g21) - 1),
-						StringUtils.substring(g22, length - 3));
-				//
 			} // if
 				//
+		} else if (Boolean.logicalAnd(StringUtils.length(lcsk = longestCommonSubstring(g11, Util.group(m2, 1))) == 1,
+				StringUtils.isNotBlank(lcsv))) {
+			//
+			MultimapUtil.put(multimap, lcsk, lcsv);
+			//
+		} else if (StringUtils.length(g21) == StringUtils.length(g22)) {
+			//
+			MultimapUtil.put(multimap, g21, g22);
+			//
+		} else if (Boolean.logicalAnd((length = StringUtils.length(g22)) > 1,
+				StringUtils.startsWith(getCharacterName(g22, length - 2), "HIRAGANA LETTER SMALL"))) {
+			//
+			MultimapUtil.put(multimap, StringUtils.substring(g21, StringUtils.length(g21) - 1),
+					StringUtils.substring(g22, length - 3));
+			//
 		} // if
 			//
 		return Pair.of(multimap, intCollection);
