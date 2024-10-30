@@ -4360,7 +4360,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				int lastIndexOf;
 				//
-				if (StringUtils.length(cpk) == 1 && StringUtils.length(csk) == 2) {
+				if (Boolean.logicalAnd(StringUtils.length(cpk) == 1, StringUtils.length(csk) == 2)) {
 					//
 					final String csv = Strings.commonSuffix(g12, g22);
 					//
