@@ -69,6 +69,8 @@ import it.unimi.dsi.fastutil.ints.IntObjectPair;
 public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean
 		implements FactoryBean<Multimap<String, String>> {
 
+	private static final String HIRAGANA_LETTER_SMALL = "HIRAGANA LETTER SMALL";
+
 	private static final Pattern PATTERN_KANJI_HIRAGANA = Pattern.compile(
 			"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$");
 
@@ -2705,7 +2707,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			for (int j = StringUtils.length(tsbv) - 1; j >= 0; j--) {
 				//
-				testAndAccept((a, b) -> StringUtils.startsWith(Character.getName(a.charAt(b)), "HIRAGANA LETTER SMALL"),
+				testAndAccept((a, b) -> StringUtils.startsWith(Character.getName(a.charAt(b)), HIRAGANA_LETTER_SMALL),
 						tsbv, j, (a, b) -> a.deleteCharAt(b));
 				//
 			} // for
@@ -4364,7 +4366,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			MultimapUtil.put(multimap, g21, g22);
 			//
 		} else if (Boolean.logicalAnd((length = StringUtils.length(g22)) > 1,
-				StringUtils.startsWith(getCharacterName(g22, length - 2), "HIRAGANA LETTER SMALL"))) {
+				StringUtils.startsWith(getCharacterName(g22, length - 2), HIRAGANA_LETTER_SMALL))) {
 			//
 			MultimapUtil.put(multimap, StringUtils.substring(g21, StringUtils.length(g21) - 1),
 					StringUtils.substring(g22, length - 3));
@@ -4442,7 +4444,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				String cpk, csk;
 				//
 				if (length(ints = toArray(filter(IntStream.range(0, StringUtils.length(g22)),
-						x -> StringUtils.startsWith(getCharacterName(g22, x), "HIRAGANA LETTER SMALL")))) == 1) {
+						x -> StringUtils.startsWith(getCharacterName(g22, x), HIRAGANA_LETTER_SMALL)))) == 1) {
 					//
 					final int i = ints[0];
 					//
