@@ -4466,8 +4466,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					IntCollectionUtil.addInt(intCollection, index);
 					//
-				} else if (StringUtils.length(cpk = Strings.commonPrefix(g11, g21)) == 1
-						&& StringUtils.length(csk = Strings.commonSuffix(g11, g21)) == 1) {
+				} else if (Boolean.logicalAnd(StringUtils.length(cpk = Strings.commonPrefix(g11, g21)) == 1,
+						StringUtils.length(csk = Strings.commonSuffix(g11, g21)) == 1)) {
 					//
 					final String cpv = Strings.commonPrefix(g12, g22);
 					//
