@@ -4148,7 +4148,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		final List<ObjIntObjObjFunction<PatternMap, String, Map<String, String>, Entry<Multimap<String, String>, IntCollection>>> functions = Arrays
 				.asList(OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection12B1,
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection12B2,
-						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection12B3);
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection12B3,
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection12B4);
 		//
 		int length;
 		//
@@ -4498,8 +4499,44 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-		} else if (Boolean.logicalAnd(StringUtils.isNotBlank(Strings.commonPrefix(g11, g21)),
-				StringUtils.endsWith(g22, "ん"))) {
+		} // if
+			//
+		return Pair.of(multimap, intCollection);
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection12B4(
+			final PatternMap patternMap, final int index, final String line, final Map<String, String> map) {
+		//
+		final Matcher m2 = toMatcher12B1(MapUtils.getObject(map, "s"), patternMap, line);
+		//
+		if (!Util.matches(m2) || Util.groupCount(m2) <= 1) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Multimap<String, String> multimap = LinkedHashMultimap.create();
+		//
+		final IntCollection intCollection = IntList.create();
+		//
+		final String g11 = MapUtils.getObject(map, "g11");
+		//
+		final String g12 = MapUtils.getObject(map, "g12");
+		//
+		final String g21 = Util.group(m2, 1);
+		//
+		final String g22 = Util.group(m2, 2);
+		//
+		int length, lastIndexOf;
+		//
+		int[] ints;
+		//
+		final String cpk = Strings.commonPrefix(g11, g21);
+		//
+		TextStringBuilder tsbk = null, tsbv = null;
+		//
+		if (Boolean.logicalAnd(StringUtils.isNotBlank(cpk), StringUtils.endsWith(g22, "ん"))) {
 			//
 			final String cpv = Strings.commonPrefix(g12, g22);
 			//
