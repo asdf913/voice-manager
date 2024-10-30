@@ -204,8 +204,9 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 			//
 			toString = Objects.toString(m);
 			//
-			if ((Objects.equals(name, "getCommonSuffix")
-					&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class }))
+			if (ArrayUtils.contains(new Class<?>[] { Boolean.TYPE, Long.TYPE }, m.getReturnType())
+					|| (Objects.equals(name, "getCommonSuffix")
+							&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class }))
 					|| (Objects.equals(name, "toMultimapAndIntCollection2") && Arrays.equals(parameterTypes,
 							new Class<?>[] { PatternMap.class, Iterable.class, Entry.class }))
 					|| (Objects.equals(name, "toMultimapAndIntCollection4A") && Arrays.equals(parameterTypes,
@@ -235,8 +236,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 					|| (Objects.equals(name, "toMultimapAndIntCollection12B2") && Arrays.equals(parameterTypes,
 							new Class<?>[] { PatternMap.class, Integer.TYPE, String.class, Map.class }))
 					|| (Objects.equals(name, "toMultimapAndIntCollection12B3") && Arrays.equals(parameterTypes,
-							new Class<?>[] { PatternMap.class, Integer.TYPE, String.class, Map.class }))
-					|| Objects.equals(Boolean.TYPE, m.getReturnType())) {
+							new Class<?>[] { PatternMap.class, Integer.TYPE, String.class, Map.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
@@ -538,9 +538,10 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 			//
 		} // if
 			//
-		Assertions.assertEquals("({間明大明=[まあきだいみょう], 文=[もん], 丹=[たん], 大=[だい], 明=[みょう]},[0])",
+		Assertions.assertEquals(
+				"({間明大明=[まあきだいみょう], 文=[もん], 丹=[たん], 大=[だい], 明=[みょう], 大十絣=[だいじゅうがすり], 十=[じゅう], 絣=[かすり]},[0, 4])",
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 間明大明（まあきだいみょう）"),
-						Arrays.asList(null, "大牡丹文（おおぼたんもん）", "大文字文（だいもんじもん）", "大大明（おおだいみょう）"))));
+						Arrays.asList(null, "大牡丹文（おおぼたんもん）", "大文字文（だいもんじもん）", "大大明（おおだいみょう）", "大十絣（だいじゅうがすり）"))));
 		//
 	}
 
