@@ -4003,7 +4003,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		Util.forEach(
 				Arrays.asList(Triplet.with("寸", "ずん", "すん"), Triplet.with("高", "だか", "たか"),
-						Triplet.with("絣", "がすり", "かすり")),
+						Triplet.with("絣", "がすり", "かすり"), Triplet.with("縞", "じま", "しま")),
 				//
 				a -> testAndAccept(
 						b -> b != null
@@ -4438,6 +4438,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 			} else if (StringUtils.length(g21) == 3) {
 				//
+				String cpk, csk;
+				//
 				if (length(ints = toArray(filter(IntStream.range(0, StringUtils.length(g22)),
 						x -> StringUtils.startsWith(getCharacterName(g22, x), "HIRAGANA LETTER SMALL")))) == 1) {
 					//
@@ -4460,6 +4462,19 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 									StringUtils.substring(g22, lastIndexOf - 1), StringUtils.substring(g21, 1, 2),
 									StringUtils.substring(g22, lastIndexOf - 1, lastIndexOf + 1),
 									StringUtils.substring(g21, 2), StringUtils.substring(g22, lastIndexOf + 1)));
+					//
+					IntCollectionUtil.addInt(intCollection, index);
+					//
+				} else if (StringUtils.length(cpk = Strings.commonPrefix(g11, g21)) == 1
+						&& StringUtils.length(csk = Strings.commonSuffix(g11, g21)) == 1) {
+					//
+					final String cpv = Strings.commonPrefix(g12, g22);
+					//
+					final String csv = Strings.commonSuffix(g12, g22);
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(g21, g22, cpk, cpv, StringUtils.substringBetween(g21, cpk, csk),
+									StringUtils.substringBetween(g22, cpv, csv), csk, csv));
 					//
 					IntCollectionUtil.addInt(intCollection, index);
 					//
