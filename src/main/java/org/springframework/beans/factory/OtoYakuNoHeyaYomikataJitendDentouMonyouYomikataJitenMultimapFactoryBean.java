@@ -4352,6 +4352,24 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				MultimapUtil.put(multimap, g21, g22);
 				//
+			} else if (StringUtils.length(g11) == StringUtils.length(g21)) {
+				//
+				final String cpk = Strings.commonPrefix(g11, g21);
+				//
+				final String csk = Strings.commonSuffix(g11, g21);
+				//
+				if (StringUtils.length(cpk) == 1 && StringUtils.length(csk) == 2) {
+					//
+					final String csv = Strings.commonSuffix(g12, g22);
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(g21, g22, StringUtils.substringBetween(g21, cpk, csk),
+									StringUtils.substringBetween(g22, Strings.commonPrefix(g12, g22), csv), csk, csv));
+					//
+					IntCollectionUtil.addInt(intCollection, index);
+					//
+				} // if
+					//
 			} // if
 				//
 		} // if
