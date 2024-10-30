@@ -4241,9 +4241,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			MultimapUtil.put(multimap, Util.group(m2, 1), Util.group(m2, 2));
 			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				s)), line)) && Util.groupCount(m2) > 1) {
+		} else if (Util.matches(m2 = toMatcher12B1(s, patternMap, line)) && Util.groupCount(m2) > 1) {
 			//
 			String g21, g22, cpk, cpv, lcsk, lcsv;
 			//
@@ -4285,6 +4283,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
+	private static Matcher toMatcher12B1(final String s, final PatternMap patternMap, final String line) {
+		//
+		return Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+				s)), line);
+		//
+	}
+
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection12B2(
 			final PatternMap patternMap, final int index, final String line, final Map<String, String> map) {
 		//
@@ -4294,9 +4300,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		Matcher m2;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				MapUtils.getObject(map, "s"))), line)) && Util.groupCount(m2) > 1) {
+
+		//
+		if (Util.matches(m2 = toMatcher12B1(MapUtils.getObject(map, "s"), patternMap, line))
+				&& Util.groupCount(m2) > 1) {
 			//
 			final String g11 = MapUtils.getObject(map, "g11");
 			//
@@ -4369,9 +4376,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		Matcher m2;
 		//
-		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				MapUtils.getObject(map, "s"))), line)) && Util.groupCount(m2) > 1) {
+		if (Util.matches(m2 = toMatcher12B1(MapUtils.getObject(map, "s"), patternMap, line))
+				&& Util.groupCount(m2) > 1) {
 			//
 			final String g11 = MapUtils.getObject(map, "g11");
 			//
