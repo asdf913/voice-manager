@@ -4196,6 +4196,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
+	@Nullable
 	private static Iterable<Entry<String, IntObjectPair<String>>> toIterable12B(final Iterable<String> lines,
 			final String g11) {
 		//
