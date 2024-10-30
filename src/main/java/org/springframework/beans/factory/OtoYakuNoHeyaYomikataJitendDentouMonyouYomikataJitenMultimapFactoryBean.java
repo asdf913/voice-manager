@@ -4342,8 +4342,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 				} // if
 					//
-			} else if (StringUtils.length(lcsk = longestCommonSubstring(g11, Util.group(m2, 1))) == 1
-					&& StringUtils.isNotBlank(lcsv)) {
+			} else if (Boolean.logicalAnd(
+					StringUtils.length(lcsk = longestCommonSubstring(g11, Util.group(m2, 1))) == 1,
+					StringUtils.isNotBlank(lcsv))) {
 				//
 				MultimapUtil.put(multimap, lcsk, lcsv);
 				//
