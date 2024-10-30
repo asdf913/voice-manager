@@ -4476,6 +4476,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		return instance != null ? Character.getName(instance.charAt(index)) : null;
 	}
 
+	@Nullable
 	private static int[] toArray(@Nullable final IntStream instance) {
 		return instance != null ? instance.toArray() : null;
 	}
@@ -4484,6 +4485,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		return instance != null ? instance.length : 0;
 	}
 
+	@Nullable
 	private static IntStream filter(@Nullable final IntStream intStream, final IntPredicate intPredicate) {
 		return intStream != null ? intStream.filter(intPredicate) : intStream;
 	}
