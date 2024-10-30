@@ -4020,7 +4020,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		final Multimap<String, String> mm = LinkedHashMultimap
 				.create(ImmutableMultimap.of("祝", "いわい", "唐", "う", "唐", "からくさ", "大", "う", "大", "き"));
 		//
-		MultimapUtil.putAll(mm, ImmutableMultimap.of("大", "ま", "大", "ょう", "持", "もち", "間", "ょう"));
+		MultimapUtil.putAll(mm, ImmutableMultimap.of("大", "ま", "大", "ょう", "持", "もち", "間", "ょう", "縫", "ぬい"));
 		//
 		Util.forEach(IterableUtils.toList(MultimapUtil.entries(mm)),
 				x -> testAndAccept(
@@ -4298,15 +4298,15 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String g12 = MapUtils.getObject(map, "g12");
 		//
-		String g21, g22, lcsv;
-		//
-		TextStringBuilder tsbk = null, tsbv = null;
-		//
-		int length;
-		//
 		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
 				s)), line)) && Util.groupCount(m2) > 1) {
+			//
+			String g21, g22, lcsk, lcsv;
+			//
+			TextStringBuilder tsbk = null, tsbv = null;
+			//
+			int length;
 			//
 			if (Boolean.logicalAnd(StringUtils.endsWith(g22 = Util.group(m2, 2), "ん"),
 					StringUtils.isNotBlank(lcsv = longestCommonSubstring(g12, g22)))) {
@@ -4341,6 +4341,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 				} // if
 					//
+			} else if (StringUtils.length(lcsk = longestCommonSubstring(g11, Util.group(m2, 1))) == 1
+					&& StringUtils.isNotBlank(lcsv)) {
+				//
+				MultimapUtil.put(multimap, lcsk, lcsv);
+				//
 			} // if
 				//
 		} // if
