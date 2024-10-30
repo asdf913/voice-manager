@@ -4358,6 +4358,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				final String csk = Strings.commonSuffix(g11, g21);
 				//
+				int lastIndexOf;
+				//
 				if (StringUtils.length(cpk) == 1 && StringUtils.length(csk) == 2) {
 					//
 					final String csv = Strings.commonSuffix(g12, g22);
@@ -4367,6 +4369,25 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 									StringUtils.substringBetween(g22, Strings.commonPrefix(g12, g22), csv), csk, csv));
 					//
 					IntCollectionUtil.addInt(intCollection, index);
+					//
+				} else if ((lastIndexOf = StringUtils.lastIndexOf(g22, "ん")) == StringUtils.length(g22) - 1
+						&& lastIndexOf - StringUtils.indexOf(g22, "ん") == 2) {
+					//
+					append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)),
+							g21);
+					//
+					append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
+							g22);
+					//
+					MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+							substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
+					//
+					deleteLastCharacter(tsbk);
+					//
+					deleteLast2Characters(tsbv);
+					//
+					MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+							substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 					//
 				} // if
 					//
