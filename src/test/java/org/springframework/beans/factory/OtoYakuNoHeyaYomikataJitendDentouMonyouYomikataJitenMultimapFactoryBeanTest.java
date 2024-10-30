@@ -516,7 +516,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 縫取模様（ぬいとりもよう）"),
 						Arrays.asList(null, "縫箔（ぬいはく）", "縫取紋（ぬいとりもん）"))));
 		//
-		Assertions.assertEquals("({葡萄唐草=[ぶどうからくさ], 草=[くさ], 文=[もん]},[0])",
+		Assertions.assertEquals("({葡萄唐草=[ぶどうからくさ], 草=[くさ], 文=[もん], 花=[ばな]},[0])",
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 葡萄唐草（ぶどうからくさ）"),
 						Arrays.asList(null, "草花文（くさばなもん）", "唐草文（からくさもん）"))));
 		//
