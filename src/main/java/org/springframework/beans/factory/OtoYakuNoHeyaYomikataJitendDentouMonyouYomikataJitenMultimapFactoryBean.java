@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -4145,54 +4146,74 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		int length;
 		//
-		for (int i = StringUtils.length(g11) - 1; Boolean.logicalAnd(i >= 0, Util.iterator(functions) != null); i--) {
+		final Iterable<Entry<String, IntObjectPair<String>>> siops = toIterable12B(lines, g11);
+		//
+		Entry<String, IntObjectPair<String>> siop = null;
+		//
+		IntObjectPair<String> value = null;
+		//
+		for (int i = 0; Boolean.logicalAnd(i < IterableUtils.size(siops), Util.iterator(functions) != null); i++) {
 			//
-			for (int j = 0; j < IterableUtils.size(lines); j++) {
+			if ((siop = IterableUtils.get(siops, i)) == null || (value = siop.getValue()) == null) {
 				//
-				if (keyIntEquals(iop, j)) {
+				continue;
+				//
+			} // if
+				//
+			if (map == null) {
+				//
+				Util.putAll(map = Reflection.newProxy(Map.class, new IH()), Map.of("g11", g11, "g12", g12));
+				//
+			} // if
+				//
+			Util.put(map, "s", Util.getKey(siop));
+			//
+			length = MultimapUtil.size(multimap);
+			//
+			for (final ObjIntObjObjFunction<PatternMap, String, Map<String, String>, Entry<Multimap<String, String>, IntCollection>> function : functions) {
+				//
+				if (Boolean.logicalOr((temp = ObjIntObjObjFunction.apply(function, patternMap,
+						Util.getValue(siop).keyInt(), PairUtil.right(value), map)) == null,
+						length != MultimapUtil.size(multimap))) {
 					//
 					continue;
 					//
 				} // if
 					//
-				if (map == null) {
-					//
-					Util.putAll(map = Reflection.newProxy(Map.class, new IH()), Map.of("g11", g11, "g12", g12));
-					//
-				} // if
-					//
-				Util.put(map, "s", StringUtils.substring(g11, i, i + 1));
+				MultimapUtil.putAll(multimap, Util.getKey(temp));
 				//
-				length = MultimapUtil.size(multimap);
+				Util.forEach(
+						Util.cast(IntStream.class,
+								testAndApply(Objects::nonNull, IntCollectionUtil.toIntArray(Util.getValue(temp)),
+										IntStream::of, null)),
+						x -> testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b), intCollection, x,
+								IntCollectionUtil::addInt));
 				//
-				for (final ObjIntObjObjFunction<PatternMap, String, Map<String, String>, Entry<Multimap<String, String>, IntCollection>> function : functions) {
-					//
-					if (Boolean
-							.logicalOr(
-									(temp = ObjIntObjObjFunction.apply(function, patternMap, j,
-											IterableUtils.get(lines, j), map)) == null,
-									length != MultimapUtil.size(multimap))) {
-						//
-						continue;
-						//
-					} // if
-						//
-					MultimapUtil.putAll(multimap, Util.getKey(temp));
-					//
-					Util.forEach(
-							Util.cast(IntStream.class,
-									testAndApply(Objects::nonNull, IntCollectionUtil.toIntArray(Util.getValue(temp)),
-											IntStream::of, null)),
-							x -> testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b), intCollection, x,
-									IntCollectionUtil::addInt));
-					//
-				} // for
-					//
 			} // for
 				//
 		} // for
 			//
 		return Pair.of(multimap, intCollection);
+		//
+	}
+
+	private static Iterable<Entry<String, IntObjectPair<String>>> toIterable12B(final Iterable<String> lines,
+			final String g11) {
+		//
+		Collection<Entry<String, IntObjectPair<String>>> entries = null;
+		//
+		for (int i = StringUtils.length(g11) - 1; i >= 0; i--) {
+			//
+			for (int j = 0; j < IterableUtils.size(lines); j++) {
+				//
+				Util.add(entries = ObjectUtils.getIfNull(entries, ArrayList::new), Pair
+						.of(StringUtils.substring(g11, i, i + 1), IntObjectPair.of(j, IterableUtils.get(lines, j))));
+				//
+			} // for
+				//
+		} // for
+			//
+		return entries;
 		//
 	}
 
