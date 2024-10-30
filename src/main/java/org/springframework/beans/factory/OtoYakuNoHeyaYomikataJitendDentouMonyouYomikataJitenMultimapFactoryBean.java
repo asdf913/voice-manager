@@ -4429,8 +4429,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 				} // if
 					//
-			} else if (Boolean.logicalAnd((length = StringUtils.length(g22)) > 1, StringUtils.startsWith(
-					Character.getName(g22 != null ? g22.charAt(length - 2) : null), "HIRAGANA LETTER SMALL"))) {
+			} else if (Boolean.logicalAnd((length = StringUtils.length(g22)) > 1,
+					StringUtils.startsWith(getCharacterName(g22, length - 2), "HIRAGANA LETTER SMALL"))) {
 				//
 				MultimapUtil.put(multimap, StringUtils.substring(g21, StringUtils.length(g21) - 1),
 						StringUtils.substring(g22, length - 3));
@@ -4438,8 +4438,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			} else if (StringUtils.length(g21) == 3) {
 				//
 				if (length(ints = toArray(filter(IntStream.range(0, StringUtils.length(g22)),
-						x -> StringUtils.startsWith(g22 != null ? Character.getName(g22.charAt(x)) : null,
-								"HIRAGANA LETTER SMALL")))) == 1) {
+						x -> StringUtils.startsWith(getCharacterName(g22, x), "HIRAGANA LETTER SMALL")))) == 1) {
 					//
 					final int i = ints[0];
 					//
@@ -4471,6 +4470,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		return Pair.of(multimap, intCollection);
 		//
+	}
+
+	private static String getCharacterName(final String instance, final int index) {
+		return instance != null ? Character.getName(instance.charAt(index)) : null;
 	}
 
 	private static int[] toArray(@Nullable final IntStream instance) {
