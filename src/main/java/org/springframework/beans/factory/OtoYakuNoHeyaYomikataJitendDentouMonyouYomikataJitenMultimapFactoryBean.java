@@ -4472,6 +4472,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
+	@Nullable
 	private static String getCharacterName(@Nullable final String instance, final int index) {
 		return instance != null ? Character.getName(instance.charAt(index)) : null;
 	}
