@@ -4166,8 +4166,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				for (final ObjIntObjObjFunction<PatternMap, String, Map<String, String>, Entry<Multimap<String, String>, IntCollection>> function : functions) {
 					//
-					if ((temp = ObjIntObjObjFunction.apply(function, patternMap, j, IterableUtils.get(lines, j),
-							map)) == null || length != MultimapUtil.size(multimap)) {
+					if (Boolean
+							.logicalOr(
+									(temp = ObjIntObjObjFunction.apply(function, patternMap, j,
+											IterableUtils.get(lines, j), map)) == null,
+									length != MultimapUtil.size(multimap))) {
 						//
 						continue;
 						//
