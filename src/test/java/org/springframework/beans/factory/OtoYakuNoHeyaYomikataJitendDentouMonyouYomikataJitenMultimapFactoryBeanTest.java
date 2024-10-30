@@ -511,18 +511,19 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 				.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 団禧字文（だんきじもん）"), null)));
 		//
 		Assertions.assertEquals(
-				"({片子持縞=[かたこもちじま], 縞=[しま], 文=[もん], 雲=[くも], 片=[かた], 片木=[へぎ], 片滝縞=[かたたきじま], 滝=[たき]},[0, 1, 3, 5])",
+				"({片子持縞=[かたこもちじま], 縞=[しま], 文=[もん], 雲=[くも], 片=[かた], 片木=[へぎ], 片滝縞=[かたたきじま], 滝=[たき], 水=[すい], 流=[りゅう]},[0, 1, 3, 5])",
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 片子持縞（かたこもちじま）"),
-						Arrays.asList(null, "縞（しま）", "片男波文（かたおなみもん）", "片木（へぎ）", "子持雲文（こもちくももん）", "片滝縞（かたたきじま）"))));
+						Arrays.asList(null, "縞（しま）", "片男波文（かたおなみもん）", "片木（へぎ）", "子持雲文（こもちくももん）", "片滝縞（かたたきじま）",
+								"片輪車流水文（かたわぐるまりゅうすいもん）"))));
 		//
 		Assertions.assertEquals(
 				"({縫取模様=[ぬいとりもよう], 縫箔=[ぬいはく], 箔=[はく], 紋=[もん], 縫目模様=[ぬいめもよう], 目=[め], 模様=[もよう], 縫文様=[ぬいもんよう], 文様=[もんよう], 文=[もん], 様=[よう]},[0, 1, 3, 4])",
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 縫取模様（ぬいとりもよう）"),
 						Arrays.asList(null, "縫箔（ぬいはく）", "縫取紋（ぬいとりもん）", "縫目模様（ぬいめもよう）", "縫文様（ぬいもんよう）"))));
 		//
-		Assertions.assertEquals("({葡萄唐草=[ぶどうからくさ], 草=[くさ], 文=[もん], 葡萄文=[ぶどうもん], 葡萄=[ぶどう]},[0, 3])",
+		Assertions.assertEquals("({葡萄唐草=[ぶどうからくさ], 草=[くさ], 文=[もん], 葡萄文=[ぶどうもん], 葡萄=[ぶどう], 栗鼠=[りす]},[0, 3, 4])",
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 葡萄唐草（ぶどうからくさ）"),
-						Arrays.asList(null, "草花文（くさばなもん）", "唐草文（からくさもん）", "葡萄文（ぶどうもん）"))));
+						Arrays.asList(null, "草花文（くさばなもん）", "唐草文（からくさもん）", "葡萄文（ぶどうもん）", "葡萄栗鼠文（ぶどうりすもん）"))));
 		//
 	}
 

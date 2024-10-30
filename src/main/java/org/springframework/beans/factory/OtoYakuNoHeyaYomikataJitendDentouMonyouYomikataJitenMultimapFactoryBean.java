@@ -4404,9 +4404,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		int[] ints;
 		//
+		final String cpk = Strings.commonPrefix(g11, g21);
+		//
+		TextStringBuilder tsbk = null, tsbv = null;
+		//
 		if (StringUtils.length(g11) == StringUtils.length(g21)) {
-			//
-			final String cpk = Strings.commonPrefix(g11, g21);
 			//
 			final String csk = Strings.commonSuffix(g11, g21);
 			//
@@ -4422,14 +4424,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} else if ((lastIndexOf = StringUtils.lastIndexOf(g22, "ん")) == StringUtils.length(g22) - 1) {
 				//
-				final TextStringBuilder tsbk = new TextStringBuilder(g21);
-				//
-				final TextStringBuilder tsbv = new TextStringBuilder(g22);
-				//
 				if (lastIndexOf - StringUtils.indexOf(g22, "ん") == 2) {
 					//
-					MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-							substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
+					MultimapUtil.put(multimap,
+							substring(tsbk = new TextStringBuilder(g21), (length = StringUtils.length(tsbk)) - 1,
+									length),
+							substring(tsbv = new TextStringBuilder(g22), (length = StringUtils.length(tsbv)) - 2,
+									length));
 					//
 					deleteLastCharacter(tsbk);
 					//
@@ -4444,7 +4445,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 		} else if (StringUtils.length(g21) == 3) {
 			//
-			String cpk, csk;
+			String csk;
 			//
 			if (length(ints = toArray(filter(IntStream.range(0, StringUtils.length(g22)),
 					x -> StringUtils.startsWith(getCharacterName(g22, x), HIRAGANA_LETTER_SMALL)))) == 1) {
@@ -4471,7 +4472,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				IntCollectionUtil.addInt(intCollection, index);
 				//
-			} else if (Boolean.logicalAnd(StringUtils.length(cpk = Strings.commonPrefix(g11, g21)) == 1,
+			} else if (Boolean.logicalAnd(StringUtils.length(cpk) == 1,
 					StringUtils.length(csk = Strings.commonSuffix(g11, g21)) == 1)) {
 				//
 				final String cpv = Strings.commonPrefix(g12, g22);
@@ -4492,6 +4493,45 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 2),
 								StringUtils.substring(g22, 0, lastIndexOf - 1), StringUtils.substring(g21, 2),
 								StringUtils.substring(g22, lastIndexOf - 1)));
+				//
+				IntCollectionUtil.addInt(intCollection, index);
+				//
+			} // if
+				//
+		} else if (StringUtils.isNotBlank(Strings.commonPrefix(g11, g21)) && StringUtils.endsWith(g22, "ん")) {
+			//
+			final String cpv = Strings.commonPrefix(g12, g22);
+			//
+			if (length(ints = toArray(filter(IntStream.range(0, StringUtils.length(g22)),
+					x -> StringUtils.startsWith(getCharacterName(g22, x), HIRAGANA_LETTER_SMALL)))) == 1) {
+				//
+				MultimapUtil.putAll(multimap, ImmutableMultimap.of(cpk, cpv,
+						substring(tsbk = new TextStringBuilder(g21), (length = StringUtils.length(tsbk)) - 1, length),
+						substring(tsbv = new TextStringBuilder(g22), (length = StringUtils.length(tsbv)) - 2, length)));
+				//
+				deleteLastCharacter(tsbk);
+				//
+				deleteLast2Characters(tsbv);
+				//
+				final String string = substring(tsbv, (lastIndexOf = ints[0]) + 2, StringUtils.length(tsbv));
+				//
+				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length), string);
+				//
+				deleteLastCharacter(tsbk);
+				//
+				delete(tsbv, (length = StringUtils.length(tsbv)) - StringUtils.length(string), length + 1);
+				//
+				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+						tsbv.substring(lastIndexOf - 1));
+				//
+			} else if (StringUtils.length(g21) == 5) {
+				//
+				MultimapUtil.putAll(multimap,
+						ImmutableMultimap.of(cpk, cpv,
+								StringUtils.substring(g21, length = StringUtils.length(cpk), length + 2),
+								StringUtils.substring(g22, StringUtils.length(cpv), StringUtils.length(g22) - 2),
+								StringUtils.substring(g21, StringUtils.length(g21) - 1),
+								StringUtils.substring(g22, StringUtils.length(g22) - 2)));
 				//
 				IntCollectionUtil.addInt(intCollection, index);
 				//
