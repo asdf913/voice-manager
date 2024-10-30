@@ -4137,6 +4137,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				.asList(OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection12B1,
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection12B2);
 		//
+		int length;
+		//
 		for (int i = StringUtils.length(g11) - 1; i >= 0 && Util.iterator(functions) != null; i--) {
 			//
 			for (int j = 0; j < IterableUtils.size(lines); j++) {
@@ -4155,10 +4157,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 				Util.put(map, "s", StringUtils.substring(g11, i, i + 1));
 				//
+				length = MultimapUtil.size(multimap);
+				//
 				for (final ObjIntObjObjFunction<PatternMap, String, Map<String, String>, Entry<Multimap<String, String>, IntCollection>> function : functions) {
 					//
 					if (function == null
-							|| (temp = function.apply(patternMap, j, IterableUtils.get(lines, j), map)) == null) {
+							|| (temp = function.apply(patternMap, j, IterableUtils.get(lines, j), map)) == null
+							|| length != MultimapUtil.size(multimap)) {
 						//
 						continue;
 						//
