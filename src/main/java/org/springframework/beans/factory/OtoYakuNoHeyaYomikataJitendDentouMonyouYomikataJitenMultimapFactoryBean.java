@@ -4380,120 +4380,122 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection12B3(
 			final PatternMap patternMap, final int index, final String line, final Map<String, String> map) {
 		//
+		Matcher m2;
+		//
+		if (!Util.matches(m2 = toMatcher12B1(MapUtils.getObject(map, "s"), patternMap, line))
+				|| Util.groupCount(m2) <= 1) {
+			//
+			return null;
+			//
+		} // if
+			//
 		final Multimap<String, String> multimap = LinkedHashMultimap.create();
 		//
 		final IntCollection intCollection = IntList.create();
 		//
-		Matcher m2;
+		final String g11 = MapUtils.getObject(map, "g11");
 		//
-		if (Util.matches(m2 = toMatcher12B1(MapUtils.getObject(map, "s"), patternMap, line))
-				&& Util.groupCount(m2) > 1) {
+		final String g12 = MapUtils.getObject(map, "g12");
+		//
+		final String g21 = Util.group(m2, 1);
+		//
+		final String g22 = Util.group(m2, 2);
+		//
+		int length, lastIndexOf;
+		//
+		int[] ints;
+		//
+		if (StringUtils.length(g11) == StringUtils.length(g21)) {
 			//
-			final String g11 = MapUtils.getObject(map, "g11");
+			final String cpk = Strings.commonPrefix(g11, g21);
 			//
-			final String g12 = MapUtils.getObject(map, "g12");
+			final String csk = Strings.commonSuffix(g11, g21);
 			//
-			final String g21 = Util.group(m2, 1);
-			//
-			final String g22 = Util.group(m2, 2);
-			//
-			int length, lastIndexOf;
-			//
-			int[] ints;
-			//
-			if (StringUtils.length(g11) == StringUtils.length(g21)) {
+			if (Boolean.logicalAnd(StringUtils.length(cpk) == 1, StringUtils.length(csk) == 2)) {
 				//
-				final String cpk = Strings.commonPrefix(g11, g21);
+				final String csv = Strings.commonSuffix(g12, g22);
 				//
-				final String csk = Strings.commonSuffix(g11, g21);
+				MultimapUtil.putAll(multimap,
+						ImmutableMultimap.of(g21, g22, StringUtils.substringBetween(g21, cpk, csk),
+								StringUtils.substringBetween(g22, Strings.commonPrefix(g12, g22), csv), csk, csv));
 				//
-				if (Boolean.logicalAnd(StringUtils.length(cpk) == 1, StringUtils.length(csk) == 2)) {
-					//
-					final String csv = Strings.commonSuffix(g12, g22);
-					//
-					MultimapUtil.putAll(multimap,
-							ImmutableMultimap.of(g21, g22, StringUtils.substringBetween(g21, cpk, csk),
-									StringUtils.substringBetween(g22, Strings.commonPrefix(g12, g22), csv), csk, csv));
-					//
-					IntCollectionUtil.addInt(intCollection, index);
-					//
-				} else if ((lastIndexOf = StringUtils.lastIndexOf(g22, "ん")) == StringUtils.length(g22) - 1) {
-					//
-					final TextStringBuilder tsbk = new TextStringBuilder(g21);
-					//
-					final TextStringBuilder tsbv = new TextStringBuilder(g22);
-					//
-					if (lastIndexOf - StringUtils.indexOf(g22, "ん") == 2) {
-						//
-						MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-								substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
-						//
-						deleteLastCharacter(tsbk);
-						//
-						deleteLast2Characters(tsbv);
-						//
-						MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-								substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
-						//
-					} // if
-						//
-				} // if
-					//
-			} else if (StringUtils.length(g21) == 3) {
+				IntCollectionUtil.addInt(intCollection, index);
 				//
-				String cpk, csk;
+			} else if ((lastIndexOf = StringUtils.lastIndexOf(g22, "ん")) == StringUtils.length(g22) - 1) {
 				//
-				if (length(ints = toArray(filter(IntStream.range(0, StringUtils.length(g22)),
-						x -> StringUtils.startsWith(getCharacterName(g22, x), HIRAGANA_LETTER_SMALL)))) == 1) {
+				final TextStringBuilder tsbk = new TextStringBuilder(g21);
+				//
+				final TextStringBuilder tsbv = new TextStringBuilder(g22);
+				//
+				if (lastIndexOf - StringUtils.indexOf(g22, "ん") == 2) {
 					//
-					final int i = ints[0];
+					MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+							substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 					//
-					MultimapUtil.putAll(multimap,
-							ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
-									StringUtils.substring(g22, 0, i - 1), StringUtils.substring(g21, 1, 2),
-									StringUtils.substring(g22, i - 1, i + 2), StringUtils.substring(g21, 2),
-									StringUtils.substring(g22, i + 2)));
+					deleteLastCharacter(tsbk);
 					//
-					IntCollectionUtil.addInt(intCollection, index);
+					deleteLast2Characters(tsbv);
 					//
-				} else if (Boolean.logicalAnd(StringUtils.countMatches(g22, "ん") == 1,
-						(lastIndexOf = StringUtils.lastIndexOf(g22, "ん")) == StringUtils.length(g22) - 3)) {
-					//
-					MultimapUtil.putAll(multimap,
-							ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
-									StringUtils.substring(g22, 0, lastIndexOf - 1), StringUtils.substring(g21, 1),
-									StringUtils.substring(g22, lastIndexOf - 1), StringUtils.substring(g21, 1, 2),
-									StringUtils.substring(g22, lastIndexOf - 1, lastIndexOf + 1),
-									StringUtils.substring(g21, 2), StringUtils.substring(g22, lastIndexOf + 1)));
-					//
-					IntCollectionUtil.addInt(intCollection, index);
-					//
-				} else if (Boolean.logicalAnd(StringUtils.length(cpk = Strings.commonPrefix(g11, g21)) == 1,
-						StringUtils.length(csk = Strings.commonSuffix(g11, g21)) == 1)) {
-					//
-					final String cpv = Strings.commonPrefix(g12, g22);
-					//
-					final String csv = Strings.commonSuffix(g12, g22);
-					//
-					MultimapUtil.putAll(multimap,
-							ImmutableMultimap.of(g21, g22, cpk, cpv, StringUtils.substringBetween(g21, cpk, csk),
-									StringUtils.substringBetween(g22, cpv, csv), csk, csv));
-					//
-					IntCollectionUtil.addInt(intCollection, index);
-					//
-				} else if (Util.and((lastIndexOf = StringUtils.lastIndexOf(g22, "ん")) == StringUtils.length(g22) - 1,
-						StringUtils.indexOf(g22, "ん") == lastIndexOf,
-						StringUtils.length(g22) - StringUtils.length(g21) == 2)) {
-					//
-					MultimapUtil.putAll(multimap,
-							ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 2),
-									StringUtils.substring(g22, 0, lastIndexOf - 1), StringUtils.substring(g21, 2),
-									StringUtils.substring(g22, lastIndexOf - 1)));
-					//
-					IntCollectionUtil.addInt(intCollection, index);
+					MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+							substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
 					//
 				} // if
 					//
+			} // if
+				//
+		} else if (StringUtils.length(g21) == 3) {
+			//
+			String cpk, csk;
+			//
+			if (length(ints = toArray(filter(IntStream.range(0, StringUtils.length(g22)),
+					x -> StringUtils.startsWith(getCharacterName(g22, x), HIRAGANA_LETTER_SMALL)))) == 1) {
+				//
+				final int i = ints[0];
+				//
+				MultimapUtil.putAll(multimap,
+						ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
+								StringUtils.substring(g22, 0, i - 1), StringUtils.substring(g21, 1, 2),
+								StringUtils.substring(g22, i - 1, i + 2), StringUtils.substring(g21, 2),
+								StringUtils.substring(g22, i + 2)));
+				//
+				IntCollectionUtil.addInt(intCollection, index);
+				//
+			} else if (Boolean.logicalAnd(StringUtils.countMatches(g22, "ん") == 1,
+					(lastIndexOf = StringUtils.lastIndexOf(g22, "ん")) == StringUtils.length(g22) - 3)) {
+				//
+				MultimapUtil.putAll(multimap,
+						ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
+								StringUtils.substring(g22, 0, lastIndexOf - 1), StringUtils.substring(g21, 1),
+								StringUtils.substring(g22, lastIndexOf - 1), StringUtils.substring(g21, 1, 2),
+								StringUtils.substring(g22, lastIndexOf - 1, lastIndexOf + 1),
+								StringUtils.substring(g21, 2), StringUtils.substring(g22, lastIndexOf + 1)));
+				//
+				IntCollectionUtil.addInt(intCollection, index);
+				//
+			} else if (Boolean.logicalAnd(StringUtils.length(cpk = Strings.commonPrefix(g11, g21)) == 1,
+					StringUtils.length(csk = Strings.commonSuffix(g11, g21)) == 1)) {
+				//
+				final String cpv = Strings.commonPrefix(g12, g22);
+				//
+				final String csv = Strings.commonSuffix(g12, g22);
+				//
+				MultimapUtil.putAll(multimap,
+						ImmutableMultimap.of(g21, g22, cpk, cpv, StringUtils.substringBetween(g21, cpk, csk),
+								StringUtils.substringBetween(g22, cpv, csv), csk, csv));
+				//
+				IntCollectionUtil.addInt(intCollection, index);
+				//
+			} else if (Util.and((lastIndexOf = StringUtils.lastIndexOf(g22, "ん")) == StringUtils.length(g22) - 1,
+					StringUtils.indexOf(g22, "ん") == lastIndexOf,
+					StringUtils.length(g22) - StringUtils.length(g21) == 2)) {
+				//
+				MultimapUtil.putAll(multimap,
+						ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 2),
+								StringUtils.substring(g22, 0, lastIndexOf - 1), StringUtils.substring(g21, 2),
+								StringUtils.substring(g22, lastIndexOf - 1)));
+				//
+				IntCollectionUtil.addInt(intCollection, index);
+				//
 			} // if
 				//
 		} // if
