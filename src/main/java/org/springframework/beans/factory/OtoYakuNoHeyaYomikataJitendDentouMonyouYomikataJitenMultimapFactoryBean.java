@@ -4482,7 +4482,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					IntCollectionUtil.addInt(intCollection, index);
 					//
 				} else if (Boolean.logicalAnd(
-						(lastIndexOf = StringUtils.lastIndexOf(g22, "ん")) == (length = StringUtils.length(g22)) - 1,	
+						(lastIndexOf = StringUtils.lastIndexOf(g22, "ん")) == StringUtils.length(g22) - 1,
 						StringUtils.indexOf(g22, "ん") == lastIndexOf)
 						&& StringUtils.length(g22) - StringUtils.length(g21) == 2) {
 					//
