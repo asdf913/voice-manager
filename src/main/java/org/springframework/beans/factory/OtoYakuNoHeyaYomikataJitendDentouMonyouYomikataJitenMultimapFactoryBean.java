@@ -4315,6 +4315,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			String lcsk, lcsv;
 			//
+			int length;
+			//
 			if (Boolean.logicalAnd(StringUtils.endsWith(g22, "ん"),
 					StringUtils.isNotBlank(lcsv = longestCommonSubstring(g12, g22)))) {
 				//
@@ -4323,9 +4325,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				final TextStringBuilder tsbv = new TextStringBuilder(StringUtils.substringAfter(g22, lcsv));
 				//
-				int length = StringUtils.length(tsbv);
-				//
-				if (Boolean.logicalAnd(StringUtils.length(tsbk) == 2, length > 1)) {
+				if (Boolean.logicalAnd(StringUtils.length(tsbk) == 2, (length = StringUtils.length(tsbv)) > 1)) {
 					//
 					MultimapUtil.put(multimap, substring(tsbk, 1, 2), substring(tsbv, length - 2, length));
 					//
@@ -4358,6 +4358,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			} else if (StringUtils.length(g21) == StringUtils.length(g22)) {
 				//
 				MultimapUtil.put(multimap, g21, g22);
+				//
+			} else if (Boolean.logicalAnd((length = StringUtils.length(g22)) > 1,
+					StringUtils.startsWith(getCharacterName(g22, length - 2), "HIRAGANA LETTER SMALL"))) {
+				//
+				MultimapUtil.put(multimap, StringUtils.substring(g21, StringUtils.length(g21) - 1),
+						StringUtils.substring(g22, length - 3));
 				//
 			} // if
 				//
@@ -4429,12 +4435,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 				} // if
 					//
-			} else if (Boolean.logicalAnd((length = StringUtils.length(g22)) > 1,
-					StringUtils.startsWith(getCharacterName(g22, length - 2), "HIRAGANA LETTER SMALL"))) {
-				//
-				MultimapUtil.put(multimap, StringUtils.substring(g21, StringUtils.length(g21) - 1),
-						StringUtils.substring(g22, length - 3));
-				//
 			} else if (StringUtils.length(g21) == 3) {
 				//
 				if (length(ints = toArray(filter(IntStream.range(0, StringUtils.length(g22)),
