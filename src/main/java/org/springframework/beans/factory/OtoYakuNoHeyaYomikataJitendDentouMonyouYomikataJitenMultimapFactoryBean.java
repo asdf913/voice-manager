@@ -4302,8 +4302,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		Matcher m2;
 		//
-
-		//
 		if (Util.matches(m2 = toMatcher12B1(MapUtils.getObject(map, "s"), patternMap, line))
 				&& Util.groupCount(m2) > 1) {
 			//
