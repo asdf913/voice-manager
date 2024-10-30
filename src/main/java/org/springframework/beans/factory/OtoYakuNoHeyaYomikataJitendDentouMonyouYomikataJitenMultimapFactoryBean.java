@@ -4475,15 +4475,15 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static int[] toArray(final IntStream instance) {
+	private static int[] toArray(@Nullable final IntStream instance) {
 		return instance != null ? instance.toArray() : null;
 	}
 
-	private static long length(final int[] instance) {
+	private static long length(@Nullable final int[] instance) {
 		return instance != null ? instance.length : 0;
 	}
 
-	private static IntStream filter(final IntStream intStream, final IntPredicate intPredicate) {
+	private static IntStream filter(@Nullable final IntStream intStream, final IntPredicate intPredicate) {
 		return intStream != null ? intStream.filter(intPredicate) : intStream;
 	}
 
