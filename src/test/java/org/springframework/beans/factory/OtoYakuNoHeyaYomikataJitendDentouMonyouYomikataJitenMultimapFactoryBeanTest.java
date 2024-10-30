@@ -538,9 +538,9 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 			//
 		} // if
 			//
-		Assertions.assertEquals("({間明大明=[まあきだいみょう], 文=[もん], 丹=[たん]},[0])",
+		Assertions.assertEquals("({間明大明=[まあきだいみょう], 文=[もん], 丹=[たん], 大=[だい]},[0])",
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 間明大明（まあきだいみょう）"),
-						Arrays.asList(null, "大牡丹文（おおぼたんもん）"))));
+						Arrays.asList(null, "大牡丹文（おおぼたんもん）", "大文字文（だいもんじもん）"))));
 		//
 	}
 

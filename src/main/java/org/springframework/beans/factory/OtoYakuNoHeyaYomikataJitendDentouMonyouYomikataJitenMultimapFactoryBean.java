@@ -4173,14 +4173,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			for (final ObjIntObjObjFunction<PatternMap, String, Map<String, String>, Entry<Multimap<String, String>, IntCollection>> function : functions) {
 				//
-				if (Boolean.logicalOr((temp = ObjIntObjObjFunction.apply(function, patternMap, value.keyInt(),
-						PairUtil.right(value), map)) == null, length != MultimapUtil.size(multimap))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				MultimapUtil.putAll(multimap, Util.getKey(temp));
+				MultimapUtil.putAll(multimap, Util.getKey(temp = ObjIntObjObjFunction.apply(function, patternMap,
+						value.keyInt(), PairUtil.right(value), map)));
 				//
 				Util.forEach(
 						Util.cast(IntStream.class,
@@ -4189,6 +4183,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						x -> testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b), intCollection, x,
 								IntCollectionUtil::addInt));
 				//
+				if (length != MultimapUtil.size(multimap)) {
+					//
+					break;
+					//
+				} // if
 			} // for
 				//
 		} // for
@@ -4395,7 +4394,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				final String csk = Strings.commonSuffix(g11, g21);
 				//
-				int lastIndexOf;
+				int lastIndexOf, indexOf;
 				//
 				if (Boolean.logicalAnd(StringUtils.length(cpk) == 1, StringUtils.length(csk) == 2)) {
 					//
@@ -4407,23 +4406,55 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					IntCollectionUtil.addInt(intCollection, index);
 					//
-				} else if ((lastIndexOf = StringUtils.lastIndexOf(g22, "ん")) == StringUtils.length(g22) - 1
-						&& lastIndexOf - StringUtils.indexOf(g22, "ん") == 2) {
+				} else if ((lastIndexOf = StringUtils.lastIndexOf(g22, "ん")) == StringUtils.length(g22) - 1) {
 					//
 					final TextStringBuilder tsbk = new TextStringBuilder(g21);
 					//
 					final TextStringBuilder tsbv = new TextStringBuilder(g22);
 					//
-					MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-							substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
-					//
-					deleteLastCharacter(tsbk);
-					//
-					deleteLast2Characters(tsbv);
-					//
-					MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
-							substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
-					//
+					if (lastIndexOf - (indexOf = StringUtils.indexOf(g22, "ん")) == 2) {
+						//
+						MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+								substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
+						//
+						deleteLastCharacter(tsbk);
+						//
+						deleteLast2Characters(tsbv);
+						//
+						MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+								substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
+						//
+					} else if (lastIndexOf - indexOf == 3) {
+						//
+						IntCollectionUtil.addInt(intCollection, index);
+						//
+						MultimapUtil.putAll(multimap,
+								ImmutableMultimap.of(g21, g22,
+										substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+										substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length)));
+						//
+						deleteLastCharacter(tsbk);
+						//
+						deleteLast2Characters(tsbv);
+						//
+						MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+								substring(tsbv, (length = StringUtils.length(tsbv)) - 1, length));
+						//
+						deleteLastCharacter(tsbk);
+						//
+						deleteLastCharacter(tsbv);
+						//
+						MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
+								substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
+						//
+						deleteLastCharacter(tsbk);
+						//
+						deleteLast2Characters(tsbv);
+						//
+						MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
+						//
+					} // if
+						//
 				} // if
 					//
 			} // if
