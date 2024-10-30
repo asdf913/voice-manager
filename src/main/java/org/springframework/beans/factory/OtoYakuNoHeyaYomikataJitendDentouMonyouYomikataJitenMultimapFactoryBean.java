@@ -4139,7 +4139,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		int length;
 		//
-		for (int i = StringUtils.length(g11) - 1; i >= 0 && Util.iterator(functions) != null; i--) {
+		for (int i = StringUtils.length(g11) - 1; Boolean.logicalAnd(i >= 0, Util.iterator(functions) != null); i--) {
 			//
 			for (int j = 0; j < IterableUtils.size(lines); j++) {
 				//
@@ -4309,8 +4309,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 						MultimapUtil.put(multimap, Util.toString(tsbk), Util.toString(tsbv));
 						//
-					} // if
-						//
+					} else {
+						System.out.println();
+					}
+					//
 				} // if
 					//
 			} // if
