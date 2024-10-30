@@ -4108,6 +4108,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 
 		R apply(final A a, final int b, final C c, final D d);
 
+		private static <A, C, D, R> R apply(final ObjIntObjObjFunction<A, C, D, R> instance, final A a, final int b,
+				final C c, final D d) {
+			return instance != null ? instance.apply(a, b, c, d) : null;
+		}
+
 	}
 
 	@Nullable
@@ -4161,9 +4166,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				for (final ObjIntObjObjFunction<PatternMap, String, Map<String, String>, Entry<Multimap<String, String>, IntCollection>> function : functions) {
 					//
-					if (function == null
-							|| (temp = function.apply(patternMap, j, IterableUtils.get(lines, j), map)) == null
-							|| length != MultimapUtil.size(multimap)) {
+					if ((temp = ObjIntObjObjFunction.apply(function, patternMap, j, IterableUtils.get(lines, j),
+							map)) == null || length != MultimapUtil.size(multimap)) {
 						//
 						continue;
 						//
