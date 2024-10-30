@@ -4299,10 +4299,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection12B2(
 			final PatternMap patternMap, final int index, final String line, final Map<String, String> map) {
 		//
-		Matcher m2;
+		final Matcher m2 = toMatcher12B1(MapUtils.getObject(map, "s"), patternMap, line);
 		//
-		if (!Util.matches(m2 = toMatcher12B1(MapUtils.getObject(map, "s"), patternMap, line))
-				|| Util.groupCount(m2) <= 1) {
+		if (!Util.matches(m2) || Util.groupCount(m2) <= 1) {
 			//
 			return null;
 			//
@@ -4380,10 +4379,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection12B3(
 			final PatternMap patternMap, final int index, final String line, final Map<String, String> map) {
 		//
-		Matcher m2;
+		final Matcher m2 = toMatcher12B1(MapUtils.getObject(map, "s"), patternMap, line);
 		//
-		if (!Util.matches(m2 = toMatcher12B1(MapUtils.getObject(map, "s"), patternMap, line))
-				|| Util.groupCount(m2) <= 1) {
+		if (!Util.matches(m2) || Util.groupCount(m2) <= 1) {
 			//
 			return null;
 			//
