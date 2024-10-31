@@ -22,6 +22,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.TriConsumer;
 import org.apache.commons.text.TextStringBuilder;
 import org.d2ab.collection.ints.IntCollection;
+import org.d2ab.function.CharPredicate;
 import org.d2ab.function.ObjIntPredicate;
 import org.javatuples.Quartet;
 import org.javatuples.Sextet;
@@ -232,7 +233,9 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 					|| (Objects.equals(name, "toMultimap12A")
 							&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class }))
 					|| (Objects.equals(name, "toMultimapAndIntCollection12B1") && Arrays.equals(parameterTypes,
-							new Class<?>[] { PatternMap.class, Integer.TYPE, String.class, Map.class }))) {
+							new Class<?>[] { PatternMap.class, Integer.TYPE, String.class, Map.class }))
+					|| (Objects.equals(name, "indexOf")
+							&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, CharPredicate.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
@@ -494,9 +497,10 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 						Arrays.asList(null, "印花文（いんかもん）＊文様装飾技法", "印金（いんきん）＊名物裂、技法", "印伝革（いんでんがわ）＊染革",
 								"印度の花食い鳥（いんどのはなくいどり）", "印籠（いんろう）＊薬入れ"))));
 		//
-		Assertions.assertEquals("({永楽銭紋=[えいらくせんもん], 永楽=[えいらく], 銭=[せん], 紋=[もん], 永=[えい], 高=[たか]},[0, 1])",
+		Assertions.assertEquals(
+				"({永楽銭紋=[えいらくせんもん], 永楽=[えいらく], 銭=[せん], 紋=[もん], 金銭文=[きんせんもん], 金=[きん], 文=[もん], 永=[えい], 高=[たか]},[0, 2, 1])",
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 永楽銭紋（えいらくせんもん）"),
-						Arrays.asList(null, "永高（えいだか）"))));
+						Arrays.asList(null, "永高（えいだか）", "金銭文（きんせんもん）"))));
 		//
 		Assertions.assertEquals("({三寸模様=[さんずんもよう], 三=[さん], 模様=[もよう], 寸=[すん]},[0])", Objects
 				.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 三寸模様（さんずんもよう）"), null)));
@@ -543,9 +547,10 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 								"大小菊花文（だいしょうきくかもん）"))));
 		//
 		Assertions.assertEquals(
-				"({唐獅子文=[からししもん], 雲文=[うんもん], 雲=[うん], 文=[もん], 卍文=[まんじもん], 卍=[まんじ], 鼈文=[すっぽんもん], 鼈=[すっぽん]},[0, 1, 2, 3])",
+				"({唐獅子文=[からししもん], 雲文=[うんもん], 雲=[うん], 文=[もん], 卍文=[まんじもん], 卍=[まんじ], 鼈文=[すっぽんもん], 鼈=[すっぽん], 雁木文=[がんぎもん], 雁=[がん], 雲竜文=[うんりゅうもん], 竜=[りゅう], 火焔文=[かえんもん], 火=[か], 焔=[えん], 白雲文=[はくうんもん], 白=[はく], 斧文=[ふもん], 斧=[ふ], 木=[き]},[0, 1, 2, 3, 4, 5, 6, 7, 8])",
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 唐獅子文（からししもん）"),
-						Arrays.asList(null, "雲文（うんもん）", "卍文（まんじもん）", "鼈文（すっぽんもん）"))));
+						Arrays.asList(null, "雲文（うんもん）", "卍文（まんじもん）", "鼈文（すっぽんもん）", "雁木文（がんぎもん）", "雲竜文（うんりゅうもん）",
+								"火焔文（かえんもん）", "白雲文（はくうんもん）", "斧文（ふもん）"))));
 		//
 	}
 
