@@ -537,9 +537,10 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		} // if
 			//
 		Assertions.assertEquals(
-				"({間明大明=[まあきだいみょう], 文=[もん], 丹=[たん], 大=[だい], 明=[みょう], 大十絣=[だいじゅうがすり], 十=[じゅう], 絣=[かすり]},[0, 4])",
+				"({間明大明=[まあきだいみょう], 文=[もん], 丹=[たん], 大=[だい], 明=[みょう], 大十絣=[だいじゅうがすり], 十=[じゅう], 小=[しょう], 菊花=[きくか], 絣=[かすり]},[0, 4, 5])",
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, " 間明大明（まあきだいみょう）"),
-						Arrays.asList(null, "大牡丹文（おおぼたんもん）", "大文字文（だいもんじもん）", "大大明（おおだいみょう）", "大十絣（だいじゅうがすり）"))));
+						Arrays.asList(null, "大牡丹文（おおぼたんもん）", "大文字文（だいもんじもん）", "大大明（おおだいみょう）", "大十絣（だいじゅうがすり）",
+								"大小菊花文（だいしょうきくかもん）"))));
 		//
 	}
 

@@ -4584,6 +4584,35 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 		} // if
 			//
+		final String lcsk = longestCommonSubstring(g11, g21);
+		//
+		final String lcsv = longestCommonSubstring(g12, g22);
+		//
+		if (StringUtils.length(lcsk) == 1 && StringUtils.isNotBlank(lcsv)
+				&& StringUtils.indexOf(g11, lcsk) == StringUtils.length(g11) - 2) {
+			//
+			if (length(ints = toArray(filter(IntStream.range(0, StringUtils.length(g22)),
+					x -> StringUtils.startsWith(getCharacterName(g22, x), HIRAGANA_LETTER_SMALL)))) == 1
+					&& StringUtils.startsWith(g21, lcsk) && StringUtils.startsWith(g22, lcsv)
+					&& StringUtils.endsWith(g22, "ん")) {
+				//
+				final int i = ints[0];
+				//
+				MultimapUtil.putAll(multimap,
+						ImmutableMultimap.of(lcsk, lcsv, StringUtils.substringAfter(g11, lcsk),
+								StringUtils.substringAfter(g12, lcsv), StringUtils.substring(g21, 1, 2),
+								StringUtils.substring(g22, i - 1, i + 2),
+								StringUtils.substring(g21, 2, StringUtils.length(g21) - 1),
+								StringUtils.substring(g22, i + 2, StringUtils.length(g22) - 2),
+								StringUtils.substring(g21, StringUtils.length(g21) - 1),
+								StringUtils.substring(g22, StringUtils.length(g22) - 2)));
+				//
+				IntCollectionUtil.addInt(intCollection, index);
+				//
+			} // if
+				//
+		} // if
+			//
 		return Pair.of(multimap, intCollection);
 		//
 	}
