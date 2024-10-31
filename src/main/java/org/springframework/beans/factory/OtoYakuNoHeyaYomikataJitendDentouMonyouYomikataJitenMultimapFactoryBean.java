@@ -4728,8 +4728,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 				} // if
 					//
-			} else if (StringUtils.length(g21) == 2 && StringUtils.length(g22) == 3
-					&& (indexOf = StringUtils.indexOf(g22, "ん")) == (lastIndexOf = StringUtils.lastIndexOf(g22, "ん"))
+			} else if (Boolean.logicalAnd(StringUtils.length(g21) == 2 && StringUtils.length(g22) == 3,
+					(indexOf = StringUtils.indexOf(g22, "ん")) == (lastIndexOf = StringUtils.lastIndexOf(g22, "ん")))
 					&& Objects.equals(StringUtils.substring(g22, lastIndexOf), "ん")) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
