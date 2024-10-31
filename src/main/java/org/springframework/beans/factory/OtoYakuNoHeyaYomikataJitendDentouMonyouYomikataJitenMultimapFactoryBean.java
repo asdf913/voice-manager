@@ -3978,22 +3978,36 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		String g21;
 		//
-		int indexOf;
+		int indexOf, lastIndexOf;
 		//
 		for (int i = 0; i < IterableUtils.size(lines); i++) {
 			//
 			if (Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA, IterableUtils.get(lines, i)))
 					&& Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
-					&& StringUtils.length(g22 = Util.group(m2, 2)) == 4
-					&& (indexOf = StringUtils.indexOf(g22, "ん")) < StringUtils.lastIndexOf(g22, "ん")) {
+					&& StringUtils.isNotBlank(longestCommonSubstring(g11, g21))
+					&& (indexOf = StringUtils.indexOf(g22 = Util.group(m2, 2), "ん")) < (lastIndexOf = StringUtils
+							.lastIndexOf(g22, "ん"))) {
 				//
-				MultimapUtil.putAll(multimap,
-						ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
-								StringUtils.substring(g22, 0, indexOf + 1), StringUtils.substring(g21, 1),
-								StringUtils.substring(g22, indexOf + 1)));
-				//
-				IntCollectionUtil.addInt(intCollection, i);
-				//
+				if (StringUtils.length(g22 = Util.group(m2, 2)) == 4) {
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
+									StringUtils.substring(g22, 0, indexOf + 1), StringUtils.substring(g21, 1),
+									StringUtils.substring(g22, indexOf + 1)));
+					//
+					IntCollectionUtil.addInt(intCollection, i);
+					//
+				} else if (lastIndexOf - indexOf == 3) {
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
+									StringUtils.substring(g22, 0, indexOf + 2), StringUtils.substring(g21, 1),
+									StringUtils.substring(g22, indexOf + 2)));
+					//
+					IntCollectionUtil.addInt(intCollection, i);
+					//
+				} // if
+					//
 			} // if
 				//
 		} // for
