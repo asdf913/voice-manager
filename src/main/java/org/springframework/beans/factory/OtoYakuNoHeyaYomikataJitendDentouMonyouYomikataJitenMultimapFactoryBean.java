@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.IntPredicate;
@@ -3969,55 +3970,25 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		// B
 		//
-		final Entry<Multimap<String, String>, IntCollection> mi = toMultimapAndIntCollection12B(patternMap, iop, lines,
+		Entry<Multimap<String, String>, IntCollection> mi = toMultimapAndIntCollection12B(patternMap, iop, lines,
 				Pair.of(g11, g12));
 		//
 		MultimapUtil.putAll(multimap, Util.getKey(mi));
 		//
 		IntCollectionUtil.addAllInts(intCollection, Util.getValue(mi));
 		//
-		String g21;
+		// C
 		//
-		int indexOf, lastIndexOf;
+		MultimapUtil.putAll(multimap, Util.getKey(mi = toMultimapAndIntCollection12C(patternMap, iop, lines, g11)));
 		//
-		for (int i = 0; i < IterableUtils.size(lines); i++) {
-			//
-			if (Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA, IterableUtils.get(lines, i)))
-					&& Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
-					&& StringUtils.isNotBlank(longestCommonSubstring(g11, g21))
-					&& (indexOf = StringUtils.indexOf(g22 = Util.group(m2, 2), "ん")) < (lastIndexOf = StringUtils
-							.lastIndexOf(g22, "ん"))) {
-				//
-				if (Boolean.logicalOr(StringUtils.length(g22 = Util.group(m2, 2)) == 4, lastIndexOf - indexOf == 2)) {
-					//
-					MultimapUtil.putAll(multimap,
-							ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
-									StringUtils.substring(g22, 0, indexOf + 1), StringUtils.substring(g21, 1),
-									StringUtils.substring(g22, indexOf + 1)));
-					//
-					IntCollectionUtil.addInt(intCollection, i);
-					//
-				} else if (lastIndexOf - indexOf == 3) {
-					//
-					MultimapUtil.putAll(multimap,
-							ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
-									StringUtils.substring(g22, 0, indexOf + 2), StringUtils.substring(g21, 1),
-									StringUtils.substring(g22, indexOf + 2)));
-					//
-					IntCollectionUtil.addInt(intCollection, i);
-					//
-				} // if
-					//
-			} // if
-				//
-		} // for
-			//
+		IntCollectionUtil.addAllInts(intCollection, Util.getValue(mi));
+		//
 		final Entry<String, String> entry = testAndApply(x -> IterableUtils.size(x) == 1,
 				Util.toList(Util.filter(StreamSupport.stream(Util.spliterator(MultimapUtil.entries(multimap)), false),
 						x -> StringUtils.length(Util.getKey(x)) == 2)),
 				x -> IterableUtils.get(x, 0), null);
 		//
-		String key, value;
+		String g21, key, value;
 		//
 		for (int i = 0; i < IterableUtils.size(lines) && entry != null; i++) {
 			//
@@ -4645,6 +4616,56 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection12C(
+			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines,
+			final String g11) {
+		//
+		Matcher m2;
+		//
+		int indexOf, lastIndexOf;
+		//
+		String g21, g22;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		IntCollection intCollection = null;
+		//
+		for (int i = 0; i < IterableUtils.size(lines); i++) {
+			//
+			if (Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA, IterableUtils.get(lines, i)))
+					&& Util.groupCount(m2) > 1 && StringUtils.length(g21 = Util.group(m2, 1)) == 2
+					&& StringUtils.isNotBlank(longestCommonSubstring(g11, g21))
+					&& (indexOf = StringUtils.indexOf(g22 = Util.group(m2, 2), "ん")) < (lastIndexOf = StringUtils
+							.lastIndexOf(g22, "ん"))) {
+				//
+				if (Boolean.logicalOr(StringUtils.length(g22 = Util.group(m2, 2)) == 4, lastIndexOf - indexOf == 2)) {
+					//
+					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
+									StringUtils.substring(g22, 0, indexOf + 1), StringUtils.substring(g21, 1),
+									StringUtils.substring(g22, indexOf + 1)));
+					//
+					IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), i);
+					//
+				} else if (lastIndexOf - indexOf == 3) {
+					//
+					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
+									StringUtils.substring(g22, 0, indexOf + 2), StringUtils.substring(g21, 1),
+									StringUtils.substring(g22, indexOf + 2)));
+					//
+					IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), i);
+					//
+				} // if
+					//
+			} // if
+				//
+		} // for
+			//
+		return testAndApply((a, b) -> a != null || b != null, multimap, intCollection, (a, b) -> Pair.of(a, b), null);
+		//
+	}
+
 	@Nullable
 	private static String getCharacterName(@Nullable final String instance, final int index) {
 		return instance != null ? Character.getName(instance.charAt(index)) : null;
@@ -4825,6 +4846,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+			final U u, final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) throws E {
+		return Util.test(predicate, t, u) ? Util.apply(functionTrue, t, u) : Util.apply(functionFalse, t, u);
 	}
 
 	@Override
