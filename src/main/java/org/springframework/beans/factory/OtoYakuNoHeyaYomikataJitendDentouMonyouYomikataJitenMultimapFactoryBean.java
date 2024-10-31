@@ -4699,7 +4699,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							IntCollectionUtil
 									.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), i);
 							//
-						} else if (ints[0] == 2 && ints[1] == StringUtils.length(g22) - 1) {
+						} else if (Boolean.logicalAnd(ints[0] == 2, ints[1] == StringUtils.length(g22) - 1)) {
 							//
 							MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 									ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
