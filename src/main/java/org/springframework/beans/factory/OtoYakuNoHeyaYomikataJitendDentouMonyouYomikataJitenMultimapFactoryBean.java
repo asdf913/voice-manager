@@ -4854,7 +4854,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static boolean test(final CharPredicate instance, final char c) {
+	private static boolean test(@Nullable final CharPredicate instance, final char c) {
 		return instance != null && instance.test(c);
 	}
 
