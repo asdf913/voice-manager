@@ -3,7 +3,7 @@ package org.meeuw.functional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class TriPredicateUtilTest {
+class TriPredicateUtilTest {
 
 	@Test
 	void testTest() {
