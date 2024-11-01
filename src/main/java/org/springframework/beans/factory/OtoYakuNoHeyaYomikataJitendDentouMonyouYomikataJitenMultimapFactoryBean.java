@@ -56,6 +56,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 import org.meeuw.functional.TriPredicate;
+import org.meeuw.functional.TriPredicateUtil;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMultimap;
@@ -4957,9 +4958,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static <T, U, V> void testAndAccept(@Nullable final TriPredicate<T, U, V> instance, final T t, final U u,
-			final V v, @Nullable final TriConsumer<T, U, V> consumer) {
-		if (instance != null && instance.test(t, u, v) && consumer != null) {
+	private static <T, U, V> void testAndAccept(final TriPredicate<T, U, V> instance, final T t, final U u, final V v,
+			@Nullable final TriConsumer<T, U, V> consumer) {
+		if (TriPredicateUtil.test(instance, t, u, v) && consumer != null) {
 			consumer.accept(t, u, v);
 		} // if
 	}

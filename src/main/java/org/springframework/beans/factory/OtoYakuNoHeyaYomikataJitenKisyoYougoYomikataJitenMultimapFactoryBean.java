@@ -32,6 +32,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.meeuw.functional.TriConsumer;
 import org.meeuw.functional.TriPredicate;
+import org.meeuw.functional.TriPredicateUtil;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
 
 import com.google.common.collect.LinkedHashMultimap;
@@ -405,9 +406,9 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 		//
 	}
 
-	private static <T, U, V> void testAndAccept(@Nullable final TriPredicate<T, U, V> predicate, final T t,
-			@Nullable final U u, @Nullable final V v, @Nullable final TriConsumer<T, U, V> consumer) {
-		if (predicate != null && predicate.test(t, u, v) && consumer != null) {
+	private static <T, U, V> void testAndAccept(final TriPredicate<T, U, V> predicate, final T t, @Nullable final U u,
+			@Nullable final V v, @Nullable final TriConsumer<T, U, V> consumer) {
+		if (TriPredicateUtil.test(predicate, t, u, v) && consumer != null) {
 			consumer.accept(t, u, v);
 		}
 	}
