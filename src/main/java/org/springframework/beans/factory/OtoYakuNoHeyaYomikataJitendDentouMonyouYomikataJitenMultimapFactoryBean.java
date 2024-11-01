@@ -5030,7 +5030,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, @Nullable final U u,
+	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, @Nullable final T t, @Nullable final U u,
 			final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse) {
 		return Util.test(predicate, t, u) ? Util.apply(functionTrue, t, u) : Util.apply(functionFalse, t, u);
 	}
