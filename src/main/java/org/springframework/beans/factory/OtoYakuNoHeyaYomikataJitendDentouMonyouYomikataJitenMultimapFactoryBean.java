@@ -4787,7 +4787,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
 									StringUtils.substring(g22, 0, 1), StringUtils.substring(g21, 1, 2),
 									StringUtils.substring(g22, get(ints, 0, -1) - 1, get(ints, 1, -1) - 1),
-									StringUtils.substring(g21, 2), StringUtils.substring(g22, ints[1] - 1)));
+									StringUtils.substring(g21, 2), StringUtils.substring(g22, get(ints, 1, -1) - 1)));
 					//
 					IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
 							index);
@@ -4799,7 +4799,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 									StringUtils.substring(g22, 0, get(ints, 0, -1) - 1),
 									StringUtils.substring(g21, 1, 2),
 									StringUtils.substring(g22, get(ints, 0, -1) - 1, ints[1] - 1),
-									StringUtils.substring(g21, 2), StringUtils.substring(g22, ints[1] - 1)));
+									StringUtils.substring(g21, 2), StringUtils.substring(g22, get(ints, 1, -1) - 1)));
 					//
 					IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
 							index);
