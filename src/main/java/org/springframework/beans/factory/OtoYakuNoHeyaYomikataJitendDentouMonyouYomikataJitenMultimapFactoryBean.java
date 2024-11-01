@@ -4731,10 +4731,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
-								StringUtils.substring(g22, 0, get(
-										ints, 0, -1) + 1), StringUtils.substring(g21, 1, 2),
+								StringUtils.substring(g22, 0, get(ints, 0, -1) + 1), StringUtils.substring(g21, 1, 2),
 								StringUtils.substring(g22, get(ints, 0, -1) + 1, get(ints, 1, -1) + 1),
-								StringUtils.substring(g21, 2), StringUtils.substring(g22, ints[2] - 1)));
+								StringUtils.substring(g21, 2), StringUtils.substring(g22, get(ints, 2, -1) - 1)));
 				//
 				IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), index);
 				//
@@ -4776,13 +4775,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
 									StringUtils.substring(g22, 0, get(ints, 0, -1) + 1),
 									StringUtils.substring(g21, 1, 2),
-									StringUtils.substring(g22, ints[0] + 1, ints[1] - 1), StringUtils.substring(g21, 2),
-									StringUtils.substring(g22, ints[1] - 1)));
+									StringUtils.substring(g22, get(ints, 0, -1) + 1, ints[1] - 1),
+									StringUtils.substring(g21, 2), StringUtils.substring(g22, ints[1] - 1)));
 					//
 					IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
 							index);
 					//
-				} else if (Boolean.logicalAnd(get(ints, 0, -1) == 2, ints[1] == StringUtils.length(g22) - 1)) {
+				} else if (Boolean.logicalAnd(get(ints, 0, -1) == 2, get(ints, 1, -1) == StringUtils.length(g22) - 1)) {
 					//
 					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
