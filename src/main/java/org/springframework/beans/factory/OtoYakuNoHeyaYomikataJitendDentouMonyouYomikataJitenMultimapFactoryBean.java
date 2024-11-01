@@ -45,6 +45,7 @@ import org.d2ab.collection.ints.IntIterableUtil;
 import org.d2ab.collection.ints.IntList;
 import org.d2ab.function.CharPredicate;
 import org.d2ab.function.ObjIntPredicate;
+import org.d2ab.function.ObjIntPredicateUtil;
 import org.javatuples.Quartet;
 import org.javatuples.Sextet;
 import org.javatuples.Triplet;
@@ -4982,9 +4983,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static <T> void testAndAccept(@Nullable final ObjIntPredicate<T> predicate, @Nullable final T a,
-			final int b, @Nullable final ObjIntConsumer<T> consumer) {
-		if (predicate != null && predicate.test(a, b)) {
+	private static <T> void testAndAccept(final ObjIntPredicate<T> predicate, @Nullable final T a, final int b,
+			@Nullable final ObjIntConsumer<T> consumer) {
+		if (ObjIntPredicateUtil.test(predicate, a, b)) {
 			Util.accept(consumer, a, b);
 		}
 	}
