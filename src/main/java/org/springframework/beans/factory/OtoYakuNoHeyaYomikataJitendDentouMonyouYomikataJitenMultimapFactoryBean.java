@@ -4810,7 +4810,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					(indexOf = StringUtils.indexOf(g22, "ん")) == (lastIndexOf = StringUtils.lastIndexOf(g22, "ん")),
 					Objects.equals(StringUtils.substring(g22, lastIndexOf), "ん"))) {
 				//
-				if ((length = StringUtils.length(g22)) == 3 || length == 4) {
+				if (Boolean.logicalOr((length = StringUtils.length(g22)) == 3, length == 4)) {
 					//
 					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
