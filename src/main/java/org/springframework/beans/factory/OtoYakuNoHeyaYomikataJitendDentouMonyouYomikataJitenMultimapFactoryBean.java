@@ -4823,8 +4823,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				} // if
 					//
 			} else if (Boolean.logicalAnd(
-					(indexOf = StringUtils.indexOf(g22, "ん")) == (lastIndexOf = StringUtils.lastIndexOf(g22, "ん")),
-					indexOf == 1)) {
+					(indexOf = StringUtils.indexOf(g22, "ん")) == (StringUtils.lastIndexOf(g22, "ん")), indexOf == 1)) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
