@@ -4750,7 +4750,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String g22 = Util.getValue(entry);
 		//
-		int indexOf, lastIndexOf;
+		int indexOf, lastIndexOf, length;
 		//
 		Multimap<String, String> multimap = null;
 		//
@@ -4800,17 +4800,45 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 			} // if
 				//
-		} else if (Util.and(StringUtils.length(g21) == 2, StringUtils.length(g22) == 3,
-				(indexOf = StringUtils.indexOf(g22, "ん")) == (lastIndexOf = StringUtils.lastIndexOf(g22, "ん")),
-				Objects.equals(StringUtils.substring(g22, lastIndexOf), "ん"))) {
+		} else if (StringUtils.length(g21) == 2) {
 			//
-			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
-							StringUtils.substring(g22, 0, indexOf - 1), StringUtils.substring(g21, 1),
-							StringUtils.substring(g22, indexOf - 1)));
-			//
-			IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), index);
-			//
+			if ((indexOf = StringUtils.indexOf(g22, "ん")) == (lastIndexOf = StringUtils.lastIndexOf(g22, "ん"))
+					&& Objects.equals(StringUtils.substring(g22, lastIndexOf), "ん")) {
+				//
+				if ((length = StringUtils.length(g22)) == 3) {
+					//
+					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
+									StringUtils.substring(g22, 0, indexOf - 1), StringUtils.substring(g21, 1),
+									StringUtils.substring(g22, indexOf - 1)));
+					//
+					IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
+							index);
+					//
+				} else if (length == 4) {
+					//
+					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
+									StringUtils.substring(g22, 0, indexOf - 1), StringUtils.substring(g21, 1),
+									StringUtils.substring(g22, indexOf - 1)));
+					//
+					IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
+							index);
+					//
+				} // if
+					//
+			} else if ((indexOf = StringUtils.indexOf(g22, "ん")) == (lastIndexOf = StringUtils.lastIndexOf(g22, "ん"))
+					&& indexOf == 1) {
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
+								StringUtils.substring(g22, 0, indexOf + 1), StringUtils.substring(g21, 1),
+								StringUtils.substring(g22, indexOf + 1)));
+				//
+				IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), index);
+				//
+			} // if
+				//
 		} // if
 			//
 		return testAndApply((a, b) -> Boolean.logicalOr(a != null, b != null), multimap, intCollection, Pair::of, null);
