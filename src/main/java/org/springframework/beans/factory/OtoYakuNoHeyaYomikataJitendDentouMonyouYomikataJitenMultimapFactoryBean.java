@@ -4729,7 +4729,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
-								StringUtils.substring(g22, 0, ints[0] + 1), StringUtils.substring(g21, 1, 2),
+								StringUtils.substring(g22, 0, get(ints, 0, -1) + 1), StringUtils.substring(g21, 1, 2),
 								StringUtils.substring(g22, ints[0] + 1, ints[1] + 1), StringUtils.substring(g21, 2),
 								StringUtils.substring(g22, ints[2] - 1)));
 				//
@@ -4741,6 +4741,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		return testAndApply((a, b) -> Boolean.logicalOr(a != null, b != null), multimap, intCollection, Pair::of, null);
 		//
+	}
+
+	private static int get(final int[] instance, final int index, final int defaultValue) {
+		return instance != null ? instance[index] : defaultValue;
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection12C2(final int index,
@@ -4763,7 +4767,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			if (Boolean.logicalAnd(StringUtils.length(g21) == 3,
 					(length(ints = toArray(indexOf(g22, c -> c == 'ん')))) == 2)) {
 				//
-				if (Boolean.logicalAnd(ints[0] == 1, ints[1] == StringUtils.length(g22) - 1)) {
+				if (Boolean.logicalAnd(get(ints, 0, -1) == 1, ints[1] == StringUtils.length(g22) - 1)) {
 					//
 					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
