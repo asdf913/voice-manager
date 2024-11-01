@@ -4849,8 +4849,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	private static IntStream indexOf(final String string, final CharPredicate charPredicate) {
 		//
 		return filter(IntStream.range(0, StringUtils.length(string)),
-				i -> charPredicate != null && string != null && charPredicate.test(string.charAt(i)));
+				i -> string != null && test(charPredicate, string.charAt(i)));
 		//
+	}
+
+	private static boolean test(final CharPredicate instance, final char c) {
+		return instance != null && instance.test(c);
 	}
 
 	@Nullable

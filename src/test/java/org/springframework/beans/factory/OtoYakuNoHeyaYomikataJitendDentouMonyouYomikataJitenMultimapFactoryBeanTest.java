@@ -180,6 +180,10 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 					//
 					list.add(Boolean.FALSE);
 					//
+				} else if (Objects.equals(parameterType, Character.TYPE)) {
+					//
+					list.add(' ');
+					//
 				} else {
 					//
 					list.add(null);
