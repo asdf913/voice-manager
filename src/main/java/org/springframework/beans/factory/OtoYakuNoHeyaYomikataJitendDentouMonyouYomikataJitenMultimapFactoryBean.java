@@ -146,7 +146,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection9,
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection10,
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection11,
-						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection12);
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection12,
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection13);
 		//
 		Entry<Multimap<String, String>, IntCollection> entry = null;
 		//
@@ -4843,6 +4844,37 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		} // if
 			//
 		return testAndApply((a, b) -> Boolean.logicalOr(a != null, b != null), multimap, intCollection, Pair::of, null);
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection13(
+			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines) {
+		//
+		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$"),
+				PairUtil.right(iop));
+		//
+		if (Util.matches(m1) && Util.groupCount(m1) >= 3) {
+			//
+			final String g14 = Util.group(m1, 4);
+			//
+			final int[] ints = toArray(filter(IntStream.range(0, StringUtils.length(g14)),
+					x -> StringUtils.startsWith(getCharacterName(g14, x), HIRAGANA_LETTER_SMALL)));
+			//
+			if (length(ints) == 1) {
+				//
+				final String g12 = Util.group(m1, 2);
+				//
+				return Pair.of(ImmutableMultimap.of(Util.group(m1, 1), StringUtils.substringBefore(g14, g12),
+						Util.group(m1, 3), StringUtils.substringAfter(g14, g12)), createIntCollection(iop));
+				//
+			} // if
+				//
+			return null;
+			//
+		} // if
+			//
+		return null;
 		//
 	}
 
