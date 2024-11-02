@@ -4953,6 +4953,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			if (StringUtils.equals(g12, "の")) {
 				//
+				final String g11 = Util.group(m1, 1);
+				//
 				final String g13 = Util.group(m1, 3);
 				//
 				final String g14 = Util.group(m1, 4);
@@ -4962,10 +4964,17 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				if (length > 0 && g14 != null && g14.charAt(length - 1) == 'ん' && StringUtils.length(g13) > 1) {
 					//
 					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							ImmutableMultimap.of(Util.group(m1, 1), StringUtils.substringBefore(g14, g12),
+							ImmutableMultimap.of(g11, StringUtils.substringBefore(g14, g12),
 									StringUtils.substring(g13, 0, 1),
 									StringUtils.substring(g14, StringUtils.indexOf(g14, g12) + 1, length - 2),
 									StringUtils.substring(g13, 1), StringUtils.substring(g14, length - 2, length + 1)));
+					//
+					intCollection = createIntCollection(iop);
+					//
+				} else {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g11,
+							StringUtils.substringBefore(g14, g12));
 					//
 					intCollection = createIntCollection(iop);
 					//
