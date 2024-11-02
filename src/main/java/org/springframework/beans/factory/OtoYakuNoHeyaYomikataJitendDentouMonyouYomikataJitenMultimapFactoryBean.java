@@ -4961,7 +4961,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			if (StringUtils.equals(g12, "の")) {
 				//
-				if (length > 0 && g14 != null && g14.charAt(length - 1) == 'ん' && StringUtils.length(g13) > 1) {
+				if (length > 0 && equals(g14,length - 1, 'ん') && StringUtils.length(g13) > 1) {
 					//
 					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							ImmutableMultimap.of(g11, StringUtils.substringBefore(g14, g12),
@@ -4980,7 +4980,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 				} // if
 					//
-			} else if (StringUtils.equals(g12, "つ") && length > 0 && g14 != null && g14.charAt(length - 1) == 'ん'
+			} else if (StringUtils.equals(g12, "つ") && length > 0 && equals(g14, length - 1, 'ん')
 					&& StringUtils.length(g13) > 1) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
@@ -5015,6 +5015,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		return testAndApply((a, b) -> Boolean.logicalOr(a != null, b != null), multimap, intCollection, Pair::of, null);
 		//
+	}
+
+	private static boolean equals(final String string, final int index, final char c) {
+		return string != null && string.charAt(index) == c;
 	}
 
 	@Nullable
