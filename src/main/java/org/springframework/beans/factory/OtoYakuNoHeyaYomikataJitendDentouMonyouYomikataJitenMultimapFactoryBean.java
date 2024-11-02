@@ -5017,7 +5017,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static boolean equals(final String string, final int index, final char c) {
+	private static boolean equals(@Nullable final String string, final int index, final char c) {
 		return string != null && string.charAt(index) == c;
 	}
 
