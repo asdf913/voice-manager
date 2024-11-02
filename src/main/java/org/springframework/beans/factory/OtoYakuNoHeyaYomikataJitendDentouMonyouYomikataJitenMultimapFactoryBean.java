@@ -4856,6 +4856,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		if (Util.matches(m1) && Util.groupCount(m1) >= 3) {
 			//
+			final String g11 = Util.group(m1, 1);
+			//
+			final String g12 = Util.group(m1, 2);
+			//
+			final String g13 = Util.group(m1, 3);
+			//
 			final String g14 = Util.group(m1, 4);
 			//
 			final int[] ints = toArray(filter(IntStream.range(0, StringUtils.length(g14)),
@@ -4863,11 +4869,23 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			if (length(ints) == 1) {
 				//
-				final String g12 = Util.group(m1, 2);
+				return Pair.of(ImmutableMultimap.of(g11, StringUtils.substringBefore(g14, g12), g13,
+						StringUtils.substringAfter(g14, g12)), createIntCollection(iop));
 				//
-				return Pair.of(ImmutableMultimap.of(Util.group(m1, 1), StringUtils.substringBefore(g14, g12),
-						Util.group(m1, 3), StringUtils.substringAfter(g14, g12)), createIntCollection(iop));
+			} else if (StringUtils.endsWith(g14, "ん")) {
 				//
+				if (StringUtils.equals(g12, "つ")) {
+					//
+					return Pair.of(ImmutableMultimap.of(g11, StringUtils.substringBefore(g14, g12), g13,
+							StringUtils.substringAfter(g14, g12)), createIntCollection(iop));
+					//
+				} else {
+					//
+					return Pair.of(ImmutableMultimap.of(g13, StringUtils.substringAfter(g14, g12)),
+							createIntCollection(iop));
+					//
+				} // if
+					//
 			} // if
 				//
 			return null;
