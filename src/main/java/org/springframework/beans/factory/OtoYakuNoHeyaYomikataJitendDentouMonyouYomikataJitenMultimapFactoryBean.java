@@ -5002,6 +5002,16 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				intCollection = createIntCollection(iop);
 				//
+			} else if (StringUtils.equals(g12, "く") && StringUtils.length(g13) > 1 && length > 0
+					&& equals(g14, length - 1, 'ん')) {
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						ImmutableMultimap.of(StringUtils.substring(g13, 0, 1),
+								StringUtils.substring(g14, StringUtils.indexOf(g14, g12) + 1, length - 2),
+								StringUtils.substring(g13, 1), StringUtils.substring(g14, length - 2, length + 1)));
+				//
+				intCollection = createIntCollection(iop);
+				//
 			} // if
 				//
 		} // if
