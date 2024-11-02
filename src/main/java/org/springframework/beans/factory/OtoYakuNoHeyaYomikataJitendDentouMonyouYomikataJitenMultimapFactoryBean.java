@@ -4959,9 +4959,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			final int length = StringUtils.length(g14);
 			//
+			final boolean g14EndsWithHiraganaLetterN = length > 0 && equals(g14, length - 1, 'ん');
+			//
 			if (StringUtils.equals(g12, "の")) {
 				//
-				if (length > 0 && equals(g14, length - 1, 'ん') && StringUtils.length(g13) > 1) {
+				if (g14EndsWithHiraganaLetterN && StringUtils.length(g13) > 1) {
 					//
 					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							ImmutableMultimap.of(g11, StringUtils.substringBefore(g14, g12),
@@ -4980,8 +4982,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 				} // if
 					//
-			} else if (StringUtils.equals(g12, "つ") && length > 0 && equals(g14, length - 1, 'ん')
-					&& StringUtils.length(g13) > 1) {
+			} else if (StringUtils.equals(g12, "つ") && g14EndsWithHiraganaLetterN && StringUtils.length(g13) > 1) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						ImmutableMultimap.of(g11, StringUtils.substringBefore(g14, g12),
