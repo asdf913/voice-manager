@@ -4994,7 +4994,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				intCollection = createIntCollection(iop);
 				//
-			} else if (StringUtils.equals(g12, "く") && StringUtils.length(g13) > 1 && g14EndsWithHiraganaLetterN) {
+			} else if (Boolean.logicalAnd(StringUtils.equals(g12, "く"), StringUtils.length(g13) > 1)
+					&& g14EndsWithHiraganaLetterN) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						ImmutableMultimap.of(StringUtils.substring(g13, 0, 1),
