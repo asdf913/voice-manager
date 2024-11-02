@@ -4851,7 +4851,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection13(
 			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines) {
 		//
-		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
+		Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$"),
 				PairUtil.right(iop));
 		//
@@ -4859,13 +4859,15 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		IntCollection intCollection = null;
 		//
+		String g12, g13;
+		//
 		if (Util.matches(m1) && Util.groupCount(m1) >= 3) {
 			//
 			final String g11 = Util.group(m1, 1);
 			//
-			final String g12 = Util.group(m1, 2);
+			g12 = Util.group(m1, 2);
 			//
-			final String g13 = Util.group(m1, 3);
+			g13 = Util.group(m1, 3);
 			//
 			final String g14 = Util.group(m1, 4);
 			//
@@ -4909,6 +4911,52 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			} // if
 				//
 		} // if
+			//
+		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$"),
+				PairUtil.right(iop))) && Util.groupCount(m1) >= 3) {
+			//
+			if (StringUtils.equals(g12 = Util.group(m1, 2), "の")) {
+				//
+				final String g14 = Util.group(m1, 4);
+				//
+				final int length = StringUtils.length(g14);
+				//
+				if (length > 0 && g14 != null && g14.charAt(length - 1) == 'ん'
+						&& StringUtils.length(g13 = Util.group(m1, 3)) > 1) {
+					//
+					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							ImmutableMultimap.of(Util.group(m1, 1), StringUtils.substringBefore(g14, g12),
+									StringUtils.substring(g13, 0, 1),
+									StringUtils.substring(g14, StringUtils.indexOf(g14, g12) + 1, length - 2),
+									StringUtils.substring(g13, 1), StringUtils.substring(g14, length - 2, length + 1)));
+					//
+					intCollection = createIntCollection(iop);
+					//
+				} // if
+					//
+			} // if
+				//
+		} // if
+			//
+		final Multimap<String, String> mm = LinkedHashMultimap.create(ImmutableMultimap.of("住", "すみ", "鹿", "か"));
+		//
+		final Iterable<Entry<String, String>> entries = MultimapUtil.entries(mm);
+		//
+		Entry<String, String> entry;
+		//
+		String k, v;
+		//
+		for (int i = 0; i < IterableUtils.size(entries); i++) {
+			//
+			if (MultimapUtil.containsEntry(multimap, k = Util.getKey(entry = IterableUtils.get(entries, i)),
+					v = Util.getValue(entry))) {
+				//
+				MultimapUtil.remove(multimap, k, v);
+				//
+			} // if
+				//
+		} // for
 			//
 		final Iterable<Triplet<String, String, String>> triplets = Arrays.asList(Triplet.with("鮫", "ざめ", "さめ"),
 				Triplet.with("縞", "じま", "しま"));
