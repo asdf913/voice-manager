@@ -4984,7 +4984,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 			} else if ((Boolean.logicalAnd(StringUtils.equals(g12, "つ"), g14EndsWithHiraganaLetterN)
 					&& StringUtils.length(g13) > 1)
-					|| (StringUtils.equals(g12, "と") && StringUtils.length(g13) > 1 && g14EndsWithHiraganaLetterN)) {
+					|| (Boolean.logicalAnd(StringUtils.equals(g12, "と"), StringUtils.length(g13) > 1)
+							&& g14EndsWithHiraganaLetterN)) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						ImmutableMultimap.of(g11, StringUtils.substringBefore(g14, g12),
@@ -4994,8 +4995,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				intCollection = createIntCollection(iop);
 				//
-			} else if (Util.and(StringUtils.equals(g12, "く"), StringUtils.length(g13) > 1
-					, g14EndsWithHiraganaLetterN)) {
+			} else if (Util.and(StringUtils.equals(g12, "く"), StringUtils.length(g13) > 1,
+					g14EndsWithHiraganaLetterN)) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						ImmutableMultimap.of(StringUtils.substring(g13, 0, 1),
