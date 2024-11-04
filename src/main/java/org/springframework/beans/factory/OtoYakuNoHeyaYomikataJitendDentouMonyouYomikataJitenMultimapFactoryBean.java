@@ -5028,17 +5028,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		Entry<String, String> entry;
 		//
-		String k, v;
-		//
 		for (int i = 0; i < IterableUtils.size(entries); i++) {
 			//
-			if (MultimapUtil.containsEntry(multimap, k = Util.getKey(entry = IterableUtils.get(entries, i)),
-					v = Util.getValue(entry))) {
-				//
-				MultimapUtil.remove(multimap, k, v);
-				//
-			} // if
-				//
+			testAndAccept((a, b, c) -> MultimapUtil.containsEntry(a, b, c), multimap,
+					Util.getKey(entry = IterableUtils.get(entries, i)), Util.getValue(entry),
+					(a, b, c) -> MultimapUtil.remove(a, b, c));
+			//
 		} // for
 			//
 		return testAndApply((a, b) -> Boolean.logicalOr(a != null, b != null), multimap, intCollection, Pair::of, null);
