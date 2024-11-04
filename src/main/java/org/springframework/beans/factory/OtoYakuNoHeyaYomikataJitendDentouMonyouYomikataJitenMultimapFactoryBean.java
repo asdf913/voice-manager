@@ -5006,7 +5006,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			intCollection = createIntCollection(iop);
 			//
-		} else if (Boolean.logicalAnd(Util.contains(Arrays.asList("し", "る", "り", "ね"), g12),
+		} else if (Boolean.logicalAnd(Util.contains(Arrays.asList("し", "る", "り", "ね", "き"), g12),
 				StringUtils.length(g13) > 1)) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g13,
