@@ -4947,43 +4947,27 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		IntCollection intCollection = null;
 		//
-		if (Util.matches(m1) && Util.groupCount(m1) >= 3) {
+		if (!Util.matches(m1) && Util.groupCount(m1) <= 3) {
 			//
-			final String g11 = Util.group(m1, 1);
+			return null;
 			//
-			final String g12 = Util.group(m1, 2);
+		} // if
 			//
-			final String g13 = Util.group(m1, 3);
+		final String g11 = Util.group(m1, 1);
+		//
+		final String g12 = Util.group(m1, 2);
+		//
+		final String g13 = Util.group(m1, 3);
+		//
+		final String g14 = Util.group(m1, 4);
+		//
+		final int length = StringUtils.length(g14);
+		//
+		final boolean g14EndsWithHiraganaLetterN = length > 0 && equals(g14, length - 1, 'ん');
+		//
+		if (StringUtils.equals(g12, "の")) {
 			//
-			final String g14 = Util.group(m1, 4);
-			//
-			final int length = StringUtils.length(g14);
-			//
-			final boolean g14EndsWithHiraganaLetterN = length > 0 && equals(g14, length - 1, 'ん');
-			//
-			if (StringUtils.equals(g12, "の")) {
-				//
-				if (Boolean.logicalAnd(g14EndsWithHiraganaLetterN, StringUtils.length(g13) > 1)) {
-					//
-					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							ImmutableMultimap.of(g11, StringUtils.substringBefore(g14, g12),
-									StringUtils.substring(g13, 0, 1),
-									StringUtils.substring(g14, StringUtils.indexOf(g14, g12) + 1, length - 2),
-									StringUtils.substring(g13, 1), StringUtils.substring(g14, length - 2, length + 1)));
-					//
-					intCollection = createIntCollection(iop);
-					//
-				} else {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g11,
-							StringUtils.substringBefore(g14, g12));
-					//
-					intCollection = createIntCollection(iop);
-					//
-				} // if
-					//
-			} else if (Util.and(Util.contains(Arrays.asList("つ", "と"), g12), StringUtils.length(g13) > 1,
-					g14EndsWithHiraganaLetterN)) {
+			if (Boolean.logicalAnd(g14EndsWithHiraganaLetterN, StringUtils.length(g13) > 1)) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						ImmutableMultimap.of(g11, StringUtils.substringBefore(g14, g12),
@@ -4993,32 +4977,48 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				intCollection = createIntCollection(iop);
 				//
-			} else if (Util.and(StringUtils.equals(g12, "く"), StringUtils.length(g13) > 1,
-					g14EndsWithHiraganaLetterN)) {
+			} else {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g11,
+						StringUtils.substringBefore(g14, g12));
+				//
+				intCollection = createIntCollection(iop);
+				//
+			} // if
+				//
+		} else if (Util.and(Util.contains(Arrays.asList("つ", "と"), g12), StringUtils.length(g13) > 1,
+				g14EndsWithHiraganaLetterN)) {
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					ImmutableMultimap.of(g11, StringUtils.substringBefore(g14, g12), StringUtils.substring(g13, 0, 1),
+							StringUtils.substring(g14, StringUtils.indexOf(g14, g12) + 1, length - 2),
+							StringUtils.substring(g13, 1), StringUtils.substring(g14, length - 2, length + 1)));
+			//
+			intCollection = createIntCollection(iop);
+			//
+		} else if (Util.and(StringUtils.equals(g12, "く"), StringUtils.length(g13) > 1, g14EndsWithHiraganaLetterN)) {
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					ImmutableMultimap.of(StringUtils.substring(g13, 0, 1),
+							StringUtils.substring(g14, StringUtils.indexOf(g14, g12) + 1, length - 2),
+							StringUtils.substring(g13, 1), StringUtils.substring(g14, length - 2, length + 1)));
+			//
+			intCollection = createIntCollection(iop);
+			//
+		} else if (Boolean.logicalAnd(StringUtils.equals(g12, "し"), StringUtils.length(g13) > 1)) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g13,
+					StringUtils.substringAfter(g14, g12));
+			//
+			intCollection = createIntCollection(iop);
+			//
+			if (g14EndsWithHiraganaLetterN) {
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						ImmutableMultimap.of(StringUtils.substring(g13, 0, 1),
 								StringUtils.substring(g14, StringUtils.indexOf(g14, g12) + 1, length - 2),
-								StringUtils.substring(g13, 1), StringUtils.substring(g14, length - 2, length + 1)));
+								StringUtils.substring(g13, 1), StringUtils.substring(g14, length - 2)));
 				//
-				intCollection = createIntCollection(iop);
-				//
-			} else if (Boolean.logicalAnd(StringUtils.equals(g12, "し"), StringUtils.length(g13) > 1)) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g13,
-						StringUtils.substringAfter(g14, g12));
-				//
-				intCollection = createIntCollection(iop);
-				//
-				if (g14EndsWithHiraganaLetterN) {
-					//
-					MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-							ImmutableMultimap.of(StringUtils.substring(g13, 0, 1),
-									StringUtils.substring(g14, StringUtils.indexOf(g14, g12) + 1, length - 2),
-									StringUtils.substring(g13, 1), StringUtils.substring(g14, length - 2)));
-					//
-				} // if
-					//
 			} // if
 				//
 		} // if
