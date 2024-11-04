@@ -5005,7 +5005,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			intCollection = createIntCollection(iop);
 			//
-		} else if (Boolean.logicalAnd(StringUtils.equals(g12, "し"), StringUtils.length(g13) > 1)) {
+		} else if (Boolean.logicalAnd(Util.contains(Arrays.asList("し", "る"), g12), StringUtils.length(g13) > 1)) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g13,
 					StringUtils.substringAfter(g14, g12));
@@ -5023,8 +5023,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 		} // if
 			//
-		final Iterable<Entry<String, String>> entries = MultimapUtil
-				.entries(LinkedHashMultimap.create(ImmutableMultimap.of("住", "すみ", "鹿", "か")));
+		final Iterable<Entry<String, String>> entries = MultimapUtil.entries(
+				LinkedHashMultimap.create(ImmutableMultimap.of("住", "すみ", "鹿", "か", "波文", "なみもん", "猪文", "いのししもん")));
 		//
 		Entry<String, String> entry;
 		//
