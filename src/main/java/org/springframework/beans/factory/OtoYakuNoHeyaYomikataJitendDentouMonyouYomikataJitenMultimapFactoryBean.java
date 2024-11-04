@@ -5030,9 +5030,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		for (int i = 0; i < IterableUtils.size(entries); i++) {
 			//
-			testAndAccept((a, b, c) -> MultimapUtil.containsEntry(a, b, c), multimap,
-					Util.getKey(entry = IterableUtils.get(entries, i)), Util.getValue(entry),
-					(a, b, c) -> MultimapUtil.remove(a, b, c));
+			testAndAccept(MultimapUtil::containsEntry, multimap, Util.getKey(entry = IterableUtils.get(entries, i)),
+					Util.getValue(entry), MultimapUtil::remove);
 			//
 		} // for
 			//
