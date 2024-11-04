@@ -4947,7 +4947,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		IntCollection intCollection = null;
 		//
-		if (!Util.matches(m1) && Util.groupCount(m1) <= 3) {
+		if (!Util.matches(m1) || Util.groupCount(m1) <= 3) {
 			//
 			return null;
 			//
