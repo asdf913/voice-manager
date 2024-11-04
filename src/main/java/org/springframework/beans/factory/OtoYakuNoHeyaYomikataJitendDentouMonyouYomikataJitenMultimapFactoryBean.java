@@ -5006,7 +5006,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			intCollection = createIntCollection(iop);
 			//
-		} else if (Boolean.logicalAnd(Util.contains(Arrays.asList("し", "る", "り", "ね", "き", "れ"), g12),
+		} else if (Boolean.logicalAnd(Util.contains(Arrays.asList("し", "る", "り", "ね", "き", "れ", "い"), g12),
 				StringUtils.length(g13) > 1)) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g13,
@@ -5028,7 +5028,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		final Multimap<String, String> mm = LinkedHashMultimap
 				.create(ImmutableMultimap.of("住", "すみ", "鹿", "か", "波文", "なみもん", "猪文", "いのししもん", "子文", "こもん"));
 		//
-		MultimapUtil.putAll(mm, ImmutableMultimap.of("桐文", "きりもん", "松文", "まつもん", "雲文", "くももん"));
+		MultimapUtil.putAll(mm, ImmutableMultimap.of("桐文", "きりもん", "松文", "まつもん", "雲文", "くももん", "鶴文", "つるもん"));
 		//
 		final Iterable<Entry<String, String>> entries = MultimapUtil.entries(mm);
 		//
