@@ -149,7 +149,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection12,
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection13,
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection14,
-						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection15);
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection15,
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection16);
 		//
 		Entry<Multimap<String, String>, IntCollection> entry = null;
 		//
@@ -5127,11 +5128,21 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
+		return null;
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection16(
+			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines) {
+		//
+		String g11, g12;
+		//
 		final Pattern pattern = PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}{3})\\p{InHalfwidthAndFullwidthForms}");
 		//
-		if (Util.matches(m1 = Util.matcher(pattern, PairUtil.right(iop))) && Util.groupCount(m1) > 1
-				&& StringUtils.length(g11 = Util.group(m1, 1)) == 2
+		final Matcher m1 = Util.matcher(pattern, PairUtil.right(iop));
+		//
+		if (Util.matches(m1) && Util.groupCount(m1) > 1 && StringUtils.length(g11 = Util.group(m1, 1)) == 2
 				&& StringUtils.length(g12 = Util.group(m1, 2)) == 3) {
 			//
 			if (Util.contains(Arrays.asList("ん", "ょ"), StringUtils.substring(g12, 1, 2))) {
