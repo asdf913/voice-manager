@@ -5023,12 +5023,25 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
+		} else if (Objects.equals(g12, "に") && StringUtils.length(g13) > 1 && g14EndsWithHiraganaLetterN) {
+			//
+			MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					ImmutableMultimap.of(g11, StringUtils.substringBefore(g14, g12), g13,
+							StringUtils.substringAfter(g14, g12), StringUtils.substring(g13, 0, 1),
+							StringUtils.substring(g14, StringUtils.indexOf(g14, g12) + 1, length - 2),
+							StringUtils.substring(g13, 1), StringUtils.substring(g14, length - 2, length + 1)));
+			//
+			intCollection = createIntCollection(iop);
+			//
 		} // if
 			//
 		final Multimap<String, String> mm = LinkedHashMultimap
 				.create(ImmutableMultimap.of("住", "すみ", "鹿", "か", "波文", "なみもん", "猪文", "いのししもん", "子文", "こもん"));
 		//
-		MultimapUtil.putAll(mm, ImmutableMultimap.of("桐文", "きりもん", "松文", "まつもん", "雲文", "くももん", "鶴文", "つるもん"));
+		MultimapUtil.putAll(mm,
+				ImmutableMultimap.of("桐文", "きりもん", "松文", "まつもん", "雲文", "くももん", "鶴文", "つるもん", "雁文", "がんもん"));
+		//
+		MultimapUtil.putAll(mm, ImmutableMultimap.of("魚文", "うおもん", "舟文", "ふねもん", "鳥文", "とりもん"));
 		//
 		final Iterable<Entry<String, String>> entries = MultimapUtil.entries(mm);
 		//
