@@ -5033,6 +5033,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			intCollection = createIntCollection(iop);
 			//
+		} else if (Objects.equals(g12, "び")) {
+			//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g13,
+					StringUtils.substringAfter(g14, g12));
+			//
+			intCollection = createIntCollection(iop);
+			//
 		} // if
 			//
 		final Multimap<String, String> mm = LinkedHashMultimap
