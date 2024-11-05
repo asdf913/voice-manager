@@ -5179,18 +5179,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 				} // for
 					//
-				final Iterable<Entry<String, String>> entries = MultimapUtil.entries(ImmutableMultimap.of("厚", "あつ"));
+				Util.forEach(MultimapUtil.entries(ImmutableMultimap.of("厚", "あつ")),
+						x -> testAndAccept(MultimapUtil::containsEntry, multimap, Util.getKey(x), Util.getValue(x),
+								MultimapUtil::remove));
 				//
-				Entry<String, String> entry;
-				//
-				for (int i = 0; i < IterableUtils.size(entries); i++) {
-					//
-					testAndAccept(MultimapUtil::containsEntry, multimap,
-							Util.getKey(entry = IterableUtils.get(entries, i)), Util.getValue(entry),
-							MultimapUtil::remove);
-					//
-				} // for
-					//
 				return Pair.of(multimap, intCollection);
 				//
 			} // if
