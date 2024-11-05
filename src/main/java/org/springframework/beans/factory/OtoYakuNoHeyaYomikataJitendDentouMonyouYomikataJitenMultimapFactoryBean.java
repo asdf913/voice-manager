@@ -5128,7 +5128,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				PairUtil.right(iop))) && Util.groupCount(m1) > 1 && StringUtils.length(g1 = Util.group(m1, 1)) == 2
 				&& StringUtils.length(g2 = Util.group(m1, 2)) == 3) {
 			//
-			if (Objects.equals(StringUtils.substring(g2, 1, 2), "ん")) {
+			if (Util.contains(Arrays.asList("ん", "ょ"), StringUtils.substring(g2, 1, 2))) {
 				//
 				return Pair.of(ImmutableMultimap.of(g1, g2, StringUtils.substring(g1, 0, 1),
 						StringUtils.substring(g2, 0, 2), StringUtils.substring(g1, 1), StringUtils.substring(g2, 2)),
