@@ -5140,6 +5140,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						StringUtils.substring(g2, 0, 1), StringUtils.substring(g1, 1), StringUtils.substring(g2, 1)),
 						createIntCollection(iop));
 				//
+			} else {
+				//
+				return Pair.of(ImmutableMultimap.of(g1, g2), createIntCollection(iop));
+				//
 			} // if
 				//
 		} // if
