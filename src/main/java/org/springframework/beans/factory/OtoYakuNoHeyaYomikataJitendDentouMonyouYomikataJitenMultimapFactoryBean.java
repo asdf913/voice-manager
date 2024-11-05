@@ -5158,25 +5158,22 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				for (int i = 0; i < IterableUtils.size(lines); i++) {
 					//
-					if (keyIntEquals(iop, i)) {
+					if (keyIntEquals(iop, i) || !Util.matches(m2 = Util.matcher(pattern, IterableUtils.get(lines, i)))
+							|| Util.groupCount(m2) <= 1
+							|| StringUtils.isBlank(csk = Strings.commonSuffix(g11, g21 = Util.group(m2, 1)))
+							|| StringUtils.isBlank(csv = Strings.commonSuffix(g12, g22 = Util.group(m2, 2)))) {
 						//
 						continue;
 						//
 					} // if
 						//
-					if (Util.matches(m2 = Util.matcher(pattern, IterableUtils.get(lines, i))) && Util.groupCount(m2) > 1
-							&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21 = Util.group(m2, 1)))
-							&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22 = Util.group(m2, 2)))) {
-						//
-						MultimapUtil.putAll(multimap,
-								ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
-										StringUtils.substringBefore(g12, csv), csk, csv, g21, g22,
-										StringUtils.substring(g21, 0, 1), StringUtils.substringBefore(g22, csv)));
-						//
-						IntCollectionUtil.addInt(intCollection, i);
-						//
-					} // if
-						//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
+									StringUtils.substringBefore(g12, csv), csk, csv, g21, g22,
+									StringUtils.substring(g21, 0, 1), StringUtils.substringBefore(g22, csv)));
+					//
+					IntCollectionUtil.addInt(intCollection, i);
+					//
 				} // for
 					//
 				Util.forEach(MultimapUtil.entries(ImmutableMultimap.of("厚", "あつ")),
