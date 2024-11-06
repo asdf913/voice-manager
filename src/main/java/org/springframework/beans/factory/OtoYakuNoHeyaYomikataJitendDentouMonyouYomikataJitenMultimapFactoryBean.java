@@ -5148,71 +5148,70 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		IntCollection intCollection = null;
 		//
-		if (Util.matches(m1) && Util.groupCount(m1) > 1 && StringUtils.length(g11 = Util.group(m1, 1)) == 2
-				&& StringUtils.length(g12 = Util.group(m1, 2)) == 3) {
+		if (!Util.matches(m1) || Util.groupCount(m1) <= 1 || StringUtils.length(g11 = Util.group(m1, 1)) != 2
+				|| StringUtils.length(g12 = Util.group(m1, 2)) != 3) {
 			//
-			if (Util.contains(Arrays.asList("ん", "ょ"), StringUtils.substring(g12, 1, 2))) {
-				//
-				return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
-						StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 1), StringUtils.substring(g12, 2)),
-						createIntCollection(iop));
-				//
-			} else if (StringUtils.endsWith(g12, "ん")) {
-				//
-				return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
-						StringUtils.substring(g12, 0, 1), StringUtils.substring(g11, 1), StringUtils.substring(g12, 1)),
-						createIntCollection(iop));
-				//
-			} else {
-				//
-				multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
-				//
-				intCollection = createIntCollection(iop);
-				//
-				Matcher m2;
-				//
-				String g21, g22, csk, csv;
-				//
-				for (int i = 0; i < IterableUtils.size(lines); i++) {
-					//
-					if (keyIntEquals(iop, i) || !Util.matches(m2 = Util.matcher(pattern, IterableUtils.get(lines, i)))
-							|| Util.groupCount(m2) <= 1
-							|| StringUtils.isBlank(csk = Strings.commonSuffix(g11, g21 = Util.group(m2, 1)))
-							|| StringUtils.isBlank(csv = Strings.commonSuffix(g12, g22 = Util.group(m2, 2)))) {
-						//
-						continue;
-						//
-					} // if
-						//
-					MultimapUtil.putAll(multimap,
-							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
-									StringUtils.substringBefore(g12, csv), csk, csv, g21, g22,
-									StringUtils.substring(g21, 0, 1), StringUtils.substringBefore(g22, csv)));
-					//
-					IntCollectionUtil.addInt(intCollection, i);
-					//
-				} // for
-					//
-				final Iterable<Entry<String, String>> entries = MultimapUtil.entries(ImmutableMultimap.of("厚", "あつ"));
-				//
-				Entry<String, String> entry = null;
-				//
-				for (int i = 0; i < IterableUtils.size(entries); i++) {
-					//
-					testAndAccept(MultimapUtil::containsEntry, multimap,
-							Util.getKey(entry = IterableUtils.get(entries, i)), Util.getValue(entry),
-							MultimapUtil::remove);
-					//
-				} // for
-					//
-				return Pair.of(multimap, intCollection);
-				//
-			} // if
-				//
+			return null;
+			//
 		} // if
 			//
-		return null;
-		//
+		if (Util.contains(Arrays.asList("ん", "ょ"), StringUtils.substring(g12, 1, 2))) {
+			//
+			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
+					StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 1), StringUtils.substring(g12, 2)),
+					createIntCollection(iop));
+			//
+		} else if (StringUtils.endsWith(g12, "ん")) {
+			//
+			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
+					StringUtils.substring(g12, 0, 1), StringUtils.substring(g11, 1), StringUtils.substring(g12, 1)),
+					createIntCollection(iop));
+			//
+		} else {
+			//
+			multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
+			//
+			intCollection = createIntCollection(iop);
+			//
+			Matcher m2;
+			//
+			String g21, g22, csk, csv;
+			//
+			for (int i = 0; i < IterableUtils.size(lines); i++) {
+				//
+				if (keyIntEquals(iop, i) || !Util.matches(m2 = Util.matcher(pattern, IterableUtils.get(lines, i)))
+						|| Util.groupCount(m2) <= 1
+						|| StringUtils.isBlank(csk = Strings.commonSuffix(g11, g21 = Util.group(m2, 1)))
+						|| StringUtils.isBlank(csv = Strings.commonSuffix(g12, g22 = Util.group(m2, 2)))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				MultimapUtil.putAll(multimap,
+						ImmutableMultimap.of(StringUtils.substring(g11, 0, 1), StringUtils.substringBefore(g12, csv),
+								csk, csv, g21, g22, StringUtils.substring(g21, 0, 1),
+								StringUtils.substringBefore(g22, csv)));
+				//
+				IntCollectionUtil.addInt(intCollection, i);
+				//
+			} // for
+				//
+			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(ImmutableMultimap.of("厚", "あつ"));
+			//
+			Entry<String, String> entry = null;
+			//
+			for (int i = 0; i < IterableUtils.size(entries); i++) {
+				//
+				testAndAccept(MultimapUtil::containsEntry, multimap, Util.getKey(entry = IterableUtils.get(entries, i)),
+						Util.getValue(entry), MultimapUtil::remove);
+				//
+			} // for
+				//
+			return Pair.of(multimap, intCollection);
+			//
+		} // if
+			//
 	}
 
 	@Nullable
