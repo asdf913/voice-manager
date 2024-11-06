@@ -702,6 +702,9 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		Assertions.assertEquals("({厚司=[あつし]},[0])", Objects.toString(toMultimapAndIntCollection(patternMap,
 				IntObjectPair.of(ZERO, "厚司（あつし）"), Arrays.asList(null, "井桁（いげた）"))));
 		//
+		Assertions.assertEquals("({蒼縞=[あおじま]},[0])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "蒼縞（あおじま）"), null)));
+		//
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection(
