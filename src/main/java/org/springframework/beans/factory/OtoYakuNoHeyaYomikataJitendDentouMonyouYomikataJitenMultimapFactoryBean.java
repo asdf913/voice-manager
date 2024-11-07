@@ -5320,22 +5320,20 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		});
 		//
-		final Iterable<Triplet<String, String, String>> triplets = Arrays.asList(Triplet.with("春", "ぱる", "はる"),
-				Triplet.with("風", "ぷう", "ふう"), Triplet.with("樽", "だる", "たる"));
+		Util.forEach(Arrays.asList(Triplet.with("春", "ぱる", "はる"), Triplet.with("風", "ぷう", "ふう"),
+				Triplet.with("樽", "だる", "たる")), x -> {
+					//
+					testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)),
+							multimap, x, (a, b) -> {
+								//
+								MultimapUtil.remove(a, IValue0Util.getValue0(b), Util.getValue1(b));
+								//
+								MultimapUtil.put(a, IValue0Util.getValue0(b), Util.getValue2(b));
+								//
+							});
+					//
+				});
 		//
-		for (int i = 0; i < IterableUtils.size(triplets); i++) {
-			//
-			testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)),
-					multimap, IterableUtils.get(triplets, i), (a, b) -> {
-						//
-						MultimapUtil.remove(a, IValue0Util.getValue0(b), Util.getValue1(b));
-						//
-						MultimapUtil.put(a, IValue0Util.getValue0(b), Util.getValue2(b));
-						//
-					});
-			//
-		} // for
-			//
 		return Pair.of(multimap, createIntCollection(iop));
 		//
 	}
