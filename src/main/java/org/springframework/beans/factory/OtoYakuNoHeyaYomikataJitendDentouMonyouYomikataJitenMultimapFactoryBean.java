@@ -5313,17 +5313,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 		} // if
 			//
-		final Iterable<Entry<String, String>> entries = MultimapUtil.entries(ImmutableMultimap.of("目", "も", "八", "は"));
+		Util.forEach(MultimapUtil.entries(ImmutableMultimap.of("目", "も", "八", "は")), x -> {
+			//
+			testAndAccept(MultimapUtil::containsEntry, multimap, Util.getKey(x), Util.getValue(x),
+					MultimapUtil::remove);
+			//
+		});
 		//
-		Entry<String, String> entry;
-		//
-		for (int i = 0; i < IterableUtils.size(entries); i++) {
-			//
-			testAndAccept(MultimapUtil::containsEntry, multimap, Util.getKey(entry = IterableUtils.get(entries, i)),
-					Util.getValue(entry), MultimapUtil::remove);
-			//
-		} // for
-			//
 		final Iterable<Triplet<String, String, String>> triplets = Arrays.asList(Triplet.with("春", "ぱる", "はる"),
 				Triplet.with("風", "ぷう", "ふう"), Triplet.with("樽", "だる", "たる"));
 		//
