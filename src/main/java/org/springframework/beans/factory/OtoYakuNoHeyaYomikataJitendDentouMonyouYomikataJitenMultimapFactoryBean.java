@@ -5239,8 +5239,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final int[] ints = toArray(filter(IntStream.range(0, StringUtils.length(g12)),
 					x -> StringUtils.startsWith(getCharacterName(g12, x), HIRAGANA_LETTER_SMALL)));
 			//
-			char c;
-			//
 			if (lastIndexOf > indexOf) {
 				//
 				MultimapUtil.putAll(multimap,
