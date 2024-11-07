@@ -5266,7 +5266,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 		} else if (Boolean.logicalAnd(length(ints) == 1, g12 != null)) {
 			//
-			if (Boolean.logicalAnd((indexOf = ints[0]) == StringUtils.length(g12) - 2,
+			if (Boolean.logicalAnd((indexOf = get(ints, 0, 0)) == StringUtils.length(g12) - 2,
 					ArrayUtils.contains(new char[] { 'ょ', 'ゅ' }, g12.charAt(indexOf)))) {
 				//
 				MultimapUtil.putAll(multimap,
