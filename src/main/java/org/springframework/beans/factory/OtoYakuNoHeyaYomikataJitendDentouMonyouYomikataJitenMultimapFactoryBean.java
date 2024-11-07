@@ -29,6 +29,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -5266,14 +5267,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 			} else if (length(ints) == 1 && g12 != null) {
 				//
-				if ((c = g12.charAt(indexOf = ints[0])) == 'ょ' && indexOf == StringUtils.length(g12) - 2) {
-					//
-					MultimapUtil.putAll(multimap,
-							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
-									StringUtils.substring(g12, 0, indexOf - 1), StringUtils.substring(g11, 1),
-									StringUtils.substring(g12, indexOf - 1)));
-					//
-				} else if (c == 'ゅ' && indexOf == StringUtils.length(g12) - 2) {
+				if ((indexOf = ints[0]) == StringUtils.length(g12) - 2
+						&& ArrayUtils.contains(new char[] { 'ょ', 'ゅ' }, c = g12.charAt(indexOf = ints[0]))) {
 					//
 					MultimapUtil.putAll(multimap,
 							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
