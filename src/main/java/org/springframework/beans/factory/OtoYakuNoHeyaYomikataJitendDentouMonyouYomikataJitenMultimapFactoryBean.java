@@ -5219,9 +5219,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection17(
 			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines) {
 		//
-		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}{4})\\p{InHalfwidthAndFullwidthForms}"),
-				PairUtil.right(iop));
+		final Pattern pattern = PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}{4})\\p{InHalfwidthAndFullwidthForms}");
+		//
+		final Matcher m1 = Util.matcher(pattern, PairUtil.right(iop));
 		//
 		String g11, g12;
 		//
@@ -5282,6 +5283,41 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
+		} else {
+			//
+			Matcher m2 = null;
+			//
+			String g21, g22, cpk, cpv;
+			//
+			for (int i = 0; i < IterableUtils.size(lines); i++) {
+				//
+				if (keyIntEquals(iop, i) || !Util.matches(m2 = Util.matcher(pattern, IterableUtils.get(lines, i)))
+						|| Util.groupCount(m2) <= 1
+						|| StringUtils.isBlank(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1)))
+						|| StringUtils.isBlank(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2)))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (!StringUtils.endsWith(g22, "ん") && StringUtils.length(cpv) > 1) {
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(g21, g22, cpk, cpv, StringUtils.substringAfter(g11, cpk),
+									StringUtils.substringAfter(g12, cpv), StringUtils.substringAfter(g21, cpk),
+									StringUtils.substringAfter(g22, cpv)));
+					//
+				} else if (StringUtils.length(cpv) > 1) {
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(g21, g22, cpk, cpv, StringUtils.substringAfter(g11, cpk),
+									StringUtils.substringAfter(g12, cpv), StringUtils.substringAfter(g21, cpk),
+									StringUtils.substringAfter(g22, cpv)));
+					//
+				} // if
+					//
+			} // for
+				//
 		} // if
 			//
 		final Iterable<Entry<String, String>> entries = MultimapUtil.entries(ImmutableMultimap.of("目", "も", "八", "は"));
@@ -5296,7 +5332,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		} // for
 			//
 		final Iterable<Triplet<String, String, String>> triplets = Arrays.asList(Triplet.with("春", "ぱる", "はる"),
-				Triplet.with("風", "ぷう", "ふう"));
+				Triplet.with("風", "ぷう", "ふう"), Triplet.with("樽", "だる", "たる"));
 		//
 		for (int i = 0; i < IterableUtils.size(triplets); i++) {
 			//
