@@ -5282,22 +5282,17 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final Iterable<Triplet<String, String, String>> triplets = Arrays.asList(Triplet.with("春", "ぱる", "はる"),
 					Triplet.with("風", "ぷう", "ふう"));
 			//
-			Triplet<String, String, String> triplet = null;
-			//
-			String iValue0, iValue1;
-			//
 			for (int i = 0; i < IterableUtils.size(triplets); i++) {
 				//
-				if (MultimapUtil.containsEntry(multimap,
-						iValue0 = IValue0Util.getValue0(triplet = IterableUtils.get(triplets, i)),
-						iValue1 = Util.getValue1(triplet))) {
-					//
-					MultimapUtil.remove(multimap, iValue0, iValue1);
-					//
-					MultimapUtil.put(multimap, iValue0, Util.getValue2(triplet));
-					//
-				} // if
-					//
+				testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)),
+						multimap, IterableUtils.get(triplets, i), (a, b) -> {
+							//
+							MultimapUtil.remove(a, IValue0Util.getValue0(b), Util.getValue1(b));
+							//
+							MultimapUtil.put(a, IValue0Util.getValue0(b), Util.getValue2(b));
+							//
+						});
+				//
 			} // for
 				//
 			return Pair.of(multimap, createIntCollection(iop));
