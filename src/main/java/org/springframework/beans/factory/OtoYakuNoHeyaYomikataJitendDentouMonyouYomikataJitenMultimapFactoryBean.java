@@ -5246,7 +5246,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 								StringUtils.substring(g12, 0, indexOf + 1), StringUtils.substring(g11, 1),
 								StringUtils.substring(g12, indexOf + 1)));
 				//
-			} else if (indexOf == lastIndexOf && lastIndexOf >= 0) {
+			} else if (Boolean.logicalAnd(indexOf == lastIndexOf, lastIndexOf >= 0)) {
 				//
 				if (lastIndexOf == StringUtils.length(g12) - 1) {
 					//
