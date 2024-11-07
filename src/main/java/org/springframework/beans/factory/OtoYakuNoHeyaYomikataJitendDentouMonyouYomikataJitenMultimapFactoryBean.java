@@ -5231,9 +5231,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
 			//
-			final int indexOf = StringUtils.indexOf(g12, "ん");
+			int indexOf = StringUtils.indexOf(g12, "ん");
 			//
 			final int lastIndexOf = StringUtils.lastIndexOf(g12, "ん");
+			//
+			final int[] ints = toArray(filter(IntStream.range(0, StringUtils.length(g12)),
+					x -> StringUtils.startsWith(getCharacterName(g12, x), HIRAGANA_LETTER_SMALL)));
+			//
+			char c;
 			//
 			if (lastIndexOf > indexOf) {
 				//
@@ -5256,6 +5261,24 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
 									StringUtils.substring(g12, 0, indexOf + 1), StringUtils.substring(g11, 1),
 									StringUtils.substring(g12, indexOf + 1)));
+					//
+				} // if
+					//
+			} else if (length(ints) == 1 && g12 != null) {
+				//
+				if ((c = g12.charAt(indexOf = ints[0])) == 'ょ' && indexOf == StringUtils.length(g12) - 2) {
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
+									StringUtils.substring(g12, 0, indexOf - 1), StringUtils.substring(g11, 1),
+									StringUtils.substring(g12, indexOf - 1)));
+					//
+				} else if (c == 'ゅ' && indexOf == StringUtils.length(g12) - 2) {
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
+									StringUtils.substring(g12, 0, indexOf - 1), StringUtils.substring(g11, 1),
+									StringUtils.substring(g12, indexOf - 1)));
 					//
 				} // if
 					//
