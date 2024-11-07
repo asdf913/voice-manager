@@ -5233,14 +5233,54 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			final int indexOf = StringUtils.indexOf(g12, "ん");
 			//
-			if (StringUtils.lastIndexOf(g12, "ん") > indexOf) {
+			final int lastIndexOf = StringUtils.lastIndexOf(g12, "ん");
+			//
+			if (lastIndexOf > indexOf) {
 				//
 				MultimapUtil.putAll(multimap,
 						ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
 								StringUtils.substring(g12, 0, indexOf + 1), StringUtils.substring(g11, 1),
 								StringUtils.substring(g12, indexOf + 1)));
 				//
+			} else if (indexOf == lastIndexOf && lastIndexOf >= 0) {
+				//
+				if (lastIndexOf == StringUtils.length(g12) - 1) {
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, 2),
+									StringUtils.substring(g11, 1), StringUtils.substring(g12, 2)));
+					//
+				} else {
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
+									StringUtils.substring(g12, 0, indexOf + 1), StringUtils.substring(g11, 1),
+									StringUtils.substring(g12, indexOf + 1)));
+					//
+				} // if
+					//
 			} // if
+				//
+			final Iterable<Triplet<String, String, String>> triplets = Arrays.asList(Triplet.with("春", "ぱる", "はる"),
+					Triplet.with("風", "ぷう", "ふう"));
+			//
+			Triplet<String, String, String> triplet = null;
+			//
+			String iValue0, iValue1;
+			//
+			for (int i = 0; i < IterableUtils.size(triplets); i++) {
+				//
+				if (MultimapUtil.containsEntry(multimap,
+						iValue0 = IValue0Util.getValue0(triplet = IterableUtils.get(triplets, i)),
+						iValue1 = Util.getValue1(triplet))) {
+					//
+					MultimapUtil.remove(multimap, iValue0, iValue1);
+					//
+					MultimapUtil.put(multimap, iValue0, Util.getValue2(triplet));
+					//
+				} // if
+					//
+			} // for
 				//
 			return Pair.of(multimap, createIntCollection(iop));
 			//
