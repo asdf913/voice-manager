@@ -5322,7 +5322,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection17A(
-			final IntObjectPair<Entry<String, String>> iop) {
+			@Nullable final IntObjectPair<Entry<String, String>> iop) {
 		//
 		final Entry<String, String> entry = PairUtil.right(iop);
 		//
