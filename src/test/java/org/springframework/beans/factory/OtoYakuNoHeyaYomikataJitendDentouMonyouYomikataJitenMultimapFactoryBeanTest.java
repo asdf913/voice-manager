@@ -240,7 +240,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 					|| (Objects.equals(name, "toMultimapAndIntCollection12B1") && Arrays.equals(parameterTypes,
 							new Class<?>[] { PatternMap.class, Integer.TYPE, String.class, Map.class }))
 					|| (Objects.equals(name, "toMultimapAndIntCollection17") && Arrays.equals(parameterTypes,
-							new Class<?>[] { PatternMap.class, IntObjectPair.class, Iterable.class, Pattern.class }))
+							new Class<?>[] { IntObjectPair.class, Iterable.class, Pattern.class }))
 					|| (Objects.equals(name, "toMultimapAndIntCollection17A")
 							&& Arrays.equals(parameterTypes, new Class<?>[] { IntObjectPair.class }))
 					|| (Objects.equals(name, "indexOf")

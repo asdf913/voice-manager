@@ -5233,7 +5233,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
-		final Entry<Multimap<String, String>, IntCollection> entry = toMultimapAndIntCollection17(patternMap,
+		final Entry<Multimap<String, String>, IntCollection> entry = toMultimapAndIntCollection17(
 				iop != null ? IntObjectPair.of(iop.keyInt(), Pair.of(g11, g12)) : null, lines, pattern);
 		//
 		return Pair.of(Util.getKey(entry), Util.getValue(entry));
@@ -5241,8 +5241,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection17(
-			final PatternMap patternMap, @Nullable final IntObjectPair<Entry<String, String>> iop,
-			final Iterable<String> lines, final Pattern pattern) {
+			@Nullable final IntObjectPair<Entry<String, String>> iop, final Iterable<String> lines,
+			final Pattern pattern) {
 		//
 		final Entry<Multimap<String, String>, IntCollection> mi = toMultimapAndIntCollection17A(iop);
 		//
