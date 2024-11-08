@@ -5244,6 +5244,71 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final PatternMap patternMap, final IntObjectPair<Entry<String, String>> iop, final Iterable<String> lines,
 			final Pattern pattern) {
 		//
+		final Entry<Multimap<String, String>, IntCollection> mi = toMultimapAndIntCollection17A(iop);
+		//
+		final Multimap<String, String> multimap = Util.getKey(mi);
+		//
+		if (MultimapUtil.size(multimap) == 1) {
+			//
+			final Entry<String, String> entry = PairUtil.right(iop);
+			//
+			final String g11 = Util.getKey(entry);
+			//
+			final String g12 = Util.getValue(entry);
+			//
+			Matcher m2 = null;
+			//
+			String g21, g22, cpk, cpv;
+			//
+			for (int i = 0; i < IterableUtils.size(lines); i++) {
+				//
+				if (keyIntEquals(iop, i) || !Util.matches(m2 = Util.matcher(pattern, IterableUtils.get(lines, i)))
+						|| Util.groupCount(m2) <= 1
+						|| StringUtils.isBlank(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1)))
+						|| StringUtils.isBlank(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2)))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (StringUtils.length(cpv) > 1) {
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(g21, g22, cpk, cpv, StringUtils.substringAfter(g11, cpk),
+									StringUtils.substringAfter(g12, cpv), StringUtils.substringAfter(g21, cpk),
+									StringUtils.substringAfter(g22, cpv)));
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		Util.forEach(MultimapUtil.entries(ImmutableMultimap.of("目", "も", "八", "は")),
+				x -> testAndAccept(MultimapUtil::containsEntry, multimap, Util.getKey(x), Util.getValue(x),
+						MultimapUtil::remove));
+		//
+		Util.forEach(Arrays.asList(Triplet.with("春", "ぱる", "はる"), Triplet.with("風", "ぷう", "ふう"),
+				Triplet.with("樽", "だる", "たる")), x ->
+		//
+		testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)), multimap, x,
+				(a, b) -> {
+					//
+					MultimapUtil.remove(a, IValue0Util.getValue0(b), Util.getValue1(b));
+					//
+					MultimapUtil.put(a, IValue0Util.getValue0(b), Util.getValue2(b));
+					//
+				})
+		//
+		);
+		//
+		return Pair.of(multimap, Util.getValue(mi));
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection17A(
+			final IntObjectPair<Entry<String, String>> iop) {
+		//
 		final Entry<String, String> entry = PairUtil.right(iop);
 		//
 		final String g11 = Util.getKey(entry);
@@ -5301,54 +5366,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-		} else {
-			//
-			Matcher m2 = null;
-			//
-			String g21, g22, cpk, cpv;
-			//
-			for (int i = 0; i < IterableUtils.size(lines); i++) {
-				//
-				if (keyIntEquals(iop, i) || !Util.matches(m2 = Util.matcher(pattern, IterableUtils.get(lines, i)))
-						|| Util.groupCount(m2) <= 1
-						|| StringUtils.isBlank(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1)))
-						|| StringUtils.isBlank(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2)))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (StringUtils.length(cpv) > 1) {
-					//
-					MultimapUtil.putAll(multimap,
-							ImmutableMultimap.of(g21, g22, cpk, cpv, StringUtils.substringAfter(g11, cpk),
-									StringUtils.substringAfter(g12, cpv), StringUtils.substringAfter(g21, cpk),
-									StringUtils.substringAfter(g22, cpv)));
-					//
-				} // if
-					//
-			} // for
-				//
 		} // if
 			//
-		Util.forEach(MultimapUtil.entries(ImmutableMultimap.of("目", "も", "八", "は")),
-				x -> testAndAccept(MultimapUtil::containsEntry, multimap, Util.getKey(x), Util.getValue(x),
-						MultimapUtil::remove));
-		//
-		Util.forEach(Arrays.asList(Triplet.with("春", "ぱる", "はる"), Triplet.with("風", "ぷう", "ふう"),
-				Triplet.with("樽", "だる", "たる")), x ->
-		//
-		testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)), multimap, x,
-				(a, b) -> {
-					//
-					MultimapUtil.remove(a, IValue0Util.getValue0(b), Util.getValue1(b));
-					//
-					MultimapUtil.put(a, IValue0Util.getValue0(b), Util.getValue2(b));
-					//
-				})
-		//
-		);
-		//
 		return Pair.of(multimap, createIntCollection(iop));
 		//
 	}
