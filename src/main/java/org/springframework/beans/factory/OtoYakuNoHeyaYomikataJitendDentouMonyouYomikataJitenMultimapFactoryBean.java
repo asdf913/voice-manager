@@ -5233,7 +5233,25 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
-		final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
+		final Entry<Multimap<String, String>, IntCollection> entry = toMultimapAndIntCollection17(patternMap,
+				iop != null ? IntObjectPair.of(iop.keyInt(), Pair.of(g11, g12)) : null, lines, pattern);
+		//
+		return Pair.of(Util.getKey(entry), Util.getValue(entry));
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection17(
+			final PatternMap patternMap, final IntObjectPair<Entry<String, String>> iop, final Iterable<String> lines,
+			final Pattern pattern) {
+		//
+		final Entry<String, String> entry = PairUtil.right(iop);
+		//
+		final String g11 = Util.getKey(entry);
+		//
+		final String g12 = Util.getValue(entry);
+		//
+		final Multimap<String, String> multimap = testAndApply((a, b) -> a != null, g11, g12,
+				(a, b) -> LinkedHashMultimap.create(ImmutableMultimap.of(a, b)), null);
 		//
 		int indexOf = StringUtils.indexOf(g12, "ん");
 		//

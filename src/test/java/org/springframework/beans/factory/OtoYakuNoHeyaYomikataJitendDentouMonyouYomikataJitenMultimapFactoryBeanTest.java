@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -238,6 +239,8 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 							&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class }))
 					|| (Objects.equals(name, "toMultimapAndIntCollection12B1") && Arrays.equals(parameterTypes,
 							new Class<?>[] { PatternMap.class, Integer.TYPE, String.class, Map.class }))
+					|| (Objects.equals(name, "toMultimapAndIntCollection17") && Arrays.equals(parameterTypes,
+							new Class<?>[] { PatternMap.class, IntObjectPair.class, Iterable.class, Pattern.class }))
 					|| (Objects.equals(name, "indexOf")
 							&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, CharPredicate.class }))) {
 				//
