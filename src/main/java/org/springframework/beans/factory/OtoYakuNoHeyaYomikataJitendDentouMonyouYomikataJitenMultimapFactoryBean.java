@@ -5248,6 +5248,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final Multimap<String, String> multimap = Util.getKey(mi);
 		//
+		final IntCollection intCollection = Util.getValue(mi);
+		//
 		if (MultimapUtil.size(multimap) == 1) {
 			//
 			final Entry<String, String> entry = PairUtil.right(iop);
@@ -5278,6 +5280,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 									StringUtils.substringAfter(g12, cpv), StringUtils.substringAfter(g21, cpk),
 									StringUtils.substringAfter(g22, cpv)));
 					//
+				} else if (StringUtils.endsWith(g22, "ん")) {
+					//
+					MultimapUtil.put(multimap, StringUtils.substring(g11, 1), StringUtils.substring(g22, 2));
+					//
+					IntCollectionUtil.addInt(intCollection, i);
+					//
 				} // if
 					//
 			} // for
@@ -5302,7 +5310,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		);
 		//
-		return Pair.of(multimap, Util.getValue(mi));
+		return Pair.of(multimap, intCollection);
 		//
 	}
 
