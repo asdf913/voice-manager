@@ -5331,26 +5331,23 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 		} // if
 			//
-		Util.forEach(MultimapUtil.entries(ImmutableMultimap.of("目", "も", "八", "は")), x -> {
-			//
-			testAndAccept(MultimapUtil::containsEntry, multimap, Util.getKey(x), Util.getValue(x),
-					MultimapUtil::remove);
-			//
-		});
+		Util.forEach(MultimapUtil.entries(ImmutableMultimap.of("目", "も", "八", "は")),
+				x -> testAndAccept(MultimapUtil::containsEntry, multimap, Util.getKey(x), Util.getValue(x),
+						MultimapUtil::remove));
 		//
 		Util.forEach(Arrays.asList(Triplet.with("春", "ぱる", "はる"), Triplet.with("風", "ぷう", "ふう"),
-				Triplet.with("樽", "だる", "たる")), x -> {
+				Triplet.with("樽", "だる", "たる")), x ->
+		//
+		testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)), multimap, x,
+				(a, b) -> {
 					//
-					testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)),
-							multimap, x, (a, b) -> {
-								//
-								MultimapUtil.remove(a, IValue0Util.getValue0(b), Util.getValue1(b));
-								//
-								MultimapUtil.put(a, IValue0Util.getValue0(b), Util.getValue2(b));
-								//
-							});
+					MultimapUtil.remove(a, IValue0Util.getValue0(b), Util.getValue1(b));
 					//
-				});
+					MultimapUtil.put(a, IValue0Util.getValue0(b), Util.getValue2(b));
+					//
+				})
+		//
+		);
 		//
 		return Pair.of(multimap, createIntCollection(iop));
 		//
