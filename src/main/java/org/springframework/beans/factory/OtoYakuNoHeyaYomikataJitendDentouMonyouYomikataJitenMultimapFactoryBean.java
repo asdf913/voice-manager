@@ -5286,6 +5286,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					IntCollectionUtil.addInt(intCollection, i);
 					//
+				} else if (StringUtils.startsWith(g22, "え")) {
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(cpk, cpv, StringUtils.substringAfter(g11, cpk),
+									StringUtils.substringAfter(g12, cpv), StringUtils.substringAfter(g21, cpk),
+									StringUtils.substringAfter(g22, cpv)));
+					//
 				} // if
 					//
 			} // for
@@ -5297,7 +5304,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						MultimapUtil::remove));
 		//
 		Util.forEach(Arrays.asList(Triplet.with("春", "ぱる", "はる"), Triplet.with("風", "ぷう", "ふう"),
-				Triplet.with("樽", "だる", "たる")), x ->
+				Triplet.with("樽", "だる", "たる"), Triplet.with("絣", "がすり", "かすり")), x ->
 		//
 		testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)), multimap, x,
 				(a, b) -> {
