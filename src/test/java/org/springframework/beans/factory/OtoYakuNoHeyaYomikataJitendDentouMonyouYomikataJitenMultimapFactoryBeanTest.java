@@ -789,6 +789,18 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "絵絣（えがすり）"),
 						Arrays.asList(null, "絵詞（えことば）"))));
 		//
+		Assertions.assertEquals("({聖樹文=[せいじゅもん], 聖=[せい], 樹=[じゅ], 文=[もん]},[0])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "聖樹文（せいじゅもん）"), null)));
+		//
+		Assertions.assertEquals("({双魚文=[そうぎょもん], 双=[そう], 魚=[ぎょ], 文=[もん]},[0])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "双魚文（そうぎょもん）"), null)));
+		//
+		Assertions.assertEquals("({宝珠文=[ほうじゅもん], 宝=[ほう], 文=[もん], 珠=[しゅ]},[0])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "宝珠文（ほうじゅもん）"), null)));
+		//
+		Assertions.assertEquals("({鈴杵文=[れいしょもん], 鈴=[れい], 杵=[しょ], 文=[もん]},[0])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "鈴杵文（れいしょもん）"), null)));
+		//
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection(

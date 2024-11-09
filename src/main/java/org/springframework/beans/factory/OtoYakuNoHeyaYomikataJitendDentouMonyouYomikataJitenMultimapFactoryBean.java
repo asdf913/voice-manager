@@ -152,7 +152,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection14,
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection15,
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection16,
-						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection17);
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection17,
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection18);
 		//
 		Entry<Multimap<String, String>, IntCollection> entry = null;
 		//
@@ -5384,6 +5385,69 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		} // if
 			//
 		return Pair.of(multimap, createIntCollection(iop));
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection18(
+			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines) {
+		//
+		final Matcher m1 = Util.matcher(PATTERN_KANJI_HIRAGANA, PairUtil.right(iop));
+		//
+		String g11, g12;
+		//
+		int indexOf;
+		//
+		int[] ints;
+		//
+		long length;
+		//
+		if (!Util.matches(m1) || Util.groupCount(m1) <= 1 || StringUtils.isBlank(g11 = Util.group(m1, 1))
+				|| (indexOf = StringUtils.indexOf(g12 = Util.group(m1, 2), "ん")) != StringUtils.length(g12) - 1
+				|| (indexOf != StringUtils.lastIndexOf(g12, "ん"))
+				|| (ints = toArray(filter(IntStream.range(0, StringUtils.length(g12)),
+						x -> StringUtils.startsWith(getCharacterName(g12, x), HIRAGANA_LETTER_SMALL)))) == null
+				|| (length = length(ints)) < 1) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
+		//
+		final IntCollection intCollection = createIntCollection(iop);
+		//
+		if (length == 1) {
+			//
+			if (StringUtils.length(g11) == 3 && StringUtils.length(g12) == 6) {
+				//
+				if (indexOf - ints[0] == 2) {
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, 2),
+									StringUtils.substring(g11, 1, 2),
+									StringUtils.substring(g12, ints[0] - 1, ints[0] + 1), StringUtils.substring(g11, 2),
+									StringUtils.substring(g12, indexOf - 1)));
+					//
+				} // if
+					//
+			} // if
+				//
+		} // if
+			//
+		Util.forEach(Arrays.asList(Triplet.with("珠", "じゅ", "しゅ")), x ->
+		//
+		testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)), multimap, x,
+				(a, b) -> {
+					//
+					MultimapUtil.remove(a, IValue0Util.getValue0(b), Util.getValue1(b));
+					//
+					MultimapUtil.put(a, IValue0Util.getValue0(b), Util.getValue2(b));
+					//
+				})
+		//
+		);
+		//
+		return Pair.of(multimap, intCollection);
 		//
 	}
 
