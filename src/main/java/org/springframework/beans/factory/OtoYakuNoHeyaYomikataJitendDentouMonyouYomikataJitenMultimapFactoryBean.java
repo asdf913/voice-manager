@@ -5366,7 +5366,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		} else if (Boolean.logicalAnd(length(ints) == 1, g12 != null)) {
 			//
 			if (Boolean.logicalAnd((indexOf = get(ints, 0, 0)) == StringUtils.length(g12) - 2,
-					ArrayUtils.contains(new char[] { 'ょ', 'ゅ' }, g12.charAt(indexOf)))) {
+					ArrayUtils.contains(new char[] { 'ょ', 'ゅ' }, charAt(g12, indexOf, ' ')))) {
 				//
 				MultimapUtil.putAll(multimap,
 						ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
@@ -5385,6 +5385,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		return Pair.of(multimap, createIntCollection(iop));
 		//
+	}
+
+	private static char charAt(final String string, final int index, final char c) {
+		return string != null ? string.charAt(index) : c;
 	}
 
 	private static boolean equals(@Nullable final String string, final int index, final char c) {

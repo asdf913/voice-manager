@@ -210,7 +210,8 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 			//
 			toString = Objects.toString(m);
 			//
-			if (ArrayUtils.contains(new Class<?>[] { Boolean.TYPE, Long.TYPE, Integer.TYPE }, m.getReturnType())
+			if (ArrayUtils.contains(new Class<?>[] { Boolean.TYPE, Long.TYPE, Integer.TYPE, Character.TYPE },
+					m.getReturnType())
 					|| (Objects.equals(name, "getCommonSuffix")
 							&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class }))
 					|| (Objects.equals(name, "toMultimapAndIntCollection2") && Arrays.equals(parameterTypes,
