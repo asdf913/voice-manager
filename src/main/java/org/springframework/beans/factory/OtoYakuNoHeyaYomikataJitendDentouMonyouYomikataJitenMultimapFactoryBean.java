@@ -5387,7 +5387,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static char charAt(final String string, final int index, final char c) {
+	private static char charAt(@Nullable final String string, final int index, final char c) {
 		return string != null ? string.charAt(index) : c;
 	}
 
