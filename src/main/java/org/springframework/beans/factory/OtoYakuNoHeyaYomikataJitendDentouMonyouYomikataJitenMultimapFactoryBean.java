@@ -5458,8 +5458,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-			if (Boolean.logicalAnd(StringUtils.length(g11) == 3, StringUtils.length(g12) == 6)
-					&& MultimapUtil.size(multimap) == size) {
+			if (Util.and(StringUtils.length(g11) == 3, StringUtils.length(g12) == 6,
+					MultimapUtil.size(multimap) == size)) {
 				//
 				final int indexOfSubtractInts0 = indexOf - ints[0];
 				//
