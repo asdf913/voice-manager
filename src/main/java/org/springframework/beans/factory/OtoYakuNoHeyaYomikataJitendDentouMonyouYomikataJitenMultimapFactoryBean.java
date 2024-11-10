@@ -5477,6 +5477,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
+	@Nullable
 	private static Entry<String, String> toEntry18A(final Iterable<Entry<String, String>> entries,
 			final Entry<String, String> kv) {
 		//
