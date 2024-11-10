@@ -5520,7 +5520,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static Multimap<String, String> toMultimap18B(final IntObjectPair<Entry<String, String>> iop,
+	private static Multimap<String, String> toMultimap18B(@Nullable final IntObjectPair<Entry<String, String>> iop,
 			final int indexOf) {
 		//
 		Multimap<String, String> multimap = null;
