@@ -5415,18 +5415,65 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
 		//
+		final Iterable<Entry<String, String>> entries = MultimapUtil
+				.entries(ImmutableMultimap.of("銀杏", "いちょう", "桔梗", "ききょう"));
+		//
 		final IntCollection intCollection = createIntCollection(iop);
 		//
 		if (length == 1) {
 			//
 			if (StringUtils.length(g11) == 3 && StringUtils.length(g12) == 6) {
 				//
-				if (indexOf - ints[0] == 2) {
+				final int indexOfSubtractInts0 = indexOf - ints[0];
+				//
+				Entry<String, String> entry = null;
+				//
+				if (Util.iterator(entries) != null) {
+					//
+					for (final Entry<String, String> e : entries) {
+						//
+						if (e == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						if (StringUtils.startsWith(g11, Util.getKey(e))
+								&& StringUtils.startsWith(g12, Util.getValue(e))) {
+							//
+							entry = e;
+							//
+							break;
+							//
+						} // if
+							//
+					} // for
+						//
+				} // if
+					//
+				if (entry != null) {
+					//
+					final String key = Util.getKey(entry);
+					//
+					final String value = Util.getValue(entry);
+					//
+					MultimapUtil.putAll(multimap, ImmutableMultimap.of(key, value, StringUtils.substringAfter(g11, key),
+							StringUtils.substringAfter(g12, value)));
+					//
+				} else if (indexOfSubtractInts0 == 2) {
 					//
 					MultimapUtil.putAll(multimap,
 							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, 2),
 									StringUtils.substring(g11, 1, 2),
 									StringUtils.substring(g12, ints[0] - 1, ints[0] + 1), StringUtils.substring(g11, 2),
+									StringUtils.substring(g12, indexOf - 1)));
+					//
+				} else if (indexOfSubtractInts0 == 3) {
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, 1),
+									StringUtils.substring(g11, 1, 2),
+									StringUtils.substring(g12, ints[0] - 1, ints[0] + 2), StringUtils.substring(g11, 2),
 									StringUtils.substring(g12, indexOf - 1)));
 					//
 				} // if
@@ -5435,7 +5482,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 		} // if
 			//
-		Util.forEach(Arrays.asList(Triplet.with("珠", "じゅ", "しゅ")), x ->
+		Util.forEach(Arrays.asList(Triplet.with("珠", "じゅ", "しゅ"), Triplet.with("稜", "せん", "りょう"),
+				Triplet.with("線", "りょう", "せん")), x ->
 		//
 		testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)), multimap, x,
 				(a, b) -> {
