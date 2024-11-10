@@ -5418,7 +5418,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		final Multimap<String, String> mm = LinkedHashMultimap
 				.create(ImmutableMultimap.of("銀杏", "いちょう", "桔梗", "ききょう", "亀甲", "きっこう", "八宝", "はっぽう", "鹿鶴", "ろっかく"));
 		//
-		MultimapUtil.putAll(mm, ImmutableMultimap.of("丁子", "ちょうじ", "茗荷", "みょうが"));
+		MultimapUtil.putAll(mm,
+				ImmutableMultimap.of("丁子", "ちょうじ", "茗荷", "みょうが", "種子", "しゅじ", "雪花", "せっか", "独鈷", "とっこ"));
+		//
+		MultimapUtil.putAll(mm, ImmutableMultimap.of("八掛", "はっけ"));
 		//
 		final Iterable<Entry<String, String>> entries = MultimapUtil.entries(mm);
 		//
@@ -5426,11 +5429,24 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		if (length == 1) {
 			//
+			final int size = MultimapUtil.size(multimap);
+			//
+			final Entry<String, String> entry = toEntry18A(entries, Pair.of(g11, g12));
+			//
+			if (entry != null) {
+				//
+				final String key = Util.getKey(entry);
+				//
+				final String value = Util.getValue(entry);
+				//
+				MultimapUtil.putAll(multimap, ImmutableMultimap.of(key, value, StringUtils.substringAfter(g11, key),
+						StringUtils.substringAfter(g12, value)));
+				//
+			} // if
+				//
 			if (Boolean.logicalAnd(StringUtils.length(g11) == 3, StringUtils.length(g12) == 6)) {
 				//
 				final int indexOfSubtractInts0 = indexOf - ints[0];
-				//
-				final Entry<String, String> entry = toEntry18A(entries, Pair.of(g11, g12));
 				//
 				char c;
 				//
@@ -5495,7 +5511,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 				});
 				//
-			} else if (StringUtils.length(g11) == 3 && StringUtils.length(g12) == 5) {
+			} else if (StringUtils.length(g11) == 3 && StringUtils.length(g12) == 5
+					&& MultimapUtil.size(multimap) == size) {
 				//
 				if (ints[0] == 2) {
 					//
@@ -5503,6 +5520,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, 1),
 									StringUtils.substring(g11, 1, 2),
 									StringUtils.substring(g12, ints[0] - 1, ints[0] + 1), StringUtils.substring(g11, 2),
+									StringUtils.substring(g12, ints[0] + 1)));
+					//
+				} else if (charAt(g12, 1, ' ') == 'ゅ') {
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
+									StringUtils.substring(g12, 0, ints[0] + 1), StringUtils.substring(g11, 1, 2),
+									StringUtils.substring(g12, ints[0] + 1, ints[0] + 2), StringUtils.substring(g11, 2),
 									StringUtils.substring(g12, ints[0] + 2)));
 					//
 				} // if

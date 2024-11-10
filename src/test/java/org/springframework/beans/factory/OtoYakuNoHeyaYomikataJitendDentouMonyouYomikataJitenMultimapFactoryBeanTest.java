@@ -921,11 +921,29 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		Assertions.assertEquals("({鯱文=[しゃちほこもん], 鯱=[しゃちほこ], 文=[もん]},[0])",
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "鯱文（しゃちほこもん）"), null)));
 		//
-		Assertions.assertEquals("({汽車文=[きしゃもん], 汽=[き], 車=[しゃ], 文=[ん]},[0])",
+		Assertions.assertEquals("({汽車文=[きしゃもん], 汽=[き], 車=[しゃ], 文=[もん]},[0])",
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "汽車文（きしゃもん）"), null)));
 		//
-		Assertions.assertEquals("({鯉魚文=[りぎょもん], 鯉=[り], 魚=[ぎょ], 文=[ん]},[0])",
+		Assertions.assertEquals("({鯉魚文=[りぎょもん], 鯉=[り], 魚=[ぎょ], 文=[もん]},[0])",
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "鯉魚文（りぎょもん）"), null)));
+		//
+		Assertions.assertEquals("({種子文=[しゅじもん], 種子=[しゅじ], 文=[もん]},[0])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "種子文（しゅじもん）"), null)));
+		//
+		Assertions.assertEquals("({雪花文=[せっかもん], 雪花=[せっか], 文=[もん]},[0])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "雪花文（せっかもん）"), null)));
+		//
+		Assertions.assertEquals("({独鈷文=[とっこもん], 独鈷=[とっこ], 文=[もん]},[0])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "独鈷文（とっこもん）"), null)));
+		//
+		Assertions.assertEquals("({八掛文=[はっけもん], 八掛=[はっけ], 文=[もん]},[0])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "八掛文（はっけもん）"), null)));
+		//
+		Assertions.assertEquals("({寿字文=[じゅじもん], 寿=[じゅ], 字=[じ], 文=[もん]},[0])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "寿字文（じゅじもん）"), null)));
+		//
+		Assertions.assertEquals("({棕梠文=[しゅろもん], 棕=[しゅ], 梠=[ろ], 文=[もん]},[0])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "棕梠文（しゅろもん）"), null)));
 		//
 	}
 
