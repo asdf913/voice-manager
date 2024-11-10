@@ -5438,8 +5438,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							//
 						} // if
 							//
-						if (StringUtils.startsWith(g11, Util.getKey(e))
-								&& StringUtils.startsWith(g12, Util.getValue(e))) {
+						if (Boolean.logicalAnd(StringUtils.startsWith(g11, Util.getKey(e)),
+								StringUtils.startsWith(g12, Util.getValue(e)))) {
 							//
 							entry = e;
 							//
