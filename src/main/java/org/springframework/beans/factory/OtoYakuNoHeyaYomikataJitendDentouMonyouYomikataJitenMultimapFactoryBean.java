@@ -5459,22 +5459,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 				} else if (charAt(g12, ints[0], ' ') == 'ょ') {
 					//
-					if (charAt(g12, ints[0] + 1, ' ') == 'う') {
-						//
-						MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
-								StringUtils.substring(g12, ints[0] - 1, ints[0] + 2), StringUtils.substring(g11, 1, 2),
-								StringUtils.substring(g12, ints[0] + 2, ints[0] + 3), StringUtils.substring(g11, 2),
-								StringUtils.substring(g12, indexOf - 1)));
-						//
-					} else {
-						//
-						MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
-								StringUtils.substring(g12, ints[0] - 1, ints[0] + 1), StringUtils.substring(g11, 1, 2),
-								StringUtils.substring(g12, ints[0] + 1, ints[0] + 3), StringUtils.substring(g11, 2),
-								StringUtils.substring(g12, indexOf - 1)));
-						//
-					} // if
-						//
+					MultimapUtil.putAll(multimap, toMultimap18B(IntObjectPair.of(ints[0], Pair.of(g11, g12)), indexOf));
+					//
 				} // if
 					//
 			} // if
@@ -5531,6 +5517,45 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		} // if
 			//
 		return entry;
+		//
+	}
+
+	private static Multimap<String, String> toMultimap18B(final IntObjectPair<Entry<String, String>> iop,
+			final int indexOf) {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		final Entry<String, String> entry = PairUtil.right(iop);
+		//
+		final String k = Util.getKey(entry);
+		//
+		final String v = Util.getValue(entry);
+		//
+		if (iop != null) {
+			//
+			final int keyInt = iop.keyInt();
+			//
+			if (charAt(v, keyInt + 1, ' ') == 'う') {
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						ImmutableMultimap.of(StringUtils.substring(k, 0, 1),
+								StringUtils.substring(v, keyInt - 1, keyInt + 2), StringUtils.substring(k, 1, 2),
+								StringUtils.substring(v, keyInt + 2, keyInt + 3), StringUtils.substring(k, 2),
+								StringUtils.substring(v, indexOf - 1)));
+				//
+			} else {
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						ImmutableMultimap.of(StringUtils.substring(k, 0, 1),
+								StringUtils.substring(v, keyInt - 1, keyInt + 1), StringUtils.substring(k, 1, 2),
+								StringUtils.substring(v, keyInt + 1, keyInt + 3), StringUtils.substring(k, 2),
+								StringUtils.substring(v, indexOf - 1)));
+				//
+			} // if
+				//
+		} // if
+			//
+		return multimap;
 		//
 	}
 
