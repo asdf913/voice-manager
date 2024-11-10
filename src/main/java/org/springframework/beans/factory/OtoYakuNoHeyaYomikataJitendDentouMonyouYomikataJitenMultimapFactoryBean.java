@@ -5422,7 +5422,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		if (length == 1) {
 			//
-			if (StringUtils.length(g11) == 3 && StringUtils.length(g12) == 6) {
+			if (Boolean.logicalAnd(StringUtils.length(g11) == 3, StringUtils.length(g12) == 6)) {
 				//
 				final int indexOfSubtractInts0 = indexOf - ints[0];
 				//
