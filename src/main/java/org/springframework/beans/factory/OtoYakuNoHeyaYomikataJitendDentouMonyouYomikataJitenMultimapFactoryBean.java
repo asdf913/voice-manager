@@ -5479,21 +5479,25 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 			} else if (StringUtils.length(g11) == 2) {
 				//
-				if (StringUtils.length(g12) == 5) {
+				testAndAccept((a, b, c) -> StringUtils.length(c) == 5, multimap, g11, g12, (a, b, c) -> {
 					//
-					MultimapUtil.putAll(multimap,
-							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
-									StringUtils.substring(g12, 0, ints[0] + 2), StringUtils.substring(g11, 1),
-									StringUtils.substring(g12, ints[0] + 2)));
+					MultimapUtil.putAll(a,
+							ImmutableMultimap.of(StringUtils.substring(b, 0, 1),
+									StringUtils.substring(c, 0, ints[0] + 2), StringUtils.substring(b, 1),
+									StringUtils.substring(c, ints[0] + 2)));
 					//
-				} else {
+				});
+				//
+				testAndAccept((a, b, c) -> StringUtils.length(c) != 5, multimap, g11, g12, (a, b, c) -> {
 					//
-					MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
-							StringUtils.substring(g12, 0, StringUtils.length(g12) - 2), StringUtils.substring(g11, 1),
-							StringUtils.substring(g12, StringUtils.length(g12) - 2)));
+					final int l = StringUtils.length(c);
 					//
-				} // if
+					MultimapUtil.putAll(a,
+							ImmutableMultimap.of(StringUtils.substring(b, 0, 1), StringUtils.substring(c, 0, l - 2),
+									StringUtils.substring(b, 1), StringUtils.substring(c, l - 2)));
 					//
+				});
+				//
 			} // if
 				//
 		} // if
