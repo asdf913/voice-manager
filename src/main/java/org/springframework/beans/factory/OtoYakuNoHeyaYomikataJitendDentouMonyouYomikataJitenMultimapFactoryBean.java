@@ -5413,7 +5413,21 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
-		final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
+		return toMultimapAndIntCollection18(iop, Pair.of(g11, g12), indexOf, ints, length);
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection18(
+			final IntObjectPair<String> iop, final Entry<String, String> entry, final int indexOf, final int[] ints,
+			final long length) {
+		//
+		final String g11 = Util.getKey(entry);
+		//
+		final String g12 = Util.getValue(entry);
+		//
+		final Multimap<String, String> multimap = testAndApply(Objects::nonNull,
+				testAndApply((a, b) -> Objects.nonNull(a), g11, g12, ImmutableMultimap::of, null),
+				LinkedHashMultimap::create, null);
 		//
 		final Multimap<String, String> mm = LinkedHashMultimap
 				.create(ImmutableMultimap.of("銀杏", "いちょう", "桔梗", "ききょう", "亀甲", "きっこう", "八宝", "はっぽう", "鹿鶴", "ろっかく"));
@@ -5431,35 +5445,27 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			final int size = MultimapUtil.size(multimap);
 			//
-			final Entry<String, String> entry = toEntry18A(entries, Pair.of(g11, g12));
+			final Entry<String, String> en = toEntry18A(entries, Pair.of(g11, g12));
 			//
-			if (entry != null) {
+			if (en != null) {
 				//
-				final String key = Util.getKey(entry);
+				final String key = Util.getKey(en);
 				//
-				final String value = Util.getValue(entry);
+				final String value = Util.getValue(en);
 				//
 				MultimapUtil.putAll(multimap, ImmutableMultimap.of(key, value, StringUtils.substringAfter(g11, key),
 						StringUtils.substringAfter(g12, value)));
 				//
 			} // if
 				//
-			if (Boolean.logicalAnd(StringUtils.length(g11) == 3, StringUtils.length(g12) == 6)) {
+			if (Boolean.logicalAnd(StringUtils.length(g11) == 3, StringUtils.length(g12) == 6)
+					&& MultimapUtil.size(multimap) == size) {
 				//
 				final int indexOfSubtractInts0 = indexOf - ints[0];
 				//
 				char c;
 				//
-				if (entry != null) {
-					//
-					final String key = Util.getKey(entry);
-					//
-					final String value = Util.getValue(entry);
-					//
-					MultimapUtil.putAll(multimap, ImmutableMultimap.of(key, value, StringUtils.substringAfter(g11, key),
-							StringUtils.substringAfter(g12, value)));
-					//
-				} else if (indexOfSubtractInts0 == 2) {
+				if (indexOfSubtractInts0 == 2) {
 					//
 					MultimapUtil.putAll(multimap,
 							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, 2),

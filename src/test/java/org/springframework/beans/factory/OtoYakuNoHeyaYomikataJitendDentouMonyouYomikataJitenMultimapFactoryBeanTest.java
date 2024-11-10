@@ -182,6 +182,10 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 					//
 					list.add(Integer.valueOf(0));
 					//
+				} else if (Objects.equals(parameterType, Long.TYPE)) {
+					//
+					list.add(Long.valueOf(0));
+					//
 				} else if (Objects.equals(parameterType, Boolean.TYPE)) {
 					//
 					list.add(Boolean.FALSE);
@@ -249,6 +253,8 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 							new Class<?>[] { IntObjectPair.class, Iterable.class, Pattern.class }))
 					|| (Objects.equals(name, "toMultimapAndIntCollection17A")
 							&& Arrays.equals(parameterTypes, new Class<?>[] { IntObjectPair.class }))
+					|| (Objects.equals(name, "toMultimapAndIntCollection18") && Arrays.equals(parameterTypes,
+							new Class<?>[] { IntObjectPair.class, Entry.class, Integer.TYPE, int[].class, Long.TYPE }))
 					|| (Objects.equals(name, "indexOf")
 							&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, CharPredicate.class }))) {
 				//
