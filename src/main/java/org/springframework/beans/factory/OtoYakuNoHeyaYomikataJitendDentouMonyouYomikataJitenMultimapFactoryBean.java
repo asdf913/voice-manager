@@ -5724,8 +5724,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static <T, U, V> void testAndAccept(final TriPredicate<T, U, V> instance, final T t, final U u, final V v,
-			@Nullable final TriConsumer<T, U, V> consumer) {
+	private static <T, U, V> void testAndAccept(final TriPredicate<T, U, V> instance, final T t, final U u,
+			@Nullable final V v, @Nullable final TriConsumer<T, U, V> consumer) {
 		if (TriPredicateUtil.test(instance, t, u, v) && consumer != null) {
 			consumer.accept(t, u, v);
 		} // if
