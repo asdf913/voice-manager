@@ -5479,14 +5479,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 			} else if (StringUtils.length(g11) == 2) {
 				//
-				testAndAccept((a, b, c) -> StringUtils.length(c) == 5, multimap, g11, g12, (a, b, c) -> {
-					//
-					MultimapUtil.putAll(a,
-							ImmutableMultimap.of(StringUtils.substring(b, 0, 1),
-									StringUtils.substring(c, 0, ints[0] + 2), StringUtils.substring(b, 1),
-									StringUtils.substring(c, ints[0] + 2)));
-					//
-				});
+				testAndAccept((a, b, c) -> StringUtils.length(c) == 5, multimap, g11, g12,
+						(a, b, c) -> MultimapUtil.putAll(a,
+								ImmutableMultimap.of(StringUtils.substring(b, 0, 1),
+										StringUtils.substring(c, 0, ints[0] + 2), StringUtils.substring(b, 1),
+										StringUtils.substring(c, ints[0] + 2))));
 				//
 				testAndAccept((a, b, c) -> StringUtils.length(c) != 5, multimap, g11, g12, (a, b, c) -> {
 					//
