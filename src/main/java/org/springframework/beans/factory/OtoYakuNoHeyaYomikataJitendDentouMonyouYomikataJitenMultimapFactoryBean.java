@@ -5415,8 +5415,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
 		//
-		final Iterable<Entry<String, String>> entries = MultimapUtil
-				.entries(ImmutableMultimap.of("銀杏", "いちょう", "桔梗", "ききょう"));
+		final Multimap<String, String> mm = LinkedHashMultimap
+				.create(ImmutableMultimap.of("銀杏", "いちょう", "桔梗", "ききょう", "亀甲", "きっこう", "八宝", "はっぽう", "鹿鶴", "ろっかく"));
+		//
+		MultimapUtil.putAll(mm, ImmutableMultimap.of("丁子", "ちょうじ", "茗荷", "みょうが"));
+		//
+		final Iterable<Entry<String, String>> entries = MultimapUtil.entries(mm);
 		//
 		final IntCollection intCollection = createIntCollection(iop);
 		//
@@ -5453,6 +5457,24 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 									StringUtils.substring(g12, ints[0] - 1, ints[0] + 2), StringUtils.substring(g11, 2),
 									StringUtils.substring(g12, indexOf - 1)));
 					//
+				} else if (charAt(g12, ints[0], ' ') == 'ょ') {
+					//
+					if (charAt(g12, ints[0] + 1, ' ') == 'う') {
+						//
+						MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
+								StringUtils.substring(g12, ints[0] - 1, ints[0] + 2), StringUtils.substring(g11, 1, 2),
+								StringUtils.substring(g12, ints[0] + 2, ints[0] + 3), StringUtils.substring(g11, 2),
+								StringUtils.substring(g12, indexOf - 1)));
+						//
+					} else {
+						//
+						MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
+								StringUtils.substring(g12, ints[0] - 1, ints[0] + 1), StringUtils.substring(g11, 1, 2),
+								StringUtils.substring(g12, ints[0] + 1, ints[0] + 3), StringUtils.substring(g11, 2),
+								StringUtils.substring(g12, indexOf - 1)));
+						//
+					} // if
+						//
 				} // if
 					//
 			} // if
