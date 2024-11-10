@@ -5432,6 +5432,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				final Entry<String, String> entry = toEntry18A(entries, Pair.of(g11, g12));
 				//
+				char c;
+				//
 				if (entry != null) {
 					//
 					final String key = Util.getKey(entry);
@@ -5457,9 +5459,17 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 									StringUtils.substring(g12, ints[0] - 1, ints[0] + 2), StringUtils.substring(g11, 2),
 									StringUtils.substring(g12, indexOf - 1)));
 					//
-				} else if (charAt(g12, ints[0], ' ') == 'ょ') {
+				} else if ((c = charAt(g12, ints[0], ' ')) == 'ょ') {
 					//
 					MultimapUtil.putAll(multimap, toMultimap18B(IntObjectPair.of(ints[0], Pair.of(g11, g12)), indexOf));
+					//
+				} else if (c == 'ゃ') {
+					//
+					MultimapUtil.putAll(multimap,
+							ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
+									StringUtils.substring(g12, 0, ints[0] + 1), StringUtils.substring(g11, 1, 2),
+									StringUtils.substring(g12, ints[0] + 1, ints[0] + 3), StringUtils.substring(g11, 2),
+									StringUtils.substring(g12, indexOf - 1)));
 					//
 				} // if
 					//
