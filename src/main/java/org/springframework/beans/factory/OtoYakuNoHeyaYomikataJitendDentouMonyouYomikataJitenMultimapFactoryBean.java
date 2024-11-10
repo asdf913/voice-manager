@@ -5426,25 +5426,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				final int indexOfSubtractInts0 = indexOf - ints[0];
 				//
-				Entry<String, String> entry = null;
+				final Entry<String, String> entry = toEntry18A(entries, Pair.of(g11, g12));
 				//
-				if (Util.iterator(entries) != null) {
-					//
-					for (final Entry<String, String> e : entries) {
-						//
-						if (Boolean.logicalAnd(StringUtils.startsWith(g11, Util.getKey(e)),
-								StringUtils.startsWith(g12, Util.getValue(e)))) {
-							//
-							entry = e;
-							//
-							break;
-							//
-						} // if
-							//
-					} // for
-						//
-				} // if
-					//
 				if (entry != null) {
 					//
 					final String key = Util.getKey(entry);
@@ -5491,6 +5474,40 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		);
 		//
 		return Pair.of(multimap, intCollection);
+		//
+	}
+
+	private static Entry<String, String> toEntry18A(final Iterable<Entry<String, String>> entries,
+			final Entry<String, String> kv) {
+		//
+		Entry<String, String> entry = null;
+		//
+		if (Util.iterator(entries) != null) {
+			//
+			final String k = Util.getKey(kv);
+			//
+			final String v = Util.getValue(kv);
+			//
+			for (final Entry<String, String> e : entries) {
+				//
+				if (Boolean.logicalAnd(StringUtils.startsWith(k, Util.getKey(e)),
+						StringUtils.startsWith(v, Util.getValue(e)))) {
+					//
+					if (entry != null) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					entry = e;
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		return entry;
 		//
 	}
 

@@ -8,6 +8,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -21,6 +22,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.TriConsumer;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.TextStringBuilder;
 import org.d2ab.collection.ints.IntCollection;
 import org.d2ab.function.CharPredicate;
@@ -49,7 +51,8 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 	private static final String SPACE = " ";
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP_AND_INT_COLLECTION, METHOD_TEST_AND_ACCEPT3,
-			METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_APPEND, METHOD_SUB_STRING, METHOD_TEST_AND_RUN;
+			METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_APPEND, METHOD_SUB_STRING, METHOD_TEST_AND_RUN,
+			METHOD_TO_ENTRY_18A;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -79,6 +82,8 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		(METHOD_TEST_AND_RUN = clz.getDeclaredMethod("testAndRun", Boolean.TYPE, Runnable.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_RUN = clz.getDeclaredMethod("testAndRun", Boolean.TYPE, Runnable.class)).setAccessible(true);
+		//
+		(METHOD_TO_ENTRY_18A = clz.getDeclaredMethod("toEntry18A", Iterable.class, Entry.class)).setAccessible(true);
 		//
 	}
 
@@ -963,6 +968,30 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 	private static void testAndRun(final boolean b, final Runnable runnable) throws Throwable {
 		try {
 			METHOD_TEST_AND_RUN.invoke(null, b, runnable);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToEntry18A() {
+		//
+		final Entry<String, String> entry = Pair.of("k", "v");
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> toEntry18A(Collections.nCopies(2, entry), entry));
+		//
+	}
+
+	private static Entry<String, String> toEntry18A(final Iterable<Entry<String, String>> entries,
+			final Entry<String, String> kv) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_ENTRY_18A.invoke(null, entries, kv);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Entry) {
+				return (Entry) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
