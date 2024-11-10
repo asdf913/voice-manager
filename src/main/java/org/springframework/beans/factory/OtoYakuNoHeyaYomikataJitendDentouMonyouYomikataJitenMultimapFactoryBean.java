@@ -5445,19 +5445,17 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			final int size = MultimapUtil.size(multimap);
 			//
-			final Entry<String, String> en = toEntry18A(entries, Pair.of(g11, g12));
-			//
-			if (en != null) {
+			testAndAccept((a, b) -> b != null, multimap, toEntry18A(entries, Pair.of(g11, g12)), (a, b) -> {
 				//
-				final String key = Util.getKey(en);
+				final String key = Util.getKey(b);
 				//
-				final String value = Util.getValue(en);
+				final String value = Util.getValue(b);
 				//
-				MultimapUtil.putAll(multimap, ImmutableMultimap.of(key, value, StringUtils.substringAfter(g11, key),
+				MultimapUtil.putAll(a, ImmutableMultimap.of(key, value, StringUtils.substringAfter(g11, key),
 						StringUtils.substringAfter(g12, value)));
 				//
-			} // if
-				//
+			});
+			//
 			if (Util.and(StringUtils.length(g11) == 3, StringUtils.length(g12) == 6,
 					MultimapUtil.size(multimap) == size)) {
 				//
