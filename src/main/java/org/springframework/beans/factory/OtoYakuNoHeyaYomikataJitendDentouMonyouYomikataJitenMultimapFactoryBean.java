@@ -5432,12 +5432,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					for (final Entry<String, String> e : entries) {
 						//
-						if (e == null) {
-							//
-							continue;
-							//
-						} // if
-							//
 						if (Boolean.logicalAnd(StringUtils.startsWith(g11, Util.getKey(e)),
 								StringUtils.startsWith(g12, Util.getValue(e)))) {
 							//
