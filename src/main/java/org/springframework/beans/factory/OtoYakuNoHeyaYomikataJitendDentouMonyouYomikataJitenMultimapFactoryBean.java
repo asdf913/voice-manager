@@ -5413,7 +5413,24 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
-		return toMultimapAndIntCollection18(iop, Pair.of(g11, g12), indexOf, ints, length);
+		final Entry<Multimap<String, String>, IntCollection> entry = toMultimapAndIntCollection18(iop,
+				Pair.of(g11, g12), indexOf, ints, length);
+		//
+		Util.forEach(Arrays.asList(Triplet.with("珠", "じゅ", "しゅ"), Triplet.with("稜", "せん", "りょう"),
+				Triplet.with("線", "りょう", "せん")), x ->
+		//
+		testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)),
+				Util.getKey(entry), x, (a, b) -> {
+					//
+					MultimapUtil.remove(a, IValue0Util.getValue0(b), Util.getValue1(b));
+					//
+					MultimapUtil.put(a, IValue0Util.getValue0(b), Util.getValue2(b));
+					//
+				})
+		//
+		);
+		//
+		return entry;
 		//
 	}
 
@@ -5540,20 +5557,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 		} // if
 			//
-		Util.forEach(Arrays.asList(Triplet.with("珠", "じゅ", "しゅ"), Triplet.with("稜", "せん", "りょう"),
-				Triplet.with("線", "りょう", "せん")), x ->
-		//
-		testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)), multimap, x,
-				(a, b) -> {
-					//
-					MultimapUtil.remove(a, IValue0Util.getValue0(b), Util.getValue1(b));
-					//
-					MultimapUtil.put(a, IValue0Util.getValue0(b), Util.getValue2(b));
-					//
-				})
-		//
-		);
-		//
 		return Pair.of(multimap, intCollection);
 		//
 	}
