@@ -5576,7 +5576,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							StringUtils.substring(g11, 2, 3), StringUtils.substring(g12, ints[0] + 3, ints[0] + 4),
 							StringUtils.substring(g11, 3), StringUtils.substring(g12, ints[0] + 4)));
 			//
-		} else if (StringUtils.length(g12) == 7 && charAt(g12, ints[0], ' ') == 'ょ') {
+		} else if (Boolean.logicalAnd(StringUtils.length(g12) == 7, charAt(g12, ints[0], ' ') == 'ょ')) {
 			//
 			if (charAt(g12, ints[0] + 1, ' ') == 'う') {
 				//
