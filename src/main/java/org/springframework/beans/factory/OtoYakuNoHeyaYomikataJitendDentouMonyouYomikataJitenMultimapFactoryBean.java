@@ -1786,7 +1786,24 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 				} // if
 					//
-			} else if (proxy instanceof IntMap) {
+			} // if
+				//
+			final IValue0<Object> iValue0 = invokeIntMap(proxy, name, args);
+			//
+			if (iValue0 != null) {
+				//
+				return IValue0Util.getValue0(iValue0);
+				//
+			} // if
+				//
+			throw new Throwable(name);
+			//
+		}
+
+		private IValue0<Object> invokeIntMap(final Object proxy, final String name, final Object[] args)
+				throws Throwable {
+			//
+			if (proxy instanceof IntMap) {
 				//
 				if (Objects.equals(name, "get") && args != null && args.length > 0) {
 					//
@@ -1798,13 +1815,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 					} // if
 						//
-					return MapUtils.getObject(getIntMap(), args[0]);
+					return Unit.with(MapUtils.getObject(getIntMap(), args[0]));
 					//
 				} else if (Objects.equals(name, "put") && args != null && args.length > 1) {
 					//
 					Util.put(getIntMap(), args[0], args[1]);
 					//
-					return null;
+					return Unit.with(null);
 					//
 				} // if
 					//
