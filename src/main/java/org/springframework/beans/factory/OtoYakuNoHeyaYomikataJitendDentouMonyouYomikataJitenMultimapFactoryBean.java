@@ -5555,17 +5555,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 		} else if (Boolean.logicalAnd(StringUtils.length(g12) == 7, StringUtils.length(g12) - ints[0] == 4)) {
 			//
-			testAndRun(StringUtils.length(g11) == 3, () -> {
-				//
-				MultimapUtil.putAll(multimap,
-						ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
-								StringUtils.substring(g12, 0, ints[0] - 1), StringUtils.substring(g11, 1, 2),
-								StringUtils.substring(g12, ints[0] - 1, ints[0] + 2), StringUtils.substring(g11, 2),
-								StringUtils.substring(g12, ints[0] + 2)));
-				//
-			});
+			final boolean b = StringUtils.length(g11) == 3;
 			//
-			if (Boolean.logicalAnd(StringUtils.length(g11) != 3, charAt(g12, ints[0], ' ') == 'ょ')) {
+			testAndRun(b, () -> MultimapUtil.putAll(multimap,
+					ImmutableMultimap.of(StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, ints[0] - 1),
+							StringUtils.substring(g11, 1, 2), StringUtils.substring(g12, ints[0] - 1, ints[0] + 2),
+							StringUtils.substring(g11, 2), StringUtils.substring(g12, ints[0] + 2))));
+			//
+			if (Boolean.logicalAnd(!b, charAt(g12, ints[0], ' ') == 'ょ')) {
 				//
 				MultimapUtil.putAll(multimap,
 						ImmutableMultimap.of(StringUtils.substring(g11, 0, 2), StringUtils.substring(g12, 0, 2),
