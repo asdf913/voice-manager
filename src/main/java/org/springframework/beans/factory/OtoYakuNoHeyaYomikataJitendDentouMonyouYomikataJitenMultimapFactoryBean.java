@@ -5578,7 +5578,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} else if (Boolean.logicalAnd(StringUtils.length(g12) == 7, charAt(g12, ints[0], ' ') == 'ょ')) {
 			//
-			if (ArrayUtils.contains(new char[] { 'う', 'く' }, charAt(g12, ints[0] + 1, ' '))) {
+			testAndRun(ArrayUtils.contains(new char[] { 'う', 'く' }, charAt(g12, ints[0] + 1, ' ')), () -> {
 				//
 				MultimapUtil.putAll(multimap,
 						ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
@@ -5586,7 +5586,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 								StringUtils.substring(g12, ints[0] + 2, ints[0] + 4), StringUtils.substring(g11, 2),
 								StringUtils.substring(g12, ints[0] + 4)));
 				//
-			} else if (Boolean.logicalAnd(StringUtils.length(g11) == 4,
+			});
+			//
+			if (Boolean.logicalAnd(StringUtils.length(g11) == 4,
 					!StringUtils.equals(getCharacterName(g12, ints[0] + 1), HIRAGANA_LETTER_SMALL))) {
 				//
 				MultimapUtil.putAll(multimap,
