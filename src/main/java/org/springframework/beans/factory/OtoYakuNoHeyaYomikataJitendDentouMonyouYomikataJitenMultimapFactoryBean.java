@@ -5571,7 +5571,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-		} else if (StringUtils.length(g12) == 7 && charAt(g12, ints[0], ' ') == 'っ') {
+		} else if (Boolean.logicalAnd(StringUtils.length(g12) == 7, charAt(g12, ints[0], ' ') == 'っ')) {
 			//
 			if (MultimapUtil.containsEntry(multimap, "花文", "かもん")) {
 				//
