@@ -5565,7 +5565,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			});
 			//
-			if (StringUtils.length(g11) != 3 && charAt(g12, ints[0], ' ') == 'ょ') {
+			if (Boolean.logicalAnd(StringUtils.length(g11) != 3, charAt(g12, ints[0], ' ') == 'ょ')) {
 				//
 				MultimapUtil.putAll(multimap,
 						ImmutableMultimap.of(StringUtils.substring(g11, 0, 2), StringUtils.substring(g12, 0, 2),
