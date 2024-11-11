@@ -1800,7 +1800,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		}
 
-		private IValue0<Object> invokeIntMap(final Object proxy, final String name, final Object[] args)
+		private IValue0<Object> invokeIntMap(final Object proxy, final String name, @Nullable final Object[] args)
 				throws Throwable {
 			//
 			if (proxy instanceof IntMap) {
