@@ -253,10 +253,6 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 							new Class<?>[] { IntObjectPair.class, Iterable.class, Pattern.class }))
 					|| (Objects.equals(name, "toMultimapAndIntCollection17A")
 							&& Arrays.equals(parameterTypes, new Class<?>[] { IntObjectPair.class }))
-					|| (Objects.equals(name, "toMultimapAndIntCollection18") && Arrays.equals(parameterTypes,
-							new Class<?>[] { IntObjectPair.class, Entry.class, Class.forName(
-									"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean$IntMap"),
-									int[].class }))
 					|| (Objects.equals(name, "indexOf")
 							&& Arrays.equals(parameterTypes, new Class<?>[] { String.class, CharPredicate.class }))) {
 				//

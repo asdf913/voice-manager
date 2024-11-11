@@ -5495,6 +5495,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 
 		void put(final K key, final int i);
 
+		private static <K> int get(final IntMap<K> instance, final K key, final int defaultValue) {
+			return instance != null ? instance.get(key) : defaultValue;
+		}
+
 	}
 
 	@Nullable
@@ -5502,7 +5506,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final IntObjectPair<String> iop, final Entry<String, String> entry, @Nullable final IntMap<String> intMap,
 			final int[] ints) {
 		//
-		if (intMap != null && intMap.get("length") != 1) {
+		if (IntMap.get(intMap, "length", 0) != 1) {
 			//
 			return null;
 			//
@@ -5512,7 +5516,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String g12 = Util.getValue(entry);
 		//
-		final int indexOf = intMap != null ? intMap.get("indexOf") : 0;
+		final int indexOf = IntMap.get(intMap, "indexOf", 0);
 		//
 		final Multimap<String, String> multimap = testAndApply(Objects::nonNull,
 				testAndApply((a, b) -> Objects.nonNull(a), g11, g12, ImmutableMultimap::of, null),
