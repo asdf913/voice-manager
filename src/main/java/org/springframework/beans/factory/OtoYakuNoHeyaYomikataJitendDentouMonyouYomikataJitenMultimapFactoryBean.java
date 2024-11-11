@@ -5482,7 +5482,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 
 	@Nullable
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection18(
-			final IntObjectPair<String> iop, final Entry<String, String> entry, final IntMap<String> intMap,
+			final IntObjectPair<String> iop, final Entry<String, String> entry, @Nullable final IntMap<String> intMap,
 			final int[] ints) {
 		//
 		if (intMap != null && intMap.get("length") != 1) {
