@@ -5542,7 +5542,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	private static <T, U, V, W, R> R apply(final QuaternaryFunction<T, U, V, W, R> instance, final T t, final U u,
-			final V v, final W w) {
+			@Nullable final V v, final W w) {
 		return instance != null ? instance.apply(t, u, v, w) : null;
 	}
 
