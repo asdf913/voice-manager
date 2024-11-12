@@ -77,6 +77,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 
 	private static final String HIRAGANA_LETTER_SMALL = "HIRAGANA LETTER SMALL";
 
+	private static final String LENGTH = "length";
+
 	private static final Pattern PATTERN_KANJI_HIRAGANA = Pattern.compile(
 			"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$");
 
@@ -5483,7 +5485,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			for (final QuaternaryFunction<IntObjectPair<String>, Entry<String, String>, IntMap<String>, int[], Entry<Multimap<String, String>, IntCollection>> function : functions) {
 				//
 				IntMap.put(intMap = ObjectUtils.getIfNull(intMap, () -> Reflection.newProxy(IntMap.class, new IH())),
-						"length", (int) length);
+						LENGTH, (int) length);
 				//
 				IntMap.put(intMap, "indexOf", indexOf);
 				//
@@ -5567,7 +5569,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final IntObjectPair<String> iop, final Entry<String, String> entry, @Nullable final IntMap<String> intMap,
 			final int[] ints) {
 		//
-		if (IntMap.get(intMap, "length", 0) != 1) {
+		if (IntMap.get(intMap, LENGTH, 0) != 1) {
 			//
 			return null;
 			//
@@ -5810,7 +5812,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final IntObjectPair<String> iop, final Entry<String, String> entry, final IntMap<String> intMap,
 			final int[] ints) {
 		//
-		if (IntMap.get(intMap, "length", 0) != 1) {
+		if (IntMap.get(intMap, LENGTH, 0) != 1) {
 			//
 			return null;
 			//
