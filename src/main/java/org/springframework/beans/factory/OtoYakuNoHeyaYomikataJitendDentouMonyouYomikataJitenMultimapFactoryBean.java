@@ -5538,6 +5538,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
+	@Nullable
 	private static <T, U, V, W, R> R apply(@Nullable final QuaternaryFunction<T, U, V, W, R> instance, final T t,
 			final U u, @Nullable final V v, final W w) {
 		return instance != null ? instance.apply(t, u, v, w) : null;
@@ -5804,6 +5805,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
+	@Nullable
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection18B(
 			final IntObjectPair<String> iop, final Entry<String, String> entry, final IntMap<String> intMap,
 			final int[] ints) {
