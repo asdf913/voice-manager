@@ -5461,7 +5461,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		} // if
 			//
 		final Iterable<QuaternaryFunction<IntObjectPair<String>, Entry<String, String>, IntMap<String>, int[], Entry<Multimap<String, String>, IntCollection>>> functions = Arrays
-				.asList(OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection18A);
+				.asList(OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection18A,
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection18B);
 		//
 		Multimap<String, String> multimap = null;
 		//
@@ -5472,6 +5473,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			Entry<Multimap<String, String>, IntCollection> entry;
 			//
 			IntMap<String> intMap = null;
+			//
+			Multimap<String, String> mm = null;
+			//
+			IntCollection ic = null;
+			//
+			int[] is = null;
 			//
 			for (final QuaternaryFunction<IntObjectPair<String>, Entry<String, String>, IntMap<String>, int[], Entry<Multimap<String, String>, IntCollection>> function : functions) {
 				//
@@ -5484,11 +5491,32 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				} // if
 					//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.getKey(entry = apply(function, iop, Pair.of(g11, g12), intMap, ints)));
+						mm = Util.getKey(entry = apply(function, iop, Pair.of(g11, g12), intMap, ints)));
 				//
-				IntCollectionUtil.addAllInts(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
-						Util.getValue(entry));
+				ic = Util.getValue(entry);
 				//
+				if ((is = IntCollectionUtil.toIntArray(ic)) != null) {
+					//
+					for (final int i : is) {
+						//
+						if (!IntIterableUtil.containsInt(
+								intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), i)) {
+							//
+							IntCollectionUtil
+									.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), i);
+							//
+						} // if
+							//
+					} // for
+						//
+				} // if
+					//
+				if (MultimapUtil.size(mm) > 1) {
+					//
+					break;
+					//
+				} // if
+					//
 			} // for
 				//
 		} // if
@@ -5770,6 +5798,38 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		} // if
 			//
 		return multimap;
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection18B(
+			final IntObjectPair<String> iop, final Entry<String, String> entry, final IntMap<String> intMap,
+			final int[] ints) {
+		//
+		if (IntMap.get(intMap, "length", 0) != 1) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final String g11 = Util.getKey(entry);
+		//
+		final String g12 = Util.getValue(entry);
+		//
+		final Multimap<String, String> multimap = testAndApply(Objects::nonNull,
+				testAndApply((a, b) -> Objects.nonNull(a), g11, g12, ImmutableMultimap::of, null),
+				LinkedHashMultimap::create, null);
+		//
+		if (StringUtils.length(g11) == 3 && length(ints) > 0 && charAt(g12, ints[0], ' ') == 'ゅ'
+				&& StringUtils.length(g12) > 6 && charAt(g12, 6, ' ') == 'ん') {
+			//
+			MultimapUtil.putAll(multimap,
+					ImmutableMultimap.of(StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, ints[0] + 2),
+							StringUtils.substring(g11, 1, 2), StringUtils.substring(g12, ints[0] + 2, ints[0] + 4),
+							StringUtils.substring(g11, 2), StringUtils.substring(g12, ints[0] + 4)));
+			//
+		} // if
+			//
+		return Pair.of(multimap, createIntCollection(iop));
 		//
 	}
 
