@@ -5482,14 +5482,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			for (final QuaternaryFunction<IntObjectPair<String>, Entry<String, String>, IntMap<String>, int[], Entry<Multimap<String, String>, IntCollection>> function : functions) {
 				//
-				if (intMap == null && (intMap = Reflection.newProxy(IntMap.class, new IH())) != null) {
-					//
-					intMap.put("length", (int) length);
-					//
-					intMap.put("indexOf", indexOf);
-					//
-				} // if
-					//
+				IntMap.put(intMap = ObjectUtils.getIfNull(intMap, () -> Reflection.newProxy(IntMap.class, new IH())),
+						"length", (int) length);
+				//
+				IntMap.put(intMap, "indexOf", indexOf);
+				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						mm = Util.getKey(entry = apply(function, iop, Pair.of(g11, g12), intMap, ints)));
 				//
@@ -5554,6 +5551,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 
 		private static <K> int get(@Nullable final IntMap<K> instance, final K key, final int defaultValue) {
 			return instance != null ? instance.get(key) : defaultValue;
+		}
+
+		private static <K> void put(final IntMap<K> instance, final K key, final int value) {
+			if (instance != null) {
+				instance.put(key, value);
+			}
 		}
 
 	}

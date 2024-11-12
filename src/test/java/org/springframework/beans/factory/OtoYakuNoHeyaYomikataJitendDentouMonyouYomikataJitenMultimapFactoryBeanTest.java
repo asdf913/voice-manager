@@ -147,12 +147,14 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 	@Test
 	void testNull() throws ClassNotFoundException {
 		//
-		final Method[] ms = ArrayUtils.addAll(ArrayUtils.addAll(
+		final Method[] ms = ArrayUtils.addAll(ArrayUtils.addAll(ArrayUtils.addAll(
 				getDeclaredMethods(OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean.class),
 				getDeclaredMethods(Class.forName(
 						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean$ObjObjIntObjObjFunction"))),
 				getDeclaredMethods(Class.forName(
-						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean$ObjIntObjObjFunction")));
+						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean$ObjIntObjObjFunction"))),
+				getDeclaredMethods(Class.forName(
+						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean$IntMap")));
 		//
 		Method m = null;
 		//
