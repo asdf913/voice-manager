@@ -52,7 +52,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP_AND_INT_COLLECTION, METHOD_TEST_AND_ACCEPT3,
 			METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_APPEND, METHOD_SUB_STRING, METHOD_TEST_AND_RUN,
-			METHOD_TO_ENTRY_18A;
+			METHOD_TO_ENTRY_18A1;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -83,7 +83,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		//
 		(METHOD_TEST_AND_RUN = clz.getDeclaredMethod("testAndRun", Boolean.TYPE, Runnable.class)).setAccessible(true);
 		//
-		(METHOD_TO_ENTRY_18A = clz.getDeclaredMethod("toEntry18A", Iterable.class, Entry.class)).setAccessible(true);
+		(METHOD_TO_ENTRY_18A1 = clz.getDeclaredMethod("toEntry18A1", Iterable.class, Entry.class)).setAccessible(true);
 		//
 	}
 
@@ -1153,18 +1153,18 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 	}
 
 	@Test
-	void testToEntry18A() {
+	void testToEntry18A1() {
 		//
 		final Entry<String, String> entry = Pair.of("k", "v");
 		//
-		Assertions.assertThrows(IllegalStateException.class, () -> toEntry18A(Collections.nCopies(2, entry), entry));
+		Assertions.assertThrows(IllegalStateException.class, () -> toEntry18A1(Collections.nCopies(2, entry), entry));
 		//
 	}
 
-	private static Entry<String, String> toEntry18A(final Iterable<Entry<String, String>> entries,
+	private static Entry<String, String> toEntry18A1(final Iterable<Entry<String, String>> entries,
 			final Entry<String, String> kv) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_ENTRY_18A.invoke(null, entries, kv);
+			final Object obj = METHOD_TO_ENTRY_18A1.invoke(null, entries, kv);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Entry) {

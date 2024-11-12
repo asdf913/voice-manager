@@ -5536,7 +5536,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final IntCollection intCollection = createIntCollection(iop);
 		//
-		testAndAccept((a, b) -> b != null, multimap, toEntry18A(entries, Pair.of(g11, g12)), (a, b) -> {
+		testAndAccept((a, b) -> b != null, multimap, toEntry18A1(entries, Pair.of(g11, g12)), (a, b) -> {
 			//
 			final String key = Util.getKey(b);
 			//
@@ -5670,7 +5670,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	@Nullable
-	private static Entry<String, String> toEntry18A(final Iterable<Entry<String, String>> entries,
+	private static Entry<String, String> toEntry18A1(final Iterable<Entry<String, String>> entries,
 			final Entry<String, String> kv) {
 		//
 		Entry<String, String> entry = null;
