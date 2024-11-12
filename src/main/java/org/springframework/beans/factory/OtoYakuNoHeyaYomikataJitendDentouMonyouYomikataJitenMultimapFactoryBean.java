@@ -1800,6 +1800,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		}
 
+		@Nullable
 		private IValue0<Object> invokeIntMap(final Object proxy, final String name, @Nullable final Object[] args)
 				throws Throwable {
 			//
