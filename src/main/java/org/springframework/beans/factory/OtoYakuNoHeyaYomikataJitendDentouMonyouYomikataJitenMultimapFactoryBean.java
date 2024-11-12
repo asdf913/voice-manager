@@ -5569,7 +5569,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} else if ((c = charAt(g12, ints[0], ' ')) == 'ょ') {
 				//
-				MultimapUtil.putAll(multimap, toMultimap18B(IntObjectPair.of(ints[0], Pair.of(g11, g12)), indexOf));
+				MultimapUtil.putAll(multimap, toMultimap18A2(IntObjectPair.of(ints[0], Pair.of(g11, g12)), indexOf));
 				//
 			} else if (c == 'ゃ') {
 				//
@@ -5581,7 +5581,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} else {
 				//
-				MultimapUtil.putAll(multimap, toMultimap18B(IntObjectPair.of(ints[0], Pair.of(g11, g12)), indexOf));
+				MultimapUtil.putAll(multimap, toMultimap18A2(IntObjectPair.of(ints[0], Pair.of(g11, g12)), indexOf));
 				//
 			} // if
 				//
@@ -5705,7 +5705,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	@Nullable
-	private static Multimap<String, String> toMultimap18B(@Nullable final IntObjectPair<Entry<String, String>> iop,
+	private static Multimap<String, String> toMultimap18A2(@Nullable final IntObjectPair<Entry<String, String>> iop,
 			final int indexOf) {
 		//
 		Multimap<String, String> multimap = null;
