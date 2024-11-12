@@ -5478,8 +5478,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			Multimap<String, String> mm = null;
 			//
-			IntCollection ic = null;
-			//
 			int[] is = null;
 			//
 			for (final QuaternaryFunction<IntObjectPair<String>, Entry<String, String>, IntMap<String>, int[], Entry<Multimap<String, String>, IntCollection>> function : functions) {
@@ -5492,20 +5490,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						mm = Util.getKey(entry = apply(function, iop, Pair.of(g11, g12), intMap, ints)));
 				//
-				ic = Util.getValue(entry);
-				//
-				if ((is = IntCollectionUtil.toIntArray(ic)) != null) {
+				if ((is = IntCollectionUtil.toIntArray(Util.getValue(entry))) != null) {
 					//
 					for (final int i : is) {
 						//
-						if (!IntIterableUtil.containsInt(
-								intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), i)) {
-							//
-							IntCollectionUtil
-									.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), i);
-							//
-						} // if
-							//
+						testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b),
+								intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), i,
+								(a, b) -> IntCollectionUtil.addInt(a, b));
+						//
 					} // for
 						//
 				} // if
