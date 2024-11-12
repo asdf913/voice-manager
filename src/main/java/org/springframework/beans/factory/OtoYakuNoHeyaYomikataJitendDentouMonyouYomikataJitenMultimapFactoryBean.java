@@ -5556,7 +5556,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			return instance != null ? instance.get(key) : defaultValue;
 		}
 
-		private static <K> void put(final IntMap<K> instance, final K key, final int value) {
+		private static <K> void put(@Nullable final IntMap<K> instance, final K key, final int value) {
 			if (instance != null) {
 				instance.put(key, value);
 			}
