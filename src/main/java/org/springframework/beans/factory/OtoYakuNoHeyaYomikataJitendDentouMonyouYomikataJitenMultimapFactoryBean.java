@@ -5468,7 +5468,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
-		final Entry<Multimap<String, String>, IntCollection> entry = toMultimapAndIntCollection18(iop,
+		final Entry<Multimap<String, String>, IntCollection> entry = toMultimapAndIntCollection18A(iop,
 				Pair.of(g11, g12), intMap, ints);
 		//
 		Util.forEach(Arrays.asList(Triplet.with("珠", "じゅ", "しゅ"), Triplet.with("稜", "せん", "りょう"),
@@ -5502,7 +5502,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	@Nullable
-	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection18(
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection18A(
 			final IntObjectPair<String> iop, final Entry<String, String> entry, @Nullable final IntMap<String> intMap,
 			final int[] ints) {
 		//
