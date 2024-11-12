@@ -1827,7 +1827,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 			} // if
 				//
-			throw new Throwable(name);
+			return null;
 			//
 		}
 
