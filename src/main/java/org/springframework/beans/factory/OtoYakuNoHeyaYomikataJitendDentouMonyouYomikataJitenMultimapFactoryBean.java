@@ -5917,12 +5917,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				if (StringUtils.length(g12) == 7) {
 					//
-					System.out.println(iop);
-					//
 					return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
 							StringUtils.substring(g12, 0, 5), StringUtils.substring(g11, 1),
 							StringUtils.substring(g12, 5)), createIntCollection(iop));
-					//
 					//
 				} // if
 					//
