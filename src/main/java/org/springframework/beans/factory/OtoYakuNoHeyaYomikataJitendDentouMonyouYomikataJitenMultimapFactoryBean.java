@@ -5932,30 +5932,20 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 				} else if (length >= 5) {
 					//
-					if (ArrayUtils.contains(new char[] { 'し', 'べ', 'り', 'み' }, charAt(g12, 2, space))) {
-						//
-						final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11,
-								g12, StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, length - 2),
-								StringUtils.substring(g11, 1), StringUtils.substring(g12, length - 2)));
-						//
-						testAndAccept(MultimapUtil::containsEntry, multimap, "隠", "かくし", MultimapUtil::remove);
-						//
-						testAndAccept(MultimapUtil::containsEntry, multimap, "竝", "ならべ", MultimapUtil::remove);
-						//
-						testAndAccept(MultimapUtil::containsEntry, multimap, "滕", "ちきり", MultimapUtil::remove);
-						//
-						testAndAccept(MultimapUtil::containsEntry, multimap, "鼓", "つずみ", MultimapUtil::remove);
-						//
-						return Pair.of(multimap, createIntCollection(iop));
-						//
-					} else {
-						//
-						return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
-								StringUtils.substring(g12, 0, length - 2), StringUtils.substring(g11, 1),
-								StringUtils.substring(g12, length - 2)), createIntCollection(iop));
-						//
-					} // if
-						//
+					final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
+							StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, length - 2),
+							StringUtils.substring(g11, 1), StringUtils.substring(g12, length - 2)));
+					//
+					testAndAccept(MultimapUtil::containsEntry, multimap, "隠", "かくし", MultimapUtil::remove);
+					//
+					testAndAccept(MultimapUtil::containsEntry, multimap, "竝", "ならべ", MultimapUtil::remove);
+					//
+					testAndAccept(MultimapUtil::containsEntry, multimap, "滕", "ちきり", MultimapUtil::remove);
+					//
+					testAndAccept(MultimapUtil::containsEntry, multimap, "鼓", "つずみ", MultimapUtil::remove);
+					//
+					return Pair.of(multimap, createIntCollection(iop));
+					//
 				} // if
 					//
 			} else {
