@@ -5877,9 +5877,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection19(
 			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines) {
 		//
-		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$"),
-				PairUtil.right(iop));
+		final Pattern pattern = PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$");
+		//
+		final Matcher m1 = Util.matcher(pattern, PairUtil.right(iop));
 		//
 		if (Util.matches(m1) && Util.groupCount(m1) > 1) {
 			//
@@ -5957,6 +5958,67 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 				} // if
 					//
+			} else {
+				//
+				Multimap<String, String> multimap = null;
+				//
+				IntCollection intCollection = null;
+				//
+				Matcher m2;
+				//
+				String g21, g22, cpk, cpv;
+				//
+				for (int i = 0; i < IterableUtils.size(lines); i++) {
+					//
+					if (keyIntEquals(iop, i) || !Util.matches(m2 = Util.matcher(pattern, IterableUtils.get(lines, i)))
+							|| Util.groupCount(m2) <= 1) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (StringUtils.isNotBlank(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1)))
+							&& StringUtils.isNotBlank(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2)))
+							&& StringUtils.endsWith(g22, "ん")) {
+						//
+						multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk, cpv,
+								StringUtils.substringAfter(g11, cpk), StringUtils.substringAfter(g12, cpv), g21, g22,
+								StringUtils.substringAfter(g21, cpk), StringUtils.substringAfter(g22, cpv)));
+						//
+						testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b),
+								intCollection = createIntCollection(iop), i, (a, b) -> {
+									IntCollectionUtil.addInt(a, b);
+								});
+						//
+						break;
+						//
+					} // if
+						//
+				} // for
+					//
+				testAndAccept(MultimapUtil::containsEntry, multimap, "入", "いり", MultimapUtil::remove);
+				//
+				testAndAccept(MultimapUtil::containsEntry, multimap, "経", "たて", MultimapUtil::remove);
+				//
+				final Multimap<String, String> mm = multimap;
+				//
+				Util.forEach(Arrays.asList(Triplet.with("絣", "がすり", "かすり"), Triplet.with("標", "じるし", "しるし"),
+						Triplet.with("縞", "じま", "しま")), x ->
+				//
+				testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)), mm,
+						x, (a, b) -> {
+							//
+							MultimapUtil.remove(a, IValue0Util.getValue0(b), Util.getValue1(b));
+							//
+							MultimapUtil.put(a, IValue0Util.getValue0(b), Util.getValue2(b));
+							//
+						})
+				//
+				);
+				//
+				return testAndApply((a, b) -> a != null && b != null, multimap, intCollection, (a, b) -> Pair.of(a, b),
+						null);
+				//
 			} // if
 				//
 		} // if
