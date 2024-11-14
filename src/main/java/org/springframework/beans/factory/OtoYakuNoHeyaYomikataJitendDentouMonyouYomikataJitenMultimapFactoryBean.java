@@ -5969,7 +5969,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	private static <T> char testAndApplyAsChar(final Predicate<T> predicate, final T value, final char defaultValue,
-			final ToCharFunction<T> functionTrue, final ToCharFunction<T> functionFalse) {
+			final ToCharFunction<T> functionTrue, @Nullable final ToCharFunction<T> functionFalse) {
 		return Util.test(predicate, value) ? applyAsChar(functionTrue, value, defaultValue)
 				: applyAsChar(functionFalse, value, defaultValue);
 	}
