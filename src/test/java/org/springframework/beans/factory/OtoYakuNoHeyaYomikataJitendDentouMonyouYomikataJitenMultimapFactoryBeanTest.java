@@ -1209,6 +1209,21 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		Assertions.assertEquals("({櫓文=[やぐらもん], 櫓=[やぐら], 文=[もん]},[0])",
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "櫓文（やぐらもん）"), null)));
 		//
+		Assertions.assertEquals("({薊文=[あざみもん], 薊=[あざみ], 文=[もん]},[0])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "薊文（あざみもん）"), null)));
+		//
+		Assertions.assertEquals("({鏡文=[かがみもん], 鏡=[かがみ], 文=[もん]},[0])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "鏡文（かがみもん）"), null)));
+		//
+		Assertions.assertEquals("({霞文=[かすみもん], 霞=[かすみ], 文=[もん]},[0])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "霞文（かすみもん）"), null)));
+		//
+		Assertions.assertEquals("({鼓文=[つずみもん], 文=[もん]},[0])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "鼓文（つずみもん）"), null)));
+		//
+		Assertions.assertEquals("({鼠文=[ねずみもん], 鼠=[ねずみ], 文=[もん]},[0])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "鼠文（ねずみもん）"), null)));
+		//
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection(
