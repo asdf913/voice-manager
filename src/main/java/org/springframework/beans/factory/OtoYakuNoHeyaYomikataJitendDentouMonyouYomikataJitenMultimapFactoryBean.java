@@ -5875,7 +5875,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 
 	@Nullable
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection19(
-			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines) {
+			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop, final Iterable<String> lines) {
 		//
 		final Pattern pattern = PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$");
