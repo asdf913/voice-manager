@@ -5988,7 +5988,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				: applyAsChar(functionFalse, value, defaultValue);
 	}
 
-	private static <T> char applyAsChar(@Nullable final ToCharFunction<T> instance, final T value,
+	private static <T> char applyAsChar(@Nullable final ToCharFunction<T> instance, @Nullable final T value,
 			final char defaultValue) {
 		return instance != null ? instance.applyAsChar(value) : defaultValue;
 	}
