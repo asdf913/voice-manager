@@ -6015,7 +6015,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				);
 				//
-				return testAndApply((a, b) -> a != null && b != null, multimap, intCollection, Pair::of, null);
+				return testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), multimap, intCollection,
+						Pair::of, null);
 				//
 			} // if
 				//
