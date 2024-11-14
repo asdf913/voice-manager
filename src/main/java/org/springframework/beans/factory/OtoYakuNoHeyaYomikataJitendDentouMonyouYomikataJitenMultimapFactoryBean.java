@@ -5922,69 +5922,65 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				final int length = StringUtils.length(g12);
 				//
-				if (StringUtils.length(g12) >= 6) {
+				if (length >= 6) {
 					//
 					return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
 							StringUtils.substring(g12, 0, length - 2), StringUtils.substring(g11, 1),
 							StringUtils.substring(g12, length - 2)), createIntCollection(iop));
 					//
-				} else if (Boolean.logicalAnd(StringUtils.length(g12) == 5, ArrayUtils.contains(
-						new char[] { 'い', 'れ', 'だ', 'ぎ', 'て', 'で', 'わ', 'す', 'ま', 'び', 'め', 'え', 'ご', 'じ', 'き', 'ら' },
-						testAndApplyAsChar(x -> StringUtils.length(x) > 2, g12, space, x -> charAt(x, 2, space),
-								null)))) {
+				} else if (length >= 5) {
 					//
-					return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
-							StringUtils.substring(g12, 0, length - 2), StringUtils.substring(g11, 1),
-							StringUtils.substring(g12, length - 2)), createIntCollection(iop));
+					char c = charAt(g12, 2, space);
 					//
-				} else if (Boolean.logicalAnd(StringUtils.length(g12) == 5,
-						ArrayUtils.contains(new char[] { 'し' }, testAndApplyAsChar(x -> StringUtils.length(x) > 2, g12,
-								space, x -> charAt(x, 2, space), null)))) {
-					//
-					final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
-							StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, length - 2),
-							StringUtils.substring(g11, 1), StringUtils.substring(g12, length - 2)));
-					//
-					testAndAccept(MultimapUtil::containsEntry, multimap, "隠", "かくし", MultimapUtil::remove);
-					//
-					return Pair.of(multimap, createIntCollection(iop));
-					//
-				} else if (Boolean.logicalAnd(StringUtils.length(g12) == 5,
-						ArrayUtils.contains(new char[] { 'べ' }, testAndApplyAsChar(x -> StringUtils.length(x) > 2, g12,
-								space, x -> charAt(x, 2, space), null)))) {
-					//
-					final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
-							StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, length - 2),
-							StringUtils.substring(g11, 1), StringUtils.substring(g12, length - 2)));
-					//
-					testAndAccept(MultimapUtil::containsEntry, multimap, "竝", "ならべ", MultimapUtil::remove);
-					//
-					return Pair.of(multimap, createIntCollection(iop));
-					//
-				} else if (Boolean.logicalAnd(StringUtils.length(g12) == 5,
-						ArrayUtils.contains(new char[] { 'り' }, testAndApplyAsChar(x -> StringUtils.length(x) > 2, g12,
-								space, x -> charAt(x, 2, space), null)))) {
-					//
-					final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
-							StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, length - 2),
-							StringUtils.substring(g11, 1), StringUtils.substring(g12, length - 2)));
-					//
-					testAndAccept(MultimapUtil::containsEntry, multimap, "滕", "ちきり", MultimapUtil::remove);
-					//
-					return Pair.of(multimap, createIntCollection(iop));
-					//
-				} else if (Boolean.logicalAnd(StringUtils.length(g12) == 5,
-						ArrayUtils.contains(new char[] { 'み' }, testAndApplyAsChar(x -> StringUtils.length(x) > 2, g12,
-								space, x -> charAt(x, 2, space), null)))) {
-					//
-					final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
-							StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, length - 2),
-							StringUtils.substring(g11, 1), StringUtils.substring(g12, length - 2)));
-					//
-					testAndAccept(MultimapUtil::containsEntry, multimap, "鼓", "つずみ", MultimapUtil::remove);
-					//
-					return Pair.of(multimap, createIntCollection(iop));
-					//
+					if (c == 'し') {
+						//
+						final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11,
+								g12, StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, length - 2),
+								StringUtils.substring(g11, 1), StringUtils.substring(g12, length - 2)));
+						//
+						testAndAccept(MultimapUtil::containsEntry, multimap, "隠", "かくし", MultimapUtil::remove);
+						//
+						return Pair.of(multimap, createIntCollection(iop));
+						//
+					} else if (c == 'べ') {
+						//
+						final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11,
+								g12, StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, length - 2),
+								StringUtils.substring(g11, 1), StringUtils.substring(g12, length - 2)));
+						//
+						testAndAccept(MultimapUtil::containsEntry, multimap, "竝", "ならべ", MultimapUtil::remove);
+						//
+						return Pair.of(multimap, createIntCollection(iop));
+						//
+					} else if (c == 'り') {
+						//
+						final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11,
+								g12, StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, length - 2),
+								StringUtils.substring(g11, 1), StringUtils.substring(g12, length - 2)));
+						//
+						testAndAccept(MultimapUtil::containsEntry, multimap, "滕", "ちきり", MultimapUtil::remove);
+						//
+						return Pair.of(multimap, createIntCollection(iop));
+						//
+					} else if (c == 'み') {
+						//
+						final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11,
+								g12, StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, length - 2),
+								StringUtils.substring(g11, 1), StringUtils.substring(g12, length - 2)));
+						//
+						testAndAccept(MultimapUtil::containsEntry, multimap, "鼓", "つずみ", MultimapUtil::remove);
+						//
+						return Pair.of(multimap, createIntCollection(iop));
+						//
+					} else if (ArrayUtils.contains(new char[] { 'い', 'れ', 'だ', 'ぎ', 'て', 'で', 'わ', 'す', 'ま', 'び', 'め',
+							'え', 'ご', 'じ', 'き', 'ら' }, c)) {
+						//
+						return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
+								StringUtils.substring(g12, 0, length - 2), StringUtils.substring(g11, 1),
+								StringUtils.substring(g12, length - 2)), createIntCollection(iop));
+						//
+					} // if
+						//
 				} // if
 					//
 			} // if
@@ -5992,6 +5988,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		} // if
 			//
 		return null;
+
 		//
 	}
 
