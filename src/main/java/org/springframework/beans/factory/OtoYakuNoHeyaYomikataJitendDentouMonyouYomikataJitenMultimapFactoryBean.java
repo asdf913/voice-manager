@@ -5986,9 +5986,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 								StringUtils.substringAfter(g21, cpk), StringUtils.substringAfter(g22, cpv)));
 						//
 						testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b),
-								intCollection = createIntCollection(iop), i, (a, b) -> {
-									IntCollectionUtil.addInt(a, b);
-								});
+								intCollection = createIntCollection(iop), i, IntCollectionUtil::addInt);
 						//
 						break;
 						//
