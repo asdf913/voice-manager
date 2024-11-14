@@ -48,6 +48,7 @@ import org.d2ab.function.CharPredicate;
 import org.d2ab.function.ObjIntPredicate;
 import org.d2ab.function.ObjIntPredicateUtil;
 import org.d2ab.function.QuaternaryFunction;
+import org.d2ab.function.ToCharFunction;
 import org.javatuples.Quartet;
 import org.javatuples.Sextet;
 import org.javatuples.Triplet;
@@ -5917,6 +5918,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				final int length = StringUtils.length(g12);
 				//
+				final char space = ' ';
+				//
 				if (StringUtils.length(g12) >= 6) {
 					//
 					return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
@@ -5942,8 +5945,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					return Pair.of(multimap, createIntCollection(iop));
 					//
-				} else if (StringUtils.length(g12) == 5
-						&& ArrayUtils.contains(new char[] { 'べ' }, charAt(g12, 2, ' '))) {
+				} else if (Boolean.logicalAnd(StringUtils.length(g12) == 5,
+						ArrayUtils.contains(new char[] { 'べ' }, testAndApplyAsChar(x -> StringUtils.length(x) > 2, g12,
+								space, x -> charAt(x, 2, space), null)))) {
 					//
 					final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
 							StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, length - 2),
@@ -5961,6 +5965,16 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		return null;
 		//
+	}
+
+	private static <T, R> char testAndApplyAsChar(final Predicate<T> predicate, final T value, final char defaultValue,
+			final ToCharFunction<T> functionTrue, final ToCharFunction<T> functionFalse) {
+		return Util.test(predicate, value) ? applyAsChar(functionTrue, value, defaultValue)
+				: applyAsChar(functionFalse, value, defaultValue);
+	}
+
+	private static <T> char applyAsChar(final ToCharFunction<T> instance, final T value, final char defaultValue) {
+		return instance != null ? instance.applyAsChar(value) : defaultValue;
 	}
 
 	private static char charAt(@Nullable final String string, final int index, final char c) {
