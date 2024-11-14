@@ -5882,133 +5882,134 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final Matcher m1 = Util.matcher(pattern, PairUtil.right(iop));
 		//
-		if (Util.matches(m1) && Util.groupCount(m1) > 1) {
+		if (!Util.matches(m1) || Util.groupCount(m1) <= 1) {
 			//
-			final String g11 = Util.group(m1, 1);
+			return null;
 			//
-			final String g12 = Util.group(m1, 2);
+		} // if
 			//
-			final char space = ' ';
+		final String g11 = Util.group(m1, 1);
+		//
+		final String g12 = Util.group(m1, 2);
+		//
+		final char space = ' ';
+		//
+		if (Boolean.logicalAnd(StringUtils.length(g12) > 3, testAndApplyAsChar(x -> StringUtils.length(x) > 3, g12,
+				space, x -> charAt(g12, 3, space), null) == 'ゅ')) {
 			//
-			if (Boolean.logicalAnd(StringUtils.length(g12) > 3, testAndApplyAsChar(x -> StringUtils.length(x) > 3, g12,
-					space, x -> charAt(g12, 3, space), null) == 'ゅ')) {
+			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
+					StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 1), StringUtils.substring(g12, 2)),
+					createIntCollection(iop));
+			//
+		} else if (Boolean.logicalAnd(StringUtils.length(g12) > 1, testAndApplyAsChar(x -> StringUtils.length(x) > 1,
+				g12, space, x -> charAt(x, 1, space), null) == 'ん')) {
+			//
+			final Multimap<String, String> multimap = LinkedHashMultimap.create(
+					ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, 2),
+							StringUtils.substring(g11, 1), StringUtils.substring(g12, 2)));
+			//
+			Util.forEach(Arrays.asList(Triplet.with("象", "じょう", "しょう"), Triplet.with("絣", "がすり", "かすり")), x ->
+			//
+			testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)),
+					multimap, x, (a, b) -> {
+						//
+						MultimapUtil.remove(a, IValue0Util.getValue0(b), Util.getValue1(b));
+						//
+						MultimapUtil.put(a, IValue0Util.getValue0(b), Util.getValue2(b));
+						//
+					})
+			//
+			);
+			//
+			return Pair.of(multimap, createIntCollection(iop));
+			//
+		} else if (StringUtils.endsWith(g12, "ん")) {
+			//
+			final int length = StringUtils.length(g12);
+			//
+			if (length >= 6) {
 				//
 				return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
-						StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 1), StringUtils.substring(g12, 2)),
-						createIntCollection(iop));
+						StringUtils.substring(g12, 0, length - 2), StringUtils.substring(g11, 1),
+						StringUtils.substring(g12, length - 2)), createIntCollection(iop));
 				//
-			} else if (Boolean.logicalAnd(StringUtils.length(g12) > 1,
-					testAndApplyAsChar(x -> StringUtils.length(x) > 1, g12, space, x -> charAt(x, 1, space),
-							null) == 'ん')) {
+			} else if (length >= 5) {
 				//
 				final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
-						StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, 2),
-						StringUtils.substring(g11, 1), StringUtils.substring(g12, 2)));
+						StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, length - 2),
+						StringUtils.substring(g11, 1), StringUtils.substring(g12, length - 2)));
 				//
-				Util.forEach(Arrays.asList(Triplet.with("象", "じょう", "しょう"), Triplet.with("絣", "がすり", "かすり")), x ->
+				testAndAccept(MultimapUtil::containsEntry, multimap, "隠", "かくし", MultimapUtil::remove);
 				//
-				testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)),
-						multimap, x, (a, b) -> {
-							//
-							MultimapUtil.remove(a, IValue0Util.getValue0(b), Util.getValue1(b));
-							//
-							MultimapUtil.put(a, IValue0Util.getValue0(b), Util.getValue2(b));
-							//
-						})
+				testAndAccept(MultimapUtil::containsEntry, multimap, "竝", "ならべ", MultimapUtil::remove);
 				//
-				);
+				testAndAccept(MultimapUtil::containsEntry, multimap, "滕", "ちきり", MultimapUtil::remove);
+				//
+				testAndAccept(MultimapUtil::containsEntry, multimap, "鼓", "つずみ", MultimapUtil::remove);
 				//
 				return Pair.of(multimap, createIntCollection(iop));
 				//
-			} else if (StringUtils.endsWith(g12, "ん")) {
+			} // if
 				//
-				final int length = StringUtils.length(g12);
+		} else {
+			//
+			Multimap<String, String> multimap = null;
+			//
+			IntCollection intCollection = null;
+			//
+			Matcher m2;
+			//
+			String g21, g22, cpk, cpv;
+			//
+			for (int i = 0; i < IterableUtils.size(lines); i++) {
 				//
-				if (length >= 6) {
+				if (keyIntEquals(iop, i) || !Util.matches(m2 = Util.matcher(pattern, IterableUtils.get(lines, i)))
+						|| Util.groupCount(m2) <= 1) {
 					//
-					return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
-							StringUtils.substring(g12, 0, length - 2), StringUtils.substring(g11, 1),
-							StringUtils.substring(g12, length - 2)), createIntCollection(iop));
-					//
-				} else if (length >= 5) {
-					//
-					final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
-							StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, length - 2),
-							StringUtils.substring(g11, 1), StringUtils.substring(g12, length - 2)));
-					//
-					testAndAccept(MultimapUtil::containsEntry, multimap, "隠", "かくし", MultimapUtil::remove);
-					//
-					testAndAccept(MultimapUtil::containsEntry, multimap, "竝", "ならべ", MultimapUtil::remove);
-					//
-					testAndAccept(MultimapUtil::containsEntry, multimap, "滕", "ちきり", MultimapUtil::remove);
-					//
-					testAndAccept(MultimapUtil::containsEntry, multimap, "鼓", "つずみ", MultimapUtil::remove);
-					//
-					return Pair.of(multimap, createIntCollection(iop));
+					continue;
 					//
 				} // if
 					//
-			} else {
-				//
-				Multimap<String, String> multimap = null;
-				//
-				IntCollection intCollection = null;
-				//
-				Matcher m2;
-				//
-				String g21, g22, cpk, cpv;
-				//
-				for (int i = 0; i < IterableUtils.size(lines); i++) {
+				if (Util.and(StringUtils.isNotBlank(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1))),
+						StringUtils.isNotBlank(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2))),
+						StringUtils.endsWith(g22, "ん"))) {
 					//
-					if (keyIntEquals(iop, i) || !Util.matches(m2 = Util.matcher(pattern, IterableUtils.get(lines, i)))
-							|| Util.groupCount(m2) <= 1) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (Util.and(StringUtils.isNotBlank(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1))),
-							StringUtils.isNotBlank(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2))),
-							StringUtils.endsWith(g22, "ん"))) {
-						//
-						multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk, cpv,
-								StringUtils.substringAfter(g11, cpk), StringUtils.substringAfter(g12, cpv), g21, g22,
-								StringUtils.substringAfter(g21, cpk), StringUtils.substringAfter(g22, cpv)));
-						//
-						testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b),
-								intCollection = createIntCollection(iop), i, IntCollectionUtil::addInt);
-						//
-						break;
-						//
-					} // if
-						//
-				} // for
+					multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk, cpv,
+							StringUtils.substringAfter(g11, cpk), StringUtils.substringAfter(g12, cpv), g21, g22,
+							StringUtils.substringAfter(g21, cpk), StringUtils.substringAfter(g22, cpv)));
 					//
-				testAndAccept(MultimapUtil::containsEntry, multimap, "入", "いり", MultimapUtil::remove);
+					testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b),
+							intCollection = createIntCollection(iop), i, IntCollectionUtil::addInt);
+					//
+					break;
+					//
+				} // if
+					//
+			} // for
 				//
-				testAndAccept(MultimapUtil::containsEntry, multimap, "経", "たて", MultimapUtil::remove);
-				//
-				final Multimap<String, String> mm = multimap;
-				//
-				Util.forEach(Arrays.asList(Triplet.with("絣", "がすり", "かすり"), Triplet.with("標", "じるし", "しるし"),
-						Triplet.with("縞", "じま", "しま")), x ->
-				//
-				testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)), mm,
-						x, (a, b) -> {
-							//
-							MultimapUtil.remove(a, IValue0Util.getValue0(b), Util.getValue1(b));
-							//
-							MultimapUtil.put(a, IValue0Util.getValue0(b), Util.getValue2(b));
-							//
-						})
-				//
-				);
-				//
-				return testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), multimap, intCollection,
-						Pair::of, null);
-				//
-			} // if
-				//
+			testAndAccept(MultimapUtil::containsEntry, multimap, "入", "いり", MultimapUtil::remove);
+			//
+			testAndAccept(MultimapUtil::containsEntry, multimap, "経", "たて", MultimapUtil::remove);
+			//
+			final Multimap<String, String> mm = multimap;
+			//
+			Util.forEach(Arrays.asList(Triplet.with("絣", "がすり", "かすり"), Triplet.with("標", "じるし", "しるし"),
+					Triplet.with("縞", "じま", "しま")), x ->
+			//
+			testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)), mm, x,
+					(a, b) -> {
+						//
+						MultimapUtil.remove(a, IValue0Util.getValue0(b), Util.getValue1(b));
+						//
+						MultimapUtil.put(a, IValue0Util.getValue0(b), Util.getValue2(b));
+						//
+					})
+			//
+			);
+			//
+			return testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), multimap, intCollection, Pair::of,
+					null);
+			//
 		} // if
 			//
 		return null;
