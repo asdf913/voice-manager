@@ -5927,7 +5927,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							StringUtils.substring(g12, length - 2)), createIntCollection(iop));
 					//
 				} else if (Boolean.logicalAnd(StringUtils.length(g12) == 5, ArrayUtils.contains(
-						new char[] { 'い', 'れ', 'だ', 'ぎ', 'て', 'で', 'わ', 'す', 'ま', 'び', 'め', 'え', 'ご', 'じ', 'き' },
+						new char[] { 'い', 'れ', 'だ', 'ぎ', 'て', 'で', 'わ', 'す', 'ま', 'び', 'め', 'え', 'ご', 'じ', 'き', 'ら' },
 						testAndApplyAsChar(x -> StringUtils.length(x) > 2, g12, space, x -> charAt(x, 2, space),
 								null)))) {
 					//
