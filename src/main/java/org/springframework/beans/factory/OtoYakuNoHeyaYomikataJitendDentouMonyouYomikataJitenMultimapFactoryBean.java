@@ -5974,7 +5974,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		Matcher m2;
 		//
-		String g21, g22, cpk, cpv;
+		String g21, g22, cpk, cpv, csk, csv;
 		//
 		for (int i = 0; i < IterableUtils.size(lines); i++) {
 			//
@@ -5998,6 +5998,22 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				break;
 				//
+			} else if (StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21))
+					&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22))) {
+				//
+				if (StringUtils.length(g22) == 4 && charAt(g22, 0, ' ') == 'え') {
+					//
+					multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
+							StringUtils.substringBefore(g11, csk), StringUtils.substringBefore(g12, csv), csk, csv, g21,
+							g22, StringUtils.substringBefore(g21, csk), StringUtils.substringBefore(g22, csv)));
+					//
+					testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b), intCollection = IntList.create(index),
+							i, IntCollectionUtil::addInt);
+					//
+					break;
+					//
+				} // if
+					//
 			} // if
 				//
 		} // for
@@ -6005,6 +6021,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		testAndAccept(MultimapUtil::containsEntry, multimap, "入", "いり", MultimapUtil::remove);
 		//
 		testAndAccept(MultimapUtil::containsEntry, multimap, "経", "たて", MultimapUtil::remove);
+		//
+		testAndAccept(MultimapUtil::containsEntry, multimap, "抜", "ぬき", MultimapUtil::remove);
+		//
+		testAndAccept(MultimapUtil::containsEntry, multimap, "緯", "よこ", MultimapUtil::remove);
 		//
 		final Multimap<String, String> mm = multimap;
 		//
