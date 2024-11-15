@@ -5999,21 +5999,17 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				break;
 				//
 			} else if (StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21))
-					&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22))) {
+					&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22)) && StringUtils.length(g22) == 4) {
 				//
-				if (StringUtils.length(g22) == 4) {
-					//
-					multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
-							StringUtils.substringBefore(g11, csk), StringUtils.substringBefore(g12, csv), csk, csv, g21,
-							g22, StringUtils.substringBefore(g21, csk), StringUtils.substringBefore(g22, csv)));
-					//
-					testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b), intCollection = IntList.create(index),
-							i, IntCollectionUtil::addInt);
-					//
-					break;
-					//
-				} // if
-					//
+				multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
+						StringUtils.substringBefore(g11, csk), StringUtils.substringBefore(g12, csv), csk, csv, g21,
+						g22, StringUtils.substringBefore(g21, csk), StringUtils.substringBefore(g22, csv)));
+				//
+				testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b), intCollection = IntList.create(index), i,
+						IntCollectionUtil::addInt);
+				//
+				break;
+				//
 			} // if
 				//
 		} // for
