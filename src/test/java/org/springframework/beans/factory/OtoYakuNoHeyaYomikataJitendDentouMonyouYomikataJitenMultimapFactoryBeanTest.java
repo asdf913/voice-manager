@@ -1299,6 +1299,18 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "盲縞（めくらじま）"),
 						Arrays.asList(null, "蒼縞（あおじま）"))));
 		//
+		Assertions.assertEquals("({間道=[かんとう], 間=[かん], 道=[とう]},[0])", Objects
+				.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "間道（かんとう）＊織物の一種"), null)));
+		//
+		Assertions.assertEquals("({珍絣=[ちんがすり], 珍=[ちん], 絣=[かすり]},[0])", Objects
+				.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "珍絣（ちんがすり）＊縞柄の一種"), null)));
+		//
+		Assertions.assertEquals("({緞子=[どんす], 緞=[どん], 子=[す]},[0])", Objects
+				.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "緞子（どんす）＊織物の一種"), null)));
+		//
+		Assertions.assertEquals("({万筋=[まんすじ], 万=[まん], 筋=[すじ]},[0])", Objects
+				.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "万筋（まんすじ）＊竪縞の一種"), null)));
+		//
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection(
