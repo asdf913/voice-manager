@@ -6213,6 +6213,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 1), StringUtils.substring(g12, 2)),
 						createIntCollection(iop));
 				//
+			} else if (testAndApplyAsChar(x -> StringUtils.length(x) > 3, g12, space, x -> charAt(x, 3, space),
+					null) == 'ん') {
+				//
+				return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
+						StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 1), StringUtils.substring(g12, 2)),
+						createIntCollection(iop));
+				//
 			} // if
 				//
 		} // if
