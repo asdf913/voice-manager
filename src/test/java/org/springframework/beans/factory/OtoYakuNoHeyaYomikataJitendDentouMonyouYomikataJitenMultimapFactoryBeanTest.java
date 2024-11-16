@@ -1322,6 +1322,18 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "矢絣（やがすり）＊絣柄の一種"),
 						Arrays.asList(null, "矢車文（やぐるまもん）"))));
 		//
+		Assertions.assertEquals("({棒縞=[ぼうじま], 棒=[ぼう], 蒼縞=[あおじま], 蒼=[あお], 縞=[しま]},[0, 1])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "棒縞（ぼうじま）＊縞柄の一種"),
+						Arrays.asList(null, "蒼縞（あおじま）"))));
+		//
+		Assertions.assertEquals("({矢絣=[やがすり], 矢=[や], 雨絣=[あめがすり], 雨=[あめ], 絣=[かすり]},[0, 1])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "矢絣（やがすり）＊絣柄の一種"),
+						Arrays.asList(null, "雨絣（あめがすり）"))));
+		//
+		Assertions.assertEquals("({嫁柄=[よめがら], 嫁=[よめ], 柄=[がら], 中柄=[ちゅうがら], 中=[ちゅう]},[0, 1])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "嫁柄（よめがら）＊絣柄の呼称"),
+						Arrays.asList(null, "中柄（ちゅうがら）"))));
+		//
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection(

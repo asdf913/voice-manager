@@ -6102,19 +6102,21 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		final Entry<Multimap<String, String>, IntCollection> entry = toMultimapAndIntCollection20A(
 				iop != null ? iop.keyInt() : 0, Pair.of(g11, g12), lines);
 		//
-		Util.forEach(Arrays.asList(Triplet.with("柏", "がしわ", "かしわ"), Triplet.with("絣", "がすり", "かすり"),
-				Triplet.with("杵", "ぎね", "きね"), Triplet.with("車", "ぐるま", "くるま")), a ->
-		//
-		testAndAccept((b, c) -> MultimapUtil.containsEntry(b, IValue0Util.getValue0(c), Util.getValue1(c)),
-				Util.getKey(entry), a, (b, c) -> {
-					//
-					final String s1 = IValue0Util.getValue0(c);
-					//
-					MultimapUtil.remove(b, s1, Util.getValue1(c));
-					//
-					MultimapUtil.put(b, s1, Util.getValue2(c));
-					//
-				}));
+		Util.forEach(
+				Arrays.asList(Triplet.with("柏", "がしわ", "かしわ"), Triplet.with("絣", "がすり", "かすり"),
+						Triplet.with("杵", "ぎね", "きね"), Triplet.with("車", "ぐるま", "くるま"), Triplet.with("縞", "じま", "しま")),
+				a ->
+				//
+				testAndAccept((b, c) -> MultimapUtil.containsEntry(b, IValue0Util.getValue0(c), Util.getValue1(c)),
+						Util.getKey(entry), a, (b, c) -> {
+							//
+							final String s1 = IValue0Util.getValue0(c);
+							//
+							MultimapUtil.remove(b, s1, Util.getValue1(c));
+							//
+							MultimapUtil.put(b, s1, Util.getValue2(c));
+							//
+						}));
 		//
 		return entry;
 		//
@@ -6130,7 +6132,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		Matcher m2;
 		//
-		String g21, g22, cpk, cpv;
+		String g21, g22, cpk, cpv, csk, csv;
 		//
 		Multimap<String, String> multimap = null;
 		//
@@ -6145,28 +6147,42 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			} // if
 				//
 			if (Util.matches(m2 = Util.matcher(PATTERN_KANJI_HIRAGANA, IterableUtils.get(lines, i)))
-					&& Util.groupCount(m2) > 1
-					&& StringUtils.isNotBlank(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1)))
-					&& StringUtils.isNotBlank(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2)))) {
+					&& Util.groupCount(m2) > 1) {
 				//
-				multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk, cpv,
-						StringUtils.substringAfter(g11, cpk), StringUtils.substringAfter(g12, cpv), g21, g22));
-				//
-				if (Util.and(StringUtils.length(g21) > 2, StringUtils.length(g22) > 2,
-						StringUtils.endsWith(g22, "ん"))) {
+				if (Boolean.logicalAnd(StringUtils.isNotBlank(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1))),
+						StringUtils.isNotBlank(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2))))) {
 					//
-					MultimapUtil.put(multimap, StringUtils.substring(g21, 1, 2),
-							StringUtils.substring(g22, StringUtils.length(cpk), StringUtils.length(g22) - 2));
+					multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk, cpv,
+							StringUtils.substringAfter(g11, cpk), StringUtils.substringAfter(g12, cpv), g21, g22));
 					//
-					MultimapUtil.put(multimap, StringUtils.substring(g21, 2),
-							StringUtils.substring(g22, StringUtils.length(g22) - 2));
+					if (Util.and(StringUtils.length(g21) > 2, StringUtils.length(g22) > 2,
+							StringUtils.endsWith(g22, "ん"))) {
+						//
+						MultimapUtil.put(multimap, StringUtils.substring(g21, 1, 2),
+								StringUtils.substring(g22, StringUtils.length(cpk), StringUtils.length(g22) - 2));
+						//
+						MultimapUtil.put(multimap, StringUtils.substring(g21, 2),
+								StringUtils.substring(g22, StringUtils.length(g22) - 2));
+						//
+					} // if
+						//
+					IntCollectionUtil.addInt(intCollection = IntList.create(index), i);
+					//
+					return Pair.of(multimap, intCollection);
+					//
+				} else if (StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21))
+						&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22))
+						&& StringUtils.length(g21) == 2) {
+					//
+					IntCollectionUtil.addInt(intCollection = IntList.create(index), i);
+					//
+					return Pair.of(LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
+							StringUtils.substringBefore(g11, csk), StringUtils.substringBefore(g12, csv), csk, csv, g21,
+							g22, StringUtils.substringBefore(g21, csk), StringUtils.substringBefore(g22, csv))),
+							intCollection);
 					//
 				} // if
 					//
-				IntCollectionUtil.addInt(intCollection = IntList.create(index), i);
-				//
-				return Pair.of(multimap, intCollection);
-				//
 			} // if
 				//
 		} // for
