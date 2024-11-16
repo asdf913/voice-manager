@@ -6047,7 +6047,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection20(
-			final PatternMap patternMap, @Nullable final IntObjectPair<String> iop, final Iterable<String> lines) {
+			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines) {
 		//
 		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{2}\\p{InHiragana}\\p{InCJKUnifiedIdeographs}{2}$"),
@@ -6067,13 +6067,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, 2),
 						StringUtils.substring(g11, 1), StringUtils.substring(g12, 2)));
 				//
-				Util.forEach(
-						Arrays.asList(Triplet.with("絣", "がすり", "かすり")),
+				Util.forEach(Arrays.asList(Triplet.with("絣", "がすり", "かすり")),
 						//
-						a -> testAndAccept(
-								b -> b != null
-										&& MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
-								a, b -> {
+						a -> testAndAccept(b -> b != null
+								&& MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+								b -> {
 									//
 									final String s1 = IValue0Util.getValue0(b);
 									//
