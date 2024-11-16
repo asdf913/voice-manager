@@ -6099,19 +6099,47 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
+		final Entry<Multimap<String, String>, IntCollection> entry = toMultimapAndIntCollection20A(
+				iop != null ? iop.keyInt() : 0, Pair.of(g11, g12), lines);
+		//
+		Util.forEach(Arrays.asList(Triplet.with("柏", "がしわ", "かしわ"), Triplet.with("絣", "がすり", "かすり"),
+				Triplet.with("杵", "ぎね", "きね"), Triplet.with("車", "ぐるま", "くるま")), a -> {
+					//
+					testAndAccept((b, c) -> MultimapUtil.containsEntry(b, IValue0Util.getValue0(c), Util.getValue1(c)),
+							Util.getKey(entry), a, (b, c) -> {
+								//
+								final String s1 = IValue0Util.getValue0(c);
+								//
+								MultimapUtil.remove(b, s1, Util.getValue1(c));
+								//
+								MultimapUtil.put(b, s1, Util.getValue2(c));
+								//
+							});
+					//
+				});
+		//
+		return entry;
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection20A(final int index,
+			final Entry<String, String> entry, final Iterable<String> lines) {
+		//
+		final String g11 = Util.getKey(entry);
+		//
+		final String g12 = Util.getValue(entry);
+		//
 		Matcher m2;
 		//
 		String g21, g22, cpk, cpv;
 		//
 		Multimap<String, String> multimap = null;
 		//
-		Iterable<Triplet<String, String, String>> triplets = null;
-		//
 		IntCollection intCollection = null;
 		//
 		for (int i = 0; i < IterableUtils.size(lines); i++) {
 			//
-			if (keyIntEquals(iop, i)) {
+			if (index == i) {
 				//
 				continue;
 				//
@@ -6136,26 +6164,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 				} // if
 					//
-				triplets = ObjectUtils.getIfNull(triplets,
-						() -> Arrays.asList(Triplet.with("柏", "がしわ", "かしわ"), Triplet.with("絣", "がすり", "かすり"),
-								Triplet.with("杵", "ぎね", "きね"), Triplet.with("車", "ぐるま", "くるま")));
-				//
-				for (int j = 0; j < IterableUtils.size(triplets); j++) {
-					//
-					testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)),
-							multimap, IterableUtils.get(triplets, j), (a, b) -> {
-								//
-								final String s1 = IValue0Util.getValue0(b);
-								//
-								MultimapUtil.remove(a, s1, Util.getValue1(b));
-								//
-								MultimapUtil.put(a, s1, Util.getValue2(b));
-								//
-							});
-					//
-				} // for
-					//
-				IntCollectionUtil.addInt(intCollection = createIntCollection(iop), i);
+				IntCollectionUtil.addInt(intCollection = IntList.create(index), i);
 				//
 				return Pair.of(multimap, intCollection);
 				//
