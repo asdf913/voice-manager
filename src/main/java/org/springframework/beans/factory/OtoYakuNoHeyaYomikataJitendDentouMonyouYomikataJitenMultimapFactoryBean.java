@@ -6103,20 +6103,18 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				iop != null ? iop.keyInt() : 0, Pair.of(g11, g12), lines);
 		//
 		Util.forEach(Arrays.asList(Triplet.with("柏", "がしわ", "かしわ"), Triplet.with("絣", "がすり", "かすり"),
-				Triplet.with("杵", "ぎね", "きね"), Triplet.with("車", "ぐるま", "くるま")), a -> {
+				Triplet.with("杵", "ぎね", "きね"), Triplet.with("車", "ぐるま", "くるま")), a ->
+		//
+		testAndAccept((b, c) -> MultimapUtil.containsEntry(b, IValue0Util.getValue0(c), Util.getValue1(c)),
+				Util.getKey(entry), a, (b, c) -> {
 					//
-					testAndAccept((b, c) -> MultimapUtil.containsEntry(b, IValue0Util.getValue0(c), Util.getValue1(c)),
-							Util.getKey(entry), a, (b, c) -> {
-								//
-								final String s1 = IValue0Util.getValue0(c);
-								//
-								MultimapUtil.remove(b, s1, Util.getValue1(c));
-								//
-								MultimapUtil.put(b, s1, Util.getValue2(c));
-								//
-							});
+					final String s1 = IValue0Util.getValue0(c);
 					//
-				});
+					MultimapUtil.remove(b, s1, Util.getValue1(c));
+					//
+					MultimapUtil.put(b, s1, Util.getValue2(c));
+					//
+				}));
 		//
 		return entry;
 		//
