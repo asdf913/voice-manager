@@ -6120,6 +6120,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
+	@Nullable
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection20A(final int index,
 			final Entry<String, String> entry, final Iterable<String> lines) {
 		//
