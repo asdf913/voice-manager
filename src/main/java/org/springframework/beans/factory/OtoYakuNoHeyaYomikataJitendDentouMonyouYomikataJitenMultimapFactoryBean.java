@@ -6224,6 +6224,46 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						StringUtils.substring(g12, 0, 1), StringUtils.substring(g11, 1), StringUtils.substring(g12, 1)),
 						createIntCollection(iop));
 				//
+			} else if (StringUtils.length(g12) == 3) {
+				//
+				Matcher m2;
+				//
+				String g21, g22, csk, csv;
+				//
+				Multimap<String, String> multimap = null;
+				//
+				IntCollection intCollection = null;
+				//
+				for (int i = 0; i < IterableUtils.size(lines); i++) {
+					//
+					if (keyIntEquals(iop, i)) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+							"^(\\p{InCJKUnifiedIdeographs}%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}]+$",
+							testAndApply(x -> StringUtils.length(x) > 1, g11, x -> StringUtils.substring(x, 1), null))),
+							IterableUtils.get(lines, i))) && Util.groupCount(m2) > 1
+							&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21 = Util.group(m2, 1)))
+							&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22 = Util.group(m2, 2)))) {
+						//
+						testAndAccept(MultimapUtil::containsEntry,
+								multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
+										StringUtils.substringBefore(g11, csk), StringUtils.substringBefore(g12, csv),
+										csk, csv, g21, g22, StringUtils.substringBefore(g21, csk),
+										StringUtils.substringBefore(g22, csv))),
+								"蒔", "まき", MultimapUtil::remove);
+						//
+						IntCollectionUtil.addInt(intCollection = createIntCollection(iop), i);
+						//
+						return Pair.of(multimap, intCollection);
+						//
+					} // if
+						//
+				} // for
+					//
 			} // if
 				//
 		} // if

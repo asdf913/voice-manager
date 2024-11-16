@@ -1343,6 +1343,10 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		Assertions.assertEquals("({螺鈿=[らでん], 螺=[ら], 鈿=[でん]},[0])", Objects
 				.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "螺鈿（らでん）＊漆工技法の一種"), null)));
 		//
+		Assertions.assertEquals("({蒔絵=[まきえ], 絵=[え], 上絵=[うわえ], 上=[うわ]},[0, 1])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "蒔絵（まきえ）＊漆工技法の一種"),
+						Arrays.asList(null, "上絵（うわえ）＊工芸用語"))));
+		//
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection(
