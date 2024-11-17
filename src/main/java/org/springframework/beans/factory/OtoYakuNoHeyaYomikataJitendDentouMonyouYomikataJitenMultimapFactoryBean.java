@@ -6213,7 +6213,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			Matcher m2;
 			//
-			String g21, g22;
+			String string, g21, g22;
 			//
 			IntCollection intCollection = null;
 			//
@@ -6247,10 +6247,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 					} // if
 						//
+					string = testAndApply(x -> StringUtils.length(x) > 1, g11, x -> StringUtils.substring(x, 1), null);
+					//
 					if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 							"^(\\p{InCJKUnifiedIdeographs}%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}]+$",
-							testAndApply(x -> StringUtils.length(x) > 1, g11, x -> StringUtils.substring(x, 1), null))),
-							IterableUtils.get(lines, i))) && Util.groupCount(m2) > 1
+							string)), IterableUtils.get(lines, i))) && Util.groupCount(m2) > 1
 							&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21 = Util.group(m2, 1)))
 							&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22 = Util.group(m2, 2)))) {
 						//
@@ -6281,11 +6282,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 					} // if
 						//
+					string = testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1),
+							null);
+					//
 					if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 							"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{4}[\\p{InHiragana}\\p{InCJKUnifiedIdeographs}]+$",
-							testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1),
-									null))),
-							StringUtils.trim(IterableUtils.get(lines, i)))) && Util.groupCount(m2) > 1
+							string)), StringUtils.trim(IterableUtils.get(lines, i)))) && Util.groupCount(m2) > 1
 							&& StringUtils.isNotBlank(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1)))
 							&& StringUtils.isNotBlank(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2)))) {
 						//
