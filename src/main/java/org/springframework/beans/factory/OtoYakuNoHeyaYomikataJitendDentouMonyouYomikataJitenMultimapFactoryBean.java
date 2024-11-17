@@ -6270,33 +6270,49 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 		} else {
 			//
-			String cpk, cpv;
+			return toMultimapAndIntCollection21A(patternMap, iop != null ? iop.keyInt() : 0, Pair.of(g11, g12), lines);
 			//
-			for (int i = 0; i < IterableUtils.size(lines); i++) {
-				//
-				string = testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1), null);
-				//
-				if (!keyIntEquals(iop, i)
-						&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-								"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{4}[\\p{InHiragana}\\p{InCJKUnifiedIdeographs}]+$",
-								string)), StringUtils.trim(IterableUtils.get(lines, i))))
-						&& Util.groupCount(m2) > 1
-						&& StringUtils.isNotBlank(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1)))
-						&& StringUtils.isNotBlank(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2)))) {
-					//
-					IntCollectionUtil.addInt(intCollection = createIntCollection(iop), i);
-					//
-					return Pair.of(
-							ImmutableMultimap.of(g11, g12, cpk, cpv, StringUtils.substringAfter(g11, cpk),
-									StringUtils.substringAfter(g12, cpv), g21, g22,
-									StringUtils.substringAfter(g21, cpk), StringUtils.substringAfter(g22, cpv)),
-							intCollection);
-					//
-				} // if
-					//
-			} // for
-				//
 		} // if
+			//
+		return null;
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection21A(
+			final PatternMap patternMap, final int index, final Entry<String, String> entry,
+			final Iterable<String> lines) {
+		//
+		final String g11 = Util.getKey(entry);
+		//
+		final String g12 = Util.getValue(entry);
+		//
+		Matcher m2;
+		//
+		String string, g21, g22;
+		//
+		IntCollection intCollection = null;
+		//
+		String cpk, cpv;
+		//
+		for (int i = 0; i < IterableUtils.size(lines); i++) {
+			//
+			string = testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1), null);
+			//
+			if (i != index && Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+					"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{4}[\\p{InHiragana}\\p{InCJKUnifiedIdeographs}]+$",
+					string)), StringUtils.trim(IterableUtils.get(lines, i)))) && Util.groupCount(m2) > 1
+					&& StringUtils.isNotBlank(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1)))
+					&& StringUtils.isNotBlank(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2)))) {
+				//
+				IntCollectionUtil.addInt(intCollection = IntList.create(index), i);
+				//
+				return Pair.of(ImmutableMultimap.of(g11, g12, cpk, cpv, StringUtils.substringAfter(g11, cpk),
+						StringUtils.substringAfter(g12, cpv), g21, g22, StringUtils.substringAfter(g21, cpk),
+						StringUtils.substringAfter(g22, cpv)), intCollection);
+				//
+			} // if
+				//
+		} // for
 			//
 		return null;
 		//
