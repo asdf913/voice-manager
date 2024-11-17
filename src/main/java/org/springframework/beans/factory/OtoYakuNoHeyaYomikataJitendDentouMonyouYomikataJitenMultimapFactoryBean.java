@@ -6276,18 +6276,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				for (int i = 0; i < IterableUtils.size(lines); i++) {
 					//
-					if (keyIntEquals(iop, i)) {
-						//
-						continue;
-						//
-					} // if
-						//
 					string = testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1),
 							null);
 					//
-					if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-							"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{4}[\\p{InHiragana}\\p{InCJKUnifiedIdeographs}]+$",
-							string)), StringUtils.trim(IterableUtils.get(lines, i)))) && Util.groupCount(m2) > 1
+					if (!keyIntEquals(iop, i)
+							&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+									"^(%1$s\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}{4}[\\p{InHiragana}\\p{InCJKUnifiedIdeographs}]+$",
+									string)), StringUtils.trim(IterableUtils.get(lines, i))))
+							&& Util.groupCount(m2) > 1
 							&& StringUtils.isNotBlank(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1)))
 							&& StringUtils.isNotBlank(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2)))) {
 						//
