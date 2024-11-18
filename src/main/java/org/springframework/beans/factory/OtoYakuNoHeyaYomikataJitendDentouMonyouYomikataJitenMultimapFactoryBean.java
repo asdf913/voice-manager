@@ -6376,7 +6376,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			if (StringUtils.endsWith(g12 = Util.group(m1, 2), "ん")) {
 				//
-				final int length = StringUtils.length(g12 = Util.group(m1, 2));
+				final int length = StringUtils.length(g12);
 				//
 				final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
 						StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, length - 2),
