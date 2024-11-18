@@ -6280,6 +6280,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
+	private static String format(final String a, final Object b) {
+		return testAndApply((x, y) -> x != null, a, b, (x, y) -> String.format(x, y), null);
+	}
+
 	@Nullable
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection21A(
 			final PatternMap patternMap, final int index, final Entry<String, String> entry,
@@ -6408,13 +6412,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			for (int i = 0; i < IterableUtils.size(lines); i++) {
 				//
-				if (!keyIntEquals(iop, i)
-						&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-								"^(\\p{InCJKUnifiedIdeographs}%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+",
-								testAndApply(x -> StringUtils.length(x) > 0, g11,
-										x -> StringUtils.substring(x, StringUtils.length(x) - 1), null))),
-								IterableUtils.get(lines, i)))
-						&& Util.groupCount(m2) > 1
+				if (!keyIntEquals(iop, i) && Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, format(
+						"^(\\p{InCJKUnifiedIdeographs}%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+",
+						testAndApply(x -> StringUtils.length(x) > 0, g11,
+								x -> StringUtils.substring(x, StringUtils.length(x) - 1), null))),
+						IterableUtils.get(lines, i))) && Util.groupCount(m2) > 1
 						&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21 = Util.group(m2, 1)))
 						&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22 = Util.group(m2, 2)))) {
 					//
