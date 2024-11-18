@@ -6394,6 +6394,45 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						StringUtils.substring(g12, 0, length - 2), StringUtils.substring(g11, 1),
 						StringUtils.substring(g12, length - 2)), createIntCollection(iop));
 				//
+			} else {
+				//
+				Matcher m2;
+				//
+				String g21, g22, cpk, cpv;
+				//
+				IntCollection intCollection;
+				//
+				for (int i = 0; i < IterableUtils.size(lines); i++) {
+					//
+					if (keyIntEquals(iop, i)) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+							"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$",
+							testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1),
+									null))),
+							IterableUtils.get(lines, i))) && Util.groupCount(m2) > 1
+							&& StringUtils.isNotBlank(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1)))
+							&& StringUtils.isNotBlank(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2)))) {
+						//
+						final Multimap<String, String> multimap = LinkedHashMultimap
+								.create(ImmutableMultimap.of(g11, g12, cpk, cpv, StringUtils.substringAfter(g11, cpk),
+										StringUtils.substringAfter(g12, cpv), g21, g22,
+										StringUtils.substringAfter(g21, cpk), StringUtils.substringAfter(g22, cpv)));
+						//
+						testAndAccept(MultimapUtil::containsEntry, multimap, "摺", "すり", MultimapUtil::remove);
+						//
+						IntCollectionUtil.addInt(intCollection = createIntCollection(iop), i);
+						//
+						return Pair.of(multimap, intCollection);
+						//
+					} // if
+						//
+				} // for
+					//
 			} // if
 				//
 		} // if
