@@ -6458,7 +6458,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$",
 				firstChar)), line);
 		//
-		String g21, g22, cpk, cpv, lcsk, lcsv;
+		String g21, g22, cpk, cpv;
 		//
 		final int index1 = IntMap.get(intMap, "index1", 0);
 		//
@@ -6476,7 +6476,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			return Pair.of(multimap, IntList.create(index1, index2));
 			//
-		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+		} // if
+			//
+		String lcsk, lcsv;
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$"),
 				line)) && Util.groupCount(m2) > 1
 				&& StringUtils.isNotBlank(lcsk = longestCommonSubstring(g11, g21 = Util.group(m2, 1)))
@@ -6514,6 +6518,32 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 
 						//
 					});
+			//
+			return Pair.of(multimap, IntList.create(index1, index2));
+			//
+		} // if
+			//
+		String csk, csv;
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(\\p{InCJKUnifiedIdeographs}+%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}+$",
+				testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 1), null))), line))
+				&& Util.groupCount(m2) > 1
+				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21 = Util.group(m2, 1)))
+				&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22 = Util.group(m2, 2)))) {
+			//
+			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
+			//
+			if (StringUtils.endsWith(StringUtils.substringBefore(g22, csv), "ょ") && StringUtils.length(csv) > 1) {
+				//
+				csv = StringUtils.substring(csv, 1);
+				//
+			} // if
+				//
+			MultimapUtil.putAll(multimap,
+					ImmutableMultimap.of(StringUtils.substringBefore(g11, csk), StringUtils.substringBefore(g12, csv),
+							csk, csv, g21, g22, StringUtils.substringBefore(g21, csk),
+							StringUtils.substringBefore(g22, csv)));
 			//
 			return Pair.of(multimap, IntList.create(index1, index2));
 			//
