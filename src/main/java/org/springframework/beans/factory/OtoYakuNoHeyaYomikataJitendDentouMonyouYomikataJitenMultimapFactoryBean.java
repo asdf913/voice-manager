@@ -6461,10 +6461,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					testAndAccept(
 							(a, b) -> Boolean.logicalAnd(StringUtils.endsWith(g11, a), StringUtils.endsWith(g12, b)),
-							lcsk, lcsv, (a, b) -> {
-								MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substringBefore(g11, a),
-										StringUtils.substringBefore(g12, b), a, b));
-							});
+							lcsk, lcsv, (a, b) -> MultimapUtil.putAll(multimap, ImmutableMultimap.of(
+									StringUtils.substringBefore(g11, a), StringUtils.substringBefore(g12, b), a, b)));
 					//
 					testAndAccept(
 							(a, b) -> Boolean.logicalAnd(StringUtils.indexOf(Util.getKey(a), Util.getKey(b)) == 1,
