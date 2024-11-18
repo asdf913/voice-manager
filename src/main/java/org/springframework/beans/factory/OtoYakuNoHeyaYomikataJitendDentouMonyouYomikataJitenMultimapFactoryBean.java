@@ -6398,9 +6398,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				Matcher m2;
 				//
-				String firstChar, g21, g22, cpk, cpv;
+				String firstChar, g21, g22, cpk, cpv, lcsk, lcsv;
 				//
 				IntCollection intCollection;
+				//
+				int indexOf;
 				//
 				for (int i = 0; i < IterableUtils.size(lines); i++) {
 					//
@@ -6425,6 +6427,43 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 										StringUtils.substringAfter(g21, cpk), StringUtils.substringAfter(g22, cpv)));
 						//
 						testAndAccept(MultimapUtil::containsEntry, multimap, "摺", "すり", MultimapUtil::remove);
+						//
+						IntCollectionUtil.addInt(intCollection = createIntCollection(iop), i);
+						//
+						return Pair.of(multimap, intCollection);
+						//
+					} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+							"^(\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
+							firstChar)), IterableUtils.get(lines, i))) && Util.groupCount(m2) > 1
+							&& StringUtils.isNotBlank(lcsk = longestCommonSubstring(g11, g21 = Util.group(m2, 1)))
+							&& StringUtils.isNotBlank(lcsv = longestCommonSubstring(g12, g22 = Util.group(m2, 2)))
+							&& StringUtils.endsWith(g22, "ん")
+							&& !StringUtils.contains(g21,
+									testAndApply(x -> StringUtils.length(x) > 0, g11,
+											x -> StringUtils.substring(x, 0, 1), null))
+							&& StringUtils.contains(g21, testAndApply(x -> StringUtils.length(x) > 1, g11,
+									x -> StringUtils.substring(x, 1), null))) {
+						//
+						final Multimap<String, String> multimap = LinkedHashMultimap
+								.create(ImmutableMultimap.of(g11, g12));
+						//
+						if (StringUtils.endsWith(g11, lcsk) && StringUtils.endsWith(g12, lcsv)) {
+							//
+							MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substringBefore(g11, lcsk),
+									StringUtils.substringBefore(g12, lcsv), lcsk, lcsv));
+							//
+						} // if
+							//
+						if (StringUtils.indexOf(g21, lcsk) == 1 && (indexOf = StringUtils.indexOf(g22, lcsv)) > 0) {
+							//
+							MultimapUtil.putAll(multimap,
+									ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
+											StringUtils.substring(g22, 0, indexOf),
+											StringUtils.substring(g21, StringUtils.length(g21) - 1),
+											StringUtils.substring(g22, indexOf + StringUtils.length(lcsv))));
+
+							//
+						} // if
 						//
 						IntCollectionUtil.addInt(intCollection = createIntCollection(iop), i);
 						//
