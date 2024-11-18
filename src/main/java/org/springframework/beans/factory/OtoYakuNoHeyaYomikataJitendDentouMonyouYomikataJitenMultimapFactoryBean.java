@@ -6523,12 +6523,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
+		final String secondChar = testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 1),
+				null);
+		//
 		String csk, csv;
 		//
 		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
 				"^(\\p{InCJKUnifiedIdeographs}+%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}+$",
-				testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 1), null))), line))
-				&& Util.groupCount(m2) > 1
+				secondChar)), line)) && Util.groupCount(m2) > 1
 				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21 = Util.group(m2, 1)))
 				&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22 = Util.group(m2, 2)))) {
 			//
