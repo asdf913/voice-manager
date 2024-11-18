@@ -6408,17 +6408,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				for (int i = 0; i < IterableUtils.size(lines); i++) {
 					//
-					if (keyIntEquals(iop, i)) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-							"^(\\p{InCJKUnifiedIdeographs}%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+",
-							new Object[] { testAndApply(x -> StringUtils.length(x) > 0, g11,
-									x -> StringUtils.substring(x, StringUtils.length(x) - 1), null) })),
-							IterableUtils.get(lines, i))) && Util.groupCount(m2) > 1
+					if (!keyIntEquals(iop, i)
+							&& Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+									"^(\\p{InCJKUnifiedIdeographs}%1$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+",
+									new Object[] { testAndApply(x -> StringUtils.length(x) > 0, g11,
+											x -> StringUtils.substring(x, StringUtils.length(x) - 1), null) })),
+									IterableUtils.get(lines, i)))
+							&& Util.groupCount(m2) > 1
 							&& StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, g21 = Util.group(m2, 1)))
 							&& StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, g22 = Util.group(m2, 2)))) {
 						//
