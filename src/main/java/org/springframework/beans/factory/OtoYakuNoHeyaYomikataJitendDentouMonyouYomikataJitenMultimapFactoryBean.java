@@ -6460,13 +6460,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						final Multimap<String, String> multimap = LinkedHashMultimap
 								.create(ImmutableMultimap.of(g11, g12));
 						//
-						if (Boolean.logicalAnd(StringUtils.endsWith(g11, lcsk), StringUtils.endsWith(g12, lcsv))) {
-							//
-							MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substringBefore(g11, lcsk),
-									StringUtils.substringBefore(g12, lcsv), lcsk, lcsv));
-							//
-						} // if
-							//
+						testAndAccept((a, b) -> Boolean.logicalAnd(StringUtils.endsWith(g11, a),
+								StringUtils.endsWith(g12, b)), lcsk, lcsv, (a, b) -> {
+									MultimapUtil.putAll(multimap,
+											ImmutableMultimap.of(StringUtils.substringBefore(g11, a),
+													StringUtils.substringBefore(g12, b), a, b));
+								});
+						//
 						if (Boolean.logicalAnd(StringUtils.indexOf(g21, lcsk) == 1,
 								(indexOf = StringUtils.indexOf(g22, lcsv)) > 0)) {
 							//
