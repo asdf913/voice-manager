@@ -6354,7 +6354,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			return Pair.of(multimap, createIntCollection(iop));
 			//
-		} //
+		} // if
 			//
 		String g11, g12;
 		//
