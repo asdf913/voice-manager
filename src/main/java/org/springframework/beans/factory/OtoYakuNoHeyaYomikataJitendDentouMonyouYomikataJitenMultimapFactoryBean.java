@@ -6412,11 +6412,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
-		Matcher m2;
+		IntMap<String> intMap = null;
 		//
-		String firstChar, g21, g22, cpk, cpv, lcsk, lcsv;
-		//
-		IntCollection intCollection;
+		Entry<Multimap<String, String>, IntCollection> entry = null;
 		//
 		for (int i = 0; i < IterableUtils.size(lines); i++) {
 			//
@@ -6426,71 +6424,99 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-			firstChar = testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1), null);
+			IntMap.put(intMap = ObjectUtils.getIfNull(intMap, () -> Reflection.newProxy(IntMap.class, new IH())),
+					"index1", iop != null ? iop.keyInt() : 0);
 			//
-			if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
-					"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$",
-					firstChar)), IterableUtils.get(lines, i))) && Util.groupCount(m2) > 1
-					&& StringUtils.isNotBlank(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1)))
-					&& StringUtils.isNotBlank(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2)))) {
+			IntMap.put(intMap, "index2", i);
+			//
+			if ((entry = toMultimapAndIntCollection23A(patternMap, Pair.of(g11, g12), intMap,
+					IterableUtils.get(lines, i))) != null) {
 				//
-				final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk,
-						cpv, StringUtils.substringAfter(g11, cpk), StringUtils.substringAfter(g12, cpv), g21, g22,
-						StringUtils.substringAfter(g21, cpk), StringUtils.substringAfter(g22, cpv)));
-				//
-				testAndAccept(MultimapUtil::containsEntry, multimap, "摺", "すり", MultimapUtil::remove);
-				//
-				IntCollectionUtil.addInt(intCollection = createIntCollection(iop), i);
-				//
-				return Pair.of(multimap, intCollection);
-				//
-			} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
-					"^(\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$"),
-					IterableUtils.get(lines, i))) && Util.groupCount(m2) > 1
-					&& StringUtils.isNotBlank(lcsk = longestCommonSubstring(g11, g21 = Util.group(m2, 1)))
-					&& StringUtils.isNotBlank(lcsv = longestCommonSubstring(g12, g22 = Util.group(m2, 2)))
-					&& StringUtils.endsWith(g22, "ん")
-					&& !StringUtils.contains(g21,
-							testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1),
-									null))
-					&& StringUtils.contains(g21, testAndApply(x -> StringUtils.length(x) > 1, g11,
-							x -> StringUtils.substring(x, 1), null))) {
-				//
-				final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
-				//
-				testAndAccept((a, b) -> Boolean.logicalAnd(StringUtils.endsWith(g11, a), StringUtils.endsWith(g12, b)),
-						lcsk, lcsv, (a, b) -> MultimapUtil.putAll(multimap, ImmutableMultimap
-								.of(StringUtils.substringBefore(g11, a), StringUtils.substringBefore(g12, b), a, b)));
-				//
-				testAndAccept(
-						(a, b) -> Boolean.logicalAnd(StringUtils.indexOf(Util.getKey(a), Util.getKey(b)) == 1,
-								StringUtils.indexOf(Util.getValue(a), Util.getValue(b)) > 0),
-						Pair.of(g21, g22), Pair.of(lcsk, lcsv), (a, b) -> {
-							//
-							final String va = Util.getValue(a);
-							//
-							final String vb = Util.getValue(b);
-							//
-							final int indexOf = StringUtils.indexOf(va, vb);
-							//
-							final String ka = Util.getKey(a);
-							//
-							MultimapUtil.putAll(multimap,
-									ImmutableMultimap.of(ka, va, StringUtils.substring(ka, 0, 1),
-											StringUtils.substring(va, 0, indexOf),
-											StringUtils.substring(ka, StringUtils.length(ka) - 1),
-											StringUtils.substring(va, indexOf + StringUtils.length(vb))));
-
-							//
-						});
-				//
-				IntCollectionUtil.addInt(intCollection = createIntCollection(iop), i);
-				//
-				return Pair.of(multimap, intCollection);
+				return entry;
 				//
 			} // if
 				//
 		} // for
+			//
+		return null;
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection23A(
+			final PatternMap patternMap, final Entry<String, String> entry, final IntMap<String> intMap,
+			final String line) {
+		//
+		final String g11 = Util.getKey(entry);
+		//
+		final String g12 = Util.getValue(entry);
+		//
+		final String firstChar = testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1),
+				null);
+		//
+		Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}]+$",
+				firstChar)), line);
+		//
+		String g21, g22, cpk, cpv, lcsk, lcsv;
+		//
+		final int index1 = IntMap.get(intMap, "index1", 0);
+		//
+		final int index2 = IntMap.get(intMap, "index2", 0);
+		//
+		if (Util.matches(m2) && Util.groupCount(m2) > 1
+				&& StringUtils.isNotBlank(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1)))
+				&& StringUtils.isNotBlank(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2)))) {
+			//
+			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk, cpv,
+					StringUtils.substringAfter(g11, cpk), StringUtils.substringAfter(g12, cpv), g21, g22,
+					StringUtils.substringAfter(g21, cpk), StringUtils.substringAfter(g22, cpv)));
+			//
+			testAndAccept(MultimapUtil::containsEntry, multimap, "摺", "すり", MultimapUtil::remove);
+			//
+			return Pair.of(multimap, IntList.create(index1, index2));
+			//
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$"),
+				line)) && Util.groupCount(m2) > 1
+				&& StringUtils.isNotBlank(lcsk = longestCommonSubstring(g11, g21 = Util.group(m2, 1)))
+				&& StringUtils.isNotBlank(lcsv = longestCommonSubstring(g12, g22 = Util.group(m2, 2)))
+				&& StringUtils.endsWith(g22, "ん")
+				&& !StringUtils.contains(g21,
+						testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1), null))
+				&& StringUtils.contains(g21,
+						testAndApply(x -> StringUtils.length(x) > 1, g11, x -> StringUtils.substring(x, 1), null))) {
+			//
+			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
+			//
+			testAndAccept((a, b) -> Boolean.logicalAnd(StringUtils.endsWith(g11, a), StringUtils.endsWith(g12, b)),
+					lcsk, lcsv, (a, b) -> MultimapUtil.putAll(multimap, ImmutableMultimap
+							.of(StringUtils.substringBefore(g11, a), StringUtils.substringBefore(g12, b), a, b)));
+			//
+			testAndAccept(
+					(a, b) -> Boolean.logicalAnd(StringUtils.indexOf(Util.getKey(a), Util.getKey(b)) == 1,
+							StringUtils.indexOf(Util.getValue(a), Util.getValue(b)) > 0),
+					Pair.of(g21, g22), Pair.of(lcsk, lcsv), (a, b) -> {
+						//
+						final String va = Util.getValue(a);
+						//
+						final String vb = Util.getValue(b);
+						//
+						final int indexOf = StringUtils.indexOf(va, vb);
+						//
+						final String ka = Util.getKey(a);
+						//
+						MultimapUtil.putAll(multimap,
+								ImmutableMultimap.of(ka, va, StringUtils.substring(ka, 0, 1),
+										StringUtils.substring(va, 0, indexOf),
+										StringUtils.substring(ka, StringUtils.length(ka) - 1),
+										StringUtils.substring(va, indexOf + StringUtils.length(vb))));
+
+						//
+					});
+			//
+			return Pair.of(multimap, IntList.create(index1, index2));
+			//
+		} // if
 			//
 		return null;
 		//
