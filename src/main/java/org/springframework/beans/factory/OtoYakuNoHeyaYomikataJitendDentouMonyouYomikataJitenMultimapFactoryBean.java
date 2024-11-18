@@ -6278,7 +6278,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	private static String format(final String a, final Object b) {
-		return testAndApply((x, y) -> x != null, a, b, (x, y) -> String.format(x, y), null);
+		return testAndApply((x, y) -> x != null, a, b, String::format, null);
 	}
 
 	@Nullable
