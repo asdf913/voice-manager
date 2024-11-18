@@ -6383,8 +6383,16 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					null) == 'ょ') {
 				//
 				return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
-						StringUtils.substring(g12, 0, 3), StringUtils.substring(g11, 1),
-						StringUtils.substring(g12, 3)), createIntCollection(iop));
+						StringUtils.substring(g12, 0, 3), StringUtils.substring(g11, 1), StringUtils.substring(g12, 3)),
+						createIntCollection(iop));
+				//
+			} else if (StringUtils.endsWith(g12, "ん")) {
+				//
+				final int length = StringUtils.length(g12);
+				//
+				return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
+						StringUtils.substring(g12, 0, length - 2), StringUtils.substring(g11, 1),
+						StringUtils.substring(g12, length - 2)), createIntCollection(iop));
 				//
 			} // if
 				//
