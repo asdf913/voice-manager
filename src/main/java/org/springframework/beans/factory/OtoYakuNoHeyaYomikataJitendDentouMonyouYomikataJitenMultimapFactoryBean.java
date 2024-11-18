@@ -6357,13 +6357,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				"^(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{2}$"),
 				right)) && Util.groupCount(m1) > 1) {
 			//
+			final char space = ' ';
+			//
+			final String g11 = Util.group(m1, 1);
+			//
 			final String g12 = Util.group(m1, 2);
 			//
 			if (StringUtils.length(g12) == 3) {
-				//
-				final String g11 = Util.group(m1, 1);
-				//
-				final char space = ' ';
 				//
 				if (testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space, x -> charAt(x, 1, space),
 						null) == 'ん') {
@@ -6379,6 +6379,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 				} // if
 					//
+			} else if (testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space, x -> charAt(x, 1, space),
+					null) == 'ょ') {
+				//
+				return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
+						StringUtils.substring(g12, 0, 3), StringUtils.substring(g11, 1),
+						StringUtils.substring(g12, 3)), createIntCollection(iop));
+				//
 			} // if
 				//
 		} // if
