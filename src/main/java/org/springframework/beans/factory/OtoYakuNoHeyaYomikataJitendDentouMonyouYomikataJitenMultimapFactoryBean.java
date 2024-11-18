@@ -6361,12 +6361,21 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			if (StringUtils.length(g12) == 3) {
 				//
+				final String g11 = Util.group(m1, 1);
+				//
 				final char space = ' ';
 				//
 				if (testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space, x -> charAt(x, 1, space),
 						null) == 'ん') {
 					//
-					return Pair.of(ImmutableMultimap.of(Util.group(m1, 1), g12), createIntCollection(iop));
+					return Pair.of(ImmutableMultimap.of(g11, g12), createIntCollection(iop));
+					//
+				} else if (testAndApplyAsChar(x -> StringUtils.length(x) > 2, g12, space, x -> charAt(x, 2, space),
+						null) == 'ょ') {
+					//
+					return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
+							StringUtils.substring(g12, 0, 1), StringUtils.substring(g11, 1),
+							StringUtils.substring(g12, 1)), createIntCollection(iop));
 					//
 				} // if
 					//
