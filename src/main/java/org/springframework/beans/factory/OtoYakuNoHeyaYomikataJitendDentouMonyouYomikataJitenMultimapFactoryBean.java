@@ -6415,8 +6415,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				IntCollection intCollection;
 				//
-				int indexOf;
-				//
 				for (int i = 0; i < IterableUtils.size(lines); i++) {
 					//
 					if (keyIntEquals(iop, i)) {
@@ -6467,18 +6465,28 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 													StringUtils.substringBefore(g12, b), a, b));
 								});
 						//
-						if (Boolean.logicalAnd(StringUtils.indexOf(g21, lcsk) == 1,
-								(indexOf = StringUtils.indexOf(g22, lcsv)) > 0)) {
-							//
-							MultimapUtil.putAll(multimap,
-									ImmutableMultimap.of(g21, g22, StringUtils.substring(g21, 0, 1),
-											StringUtils.substring(g22, 0, indexOf),
-											StringUtils.substring(g21, StringUtils.length(g21) - 1),
-											StringUtils.substring(g22, indexOf + StringUtils.length(lcsv))));
+						testAndAccept(
+								(a, b) -> Boolean.logicalAnd(StringUtils.indexOf(Util.getKey(a), Util.getKey(b)) == 1,
+										StringUtils.indexOf(Util.getValue(a), Util.getValue(b)) > 0),
+								Pair.of(g21, g22), Pair.of(lcsk, lcsv), (a, b) -> {
+									//
+									final String va = Util.getValue(a);
+									//
+									final String vb = Util.getValue(b);
+									//
+									final int indexOf = StringUtils.indexOf(va, vb);
+									//
+									final String ka = Util.getKey(a);
+									//
+									MultimapUtil.putAll(multimap,
+											ImmutableMultimap.of(ka, va, StringUtils.substring(ka, 0, 1),
+													StringUtils.substring(va, 0, indexOf),
+													StringUtils.substring(ka, StringUtils.length(ka) - 1),
+													StringUtils.substring(va, indexOf + StringUtils.length(vb))));
 
-							//
-						} // if
-							//
+									//
+								});
+						//
 						IntCollectionUtil.addInt(intCollection = createIntCollection(iop), i);
 						//
 						return Pair.of(multimap, intCollection);
