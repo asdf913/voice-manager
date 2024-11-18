@@ -6354,6 +6354,22 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			return Pair.of(multimap, createIntCollection(iop));
 			//
+		} //
+			//
+		String g11, g12;
+		//
+		int indexOf;
+		//
+		if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}+\\p{InCJKSymbolsAndPunctuation}\\p{InCJKUnifiedIdeographs}+$"),
+				right)) && Util.groupCount(m1) > 1 && StringUtils.length(g11 = Util.group(m1, 1)) == 2
+				&& StringUtils.lastIndexOf(g12 = Util.group(m1, 2), "ん")
+						- (indexOf = StringUtils.indexOf(g12, "ん")) == 2) {
+			//
+			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
+					StringUtils.substring(g12, 0, indexOf + 1), StringUtils.substring(g11, 1),
+					StringUtils.substring(g12, indexOf + 1)), createIntCollection(iop));
+			//
 		} // if
 			//
 		return null;
