@@ -7063,8 +7063,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} else if (length == 6) {
 				//
-				if (ArrayUtils.contains(new char[] { 'あ', 'こ' }, testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12,
-						space, x -> charAt(x, 0, space), null))) {
+				if (ArrayUtils.contains(new char[] { 'あ', 'こ', 'ち' }, testAndApplyAsChar(x -> StringUtils.length(x) > 0,
+						g12, space, x -> charAt(x, 0, space), null))) {
 					//
 					final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
 							StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, 2),
