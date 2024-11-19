@@ -1454,6 +1454,17 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		Assertions.assertEquals("({火焔文=[かえんもん], 火=[か], 焔=[えん], 文=[もん]},[0])",
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "火焔文（かえんもん）"), null)));
 		//
+	}
+
+	@Test
+	void testToMultimapAndIntCollection13() throws Throwable {
+		//
+		if (isSystemPropertiesContainsTestGetObject) {
+			//
+			return;
+			//
+		} // if
+			//
 		Assertions.assertEquals("({花瓶文=[かびんもん], 花=[か], 瓶=[びん], 文=[もん]},[0])",
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "花瓶文（かびんもん）"), null)));
 		//
