@@ -6854,9 +6854,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			if ((result = IntObjFunction.apply(IterableUtils.get(functions, i), keyInt(iop, 0),
 					Pair.of(g11, g12))) == null) {
+				//
 				continue;
-			}
-			//
+				//
+			} // if
+				//
 			return result;
 			//
 		} // for
