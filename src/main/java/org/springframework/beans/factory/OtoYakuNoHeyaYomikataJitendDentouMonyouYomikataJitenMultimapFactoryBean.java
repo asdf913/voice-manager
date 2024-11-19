@@ -7032,139 +7032,139 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final char space = ' ';
 		//
-		if (testAndApplyAsChar(x -> StringUtils.length(x) > 3, g12, space, x -> charAt(x, 3, space), null) == 'ん') {
+		if (testAndApplyAsChar(x -> StringUtils.length(x) > 3, g12, space, x -> charAt(x, 3, space), null) != 'ん') {
 			//
-			final int length = StringUtils.length(g12);
+			return null;
 			//
-			if (length == 7) {
-				//
-				final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
-						StringUtils.substring(g11, 0, 2), StringUtils.substring(g12, 0, 4),
-						StringUtils.substring(g11, 1, 2), StringUtils.substring(g12, 2, 4),
-						StringUtils.substring(g11, 2), StringUtils.substring(g12, 4)));
-				//
-				Util.forEach(Arrays.asList(Triplet.with("絣", "がすり", "かすり")),
-						//
-						a -> testAndAccept(
-								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
-								a, b -> {
-									//
-									final String s1 = IValue0Util.getValue0(b);
-									//
-									MultimapUtil.remove(multimap, s1, Util.getValue1(b));
-									//
-									MultimapUtil.put(multimap, s1, Util.getValue2(b));
-									//
-								})
-				//
-				);
-				//
-				return Pair.of(multimap, IntList.create(index));
-				//
-			} else if (length == 6) {
-				//
-				if (testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space, x -> charAt(x, 0, space),
-						null) == 'ゆ') {
+		} // if
+			//
+		final int length = StringUtils.length(g12);
+		//
+		if (length == 7) {
+			//
+			final Multimap<String, String> multimap = LinkedHashMultimap.create(
+					ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 2), StringUtils.substring(g12, 0, 4),
+							StringUtils.substring(g11, 1, 2), StringUtils.substring(g12, 2, 4),
+							StringUtils.substring(g11, 2), StringUtils.substring(g12, 4)));
+			//
+			Util.forEach(Arrays.asList(Triplet.with("絣", "がすり", "かすり")),
 					//
-					return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
-							StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 1, 2),
-							StringUtils.substring(g12, 2, 4)), IntList.create(index));
+					a -> testAndAccept(
+							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+							b -> {
+								//
+								final String s1 = IValue0Util.getValue0(b);
+								//
+								MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+								//
+								MultimapUtil.put(multimap, s1, Util.getValue2(b));
+								//
+							})
+			//
+			);
+			//
+			return Pair.of(multimap, IntList.create(index));
+			//
+		} else if (length == 6) {
+			//
+			if (testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space, x -> charAt(x, 0, space), null) == 'ゆ') {
+				//
+				return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
+						StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 1, 2),
+						StringUtils.substring(g12, 2, 4)), IntList.create(index));
+				//
+			} // if
+				//
+			final Multimap<String, String> multimap = LinkedHashMultimap.create(
+					ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, 2),
+							StringUtils.substring(g11, 1, 2), StringUtils.substring(g12, 2, 4),
+							StringUtils.substring(g11, 2), StringUtils.substring(g12, 4)));
+			//
+			Util.forEach(Arrays.asList(Triplet.with("菊", "ぎく", "きく")),
 					//
-				} // if
-					//
-				final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
-						StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, 2),
-						StringUtils.substring(g11, 1, 2), StringUtils.substring(g12, 2, 4),
-						StringUtils.substring(g11, 2), StringUtils.substring(g12, 4)));
-				//
-				Util.forEach(Arrays.asList(Triplet.with("菊", "ぎく", "きく")),
-						//
-						a -> testAndAccept(
-								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
-								a, b -> {
-									//
-									final String s1 = IValue0Util.getValue0(b);
-									//
-									MultimapUtil.remove(multimap, s1, Util.getValue1(b));
-									//
-									MultimapUtil.put(multimap, s1, Util.getValue2(b));
-									//
-								})
-				//
-				);
-				//
-				return Pair.of(multimap, IntList.create(index));
-				//
-			} else if (testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space, x -> charAt(x, 0, space),
-					null) == testAndApplyAsChar(x -> StringUtils.length(x) > 1, g12, space, x -> charAt(x, 1, space),
-							null)) {
-				//
-				if (testAndApplyAsChar(x -> StringUtils.length(x) > 1, g11, space, x -> charAt(x, 1, space),
-						null) == '子') {
-					//
-					return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 2),
-							StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 1, 2),
-							StringUtils.substring(g12, 1, 2), StringUtils.substring(g11, 2),
-							StringUtils.substring(g12, 2)), IntList.create(index));
-					//
-				} // if
-					//
-				return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 2),
-						StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 0, 1),
-						StringUtils.substring(g12, 0, 1), StringUtils.substring(g11, 1, 2),
-						StringUtils.substring(g12, 1, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
-						IntList.create(index));
-				//
-			} else if (testAndApplyAsChar(x -> StringUtils.length(x) > 1, g11, space, x -> charAt(x, 1, space),
-					null) == '子') {
-				//
-				return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 2),
-						StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
-						IntList.create(index));
-				//
-			} else if (testAndApplyAsChar(x -> StringUtils.length(x) > 0, g11, space, x -> charAt(x, 0, space),
-					null) == testAndApplyAsChar(x -> StringUtils.length(x) > 2, g11, space, x -> charAt(x, 2, space),
-							null)) {
+					a -> testAndAccept(
+							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+							b -> {
+								//
+								final String s1 = IValue0Util.getValue0(b);
+								//
+								MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+								//
+								MultimapUtil.put(multimap, s1, Util.getValue2(b));
+								//
+							})
+			//
+			);
+			//
+			return Pair.of(multimap, IntList.create(index));
+			//
+		} else if (testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space, x -> charAt(x, 0, space),
+				null) == testAndApplyAsChar(x -> StringUtils.length(x) > 1, g12, space, x -> charAt(x, 1, space),
+						null)) {
+			//
+			if (testAndApplyAsChar(x -> StringUtils.length(x) > 1, g11, space, x -> charAt(x, 1, space), null) == '子') {
 				//
 				return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 2),
 						StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 1, 2),
 						StringUtils.substring(g12, 1, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
 						IntList.create(index));
 				//
-			} else if (testAndApplyAsChar(x -> StringUtils.length(x) > 1, g11, space, x -> charAt(x, 1, space),
-					null) == '字') {
-				//
-				return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
-						StringUtils.substring(g12, 0, 1), StringUtils.substring(g11, 1, 2),
-						StringUtils.substring(g12, 1, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
-						IntList.create(index));
-				//
-			} else if (Boolean.logicalOr(
-					testAndApplyAsChar(x -> StringUtils.length(x) > 1, g12, space, x -> charAt(x, 1, space),
-							null) == testAndApplyAsChar(x -> StringUtils.length(x) > 2, g12, space,
-									x -> charAt(x, 2, space), null),
-					ArrayUtils.contains(new char[] { 'え', 'の', 'だ', 'こ', 'ぐ', 'び' }, testAndApplyAsChar(
-							x -> StringUtils.length(x) > 0, g12, space, x -> charAt(x, 0, space), null)))) {
-				//
-				return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 2),
-						StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
-						IntList.create(index));
-				//
-			} else if (Boolean.logicalOr(
-					ArrayUtils.contains(new char[] { '幾', '真' },
-							testAndApplyAsChar(x -> StringUtils.length(x) > 0, g11, space, x -> charAt(x, 0, space),
-									null)),
-					testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space, x -> charAt(x, 0, space),
-							null) == 'は')) {
-				//
-				return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 2),
-						StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 0, 1),
-						StringUtils.substring(g12, 0, 1), StringUtils.substring(g11, 1, 2),
-						StringUtils.substring(g12, 1, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
-						IntList.create(index));
-				//
 			} // if
 				//
+			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 2),
+					StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 0, 1),
+					StringUtils.substring(g12, 0, 1), StringUtils.substring(g11, 1, 2),
+					StringUtils.substring(g12, 1, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
+					IntList.create(index));
+			//
+		} else if (testAndApplyAsChar(x -> StringUtils.length(x) > 1, g11, space, x -> charAt(x, 1, space),
+				null) == '子') {
+			//
+			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 2),
+					StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
+					IntList.create(index));
+			//
+		} else if (testAndApplyAsChar(x -> StringUtils.length(x) > 0, g11, space, x -> charAt(x, 0, space),
+				null) == testAndApplyAsChar(x -> StringUtils.length(x) > 2, g11, space, x -> charAt(x, 2, space),
+						null)) {
+			//
+			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 2),
+					StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 1, 2),
+					StringUtils.substring(g12, 1, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
+					IntList.create(index));
+			//
+		} else if (testAndApplyAsChar(x -> StringUtils.length(x) > 1, g11, space, x -> charAt(x, 1, space),
+				null) == '字') {
+			//
+			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
+					StringUtils.substring(g12, 0, 1), StringUtils.substring(g11, 1, 2),
+					StringUtils.substring(g12, 1, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
+					IntList.create(index));
+			//
+		} else if (Boolean.logicalOr(testAndApplyAsChar(x -> StringUtils.length(x) > 1, g12, space,
+				x -> charAt(x, 1, space),
+				null) == testAndApplyAsChar(x -> StringUtils.length(x) > 2, g12, space, x -> charAt(x, 2, space), null),
+				ArrayUtils.contains(new char[] { 'え', 'の', 'だ', 'こ', 'ぐ', 'び' }, testAndApplyAsChar(
+						x -> StringUtils.length(x) > 0, g12, space, x -> charAt(x, 0, space), null)))) {
+			//
+			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 2),
+					StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
+					IntList.create(index));
+			//
+		} else if (Boolean
+				.logicalOr(
+						ArrayUtils.contains(new char[] { '幾', '真' },
+								testAndApplyAsChar(x -> StringUtils.length(x) > 0, g11, space, x -> charAt(x, 0, space),
+										null)),
+						testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space, x -> charAt(x, 0, space),
+								null) == 'は')) {
+			//
+			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 2),
+					StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 0, 1),
+					StringUtils.substring(g12, 0, 1), StringUtils.substring(g11, 1, 2),
+					StringUtils.substring(g12, 1, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
+					IntList.create(index));
+			//
 		} // if
 			//
 		return null;
