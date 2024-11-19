@@ -6702,15 +6702,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				"^(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$"),
 				right)) && Util.groupCount(m1) > 3) {
 			//
-			if (StringUtils.length(g12 = Util.group(m1, 2)) == 2) {
-				//
-				final String g14 = Util.group(m1, 4);
-				//
-				return Pair.of(ImmutableMultimap.of(Util.group(m1, 1), StringUtils.substringBefore(g14, g12),
-						Util.group(m1, 3), StringUtils.substringAfter(g14, g12)), createIntCollection(iop));
-				//
-			} // if
-				//
+			final String g14 = Util.group(m1, 4);
+			//
+			return Pair.of(
+					ImmutableMultimap.of(Util.group(m1, 1), StringUtils.substringBefore(g14, g12 = Util.group(m1, 2)),
+							Util.group(m1, 3), StringUtils.substringAfter(g14, g12)),
+					createIntCollection(iop));
+			//
 		} // if
 			//
 		return null;
