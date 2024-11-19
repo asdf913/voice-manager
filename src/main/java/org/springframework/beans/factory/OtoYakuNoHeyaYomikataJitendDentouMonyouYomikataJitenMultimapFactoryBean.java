@@ -6851,7 +6851,22 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					StringUtils.substring(g12, 2, 3), StringUtils.substring(g11, 2), StringUtils.substring(g12, 3)),
 					createIntCollection(iop));
 			//
-		} else if (Boolean.logicalAnd(
+		} // if
+			//
+		return toMultimapAndIntCollection26A(iop != null ? iop.keyInt() : 0, Pair.of(g11, g12));
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection26A(final int index,
+			final Entry<String, String> entry) {
+		//
+		final String g11 = Util.getKey(entry);
+		//
+		final String g12 = Util.getValue(entry);
+		//
+		final char space = ' ';
+		//
+		if (Boolean.logicalAnd(
 				testAndApplyAsChar(x -> StringUtils.length(x) > 2, g12, space, x -> charAt(x, 2, space), null) == 'ん',
 				testAndApplyAsChar(x -> StringUtils.length(x) > 4, g12, space, x -> charAt(x, 4, space),
 						null) == 'ょ')) {
@@ -6859,7 +6874,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
 					StringUtils.substring(g12, 0, 1), StringUtils.substring(g11, 1, 2),
 					StringUtils.substring(g12, 1, 3), StringUtils.substring(g11, 2), StringUtils.substring(g12, 3)),
-					createIntCollection(iop));
+					IntList.create(index));
 			//
 		} // if
 			//
