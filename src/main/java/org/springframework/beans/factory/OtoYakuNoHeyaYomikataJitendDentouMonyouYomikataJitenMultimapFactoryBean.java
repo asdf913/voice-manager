@@ -6815,7 +6815,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		final Iterable<IntObjFunction<Entry<String, String>, Entry<Multimap<String, String>, IntCollection>>> functions = Arrays
 				.asList(OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection26A,
-						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection26B);
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection26B,
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection26C);
 		//
 		Entry<Multimap<String, String>, IntCollection> result;
 		//
@@ -7015,8 +7016,22 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					StringUtils.substring(g12, get(ints, 0, 0) + 1, ints[1] + 1), StringUtils.substring(g11, 2),
 					StringUtils.substring(g12, ints[1] + 1)), IntList.create(index));
 			//
-		} else if (testAndApplyAsChar(x -> StringUtils.length(x) > 3, g12, space, x -> charAt(x, 3, space),
-				null) == 'ん') {
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection26C(final int index,
+			final Entry<String, String> entry) {
+		//
+		final String g11 = Util.getKey(entry);
+		//
+		final String g12 = Util.getValue(entry);
+		//
+		final char space = ' ';
+		//
+		if (testAndApplyAsChar(x -> StringUtils.length(x) > 3, g12, space, x -> charAt(x, 3, space), null) == 'ん') {
 			//
 			if (StringUtils.length(g12) == 7) {
 				//
