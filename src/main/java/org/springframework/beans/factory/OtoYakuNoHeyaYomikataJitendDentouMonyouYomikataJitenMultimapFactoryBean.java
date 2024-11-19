@@ -6811,9 +6811,35 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		} else if (length(ints = toArray(indexOf(g12, c -> c == 'ゅ'))) == 2) {
 			//
 			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
-					StringUtils.substring(g12, 0, ints[0] +2), StringUtils.substring(g11, 1, 2),
+					StringUtils.substring(g12, 0, ints[0] + 2), StringUtils.substring(g11, 1, 2),
 					StringUtils.substring(g12, ints[1] - 1, ints[1] + 2), StringUtils.substring(g11, 2),
 					StringUtils.substring(g12, ints[1] + 2)), createIntCollection(iop));
+			//
+		} else if (testAndApplyAsChar(x -> StringUtils.length(x) > 3, g12, space, x -> charAt(x, 3, space),
+				null) == 'ゅ') {
+			//
+			final Multimap<String, String> multimap = LinkedHashMultimap.create(
+					ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, 2),
+							StringUtils.substring(g11, 1, 2), StringUtils.substring(g12, 2, 5),
+							StringUtils.substring(g11, 2), StringUtils.substring(g12, 5)));
+			//
+			Util.forEach(Arrays.asList(Triplet.with("絣", "がすり", "かすり")),
+					//
+					a -> testAndAccept(b -> b != null
+							&& MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+							b -> {
+								//
+								final String s1 = IValue0Util.getValue0(b);
+								//
+								MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+								//
+								MultimapUtil.put(multimap, s1, Util.getValue2(b));
+								//
+							})
+			//
+			);
+			//
+			return Pair.of(multimap, createIntCollection(iop));
 			//
 		} // if
 			//
