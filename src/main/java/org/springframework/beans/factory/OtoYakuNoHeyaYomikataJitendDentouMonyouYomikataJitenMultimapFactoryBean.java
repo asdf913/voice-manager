@@ -7143,8 +7143,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						IntList.create(index));
 				//
 			} else if (Boolean.logicalOr(
-					testAndApplyAsChar(x -> StringUtils.length(x) > 0, g11, space, x -> charAt(x, 0, space),
-							null) == '幾',
+					ArrayUtils.contains(new char[] { '幾', '真' },
+							testAndApplyAsChar(x -> StringUtils.length(x) > 0, g11, space, x -> charAt(x, 0, space),
+									null)),
 					testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space, x -> charAt(x, 0, space),
 							null) == 'は')) {
 				//
