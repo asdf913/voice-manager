@@ -6843,7 +6843,25 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
-		return toMultimapAndIntCollection26A(iop != null ? iop.keyInt() : 0, Pair.of(g11, g12));
+		final Iterable<IntObjFunction<Entry<String, String>, Entry<Multimap<String, String>, IntCollection>>> functions = Arrays
+				.asList(OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection26A);
+		//
+		IntObjFunction<Entry<String, String>, Entry<Multimap<String, String>, IntCollection>> function;
+		//
+		Entry<Multimap<String, String>, IntCollection> result;
+		//
+		for (int i = 0; i < IterableUtils.size(functions); i++) {
+			//
+			if ((function = IterableUtils.get(functions, i)) == null
+					|| (result = function.apply(iop != null ? iop.keyInt() : 0, Pair.of(g11, g12))) == null) {
+				continue;
+			}
+			//
+			return result;
+			//
+		} // for
+			//
+		return null;
 		//
 	}
 
