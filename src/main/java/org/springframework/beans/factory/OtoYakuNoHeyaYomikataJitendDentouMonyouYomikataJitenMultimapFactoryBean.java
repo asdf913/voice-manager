@@ -6736,7 +6736,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		final String g12 = Util.group(m1, 2);
 		//
-		int[] ints = toArray(indexOf(g12, c -> c == 'ん'));
+		final int[] ints = toArray(indexOf(g12, c -> c == 'ん'));
 		//
 		if (length(ints) == 2) {
 			//
@@ -6810,13 +6810,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					StringUtils.substring(g12, indexOf - 1, indexOf + 1), StringUtils.substring(g11, 2),
 					StringUtils.substring(g12, indexOf + 1)), createIntCollection(iop));
 			//
-		} else if (length(ints = toArray(indexOf(g12, c -> c == 'ゅ'))) == 2) {
-			//
-			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
-					StringUtils.substring(g12, 0, ints[0] + 2), StringUtils.substring(g11, 1, 2),
-					StringUtils.substring(g12, ints[1] - 1, ints[1] + 2), StringUtils.substring(g11, 2),
-					StringUtils.substring(g12, ints[1] + 2)), createIntCollection(iop));
-			//
 		} // if
 			//
 		final Iterable<IntObjFunction<Entry<String, String>, Entry<Multimap<String, String>, IntCollection>>> functions = Arrays
@@ -6851,7 +6844,17 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final char space = ' ';
 		//
-		if (testAndApplyAsChar(x -> StringUtils.length(x) > 3, g12, space, x -> charAt(x, 3, space), null) == 'ゅ') {
+		final int[] ints = toArray(indexOf(g12, c -> c == 'ゅ'));
+		//
+		if (length(ints) == 2) {
+			//
+			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
+					StringUtils.substring(g12, 0, ints[0] + 2), StringUtils.substring(g11, 1, 2),
+					StringUtils.substring(g12, ints[1] - 1, ints[1] + 2), StringUtils.substring(g11, 2),
+					StringUtils.substring(g12, ints[1] + 2)), IntList.create(index));
+			//
+		} else if (testAndApplyAsChar(x -> StringUtils.length(x) > 3, g12, space, x -> charAt(x, 3, space),
+				null) == 'ゅ') {
 			//
 			final Multimap<String, String> multimap = LinkedHashMultimap.create(
 					ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, 2),
