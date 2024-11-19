@@ -6668,7 +6668,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			final char space = ' ';
 			//
-			if (StringUtils.length(g12) > 5 && charAt(g12, 1, space) == 'ょ' && charAt(g12, 5, space) == 'ん') {
+			if (Boolean.logicalAnd(
+					testAndApplyAsChar(x -> StringUtils.length(x) > 1, g12, space, x -> charAt(x, 1, space),
+							null) == 'ょ',
+					testAndApplyAsChar(x -> StringUtils.length(x) > 5, g12, space, x -> charAt(x, 5, space),
+							null) == 'ん')) {
 				//
 				return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
 						StringUtils.substring(g12, 0, 3), StringUtils.substring(g11, 1, 2),
