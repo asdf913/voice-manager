@@ -5960,12 +5960,16 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 		} else {
 			//
-			return toMultimapAndIntCollection19A(pattern, iop != null ? iop.keyInt() : 0, Pair.of(g11, g12), lines);
+			return toMultimapAndIntCollection19A(pattern, keyInt(iop, 0), Pair.of(g11, g12), lines);
 			//
 		} // if
 			//
 		return null;
 		//
+	}
+
+	private static int keyInt(final IntObjectPair<?> instance, final int defaultValue) {
+		return instance != null ? instance.keyInt() : defaultValue;
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection19A(final Pattern pattern,
@@ -6105,8 +6109,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // if
 			//
-		final Entry<Multimap<String, String>, IntCollection> entry = toMultimapAndIntCollection20A(
-				iop != null ? iop.keyInt() : 0, Pair.of(g11, g12), lines);
+		final Entry<Multimap<String, String>, IntCollection> entry = toMultimapAndIntCollection20A(keyInt(iop, 0),
+				Pair.of(g11, g12), lines);
 		//
 		Util.forEach(
 				Arrays.asList(Triplet.with("柏", "がしわ", "かしわ"), Triplet.with("絣", "がすり", "かすり"),
@@ -6272,7 +6276,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 		} else {
 			//
-			return toMultimapAndIntCollection21A(patternMap, iop != null ? iop.keyInt() : 0, Pair.of(g11, g12), lines);
+			return toMultimapAndIntCollection21A(patternMap, keyInt(iop, 0), Pair.of(g11, g12), lines);
 			//
 		} // if
 			//
@@ -6444,7 +6448,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			} // if
 				//
 			IntMap.put(intMap = ObjectUtils.getIfNull(intMap, () -> Reflection.newProxy(IntMap.class, new IH())),
-					"index1", iop != null ? iop.keyInt() : 0);
+					"index1", keyInt(iop, 0));
 			//
 			IntMap.put(intMap, "index2", i);
 			//
@@ -6853,7 +6857,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		for (int i = 0; i < IterableUtils.size(functions); i++) {
 			//
 			if ((function = IterableUtils.get(functions, i)) == null
-					|| (result = function.apply(iop != null ? iop.keyInt() : 0, Pair.of(g11, g12))) == null) {
+					|| (result = function.apply(keyInt(iop, 0), Pair.of(g11, g12))) == null) {
 				continue;
 			}
 			//
