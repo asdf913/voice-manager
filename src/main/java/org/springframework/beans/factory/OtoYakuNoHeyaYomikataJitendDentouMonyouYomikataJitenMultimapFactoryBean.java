@@ -6571,17 +6571,17 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection24(
 			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines) {
 		//
-		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}$"),
-				PairUtil.right(iop));
+		final String right = PairUtil.right(iop);
 		//
-		String g11;
+		Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}$"),
+				right);
+		//
+		String g11, g12;
 		//
 		if (Util.matches(m1) && Util.groupCount(m1) > 1 && StringUtils.length(g11 = Util.group(m1, 1)) == 2) {
 			//
-			final String g12 = Util.group(m1, 2);
-			//
-			if (StringUtils.endsWith(g12, "ん")) {
+			if (StringUtils.endsWith(g12 = Util.group(m1, 2), "ん")) {
 				//
 				final int length = StringUtils.length(g12);
 				//
@@ -6632,6 +6632,39 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				} // if
 					//
 			} // for
+				//
+		} else if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{2}$"),
+				right)) && Util.groupCount(m1) > 1 && StringUtils.length(g11 = Util.group(m1, 1)) == 3) {
+			//
+			final int[] ints = toArray(indexOf(g12 = Util.group(m1, 2), c -> c == 'ん'));
+			//
+			if (length(ints) == 2) {
+				//
+				final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
+						StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, ints[0] + 1),
+						StringUtils.substring(g11, 1, 2), StringUtils.substring(g12, ints[0] + 1, ints[1] + 1),
+						StringUtils.substring(g11, 2), StringUtils.substring(g12, ints[1] + 1)));
+				//
+				Util.forEach(Arrays.asList(Triplet.with("革", "がわ", "かわ")),
+						//
+						a -> testAndAccept(
+								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
+								a, b -> {
+									//
+									final String s1 = IValue0Util.getValue0(b);
+									//
+									MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+									//
+									MultimapUtil.put(multimap, s1, Util.getValue2(b));
+									//
+								})
+				//
+				);
+				//
+				return Pair.of(multimap, createIntCollection(iop));
+				//
+			} // if
 				//
 		} // if
 			//
