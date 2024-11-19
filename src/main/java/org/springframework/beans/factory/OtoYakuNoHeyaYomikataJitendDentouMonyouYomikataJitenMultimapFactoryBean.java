@@ -6841,16 +6841,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			return Pair.of(multimap, createIntCollection(iop));
 			//
-		} else if (Boolean.logicalAnd(
-				testAndApplyAsChar(x -> StringUtils.length(x) > 1, g12, space, x -> charAt(x, 1, space), null) == 'ん',
-				testAndApplyAsChar(x -> StringUtils.length(x) > 4, g12, space, x -> charAt(x, 4, space),
-						null) == 'ょ')) {
-			//
-			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
-					StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 1, 2),
-					StringUtils.substring(g12, 2, 3), StringUtils.substring(g11, 2), StringUtils.substring(g12, 3)),
-					createIntCollection(iop));
-			//
 		} // if
 			//
 		return toMultimapAndIntCollection26A(iop != null ? iop.keyInt() : 0, Pair.of(g11, g12));
@@ -6868,6 +6858,16 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		final char space = ' ';
 		//
 		if (Boolean.logicalAnd(
+				testAndApplyAsChar(x -> StringUtils.length(x) > 1, g12, space, x -> charAt(x, 1, space), null) == 'ん',
+				testAndApplyAsChar(x -> StringUtils.length(x) > 4, g12, space, x -> charAt(x, 4, space),
+						null) == 'ょ')) {
+			//
+			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
+					StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 1, 2),
+					StringUtils.substring(g12, 2, 3), StringUtils.substring(g11, 2), StringUtils.substring(g12, 3)),
+					IntList.create(index));
+			//
+		} else if (Boolean.logicalAnd(
 				testAndApplyAsChar(x -> StringUtils.length(x) > 2, g12, space, x -> charAt(x, 2, space), null) == 'ん',
 				testAndApplyAsChar(x -> StringUtils.length(x) > 4, g12, space, x -> charAt(x, 4, space),
 						null) == 'ょ')) {
