@@ -6797,9 +6797,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			int indexOf;
 			//
-			if (testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space,
-					x -> charAt(x, StringUtils.length(x) - 1, space), null) == 'ん'
-					&& (indexOf = StringUtils.indexOf(g12, "ゅ")) > 0 && StringUtils.lastIndexOf(g12, "ゅ") == indexOf) {
+			if (Boolean.logicalAnd(
+					testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space,
+							x -> charAt(x, StringUtils.length(x) - 1, space), null) == 'ん',
+					(indexOf = StringUtils.indexOf(g12, "ゅ")) > 0 && StringUtils.lastIndexOf(g12, "ゅ") == indexOf)) {
 				//
 				return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
 						StringUtils.substring(g12, 0, indexOf - 1), StringUtils.substring(g11, 1, 2),
