@@ -5966,7 +5966,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static int keyInt(final IntObjectPair<?> instance, final int defaultValue) {
+	private static int keyInt(@Nullable final IntObjectPair<?> instance, final int defaultValue) {
 		return instance != null ? instance.keyInt() : defaultValue;
 	}
 
