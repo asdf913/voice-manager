@@ -7030,8 +7030,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					Util.forEach(Arrays.asList(Triplet.with("絣", "がすり", "かすり")),
 							//
-							a -> testAndAccept(b -> b != null && MultimapUtil.containsEntry(multimap,
-									IValue0Util.getValue0(b), Util.getValue1(b)), a, b -> {
+							a -> testAndAccept(b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b),
+									Util.getValue1(b)), a, b -> {
 										//
 										final String s1 = IValue0Util.getValue0(b);
 										//
