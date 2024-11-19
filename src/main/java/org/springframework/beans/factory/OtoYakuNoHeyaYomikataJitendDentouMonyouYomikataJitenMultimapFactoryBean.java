@@ -6644,17 +6644,17 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection25(
 			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines) {
 		//
-		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
-				"^(\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{2}$"),
-				PairUtil.right(iop));
+		final String right = PairUtil.right(iop);
 		//
-		String g11;
+		Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{2}$"),
+				right);
+		//
+		String g11, g12;
 		//
 		if (Util.matches(m1) && Util.groupCount(m1) > 1 && StringUtils.length(g11 = Util.group(m1, 1)) == 3) {
 			//
-			final String g12 = Util.group(m1, 2);
-			//
-			final int[] ints = toArray(indexOf(g12, c -> c == 'ん'));
+			final int[] ints = toArray(indexOf(g12 = Util.group(m1, 2), c -> c == 'ん'));
 			//
 			if (length(ints) == 2) {
 				//
@@ -6695,6 +6695,19 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						StringUtils.substring(g12, 0, 3), StringUtils.substring(g11, 1, 2),
 						StringUtils.substring(g12, 3, 4), StringUtils.substring(g11, 2), StringUtils.substring(g12, 4)),
 						createIntCollection(iop));
+				//
+			} // if
+				//
+		} else if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs})(\\p{InHiragana}+)(\\p{InCJKUnifiedIdeographs})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$"),
+				right)) && Util.groupCount(m1) > 3) {
+			//
+			if (StringUtils.length(g12 = Util.group(m1, 2)) == 2) {
+				//
+				final String g14 = Util.group(m1, 4);
+				//
+				return Pair.of(ImmutableMultimap.of(Util.group(m1, 1), StringUtils.substringBefore(g14, g12),
+						Util.group(m1, 3), StringUtils.substringAfter(g14, g12)), createIntCollection(iop));
 				//
 			} // if
 				//
