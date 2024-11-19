@@ -6751,7 +6751,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 				} else if (ints[1] - ints[0] == 2) {
 					//
-					if (ints[0] == 2) {
+					if (ArrayUtils.contains(new int[] { 2, 3 }, ints[0])) {
 						//
 						return Pair.of(
 								ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
