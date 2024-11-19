@@ -4690,7 +4690,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 
 		R apply(final int a, final B b);
 
-		private static <B, R> R apply(final IntObjFunction<B, R> instance, final int a, final B b) {
+		private static <B, R> R apply(@Nullable final IntObjFunction<B, R> instance, final int a, final B b) {
 			return instance != null ? instance.apply(a, b) : null;
 		}
 
