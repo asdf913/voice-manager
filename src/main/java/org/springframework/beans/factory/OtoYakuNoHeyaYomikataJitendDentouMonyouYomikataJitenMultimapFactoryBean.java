@@ -4690,6 +4690,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 
 		R apply(final int a, final B b);
 
+		private static <B, R> R apply(final IntObjFunction<B, R> instance, final int a, final B b) {
+			return instance != null ? instance.apply(a, b) : null;
+		}
+
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection12C(
@@ -4725,14 +4729,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			for (final IntObjFunction<Entry<String, String>, Entry<Multimap<String, String>, IntCollection>> function : functions) {
 				//
-				if (function == null) {
-					//
-					continue;
-					//
-				} // if
-					//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						Util.getKey(entry = function.apply(i, Pair.of(g21, Util.group(m2, 2)))));
+						Util.getKey(entry = IntObjFunction.apply(function, i, Pair.of(g21, Util.group(m2, 2)))));
 				//
 				IntCollectionUtil.addAllInts(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
 						Util.getValue(entry));
@@ -6850,14 +6848,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		final Iterable<IntObjFunction<Entry<String, String>, Entry<Multimap<String, String>, IntCollection>>> functions = Arrays
 				.asList(OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection26A);
 		//
-		IntObjFunction<Entry<String, String>, Entry<Multimap<String, String>, IntCollection>> function;
-		//
 		Entry<Multimap<String, String>, IntCollection> result;
 		//
 		for (int i = 0; i < IterableUtils.size(functions); i++) {
 			//
-			if ((function = IterableUtils.get(functions, i)) == null
-					|| (result = function.apply(keyInt(iop, 0), Pair.of(g11, g12))) == null) {
+			if ((result = IntObjFunction.apply(IterableUtils.get(functions, i), keyInt(iop, 0),
+					Pair.of(g11, g12))) == null) {
 				continue;
 			}
 			//
