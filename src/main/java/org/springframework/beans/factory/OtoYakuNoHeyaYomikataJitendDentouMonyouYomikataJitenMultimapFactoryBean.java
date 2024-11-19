@@ -6919,8 +6919,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		if (testAndApplyAsChar(x -> StringUtils.length(x) > 3, g12, space, x -> charAt(x, 3, space), null) == 'ょ') {
 			//
-			if (StringUtils.length(g12) == 6 && testAndApplyAsChar(x -> StringUtils.length(x) > 1, g12, space,
-					x -> charAt(x, 1, space), null) == 'ん') {
+			if (Boolean.logicalAnd(StringUtils.length(g12) == 6, testAndApplyAsChar(x -> StringUtils.length(x) > 1, g12,
+					space, x -> charAt(x, 1, space), null) == 'ん')) {
 				//
 				if (testAndApplyAsChar(x -> StringUtils.length(x) > 4, g12, space, x -> charAt(x, 4, space),
 						null) == 'う') {
