@@ -7076,7 +7076,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	@Nullable
-	private static IntStream indexOf(final String string, final CharPredicate charPredicate) {
+	private static IntStream indexOf(@Nullable final String string, final CharPredicate charPredicate) {
 		//
 		return filter(IntStream.range(0, StringUtils.length(string)),
 				i -> string != null && test(charPredicate, string.charAt(i)));
