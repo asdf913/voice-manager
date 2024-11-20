@@ -7201,7 +7201,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			);
 			//
-			return Pair.of(multimap, IntList.create(index));// TODO
+			return Pair.of(multimap, IntList.create(index)); 
 			//
 		} else if (testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space, x -> charAt(x, 0, space),
 				null) == testAndApplyAsChar(x -> StringUtils.length(x) > 1, g12, space, x -> charAt(x, 1, space),
