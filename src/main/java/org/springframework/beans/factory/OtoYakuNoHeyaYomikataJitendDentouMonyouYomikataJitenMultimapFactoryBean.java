@@ -6816,7 +6816,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		final Iterable<IntObjFunction<Entry<String, String>, Entry<Multimap<String, String>, IntCollection>>> functions = Arrays
 				.asList(OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection26A,
 						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection26B,
-						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection26C);
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection26C,
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection26D);
 		//
 		Entry<Multimap<String, String>, IntCollection> result;
 		//
@@ -7201,7 +7202,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			);
 			//
-			return Pair.of(multimap, IntList.create(index)); 
+			return Pair.of(multimap, IntList.create(index));
 			//
 		} else if (testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space, x -> charAt(x, 0, space),
 				null) == testAndApplyAsChar(x -> StringUtils.length(x) > 1, g12, space, x -> charAt(x, 1, space),
@@ -7257,7 +7258,28 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
 					IntList.create(index));
 			//
-		} else if (Boolean
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection26D(final int index,
+			final Entry<String, String> entry) {
+		//
+		final String g11 = Util.getKey(entry);
+		//
+		final String g12 = Util.getValue(entry);
+		//
+		final char space = ' ';
+		//
+		if (testAndApplyAsChar(x -> StringUtils.length(x) > 3, g12, space, x -> charAt(x, 3, space), null) != 'ん') {
+			//
+			return null;
+			//
+		} // if
+			//
+		if (Boolean
 				.logicalOr(
 						ArrayUtils.contains(new char[] { '幾', '真' },
 								testAndApplyAsChar(x -> StringUtils.length(x) > 0, g11, space, x -> charAt(x, 0, space),
