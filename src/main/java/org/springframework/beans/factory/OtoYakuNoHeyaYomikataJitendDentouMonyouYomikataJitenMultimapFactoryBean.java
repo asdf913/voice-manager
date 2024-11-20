@@ -7251,43 +7251,51 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final char space = ' ';
 		//
-		if (testAndApplyAsChar(x -> StringUtils.length(x) > 3, g12, space, x -> charAt(x, 3, space), null) != 'ん') {
+		if (testAndApplyAsChar(x -> StringUtils.length(x) > 3, g12, space, x -> charAt(x, 3, space), null) == 'ん') {
 			//
-			return null;
-			//
-		} // if
-			//
-		if (Boolean
-				.logicalOr(
-						ArrayUtils.contains(new char[] { '幾', '真' },
-								testAndApplyAsChar(x -> StringUtils.length(x) > 0, g11, space, x -> charAt(x, 0, space),
-										null)),
-						testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space, x -> charAt(x, 0, space),
-								null) == 'は')) {
+			if (Boolean.logicalOr(
+					ArrayUtils.contains(new char[] { '幾', '真' },
+							testAndApplyAsChar(x -> StringUtils.length(x) > 0, g11, space, x -> charAt(x, 0, space),
+									null)),
+					testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space, x -> charAt(x, 0, space),
+							null) == 'は')) {
+				//
+				return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 2),
+						StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 0, 1),
+						StringUtils.substring(g12, 0, 1), StringUtils.substring(g11, 1, 2),
+						StringUtils.substring(g12, 1, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
+						IntList.create(index));
+				//
+			} else if (Util.or(
+					testAndApplyAsChar(x -> StringUtils.length(x) > 1, g12, space, x -> charAt(x, 1, space),
+							null) == testAndApplyAsChar(x -> StringUtils.length(x) > 2, g12, space,
+									x -> charAt(x, 2, space), null),
+					ArrayUtils.contains(new char[] { 'え', 'の', 'だ', 'こ', 'ぐ', 'び' },
+							testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space, x -> charAt(x, 0, space),
+									null)),
+					testAndApplyAsChar(x -> StringUtils.length(x) > 0, g11, space, x -> charAt(x, 0, space),
+							null) == '鉸')) {
+				//
+				return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 2),
+						StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
+						IntList.create(index));
+				//
+			} else if (testAndApplyAsChar(x -> StringUtils.length(x) > 1, g11, space, x -> charAt(x, 1, space),
+					null) == '字') {
+				//
+				return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
+						StringUtils.substring(g12, 0, 1), StringUtils.substring(g11, 1, 2),
+						StringUtils.substring(g12, 1, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
+						IntList.create(index));
+				//
+			} // if
+				//
+		} else if (testAndApplyAsChar(x -> StringUtils.length(x) > 1, g12, space, x -> charAt(x, 1, space),
+				null) == 'ゃ') {
 			//
 			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 2),
-					StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 0, 1),
-					StringUtils.substring(g12, 0, 1), StringUtils.substring(g11, 1, 2),
-					StringUtils.substring(g12, 1, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
-					IntList.create(index));
-			//
-		} else if (Util.or(testAndApplyAsChar(x -> StringUtils.length(x) > 1, g12, space, x -> charAt(x, 1, space),
-				null) == testAndApplyAsChar(x -> StringUtils.length(x) > 2, g12, space, x -> charAt(x, 2, space), null),
-				ArrayUtils.contains(new char[] { 'え', 'の', 'だ', 'こ', 'ぐ', 'び' },
-						testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space, x -> charAt(x, 0, space), null)),
-				testAndApplyAsChar(x -> StringUtils.length(x) > 0, g11, space, x -> charAt(x, 0, space),
-						null) == '鉸')) {
-			//
-			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 2),
-					StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
-					IntList.create(index));
-			//
-		} else if (testAndApplyAsChar(x -> StringUtils.length(x) > 1, g11, space, x -> charAt(x, 1, space),
-				null) == '字') {
-			//
-			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 1),
-					StringUtils.substring(g12, 0, 1), StringUtils.substring(g11, 1, 2),
-					StringUtils.substring(g12, 1, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
+					StringUtils.substring(g12, 0, 4), StringUtils.substring(g11, 1, 2),
+					StringUtils.substring(g12, 3, 4), StringUtils.substring(g11, 2), StringUtils.substring(g12, 4)),
 					IntList.create(index));
 			//
 		} // if
