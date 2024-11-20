@@ -7247,17 +7247,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					StringUtils.substring(g12, 1, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
 					IntList.create(index));
 			//
-		} else if (Util.or(testAndApplyAsChar(x -> StringUtils.length(x) > 1, g12, space, x -> charAt(x, 1, space),
-				null) == testAndApplyAsChar(x -> StringUtils.length(x) > 2, g12, space, x -> charAt(x, 2, space), null),
-				ArrayUtils.contains(new char[] { 'え', 'の', 'だ', 'こ', 'ぐ', 'び' },
-						testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space, x -> charAt(x, 0, space), null)),
-				testAndApplyAsChar(x -> StringUtils.length(x) > 0, g11, space, x -> charAt(x, 0, space),
-						null) == '鉸')) {
-			//
-			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 2),
-					StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
-					IntList.create(index));
-			//
 		} // if
 			//
 		return null;
@@ -7292,6 +7281,17 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 0, 1),
 					StringUtils.substring(g12, 0, 1), StringUtils.substring(g11, 1, 2),
 					StringUtils.substring(g12, 1, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
+					IntList.create(index));
+			//
+		} else if (Util.or(testAndApplyAsChar(x -> StringUtils.length(x) > 1, g12, space, x -> charAt(x, 1, space),
+				null) == testAndApplyAsChar(x -> StringUtils.length(x) > 2, g12, space, x -> charAt(x, 2, space), null),
+				ArrayUtils.contains(new char[] { 'え', 'の', 'だ', 'こ', 'ぐ', 'び' },
+						testAndApplyAsChar(x -> StringUtils.length(x) > 0, g12, space, x -> charAt(x, 0, space), null)),
+				testAndApplyAsChar(x -> StringUtils.length(x) > 0, g11, space, x -> charAt(x, 0, space),
+						null) == '鉸')) {
+			//
+			return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 2),
+					StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 2), StringUtils.substring(g12, 2)),
 					IntList.create(index));
 			//
 		} // if
