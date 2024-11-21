@@ -7365,15 +7365,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final PatternMap patternMap, final int index, final Entry<String, String> entry,
 			final Iterable<String> lines) {
 		//
-		Matcher m2;
-		//
-		final String g11 = Util.getKey(entry);
-		//
-		final String g12 = Util.getValue(entry);
-		//
-		String g23, g24, cpk, cpv;
-		//
-		Multimap<String, String> multimap;
+		Entry<Multimap<String, String>, IntCollection> result;
 		//
 		for (int i = 0; i < IterableUtils.size(lines); i++) {
 			//
@@ -7383,64 +7375,63 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-			if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, format(
-					"^(%1$s\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
-					testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1), null))),
-					IterableUtils.get(lines, i))) && Util.groupCount(m2) > 2
-					&& StringUtils.length(cpk = Strings.commonPrefix(g11, Util.group(m2, 1))) == 1
-					&& StringUtils.isNotBlank(cpv = Strings.commonPrefix(g12, g24 = Util.group(m2, 4)))) {
+			if ((result = toMultimapAndIntCollection26(patternMap, IntObjectPair.of(index, entry),
+					IntObjectPair.of(i, IterableUtils.get(lines, i)))) != null) {
 				//
-				if (StringUtils.length(g23 = Util.group(m2, 3)) == 1) {
+				return result;
+				//
+			} // if
+				//
+		} // for
+			//
+		return null;
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection26(
+			final PatternMap patternMap, final IntObjectPair<Entry<String, String>> iop1,
+			final IntObjectPair<String> iop2) {
+		//
+		Matcher m2;
+		//
+		final Entry<String, String> entry = PairUtil.right(iop1);
+		//
+		final String g11 = Util.getKey(entry);
+		//
+		final String g12 = Util.getValue(entry);
+		//
+		String g23, g24, cpk, cpv;
+		//
+		final int index = keyInt(iop1, 0);
+		//
+		final int i = keyInt(iop2, 0);
+		//
+		Multimap<String, String> multimap;
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
+				testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1), null))),
+				PairUtil.right(iop2))) && Util.groupCount(m2) > 2
+				&& StringUtils.length(cpk = Strings.commonPrefix(g11, Util.group(m2, 1))) == 1
+				&& StringUtils.isNotBlank(cpv = Strings.commonPrefix(g12, g24 = Util.group(m2, 4)))) {
+			//
+			if (StringUtils.length(g23 = Util.group(m2, 3)) == 1) {
+				//
+				if (StringUtils.length(g12) == 4) {
 					//
-					if (StringUtils.length(g12) == 4) {
-						//
-						return Pair.of(ImmutableMultimap.of(g11, g12, cpk, cpv, StringUtils.substring(g11, 2),
-								StringUtils.substring(g12, 3), Util.group(m2, 3), StringUtils.substring(g24, 4)),
-								IntList.create(index, i));
-						//
-					} else if (Objects.equals(Util.group(m2, 2), "み")) {
-						//
-						multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk, cpv,
-								StringUtils.substring(g11, 1, 2), StringUtils.substring(g12, 2, 4),
-								StringUtils.substring(g11, 2), StringUtils.substring(g12, 4), Util.group(m2, 3),
-								StringUtils.substring(g24, 5)));
-						//
-						Util.forEach(Arrays.asList(Triplet.with("顔", "がお", "かお")),
-								//
-								a -> testAndAccept(b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b),
-										Util.getValue1(b)), a, b -> {
-											//
-											final String s1 = IValue0Util.getValue0(b);
-											//
-											MultimapUtil.remove(multimap, s1, Util.getValue1(b));
-											//
-											MultimapUtil.put(multimap, s1, Util.getValue2(b));
-											//
-										})
-						//
-						);
-						//
-						return Pair.of(multimap, IntList.create(index, i));
-						//
-					} else if (StringUtils.length(g12) == 6) {
-						//
-						MultimapUtil.putAll(
-								multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
-										StringUtils.substring(g11, 0, 2), StringUtils.substring(g12, 0, 4), cpk, cpv,
-										StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, 2),
-										StringUtils.substring(g11, 1, 2), StringUtils.substring(g12, 2, 4))),
-								ImmutableMultimap.of(StringUtils.substring(g11, 2), StringUtils.substring(g12, 4)));
-						//
-						return Pair.of(multimap, IntList.create(index, i));
-						//
-					} // if
-						//
-					multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk, cpv,
-							StringUtils.substring(g11, 1, 2),
-							StringUtils.substring(g12, StringUtils.length(cpv), StringUtils.length(cpv) + 2),
-							StringUtils.substring(g11, 2), StringUtils.substring(g24, StringUtils.length(cpv) + 3)));
+					return Pair.of(
+							ImmutableMultimap.of(g11, g12, cpk, cpv, StringUtils.substring(g11, 2),
+									StringUtils.substring(g12, 3), Util.group(m2, 3), StringUtils.substring(g24, 4)),
+							IntList.create(index, i));
 					//
-					Util.forEach(Arrays.asList(Triplet.with("船", "ぶね", "ふね")),
+				} else if (Objects.equals(Util.group(m2, 2), "み")) {
+					//
+					multimap = LinkedHashMultimap
+							.create(ImmutableMultimap.of(g11, g12, cpk, cpv, StringUtils.substring(g11, 1, 2),
+									StringUtils.substring(g12, 2, 4), StringUtils.substring(g11, 2),
+									StringUtils.substring(g12, 4), Util.group(m2, 3), StringUtils.substring(g24, 5)));
+					//
+					Util.forEach(Arrays.asList(Triplet.with("顔", "がお", "かお")),
 							//
 							a -> testAndAccept(b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b),
 									Util.getValue1(b)), a, b -> {
@@ -7457,31 +7448,65 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					return Pair.of(multimap, IntList.create(index, i));
 					//
-				} else if (StringUtils.startsWith(g23,
-						testAndApply(x -> StringUtils.length(x) > 1, g11, x -> StringUtils.substring(x, 1, 2), null))) {
+				} else if (StringUtils.length(g12) == 6) {
 					//
-					if (StringUtils.length(cpv) == 2) {
+					MultimapUtil.putAll(
+							multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
+									StringUtils.substring(g11, 0, 2), StringUtils.substring(g12, 0, 4), cpk, cpv,
+									StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, 2),
+									StringUtils.substring(g11, 1, 2), StringUtils.substring(g12, 2, 4))),
+							ImmutableMultimap.of(StringUtils.substring(g11, 2), StringUtils.substring(g12, 4)));
+					//
+					return Pair.of(multimap, IntList.create(index, i));
+					//
+				} // if
+					//
+				multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk, cpv,
+						StringUtils.substring(g11, 1, 2),
+						StringUtils.substring(g12, StringUtils.length(cpv), StringUtils.length(cpv) + 2),
+						StringUtils.substring(g11, 2), StringUtils.substring(g24, StringUtils.length(cpv) + 3)));
+				//
+				Util.forEach(Arrays.asList(Triplet.with("船", "ぶね", "ふね")),
 						//
-						MultimapUtil.putAll(
-								multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
-										StringUtils.substring(g11, 0, 2), StringUtils.substring(g12, 0, 4), cpk, cpv,
-										StringUtils.substring(g11, StringUtils.length(cpk), 2),
-										StringUtils.substring(g12, StringUtils.length(cpv), 4),
-										StringUtils.substring(g11, 2), StringUtils.substring(g12, 4))),
-								ImmutableMultimap.of(
-										testAndApply(x -> StringUtils.length(x) > 1, g23,
-												x -> StringUtils.substring(x, 1, 2), null),
-										StringUtils.substring(g24, 6, 8)));
-						//
-						return Pair.of(multimap, IntList.create(index, i));
-						//
-					} // if
-						//
+						a -> testAndAccept(
+								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
+								a, b -> {
+									//
+									final String s1 = IValue0Util.getValue0(b);
+									//
+									MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+									//
+									MultimapUtil.put(multimap, s1, Util.getValue2(b));
+									//
+								})
+				//
+				);
+				//
+				return Pair.of(multimap, IntList.create(index, i));
+				//
+			} else if (StringUtils.startsWith(g23,
+					testAndApply(x -> StringUtils.length(x) > 1, g11, x -> StringUtils.substring(x, 1, 2), null))) {
+				//
+				if (StringUtils.length(cpv) == 2) {
+					//
+					MultimapUtil.putAll(
+							multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
+									StringUtils.substring(g11, 0, 2), StringUtils.substring(g12, 0, 4), cpk, cpv,
+									StringUtils.substring(g11, StringUtils.length(cpk), 2),
+									StringUtils.substring(g12, StringUtils.length(cpv), 4),
+									StringUtils.substring(g11, 2), StringUtils.substring(g12, 4))),
+							ImmutableMultimap.of(
+									testAndApply(x -> StringUtils.length(x) > 1, g23,
+											x -> StringUtils.substring(x, 1, 2), null),
+									StringUtils.substring(g24, 6, 8)));
+					//
+					return Pair.of(multimap, IntList.create(index, i));
+					//
 				} // if
 					//
 			} // if
 				//
-		} // for
+		} // if
 			//
 		return null;
 		//
