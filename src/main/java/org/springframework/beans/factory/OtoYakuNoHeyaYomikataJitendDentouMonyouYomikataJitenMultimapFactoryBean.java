@@ -7422,6 +7422,17 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 						return Pair.of(multimap, IntList.create(index, i));
 						//
+					} else if (StringUtils.length(g12) == 6) {
+						//
+						MultimapUtil.putAll(
+								multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
+										StringUtils.substring(g11, 0, 2), StringUtils.substring(g12, 0, 4), cpk, cpv,
+										StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, 2),
+										StringUtils.substring(g11, 1, 2), StringUtils.substring(g12, 2, 4))),
+								ImmutableMultimap.of(StringUtils.substring(g11, 2), StringUtils.substring(g12, 4)));
+						//
+						return Pair.of(multimap, IntList.create(index, i));
+						//
 					} // if
 						//
 				} // if
