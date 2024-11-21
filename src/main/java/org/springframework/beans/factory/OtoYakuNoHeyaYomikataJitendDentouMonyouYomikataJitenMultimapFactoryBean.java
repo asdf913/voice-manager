@@ -6834,6 +6834,45 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} // for
 			//
+		Matcher m2;
+		//
+		String g24, cpk, cpv;
+		//
+		IntCollection intCollection;
+		//
+		for (int i = 0; i < IterableUtils.size(lines); i++) {
+			//
+			if (keyIntEquals(iop, i)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+					"^(%1$s\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
+					testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1), null))),
+					IterableUtils.get(lines, i))) && Util.groupCount(m2) > 2
+					&& StringUtils.length(cpk = Strings.commonPrefix(g11, Util.group(m2, 1))) == 1
+					&& StringUtils.isNotBlank(cpv = Strings.commonPrefix(g12, g24 = Util.group(m2, 4)))) {
+				//
+				if (StringUtils.length(Util.group(m2, 3)) == 1) {
+					//
+					if (StringUtils.length(g12) == 4) {
+						//
+						IntCollectionUtil.addInt(intCollection = createIntCollection(iop), i);
+						//
+						return Pair.of(ImmutableMultimap.of(g11, g12, cpk, cpv, StringUtils.substring(g11, 2),
+								StringUtils.substring(g12, 3), Util.group(m2, 3), StringUtils.substring(g24, 4)),
+								intCollection);
+						//
+					} // if
+						//
+				} // if
+					//
+			} // if
+				//
+		} // for
+			//
 		return null;
 		//
 	}
