@@ -6848,7 +6848,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-			if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+			if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, format(
 					"^(%1$s\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
 					testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1), null))),
 					IterableUtils.get(lines, i))) && Util.groupCount(m2) > 2
