@@ -7371,7 +7371,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String g12 = Util.getValue(entry);
 		//
-		String g24, cpk, cpv;
+		String g23, g24, cpk, cpv;
 		//
 		Multimap<String, String> multimap;
 		//
@@ -7390,7 +7390,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					&& StringUtils.length(cpk = Strings.commonPrefix(g11, Util.group(m2, 1))) == 1
 					&& StringUtils.isNotBlank(cpv = Strings.commonPrefix(g12, g24 = Util.group(m2, 4)))) {
 				//
-				if (StringUtils.length(Util.group(m2, 3)) == 1) {
+				if (StringUtils.length(g23 = Util.group(m2, 3)) == 1) {
 					//
 					if (StringUtils.length(g12) == 4) {
 						//
@@ -7457,6 +7457,26 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					//
 					return Pair.of(multimap, IntList.create(index, i));
 					//
+				} else if (StringUtils.startsWith(g23,
+						testAndApply(x -> StringUtils.length(x) > 1, g11, x -> StringUtils.substring(x, 1, 2), null))) {
+					//
+					if (StringUtils.length(cpv) == 2) {
+						//
+						MultimapUtil.putAll(
+								multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
+										StringUtils.substring(g11, 0, 2), StringUtils.substring(g12, 0, 4), cpk, cpv,
+										StringUtils.substring(g11, StringUtils.length(cpk), 2),
+										StringUtils.substring(g12, StringUtils.length(cpv), 4),
+										StringUtils.substring(g11, 2), StringUtils.substring(g12, 4))),
+								ImmutableMultimap.of(
+										testAndApply(x -> StringUtils.length(x) > 1, g23,
+												x -> StringUtils.substring(x, 1, 2), null),
+										StringUtils.substring(g24, 6, 8)));
+						//
+						return Pair.of(multimap, IntList.create(index, i));
+						//
+					} // if
+						//
 				} // if
 					//
 			} // if
