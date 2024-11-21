@@ -7539,8 +7539,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				if (StringUtils.length(g24) == 7) {
 					//
-					System.out.println(iop1 + " " + iop2);
-					//
 					MultimapUtil.putAll(
 							multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
 									StringUtils.substring(g11, 0, 2), StringUtils.substring(g12, 0, 3), cpk, cpv,
