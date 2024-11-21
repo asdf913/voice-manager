@@ -7433,16 +7433,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						//
 						return Pair.of(multimap, IntList.create(index, i));
 						//
-					} else if (StringUtils.startsWith(g12, "お")) {
-						//
-						return Pair.of(
-								ImmutableMultimap.of(g11, g12, cpk, cpv, StringUtils.substring(g11, 1, 2),
-										StringUtils.substring(g12, StringUtils.length(cpv),
-												StringUtils.length(cpv) + 2),
-										StringUtils.substring(g11, 2),
-										StringUtils.substring(g24, StringUtils.length(cpv) + 3)),
-								IntList.create(index, i));
-						//
 					} // if
 						//
 					multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk, cpv,
