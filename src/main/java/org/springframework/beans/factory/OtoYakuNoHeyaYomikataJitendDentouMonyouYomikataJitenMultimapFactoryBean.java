@@ -7630,7 +7630,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		if (StringUtils.equals(g22, "の")) {
 			//
-			if (StringUtils.contains(g11, "渦")) {
+			if (anyMatch(Stream.of("渦", "花"), x -> StringUtils.contains(g11, x))) {
 				//
 				MultimapUtil.putAll(
 						multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk, cpv,
