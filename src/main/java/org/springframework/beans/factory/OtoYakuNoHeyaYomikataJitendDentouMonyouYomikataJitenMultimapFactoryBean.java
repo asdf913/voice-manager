@@ -7683,7 +7683,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
-	private static <T> boolean anyMatch(final Stream<T> instance, final Predicate<? super T> predicate) {
+	private static <T> boolean anyMatch(@Nullable final Stream<T> instance, final Predicate<? super T> predicate) {
 		return instance != null && instance.anyMatch(predicate);
 	}
 
