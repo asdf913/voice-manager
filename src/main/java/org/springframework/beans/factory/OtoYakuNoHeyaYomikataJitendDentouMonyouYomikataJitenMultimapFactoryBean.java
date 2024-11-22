@@ -7492,7 +7492,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			return Pair.of(multimap, IntList.create(index, i));
 			//
-		} else if (StringUtils.startsWith(g23,
+		} // if
+			//
+		String g22;
+		//
+		if (StringUtils.startsWith(g23,
 				testAndApply(x -> StringUtils.length(x) > 1, g11, x -> StringUtils.substring(x, 1, 2), null))) {
 			//
 			if (StringUtils.length(cpv) == 2) {
@@ -7541,8 +7545,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} else if (StringUtils.length(g12) == 5) {
 			//
-			String g22;
-			//
 			if (StringUtils.length(g24) == 7) {
 				//
 				MultimapUtil.putAll(
@@ -7584,6 +7586,24 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			return Pair.of(multimap, IntList.create(index, i));
 			//
+		} else if (StringUtils.equals(g22 = Util.group(m2, 2), "の")) {
+			//
+			if (StringUtils.contains(g11, "渦")) {
+				//
+				MultimapUtil.putAll(
+						multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk, cpv,
+								StringUtils.substring(g11, StringUtils.length(cpk), 2),
+								StringUtils.substring(g12, StringUtils.length(cpv), 4), StringUtils.substring(g11, 2),
+								StringUtils.substring(g12, 4))),
+						ImmutableMultimap.of(
+								testAndApply(x -> StringUtils.length(x) > 0, g23, x -> StringUtils.substring(x, 0, 1),
+										null),
+								StringUtils.substringBetween(g24, Util.group(m2, 2), Strings.commonSuffix(g12, g24))));
+				//
+				return Pair.of(multimap, IntList.create(index, i));
+				//
+			} // if
+				//
 		} // if
 			//
 		return null;
