@@ -1742,6 +1742,10 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "雲花文（くもはなもん）"),
 						Arrays.asList(null, "雲居の梅文（くもいのうめもん）"))));
 		//
+		Assertions.assertEquals("({雲丸文=[くもまるもん], 雲=[くも], 丸=[まる], 文=[もん], 梅=[うめ]},[0, 1])",
+				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "雲丸文（くもまるもん）"),
+						Arrays.asList(null, "雲居の梅文（くもいのうめもん）"))));
+		//
 	}
 
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection(

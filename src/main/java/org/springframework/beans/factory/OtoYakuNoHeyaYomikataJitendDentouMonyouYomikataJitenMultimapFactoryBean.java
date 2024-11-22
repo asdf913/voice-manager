@@ -7630,7 +7630,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		if (StringUtils.equals(g22, "の")) {
 			//
-			if (anyMatch(Stream.of("渦", "花"), x -> StringUtils.contains(g11, x))) {
+			if (anyMatch(Stream.of("渦", "花", "丸"), x -> StringUtils.contains(g11, x))) {
 				//
 				MultimapUtil.putAll(
 						multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk, cpv,
@@ -7644,39 +7644,37 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				return Pair.of(multimap, IntList.create(index, i));
 				//
-			} else if (anyMatch(Stream.of("形", "鳥"), x -> StringUtils.contains(g11, x))) {
-				//
-				MultimapUtil.putAll(
-						multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
-								StringUtils.substring(g11, 0, 2), StringUtils.substring(g12, 0, 4), cpk, cpv,
-								StringUtils.substring(g11, StringUtils.length(cpk), 2),
-								StringUtils.substring(g12, StringUtils.length(cpv), 4), StringUtils.substring(g11, 2),
-								StringUtils.substring(g12, 4))),
-						ImmutableMultimap.of(
-								testAndApply(x -> StringUtils.length(x) > 0, Util.group(m2, 3),
-										x -> StringUtils.substring(x, 0, 1), null),
-								StringUtils.substringBetween(g24, g22, Strings.commonSuffix(g12, g24))));
-				//
-				Util.forEach(Arrays.asList(Triplet.with("形", "がた", "かた")),
-						//
-						a -> testAndAccept(
-								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
-								a, b -> {
-									//
-									final String s1 = IValue0Util.getValue0(b);
-									//
-									MultimapUtil.remove(multimap, s1, Util.getValue1(b));
-									//
-									MultimapUtil.put(multimap, s1, Util.getValue2(b));
-									//
-								})
-				//
-				);
-				//
-				return Pair.of(multimap, IntList.create(index, i));
-				//
 			} // if
 				//
+			MultimapUtil.putAll(
+					multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
+							StringUtils.substring(g11, 0, 2), StringUtils.substring(g12, 0, 4), cpk, cpv,
+							StringUtils.substring(g11, StringUtils.length(cpk), 2),
+							StringUtils.substring(g12, StringUtils.length(cpv), 4), StringUtils.substring(g11, 2),
+							StringUtils.substring(g12, 4))),
+					ImmutableMultimap.of(
+							testAndApply(x -> StringUtils.length(x) > 0, Util.group(m2, 3),
+									x -> StringUtils.substring(x, 0, 1), null),
+							StringUtils.substringBetween(g24, g22, Strings.commonSuffix(g12, g24))));
+			//
+			Util.forEach(Arrays.asList(Triplet.with("形", "がた", "かた")),
+					//
+					a -> testAndAccept(
+							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+							b -> {
+								//
+								final String s1 = IValue0Util.getValue0(b);
+								//
+								MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+								//
+								MultimapUtil.put(multimap, s1, Util.getValue2(b));
+								//
+							})
+			//
+			);
+			//
+			return Pair.of(multimap, IntList.create(index, i));
+			//
 		} // if
 			//
 		return null;
