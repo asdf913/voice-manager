@@ -7594,6 +7594,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 	}
 
+	@Nullable
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection26B(
 			final PatternMap patternMap, final IntObjectPair<Entry<String, String>> iop1,
 			final IntObjectPair<String> iop2) {
