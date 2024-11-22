@@ -7563,21 +7563,27 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} else if (StringUtils.startsWith(g12, "ゆ")) {
 				//
-				MultimapUtil.putAll(
-						multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
-								StringUtils.substring(g11, 0, 2), StringUtils.substring(g12, 0, 3), cpk, cpv,
-								StringUtils.substring(g11, StringUtils.length(cpk), 2),
-								StringUtils.substring(g12, StringUtils.length(cpv), 3), StringUtils.substring(g11, 2),
-								StringUtils.substring(g12, 3))),
-						ImmutableMultimap.of(
-								testAndApply(x -> StringUtils.length(x) > 0, g23, x -> StringUtils.substring(x, 0, 1),
-										null),
-								StringUtils.substringBetween(g24, Util.group(m2, 2), Strings.commonSuffix(g12, g24))));
-				//
-				return Pair.of(multimap, IntList.create(index, i));
+				return Pair.of(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 0, 2),
+						StringUtils.substring(g12, 0, 3), cpk, cpv,
+						StringUtils.substring(g11, StringUtils.length(cpk), 2),
+						StringUtils.substring(g12, StringUtils.length(cpv), 3), StringUtils.substring(g11, 2),
+						StringUtils.substring(g12, 3)), IntList.create(index, i));
 				//
 			} // if
 				//
+			MultimapUtil.putAll(
+					multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
+							StringUtils.substring(g11, 0, 2), StringUtils.substring(g12, 0, 3), cpk, cpv,
+							StringUtils.substring(g11, StringUtils.length(cpk), 2),
+							StringUtils.substring(g12, StringUtils.length(cpv), 3), StringUtils.substring(g11, 2),
+							StringUtils.substring(g12, 3))),
+					ImmutableMultimap.of(
+							testAndApply(x -> StringUtils.length(x) > 1, g23, x -> StringUtils.substring(x, 0, 2),
+									null),
+							StringUtils.substringBetween(g24, Util.group(m2, 2), Strings.commonSuffix(g12, g24))));
+			//
+			return Pair.of(multimap, IntList.create(index, i));
+			//
 		} // if
 			//
 		return null;
