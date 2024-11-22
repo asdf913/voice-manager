@@ -7627,8 +7627,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String g22 = Util.group(m2, 2);
 		//
-		final String g23 = Util.group(m2, 3);
-		//
 		if (StringUtils.equals(g22, "の")) {
 			//
 			if (StringUtils.contains(g11, "渦")) {
@@ -7638,8 +7636,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 								StringUtils.substring(g11, StringUtils.length(cpk), 2),
 								StringUtils.substring(g12, StringUtils.length(cpv), 4), StringUtils.substring(g11, 2),
 								StringUtils.substring(g12, 4))),
-						ImmutableMultimap.of(testAndApply(x -> StringUtils.length(x) > 0, g23,
-								x -> StringUtils.substring(x, 0, 1), null),
+						ImmutableMultimap.of(
+								testAndApply(x -> StringUtils.length(x) > 0, Util.group(m2, 3),
+										x -> StringUtils.substring(x, 0, 1), null),
 								StringUtils.substringBetween(g24, g22, Strings.commonSuffix(g12, g24))));
 				//
 				return Pair.of(multimap, IntList.create(index, i));
