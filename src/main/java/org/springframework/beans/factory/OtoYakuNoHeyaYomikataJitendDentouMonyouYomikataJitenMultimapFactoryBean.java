@@ -7644,7 +7644,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				return Pair.of(multimap, IntList.create(index, i));
 				//
-			} else if (StringUtils.contains(g11, "形")) {
+			} else if (anyMatch(Stream.of("形", "鳥"), x -> StringUtils.contains(g11, x))) {
 				//
 				MultimapUtil.putAll(
 						multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
@@ -7657,11 +7657,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 										x -> StringUtils.substring(x, 0, 1), null),
 								StringUtils.substringBetween(g24, g22, Strings.commonSuffix(g12, g24))));
 				//
-				Util.forEach(Arrays.asList(Triplet.with("形","がた", "かた")),
+				Util.forEach(Arrays.asList(Triplet.with("形", "がた", "かた")),
 						//
 						a -> testAndAccept(
-								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
-								b -> {
+								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
+								a, b -> {
 									//
 									final String s1 = IValue0Util.getValue0(b);
 									//
