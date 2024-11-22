@@ -7541,9 +7541,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} else if (StringUtils.length(g12) == 5) {
 			//
+			String g22;
+			//
 			if (StringUtils.length(g24) == 7) {
-				//
-				final String g22 = Util.group(m2, 2);
 				//
 				MultimapUtil.putAll(
 						multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
@@ -7551,13 +7551,28 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 								StringUtils.substring(g11, StringUtils.length(cpk), 2),
 								StringUtils.substring(g12, StringUtils.length(cpv), 3), StringUtils.substring(g11, 2),
 								StringUtils.substring(g12, 3))),
-						ImmutableMultimap.of(g21, StringUtils.substringBefore(g24, g22),
+						ImmutableMultimap.of(g21, StringUtils.substringBefore(g24, g22 = Util.group(m2, 2)),
 								testAndApply(x -> StringUtils.length(x) > 1, g21, x -> StringUtils.substring(x, 1),
 										null),
 								StringUtils.substringBetween(g24, cpv, g22),
 								testAndApply(x -> StringUtils.length(x) > 0, g23, x -> StringUtils.substring(x, 0, 1),
 										null),
 								StringUtils.substringBetween(g24, g22, Strings.commonSuffix(g12, g24))));
+				//
+				return Pair.of(multimap, IntList.create(index, i));
+				//
+			} else if (StringUtils.startsWith(g12, "ゆ")) {
+				//
+				MultimapUtil.putAll(
+						multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
+								StringUtils.substring(g11, 0, 2), StringUtils.substring(g12, 0, 3), cpk, cpv,
+								StringUtils.substring(g11, StringUtils.length(cpk), 2),
+								StringUtils.substring(g12, StringUtils.length(cpv), 3), StringUtils.substring(g11, 2),
+								StringUtils.substring(g12, 3))),
+						ImmutableMultimap.of(
+								testAndApply(x -> StringUtils.length(x) > 0, g23, x -> StringUtils.substring(x, 0, 1),
+										null),
+								StringUtils.substringBetween(g24, Util.group(m2, 2), Strings.commonSuffix(g12, g24))));
 				//
 				return Pair.of(multimap, IntList.create(index, i));
 				//
