@@ -7365,22 +7365,24 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			final PatternMap patternMap, final int index, final Entry<String, String> entry,
 			final Iterable<String> lines) {
 		//
+		final Iterable<TriFunction<PatternMap, IntObjectPair<Entry<String, String>>, IntObjectPair<String>, Entry<Multimap<String, String>, IntCollection>>> functions = Arrays
+				.asList(OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection26A,
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection26B);
+		//
 		Entry<Multimap<String, String>, IntCollection> result;
 		//
 		for (int i = 0; i < IterableUtils.size(lines); i++) {
 			//
-			if (index == i) {
+			for (int j = 0; j < IterableUtils.size(functions) && index != i; j++) {
 				//
-				continue;
-				//
-			} // if
-				//
-			if ((result = toMultimapAndIntCollection26(patternMap, IntObjectPair.of(index, entry),
-					IntObjectPair.of(i, IterableUtils.get(lines, i)))) != null) {
-				//
-				return result;
-				//
-			} // if
+				if ((result = TriFunctionUtil.apply(IterableUtils.get(functions, j), patternMap,
+						IntObjectPair.of(index, entry), IntObjectPair.of(i, IterableUtils.get(lines, i)))) != null) {
+					//
+					return result;
+					//
+				} // if
+					//
+			} // for
 				//
 		} // for
 			//
@@ -7389,7 +7391,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	}
 
 	@Nullable
-	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection26(
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection26A(
 			final PatternMap patternMap, final IntObjectPair<Entry<String, String>> iop1,
 			final IntObjectPair<String> iop2) {
 		//
@@ -7586,7 +7588,48 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			return Pair.of(multimap, IntList.create(index, i));
 			//
-		} else if (StringUtils.equals(g22 = Util.group(m2, 2), "の")) {
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection26B(
+			final PatternMap patternMap, final IntObjectPair<Entry<String, String>> iop1,
+			final IntObjectPair<String> iop2) {
+		//
+		Matcher m2;
+		//
+		final Entry<String, String> entry = PairUtil.right(iop1);
+		//
+		final String g11 = Util.getKey(entry);
+		//
+		final String g12 = Util.getValue(entry);
+		//
+		final int index = keyInt(iop1, 0);
+		//
+		final int i = keyInt(iop2, 0);
+		//
+		String g24, cpk, cpv;
+		//
+		if (!Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$",
+				testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1), null))),
+				PairUtil.right(iop2))) || Util.groupCount(m2) <= 1
+				|| StringUtils.length(cpk = Strings.commonPrefix(g11, Util.group(m2, 1))) != 1
+				|| StringUtils.isBlank(cpv = Strings.commonPrefix(g12, g24 = Util.group(m2, 4)))) {
+			//
+			return null;
+			//
+		} // if
+			//
+		Multimap<String, String> multimap;
+		//
+		final String g22 = Util.group(m2, 2);
+		//
+		final String g23 = Util.group(m2, 3);
+		//
+		if (StringUtils.equals(g22, "の")) {
 			//
 			if (StringUtils.contains(g11, "渦")) {
 				//
