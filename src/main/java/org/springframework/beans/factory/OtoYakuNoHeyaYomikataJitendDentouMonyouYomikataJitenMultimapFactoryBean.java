@@ -7677,20 +7677,16 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} else if (StringUtils.length(g23) == 3) {
 			//
-			if (anyMatch(Stream.of("桐", "水"), x -> StringUtils.contains(g11, x))) {
-				//
-				MultimapUtil.putAll(
-						multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk, cpv,
-								StringUtils.substring(g11, StringUtils.length(cpk), 2),
-								StringUtils.substring(g12, StringUtils.length(cpv), 4), StringUtils.substring(g11, 2),
-								StringUtils.substring(g12, 4))),
-						ImmutableMultimap.of(testAndApply(x -> StringUtils.length(x) > 1, g23,
-								x -> StringUtils.substring(x, 0, 2), null),
-								StringUtils.substringBetween(g24, g22, Strings.commonSuffix(g12, g24))));
-				//
-				return Pair.of(multimap, IntList.create(index, i));
-				//
-			} //if
+			MultimapUtil.putAll(
+					multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk, cpv,
+							StringUtils.substring(g11, StringUtils.length(cpk), 2),
+							StringUtils.substring(g12, StringUtils.length(cpv), 4), StringUtils.substring(g11, 2),
+							StringUtils.substring(g12, 4))),
+					ImmutableMultimap.of(testAndApply(x -> StringUtils.length(x) > 1, g23,
+							x -> StringUtils.substring(x, 0, 2), null),
+							StringUtils.substringBetween(g24, g22, Strings.commonSuffix(g12, g24))));
+			//
+			return Pair.of(multimap, IntList.create(index, i));
 			//
 		} // if
 			//
