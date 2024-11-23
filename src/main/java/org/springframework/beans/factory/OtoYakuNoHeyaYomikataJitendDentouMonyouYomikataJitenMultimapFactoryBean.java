@@ -7677,7 +7677,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 		} else if (StringUtils.length(g23) == 3) {
 			//
-			if (StringUtils.contains(g11, "桐")) {
+			if (anyMatch(Stream.of("桐", "水"), x -> StringUtils.contains(g11, x))) {
 				//
 				MultimapUtil.putAll(
 						multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk, cpv,
@@ -7690,8 +7690,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				return Pair.of(multimap, IntList.create(index, i));
 				//
-			} // if
-				//
+			} //if
+			//
 		} // if
 			//
 		return null;
