@@ -7761,7 +7761,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final int index = keyInt(iop1, 0);
 		//
-		String g21, g22, cpk, cpv, csv;
+		String g21, g22, cpk, cpv, csk, csv;
 		//
 		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}{8})\\p{InHalfwidthAndFullwidthForms}+$",
@@ -7769,7 +7769,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				PairUtil.right(iop2))) && Util.groupCount(m2) > 1
 				&& StringUtils.length(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1))) == 1
 				&& StringUtils.length(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2))) == 2
-				&& StringUtils.isBlank(Strings.commonSuffix(g11, g21))
+				&& StringUtils.isBlank(csk = Strings.commonSuffix(g11, g21))
 				&& StringUtils.length(csv = Strings.commonSuffix(g12, g22)) == 2) {
 			//
 			if (StringUtils.startsWith(g12, "あ")) {
@@ -7780,6 +7780,17 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
+			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk, cpv,
+					StringUtils.substring(g11, 1, 2),
+					StringUtils.substring(g12, StringUtils.length(cpv),
+							StringUtils.length(g12) - StringUtils.length(csv)),
+					StringUtils.substring(g11, 2), csv, StringUtils.substring(g21, 1, 3),
+					StringUtils.substringBetween(g22, cpv, csv)));
+			//
+			MultimapUtil.put(multimap, StringUtils.substring(g21, StringUtils.length(g21) - 1), csv);
+			//
+			return Pair.of(multimap, IntList.create(index));
+			//
 		} // if
 			//
 		return null;
