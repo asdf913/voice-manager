@@ -7761,7 +7761,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final int index = keyInt(iop1, 0);
 		//
-		String g21, g22, cpk, cpv, csk, csv;
+		String g21, g22, cpk, cpv, csv;
 		//
 		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}{8})\\p{InHalfwidthAndFullwidthForms}+$",
