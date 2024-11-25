@@ -7367,7 +7367,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final Iterable<TriFunction<PatternMap, IntObjectPair<Entry<String, String>>, IntObjectPair<String>, Entry<Multimap<String, String>, IntCollection>>> functions = Arrays
 				.asList(OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection26A,
-						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection26B);
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection26B,
+						OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean::toMultimapAndIntCollection26C);
 		//
 		Entry<Multimap<String, String>, IntCollection> result;
 		//
@@ -7742,6 +7743,45 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		);
 		//
 		return Pair.of(multimap, IntList.create(index));
+		//
+	}
+
+	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection26C(
+			final PatternMap patternMap, final IntObjectPair<Entry<String, String>> iop1,
+			final IntObjectPair<String> iop2) {
+		//
+		Matcher m2;
+		//
+		final Entry<String, String> entry = PairUtil.right(iop1);
+		//
+		final String g11 = Util.getKey(entry);
+		//
+		final String g12 = Util.getValue(entry);
+		//
+		final int index = keyInt(iop1, 0);
+		//
+		String g21, g22, cpk, cpv, csv;
+		//
+		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}{8})\\p{InHalfwidthAndFullwidthForms}+$",
+				testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1), null))),
+				PairUtil.right(iop2))) && Util.groupCount(m2) > 1
+				&& StringUtils.length(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1))) == 1
+				&& StringUtils.length(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2))) == 2
+				&& StringUtils.isBlank(Strings.commonSuffix(g11, g21))
+				&& StringUtils.length(csv = Strings.commonSuffix(g12, g22)) == 2) {
+			//
+			if (StringUtils.startsWith(g12, "あ")) {
+				//
+				return Pair.of(ImmutableMultimap.of(g11, g12, cpk, cpv, StringUtils.substring(g11, 1, 2),
+						StringUtils.substringBetween(g12, cpv, csv), StringUtils.substring(g11, 2), csv,
+						StringUtils.substring(g21, StringUtils.length(g21) - 1), csv), IntList.create(index));
+				//
+			} // if
+				//
+		} // if
+			//
+		return null;
 		//
 	}
 
