@@ -7769,7 +7769,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				PairUtil.right(iop2))) && Util.groupCount(m2) > 1
 				&& StringUtils.length(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1))) == 1
 				&& StringUtils.length(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2))) == 2
-				&& StringUtils.isBlank(csk = Strings.commonSuffix(g11, g21))
+				&& StringUtils.isBlank(Strings.commonSuffix(g11, g21))
 				&& StringUtils.length(csv = Strings.commonSuffix(g12, g22)) == 2) {
 			//
 			if (StringUtils.startsWith(g12, "あ")) {
