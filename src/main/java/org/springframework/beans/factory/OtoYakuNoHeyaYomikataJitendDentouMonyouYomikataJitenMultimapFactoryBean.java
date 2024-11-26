@@ -7803,16 +7803,18 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				&& StringUtils.length(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2))) == 2
 				&& StringUtils.length(g12) == StringUtils.length(g22) && StringUtils.length(g12) == 5) {
 			//
-			if (StringUtils.length(csv = Strings.commonSuffix(g12, g22)) == 1) {
-				//
-				final String csk = Strings.commonSuffix(g11, g21);
+			final String csk = Strings.commonSuffix(g11, g21);
+			//
+			if (StringUtils.length(csv = Strings.commonSuffix(g12, g22)) == 1 || Objects.equals(
+					testAndApply(x -> StringUtils.length(x) > 2, g12, x -> StringUtils.substring(x, 2, 3), null),
+					"ほ")) {
 				//
 				final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk,
 						cpv, StringUtils.substringBetween(g11, cpk, csk), StringUtils.substringBetween(g12, cpv, csv),
 						csk, csv, StringUtils.substringBetween(g21, cpk, csk),
 						StringUtils.substringBetween(g22, cpv, csv)));
 				//
-				Util.forEach(Arrays.asList(Triplet.with("手","で", "て")),
+				Util.forEach(Arrays.asList(Triplet.with("手", "で", "て"), Triplet.with("辺", "べ", "へ")),
 						//
 						a -> testAndAccept(
 								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
