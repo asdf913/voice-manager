@@ -7761,12 +7761,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final int index = keyInt(iop1, 0);
 		//
+		final String right = PairUtil.right(iop2);
+		//
 		String g21, g22, cpk, cpv, csv;
 		//
 		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, format(
-				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}{8})\\p{InHalfwidthAndFullwidthForms}+$",
-				testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1), null))),
-				PairUtil.right(iop2))) && Util.groupCount(m2) > 1
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}{8})\\p{InHalfwidthAndFullwidthForms}$",
+				testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1), null))), right))
+				&& Util.groupCount(m2) > 1
 				&& StringUtils.length(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1))) == 1
 				&& StringUtils.length(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2))) == 2
 				&& StringUtils.isBlank(Strings.commonSuffix(g11, g21))
@@ -7780,17 +7782,56 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk, cpv,
-					StringUtils.substring(g11, 1, 2),
-					StringUtils.substring(g12, StringUtils.length(cpv),
-							StringUtils.length(g12) - StringUtils.length(csv)),
-					StringUtils.substring(g11, 2), csv, StringUtils.substring(g21, 1, 3),
-					StringUtils.substringBetween(g22, cpv, csv)));
+			final Multimap<String, String> multimap = LinkedHashMultimap
+					.create(ImmutableMultimap.of(g11, g12, cpk, cpv, StringUtils.substring(g11, 1, 2),
+							StringUtils.substring(g12, StringUtils.length(cpv),
+									StringUtils.length(g12) - StringUtils.length(csv)),
+							StringUtils.substring(g11, 2), csv, StringUtils.substring(g21, 1, 3),
+							StringUtils.substringBetween(g22, cpv, csv)));
 			//
 			MultimapUtil.put(multimap, StringUtils.substring(g21, StringUtils.length(g21) - 1), csv);
 			//
 			return Pair.of(multimap, IntList.create(index));
 			//
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, String.format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs}%2$s)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+				testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1), null),
+				testAndApply(x -> StringUtils.length(x) > 0, g11,
+						x -> StringUtils.substring(x, StringUtils.length(x) - 1), null))),
+				right)) && Util.groupCount(m2) > 1
+				&& StringUtils.length(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1))) == 1
+				&& StringUtils.length(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2))) == 2
+				&& StringUtils.length(g12) == StringUtils.length(g22) && StringUtils.length(g12) == 5) {
+			//
+			if (StringUtils.length(csv = Strings.commonSuffix(g12, g22)) == 1) {
+				//
+				final String csk = Strings.commonSuffix(g11, g21);
+				//
+				final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk,
+						cpv, StringUtils.substringBetween(g11, cpk, csk), StringUtils.substringBetween(g12, cpv, csv),
+						csk, csv, StringUtils.substringBetween(g21, cpk, csk),
+						StringUtils.substringBetween(g22, cpv, csv)));
+				//
+				Util.forEach(Arrays.asList(Triplet.with("手","で", "て")),
+						//
+						a -> testAndAccept(
+								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
+								a, b -> {
+									//
+									final String s1 = IValue0Util.getValue0(b);
+									//
+									MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+									//
+									MultimapUtil.put(multimap, s1, Util.getValue2(b));
+									//
+								})
+				//
+				);
+				//
+				return Pair.of(multimap, IntList.create(index, keyInt(iop2, 0)));
+				//
+			} // if
+				//
 		} // if
 			//
 		return null;
