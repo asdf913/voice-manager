@@ -7805,35 +7805,29 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			final String csk = Strings.commonSuffix(g11, g21);
 			//
-			if (StringUtils.length(csv = Strings.commonSuffix(g12, g22)) == 1 || Objects.equals(
-					testAndApply(x -> StringUtils.length(x) > 2, g12, x -> StringUtils.substring(x, 2, 3), null),
-					"ほ")) {
-				//
-				final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk,
-						cpv, StringUtils.substringBetween(g11, cpk, csk), StringUtils.substringBetween(g12, cpv, csv),
-						csk, csv, StringUtils.substringBetween(g21, cpk, csk),
-						StringUtils.substringBetween(g22, cpv, csv)));
-				//
-				Util.forEach(Arrays.asList(Triplet.with("手", "で", "て"), Triplet.with("辺", "べ", "へ")),
-						//
-						a -> testAndAccept(
-								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
-								a, b -> {
-									//
-									final String s1 = IValue0Util.getValue0(b);
-									//
-									MultimapUtil.remove(multimap, s1, Util.getValue1(b));
-									//
-									MultimapUtil.put(multimap, s1, Util.getValue2(b));
-									//
-								})
-				//
-				);
-				//
-				return Pair.of(multimap, IntList.create(index, keyInt(iop2, 0)));
-				//
-			} // if
-				//
+			final Multimap<String, String> multimap = LinkedHashMultimap
+					.create(ImmutableMultimap.of(g11, g12, cpk, cpv, StringUtils.substringBetween(g11, cpk, csk),
+							StringUtils.substringBetween(g12, cpv, csv = Strings.commonSuffix(g12, g22)), csk, csv,
+							StringUtils.substringBetween(g21, cpk, csk), StringUtils.substringBetween(g22, cpv, csv)));
+			//
+			Util.forEach(Arrays.asList(Triplet.with("手", "で", "て"), Triplet.with("辺", "べ", "へ")),
+					//
+					a -> testAndAccept(
+							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+							b -> {
+								//
+								final String s1 = IValue0Util.getValue0(b);
+								//
+								MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+								//
+								MultimapUtil.put(multimap, s1, Util.getValue2(b));
+								//
+							})
+			//
+			);
+			//
+			return Pair.of(multimap, IntList.create(index, keyInt(iop2, 0)));
+			//
 		} // if
 			//
 		return null;
