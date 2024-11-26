@@ -1782,7 +1782,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "蘆穂文（あしほもん）"),
 						Arrays.asList(null, "蘆辺文（あしべもん）"))));
 		//
-		Assertions.assertEquals("({蘆穂文=[あしほもん], 蘆=[あし], 穂=[ほ], 文=[もん], 辺=[へ]},[0, 1])",
+		Assertions.assertEquals("({蘆辺文=[あしべもん], 蘆=[あし], 文=[もん], 穂=[ほ], 辺=[へ]},[0, 1])",
 				Objects.toString(toMultimapAndIntCollection(patternMap, IntObjectPair.of(ZERO, "蘆辺文（あしべもん）"),
 						Arrays.asList(null, "蘆穂文（あしほもん）"))));
 		//
