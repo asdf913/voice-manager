@@ -7763,7 +7763,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String right = PairUtil.right(iop2);
 		//
-		String g21, g22, cpk, cpv, csv;
+		String g21, g22, cpk, cpv, csk, csv;
 		//
 		if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}{8})\\p{InHalfwidthAndFullwidthForms}$",
@@ -7803,14 +7803,45 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				&& StringUtils.length(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2))) == 2
 				&& StringUtils.length(g12) == StringUtils.length(g22) && StringUtils.length(g12) == 5) {
 			//
-			final String csk = Strings.commonSuffix(g11, g21);
-			//
-			final Multimap<String, String> multimap = LinkedHashMultimap
-					.create(ImmutableMultimap.of(g11, g12, cpk, cpv, StringUtils.substringBetween(g11, cpk, csk),
-							StringUtils.substringBetween(g12, cpv, csv = Strings.commonSuffix(g12, g22)), csk, csv,
-							StringUtils.substringBetween(g21, cpk, csk), StringUtils.substringBetween(g22, cpv, csv)));
+			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, cpk, cpv,
+					StringUtils.substringBetween(g11, cpk, Strings.commonSuffix(g11, g21)),
+					StringUtils.substringBetween(g12, cpv, csv = Strings.commonSuffix(g12, g22)),
+					csk = Strings.commonSuffix(g11, g21), csv, StringUtils.substringBetween(g21, cpk, csk),
+					StringUtils.substringBetween(g22, cpv, csv)));
 			//
 			Util.forEach(Arrays.asList(Triplet.with("手", "で", "て"), Triplet.with("辺", "べ", "へ")),
+					//
+					a -> testAndAccept(
+							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+							b -> {
+								//
+								final String s1 = IValue0Util.getValue0(b);
+								//
+								MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+								//
+								MultimapUtil.put(multimap, s1, Util.getValue2(b));
+								//
+							})
+			//
+			);
+			//
+			return Pair.of(multimap, IntList.create(index, keyInt(iop2, 0)));
+			//
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap, format(
+				"^(%1$s\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
+				testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1), null))), right))
+				&& Util.groupCount(m2) > 1
+				&& StringUtils.length(cpk = Strings.commonPrefix(g11, g21 = Util.group(m2, 1))) == 1
+				&& StringUtils.length(cpv = Strings.commonPrefix(g12, g22 = Util.group(m2, 2))) > 3
+				&& !Objects.equals(g12, g22)) {
+			//
+			final Multimap<String, String> multimap = LinkedHashMultimap
+					.create(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 1, 2),
+							StringUtils.substringBetween(g12, cpv, csv = Strings.commonSuffix(g12, g22)),
+							csk = Strings.commonSuffix(g11, g21), csv = Strings.commonSuffix(g12, g22), g21, g22,
+							StringUtils.substring(g21, 1, 2), StringUtils.substringBetween(g22, cpv, csv)));
+			//
+			Util.forEach(Arrays.asList(Triplet.with("菱", "びし", "ひし")),
 					//
 					a -> testAndAccept(
 							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
