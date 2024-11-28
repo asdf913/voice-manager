@@ -263,7 +263,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertNull(text(null));
 		//
-		Assertions.assertEquals(EMPTY, text(Util.cast(Elements.class, Narcissus.allocateInstance(Elements.class))));
+		Assertions.assertNull(text(Util.cast(Elements.class, Narcissus.allocateInstance(Elements.class))));
 		//
 	}
 

@@ -1,6 +1,7 @@
 package org.springframework.beans.factory;
 
 import java.lang.Character.UnicodeBlock;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -21,6 +22,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -33,6 +35,8 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
+
+import io.github.toolfactory.narcissus.Narcissus;
 
 /**
  * https://web.archive.org/web/20211126172558/http://www.gsi.go.jp/KIDS/map-sign-tizukigou-h14kigou-itiran.htm
@@ -329,7 +333,20 @@ public class TiZuKiGouKanjiHiraganaMapFactoryBean extends StringMapFromResourceF
 
 	@Nullable
 	private static String text(@Nullable final Elements instance) {
+		//
+		final List<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				f -> Objects.equals(Util.getName(f), "elementData")));
+		//
+		if (IterableUtils.size(fs) == 1 && Narcissus.getField(instance, IterableUtils.get(fs, 0)) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
 		return instance != null ? instance.text() : null;
+		//
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate,
