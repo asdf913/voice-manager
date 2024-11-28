@@ -7843,10 +7843,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		final String g11 = Util.getKey(entry);
 		//
-		final Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap, format(
+		final String right = PairUtil.right(iop2);
+		//
+		Matcher m2 = Util.matcher(PatternMap.getPattern(patternMap, format(
 				"^(%1$s\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$",
-				testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1), null))),
-				PairUtil.right(iop2));
+				testAndApply(x -> StringUtils.length(x) > 0, g11, x -> StringUtils.substring(x, 0, 1), null))), right);
 		//
 		final String g12 = Util.getValue(entry);
 		//
@@ -7883,6 +7884,72 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			return Pair.of(multimap, IntList.create(keyInt(iop1, 0), keyInt(iop2, 0)));
 			//
+		} else if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}{2})(\\p{InHiragana})(\\p{InCJKUnifiedIdeographs}{2})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}+$"),
+				right)) && Util.groupCount(m2) > 3
+				&& StringUtils.startsWith(g21 = Util.group(m2, 1),
+						testAndApply(x -> StringUtils.length(x) > 1, g11, x -> StringUtils.substring(x, 1, 2), null))) {
+			//
+			final String lcsv = longestCommonSubstring(g12, Util.group(m2, 4));
+			//
+			if (StringUtils.length(lcsv) == 3) {
+				//
+				if (!StringUtils.endsWith(g12, "ん")) {
+					//
+					final String g23 = Util.group(m2, 3);
+					//
+					final String g24 = Util.group(m2, 4);
+					//
+					final String lcsk = longestCommonSubstring(g11, g21);
+					//
+					final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12,
+							StringUtils.substringBefore(g11, lcsk), StringUtils.substringBefore(g12, lcsv), lcsk, lcsv,
+							StringUtils.substringAfter(g11, lcsk), StringUtils.substringAfter(g12, lcsv),
+							StringUtils.substringAfter(g21, lcsk),
+							StringUtils.substringBetween(g24, lcsv, g22 = Util.group(m2, 2))
+
+					));
+					//
+					final String g24SubstringAfterG22 = StringUtils.substringAfter(g24, g22);
+					//
+					MultimapUtil.put(multimap, g23, g24SubstringAfterG22);
+					//
+					if (StringUtils.endsWith(g24, "ん")) {
+						//
+						MultimapUtil.putAll(multimap,
+								ImmutableMultimap.of(
+										testAndApply(x -> StringUtils.length(x) > 0, g23,
+												x -> StringUtils.substring(x, 0, 1), null),
+										StringUtils.substring(g24SubstringAfterG22, 0,
+												StringUtils.length(g24SubstringAfterG22) - 2),
+										testAndApply(x -> StringUtils.length(x) > 1, g23,
+												x -> StringUtils.substring(x, 1), null),
+										StringUtils.substring(g24SubstringAfterG22,
+												StringUtils.length(g24SubstringAfterG22) - 2)));
+						//
+					} // if
+						//
+					Util.forEach(Arrays.asList(Triplet.with("樽", "だる", "たる")),
+							//
+							a -> testAndAccept(b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b),
+									Util.getValue1(b)), a, b -> {
+										//
+										final String s1 = IValue0Util.getValue0(b);
+										//
+										MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+										//
+										MultimapUtil.put(multimap, s1, Util.getValue2(b));
+										//
+									})
+					//
+					);
+					//
+					return Pair.of(multimap, IntList.create(keyInt(iop1, 0), keyInt(iop2, 0)));
+					//
+				} // if
+					//
+			} // if
+				//
 		} // if
 			//
 		return null;
