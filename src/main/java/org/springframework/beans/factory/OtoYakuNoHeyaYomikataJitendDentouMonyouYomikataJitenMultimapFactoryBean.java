@@ -7836,10 +7836,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				&& !Objects.equals(g12, g22)) {
 			//
 			final Multimap<String, String> multimap = LinkedHashMultimap
-					.create(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, 1, 2),
+					.create(ImmutableMultimap.of(g11, g12, StringUtils.substring(g11, StringUtils.length(cpk), 2),
 							StringUtils.substringBetween(g12, cpv, csv = Strings.commonSuffix(g12, g22)),
-							csk = Strings.commonSuffix(g11, g21), csv = Strings.commonSuffix(g12, g22), g21, g22,
-							StringUtils.substring(g21, 1, 2), StringUtils.substringBetween(g22, cpv, csv)));
+							Strings.commonSuffix(g11, g21), csv, g21, g22,
+							StringUtils.substring(g21, StringUtils.length(cpk), 2),
+							StringUtils.substringBetween(g22, cpv, csv)));
 			//
 			Util.forEach(Arrays.asList(Triplet.with("菱", "びし", "ひし")),
 					//
