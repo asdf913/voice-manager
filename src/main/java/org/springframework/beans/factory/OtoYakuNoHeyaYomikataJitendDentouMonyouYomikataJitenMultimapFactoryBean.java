@@ -7957,27 +7957,65 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	private static Entry<Multimap<String, String>, IntCollection> toMultimapAndIntCollection27(
 			final PatternMap patternMap, final IntObjectPair<String> iop, final Iterable<String> lines) {
 		//
-		final Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
+		final String right = PairUtil.right(iop);
+		//
+		Matcher m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{6}$"),
-				PairUtil.right(iop));
+				right);
+		//
+		Multimap<String, String> multimap;
+		//
+		String g11, g12;
+		//
+		int[] ints;
 		//
 		if (Util.matches(m1) && Util.groupCount(m1) > 1) {
 			//
-			final String g11 = Util.group(m1, 1);
+			multimap = LinkedHashMultimap
+					.create(ImmutableMultimap.of(g11 = Util.group(m1, 1), g12 = Util.group(m1, 2)));
 			//
-			final String g12 = Util.group(m1, 2);
-			//
-			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12));
-			//
-			final int[] ints = toArray(indexOf(g12, c -> c == 'ん'));
-			//
-			if (StringUtils.length(g11) > 2 && length(ints) == 2) {
+			if (StringUtils.length(g11) > 2 && length(ints = toArray(indexOf(g12, c -> c == 'ん'))) == 2) {
 				//
 				MultimapUtil.putAll(multimap,
 						ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
 								StringUtils.substring(g12, 0, ints[0] + 1), StringUtils.substring(g11, 1, 2),
 								StringUtils.substring(g12, ints[0] + 1, ints[1] - 1), StringUtils.substring(g11, 2),
 								StringUtils.substring(g12, ints[1] - 1)));
+				//
+			} // if
+				//
+			return Pair.of(multimap, createIntCollection(iop));
+			//
+		} else if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}{4})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}ん\\p{InHiragana}ょ\\p{InHiragana}+ん)\\p{InHalfwidthAndFullwidthForms}$"),
+				right)) && Util.groupCount(m1) > 1) {
+			//
+			multimap = LinkedHashMultimap
+					.create(ImmutableMultimap.of(g11 = Util.group(m1, 1), g12 = Util.group(m1, 2)));
+			//
+			final int length = StringUtils.length(g11);
+			//
+			if (Boolean.logicalAnd(length > 0, length(ints = toArray(indexOf(g12, c -> c == 'ん'))) > 0)) {
+				//
+				MultimapUtil.put(multimap, StringUtils.substring(g11, 0, 1),
+						StringUtils.substring(g12, 0, ints[0] + 1));
+				//
+			} // if
+				//
+			final int index = StringUtils.indexOf(g12, 'ょ');
+			//
+			if (length > 2 && index > 0 && index == StringUtils.lastIndexOf(g12, 'ょ') && length(ints) > 1) {
+				//
+				MultimapUtil.putAll(multimap,
+						ImmutableMultimap.of(StringUtils.substring(g11, 1, 2),
+								StringUtils.substring(g12, index - 1, index + 2), StringUtils.substring(g11, 2, 3),
+								StringUtils.substring(g12, index + 2, ints[1] - 1)));
+				//
+			} // if
+				//
+			if (length > 3 && length(ints) > 1) {
+				//
+				MultimapUtil.put(multimap, StringUtils.substring(g11, 3), StringUtils.substring(g12, ints[1] - 1));
 				//
 			} // if
 				//
