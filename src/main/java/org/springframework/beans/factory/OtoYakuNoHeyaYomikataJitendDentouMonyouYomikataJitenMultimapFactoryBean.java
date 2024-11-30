@@ -8004,7 +8004,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			final int index = StringUtils.indexOf(g12, 'ょ');
 			//
-			if (length > 2 && index > 0 && index == StringUtils.lastIndexOf(g12, 'ょ') && length(ints) > 1) {
+			if (Boolean.logicalAnd(length > 2, index > 0) && index == StringUtils.lastIndexOf(g12, 'ょ')
+					&& length(ints) > 1) {
 				//
 				MultimapUtil.putAll(multimap,
 						ImmutableMultimap.of(StringUtils.substring(g11, 1, 2),
