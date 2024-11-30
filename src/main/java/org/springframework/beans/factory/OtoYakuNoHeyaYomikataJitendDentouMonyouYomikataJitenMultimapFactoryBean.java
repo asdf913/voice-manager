@@ -7995,13 +7995,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			final int length = StringUtils.length(g11);
 			//
-			if (Boolean.logicalAnd(length > 0, length(ints = toArray(indexOf(g12, c -> c == 'ん'))) > 0)) {
-				//
-				MultimapUtil.put(multimap, StringUtils.substring(g11, 0, 1),
-						StringUtils.substring(g12, 0, get(ints, 0, 0) + 1));
-				//
-			} // if
-				//
+			testAndAccept(a -> Boolean.logicalAnd(length > 0, length(a) > 0),
+					ints = toArray(indexOf(g12, c -> c == 'ん')), a -> {
+						//
+						MultimapUtil.put(multimap, StringUtils.substring(g11, 0, 1),
+								StringUtils.substring(g12, 0, get(a, 0, 0) + 1));
+						//
+					});
+			//
 			final int index = StringUtils.indexOf(g12, 'ょ');
 			//
 			if (Util.and(length > 2, index > 0, index == StringUtils.lastIndexOf(g12, 'ょ'), length(ints) > 1)) {
