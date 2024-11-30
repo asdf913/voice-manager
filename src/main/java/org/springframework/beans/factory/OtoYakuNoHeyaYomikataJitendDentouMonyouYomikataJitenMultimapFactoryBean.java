@@ -7981,7 +7981,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
 								StringUtils.substring(g12, 0, get(ints, 0, 0) + 1), StringUtils.substring(g11, 1, 2),
 								StringUtils.substring(g12, get(ints, 0, 0) + 1, get(ints, 1, 0) - 1),
-								StringUtils.substring(g11, 2), StringUtils.substring(g12, ints[1] - 1)));
+								StringUtils.substring(g11, 2), StringUtils.substring(g12, get(ints, 1, 0) - 1)));
 				//
 			} // if
 				//
