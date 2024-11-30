@@ -8084,13 +8084,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			if (StringUtils.length(g12) == StringUtils.length(g13)
 					&& StringUtils.length(g12) - StringUtils.length(lcsv) == 1) {
 				//
-				if (multimap != null) {
-					//
-					multimap.putAll(StringUtils.substring(g11, 0, 1), Arrays
-							.asList(StringUtils.substringBefore(g12, lcsv), StringUtils.substringBefore(g13, lcsv)));
-					//
-				} // if
-					//
+				MultimapUtil.putAll(multimap, StringUtils.substring(g11, 0, 1),
+						Arrays.asList(StringUtils.substringBefore(g12, lcsv), StringUtils.substringBefore(g13, lcsv)));
+				//
 				final int index = StringUtils.indexOf(lcsv, "ょ");
 				//
 				if (index == StringUtils.lastIndexOf(lcsv, "ょ")) {
