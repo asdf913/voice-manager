@@ -7965,14 +7965,15 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		Multimap<String, String> multimap;
 		//
-		String g11, g12;
+		String g11;
 		//
 		int[] ints;
 		//
 		if (Util.matches(m1) && Util.groupCount(m1) > 1) {
 			//
-			multimap = LinkedHashMultimap
-					.create(ImmutableMultimap.of(g11 = Util.group(m1, 1), g12 = Util.group(m1, 2)));
+			final String g12 = Util.group(m1, 2);
+			//
+			multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11 = Util.group(m1, 1), g12));
 			//
 			if (Boolean.logicalAnd(StringUtils.length(g11) > 2,
 					length(ints = toArray(indexOf(g12, c -> c == 'ん'))) == 2)) {
@@ -7991,8 +7992,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				"^(\\p{InCJKUnifiedIdeographs}{4})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}ん\\p{InHiragana}ょ\\p{InHiragana}+ん)\\p{InHalfwidthAndFullwidthForms}$"),
 				right)) && Util.groupCount(m1) > 1) {
 			//
-			multimap = LinkedHashMultimap
-					.create(ImmutableMultimap.of(g11 = Util.group(m1, 1), g12 = Util.group(m1, 2)));
+			final String g12 = Util.group(m1, 2);
+			//
+			multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11 = Util.group(m1, 1), g12));
 			//
 			final int length = StringUtils.length(g11);
 			//
@@ -8023,8 +8025,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				"^(\\p{InCJKUnifiedIdeographs}{4})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}ん\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}{2}\\p{InCJKUnifiedIdeographs}{3}$"),
 				right)) && Util.groupCount(m1) > 1) {
 			//
-			multimap = LinkedHashMultimap
-					.create(ImmutableMultimap.of(g11 = Util.group(m1, 1), g12 = Util.group(m1, 2)));
+			final String g12 = Util.group(m1, 2);
+			//
+			multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11 = Util.group(m1, 1), g12));
 			//
 			final int length = StringUtils.length(g11);
 			//
@@ -8050,7 +8053,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		} else if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}{4})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}{2}ょ\\p{InHiragana}{2}ょ\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
 				right)) && Util.groupCount(m1) > 1
-				&& length(ints = toArray(indexOf(g12 = Util.group(m1, 2), c -> c == 'ょ'))) == 2) {
+				&& length(ints = toArray(indexOf(Util.group(m1, 2), c -> c == 'ょ'))) == 2) {
+			//
+			final String g12 = Util.group(m1, 2);
 			//
 			MultimapUtil.putAll(
 					multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11 = Util.group(m1, 1), g12,
@@ -8062,6 +8067,43 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							StringUtils.substring(g12, ints[1] - 1, ints[1] + 2), StringUtils.substring(g11, 3),
 							StringUtils.substring(g12, ints[1] + 2)));
 			//
+			return Pair.of(multimap, createIntCollection(iop));
+			//
+		} else if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}{3})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+ょ\\p{InHiragana}+ん)\\p{InKatakana}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
+				right)) && Util.groupCount(m1) > 2) {
+			//
+			final String g12 = Util.group(m1, 2);
+			//
+			final String g13 = Util.group(m1, 3);
+			//
+			final String lcsv = longestCommonSubstring(g12, g13);
+			//
+			multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11 = Util.group(m1, 1), g12));
+			//
+			if (StringUtils.length(g12) == StringUtils.length(g13)
+					&& StringUtils.length(g12) - StringUtils.length(lcsv) == 1) {
+				//
+				if (multimap != null) {
+					//
+					multimap.putAll(StringUtils.substring(g11, 0, 1), Arrays
+							.asList(StringUtils.substringBefore(g12, lcsv), StringUtils.substringBefore(g13, lcsv)));
+					//
+				} // if
+					//
+				final int index = StringUtils.indexOf(lcsv, "ょ");
+				//
+				if (index == StringUtils.lastIndexOf(lcsv, "ょ")) {
+					//
+					MultimapUtil.put(multimap, StringUtils.substring(g11, 1, 2),
+							StringUtils.substring(lcsv, index - 1, index + 2));
+					//
+				} // if
+					//
+				MultimapUtil.put(multimap, StringUtils.substring(g11, 2), StringUtils.substring(lcsv, index + 2));
+				//
+			} // if
+				//
 			return Pair.of(multimap, createIntCollection(iop));
 			//
 		} // if
