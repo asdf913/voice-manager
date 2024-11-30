@@ -7998,7 +7998,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			if (Boolean.logicalAnd(length > 0, length(ints = toArray(indexOf(g12, c -> c == 'ん'))) > 0)) {
 				//
 				MultimapUtil.put(multimap, StringUtils.substring(g11, 0, 1),
-						StringUtils.substring(g12, 0, ints[0] + 1));
+						StringUtils.substring(g12, 0, get(ints, 0, 0) + 1));
 				//
 			} // if
 				//
@@ -8009,13 +8009,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				MultimapUtil.putAll(multimap,
 						ImmutableMultimap.of(StringUtils.substring(g11, 1, 2),
 								StringUtils.substring(g12, index - 1, index + 2), StringUtils.substring(g11, 2, 3),
-								StringUtils.substring(g12, index + 2, ints[1] - 1)));
+								StringUtils.substring(g12, index + 2, get(ints, 1, 0) - 1)));
 				//
 			} // if
 				//
 			if (length > 3 && length(ints) > 1) {
 				//
-				MultimapUtil.put(multimap, StringUtils.substring(g11, 3), StringUtils.substring(g12, ints[1] - 1));
+				MultimapUtil.put(multimap, StringUtils.substring(g11, 3),
+						StringUtils.substring(g12, get(ints, 1, 0) - 1));
 				//
 			} // if
 				//
