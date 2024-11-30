@@ -8014,13 +8014,13 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-			if (Boolean.logicalAnd(length > 3, length(ints) > 1)) {
+			testAndRun(Boolean.logicalAnd(length > 3, length(ints) > 1), () -> {
 				//
 				MultimapUtil.put(multimap, StringUtils.substring(g11, 3),
 						StringUtils.substring(g12, get(ints, 1, 0) - 1));
 				//
-			} // if
-				//
+			});
+			//
 			return Pair.of(multimap, createIntCollection(iop));
 			//
 		} else if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
