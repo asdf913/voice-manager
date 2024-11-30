@@ -7976,7 +7976,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11 = Util.group(m1, 1), g12));
 			//
 			testAndAccept(a -> Boolean.logicalAnd(StringUtils.length(g11) > 2, length(a) == 2),
-					ints = toArray(indexOf(g12, c -> c == 'ん')), a -> {
+					toArray(indexOf(g12, c -> c == 'ん')), a -> {
 						MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substring(g11, 0, 1),
 								StringUtils.substring(g12, 0, get(a, 0, 0) + 1), StringUtils.substring(g11, 1, 2),
 								StringUtils.substring(g12, get(a, 0, 0) + 1, get(a, 1, 0) - 1),
