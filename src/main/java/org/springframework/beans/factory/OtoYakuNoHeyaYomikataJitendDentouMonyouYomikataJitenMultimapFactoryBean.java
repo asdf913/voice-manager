@@ -8033,14 +8033,14 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			final int index = StringUtils.indexOf(g12, 'ゅ');
 			//
-			if (Boolean.logicalAnd(length > 1, length(ints = toArray(indexOf(g12, c -> c == 'ん'))) > 0)) {
-				//
-				MultimapUtil.putAll(multimap,
-						ImmutableMultimap.of(StringUtils.substring(g11, 0, 2), StringUtils.substring(g12, 0, index + 2),
-								StringUtils.substring(g11, 0, 1), StringUtils.substring(g12, 0, get(ints, 0, 0) + 1)));
-				//
-			} // if
-				//
+			testAndAccept(a -> Boolean.logicalAnd(length > 1, length(a) > 0),
+					ints = toArray(indexOf(g12, c -> c == 'ん')), a -> {
+						MultimapUtil.putAll(multimap,
+								ImmutableMultimap.of(StringUtils.substring(g11, 0, 2),
+										StringUtils.substring(g12, 0, index + 2), StringUtils.substring(g11, 0, 1),
+										StringUtils.substring(g12, 0, get(a, 0, 0) + 1)));
+					});
+			//
 			if (Util.and(length > 3, index > 0, index == StringUtils.lastIndexOf(g12, 'ゅ'), length(ints) > 1)) {
 				//
 				MultimapUtil.putAll(multimap,
