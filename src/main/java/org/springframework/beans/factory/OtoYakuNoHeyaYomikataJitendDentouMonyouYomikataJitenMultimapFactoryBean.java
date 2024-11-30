@@ -8041,17 +8041,17 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 										StringUtils.substring(g12, 0, get(a, 0, 0) + 1)));
 					});
 			//
-			if (Util.and(length > 3, index > 0, index == StringUtils.lastIndexOf(g12, 'ゅ'), length(ints) > 1)) {
-				//
-				MultimapUtil.putAll(multimap,
-						ImmutableMultimap.of(StringUtils.substring(g11, 1, 2),
+			testAndRun(Util.and(length > 3, index > 0, index == StringUtils.lastIndexOf(g12, 'ゅ'), length(ints) > 1),
+					() -> {
+						//
+						MultimapUtil.putAll(multimap, ImmutableMultimap.of(StringUtils.substring(g11, 1, 2),
 								StringUtils.substring(g12, index - 1, index + 2), StringUtils.substring(g11, 2),
 								StringUtils.substring(g12, index + 2), StringUtils.substring(g11, 2, 3),
 								StringUtils.substring(g12, index + 2, get(ints, 1, 0) + 1),
 								StringUtils.substring(g11, 3), StringUtils.substring(g12, get(ints, 1, 0) + 1)));
-				//
-			} // if
-				//
+						//
+					});
+			//
 			return Pair.of(multimap, createIntCollection(iop));
 			//
 		} // if
