@@ -8080,12 +8080,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				final int index = StringUtils.indexOf(lcsv, "ょ");
 				//
-				if (index == StringUtils.lastIndexOf(lcsv, "ょ")) {
+				testAndRun(index == StringUtils.lastIndexOf(lcsv, "ょ"), () -> {
 					//
 					MultimapUtil.put(multimap, StringUtils.substring(g11, 1, 2),
 							StringUtils.substring(lcsv, index - 1, index + 2));
 					//
-				} // if
+				}); // if
 					//
 				MultimapUtil.put(multimap, StringUtils.substring(g11, 2), StringUtils.substring(lcsv, index + 2));
 				//
