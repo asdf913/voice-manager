@@ -8093,6 +8093,18 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			return Pair.of(multimap, createIntCollection(iop));
 			//
+		} else if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
+				"^(\\p{InCJKUnifiedIdeographs}{4})\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}ん\\p{InHiragana}ゅ\\p{InHiragana}{2}ん)\\p{InHalfwidthAndFullwidthForms}$"),
+				right)) && Util.groupCount(m1) > 1) {
+			//
+			final String g12 = Util.group(m1, 2);
+			//
+			return Pair.of(ImmutableMultimap.of(g11 = Util.group(m1, 1), g12, StringUtils.substring(g11, 0, 1),
+					StringUtils.substring(g12, 0, 2), StringUtils.substring(g11, 1, 2),
+					StringUtils.substring(g12, 2, 4), StringUtils.substring(g11, 2, 3),
+					StringUtils.substring(g12, 4, 5), StringUtils.substring(g11, 3), StringUtils.substring(g12, 5)),
+					createIntCollection(iop));
+			//
 		} // if
 			//
 		return null;
