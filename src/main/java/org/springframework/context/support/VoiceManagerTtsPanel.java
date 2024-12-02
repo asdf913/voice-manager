@@ -545,7 +545,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
-	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, final E item) {
+	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, @Nullable final E item) {
 		if (instance != null) {
 			instance.addElement(item);
 		}
@@ -687,7 +687,7 @@ public class VoiceManagerTtsPanel extends JPanel
 	}
 
 	private static ByteConverter getByteConverter(final ConfigurableListableBeanFactory configurableListableBeanFactory,
-			final String attribute, final Object value) {
+			final String attribute, @Nullable final Object value) {
 		//
 		IValue0<ByteConverter> byteConverter = null;
 		//
@@ -1556,7 +1556,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
@@ -1628,7 +1628,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		return instance != null ? instance.get(index) : null;
 	}
 
-	private static String convertLanguageCodeToText(final String instance, final int base) {
+	private static String convertLanguageCodeToText(@Nullable final String instance, final int base) {
 		return StringUtils.defaultIfBlank(convertLanguageCodeToText(LocaleID.values(), valueOf(instance, base)),
 				instance);
 	}
