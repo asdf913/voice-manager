@@ -196,7 +196,7 @@ public class VoiceManagerTtsPanel extends JPanel
 			return instance != null ? instance.getObject(key) : null;
 		}
 
-		static <T> void setObject(final ObjectMap instance, final Class<T> key, final T value) {
+		static <T> void setObject(@Nullable final ObjectMap instance, final Class<T> key, final T value) {
 			if (instance != null) {
 				instance.setObject(key, value);
 			}
@@ -217,7 +217,7 @@ public class VoiceManagerTtsPanel extends JPanel
 
 		@Override
 		@Nullable
-		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
 			//
 			final String methodName = Util.getName(method);
 			//
@@ -252,11 +252,11 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 		}
 
-		private static boolean containsKey(final Map<?, ?> instance, final Object key) {
+		private static boolean containsKey(@Nullable final Map<?, ?> instance, final Object key) {
 			return instance != null && instance.containsKey(key);
 		}
 
-		private static boolean isArray(final OfField<?> instance) {
+		private static boolean isArray(@Nullable final OfField<?> instance) {
 			return instance != null && instance.isArray();
 		}
 
@@ -485,7 +485,7 @@ public class VoiceManagerTtsPanel extends JPanel
 	}
 
 	private static <T, E extends Throwable> void forEach(final Iterable<T> items,
-			final FailableConsumer<? super T, E> action) throws E {
+			@Nullable final FailableConsumer<? super T, E> action) throws E {
 		//
 		if (Util.iterator(items) != null && (action != null || Proxy.isProxyClass(Util.getClass(items)))) {
 			//
@@ -536,7 +536,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
-	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) {
+	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, final E item) {
 		if (instance != null) {
 			instance.addElement(item);
 		}
@@ -774,7 +774,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
-	private static void setFileSelectionMode(final JFileChooser instance, final int mode) {
+	private static void setFileSelectionMode(@Nullable final JFileChooser instance, final int mode) {
 		if (instance != null) {
 			instance.setFileSelectionMode(mode);
 		}
@@ -851,7 +851,7 @@ public class VoiceManagerTtsPanel extends JPanel
 	}
 
 	@Nullable
-	private static Integer getRate(final List<Field> fs) {
+	private static Integer getRate(@Nullable final List<Field> fs) {
 		//
 		if (fs != null && !fs.isEmpty()) {
 			//
@@ -887,7 +887,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
-	private static boolean isStatic(final Member instance) {
+	private static boolean isStatic(@Nullable final Member instance) {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
@@ -940,7 +940,7 @@ public class VoiceManagerTtsPanel extends JPanel
 	}
 
 	private static void addChangeListener(final ChangeListener changeListener, final JSlider instance,
-			final JSlider... vs) {
+			@Nullable final JSlider... vs) {
 		//
 		addChangeListener(instance, changeListener);
 		//
@@ -952,13 +952,13 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 	}
 
-	private static void addChangeListener(final JSlider instance, final ChangeListener changeListener) {
+	private static void addChangeListener(@Nullable final JSlider instance, final ChangeListener changeListener) {
 		if (instance != null) {
 			instance.addChangeListener(changeListener);
 		}
 	}
 
-	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
+	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
 		//
 		AbstractButton ab = null;
 		//
@@ -996,7 +996,7 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 	}
 
-	private static void setPreferredWidth(final int width, final Component... cs) {
+	private static void setPreferredWidth(final int width, @Nullable final Component... cs) {
 		//
 		Component c = null;
 		//
@@ -1020,7 +1020,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		return instance != null ? instance.getVoiceIds() : null;
 	}
 
-	private static void setEditable(final boolean editable, final JTextComponent... jtcs) {
+	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
 		//
 		JTextComponent jtc = null;
 		//
@@ -1067,7 +1067,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
-	private static <T> T[] toArray(final Collection<T> instance, final T[] array) {
+	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.toArray(array)
@@ -1111,30 +1111,30 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
-	private static boolean isAnnotationPresent(final AnnotatedElement instance,
-			final Class<? extends Annotation> annotationClass) {
+	private static boolean isAnnotationPresent(@Nullable final AnnotatedElement instance,
+			@Nullable final Class<? extends Annotation> annotationClass) {
 		return instance != null && annotationClass != null && instance.isAnnotationPresent(annotationClass);
 	}
 
-	private static void setPaintLabels(final JSlider instance, final boolean b) {
+	private static void setPaintLabels(@Nullable final JSlider instance, final boolean b) {
 		if (instance != null) {
 			instance.setPaintLabels(b);
 		}
 	}
 
-	private static void setPaintTicks(final JSlider instance, final boolean b) {
+	private static void setPaintTicks(@Nullable final JSlider instance, final boolean b) {
 		if (instance != null) {
 			instance.setPaintTicks(b);
 		}
 	}
 
-	private static void setMajorTickSpacing(final JSlider instance, final int n) {
+	private static void setMajorTickSpacing(@Nullable final JSlider instance, final int n) {
 		if (instance != null) {
 			instance.setMajorTickSpacing(n);
 		}
 	}
 
-	private void setSpeechVolume(@Nullable final Number speechVolume, final Number upperEnpoint) {
+	private void setSpeechVolume(@Nullable final Number speechVolume, @Nullable final Number upperEnpoint) {
 		//
 		if (speechVolume != null) {
 			//
@@ -1171,7 +1171,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		return instance != null ? instance.get(row, column) : instance;
 	}
 
-	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
 			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
 			final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
@@ -1244,7 +1244,8 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 	}
 
-	private static void setValue(final JSlider instance, final String string, final Consumer<JSlider> consumer) {
+	private static void setValue(@Nullable final JSlider instance, final String string,
+			final Consumer<JSlider> consumer) {
 		//
 		Integer i = valueOf(string);
 		//
@@ -1284,7 +1285,8 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 	}
 
-	private static <T> Stream<T> sorted(final Stream<T> instance, final Comparator<? super T> comparator) {
+	private static <T> Stream<T> sorted(@Nullable final Stream<T> instance,
+			@Nullable final Comparator<? super T> comparator) {
 		//
 		return instance != null && (comparator != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.sorted(comparator)
@@ -1292,8 +1294,8 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
-	private static void setValue(final JSlider instance, final Method method, final Consumer<JSlider> consumer,
-			final boolean headless) {
+	private static void setValue(@Nullable final JSlider instance, final Method method,
+			final Consumer<JSlider> consumer, final boolean headless) {
 		//
 		try {
 			//
@@ -1331,13 +1333,13 @@ public class VoiceManagerTtsPanel extends JPanel
 		TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(headless, LOG, throwable);
 	}
 
-	private static <T> void accept(final Consumer<T> instance, final T value) {
+	private static <T> void accept(@Nullable final Consumer<T> instance, final T value) {
 		if (instance != null) {
 			instance.accept(value);
 		}
 	}
 
-	private static void add(@Nullable final Container instance, final Component comp) {
+	private static void add(@Nullable final Container instance, @Nullable final Component comp) {
 		//
 		if (instance == null) {
 			//
@@ -1367,7 +1369,8 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 	}
 
-	private static void add(@Nullable final Container instance, final Component comp, final Object constraints) {
+	private static void add(@Nullable final Container instance, @Nullable final Component comp,
+			final Object constraints) {
 		//
 		if (instance == null) {
 			//
@@ -1436,7 +1439,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		return field != null ? field.get(instance) : null;
 	}
 
-	private static void setAccessible(final AccessibleObject instance, final boolean flag) {
+	private static void setAccessible(@Nullable final AccessibleObject instance, final boolean flag) {
 		if (instance != null) {
 			instance.setAccessible(flag);
 		}
@@ -1446,15 +1449,15 @@ public class VoiceManagerTtsPanel extends JPanel
 		return instance != null ? instance.upperEndpoint() : null;
 	}
 
-	private static boolean hasLowerBound(final Range<?> instance) {
+	private static boolean hasLowerBound(@Nullable final Range<?> instance) {
 		return instance != null && instance.hasLowerBound();
 	}
 
-	private static boolean hasUpperBound(final Range<?> instance) {
+	private static boolean hasUpperBound(@Nullable final Range<?> instance) {
 		return instance != null && instance.hasUpperBound();
 	}
 
-	private static Range<Integer> createRange(final Integer minValue, final Integer maxValue) {
+	private static Range<Integer> createRange(@Nullable final Integer minValue, @Nullable final Integer maxValue) {
 		//
 		if (minValue != null && maxValue != null) {
 			return Range.open(minValue, maxValue);
@@ -1503,7 +1506,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
-	private static boolean contains(final Lookup instance, final Object row, final Object column) {
+	private static boolean contains(@Nullable final Lookup instance, final Object row, final Object column) {
 		return instance != null && instance.contains(row, column);
 	}
 
@@ -1639,7 +1642,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		return instance != null ? instance.getVoiceAttribute(voiceId, attribute) : null;
 	}
 
-	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) {
+	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, final Object selectedItem) {
 		if (instance != null) {
 			instance.setSelectedItem(selectedItem);
 		}
@@ -1692,7 +1695,7 @@ public class VoiceManagerTtsPanel extends JPanel
 
 	}
 
-	private static void setEnabled(final boolean b, final Component instance, final Component... cs) {
+	private static void setEnabled(final boolean b, final Component instance, @Nullable final Component... cs) {
 		//
 		setEnabled(instance, b);
 		//
@@ -1704,7 +1707,7 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 	}
 
-	private static void setEnabled(final Component instance, final boolean b) {
+	private static void setEnabled(@Nullable final Component instance, final boolean b) {
 		if (instance != null) {
 			instance.setEnabled(b);
 		}
@@ -1736,7 +1739,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		return instance != null ? instance.getProviderPlatform() : null;
 	}
 
-	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
+	private static <T, E extends Throwable> void testAndAccept(@Nullable final Predicate<T> predicate, final T value,
 			final FailableConsumer<T, E> consumer) throws E {
 		if (Util.test(predicate, value) && consumer != null) {
 			consumer.accept(value);
@@ -1752,7 +1755,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		return instance != null ? instance.getProviderVersion() : null;
 	}
 
-	private static boolean isInstalled(final SpeechApi instance) {
+	private static boolean isInstalled(@Nullable final SpeechApi instance) {
 		return instance != null && instance.isInstalled();
 	}
 
