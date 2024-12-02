@@ -318,6 +318,8 @@ import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactoryUtil;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.AttributeAccessor;
 import org.springframework.core.env.Environment;
@@ -414,7 +416,7 @@ import net.sourceforge.javaflacencoder.StreamConfiguration;
 
 @Title("Voice Manager")
 public class VoiceManager extends JFrame implements ActionListener, ItemListener, ChangeListener, KeyListener,
-		EnvironmentAware, BeanFactoryPostProcessor, InitializingBean, DocumentListener {
+		EnvironmentAware, BeanFactoryPostProcessor, InitializingBean, DocumentListener, ApplicationContextAware {
 
 	private static final long serialVersionUID = 6093437131552718994L;
 
@@ -513,6 +515,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			&& longValue(length(f), 0) == 0;
 
 	private static IValue0<Method> METHOD_RANDOM_ALPHABETIC = null;
+
+	private ApplicationContext applicationContext = null;
 
 	private transient PropertyResolver propertyResolver = null;
 
@@ -960,6 +964,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Override
 	public void setEnvironment(final Environment environment) {
 		this.propertyResolver = environment;
+	}
+
+	@Override
+	public void setApplicationContext(final ApplicationContext applicationContext) {
+		this.applicationContext = applicationContext;
 	}
 
 	@Override
@@ -2168,8 +2177,24 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				() -> add(craeteSpeechApiInstallationWarningJPanel(microsoftSpeechPlatformRuntimeDownloadPageUrl),
 						WRAP));
 		//
-		jTabbedPane.addTab("TTS", createTtsPanel(cloneLayoutManager(), voiceIds));
+		final Map<String, Component> cs = ListableBeanFactoryUtil.getBeansOfType(applicationContext, Component.class);
 		//
+		if (Util.iterator(Util.entrySet(cs)) != null) {
+			//
+			Component component = null;
+			//
+			for (final Entry<String, Component> entry : Util.entrySet(cs)) {
+				//
+				if ((component = Util.getValue(entry)) instanceof Titled t) {
+					//
+					jTabbedPane.addTab(t.getTitle(), component);
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
 		jTabbedPane.addTab(TAB_TITLE_IMPORT_SINGLE, createSingleImportPanel(cloneLayoutManager(), voiceIds));
 		//
 		jTabbedPane.addTab(TAB_TITLE_IMPORT_BATCH, createBatchImportPanel(cloneLayoutManager()));
@@ -8917,7 +8942,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getDocument() : null;
 	}
 
-	private static interface ByteConverter {
+	static interface ByteConverter {
 
 		@Nullable
 		byte[] convert(final byte[] source);

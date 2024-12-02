@@ -952,6 +952,10 @@
 		<property name="valueColumnName" value="hiragana" />
 		<property name="valueColumnIndex" value="1" />
 	</bean>
+	
+	<!---->
+	<bean id="speechApi"
+		class="org.springframework.context.support.SpeechApiImpl" />
 
 	<!-- -->
 	<bean class="org.springframework.context.support.VoiceManager">
@@ -963,9 +967,7 @@
 			value="${org.springframework.context.support.VoiceManager.outputFolder}" />
 		<property name="outputFolderFileNameExpressions"
 			value="${org.springframework.context.support.VoiceManager.outputFolderFileNameExpressions}" />
-		<property name="speechApi">
-			<bean class="org.springframework.context.support.SpeechApiImpl" />
-		</property>
+		<property name="speechApi" ref="speechApi" />
 		<property name="mp3Tags"
 			value="${org.springframework.context.support.VoiceManager.mp3Tags}" />
 		<property name="microsoftSpeechObjectLibraryAttributeNames"
@@ -1046,6 +1048,12 @@
 					value="${org.springframework.beans.factory.AllowedRomajiCharacterArrayFactoryBean.allowedRomajiCharacters}" />
 			</bean>
 		</property>
+	</bean>
+
+	<!---->
+	<bean
+		class="org.springframework.context.support.VoiceManagerTtsPanel">
+		<property name="speechApi" ref="speechApi" />
 	</bean>
 
 	<!-- -->
