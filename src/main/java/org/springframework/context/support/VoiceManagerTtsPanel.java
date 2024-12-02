@@ -192,6 +192,7 @@ public class VoiceManagerTtsPanel extends JPanel
 
 	private static interface ObjectMap {
 
+		@Nullable
 		<T> T getObject(final Class<T> key);
 
 		boolean containsObject(final Class<?> key);
