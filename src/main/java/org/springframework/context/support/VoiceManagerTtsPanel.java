@@ -223,11 +223,11 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 			if (proxy instanceof ObjectMap) {
 				//
-				final Map<Object, Object> objects = getObjects();
+				final Map<Object, Object> os = getObjects();
 				//
 				if (Objects.equals(methodName, "setObject") && args != null && args.length > 1) {
 					//
-					Util.put(objects, args[0], args[1]);
+					Util.put(os, args[0], args[1]);
 					//
 					return null;
 					//
@@ -235,14 +235,14 @@ public class VoiceManagerTtsPanel extends JPanel
 					//
 					final Object key = args[0];
 					//
-					if (!containsKey(objects, key)) {
+					if (!containsKey(os, key)) {
 						//
 						throw new IllegalStateException(String.format("Key [%1$s] Not Found",
 								testAndApply(IH::isArray, Util.cast(Class.class, key), IH::getSimpleName, x -> key)));
 						//
 					} // if
 						//
-					return Util.get(objects, key);
+					return Util.get(os, key);
 					//
 				}
 				//
