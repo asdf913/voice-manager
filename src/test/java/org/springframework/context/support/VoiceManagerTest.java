@@ -1719,14 +1719,10 @@ class VoiceManagerTest {
 			//
 			final String methodName = Util.getName(thisMethod);
 			//
-			if (self instanceof Component) {
+			if (self instanceof Component && Objects.equals(methodName, "getPreferredSize")) {
 				//
-				if (Objects.equals(methodName, "getPreferredSize")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
