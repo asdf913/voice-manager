@@ -137,8 +137,14 @@ public class VoiceManagerTtsPanel extends JPanel
 
 	private transient SpeechApi speechApi = null;
 
-	private JTextComponent tfTextTts, tfProviderName, tfProviderVersion, tfProviderPlatform, tfSpeechLanguageCode,
-			tfSpeechLanguageName, tfSpeechRate, tfSpeechVolume, tfElapsed = null;
+	@Nullable
+	private JTextComponent tfTextTts = null;
+
+	private JTextComponent tfProviderName, tfProviderVersion, tfSpeechLanguageCode, tfSpeechLanguageName, tfSpeechRate,
+			tfSpeechVolume, tfElapsed = null;
+
+	@Nullable
+	private JTextComponent tfProviderPlatform = null;
 
 	private JComboBox<Object> jcbVoiceId = null;
 
@@ -409,6 +415,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		setRenderer(jcbSpeakMethod, new ListCellRenderer<Object>() {
 
 			@Override
+			@Nullable
 			public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
 					final boolean isSelected, final boolean cellHasFocus) {
 				//
@@ -1686,6 +1693,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		private String commonPrefix = null;
 
 		@Override
+		@Nullable
 		public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
 				final int index, final boolean isSelected, final boolean cellHasFocus) {
 			//
