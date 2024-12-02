@@ -382,8 +382,8 @@ class VoiceManagerTest {
 			METHOD_SET_MAJOR_TICK_SPACING, METHOD_SET_PAINT_TICKS, METHOD_SET_PAINT_LABELS, METHOD_SORTED,
 			METHOD_GET_ID3V1_TAG, METHOD_GET_ID3V2_TAG, METHOD_ADD_VALIDATION_DATA, METHOD_CREATE_IMPORT_RESULT_PANEL,
 			METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG, METHOD_OPEN_STREAM,
-			METHOD_ACTION_PERFORMED_FOR_IMPORT_FILE_TEMPLATE, METHOD_SUBMIT, METHOD_OPEN_CONNECTION,
-			METHOD_FORMAT_HEX = null;
+			METHOD_ACTION_PERFORMED_FOR_IMPORT_FILE_TEMPLATE, METHOD_SUBMIT, METHOD_OPEN_CONNECTION, METHOD_FORMAT_HEX,
+			METHOD_SET_SELECTED_INDEX = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1110,6 +1110,9 @@ class VoiceManagerTest {
 		(METHOD_OPEN_CONNECTION = clz.getDeclaredMethod("openConnection", URL.class)).setAccessible(true);
 		//
 		(METHOD_FORMAT_HEX = clz.getDeclaredMethod("formatHex", HexFormat.class, byte[].class)).setAccessible(true);
+		//
+		(METHOD_SET_SELECTED_INDEX = clz.getDeclaredMethod("setSelectedIndex", JTabbedPane.class, Number.class))
+				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
@@ -10439,6 +10442,31 @@ class VoiceManagerTest {
 				return (String) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetSelectedIndex() {
+		//
+		final JTabbedPane jTabbedPane = new JTabbedPane();
+		//
+		Assertions.assertDoesNotThrow(() -> setSelectedIndex(jTabbedPane, null));
+		//
+		final Number zero = Integer.valueOf(0);
+		//
+		Assertions.assertDoesNotThrow(() -> setSelectedIndex(jTabbedPane, zero));
+		//
+		jTabbedPane.addTab(null, null);
+		//
+		Assertions.assertDoesNotThrow(() -> setSelectedIndex(jTabbedPane, zero));
+		//
+	}
+
+	private static void setSelectedIndex(final JTabbedPane instance, final Number index) throws Throwable {
+		try {
+			METHOD_SET_SELECTED_INDEX.invoke(null, instance, index);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

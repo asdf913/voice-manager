@@ -2220,15 +2220,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final List<?> pages = Util.cast(List.class, testAndApply(Objects::nonNull, jTabbedPane,
 				x -> Narcissus.getField(x, getDeclaredField(Util.getClass(x), "pages")), null));
 		//
-		final Integer tabIndex = getTabIndexByTitle(pages, PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManager.tabTitle"));
+		setSelectedIndex(jTabbedPane, getTabIndexByTitle(pages, PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.tabTitle")));
 		//
-		if (tabIndex != null) {
-			//
-			jTabbedPane.setSelectedIndex(tabIndex.intValue());
-			//
-		} // if
-			//
 		if (layoutManager instanceof MigLayout) {
 			//
 			add(jTabbedPane, WRAP);
@@ -2260,6 +2254,16 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				});
 		//
+	}
+
+	private static void setSelectedIndex(final JTabbedPane instance, final Number index) {
+		//
+		if (instance != null && index != null && instance.getTabCount() > index.intValue()) {
+			//
+			instance.setSelectedIndex(index.intValue());
+			//
+		} // if
+			//
 	}
 
 	private static void setPreferredWidth(@Nullable final Component component,
