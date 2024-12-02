@@ -64,6 +64,7 @@ import org.meeuw.functional.TriConsumer;
 import org.meeuw.functional.TriPredicate;
 import org.meeuw.functional.TriPredicateUtil;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
@@ -632,8 +633,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}([\\p{InKatakana}\\p{InHiragana}]+)\\p{InHalfwidthAndFullwidthForms}$"),
 				s2))
 				&& Util.groupCount(m2) > 1
-				&& StringUtils
-						.isNotEmpty(commonSuffix1 = getCommonSuffix(g2, g22 = Util.group(m2, 2)))
+				&& StringUtils.isNotEmpty(
+						commonSuffix1 = Strings.commonSuffix(g2, g22 = Util.group(m2, 2)))
 				&& CollectionUtils
 						.isEqualCollection(
 								Collections.singleton(UnicodeBlock.KATAKANA), Util
@@ -645,7 +646,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 														UnicodeBlock::of)),
 												Collectors.toSet()))) {
 			//
-			return Pair.of(ImmutableMultimap.of(g1, g2, getCommonSuffix(g1, Util.group(m2, 1)), commonSuffix1),
+			return Pair.of(ImmutableMultimap.of(g1, g2, Strings.commonSuffix(g1, Util.group(m2, 1)), commonSuffix1),
 					toIntList(i, IntStream.rangeClosed(0, 1)));
 			//
 		} // if
@@ -656,9 +657,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			final String g21 = Util.group(m2, 1);
 			//
-			final String commonSuffix2 = getCommonSuffix(g2, Util.group(m2, 2));
+			final String commonSuffix2 = Strings.commonSuffix(g2, Util.group(m2, 2));
 			//
-			return Pair.of(ImmutableMultimap.of(g1, g2, commonSuffix1 = getCommonSuffix(g1, g21), commonSuffix2,
+			return Pair.of(ImmutableMultimap.of(g1, g2, commonSuffix1 = Strings.commonSuffix(g1, g21), commonSuffix2,
 					StringUtils.substringBefore(g1, commonSuffix1), StringUtils.substringBefore(g2, commonSuffix2), g21,
 					g22 = Util.group(m2, 2), StringUtils.substringBefore(g21, commonSuffix1),
 					StringUtils.substringBefore(g22, commonSuffix2)), toIntList(i, IntStream.rangeClosed(0, 1)));
@@ -909,9 +910,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				&& StringUtils.isNotEmpty(commonPrefix2 = StringUtils.getCommonPrefix(g12, Util.group(m2, 2),
 						Util.group(m2, 3), g32 = Util.group(m3, 2)))) {
 			//
-			final Multimap<String, String> multimap = LinkedHashMultimap
-					.create(ImmutableMultimap.of(g11, g12, g31, g32, commonPrefix1, commonPrefix2,
-							commonSuffix1 = getCommonSuffix(g11, g31), commonSuffix2 = getCommonSuffix(g12, g32)));
+			final Multimap<String, String> multimap = LinkedHashMultimap.create(ImmutableMultimap.of(g11, g12, g31, g32,
+					commonPrefix1, commonPrefix2, commonSuffix1 = Strings.commonSuffix(g11, g31),
+					commonSuffix2 = Strings.commonSuffix(g12, g32)));
 			//
 			MultimapUtil.putAll(multimap,
 					ImmutableMultimap.of(StringUtils.substringBefore(g11, commonSuffix1),
@@ -931,8 +932,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}$"),
 						StringUtils.trim(s3)))
 				&& Util.groupCount(m3) > 1
-				&& StringUtils.isNotEmpty(commonSuffix1 = getCommonSuffix(g11, g31 = Util.group(m3, 1)))
-				&& StringUtils.isNotEmpty(commonSuffix2 = getCommonSuffix(g12, Util.group(m3, 2)))) {
+				&& StringUtils.isNotEmpty(commonSuffix1 = Strings.commonSuffix(g11, g31 = Util.group(m3, 1)))
+				&& StringUtils.isNotEmpty(commonSuffix2 = Strings.commonSuffix(g12, Util.group(m3, 2)))) {
 			//
 			return Pair.of(ImmutableMultimap.of(g11, g12, g31, Util.group(m3, 2), commonSuffix1, commonSuffix2,
 					StringUtils.substringBefore(g11, commonSuffix1), StringUtils.substringBefore(g12, commonSuffix2)),
@@ -1273,9 +1274,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		final String g2 = Util.getValue(entry);
 		//
 		if (!(Util.matches(m2) && Util.groupCount(m2) > 1
-				&& StringUtils.isNotEmpty(commonSuffix1 = getCommonSuffix(g1, g2))
-				&& StringUtils
-						.isNotEmpty(commonSuffix2 = getCommonSuffix(g21 = Util.group(m2, 1), g22 = Util.group(m2, 2)))
+				&& StringUtils.isNotEmpty(commonSuffix1 = Strings.commonSuffix(g1, g2))
+				&& StringUtils.isNotEmpty(
+						commonSuffix2 = Strings.commonSuffix(g21 = Util.group(m2, 1), g22 = Util.group(m2, 2)))
 				&& Util.matches(m3 = Util.matcher(PatternMap.getPattern(patternMap,
 						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InKatakana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}]+$"),
 						testAndApply(x -> IterableUtils.size(x) - 2 > i, list, x -> IterableUtils.get(x, i + 2), null)))
@@ -1432,9 +1433,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						s2))
 				&& Util.groupCount(m2) > 1) {
 			//
-			final String commonSuffix1 = getCommonSuffix(g21 = Util.group(m2, 1), g11);
+			final String commonSuffix1 = Strings.commonSuffix(g21 = Util.group(m2, 1), g11);
 			//
-			final String commonSuffix2 = getCommonSuffix(g22 = Util.group(m2, 2), g12);
+			final String commonSuffix2 = Strings.commonSuffix(g22 = Util.group(m2, 2), g12);
 			//
 			return Pair.of(ImmutableMultimap.of(StringUtils.substringAfter(g11, commonPrefix),
 					StringUtils.substringAfter(g12, commonPrefix), g21, g22,
@@ -1597,7 +1598,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						.toList(Util.map(Util.stream(tsbs), x -> Util.toString(Util.getValue(x))))) == 2)) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s,
-					getCommonSuffix(IterableUtils.get(strings, 0), IterableUtils.get(strings, 1)));
+					Strings.commonSuffix(IterableUtils.get(strings, 0), IterableUtils.get(strings, 1)));
 			//
 		} // if
 			//
@@ -2024,8 +2025,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						ImmutableMultimap.of(g11 = Util.group(m, 1), g12 = Util.group(m, 2)));
 				//
-				if (StringUtils.isNotBlank(cs = getCommonSuffix(g12, g3))
-						|| StringUtils.isNotBlank(cs = getCommonSuffix(g12, g4))) {
+				if (StringUtils.isNotBlank(cs = Strings.commonSuffix(g12, g3))
+						|| StringUtils.isNotBlank(cs = Strings.commonSuffix(g12, g4))) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), lcsk, cs);
 					//
@@ -2097,12 +2098,12 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cp,
 					cp2 = StringUtils.getCommonPrefix(Util.group(m2, 2), g12, g13));
 			//
-			cs1 = getCommonSuffix(g11, Util.group(m2, 1));
+			cs1 = Strings.commonSuffix(g11, Util.group(m2, 1));
 			//
 			for (final String g : Arrays.asList(g12, g13)) {
 				//
 				if (Boolean.logicalOr(StringUtils.isBlank(cs1),
-						StringUtils.isBlank(cs2 = getCommonSuffix(Util.group(m2, 2), g)))) {
+						StringUtils.isBlank(cs2 = Strings.commonSuffix(Util.group(m2, 2), g)))) {
 					//
 					continue;
 					//
@@ -2528,9 +2529,9 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 				} // if
 					//
-				if (Util.and(StringUtils.isNotBlank(csk = getCommonSuffix(t1, key = Util.getKey(en))),
+				if (Util.and(StringUtils.isNotBlank(csk = Strings.commonSuffix(t1, key = Util.getKey(en))),
 						StringUtils.length(csk) == 1,
-						StringUtils.isNotBlank(csv = getCommonSuffix(t2, value = Util.getValue(en))))) {
+						StringUtils.isNotBlank(csv = Strings.commonSuffix(t2, value = Util.getValue(en))))) {
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), csk, csv);
 					//
@@ -2797,8 +2798,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 					if (Util.and(StringUtils.isNotBlank(cpk = StringUtils.getCommonPrefix(g11, key = Util.getKey(en))),
 							StringUtils.isNotBlank(cpv = StringUtils.getCommonPrefix(g12, value = Util.getValue(en))),
-							StringUtils.isNotBlank(csk = getCommonSuffix(g11, key)),
-							StringUtils.isNotBlank(csv = getCommonSuffix(g12, value)),
+							StringUtils.isNotBlank(csk = Strings.commonSuffix(g11, key)),
+							StringUtils.isNotBlank(csv = Strings.commonSuffix(g12, value)),
 							!Objects.equals(key, StringUtils.replace(g11, lcs, "")))) {
 						//
 						testAndAccept((a, b) -> !IntIterableUtil.containsInt(a, b),
@@ -2953,8 +2954,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				for (int j = 0; j < IterableUtils.size(ss); j++) {
 					//
 					if (StringUtils
-							.isNotBlank(csv = getCommonSuffix(v1 = Util.getValue(e1 = IterableUtils.get(entries2, k)),
-									IterableUtils.get(ss, j)))
+							.isNotBlank(csv = Strings.commonSuffix(
+									v1 = Util.getValue(e1 = IterableUtils.get(entries2, k)), IterableUtils.get(ss, j)))
 							&& StringUtils.length(k1 = Util.getKey(e1)) == 2) {
 						//
 						MultimapUtil.put(multimap, StringUtils.substring(k1, 0, 1),
@@ -3156,9 +3157,10 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			} // if
 				//
-			if (Boolean.logicalAnd(StringUtils.isNotBlank(
-					csk = getCommonSuffix(k1 = Util.getKey(e1), k2 = Util.getKey(e2 = IterableUtils.get(entries2, j)))),
-					StringUtils.isNotBlank(csv = getCommonSuffix(v1 = Util.getValue(e1), v2 = Util.getValue(e2))))
+			if (Boolean.logicalAnd(
+					StringUtils.isNotBlank(csk = Strings.commonSuffix(k1 = Util.getKey(e1),
+							k2 = Util.getKey(e2 = IterableUtils.get(entries2, j)))),
+					StringUtils.isNotBlank(csv = Strings.commonSuffix(v1 = Util.getValue(e1), v2 = Util.getValue(e2))))
 					&& !Objects.equals(k1, k2)) {
 				//
 				testAndAccept((a, b) -> StringUtils.isNotBlank(IValue0Util.getValue0(b)),
@@ -3244,7 +3246,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				&& Objects.equals(StringUtils.substring(k1, 0, 1), StringUtils.substring(k2, 0, 1)) && Objects.equals(
 						sl = StringUtils.substring(k1, kl1 - 1, kl1), StringUtils.substring(k2, kl2 - 1, kl2))) {
 			//
-			if (StringUtils.isNotBlank(csv = getCommonSuffix(v1 = Util.getValue(e1), v2 = Util.getValue(e2)))) {
+			if (StringUtils.isNotBlank(csv = Strings.commonSuffix(v1 = Util.getValue(e1), v2 = Util.getValue(e2)))) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), sl, csv);
 				//
@@ -3276,16 +3278,16 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cpk, cpv);
 			//
-		} else if (Boolean.logicalAnd(StringUtils.length(csk = getCommonSuffix(k1, k2)) == 1,
-				StringUtils.isNotBlank(csv = getCommonSuffix(v1, v2)))) {
+		} else if (Boolean.logicalAnd(StringUtils.length(csk = Strings.commonSuffix(k1, k2)) == 1,
+				StringUtils.isNotBlank(csv = Strings.commonSuffix(v1, v2)))) {
 			//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), csk, csv);
 			//
 		} // if
 			//
 		if (StringUtils.isNotBlank(cpk) && StringUtils.isNotBlank(cpv)
-				&& StringUtils.isNotBlank(csk = getCommonSuffix(k1, k2))
-				&& StringUtils.isNotBlank(csv = getCommonSuffix(v1, v2))
+				&& StringUtils.isNotBlank(csk = Strings.commonSuffix(k1, k2))
+				&& StringUtils.isNotBlank(csv = Strings.commonSuffix(v1, v2))
 				&& ((StringUtils.isNotBlank(sbk = StringUtils.substringBetween(k1, cpk, csk))
 						&& StringUtils.isNotBlank(sbv = StringUtils.substringBetween(v1, cpv, csv)))
 						|| (StringUtils.isNotBlank(sbk = StringUtils.substringBetween(k2, cpk, csk))
@@ -3429,7 +3431,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						g11 = Util.group(m, 1), g12 = Util.group(m, 2));
 				//
 				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-						toMultimap14(getCommonSuffix(g11, g2), gs, g12));
+						toMultimap14(Strings.commonSuffix(g11, g2), gs, g12));
 				//
 			} // if
 				//
@@ -3455,7 +3457,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			//
 			for (final String g : gs) {
 				//
-				Util.add(ss = ObjectUtils.getIfNull(ss, ArrayList::new), getCommonSuffix(g2, g));
+				Util.add(ss = ObjectUtils.getIfNull(ss, ArrayList::new), Strings.commonSuffix(g2, g));
 				//
 			} // for
 				//
@@ -4797,7 +4799,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				"^([\\p{InCJKUnifiedIdeographs}(\\p{InKatakana})]+)\\p{InHalfwidthAndFullwidthForms}([\\p{InHiragana}\\p{InKatakana}]+)[\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}\\p{InKatakana}]+$"),
 				input))
 				&& Util.groupCount(m) > 1
-				&& StringUtils.isNotEmpty(commonSuffix = getCommonSuffix(
+				&& StringUtils.isNotEmpty(commonSuffix = Strings.commonSuffix(
 						KanaConverter.convertKana(g1 = Util.group(m, 1), KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA),
 						g2 = Util.group(m, 2)))) {
 			//
@@ -4923,27 +4925,6 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		} // if
 			//
 		return null;
-		//
-	}
-
-	// http://www.java2s.com/example/java-utility-method/collection-element-get/getcommonsuffix-collection-string-c-85a78.html
-	private static String getCommonSuffix(@Nullable final String s1, @Nullable final String s2) {
-		//
-		int i = 0;
-		//
-		if (s1 == null || s2 == null || s1.length() == 0 || s2.length() == 0) {
-			//
-			return "";
-			//
-		} // if
-			//
-		while (i < s1.length() && i < s2.length() && s1.charAt(s1.length() - 1 - i) == s2.charAt(s2.length() - 1 - i)) {
-			//
-			i++;
-			//
-		} // if
-			//
-		return StringUtils.substring(s1, StringUtils.length(s1) - i);
 		//
 	}
 
