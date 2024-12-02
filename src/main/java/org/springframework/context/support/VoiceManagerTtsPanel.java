@@ -197,7 +197,7 @@ public class VoiceManagerTtsPanel extends JPanel
 
 		boolean containsObject(final Class<?> key);
 
-		<T> void setObject(final Class<T> key, final T value);
+		<T> void setObject(final Class<T> key, @Nullable final T value);
 
 		@Nullable
 		static <T> T getObject(@Nullable final ObjectMap instance, final Class<T> key) {
