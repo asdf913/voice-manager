@@ -8169,7 +8169,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		}
 	}
 
-	private static <T> void testAndAccept(@Nullable final Predicate<T> predicate, final T value,
+	private static <T> void testAndAccept(@Nullable final Predicate<T> predicate, @Nullable final T value,
 			@Nullable final Consumer<T> consumer) {
 		if (predicate != null && predicate.test(value) && consumer != null) {
 			consumer.accept(value);

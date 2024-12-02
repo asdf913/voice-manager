@@ -747,7 +747,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		return instance != null ? instance.getSelectedFile() : null;
 	}
 
-	private static int showSaveDialog(@Nullable final JFileChooser instance, final Component parent)
+	private static int showSaveDialog(@Nullable final JFileChooser instance, @Nullable final Component parent)
 			throws HeadlessException {
 		//
 		if (instance == null) {
@@ -1148,7 +1148,7 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 	}
 
-	private static void setValue(final JSlider instance, final int n) {
+	private static void setValue(@Nullable final JSlider instance, final int n) {
 		if (instance != null) {
 			instance.setValue(n);
 		}
@@ -1435,7 +1435,8 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
-	private static Object get(@Nullable final Field field, final Object instance) throws IllegalAccessException {
+	private static Object get(@Nullable final Field field, @Nullable final Object instance)
+			throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
 	}
 
@@ -1529,7 +1530,8 @@ public class VoiceManagerTtsPanel extends JPanel
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
@@ -1611,7 +1613,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		}
 	}
 
-	private static String convertLanguageCodeToText(final LocaleID[] enums, final Integer value) {
+	private static String convertLanguageCodeToText(final LocaleID[] enums, @Nullable final Integer value) {
 		//
 		final List<LocaleID> localeIds = Util
 				.toList(Util.filter(testAndApply(Objects::nonNull, enums, Arrays::stream, null),
@@ -1739,15 +1741,15 @@ public class VoiceManagerTtsPanel extends JPanel
 		return instance != null ? instance.getProviderPlatform() : null;
 	}
 
-	private static <T, E extends Throwable> void testAndAccept(@Nullable final Predicate<T> predicate, final T value,
-			final FailableConsumer<T, E> consumer) throws E {
+	private static <T, E extends Throwable> void testAndAccept(@Nullable final Predicate<T> predicate,
+			@Nullable final T value, final FailableConsumer<T, E> consumer) throws E {
 		if (Util.test(predicate, value) && consumer != null) {
 			consumer.accept(value);
 		}
 	}
 
 	private static JTextComponent createProviderVersionJTextComponent(final boolean isInstalled,
-			final Provider provider) {
+			@Nullable final Provider provider) {
 		return isInstalled ? new JTextField(getProviderVersion(provider)) : new JTextField();
 	}
 
