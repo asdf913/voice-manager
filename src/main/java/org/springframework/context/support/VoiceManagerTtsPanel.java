@@ -1777,7 +1777,7 @@ public class VoiceManagerTtsPanel extends JPanel
 	}
 
 	private static <T, E extends Throwable> void testAndAccept(@Nullable final Predicate<T> predicate,
-			@Nullable final T value, final FailableConsumer<T, E> consumer) throws E {
+			@Nullable final T value, @Nullable final FailableConsumer<T, E> consumer) throws E {
 		if (Util.test(predicate, value) && consumer != null) {
 			consumer.accept(value);
 		}

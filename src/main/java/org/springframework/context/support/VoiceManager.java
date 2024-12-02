@@ -2262,7 +2262,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void setPreferredWidth(final Component component, final Supplier<Double> supplier) {
+	private static void setPreferredWidth(@Nullable final Component component, final Supplier<Double> supplier) {
 		//
 		if (component != null) {
 			//
