@@ -48,6 +48,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -215,6 +216,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		}
 
 		@Override
+		@Nullable
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
 			final String methodName = Util.getName(method);
@@ -501,6 +503,7 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static Collection<Object> getByteConverterAttributeValues(
 			final ConfigurableListableBeanFactory configurableListableBeanFactory, final String attribute) {
 		//
@@ -854,6 +857,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static Integer getRate(final List<Field> fs) {
 		//
 		if (fs != null && !fs.isEmpty()) {
@@ -1061,6 +1065,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static Double getPreferredWidth(final Component c) {
 		//
 		final Dimension d = Util.getPreferredSize(c);
@@ -1492,6 +1497,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static Integer valueOf(final String instance) {
 		try {
 			return StringUtils.isNotBlank(instance) ? Integer.valueOf(instance) : null;
@@ -1600,6 +1606,7 @@ public class VoiceManagerTtsPanel extends JPanel
 				instance);
 	}
 
+	@Nullable
 	private static Integer valueOf(final String instance, final int base) {
 		try {
 			return StringUtils.isNotBlank(instance) ? Integer.valueOf(instance, base) : null;
@@ -1713,6 +1720,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		return instance != null ? instance.getSelectedItem() : null;
 	}
 
+	@Nullable
 	private static JTextComponent createProviderPlatformJTextComponent(final boolean isInstalled,
 			final Provider provider) {
 		//
