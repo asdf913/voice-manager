@@ -192,7 +192,7 @@ public class VoiceManagerTtsPanel extends JPanel
 
 		<T> void setObject(final Class<T> key, final T value);
 
-		static <T> T getObject(final ObjectMap instance, final Class<T> key) {
+		static <T> T getObject(@Nullable final ObjectMap instance, final Class<T> key) {
 			return instance != null ? instance.getObject(key) : null;
 		}
 
@@ -260,7 +260,7 @@ public class VoiceManagerTtsPanel extends JPanel
 			return instance != null && instance.isArray();
 		}
 
-		private static String getSimpleName(final Class<?> instance) {
+		private static String getSimpleName(@Nullable final Class<?> instance) {
 			return instance != null ? instance.getSimpleName() : null;
 		}
 
@@ -729,7 +729,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
-	private static URI toURI(final File instance) {
+	private static URI toURI(@Nullable final File instance) {
 		return instance != null ? instance.toURI() : null;
 	}
 
@@ -751,11 +751,12 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 	}
 
-	private static File getSelectedFile(final JFileChooser instance) {
+	private static File getSelectedFile(@Nullable final JFileChooser instance) {
 		return instance != null ? instance.getSelectedFile() : null;
 	}
 
-	private static int showSaveDialog(final JFileChooser instance, final Component parent) throws HeadlessException {
+	private static int showSaveDialog(@Nullable final JFileChooser instance, final Component parent)
+			throws HeadlessException {
 		//
 		if (instance == null) {
 			//
@@ -817,15 +818,15 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
-	private static Class<?>[] getParameterTypes(final Executable instance) {
+	private static Class<?>[] getParameterTypes(@Nullable final Executable instance) {
 		return instance != null ? instance.getParameterTypes() : null;
 	}
 
-	private static Duration elapsed(final Stopwatch instance) {
+	private static Duration elapsed(@Nullable final Stopwatch instance) {
 		return instance != null ? instance.elapsed() : null;
 	}
 
-	private static Stopwatch stop(final Stopwatch instance) {
+	private static Stopwatch stop(@Nullable final Stopwatch instance) {
 		return instance != null ? instance.stop() : null;
 	}
 
@@ -904,12 +905,12 @@ public class VoiceManagerTtsPanel extends JPanel
 	 * https://github.com/apache/commons-lang/blob/master/src/main/java/org/apache/
 	 * commons/lang3/ObjectUtils.java#L597
 	 */
-	private static <T, E extends Throwable> T getIfNull(final T object, final FailableSupplier<T, E> defaultSupplier)
-			throws E {
+	private static <T, E extends Throwable> T getIfNull(@Nullable final T object,
+			final FailableSupplier<T, E> defaultSupplier) throws E {
 		return object != null ? object : get(defaultSupplier);
 	}
 
-	private static <T, E extends Throwable> T get(final FailableSupplier<T, E> instance) throws E {
+	private static <T, E extends Throwable> T get(@Nullable final FailableSupplier<T, E> instance) throws E {
 		return instance != null ? instance.get() : null;
 	}
 
@@ -942,7 +943,7 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 	}
 
-	private static Integer getValue(final JSlider instance) {
+	private static Integer getValue(@Nullable final JSlider instance) {
 		return instance != null ? Integer.valueOf(instance.getValue()) : null;
 	}
 
@@ -1023,7 +1024,7 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 	}
 
-	private static String[] getVoiceIds(final SpeechApi instance) {
+	private static String[] getVoiceIds(@Nullable final SpeechApi instance) {
 		return instance != null ? instance.getVoiceIds() : null;
 	}
 
@@ -1082,7 +1083,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
-	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
+	private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
 			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
 			final boolean cellHasFocus) {
 		//
@@ -1091,7 +1092,8 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
-	private static <E> void setRenderer(final JComboBox<E> instance, final ListCellRenderer<? super E> aRenderer) {
+	private static <E> void setRenderer(@Nullable final JComboBox<E> instance,
+			final ListCellRenderer<? super E> aRenderer) {
 		//
 		if (instance == null) {
 			//
@@ -1140,7 +1142,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		}
 	}
 
-	private void setSpeechVolume(final Number speechVolume, final Number upperEnpoint) {
+	private void setSpeechVolume(@Nullable final Number speechVolume, final Number upperEnpoint) {
 		//
 		if (speechVolume != null) {
 			//
@@ -1173,10 +1175,8 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
-	private static Object get(final Lookup instance, final Object row, final Object column) {
-		//
+	private static Object get(@Nullable final Lookup instance, final Object row, final Object column) {
 		return instance != null ? instance.get(row, column) : instance;
-		//
 	}
 
 	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
@@ -1186,7 +1186,7 @@ public class VoiceManagerTtsPanel extends JPanel
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
 
-	private static void addSpeedButtons(final VoiceManagerTtsPanel instance, final Range<Integer> range) {
+	private static void addSpeedButtons(@Nullable final VoiceManagerTtsPanel instance, final Range<Integer> range) {
 		//
 		if (!(hasLowerBound(range) && hasUpperBound(range) && lowerEndpoint(range) != null
 				&& upperEndpoint(range) != null)) {
@@ -1330,7 +1330,7 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 	}
 
-	private static Object invoke(final Method method, final Object instance, Object... args)
+	private static Object invoke(@Nullable final Method method, final Object instance, Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
 	}
@@ -1345,7 +1345,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		}
 	}
 
-	private static void add(final Container instance, final Component comp) {
+	private static void add(@Nullable final Container instance, final Component comp) {
 		//
 		if (instance == null) {
 			//
@@ -1375,7 +1375,7 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 	}
 
-	private static void add(final Container instance, final Component comp, final Object constraints) {
+	private static void add(@Nullable final Container instance, final Component comp, final Object constraints) {
 		//
 		if (instance == null) {
 			//
@@ -1405,11 +1405,12 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 	}
 
-	private static Field getDeclaredField(final Class<?> instance, final String name) throws NoSuchFieldException {
+	private static Field getDeclaredField(@Nullable final Class<?> instance, final String name)
+			throws NoSuchFieldException {
 		return instance != null ? instance.getDeclaredField(name) : null;
 	}
 
-	private static <C extends Comparable<C>> C lowerEndpoint(final Range<C> instance) {
+	private static <C extends Comparable<C>> C lowerEndpoint(@Nullable final Range<C> instance) {
 		//
 		if (instance == null) {
 			//
@@ -1439,7 +1440,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
-	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+	private static Object get(@Nullable final Field field, final Object instance) throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
 	}
 
@@ -1449,7 +1450,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		}
 	}
 
-	private static <C extends Comparable<C>> C upperEndpoint(final Range<C> instance) {
+	private static <C extends Comparable<C>> C upperEndpoint(@Nullable final Range<C> instance) {
 		return instance != null ? instance.upperEndpoint() : null;
 	}
 
@@ -1506,7 +1507,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		}
 	}
 
-	private static int intValue(final Number instance, final int defaultValue) {
+	private static int intValue(@Nullable final Number instance, final int defaultValue) {
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
@@ -1597,7 +1598,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
-	private static <E> E get(final List<E> instance, final int index) {
+	private static <E> E get(@Nullable final List<E> instance, final int index) {
 		return instance != null ? instance.get(index) : null;
 	}
 
@@ -1641,7 +1642,8 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
-	private static String getVoiceAttribute(final SpeechApi instance, final String voiceId, final String attribute) {
+	private static String getVoiceAttribute(@Nullable final SpeechApi instance, final String voiceId,
+			final String attribute) {
 		return instance != null ? instance.getVoiceAttribute(voiceId, attribute) : null;
 	}
 
@@ -1651,7 +1653,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		}
 	}
 
-	private static <E> ListCellRenderer<? super E> getRenderer(final JComboBox<E> instance) {
+	private static <E> ListCellRenderer<? super E> getRenderer(@Nullable final JComboBox<E> instance) {
 		return instance != null ? instance.getRenderer() : null;
 	}
 
@@ -1716,7 +1718,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		}
 	}
 
-	private static Object getSelectedItem(final ComboBoxModel<?> instance) {
+	private static Object getSelectedItem(@Nullable final ComboBoxModel<?> instance) {
 		return instance != null ? instance.getSelectedItem() : null;
 	}
 
@@ -1738,7 +1740,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
-	private static String getProviderPlatform(final Provider instance) {
+	private static String getProviderPlatform(@Nullable final Provider instance) {
 		return instance != null ? instance.getProviderPlatform() : null;
 	}
 
@@ -1754,7 +1756,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		return isInstalled ? new JTextField(getProviderVersion(provider)) : new JTextField();
 	}
 
-	private static String getProviderVersion(final Provider instance) {
+	private static String getProviderVersion(@Nullable final Provider instance) {
 		return instance != null ? instance.getProviderVersion() : null;
 	}
 
@@ -1762,7 +1764,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		return instance != null && instance.isInstalled();
 	}
 
-	private static String getProviderName(final Provider instance) {
+	private static String getProviderName(@Nullable final Provider instance) {
 		return instance != null ? instance.getProviderName() : null;
 	}
 
