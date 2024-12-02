@@ -166,11 +166,7 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 					//
 			} else if (proxy instanceof Cell) {
 				//
-				if (Objects.equals(methodName, "getStringCellValue")) {
-					//
-					return null;
-					//
-				} else if (Objects.equals(methodName, "getCellType")) {
+				if (Util.contains(Arrays.asList("getStringCellValue", "getCellType"), methodName)) {
 					//
 					return null;
 					//
