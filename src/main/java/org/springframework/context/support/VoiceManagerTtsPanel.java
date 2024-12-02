@@ -563,10 +563,6 @@ public class VoiceManagerTtsPanel extends JPanel
 				//
 			} // try
 				//
-		} else {
-			//
-			throw new UnsupportedOperationException();// TODO
-			//
 		} // if
 			//
 	}
@@ -630,10 +626,6 @@ public class VoiceManagerTtsPanel extends JPanel
 		} else if (Objects.equals(source, btnWriteVoice)) {
 			//
 			actionPerformedForWriteVoice(headless);
-			//
-		} else {
-			//
-			throw new UnsupportedOperationException();// TODO
 			//
 		} // if
 			//
