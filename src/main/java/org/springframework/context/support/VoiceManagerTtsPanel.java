@@ -129,18 +129,16 @@ public class VoiceManagerTtsPanel extends JPanel
 
 	private static final String COMPONENT = "component";
 
-	private ApplicationContext applicationContext = null;
+	private transient ApplicationContext applicationContext = null;
 
-	private ConfigurableListableBeanFactory configurableListableBeanFactory = null;
+	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
-	private PropertyResolver propertyResolver = null;
+	private transient PropertyResolver propertyResolver = null;
 
-	private SpeechApi speechApi = null;
+	private transient SpeechApi speechApi = null;
 
 	private JTextComponent tfTextTts, tfProviderName, tfProviderVersion, tfProviderPlatform, tfSpeechLanguageCode,
 			tfSpeechLanguageName, tfSpeechRate, tfSpeechVolume, tfElapsed = null;
-
-	private ComboBoxModel<String> cbmVoiceId = null;
 
 	private JComboBox<Object> jcbVoiceId = null;
 
@@ -163,9 +161,11 @@ public class VoiceManagerTtsPanel extends JPanel
 
 	private JSlider jsSpeechRate, jsSpeechVolume = null;
 
-	private ComboBoxModel<?> cbmAudioFormatWrite = null;
+	private transient ComboBoxModel<String> cbmVoiceId = null;
 
-	private ComboBoxModel<Method> cbmSpeakMethod = null;
+	private transient ComboBoxModel<?> cbmAudioFormatWrite = null;
+
+	private transient ComboBoxModel<Method> cbmSpeakMethod = null;
 
 	@Override
 	public String getTitle() {

@@ -516,7 +516,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static IValue0<Method> METHOD_RANDOM_ALPHABETIC = null;
 
-	private ApplicationContext applicationContext = null;
+	private transient ApplicationContext applicationContext = null;
 
 	private transient PropertyResolver propertyResolver = null;
 
