@@ -1069,7 +1069,7 @@ public class VoiceManagerTtsPanel extends JPanel
 	}
 
 	@Nullable
-	private static Double getPreferredWidth(final Component c) {
+	private static Double getPreferredWidth(@Nullable final Component c) {
 		//
 		final Dimension d = Util.getPreferredSize(c);
 		//
@@ -1186,7 +1186,7 @@ public class VoiceManagerTtsPanel extends JPanel
 
 	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
 			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
-			final FailableBiFunction<T, U, R, E> functionFalse) throws E {
+			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
@@ -1339,7 +1339,7 @@ public class VoiceManagerTtsPanel extends JPanel
 	}
 
 	@Nullable
-	private static Object invoke(@Nullable final Method method, final Object instance, Object... args)
+	private static Object invoke(@Nullable final Method method, @Nullable final Object instance, Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
 	}
@@ -1747,7 +1747,7 @@ public class VoiceManagerTtsPanel extends JPanel
 
 	@Nullable
 	private static JTextComponent createProviderPlatformJTextComponent(final boolean isInstalled,
-			final Provider provider) {
+			@Nullable final Provider provider) {
 		//
 		try {
 			//
