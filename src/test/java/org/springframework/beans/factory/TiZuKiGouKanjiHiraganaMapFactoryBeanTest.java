@@ -82,16 +82,13 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			final String methodName = method != null ? method.getName() : null;
+			final String methodName = Util.getName(method);
 			//
-			if (proxy instanceof Link) {
+			if (proxy instanceof Link
+					&& Util.contains(Arrays.asList("getText", "getUrl", "getDescription"), methodName)) {
 				//
-				if (Util.contains(Arrays.asList("getText", "getUrl", "getDescription"), methodName)) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);

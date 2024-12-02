@@ -116,14 +116,11 @@ class UtilTest {
 			//
 			final String methodName = Util.getName(method);
 			//
-			if (proxy instanceof Stream) {
+			if (proxy instanceof Stream
+					&& Util.contains(Arrays.asList("map", "filter", "toList", "collect"), methodName)) {
 				//
-				if (Util.contains(Arrays.asList("map", "filter", "toList", "collect"), methodName)) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
