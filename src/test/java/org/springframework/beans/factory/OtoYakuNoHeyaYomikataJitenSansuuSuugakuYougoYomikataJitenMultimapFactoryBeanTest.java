@@ -88,15 +88,7 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 			//
 			if (proxy instanceof Link) {
 				//
-				if (Objects.equals(methodName, "getText")) {
-					//
-					return null;
-					//
-				} else if (Objects.equals(methodName, "getUrl")) {
-					//
-					return null;
-					//
-				} else if (Objects.equals(methodName, "getDescription")) {
+				if (Util.contains(Arrays.asList("getText", "getUrl", "getDescription"), methodName)) {
 					//
 					return null;
 					//

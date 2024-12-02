@@ -118,19 +118,7 @@ class UtilTest {
 			//
 			if (proxy instanceof Stream) {
 				//
-				if (Objects.equals(methodName, "map")) {
-					//
-					return null;
-					//
-				} else if (Objects.equals(methodName, "filter")) {
-					//
-					return null;
-					//
-				} else if (Objects.equals(methodName, "toList")) {
-					//
-					return null;
-					//
-				} else if (Objects.equals(methodName, "collect")) {
+				if (Util.contains(Arrays.asList("map", "filter", "toList", "collect"), methodName)) {
 					//
 					return null;
 					//
@@ -160,11 +148,7 @@ class UtilTest {
 			//
 			if (self instanceof InvokeInstruction) {
 				//
-				if (Objects.equals(methodName, "getMethodName")) {
-					//
-					return null;
-					//
-				} else if (Objects.equals(methodName, "getArgumentTypes")) {
+				if (Util.contains(Arrays.asList("getMethodName", "getArgumentTypes"), methodName)) {
 					//
 					return null;
 					//

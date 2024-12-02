@@ -5,10 +5,10 @@ import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -71,15 +71,7 @@ class OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBeanTest {
 			//
 			if (proxy instanceof Link) {
 				//
-				if (Objects.equals(methodName, "getText")) {
-					//
-					return null;
-					//
-				} else if (Objects.equals(methodName, "getUrl")) {
-					//
-					return null;
-					//
-				} else if (Objects.equals(methodName, "getDescription")) {
+				if (Util.contains(Arrays.asList("getText", "getUrl", "getDescription"), methodName)) {
 					//
 					return null;
 					//
