@@ -203,7 +203,7 @@ public class VoiceManagerTtsPanel extends JPanel
 			return instance != null ? instance.getObject(key) : null;
 		}
 
-		static <T> void setObject(@Nullable final ObjectMap instance, final Class<T> key, final T value) {
+		static <T> void setObject(@Nullable final ObjectMap instance, final Class<T> key, @Nullable final T value) {
 			if (instance != null) {
 				instance.setObject(key, value);
 			}
@@ -493,7 +493,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
-	private static <T, E extends Throwable> void forEach(final Iterable<T> items,
+	private static <T, E extends Throwable> void forEach(@Nullable final Iterable<T> items,
 			@Nullable final FailableConsumer<? super T, E> action) throws E {
 		//
 		if (Util.iterator(items) != null && (action != null || Proxy.isProxyClass(Util.getClass(items)))) {
@@ -1634,7 +1634,7 @@ public class VoiceManagerTtsPanel extends JPanel
 	}
 
 	@Nullable
-	private static Integer valueOf(final String instance, final int base) {
+	private static Integer valueOf(@Nullable final String instance, final int base) {
 		try {
 			return StringUtils.isNotBlank(instance) ? Integer.valueOf(instance, base) : null;
 		} catch (final NumberFormatException e) {
