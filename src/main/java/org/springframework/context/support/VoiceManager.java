@@ -2239,19 +2239,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		if (jPanelWarning != null) {
-			//
-			final Double maxPreferredWidth = ObjectUtils.max(getPreferredWidth(jPanelWarning),
-					getPreferredWidth(jTabbedPane));
-			//
-			if (maxPreferredWidth != null) {
-				//
-				setPreferredWidth(maxPreferredWidth.intValue(), jPanelWarning);
-				//
-			} // if
-				//
-		} // if
-			//
+		setPreferredWidth(jPanelWarning, () -> getPreferredWidth(jTabbedPane));
+		//
 		final Predicate<Component> predicate = createFocusableComponentPredicate(
 				Arrays.asList(JLabel.class, JScrollPane.class, JProgressBar.class, JPanel.class));
 		//
@@ -2271,6 +2260,23 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				});
 		//
+	}
+
+	private static void setPreferredWidth(final Component component, final Supplier<Double> supplier) {
+		//
+		if (component != null) {
+			//
+			final Double maxPreferredWidth = ObjectUtils.max(getPreferredWidth(component),
+					supplier != null ? supplier.get() : null);
+			//
+			if (maxPreferredWidth != null) {
+				//
+				setPreferredWidth(maxPreferredWidth.intValue(), component);
+				//
+			} // if
+				//
+		} // if
+			//
 	}
 
 	private static Predicate<Component> createFocusableComponentPredicate(

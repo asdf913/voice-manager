@@ -275,6 +275,9 @@ import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
 import j2html.attributes.Attribute;
 import j2html.tags.specialized.ATag;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyFactory;
+import javassist.util.proxy.ProxyObject;
 import javazoom.jl.player.Player;
 import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
@@ -353,9 +356,10 @@ class VoiceManagerTest {
 			METHOD_HAS_UPPER_BOUND, METHOD_LOWER_END_POINT, METHOD_UPPER_END_POINT, METHOD_GET_IF_NULL,
 			METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE, METHOD_GET_RESPONSE_CODE,
 			METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM, METHOD_SET_PREFERRED_WIDTH_ARRAY,
-			METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS,
-			METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC, METHOD_IMPORT_BY_WORK_BOOK_FILES,
-			METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS, METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME,
+			METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_SET_PREFERRED_WIDTH_2, METHOD_GET_VALUE_FROM_CELL,
+			METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC,
+			METHOD_IMPORT_BY_WORK_BOOK_FILES, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS,
+			METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME,
 			METHOD_CREATE_PROVIDER_VERSION_J_TEXT_COMPONENT, METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT,
 			METHOD_SET_SPEECH_VOLUME, METHOD_VALUES, METHOD_EXPORT_MICROSOFT_ACCESS, METHOD_IMPORT_RESULT_SET,
 			METHOD_CREATE_VOICE_ID_WARNING_PANEL, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL,
@@ -874,6 +878,9 @@ class VoiceManagerTest {
 		(METHOD_SET_PREFERRED_WIDTH_ITERABLE = clz.getDeclaredMethod("setPreferredWidth", Integer.TYPE, Iterable.class))
 				.setAccessible(true);
 		//
+		(METHOD_SET_PREFERRED_WIDTH_2 = clz.getDeclaredMethod("setPreferredWidth", Component.class, Supplier.class))
+				.setAccessible(true);
+		//
 		(METHOD_GET_VALUE_FROM_CELL = clz.getDeclaredMethod("getValueFromCell", CLASS_OBJECT_MAP)).setAccessible(true);
 		//
 		(METHOD_GET_MP3_TAGS = clz.getDeclaredMethod("getMp3Tags", VoiceManager.class)).setAccessible(true);
@@ -1223,7 +1230,7 @@ class VoiceManagerTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			final String methodName = method != null ? method.getName() : null;
+			final String methodName = Util.getName(method);
 			//
 			if (ReflectionUtils.isToStringMethod(method)) {
 				//
@@ -1693,6 +1700,30 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "convert")) {
 					//
 					return convertedByteArray;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+	}
+
+	private static class MH implements MethodHandler {
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			final String methodName = Util.getName(thisMethod);
+			//
+			if (self instanceof Component) {
+				//
+				if (Objects.equals(methodName, "getPreferredSize")) {
+					//
+					return null;
 					//
 				} // if
 					//
@@ -8129,7 +8160,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testSetPreferredWidth() {
+	void testSetPreferredWidth() throws Throwable {
 		//
 		Assertions.assertDoesNotThrow(() -> setPreferredWidth(ZERO, (Component[]) null));
 		//
@@ -8140,6 +8171,26 @@ class VoiceManagerTest {
 		Assertions.assertDoesNotThrow(() -> setPreferredWidth(ZERO, (Iterable) iterable));
 		//
 		Assertions.assertDoesNotThrow(() -> setPreferredWidth(ZERO, Collections.singleton(null)));
+		//
+		final MH mh = new MH();
+		//
+		final ProxyFactory proxyFactory = new ProxyFactory();
+		//
+		proxyFactory.setSuperclass(Component.class);
+		//
+		final Object instance = newInstance(getDeclaredConstructor(proxyFactory.createClass()));
+		//
+		if (instance instanceof ProxyObject) {
+			//
+			((ProxyObject) instance).setHandler(mh);
+			//
+		} // if
+			//
+		final Component component = Util.cast(Component.class, instance);
+		//
+		Assertions.assertDoesNotThrow(() -> setPreferredWidth(component, null));
+		//
+		Assertions.assertDoesNotThrow(() -> setPreferredWidth(component, () -> Double.valueOf(0)));
 		//
 	}
 
@@ -8154,6 +8205,14 @@ class VoiceManagerTest {
 	private static void setPreferredWidth(final int width, final Iterable<Component> cs) throws Throwable {
 		try {
 			METHOD_SET_PREFERRED_WIDTH_ITERABLE.invoke(null, width, cs);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static void setPreferredWidth(final Component component, final Supplier<Double> supplier) throws Throwable {
+		try {
+			METHOD_SET_PREFERRED_WIDTH_2.invoke(null, component, supplier);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
