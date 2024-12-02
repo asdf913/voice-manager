@@ -2256,7 +2256,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void setSelectedIndex(final JTabbedPane instance, final Number index) {
+	private static void setSelectedIndex(@Nullable final JTabbedPane instance, @Nullable final Number index) {
 		//
 		if (instance != null && index != null && instance.getTabCount() > index.intValue()) {
 			//
