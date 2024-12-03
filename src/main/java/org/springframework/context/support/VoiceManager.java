@@ -3654,7 +3654,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		if (jsSpeechRate == null && tfSpeechRate == null) {
+		if (Boolean.logicalAnd(jsSpeechRate == null, tfSpeechRate == null)) {
 			//
 			add(panel2, new JLabel(SPEECH_RATE), String.format("align %1$s %1$s", "50%"));
 			//
