@@ -3712,14 +3712,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if ((maxPreferredWidth = ObjectUtils.max(getPreferredWidth(jcbYomi), getPreferredWidth(tfHiragana),
 				getPreferredWidth(tfKatakana))) != null) {
 			//
-			final Dimension d = tfKatakana.getSize();
+			testAndAccept((a, b) -> b != null, maxPreferredWidth, tfKatakana.getSize(), (a, b) -> {
+				//
+				tfKatakana.setMinimumSize(new Dimension(a.intValue(), (int) b.getHeight()));
+				//
+			});
 			//
-			if (d != null) {
-				//
-				tfKatakana.setMinimumSize(new Dimension(maxPreferredWidth.intValue(), (int) d.getHeight()));
-				//
-			} // if
-				//
 			setPreferredWidth(maxPreferredWidth.intValue(), tfHiragana, tfKatakana);
 			//
 		} // if
