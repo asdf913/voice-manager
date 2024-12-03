@@ -20,6 +20,10 @@ public abstract class RangeUtil {
 		return instance != null && instance.hasLowerBound();
 	}
 
+	public static boolean hasUpperBound(final Range<?> instance) {
+		return instance != null && instance.hasUpperBound();
+	}
+
 	public static <C extends Comparable<C>> C upperEndpoint(@Nullable final Range<C> instance) {
 		return instance != null ? instance.upperEndpoint() : null;
 	}

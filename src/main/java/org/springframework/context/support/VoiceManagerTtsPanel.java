@@ -381,8 +381,8 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 		final Range<Integer> speechVolumeRange = createVolumeRange(speechApiInstance);
 		//
-		final Integer upperEnpoint = testAndApply(VoiceManagerTtsPanel::hasUpperBound, speechVolumeRange,
-				RangeUtil::upperEndpoint, null);
+		final Integer upperEnpoint = testAndApply(RangeUtil::hasUpperBound, speechVolumeRange, RangeUtil::upperEndpoint,
+				null);
 		//
 		add(jsSpeechVolume = new JSlider(
 				intValue(testAndApply(RangeUtil::hasLowerBound, speechVolumeRange, RangeUtil::lowerEndpoint, null), 0),
@@ -1196,7 +1196,7 @@ public class VoiceManagerTtsPanel extends JPanel
 
 	private static void addSpeedButtons(@Nullable final VoiceManagerTtsPanel instance, final Range<Integer> range) {
 		//
-		if (!(RangeUtil.hasLowerBound(range) && hasUpperBound(range) && RangeUtil.lowerEndpoint(range) != null
+		if (!(RangeUtil.hasLowerBound(range) && RangeUtil.hasUpperBound(range) && RangeUtil.lowerEndpoint(range) != null
 				&& RangeUtil.upperEndpoint(range) != null)) {
 			//
 			return;
@@ -1428,10 +1428,6 @@ public class VoiceManagerTtsPanel extends JPanel
 	private static Object get(@Nullable final Field field, @Nullable final Object instance)
 			throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
-	}
-
-	private static boolean hasUpperBound(@Nullable final Range<?> instance) {
-		return instance != null && instance.hasUpperBound();
 	}
 
 	private static Range<Integer> createRange(@Nullable final Integer minValue, @Nullable final Integer maxValue) {

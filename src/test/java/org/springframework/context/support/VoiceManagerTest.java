@@ -352,7 +352,7 @@ class VoiceManagerTest {
 			METHOD_CREATE_ZIP_FILE, METHOD_RETRIEVE_ALL_VOICES, METHOD_SEARCH_VOICE_LIST_NAMES_BY_VOICE_ID,
 			METHOD_SET_LIST_NAMES, METHOD_SET_SOURCE, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML,
 			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_ACTION_PERFORMED_FOR_CONVERSION,
-			METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY, METHOD_HAS_UPPER_BOUND, METHOD_GET_IF_NULL, METHOD_SET_LANGUAGE,
+			METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY, METHOD_GET_IF_NULL, METHOD_SET_LANGUAGE,
 			METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE, METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION,
 			METHOD_GET_ALGORITHM, METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE,
 			METHOD_SET_PREFERRED_WIDTH_2, METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS,
@@ -837,8 +837,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_TO_CHAR_ARRAY = clz.getDeclaredMethod("toCharArray", String.class)).setAccessible(true);
-		//
-		(METHOD_HAS_UPPER_BOUND = clz.getDeclaredMethod("hasUpperBound", Range.class)).setAccessible(true);
 		//
 		(METHOD_GET_IF_NULL = clz.getDeclaredMethod("getIfNull", Object.class, FailableSupplier.class))
 				.setAccessible(true);
@@ -7827,27 +7825,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof char[]) {
 				return (char[]) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testHasUpperBound() throws Throwable {
-		//
-		Assertions.assertFalse(hasUpperBound(null));
-		//
-		Assertions.assertTrue(hasUpperBound(Range.atMost(ONE)));
-		//
-	}
-
-	private static boolean hasUpperBound(final Range<?> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_HAS_UPPER_BOUND.invoke(null, instance);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

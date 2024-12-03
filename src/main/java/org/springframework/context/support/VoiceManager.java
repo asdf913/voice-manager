@@ -2919,7 +2919,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static void addSpeedButtons(@Nullable final VoiceManager instance, final Container container,
 			final Range<Integer> range, final int width) {
 		//
-		if (!(RangeUtil.hasLowerBound(range) && hasUpperBound(range) && RangeUtil.lowerEndpoint(range) != null
+		if (!(RangeUtil.hasLowerBound(range) && RangeUtil.hasUpperBound(range) && RangeUtil.lowerEndpoint(range) != null
 				&& RangeUtil.upperEndpoint(range) != null)) {
 			//
 			return;
@@ -3137,10 +3137,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return null;
 		//
-	}
-
-	private static boolean hasUpperBound(@Nullable final Range<?> instance) {
-		return instance != null && instance.hasUpperBound();
 	}
 
 	private static void setValue(@Nullable final JSlider instance, final int n) {
@@ -3611,7 +3607,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Range<Integer> speechVolumeRange = createVolumeRange(speechApiInstance);
 		//
-		final Integer upperEnpoint = testAndApply(VoiceManager::hasUpperBound, speechVolumeRange,
+		final Integer upperEnpoint = testAndApply(RangeUtil::hasUpperBound, speechVolumeRange,
 				RangeUtil::upperEndpoint, null);
 		//
 		add(panel2,
