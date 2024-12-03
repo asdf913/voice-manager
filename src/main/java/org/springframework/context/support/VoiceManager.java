@@ -678,9 +678,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		String value();
 	}
 
-	@Group(SPEECH_RATE)
-	private AbstractButton btnSpeechRateFaster = null;
-
 	@Group("Conversion")
 	private AbstractButton btnConvertToRomaji = null;
 
@@ -8297,12 +8294,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} else if (Objects.equals(source, jsSpeechRate)) {
 			//
-			if (jsSpeechRate != null) {
-				//
-				setEnabled(btnSpeechRateFaster, intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMaximum());
-				//
-			} // if
-				//
 			Util.setText(tfSpeechRate, Util.toString(getValue(jsSpeechRate)));
 			//
 		} // if
