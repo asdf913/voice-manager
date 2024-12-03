@@ -3132,13 +3132,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static JTextComponent createProviderVersionJTextComponent(final boolean isInstalled,
-			@Nullable final Provider provider) {
-		//
-		return isInstalled ? new JTextField(getProviderVersion(provider)) : new JTextField();
-		//
-	}
-
 	@Nullable
 	private static JTextComponent createProviderPlatformJTextComponent(final boolean isInstalled,
 			@Nullable final Provider provider) {
