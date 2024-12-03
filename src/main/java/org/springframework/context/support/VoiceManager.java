@@ -679,9 +679,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Group(SPEECH_RATE)
-	private AbstractButton btnSpeechRateSlower = null;
-
-	@Group(SPEECH_RATE)
 	private AbstractButton btnSpeechRateNormal = null;
 
 	@Group(SPEECH_RATE)
@@ -6410,11 +6407,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		IntValue intValue = null;
 		//
-		if (Objects.equals(source, btnSpeechRateSlower)) {
-			//
-			intValue = new IntValue(intValue(getValue(jsSpeechRate), 0) - 1);
-			//
-		} else if (Objects.equals(source, btnSpeechRateNormal)) {
+		if (Objects.equals(source, btnSpeechRateNormal)) {
 			//
 			intValue = new IntValue(0);
 			//
@@ -8339,8 +8332,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} else if (Objects.equals(source, jsSpeechRate)) {
 			//
 			if (jsSpeechRate != null) {
-				//
-				setEnabled(btnSpeechRateSlower, intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMinimum());
 				//
 				setEnabled(btnSpeechRateFaster, intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMaximum());
 				//
