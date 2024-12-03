@@ -20,7 +20,7 @@ public abstract class RangeUtil {
 		return instance != null && instance.hasLowerBound();
 	}
 
-	public static boolean hasUpperBound(final Range<?> instance) {
+	public static boolean hasUpperBound(@Nullable final Range<?> instance) {
 		return instance != null && instance.hasUpperBound();
 	}
 
