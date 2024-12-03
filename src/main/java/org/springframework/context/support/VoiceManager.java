@@ -349,6 +349,7 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.github.curiousoddman.rgxgen.RgxGen;
 import com.google.common.base.Functions;
 import com.google.common.base.Stopwatch;
+import com.google.common.base.StopwatchUtil;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
@@ -7595,11 +7596,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.stop() : null;
 	}
 
-	@Nullable
-	private static Duration elapsed(@Nullable final Stopwatch instance) {
-		return instance != null ? instance.elapsed() : null;
-	}
-
 	private static void browse(@Nullable final Desktop instance, final URI uri) throws IOException {
 		if (instance != null) {
 			instance.browse(uri);
@@ -11801,7 +11797,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 									//
 									// elapsed
 									//
-									StringUtils.leftPad(elapsedString = Util.toString(elapsed(stopwatch)),
+									StringUtils.leftPad(elapsedString = Util.toString(StopwatchUtil.elapsed(stopwatch)),
 											maxElapsedStringLength),
 									//
 									// File

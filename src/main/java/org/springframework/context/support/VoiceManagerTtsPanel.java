@@ -30,7 +30,6 @@ import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -104,6 +103,7 @@ import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.base.StopwatchUtil;
 import com.google.common.collect.Range;
 import com.google.common.reflect.Reflection;
 
@@ -631,7 +631,7 @@ public class VoiceManagerTtsPanel extends JPanel
 				//
 			} // if
 				//
-			Util.setText(tfElapsed, Util.toString(elapsed(stop(stopwatch))));
+			Util.setText(tfElapsed, Util.toString(StopwatchUtil.elapsed(stop(stopwatch))));
 			//
 		} else if (Objects.equals(source, btnWriteVoice)) {
 			//
@@ -825,11 +825,6 @@ public class VoiceManagerTtsPanel extends JPanel
 	@Nullable
 	private static Class<?>[] getParameterTypes(@Nullable final Executable instance) {
 		return instance != null ? instance.getParameterTypes() : null;
-	}
-
-	@Nullable
-	private static Duration elapsed(@Nullable final Stopwatch instance) {
-		return instance != null ? instance.elapsed() : null;
 	}
 
 	@Nullable
