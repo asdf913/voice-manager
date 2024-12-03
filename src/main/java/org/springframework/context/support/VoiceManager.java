@@ -6386,10 +6386,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private int value = 0;
 
-		private IntValue(final int value) {
-			this.value = value;
-		}
-
 	}
 
 	private void actionPerformedForConversion(final Object source) {
