@@ -353,7 +353,7 @@ class VoiceManagerTest {
 			METHOD_SET_LIST_NAMES, METHOD_SET_SOURCE, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML,
 			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_ACTION_PERFORMED_FOR_CONVERSION,
 			METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY, METHOD_HAS_LOWER_BOUND, METHOD_HAS_UPPER_BOUND,
-			METHOD_LOWER_END_POINT, METHOD_UPPER_END_POINT, METHOD_GET_IF_NULL, METHOD_SET_LANGUAGE,
+			METHOD_LOWER_END_POINT, METHOD_GET_IF_NULL, METHOD_SET_LANGUAGE,
 			METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE, METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION,
 			METHOD_GET_ALGORITHM, METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE,
 			METHOD_SET_PREFERRED_WIDTH_2, METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS,
@@ -844,8 +844,6 @@ class VoiceManagerTest {
 		(METHOD_HAS_UPPER_BOUND = clz.getDeclaredMethod("hasUpperBound", Range.class)).setAccessible(true);
 		//
 		(METHOD_LOWER_END_POINT = clz.getDeclaredMethod("lowerEndpoint", Range.class)).setAccessible(true);
-		//
-		(METHOD_UPPER_END_POINT = clz.getDeclaredMethod("upperEndpoint", Range.class)).setAccessible(true);
 		//
 		(METHOD_GET_IF_NULL = clz.getDeclaredMethod("getIfNull", Object.class, FailableSupplier.class))
 				.setAccessible(true);
@@ -7893,23 +7891,6 @@ class VoiceManagerTest {
 	private static <C extends Comparable<C>> C lowerEndpoint(final Range<C> instance) throws Throwable {
 		try {
 			return (C) METHOD_LOWER_END_POINT.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testUpperEndpoint() throws Throwable {
-		//
-		Assertions.assertNull(upperEndpoint(null));
-		//
-		Assertions.assertEquals(ONE, upperEndpoint(Range.atMost(ONE)));
-		//
-	}
-
-	private static <C extends Comparable<C>> C upperEndpoint(final Range<C> instance) throws Throwable {
-		try {
-			return (C) METHOD_UPPER_END_POINT.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
