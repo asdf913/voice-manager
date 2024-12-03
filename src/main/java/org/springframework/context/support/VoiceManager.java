@@ -6382,8 +6382,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static class IntValue {}
-
 	private void actionPerformedForConversion(final Object source) {
 		//
 		Entry<JTextComponent, String> pair = null;
