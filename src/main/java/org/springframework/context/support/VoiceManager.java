@@ -5523,53 +5523,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private void actionPerformedForSpeak(final boolean headless) {
-		//
-		final Stopwatch stopwatch = Stopwatch.createStarted();
-		//
-		final Method method = Util.cast(Method.class, getSelectedItem(cbmSpeakMethod));
-		//
-		final Object instance = getInstance(speechApi);
-		//
-		final String text = Util.getText(tfTextTts);
-		//
-		final String voiceId = Util.toString(getSelectedItem(cbmVoiceId));
-		//
-		final int rate = intValue(getRate(), 0);
-		//
-		final int volume = Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100);
-		//
-		if (Arrays.equals(getParameterTypes(method),
-				new Class<?>[] { String.class, String.class, Integer.TYPE, Integer.TYPE })) {
-			//
-			try {
-				//
-				invoke(method, instance, text, voiceId, rate, volume);
-				//
-			} catch (final IllegalAccessException e) {
-				//
-				errorOrAssertOrShowException(headless, e);
-				//
-			} catch (final InvocationTargetException e) {
-				//
-				final Throwable targetException = e.getTargetException();
-				//
-				errorOrAssertOrShowException(headless,
-						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-								ExceptionUtils.getRootCause(e), e));
-				//
-			} // try
-				//
-		} else if (speechApi != null) {
-			//
-			speechApi.speak(text, voiceId, rate, volume);
-			//
-		} // if
-			//
-		Util.setText(tfElapsed, Util.toString(elapsed(stop(stopwatch))));
-		//
-	}
-
 	private void actionPerformedForWriteVoice(final boolean headless) {
 		//
 		final JFileChooser jfc = new JFileChooser(".");
