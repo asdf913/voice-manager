@@ -2684,12 +2684,6 @@ class VoiceManagerTest {
 		//
 		final AbstractButton btnSpeechRateSlower = new JButton();
 		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnSpeechRateSlower", btnSpeechRateSlower, true);
-			//
-		} // if
-			//
 		final ActionEvent actionEventBtnSpeechRateSlower = new ActionEvent(btnSpeechRateSlower, 0, null);
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeechRateSlower));
