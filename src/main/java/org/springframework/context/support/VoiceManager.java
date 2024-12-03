@@ -508,7 +508,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	 *      "https://github.com/mikaelgrev/miglayout/blob/master/core/src/main/java/net/miginfocom/layout/ConstraintParser.java#L780">net.miginfocom.layout.ConstraintParser.parseComponentConstraint(java.lang.String)&nbsp;Line&nbsp;534&nbsp;at&nbsp;master&nbsp;·&nbsp;mikaelgrev/miglayout</a>
 	 */
 	private static final String WMIN_ONLY_FORMAT = "wmin %1$s";
-	
+
 	private static final String ALIGN_FORMAT = "align %1$s %1$s";
 
 	private static final String ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER = "Romaji";
@@ -2919,7 +2919,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static void addSpeedButtons(@Nullable final VoiceManager instance, final Container container,
 			final Range<Integer> range, final int width) {
 		//
-		if (!(hasLowerBound(range) && hasUpperBound(range) && RangeUtil.lowerEndpoint(range) != null
+		if (!(RangeUtil.hasLowerBound(range) && hasUpperBound(range) && RangeUtil.lowerEndpoint(range) != null
 				&& RangeUtil.upperEndpoint(range) != null)) {
 			//
 			return;
@@ -3137,10 +3137,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return null;
 		//
-	}
-
-	private static boolean hasLowerBound(@Nullable final Range<?> instance) {
-		return instance != null && instance.hasLowerBound();
 	}
 
 	private static boolean hasUpperBound(@Nullable final Range<?> instance) {
@@ -3620,8 +3616,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(panel2,
 				jsSpeechVolume = new JSlider(intValue(
-						testAndApply(VoiceManager::hasLowerBound, speechVolumeRange, RangeUtil::lowerEndpoint, null),
-						0), intValue(upperEnpoint, 100)),
+						testAndApply(RangeUtil::hasLowerBound, speechVolumeRange, RangeUtil::lowerEndpoint, null), 0),
+						intValue(upperEnpoint, 100)),
 				String.format(WMIN_ONLY_FORMAT, width));
 		//
 		setSpeechVolume(valueOf(PropertyResolverUtil.getProperty(propertyResolver,

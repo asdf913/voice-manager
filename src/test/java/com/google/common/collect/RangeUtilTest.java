@@ -26,6 +26,10 @@ class RangeUtilTest {
 		//
 		Class<?>[] parameterTypes = null;
 		//
+		Object invokeStaticMethod = null;
+		//
+		String toString = null;
+		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ms[i]) == null || !Modifier.isStatic(m.getModifiers()) || m.isSynthetic()) {
@@ -55,8 +59,20 @@ class RangeUtilTest {
 					//
 			} // if
 				//
-			Assertions.assertNull(Narcissus.invokeStaticMethod(m, toArray(list)), Objects.toString(m));
+			invokeStaticMethod = Narcissus.invokeStaticMethod(m, toArray(list));
 			//
+			toString = Objects.toString(m);
+			//
+			if (Objects.equals(m.getReturnType(), Boolean.TYPE)) {
+				//
+				Assertions.assertNotNull(invokeStaticMethod, toString);
+				//
+			} else {
+				//
+				Assertions.assertNull(invokeStaticMethod, toString);
+				//
+			} // if
+				//
 		} // for
 			//
 	}
