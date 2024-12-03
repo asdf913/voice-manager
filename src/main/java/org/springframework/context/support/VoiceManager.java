@@ -508,6 +508,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	 *      "https://github.com/mikaelgrev/miglayout/blob/master/core/src/main/java/net/miginfocom/layout/ConstraintParser.java#L780">net.miginfocom.layout.ConstraintParser.parseComponentConstraint(java.lang.String)&nbsp;Line&nbsp;534&nbsp;at&nbsp;master&nbsp;·&nbsp;mikaelgrev/miglayout</a>
 	 */
 	private static final String WMIN_ONLY_FORMAT = "wmin %1$s";
+	
+	private static final String ALIGN_FORMAT = "align %1$s %1$s";
 
 	private static final String ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER = "Romaji";
 
@@ -2924,7 +2926,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		add(container, new JLabel(SPEECH_RATE), String.format("align %1$s %1$s", "50%"));
+		add(container, new JLabel(SPEECH_RATE), String.format(ALIGN_FORMAT, "50%"));
 		//
 		final JSlider jsSpeechRate = instance != null
 				? instance.jsSpeechRate = new JSlider(intValue(RangeUtil.lowerEndpoint(range), 0),
@@ -3598,7 +3600,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		if (Boolean.logicalAnd(jsSpeechRate == null, tfSpeechRate == null)) {
 			//
-			add(panel2, new JLabel(SPEECH_RATE), String.format("align %1$s %1$s", "50%"));
+			add(panel2, new JLabel(SPEECH_RATE), String.format(ALIGN_FORMAT, "50%"));
 			//
 			add(panel2,
 					tfSpeechRate = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
@@ -3609,7 +3611,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			// Speech Volume
 			//
-		add(panel2, new JLabel("Speech Volume"), String.format("align %1$s %1$s", "50%"));
+		add(panel2, new JLabel("Speech Volume"), String.format(ALIGN_FORMAT, "50%"));
 		//
 		final Range<Integer> speechVolumeRange = createVolumeRange(speechApiInstance);
 		//
