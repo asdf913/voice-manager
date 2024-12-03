@@ -17,7 +17,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.invoke.TypeDescriptor.OfField;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
@@ -385,9 +384,9 @@ public class VoiceManagerTtsPanel extends JPanel
 		final Integer upperEnpoint = testAndApply(VoiceManagerTtsPanel::hasUpperBound, speechVolumeRange,
 				RangeUtil::upperEndpoint, null);
 		//
-		add(jsSpeechVolume = new JSlider(intValue(testAndApply(VoiceManagerTtsPanel::hasLowerBound, speechVolumeRange,
-				VoiceManagerTtsPanel::lowerEndpoint, null), 0), intValue(upperEnpoint, 100)),
-				String.format("%1$s,span %2$s", GROWX, 3));
+		add(jsSpeechVolume = new JSlider(intValue(
+				testAndApply(VoiceManagerTtsPanel::hasLowerBound, speechVolumeRange, RangeUtil::lowerEndpoint, null),
+				0), intValue(upperEnpoint, 100)), String.format("%1$s,span %2$s", GROWX, 3));
 		//
 		setSpeechVolume(valueOf(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.speechVolume")), upperEnpoint);
@@ -1197,7 +1196,7 @@ public class VoiceManagerTtsPanel extends JPanel
 
 	private static void addSpeedButtons(@Nullable final VoiceManagerTtsPanel instance, final Range<Integer> range) {
 		//
-		if (!(hasLowerBound(range) && hasUpperBound(range) && lowerEndpoint(range) != null
+		if (!(hasLowerBound(range) && hasUpperBound(range) && RangeUtil.lowerEndpoint(range) != null
 				&& RangeUtil.upperEndpoint(range) != null)) {
 			//
 			return;
@@ -1207,7 +1206,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		add(instance, new JLabel(SPEECH_RATE), "aligny top");
 		//
 		final JSlider jsSpeechRate = instance != null
-				? instance.jsSpeechRate = new JSlider(intValue(lowerEndpoint(range), 0),
+				? instance.jsSpeechRate = new JSlider(intValue(RangeUtil.lowerEndpoint(range), 0),
 						intValue(RangeUtil.upperEndpoint(range), 0))
 				: null;
 		//
@@ -1426,46 +1425,9 @@ public class VoiceManagerTtsPanel extends JPanel
 	}
 
 	@Nullable
-	private static <C extends Comparable<C>> C lowerEndpoint(@Nullable final Range<C> instance) {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		try {
-			//
-			final Field lowerBound = getDeclaredField(Range.class, "lowerBound");
-			//
-			setAccessible(lowerBound, true);
-			//
-			if (get(lowerBound, instance) == null) {
-				//
-				return null;
-				//
-			} // if
-				//
-		} catch (final NoSuchFieldException | IllegalAccessException e) {
-			//
-			LoggerUtil.error(LOG, e.getMessage(), e);
-			//
-		} // try
-			//
-		return instance.lowerEndpoint();
-		//
-	}
-
-	@Nullable
 	private static Object get(@Nullable final Field field, @Nullable final Object instance)
 			throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
-	}
-
-	private static void setAccessible(@Nullable final AccessibleObject instance, final boolean flag) {
-		if (instance != null) {
-			instance.setAccessible(flag);
-		}
 	}
 
 	private static boolean hasLowerBound(@Nullable final Range<?> instance) {

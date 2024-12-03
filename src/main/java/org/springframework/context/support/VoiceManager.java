@@ -2917,7 +2917,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static void addSpeedButtons(@Nullable final VoiceManager instance, final Container container,
 			final Range<Integer> range) {
 		//
-		if (!(hasLowerBound(range) && hasUpperBound(range) && lowerEndpoint(range) != null
+		if (!(hasLowerBound(range) && hasUpperBound(range) && RangeUtil.lowerEndpoint(range) != null
 				&& RangeUtil.upperEndpoint(range) != null)) {
 			//
 			return;
@@ -2927,7 +2927,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		add(container, new JLabel(SPEECH_RATE), String.format("align %1$s %1$s", "50%"));
 		//
 		final JSlider jsSpeechRate = instance != null
-				? instance.jsSpeechRate = new JSlider(intValue(lowerEndpoint(range), 0),
+				? instance.jsSpeechRate = new JSlider(intValue(RangeUtil.lowerEndpoint(range), 0),
 						intValue(RangeUtil.upperEndpoint(range), 0))
 				: null;
 		//
@@ -3144,37 +3144,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static boolean hasUpperBound(@Nullable final Range<?> instance) {
 		return instance != null && instance.hasUpperBound();
-	}
-
-	@Nullable
-	private static <C extends Comparable<C>> C lowerEndpoint(@Nullable final Range<C> instance) {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		try {
-			//
-			final Field lowerBound = getDeclaredField(Range.class, "lowerBound");
-			//
-			setAccessible(lowerBound, true);
-			//
-			if (get(lowerBound, instance) == null) {
-				//
-				return null;
-				//
-			} // if
-				//
-		} catch (final NoSuchFieldException | IllegalAccessException e) {
-			//
-			LoggerUtil.error(LOG, e.getMessage(), e);
-			//
-		} // try
-			//
-		return instance.lowerEndpoint();
-		//
 	}
 
 	private static void setValue(@Nullable final JSlider instance, final int n) {
@@ -3648,7 +3617,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(panel2,
 				jsSpeechVolume = new JSlider(intValue(
-						testAndApply(VoiceManager::hasLowerBound, speechVolumeRange, VoiceManager::lowerEndpoint, null),
+						testAndApply(VoiceManager::hasLowerBound, speechVolumeRange, RangeUtil::lowerEndpoint, null),
 						0), intValue(upperEnpoint, 100)),
 				String.format(WMIN_ONLY_FORMAT, 300));
 		//
@@ -8764,7 +8733,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				if (range != null && !range.contains(q)) {
 					//
 					throw new IllegalStateException(String.format("Under VBR,\"quality\" cound be with in %1$s to %2$s",
-							lowerEndpoint(range), RangeUtil.upperEndpoint(range)));
+							RangeUtil.lowerEndpoint(range), RangeUtil.upperEndpoint(range)));
 					//
 				} // if
 					//
