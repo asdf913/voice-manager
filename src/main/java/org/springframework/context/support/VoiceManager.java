@@ -679,9 +679,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Group(SPEECH_RATE)
-	private AbstractButton btnSpeechRateNormal = null;
-
-	@Group(SPEECH_RATE)
 	private AbstractButton btnSpeechRateFaster = null;
 
 	@Group("Conversion")
@@ -6407,11 +6404,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		IntValue intValue = null;
 		//
-		if (Objects.equals(source, btnSpeechRateNormal)) {
-			//
-			intValue = new IntValue(0);
-			//
-		} else if (Objects.equals(source, btnSpeechRateFaster)) {
+		if (Objects.equals(source, btnSpeechRateFaster)) {
 			//
 			intValue = new IntValue(intValue(getValue(jsSpeechRate), 0) + 1);
 			//

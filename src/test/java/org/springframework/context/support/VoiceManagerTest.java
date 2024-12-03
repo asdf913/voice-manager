@@ -2702,12 +2702,6 @@ class VoiceManagerTest {
 		//
 		final AbstractButton btnSpeechRateNormal = new JButton();
 		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnSpeechRateNormal", btnSpeechRateNormal, true);
-			//
-		} // if
-			//
 		final ActionEvent actionEventBtnSpeechRateNormal = new ActionEvent(btnSpeechRateNormal, 0, null);
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeechRateNormal));
