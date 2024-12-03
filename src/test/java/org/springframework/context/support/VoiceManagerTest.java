@@ -2653,12 +2653,6 @@ class VoiceManagerTest {
 		//
 		final AbstractButton btnSpeak = new JButton();
 		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnSpeak", btnSpeak, true);
-			//
-		} // if
-			//
 		final ActionEvent actionEventBtnSpeak = new ActionEvent(btnSpeak, 0, null);
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeak));

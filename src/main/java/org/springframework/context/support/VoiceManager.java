@@ -695,9 +695,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private AbstractButton btnConvertToKatakana = null;
 
 	@Group("TTS Button")
-	private AbstractButton btnSpeak = null;
-
-	@Group("TTS Button")
 	private AbstractButton btnWriteVoice = null;
 
 	@Note("Execute")
@@ -4942,12 +4939,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
 				final int index, final boolean isSelected, final boolean cellHasFocus) {
 			//
-			if (getInstance(speechApi) instanceof SpeechApiSystemSpeechImpl) {
-				//
-				setEnabled(getSelectedItem(cbmVoiceId) != null, btnSpeak, btnWriteVoice);
-				//
-			} // if
-				//
 			final String s = Util.toString(value);
 			//
 			try {
@@ -5257,11 +5248,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		testAndRun(Util.contains(getObjectsByGroupAnnotation(this, "Import"), source),
 				() -> actionPerformedForImport(source, headless));
 		//
-		if (Objects.equals(source, btnSpeak)) {
-			//
-			actionPerformedForSpeak(headless);
-			//
-		} else if (Objects.equals(source, btnWriteVoice)) {
+		if (Objects.equals(source, btnWriteVoice)) {
 			//
 			actionPerformedForWriteVoice(headless);
 			//
