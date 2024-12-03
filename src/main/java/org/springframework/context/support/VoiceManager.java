@@ -7537,11 +7537,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null && src != null ? instance.encodeToString(src) : null;
 	}
 
-	@Nullable
-	private static Stopwatch stop(@Nullable final Stopwatch instance) {
-		return instance != null ? instance.stop() : null;
-	}
-
 	private static void browse(@Nullable final Desktop instance, final URI uri) throws IOException {
 		if (instance != null) {
 			instance.browse(uri);
