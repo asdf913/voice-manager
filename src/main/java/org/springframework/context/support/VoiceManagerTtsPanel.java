@@ -105,6 +105,7 @@ import org.springframework.core.env.PropertyResolverUtil;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.StopwatchUtil;
 import com.google.common.collect.Range;
+import com.google.common.collect.RangeUtil;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -382,7 +383,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		final Range<Integer> speechVolumeRange = createVolumeRange(speechApiInstance);
 		//
 		final Integer upperEnpoint = testAndApply(VoiceManagerTtsPanel::hasUpperBound, speechVolumeRange,
-				VoiceManagerTtsPanel::upperEndpoint, null);
+				RangeUtil::upperEndpoint, null);
 		//
 		add(jsSpeechVolume = new JSlider(intValue(testAndApply(VoiceManagerTtsPanel::hasLowerBound, speechVolumeRange,
 				VoiceManagerTtsPanel::lowerEndpoint, null), 0), intValue(upperEnpoint, 100)),
@@ -1197,7 +1198,7 @@ public class VoiceManagerTtsPanel extends JPanel
 	private static void addSpeedButtons(@Nullable final VoiceManagerTtsPanel instance, final Range<Integer> range) {
 		//
 		if (!(hasLowerBound(range) && hasUpperBound(range) && lowerEndpoint(range) != null
-				&& upperEndpoint(range) != null)) {
+				&& RangeUtil.upperEndpoint(range) != null)) {
 			//
 			return;
 			//
@@ -1207,7 +1208,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 		final JSlider jsSpeechRate = instance != null
 				? instance.jsSpeechRate = new JSlider(intValue(lowerEndpoint(range), 0),
-						intValue(upperEndpoint(range), 0))
+						intValue(RangeUtil.upperEndpoint(range), 0))
 				: null;
 		//
 		add(instance, jsSpeechRate, String.format("%1$s,span %2$s", GROWX, 7));
@@ -1465,11 +1466,6 @@ public class VoiceManagerTtsPanel extends JPanel
 		if (instance != null) {
 			instance.setAccessible(flag);
 		}
-	}
-
-	@Nullable
-	private static <C extends Comparable<C>> C upperEndpoint(@Nullable final Range<C> instance) {
-		return instance != null ? instance.upperEndpoint() : null;
 	}
 
 	private static boolean hasLowerBound(@Nullable final Range<?> instance) {

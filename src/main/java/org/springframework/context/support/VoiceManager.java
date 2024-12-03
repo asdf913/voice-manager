@@ -355,6 +355,7 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
 import com.google.common.collect.Range;
+import com.google.common.collect.RangeUtil;
 import com.google.common.collect.Table;
 import com.google.common.collect.TableUtil;
 import com.google.common.reflect.Reflection;
@@ -2917,7 +2918,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final Range<Integer> range) {
 		//
 		if (!(hasLowerBound(range) && hasUpperBound(range) && lowerEndpoint(range) != null
-				&& upperEndpoint(range) != null)) {
+				&& RangeUtil.upperEndpoint(range) != null)) {
 			//
 			return;
 			//
@@ -2927,7 +2928,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final JSlider jsSpeechRate = instance != null
 				? instance.jsSpeechRate = new JSlider(intValue(lowerEndpoint(range), 0),
-						intValue(upperEndpoint(range), 0))
+						intValue(RangeUtil.upperEndpoint(range), 0))
 				: null;
 		//
 		add(container, jsSpeechRate, String.format(WMIN_ONLY_FORMAT, 300)// TODO
@@ -3174,11 +3175,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return instance.lowerEndpoint();
 		//
-	}
-
-	@Nullable
-	private static <C extends Comparable<C>> C upperEndpoint(@Nullable final Range<C> instance) {
-		return instance != null ? instance.upperEndpoint() : null;
 	}
 
 	private static void setValue(@Nullable final JSlider instance, final int n) {
@@ -8768,7 +8764,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				if (range != null && !range.contains(q)) {
 					//
 					throw new IllegalStateException(String.format("Under VBR,\"quality\" cound be with in %1$s to %2$s",
-							lowerEndpoint(range), range.upperEndpoint()));
+							lowerEndpoint(range), RangeUtil.upperEndpoint(range)));
 					//
 				} // if
 					//
