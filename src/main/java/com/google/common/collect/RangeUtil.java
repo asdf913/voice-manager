@@ -16,7 +16,7 @@ public abstract class RangeUtil {
 	private RangeUtil() {
 	}
 
-	public static boolean hasLowerBound(final Range<?> instance) {
+	public static boolean hasLowerBound(@Nullable final Range<?> instance) {
 		return instance != null && instance.hasLowerBound();
 	}
 
