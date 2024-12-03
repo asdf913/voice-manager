@@ -1053,7 +1053,7 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_ADD_SPEED_BUTTONS = clz.getDeclaredMethod("addSpeedButtons", VoiceManager.class, Container.class,
-				Range.class)).setAccessible(true);
+				Range.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_SET_MAJOR_TICK_SPACING = clz.getDeclaredMethod("setMajorTickSpacing", JSlider.class, Integer.TYPE))
 				.setAccessible(true);
@@ -9945,26 +9945,31 @@ class VoiceManagerTest {
 	@Test
 	void testAddSpeedButtons() {
 		//
-		Assertions.assertDoesNotThrow(() -> addSpeedButtons(null, null, null));
+		Assertions.assertDoesNotThrow(() -> addSpeedButtons(null, null, null, 0));
 		//
 		Assertions.assertDoesNotThrow(
-				() -> addSpeedButtons(null, null, Util.cast(Range.class, Narcissus.allocateInstance(Range.class))));
+				() -> addSpeedButtons(null, null, Util.cast(Range.class, Narcissus.allocateInstance(Range.class)), 0));
 		//
-		Assertions.assertDoesNotThrow(() -> addSpeedButtons(null, null, Range.atLeast(Integer.valueOf(-1))));
+		Assertions.assertDoesNotThrow(() -> addSpeedButtons(null, null, Range.atLeast(Integer.valueOf(-1)), 0));
 		//
 		final Range<Integer> range = Range.open(Integer.valueOf(-1), Integer.valueOf(1));
 		//
-		Assertions.assertDoesNotThrow(() -> addSpeedButtons(null, null, range));
+		Assertions.assertDoesNotThrow(() -> addSpeedButtons(null, null, range, 0));
 		//
-		Assertions.assertDoesNotThrow(() -> addSpeedButtons(
-				Util.cast(VoiceManager.class, Narcissus.allocateInstance(VoiceManager.class)), new JPanel(), range));
+		final VoiceManager voiceManager = Util.cast(VoiceManager.class, Narcissus.allocateInstance(VoiceManager.class));
+		//
+		final Container container = new JPanel();
+		//
+		Assertions.assertDoesNotThrow(() -> addSpeedButtons(voiceManager, container, range, 0));
+		//
+		Assertions.assertDoesNotThrow(() -> addSpeedButtons(voiceManager, container, range, -1));
 		//
 	}
 
 	private static void addSpeedButtons(final VoiceManager instance, final Container container,
-			final Range<Integer> range) throws Throwable {
+			final Range<Integer> range, final int width) throws Throwable {
 		try {
-			METHOD_ADD_SPEED_BUTTONS.invoke(null, instance, container, range);
+			METHOD_ADD_SPEED_BUTTONS.invoke(null, instance, container, range, width);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

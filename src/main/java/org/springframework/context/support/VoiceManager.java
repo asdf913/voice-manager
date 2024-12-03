@@ -2915,7 +2915,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static void addSpeedButtons(@Nullable final VoiceManager instance, final Container container,
-			final Range<Integer> range) {
+			final Range<Integer> range, final int width) {
 		//
 		if (!(hasLowerBound(range) && hasUpperBound(range) && RangeUtil.lowerEndpoint(range) != null
 				&& RangeUtil.upperEndpoint(range) != null)) {
@@ -2931,8 +2931,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						intValue(RangeUtil.upperEndpoint(range), 0))
 				: null;
 		//
-		add(container, jsSpeechRate, String.format(WMIN_ONLY_FORMAT, 300)// TODO
-		);
+		add(container, jsSpeechRate, String.format(WMIN_ONLY_FORMAT, width));
 		//
 		setMajorTickSpacing(jsSpeechRate, 1);
 		//
@@ -3588,10 +3587,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		panel2.setLayout(cloneLayoutManager());
 		//
+		final int width = 300;
+		//
 		if (Boolean.logicalAnd(Util.test(predicate, "min"), Util.test(predicate, "max"))) {
 			//
 			addSpeedButtons(this, panel2, createRange(toInteger(testAndApply(predicate, "min", function, null)),
-					toInteger(testAndApply(predicate, "max", function, null))));
+					toInteger(testAndApply(predicate, "max", function, null))), width);
 			//
 		} // if
 			//
@@ -3619,7 +3620,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				jsSpeechVolume = new JSlider(intValue(
 						testAndApply(VoiceManager::hasLowerBound, speechVolumeRange, RangeUtil::lowerEndpoint, null),
 						0), intValue(upperEnpoint, 100)),
-				String.format(WMIN_ONLY_FORMAT, 300));
+				String.format(WMIN_ONLY_FORMAT, width));
 		//
 		setSpeechVolume(valueOf(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.speechVolume")), upperEnpoint);
