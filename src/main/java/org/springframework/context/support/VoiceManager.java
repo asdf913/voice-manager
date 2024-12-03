@@ -5202,11 +5202,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				FailableStreamUtil.stream(FailableStreamUtil.map(fs, f -> FieldUtils.readField(f, this, true))),
 				Objects::nonNull)), source), () -> actionPerformedForSystemClipboardAnnotated(nonTest, source));
 		//
-		// Speech Rate
-		//
-		testAndRun(Util.contains(getObjectsByGroupAnnotation(this, SPEECH_RATE), source),
-				() -> actionPerformedForSpeechRate(source));
-		//
 		// Conversion
 		//
 		testAndRun(Util.contains(getObjectsByGroupAnnotation(this, "Conversion"), source),
@@ -6398,28 +6393,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			this.value = value;
 		}
 
-	}
-
-	private void actionPerformedForSpeechRate(final Object source) {
-		//
-		IntValue intValue = null;
-		//
-		if (Objects.equals(source, btnSpeechRateFaster)) {
-			//
-			intValue = new IntValue(intValue(getValue(jsSpeechRate), 0) + 1);
-			//
-		} // if
-			//
-		if (intValue != null) {
-			//
-			setValue(jsSpeechRate, intValue.value);
-			//
-			return;
-			//
-		} // if
-			//
-		throw new IllegalStateException();
-		//
 	}
 
 	private void actionPerformedForConversion(final Object source) {
