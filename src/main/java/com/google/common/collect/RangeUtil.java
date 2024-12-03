@@ -3,6 +3,8 @@ package com.google.common.collect;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 
+import javax.annotation.Nullable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -52,7 +54,7 @@ public abstract class RangeUtil {
 		return field != null ? field.get(instance) : null;
 	}
 
-	private static void setAccessible(final AccessibleObject instance, final boolean flag) {
+	private static void setAccessible(@Nullable final AccessibleObject instance, final boolean flag) {
 		if (instance != null) {
 			instance.setAccessible(flag);
 		}
