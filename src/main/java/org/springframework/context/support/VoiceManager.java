@@ -3518,9 +3518,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		add(panel, jlListNameCount = new JLabel(), String.format("wmax %1$s", 20));
 		//
-		testAndRun(StringUtils.isNotBlank(tags), () -> {
-			keyReleased(new KeyEvent(tfListNames, 0, 0, 0, 0, ' '));
-		});
+		testAndRun(StringUtils.isNotBlank(tags), () -> keyReleased(new KeyEvent(tfListNames, 0, 0, 0, 0, ' ')));
 		//
 		// JLPT level
 		//
