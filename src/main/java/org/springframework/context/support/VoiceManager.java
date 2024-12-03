@@ -2943,7 +2943,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						intValue(upperEndpoint(range), 0))
 				: null;
 		//
-		add(container, jsSpeechRate, String.format("wmin %1$s", 300)// TODO
+		add(container, jsSpeechRate, String.format(WMIN_ONLY_FORMAT, 300)// TODO
 		);
 		//
 		setMajorTickSpacing(jsSpeechRate, 1);
@@ -3661,7 +3661,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			add(panel2,
 					tfSpeechRate = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 							"org.springframework.context.support.VoiceManager.speechRate")),
-					String.format("wmin %1$s", 27));
+					String.format(WMIN_ONLY_FORMAT, 27));
 			//
 		} // if
 			//
@@ -3678,7 +3678,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				jsSpeechVolume = new JSlider(intValue(
 						testAndApply(VoiceManager::hasLowerBound, speechVolumeRange, VoiceManager::lowerEndpoint, null),
 						0), intValue(upperEnpoint, 100)),
-				String.format("wmin %1$s", 300));
+				String.format(WMIN_ONLY_FORMAT, 300));
 		//
 		setSpeechVolume(valueOf(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.speechVolume")), upperEnpoint);
