@@ -16,11 +16,11 @@ public abstract class RangeUtil {
 	private RangeUtil() {
 	}
 
-	public static <C extends Comparable<C>> C upperEndpoint(final Range<C> instance) {
+	public static <C extends Comparable<C>> C upperEndpoint(@Nullable final Range<C> instance) {
 		return instance != null ? instance.upperEndpoint() : null;
 	}
 
-	public static <C extends Comparable<C>> C lowerEndpoint(final Range<C> instance) {
+	public static <C extends Comparable<C>> C lowerEndpoint(@Nullable final Range<C> instance) {
 		//
 		if (instance == null) {
 			//
@@ -50,7 +50,7 @@ public abstract class RangeUtil {
 		//
 	}
 
-	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+	private static Object get(@Nullable final Field field, final Object instance) throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
 	}
 
@@ -60,7 +60,8 @@ public abstract class RangeUtil {
 		}
 	}
 
-	private static Field getDeclaredField(final Class<?> instance, final String name) throws NoSuchFieldException {
+	private static Field getDeclaredField(@Nullable final Class<?> instance, final String name)
+			throws NoSuchFieldException {
 		return instance != null ? instance.getDeclaredField(name) : null;
 	}
 
