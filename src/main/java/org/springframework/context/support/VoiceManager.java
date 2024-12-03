@@ -6382,11 +6382,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static class IntValue {
-
-		private int value = 0;
-
-	}
+	private static class IntValue {}
 
 	private void actionPerformedForConversion(final Object source) {
 		//
