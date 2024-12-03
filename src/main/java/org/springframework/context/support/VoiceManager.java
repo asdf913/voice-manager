@@ -692,9 +692,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Group("Conversion")
 	private AbstractButton btnConvertToKatakana = null;
 
-	@Group("TTS Button")
-	private AbstractButton btnWriteVoice = null;
-
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
@@ -5233,11 +5230,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		testAndRun(Util.contains(getObjectsByGroupAnnotation(this, "Import"), source),
 				() -> actionPerformedForImport(source, headless));
 		//
-		if (Objects.equals(source, btnWriteVoice)) {
-			//
-			actionPerformedForWriteVoice(headless);
-			//
-		} else if (Objects.equals(source, btnExecute)) {
+		if (Objects.equals(source, btnExecute)) {
 			//
 			actionPerformedForExecute(headless, nonTest);
 			//
@@ -5515,52 +5508,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return Util.toList(
 				FailableStreamUtil.stream(FailableStreamUtil.map(fs, f -> FieldUtils.readField(f, instance, true))));
 		//
-	}
-
-	private void actionPerformedForWriteVoice(final boolean headless) {
-		//
-		final JFileChooser jfc = new JFileChooser(".");
-		//
-		setFileSelectionMode(jfc, JFileChooser.FILES_ONLY);
-		//
-		if (showSaveDialog(jfc, null) != JFileChooser.APPROVE_OPTION) {
-			//
-			return;
-			//
-		} //
-			//
-		final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
-		//
-		final File file = getSelectedFile(jfc);
-		//
-		ObjectMap.setObject(objectMap, SpeechApi.class, speechApi);
-		//
-		ObjectMap.setObject(objectMap, File.class, file);
-		//
-		writeVoiceToFile(objectMap, Util.getText(tfTextTts), Util.toString(getSelectedItem(cbmVoiceId))
-		//
-				, intValue(getRate(), 0)// rate
-				//
-				, Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100)// volume
-		);
-		//
-		final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory, FORMAT,
-				getSelectedItem(cbmAudioFormatWrite));
-		//
-		if (byteConverter != null) {
-			//
-			try {
-				//
-				FileUtils.writeByteArrayToFile(file, byteConverter.convert(Files.readAllBytes(Path.of(toURI(file)))));
-				//
-			} catch (final IOException e) {
-				//
-				errorOrAssertOrShowException(headless, e);
-				//
-			} // try
-				//
-		} // if
-			//
 	}
 
 	private static int showSaveDialog(@Nullable final JFileChooser instance, @Nullable final Component parent)
