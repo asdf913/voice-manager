@@ -3150,14 +3150,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		add(container, new JLabel(SPEECH_RATE), "aligny top");
+		add(container, new JLabel(SPEECH_RATE), String.format("align %1$s %1$s", "50%"));
 		//
 		final JSlider jsSpeechRate = instance != null
 				? instance.jsSpeechRate = new JSlider(intValue(lowerEndpoint(range), 0),
 						intValue(upperEndpoint(range), 0))
 				: null;
 		//
-		add(container, jsSpeechRate, String.format("%1$s,span %2$s", GROWX, 7));
+		add(container, jsSpeechRate, String.format("wmin %1$s", 300)// TODO
+		);
 		//
 		setMajorTickSpacing(jsSpeechRate, 1);
 		//
@@ -3167,7 +3168,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final JTextComponent tfSpeechRate = instance != null ? instance.tfSpeechRate = new JTextField() : null;
 		//
-		add(container, tfSpeechRate, String.format("%1$s,width %2$s", WRAP, 24));
+		add(container, tfSpeechRate, String.format("align %1$s %1$s,width %2$s", "50%", 20));
 		//
 		setEditable(false, tfSpeechRate);
 		//
@@ -3176,35 +3177,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						"org.springframework.context.support.VoiceManager.speechRate"),
 				a -> instance.stateChanged(new ChangeEvent(a)));
 		//
-		add(container, new JLabel(""));
-		//
-		final AbstractButton btnSpeechRateSlower = instance != null
-				? instance.btnSpeechRateSlower = new JButton("Slower")
-				: null;
-		//
-		add(container, btnSpeechRateSlower);
-		//
-		final AbstractButton btnSpeechRateNormal = instance != null
-				? instance.btnSpeechRateNormal = new JButton("Normal")
-				: null;
-		//
-		add(container, btnSpeechRateNormal);
-		//
-		final AbstractButton btnSpeechRateFaster = instance != null
-				? instance.btnSpeechRateFaster = new JButton("Faster")
-				: null;
-		//
-		add(container, btnSpeechRateFaster, WRAP);
-		//
-		final Double maxWidth = ObjectUtils.max(getPreferredWidth(btnSpeechRateSlower),
-				getPreferredWidth(btnSpeechRateNormal), getPreferredWidth(btnSpeechRateFaster));
-		//
-		if (maxWidth != null) {
-			//
-			setPreferredWidth(maxWidth.intValue(), btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster);
-			//
-		} // if
-			//
 	}
 
 	@Nullable
@@ -3875,9 +3847,73 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		cbUseTtsVoice.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.useTtsVoice")));
 		//
+		// Speech Rate
+		//
+		final Object speechApiInstance = getInstance(speechApi);
+		//
+		final Lookup lookup = Util.cast(Lookup.class, speechApiInstance);
+		//
+		final Predicate<String> predicate = a -> contains(lookup, "rate", a);
+		//
+		final FailableFunction<String, Object, RuntimeException> function = a -> get(lookup, "rate", a);
+		//
+		final JPanel panel2 = new JPanel();
+		//
+		panel2.setLayout(cloneLayoutManager());
+		//
+		if (Boolean.logicalAnd(Util.test(predicate, "min"), Util.test(predicate, "max"))) {
+			//
+			addSpeedButtons(this, panel2, createRange(toInteger(testAndApply(predicate, "min", function, null)),
+					toInteger(testAndApply(predicate, "max", function, null))));
+			//
+		} // if
+			//
+		if (jsSpeechRate == null && tfSpeechRate == null) {
+			//
+			add(panel2, new JLabel(SPEECH_RATE), String.format("align %1$s %1$s", "50%"));
+			//
+			add(panel2,
+					tfSpeechRate = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+							"org.springframework.context.support.VoiceManager.speechRate")),
+					String.format("wmin %1$s", 27));
+			//
+		} // if
+			//
+			// Speech Volume
+			//
+		add(panel2, new JLabel("Speech Volume"), String.format("align %1$s %1$s", "50%"));
+		//
+		final Range<Integer> speechVolumeRange = createVolumeRange(speechApiInstance);
+		//
+		final Integer upperEnpoint = testAndApply(VoiceManager::hasUpperBound, speechVolumeRange,
+				VoiceManager::upperEndpoint, null);
+		//
+		add(panel2,
+				jsSpeechVolume = new JSlider(intValue(
+						testAndApply(VoiceManager::hasLowerBound, speechVolumeRange, VoiceManager::lowerEndpoint, null),
+						0), intValue(upperEnpoint, 100)),
+				String.format("wmin %1$s", 300));
+		//
+		setSpeechVolume(valueOf(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.speechVolume")), upperEnpoint);
+		//
+		setMajorTickSpacing(jsSpeechVolume, 10);
+		//
+		setPaintTicks(jsSpeechVolume, true);
+		//
+		setPaintLabels(jsSpeechVolume, true);
+		//
+		add(panel2, tfSpeechVolume = new JTextField(), String.format("align %1$s %1$s,wmin %2$s", "50%", 27));
+		//
 		// Audio Format
 		//
-		add(panel, new JComboBox(cbmAudioFormatExecute = new DefaultComboBoxModel<Object>()));
+		add(panel2, new JComboBox(cbmAudioFormatExecute = new DefaultComboBoxModel<Object>()));
+		//
+		add(panel, panel2, String.format("%1$s,span %2$s", WRAP, 21));
+		//
+		add(panel, new JLabel(""));
+		//
+		add(panel, new JLabel(""));
 		//
 		add(panel, btnExecute = new JButton("Execute"), String.format(SPAN_ONLY_FORMAT, 3));
 		//
@@ -3916,6 +3952,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		addActionListener(this, btnExecute, btnConvertToRomaji, btnConvertToHiraganaOrKatakana, btnConvertToKatakana,
 				btnCopyRomaji, btnCopyHiragana, btnCopyKatakana, btnPronunciationPageUrlCheck, btnIpaSymbol,
 				btnCheckPronunciation, btnPlayPronunciationAudio);
+		//
+		addChangeListener(this, jsSpeechVolume, jsSpeechRate);
 		//
 		setEnabled(voiceIds != null, cbUseTtsVoice);
 		//
