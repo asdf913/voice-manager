@@ -968,7 +968,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		// the "java.lang.Number" instance to the
 		// "javax.swing.JFrame.setDefaultCloseOperation(int)" method
 		//
-		final Iterable<?> bpps = values(
+		final Iterable<?> bpps = Util.values(
 				ListableBeanFactoryUtil.getBeansOfType(configurableListableBeanFactory, BeanPostProcessor.class));
 		//
 		final Number defaultCloseOperation = getDefaultCloseOperation(bpps);
@@ -1736,8 +1736,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map = IValue0Util
 				.getValue0(getWorkbookClassFailableSupplierMap());
 		//
-		final List<Class<? extends Workbook>> classes = Util.toList(
-				Util.filter(Util.stream(Util.keySet(map)), x -> Boolean.logicalOr(Objects.equals(Util.getName(x), toString),
+		final List<Class<? extends Workbook>> classes = Util.toList(Util.filter(Util.stream(Util.keySet(map)),
+				x -> Boolean.logicalOr(Objects.equals(Util.getName(x), toString),
 						StringUtils.endsWithIgnoreCase(Util.getName(x), toString))));
 		//
 		final int size = IterableUtils.size(classes);
@@ -2159,8 +2159,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				() -> add(craeteSpeechApiInstallationWarningJPanel(microsoftSpeechPlatformRuntimeDownloadPageUrl),
 						WRAP));
 		//
-		final Iterable<Component> cs = values(
-				ListableBeanFactoryUtil.getBeansOfType(applicationContext, Component.class));
+		final Iterable<Component> cs = Util
+				.values(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Component.class));
 		//
 		Component component = null;
 		//
@@ -5640,9 +5640,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 								ImageWriterSpi.class),
 						x -> Narcissus.getField(x, getDeclaredField(Util.getClass(x), "map")), null));
 		//
-		final List<String> classNames = testAndApply(Objects::nonNull,
-				Util.toList(
-						Util.map(Util.stream(Util.keySet(imageWriterSpis)), x -> Util.getName(Util.cast(Class.class, x)))),
+		final List<String> classNames = testAndApply(Objects::nonNull, Util.toList(
+				Util.map(Util.stream(Util.keySet(imageWriterSpis)), x -> Util.getName(Util.cast(Class.class, x)))),
 				ArrayList::new, null);
 		//
 		final String commonPrefix = StringUtils.getCommonPrefix(toArray(classNames, new String[] {}));
@@ -6802,7 +6801,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				ObjectMap.setObject(objectMap, FileFormat.class, fileFormat);
 				//
-				exportMicrosoftAccess(objectMap, values(
+				exportMicrosoftAccess(objectMap, Util.values(
 						ListableBeanFactoryUtil.getBeansOfType(configurableListableBeanFactory, DataSource.class)));
 				//
 			} // if
@@ -6935,11 +6934,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static String getFileExtension(@Nullable final FileFormat instance) {
 		return instance != null ? instance.getFileExtension() : null;
-	}
-
-	@Nullable
-	private static <V> Collection<V> values(@Nullable final Map<?, V> instance) {
-		return instance != null ? instance.values() : null;
 	}
 
 	private static void exportMicrosoftAccess(final ObjectMap objectMap, @Nullable final Iterable<DataSource> dss)

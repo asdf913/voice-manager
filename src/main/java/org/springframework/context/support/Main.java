@@ -591,7 +591,7 @@ public class Main {
 			//
 		} // if
 			//
-		return IterableUtils.first(beans.values());
+		return IterableUtils.first(Util.values(beans));
 		//
 	}
 

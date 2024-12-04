@@ -808,7 +808,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		} // if
 			//
-		saveAudio(headless, jfc, audioUrls != null ? audioUrls.values() : null);
+		saveAudio(headless, jfc, Util.values(audioUrls));
 		//
 	}
 

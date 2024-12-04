@@ -358,8 +358,8 @@ class VoiceManagerTest {
 			METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC,
 			METHOD_IMPORT_BY_WORK_BOOK_FILES, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS,
 			METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME,
-			METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT, METHOD_SET_SPEECH_VOLUME, METHOD_VALUES,
-			METHOD_EXPORT_MICROSOFT_ACCESS, METHOD_IMPORT_RESULT_SET, METHOD_CREATE_VOICE_ID_WARNING_PANEL,
+			METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT, METHOD_SET_SPEECH_VOLUME, METHOD_EXPORT_MICROSOFT_ACCESS,
+			METHOD_IMPORT_RESULT_SET, METHOD_CREATE_VOICE_ID_WARNING_PANEL,
 			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_GET_EMPTY_FILE_PATH,
 			METHOD_SET_LOCALE_ID_SHEET, METHOD_ADD_LOCALE_ID_ROW, METHOD_SET_FOCUS_CYCLE_ROOT,
 			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP,
@@ -888,8 +888,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_SET_SPEECH_VOLUME = clz.getDeclaredMethod("setSpeechVolume", Number.class, Number.class))
 				.setAccessible(true);
-		//
-		(METHOD_VALUES = clz.getDeclaredMethod("values", Map.class)).setAccessible(true);
 		//
 		(METHOD_EXPORT_MICROSOFT_ACCESS = clz.getDeclaredMethod("exportMicrosoftAccess", CLASS_OBJECT_MAP,
 				Iterable.class)).setAccessible(true);
@@ -8327,27 +8325,6 @@ class VoiceManagerTest {
 	private void setSpeechVolume(final Number speechVolume, final Number upperEnpoint) throws Throwable {
 		try {
 			METHOD_SET_SPEECH_VOLUME.invoke(instance, speechVolume, upperEnpoint);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testValues() throws Throwable {
-		//
-		Assertions.assertEquals(Collections.emptySet(), values(Collections.emptyMap()));
-		//
-	}
-
-	private static <V> Collection<V> values(final Map<?, V> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_VALUES.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Collection) {
-				return (Collection) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

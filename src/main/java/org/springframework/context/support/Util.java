@@ -1192,6 +1192,10 @@ public abstract class Util {
 		return instance != null ? instance.keySet() : null;
 	}
 
+	static <V> Collection<V> values(final Map<?, V> instance) {
+		return instance != null ? instance.values() : null;
+	}
+
 	@Nullable
 	private static <T> IValue0<Iterator<T>> iterator(@Nullable final Class<?> clz, final Object instance)
 			throws ReflectiveOperationException, IOException {
