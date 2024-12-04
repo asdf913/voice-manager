@@ -3410,7 +3410,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final String name = name(Util.cast(Enum.class, value));
 				//
-				if (containsKey(yomiNameMapTemp, name)) {
+				if (Util.containsKey(yomiNameMapTemp, name)) {
 					//
 					return VoiceManager.getListCellRendererComponent(listCellRenderer, list,
 							Util.get(yomiNameMapTemp, name), index, isSelected, cellHasFocus);
@@ -4975,10 +4975,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static boolean containsKey(@Nullable final Map<?, ?> instance, @Nullable final Object key) {
-		return instance != null && instance.containsKey(key);
-	}
-
 	@Nullable
 	private static Integer valueOf(@Nullable final String instance) {
 		try {
@@ -5370,7 +5366,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-		if (containsKey(audioUrls, preferredPronunciationAudioFormat)) {
+		if (Util.containsKey(audioUrls, preferredPronunciationAudioFormat)) {
 			//
 			setSelectedItem(mcbmAudioFormat, preferredPronunciationAudioFormat);
 			//
@@ -6211,7 +6207,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (final Map map : maps) {
 			//
-			if (containsKey(map, key)) {
+			if (Util.containsKey(map, key)) {
 				//
 				value = Util.get(map, key);
 				//
@@ -6255,7 +6251,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		for (final Map<?, ?> m : maps) {
 			//
-			if (m == null || !containsKey(m, key)) {
+			if (m == null || !Util.containsKey(m, key)) {
 				//
 				continue;
 				//
@@ -8652,7 +8648,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				String string = Util.toString(quality);
 				//
-				if (containsKey(map, string) || containsKey(map, string = StringUtils.lowerCase(string))) {
+				if (Util.containsKey(map, string) || Util.containsKey(map, string = StringUtils.lowerCase(string))) {
 					//
 					setQuality(Util.get(map, string));
 					//
@@ -10133,9 +10129,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			String audioUrl = null;
 			//
-			if (StringUtils.isBlank(
-					audioUrl = testAndApply(VoiceManager::containsKey, audioUrls = pronunciation.getAudioUrls(),
-							vm != null ? vm.preferredPronunciationAudioFormat : null, Util::get, null))) {
+			if (StringUtils.isBlank(audioUrl = testAndApply(Util::containsKey, audioUrls = pronunciation.getAudioUrls(),
+					vm != null ? vm.preferredPronunciationAudioFormat : null, Util::get, null))) {
 				//
 				final Entry<String, String> entry = testAndApply(CollectionUtils::isNotEmpty, Util.entrySet(audioUrls),
 						x -> IterableUtils.get(x, 0), null);
@@ -10951,7 +10946,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final Object key = args[0];
 				//
-				if (!containsKey(map, key)) {
+				if (!Util.containsKey(map, key)) {
 					//
 					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
 							testAndApply(IH::isArray, Util.cast(Class.class, key), Util::getSimpleName, x -> key)));
@@ -10962,7 +10957,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} else if (Objects.equals(methodName, "containsObject") && args != null && args.length > 0) {
 				//
-				return Unit.with(Boolean.valueOf(containsKey(map, args[0])));
+				return Unit.with(Boolean.valueOf(Util.containsKey(map, args[0])));
 				//
 			} else if (Objects.equals(methodName, "setObject") && args != null && args.length > 1) {
 				//
@@ -10984,7 +10979,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final Object key = args[0];
 				//
-				if (!containsKey(map, key)) {
+				if (!Util.containsKey(map, key)) {
 					//
 					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
 					//
@@ -11012,7 +11007,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final Object key = args[0];
 				//
-				if (!containsKey(map, key)) {
+				if (!Util.containsKey(map, key)) {
 					//
 					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
 					//
@@ -11022,7 +11017,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} else if (Objects.equals(methodName, "containsKey") && args != null && args.length > 0) {
 				//
-				return Unit.with(containsKey(map, args[0]));
+				return Unit.with(Util.containsKey(map, args[0]));
 				//
 			} else if (Objects.equals(methodName, "setObject") && args != null && args.length > 1) {
 				//
@@ -11044,7 +11039,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final Object key = args[0];
 				//
-				if (!containsKey(map, key)) {
+				if (!Util.containsKey(map, key)) {
 					//
 					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
 					//
@@ -11054,7 +11049,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} else if (Objects.equals(methodName, "containsKey") && args != null && args.length > 0) {
 				//
-				return Unit.with(containsKey(map, args[0]));
+				return Unit.with(Util.containsKey(map, args[0]));
 				//
 			} else if (Objects.equals(methodName, "setInt") && args != null && args.length > 1) {
 				//
@@ -11076,7 +11071,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final Object key = args[0];
 				//
-				if (!containsKey(map, key)) {
+				if (!Util.containsKey(map, key)) {
 					//
 					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
 					//
@@ -13634,7 +13629,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			final Map<?, ?> map = Util.cast(Map.class, obj);
 			//
-			if (!containsKey(map, type) || Util.get(map, type) == null) {
+			if (!Util.containsKey(map, type) || Util.get(map, type) == null) {
 				//
 				return null;
 				//

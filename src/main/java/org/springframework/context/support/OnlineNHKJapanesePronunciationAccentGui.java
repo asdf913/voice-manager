@@ -694,10 +694,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 	}
 
-	private static boolean containsKey(@Nullable final Map<?, ?> instance, @Nullable final Object key) {
-		return instance != null && instance.containsKey(key);
-	}
-
 	private static void saveFile(@Nullable final File file, final String url) throws Exception {
 		//
 		try (final InputStream is = openStream(testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null))) {
@@ -793,7 +789,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		final JFileChooser jfc = new JFileChooser(".");
 		//
-		if (containsKey(audioUrls, audioFormat)) {
+		if (Util.containsKey(audioUrls, audioFormat)) {
 			//
 			if (!headless && jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//

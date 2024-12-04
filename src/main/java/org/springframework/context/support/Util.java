@@ -1184,7 +1184,7 @@ public abstract class Util {
 		//
 	}
 
-	private static boolean containsKey(@Nullable final Map<?, ?> instance, @Nullable final Object key) {
+	static boolean containsKey(@Nullable final Map<?, ?> instance, @Nullable final Object key) {
 		return instance != null && instance.containsKey(key);
 	}
 

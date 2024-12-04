@@ -445,7 +445,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 					//
 					final Object key = args[0];
 					//
-					if (!containsKey(getObjects(), key)) {
+					if (!Util.containsKey(getObjects(), key)) {
 						//
 						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
 								testAndApply(IH::isArray, Util.cast(Class.class, key), Util::getSimpleName, x -> key)));
@@ -466,10 +466,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				//
 			throw new Throwable(methodName);
 			//
-		}
-
-		private static boolean containsKey(@Nullable final Map<?, ?> instance, final Object key) {
-			return instance != null && instance.containsKey(key);
 		}
 
 		private static boolean isArray(@Nullable final OfField<?> instance) {

@@ -243,7 +243,7 @@ public class VoiceManagerTtsPanel extends JPanel
 					//
 					final Object key = args[0];
 					//
-					if (!containsKey(os, key)) {
+					if (!Util.containsKey(os, key)) {
 						//
 						throw new IllegalStateException(String.format("Key [%1$s] Not Found",
 								testAndApply(IH::isArray, Util.cast(Class.class, key), Util::getSimpleName, x -> key)));
@@ -258,10 +258,6 @@ public class VoiceManagerTtsPanel extends JPanel
 				//
 			throw new Throwable(methodName);
 			//
-		}
-
-		private static boolean containsKey(@Nullable final Map<?, ?> instance, final Object key) {
-			return instance != null && instance.containsKey(key);
 		}
 
 		private static boolean isArray(@Nullable final OfField<?> instance) {

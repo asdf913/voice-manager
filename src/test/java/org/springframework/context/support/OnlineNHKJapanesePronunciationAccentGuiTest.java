@@ -90,7 +90,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_FOR_EACH_ITERABLE, METHOD_MAP_INT_STREAM, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS,
 			METHOD_SAVE_PITCH_ACCENT_IMAGE, METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED,
 			METHOD_GET_DECLARED_FIELD, METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET_FIELD,
-			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_CONTAINS_KEY, METHOD_IIF, METHOD_SORT,
+			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_IIF, METHOD_SORT,
 			METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION,
 			METHOD_SET_PREFERRED_SIZE, METHOD_MAX, METHOD_TO_ARRAY, METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3,
 			METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
@@ -159,8 +159,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_SAVE_FILE = clz.getDeclaredMethod("saveFile", File.class, String.class)).setAccessible(true);
 		//
-		(METHOD_CONTAINS_KEY = clz.getDeclaredMethod("containsKey", Map.class, Object.class)).setAccessible(true);
-		//
 		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_SORT = clz.getDeclaredMethod("sort", List.class, Comparator.class)).setAccessible(true);
@@ -203,7 +201,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 		private Iterator<?> iterator = null;
 
-		private Boolean hasNext, containsKey, isEmpty = null;
+		private Boolean hasNext, isEmpty = null;
 
 		private Component component = null;
 
@@ -307,10 +305,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				if (Objects.equals(methodName, "entrySet")) {
 					//
 					return entrySet;
-					//
-				} else if (Objects.equals(methodName, "containsKey")) {
-					//
-					return containsKey;
 					//
 				} // if
 					//
@@ -1197,39 +1191,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static void saveFile(final File file, final String url) throws Throwable {
 		try {
 			METHOD_SAVE_FILE.invoke(null, file, url);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testContainsKey() throws Throwable {
-		//
-		if (ih != null) {
-			//
-			ih.containsKey = Boolean.FALSE;
-			//
-		} // if
-			//
-		Assertions.assertFalse(containsKey(map, null));
-		//
-		if (ih != null) {
-			//
-			ih.containsKey = Boolean.TRUE;
-			//
-		} // if
-			//
-		Assertions.assertTrue(containsKey(map, null));
-		//
-	}
-
-	private static boolean containsKey(final Map<?, ?> instance, final Object key) throws Throwable {
-		try {
-			final Object obj = METHOD_CONTAINS_KEY.invoke(null, instance, key);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

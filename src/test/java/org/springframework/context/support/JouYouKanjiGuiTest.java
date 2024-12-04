@@ -17,7 +17,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.Spliterator;
@@ -600,21 +599,11 @@ class JouYouKanjiGuiTest {
 		AssertionsUtil.assertThrowsAndEquals(Throwable.class, "{localizedMessage=setObject, message=setObject}",
 				() -> ih.invoke(objectMap, setObject, new Object[] {}));
 		//
-		// org.springframework.context.support.JouYouKanjiGui$IH.containsKey(java.lang.Map,java.lang.Object)
-		//
-		Method method = CLASS_IH != null ? CLASS_IH.getDeclaredMethod("containsKey", Map.class, Object.class) : null;
-		//
-		if (method != null) {
-			//
-			method.setAccessible(true);
-			//
-		} // if
-			//
-		Assertions.assertEquals(Boolean.FALSE, invoke(method, null, null, null));
-		//
 		// org.springframework.context.support.JouYouKanjiGui$IH.isArray(java.lang.Class)
 		//
-		if ((method = CLASS_IH != null ? CLASS_IH.getDeclaredMethod("isArray", OfField.class) : null) != null) {
+		final Method method = CLASS_IH != null ? CLASS_IH.getDeclaredMethod("isArray", OfField.class) : null;
+		//
+		if (method != null) {
 			//
 			method.setAccessible(true);
 			//
