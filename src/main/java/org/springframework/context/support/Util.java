@@ -1188,6 +1188,10 @@ public abstract class Util {
 		return instance != null && instance.containsKey(key);
 	}
 
+	static <K> Set<K> keySet(final Map<K, ?> instance) {
+		return instance != null ? instance.keySet() : null;
+	}
+
 	@Nullable
 	private static <T> IValue0<Iterator<T>> iterator(@Nullable final Class<?> clz, final Object instance)
 			throws ReflectiveOperationException, IOException {

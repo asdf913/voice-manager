@@ -1737,7 +1737,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				.getValue0(getWorkbookClassFailableSupplierMap());
 		//
 		final List<Class<? extends Workbook>> classes = Util.toList(
-				Util.filter(Util.stream(keySet(map)), x -> Boolean.logicalOr(Objects.equals(Util.getName(x), toString),
+				Util.filter(Util.stream(Util.keySet(map)), x -> Boolean.logicalOr(Objects.equals(Util.getName(x), toString),
 						StringUtils.endsWithIgnoreCase(Util.getName(x), toString))));
 		//
 		final int size = IterableUtils.size(classes);
@@ -1985,11 +1985,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return null;
 		//
-	}
-
-	@Nullable
-	private static <K> Set<K> keySet(@Nullable final Map<K, ?> instance) {
-		return instance != null ? instance.keySet() : null;
 	}
 
 	@Nullable
@@ -4003,7 +3998,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final JComboBox<Class> jcbClass = new JComboBox<Class>(
 				cbmWorkbookClass = new DefaultComboBoxModel<>((Class[]) toArray(classes, new Class[] {})));
 		//
-		testAndRun(Util.contains(keySet(IValue0Util.getValue0(getWorkbookClassFailableSupplierMap())), workbookClass),
+		testAndRun(
+				Util.contains(Util.keySet(IValue0Util.getValue0(getWorkbookClassFailableSupplierMap())), workbookClass),
 				() -> setSelectedItem(cbmWorkbookClass, workbookClass));
 		//
 		final ListCellRenderer<?> lcr = getRenderer(jcbClass);
@@ -5646,7 +5642,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final List<String> classNames = testAndApply(Objects::nonNull,
 				Util.toList(
-						Util.map(Util.stream(keySet(imageWriterSpis)), x -> Util.getName(Util.cast(Class.class, x)))),
+						Util.map(Util.stream(Util.keySet(imageWriterSpis)), x -> Util.getName(Util.cast(Class.class, x)))),
 				ArrayList::new, null);
 		//
 		final String commonPrefix = StringUtils.getCommonPrefix(toArray(classNames, new String[] {}));
@@ -11897,8 +11893,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							new StreamResult(writer));
 					//
 					newOdfPresentationDocument = generateOdfPresentationDocument(Util.toString(writer),
-							StringMap.getString(stringMap, "outputFolder"), keySet(voices), embedAudioInPresentation,
-							folderInPresentation);
+							StringMap.getString(stringMap, "outputFolder"), Util.keySet(voices),
+							embedAudioInPresentation, folderInPresentation);
 					//
 				} // if
 					//

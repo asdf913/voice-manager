@@ -479,9 +479,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 								ImageWriterSpi.class),
 						x -> Narcissus.getField(x, getDeclaredField(Util.getClass(x), "map")), null));
 		//
-		final List<String> classNames = testAndApply(Objects::nonNull,
-				Util.toList(Util.map(Util.stream(imageWriterSpis != null ? imageWriterSpis.keySet() : null),
-						x -> Util.getName(Util.cast(Class.class, x)))),
+		final List<String> classNames = testAndApply(Objects::nonNull, Util.toList(
+				Util.map(Util.stream(Util.keySet(imageWriterSpis)), x -> Util.getName(Util.cast(Class.class, x)))),
 				ArrayList::new, null);
 		//
 		final String commonPrefix = StringUtils.getCommonPrefix(toArray(classNames, new String[] {}));
