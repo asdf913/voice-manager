@@ -291,6 +291,7 @@ public abstract class Util {
 		return instance != null ? instance.getName() : null;
 	}
 
+	@Nullable
 	static String getSimpleName(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getSimpleName() : null;
 	}
