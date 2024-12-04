@@ -1188,11 +1188,11 @@ public abstract class Util {
 		return instance != null && instance.containsKey(key);
 	}
 
-	static <K> Set<K> keySet(final Map<K, ?> instance) {
+	static <K> Set<K> keySet(@Nullable final Map<K, ?> instance) {
 		return instance != null ? instance.keySet() : null;
 	}
 
-	static <V> Collection<V> values(final Map<?, V> instance) {
+	static <V> Collection<V> values(@Nullable final Map<?, V> instance) {
 		return instance != null ? instance.values() : null;
 	}
 
