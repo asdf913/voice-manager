@@ -10457,21 +10457,6 @@ class VoiceManagerTest {
 			//
 			Assertions.assertEquals(Boolean.TRUE, invoke(isArray, null, clz));
 			//
-			// org.springframework.context.support.VoiceManager$IH.getSimpleName(java.lang.class)
-			//
-			final Method getSimpleName = CLASS_IH != null ? CLASS_IH.getDeclaredMethod("getSimpleName", Class.class)
-					: null;
-			//
-			if (getSimpleName != null) {
-				//
-				getSimpleName.setAccessible(true);
-				//
-			} // if
-				//
-			Assertions.assertNull(invoke(getSimpleName, null, (Object) null));
-			//
-			Assertions.assertEquals("byte[]", invoke(getSimpleName, null, clz));
-			//
 			// java.lang.Runnable
 			//
 			final Runnable runnable = Reflection.newProxy(Runnable.class, ih);

@@ -622,16 +622,6 @@ class JouYouKanjiGuiTest {
 			//
 		Assertions.assertEquals(Boolean.FALSE, invoke(method, null, (Object) null));
 		//
-		// org.springframework.context.support.JouYouKanjiGui$IH.getSimpleName(java.lang.Class)
-		//
-		if ((method = CLASS_IH != null ? CLASS_IH.getDeclaredMethod("getSimpleName", Class.class) : null) != null) {
-			//
-			method.setAccessible(true);
-			//
-		} // if
-			//
-		Assertions.assertNull(invoke(method, null, (Object) null));
-		//
 	}
 
 	private static Object invoke(final Method method, final Object instance, final Object... args) throws Throwable {
