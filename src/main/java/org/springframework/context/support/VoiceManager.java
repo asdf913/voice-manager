@@ -3122,7 +3122,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			return isInstalled ? new JTextField(getProviderPlatform(provider)) : new JTextField();
+			return isInstalled ? new JTextField(Provider.getProviderPlatform(provider)) : new JTextField();
 			//
 		} catch (final Error e) {
 			//
@@ -3138,11 +3138,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (instance != null) {
 			instance.setValue(n);
 		}
-	}
-
-	@Nullable
-	private static String getProviderPlatform(@Nullable final Provider instance) {
-		return instance != null ? instance.getProviderPlatform() : null;
 	}
 
 	private static boolean isAnnotationPresent(@Nullable final AnnotatedElement instance,

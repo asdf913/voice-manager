@@ -198,11 +198,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 	@Override
 	@Nullable
 	public String getProviderPlatform() {
-		//
-		final Provider provider = Util.cast(Provider.class, getInstance());
-		//
-		return provider != null ? provider.getProviderPlatform() : null;
-		//
+		return Provider.getProviderPlatform(Util.cast(Provider.class, getInstance()));
 	}
 
 }

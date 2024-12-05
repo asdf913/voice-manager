@@ -1696,7 +1696,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 		try {
 			//
-			return isInstalled ? new JTextField(getProviderPlatform(provider)) : new JTextField();
+			return isInstalled ? new JTextField(Provider.getProviderPlatform(provider)) : new JTextField();
 			//
 		} catch (final Error e) {
 			//
@@ -1706,11 +1706,6 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 		return null;
 		//
-	}
-
-	@Nullable
-	private static String getProviderPlatform(@Nullable final Provider instance) {
-		return instance != null ? instance.getProviderPlatform() : null;
 	}
 
 	private static <T, E extends Throwable> void testAndAccept(@Nullable final Predicate<T> predicate,

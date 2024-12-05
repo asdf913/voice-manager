@@ -13,4 +13,8 @@ public interface Provider {
 	@Nullable
 	String getProviderPlatform();
 
+	static String getProviderPlatform(final Provider instance) {
+		return instance != null ? instance.getProviderPlatform() : null;
+	}
+
 }
