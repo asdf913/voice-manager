@@ -1557,6 +1557,7 @@ public abstract class Util {
 		return instance != null ? instance.getMethods() : null;
 	}
 
+	@Nullable
 	static byte[] digest(@Nullable final MessageDigest instance, @Nullable final byte[] input) {
 		return instance != null && input != null ? instance.digest(input) : null;
 	}
