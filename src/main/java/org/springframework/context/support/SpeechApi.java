@@ -20,6 +20,7 @@ public interface SpeechApi {
 	@Nullable
 	public String[] getVoiceIds();
 
+	@Nullable
 	static String[] getVoiceIds(@Nullable final SpeechApi instance) {
 		return instance != null ? instance.getVoiceIds() : null;
 	}
