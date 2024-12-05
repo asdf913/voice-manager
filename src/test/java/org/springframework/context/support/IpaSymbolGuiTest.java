@@ -73,8 +73,6 @@ class IpaSymbolGuiTest {
 
 	private static class MH implements MethodHandler {
 
-		private byte[] digest = null;
-
 		private Dimension preferredSize = null;
 
 		@Override
