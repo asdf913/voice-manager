@@ -1184,10 +1184,12 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	static boolean containsKey(@Nullable final Map<?, ?> instance, @Nullable final Object key) {
 		return instance != null && instance.containsKey(key);
 	}
 
+	@Nullable
 	static <K> Set<K> keySet(@Nullable final Map<K, ?> instance) {
 		return instance != null ? instance.keySet() : null;
 	}
