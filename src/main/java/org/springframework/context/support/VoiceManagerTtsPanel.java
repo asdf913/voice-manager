@@ -346,7 +346,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 		final Lookup lookup = Util.cast(Lookup.class, speechApiInstance);
 		//
-		final Predicate<String> predicate = a -> contains(lookup, "rate", a);
+		final Predicate<String> predicate = a -> Lookup.contains(lookup, "rate", a);
 		//
 		final FailableFunction<String, Object, RuntimeException> function = a -> get(lookup, "rate", a);
 		//
@@ -1160,7 +1160,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 		final Lookup lookup = Util.cast(Lookup.class, instance);
 		//
-		final BiPredicate<String, String> biPredicate = (a, b) -> contains(lookup, a, b);
+		final BiPredicate<String, String> biPredicate = (a, b) -> Lookup.contains(lookup, a, b);
 		//
 		final FailableBiFunction<String, String, Object, RuntimeException> biFunction = (a, b) -> get(lookup, a, b);
 		//
@@ -1465,10 +1465,6 @@ public class VoiceManagerTtsPanel extends JPanel
 
 	private static int intValue(@Nullable final Number instance, final int defaultValue) {
 		return instance != null ? instance.intValue() : defaultValue;
-	}
-
-	private static boolean contains(@Nullable final Lookup instance, final Object row, final Object column) {
-		return instance != null && instance.contains(row, column);
 	}
 
 	private static Object getInstance(final SpeechApi speechApi) {

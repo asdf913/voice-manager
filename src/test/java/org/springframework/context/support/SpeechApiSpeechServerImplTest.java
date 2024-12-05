@@ -113,16 +113,12 @@ class SpeechApiSpeechServerImplTest {
 	@Test
 	void testContains() throws Throwable {
 		//
-		if (instance != null) {
-			//
-			Assertions.assertFalse(instance.contains("volume", "min"));
-			//
-			instance.afterPropertiesSet();
-			//
-			Assertions.assertTrue(instance.contains("volume", "min"));
-			//
-		} // if
-			//
+		Assertions.assertFalse(Lookup.contains(instance, "volume", "min"));
+		//
+		instance.afterPropertiesSet();
+		//
+		Assertions.assertTrue(Lookup.contains(instance, "volume", "min"));
+		//
 	}
 
 }

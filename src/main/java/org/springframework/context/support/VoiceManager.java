@@ -3563,7 +3563,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Lookup lookup = Util.cast(Lookup.class, speechApiInstance);
 		//
-		final Predicate<String> predicate = a -> contains(lookup, "rate", a);
+		final Predicate<String> predicate = a -> Lookup.contains(lookup, "rate", a);
 		//
 		final FailableFunction<String, Object, RuntimeException> function = a -> get(lookup, "rate", a);
 		//
@@ -4893,18 +4893,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Lookup lookup = Util.cast(Lookup.class, instance);
 		//
-		final BiPredicate<String, String> biPredicate = (a, b) -> contains(lookup, a, b);
+		final BiPredicate<String, String> biPredicate = (a, b) -> Lookup.contains(lookup, a, b);
 		//
 		final FailableBiFunction<String, String, Object, RuntimeException> biFunction = (a, b) -> get(lookup, a, b);
 		//
 		return createRange(toInteger(testAndApply(biPredicate, "volume", "min", biFunction, null)),
 				toInteger(testAndApply(biPredicate, "volume", "max", biFunction, null)));
-		//
-	}
-
-	private static boolean contains(@Nullable final Lookup instance, final Object row, final Object column) {
-		//
-		return instance != null && instance.contains(row, column);
 		//
 	}
 

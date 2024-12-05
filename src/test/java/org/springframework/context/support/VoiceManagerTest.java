@@ -321,7 +321,7 @@ class VoiceManagerTest {
 			METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_COPY_OBJECT_MAP, METHOD_DELETE, METHOD_DELETE_ON_EXIT,
 			METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA,
 			METHOD_SET_ROMAJI, METHOD_AND, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_STRING_BUILDER,
-			METHOD_EXECUTE, METHOD_GET_BYTE_CONVERTER, METHOD_CONTAINS_LOOKUP, METHOD_GET_LPW_STR,
+			METHOD_EXECUTE, METHOD_GET_BYTE_CONVERTER, METHOD_GET_LPW_STR,
 			METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM1,
 			METHOD_TO_ARRAY_STREAM2, METHOD_GET_ID, METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX,
 			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
@@ -576,9 +576,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_BYTE_CONVERTER = clz.getDeclaredMethod("getByteConverter", ConfigurableListableBeanFactory.class,
 				String.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_CONTAINS_LOOKUP = clz.getDeclaredMethod("contains", Lookup.class, Object.class, Object.class))
-				.setAccessible(true);
 		//
 		(METHOD_GET_LPW_STR = clz.getDeclaredMethod("getLpwstr", CTProperty.class)).setAccessible(true);
 		//
@@ -5527,29 +5524,6 @@ class VoiceManagerTest {
 			final String attribute, final Object value) throws Throwable {
 		try {
 			return METHOD_GET_BYTE_CONVERTER.invoke(null, configurableListableBeanFactory, attribute, value);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testContains() throws Throwable {
-		//
-		// org.springframework.context.support.VoiceManagerTest.contains(org.springframework.context.support.Lookup,java.lang.Object,java.lang.Object)
-		//
-		Assertions.assertEquals(ih.contains = Boolean.FALSE, contains(lookup, null, null));
-		//
-		Assertions.assertEquals(ih.contains = Boolean.TRUE, contains(lookup, null, null));
-		//
-	}
-
-	private static boolean contains(final Lookup instance, final Object row, final Object column) throws Throwable {
-		try {
-			final Object obj = METHOD_CONTAINS_LOOKUP.invoke(null, instance, row, column);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
