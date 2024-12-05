@@ -1717,12 +1717,7 @@ public class VoiceManagerTtsPanel extends JPanel
 
 	private static JTextComponent createProviderVersionJTextComponent(final boolean isInstalled,
 			@Nullable final Provider provider) {
-		return isInstalled ? new JTextField(getProviderVersion(provider)) : new JTextField();
-	}
-
-	@Nullable
-	private static String getProviderVersion(@Nullable final Provider instance) {
-		return instance != null ? instance.getProviderVersion() : null;
+		return isInstalled ? new JTextField(Provider.getProviderVersion(provider)) : new JTextField();
 	}
 
 	private static boolean isInstalled(@Nullable final SpeechApi instance) {

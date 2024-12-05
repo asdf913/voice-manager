@@ -9153,11 +9153,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getProviderName() : null;
 	}
 
-	@Nullable
-	private static String getProviderVersion(@Nullable final Provider instance) {
-		return instance != null ? instance.getProviderVersion() : null;
-	}
-
 	private static void execute(final ObjectMap objectMap) {
 		//
 		final File file = ObjectMap.getObject(objectMap, File.class);

@@ -10,6 +10,10 @@ public interface Provider {
 	@Nullable
 	String getProviderVersion();
 
+	static String getProviderVersion(final Provider instance) {
+		return instance != null ? instance.getProviderVersion() : null;
+	}
+
 	@Nullable
 	String getProviderPlatform();
 
