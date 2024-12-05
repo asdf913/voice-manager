@@ -283,7 +283,8 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 		final Provider provider = Util.cast(Provider.class, speechApi);
 		//
-		add(tfProviderName = new JTextField(getProviderName(provider)), String.format("%1$s,span %2$s", GROWX, 3));
+		add(tfProviderName = new JTextField(Provider.getProviderName(provider)),
+				String.format("%1$s,span %2$s", GROWX, 3));
 		//
 		final boolean isInstalled = isInstalled(speechApi);
 		//
@@ -1722,11 +1723,6 @@ public class VoiceManagerTtsPanel extends JPanel
 
 	private static boolean isInstalled(@Nullable final SpeechApi instance) {
 		return instance != null && instance.isInstalled();
-	}
-
-	@Nullable
-	private static String getProviderName(@Nullable final Provider instance) {
-		return instance != null ? instance.getProviderName() : null;
 	}
 
 }

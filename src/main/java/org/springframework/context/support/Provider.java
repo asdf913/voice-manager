@@ -7,6 +7,10 @@ public interface Provider {
 	@Nullable
 	String getProviderName();
 
+	static String getProviderName(final Provider instance) {
+		return instance != null ? instance.getProviderName() : null;
+	}
+
 	@Nullable
 	String getProviderVersion();
 

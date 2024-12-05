@@ -4372,9 +4372,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		final StringBuilder btnExportMicrosoftSpeechObjectLibraryInformationName = new StringBuilder("Export ");
 		//
-		if (StringUtils
-				.isNotBlank(append(btnExportMicrosoftSpeechObjectLibraryInformationName, StringUtils.defaultIfBlank(
-						getProviderName(Util.cast(Provider.class, speechApi)), "Microsoft Speech Object Library")))) {
+		if (StringUtils.isNotBlank(append(btnExportMicrosoftSpeechObjectLibraryInformationName,
+				StringUtils.defaultIfBlank(Provider.getProviderName(Util.cast(Provider.class, speechApi)),
+						"Microsoft Speech Object Library")))) {
 			//
 			append(btnExportMicrosoftSpeechObjectLibraryInformationName, ' ');
 			//
@@ -5931,8 +5931,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		setLanguage(voice, StringUtils.defaultIfBlank(getLanguage(voice),
 				convertLanguageCodeToText(getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
 		//
-		setSource(voice,
-				StringUtils.defaultIfBlank(getSource(voice), getProviderName(Util.cast(Provider.class, speechApi))));
+		setSource(voice, StringUtils.defaultIfBlank(getSource(voice),
+				Provider.getProviderName(Util.cast(Provider.class, speechApi))));
 		//
 		return file;
 		//
@@ -9148,11 +9148,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	@Nullable
-	private static String getProviderName(@Nullable final Provider instance) {
-		return instance != null ? instance.getProviderName() : null;
-	}
-
 	private static void execute(final ObjectMap objectMap) {
 		//
 		final File file = ObjectMap.getObject(objectMap, File.class);
@@ -10190,7 +10185,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		setSource(voice, StringUtils.defaultIfBlank(getSource(voice),
-				getProviderName(ObjectMap.getObject(objectMap, Provider.class))));
+				Provider.getProviderName(ObjectMap.getObject(objectMap, Provider.class))));
 		//
 		try {
 			//
