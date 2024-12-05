@@ -163,14 +163,10 @@ class UtilTest {
 					//
 				} // if
 					//
-			} else if (self instanceof MessageDigest) {
+			} else if (self instanceof MessageDigest && Objects.equals(methodName, "digest")) {
 				//
-				if (Objects.equals(methodName, "digest")) {
-					//
-					return digest;
-					//
-				} // if
-					//
+				return digest;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
