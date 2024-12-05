@@ -8,7 +8,7 @@ public interface SpeechApi {
 
 	public boolean isInstalled();
 
-	static boolean isInstalled(final SpeechApi instance) {
+	static boolean isInstalled(@Nullable final SpeechApi instance) {
 		return instance != null && instance.isInstalled();
 	}
 
