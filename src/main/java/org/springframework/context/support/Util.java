@@ -1194,6 +1194,7 @@ public abstract class Util {
 		return instance != null ? instance.keySet() : null;
 	}
 
+	@Nullable
 	static <V> Collection<V> values(@Nullable final Map<?, V> instance) {
 		return instance != null ? instance.values() : null;
 	}
