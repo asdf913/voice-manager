@@ -302,12 +302,12 @@ class VoiceManagerTest {
 	private static Integer TEMP_FILE_MINIMUM_PREFIX_LENGTH = null;
 
 	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION_CONTENT_INFO,
-			METHOD_GET_FILE_EXTENSION_FILE_FORMAT, METHOD_GET_FILE_EXTENSION_FAILABLE_SUPPLIER, METHOD_DIGEST,
-			METHOD_GET_MAPPER, METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3,
-			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_INT_VALUE, METHOD_LONG_VALUE,
-			METHOD_GET_PROPERTY_CUSTOM_PROPERTIES, METHOD_GET_VALUE, METHOD_GET_SOURCE_VOICE, METHOD_EXPORT,
-			METHOD_MAP_INT_STREAM, METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG, METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM,
-			METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_CREATE_WORK_BOOK_LIST,
+			METHOD_GET_FILE_EXTENSION_FILE_FORMAT, METHOD_GET_FILE_EXTENSION_FAILABLE_SUPPLIER, METHOD_GET_MAPPER,
+			METHOD_INSERT_OR_UPDATE, METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3, METHOD_TEST_AND_APPLY4,
+			METHOD_TEST_AND_APPLY5, METHOD_INT_VALUE, METHOD_LONG_VALUE, METHOD_GET_PROPERTY_CUSTOM_PROPERTIES,
+			METHOD_GET_VALUE, METHOD_GET_SOURCE_VOICE, METHOD_EXPORT, METHOD_MAP_INT_STREAM, METHOD_MAP_TO_INT,
+			METHOD_MAP_TO_LONG, METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL_INT,
+			METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_CREATE_WORK_BOOK_LIST,
 			METHOD_CREATE_VOICE_OBJECT_MAPPER, METHOD_CREATE_VOICE_OBJECT_MAP, METHOD_INVOKE, METHOD_ANNOTATION_TYPE,
 			METHOD_FIND_FIRST, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1,
 			METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER, METHOD_IMPORT_VOICE_OBJECT_MAP_FILE, METHOD_IMPORT_VOICE5,
@@ -400,8 +400,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_FILE_EXTENSION_FAILABLE_SUPPLIER = clz.getDeclaredMethod("getFileExtension",
 				FailableSupplier.class)).setAccessible(true);
-		//
-		(METHOD_DIGEST = clz.getDeclaredMethod("digest", MessageDigest.class, byte[].class)).setAccessible(true);
 		//
 		(METHOD_GET_MAPPER = clz.getDeclaredMethod("getMapper", Configuration.class, Class.class, SqlSession.class))
 				.setAccessible(true);
@@ -3654,35 +3652,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testDigest() throws Throwable {
-		//
-		Assertions.assertNull(digest(null, null));
-		//
-		final MessageDigest md = MessageDigest.getInstance("SHA-512");
-		//
-		Assertions.assertNull(digest(md, null));
-		//
-		Assertions.assertEquals(
-				"cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e",
-				HexFormat.of().formatHex(digest(md, new byte[] {})));
-		//
-	}
-
-	private static byte[] digest(final MessageDigest instance, final byte[] input) throws Throwable {
-		try {
-			final Object obj = METHOD_DIGEST.invoke(null, instance, input);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof byte[]) {
-				return (byte[]) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

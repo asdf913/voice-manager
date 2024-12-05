@@ -10609,7 +10609,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			Long length = length(selectedFile);
 			//
-			String fileDigest = formatHex(hexFormat, digest(md, Files.readAllBytes(Path.of(toURI(selectedFile)))));
+			String fileDigest = formatHex(hexFormat, Util.digest(md, Files.readAllBytes(Path.of(toURI(selectedFile)))));
 			//
 			final String voiceFolder = ObjectMap.getObject(objectMap, String.class);
 			//
@@ -10633,7 +10633,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				length = length(file);
 				//
-				fileDigest = formatHex(hexFormat, digest(md, Files.readAllBytes(Path.of(toURI(file)))));
+				fileDigest = formatHex(hexFormat, Util.digest(md, Files.readAllBytes(Path.of(toURI(file)))));
 				//
 			} else {
 				//
@@ -12118,7 +12118,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 					textContent,
 					testAndApply(Objects::nonNull,
-							digest(ObjectMap.getObject(objectMap, MessageDigest.class), getBytes(textContent)),
+							Util.digest(ObjectMap.getObject(objectMap, MessageDigest.class), getBytes(textContent)),
 							Hex::encodeHexString, null)
 			//
 			), (a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b)));
@@ -13633,11 +13633,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return instance.getMapper(type, sqlSession);
 		//
-	}
-
-	@Nullable
-	private static byte[] digest(@Nullable final MessageDigest instance, @Nullable final byte[] input) {
-		return instance != null && input != null ? instance.digest(input) : null;
 	}
 
 	@Nullable

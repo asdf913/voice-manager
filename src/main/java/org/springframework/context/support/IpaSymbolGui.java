@@ -246,10 +246,9 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 						? Integer.valueOf(bs.length)
 						: null;
 				//
-				hex1 = testAndApply(Objects::nonNull,
-						digest(md = MessageDigest
-								.getInstance(StringUtils.defaultIfBlank(messageDigestAlgorithm, "SHA-512")), bs),
-						Hex::encodeHexString, null);
+				hex1 = testAndApply(Objects::nonNull, Util.digest(
+						md = MessageDigest.getInstance(StringUtils.defaultIfBlank(messageDigestAlgorithm, "SHA-512")),
+						bs), Hex::encodeHexString, null);
 				//
 			} catch (final IOException | NoSuchAlgorithmException e) {
 				//
@@ -268,7 +267,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 						? Integer.valueOf(bs.length)
 						: null;
 				//
-				hex2 = testAndApply(Objects::nonNull, digest(md, bs), Hex::encodeHexString, null);
+				hex2 = testAndApply(Objects::nonNull, Util.digest(md, bs), Hex::encodeHexString, null);
 				//
 			} catch (final Exception e) {
 				//
@@ -350,11 +349,6 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			//
 		return instance != null ? instance.openStream() : null;
 		//
-	}
-
-	@Nullable
-	private static byte[] digest(@Nullable final MessageDigest instance, @Nullable final byte[] input) {
-		return instance != null && input != null ? instance.digest(input) : null;
 	}
 
 	private static void errorOrAssertOrShowException(final boolean headless, final Throwable throwable) {

@@ -11,6 +11,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.EventObject;
@@ -1554,6 +1555,10 @@ public abstract class Util {
 	@Nullable
 	static Method[] getMethods(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getMethods() : null;
+	}
+
+	static byte[] digest(final MessageDigest instance, final byte[] input) {
+		return instance != null && input != null ? instance.digest(input) : null;
 	}
 
 }

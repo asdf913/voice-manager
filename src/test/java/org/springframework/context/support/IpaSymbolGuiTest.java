@@ -42,8 +42,7 @@ class IpaSymbolGuiTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_TEST_AND_APPLY, METHOD_OPEN_STREAM,
-			METHOD_DIGEST, METHOD_IIF, METHOD_SET_PREFERRED_WIDTH, METHOD_TEST_AND_ACCEPT3,
-			METHOD_TEST_AND_ACCEPT4 = null;
+			METHOD_IIF, METHOD_SET_PREFERRED_WIDTH, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4 = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -59,8 +58,6 @@ class IpaSymbolGuiTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
-		//
-		(METHOD_DIGEST = clz.getDeclaredMethod("digest", MessageDigest.class, byte[].class)).setAccessible(true);
 		//
 		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
 		//
@@ -276,39 +273,6 @@ class IpaSymbolGuiTest {
 				return null;
 			} else if (obj instanceof InputStream) {
 				return (InputStream) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testDigest() throws Throwable {
-		//
-		Assertions.assertNull(digest(null, null));
-		//
-		final MessageDigest messageDigest = ProxyUtil.createProxy(MessageDigest.class, mh, clz -> {
-			//
-			final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor(String.class) : null;
-			//
-			return constructor != null ? constructor.newInstance((Object) null) : null;
-			//
-		});
-		//
-		Assertions.assertNull(digest(messageDigest, null));
-		//
-		Assertions.assertNull(digest(messageDigest, new byte[] {}));
-		//
-	}
-
-	private static byte[] digest(final MessageDigest instance, final byte[] input) throws Throwable {
-		try {
-			final Object obj = METHOD_DIGEST.invoke(null, instance, input);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof byte[]) {
-				return (byte[]) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
