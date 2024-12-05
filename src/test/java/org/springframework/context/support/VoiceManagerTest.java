@@ -1729,8 +1729,6 @@ class VoiceManagerTest {
 
 	private org.jsoup.nodes.Element element = null;
 
-	private Provider provider = null;
-
 	private Workbook workbook = null;
 
 	private Cell cell = null;
@@ -1788,8 +1786,6 @@ class VoiceManagerTest {
 		logger = Reflection.newProxy(Logger.class, ih);
 		//
 		voiceMapper = Reflection.newProxy(VoiceMapper.class, ih);
-		//
-		provider = Reflection.newProxy(Provider.class, ih);
 		//
 		workbook = Reflection.newProxy(Workbook.class, ih);
 		//
