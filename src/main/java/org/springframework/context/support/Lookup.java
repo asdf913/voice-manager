@@ -1,5 +1,7 @@
 package org.springframework.context.support;
 
+import javax.annotation.Nullable;
+
 public interface Lookup {
 
 	boolean contains(final Object row, final Object column);
