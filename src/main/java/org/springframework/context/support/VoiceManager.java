@@ -2093,7 +2093,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		JPanel jPanelWarning = null;
 		//
-		final boolean isInstalled = isInstalled(speechApi);
+		final boolean isInstalled = SpeechApi.isInstalled(speechApi);
 		//
 		if (isInstalled) {
 			//
@@ -4404,7 +4404,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		addActionListener(this, btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy, btnExportBrowse,
 				btnDllPathCopy);
 		//
-		setEnabled(isInstalled(speechApi) && voiceIds != null, btnExportMicrosoftSpeechObjectLibraryInformation);
+		setEnabled(SpeechApi.isInstalled(speechApi) && voiceIds != null,
+				btnExportMicrosoftSpeechObjectLibraryInformation);
 		//
 		if (panelDllPath != null) {
 			//
@@ -4886,10 +4887,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
-	}
-
-	private static boolean isInstalled(@Nullable final SpeechApi instance) {
-		return instance != null && instance.isInstalled();
 	}
 
 	@Nullable
@@ -10074,7 +10071,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // if
 				//
-			if ((it == null || it.file == null) && isInstalled(ObjectMap.getObject(objectMap, SpeechApi.class))) {
+			if ((it == null || it.file == null)
+					&& SpeechApi.isInstalled(ObjectMap.getObject(objectMap, SpeechApi.class))) {
 				//
 				ObjectMap.setObject(objectMap, ImportTask.class, it);
 				//

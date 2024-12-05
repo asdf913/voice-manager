@@ -123,11 +123,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 
 	@Override
 	public boolean isInstalled() {
-		//
-		final SpeechApi speechApi = getInstance();
-		//
-		return speechApi != null && speechApi.isInstalled();
-		//
+		return SpeechApi.isInstalled(getInstance());
 	}
 
 	@Override

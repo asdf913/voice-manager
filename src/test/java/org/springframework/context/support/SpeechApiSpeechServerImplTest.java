@@ -23,9 +23,7 @@ class SpeechApiSpeechServerImplTest {
 	}
 
 	private boolean isInstalled() {
-		//
-		return instance != null && instance.isInstalled();
-		//
+		return SpeechApi.isInstalled(instance);
 	}
 
 	@Test

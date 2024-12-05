@@ -8,6 +8,10 @@ public interface SpeechApi {
 
 	public boolean isInstalled();
 
+	static boolean isInstalled(final SpeechApi instance) {
+		return instance != null && instance.isInstalled();
+	}
+
 	public void speak(@Nullable final String text, @Nullable final String voiceId, final int rate, final int volume);
 
 	public void writeVoiceToFile(@Nullable final String text, @Nullable final String voiceId, final int rate,
