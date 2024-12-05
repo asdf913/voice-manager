@@ -88,17 +88,9 @@ class IpaSymbolGuiTest {
 				//
 			} // if
 				//
-			final String methodName = thisMethod != null ? thisMethod.getName() : null;
+			final String methodName = Util.getName(thisMethod);
 			//
-			if (self instanceof MessageDigest) {
-				//
-				if (Objects.equals(methodName, "digest")) {
-					//
-					return digest;
-					//
-				} // if
-					//
-			} else if (self instanceof Component) {
+			if (self instanceof Component) {
 				//
 				if (Objects.equals(methodName, "getPreferredSize")) {
 					//

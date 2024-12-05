@@ -133,6 +133,8 @@ class UtilTest {
 
 	private static class MH implements MethodHandler {
 
+		private byte[] digest = null;
+
 		@Override
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
@@ -158,6 +160,14 @@ class UtilTest {
 				if (Objects.equals(methodName, "getReferenceType")) {
 					//
 					return null;
+					//
+				} // if
+					//
+			} else if (self instanceof MessageDigest) {
+				//
+				if (Objects.equals(methodName, "digest")) {
+					//
+					return digest;
 					//
 				} // if
 					//
