@@ -109,7 +109,7 @@ class SpeechApiSystemSpeechImplTest {
 		//
 		Assertions.assertNull(instance.getVoiceAttribute(null, null));
 		//
-		final String[] voiceIds = instance != null ? instance.getVoiceIds() : null;
+		final String[] voiceIds = SpeechApi.getVoiceIds(instance);
 		//
 		String voiceId = null;
 		//

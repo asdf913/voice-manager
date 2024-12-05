@@ -2116,7 +2116,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			try {
 				//
-				voiceIds = getVoiceIds(speechApi);
+				voiceIds = SpeechApi.getVoiceIds(speechApi);
 				//
 			} catch (final Error e) {
 				//
@@ -4893,11 +4893,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static String getVoiceAttribute(@Nullable final SpeechApi instance, @Nullable final String voiceId,
 			final String attribute) {
 		return instance != null ? instance.getVoiceAttribute(voiceId, attribute) : null;
-	}
-
-	@Nullable
-	private static String[] getVoiceIds(@Nullable final SpeechApi instance) {
-		return instance != null ? instance.getVoiceIds() : null;
 	}
 
 	private static Range<Integer> createVolumeRange(final Object instance) {
@@ -12683,7 +12678,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Row row = null;
 		//
-		final String[] voiceIds = getVoiceIds(speechApi);
+		final String[] voiceIds = SpeechApi.getVoiceIds(speechApi);
 		//
 		final String commonPrefix = String.join("",
 				StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");

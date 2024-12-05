@@ -302,7 +302,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 		add(new JLabel("Voice Id"));
 		//
-		final String[] voiceIds = getVoiceIds(speechApi);
+		final String[] voiceIds = SpeechApi.getVoiceIds(speechApi);
 		//
 		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
 				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
@@ -1018,11 +1018,6 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 		} // for
 			//
-	}
-
-	@Nullable
-	private static String[] getVoiceIds(@Nullable final SpeechApi instance) {
-		return instance != null ? instance.getVoiceIds() : null;
 	}
 
 	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
