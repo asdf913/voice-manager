@@ -107,7 +107,7 @@ class SpeechApiSystemSpeechImplTest {
 	@EnabledOnOs(OS.WINDOWS)
 	void testGetVoiceAttribute() {
 		//
-		Assertions.assertNull(instance.getVoiceAttribute(null, null));
+		Assertions.assertNull(SpeechApi.getVoiceAttribute(instance, null, null));
 		//
 		final String[] voiceIds = SpeechApi.getVoiceIds(instance);
 		//
@@ -115,11 +115,11 @@ class SpeechApiSystemSpeechImplTest {
 		//
 		for (int i = 0; voiceIds != null && i < voiceIds.length; i++) {
 			//
-			Assertions.assertNull(instance.getVoiceAttribute(voiceId = voiceIds[i], null));
+			Assertions.assertNull(SpeechApi.getVoiceAttribute(instance, voiceId = voiceIds[i], null));
 			//
-			Assertions.assertNull(instance.getVoiceAttribute(voiceId, ""));
+			Assertions.assertNull(SpeechApi.getVoiceAttribute(instance, voiceId, ""));
 			//
-			Assertions.assertNotNull(instance.getVoiceAttribute(voiceId, "Language"));
+			Assertions.assertNotNull(SpeechApi.getVoiceAttribute(instance, voiceId, "Language"));
 			//
 		} // for
 			//

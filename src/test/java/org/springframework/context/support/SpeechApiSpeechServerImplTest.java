@@ -58,7 +58,7 @@ class SpeechApiSpeechServerImplTest {
 	@EnabledIf("isInstalled")
 	void testGetVoiceAttribute() {
 		//
-		Assertions.assertNull(instance.getVoiceAttribute(null, null));
+		Assertions.assertNull(SpeechApi.getVoiceAttribute(instance, null, null));
 		//
 		final String[] voiceIds = SpeechApi.getVoiceIds(instance);
 		//
@@ -66,11 +66,11 @@ class SpeechApiSpeechServerImplTest {
 		//
 		for (int i = 0; voiceIds != null && i < voiceIds.length; i++) {
 			//
-			Assertions.assertEquals("", instance.getVoiceAttribute(voiceId = voiceIds[i], null));
+			Assertions.assertEquals("", SpeechApi.getVoiceAttribute(instance, voiceId = voiceIds[i], null));
 			//
-			Assertions.assertEquals("", instance.getVoiceAttribute(voiceId, ""));
+			Assertions.assertEquals("", SpeechApi.getVoiceAttribute(instance, voiceId, ""));
 			//
-			Assertions.assertNotNull(instance.getVoiceAttribute(voiceId, "Language"));
+			Assertions.assertNotNull(SpeechApi.getVoiceAttribute(instance, voiceId, "Language"));
 			//
 		} // for
 			//

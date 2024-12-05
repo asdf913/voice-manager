@@ -3056,7 +3056,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		List<?> temp = Util.toList(Util.filter(testAndApply(Objects::nonNull, voiceIds, Arrays::stream, null),
 				x -> Boolean.logicalOr(Objects.equals(x, voiceId),
-						Objects.equals(getVoiceAttribute(speechApi, x, "Name"), voiceId))));
+						Objects.equals(SpeechApi.getVoiceAttribute(speechApi, x, "Name"), voiceId))));
 		//
 		int size = IterableUtils.size(temp);
 		//
@@ -3078,7 +3078,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			if ((size = IterableUtils.size(temp = Util
 					.toList(Util.filter(testAndApply(Objects::nonNull, voiceIds, Arrays::stream, null), x -> {
 						//
-						final String language = getVoiceAttribute(speechApi, x, LANGUAGE);
+						final String language = SpeechApi.getVoiceAttribute(speechApi, x, LANGUAGE);
 						//
 						return StringUtils.startsWithIgnoreCase(convertLanguageCodeToText(language, 16), voiceLanguage)
 								|| Objects.equals(language, voiceLanguage);
@@ -4866,7 +4866,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			try {
 				//
-				final String name = getVoiceAttribute(speechApi, s, "Name");
+				final String name = SpeechApi.getVoiceAttribute(speechApi, s, "Name");
 				//
 				if (StringUtils.isNotBlank(name)) {
 					//
@@ -4887,12 +4887,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		}
 
-	}
-
-	@Nullable
-	private static String getVoiceAttribute(@Nullable final SpeechApi instance, @Nullable final String voiceId,
-			final String attribute) {
-		return instance != null ? instance.getVoiceAttribute(voiceId, attribute) : null;
 	}
 
 	private static Range<Integer> createVolumeRange(final Object instance) {
@@ -5921,7 +5915,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		setLanguage(voice, StringUtils.defaultIfBlank(getLanguage(voice),
-				convertLanguageCodeToText(getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
+				convertLanguageCodeToText(SpeechApi.getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
 		//
 		setSource(voice, StringUtils.defaultIfBlank(getSource(voice),
 				Provider.getProviderName(Util.cast(Provider.class, speechApi))));
@@ -8088,8 +8082,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			try {
 				//
-				final String language = getVoiceAttribute(speechApi, Util.toString(getSelectedItem(cbmVoiceId)),
-						LANGUAGE);
+				final String language = SpeechApi.getVoiceAttribute(speechApi,
+						Util.toString(getSelectedItem(cbmVoiceId)), LANGUAGE);
 				//
 				Util.setText(tfSpeechLanguageCode, language);
 				//
@@ -10182,10 +10176,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			setLanguage(voice,
-					StringUtils.defaultIfBlank(getLanguage(voice), convertLanguageCodeToText(
-							getVoiceAttribute(ObjectMap.getObject(objectMap, SpeechApi.class), voiceId, LANGUAGE),
-							16)));
+			setLanguage(voice, StringUtils.defaultIfBlank(getLanguage(voice), convertLanguageCodeToText(
+					SpeechApi.getVoiceAttribute(ObjectMap.getObject(objectMap, SpeechApi.class), voiceId, LANGUAGE),
+					16)));
 			//
 		} catch (final Error e) {
 			//
@@ -12818,7 +12811,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				CellUtil.setCellValue(
 						cell = RowUtil.createCell(row, Math.max(row != null ? row.getLastCellNum() : 0, 0)),
-						value = getVoiceAttribute(ObjectMap.getObject(objectMap, SpeechApi.class), voiceId,
+						value = SpeechApi.getVoiceAttribute(ObjectMap.getObject(objectMap, SpeechApi.class), voiceId,
 								attribute = attributes[j]));
 				//
 				if (Objects.equals(LANGUAGE, attribute)) {

@@ -162,9 +162,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 	@Override
 	@Nullable
 	public String getVoiceAttribute(@Nullable final String voiceId, final String attribute) {
-		//
-		return instance != null ? instance.getVoiceAttribute(voiceId, attribute) : null;
-		//
+		return SpeechApi.getVoiceAttribute(instance, voiceId, attribute);
 	}
 
 	@Override

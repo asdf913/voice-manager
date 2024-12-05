@@ -551,8 +551,8 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 			try {
 				//
-				final String language = getVoiceAttribute(speechApi, Util.toString(getSelectedItem(cbmVoiceId)),
-						LANGUAGE);
+				final String language = SpeechApi.getVoiceAttribute(speechApi,
+						Util.toString(getSelectedItem(cbmVoiceId)), LANGUAGE);
 				//
 				Util.setText(tfSpeechLanguageCode, language);
 				//
@@ -1510,7 +1510,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 		List<?> temp = Util.toList(Util.filter(testAndApply(Objects::nonNull, voiceIds, Arrays::stream, null),
 				x -> Boolean.logicalOr(Objects.equals(x, voiceId),
-						Objects.equals(getVoiceAttribute(speechApi, x, "Name"), voiceId))));
+						Objects.equals(SpeechApi.getVoiceAttribute(speechApi, x, "Name"), voiceId))));
 		//
 		int size = IterableUtils.size(temp);
 		//
@@ -1532,7 +1532,7 @@ public class VoiceManagerTtsPanel extends JPanel
 			if ((size = IterableUtils.size(temp = Util
 					.toList(Util.filter(testAndApply(Objects::nonNull, voiceIds, Arrays::stream, null), x -> {
 						//
-						final String language = getVoiceAttribute(speechApi, x, LANGUAGE);
+						final String language = SpeechApi.getVoiceAttribute(speechApi, x, LANGUAGE);
 						//
 						return StringUtils.startsWithIgnoreCase(convertLanguageCodeToText(language, 16), voiceLanguage)
 								|| Objects.equals(language, voiceLanguage);
@@ -1602,12 +1602,6 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 	}
 
-	@Nullable
-	private static String getVoiceAttribute(@Nullable final SpeechApi instance, final String voiceId,
-			final String attribute) {
-		return instance != null ? instance.getVoiceAttribute(voiceId, attribute) : null;
-	}
-
 	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, final Object selectedItem) {
 		if (instance != null) {
 			instance.setSelectedItem(selectedItem);
@@ -1640,7 +1634,7 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 			try {
 				//
-				final String name = getVoiceAttribute(speechApi, s, "Name");
+				final String name = SpeechApi.getVoiceAttribute(speechApi, s, "Name");
 				//
 				if (StringUtils.isNotBlank(name)) {
 					//
