@@ -251,17 +251,13 @@ class SpeechApiSystemSpeechImplTest {
 	@Test
 	void testGet() throws Throwable {
 		//
-		if (instance != null) {
-			//
-			AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{}",
-					() -> instance.get("volume", "min"));
-			//
-			instance.afterPropertiesSet();
-			//
-			Assertions.assertDoesNotThrow(() -> instance.get("volume", "min"));
-			//
-		} // if
-			//
+		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{}",
+				() -> Lookup.get(instance, "volume", "min"));
+		//
+		instance.afterPropertiesSet();
+		//
+		Assertions.assertDoesNotThrow(() -> Lookup.get(instance, "volume", "min"));
+		//
 	}
 
 	@Test

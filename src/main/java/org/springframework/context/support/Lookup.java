@@ -12,4 +12,8 @@ public interface Lookup {
 
 	Object get(final Object row, final Object column);
 
+	static Object get(final Lookup instance, final Object row, final Object column) {
+		return instance != null ? instance.get(row, column) : instance;
+	}
+
 }

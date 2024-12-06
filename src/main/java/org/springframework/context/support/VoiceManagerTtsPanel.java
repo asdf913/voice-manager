@@ -348,7 +348,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 		final Predicate<String> predicate = a -> Lookup.contains(lookup, "rate", a);
 		//
-		final FailableFunction<String, Object, RuntimeException> function = a -> get(lookup, "rate", a);
+		final FailableFunction<String, Object, RuntimeException> function = a -> Lookup.get(lookup, "rate", a);
 		//
 		if (Boolean.logicalAnd(Util.test(predicate, "min"), Util.test(predicate, "max"))) {
 			//
@@ -1162,16 +1162,12 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 		final BiPredicate<String, String> biPredicate = (a, b) -> Lookup.contains(lookup, a, b);
 		//
-		final FailableBiFunction<String, String, Object, RuntimeException> biFunction = (a, b) -> get(lookup, a, b);
+		final FailableBiFunction<String, String, Object, RuntimeException> biFunction = (a, b) -> Lookup.get(lookup, a,
+				b);
 		//
 		return createRange(toInteger(testAndApply(biPredicate, "volume", "min", biFunction, null)),
 				toInteger(testAndApply(biPredicate, "volume", "max", biFunction, null)));
 		//
-	}
-
-	@Nullable
-	private static Object get(@Nullable final Lookup instance, final Object row, final Object column) {
-		return instance != null ? instance.get(row, column) : instance;
 	}
 
 	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
