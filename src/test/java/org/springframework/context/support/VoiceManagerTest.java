@@ -1712,8 +1712,6 @@ class VoiceManagerTest {
 
 	private NodeList nodeList = null;
 
-	private Lookup lookup = null;
-
 	private Iterable<?> iterable = null;
 
 	private Logger logger = null;
@@ -1771,8 +1769,6 @@ class VoiceManagerTest {
 		node = Reflection.newProxy(Node.class, ih);
 		//
 		nodeList = Reflection.newProxy(NodeList.class, ih);
-		//
-		lookup = Reflection.newProxy(Lookup.class, ih);
 		//
 		iterable = Reflection.newProxy(Iterable.class, ih);
 		//
