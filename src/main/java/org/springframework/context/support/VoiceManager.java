@@ -2175,8 +2175,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // for
 			//
-//		jTabbedPane.addTab(TAB_TITLE_IMPORT_SINGLE, createSingleImportPanel(cloneLayoutManager(), voiceIds));
-		//
 		jTabbedPane.addTab(TAB_TITLE_IMPORT_BATCH, createBatchImportPanel(cloneLayoutManager()));
 		//
 		jTabbedPane.addTab("Export", createExportPanel(cloneLayoutManager()));
