@@ -461,11 +461,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String HIDE_AUDIO_IMAGE_IN_PRESENTATION = "hideAudioImageInPresentation";
 
-	private static final String SOURCE = "Source";
-
 	private static final String PASSWORD = "Password";
-
-	private static final String SPEECH_RATE = "Speech Rate";
 
 	private static final String OLE_2_COMPOUND_DOCUMENT = "OLE 2 Compound Document";
 
@@ -507,8 +503,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	 *      "https://github.com/mikaelgrev/miglayout/blob/master/core/src/main/java/net/miginfocom/layout/ConstraintParser.java#L780">net.miginfocom.layout.ConstraintParser.parseComponentConstraint(java.lang.String)&nbsp;Line&nbsp;534&nbsp;at&nbsp;master&nbsp;·&nbsp;mikaelgrev/miglayout</a>
 	 */
 	private static final String WMIN_ONLY_FORMAT = "wmin %1$s";
-
-	private static final String ALIGN_FORMAT = "align %1$s %1$s";
 
 	private static final String ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER = "Romaji";
 
