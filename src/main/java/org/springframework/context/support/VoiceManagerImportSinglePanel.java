@@ -80,6 +80,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.imageio.spi.IIORegistry;
 import javax.imageio.spi.ImageWriterSpi;
@@ -2552,7 +2553,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 	}
 
-	private static int showOpenDialog(final JFileChooser instance, final Component parent) throws HeadlessException {
+	private static int showOpenDialog(final JFileChooser instance, @Nullable final Component parent)
+			throws HeadlessException {
 		//
 		if (instance == null) {
 			//
@@ -3710,7 +3712,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static String getFile(final URL instance) {
+	private static String getFile(@Nullable final URL instance) {
 		return instance != null ? instance.getFile() : null;
 	}
 
@@ -3795,7 +3797,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static String getMimeType(final ContentInfo instance) {
+	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
 
@@ -4166,7 +4168,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 	}
 
-	private static Object invoke(final Method method, final Object instance, Object... args)
+	private static Object invoke(final Method method, @Nullable final Object instance, Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
 	}
@@ -4358,8 +4360,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	 * https://github.com/apache/commons-lang/blob/master/src/main/java/org/apache/
 	 * commons/lang3/ObjectUtils.java#L597
 	 */
-	private static <T, E extends Throwable> T getIfNull(final T object, final FailableSupplier<T, E> defaultSupplier)
-			throws E {
+	private static <T, E extends Throwable> T getIfNull(@Nullable final T object,
+			final FailableSupplier<T, E> defaultSupplier) throws E {
 		return object != null ? object : get(defaultSupplier);
 	}
 
@@ -4421,7 +4423,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		}
 	}
 
-	private static List<Object> getObjectList(final ObjectMapper objectMapper, final Object value) {
+	private static List<Object> getObjectList(final ObjectMapper objectMapper, @Nullable final Object value) {
 		//
 		if (value == null) {
 			//
@@ -4483,7 +4485,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return objectMapper;
 	}
 
-	private static void setBackground(final Component instance, final Color color) {
+	private static void setBackground(final Component instance, @Nullable final Color color) {
 		if (instance != null) {
 			instance.setBackground(color);
 		}
@@ -4951,7 +4953,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) {
+	private static void setSelectedItem(final ComboBoxModel<?> instance, @Nullable final Object selectedItem) {
 		if (instance != null) {
 			instance.setSelectedItem(selectedItem);
 		}
@@ -4967,12 +4969,13 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		}
 	}
 
-	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+	private static Object get(final Field field, @Nullable final Object instance) throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
