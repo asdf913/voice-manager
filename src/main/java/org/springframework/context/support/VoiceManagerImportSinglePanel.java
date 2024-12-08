@@ -46,7 +46,6 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
@@ -2232,122 +2231,6 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 		}
 
-		private static IValue0<Object> handleBooleanMap(final String methodName, final Map<Object, Object> map,
-				final Object[] args) {
-			//
-			if (Objects.equals(methodName, "getBoolean") && args != null && args.length > 0) {
-				//
-				final Object key = args[0];
-				//
-				if (!Util.containsKey(map, key)) {
-					//
-					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
-					//
-				} // if
-					//
-				return Unit.with(Util.get(map, key));
-				//
-			} else if (Objects.equals(methodName, "setBoolean") && args != null && args.length > 1) {
-				//
-				Util.put(map, args[0], args[1]);
-				//
-				return Unit.with(null);
-				//
-			} // if
-				//
-			return null;
-			//
-		}
-
-		private static IValue0<Object> handleIntMap(final String methodName, final Map<Object, Object> map,
-				final Object[] args) {
-			//
-			if (Objects.equals(methodName, "getObject") && args != null && args.length > 0) {
-				//
-				final Object key = args[0];
-				//
-				if (!Util.containsKey(map, key)) {
-					//
-					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
-					//
-				} // if
-					//
-				return Unit.with(Util.get(map, key));
-				//
-			} else if (Objects.equals(methodName, "containsKey") && args != null && args.length > 0) {
-				//
-				return Unit.with(Util.containsKey(map, args[0]));
-				//
-			} else if (Objects.equals(methodName, "setObject") && args != null && args.length > 1) {
-				//
-				Util.put(map, args[0], args[1]);
-				//
-				return Unit.with(null);
-				//
-			} // if
-				//
-			return null;
-			//
-		}
-
-		private static IValue0<Object> handleIntIntMap(final String methodName, final Map<Object, Object> map,
-				final Object[] args) {
-			//
-			if (Objects.equals(methodName, "getInt") && args != null && args.length > 0) {
-				//
-				final Object key = args[0];
-				//
-				if (!Util.containsKey(map, key)) {
-					//
-					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
-					//
-				} // if
-					//
-				return Unit.with(Util.get(map, key));
-				//
-			} else if (Objects.equals(methodName, "containsKey") && args != null && args.length > 0) {
-				//
-				return Unit.with(Util.containsKey(map, args[0]));
-				//
-			} else if (Objects.equals(methodName, "setInt") && args != null && args.length > 1) {
-				//
-				Util.put(map, args[0], args[1]);
-				//
-				return Unit.with(null);
-				//
-			} // if
-				//
-			return null;
-			//
-		}
-
-		private static IValue0<Object> handleStringMap(final String methodName, final Map<Object, Object> map,
-				final Object[] args) {
-			//
-			if (Objects.equals(methodName, "getString") && args != null && args.length > 0) {
-				//
-				final Object key = args[0];
-				//
-				if (!Util.containsKey(map, key)) {
-					//
-					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
-					//
-				} // if
-					//
-				return Unit.with(Util.get(map, key));
-				//
-			} else if (Objects.equals(methodName, "setString") && args != null && args.length > 1) {
-				//
-				Util.put(map, args[0], args[1]);
-				//
-				return Unit.with(null);
-				//
-			} // if
-				//
-			return null;
-			//
-		}
-
 		private static boolean isArray(final OfField<?> instance) {
 			return instance != null && instance.isArray();
 		}
@@ -2699,16 +2582,6 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		if (instance != null) {
 			instance.setFileSelectionMode(mode);
 		}
-	}
-
-	private static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) {
-		//
-		if (instance != null) {
-			//
-			instance.forEach(action);
-			//
-		} // if
-			//
 	}
 
 	private static class VoiceThrowableMessageBiConsumer implements BiConsumer<Voice, String> {
@@ -3415,32 +3288,6 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 	}
 
-	private static URI toURI(final URL instance) throws URISyntaxException {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		try {
-			//
-			if (Narcissus.getField(instance, URL.class.getDeclaredField(HANDLER)) == null) {
-				//
-				return null;
-				//
-			} // if
-				//
-		} catch (final NoSuchFieldException e) {
-			//
-			LoggerUtil.error(LOG, e.getMessage(), e);
-			//
-		} // try
-			//
-		return instance.toURI();
-		//
-	}
-
 	private static String getFileExtension(final ContentInfo ci) {
 		//
 		final String message = getMessage(ci);
@@ -4063,39 +3910,6 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		if (instance != null) {
 			instance.addChangeListener(changeListener);
 		}
-	}
-
-	private static List<Field> findFieldsByValue(final Field[] fs, final Object instance, final Object value) {
-		//
-		Field f = null;
-		//
-		Object fieldValue = null;
-		//
-		List<Field> list = null;
-		//
-		for (int i = 0; fs != null && i < fs.length; i++) {
-			//
-			if ((f = fs[i]) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if ((fieldValue = testAndApply(VoiceManagerImportSinglePanel::isStatic, f, Narcissus::getStaticField,
-					a -> testAndApply(Objects::nonNull, instance, b -> Narcissus.getField(b, a), null))) != value
-					|| !Objects.equals(fieldValue, value)) {
-				//
-				continue;
-				//
-			} // if
-				//
-			testAndAccept((a, b) -> !Util.contains(a, b), list = ObjectUtils.getIfNull(list, ArrayList::new), f,
-					Util::add, null);
-			//
-		} // for
-			//
-		return list;
-		//
 	}
 
 	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
