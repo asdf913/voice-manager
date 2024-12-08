@@ -524,6 +524,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient PropertyResolver propertyResolver = null;
 
+	static VoiceManager INSTANCE = null;
+
 	@Note("Folder")
 	private JTextComponent tfFolder = null;
 
@@ -2079,6 +2081,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void init() throws NoSuchFieldException {
 		//
+		if (INSTANCE == null) {
+			//
+			INSTANCE = this;
+			//
+		} // if
+			//
 		final JTabbedPane jTabbedPane = new JTabbedPane();
 		//
 		final String TAB_TITLE_IMPORT_SINGLE = "Import(Single)";
@@ -2174,7 +2182,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // for
 			//
-		jTabbedPane.addTab(TAB_TITLE_IMPORT_SINGLE, createSingleImportPanel(cloneLayoutManager(), voiceIds));
+//		jTabbedPane.addTab(TAB_TITLE_IMPORT_SINGLE, createSingleImportPanel(cloneLayoutManager(), voiceIds));
 		//
 		jTabbedPane.addTab(TAB_TITLE_IMPORT_BATCH, createBatchImportPanel(cloneLayoutManager()));
 		//

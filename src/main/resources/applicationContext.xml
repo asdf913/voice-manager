@@ -1056,6 +1056,32 @@
 		<property name="speechApi" ref="speechApi" />
 	</bean>
 
+	<!---->
+	<bean
+		class="org.springframework.context.support.VoiceManagerImportSinglePanel">
+		<property name="speechApi" ref="speechApi" />
+		<property name="gaKuNenBeTsuKanJiMultimap"
+			ref="GaKuNenBeTsuKanJiMultimap" />
+		<property name="jlptVocabularyList" ref="JlptVocabularyList" />
+		<property name="jlptLevels" ref="JlptLevelList" />
+		<property name="jouYouKanJiList" ref="JouYouKanJiList" />
+		<property name="imageFormat"
+			value="${org.springframework.context.support.VoiceManager.imageFormat}" />
+		<property name="preferredPronunciationAudioFormat"
+			value="${org.springframework.context.support.VoiceManager.preferredPronunciationAudioFormat}" />
+		<property
+			name="onlineNHKJapanesePronunciationsAccentFailableFunction"
+			ref="OnlineNHKJapanesePronunciationsAccentFailableFunction" />
+		<property name="ipaSymbolMultimap" ref="ipaMultimap" />
+		<property name="sqlSessionFactory" ref="SqlSessionFactory" />
+		<property name="voiceFolder"
+			value="${org.springframework.context.support.VoiceManager.voiceFolder}" />
+		<property name="messageDigestAlgorithm"
+			ref="messageDigestAlgorithm" />
+		<property name="mp3Tags"
+			value="${org.springframework.context.support.VoiceManager.mp3Tags}" />
+	</bean>
+
 	<!-- -->
 	<bean class="org.springframework.context.support.IpaSymbolGui">
 		<property name="layout" ref="MigLayout" />
