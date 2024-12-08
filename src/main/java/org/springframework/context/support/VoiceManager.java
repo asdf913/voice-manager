@@ -139,7 +139,6 @@ import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -2901,62 +2900,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
-	private static void setMajorTickSpacing(@Nullable final JSlider instance, final int n) {
-		if (instance != null) {
-			instance.setMajorTickSpacing(n);
-		}
-	}
-
-	private static void setPaintTicks(@Nullable final JSlider instance, final boolean b) {
-		if (instance != null) {
-			instance.setPaintTicks(b);
-		}
-	}
-
-	private static void setPaintLabels(@Nullable final JSlider instance, final boolean b) {
-		if (instance != null) {
-			instance.setPaintLabels(b);
-		}
-	}
-
-	private static void addSpeedButtons(@Nullable final VoiceManager instance, final Container container,
-			final Range<Integer> range, final int width) {
-		//
-		if (!(RangeUtil.hasLowerBound(range) && RangeUtil.hasUpperBound(range) && RangeUtil.lowerEndpoint(range) != null
-				&& RangeUtil.upperEndpoint(range) != null)) {
-			//
-			return;
-			//
-		} // if
-			//
-		add(container, new JLabel(SPEECH_RATE), String.format(ALIGN_FORMAT, "50%"));
-		//
-		final JSlider jsSpeechRate = instance != null
-				? instance.jsSpeechRate = new JSlider(intValue(RangeUtil.lowerEndpoint(range), 0),
-						intValue(RangeUtil.upperEndpoint(range), 0))
-				: null;
-		//
-		add(container, jsSpeechRate, String.format(WMIN_ONLY_FORMAT, width));
-		//
-		setMajorTickSpacing(jsSpeechRate, 1);
-		//
-		setPaintTicks(jsSpeechRate, true);
-		//
-		setPaintLabels(jsSpeechRate, true);
-		//
-		final JTextComponent tfSpeechRate = instance != null ? instance.tfSpeechRate = new JTextField() : null;
-		//
-		add(container, tfSpeechRate, String.format("align %1$s %1$s,width %2$s", "50%", 20));
-		//
-		setEditable(false, tfSpeechRate);
-		//
-		setValue(jsSpeechRate,
-				PropertyResolverUtil.getProperty(instance != null ? instance.propertyResolver : null,
-						"org.springframework.context.support.VoiceManager.speechRate"),
-				a -> instance.stateChanged(new ChangeEvent(a)));
-		//
-	}
-
 	@Nullable
 	private static <E> ListCellRenderer<? super E> getRenderer(@Nullable final JComboBox<E> instance) {
 		return instance != null ? instance.getRenderer() : null;
@@ -3110,20 +3053,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private void setSpeechVolume(@Nullable final Number speechVolume, @Nullable final Number upperEnpoint) {
-		//
-		if (speechVolume != null) {
-			//
-			setValue(jsSpeechVolume, Math.min(speechVolume.intValue(), intValue(upperEnpoint, 100)));
-			//
-		} else if (upperEnpoint != null) {
-			//
-			setValue(jsSpeechVolume, upperEnpoint.intValue());
-			//
-		} // if
-			//
-	}
-
 	@Nullable
 	private static JTextComponent createProviderPlatformJTextComponent(final boolean isInstalled,
 			@Nullable final Provider provider) {
@@ -3153,156 +3082,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null && annotationClass != null && instance.isAnnotationPresent(annotationClass);
 	}
 
-	private static void setValue(@Nullable final JSlider instance, final String string,
-			final Consumer<JSlider> consumer) {
-		//
-		Integer i = valueOf(string);
-		//
-		if (i != null) {
-			//
-			if (instance != null && i >= instance.getMinimum() && i <= instance.getMaximum()) {
-				//
-				setValue(instance, i.intValue());
-				//
-				accept(consumer, instance);
-				//
-			} // if
-				//
-		} else {
-			//
-			final List<Method> ms = Util.toList(Util.filter(
-					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(instance)), Arrays::stream,
-							null),
-					x -> x != null && Objects.equals(x.getReturnType(), Integer.TYPE) && x.getParameterCount() == 0
-							&& StringUtils.startsWithIgnoreCase(Util.getName(x), "get" + string)));
-			//
-			final int size = CollectionUtils.size(ms);
-			//
-			if (size == 1) {
-				//
-				setValue(instance, get(ms, 0), consumer, GraphicsEnvironment.isHeadless());
-				//
-			} else if (size > 1) {
-				//
-				throw new IllegalStateException(
-						Util.collect(sorted(Util.map(Util.stream(ms), Util::getName), ObjectUtils::compare),
-								Collectors.joining(",")));
-				//
-			} // if
-				//
-		} // if
-			//
-	}
-
-	private static void setValue(@Nullable final JSlider instance, @Nullable final Method method,
-			final Consumer<JSlider> consumer, final boolean headless) {
-		//
-		try {
-			//
-			final Integer i = Util.cast(Integer.class, invoke(method, instance));
-			//
-			if (instance != null && i != null) {
-				//
-				instance.setValue(i.intValue());
-				//
-				accept(consumer, instance);
-				//
-			} // if
-				//
-		} catch (final IllegalAccessException e) {
-			//
-			errorOrAssertOrShowException(headless, e);
-			//
-		} catch (final InvocationTargetException e) {
-			//
-			final Throwable targetException = e.getTargetException();
-			//
-			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(
-					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
-			//
-		} // try
-			//
-	}
-
 	@Nullable
 	private static <E> E get(@Nullable final List<E> instance, final int index) {
 		return instance != null ? instance.get(index) : null;
 	}
 
-	private static void addChangeListener(final ChangeListener changeListener, final JSlider instance,
-			@Nullable final JSlider... vs) {
-		//
-		addChangeListener(instance, changeListener);
-		//
-		for (int i = 0; vs != null && i < vs.length; i++) {
-			//
-			addChangeListener(vs[i], changeListener);
-			//
-		} // for
-			//
-	}
-
-	private static void addChangeListener(@Nullable final JSlider instance, final ChangeListener changeListener) {
-		if (instance != null) {
-			instance.addChangeListener(changeListener);
-		}
-	}
-
-	private static ListCellRenderer<Pronunciation> createPronunciationListCellRenderer(
-			@Nullable final ListCellRenderer<?> lcr) {
-		//
-		return new ListCellRenderer<>() {
-
-			@Override
-			@Nullable
-			public Component getListCellRendererComponent(final JList<? extends Pronunciation> list,
-					final Pronunciation value, final int index, boolean isSelected, boolean cellHasFocus) {
-				//
-				final BufferedImage pitchAccentImage = getPitchAccentImage(value);
-				//
-				// If the "java.awt.image.BufferedImage" instance is instantiated by
-				// "io.github.toolfactory.narcissus.Narcissus.allocateInstance(java.lang.Class)",
-				// check if the "raster" field in the "java.awt.image.BufferedImage" instance is
-				// not null
-				//
-				Object raster = null;
-				//
-				try {
-					//
-					raster = testAndApply(Objects::nonNull, pitchAccentImage,
-							x -> Narcissus.getObjectField(x, getDeclaredField(Util.getClass(x), "raster")), null);
-					//
-				} catch (final NoSuchFieldException e) {
-					//
-					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-					//
-				} // try
-					//
-				if (pitchAccentImage != null && raster != null) {
-					//
-					return VoiceManager.getListCellRendererComponent(((ListCellRenderer) lcr), list,
-							new ImageIcon(pitchAccentImage), index, isSelected, cellHasFocus);
-					//
-				} // if
-					//
-				return VoiceManager.getListCellRendererComponent(((ListCellRenderer) lcr), list, new ImageIcon(), index,
-						isSelected, cellHasFocus);
-				//
-			}
-		};
-		//
-	}
-
 	@Nullable
 	private static BufferedImage getPitchAccentImage(@Nullable final Pronunciation instance) {
 		return instance != null ? instance.getPitchAccentImage() : null;
-	}
-
-	private static void addDocumentListener(@Nullable final javax.swing.text.Document instance,
-			final DocumentListener listener) {
-		if (instance != null) {
-			instance.addDocumentListener(listener);
-		}
 	}
 
 	@Nullable
@@ -3327,12 +3114,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static class BooleanComboBoxModelSupplier implements Supplier<ComboBoxModel<Boolean>> {
 
 		private Collection<Boolean> booleans = null;
-
-		private BooleanComboBoxModelSupplier(final Collection<Boolean> booleans) {
-			//
-			this.booleans = booleans;
-			//
-		}
 
 		@Override
 		public ComboBoxModel<Boolean> get() {
@@ -4467,20 +4248,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
-	private static Range<Integer> createVolumeRange(final Object instance) {
-		//
-		final Lookup lookup = Util.cast(Lookup.class, instance);
-		//
-		final BiPredicate<String, String> biPredicate = (a, b) -> Lookup.contains(lookup, a, b);
-		//
-		final FailableBiFunction<String, String, Object, RuntimeException> biFunction = (a, b) -> Lookup.get(lookup, a,
-				b);
-		//
-		return createRange(toInteger(testAndApply(biPredicate, "volume", "min", biFunction, null)),
-				toInteger(testAndApply(biPredicate, "volume", "max", biFunction, null)));
-		//
-	}
-
 	@Nullable
 	private static Integer toInteger(@Nullable final Object object) {
 		//
@@ -4501,20 +4268,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		return integer;
-		//
-	}
-
-	private static Range<Integer> createRange(@Nullable final Integer minValue, @Nullable final Integer maxValue) {
-		//
-		if (minValue != null && maxValue != null) {
-			return Range.open(minValue, maxValue);
-		} else if (minValue != null) {
-			return Range.atLeast(minValue);
-		} else if (maxValue != null) {
-			return Range.atMost(maxValue);
-		} // if
-			//
-		return Range.all();
 		//
 	}
 
@@ -10082,12 +9835,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static String name(@Nullable final Enum<?> instance) {
 		return instance != null ? instance.name() : null;
-	}
-
-	private static <E> void add(@Nullable final List<E> instance, final int index, @Nullable final E element) {
-		if (instance != null) {
-			instance.add(index, element);
-		}
 	}
 
 	private static void importVoice(@Nullable final ObjectMap objectMap,

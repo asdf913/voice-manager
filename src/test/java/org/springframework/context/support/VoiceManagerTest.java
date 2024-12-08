@@ -250,7 +250,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Range;
 import com.google.common.collect.Table;
 import com.google.common.reflect.Reflection;
 import com.healthmarketscience.jackcess.Database;
@@ -313,32 +312,31 @@ class VoiceManagerTest {
 			METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER, METHOD_IMPORT_VOICE_OBJECT_MAP_FILE, METHOD_IMPORT_VOICE5,
 			METHOD_IMPORT_VOICE_BY_SPEECH_API,
 			METHOD_IMPORT_VOICE_BY_ONLINE_NHK_JAPANESE_PRONUNCIATIONS_ACCENT_FAILABLE_FUNCTION, METHOD_ADD_CONTAINER2,
-			METHOD_ADD_CONTAINER3, METHOD_ADD_LIST, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_ANY_MATCH,
-			METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_MATCHER, METHOD_MATCHES, METHOD_SET_VALUE_J_PROGRESS_BAR,
-			METHOD_SET_VALUE_J_SLIDER, METHOD_SET_STRING_J_PROGRESS_BAR, METHOD_SET_STRING_COMMENT,
-			METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_VALUE_OF1, METHOD_VALUE_OF2, METHOD_CREATE_RANGE,
-			METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST,
-			METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_COPY_OBJECT_MAP, METHOD_DELETE, METHOD_DELETE_ON_EXIT,
-			METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA,
-			METHOD_SET_ROMAJI, METHOD_AND, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_STRING_BUILDER,
-			METHOD_EXECUTE, METHOD_GET_BYTE_CONVERTER, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT,
-			METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM1, METHOD_TO_ARRAY_STREAM2, METHOD_GET_ID,
-			METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_DATA_VALIDATION_HELPER,
-			METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION, METHOD_CREATE_EXPORT_TASK,
-			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES,
-			METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES,
-			METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES,
-			METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_PASS_WORD,
-			METHOD_GET_SUPPLIER, METHOD_GET_LIST, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK,
-			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR,
-			METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
-			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
-			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES,
-			METHOD_GET_DLL_PATH, METHOD_GET_RATE0, METHOD_GET_RATE_VOICE_MANAGER, METHOD_GET_RATE_FIELD_LIST,
-			METHOD_ADD_CHANGE_LISTENER, METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING,
-			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_FILE_EXTENSIONS,
-			METHOD_REDUCE2, METHOD_REDUCE3, METHOD_APPEND_STRING, METHOD_APPEND_CHAR, METHOD_GET_RESOURCE_AS_STREAM,
-			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD,
+			METHOD_ADD_CONTAINER3, METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY, METHOD_ANY_MATCH, METHOD_NAME,
+			METHOD_GET_SELECTED_ITEM, METHOD_MATCHER, METHOD_MATCHES, METHOD_SET_VALUE_J_PROGRESS_BAR,
+			METHOD_SET_STRING_J_PROGRESS_BAR, METHOD_SET_STRING_COMMENT, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT,
+			METHOD_VALUE_OF1, METHOD_VALUE_OF2, METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE,
+			METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_COPY_OBJECT_MAP, METHOD_DELETE,
+			METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED,
+			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_AND, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL,
+			METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE, METHOD_GET_BYTE_CONVERTER, METHOD_GET_LPW_STR,
+			METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM1,
+			METHOD_TO_ARRAY_STREAM2, METHOD_GET_ID, METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX,
+			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
+			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
+			METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP,
+			METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
+			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
+			METHOD_GET_NAME_FILE, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LIST,
+			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_CREATE_DRAWING_PATRIARCH,
+			METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING,
+			METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR, METHOD_TEST_AND_ACCEPT_PREDICATE,
+			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_PACKAGE, METHOD_BROWSE,
+			METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE0,
+			METHOD_GET_RATE_VOICE_MANAGER, METHOD_GET_RATE_FIELD_LIST, METHOD_IS_ANNOTATION_PRESENT,
+			METHOD_ENCODE_TO_STRING, METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT,
+			METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE2, METHOD_REDUCE3, METHOD_APPEND_STRING, METHOD_APPEND_CHAR,
+			METHOD_GET_RESOURCE_AS_STREAM, METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_INSTRUCTION_ARRAY, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH,
 			METHOD_ITEM, METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET,
 			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
@@ -356,27 +354,25 @@ class VoiceManagerTest {
 			METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC,
 			METHOD_IMPORT_BY_WORK_BOOK_FILES, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS,
 			METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME,
-			METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT, METHOD_SET_SPEECH_VOLUME, METHOD_EXPORT_MICROSOFT_ACCESS,
-			METHOD_IMPORT_RESULT_SET, METHOD_CREATE_VOICE_ID_WARNING_PANEL,
-			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_GET_EMPTY_FILE_PATH,
-			METHOD_SET_LOCALE_ID_SHEET, METHOD_ADD_LOCALE_ID_ROW, METHOD_SET_FOCUS_CYCLE_ROOT,
-			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP,
-			METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE, METHOD_GET_WRITER, METHOD_GET_WORK_BOOK_CLASS,
-			METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME, METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE,
-			METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL,
-			METHOD_ADD_DOCUMENT_LISTENER, METHOD_GET_LEVEL, METHOD_ADD_ALL, METHOD_PLAY_AUDIO, METHOD_PLAY,
+			METHOD_CREATE_PROVIDER_PLATFORM_J_TEXT_COMPONENT, METHOD_EXPORT_MICROSOFT_ACCESS, METHOD_IMPORT_RESULT_SET,
+			METHOD_CREATE_VOICE_ID_WARNING_PANEL, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL,
+			METHOD_GET_EMPTY_FILE_PATH, METHOD_SET_LOCALE_ID_SHEET, METHOD_ADD_LOCALE_ID_ROW,
+			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
+			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
+			METHOD_GET_WRITER, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME, METHOD_IF_ELSE,
+			METHOD_GET_PAGE_TITLE, METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_TO_MILLIS,
+			METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL, METHOD_ADD_ALL, METHOD_PLAY_AUDIO, METHOD_PLAY,
 			METHOD_PRONOUNICATION_CHANGED, METHOD_REMOVE_ELEMENT_AT, METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT,
-			METHOD_CREATE_PRONUNCIATION_LIST_CELL_RENDERER, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_GET_FILE,
+			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_GET_FILE,
 			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE3, METHOD_GET_AUDIO_FILE4,
 			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER,
 			METHOD_READ_LINE, METHOD_PRINT_LN, METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_NUMERIC_CELL_VALUE,
 			METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT,
 			METHOD_GET_IMAGE_FORMAT, METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY, METHOD_IS_ALL_CHARACTERS_ALLOWED,
 			METHOD_GET_VALUE_COLLECTION_BY_KEY, METHOD_CREATE_YOMI_NAME_MAP0, METHOD_CREATE_YOMI_NAME_MAP1,
-			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_ADD_SPEED_BUTTONS,
-			METHOD_SET_MAJOR_TICK_SPACING, METHOD_SET_PAINT_TICKS, METHOD_SET_PAINT_LABELS, METHOD_SORTED,
-			METHOD_GET_ID3V1_TAG, METHOD_GET_ID3V2_TAG, METHOD_ADD_VALIDATION_DATA, METHOD_CREATE_IMPORT_RESULT_PANEL,
-			METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG, METHOD_OPEN_STREAM,
+			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_SORTED, METHOD_GET_ID3V1_TAG,
+			METHOD_GET_ID3V2_TAG, METHOD_ADD_VALIDATION_DATA, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL,
+			METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG, METHOD_OPEN_STREAM,
 			METHOD_ACTION_PERFORMED_FOR_IMPORT_FILE_TEMPLATE, METHOD_SUBMIT, METHOD_OPEN_CONNECTION, METHOD_FORMAT_HEX,
 			METHOD_SET_SELECTED_INDEX = null;
 
@@ -494,8 +490,6 @@ class VoiceManagerTest {
 		(METHOD_ADD_CONTAINER3 = clz.getDeclaredMethod("add", Container.class, Component.class, Object.class))
 				.setAccessible(true);
 		//
-		(METHOD_ADD_LIST = clz.getDeclaredMethod("add", List.class, Integer.TYPE, Object.class)).setAccessible(true);
-		//
 		(METHOD_CREATE_IMPORT_FILE_TEMPLATE_BYTE_ARRAY = clz.getDeclaredMethod("createImportFileTemplateByteArray",
 				Boolean.TYPE, Collection.class, Collection.class)).setAccessible(true);
 		//
@@ -512,9 +506,6 @@ class VoiceManagerTest {
 		(METHOD_SET_VALUE_J_PROGRESS_BAR = clz.getDeclaredMethod("setValue", JProgressBar.class, Integer.TYPE))
 				.setAccessible(true);
 		//
-		(METHOD_SET_VALUE_J_SLIDER = clz.getDeclaredMethod("setValue", JSlider.class, String.class, Consumer.class))
-				.setAccessible(true);
-		//
 		(METHOD_SET_STRING_J_PROGRESS_BAR = clz.getDeclaredMethod("setString", JProgressBar.class, String.class))
 				.setAccessible(true);
 		//
@@ -529,8 +520,6 @@ class VoiceManagerTest {
 		(METHOD_VALUE_OF1 = clz.getDeclaredMethod("valueOf", String.class)).setAccessible(true);
 		//
 		(METHOD_VALUE_OF2 = clz.getDeclaredMethod("valueOf", String.class, Integer.TYPE)).setAccessible(true);
-		//
-		(METHOD_CREATE_RANGE = clz.getDeclaredMethod("createRange", Integer.class, Integer.class)).setAccessible(true);
 		//
 		(METHOD_WRITE_VOICE_TO_FILE = clz.getDeclaredMethod("writeVoiceToFile", CLASS_OBJECT_MAP, String.class,
 				String.class, Integer.class, Integer.class)).setAccessible(true);
@@ -696,9 +685,6 @@ class VoiceManagerTest {
 		(METHOD_GET_RATE_VOICE_MANAGER = clz.getDeclaredMethod("getRate", VoiceManager.class)).setAccessible(true);
 		//
 		(METHOD_GET_RATE_FIELD_LIST = clz.getDeclaredMethod("getRate", List.class)).setAccessible(true);
-		//
-		(METHOD_ADD_CHANGE_LISTENER = clz.getDeclaredMethod("addChangeListener", ChangeListener.class, JSlider.class,
-				JSlider[].class)).setAccessible(true);
 		//
 		(METHOD_IS_ANNOTATION_PRESENT = clz.getDeclaredMethod("isAnnotationPresent", AnnotatedElement.class,
 				Class.class)).setAccessible(true);
@@ -869,9 +855,6 @@ class VoiceManagerTest {
 				.getDeclaredMethod("createProviderPlatformJTextComponent", Boolean.TYPE, Provider.class))
 				.setAccessible(true);
 		//
-		(METHOD_SET_SPEECH_VOLUME = clz.getDeclaredMethod("setSpeechVolume", Number.class, Number.class))
-				.setAccessible(true);
-		//
 		(METHOD_EXPORT_MICROSOFT_ACCESS = clz.getDeclaredMethod("exportMicrosoftAccess", CLASS_OBJECT_MAP,
 				Iterable.class)).setAccessible(true);
 		//
@@ -932,9 +915,6 @@ class VoiceManagerTest {
 		(METHOD_SET_JLPT_VOCABULARY_AND_LEVEL = clz.getDeclaredMethod("setJlptVocabularyAndLevel", VoiceManager.class))
 				.setAccessible(true);
 		//
-		(METHOD_ADD_DOCUMENT_LISTENER = clz.getDeclaredMethod("addDocumentListener", javax.swing.text.Document.class,
-				DocumentListener.class)).setAccessible(true);
-		//
 		(METHOD_GET_LEVEL = clz.getDeclaredMethod("getLevel", JlptVocabulary.class)).setAccessible(true);
 		//
 		(METHOD_ADD_ALL = clz.getDeclaredMethod("addAll", Collection.class, Collection.class)).setAccessible(true);
@@ -951,9 +931,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT = clz.getDeclaredMethod("actionPerformedForBtnImport", Boolean.TYPE))
 				.setAccessible(true);
-		//
-		(METHOD_CREATE_PRONUNCIATION_LIST_CELL_RENDERER = clz.getDeclaredMethod("createPronunciationListCellRenderer",
-				ListCellRenderer.class)).setAccessible(true);
 		//
 		(METHOD_GET_LIST_CELL_RENDERER_COMPONENT = clz.getDeclaredMethod("getListCellRendererComponent",
 				ListCellRenderer.class, JList.class, Object.class, Integer.TYPE, Boolean.TYPE, Boolean.TYPE))
@@ -1021,18 +998,6 @@ class VoiceManagerTest {
 		(METHOD_GET_RENDERER = clz.getDeclaredMethod("getRenderer", JComboBox.class)).setAccessible(true);
 		//
 		(METHOD_SET_RENDERER = clz.getDeclaredMethod("setRenderer", JComboBox.class, ListCellRenderer.class))
-				.setAccessible(true);
-		//
-		(METHOD_ADD_SPEED_BUTTONS = clz.getDeclaredMethod("addSpeedButtons", VoiceManager.class, Container.class,
-				Range.class, Integer.TYPE)).setAccessible(true);
-		//
-		(METHOD_SET_MAJOR_TICK_SPACING = clz.getDeclaredMethod("setMajorTickSpacing", JSlider.class, Integer.TYPE))
-				.setAccessible(true);
-		//
-		(METHOD_SET_PAINT_TICKS = clz.getDeclaredMethod("setPaintTicks", JSlider.class, Boolean.TYPE))
-				.setAccessible(true);
-		//
-		(METHOD_SET_PAINT_LABELS = clz.getDeclaredMethod("setPaintLabels", JSlider.class, Boolean.TYPE))
 				.setAccessible(true);
 		//
 		(METHOD_SORTED = clz.getDeclaredMethod("sorted", Stream.class, Comparator.class)).setAccessible(true);
@@ -4666,8 +4631,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> add(new JPanel(), component, null));
 		//
-		Assertions.assertDoesNotThrow(() -> add(null, ZERO, null));
-		//
 	}
 
 	private static void add(final Container instance, final Component comp) throws Throwable {
@@ -4685,14 +4648,6 @@ class VoiceManagerTest {
 			throw e.getTargetException();
 		}
 
-	}
-
-	private static <E> void add(final List<E> instance, final int index, final E element) throws Throwable {
-		try {
-			METHOD_ADD_LIST.invoke(null, instance, index, element);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -4830,38 +4785,11 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> setValue(new JProgressBar(), 0));
 		//
-		Assertions.assertDoesNotThrow(() -> setValue(null, null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> setValue(null, "0", null));
-		//
-		final JSlider jSlider = new JSlider();
-		//
-		Assertions.assertDoesNotThrow(() -> setValue(jSlider, "0", null));
-		//
-		Assertions.assertDoesNotThrow(() -> setValue(jSlider, "max", null));
-		//
-		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
-				"{localizedMessage=getMajorTickSpacing,getMaximum, message=getMajorTickSpacing,getMaximum}",
-				() -> setValue(jSlider, "ma", null));
-		//
-		Assertions.assertDoesNotThrow(() -> setValue(jSlider, Integer.toString(jSlider.getMinimum() - 1), null));
-		//
-		Assertions.assertDoesNotThrow(() -> setValue(jSlider, Integer.toString(jSlider.getMaximum() + 1), null));
-		//
 	}
 
 	private static void setValue(final JProgressBar instance, final int n) throws Throwable {
 		try {
 			METHOD_SET_VALUE_J_PROGRESS_BAR.invoke(null, instance, n);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static void setValue(final JSlider instance, final String string, final Consumer<JSlider> consumer)
-			throws Throwable {
-		try {
-			METHOD_SET_VALUE_J_SLIDER.invoke(null, instance, string, consumer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -4969,31 +4897,6 @@ class VoiceManagerTest {
 
 	private static String toString(final Object instance) {
 		return instance != null ? instance.toString() : null;
-	}
-
-	@Test
-	void testCreateRange() throws Throwable {
-		//
-		Assertions.assertEquals(String.format("[%1$s..+∞)", ZERO), toString(createRange(ZERO, null)));
-		//
-		Assertions.assertEquals(String.format("(-∞..%1$s]", ZERO), toString(createRange(null, ZERO)));
-		//
-		Assertions.assertEquals(String.format("(%1$s..%2$s)", ZERO, ONE), toString(createRange(ZERO, ONE)));
-		//
-	}
-
-	private static Range<Integer> createRange(final Integer minValue, final Integer maxValue) throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_RANGE.invoke(null, minValue, maxValue);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Range) {
-				return (Range) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -6587,22 +6490,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testAddChangeListener() {
-		//
-		Assertions.assertDoesNotThrow(() -> addChangeListener(instance, null, (JSlider[]) null));
-		//
-	}
-
-	private static void addChangeListener(final ChangeListener changeListener, final JSlider instance,
-			final JSlider... vs) throws Throwable {
-		try {
-			METHOD_ADD_CHANGE_LISTENER.invoke(null, changeListener, instance, vs);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testIsAnnotationPresent() throws Throwable {
 		//
 		Assertions.assertFalse(isAnnotationPresent(null, null));
@@ -8160,25 +8047,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testSetSpeechVolume() {
-		//
-		final Integer zero = Integer.valueOf(ZERO);
-		//
-		Assertions.assertDoesNotThrow(() -> setSpeechVolume(zero, null));
-		//
-		Assertions.assertDoesNotThrow(() -> setSpeechVolume(null, zero));
-		//
-	}
-
-	private void setSpeechVolume(final Number speechVolume, final Number upperEnpoint) throws Throwable {
-		try {
-			METHOD_SET_SPEECH_VOLUME.invoke(instance, speechVolume, upperEnpoint);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testExportMicrosoftAccess() throws Throwable {
 		//
 		Assertions.assertDoesNotThrow(() -> exportMicrosoftAccess(null, (Iterable) iterable));
@@ -8682,22 +8550,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testAddDocumentListener() {
-		//
-		Assertions.assertDoesNotThrow(() -> addDocumentListener(null, null));
-		//
-	}
-
-	private static void addDocumentListener(final javax.swing.text.Document instance, final DocumentListener listener)
-			throws Throwable {
-		try {
-			METHOD_ADD_DOCUMENT_LISTENER.invoke(null, instance, listener);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testGetLevel() throws Throwable {
 		//
 		Assertions.assertNull(getLevel(null));
@@ -8826,39 +8678,6 @@ class VoiceManagerTest {
 	private void actionPerformedForBtnImport(final boolean headless) throws Throwable {
 		try {
 			METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT.invoke(instance, headless);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCreatePronunciationListCellRenderer() throws Throwable {
-		//
-		final ListCellRenderer<Pronunciation> lcr = createPronunciationListCellRenderer(null);
-		//
-		Assertions.assertNull(getListCellRendererComponent(lcr, null, null, ONE, false, false));
-		//
-		final Pronunciation pronunciation = new Pronunciation();
-		//
-		Assertions.assertNull(getListCellRendererComponent(lcr, null, pronunciation, ONE, false, false));
-		//
-		pronunciation
-				.setPitchAccentImage(Util.cast(BufferedImage.class, Narcissus.allocateInstance(BufferedImage.class)));
-		//
-		Assertions.assertNull(getListCellRendererComponent(lcr, null, pronunciation, ONE, false, false));
-		//
-	}
-
-	private static ListCellRenderer<Pronunciation> createPronunciationListCellRenderer(final ListCellRenderer<?> lcr)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_PRONUNCIATION_LIST_CELL_RENDERER.invoke(null, lcr);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof ListCellRenderer) {
-				return (ListCellRenderer) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -9677,87 +9496,6 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			METHOD_SET_RENDERER.invoke(null, instance, aRenderer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAddSpeedButtons() {
-		//
-		Assertions.assertDoesNotThrow(() -> addSpeedButtons(null, null, null, 0));
-		//
-		Assertions.assertDoesNotThrow(
-				() -> addSpeedButtons(null, null, Util.cast(Range.class, Narcissus.allocateInstance(Range.class)), 0));
-		//
-		Assertions.assertDoesNotThrow(() -> addSpeedButtons(null, null, Range.atLeast(Integer.valueOf(-1)), 0));
-		//
-		final Range<Integer> range = Range.open(Integer.valueOf(-1), Integer.valueOf(1));
-		//
-		Assertions.assertDoesNotThrow(() -> addSpeedButtons(null, null, range, 0));
-		//
-		final VoiceManager voiceManager = Util.cast(VoiceManager.class, Narcissus.allocateInstance(VoiceManager.class));
-		//
-		final Container container = new JPanel();
-		//
-		Assertions.assertDoesNotThrow(() -> addSpeedButtons(voiceManager, container, range, 0));
-		//
-		Assertions.assertDoesNotThrow(() -> addSpeedButtons(voiceManager, container, range, -1));
-		//
-	}
-
-	private static void addSpeedButtons(final VoiceManager instance, final Container container,
-			final Range<Integer> range, final int width) throws Throwable {
-		try {
-			METHOD_ADD_SPEED_BUTTONS.invoke(null, instance, container, range, width);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetMajorTickSpacing() {
-		//
-		Assertions.assertDoesNotThrow(
-				() -> setMajorTickSpacing(Util.cast(JSlider.class, Narcissus.allocateInstance(JSlider.class)), 0));
-		//
-	}
-
-	private static void setMajorTickSpacing(final JSlider instance, final int n) throws Throwable {
-		try {
-			METHOD_SET_MAJOR_TICK_SPACING.invoke(null, instance, n);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetPaintTicks() {
-		//
-		Assertions.assertDoesNotThrow(
-				() -> setPaintTicks(Util.cast(JSlider.class, Narcissus.allocateInstance(JSlider.class)), false));
-		//
-	}
-
-	private static void setPaintTicks(final JSlider instance, final boolean b) throws Throwable {
-		try {
-			METHOD_SET_PAINT_TICKS.invoke(null, instance, b);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetPaintLabels() {
-		//
-		Assertions.assertDoesNotThrow(
-				() -> setPaintLabels(Util.cast(JSlider.class, Narcissus.allocateInstance(JSlider.class)), false));
-		//
-	}
-
-	private static void setPaintLabels(final JSlider instance, final boolean b) throws Throwable {
-		try {
-			METHOD_SET_PAINT_LABELS.invoke(null, instance, b);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
