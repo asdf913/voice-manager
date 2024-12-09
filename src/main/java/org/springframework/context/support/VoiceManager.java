@@ -2079,7 +2079,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Field f = null;
 		//
-		for (int i = 0; fs != null && i < fs.length; i++) {
+		for (int i = 0; i < length(fs); i++) {
 			//
 			try {
 				//
@@ -2250,6 +2250,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				});
 		//
+	}
+
+	private static int length(final Object[] instance) {
+		return instance != null ? instance.length : 0;
 	}
 
 	private static void setSelectedIndex(@Nullable final JTabbedPane instance, @Nullable final Number index) {
