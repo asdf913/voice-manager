@@ -4896,7 +4896,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 								Util.distinct(Util.map(Util.stream(temp), VoiceManagerImportSinglePanel::getLevel))),
 						x -> setSelectedItemByString(cbmJlptLevel, IterableUtils.get(x, 0)));
 				//
-				if (instance != null && instance.jcbJlptVocabulary != null) {
+				if (instance.jcbJlptVocabulary != null) {
 					//
 					instance.itemStateChanged(new ItemEvent(instance.jcbJlptVocabulary, 0, "", 0));
 					//
@@ -4910,7 +4910,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 					testAndApply(x -> IterableUtils.size(x) == 1, temp, x -> IterableUtils.get(x, 0), null),
 					x -> setSelectedItemByString(cbmJlptLevel, getLevel(x)));
 			//
-			if (instance != null && instance.jcbJlptVocabulary != null) {
+			if (instance.jcbJlptVocabulary != null) {
 				//
 				instance.itemStateChanged(new ItemEvent(instance.jcbJlptVocabulary, 0, "", 0));
 				//
