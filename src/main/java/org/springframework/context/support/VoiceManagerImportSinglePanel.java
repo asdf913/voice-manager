@@ -428,7 +428,10 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 
 	private SqlSessionFactory sqlSessionFactory = null;
 
-	private String[] voiceIds, mp3Tags = null;
+	private String[] voiceIds = null;
+
+	@Nullable
+	private String[] mp3Tags = null;
 
 	private String voiceFolder, messageDigestAlgorithm = null;
 
@@ -5023,6 +5026,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	 * @see <a href="https://stackoverflow.com/a/24011264">list - Java 8 stream
 	 *      reverse order - Stack Overflow</a>
 	 */
+	@Nullable
 	private static IntStream reverseRange(final int from, final int to) {
 		return map(IntStream.range(from, to), i -> to - i + from - 1);
 	}
