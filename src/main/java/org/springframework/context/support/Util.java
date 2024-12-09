@@ -1260,8 +1260,8 @@ public abstract class Util {
 		//
 	}
 
-	static <T, E extends Throwable> boolean test(@Nullable final FailablePredicate<T, E> instance, final T value)
-			throws E {
+	static <T, E extends Throwable> boolean test(@Nullable final FailablePredicate<T, E> instance,
+			@Nullable final T value) throws E {
 		return instance != null && instance.test(value);
 	}
 
