@@ -385,6 +385,7 @@ import domain.Voice.ByteArray;
 import domain.Voice.Yomi;
 import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
+import fr.free.nrw.jakaroma.JakaromaUtil;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.cache.StringTemplateLoaderUtil;
@@ -5643,7 +5644,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		final IValue0<?> iValue0 = getIValue0FromMapsByKey(mapRomaji, string,
 				createFunctionForBtnConvertToHiraganaOrKatakana(ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER));
 		//
-		final String romaji = convert(jakaroma = ObjectUtils.getIfNull(jakaroma, Jakaroma::new), string, false, false);
+		final String romaji = JakaromaUtil.convert(jakaroma = ObjectUtils.getIfNull(jakaroma, Jakaroma::new), string,
+				false, false);
 		//
 		if (iValue0 != null && StringUtils.isNotEmpty(Util.toString(IValue0Util.getValue0(iValue0)))
 				&& StringUtils.isNotBlank(romaji)) {
@@ -7402,12 +7404,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static String convert(@Nullable final Jakaroma instance, @Nullable final String input,
-			final boolean trailingSpace, final boolean capitalizeWords) {
-		return instance != null ? instance.convert(input, trailingSpace, capitalizeWords) : null;
 	}
 
 	@Nullable
@@ -9771,7 +9767,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		if (StringUtils.isBlank(romaji) && StringUtils.isNotBlank(hiragana)) {
 			//
-			voice.setRomaji(convert(jakaroma, hiragana, false, false));
+			voice.setRomaji(JakaromaUtil.convert(jakaroma, hiragana, false, false));
 			//
 		} // if
 			//
