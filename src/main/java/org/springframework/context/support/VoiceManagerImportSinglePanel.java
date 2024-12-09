@@ -892,7 +892,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 		if (pd != null) {
 			//
-			jcbPronunciation.setPreferredSize(new Dimension((int) pd.getWidth(), 33));
+			setPreferredSize(jcbPronunciation, new Dimension((int) pd.getWidth(), 33));
 			//
 		} // if
 			//
@@ -1033,6 +1033,12 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 		setEnabled(false, tfPronunciationPageStatusCode);
 		//
+	}
+
+	private static void setPreferredSize(final Component instance, final Dimension preferredSize) {
+		if (instance != null) {
+			instance.setPreferredSize(preferredSize);
+		}
 	}
 
 	@Override
@@ -4375,7 +4381,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 				//
 			} // if
 				//
-			c.setPreferredSize(new Dimension(width, (int) d.getHeight()));
+			setPreferredSize(c, new Dimension(width, (int) d.getHeight()));
 			//
 		} // for
 			//
