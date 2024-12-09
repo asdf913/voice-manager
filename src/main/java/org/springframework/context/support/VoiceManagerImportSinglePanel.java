@@ -2961,6 +2961,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 	}
 
+	@Nullable
 	private static String checkFileExtension(@Nullable final String fileExtension) {
 		//
 		if (fileExtension == null) {
