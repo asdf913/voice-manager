@@ -3669,6 +3669,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return instance != null ? instance.getConfiguration() : null;
 	}
 
+	@Nullable
 	private static Voice createVoice(@Nullable final ObjectMapper objectMapper,
 			@Nullable final VoiceManagerImportSinglePanel instance) {
 		//
