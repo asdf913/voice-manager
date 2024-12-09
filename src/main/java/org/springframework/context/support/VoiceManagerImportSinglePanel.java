@@ -291,11 +291,11 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			tfListNames, tfRomaji, tfHiragana, tfKatakana, tfPronunciationPageUrl, tfPronunciationPageStatusCode,
 			tfSpeechRate, tfSpeechVolume = null;
 
-	private javax.swing.text.Document tfTextImportDocument = null;
+	private transient javax.swing.text.Document tfTextImportDocument = null;
 
-	private ComboBoxModel<Boolean> cbmIsKanji = null;
+	private transient ComboBoxModel<Boolean> cbmIsKanji = null;
 
-	private ComboBoxModel<String> cbmGaKuNenBeTsuKanJi = null;
+	private transient ComboBoxModel<String> cbmGaKuNenBeTsuKanJi = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -304,12 +304,12 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	}
 
 	@Url("https://ja.wikipedia.org/wiki/%E5%B8%B8%E7%94%A8%E6%BC%A2%E5%AD%97%E4%B8%80%E8%A6%A7")
-	private ComboBoxModel<Boolean> cbmJouYouKanJi = null;
+	private transient ComboBoxModel<Boolean> cbmJouYouKanJi = null;
 
 	@Url("https://www.jlpt.jp/about/levelsummary.html")
-	private ComboBoxModel<String> cbmJlptLevel = null;
+	private transient ComboBoxModel<String> cbmJlptLevel = null;
 
-	private ComboBoxModel<Yomi> cbmYomi = null;
+	private transient ComboBoxModel<Yomi> cbmYomi = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -318,7 +318,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	}
 
 	@Note("Voice ID")
-	private ComboBoxModel<String> cbmVoiceId = null;
+	private transient ComboBoxModel<String> cbmVoiceId = null;
 
 	@Note("For Import Panel")
 	private transient ComboBoxModel<?> cbmAudioFormatExecute = null;
@@ -331,27 +331,27 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 
 	private JComboBox<Pronunciation> jcbPronunciation = null;
 
-	private IValue0<Multimap<String, String>> gaKuNenBeTsuKanJiMultimap = null;
+	private transient IValue0<Multimap<String, String>> gaKuNenBeTsuKanJiMultimap = null;
 
-	private IValue0<List<JlptVocabulary>> jlptVocabularyList = null;
+	private transient IValue0<List<JlptVocabulary>> jlptVocabularyList = null;
 
-	private IValue0<List<String>> jlptLevels = null;
+	private transient IValue0<List<String>> jlptLevels = null;
 
-	private IValue0<String> imageFormat = null;
+	private transient IValue0<String> imageFormat = null;
 
-	private IValue0<List<String>> jouYouKanJiList = null;
+	private transient IValue0<List<String>> jouYouKanJiList = null;
 
-	private IValue0<Multimap<String, String>> ipaSymbolMultimap = null;
+	private transient IValue0<Multimap<String, String>> ipaSymbolMultimap = null;
 
-	private MutableComboBoxModel<JlptVocabulary> mcbmJlptVocabulary = null;
+	private transient MutableComboBoxModel<JlptVocabulary> mcbmJlptVocabulary = null;
 
-	private MutableComboBoxModel<Pronunciation> mcbmPronunciation = null;
+	private transient MutableComboBoxModel<Pronunciation> mcbmPronunciation = null;
 
-	private MutableComboBoxModel<String> mcbmPronounicationAudioFormat = null;
+	private transient MutableComboBoxModel<String> mcbmPronounicationAudioFormat = null;
 
-	private SpeechApi speechApi = null;
+	private transient SpeechApi speechApi = null;
 
-	private Collection<Map> mapRomaji = null;
+	private transient Collection<Map> mapRomaji = null;
 
 	private char[] allowedRomajiCharacters = null;
 
@@ -419,15 +419,17 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 
 	private String preferredPronunciationAudioFormat = null;
 
-	private OnlineNHKJapanesePronunciationsAccentFailableFunction onlineNHKJapanesePronunciationsAccentFailableFunction = null;
+	private transient OnlineNHKJapanesePronunciationsAccentFailableFunction onlineNHKJapanesePronunciationsAccentFailableFunction = null;
 
-	private Jakaroma jakaroma = null;
+	private transient Jakaroma jakaroma = null;
 
-	private Collection<Multimap> multimapHiragana, multimapKatakana = null;
+	private transient Collection<Multimap> multimapHiragana = null;
 
-	private Collection<Map> mapHiragana = null;
+	private transient Collection<Multimap> multimapKatakana = null;
 
-	private SqlSessionFactory sqlSessionFactory = null;
+	private transient Collection<Map> mapHiragana = null;
+
+	private transient SqlSessionFactory sqlSessionFactory = null;
 
 	private String[] voiceIds = null;
 
@@ -436,7 +438,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 
 	private String voiceFolder, messageDigestAlgorithm = null;
 
-	private ConfigurableListableBeanFactory configurableListableBeanFactory = null;
+	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
 	@Override
 	public String getTitle() {
