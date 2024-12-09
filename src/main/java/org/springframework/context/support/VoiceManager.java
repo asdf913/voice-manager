@@ -2180,12 +2180,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		forEach(Util.values(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Component.class)), x -> {
 			//
-			if (x instanceof Titled t) {
-				//
-				jTabbedPane.addTab(t.getTitle(), x);
-				//
-			} // if
-				//
+			testAndAccept(Objects::nonNull, Util.cast(Titled.class, x), y -> jTabbedPane.addTab(getTitle(y), x));
+			//
 		});
 		//
 		jTabbedPane.addTab(TAB_TITLE_IMPORT_BATCH, createBatchImportPanel(cloneLayoutManager()));
@@ -2245,6 +2241,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				});
 		//
+	}
+
+	private static String getTitle(final Titled instance) {
+		return instance != null ? instance.getTitle() : null;
 	}
 
 	private static int length(@Nullable final Object[] instance) {
