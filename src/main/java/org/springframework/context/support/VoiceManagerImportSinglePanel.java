@@ -2276,35 +2276,12 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 
 	private void actionPerformedForExecute(final boolean headless, final boolean nonTest) {
 		//
-		VoiceManager voiceManager = VoiceManager.INSTANCE;
+		final VoiceManager voiceManager = VoiceManager.INSTANCE;
 		//
-		if (voiceManager != null) {
-			//
-			// TODO
-			//
-			final Iterable<String> iterable = Arrays.asList("tfFile", "tfFileLength", "tfFileDigest");
-			//
-			for (int i = 0; i < IterableUtils.size(iterable); i++) {
-				//
-				try {
-					//
-					Util.setText(
-							Util.cast(JTextComponent.class,
-									FieldUtils.readDeclaredField(voiceManager, IterableUtils.get(iterable, 0), true)),
-							null);
-					//
-				} catch (final IllegalAccessException e) {
-					//
-					errorOrAssertOrShowException(headless, e);
-					//
-				} // try
-					//
-			} // for
-				//
-		} // if
-			//
-			// try to retrieve the "Pronunciation" Audio File
-			//
+		setJTextComponentText(headless, voiceManager, null, "tfFile", "tfFileLength", "tfFileDigest");
+		//
+		// try to retrieve the "Pronunciation" Audio File
+		//
 		File file = getPronunciationAudioFileByAudioFormat(
 				Util.cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
 				getSelectedItem(mcbmPronounicationAudioFormat));
@@ -2431,6 +2408,31 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			IOUtils.closeQuietly(sqlSession);
 			//
 		} // try
+			//
+	}
+
+	private static void setJTextComponentText(final boolean headless, final VoiceManager voiceManager,
+			final String value, final String... names) {
+		//
+		if (voiceManager != null) {
+			//
+			for (int i = 0; names != null && i < names.length; i++) {
+				//
+				try {
+					//
+					Util.setText(
+							Util.cast(JTextComponent.class, FieldUtils.readDeclaredField(voiceManager, names[i], true)),
+							value);
+					//
+				} catch (final IllegalAccessException e) {
+					//
+					errorOrAssertOrShowException(headless, e);
+					//
+				} // try
+					//
+			} // for
+				//
+		} // if
 			//
 	}
 
