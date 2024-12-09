@@ -81,7 +81,8 @@ import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
-import org.apache.poi.util.LocaleID;
+import org.d2ab.function.ObjIntFunction;
+import org.d2ab.function.ObjIntFunctionUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -173,6 +174,8 @@ public class VoiceManagerTtsPanel extends JPanel
 
 	private transient ComboBoxModel<Method> cbmSpeakMethod = null;
 
+	private ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
+
 	@Override
 	public String getTitle() {
 		return "TTS";
@@ -188,6 +191,11 @@ public class VoiceManagerTtsPanel extends JPanel
 
 	public void setSpeechApi(final SpeechApi speechApi) {
 		this.speechApi = speechApi;
+	}
+
+	public void setLanguageCodeToTextObjIntFunction(
+			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) {
+		this.languageCodeToTextObjIntFunction = languageCodeToTextObjIntFunction;
 	}
 
 	private static interface ObjectMap {
@@ -337,7 +345,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 		ObjectMap.setObject(objectMap, SpeechApi.class, speechApi);
 		//
-		testAndAccept(Objects::nonNull, getVoiceId(objectMap),
+		testAndAccept(Objects::nonNull, getVoiceId(objectMap, languageCodeToTextObjIntFunction),
 				x -> setSelectedItem(cbmVoiceId, IValue0Util.getValue0(x)));
 		//
 		// Speech Rate
@@ -556,8 +564,8 @@ public class VoiceManagerTtsPanel extends JPanel
 				//
 				Util.setText(tfSpeechLanguageCode, language);
 				//
-				Util.setText(tfSpeechLanguageName,
-						StringUtils.defaultIfBlank(convertLanguageCodeToText(language, 16), language));
+				Util.setText(tfSpeechLanguageName, StringUtils.defaultIfBlank(
+						ObjIntFunctionUtil.apply(languageCodeToTextObjIntFunction, language, 16), language));
 				//
 			} catch (final Error e) {
 				//
@@ -1489,7 +1497,8 @@ public class VoiceManagerTtsPanel extends JPanel
 	}
 
 	@Nullable
-	private static IValue0<?> getVoiceId(final ObjectMap objectMap) {
+	private static IValue0<?> getVoiceId(final ObjectMap objectMap,
+			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) {
 		//
 		final PropertyResolver propertyResolver = ObjectMap.getObject(objectMap, PropertyResolver.class);
 		//
@@ -1526,7 +1535,8 @@ public class VoiceManagerTtsPanel extends JPanel
 						//
 						final String language = SpeechApi.getVoiceAttribute(speechApi, x, LANGUAGE);
 						//
-						return StringUtils.startsWithIgnoreCase(convertLanguageCodeToText(language, 16), voiceLanguage)
+						return StringUtils.startsWithIgnoreCase(
+								ObjIntFunctionUtil.apply(languageCodeToTextObjIntFunction, language, 16), voiceLanguage)
 								|| Objects.equals(language, voiceLanguage);
 						//
 					})))) == 1) {
@@ -1553,11 +1563,6 @@ public class VoiceManagerTtsPanel extends JPanel
 		return instance != null ? instance.get(index) : null;
 	}
 
-	private static String convertLanguageCodeToText(@Nullable final String instance, final int base) {
-		return StringUtils.defaultIfBlank(convertLanguageCodeToText(LocaleID.values(), valueOf(instance, base)),
-				instance);
-	}
-
 	@Nullable
 	private static Integer valueOf(@Nullable final String instance, final int base) {
 		try {
@@ -1565,33 +1570,6 @@ public class VoiceManagerTtsPanel extends JPanel
 		} catch (final NumberFormatException e) {
 			return null;
 		}
-	}
-
-	@Nullable
-	private static String convertLanguageCodeToText(final LocaleID[] enums, @Nullable final Integer value) {
-		//
-		final List<LocaleID> localeIds = Util
-				.toList(Util.filter(testAndApply(Objects::nonNull, enums, Arrays::stream, null),
-						a -> a != null && Objects.equals(Integer.valueOf(a.getLcid()), value)));
-		//
-		if (localeIds != null && !localeIds.isEmpty()) {
-			//
-			if (IterableUtils.size(localeIds) == 1) {
-				//
-				final LocaleID localeId = get(localeIds, 0);
-				//
-				return localeId != null ? localeId.getDescription() : null;
-				//
-			} else {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
-		} // if
-			//
-		return null;
-		//
 	}
 
 	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, final Object selectedItem) {

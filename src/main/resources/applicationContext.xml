@@ -1060,6 +1060,9 @@
 	<bean
 		class="org.springframework.context.support.VoiceManagerTtsPanel">
 		<property name="speechApi" ref="speechApi" />
+		<!-- -->
+		<property name="languageCodeToTextObjIntFunction"
+			ref="LanguageCodeToTextObjIntFunction" />
 	</bean>
 
 	<!---->
