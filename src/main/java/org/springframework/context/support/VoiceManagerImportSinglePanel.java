@@ -293,9 +293,11 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	@Note("Source")
 	private JTextComponent tfSource = null;
 
-	private JTextComponent tfTextImport, tfSpeechLanguageCode, tfSpeechLanguageName, tfIpaSymbol, tfListNames, tfRomaji,
-			tfHiragana, tfKatakana, tfPronunciationPageUrl, tfPronunciationPageStatusCode, tfSpeechRate,
-			tfSpeechVolume = null;
+	@Note("Text Import")
+	private JTextComponent tfTextImport = null;
+
+	private JTextComponent tfSpeechLanguageCode, tfSpeechLanguageName, tfIpaSymbol, tfListNames, tfRomaji, tfHiragana,
+			tfKatakana, tfPronunciationPageUrl, tfPronunciationPageStatusCode, tfSpeechRate, tfSpeechVolume = null;
 
 	private transient javax.swing.text.Document tfTextImportDocument = null;
 
