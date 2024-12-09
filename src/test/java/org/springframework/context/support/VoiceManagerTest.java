@@ -211,6 +211,7 @@ import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.util.LocaleID;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.d2ab.function.ObjIntFunction;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -315,27 +316,26 @@ class VoiceManagerTest {
 			METHOD_SET_STRING_J_PROGRESS_BAR, METHOD_SET_STRING_COMMENT, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT,
 			METHOD_VALUE_OF1, METHOD_VALUE_OF2, METHOD_WRITE_VOICE_TO_FILE, METHOD_GET_MP3_TAG_VALUE_FILE,
 			METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1, METHOD_COPY_OBJECT_MAP, METHOD_DELETE,
-			METHOD_DELETE_ON_EXIT, METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT, METHOD_IS_SELECTED,
-			METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI, METHOD_AND_PREDICATE, METHOD_AND_FAILABLE_PREDICATE,
-			METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE,
-			METHOD_GET_BYTE_CONVERTER, METHOD_GET_LPW_STR, METHOD_GET_SHEET_NAME, METHOD_ACCEPT,
-			METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM1, METHOD_TO_ARRAY_STREAM2, METHOD_GET_ID,
-			METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_DATA_VALIDATION_HELPER,
-			METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION, METHOD_CREATE_EXPORT_TASK,
-			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES,
-			METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES,
-			METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES,
-			METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_PASS_WORD,
-			METHOD_GET_SUPPLIER, METHOD_GET_LIST, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK,
-			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR,
-			METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
-			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
-			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES,
-			METHOD_GET_DLL_PATH, METHOD_GET_RATE0, METHOD_GET_RATE_VOICE_MANAGER, METHOD_GET_RATE_FIELD_LIST,
-			METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING, METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME,
-			METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE2, METHOD_REDUCE3,
-			METHOD_APPEND_STRING, METHOD_APPEND_CHAR, METHOD_GET_RESOURCE_AS_STREAM,
-			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD,
+			METHOD_DELETE_ON_EXIT, METHOD_IS_SELECTED, METHOD_SET_HIRAGANA_OR_KATAKANA, METHOD_SET_ROMAJI,
+			METHOD_AND_PREDICATE, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL,
+			METHOD_CLEAR_STRING_BUILDER, METHOD_EXECUTE, METHOD_GET_BYTE_CONVERTER, METHOD_GET_LPW_STR,
+			METHOD_GET_SHEET_NAME, METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM1,
+			METHOD_TO_ARRAY_STREAM2, METHOD_GET_ID, METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX,
+			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
+			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
+			METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP,
+			METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
+			METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
+			METHOD_GET_NAME_FILE, METHOD_GET_PASS_WORD, METHOD_GET_SUPPLIER, METHOD_GET_LIST,
+			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_CREATE_DRAWING_PATRIARCH,
+			METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING,
+			METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR, METHOD_TEST_AND_ACCEPT_PREDICATE,
+			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_PACKAGE, METHOD_BROWSE,
+			METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE0,
+			METHOD_GET_RATE_VOICE_MANAGER, METHOD_GET_RATE_FIELD_LIST, METHOD_IS_ANNOTATION_PRESENT,
+			METHOD_ENCODE_TO_STRING, METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT,
+			METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE2, METHOD_REDUCE3, METHOD_APPEND_STRING, METHOD_APPEND_CHAR,
+			METHOD_GET_RESOURCE_AS_STREAM, METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_INSTRUCTION_ARRAY, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH,
 			METHOD_ITEM, METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET,
 			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
@@ -468,13 +468,14 @@ class VoiceManagerTest {
 				BiConsumer.class, BiConsumer.class)).setAccessible(true);
 		//
 		(METHOD_IMPORT_VOICE_OBJECT_MAP_FILE = clz.getDeclaredMethod("importVoice", CLASS_OBJECT_MAP, File.class,
-				String.class)).setAccessible(true);
+				String.class, ObjIntFunction.class)).setAccessible(true);
 		//
 		(METHOD_IMPORT_VOICE5 = clz.getDeclaredMethod("importVoice", Sheet.class, CLASS_OBJECT_MAP, String.class,
-				BiConsumer.class, BiConsumer.class, Consumer.class, Collection.class)).setAccessible(true);
+				BiConsumer.class, BiConsumer.class, Consumer.class, Collection.class, ObjIntFunction.class))
+				.setAccessible(true);
 		//
 		(METHOD_IMPORT_VOICE_BY_SPEECH_API = clz.getDeclaredMethod("importVoiceBySpeechApi", CLASS_OBJECT_MAP,
-				String.class, String.class)).setAccessible(true);
+				String.class, String.class, ObjIntFunction.class)).setAccessible(true);
 		//
 		(METHOD_IMPORT_VOICE_BY_ONLINE_NHK_JAPANESE_PRONUNCIATIONS_ACCENT_FAILABLE_FUNCTION = clz.getDeclaredMethod(
 				"importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction", CLASS_OBJECT_MAP, String.class))
@@ -533,9 +534,6 @@ class VoiceManagerTest {
 		(METHOD_DELETE = clz.getDeclaredMethod("delete", File.class)).setAccessible(true);
 		//
 		(METHOD_DELETE_ON_EXIT = clz.getDeclaredMethod("deleteOnExit", File.class)).setAccessible(true);
-		//
-		(METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT = clz.getDeclaredMethod("convertLanguageCodeToText", LocaleID[].class,
-				Integer.class)).setAccessible(true);
 		//
 		(METHOD_IS_SELECTED = clz.getDeclaredMethod("isSelected", AbstractButton.class)).setAccessible(true);
 		//
@@ -636,8 +634,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_LIST = clz.getDeclaredMethod("get", List.class, Integer.TYPE)).setAccessible(true);
 		//
-		(METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK = clz
-				.getDeclaredMethod("createMicrosoftSpeechObjectLibraryWorkbook", SpeechApi.class, String[].class))
+		(METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK = clz.getDeclaredMethod(
+				"createMicrosoftSpeechObjectLibraryWorkbook", SpeechApi.class, ObjIntFunction.class, String[].class))
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_DRAWING_PATRIARCH = clz.getDeclaredMethod("createDrawingPatriarch", Sheet.class))
@@ -742,8 +740,8 @@ class VoiceManagerTest {
 		(METHOD_GET_PARENT_FILE = clz.getDeclaredMethod("getParentFile", File.class)).setAccessible(true);
 		//
 		(METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET = clz.getDeclaredMethod(
-				"setMicrosoftSpeechObjectLibrarySheet", CLASS_OBJECT_MAP, String.class, String[].class))
-				.setAccessible(true);
+				"setMicrosoftSpeechObjectLibrarySheet", CLASS_OBJECT_MAP, String.class, String[].class,
+				ObjIntFunction.class)).setAccessible(true);
 		//
 		(METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW = clz
 				.getDeclaredMethod("setMicrosoftSpeechObjectLibrarySheetFirstRow", Sheet.class, String[].class))
@@ -4278,9 +4276,9 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(null, (BiConsumer) null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(null, (File) null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(null, (File) null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(null, null, null, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(null, null, null, null, null, null, null, null));
 		//
 		final Constructor<?> constructor = getDeclaredConstructor(CLASS_IH);
 		//
@@ -4327,13 +4325,13 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (BiConsumer) null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null, null, null));
 		//
 		final Row row = Reflection.newProxy(Row.class, this.ih);
 		//
 		this.ih.rows = Iterators.forArray(null, row);
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null, null, null));
 		//
 		this.ih.rows = Iterators.forArray(null, row);
 		//
@@ -4341,13 +4339,13 @@ class VoiceManagerTest {
 		//
 		this.ih.columnIndex = Integer.valueOf(0);
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null, null, null));
 		//
 		// org.springframework.context.support.VoiceManager$importVoice(org.springframework.context.support.VoiceManager$ObjectMap,java.io.File,java.lang.String)
 		//
 		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
 				"{localizedMessage=Key [class org.springframework.context.support.VoiceManager] Not Found, message=Key [class org.springframework.context.support.VoiceManager] Not Found}",
-				() -> importVoice(objectMap, (File) null, null));
+				() -> importVoice(objectMap, (File) null, null, null));
 		//
 		final Class<?> clz = Util.getClass(objectMap);
 		//
@@ -4367,7 +4365,7 @@ class VoiceManagerTest {
 		//
 		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
 				"{localizedMessage=Key [class org.springframework.context.support.VoiceManager$ImportTask] Not Found, message=Key [class org.springframework.context.support.VoiceManager$ImportTask] Not Found}",
-				() -> importVoice(objectMap, (File) null, null));
+				() -> importVoice(objectMap, (File) null, null, null));
 		//
 		// org.springframework.context.support.VoiceManager$ImortTask
 		//
@@ -4375,13 +4373,13 @@ class VoiceManagerTest {
 		//
 		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
 				"{localizedMessage=Key [interface org.springframework.context.support.SpeechApi] Not Found, message=Key [interface org.springframework.context.support.SpeechApi] Not Found}",
-				() -> importVoice(objectMap, (File) null, null));
+				() -> importVoice(objectMap, (File) null, null, null));
 		//
 		// org.springframework.context.support.SpeechApi
 		//
 		invoke(setObject, objectMap, SpeechApi.class, null);
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));// TODO
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null, null));
 		//
 		// org.springframework.context.support.VoiceManager$ImortTask
 		//
@@ -4389,7 +4387,7 @@ class VoiceManagerTest {
 		//
 		invoke(setObject, objectMap, CLASS_IMPORT_TASK, importTask);
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null, null));
 		//
 		// org.springframework.context.support.VoiceManager$ImortTask.voice
 		//
@@ -4401,7 +4399,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null, null));
 		//
 		// org.springframework.context.support.SpeechApi
 		//
@@ -4413,7 +4411,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null, null));
 		//
 		if (this.ih != null) {
 			//
@@ -4429,13 +4427,13 @@ class VoiceManagerTest {
 		//
 		invoke(setObject, objectMap, Provider.class, Reflection.newProxy(Provider.class, this.ih));
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null, null));
 		//
 		// domain.Voice.tts
 		//
 		FieldUtils.writeDeclaredField(voice, "tts", Boolean.FALSE, true);
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null, null));
 		//
 		// org.springframework.context.support.VoiceManager.onlineNHKJapanesePronunciationsAccentFailableFunction
 		//
@@ -4448,7 +4446,7 @@ class VoiceManagerTest {
 			//
 		invoke(setObject, objectMap, VoiceManager.class, instance);
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null, null));
 		//
 		final Pronunciation pronunciation = new Pronunciation();
 		//
@@ -4458,19 +4456,19 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null, null));
 		//
 		// domain.Pronunciation.audioUrls
 		//
 		pronunciation.setAudioUrls(Collections.singletonMap(null, toString(toURL(toURI(new File("pom.xml"))))));
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null, null));
 		//
 		// domain.Voice.filePath
 		//
 		voice.setFilePath("non-exist-file");
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (File) null, null, null));
 		//
 	}
 
@@ -4497,18 +4495,21 @@ class VoiceManagerTest {
 
 	private static void importVoice(final Sheet sheet, final Object _objectMap, final String voiceId,
 			final BiConsumer<Voice, String> errorMessageConsumer, final BiConsumer<Voice, Throwable> throwableConsumer,
-			final Consumer<Voice> voiceConsumer, final Collection<Object> throwableStackTraceHexs) throws Throwable {
+			final Consumer<Voice> voiceConsumer, final Collection<Object> throwableStackTraceHexs,
+			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) throws Throwable {
 		try {
 			METHOD_IMPORT_VOICE5.invoke(null, sheet, _objectMap, voiceId, errorMessageConsumer, throwableConsumer,
-					voiceConsumer, throwableStackTraceHexs);
+					voiceConsumer, throwableStackTraceHexs, languageCodeToTextObjIntFunction);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
 	}
 
-	private static void importVoice(final Object objectMap, final File folder, final String voiceId) throws Throwable {
+	private static void importVoice(final Object objectMap, final File folder, final String voiceId,
+			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) throws Throwable {
 		try {
-			METHOD_IMPORT_VOICE_OBJECT_MAP_FILE.invoke(null, objectMap, folder, voiceId);
+			METHOD_IMPORT_VOICE_OBJECT_MAP_FILE.invoke(null, objectMap, folder, voiceId,
+					languageCodeToTextObjIntFunction);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -4517,7 +4518,7 @@ class VoiceManagerTest {
 	@Test
 	void testImportVoiceBySpeechApi() throws Throwable {
 		//
-		Assertions.assertDoesNotThrow(() -> importVoiceBySpeechApi(null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoiceBySpeechApi(null, null, null, null));
 		//
 		// org.springframework.context.support.VoiceManager$ObjectMap
 		//
@@ -4553,14 +4554,15 @@ class VoiceManagerTest {
 		//
 		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
 				"{localizedMessage=Key [interface org.springframework.context.support.Provider] Not Found, message=Key [interface org.springframework.context.support.Provider] Not Found}",
-				() -> importVoiceBySpeechApi(objectMap, null, null));
+				() -> importVoiceBySpeechApi(objectMap, null, null, null));
 		//
 	}
 
-	private static void importVoiceBySpeechApi(final Object objectMap, final String filePath, final String voiceId)
-			throws Throwable {
+	private static void importVoiceBySpeechApi(final Object objectMap, final String filePath, final String voiceId,
+			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) throws Throwable {
 		try {
-			METHOD_IMPORT_VOICE_BY_SPEECH_API.invoke(null, objectMap, filePath, voiceId);
+			METHOD_IMPORT_VOICE_BY_SPEECH_API.invoke(null, objectMap, filePath, voiceId,
+					languageCodeToTextObjIntFunction);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5066,34 +5068,6 @@ class VoiceManagerTest {
 	private static void deleteOnExit(final File instance) throws Throwable {
 		try {
 			METHOD_DELETE_ON_EXIT.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testConvertLanguageCodeToText() throws Throwable {
-		//
-		Assertions.assertNull(convertLanguageCodeToText(new LocaleID[] { null }, null));
-		//
-		final LocaleID localeId = LocaleID.JA_JP;
-		//
-		final Integer lcid = localeId != null ? Integer.valueOf(localeId.getLcid()) : null;
-		//
-		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{}",
-				() -> convertLanguageCodeToText(new LocaleID[] { localeId, localeId }, lcid));
-		//
-	}
-
-	private static String convertLanguageCodeToText(final LocaleID[] enums, final Integer value) throws Throwable {
-		try {
-			final Object obj = METHOD_CONVERT_LANGUAGE_CODE_TO_TEXT.invoke(null, enums, value);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -6068,29 +6042,30 @@ class VoiceManagerTest {
 	@Test
 	void testCreateMicrosoftSpeechObjectLibraryWorkbook() throws Throwable {
 		//
-		Assertions.assertNull(createMicrosoftSpeechObjectLibraryWorkbook(null, (String[]) null));
+		Assertions.assertNull(createMicrosoftSpeechObjectLibraryWorkbook(null, null, (String[]) null));
 		//
 		ih.voiceIds = new String[] {};
 		//
-		Assertions.assertNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, (String[]) null));
+		Assertions.assertNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, null, (String[]) null));
 		//
 		ih.voiceIds = new String[] { null };
 		//
-		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, (String) null));
+		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, null, (String) null));
 		//
-		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, SPACE));
+		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, null, SPACE));
 		//
 		ih.errorGetVoiceAttribute = new Error();
 		//
-		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, SPACE));
+		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, null, SPACE));
 		//
 	}
 
 	private static Workbook createMicrosoftSpeechObjectLibraryWorkbook(final SpeechApi speechApi,
-			final String... attributes) throws Throwable {
+			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction, final String... attributes)
+			throws Throwable {
 		try {
 			final Object obj = METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK.invoke(null, speechApi,
-					attributes);
+					languageCodeToTextObjIntFunction, attributes);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Workbook) {
@@ -6995,14 +6970,15 @@ class VoiceManagerTest {
 	@Test
 	void testSetMicrosoftSpeechObjectLibrarySheet() {
 		//
-		Assertions.assertDoesNotThrow(() -> setMicrosoftSpeechObjectLibrarySheet(null, null, null));
+		Assertions.assertDoesNotThrow(() -> setMicrosoftSpeechObjectLibrarySheet(null, null, null, null));
 		//
 	}
 
 	private static void setMicrosoftSpeechObjectLibrarySheet(final Object objectMap, final String voiceId,
-			final String[] as) throws Throwable {
+			final String[] as, final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) throws Throwable {
 		try {
-			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET.invoke(null, objectMap, voiceId, as);
+			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET.invoke(null, objectMap, voiceId, as,
+					languageCodeToTextObjIntFunction);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

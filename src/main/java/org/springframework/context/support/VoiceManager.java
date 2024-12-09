@@ -288,6 +288,7 @@ import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntList;
+import org.d2ab.function.ObjIntFunction;
 import org.eclipse.jetty.http.HttpStatus;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -941,6 +942,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private transient IValue0<String> imageFormat = null;
 
 	private char[] allowedRomajiCharacters = null;
+
+	private ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
 	private VoiceManager() {
 	}
@@ -1914,6 +1917,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setAllowedRomajiCharacters(final char[] allowedRomajiCharacters) {
 		this.allowedRomajiCharacters = allowedRomajiCharacters;
+	}
+
+	public void setLanguageCodeToTextObjIntFunction(
+			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) {
+		this.languageCodeToTextObjIntFunction = languageCodeToTextObjIntFunction;
 	}
 
 	@Nullable
@@ -3023,7 +3031,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static IValue0<?> getVoiceId(final ObjectMap objectMap) {
+	private static IValue0<?> getVoiceId(final ObjectMap objectMap,
+			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) {
 		//
 		final PropertyResolver propertyResolver = ObjectMap.getObject(objectMap, PropertyResolver.class);
 		//
@@ -3060,8 +3069,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						final String language = SpeechApi.getVoiceAttribute(speechApi, x, LANGUAGE);
 						//
-						return StringUtils.startsWithIgnoreCase(convertLanguageCodeToText(language, 16), voiceLanguage)
-								|| Objects.equals(language, voiceLanguage);
+						return StringUtils.startsWithIgnoreCase(languageCodeToTextObjIntFunction != null
+								? languageCodeToTextObjIntFunction.apply(language, 16)
+								: null, voiceLanguage) || Objects.equals(language, voiceLanguage);
 						//
 					})))) == 1) {
 				//
@@ -5238,8 +5248,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
-		setLanguage(voice, StringUtils.defaultIfBlank(getLanguage(voice),
-				convertLanguageCodeToText(SpeechApi.getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
+		setLanguage(voice,
+				StringUtils.defaultIfBlank(getLanguage(voice),
+						languageCodeToTextObjIntFunction != null
+								? languageCodeToTextObjIntFunction
+										.apply(SpeechApi.getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)
+								: null));
 		//
 		setSource(voice, StringUtils.defaultIfBlank(getSource(voice),
 				Provider.getProviderName(Util.cast(Provider.class, speechApi))));
@@ -5808,7 +5822,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					String.format("MicrosoftSpeechObjectLibrary_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
 				//
 				WorkbookUtil.write(workbook = createMicrosoftSpeechObjectLibraryWorkbook(speechApi,
-						microsoftSpeechObjectLibraryAttributeNames), os);
+						languageCodeToTextObjIntFunction, microsoftSpeechObjectLibraryAttributeNames), os);
 				//
 				Util.setText(tfExportFile, Util.getAbsolutePath(file));
 				//
@@ -7091,7 +7105,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						voiceConsumer = getIfNull(voiceConsumer,
 								() -> new VoiceConsumer(tfCurrentProcessingVoice, numberOfVoiceProcessed))
 						//
-						, throwableStackTraceHexs = ObjectUtils.getIfNull(throwableStackTraceHexs, ArrayList::new)
+						, throwableStackTraceHexs = ObjectUtils.getIfNull(throwableStackTraceHexs, ArrayList::new),
+						languageCodeToTextObjIntFunction
 				//
 				);
 				//
@@ -7414,7 +7429,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				Util.setText(tfSpeechLanguageCode, language);
 				//
 				Util.setText(tfSpeechLanguageName,
-						StringUtils.defaultIfBlank(convertLanguageCodeToText(language, 16), language));
+						StringUtils.defaultIfBlank(languageCodeToTextObjIntFunction != null
+								? languageCodeToTextObjIntFunction.apply(language, 16)
+								: null, language));
 				//
 			} catch (final Error e) {
 				//
@@ -8292,40 +8309,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null && instance.isSelected();
 	}
 
-	private static String convertLanguageCodeToText(@Nullable final String instance, final int base) {
-		//
-		return StringUtils.defaultIfBlank(convertLanguageCodeToText(LocaleID.values(), valueOf(instance, base)),
-				instance);
-		//
-	}
-
-	@Nullable
-	private static String convertLanguageCodeToText(final LocaleID[] enums, @Nullable final Integer value) {
-		//
-		final List<LocaleID> localeIds = Util
-				.toList(Util.filter(testAndApply(Objects::nonNull, enums, Arrays::stream, null),
-						a -> a != null && Objects.equals(Integer.valueOf(a.getLcid()), value)));
-		//
-		if (localeIds != null && !localeIds.isEmpty()) {
-			//
-			if (IterableUtils.size(localeIds) == 1) {
-				//
-				final LocaleID localeId = get(localeIds, 0);
-				//
-				return localeId != null ? localeId.getDescription() : null;
-				//
-			} else {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
-		} // if
-			//
-		return null;
-		//
-	}
-
 	private static void clear(@Nullable final DefaultTableModel instance) {
 		//
 		final Collection<?> dataVector = instance != null ? instance.getDataVector() : null;
@@ -9127,7 +9110,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static void importVoice(@Nullable final Sheet sheet, final ObjectMap _objectMap, final String voiceId,
 			final BiConsumer<Voice, String> errorMessageConsumer, final BiConsumer<Voice, Throwable> throwableConsumer,
-			final Consumer<Voice> voiceConsumer, final Collection<Object> throwableStackTraceHexs) throws Exception {
+			final Consumer<Voice> voiceConsumer, final Collection<Object> throwableStackTraceHexs,
+			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) throws Exception {
 		//
 		final File folder = getParentFile(ObjectMap.getObject(_objectMap, File.class));
 		//
@@ -9228,7 +9212,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							ObjectMap.setObject(objectMap, ImportTask.class, it);
 							//
-							importVoice(objectMap, folder, voiceId);
+							importVoice(objectMap, folder, voiceId, languageCodeToTextObjIntFunction);
 							//
 						} // if
 							//
@@ -9352,8 +9336,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static void importVoice(final ObjectMap objectMap, @Nullable final File folder, final String voiceId)
-			throws Exception {
+	private static void importVoice(final ObjectMap objectMap, @Nullable final File folder, final String voiceId,
+			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) throws Exception {
 		//
 		final VoiceManager vm = ObjectMap.getObject(objectMap, VoiceManager.class);
 		//
@@ -9387,7 +9371,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				ObjectMap.setObject(objectMap, ImportTask.class, it);
 				//
-				importVoiceBySpeechApi(objectMap, filePath, voiceId);
+				importVoiceBySpeechApi(objectMap, filePath, voiceId, languageCodeToTextObjIntFunction);
 				//
 			} // if
 				//
@@ -9443,7 +9427,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static void importVoiceBySpeechApi(final ObjectMap objectMap, @Nullable final String filePath,
-			final String voiceId) throws IllegalAccessException, InvocationTargetException, IOException {
+			final String voiceId, final ObjIntFunction<String, String> languageCodeToTextObjIntFunction)
+			throws IllegalAccessException, InvocationTargetException, IOException {
 		//
 		final ImportTask it = ObjectMap.getObject(objectMap, ImportTask.class);
 		//
@@ -9498,9 +9483,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			setLanguage(voice, StringUtils.defaultIfBlank(getLanguage(voice), convertLanguageCodeToText(
-					SpeechApi.getVoiceAttribute(ObjectMap.getObject(objectMap, SpeechApi.class), voiceId, LANGUAGE),
-					16)));
+			setLanguage(voice, StringUtils.defaultIfBlank(getLanguage(voice),
+					languageCodeToTextObjIntFunction != null ? languageCodeToTextObjIntFunction.apply(SpeechApi
+							.getVoiceAttribute(ObjectMap.getObject(objectMap, SpeechApi.class), voiceId, LANGUAGE), 16)
+							: null
+
+			));
 			//
 		} catch (final Error e) {
 			//
@@ -11979,7 +11967,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Nullable
 	private static Workbook createMicrosoftSpeechObjectLibraryWorkbook(final SpeechApi speechApi,
-			final String... attributes) {
+			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction, final String... attributes) {
 		//
 		Workbook workbook = null;
 		//
@@ -12034,7 +12022,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			ObjectMap.setObject(objectMap, Row.class, row);
 			//
-			setMicrosoftSpeechObjectLibrarySheet(objectMap, voiceId, as);
+			setMicrosoftSpeechObjectLibrarySheet(objectMap, voiceId, as, languageCodeToTextObjIntFunction);
 			//
 		} // for
 			//
@@ -12085,7 +12073,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static void setMicrosoftSpeechObjectLibrarySheet(@Nullable final ObjectMap objectMap, final String voiceId,
-			final String[] attributes) {
+			final String[] attributes, final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) {
 		//
 		final Workbook workbook = ObjectMap.getObject(objectMap, Workbook.class);
 		//
@@ -12133,7 +12121,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				if (Objects.equals(LANGUAGE, attribute)) {
 					//
 					setString(comment = createCellComment(drawing, createClientAnchor(creationHelper)),
-							createRichTextString(creationHelper, convertLanguageCodeToText(value, 16)));
+							createRichTextString(creationHelper,
+									languageCodeToTextObjIntFunction != null
+											? languageCodeToTextObjIntFunction.apply(value, 16)
+											: null));
 					//
 					setCellComment(cell, comment);
 					//

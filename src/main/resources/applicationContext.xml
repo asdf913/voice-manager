@@ -8,8 +8,7 @@
 		<property name="ignoreResourceNotFound" value="true" />
 		<property name="locations">
 			<list>
-				<bean
-					class="org.springframework.core.io.UrlAnnotationResource" />
+				<bean class="org.springframework.core.io.UrlAnnotationResource" />
 				<value>classpath:configuration.properties</value>
 				<value>file:configuration.properties</value>
 				<bean
@@ -90,7 +89,7 @@
 		<property name="resource" value="classpath:yojijukugo.xlsx" />
 	</bean>
 
-	<!--org.springframework.beans.factory.AccentDictionaryForJapaneseEducationMultimapFactoryBean-->
+	<!--org.springframework.beans.factory.AccentDictionaryForJapaneseEducationMultimapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.AccentDictionaryForJapaneseEducationMultimapFactoryBean">
 		<meta key="value" value="hiragana" />
@@ -267,8 +266,7 @@
 		<property name="resource" value="classpath:SeibuRailway.xlsx" />
 	</bean>
 
-	<!--
-	org.springframework.beans.factory.TokyuKanjiRomajiOrHiraganaMapFactoryBean -->
+	<!-- org.springframework.beans.factory.TokyuKanjiRomajiOrHiraganaMapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.TokyuKanjiRomajiOrHiraganaMapFactoryBean">
 		<meta key="value" value="romaji" />
@@ -293,8 +291,7 @@
 		<property name="resource" value="classpath:TokyuRailway.xlsx" />
 	</bean>
 
-	<!--
-	org.springframework.beans.factory.WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean -->
+	<!-- org.springframework.beans.factory.WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean">
 		<meta key="value" value="romaji" />
@@ -325,8 +322,7 @@
 			value="classpath:WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean.xlsx" />
 	</bean>
 
-	<!--
-	org.springframework.beans.factory.ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean -->
+	<!-- org.springframework.beans.factory.ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.ShikokuJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean">
 		<meta key="value" value="romaji" />
@@ -353,8 +349,7 @@
 			value="classpath:ShikokuJapanRailway.xlsx" />
 	</bean>
 
-	<!--
-	org.springframework.beans.factory.KyushuJapanRailwayKanjiHiraganaMapFactoryBean -->
+	<!-- org.springframework.beans.factory.KyushuJapanRailwayKanjiHiraganaMapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.KyushuJapanRailwayKanjiHiraganaMapFactoryBean">
 		<meta key="value" value="hiragana" />
@@ -365,8 +360,7 @@
 			value="classpath:KyushuJapanRailway.xlsx" />
 	</bean>
 
-	<!--
-	org.springframework.beans.factory.TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean -->
+	<!-- org.springframework.beans.factory.TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.TokyoToeiTodenKanjiRomajiOrHiraganaMapFactoryBean">
 		<meta key="value" value="romaji" />
@@ -391,8 +385,7 @@
 		<property name="resource" value="classpath:ToeiToden.xlsx" />
 	</bean>
 
-	<!--
-	org.springframework.beans.factory.TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean -->
+	<!-- org.springframework.beans.factory.TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.TokyoToeiNipporiToneriKanjiRomajiOrHiraganaMapFactoryBean">
 		<meta key="value" value="romaji" />
@@ -419,8 +412,7 @@
 			value="classpath:ToeiNipporiToneri.xlsx" />
 	</bean>
 
-	<!--
-	org.springframework.beans.factory.HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean -->
+	<!-- org.springframework.beans.factory.HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.HokkaidoJapanRailwayKanjiHiraganaMapFactoryBean">
 		<meta key="value" value="hiragana" />
@@ -433,8 +425,7 @@
 			value="classpath:HokkaidoJapanRailway.xlsx" />
 	</bean>
 
-	<!--
-	org.springframework.beans.factory.KantetsuKanjiRomajiOrHiraganaMapFactoryBean -->
+	<!-- org.springframework.beans.factory.KantetsuKanjiRomajiOrHiraganaMapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.KantetsuKanjiRomajiOrHiraganaMapFactoryBean">
 		<meta key="value" value="hiragana" />
@@ -465,8 +456,7 @@
 		<property name="resource" value="classpath:Kantetsu.xlsx" />
 	</bean>
 
-	<!--
-	org.springframework.beans.factory.ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean -->
+	<!-- org.springframework.beans.factory.ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.ChichibuRailwayKanjiRomajiOrHiraganaMapFactoryBean">
 		<meta key="value" value="hiragana" />
@@ -499,8 +489,7 @@
 			value="classpath:ChichibuRailway.xlsx" />
 	</bean>
 
-	<!--
-	org.springframework.beans.factory.KominatoKanjiRomajiOrHiraganaMapFactoryBean -->
+	<!-- org.springframework.beans.factory.KominatoKanjiRomajiOrHiraganaMapFactoryBean -->
 	<bean
 		class="org.springframework.beans.factory.KominatoKanjiRomajiOrHiraganaMapFactoryBean">
 		<meta key="value" value="hiragana" />
@@ -513,8 +502,7 @@
 		<property name="keyColumnName" value="kanji" />
 		<property name="valueColumnName" value="hiragana" />
 		<property name="valueColumnIndex" value="1" />
-		<property name="resource"
-			value="classpath:Kominato.xlsx" />
+		<property name="resource" value="classpath:Kominato.xlsx" />
 	</bean>
 
 	<bean
@@ -529,8 +517,7 @@
 		<property name="keyColumnName" value="kanji" />
 		<property name="valueColumnName" value="romaji" />
 		<property name="valueColumnIndex" value="2" />
-		<property name="resource"
-			value="classpath:Kominato.xlsx" />
+		<property name="resource" value="classpath:Kominato.xlsx" />
 	</bean>
 
 	<!---->
@@ -588,7 +575,8 @@
 		<property name="keyColumnName" value="kanji" />
 		<property name="valueColumnName" value="hiragana" />
 		<property name="valueColumnIndex" value="2" />
-		<property name="resource" value="classpath:SaitamaNewUrbanTransit.xlsx" />
+		<property name="resource"
+			value="classpath:SaitamaNewUrbanTransit.xlsx" />
 	</bean>
 
 	<bean
@@ -603,7 +591,8 @@
 		<property name="keyColumnName" value="kanji" />
 		<property name="valueColumnName" value="romaji" />
 		<property name="valueColumnIndex" value="3" />
-		<property name="resource" value="classpath:SaitamaNewUrbanTransit.xlsx" />
+		<property name="resource"
+			value="classpath:SaitamaNewUrbanTransit.xlsx" />
 	</bean>
 
 	<!-- -->
@@ -660,7 +649,7 @@
 			value="classpath:JlptVocabulary.xlsx" />
 	</bean>
 
-	<!--https://hiramatu-hifuka.com/onyak/onyindx.html-->
+	<!--https://hiramatu-hifuka.com/onyak/onyindx.html -->
 	<bean id="OtoYakuNoHeyaYomikataJitenLinkMultiMap"
 		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean">
 		<property name="url"
@@ -673,12 +662,12 @@
 
 	<bean
 		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBean">
-		<property name="links" ref="OtoYakuNoHeyaYomikataJitenLinkMultiMap" />
+		<property name="links"
+			ref="OtoYakuNoHeyaYomikataJitenLinkMultiMap" />
 	</bean>
 
-	<!--https://hiramatu-hifuka.com/onyak/onyindx.html-->
-	<bean
-		id="OtoYakuNoHeyaYomikataJitenLinkList"
+	<!--https://hiramatu-hifuka.com/onyak/onyindx.html -->
+	<bean id="OtoYakuNoHeyaYomikataJitenLinkList"
 		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean">
 		<property name="title"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.title}" />
@@ -690,7 +679,7 @@
 			value="classpath:OtoYakuNoHeyaYomikataJiten.xlsx" />
 	</bean>
 
-	<!--https://web.archive.org/web/20211126172558/http://www.gsi.go.jp/KIDS/map-sign-tizukigou-h14kigou-itiran.htm-->
+	<!--https://web.archive.org/web/20211126172558/http://www.gsi.go.jp/KIDS/map-sign-tizukigou-h14kigou-itiran.htm -->
 	<bean id="TiZuKiGouKanjiHiraganaMapFactoryBean"
 		class="org.springframework.beans.factory.TiZuKiGouKanjiHiraganaMapFactoryBean">
 		<meta key="value" value="hiragana" />
@@ -702,20 +691,22 @@
 		<property name="resource"
 			value="classpath:OtoYakuNoHeyaYomikataJiten.xlsx" />
 		<property name="sheetName" value="TiZuKiGou" />
-		<property name="links" ref="OtoYakuNoHeyaYomikataJitenLinkList" />
+		<property name="links"
+			ref="OtoYakuNoHeyaYomikataJitenLinkList" />
 		<property name="text"
 			value="${org.springframework.beans.factory.TiZuKiGouKanjiHiraganaMapFactoryBean.text}" />
 		<property name="description"
 			value="${org.springframework.beans.factory.TiZuKiGouKanjiHiraganaMapFactoryBean.description}" />
 	</bean>
 
-	<!--https://hiramatu-hifuka.com/onyak/mw3.html-->
+	<!--https://hiramatu-hifuka.com/onyak/mw3.html -->
 	<bean id="OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimap"
 		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean">
 		<meta key="value" value="hiragana" />
 		<property name="url"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.url}" />
-		<property name="links" ref="OtoYakuNoHeyaYomikataJitenLinkList" />
+		<property name="links"
+			ref="OtoYakuNoHeyaYomikataJitenLinkList" />
 		<property name="text"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.text}" />
 		<property name="description"
@@ -731,11 +722,12 @@
 		<property name="valueColumnIndex" value="1" />
 	</bean>
 
-	<!--https://hiramatu-hifuka.com/onyak/kotoba-1/sugaku.html-->
+	<!--https://hiramatu-hifuka.com/onyak/kotoba-1/sugaku.html -->
 	<bean
 		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean">
 		<meta key="value" value="hiragana" />
-		<property name="links" ref="OtoYakuNoHeyaYomikataJitenLinkList" />
+		<property name="links"
+			ref="OtoYakuNoHeyaYomikataJitenLinkList" />
 		<property name="text"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean.text}" />
 		<property name="description"
@@ -749,11 +741,12 @@
 		<property name="valueColumnIndex" value="1" />
 	</bean>
 
-	<!--https://hiramatu-hifuka.com/onyak/kotoba-1/kisyo.html-->
+	<!--https://hiramatu-hifuka.com/onyak/kotoba-1/kisyo.html -->
 	<bean
 		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBean">
 		<meta key="value" value="hiragana" />
-		<property name="links" ref="OtoYakuNoHeyaYomikataJitenLinkList" />
+		<property name="links"
+			ref="OtoYakuNoHeyaYomikataJitenLinkList" />
 		<property name="text"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBean.text}" />
 		<property name="description"
@@ -767,11 +760,12 @@
 		<property name="valueColumnIndex" value="1" />
 	</bean>
 
-	<!--https://hiramatu-hifuka.com/onyak/onyak2/robot01.html-->
+	<!--https://hiramatu-hifuka.com/onyak/onyak2/robot01.html -->
 	<bean
 		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBean">
 		<meta key="value" value="hiragana" />
-		<property name="links" ref="OtoYakuNoHeyaYomikataJitenLinkList" />
+		<property name="links"
+			ref="OtoYakuNoHeyaYomikataJitenLinkList" />
 		<property name="text"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBean.text}" />
 		<property name="description"
@@ -785,11 +779,12 @@
 		<property name="valueColumnIndex" value="1" />
 	</bean>
 
-	<!--https://hiramatu-hifuka.com/onyak/onyak2/tetu-jr.html-->
+	<!--https://hiramatu-hifuka.com/onyak/onyak2/tetu-jr.html -->
 	<bean
 		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBean">
 		<meta key="value" value="hiragana" />
-		<property name="links" ref="OtoYakuNoHeyaYomikataJitenLinkList" />
+		<property name="links"
+			ref="OtoYakuNoHeyaYomikataJitenLinkList" />
 		<property name="text"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBean.text}" />
 		<property name="description"
@@ -803,11 +798,12 @@
 		<property name="valueColumnIndex" value="1" />
 	</bean>
 
-	<!--https://hiramatu-hifuka.com/onyak/onyak2/tetu-min.html-->
+	<!--https://hiramatu-hifuka.com/onyak/onyak2/tetu-min.html -->
 	<bean
 		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean">
 		<meta key="value" value="hiragana" />
-		<property name="links" ref="OtoYakuNoHeyaYomikataJitenLinkList" />
+		<property name="links"
+			ref="OtoYakuNoHeyaYomikataJitenLinkList" />
 		<property name="text"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenMintetsuYomikataJitenMultimapFactoryBean.text}" />
 		<property name="description"
@@ -821,11 +817,12 @@
 		<property name="valueColumnIndex" value="1" />
 	</bean>
 
-	<!--https://hiramatu-hifuka.com/onyak/kotoba-1/sintomei.html-->
+	<!--https://hiramatu-hifuka.com/onyak/kotoba-1/sintomei.html -->
 	<bean
 		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean">
 		<meta key="value" value="hiragana" />
-		<property name="links" ref="OtoYakuNoHeyaYomikataJitenLinkList" />
+		<property name="links"
+			ref="OtoYakuNoHeyaYomikataJitenLinkList" />
 		<property name="text"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenSintomeiYomikataJitenMultimapFactoryBean.text}" />
 		<property name="description"
@@ -839,11 +836,12 @@
 		<property name="valueColumnIndex" value="1" />
 	</bean>
 
-	<!--https://hiramatu-hifuka.com/onyak/onyak2/yuryodo.html-->
+	<!--https://hiramatu-hifuka.com/onyak/onyak2/yuryodo.html -->
 	<bean
 		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean">
 		<meta key="value" value="hiragana" />
-		<property name="links" ref="OtoYakuNoHeyaYomikataJitenLinkList" />
+		<property name="links"
+			ref="OtoYakuNoHeyaYomikataJitenLinkList" />
 		<property name="text"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean.text}" />
 		<property name="description"
@@ -857,11 +855,12 @@
 		<property name="valueColumnIndex" value="1" />
 	</bean>
 
-	<!--https://hiramatu-hifuka.com/onyak/onyak2/tenno.html-->
+	<!--https://hiramatu-hifuka.com/onyak/onyak2/tenno.html -->
 	<bean
 		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean">
 		<meta key="value" value="hiragana" />
-		<property name="links" ref="OtoYakuNoHeyaYomikataJitenLinkList" />
+		<property name="links"
+			ref="OtoYakuNoHeyaYomikataJitenLinkList" />
 		<property name="text"
 			value="${org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean.text}" />
 		<property name="description"
@@ -956,6 +955,10 @@
 	<!---->
 	<bean id="speechApi"
 		class="org.springframework.context.support.SpeechApiImpl" />
+		
+	<!---->
+	<bean id="LanguageCodeToTextObjIntFunction"
+		class="org.d2ab.function.LanguageCodeToTextObjIntFunction" />
 
 	<!-- -->
 	<bean class="org.springframework.context.support.VoiceManager">
@@ -1048,6 +1051,9 @@
 					value="${org.springframework.beans.factory.AllowedRomajiCharacterArrayFactoryBean.allowedRomajiCharacters}" />
 			</bean>
 		</property>
+		<!-- -->
+		<property name="languageCodeToTextObjIntFunction"
+			ref="LanguageCodeToTextObjIntFunction" />
 	</bean>
 
 	<!---->
