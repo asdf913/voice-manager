@@ -3091,6 +3091,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	@Nullable
 	private static <T, U> U apply(@Nullable final ObjIntFunction<T, U> instance, final T o, final int i) {
 		return instance != null ? instance.apply(o, i) : null;
 	}
