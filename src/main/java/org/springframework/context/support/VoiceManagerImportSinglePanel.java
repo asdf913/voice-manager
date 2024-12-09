@@ -1596,7 +1596,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static void playAudio(final Pronunciation pronunciation, final Object audioFormat) {
+	private static void playAudio(final Pronunciation pronunciation, @Nullable final Object audioFormat) {
 		//
 		final Set<Entry<String, String>> entrySet = Util.entrySet(getAudioUrls(pronunciation));
 		//
@@ -2423,7 +2423,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	}
 
 	@Nullable
-	private static String getMp3TagValue(final File file, final Predicate<Object> predicate, final String... attributes)
+	private static String getMp3TagValue(@Nullable final File file, final Predicate<Object> predicate,
+			final String... attributes)
 			throws BaseException, IOException, IllegalAccessException, InvocationTargetException {
 		//
 		return getMp3TagValue(getMp3TagParirs(file, attributes), predicate);
@@ -3740,7 +3741,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	 * Format" is selected
 	 */
 	private static File getPronunciationAudioFileByAudioFormat(final Pronunciation pronunciation,
-			final Object pronounicationAudioFormat) {
+			@Nullable final Object pronounicationAudioFormat) {
 		//
 		URL url = null;
 		//
@@ -5079,7 +5080,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return instance != null ? instance.get() : null;
 	}
 
-	private static <E> void add(@Nullable final List<E> instance, final int index, final E element) {
+	private static <E> void add(@Nullable final List<E> instance, final int index, @Nullable final E element) {
 		if (instance != null) {
 			instance.add(index, element);
 		}
