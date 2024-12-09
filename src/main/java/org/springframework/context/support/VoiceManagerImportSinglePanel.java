@@ -287,9 +287,12 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 
 	private transient PropertyResolver propertyResolver = null;
 
-	private JTextComponent tfLanguage, tfSource, tfTextImport, tfSpeechLanguageCode, tfSpeechLanguageName, tfIpaSymbol,
-			tfListNames, tfRomaji, tfHiragana, tfKatakana, tfPronunciationPageUrl, tfPronunciationPageStatusCode,
-			tfSpeechRate, tfSpeechVolume = null;
+	@Note("Language")
+	private JTextComponent tfLanguage = null;
+
+	private JTextComponent tfSource, tfTextImport, tfSpeechLanguageCode, tfSpeechLanguageName, tfIpaSymbol, tfListNames,
+			tfRomaji, tfHiragana, tfKatakana, tfPronunciationPageUrl, tfPronunciationPageStatusCode, tfSpeechRate,
+			tfSpeechVolume = null;
 
 	private transient javax.swing.text.Document tfTextImportDocument = null;
 
@@ -436,7 +439,10 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	@Nullable
 	private String[] mp3Tags = null;
 
-	private String voiceFolder, messageDigestAlgorithm = null;
+	@Note("Voice Folder")
+	private String voiceFolder = null;
+
+	private String messageDigestAlgorithm = null;
 
 	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
