@@ -574,7 +574,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	}
 
 	@Nullable
-	private static Integer getTempFileMinimumPrefixLength(final Instruction[] instructions) {
+	private static Integer getTempFileMinimumPrefixLength(@Nullable final Instruction[] instructions) {
 		//
 		Integer result = null;
 		//
@@ -604,11 +604,11 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return instance != null ? instance.toArray() : null;
 	}
 
-	private static InputStream getResourceAsStream(final Class<?> instance, final String name) {
+	private static InputStream getResourceAsStream(@Nullable final Class<?> instance, @Nullable final String name) {
 		return instance != null && name != null ? instance.getResourceAsStream(name) : null;
 	}
 
-	private static <T> T[] toArray(final Collection<T> instance, final T[] array) {
+	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.toArray(array)
@@ -1113,7 +1113,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static boolean isAllAttributesMatched(final Map<?, ?> attributes, final AttributeAccessor aa) {
+	private static boolean isAllAttributesMatched(final Map<?, ?> attributes, @Nullable final AttributeAccessor aa) {
 		//
 		if (Util.iterator(Util.entrySet(attributes)) != null) {
 			//
@@ -1385,7 +1385,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 
 	@Nullable
 	private static IValue0<?> getIValue0ByKey(final Iterable<Multimap> multimaps, final Object key,
-			final Function<Collection<?>, IValue0<?>> function) {
+			@Nullable final Function<Collection<?>, IValue0<?>> function) {
 		//
 		if (Util.iterator(multimaps) == null) {
 			//
@@ -1476,7 +1476,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	}
 
 	@Nullable
-	private static String readLine(final Console instance, final String fmt, final Object... args) {
+	private static String readLine(@Nullable final Console instance, final String fmt, final Object... args) {
 		//
 		// java.io.Console.writeLock
 		//
@@ -1504,7 +1504,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static void println(final PrintWriter instance, final String string) {
+	private static void println(@Nullable final PrintWriter instance, final String string) {
 		//
 		Object lock = null;
 		//
@@ -1634,7 +1634,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 	}
 
-	private static void play(final Player instance) throws JavaLayerException {
+	private static void play(@Nullable final Player instance) throws JavaLayerException {
 		if (instance != null) {
 			instance.play();
 		}
@@ -1878,7 +1878,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static boolean isAllCharactersAllowed(final CharSequence cs, final char[] allowedChars) {
+	private static boolean isAllCharactersAllowed(@Nullable final CharSequence cs,
+			@Nullable final char[] allowedChars) {
 		//
 		boolean allCharacterAllowed = true;
 		//
@@ -2013,7 +2014,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner) {
+	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
+			final ClipboardOwner owner) {
 		if (instance != null) {
 			instance.setContents(contents, owner);
 		}
@@ -2037,7 +2039,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static boolean isAnnotationPresent(final AnnotatedElement instance,
+	private static boolean isAnnotationPresent(@Nullable final AnnotatedElement instance,
 			final Class<? extends Annotation> annotationClass) {
 		return instance != null && annotationClass != null && instance.isAnnotationPresent(annotationClass);
 	}
@@ -2059,13 +2061,13 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			return instance != null ? instance.getObject(key) : null;
 		}
 
-		static <T> void setObject(final ObjectMap instance, final Class<T> key, @Nullable final T value) {
+		static <T> void setObject(@Nullable final ObjectMap instance, final Class<T> key, @Nullable final T value) {
 			if (instance != null) {
 				instance.setObject(key, value);
 			}
 		}
 
-		static <T> boolean containsObject(final ObjectMap instance, final Class<T> key) {
+		static <T> boolean containsObject(@Nullable final ObjectMap instance, final Class<T> key) {
 			return instance != null && instance.containsObject(key);
 		}
 
@@ -2222,7 +2224,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 
 		@Nullable
 		private static IValue0<Object> handleObjectMap(final String methodName, final Map<Object, Object> map,
-				final Object[] args) {
+				@Nullable final Object[] args) {
 			//
 			if (Objects.equals(methodName, "getObject") && args != null && args.length > 0) {
 				//
@@ -2253,7 +2255,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 		}
 
-		private static boolean isArray(final OfField<?> instance) {
+		private static boolean isArray(@Nullable final OfField<?> instance) {
 			return instance != null && instance.isArray();
 		}
 
@@ -2428,7 +2430,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 
 	@Nullable
 	private static String getMp3TagValue(@Nullable final List<Pair<String, ?>> pairs,
-			final Predicate<Object> predicate) {
+			@Nullable final Predicate<Object> predicate) {
 		//
 		String string = null;
 		//
@@ -2466,7 +2468,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	}
 
 	@Nullable
-	private static List<Pair<String, ?>> getMp3TagParirs(final ID3v1 id3v1, final String... attributes)
+	private static List<Pair<String, ?>> getMp3TagParirs(final ID3v1 id3v1, @Nullable final String... attributes)
 			throws IllegalAccessException, InvocationTargetException {
 		//
 		List<Pair<String, ?>> pairs = null;
@@ -2574,7 +2576,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 	}
 
-	private static <E extends Throwable> void run(final FailableRunnable<E> instance) throws E {
+	private static <E extends Throwable> void run(@Nullable final FailableRunnable<E> instance) throws E {
 		//
 		if (instance != null) {
 			//
@@ -2611,7 +2613,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static void setFileSelectionMode(final JFileChooser instance, final int mode) {
+	private static void setFileSelectionMode(@Nullable final JFileChooser instance, final int mode) {
 		if (instance != null) {
 			instance.setFileSelectionMode(mode);
 		}
@@ -2677,7 +2679,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 		}
 
-		private static void errorOrPrintln(@Nullable final Logger logger, final PrintStream ps, final String message) {
+		private static void errorOrPrintln(@Nullable final Logger logger, @Nullable final PrintStream ps,
+				final String message) {
 			//
 			if (logger != null) {
 				//
@@ -2959,7 +2962,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 	}
 
-	private static void insertOrUpdate(final VoiceMapper instance, final Voice voice) {
+	private static void insertOrUpdate(@Nullable final VoiceMapper instance, final Voice voice) {
 		//
 		if (instance != null) {
 			//
@@ -3024,19 +3027,19 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return instance != null ? instance.getListNames() : null;
 	}
 
-	private static void setCreateTs(final Voice instance, final Date createTs) {
+	private static void setCreateTs(@Nullable final Voice instance, final Date createTs) {
 		if (instance != null) {
 			instance.setCreateTs(createTs);
 		}
 	}
 
-	private static void setUpdateTs(final Voice instance, final Date updateTs) {
+	private static void setUpdateTs(@Nullable final Voice instance, final Date updateTs) {
 		if (instance != null) {
 			instance.setUpdateTs(updateTs);
 		}
 	}
 
-	private static void setId(final Voice instance, final Integer id) {
+	private static void setId(@Nullable final Voice instance, final Integer id) {
 		if (instance != null) {
 			instance.setId(id);
 		}
@@ -3057,7 +3060,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return instance != null ? instance.getFilePath() : null;
 	}
 
-	private static String formatHex(final HexFormat instance, final byte[] bytes) {
+	private static String formatHex(@Nullable final HexFormat instance, @Nullable final byte[] bytes) {
 		return instance != null && bytes != null ? instance.formatHex(bytes) : null;
 	}
 
@@ -3131,11 +3134,11 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static boolean isFile(final File instance) {
+	private static boolean isFile(@Nullable final File instance) {
 		return instance != null && instance.isFile();
 	}
 
-	private static void addRow(final DefaultTableModel instance, final Object[] rowData) {
+	private static void addRow(@Nullable final DefaultTableModel instance, final Object[] rowData) {
 		//
 		if (instance != null) {
 			//
@@ -3290,7 +3293,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return instance != null ? instance.getParameterTypes() : null;
 	}
 
-	private static void setLanguage(final Voice instance, final String language) {
+	private static void setLanguage(@Nullable final Voice instance, final String language) {
 		if (instance != null) {
 			instance.setLanguage(language);
 		}
@@ -3414,7 +3417,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static <T> boolean or(final Predicate<T> predicate, final T a, final T b, final T... values) {
+	private static <T> boolean or(final Predicate<T> predicate, final T a, final T b, @Nullable final T... values) {
 		//
 		boolean result = Util.test(predicate, a) || Util.test(predicate, b);
 		//
@@ -3468,7 +3471,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	}
 
 	@Nullable
-	private static Integer getRate(final List<Field> fs) {
+	private static Integer getRate(@Nullable final List<Field> fs) {
 		//
 		if (fs != null && !fs.isEmpty()) {
 			//
@@ -3582,7 +3585,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static void deleteOnExit(final File instance) {
+	private static void deleteOnExit(@Nullable final File instance) {
 		if (instance != null) {
 			instance.deleteOnExit();
 		}
@@ -3594,7 +3597,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	}
 
 	@Nullable
-	private static <T> T getMapper(@Nullable final Configuration instance, final Class<T> type,
+	private static <T> T getMapper(@Nullable final Configuration instance, @Nullable final Class<T> type,
 			final SqlSession sqlSession) {
 		//
 		if (instance == null) {
@@ -3650,7 +3653,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static void setAccessible(final AccessibleObject instance, final boolean flag) {
+	private static void setAccessible(@Nullable final AccessibleObject instance, final boolean flag) {
 		if (instance != null) {
 			instance.setAccessible(flag);
 		}
@@ -3706,19 +3709,19 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static void setListNames(final Voice instance, final Iterable<String> listNames) {
+	private static void setListNames(@Nullable final Voice instance, final Iterable<String> listNames) {
 		if (instance != null) {
 			instance.setListNames(listNames);
 		}
 	}
 
-	private static void setSource(final Voice instance, final String source) {
+	private static void setSource(@Nullable final Voice instance, final String source) {
 		if (instance != null) {
 			instance.setSource(source);
 		}
 	}
 
-	private static void setPitchAccentImage(final Voice instance, final ByteArray pitchAccentImage) {
+	private static void setPitchAccentImage(@Nullable final Voice instance, final ByteArray pitchAccentImage) {
 		if (instance != null) {
 			instance.setPitchAccentImage(pitchAccentImage);
 		}
@@ -3770,7 +3773,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return instance != null ? instance.getFile() : null;
 	}
 
-	private static <T> boolean and(final Predicate<T> predicate, @Nullable final T a, final T b, final T... values) {
+	private static <T> boolean and(final Predicate<T> predicate, @Nullable final T a, final T b,
+			@Nullable final T... values) {
 		//
 		boolean result = Util.test(predicate, a) && Util.test(predicate, b);
 		//
@@ -3816,11 +3820,12 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return instance.openStream();
 	}
 
-	private static boolean isSelected(final AbstractButton instance) {
+	private static boolean isSelected(@Nullable final AbstractButton instance) {
 		return instance != null && instance.isSelected();
 	}
 
-	private static ByteArray createByteArray(final RenderedImage image, final String format, final boolean headless) {
+	private static ByteArray createByteArray(@Nullable final RenderedImage image, @Nullable final String format,
+			final boolean headless) {
 		//
 		byte[] bs = null;
 		//
@@ -3941,7 +3946,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return instance != null ? instance.getSource() : null;
 	}
 
-	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
+	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
 		//
 		AbstractButton ab = null;
 		//
@@ -3958,7 +3963,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	}
 
 	private static void addChangeListener(final ChangeListener changeListener, final JSlider instance,
-			final JSlider... vs) {
+			@Nullable final JSlider... vs) {
 		//
 		addChangeListener(instance, changeListener);
 		//
@@ -3970,7 +3975,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 	}
 
-	private static void addChangeListener(final JSlider instance, final ChangeListener changeListener) {
+	private static void addChangeListener(@Nullable final JSlider instance, final ChangeListener changeListener) {
 		if (instance != null) {
 			instance.addChangeListener(changeListener);
 		}
@@ -3985,13 +3990,13 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		} // if
 	}
 
-	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) {
+	private static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, final T t, final U u) {
 		if (instance != null) {
 			instance.accept(t, u);
 		}
 	}
 
-	private static boolean isStatic(final Member instance) {
+	private static boolean isStatic(@Nullable final Member instance) {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
@@ -4035,7 +4040,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return instance != null ? instance.max() : null;
 	}
 
-	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper) {
+	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
+			@Nullable final ToIntFunction<? super T> mapper) {
 		//
 		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
 				? instance.mapToInt(mapper)
@@ -4096,7 +4102,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 	}
 
-	private void setSpeechVolume(@Nullable final Number speechVolume, final Number upperEnpoint) {
+	private void setSpeechVolume(@Nullable final Number speechVolume, @Nullable final Number upperEnpoint) {
 		//
 		if (speechVolume != null) {
 			//
@@ -4148,7 +4154,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static void setValue(final JSlider instance, final String string, final Consumer<JSlider> consumer) {
+	private static void setValue(@Nullable final JSlider instance, final String string,
+			final Consumer<JSlider> consumer) {
 		//
 		Integer i = valueOf(string);
 		//
@@ -4188,13 +4195,14 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 	}
 
-	private static void setValue(final JSlider instance, final int n) {
+	private static void setValue(@Nullable final JSlider instance, final int n) {
 		if (instance != null) {
 			instance.setValue(n);
 		}
 	}
 
-	private static <T> Stream<T> sorted(final Stream<T> instance, final Comparator<? super T> comparator) {
+	private static <T> Stream<T> sorted(@Nullable final Stream<T> instance,
+			@Nullable final Comparator<? super T> comparator) {
 		//
 		return instance != null && (comparator != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.sorted(comparator)
@@ -4202,8 +4210,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static void setValue(final JSlider instance, final Method method, final Consumer<JSlider> consumer,
-			final boolean headless) {
+	private static void setValue(@Nullable final JSlider instance, final Method method,
+			final Consumer<JSlider> consumer, final boolean headless) {
 		//
 		try {
 			//
@@ -4238,7 +4246,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return method != null ? method.invoke(instance, args) : null;
 	}
 
-	private static void setEditable(final boolean editable, final JTextComponent... jtcs) {
+	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
 		//
 		JTextComponent jtc = null;
 		//
@@ -4254,25 +4262,25 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 	}
 
-	private static void setPaintLabels(final JSlider instance, final boolean b) {
+	private static void setPaintLabels(@Nullable final JSlider instance, final boolean b) {
 		if (instance != null) {
 			instance.setPaintLabels(b);
 		}
 	}
 
-	private static void setPaintTicks(final JSlider instance, final boolean b) {
+	private static void setPaintTicks(@Nullable final JSlider instance, final boolean b) {
 		if (instance != null) {
 			instance.setPaintTicks(b);
 		}
 	}
 
-	private static void setMajorTickSpacing(final JSlider instance, final int n) {
+	private static void setMajorTickSpacing(@Nullable final JSlider instance, final int n) {
 		if (instance != null) {
 			instance.setMajorTickSpacing(n);
 		}
 	}
 
-	private static void setEnabled(final boolean b, final Component instance, final Component... cs) {
+	private static void setEnabled(final boolean b, final Component instance, @Nullable final Component... cs) {
 		//
 		setEnabled(instance, b);
 		//
@@ -4284,7 +4292,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 	}
 
-	private static void setEnabled(final Component instance, final boolean b) {
+	private static void setEnabled(@Nullable final Component instance, final boolean b) {
 		if (instance != null) {
 			instance.setEnabled(b);
 		}
@@ -4297,14 +4305,14 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		} // if
 	}
 
-	private static <T, U, E extends Throwable> void accept(final FailableBiConsumer<T, U, E> instance, final T t,
-			final U u) throws E {
+	private static <T, U, E extends Throwable> void accept(@Nullable final FailableBiConsumer<T, U, E> instance,
+			final T t, final U u) throws E {
 		if (instance != null) {
 			instance.accept(t, u);
 		}
 	}
 
-	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, final U u) {
+	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, final U u) {
 		return instance != null && instance.test(t, u);
 	}
 
@@ -4322,14 +4330,14 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
 			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
 			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
 
-	private static void setPreferredWidth(final int width, final Component... cs) {
+	private static void setPreferredWidth(final int width, @Nullable final Component... cs) {
 		//
 		Component c = null;
 		//
@@ -4407,7 +4415,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static Range<Integer> createRange(final Integer minValue, final Integer maxValue) {
+	private static Range<Integer> createRange(@Nullable final Integer minValue, @Nullable final Integer maxValue) {
 		//
 		if (minValue != null && maxValue != null) {
 			return Range.open(minValue, maxValue);
@@ -4473,7 +4481,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
-	private static <T> void accept(final Consumer<? super T> action, final T a, final T b, final T... values) {
+	private static <T> void accept(final Consumer<? super T> action, final T a, final T b,
+			@Nullable final T... values) {
 		//
 		accept(action, a);
 		//
@@ -4487,7 +4496,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 	}
 
-	private static <T> void accept(final Consumer<T> instance, final T value) {
+	private static <T> void accept(@Nullable final Consumer<T> instance, final T value) {
 		if (instance != null) {
 			instance.accept(value);
 		}
@@ -4556,7 +4565,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return objectMapper;
 	}
 
-	private static void setBackground(final Component instance, @Nullable final Color color) {
+	private static void setBackground(@Nullable final Component instance, @Nullable final Color color) {
 		if (instance != null) {
 			instance.setBackground(color);
 		}
@@ -4618,7 +4627,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return instance != null ? instance.getDeclaredField(name) : null;
 	}
 
-	private static <E extends Throwable> void testAndRun(final boolean b, final FailableRunnable<E> runnable) throws E {
+	private static <E extends Throwable> void testAndRun(final boolean b, @Nullable final FailableRunnable<E> runnable)
+			throws E {
 		//
 		if (b && runnable != null) {
 			//
@@ -4922,13 +4932,13 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	}
 
 	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
-			final FailableConsumer<T, E> consumer) throws E {
+			@Nullable final FailableConsumer<T, E> consumer) throws E {
 		if (Util.test(predicate, value) && consumer != null) {
 			consumer.accept(value);
 		}
 	}
 
-	private static <E> void addElement(final MutableComboBoxModel<E> instance, @Nullable final E item) {
+	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, @Nullable final E item) {
 		if (instance != null) {
 			instance.addElement(item);
 		}
@@ -4950,7 +4960,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	}
 
 	private static <T, E extends Throwable> void forEach(final Iterable<T> items,
-			final FailableConsumer<? super T, E> action) throws E {
+			@Nullable final FailableConsumer<? super T, E> action) throws E {
 		//
 		if (Util.iterator(items) != null && (action != null || Proxy.isProxyClass(Util.getClass(items)))) {
 			//
@@ -5006,13 +5016,14 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return map(IntStream.range(from, to), i -> to - i + from - 1);
 	}
 
-	private static IntStream map(final IntStream instance, final IntUnaryOperator mapper) {
+	private static IntStream map(@Nullable final IntStream instance, @Nullable final IntUnaryOperator mapper) {
 		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
 				? instance.map(mapper)
 				: instance;
 	}
 
-	private static void addDocumentListener(final javax.swing.text.Document instance, final DocumentListener listener) {
+	private static void addDocumentListener(@Nullable final javax.swing.text.Document instance,
+			final DocumentListener listener) {
 		if (instance != null) {
 			instance.addDocumentListener(listener);
 		}
