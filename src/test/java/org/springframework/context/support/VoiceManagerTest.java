@@ -4772,7 +4772,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testSetValue() throws IOException {
+	void testSetValue() {
 		//
 		Assertions.assertDoesNotThrow(() -> setValue(new JProgressBar(), 0));
 		//
