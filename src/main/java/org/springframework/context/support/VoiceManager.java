@@ -510,8 +510,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String HIRAGANA_WITH_FIRST_CAPTICALIZED_LETTER = "Hiragana";
 
-	private static final Predicate<File> EMPTY_FILE_PREDICATE = f -> f != null && f.exists() && isFile(f)
-			&& longValue(length(f), 0) == 0;
+	private static final FailablePredicate<File, RuntimeException> EMPTY_FILE_PREDICATE = f -> f != null && f.exists()
+			&& isFile(f) && longValue(length(f), 0) == 0;
 
 	private static IValue0<Method> METHOD_RANDOM_ALPHABETIC = null;
 
@@ -2078,19 +2078,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Field[] fs = Util.getDeclaredFields(VoiceManager.class);
 		//
-		Field f = null;
-		//
 		for (int i = 0; i < length(fs); i++) {
 			//
 			try {
 				//
-				if (and(f = fs[i], x -> Objects.equals(Util.getDeclaringClass(x), Util.getType(x)), x -> isStatic(x),
-						x -> get(x, null) == null)) {
-					//
-					Narcissus.setStaticField(f, this);
-					//
-				} // if
-					//
+				testAndAccept(x -> and(x, y -> Objects.equals(Util.getDeclaringClass(y), Util.getType(y)),
+						y -> isStatic(y), y -> get(y, null) == null), fs[i], x -> {
+							Narcissus.setStaticField(x, this);
+						});
+				//
 			} catch (final IllegalArgumentException | IllegalAccessException e) {
 				//
 				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
@@ -5827,7 +5823,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				IOUtils.closeQuietly(workbook);
 				//
 				testAndAccept(EMPTY_FILE_PREDICATE, file, FileUtils::deleteQuietly);
-				//
+				// ini
 			} // try
 				//
 			return;
@@ -6825,8 +6821,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
-			@Nullable final FailableConsumer<T, E> consumer) throws E {
+	private static <T, E extends Throwable> void testAndAccept(final FailablePredicate<T, E> predicate,
+			@Nullable final T value, @Nullable final FailableConsumer<T, E> consumer) throws E {
 		if (Util.test(predicate, value) && consumer != null) {
 			consumer.accept(value);
 		}

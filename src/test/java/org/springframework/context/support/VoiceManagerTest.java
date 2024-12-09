@@ -657,8 +657,8 @@ class VoiceManagerTest {
 		//
 		(METHOD_SET_AUTHOR = clz.getDeclaredMethod("setAuthor", Comment.class, String.class)).setAccessible(true);
 		//
-		(METHOD_TEST_AND_ACCEPT_PREDICATE = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
-				FailableConsumer.class)).setAccessible(true);
+		(METHOD_TEST_AND_ACCEPT_PREDICATE = clz.getDeclaredMethod("testAndAccept", FailablePredicate.class,
+				Object.class, FailableConsumer.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT_BI_PREDICATE = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class,
 				Object.class, FailableBiConsumer.class)).setAccessible(true);
@@ -6200,9 +6200,9 @@ class VoiceManagerTest {
 	@Test
 	void testTestAndAccept() {
 		//
-		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysFalse(), null, null));
+		Assertions.assertDoesNotThrow(() -> testAndAccept(FailablePredicate.falsePredicate(), null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysTrue(), null, null));
+		Assertions.assertDoesNotThrow(() -> testAndAccept(FailablePredicate.truePredicate(), null, null));
 		//
 		Assertions.assertDoesNotThrow(() -> testAndAccept(null, null, null, null));
 		//
@@ -6217,7 +6217,7 @@ class VoiceManagerTest {
 		//
 	}
 
-	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
+	private static <T, E extends Throwable> void testAndAccept(final FailablePredicate<T, E> predicate, final T value,
 			final FailableConsumer<T, E> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT_PREDICATE.invoke(null, predicate, value, consumer);
