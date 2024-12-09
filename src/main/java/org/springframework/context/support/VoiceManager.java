@@ -9116,6 +9116,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
+		@Nullable
 		private static ObjIntFunction<String, String> getLanguageCodeToTextObjIntFunction(
 				@Nullable final ImportVoiceParameters instance) {
 			return instance != null ? instance.languageCodeToTextObjIntFunction : null;
