@@ -3063,12 +3063,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void setValue(@Nullable final JSlider instance, final int n) {
-		if (instance != null) {
-			instance.setValue(n);
-		}
-	}
-
 	private static boolean isAnnotationPresent(@Nullable final AnnotatedElement instance,
 			@Nullable final Class<? extends Annotation> annotationClass) {
 		return instance != null && annotationClass != null && instance.isAnnotationPresent(annotationClass);
