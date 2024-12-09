@@ -2990,6 +2990,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
+	@Nullable
 	private static Voice searchByTextAndRomaji(@Nullable final VoiceMapper instance, final String text,
 			final String romaji) {
 		return instance != null ? instance.searchByTextAndRomaji(text, romaji) : null;
