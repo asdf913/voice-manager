@@ -2178,11 +2178,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				() -> add(craeteSpeechApiInstallationWarningJPanel(microsoftSpeechPlatformRuntimeDownloadPageUrl),
 						WRAP));
 		//
-		forEach(Util.values(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Component.class)), x -> {
-			//
-			testAndAccept(Objects::nonNull, Util.cast(Titled.class, x), y -> jTabbedPane.addTab(getTitle(y), x));
-			//
-		});
+		forEach(Util.values(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Component.class)),
+				x -> testAndAccept(Objects::nonNull, Util.cast(Titled.class, x),
+						y -> jTabbedPane.addTab(getTitle(y), x)));
 		//
 		jTabbedPane.addTab(TAB_TITLE_IMPORT_BATCH, createBatchImportPanel(cloneLayoutManager()));
 		//
