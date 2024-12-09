@@ -1035,7 +1035,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static void setPreferredSize(final Component instance, final Dimension preferredSize) {
+	private static void setPreferredSize(@Nullable final Component instance, final Dimension preferredSize) {
 		if (instance != null) {
 			instance.setPreferredSize(preferredSize);
 		}
@@ -2468,7 +2468,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	}
 
 	@Nullable
-	private static List<Pair<String, ?>> getMp3TagParirs(final File file, final String... attributes)
+	private static List<Pair<String, ?>> getMp3TagParirs(@Nullable final File file, final String... attributes)
 			throws BaseException, IOException, IllegalAccessException, InvocationTargetException {
 		//
 		if (Objects.equals("mp3", getFileExtension(Util.cast(ContentInfo.class,
