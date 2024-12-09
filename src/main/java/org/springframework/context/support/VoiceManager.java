@@ -4850,7 +4850,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			ObjectMap.setObject(objectMap, VoiceMapper.class,
 					getMapper(SqlSessionFactoryUtil.getConfiguration(sqlSessionFactory), VoiceMapper.class,
-							sqlSession = openSession(sqlSessionFactory)));
+							sqlSession = SqlSessionFactoryUtil.openSession(sqlSessionFactory)));
 			//
 			ObjectMap.setObject(objectMap, VoiceManager.class, this);
 			//
@@ -5835,7 +5835,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		try {
 			//
 			final VoiceMapper voiceMapper = getMapper(SqlSessionFactoryUtil.getConfiguration(sqlSessionFactory),
-					VoiceMapper.class, sqlSession = openSession(sqlSessionFactory));
+					VoiceMapper.class, sqlSession = SqlSessionFactoryUtil.openSession(sqlSessionFactory));
 			//
 			final List<Voice> voices = retrieveAllVoices(voiceMapper);
 			//
@@ -8979,7 +8979,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				ObjectMap.setObject(objectMap, VoiceMapper.class,
 						getMapper(SqlSessionFactoryUtil.getConfiguration(sqlSessionFactory), VoiceMapper.class,
-								sqlSession = openSession(sqlSessionFactory)));
+								sqlSession = SqlSessionFactoryUtil.openSession(sqlSessionFactory)));
 				//
 				ObjectMap.setObject(objectMap, Voice.class, voice);
 				//
@@ -12723,11 +12723,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static <T> Optional<T> findFirst(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.findFirst() : null;
-	}
-
-	@Nullable
-	private static SqlSession openSession(@Nullable final SqlSessionFactory instance) {
-		return instance != null ? instance.openSession() : null;
 	}
 
 	@Nullable

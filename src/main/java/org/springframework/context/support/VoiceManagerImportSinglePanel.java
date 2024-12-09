@@ -2380,7 +2380,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 			ObjectMap.setObject(objectMap, VoiceMapper.class,
 					getMapper(SqlSessionFactoryUtil.getConfiguration(sqlSessionFactory), VoiceMapper.class,
-							sqlSession = openSession(sqlSessionFactory)));
+							sqlSession = SqlSessionFactoryUtil.openSession(sqlSessionFactory)));
 			//
 			ObjectMap.setObject(objectMap, VoiceManager.class, voiceManager);
 			//
@@ -3622,11 +3622,6 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		if (instance != null) {
 			instance.deleteOnExit();
 		}
-	}
-
-	@Nullable
-	private static SqlSession openSession(@Nullable final SqlSessionFactory instance) {
-		return instance != null ? instance.openSession() : null;
 	}
 
 	@Nullable

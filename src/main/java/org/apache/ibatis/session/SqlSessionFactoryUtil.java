@@ -6,4 +6,8 @@ public interface SqlSessionFactoryUtil {
 		return instance != null ? instance.getConfiguration() : null;
 	}
 
+	static SqlSession openSession(final SqlSessionFactory instance) {
+		return instance != null ? instance.openSession() : null;
+	}
+
 }
