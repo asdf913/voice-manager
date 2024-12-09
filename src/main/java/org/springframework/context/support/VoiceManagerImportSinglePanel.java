@@ -3386,7 +3386,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	}
 
 	@Nullable
-	private static Matcher matcher(@Nullable final Pattern instance, final CharSequence input) {
+	private static Matcher matcher(@Nullable final Pattern instance, @Nullable final CharSequence input) {
 		//
 		if (instance == null) {
 			//
@@ -3659,7 +3659,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	}
 
 	private static Voice createVoice(@Nullable final ObjectMapper objectMapper,
-			final VoiceManagerImportSinglePanel instance) {
+			@Nullable final VoiceManagerImportSinglePanel instance) {
 		//
 		if (instance == null) {
 			//
