@@ -2076,11 +2076,28 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void init() throws NoSuchFieldException {
 		//
-		if (INSTANCE == null) {
+		final Field[] fs = Util.getDeclaredFields(VoiceManager.class);
+		//
+		Field f = null;
+		//
+		for (int i = 0; fs != null && i < fs.length; i++) {
 			//
-			INSTANCE = this;
-			//
-		} // if
+			try {
+				//
+				if (Objects.equals(Util.getDeclaringClass(f = fs[i]), Util.getType(f)) && get(f, null) == null
+						&& isStatic(f)) {
+					//
+					f.set(null, this);
+					//
+				} // if
+					//
+			} catch (final IllegalArgumentException | IllegalAccessException e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} // try
+				//
+		} // for
 			//
 		final JTabbedPane jTabbedPane = new JTabbedPane();
 		//
