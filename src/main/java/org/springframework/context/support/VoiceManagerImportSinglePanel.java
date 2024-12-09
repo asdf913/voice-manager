@@ -2343,7 +2343,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 		} // try
 			//
-		if (file == null && !useTtsVoice) {
+		if (Boolean.logicalAnd(file == null, !useTtsVoice)) {
 			//
 			try {
 				//
