@@ -605,10 +605,12 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return instance != null ? instance.toArray() : null;
 	}
 
+	@Nullable
 	private static InputStream getResourceAsStream(@Nullable final Class<?> instance, @Nullable final String name) {
 		return instance != null && name != null ? instance.getResourceAsStream(name) : null;
 	}
 
+	@Nullable
 	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
@@ -3065,6 +3067,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return instance != null ? instance.getFilePath() : null;
 	}
 
+	@Nullable
 	private static String formatHex(@Nullable final HexFormat instance, @Nullable final byte[] bytes) {
 		return instance != null && bytes != null ? instance.formatHex(bytes) : null;
 	}
@@ -4046,6 +4049,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return instance != null ? instance.max() : null;
 	}
 
+	@Nullable
 	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
 			@Nullable final ToIntFunction<? super T> mapper) {
 		//
@@ -4207,6 +4211,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		}
 	}
 
+	@Nullable
 	private static <T> Stream<T> sorted(@Nullable final Stream<T> instance,
 			@Nullable final Comparator<? super T> comparator) {
 		//
@@ -5022,6 +5027,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return map(IntStream.range(from, to), i -> to - i + from - 1);
 	}
 
+	@Nullable
 	private static IntStream map(@Nullable final IntStream instance, @Nullable final IntUnaryOperator mapper) {
 		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
 				? instance.map(mapper)
