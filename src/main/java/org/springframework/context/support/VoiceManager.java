@@ -943,7 +943,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private char[] allowedRomajiCharacters = null;
 
-	private ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
+	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
 	private VoiceManager() {
 	}
