@@ -174,7 +174,7 @@ public class VoiceManagerTtsPanel extends JPanel
 
 	private transient ComboBoxModel<Method> cbmSpeakMethod = null;
 
-	private ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
+	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
 	@Override
 	public String getTitle() {
