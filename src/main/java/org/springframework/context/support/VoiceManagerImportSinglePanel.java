@@ -148,9 +148,9 @@ import org.apache.ibatis.session.ConfigurationUtil;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryUtil;
-import org.apache.poi.util.LocaleID;
 import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntList;
+import org.d2ab.function.ObjIntFunction;
 import org.eclipse.jetty.http.HttpStatus;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -480,6 +480,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 
 	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
+	private ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
+
 	@Override
 	public String getTitle() {
 		return "Import(Single)";
@@ -545,6 +547,11 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 				Util.toList(Util.map(Util.stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))),
 				new String[] {});
 		//
+	}
+
+	public void setLanguageCodeToTextObjIntFunction(
+			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) {
+		this.languageCodeToTextObjIntFunction = languageCodeToTextObjIntFunction;
 	}
 
 	private static class BooleanComboBoxModelSupplier implements Supplier<ComboBoxModel<Boolean>> {
@@ -1229,7 +1236,9 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 				Util.setText(tfSpeechLanguageCode, language);
 				//
 				Util.setText(tfSpeechLanguageName,
-						StringUtils.defaultIfBlank(convertLanguageCodeToText(language, 16), language));
+						StringUtils.defaultIfBlank(languageCodeToTextObjIntFunction != null
+								? languageCodeToTextObjIntFunction.apply(language, 16)
+								: null, language));
 				//
 			} catch (final Error e) {
 				//
@@ -3261,8 +3270,12 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 				//
 		} // if
 			//
-		setLanguage(voice, StringUtils.defaultIfBlank(getLanguage(voice),
-				convertLanguageCodeToText(SpeechApi.getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
+		setLanguage(voice,
+				StringUtils.defaultIfBlank(getLanguage(voice),
+						languageCodeToTextObjIntFunction != null
+								? languageCodeToTextObjIntFunction
+										.apply(SpeechApi.getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)
+								: null));
 		//
 		setSource(voice, StringUtils.defaultIfBlank(getSource(voice),
 				Provider.getProviderName(Util.cast(Provider.class, speechApi))));
@@ -4762,13 +4775,6 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return instance != null ? instance.getRenderer() : null;
 	}
 
-	private static String convertLanguageCodeToText(final String instance, final int base) {
-		//
-		return StringUtils.defaultIfBlank(convertLanguageCodeToText(LocaleID.values(), valueOf(instance, base)),
-				instance);
-		//
-	}
-
 	@Nullable
 	private static Integer valueOf(final String instance, final int base) {
 		try {
@@ -4776,33 +4782,6 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		} catch (final NumberFormatException e) {
 			return null;
 		}
-	}
-
-	@Nullable
-	private static String convertLanguageCodeToText(final LocaleID[] enums, @Nullable final Integer value) {
-		//
-		final List<LocaleID> localeIds = Util
-				.toList(Util.filter(testAndApply(Objects::nonNull, enums, Arrays::stream, null),
-						a -> a != null && Objects.equals(Integer.valueOf(a.getLcid()), value)));
-		//
-		if (localeIds != null && !localeIds.isEmpty()) {
-			//
-			if (IterableUtils.size(localeIds) == 1) {
-				//
-				final LocaleID localeId = IterableUtils.get(localeIds, 0);
-				//
-				return localeId != null ? localeId.getDescription() : null;
-				//
-			} else {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
-		} // if
-			//
-		return null;
-		//
 	}
 
 	@Nullable
