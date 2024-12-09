@@ -2056,6 +2056,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 
 	private static interface ObjectMap {
 
+		@Nullable
 		<T> T getObject(final Class<T> key);
 
 		boolean containsObject(final Class<?> key);
@@ -2960,7 +2961,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 	}
 
-	private static String checkFileExtension(final String fileExtension) {
+	private static String checkFileExtension(@Nullable final String fileExtension) {
 		//
 		if (fileExtension == null) {
 			//
@@ -2980,7 +2981,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
-	private static Voice searchByTextAndRomaji(final VoiceMapper instance, final String text, final String romaji) {
+	private static Voice searchByTextAndRomaji(@Nullable final VoiceMapper instance, final String text,
+			final String romaji) {
 		return instance != null ? instance.searchByTextAndRomaji(text, romaji) : null;
 	}
 
