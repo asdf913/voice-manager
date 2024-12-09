@@ -305,8 +305,11 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	@Note("IPA Symbol")
 	private JTextComponent tfIpaSymbol = null;
 
-	private JTextComponent tfListNames, tfRomaji, tfHiragana, tfKatakana, tfPronunciationPageUrl,
-			tfPronunciationPageStatusCode, tfSpeechRate, tfSpeechVolume = null;
+	@Note("List Names")
+	private JTextComponent tfListNames = null;
+
+	private JTextComponent tfRomaji, tfHiragana, tfKatakana, tfPronunciationPageUrl, tfPronunciationPageStatusCode,
+			tfSpeechRate, tfSpeechVolume = null;
 
 	private transient javax.swing.text.Document tfTextImportDocument = null;
 
