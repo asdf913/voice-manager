@@ -9118,6 +9118,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
+		private static ObjIntFunction<String, String> getLanguageCodeToTextObjIntFunction(
+				final ImportVoiceParameters instance) {
+			return instance != null ? instance.languageCodeToTextObjIntFunction : null;
+		}
+
 	}
 
 	private static void importVoice(@Nullable final Sheet sheet, final ObjectMap _objectMap, final String voiceId,
@@ -9226,10 +9231,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							ObjectMap.setObject(objectMap, ImportTask.class, it);
 							//
 							importVoice(objectMap, folder, voiceId,
-									(importVoiceParameters = ObjectMap.getObject(objectMap,
-											ImportVoiceParameters.class)) != null
-													? importVoiceParameters.languageCodeToTextObjIntFunction
-													: null);
+									ImportVoiceParameters
+											.getLanguageCodeToTextObjIntFunction(importVoiceParameters = ObjectMap
+													.getObject(objectMap, ImportVoiceParameters.class)));
 							//
 						} // if
 							//
