@@ -2839,21 +2839,11 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 			final String fileExtension = getFileExtension(new ContentInfoUtil().findMatch(selectedFile));
 			//
-			if (fileExtension == null) {
+			final String checkFileExtension = checkFileExtension(fileExtension);
+			//
+			if (checkFileExtension != null) {
 				//
-				accept(errorMessageConsumer, voice, "File Extension is null");
-				//
-				return;
-				//
-			} else if (StringUtils.isEmpty(fileExtension)) {
-				//
-				accept(errorMessageConsumer, voice, "File Extension is Empty");
-				//
-				return;
-				//
-			} else if (StringUtils.isBlank(fileExtension)) {
-				//
-				accept(errorMessageConsumer, voice, "File Extension is Blank");
+				accept(errorMessageConsumer, voice, checkFileExtension);
 				//
 				return;
 				//
@@ -2966,6 +2956,26 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 		} // try
 			//
+	}
+
+	private static String checkFileExtension(final String fileExtension) {
+		//
+		if (fileExtension == null) {
+			//
+			return "File Extension is null";
+			//
+		} else if (StringUtils.isEmpty(fileExtension)) {
+			//
+			return "File Extension is Empty";
+			//
+		} else if (StringUtils.isBlank(fileExtension)) {
+			//
+			return "File Extension is Blank";
+			//
+		} // if
+			//
+		return null;
+		//
 	}
 
 	private static Voice searchByTextAndRomaji(final VoiceMapper instance, final String text, final String romaji) {

@@ -150,7 +150,9 @@ class VoiceManagerImportSinglePanelTest {
 						|| Boolean.logicalAnd(Objects.equals(name, "getImageFormats"),
 								Arrays.equals(parameterTypes, new Class[] {}))
 						|| Boolean.logicalAnd(Objects.equals(name, "randomAlphabetic"),
-								Arrays.equals(parameterTypes, new Class[] { Integer.TYPE }))) {
+								Arrays.equals(parameterTypes, new Class[] { Integer.TYPE }))
+						|| Boolean.logicalAnd(Objects.equals(name, "checkFileExtension"),
+								Arrays.equals(parameterTypes, new Class[] { String.class }))) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
