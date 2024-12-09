@@ -2098,20 +2098,6 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			}
 		}
 
-		static <T> boolean containsObject(@Nullable final ObjectMap instance, final Class<T> key) {
-			return instance != null && instance.containsObject(key);
-		}
-
-		static <T> void setObjectIfAbsent(final ObjectMap instance, final Class<T> key, final T value) {
-			//
-			if (!ObjectMap.containsObject(instance, key)) {
-				//
-				ObjectMap.setObject(instance, key, value);
-				//
-			} // if
-				//
-		}
-
 	}
 
 	private static class IH implements InvocationHandler {
