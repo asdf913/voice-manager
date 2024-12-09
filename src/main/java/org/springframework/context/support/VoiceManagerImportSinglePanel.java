@@ -203,8 +203,8 @@ import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
 import fr.free.nrw.jakaroma.JakaromaUtil;
 import io.github.toolfactory.narcissus.Narcissus;
-import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
+import javazoom.jl.player.PlayerUtil;
 import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
 
@@ -1639,18 +1639,12 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 		try (final InputStream is = openStream(testAndApply(Objects::nonNull, value, x -> new URI(x).toURL(), null))) {
 			//
-			play(testAndApply(Objects::nonNull, is, Player::new, null));
+			PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null));
 			//
 			return "";
 			//
 		} // try
 			//
-	}
-
-	private static void play(@Nullable final Player instance) throws JavaLayerException {
-		if (instance != null) {
-			instance.play();
-		}
 	}
 
 	private void actionPerformedForBtnCheckPronunciation() {

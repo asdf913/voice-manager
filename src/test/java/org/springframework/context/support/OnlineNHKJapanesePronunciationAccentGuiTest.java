@@ -12,7 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
@@ -24,8 +23,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URL;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -64,7 +61,6 @@ import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import org.meeuw.functional.Consumers;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -76,8 +72,6 @@ import domain.Pronunciation;
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyUtil;
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
 
 class OnlineNHKJapanesePronunciationAccentGuiTest {
 
@@ -89,7 +83,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS,
 			METHOD_FOR_EACH_ITERABLE, METHOD_MAP_INT_STREAM, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS,
 			METHOD_SAVE_PITCH_ACCENT_IMAGE, METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED,
-			METHOD_GET_DECLARED_FIELD, METHOD_OPEN_STREAM, METHOD_PLAY, METHOD_ADD_ACTION_LISTENER, METHOD_GET_FIELD,
+			METHOD_GET_DECLARED_FIELD, METHOD_OPEN_STREAM, METHOD_ADD_ACTION_LISTENER, METHOD_GET_FIELD,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_IIF, METHOD_SORT,
 			METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION,
 			METHOD_SET_PREFERRED_SIZE, METHOD_MAX, METHOD_TO_ARRAY, METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3,
@@ -145,8 +139,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
-		//
-		(METHOD_PLAY = clz.getDeclaredMethod("play", Player.class)).setAccessible(true);
 		//
 		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
 				AbstractButton[].class)).setAccessible(true);
@@ -1073,39 +1065,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return (InputStream) obj;
 			}
 			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testPlay() throws Throwable {
-		//
-		try (final ByteArrayInputStream bais = new ByteArrayInputStream("".getBytes())) {
-			//
-			final FileSystem fs = FileSystems.getDefault();
-			//
-			final Executable executable = () -> play(new Player(bais));
-			//
-			if (Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
-					Util.getName(Util.getClass(fs != null ? fs.provider() : null)))) {
-				//
-				Assertions.assertDoesNotThrow(executable);
-				//
-			} else {
-				//
-				AssertionsUtil.assertThrowsAndEquals(JavaLayerException.class,
-						"{localizedMessage=Cannot create AudioDevice, message=Cannot create AudioDevice}", executable);
-				//
-			} // if
-				//
-		} // try
-			//
-	}
-
-	private static void play(final Player instance) throws Throwable {
-		try {
-			METHOD_PLAY.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

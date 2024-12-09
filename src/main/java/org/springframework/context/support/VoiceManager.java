@@ -404,8 +404,8 @@ import j2html.tags.Tag;
 import j2html.tags.TagUtil;
 import j2html.tags.specialized.ATag;
 import j2html.tags.specialized.ATagUtil;
-import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
+import javazoom.jl.player.PlayerUtil;
 import jnafilechooser.api.WindowsFolderBrowser;
 import mapper.VoiceMapper;
 import net.lingala.zip4j.model.ZipParameters;
@@ -4604,18 +4604,12 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try (final InputStream is = openStream(testAndApply(Objects::nonNull, value, x -> new URI(x).toURL(), null))) {
 			//
-			play(testAndApply(Objects::nonNull, is, Player::new, null));
+			PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null));
 			//
 			return "";
 			//
 		} // try
 			//
-	}
-
-	private static void play(@Nullable final Player instance) throws JavaLayerException {
-		if (instance != null) {
-			instance.play();
-		}
 	}
 
 	private static void pronounicationChanged(@Nullable final Pronunciation pronunciation,

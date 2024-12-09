@@ -276,7 +276,6 @@ import j2html.tags.specialized.ATag;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyFactory;
 import javassist.util.proxy.ProxyObject;
-import javazoom.jl.player.Player;
 import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
 
@@ -360,7 +359,7 @@ class VoiceManagerTest {
 			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
 			METHOD_GET_WRITER, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME, METHOD_IF_ELSE,
 			METHOD_GET_PAGE_TITLE, METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_TO_MILLIS,
-			METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL, METHOD_ADD_ALL, METHOD_PLAY_AUDIO, METHOD_PLAY,
+			METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL, METHOD_ADD_ALL, METHOD_PLAY_AUDIO,
 			METHOD_PRONOUNICATION_CHANGED, METHOD_REMOVE_ELEMENT_AT, METHOD_ACTION_PERFORMED_FOR_BTN_IMPORT,
 			METHOD_GET_FILE, METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE3,
 			METHOD_GET_AUDIO_FILE4, METHOD_IS_ALL_ATTRIBUTES_MATCHED,
@@ -918,8 +917,6 @@ class VoiceManagerTest {
 		(METHOD_ADD_ALL = clz.getDeclaredMethod("addAll", Collection.class, Collection.class)).setAccessible(true);
 		//
 		(METHOD_PLAY_AUDIO = clz.getDeclaredMethod("playAudio", Pronunciation.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_PLAY = clz.getDeclaredMethod("play", Player.class)).setAccessible(true);
 		//
 		(METHOD_PRONOUNICATION_CHANGED = clz.getDeclaredMethod("pronounicationChanged", Pronunciation.class,
 				MutableComboBoxModel.class, String.class, JTextComponent.class)).setAccessible(true);
@@ -8601,21 +8598,6 @@ class VoiceManagerTest {
 	private static void playAudio(final Pronunciation pronunciation, final Object audioFormat) throws Throwable {
 		try {
 			METHOD_PLAY_AUDIO.invoke(null, pronunciation, audioFormat);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testPlay() {
-		//
-		Assertions.assertDoesNotThrow(() -> play(Util.cast(Player.class, Narcissus.allocateInstance(Player.class))));
-		//
-	}
-
-	private static void play(final Player instance) throws Throwable {
-		try {
-			METHOD_PLAY.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -103,8 +103,8 @@ import com.google.common.reflect.Reflection;
 
 import domain.Pronunciation;
 import io.github.toolfactory.narcissus.Narcissus;
-import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
+import javazoom.jl.player.PlayerUtil;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -746,7 +746,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		try (final InputStream is = openStream(testAndApply(Objects::nonNull, value, x -> new URI(x).toURL(), null))) {
 			//
-			play(testAndApply(Objects::nonNull, is, Player::new, null));
+			PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null));
 			//
 			return "";
 			//
@@ -772,12 +772,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		return instance != null ? instance.openStream() : null;
 		//
-	}
-
-	private static void play(@Nullable final Player instance) throws JavaLayerException {
-		if (instance != null) {
-			instance.play();
-		}
 	}
 
 	private static void saveAudio(final boolean headless, @Nullable final Pronunciation pronunciation,
