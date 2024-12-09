@@ -323,7 +323,10 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	@Note("Pronunciation Page Status Code")
 	private JTextComponent tfPronunciationPageStatusCode = null;
 
-	private JTextComponent tfSpeechRate, tfSpeechVolume = null;
+	@Note("Speech Rate")
+	private JTextComponent tfSpeechRate = null;
+
+	private JTextComponent tfSpeechVolume = null;
 
 	private transient javax.swing.text.Document tfTextImportDocument = null;
 
