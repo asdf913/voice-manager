@@ -2243,7 +2243,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static String getTitle(final Titled instance) {
+	private static String getTitle(@Nullable final Titled instance) {
 		return instance != null ? instance.getTitle() : null;
 	}
 
