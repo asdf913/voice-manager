@@ -9354,7 +9354,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static void importVoice(final ObjectMap objectMap, @Nullable final File folder, final String voiceId,
-			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) throws Exception {
+			@Nullable final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) throws Exception {
 		//
 		final VoiceManager vm = ObjectMap.getObject(objectMap, VoiceManager.class);
 		//
