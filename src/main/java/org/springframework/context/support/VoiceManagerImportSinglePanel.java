@@ -2303,7 +2303,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 		final boolean useTtsVoice = isSelected(cbUseTtsVoice);
 		//
-		if (file == null && useTtsVoice) {
+		if (Boolean.logicalOr(file == null, useTtsVoice)) {
 			//
 			try {
 				//
