@@ -2086,7 +2086,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				if (Objects.equals(Util.getDeclaringClass(f = fs[i]), Util.getType(f)) && get(f, null) == null
 						&& isStatic(f)) {
 					//
-					f.set(null, this);
+					Narcissus.setStaticField(f, this);
 					//
 				} // if
 					//
