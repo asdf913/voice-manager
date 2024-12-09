@@ -289,6 +289,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntList;
 import org.d2ab.function.ObjIntFunction;
+import org.d2ab.function.ObjIntFunctionUtil;
 import org.eclipse.jetty.http.HttpStatus;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -3069,8 +3070,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						//
 						final String language = SpeechApi.getVoiceAttribute(speechApi, x, LANGUAGE);
 						//
-						return StringUtils.startsWithIgnoreCase(apply(languageCodeToTextObjIntFunction, language, 16),
-								voiceLanguage) || Objects.equals(language, voiceLanguage);
+						return StringUtils.startsWithIgnoreCase(
+								ObjIntFunctionUtil.apply(languageCodeToTextObjIntFunction, language, 16), voiceLanguage)
+								|| Objects.equals(language, voiceLanguage);
 						//
 					})))) == 1) {
 				//
@@ -3089,11 +3091,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return null;
 		//
-	}
-
-	@Nullable
-	private static <T, U> U apply(@Nullable final ObjIntFunction<T, U> instance, final T o, final int i) {
-		return instance != null ? instance.apply(o, i) : null;
 	}
 
 	@Nullable
@@ -5252,8 +5249,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
-		setLanguage(voice, StringUtils.defaultIfBlank(getLanguage(voice), apply(languageCodeToTextObjIntFunction,
-				SpeechApi.getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
+		setLanguage(voice, StringUtils.defaultIfBlank(getLanguage(voice), ObjIntFunctionUtil.apply(
+				languageCodeToTextObjIntFunction, SpeechApi.getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
 		//
 		setSource(voice, StringUtils.defaultIfBlank(getSource(voice),
 				Provider.getProviderName(Util.cast(Provider.class, speechApi))));
@@ -7437,8 +7434,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				Util.setText(tfSpeechLanguageCode, language);
 				//
-				Util.setText(tfSpeechLanguageName,
-						StringUtils.defaultIfBlank(apply(languageCodeToTextObjIntFunction, language, 16), language));
+				Util.setText(tfSpeechLanguageName, StringUtils.defaultIfBlank(
+						ObjIntFunctionUtil.apply(languageCodeToTextObjIntFunction, language, 16), language));
 				//
 			} catch (final Error e) {
 				//
@@ -9505,7 +9502,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			setLanguage(voice, StringUtils.defaultIfBlank(getLanguage(voice), apply(languageCodeToTextObjIntFunction,
+			setLanguage(voice, StringUtils.defaultIfBlank(getLanguage(voice), ObjIntFunctionUtil.apply(
+					languageCodeToTextObjIntFunction,
 					SpeechApi.getVoiceAttribute(ObjectMap.getObject(objectMap, SpeechApi.class), voiceId, LANGUAGE),
 					16)));
 			//
@@ -12140,7 +12138,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				if (Objects.equals(LANGUAGE, attribute)) {
 					//
 					setString(comment = createCellComment(drawing, createClientAnchor(creationHelper)),
-							createRichTextString(creationHelper, apply(languageCodeToTextObjIntFunction, value, 16)));
+							createRichTextString(creationHelper,
+									ObjIntFunctionUtil.apply(languageCodeToTextObjIntFunction, value, 16)));
 					//
 					setCellComment(cell, comment);
 					//

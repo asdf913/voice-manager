@@ -151,6 +151,7 @@ import org.apache.ibatis.session.SqlSessionFactoryUtil;
 import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntList;
 import org.d2ab.function.ObjIntFunction;
+import org.d2ab.function.ObjIntFunctionUtil;
 import org.eclipse.jetty.http.HttpStatus;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -1235,10 +1236,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 				//
 				Util.setText(tfSpeechLanguageCode, language);
 				//
-				Util.setText(tfSpeechLanguageName,
-						StringUtils.defaultIfBlank(languageCodeToTextObjIntFunction != null
-								? languageCodeToTextObjIntFunction.apply(language, 16)
-								: null, language));
+				Util.setText(tfSpeechLanguageName, StringUtils.defaultIfBlank(
+						ObjIntFunctionUtil.apply(languageCodeToTextObjIntFunction, language, 16), language));
 				//
 			} catch (final Error e) {
 				//
@@ -3270,12 +3269,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 				//
 		} // if
 			//
-		setLanguage(voice,
-				StringUtils.defaultIfBlank(getLanguage(voice),
-						languageCodeToTextObjIntFunction != null
-								? languageCodeToTextObjIntFunction
-										.apply(SpeechApi.getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)
-								: null));
+		setLanguage(voice, StringUtils.defaultIfBlank(getLanguage(voice), ObjIntFunctionUtil.apply(
+				languageCodeToTextObjIntFunction, SpeechApi.getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
 		//
 		setSource(voice, StringUtils.defaultIfBlank(getSource(voice),
 				Provider.getProviderName(Util.cast(Provider.class, speechApi))));
