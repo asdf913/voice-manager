@@ -2252,7 +2252,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static int length(final Object[] instance) {
+	private static int length(@Nullable final Object[] instance) {
 		return instance != null ? instance.length : 0;
 	}
 
