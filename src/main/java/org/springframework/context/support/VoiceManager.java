@@ -9444,7 +9444,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	private static void importVoiceBySpeechApi(final ObjectMap objectMap, @Nullable final String filePath,
-			final String voiceId, final ObjIntFunction<String, String> languageCodeToTextObjIntFunction)
+			final String voiceId, @Nullable final ObjIntFunction<String, String> languageCodeToTextObjIntFunction)
 			throws IllegalAccessException, InvocationTargetException, IOException {
 		//
 		final ImportTask it = ObjectMap.getObject(objectMap, ImportTask.class);
