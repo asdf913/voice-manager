@@ -238,7 +238,6 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryUtil;
@@ -4860,7 +4859,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			ObjectMap.setObject(objectMap, Voice.class, voice);
 			//
 			ObjectMap.setObject(objectMap, VoiceMapper.class,
-					getMapper(SqlSessionFactoryUtil.getConfiguration(sqlSessionFactory), VoiceMapper.class,
+					org.apache.ibatis.session.ConfigurationUtil.getMapper(
+							SqlSessionFactoryUtil.getConfiguration(sqlSessionFactory), VoiceMapper.class,
 							sqlSession = SqlSessionFactoryUtil.openSession(sqlSessionFactory)));
 			//
 			ObjectMap.setObject(objectMap, VoiceManager.class, this);
@@ -5845,8 +5845,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			final VoiceMapper voiceMapper = getMapper(SqlSessionFactoryUtil.getConfiguration(sqlSessionFactory),
-					VoiceMapper.class, sqlSession = SqlSessionFactoryUtil.openSession(sqlSessionFactory));
+			final VoiceMapper voiceMapper = org.apache.ibatis.session.ConfigurationUtil.getMapper(
+					SqlSessionFactoryUtil.getConfiguration(sqlSessionFactory), VoiceMapper.class,
+					sqlSession = SqlSessionFactoryUtil.openSession(sqlSessionFactory));
 			//
 			final List<Voice> voices = retrieveAllVoices(voiceMapper);
 			//
@@ -8989,7 +8990,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				final SqlSessionFactory sqlSessionFactory = ObjectMap.getObject(objectMap, SqlSessionFactory.class);
 				//
 				ObjectMap.setObject(objectMap, VoiceMapper.class,
-						getMapper(SqlSessionFactoryUtil.getConfiguration(sqlSessionFactory), VoiceMapper.class,
+						org.apache.ibatis.session.ConfigurationUtil.getMapper(
+								SqlSessionFactoryUtil.getConfiguration(sqlSessionFactory), VoiceMapper.class,
 								sqlSession = SqlSessionFactoryUtil.openSession(sqlSessionFactory)));
 				//
 				ObjectMap.setObject(objectMap, Voice.class, voice);
@@ -12832,63 +12834,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static Integer getId(@Nullable final VoiceList instance) {
 		return instance != null ? instance.getId() : null;
-	}
-
-	@Nullable
-	private static <T> T getMapper(@Nullable final Configuration instance, @Nullable final Class<T> type,
-			@Nullable final SqlSession sqlSession) {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		try {
-			//
-			// org.apache.ibatis.session.Configuration.mapperRegistry
-			//
-			Field field = getDeclaredField(Configuration.class, "mapperRegistry");
-			//
-			setAccessible(field, true);
-			//
-			final Object mapperRegistry = get(field, instance);
-			//
-			if (mapperRegistry == null) {
-				//
-				return null;
-				//
-			} // if
-				//
-				// org.apache.ibatis.binding.MapperRegistry.knownMappers
-				//
-			setAccessible(field = getDeclaredField(Util.getClass(mapperRegistry), "knownMappers"), true);
-			//
-			final Object obj = get(field, mapperRegistry);
-			//
-			if (Objects.equals("java.util.concurrent.ConcurrentHashMap", Util.getName(Util.getClass(obj)))
-					&& type == null) {
-				//
-				return null;
-				//
-			} // if
-				//
-			final Map<?, ?> map = Util.cast(Map.class, obj);
-			//
-			if (!Util.containsKey(map, type) || Util.get(map, type) == null) {
-				//
-				return null;
-				//
-			} // if
-				//
-		} catch (final NoSuchFieldException | IllegalAccessException e) {
-			//
-			LoggerUtil.error(LOG, e.getMessage(), e);
-			//
-		} // try
-			//
-		return instance.getMapper(type, sqlSession);
-		//
 	}
 
 	@Nullable

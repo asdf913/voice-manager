@@ -34,7 +34,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.invoke.TypeDescriptor.OfField;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
@@ -145,7 +144,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.ConfigurationUtil;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryUtil;
@@ -2371,8 +2370,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			ObjectMap.setObject(objectMap, Voice.class, voice);
 			//
 			ObjectMap.setObject(objectMap, VoiceMapper.class,
-					getMapper(SqlSessionFactoryUtil.getConfiguration(sqlSessionFactory), VoiceMapper.class,
-							sqlSession = SqlSessionFactoryUtil.openSession(sqlSessionFactory)));
+					ConfigurationUtil.getMapper(SqlSessionFactoryUtil.getConfiguration(sqlSessionFactory),
+							VoiceMapper.class, sqlSession = SqlSessionFactoryUtil.openSession(sqlSessionFactory)));
 			//
 			ObjectMap.setObject(objectMap, VoiceManager.class, voiceManager);
 			//
@@ -3611,69 +3610,6 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	private static void deleteOnExit(@Nullable final File instance) {
 		if (instance != null) {
 			instance.deleteOnExit();
-		}
-	}
-
-	@Nullable
-	private static <T> T getMapper(@Nullable final Configuration instance, @Nullable final Class<T> type,
-			@Nullable final SqlSession sqlSession) {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		try {
-			//
-			// org.apache.ibatis.session.Configuration.mapperRegistry
-			//
-			Field field = getDeclaredField(Configuration.class, "mapperRegistry");
-			//
-			setAccessible(field, true);
-			//
-			final Object mapperRegistry = get(field, instance);
-			//
-			if (mapperRegistry == null) {
-				//
-				return null;
-				//
-			} // if
-				//
-				// org.apache.ibatis.binding.MapperRegistry.knownMappers
-				//
-			setAccessible(field = getDeclaredField(Util.getClass(mapperRegistry), "knownMappers"), true);
-			//
-			final Object obj = get(field, mapperRegistry);
-			//
-			if (Objects.equals("java.util.concurrent.ConcurrentHashMap", Util.getName(Util.getClass(obj)))
-					&& type == null) {
-				//
-				return null;
-				//
-			} // if
-				//
-			final Map<?, ?> map = Util.cast(Map.class, obj);
-			//
-			if (!Util.containsKey(map, type) || Util.get(map, type) == null) {
-				//
-				return null;
-				//
-			} // if
-				//
-		} catch (final NoSuchFieldException | IllegalAccessException e) {
-			//
-			LoggerUtil.error(LOG, e.getMessage(), e);
-			//
-		} // try
-			//
-		return instance.getMapper(type, sqlSession);
-		//
-	}
-
-	private static void setAccessible(@Nullable final AccessibleObject instance, final boolean flag) {
-		if (instance != null) {
-			instance.setAccessible(flag);
 		}
 	}
 
