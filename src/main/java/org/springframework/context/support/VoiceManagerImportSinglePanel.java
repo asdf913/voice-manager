@@ -2409,8 +2409,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 	}
 
-	private static void setJTextComponentText(final boolean headless, final VoiceManager voiceManager,
-			@Nullable final String value, final String... names) {
+	private static void setJTextComponentText(final boolean headless, @Nullable final VoiceManager voiceManager,
+			@Nullable final String value, @Nullable final String... names) {
 		//
 		if (voiceManager != null) {
 			//
