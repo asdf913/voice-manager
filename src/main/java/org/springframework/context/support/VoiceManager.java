@@ -241,6 +241,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryUtil;
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.record.crypto.Biff8EncryptionKey;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
@@ -4846,8 +4847,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			ObjectMap.setObject(objectMap, Voice.class, voice);
 			//
-			ObjectMap.setObject(objectMap, VoiceMapper.class, getMapper(getConfiguration(sqlSessionFactory),
-					VoiceMapper.class, sqlSession = openSession(sqlSessionFactory)));
+			ObjectMap.setObject(objectMap, VoiceMapper.class,
+					getMapper(SqlSessionFactoryUtil.getConfiguration(sqlSessionFactory), VoiceMapper.class,
+							sqlSession = openSession(sqlSessionFactory)));
 			//
 			ObjectMap.setObject(objectMap, VoiceManager.class, this);
 			//
@@ -5830,8 +5832,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		try {
 			//
-			final VoiceMapper voiceMapper = getMapper(getConfiguration(sqlSessionFactory), VoiceMapper.class,
-					sqlSession = openSession(sqlSessionFactory));
+			final VoiceMapper voiceMapper = getMapper(SqlSessionFactoryUtil.getConfiguration(sqlSessionFactory),
+					VoiceMapper.class, sqlSession = openSession(sqlSessionFactory));
 			//
 			final List<Voice> voices = retrieveAllVoices(voiceMapper);
 			//
@@ -8979,8 +8981,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				final SqlSessionFactory sqlSessionFactory = ObjectMap.getObject(objectMap, SqlSessionFactory.class);
 				//
-				ObjectMap.setObject(objectMap, VoiceMapper.class, getMapper(getConfiguration(sqlSessionFactory),
-						VoiceMapper.class, sqlSession = openSession(sqlSessionFactory)));
+				ObjectMap.setObject(objectMap, VoiceMapper.class,
+						getMapper(SqlSessionFactoryUtil.getConfiguration(sqlSessionFactory), VoiceMapper.class,
+								sqlSession = openSession(sqlSessionFactory)));
 				//
 				ObjectMap.setObject(objectMap, Voice.class, voice);
 				//
@@ -12724,11 +12727,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static <T> Optional<T> findFirst(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.findFirst() : null;
-	}
-
-	@Nullable
-	private static Configuration getConfiguration(@Nullable final SqlSessionFactory instance) {
-		return instance != null ? instance.getConfiguration() : null;
 	}
 
 	@Nullable

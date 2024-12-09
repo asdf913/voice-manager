@@ -148,6 +148,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryUtil;
 import org.apache.poi.util.LocaleID;
 import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntList;
@@ -2395,8 +2396,9 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 			ObjectMap.setObject(objectMap, Voice.class, voice);
 			//
-			ObjectMap.setObject(objectMap, VoiceMapper.class, getMapper(getConfiguration(sqlSessionFactory),
-					VoiceMapper.class, sqlSession = openSession(sqlSessionFactory)));
+			ObjectMap.setObject(objectMap, VoiceMapper.class,
+					getMapper(SqlSessionFactoryUtil.getConfiguration(sqlSessionFactory), VoiceMapper.class,
+							sqlSession = openSession(sqlSessionFactory)));
 			//
 			ObjectMap.setObject(objectMap, VoiceManager.class, voiceManager);
 			//
@@ -3678,11 +3680,6 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		if (instance != null) {
 			instance.setAccessible(flag);
 		}
-	}
-
-	@Nullable
-	private static Configuration getConfiguration(@Nullable final SqlSessionFactory instance) {
-		return instance != null ? instance.getConfiguration() : null;
 	}
 
 	@Nullable
