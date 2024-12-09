@@ -145,6 +145,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -2861,7 +2862,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 			final VoiceMapper voiceMapper = ObjectMap.getObject(objectMap, VoiceMapper.class);
 			//
-			final Voice voiceOld = voiceMapper != null ? voiceMapper.searchByTextAndRomaji(text, romaji) : null;
+			final Voice voiceOld = searchByTextAndRomaji(voiceMapper, text, romaji);
 			//
 			final MessageDigest md = ObjectMap.getObject(objectMap, MessageDigest.class);
 			//
@@ -2962,6 +2963,10 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 	}
 
+	private static Voice searchByTextAndRomaji(final VoiceMapper instance, final String text, final String romaji) {
+		return instance != null ? instance.searchByTextAndRomaji(text, romaji) : null;
+	}
+
 	private static void insertOrUpdate(@Nullable final VoiceMapper instance, final Voice voice) {
 		//
 		if (instance != null) {
@@ -2970,7 +2975,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 			// voice
 			//
-			final Voice voiceOld = instance.searchByTextAndRomaji(getText(voice), getRomaji(voice));
+			final Voice voiceOld = searchByTextAndRomaji(instance, getText(voice), getRomaji(voice));
 			//
 			if (voiceOld != null) {
 				//
