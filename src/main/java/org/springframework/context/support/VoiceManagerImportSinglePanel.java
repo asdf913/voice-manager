@@ -1284,8 +1284,6 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 		if (voiceManager != null) {
 			//
-			// TODO
-			//
 			try {
 				//
 				accept(x -> Util.setText(Util.cast(JTextComponent.class, x), null),
@@ -2919,8 +2917,6 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			if (voiceManager != null) {
 				//
 				try {
-					//
-					// TODO
 					//
 					final JTextComponent tfFile = Util.cast(JTextComponent.class,
 							FieldUtils.readDeclaredField(voiceManager, "tfFile", true));
