@@ -481,7 +481,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 
 	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
-	private ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
+	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
 	@Override
 	public String getTitle() {
