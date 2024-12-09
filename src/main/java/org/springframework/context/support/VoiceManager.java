@@ -2245,7 +2245,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static <T, E extends Throwable> boolean and(final T value, final FailablePredicate<T, E> a,
 			final FailablePredicate<T, E> b, final FailablePredicate<T, E>... ps) throws E {
 		//
-		boolean result = test(a, value) && test(b, value);
+		boolean result = Util.test(a, value) && Util.test(b, value);
 		//
 		if (!result) {
 			//
@@ -2255,7 +2255,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		for (int i = 0; i < length(ps); i++) {
 			//
-			if (!(result &= test(ps[i], value))) {
+			if (!(result &= Util.test(ps[i], value))) {
 				//
 				return result;
 				//
@@ -2268,10 +2268,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static <T, E extends Throwable> boolean test(final FailablePredicate<T, E> instance, final T value)
-			throws E {
-		return instance != null && instance.test(value);
-	}
+	
 
 	@Nullable
 	private static String getTitle(@Nullable final Titled instance) {
