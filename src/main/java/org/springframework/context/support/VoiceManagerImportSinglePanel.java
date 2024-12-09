@@ -713,7 +713,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		setRenderer(jcbJlptVocabulary, new ListCellRenderer<JlptVocabulary>() {
 
 			@Override
-
+			@Nullable
 			public Component getListCellRendererComponent(final JList<? extends JlptVocabulary> list,
 					final JlptVocabulary value, final int index, final boolean isSelected, final boolean cellHasFocus) {
 				//
@@ -763,6 +763,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		setRenderer(jcbYomi, new ListCellRenderer<Object>() {
 
 			@Override
+			@Nullable
 			public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
 					final boolean isSelected, final boolean cellHasFocus) {
 				//
@@ -3263,6 +3264,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 	}
 
+	@Nullable
 	private static URI toURI(@Nullable final File instance) {
 		return instance != null ? instance.toURI() : null;
 	}
@@ -3509,6 +3511,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		private String commonPrefix = null;
 
 		@Override
+		@Nullable
 		public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
 				final int index, final boolean isSelected, final boolean cellHasFocus) {
 			//
@@ -4564,6 +4567,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		return new ListCellRenderer<>() {
 
 			@Override
+			@Nullable
 			public Component getListCellRendererComponent(final JList<? extends Pronunciation> list,
 					final Pronunciation value, final int index, boolean isSelected, boolean cellHasFocus) {
 				//
