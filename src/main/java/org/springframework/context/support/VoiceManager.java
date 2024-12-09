@@ -7069,6 +7069,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			Collection<Object> throwableStackTraceHexs = null;
 			//
+			ImportVoiceParameters ivps = null;
+			//
 			for (int i = 0; i < intValue(getNumberOfSheets(workbook), 0); i++) {
 				//
 				if (Util.contains(sheetExclued, getSheetName(sheet = WorkbookUtil.getSheetAt(workbook, i)))) {
@@ -7085,6 +7087,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 										POIXMLPropertiesUtil
 												.getCustomProperties(POIXMLDocumentUtil.getProperties(poiXmlDocument)),
 										"audioFormat", VoiceManager::getProperty, null))));
+				//
+				if ((ivps = ObjectUtils.getIfNull(ivps, ImportVoiceParameters::new)) != null) {
+					//
+					ivps.languageCodeToTextObjIntFunction = languageCodeToTextObjIntFunction;
+					//
+				} // if
+					//
+				ObjectMap.setObject(objectMap, ImportVoiceParameters.class, ivps);
 				//
 				if (voiceId == null) {
 					//
@@ -7104,8 +7114,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 						voiceConsumer = getIfNull(voiceConsumer,
 								() -> new VoiceConsumer(tfCurrentProcessingVoice, numberOfVoiceProcessed))
 						//
-						, throwableStackTraceHexs = ObjectUtils.getIfNull(throwableStackTraceHexs, ArrayList::new),
-						languageCodeToTextObjIntFunction
+						, throwableStackTraceHexs = ObjectUtils.getIfNull(throwableStackTraceHexs, ArrayList::new)
 				//
 				);
 				//
@@ -9105,10 +9114,15 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
+	private static class ImportVoiceParameters {
+
+		private ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
+
+	}
+
 	private static void importVoice(@Nullable final Sheet sheet, final ObjectMap _objectMap, final String voiceId,
 			final BiConsumer<Voice, String> errorMessageConsumer, final BiConsumer<Voice, Throwable> throwableConsumer,
-			final Consumer<Voice> voiceConsumer, final Collection<Object> throwableStackTraceHexs,
-			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) throws Exception {
+			final Consumer<Voice> voiceConsumer, final Collection<Object> throwableStackTraceHexs) throws Exception {
 		//
 		final File folder = getParentFile(ObjectMap.getObject(_objectMap, File.class));
 		//
@@ -9160,6 +9174,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			IH ih = null;
 			//
+			ImportVoiceParameters importVoiceParameters = null;
+			//
 			for (final Row row : sheet) {
 				//
 				if (Util.iterator(row) == null) {
@@ -9209,7 +9225,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							//
 							ObjectMap.setObject(objectMap, ImportTask.class, it);
 							//
-							importVoice(objectMap, folder, voiceId, languageCodeToTextObjIntFunction);
+							importVoice(objectMap, folder, voiceId,
+									(importVoiceParameters = ObjectMap.getObject(objectMap,
+											ImportVoiceParameters.class)) != null
+													? importVoiceParameters.languageCodeToTextObjIntFunction
+													: null);
 							//
 						} // if
 							//

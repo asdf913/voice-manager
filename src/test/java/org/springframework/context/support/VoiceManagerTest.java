@@ -471,8 +471,7 @@ class VoiceManagerTest {
 				String.class, ObjIntFunction.class)).setAccessible(true);
 		//
 		(METHOD_IMPORT_VOICE5 = clz.getDeclaredMethod("importVoice", Sheet.class, CLASS_OBJECT_MAP, String.class,
-				BiConsumer.class, BiConsumer.class, Consumer.class, Collection.class, ObjIntFunction.class))
-				.setAccessible(true);
+				BiConsumer.class, BiConsumer.class, Consumer.class, Collection.class)).setAccessible(true);
 		//
 		(METHOD_IMPORT_VOICE_BY_SPEECH_API = clz.getDeclaredMethod("importVoiceBySpeechApi", CLASS_OBJECT_MAP,
 				String.class, String.class, ObjIntFunction.class)).setAccessible(true);
@@ -4278,7 +4277,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(null, (File) null, null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(null, null, null, null, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(null, null, null, null, null, null, null));
 		//
 		final Constructor<?> constructor = getDeclaredConstructor(CLASS_IH);
 		//
@@ -4325,13 +4324,13 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (BiConsumer) null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null, null));
 		//
 		final Row row = Reflection.newProxy(Row.class, this.ih);
 		//
 		this.ih.rows = Iterators.forArray(null, row);
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null, null));
 		//
 		this.ih.rows = Iterators.forArray(null, row);
 		//
@@ -4339,7 +4338,7 @@ class VoiceManagerTest {
 		//
 		this.ih.columnIndex = Integer.valueOf(0);
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null, null));
 		//
 		// org.springframework.context.support.VoiceManager$importVoice(org.springframework.context.support.VoiceManager$ObjectMap,java.io.File,java.lang.String)
 		//
@@ -4495,11 +4494,10 @@ class VoiceManagerTest {
 
 	private static void importVoice(final Sheet sheet, final Object _objectMap, final String voiceId,
 			final BiConsumer<Voice, String> errorMessageConsumer, final BiConsumer<Voice, Throwable> throwableConsumer,
-			final Consumer<Voice> voiceConsumer, final Collection<Object> throwableStackTraceHexs,
-			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) throws Throwable {
+			final Consumer<Voice> voiceConsumer, final Collection<Object> throwableStackTraceHexs) throws Throwable {
 		try {
 			METHOD_IMPORT_VOICE5.invoke(null, sheet, _objectMap, voiceId, errorMessageConsumer, throwableConsumer,
-					voiceConsumer, throwableStackTraceHexs, languageCodeToTextObjIntFunction);
+					voiceConsumer, throwableStackTraceHexs);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
