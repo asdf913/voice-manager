@@ -229,6 +229,7 @@ import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.function.FailableRunnable;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunction;
@@ -2083,8 +2084,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			try {
 				//
-				if (and(f = fs[i], x -> Objects.equals(Util.getDeclaringClass(x), Util.getType(x)), x -> isStatic(x))
-						&& get(f, null) == null) {
+				if (and(f = fs[i], x -> Objects.equals(Util.getDeclaringClass(x), Util.getType(x)), x -> isStatic(x),
+						x -> get(x, null) == null)) {
 					//
 					Narcissus.setStaticField(f, this);
 					//
@@ -2241,8 +2242,35 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static <T> boolean and(final T value, final Predicate<T> a, final Predicate<T> b) {
-		return Util.test(a, value) && Util.test(b, value);
+	private static <T, E extends Throwable> boolean and(final T value, final FailablePredicate<T, E> a,
+			final FailablePredicate<T, E> b, final FailablePredicate<T, E>... ps) throws E {
+		//
+		boolean result = test(a, value) && test(b, value);
+		//
+		if (!result) {
+			//
+			return result;
+			//
+		} // if
+			//
+		for (int i = 0; i < length(ps); i++) {
+			//
+			if (!(result &= test(ps[i], value))) {
+				//
+				return result;
+				//
+			} // if
+				//
+				//
+		} // for
+			//
+		return result;
+		//
+	}
+
+	private static <T, E extends Throwable> boolean test(final FailablePredicate<T, E> instance, final T value)
+			throws E {
+		return instance != null && instance.test(value);
 	}
 
 	@Nullable
