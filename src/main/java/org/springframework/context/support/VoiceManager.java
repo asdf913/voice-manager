@@ -2083,8 +2083,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			try {
 				//
-				if (Objects.equals(Util.getDeclaringClass(f = fs[i]), Util.getType(f)) && get(f, null) == null
-						&& isStatic(f)) {
+				if (and(f = fs[i], x -> Objects.equals(Util.getDeclaringClass(x), Util.getType(x)), x -> isStatic(x))
+						&& get(f, null) == null) {
 					//
 					Narcissus.setStaticField(f, this);
 					//
@@ -2239,6 +2239,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 					//
 				});
 		//
+	}
+
+	private static <T> boolean and(final T value, final Predicate<T> a, final Predicate<T> b) {
+		return Util.test(a, value) && Util.test(b, value);
 	}
 
 	private static String getTitle(@Nullable final Titled instance) {
