@@ -286,7 +286,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 
 	private static IValue0<Method> METHOD_RANDOM_ALPHABETIC = null;
 
-	private PropertyResolver propertyResolver = null;
+	private transient PropertyResolver propertyResolver = null;
 
 	private JTextComponent tfLanguage, tfSource, tfTextImport, tfSpeechLanguageCode, tfSpeechLanguageName, tfIpaSymbol,
 			tfListNames, tfRomaji, tfHiragana, tfKatakana, tfPronunciationPageUrl, tfPronunciationPageStatusCode,
