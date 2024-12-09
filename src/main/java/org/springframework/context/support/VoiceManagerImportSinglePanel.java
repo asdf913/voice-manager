@@ -2059,7 +2059,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 
 		boolean containsObject(final Class<?> key);
 
-		<T> void setObject(final Class<T> key, final T value);
+		<T> void setObject(final Class<T> key, @Nullable final T value);
 
 		@Nullable
 		static <T> T getObject(@Nullable final ObjectMap instance, final Class<T> key) {
@@ -3619,7 +3619,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 
 	@Nullable
 	private static <T> T getMapper(@Nullable final Configuration instance, @Nullable final Class<T> type,
-			final SqlSession sqlSession) {
+			@Nullable final SqlSession sqlSession) {
 		//
 		if (instance == null) {
 			//
@@ -4595,7 +4595,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		}
 	}
 
-	private static ListCellRenderer<Pronunciation> createPronunciationListCellRenderer(final ListCellRenderer<?> lcr) {
+	private static ListCellRenderer<Pronunciation> createPronunciationListCellRenderer(
+			@Nullable final ListCellRenderer<?> lcr) {
 		//
 		return new ListCellRenderer<>() {
 
