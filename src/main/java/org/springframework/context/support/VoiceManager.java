@@ -9177,8 +9177,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			IH ih = null;
 			//
-			ImportVoiceParameters importVoiceParameters = null;
-			//
 			for (final Row row : sheet) {
 				//
 				if (Util.iterator(row) == null) {
@@ -9229,9 +9227,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							ObjectMap.setObject(objectMap, ImportTask.class, it);
 							//
 							importVoice(objectMap, folder, voiceId,
-									ImportVoiceParameters
-											.getLanguageCodeToTextObjIntFunction(importVoiceParameters = ObjectMap
-													.getObject(objectMap, ImportVoiceParameters.class)));
+									ImportVoiceParameters.getLanguageCodeToTextObjIntFunction(
+											ObjectMap.getObject(objectMap, ImportVoiceParameters.class)));
 							//
 						} // if
 							//
