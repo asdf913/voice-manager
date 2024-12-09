@@ -3097,20 +3097,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.item(index) : null;
 	}
 
-	private static class BooleanComboBoxModelSupplier implements Supplier<ComboBoxModel<Boolean>> {
-
-		private Collection<Boolean> booleans = null;
-
-		@Override
-		public ComboBoxModel<Boolean> get() {
-			//
-			return booleans != null ? new DefaultComboBoxModel<>(toArray(booleans, new Boolean[] {}))
-					: new DefaultComboBoxModel<>();
-			//
-		}
-
-	}
-
 	@Nullable
 	private static List<Boolean> getBooleanValues() throws IllegalAccessException {
 		//
