@@ -317,7 +317,10 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	@Note("Katakana")
 	private JTextComponent tfKatakana = null;
 
-	private JTextComponent tfPronunciationPageUrl, tfPronunciationPageStatusCode, tfSpeechRate, tfSpeechVolume = null;
+	@Note("Pronunciation Page URL")
+	private JTextComponent tfPronunciationPageUrl = null;
+
+	private JTextComponent tfPronunciationPageStatusCode, tfSpeechRate, tfSpeechVolume = null;
 
 	private transient javax.swing.text.Document tfTextImportDocument = null;
 
