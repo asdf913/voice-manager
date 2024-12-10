@@ -36,6 +36,7 @@ import javax.swing.JOptionPane;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
+import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -389,8 +390,8 @@ public class IniAsPropertiesResource implements Resource, ApplicationEventPublis
 
 	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
 			@Nullable final FailableConsumer<T, E> consumer) throws E {
-		if (test(predicate, value) && consumer != null) {
-			consumer.accept(value);
+		if (test(predicate, value)) {
+			FailableConsumerUtil.accept(consumer, value);
 		}
 	}
 

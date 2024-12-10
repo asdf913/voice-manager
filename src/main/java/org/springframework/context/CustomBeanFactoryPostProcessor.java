@@ -29,6 +29,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
+import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
@@ -261,13 +262,9 @@ public class CustomBeanFactoryPostProcessor implements EnvironmentAware, BeanFac
 
 	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
 			@Nullable final FailableConsumer<T, E> consumer) throws E {
-		//
-		if (test(predicate, value) && consumer != null) {
-			//
-			consumer.accept(value);
-			//
+		if (test(predicate, value)) {
+			FailableConsumerUtil.accept(consumer, value);
 		} // if
-			//
 	}
 
 	private static final <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {

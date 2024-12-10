@@ -56,6 +56,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
+import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -575,8 +576,8 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 
 	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
 			@Nullable final FailableConsumer<T, E> consumer) throws E {
-		if (Util.test(predicate, value) && consumer != null) {
-			consumer.accept(value);
+		if (Util.test(predicate, value)) {
+			FailableConsumerUtil.accept(consumer, value);
 		}
 	}
 

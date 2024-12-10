@@ -227,6 +227,7 @@ import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableConsumer;
+import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.FailablePredicate;
@@ -6832,8 +6833,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static <T, E extends Throwable> void testAndAccept(final FailablePredicate<T, E> predicate,
 			@Nullable final T value, @Nullable final FailableConsumer<T, E> consumer) throws E {
-		if (Util.test(predicate, value) && consumer != null) {
-			consumer.accept(value);
+		if (Util.test(predicate, value)) {
+			FailableConsumerUtil.accept(consumer, value);
 		}
 	}
 
@@ -10443,12 +10444,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			for (final T item : items) {
 				//
-				if (action != null) {
-					//
-					action.accept(item);
-					//
-				} // if
-					//
+				FailableConsumerUtil.accept(action, item);
+				//
 			} // for
 				//
 		} // if

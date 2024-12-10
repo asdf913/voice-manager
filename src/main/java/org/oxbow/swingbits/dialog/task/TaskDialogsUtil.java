@@ -19,6 +19,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
+import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.slf4j.Logger;
@@ -159,8 +160,8 @@ public class TaskDialogsUtil {
 
 	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
 			final FailableConsumer<T, E> consumer) throws E {
-		if (test(predicate, value) && consumer != null) {
-			consumer.accept(value);
+		if (test(predicate, value)) {
+			FailableConsumerUtil.accept(consumer, value);
 		}
 	}
 

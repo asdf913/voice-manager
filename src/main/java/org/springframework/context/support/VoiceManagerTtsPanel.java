@@ -75,6 +75,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableConsumer;
+import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.FailableSupplier;
@@ -501,12 +502,8 @@ public class VoiceManagerTtsPanel extends JPanel
 			//
 			for (final T item : items) {
 				//
-				if (action != null) {
-					//
-					action.accept(item);
-					//
-				} // if
-					//
+				FailableConsumerUtil.accept(action, item);
+				//
 			} // for
 				//
 		} // if
@@ -1670,8 +1667,8 @@ public class VoiceManagerTtsPanel extends JPanel
 
 	private static <T, E extends Throwable> void testAndAccept(@Nullable final Predicate<T> predicate,
 			@Nullable final T value, @Nullable final FailableConsumer<T, E> consumer) throws E {
-		if (Util.test(predicate, value) && consumer != null) {
-			consumer.accept(value);
+		if (Util.test(predicate, value)) {
+			FailableConsumerUtil.accept(consumer, value);
 		}
 	}
 
