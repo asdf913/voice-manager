@@ -177,19 +177,19 @@ public class VoiceManagerImportBatchPanel extends JPanel
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static void setToolTipText(final JComponent instance, final String toolTipText) {
+	private static void setToolTipText(@Nullable final JComponent instance, final String toolTipText) {
 		if (instance != null) {
 			instance.setToolTipText(toolTipText);
 		}
 	}
 
-	private static void setEnabled(final Component instance, final boolean b) {
+	private static void setEnabled(@Nullable final Component instance, final boolean b) {
 		if (instance != null) {
 			instance.setEnabled(b);
 		}
 	}
 
-	private static void setEditable(final boolean editable, final JTextComponent... jtcs) {
+	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
 		//
 		JTextComponent jtc = null;
 		//
@@ -205,7 +205,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 	}
 
-	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
+	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
 		//
 		AbstractButton ab = null;
 		//
