@@ -66,15 +66,20 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	@Note("Import a single Spread Sheet File")
 	private AbstractButton btnImport = null;
 
-	private AbstractButton btnImportWithinFolder, cbImportFileTemplateGenerateBlankRow, btnImportFileTemplate,
-			btnExecute = null;
+	@Note("Import Spread Sheet File(s) within a specified folder")
+	private AbstractButton btnImportWithinFolder = null;
+
+	private AbstractButton cbImportFileTemplateGenerateBlankRow, btnImportFileTemplate, btnExecute = null;
 
 	private JProgressBar progressBarImport = null;
 
 	@Note("Current Processing File")
 	private JTextComponent tfCurrentProcessingFile = null;
 
-	private JTextComponent tfCurrentProcessingSheetName, tfCurrentProcessingVoice = null;
+	@Note("Current Processing Sheet")
+	private JTextComponent tfCurrentProcessingSheetName = null;
+
+	private JTextComponent tfCurrentProcessingVoice = null;
 
 	@Note("Import Result")
 	private DefaultTableModel tmImportResult = null;
