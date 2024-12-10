@@ -5,6 +5,10 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.function.Predicate;
 
 import javax.swing.AbstractButton;
@@ -53,14 +57,29 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 	private static final String ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER = "Romaji";
 
-	private AbstractButton btnImport, btnImportWithinFolder, cbImportFileTemplateGenerateBlankRow,
-			btnImportFileTemplate, btnExecute = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("Import a single Spread Sheet File")
+	private AbstractButton btnImport = null;
+
+	private AbstractButton btnImportWithinFolder, cbImportFileTemplateGenerateBlankRow, btnImportFileTemplate,
+			btnExecute = null;
 
 	private JProgressBar progressBarImport = null;
 
-	private JTextComponent tfCurrentProcessingFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice = null;
+	@Note("Current Processing File")
+	private JTextComponent tfCurrentProcessingFile = null;
 
-	private DefaultTableModel tmImportResult, tmImportException = null;
+	private JTextComponent tfCurrentProcessingSheetName, tfCurrentProcessingVoice = null;
+
+	@Note("Import Result")
+	private DefaultTableModel tmImportResult = null;
+
+	private DefaultTableModel tmImportException = null;
 
 	private transient PropertyResolver propertyResolver = null;
 
