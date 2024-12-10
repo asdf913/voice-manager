@@ -29,7 +29,6 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.EnvironmentAware;
-import org.springframework.context.support.VoiceManager.Note;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
