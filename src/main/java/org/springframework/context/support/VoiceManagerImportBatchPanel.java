@@ -61,7 +61,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 	private DefaultTableModel tmImportResult, tmImportException = null;
 
-	private PropertyResolver propertyResolver = null;
+	private transient PropertyResolver propertyResolver = null;
 
 	private String voiceFolder = null;
 
