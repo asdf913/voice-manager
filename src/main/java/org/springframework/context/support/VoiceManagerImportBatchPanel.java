@@ -69,7 +69,10 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	@Note("Import Spread Sheet File(s) within a specified folder")
 	private AbstractButton btnImportWithinFolder = null;
 
-	private AbstractButton cbImportFileTemplateGenerateBlankRow, btnImportFileTemplate, btnExecute = null;
+	@Note("Generate a Blank Row in Import File Template")
+	private AbstractButton cbImportFileTemplateGenerateBlankRow = null;
+
+	private AbstractButton btnImportFileTemplate, btnExecute = null;
 
 	private JProgressBar progressBarImport = null;
 
