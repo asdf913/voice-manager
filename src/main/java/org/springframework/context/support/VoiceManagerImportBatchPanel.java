@@ -29,6 +29,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.EnvironmentAware;
+import org.springframework.context.support.VoiceManager.Note;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
@@ -72,7 +73,10 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	@Note("Generate a Blank Row in Import File Template")
 	private AbstractButton cbImportFileTemplateGenerateBlankRow = null;
 
-	private AbstractButton btnImportFileTemplate, btnExecute = null;
+	@Note("Import File Template")
+	private AbstractButton btnImportFileTemplate = null;
+
+	private AbstractButton btnExecute = null;
 
 	private JProgressBar progressBarImport = null;
 
