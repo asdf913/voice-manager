@@ -1177,6 +1177,26 @@ public class VoiceManagerImportBatchPanel extends JPanel
 				//
 		}
 
+		private static void setString(final JProgressBar instance, final String string) {
+			if (instance != null) {
+				instance.setString(string);
+			}
+		}
+
+		private static String format(final NumberFormat instance, final double number) {
+			return instance != null ? instance.format(number) : null;
+		}
+
+		private static void setValue(final JProgressBar instance, final int n) {
+			if (instance != null) {
+				instance.setValue(n);
+			}
+		}
+
+		private static double doubleValue(final Number instance, final double defaultValue) {
+			return instance != null ? instance.doubleValue() : defaultValue;
+		}
+
 		private static Fraction add(final Fraction a, final Fraction b) {
 			return a != null && b != null ? a.add(b) : a;
 		}
@@ -1191,26 +1211,6 @@ public class VoiceManagerImportBatchPanel extends JPanel
 				//
 		}
 
-	}
-
-	private static void setString(final JProgressBar instance, final String string) {
-		if (instance != null) {
-			instance.setString(string);
-		}
-	}
-
-	private static String format(final NumberFormat instance, final double number) {
-		return instance != null ? instance.format(number) : null;
-	}
-
-	private static void setValue(final JProgressBar instance, final int n) {
-		if (instance != null) {
-			instance.setValue(n);
-		}
-	}
-
-	private static double doubleValue(final Number instance, final double defaultValue) {
-		return instance != null ? instance.doubleValue() : defaultValue;
 	}
 
 	private static interface IntMap<T> {
