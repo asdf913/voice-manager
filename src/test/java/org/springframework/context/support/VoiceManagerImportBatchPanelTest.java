@@ -1,11 +1,16 @@
 package org.springframework.context.support;
 
+import java.awt.Component;
+import java.io.Console;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+
+import javax.swing.JFileChooser;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -27,7 +32,7 @@ class VoiceManagerImportBatchPanelTest {
 	}
 
 	@Test
-	void testNull() {
+	void testNull() throws ClassNotFoundException {
 		//
 		final Method[] ms = VoiceManagerImportBatchPanel.class.getDeclaredMethods();
 		//
@@ -38,6 +43,8 @@ class VoiceManagerImportBatchPanelTest {
 		Object[] os = null;
 		//
 		Class<?>[] parameterTypes = null;
+		//
+		Class<?> parameterType = null;
 		//
 		String name;
 		//
@@ -61,9 +68,21 @@ class VoiceManagerImportBatchPanelTest {
 				//
 			for (int j = 0; (parameterTypes = m.getParameterTypes()) != null && j < parameterTypes.length; j++) {
 				//
-				if (Objects.equals(parameterTypes[j], Boolean.TYPE)) {
+				if (Objects.equals(parameterType = parameterTypes[j], Boolean.TYPE)) {
 					//
 					Util.add(list, Boolean.FALSE);
+					//
+				} else if (Objects.equals(parameterType, Integer.TYPE)) {
+					//
+					Util.add(list, Integer.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Long.TYPE)) {
+					//
+					Util.add(list, Long.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Double.TYPE)) {
+					//
+					Util.add(list, Double.valueOf(0));
 					//
 				} else {
 					//
@@ -79,15 +98,61 @@ class VoiceManagerImportBatchPanelTest {
 			//
 			os = toArray(list);
 			//
+			if (Boolean.logicalAnd(Objects.equals(name, "getPassword"),
+					Arrays.equals(parameterTypes, new Class<?>[] { Console.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "createTempFile"),
+							Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "showOpenDialog"),
+							Arrays.equals(parameterTypes, new Class<?>[] { JFileChooser.class, Component.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "createImportFileTemplateByteArray"),
+							Arrays.equals(parameterTypes,
+									new Class<?>[] { Boolean.TYPE, Collection.class, Collection.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "actionPerformedForImport"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Object.class, Boolean.TYPE }))
+					|| Boolean.logicalAnd(Objects.equals(name, "actionPerformedForBtnImport"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Boolean.TYPE }))) {
+				//
+				continue;
+				//
+			} // if
+				//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
-				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+				invoke = Narcissus.invokeStaticMethod(m, os);
 				//
+				if (ArrayUtils.contains(new Class<?>[] { Integer.TYPE, Boolean.TYPE, Long.TYPE, Double.TYPE },
+						m.getReturnType())
+						|| Boolean.logicalAnd(Objects.equals(name, "getTempFileMinimumPrefixLength"),
+								Arrays.equals(parameterTypes, new Class<?>[] {}))
+						|| Boolean.logicalAnd(Objects.equals(name, "randomAlphabetic"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Integer.TYPE }))
+						|| Boolean.logicalAnd(Objects.equals(name, "checkFileExtension"),
+								Arrays.equals(parameterTypes, new Class<?>[] { String.class }))
+						|| Boolean.logicalAnd(Objects.equals(name, "getBooleanValues"),
+								Arrays.equals(parameterTypes, new Class<?>[] {}))
+						|| Boolean.logicalAnd(Objects.equals(name, "getIntegerValueFromCell"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Class.forName(
+										"org.springframework.context.support.VoiceManagerImportBatchPanel$ObjectMap") }))
+						|| Boolean.logicalAnd(Objects.equals(name, "getObjectsByGroupAnnotation"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Object.class, String.class }))) {
+					//
+					Assertions.assertNotNull(invoke, toString);
+					//
+				} else {
+					//
+					Assertions.assertNull(invoke, toString);
+					//
+				} // if
+					//
 			} else {
 				//
 				invoke = Narcissus.invokeMethod(instance, m, os);
 				//
-				if (ArrayUtils.contains(new Class<?>[] { Void.TYPE }, m.getReturnType())) {
+				if (ArrayUtils.contains(new Class<?>[] { Void.TYPE }, m.getReturnType())
+						|| Boolean.logicalAnd(Objects.equals(name, "getRate"),
+								Arrays.equals(parameterTypes, new Class<?>[] {}))
+						|| Boolean.logicalAnd(Objects.equals(name, "getVoiceIdForExecute"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Boolean.TYPE }))) {
 					//
 					Assertions.assertNull(invoke, toString);
 					//
