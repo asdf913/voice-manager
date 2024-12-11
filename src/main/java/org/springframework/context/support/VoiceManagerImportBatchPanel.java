@@ -367,6 +367,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 	private String preferredPronunciationAudioFormat = null;
 
+	@Nullable
 	private String[] mp3Tags = null;
 
 	@Override
