@@ -70,6 +70,7 @@ import java.util.stream.StreamSupport;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -594,8 +595,8 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
-
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
@@ -1206,7 +1207,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			return instance != null ? instance.doubleValue() : defaultValue;
 		}
 
-		private static Fraction add(final Fraction a, final Fraction b) {
+		private static Fraction add(@Nullable final Fraction a, final Fraction b) {
 			return a != null && b != null ? a.add(b) : a;
 		}
 
@@ -1963,7 +1964,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	}
 
 	private static <E extends Throwable> void ifElse(final boolean condition, final FailableRunnable<E> runnableTrue,
-			final FailableRunnable<E> runnableFalse) throws E {
+			@Nullable final FailableRunnable<E> runnableFalse) throws E {
 		//
 		if (condition) {
 			//
@@ -2148,7 +2149,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.get() : null;
 	}
 
-	private static void shutdown(final ExecutorService instance) {
+	private static void shutdown(@Nullable final ExecutorService instance) {
 		if (instance != null) {
 			instance.shutdown();
 		}
@@ -2468,7 +2469,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? Integer.valueOf(instance.getNumberOfSheets()) : null;
 	}
 
-	private static List<Object> getObjectList(final ObjectMapper objectMapper, final Object value) {
+	private static List<Object> getObjectList(final ObjectMapper objectMapper, @Nullable final Object value) {
 		//
 		if (value == null) {
 			//
@@ -2537,7 +2538,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
 			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
-			final FailableBiFunction<T, U, R, E> functionFalse) throws E {
+			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
@@ -3043,7 +3044,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static Object invoke(final Method method, final Object instance, Object... args)
+	private static Object invoke(final Method method, @Nullable final Object instance, Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
 	}
@@ -3269,7 +3270,8 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null && instance.isFile();
 	}
 
-	private static int showOpenDialog(final JFileChooser instance, final Component parent) throws HeadlessException {
+	private static int showOpenDialog(final JFileChooser instance, @Nullable final Component parent)
+			throws HeadlessException {
 		//
 		if (instance == null) {
 			//
@@ -3726,7 +3728,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+	private static Object get(final Field field, @Nullable final Object instance) throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
 	}
 
@@ -3748,8 +3750,8 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	 * https://github.com/apache/commons-lang/blob/master/src/main/java/org/apache/
 	 * commons/lang3/ObjectUtils.java#L597
 	 */
-	private static <T, E extends Throwable> T getIfNull(final T object, final FailableSupplier<T, E> defaultSupplier)
-			throws E {
+	private static <T, E extends Throwable> T getIfNull(@Nullable final T object,
+			final FailableSupplier<T, E> defaultSupplier) throws E {
 		return object != null ? object : get(defaultSupplier);
 	}
 
@@ -3780,7 +3782,8 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.getSelectedFile() : null;
 	}
 
-	private static int showSaveDialog(final JFileChooser instance, final Component parent) throws HeadlessException {
+	private static int showSaveDialog(final JFileChooser instance, @Nullable final Component parent)
+			throws HeadlessException {
 		//
 		if (instance == null) {
 			//
