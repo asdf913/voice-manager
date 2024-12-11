@@ -268,6 +268,8 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 	private static final String HANDLER = "handler";
 
+	private static final String KEY_NOT_FOUND_MESSAGE = "Key [%1$s] Not Found";
+
 	private static final Pattern PATTERN_CONTENT_INFO_MESSAGE_MP3_1 = Pattern.compile("^MPEG ADTS, layer III.+$");
 
 	private static final Pattern PATTERN_CONTENT_INFO_MESSAGE_MP3_2 = Pattern
@@ -985,6 +987,8 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 			ImportVoiceParameters ivps = null;
 			//
+			StringMap stringMap = null;
+			//
 			for (int i = 0; i < intValue(getNumberOfSheets(workbook), 0); i++) {
 				//
 				if (Util.contains(sheetExclued, getSheetName(sheet = WorkbookUtil.getSheetAt(workbook, i)))) {
@@ -1008,6 +1012,13 @@ public class VoiceManagerImportBatchPanel extends JPanel
 					//
 				} // if
 					//
+				StringMap.setString(
+						stringMap = ObjectUtils.getIfNull(stringMap,
+								() -> Reflection.newProxy(StringMap.class, new IH())),
+						"voiceId", IValue0Util.getValue0(voiceId));
+				//
+				StringMap.setString(stringMap, "preferredPronunciationAudioFormat", preferredPronunciationAudioFormat);
+				//
 				ObjectMap.setObject(objectMap, ImportVoiceParameters.class, ivps);
 				//
 				if (voiceId == null) {
@@ -1017,7 +1028,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 					//
 				} // if
 					//
-				importVoice(sheet, objectMap, IValue0Util.getValue0(voiceId),
+				importVoice(sheet, objectMap,
 						//
 						errorMessageConsumer = getIfNull(errorMessageConsumer,
 								() -> new VoiceThrowableMessageBiConsumer(headless, tmImportException)),
@@ -1029,8 +1040,6 @@ public class VoiceManagerImportBatchPanel extends JPanel
 								() -> new VoiceConsumer(tfCurrentProcessingVoice, numberOfVoiceProcessed))
 						//
 						, throwableStackTraceHexs = ObjectUtils.getIfNull(throwableStackTraceHexs, ArrayList::new)
-						//
-						, preferredPronunciationAudioFormat
 						//
 						, mp3Tags
 				//
@@ -1237,10 +1246,28 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 	}
 
-	private static void importVoice(final Sheet sheet, final ObjectMap _objectMap, final String voiceId,
+	private static interface StringMap {
+
+		String getString(final String key);
+
+		void setString(final String key, final String value);
+
+		private static String getString(final StringMap instance, final String key) {
+			return instance != null ? instance.getString(key) : null;
+		}
+
+		private static void setString(final StringMap instance, final String key, final String value) {
+			if (instance != null) {
+				instance.setString(key, value);
+			}
+		}
+
+	}
+
+	private static void importVoice(final Sheet sheet, final ObjectMap _objectMap,
 			final BiConsumer<Voice, String> errorMessageConsumer, final BiConsumer<Voice, Throwable> throwableConsumer,
 			final Consumer<Voice> voiceConsumer, final Collection<Object> throwableStackTraceHexs,
-			final String preferredPronunciationAudioFormat, final String[] mp3Tags) throws Exception {
+			final String[] mp3Tags) throws Exception {
 		//
 		final File folder = getParentFile(ObjectMap.getObject(_objectMap, File.class));
 		//
@@ -1338,10 +1365,12 @@ public class VoiceManagerImportBatchPanel extends JPanel
 							//
 							ObjectMap.setObject(objectMap, ImportTask.class, it);
 							//
-							importVoice(objectMap, folder, voiceId,
+							final StringMap stringMap = ObjectMap.getObject(objectMap, StringMap.class);
+							//
+							importVoice(objectMap, folder, StringMap.getString(stringMap, "voiceId"),
 									ImportVoiceParameters.getLanguageCodeToTextObjIntFunction(
 											ObjectMap.getObject(objectMap, ImportVoiceParameters.class)),
-									preferredPronunciationAudioFormat, mp3Tags);
+									StringMap.getString(stringMap, "preferredPronunciationAudioFormat"), mp3Tags);
 							//
 						} // if
 							//
@@ -3415,11 +3444,20 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 		private Collection<Object> throwableStackTraceHexs = null;
 
+		private Map<Object, Object> strings = null;
+
 		private Map<Object, Object> getObjects() {
 			if (objects == null) {
 				objects = new LinkedHashMap<>();
 			}
 			return objects;
+		}
+
+		private Map<Object, Object> getStrings() {
+			if (strings == null) {
+				strings = new LinkedHashMap<>();
+			}
+			return strings;
 		}
 
 		@Override
@@ -3443,7 +3481,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 					//
 					if (!Util.containsKey(os, key)) {
 						//
-						throw new IllegalStateException(String.format("Key [%1$s] Not Found",
+						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
 								testAndApply(IH::isArray, Util.cast(Class.class, key), Util::getSimpleName, x -> key)));
 						//
 					} // if
@@ -3451,6 +3489,32 @@ public class VoiceManagerImportBatchPanel extends JPanel
 					return Util.get(os, key);
 					//
 				}
+				//
+			} else if (proxy instanceof StringMap) {
+				//
+				final Map<Object, Object> map = getStrings();
+				//
+				if (Objects.equals(methodName, "getString") && args != null && args.length > 0) {
+					//
+					final Object key = args[0];
+					//
+					if (!Util.containsKey(map, key)) {
+						//
+						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
+						//
+					} // if
+						//
+					return Util.get(map, key);
+					//
+				} else if (Objects.equals(methodName, "setString") && args != null && args.length > 1) {
+					//
+					Util.put(map, args[0], args[1]);
+					//
+					return null;
+					//
+				} // if
+					//
+				return null;
 				//
 			} // if
 				//
