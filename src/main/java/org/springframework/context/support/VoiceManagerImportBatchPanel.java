@@ -1390,8 +1390,6 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction,
 			final String preferredPronunciationAudioFormat, final String[] mp3Tags) throws Exception {
 		//
-		final VoiceManager vm = ObjectMap.getObject(objectMap, VoiceManager.class);
-		//
 		final ImportTask it = ObjectMap.getObject(objectMap, ImportTask.class);
 		//
 		final Voice voice = it != null ? it.voice : null;
