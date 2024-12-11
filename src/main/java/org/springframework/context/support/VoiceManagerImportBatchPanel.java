@@ -462,6 +462,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null && name != null ? instance.getResourceAsStream(name) : null;
 	}
 
+	@Nullable
 	private static Integer getTempFileMinimumPrefixLength(final org.apache.bcel.classfile.Method method) {
 		//
 		return getTempFileMinimumPrefixLength(InstructionListUtil.getInstructions(MethodGenUtil
@@ -1465,6 +1466,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static String getMp3TagValue(final File file, final Predicate<Object> predicate, final String... attributes)
 			throws BaseException, IOException, IllegalAccessException, InvocationTargetException {
 		//
@@ -3014,6 +3016,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.getFilePath() : null;
 	}
 
+	@Nullable
 	private static String formatHex(@Nullable final HexFormat instance, @Nullable final byte[] bytes) {
 		return instance != null && bytes != null ? instance.formatHex(bytes) : null;
 	}
@@ -3444,6 +3447,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 		<T> void setObject(final Class<T> key, final T value);
 
+		@Nullable
 		static <T> T getObject(@Nullable final ObjectMap instance, final Class<T> key) {
 			return instance != null ? instance.getObject(key) : null;
 		}
@@ -3727,6 +3731,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.createExplicitListConstraint(listOfValues) : null;
 	}
 
+	@Nullable
 	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
