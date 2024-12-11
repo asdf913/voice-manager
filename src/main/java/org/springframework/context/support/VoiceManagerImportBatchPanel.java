@@ -409,6 +409,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static Integer getTempFileMinimumPrefixLength() {
 		//
 		Integer result = null;
@@ -456,6 +457,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.toArray() : null;
 	}
 
+	@Nullable
 	private static InputStream getResourceAsStream(@Nullable final Class<?> instance, @Nullable final String name) {
 		return instance != null && name != null ? instance.getResourceAsStream(name) : null;
 	}
@@ -467,6 +469,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static Integer getTempFileMinimumPrefixLength(@Nullable final Instruction[] instructions) {
 		//
 		Integer result = null;
@@ -1207,6 +1210,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			return instance != null ? instance.doubleValue() : defaultValue;
 		}
 
+		@Nullable
 		private static Fraction add(@Nullable final Fraction a, @Nullable final Fraction b) {
 			return a != null && b != null ? a.add(b) : a;
 		}
@@ -1232,6 +1236,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 		void setObject(final int key, final T value);
 
+		@Nullable
 		static <T> T getObject(@Nullable final IntMap<T> instance, final int key) {
 			return instance != null ? instance.getObject(key) : null;
 		}
@@ -1467,6 +1472,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static List<Pair<String, ?>> getMp3TagParirs(final File file, final String... attributes)
 			throws BaseException, IOException, IllegalAccessException, InvocationTargetException {
 		//
@@ -1491,6 +1497,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.getId3v2Tag() : null;
 	}
 
+	@Nullable
 	private static List<Pair<String, ?>> getMp3TagParirs(final ID3v1 id3v1, @Nullable final String... attributes)
 			throws IllegalAccessException, InvocationTargetException {
 		//
@@ -1537,6 +1544,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static String getMp3TagValue(final List<Pair<String, ?>> pairs,
 			@Nullable final Predicate<Object> predicate) {
 		//
@@ -1674,6 +1682,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static Integer getRate(@Nullable final List<Field> fs) {
 		//
 		if (fs != null && !fs.isEmpty()) {
@@ -1804,6 +1813,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static InputStream openStream(final URL instance) throws IOException {
 		//
 		if (instance == null) {
@@ -1904,6 +1914,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		}
 	}
 
+	@Nullable
 	private static Voice createVoice(final ObjectMap objectMap, final boolean first,
 			final AtomicReference<IntMap<Field>> arintMap) throws IllegalAccessException {
 		//
@@ -1997,6 +2008,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	}
 
 	@SuppressWarnings("java:S1612")
+	@Nullable
 	private static IValue0<?> getValueFromCell(final ObjectMap objectMap) {
 		//
 		final Field f = ObjectMap.getObject(objectMap, Field.class);
@@ -2073,6 +2085,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.get(index) : null;
 	}
 
+	@Nullable
 	private static IValue0<Boolean> getBooleanValueFromCell(final ObjectMap objectMap) {
 		//
 		final FormulaEvaluator formulaEvaluator = ObjectMap.getObject(objectMap, FormulaEvaluator.class);
@@ -2131,6 +2144,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static Integer valueOf(final String instance) {
 		try {
 			return StringUtils.isNotBlank(instance) ? Integer.valueOf(instance) : null;
@@ -2171,6 +2185,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.max() : null;
 	}
 
+	@Nullable
 	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
 			@Nullable final ToIntFunction<? super T> mapper) {
 		//
@@ -2180,6 +2195,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static Integer getCurrentSheetIndex(final Sheet sheet) {
 		//
 		Integer currentSheetIndex = null;
@@ -2214,6 +2230,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.spliterator() : null;
 	}
 
+	@Nullable
 	private static ObjectMap copyObjectMap(@Nullable final ObjectMap instance) {
 		//
 		if (instance != null && Proxy.isProxyClass(Util.getClass(instance))) {
@@ -2237,6 +2254,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static IValue0<Boolean> getBoolean(final CustomProperties instance, final String name) {
 		//
 		final CTProperty ctProperty = testAndApply(VoiceManagerImportBatchPanel::contains, instance, name,
@@ -2472,6 +2490,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? Integer.valueOf(instance.getNumberOfSheets()) : null;
 	}
 
+	@Nullable
 	private static List<Object> getObjectList(final ObjectMapper objectMapper, @Nullable final Object value) {
 		//
 		if (value == null) {
@@ -2557,6 +2576,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.getName() : null;
 	}
 
+	@Nullable
 	private static Workbook getWorkbook(final File file) throws IOException, GeneralSecurityException,
 			InvalidFormatException, SAXException, ParserConfigurationException {
 		//
@@ -2628,6 +2648,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static String getPassword(final Console console) {
 		//
 		if (GraphicsEnvironment.isHeadless()) {
@@ -2645,6 +2666,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static List<String> getOleEntryNames(final POIFSFileSystem poifs) {
 		//
 		List<String> list = null;
@@ -2671,6 +2693,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static Workbook getWorkbookByZipFile(final File file)
 			throws IOException, SAXException, ParserConfigurationException, InvalidFormatException {
 		//
@@ -3031,6 +3054,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static RuntimeException toRuntimeException(final Throwable instance) {
 		//
 		if (instance instanceof RuntimeException re) {
@@ -3052,6 +3076,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return method != null ? method.invoke(instance, args) : null;
 	}
 
+	@Nullable
 	private static Long length(final File instance) {
 		//
 		if (instance == null) {
@@ -3104,6 +3129,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		}
 	}
 
+	@Nullable
 	private static String checkFileExtension(final String fileExtension) {
 		//
 		if (fileExtension == null) {
@@ -3124,6 +3150,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static String getFileExtension(final ContentInfo ci) {
 		//
 		final String message = getMessage(ci);
@@ -3177,6 +3204,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static Matcher matcher(final Pattern instance, final CharSequence input) {
 		//
 		if (instance == null) {
@@ -3331,6 +3359,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static byte[] createImportFileTemplateByteArray(final boolean generateBlankRow,
 			final Collection<String> jlptValues, final Collection<String> gaKuNenBeTsuKanJiValues) {
 		//
@@ -3466,6 +3495,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		}
 
 		@Override
+		@Nullable
 		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
 			//
 			final String methodName = Util.getName(method);
@@ -3705,6 +3735,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static List<Boolean> getBooleanValues() throws IllegalAccessException {
 		//
 		List<Boolean> list = null;
