@@ -340,29 +340,29 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 	private transient ComboBoxModel<String> cbmVoiceId = null;
 
-	private PropertyResolver propertyResolver = null;
+	private transient PropertyResolver propertyResolver = null;
 
 	private String voiceFolder, messageDigestAlgorithm = null;
 
-	private IValue0<List<String>> jlptLevels = null;
+	private transient IValue0<List<String>> jlptLevels = null;
 
-	private IValue0<Multimap<String, String>> gaKuNenBeTsuKanJiMultimap = null;
+	private transient IValue0<Multimap<String, String>> gaKuNenBeTsuKanJiMultimap = null;
 
 	private ObjectMapper objectMapper = null;
 
-	private SqlSessionFactory sqlSessionFactory = null;
+	private transient SqlSessionFactory sqlSessionFactory = null;
 
-	private SpeechApi speechApi = null;
+	private transient SpeechApi speechApi = null;
 
-	private Jakaroma jakaroma = null;
+	private transient Jakaroma jakaroma = null;
 
-	private ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
+	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
-	private ConfigurableListableBeanFactory configurableListableBeanFactory = null;
+	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
 	private String[] voiceIds = null;
 
-	private OnlineNHKJapanesePronunciationsAccentFailableFunction onlineNHKJapanesePronunciationsAccentFailableFunction = null;
+	private transient OnlineNHKJapanesePronunciationsAccentFailableFunction onlineNHKJapanesePronunciationsAccentFailableFunction = null;
 
 	private String preferredPronunciationAudioFormat = null;
 
