@@ -456,7 +456,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.toArray() : null;
 	}
 
-	private static InputStream getResourceAsStream(final Class<?> instance, final String name) {
+	private static InputStream getResourceAsStream(@Nullable final Class<?> instance, @Nullable final String name) {
 		return instance != null && name != null ? instance.getResourceAsStream(name) : null;
 	}
 
@@ -467,7 +467,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static Integer getTempFileMinimumPrefixLength(final Instruction[] instructions) {
+	private static Integer getTempFileMinimumPrefixLength(@Nullable final Instruction[] instructions) {
 		//
 		Integer result = null;
 		//
@@ -601,19 +601,19 @@ public class VoiceManagerImportBatchPanel extends JPanel
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static void setToolTipText(final JComponent instance, final String toolTipText) {
+	private static void setToolTipText(@Nullable final JComponent instance, final String toolTipText) {
 		if (instance != null) {
 			instance.setToolTipText(toolTipText);
 		}
 	}
 
-	private static void setEnabled(final Component instance, final boolean b) {
+	private static void setEnabled(@Nullable final Component instance, final boolean b) {
 		if (instance != null) {
 			instance.setEnabled(b);
 		}
 	}
 
-	private static void setEditable(final boolean editable, final JTextComponent... jtcs) {
+	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
 		//
 		JTextComponent jtc = null;
 		//
@@ -629,7 +629,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 	}
 
-	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
+	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
 		//
 		AbstractButton ab = null;
 		//
@@ -720,7 +720,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private void importByWorkbookFiles(final File[] fs, final boolean headless) {
+	private void importByWorkbookFiles(@Nullable final File[] fs, final boolean headless) {
 		//
 		File f = null;
 		//
@@ -1187,7 +1187,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 				//
 		}
 
-		private static void setString(final JProgressBar instance, final String string) {
+		private static void setString(@Nullable final JProgressBar instance, final String string) {
 			if (instance != null) {
 				instance.setString(string);
 			}
@@ -1197,7 +1197,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			return instance != null ? instance.format(number) : null;
 		}
 
-		private static void setValue(final JProgressBar instance, final int n) {
+		private static void setValue(@Nullable final JProgressBar instance, final int n) {
 			if (instance != null) {
 				instance.setValue(n);
 			}
@@ -1207,11 +1207,12 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			return instance != null ? instance.doubleValue() : defaultValue;
 		}
 
-		private static Fraction add(@Nullable final Fraction a, final Fraction b) {
+		private static Fraction add(@Nullable final Fraction a, @Nullable final Fraction b) {
 			return a != null && b != null ? a.add(b) : a;
 		}
 
-		private static void infoOrPrintln(final Logger logger, final PrintStream ps, final String value) {
+		private static void infoOrPrintln(@Nullable final Logger logger, @Nullable final PrintStream ps,
+				final String value) {
 			//
 			if (logger != null && !LoggerUtil.isNOPLogger(logger)) {
 				logger.info(value);
@@ -1231,11 +1232,11 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 		void setObject(final int key, final T value);
 
-		static <T> T getObject(final IntMap<T> instance, final int key) {
+		static <T> T getObject(@Nullable final IntMap<T> instance, final int key) {
 			return instance != null ? instance.getObject(key) : null;
 		}
 
-		static <T> boolean containsKey(final IntMap<T> instance, final int key) {
+		static <T> boolean containsKey(@Nullable final IntMap<T> instance, final int key) {
 			return instance != null && instance.containsKey(key);
 		}
 
@@ -1257,7 +1258,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			return instance != null ? instance.getString(key) : null;
 		}
 
-		private static void setString(final StringMap instance, final String key, final String value) {
+		private static void setString(@Nullable final StringMap instance, final String key, final String value) {
 			if (instance != null) {
 				instance.setString(key, value);
 			}
@@ -1490,7 +1491,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.getId3v2Tag() : null;
 	}
 
-	private static List<Pair<String, ?>> getMp3TagParirs(final ID3v1 id3v1, final String... attributes)
+	private static List<Pair<String, ?>> getMp3TagParirs(final ID3v1 id3v1, @Nullable final String... attributes)
 			throws IllegalAccessException, InvocationTargetException {
 		//
 		List<Pair<String, ?>> pairs = null;
@@ -1536,7 +1537,8 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static String getMp3TagValue(final List<Pair<String, ?>> pairs, final Predicate<Object> predicate) {
+	private static String getMp3TagValue(final List<Pair<String, ?>> pairs,
+			@Nullable final Predicate<Object> predicate) {
 		//
 		String string = null;
 		//
@@ -1672,7 +1674,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static Integer getRate(final List<Field> fs) {
+	private static Integer getRate(@Nullable final List<Field> fs) {
 		//
 		if (fs != null && !fs.isEmpty()) {
 			//
@@ -1708,7 +1710,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static boolean isStatic(final Member instance) {
+	private static boolean isStatic(@Nullable final Member instance) {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
@@ -1716,7 +1718,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? Integer.valueOf(instance.getValue()) : null;
 	}
 
-	private static void setLanguage(final Voice instance, final String language) {
+	private static void setLanguage(@Nullable final Voice instance, final String language) {
 		if (instance != null) {
 			instance.setLanguage(language);
 		}
@@ -1726,13 +1728,13 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.getLanguage() : null;
 	}
 
-	private static void setSource(final Voice instance, final String source) {
+	private static void setSource(@Nullable final Voice instance, final String source) {
 		if (instance != null) {
 			instance.setSource(source);
 		}
 	}
 
-	private static void deleteOnExit(final File instance) {
+	private static void deleteOnExit(@Nullable final File instance) {
 		if (instance != null) {
 			instance.deleteOnExit();
 		}
@@ -1833,7 +1835,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	}
 
 	private static void setHiraganaOrKatakanaAndRomaji(final boolean hiraganaKatakanaConversion,
-			final boolean hiraganaRomajiConversion, final Voice voice, final Jakaroma jakaroma) {
+			final boolean hiraganaRomajiConversion, @Nullable final Voice voice, final Jakaroma jakaroma) {
 		//
 		if (voice != null) {
 			//
@@ -1896,7 +1898,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	}
 
 	private static <T, E extends Throwable> void testAndAccept(final FailablePredicate<T, E> predicate, final T value,
-			final FailableConsumer<T, E> consumer) throws E {
+			@Nullable final FailableConsumer<T, E> consumer) throws E {
 		if (Util.test(predicate, value) && consumer != null) {
 			consumer.accept(value);
 		}
@@ -1978,7 +1980,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 	}
 
-	private static <E extends Throwable> void run(final FailableRunnable<E> instance) throws E {
+	private static <E extends Throwable> void run(@Nullable final FailableRunnable<E> instance) throws E {
 		//
 		if (instance != null) {
 			//
@@ -1988,7 +1990,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 	}
 
-	private static <V> void set(final AtomicReference<V> instance, final V value) {
+	private static <V> void set(@Nullable final AtomicReference<V> instance, final V value) {
 		if (instance != null) {
 			instance.set(value);
 		}
@@ -2155,7 +2157,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		}
 	}
 
-	private static void submit(final ExecutorService instance, final Runnable task) {
+	private static void submit(@Nullable final ExecutorService instance, final Runnable task) {
 		if (instance != null) {
 			instance.submit(task);
 		}
@@ -2169,7 +2171,8 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.max() : null;
 	}
 
-	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper) {
+	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
+			@Nullable final ToIntFunction<? super T> mapper) {
 		//
 		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
 				? instance.mapToInt(mapper)
@@ -2211,7 +2214,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.spliterator() : null;
 	}
 
-	private static ObjectMap copyObjectMap(final ObjectMap instance) {
+	private static ObjectMap copyObjectMap(@Nullable final ObjectMap instance) {
 		//
 		if (instance != null && Proxy.isProxyClass(Util.getClass(instance))) {
 			//
@@ -2400,12 +2403,12 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		} // if
 	}
 
-	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, final U u) {
+	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, final U u) {
 		return instance != null && instance.test(t, u);
 	}
 
-	private static <T, U, E extends Throwable> void accept(final FailableBiConsumer<T, U, E> instance, final T t,
-			final U u) throws E {
+	private static <T, U, E extends Throwable> void accept(@Nullable final FailableBiConsumer<T, U, E> instance,
+			final T t, final U u) throws E {
 		if (instance != null) {
 			instance.accept(t, u);
 		}
@@ -2445,7 +2448,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.getSelectedItem() : null;
 	}
 
-	private static void addRow(final DefaultTableModel instance, final Object[] rowData) {
+	private static void addRow(@Nullable final DefaultTableModel instance, final Object[] rowData) {
 		//
 		if (instance != null) {
 			//
@@ -2455,7 +2458,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 	}
 
-	private static void setMaximum(final JProgressBar instance, final int n) {
+	private static void setMaximum(@Nullable final JProgressBar instance, final int n) {
 		if (instance != null) {
 			instance.setMaximum(n);
 		}
@@ -2528,7 +2531,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.getLpwstr() : null;
 	}
 
-	private static boolean contains(final CustomProperties instance, final String name) {
+	private static boolean contains(@Nullable final CustomProperties instance, final String name) {
 		return instance != null && instance.contains(name);
 	}
 
@@ -2536,7 +2539,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.getProperty(name) : null;
 	}
 
-	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
 			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
 			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
@@ -2894,7 +2897,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 	}
 
-	private static void insertOrUpdate(final VoiceMapper instance, final Voice voice) {
+	private static void insertOrUpdate(@Nullable final VoiceMapper instance, final Voice voice) {
 		//
 		if (instance != null) {
 			//
@@ -2962,19 +2965,19 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.getListNames() : null;
 	}
 
-	private static void setCreateTs(final Voice instance, final Date createTs) {
+	private static void setCreateTs(@Nullable final Voice instance, final Date createTs) {
 		if (instance != null) {
 			instance.setCreateTs(createTs);
 		}
 	}
 
-	private static void setUpdateTs(final Voice instance, final Date updateTs) {
+	private static void setUpdateTs(@Nullable final Voice instance, final Date updateTs) {
 		if (instance != null) {
 			instance.setUpdateTs(updateTs);
 		}
 	}
 
-	private static void setId(final Voice instance, final Integer id) {
+	private static void setId(@Nullable final Voice instance, final Integer id) {
 		if (instance != null) {
 			instance.setId(id);
 		}
@@ -2988,7 +2991,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.getFilePath() : null;
 	}
 
-	private static String formatHex(final HexFormat instance, final byte[] bytes) {
+	private static String formatHex(@Nullable final HexFormat instance, @Nullable final byte[] bytes) {
 		return instance != null && bytes != null ? instance.formatHex(bytes) : null;
 	}
 
@@ -3095,7 +3098,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.getText() : null;
 	}
 
-	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) {
+	private static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, final T t, final U u) {
 		if (instance != null) {
 			instance.accept(t, u);
 		}
@@ -3200,7 +3203,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static <T> boolean or(final Predicate<T> predicate, final T a, final T b, final T... values) {
+	private static <T> boolean or(final Predicate<T> predicate, final T a, final T b, @Nullable final T... values) {
 		//
 		boolean result = Util.test(predicate, a) || Util.test(predicate, b);
 		//
@@ -3266,7 +3269,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.longValue() : defaultValue;
 	}
 
-	private static boolean isFile(final File instance) {
+	private static boolean isFile(@Nullable final File instance) {
 		return instance != null && instance.isFile();
 	}
 
@@ -3412,17 +3415,17 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 		<T> void setObject(final Class<T> key, final T value);
 
-		static <T> T getObject(final ObjectMap instance, final Class<T> key) {
+		static <T> T getObject(@Nullable final ObjectMap instance, final Class<T> key) {
 			return instance != null ? instance.getObject(key) : null;
 		}
 
-		static <T> void setObject(final ObjectMap instance, final Class<T> key, final T value) {
+		static <T> void setObject(@Nullable final ObjectMap instance, final Class<T> key, final T value) {
 			if (instance != null) {
 				instance.setObject(key, value);
 			}
 		}
 
-		static <T> boolean containsObject(final ObjectMap instance, final Class<T> key) {
+		static <T> boolean containsObject(@Nullable final ObjectMap instance, final Class<T> key) {
 			return instance != null && instance.containsObject(key);
 		}
 
@@ -3463,7 +3466,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		}
 
 		@Override
-		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
 			//
 			final String methodName = Util.getName(method);
 			//
@@ -3524,7 +3527,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 		}
 
-		private static boolean isArray(final OfField<?> instance) {
+		private static boolean isArray(@Nullable final OfField<?> instance) {
 			return instance != null && instance.isArray();
 		}
 
@@ -3678,7 +3681,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 	}
 
-	private static void addValidationData(final Sheet instance, final DataValidation dataValidation) {
+	private static void addValidationData(@Nullable final Sheet instance, final DataValidation dataValidation) {
 		if (instance != null) {
 			instance.addValidationData(dataValidation);
 		}
@@ -3694,7 +3697,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.createExplicitListConstraint(listOfValues) : null;
 	}
 
-	private static <T> T[] toArray(final Collection<T> instance, final T[] array) {
+	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.toArray(array)
@@ -3763,7 +3766,8 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.annotationType() : null;
 	}
 
-	private static <T> boolean anyMatch(final Stream<T> instance, final Predicate<? super T> predicate) {
+	private static <T> boolean anyMatch(@Nullable final Stream<T> instance,
+			@Nullable final Predicate<? super T> predicate) {
 		//
 		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
 				&& instance.anyMatch(predicate);
@@ -3774,7 +3778,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.getDeclaredAnnotations() : null;
 	}
 
-	private static boolean isSelected(final AbstractButton instance) {
+	private static boolean isSelected(@Nullable final AbstractButton instance) {
 		return instance != null && instance.isSelected();
 	}
 
@@ -3809,13 +3813,14 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static void setFileSelectionMode(final JFileChooser instance, final int mode) {
+	private static void setFileSelectionMode(@Nullable final JFileChooser instance, final int mode) {
 		if (instance != null) {
 			instance.setFileSelectionMode(mode);
 		}
 	}
 
-	private static <E extends Throwable> void testAndRun(final boolean b, final FailableRunnable<E> runnable) throws E {
+	private static <E extends Throwable> void testAndRun(final boolean b, @Nullable final FailableRunnable<E> runnable)
+			throws E {
 		//
 		if (b && runnable != null) {
 			//
@@ -3838,7 +3843,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static boolean isAnnotationPresent(final AnnotatedElement instance,
+	private static boolean isAnnotationPresent(@Nullable final AnnotatedElement instance,
 			final Class<? extends Annotation> annotationClass) {
 		return instance != null && annotationClass != null && instance.isAnnotationPresent(annotationClass);
 	}
@@ -3859,7 +3864,8 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 	}
 
-	private static <T> void accept(final Consumer<? super T> action, final T a, final T b, final T... values) {
+	private static <T> void accept(final Consumer<? super T> action, final T a, final T b,
+			@Nullable final T... values) {
 		//
 		accept(action, a);
 		//
@@ -3873,7 +3879,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 	}
 
-	private static <T> void accept(final Consumer<T> instance, final T value) {
+	private static <T> void accept(@Nullable final Consumer<T> instance, final T value) {
 		if (instance != null) {
 			instance.accept(value);
 		}
@@ -3945,7 +3951,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 	}
 
-	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) {
+	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, final Object selectedItem) {
 		if (instance != null) {
 			instance.setSelectedItem(selectedItem);
 		}
