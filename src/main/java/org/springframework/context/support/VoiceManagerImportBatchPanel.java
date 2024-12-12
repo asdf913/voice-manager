@@ -600,6 +600,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
@@ -2593,6 +2594,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.getProperty(name) : null;
 	}
 
+	@Nullable
 	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
 			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
 			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
