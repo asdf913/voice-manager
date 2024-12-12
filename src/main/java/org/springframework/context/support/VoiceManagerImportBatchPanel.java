@@ -454,7 +454,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static Object[] toArray(final Stream<?> instance) {
+	private static Object[] toArray(@Nullable final Stream<?> instance) {
 		return instance != null ? instance.toArray() : null;
 	}
 
@@ -752,7 +752,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 	}
 
-	private static File[] listFiles(final File instance) {
+	private static File[] listFiles(@Nullable final File instance) {
 		return instance != null ? instance.listFiles() : null;
 	}
 
@@ -818,7 +818,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 				//
 		}
 
-		private static void errorOrPrintln(final Logger logger, final PrintStream ps, final String message) {
+		private static void errorOrPrintln(@Nullable final Logger logger, final PrintStream ps, final String message) {
 			//
 			if (logger != null) {
 				//
@@ -902,7 +902,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 		}
 
-		private static Integer incrementAndGet(final AtomicInteger instance) {
+		private static Integer incrementAndGet(@Nullable final AtomicInteger instance) {
 			return instance != null ? Integer.valueOf(instance.incrementAndGet()) : null;
 		}
 
@@ -913,7 +913,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		private ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
 		private static ObjIntFunction<String, String> getLanguageCodeToTextObjIntFunction(
-				final ImportVoiceParameters instance) {
+				@Nullable final ImportVoiceParameters instance) {
 			return instance != null ? instance.languageCodeToTextObjIntFunction : null;
 		}
 
@@ -1198,7 +1198,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			}
 		}
 
-		private static String format(final NumberFormat instance, final double number) {
+		private static String format(@Nullable final NumberFormat instance, final double number) {
 			return instance != null ? instance.format(number) : null;
 		}
 
@@ -1208,7 +1208,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			}
 		}
 
-		private static double doubleValue(final Number instance, final double defaultValue) {
+		private static double doubleValue(@Nullable final Number instance, final double defaultValue) {
 			return instance != null ? instance.doubleValue() : defaultValue;
 		}
 
@@ -1261,7 +1261,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 		void setString(final String key, final String value);
 
-		private static String getString(final StringMap instance, final String key) {
+		private static String getString(@Nullable final StringMap instance, final String key) {
 			return instance != null ? instance.getString(key) : null;
 		}
 
@@ -1492,11 +1492,11 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static ID3v1 getId3v1Tag(final Mp3File instance) {
+	private static ID3v1 getId3v1Tag(@Nullable final Mp3File instance) {
 		return instance != null ? instance.getId3v1Tag() : null;
 	}
 
-	private static ID3v2 getId3v2Tag(final Mp3File instance) {
+	private static ID3v2 getId3v2Tag(@Nullable final Mp3File instance) {
 		return instance != null ? instance.getId3v2Tag() : null;
 	}
 
@@ -1726,7 +1726,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
-	private static Integer getValue(final JSlider instance) {
+	private static Integer getValue(@Nullable final JSlider instance) {
 		return instance != null ? Integer.valueOf(instance.getValue()) : null;
 	}
 
@@ -1736,7 +1736,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		}
 	}
 
-	private static String getLanguage(final Voice instance) {
+	private static String getLanguage(@Nullable final Voice instance) {
 		return instance != null ? instance.getLanguage() : null;
 	}
 
@@ -1766,7 +1766,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static Class<?>[] getParameterTypes(final Executable instance) {
+	private static Class<?>[] getParameterTypes(@Nullable final Executable instance) {
 		return instance != null ? instance.getParameterTypes() : null;
 	}
 
@@ -1817,7 +1817,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	}
 
 	@Nullable
-	private static InputStream openStream(final URL instance) throws IOException {
+	private static InputStream openStream(@Nullable final URL instance) throws IOException {
 		//
 		if (instance == null) {
 			//
@@ -1843,7 +1843,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static String getSource(final Voice instance) {
+	private static String getSource(@Nullable final Voice instance) {
 		return instance != null ? instance.getSource() : null;
 	}
 
@@ -1878,7 +1878,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 	}
 
-	private static void setHiraganaOrKatakana(final Voice voice) {
+	private static void setHiraganaOrKatakana(@Nullable final Voice voice) {
 		//
 		final String hiragana = getHiragana(voice);
 		//
@@ -1906,7 +1906,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 	}
 
-	private static String getHiragana(final Voice instance) {
+	private static String getHiragana(@Nullable final Voice instance) {
 		return instance != null ? instance.getHiragana() : null;
 	}
 
@@ -2084,7 +2084,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static <E> E get(final List<E> instance, final int index) {
+	private static <E> E get(@Nullable final List<E> instance, final int index) {
 		return instance != null ? instance.get(index) : null;
 	}
 
@@ -2119,7 +2119,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static Boolean getBooleanValue(final CellValue instance) {
+	private static Boolean getBooleanValue(@Nullable final CellValue instance) {
 		return instance != null ? Boolean.valueOf(instance.getBooleanValue()) : null;
 	}
 
@@ -2156,15 +2156,15 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		}
 	}
 
-	private static Double getNumericCellValue(final Cell instance) {
+	private static Double getNumericCellValue(@Nullable final Cell instance) {
 		return instance != null ? Double.valueOf(instance.getNumericCellValue()) : null;
 	}
 
-	private static <T> Optional<T> findFirst(final Stream<T> instance) {
+	private static <T> Optional<T> findFirst(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.findFirst() : null;
 	}
 
-	private static <V> V get(final AtomicReference<V> instance) {
+	private static <V> V get(@Nullable final AtomicReference<V> instance) {
 		return instance != null ? instance.get() : null;
 	}
 
@@ -2180,11 +2180,11 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		}
 	}
 
-	private static int orElse(final OptionalInt instance, final int other) {
+	private static int orElse(@Nullable final OptionalInt instance, final int other) {
 		return instance != null ? instance.orElse(other) : other;
 	}
 
-	private static OptionalInt max(final IntStream instance) {
+	private static OptionalInt max(@Nullable final IntStream instance) {
 		return instance != null ? instance.max() : null;
 	}
 
@@ -2199,7 +2199,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	}
 
 	@Nullable
-	private static Integer getCurrentSheetIndex(final Sheet sheet) {
+	private static Integer getCurrentSheetIndex(@Nullable final Sheet sheet) {
 		//
 		Integer currentSheetIndex = null;
 		//
@@ -2229,7 +2229,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static <T> Spliterator<T> spliterator(final Iterable<T> instance) {
+	private static <T> Spliterator<T> spliterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.spliterator() : null;
 	}
 
@@ -2283,7 +2283,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static File getParentFile(final File instance) {
+	private static File getParentFile(@Nullable final File instance) {
 		return instance != null ? instance.getParentFile() : null;
 	}
 
@@ -2368,7 +2368,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 	}
 
-	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
+	private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
 			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
 			final boolean cellHasFocus) {
 		//
@@ -2435,7 +2435,8 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		}
 	}
 
-	private static <E> void setRenderer(final JComboBox<E> instance, final ListCellRenderer<? super E> aRenderer) {
+	private static <E> void setRenderer(@Nullable final JComboBox<E> instance,
+			final ListCellRenderer<? super E> aRenderer) {
 		//
 		if (instance == null) {
 			//
@@ -2461,11 +2462,11 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static <E> ListCellRenderer<? super E> getRenderer(final JComboBox<E> instance) {
+	private static <E> ListCellRenderer<? super E> getRenderer(@Nullable final JComboBox<E> instance) {
 		return instance != null ? instance.getRenderer() : null;
 	}
 
-	private static Object getSelectedItem(final ComboBoxModel<?> instance) {
+	private static Object getSelectedItem(@Nullable final ComboBoxModel<?> instance) {
 		return instance != null ? instance.getSelectedItem() : null;
 	}
 
@@ -2485,7 +2486,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		}
 	}
 
-	private static String getSheetName(final Sheet instance) {
+	private static String getSheetName(@Nullable final Sheet instance) {
 		return instance != null ? instance.getSheetName() : null;
 	}
 
@@ -2549,7 +2550,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 	}
 
-	private static String getLpwstr(final CTProperty instance) {
+	private static String getLpwstr(@Nullable final CTProperty instance) {
 		return instance != null ? instance.getLpwstr() : null;
 	}
 
@@ -2557,7 +2558,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null && instance.contains(name);
 	}
 
-	private static CTProperty getProperty(final CustomProperties instance, final String name) {
+	private static CTProperty getProperty(@Nullable final CustomProperties instance, final String name) {
 		return instance != null ? instance.getProperty(name) : null;
 	}
 
@@ -2575,7 +2576,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return objectMapper;
 	}
 
-	private static String getName(final File instance) {
+	private static String getName(@Nullable final File instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
@@ -2652,7 +2653,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	}
 
 	@Nullable
-	private static String getPassword(final Console console) {
+	private static String getPassword(@Nullable final Console console) {
 		//
 		if (GraphicsEnvironment.isHeadless()) {
 			//
@@ -2670,7 +2671,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	}
 
 	@Nullable
-	private static List<String> getOleEntryNames(final POIFSFileSystem poifs) {
+	private static List<String> getOleEntryNames(@Nullable final POIFSFileSystem poifs) {
 		//
 		List<String> list = null;
 		//
@@ -2737,53 +2738,54 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static String getTextContent(final Node instance) {
+	private static String getTextContent(@Nullable final Node instance) {
 		return instance != null ? instance.getTextContent() : null;
 	}
 
-	private static Node getNamedItem(final NamedNodeMap instance, final String name) {
+	private static Node getNamedItem(@Nullable final NamedNodeMap instance, final String name) {
 		return instance != null ? instance.getNamedItem(name) : null;
 	}
 
-	private static NamedNodeMap getAttributes(final Node instance) {
+	private static NamedNodeMap getAttributes(@Nullable final Node instance) {
 		return instance != null ? instance.getAttributes() : null;
 	}
 
-	private static Node item(final NodeList instance, final int index) {
+	private static Node item(@Nullable final NodeList instance, final int index) {
 		return instance != null ? instance.item(index) : null;
 	}
 
-	private static int getLength(final NodeList instance) {
+	private static int getLength(@Nullable final NodeList instance) {
 		return instance != null ? instance.getLength() : 0;
 	}
 
-	private static NodeList getChildNodes(final Node instance) {
+	private static NodeList getChildNodes(@Nullable final Node instance) {
 		return instance != null ? instance.getChildNodes() : null;
 	}
 
-	private static Element getDocumentElement(final Document instance) {
+	private static Element getDocumentElement(@Nullable final Document instance) {
 		return instance != null ? instance.getDocumentElement() : null;
 	}
 
-	private static Document parse(final DocumentBuilder instance, final InputStream is)
+	private static Document parse(@Nullable final DocumentBuilder instance, final InputStream is)
 			throws SAXException, IOException {
 		return instance != null ? instance.parse(is) : null;
 	}
 
-	private static DocumentBuilder newDocumentBuilder(final DocumentBuilderFactory instance)
+	private static DocumentBuilder newDocumentBuilder(@Nullable final DocumentBuilderFactory instance)
 			throws ParserConfigurationException {
 		return instance != null ? instance.newDocumentBuilder() : null;
 	}
 
-	private static InputStream getInputStream(final ZipFile instance, final ZipEntry entry) throws IOException {
+	private static InputStream getInputStream(@Nullable final ZipFile instance, final ZipEntry entry)
+			throws IOException {
 		return instance != null ? instance.getInputStream(entry) : null;
 	}
 
-	private static ZipEntry getEntry(final ZipFile instance, final String name) {
+	private static ZipEntry getEntry(@Nullable final ZipFile instance, final String name) {
 		return instance != null ? instance.getEntry(name) : null;
 	}
 
-	private static ContentType getContentType(final ContentInfo instance) {
+	private static ContentType getContentType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getContentType() : null;
 	}
 
@@ -2984,11 +2986,11 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 	}
 
-	private static Integer getId(final VoiceList instance) {
+	private static Integer getId(@Nullable final VoiceList instance) {
 		return instance != null ? instance.getId() : null;
 	}
 
-	private static Iterable<String> getListNames(final Voice instance) {
+	private static Iterable<String> getListNames(@Nullable final Voice instance) {
 		return instance != null ? instance.getListNames() : null;
 	}
 
@@ -3010,11 +3012,11 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		}
 	}
 
-	private static Integer getId(final Voice instance) {
+	private static Integer getId(@Nullable final Voice instance) {
 		return instance != null ? instance.getId() : null;
 	}
 
-	private static String getFilePath(final Voice instance) {
+	private static String getFilePath(@Nullable final Voice instance) {
 		return instance != null ? instance.getFilePath() : null;
 	}
 
@@ -3023,7 +3025,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null && bytes != null ? instance.formatHex(bytes) : null;
 	}
 
-	private static URI toURI(final File instance) {
+	private static URI toURI(@Nullable final File instance) {
 		return instance != null ? instance.toURI() : null;
 	}
 
@@ -3076,13 +3078,13 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static Object invoke(final Method method, @Nullable final Object instance, Object... args)
+	private static Object invoke(@Nullable final Method method, @Nullable final Object instance, Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
 	}
 
 	@Nullable
-	private static Long length(final File instance) {
+	private static Long length(@Nullable final File instance) {
 		//
 		if (instance == null) {
 			//
@@ -3108,23 +3110,25 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static Field getDeclaredField(final Class<?> instance, final String name) throws NoSuchFieldException {
+	private static Field getDeclaredField(@Nullable final Class<?> instance, final String name)
+			throws NoSuchFieldException {
 		return instance != null ? instance.getDeclaredField(name) : null;
 	}
 
-	private static String getAlgorithm(final MessageDigest instance) {
+	private static String getAlgorithm(@Nullable final MessageDigest instance) {
 		return instance != null ? instance.getAlgorithm() : null;
 	}
 
-	private static Voice searchByTextAndRomaji(final VoiceMapper instance, final String text, final String romaji) {
+	private static Voice searchByTextAndRomaji(@Nullable final VoiceMapper instance, final String text,
+			final String romaji) {
 		return instance != null ? instance.searchByTextAndRomaji(text, romaji) : null;
 	}
 
-	private static String getRomaji(final Voice instance) {
+	private static String getRomaji(@Nullable final Voice instance) {
 		return instance != null ? instance.getRomaji() : null;
 	}
 
-	private static String getText(final Voice instance) {
+	private static String getText(@Nullable final Voice instance) {
 		return instance != null ? instance.getText() : null;
 	}
 
@@ -3156,7 +3160,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	}
 
 	@Nullable
-	private static String getFileExtension(final ContentInfo ci) {
+	private static String getFileExtension(@Nullable final ContentInfo ci) {
 		//
 		final String message = getMessage(ci);
 		//
@@ -3183,7 +3187,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static boolean matches(final Matcher instance) {
+	private static boolean matches(@Nullable final Matcher instance) {
 		//
 		if (instance == null) {
 			//
@@ -3210,7 +3214,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	}
 
 	@Nullable
-	private static Matcher matcher(final Pattern instance, final CharSequence input) {
+	private static Matcher matcher(@Nullable final Pattern instance, @Nullable final CharSequence input) {
 		//
 		if (instance == null) {
 			//
@@ -3256,15 +3260,15 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static String getMimeType(final ContentInfo instance) {
+	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
 
-	private static String getMessage(final ContentInfo instance) {
+	private static String getMessage(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMessage() : null;
 	}
 
-	private static boolean checkImportFile(final File file, final Voice voice,
+	private static boolean checkImportFile(@Nullable final File file, final Voice voice,
 			final BiConsumer<Voice, String> errorMessageConsumer) {
 		//
 		if (file == null) {
@@ -3298,7 +3302,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static long longValue(final Number instance, final long defaultValue) {
+	private static long longValue(@Nullable final Number instance, final long defaultValue) {
 		return instance != null ? instance.longValue() : defaultValue;
 	}
 
@@ -3306,7 +3310,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null && instance.isFile();
 	}
 
-	private static int showOpenDialog(final JFileChooser instance, @Nullable final Component parent)
+	private static int showOpenDialog(@Nullable final JFileChooser instance, @Nullable final Component parent)
 			throws HeadlessException {
 		//
 		if (instance == null) {
@@ -3437,7 +3441,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static byte[] toByteArray(final ByteArrayOutputStream instance) {
+	private static byte[] toByteArray(@Nullable final ByteArrayOutputStream instance) {
 		return instance != null ? instance.toByteArray() : null;
 	}
 
@@ -3689,11 +3693,11 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 	}
 
-	private static String name(final Enum<?> instance) {
+	private static String name(@Nullable final Enum<?> instance) {
 		return instance != null ? instance.name() : null;
 	}
 
-	private static <T> T[] getEnumConstants(final Class<T> instance) {
+	private static <T> T[] getEnumConstants(@Nullable final Class<T> instance) {
 		return instance != null ? instance.getEnumConstants() : null;
 	}
 
@@ -3724,7 +3728,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		}
 	}
 
-	private static DataValidation createValidation(final DataValidationHelper instance,
+	private static DataValidation createValidation(@Nullable final DataValidationHelper instance,
 			final DataValidationConstraint constraint, final CellRangeAddressList cellRangeAddressList) {
 		return instance != null ? instance.createValidation(constraint, cellRangeAddressList) : null;
 	}
@@ -3770,7 +3774,8 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static Object get(final Field field, @Nullable final Object instance) throws IllegalAccessException {
+	private static Object get(@Nullable final Field field, @Nullable final Object instance)
+			throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
 	}
 
@@ -3778,11 +3783,11 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
-	private static DataValidationHelper getDataValidationHelper(final Sheet instance) {
+	private static DataValidationHelper getDataValidationHelper(@Nullable final Sheet instance) {
 		return instance != null ? instance.getDataValidationHelper() : null;
 	}
 
-	private static Integer getPhysicalNumberOfRows(final Sheet instance) {
+	private static Integer getPhysicalNumberOfRows(@Nullable final Sheet instance) {
 		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfRows()) : null;
 	}
 
@@ -3797,11 +3802,11 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return object != null ? object : get(defaultSupplier);
 	}
 
-	private static <T, E extends Throwable> T get(final FailableSupplier<T, E> instance) throws E {
+	private static <T, E extends Throwable> T get(@Nullable final FailableSupplier<T, E> instance) throws E {
 		return instance != null ? instance.get() : null;
 	}
 
-	private static Class<? extends Annotation> annotationType(final Annotation instance) {
+	private static Class<? extends Annotation> annotationType(@Nullable final Annotation instance) {
 		return instance != null ? instance.annotationType() : null;
 	}
 
@@ -3813,7 +3818,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 	}
 
-	private static Annotation[] getDeclaredAnnotations(final AnnotatedElement instance) {
+	private static Annotation[] getDeclaredAnnotations(@Nullable final AnnotatedElement instance) {
 		return instance != null ? instance.getDeclaredAnnotations() : null;
 	}
 
@@ -3821,11 +3826,11 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null && instance.isSelected();
 	}
 
-	private static File getSelectedFile(final JFileChooser instance) {
+	private static File getSelectedFile(@Nullable final JFileChooser instance) {
 		return instance != null ? instance.getSelectedFile() : null;
 	}
 
-	private static int showSaveDialog(final JFileChooser instance, @Nullable final Component parent)
+	private static int showSaveDialog(@Nullable final JFileChooser instance, @Nullable final Component parent)
 			throws HeadlessException {
 		//
 		if (instance == null) {
@@ -3891,7 +3896,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return Util.forName("org.junit.jupiter.api.Test") != null;
 	}
 
-	private static void clear(final DefaultTableModel instance) {
+	private static void clear(@Nullable final DefaultTableModel instance) {
 		//
 		final Collection<?> dataVector = instance != null ? instance.getDataVector() : null;
 		//
@@ -3996,11 +4001,11 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		}
 	}
 
-	private static <E> E getElementAt(final ListModel<E> instance, final int index) {
+	private static <E> E getElementAt(@Nullable final ListModel<E> instance, final int index) {
 		return instance != null ? instance.getElementAt(index) : null;
 	}
 
-	private static int getSize(final ListModel<?> instance) {
+	private static int getSize(@Nullable final ListModel<?> instance) {
 		return instance != null ? instance.getSize() : 0;
 	}
 
