@@ -318,13 +318,21 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	@Note("Current Processing Sheet")
 	private JTextComponent tfCurrentProcessingSheetName = null;
 
-	private JTextComponent tfCurrentProcessingVoice// TODO
-			, tfSpeechRate, tfSpeechLanguageCode, tfSpeechLanguageName = null;// TODO
+	@Note("Current Processing Voice")
+	private JTextComponent tfCurrentProcessingVoice = null;// TODO
 
-	private DefaultTableModel tmImportResult, tmImportException = null;
+	private JTextComponent tfSpeechRate// TODO
+			, tfSpeechLanguageCode, tfSpeechLanguageName = null;// TODO
 
-	private JSlider jsSpeechVolume// TODO
-			, jsSpeechRate = null;// TODO
+	@Note("Import Result")
+	private DefaultTableModel tmImportResult = null;
+
+	private DefaultTableModel tmImportException = null;
+
+	@Note("Speech Volume")
+	private JSlider jsSpeechVolume = null;// TODO
+
+	private JSlider jsSpeechRate = null;// TODO
 
 	private JComboBox<Object> jcbVoiceId = null;// TODO
 
@@ -343,7 +351,10 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 	private transient PropertyResolver propertyResolver = null;
 
-	private String voiceFolder, messageDigestAlgorithm = null;
+	@Note("Voice Folder")
+	private String voiceFolder = null;
+
+	private String messageDigestAlgorithm = null;
 
 	private transient IValue0<List<String>> jlptLevels = null;
 
