@@ -820,7 +820,8 @@ public class VoiceManagerImportBatchPanel extends JPanel
 				//
 		}
 
-		private static void errorOrPrintln(@Nullable final Logger logger, final PrintStream ps, final String message) {
+		private static void errorOrPrintln(@Nullable final Logger logger, @Nullable final PrintStream ps,
+				final String message) {
 			//
 			if (logger != null) {
 				//
