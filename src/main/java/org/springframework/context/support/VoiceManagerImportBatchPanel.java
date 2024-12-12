@@ -3790,7 +3790,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.createValidation(constraint, cellRangeAddressList) : null;
 	}
 
-	private static DataValidationConstraint createExplicitListConstraint(final DataValidationHelper instance,
+	private static DataValidationConstraint createExplicitListConstraint(@Nullable final DataValidationHelper instance,
 			final String[] listOfValues) {
 		return instance != null ? instance.createExplicitListConstraint(listOfValues) : null;
 	}
@@ -4074,7 +4074,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.getSize() : 0;
 	}
 
-	private static String getLevel(final JlptVocabulary instance) {
+	private static String getLevel(@Nullable final JlptVocabulary instance) {
 		return instance != null ? instance.getLevel() : null;
 	}
 
