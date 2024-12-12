@@ -3800,13 +3800,13 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 	@Nullable
 	private static DataValidation createValidation(@Nullable final DataValidationHelper instance,
-			final DataValidationConstraint constraint, final CellRangeAddressList cellRangeAddressList) {
+			@Nullable final DataValidationConstraint constraint, final CellRangeAddressList cellRangeAddressList) {
 		return instance != null ? instance.createValidation(constraint, cellRangeAddressList) : null;
 	}
 
 	@Nullable
 	private static DataValidationConstraint createExplicitListConstraint(@Nullable final DataValidationHelper instance,
-			final String[] listOfValues) {
+			@Nullable final String[] listOfValues) {
 		return instance != null ? instance.createExplicitListConstraint(listOfValues) : null;
 	}
 
