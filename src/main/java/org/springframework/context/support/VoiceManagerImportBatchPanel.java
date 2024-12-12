@@ -2490,6 +2490,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.getSheetName() : null;
 	}
 
+	@Nullable
 	private static Integer getNumberOfSheets(@Nullable final Workbook instance) {
 		return instance != null ? Integer.valueOf(instance.getNumberOfSheets()) : null;
 	}
