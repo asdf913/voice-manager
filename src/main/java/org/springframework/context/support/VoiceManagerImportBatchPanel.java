@@ -3590,35 +3590,44 @@ public class VoiceManagerImportBatchPanel extends JPanel
 					//
 				}
 				//
-			} else if (proxy instanceof StringMap) {
+			} // if
 				//
-				final Map<Object, Object> map = getStrings();
+			final IValue0<?> value = handleStringMap(methodName, getStrings(), args);
+			//
+			if (value != null) {
 				//
-				if (Objects.equals(methodName, "getString") && args != null && args.length > 0) {
-					//
-					final Object key = args[0];
-					//
-					if (!Util.containsKey(map, key)) {
-						//
-						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
-						//
-					} // if
-						//
-					return Util.get(map, key);
-					//
-				} else if (Objects.equals(methodName, "setString") && args != null && args.length > 1) {
-					//
-					Util.put(map, args[0], args[1]);
-					//
-					return null;
-					//
-				} // if
-					//
-				return null;
+				return IValue0Util.getValue0(value);
 				//
 			} // if
 				//
 			throw new Throwable(methodName);
+			//
+		}
+
+		private static IValue0<Object> handleStringMap(final String methodName, final Map<Object, Object> map,
+				final Object[] args) {
+			//
+			if (Objects.equals(methodName, "getString") && args != null && args.length > 0) {
+				//
+				final Object key = args[0];
+				//
+				if (!Util.containsKey(map, key)) {
+					//
+					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
+					//
+				} // if
+					//
+				return Unit.with(Util.get(map, key));
+				//
+			} else if (Objects.equals(methodName, "setString") && args != null && args.length > 1) {
+				//
+				Util.put(map, args[0], args[1]);
+				//
+				return Unit.with(null);
+				//
+			} // if
+				//
+			return null;
 			//
 		}
 
