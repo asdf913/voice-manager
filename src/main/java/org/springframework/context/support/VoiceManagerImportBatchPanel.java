@@ -1109,6 +1109,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 		private Consumer<Voice> voiceConsumer = null;
 
+		@Nullable
 		private Voice voice = null;
 
 		private File file = null;
@@ -1266,7 +1267,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			return instance != null && instance.containsKey(key);
 		}
 
-		static <T> void setObject(final IntMap<T> instance, final int key, final T value) {
+		static <T> void setObject(@Nullable final IntMap<T> instance, final int key, final T value) {
 			if (instance != null) {
 				instance.setObject(key, value);
 			}
@@ -1776,6 +1777,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		}
 	}
 
+	@Nullable
 	private static File createTempFile(final String prefix, final String suffix)
 			throws IllegalAccessException, InvocationTargetException {
 		//
