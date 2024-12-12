@@ -2360,6 +2360,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		private String commonPrefix = null;
 
 		@Override
+		@Nullable
 		public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
 				final int index, final boolean isSelected, final boolean cellHasFocus) {
 			//
@@ -3605,6 +3606,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 		}
 
+		@Nullable
 		private static IValue0<Object> handleStringMap(final String methodName, final Map<Object, Object> map,
 				final Object[] args) {
 			//
@@ -3801,6 +3803,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.createValidation(constraint, cellRangeAddressList) : null;
 	}
 
+	@Nullable
 	private static DataValidationConstraint createExplicitListConstraint(@Nullable final DataValidationHelper instance,
 			final String[] listOfValues) {
 		return instance != null ? instance.createExplicitListConstraint(listOfValues) : null;
@@ -4085,6 +4088,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		return instance != null ? instance.getSize() : 0;
 	}
 
+	@Nullable
 	private static String getLevel(@Nullable final JlptVocabulary instance) {
 		return instance != null ? instance.getLevel() : null;
 	}
