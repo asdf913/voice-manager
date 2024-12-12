@@ -1238,6 +1238,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 	private static interface IntMap<T> {
 
+		@Nullable
 		T getObject(final int key);
 
 		boolean containsKey(final int key);
