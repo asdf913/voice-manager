@@ -345,9 +345,9 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	private JTextComponent tfSpeechRate = null;
 
 	@Note("Speech Language Code")
-	private JTextComponent tfSpeechLanguageCode = null;// TODO
+	private JTextComponent tfSpeechLanguageCode = null;
 
-	private JTextComponent tfSpeechLanguageName = null;// TODO
+	private JTextComponent tfSpeechLanguageName = null;
 
 	private JTextComponent tfSpeechVolume = null;
 
@@ -361,7 +361,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 
 	private JSlider jsSpeechRate = null;
 
-	private JComboBox<Object> jcbVoiceId = null;// TODO
+	private JComboBox<Object> jcbVoiceId = null;
 
 	private JComboBox<JlptVocabulary> jcbJlptVocabulary = null;// TODO
 
@@ -555,8 +555,41 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		setLayout(new MigLayout());
 		//
-		// Speech Rate
+		// Voice Id
 		//
+		add(new JLabel("Voice Id"));
+		//
+		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds = SpeechApi.getVoiceIds(speechApi),
+				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
+			//
+			final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer();
+			//
+			voiceIdListCellRenderer.listCellRenderer = getRenderer(
+					Util.cast(JComboBox.class, jcbVoiceId = new JComboBox(cbmVoiceId)));
+			//
+			jcbVoiceId.addItemListener(this);
+			//
+			voiceIdListCellRenderer.commonPrefix = String.join("",
+					StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
+			//
+			jcbVoiceId.setRenderer(voiceIdListCellRenderer);
+			//
+			final JPanel jPanel = new JPanel();
+			//
+			jPanel.setLayout(new MigLayout());
+			//
+			add(jPanel, jcbVoiceId, String.format("%1$s,span %2$s", GROWX, 3));
+			//
+			add(jPanel, tfSpeechLanguageCode = new JTextField(), String.format("wmin %1$s", 30));
+			//
+			add(jPanel, tfSpeechLanguageName = new JTextField(), String.format("wmin %1$s", 230));
+			//
+			add(jPanel, String.format("%1$s,span %2$s", WRAP, 1));
+			//
+		} // if
+			//
+			// Speech Rate
+			//
 		final Object speechApiInstance = getInstance(speechApi);
 		//
 		final Lookup lookup = Util.cast(Lookup.class, speechApiInstance);
@@ -716,8 +749,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 		} // if
 			//
-		voiceIds = SpeechApi.getVoiceIds(speechApi);
-		//
 		addChangeListener(this, jsSpeechVolume, jsSpeechRate);
 		//
 	}
