@@ -854,73 +854,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 	}
 
-	private static void addSpeedButtons(final VoiceManagerImportBatchPanel instance, final Range<Integer> range) {
-		//
-		if (!(RangeUtil.hasLowerBound(range) && RangeUtil.hasUpperBound(range) && RangeUtil.lowerEndpoint(range) != null
-				&& RangeUtil.upperEndpoint(range) != null)) {
-			//
-			return;
-			//
-		} // if
-			//
-		add(instance, new JLabel(SPEECH_RATE), "aligny top");
-		//
-		final JSlider jsSpeechRate = instance != null
-				? instance.jsSpeechRate = new JSlider(intValue(RangeUtil.lowerEndpoint(range), 0),
-						intValue(RangeUtil.upperEndpoint(range), 0))
-				: null;
-		//
-		add(instance, jsSpeechRate, String.format("%1$s,span %2$s", GROWX, 2));
-		//
-		setMajorTickSpacing(jsSpeechRate, 1);
-		//
-		setPaintTicks(jsSpeechRate, true);
-		//
-		setPaintLabels(jsSpeechRate, true);
-		//
-		final JTextComponent tfSpeechRate = instance != null ? instance.tfSpeechRate = new JTextField() : null;
-		//
-		add(instance, tfSpeechRate// , String.format("width %1$s", 1)
-		);
-		//
-		setEditable(false, tfSpeechRate);
-		//
-		setValue(jsSpeechRate,
-				PropertyResolverUtil.getProperty(instance != null ? instance.propertyResolver : null,
-						"org.springframework.context.support.VoiceManager.speechRate"),
-				a -> instance.stateChanged(new ChangeEvent(a)));
-		//
-		add(instance, new JLabel(""));
-		//
-//		final AbstractButton btnSpeechRateSlower = instance != null
-//				? instance.btnSpeechRateSlower = new JButton("Slower")
-//				: null;
-		//
-//		add(instance, btnSpeechRateSlower);
-		//
-//		final AbstractButton btnSpeechRateNormal = instance != null
-//				? instance.btnSpeechRateNormal = new JButton("Normal")
-//				: null;
-		//
-//		add(instance, btnSpeechRateNormal);
-		//
-//		final AbstractButton btnSpeechRateFaster = instance != null
-//				? instance.btnSpeechRateFaster = new JButton("Faster")
-//				: null;
-		//
-//		add(instance, btnSpeechRateFaster, WRAP);
-		//
-//		final Double maxWidth = ObjectUtils.max(getPreferredWidth(btnSpeechRateSlower),
-//				getPreferredWidth(btnSpeechRateNormal), getPreferredWidth(btnSpeechRateFaster));
-		//
-//		if (maxWidth != null) {
-		//
-//			setPreferredWidth(maxWidth.intValue(), btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster);
-		//
-//		} // if
-		//
-	}
-
 	private static void add(@Nullable final Container instance, @Nullable final Component comp) {
 		//
 		if (instance == null) {
@@ -949,34 +882,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 		} // if
 			//
-	}
-
-	private static void setPreferredWidth(final int width, final Component... cs) {
-		//
-		Component c = null;
-		//
-		Dimension d = null;
-		//
-		for (int i = 0; cs != null && i < cs.length; i++) {
-			//
-			if ((c = cs[i]) == null || (d = Util.getPreferredSize(c)) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			c.setPreferredSize(new Dimension(width, (int) d.getHeight()));
-			//
-		} // for
-			//
-	}
-
-	private static Double getPreferredWidth(final Component c) {
-		//
-		final Dimension d = Util.getPreferredSize(c);
-		//
-		return d != null ? Double.valueOf(d.getWidth()) : null;
-		//
 	}
 
 	private static void setValue(final JSlider instance, final Method method, final Consumer<JSlider> consumer,
