@@ -1,6 +1,7 @@
 package org.springframework.context.support;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
@@ -41,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HexFormat;
 import java.util.Iterator;
@@ -64,6 +66,7 @@ import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -91,6 +94,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 import javax.xml.parsers.DocumentBuilder;
@@ -202,6 +207,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
+import com.google.common.collect.Range;
+import com.google.common.collect.RangeUtil;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
@@ -223,8 +230,8 @@ import jnafilechooser.api.WindowsFolderBrowser;
 import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
 
-public class VoiceManagerImportBatchPanel extends JPanel
-		implements Titled, InitializingBean, EnvironmentAware, ActionListener, BeanFactoryPostProcessor, ItemListener {
+public class VoiceManagerImportBatchPanel extends JPanel implements Titled, InitializingBean, EnvironmentAware,
+		ActionListener, BeanFactoryPostProcessor, ItemListener, ChangeListener {
 
 	private static final long serialVersionUID = 8152096292066653831L;
 
@@ -271,6 +278,10 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 	private static final String KEY_NOT_FOUND_MESSAGE = "Key [%1$s] Not Found";
 
+	private static final String SPEECH_RATE = "Speech Rate";
+
+	private static final String COMPONENT = "component";
+
 	private static final Pattern PATTERN_CONTENT_INFO_MESSAGE_MP3_1 = Pattern.compile("^MPEG ADTS, layer III.+$");
 
 	private static final Pattern PATTERN_CONTENT_INFO_MESSAGE_MP3_2 = Pattern
@@ -310,6 +321,15 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 	private AbstractButton btnExecute = null;
 
+	@Group(SPEECH_RATE)
+	private AbstractButton btnSpeechRateSlower = null;
+
+	@Group(SPEECH_RATE)
+	private AbstractButton btnSpeechRateNormal = null;
+
+	@Group(SPEECH_RATE)
+	private AbstractButton btnSpeechRateFaster = null;
+
 	private JProgressBar progressBarImport = null;
 
 	@Note("Current Processing File")
@@ -319,15 +339,17 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	private JTextComponent tfCurrentProcessingSheetName = null;
 
 	@Note("Current Processing Voice")
-	private JTextComponent tfCurrentProcessingVoice = null;// TODO
+	private JTextComponent tfCurrentProcessingVoice = null;
 
 	@Note("Speech Rate")
-	private JTextComponent tfSpeechRate = null;// TODO
+	private JTextComponent tfSpeechRate = null;
 
 	@Note("Speech Language Code")
 	private JTextComponent tfSpeechLanguageCode = null;// TODO
 
 	private JTextComponent tfSpeechLanguageName = null;// TODO
+
+	private JTextComponent tfSpeechVolume = null;
 
 	@Note("Import Result")
 	private DefaultTableModel tmImportResult = null;
@@ -335,9 +357,9 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	private DefaultTableModel tmImportException = null;
 
 	@Note("Speech Volume")
-	private JSlider jsSpeechVolume = null;// TODO
+	private JSlider jsSpeechVolume = null;
 
-	private JSlider jsSpeechRate = null;// TODO
+	private JSlider jsSpeechRate = null;
 
 	private JComboBox<Object> jcbVoiceId = null;// TODO
 
@@ -424,6 +446,10 @@ public class VoiceManagerImportBatchPanel extends JPanel
 				Util.toList(Util.map(Util.stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))),
 				new String[] {});
 		//
+	}
+
+	public void setSpeechApi(final SpeechApi speechApi) {
+		this.speechApi = speechApi;
 	}
 
 	@Nullable
@@ -529,6 +555,84 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		//
 		setLayout(new MigLayout());
 		//
+		// Speech Rate
+		//
+		final Object speechApiInstance = getInstance(speechApi);
+		//
+		final Lookup lookup = Util.cast(Lookup.class, speechApiInstance);
+		//
+		final Predicate<String> predicate = a -> Lookup.contains(lookup, "rate", a);
+		//
+		final FailableFunction<String, Object, RuntimeException> function = a -> Lookup.get(lookup, "rate", a);
+		//
+		final JPanel jPanel = new JPanel();
+		//
+		jPanel.setLayout(new MigLayout());
+		//
+		if (Boolean.logicalAnd(Util.test(predicate, "min"), Util.test(predicate, "max"))) {
+			//
+			add(new JLabel(SPEECH_RATE), "aligny top");
+			//
+			final Range<Integer> range = createRange(toInteger(testAndApply(predicate, "min", function, null)),
+					toInteger(testAndApply(predicate, "max", function, null)));
+			//
+			add(jPanel, jsSpeechRate = new JSlider(intValue(RangeUtil.lowerEndpoint(range), 0),
+					intValue(RangeUtil.upperEndpoint(range), 0)), String.format("growx,wmin %1$s", 300));
+			//
+			setMajorTickSpacing(jsSpeechRate, 1);
+			//
+			setPaintTicks(jsSpeechRate, true);
+			//
+			setPaintLabels(jsSpeechRate, true);
+			//
+			add(jPanel, tfSpeechRate = new JTextField(), String.format("wmin %1$s", 25));
+			//
+			setEditable(false, tfSpeechRate);
+			//
+			if (RangeUtil.hasLowerBound(range) && RangeUtil.hasUpperBound(range)
+					&& RangeUtil.lowerEndpoint(range) != null && RangeUtil.upperEndpoint(range) != null) {
+				//
+				setValue(jsSpeechRate,
+						PropertyResolverUtil.getProperty(propertyResolver,
+								"org.springframework.context.support.VoiceManager.speechRate"),
+						a -> stateChanged(new ChangeEvent(a)));
+				//
+			} // if
+				//
+			add(jPanel, new JLabel(""));
+			//
+		} // if
+			//
+			// Speech Volume
+			//
+		add(jPanel, new JLabel("Speech Volume"), "aligny top");
+		//
+		final Range<Integer> speechVolumeRange = createVolumeRange(speechApiInstance);
+		//
+		final Integer upperEnpoint = testAndApply(RangeUtil::hasUpperBound, speechVolumeRange, RangeUtil::upperEndpoint,
+				null);
+		//
+		add(jPanel,
+				jsSpeechVolume = new JSlider(intValue(
+						testAndApply(RangeUtil::hasLowerBound, speechVolumeRange, RangeUtil::lowerEndpoint, null), 0),
+						intValue(upperEnpoint, 100)),
+				String.format("%1$s,wmin %2$s", GROWX, 300));
+		//
+		setSpeechVolume(valueOf(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManager.speechVolume")), upperEnpoint);
+		//
+		setMajorTickSpacing(jsSpeechVolume, 10);
+		//
+		setPaintTicks(jsSpeechVolume, true);
+		//
+		setPaintLabels(jsSpeechVolume, true);
+		//
+		add(jPanel, tfSpeechVolume = new JTextField(), String.format("wmin %1$s", 25));
+		//
+		tfSpeechVolume.setEnabled(false);
+		//
+		add(jPanel, String.format("%1$s,span %2$s", WRAP, 5));
+		//
 		add(new JLabel("Import"));
 		//
 		add(btnImport = new JButton("Import a Single Spreadsheet"), String.format(SPAN_ONLY_FORMAT, 2));
@@ -614,6 +718,366 @@ public class VoiceManagerImportBatchPanel extends JPanel
 			//
 		voiceIds = SpeechApi.getVoiceIds(speechApi);
 		//
+		addChangeListener(this, jsSpeechVolume, jsSpeechRate);
+		//
+	}
+
+	private static void addChangeListener(final ChangeListener changeListener, final JSlider instance,
+			final JSlider... vs) {
+		//
+		addChangeListener(instance, changeListener);
+		//
+		for (int i = 0; vs != null && i < vs.length; i++) {
+			//
+			addChangeListener(vs[i], changeListener);
+			//
+		} // for
+			//
+	}
+
+	private static void addChangeListener(final JSlider instance, final ChangeListener changeListener) {
+		if (instance != null) {
+			instance.addChangeListener(changeListener);
+		}
+	}
+
+	private void setSpeechVolume(final Number speechVolume, final Number upperEnpoint) {
+		//
+		if (speechVolume != null) {
+			//
+			setValue(jsSpeechVolume, Math.min(speechVolume.intValue(), intValue(upperEnpoint, 100)));
+			//
+		} else if (upperEnpoint != null) {
+			//
+			setValue(jsSpeechVolume, upperEnpoint.intValue());
+			//
+		} // if
+			//
+	}
+
+	private static Range<Integer> createVolumeRange(final Object instance) {
+		//
+		final Lookup lookup = Util.cast(Lookup.class, instance);
+		//
+		final BiPredicate<String, String> biPredicate = (a, b) -> Lookup.contains(lookup, a, b);
+		//
+		final FailableBiFunction<String, String, Object, RuntimeException> biFunction = (a, b) -> Lookup.get(lookup, a,
+				b);
+		//
+		return createRange(toInteger(testAndApply(biPredicate, "volume", "min", biFunction, null)),
+				toInteger(testAndApply(biPredicate, "volume", "max", biFunction, null)));
+		//
+	}
+
+	private static Range<Integer> createRange(final Integer minValue, final Integer maxValue) {
+		//
+		if (minValue != null && maxValue != null) {
+			return Range.open(minValue, maxValue);
+		} else if (minValue != null) {
+			return Range.atLeast(minValue);
+		} else if (maxValue != null) {
+			return Range.atMost(maxValue);
+		} // if
+			//
+		return Range.all();
+		//
+	}
+
+	private static Integer toInteger(final Object object) {
+		//
+		Integer integer = null;
+		//
+		if (object instanceof Integer i) {
+			//
+			integer = i;
+			//
+		} else if (object instanceof Number number) {
+			//
+			integer = Integer.valueOf(intValue(number, 0));
+			//
+		} else {
+			//
+			integer = valueOf(Util.toString(object));
+			//
+		} // if
+			//
+		return integer;
+		//
+	}
+
+	private static Object getInstance(final SpeechApi speechApi) {
+		//
+		final List<Field> fs = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(speechApi)), Arrays::stream, null),
+				f -> Objects.equals(Util.getName(f), "instance")));
+		//
+		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
+		//
+		if (f != null) {
+			//
+			return Narcissus.getField(speechApi, f);
+			//
+		} // if
+			//
+		return speechApi;
+		//
+	}
+
+	private static void addSpeedButtons(final VoiceManagerImportBatchPanel instance, final Range<Integer> range) {
+		//
+		if (!(RangeUtil.hasLowerBound(range) && RangeUtil.hasUpperBound(range) && RangeUtil.lowerEndpoint(range) != null
+				&& RangeUtil.upperEndpoint(range) != null)) {
+			//
+			return;
+			//
+		} // if
+			//
+		add(instance, new JLabel(SPEECH_RATE), "aligny top");
+		//
+		final JSlider jsSpeechRate = instance != null
+				? instance.jsSpeechRate = new JSlider(intValue(RangeUtil.lowerEndpoint(range), 0),
+						intValue(RangeUtil.upperEndpoint(range), 0))
+				: null;
+		//
+		add(instance, jsSpeechRate, String.format("%1$s,span %2$s", GROWX, 2));
+		//
+		setMajorTickSpacing(jsSpeechRate, 1);
+		//
+		setPaintTicks(jsSpeechRate, true);
+		//
+		setPaintLabels(jsSpeechRate, true);
+		//
+		final JTextComponent tfSpeechRate = instance != null ? instance.tfSpeechRate = new JTextField() : null;
+		//
+		add(instance, tfSpeechRate// , String.format("width %1$s", 1)
+		);
+		//
+		setEditable(false, tfSpeechRate);
+		//
+		setValue(jsSpeechRate,
+				PropertyResolverUtil.getProperty(instance != null ? instance.propertyResolver : null,
+						"org.springframework.context.support.VoiceManager.speechRate"),
+				a -> instance.stateChanged(new ChangeEvent(a)));
+		//
+		add(instance, new JLabel(""));
+		//
+//		final AbstractButton btnSpeechRateSlower = instance != null
+//				? instance.btnSpeechRateSlower = new JButton("Slower")
+//				: null;
+		//
+//		add(instance, btnSpeechRateSlower);
+		//
+//		final AbstractButton btnSpeechRateNormal = instance != null
+//				? instance.btnSpeechRateNormal = new JButton("Normal")
+//				: null;
+		//
+//		add(instance, btnSpeechRateNormal);
+		//
+//		final AbstractButton btnSpeechRateFaster = instance != null
+//				? instance.btnSpeechRateFaster = new JButton("Faster")
+//				: null;
+		//
+//		add(instance, btnSpeechRateFaster, WRAP);
+		//
+//		final Double maxWidth = ObjectUtils.max(getPreferredWidth(btnSpeechRateSlower),
+//				getPreferredWidth(btnSpeechRateNormal), getPreferredWidth(btnSpeechRateFaster));
+		//
+//		if (maxWidth != null) {
+		//
+//			setPreferredWidth(maxWidth.intValue(), btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster);
+		//
+//		} // if
+		//
+	}
+
+	private static void add(@Nullable final Container instance, @Nullable final Component comp) {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} //
+			//
+		try {
+			//
+			if (Narcissus.getObjectField(instance, getDeclaredField(Container.class, COMPONENT)) == null) {
+				//
+				return;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		if (comp != null) {
+			//
+			instance.add(comp);
+			//
+		} // if
+			//
+	}
+
+	private static void setPreferredWidth(final int width, final Component... cs) {
+		//
+		Component c = null;
+		//
+		Dimension d = null;
+		//
+		for (int i = 0; cs != null && i < cs.length; i++) {
+			//
+			if ((c = cs[i]) == null || (d = Util.getPreferredSize(c)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			c.setPreferredSize(new Dimension(width, (int) d.getHeight()));
+			//
+		} // for
+			//
+	}
+
+	private static Double getPreferredWidth(final Component c) {
+		//
+		final Dimension d = Util.getPreferredSize(c);
+		//
+		return d != null ? Double.valueOf(d.getWidth()) : null;
+		//
+	}
+
+	private static void setValue(final JSlider instance, final Method method, final Consumer<JSlider> consumer,
+			final boolean headless) {
+		//
+		try {
+			//
+			final Integer i = Util.cast(Integer.class, invoke(method, instance));
+			//
+			if (instance != null && i != null) {
+				//
+				instance.setValue(i.intValue());
+				//
+				accept(consumer, instance);
+				//
+			} // if
+				//
+		} catch (final IllegalAccessException e) {
+			//
+			errorOrAssertOrShowException(headless, e);
+			//
+		} catch (final InvocationTargetException e) {
+			//
+			final Throwable targetException = e.getTargetException();
+			//
+			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(
+					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
+			//
+		} // try
+			//
+	}
+
+	private static void setValue(final JSlider instance, final String string, final Consumer<JSlider> consumer) {
+		//
+		Integer i = valueOf(string);
+		//
+		if (i != null) {
+			//
+			if (instance != null && i >= instance.getMinimum() && i <= instance.getMaximum()) {
+				//
+				setValue(instance, i.intValue());
+				//
+				accept(consumer, instance);
+				//
+			} // if
+				//
+		} else {
+			//
+			final List<Method> ms = Util.toList(Util.filter(
+					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(instance)), Arrays::stream,
+							null),
+					x -> x != null && Objects.equals(x.getReturnType(), Integer.TYPE) && x.getParameterCount() == 0
+							&& StringUtils.startsWithIgnoreCase(Util.getName(x), "get" + string)));
+			//
+			final int size = CollectionUtils.size(ms);
+			//
+			if (size == 1) {
+				//
+				setValue(instance, get(ms, 0), consumer, GraphicsEnvironment.isHeadless());
+				//
+			} else if (size > 1) {
+				//
+				throw new IllegalStateException(
+						Util.collect(sorted(Util.map(Util.stream(ms), Util::getName), ObjectUtils::compare),
+								Collectors.joining(",")));
+				//
+			} // if
+				//
+		} // if
+			//
+	}
+
+	private static <T> Stream<T> sorted(final Stream<T> instance, final Comparator<? super T> comparator) {
+		//
+		return instance != null && (comparator != null || Proxy.isProxyClass(Util.getClass(instance)))
+				? instance.sorted(comparator)
+				: instance;
+		//
+	}
+
+	private static void setValue(final JSlider instance, final int n) {
+		if (instance != null) {
+			instance.setValue(n);
+		}
+	}
+
+	private static void setPaintLabels(final JSlider instance, final boolean b) {
+		if (instance != null) {
+			instance.setPaintLabels(b);
+		}
+	}
+
+	private static void setPaintTicks(final JSlider instance, final boolean b) {
+		if (instance != null) {
+			instance.setPaintTicks(b);
+		}
+	}
+
+	private static void setMajorTickSpacing(final JSlider instance, final int n) {
+		if (instance != null) {
+			instance.setMajorTickSpacing(n);
+		}
+	}
+
+	private static void add(final Container instance, final Component comp, final Object constraints) {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} //
+			//
+		try {
+			//
+			if (Narcissus.getObjectField(instance, getDeclaredField(Container.class, COMPONENT)) == null) {
+				//
+				return;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		if (comp != null) {
+			//
+			instance.add(comp, constraints);
+			//
+		} // if
+			//
 	}
 
 	@Nullable
@@ -784,6 +1248,35 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		if (!headless && showOpenDialog(jfc, null) == JFileChooser.APPROVE_OPTION) {
 			//
 			importVoice(getSelectedFile(jfc));
+			//
+		} // if
+			//
+	}
+
+	@Override
+	public void stateChanged(final ChangeEvent evt) {
+		//
+		final Object source = Util.getSource(evt);
+		//
+		if (Objects.equals(source, jsSpeechVolume)) {
+			//
+			Util.setText(tfSpeechVolume, Util.toString(getValue(jsSpeechVolume)));
+			//
+		} else if (Objects.equals(source, jsSpeechRate)) {
+			//
+			if (jsSpeechRate != null) {
+				//
+				setEnabled(btnSpeechRateSlower, intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMinimum());
+				//
+				setEnabled(btnSpeechRateFaster, intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMaximum());
+				//
+			} // if
+				//
+			Util.setText(tfSpeechRate, Util.toString(getValue(jsSpeechRate)));
+			//
+		} else {
+			//
+//			throw new UnsupportedOperationException();//TODO
 			//
 		} // if
 			//
