@@ -172,8 +172,6 @@ import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.d2ab.collection.ints.IntCollectionUtil;
-import org.d2ab.collection.ints.IntList;
 import org.d2ab.function.ObjIntFunction;
 import org.d2ab.function.ObjIntFunctionUtil;
 import org.javatuples.Unit;
@@ -363,16 +361,11 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 
 	private JComboBox<Object> jcbVoiceId = null;
 
-	private JComboBox<JlptVocabulary> jcbJlptVocabulary = null;// TODO
-
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
 	private @interface Url {
 		String value();
 	}
-
-	@Url("https://www.jlpt.jp/about/levelsummary.html")
-	private transient ComboBoxModel<String> cbmJlptLevel = null;// TODO
 
 	private transient ComboBoxModel<String> cbmVoiceId = null;
 
@@ -4486,45 +4479,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 			} // try
 				//
-		} else if (Objects.equals(source, jcbJlptVocabulary)) {
-			//
-			final JlptVocabulary jv = Util.cast(JlptVocabulary.class,
-					jcbJlptVocabulary != null ? jcbJlptVocabulary.getSelectedItem() : null);
-			//
-			if (jv != null) {
-				//
-				setSelectedItemByString(cbmJlptLevel, getLevel(jv));
-				//
-			} // if
-				//
-		} // if
-			//
-	}
-
-	private static void setSelectedItemByString(final ComboBoxModel<String> cbm, final String string) {
-		//
-		IntList intList = null;
-		//
-		for (int i = 0; i < getSize(cbm); i++) {
-			//
-			if (StringUtils.equalsAnyIgnoreCase(getElementAt(cbm, i), string)) {
-				//
-				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i);
-				//
-			} // if
-				//
-		} // for
-			//
-		final int size = intList != null ? intList.size() : 0;
-		//
-		if (size > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} else if (size == 1) {
-			//
-			setSelectedItem(cbm, getElementAt(cbm, intList.get(0)));
-			//
 		} // if
 			//
 	}
