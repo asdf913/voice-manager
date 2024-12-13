@@ -324,7 +324,10 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	@Note("Speech Rate")
 	private JTextComponent tfSpeechRate = null;// TODO
 
-	private JTextComponent tfSpeechLanguageCode, tfSpeechLanguageName = null;// TODO
+	@Note("Speech Language Code")
+	private JTextComponent tfSpeechLanguageCode = null;// TODO
+
+	private JTextComponent tfSpeechLanguageName = null;// TODO
 
 	@Note("Import Result")
 	private DefaultTableModel tmImportResult = null;
