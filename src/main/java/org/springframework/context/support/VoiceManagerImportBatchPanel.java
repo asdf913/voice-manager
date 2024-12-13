@@ -1598,7 +1598,8 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	}
 
 	private static void importVoiceBySpeechApi(final ObjectMap objectMap, @Nullable final String filePath,
-			@Nullable final String voiceId, final ObjIntFunction<String, String> languageCodeToTextObjIntFunction)
+			@Nullable final String voiceId,
+			@Nullable final ObjIntFunction<String, String> languageCodeToTextObjIntFunction)
 			throws IllegalAccessException, InvocationTargetException, IOException {
 		//
 		final ImportTask it = ObjectMap.getObject(objectMap, ImportTask.class);
@@ -2615,7 +2616,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 	@Nullable
 	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
-			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
+			@Nullable final U u, final FailableBiFunction<T, U, R, E> functionTrue,
 			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
