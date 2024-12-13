@@ -110,7 +110,11 @@ class VoiceManagerImportBatchPanelTest {
 					|| Boolean.logicalAnd(Objects.equals(name, "actionPerformedForImport"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Object.class, Boolean.TYPE }))
 					|| Boolean.logicalAnd(Objects.equals(name, "actionPerformedForBtnImport"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Boolean.TYPE }))) {
+							Arrays.equals(parameterTypes, new Class<?>[] { Boolean.TYPE }))
+					|| Boolean.logicalAnd(Objects.equals(name, "createRange"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Integer.class, Integer.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "createVolumeRange"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Object.class }))) {
 				//
 				continue;
 				//
