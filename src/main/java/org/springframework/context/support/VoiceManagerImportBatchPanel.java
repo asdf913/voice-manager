@@ -321,8 +321,10 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	@Note("Current Processing Voice")
 	private JTextComponent tfCurrentProcessingVoice = null;// TODO
 
-	private JTextComponent tfSpeechRate// TODO
-			, tfSpeechLanguageCode, tfSpeechLanguageName = null;// TODO
+	@Note("Speech Rate")
+	private JTextComponent tfSpeechRate = null;// TODO
+
+	private JTextComponent tfSpeechLanguageCode, tfSpeechLanguageName = null;// TODO
 
 	@Note("Import Result")
 	private DefaultTableModel tmImportResult = null;
