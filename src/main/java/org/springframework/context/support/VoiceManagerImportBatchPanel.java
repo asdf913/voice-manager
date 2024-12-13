@@ -754,7 +754,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	}
 
 	private static void addChangeListener(final ChangeListener changeListener, final JSlider instance,
-			final JSlider... vs) {
+			@Nullable final JSlider... vs) {
 		//
 		addChangeListener(instance, changeListener);
 		//
@@ -766,7 +766,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 	}
 
-	private static void addChangeListener(final JSlider instance, final ChangeListener changeListener) {
+	private static void addChangeListener(@Nullable final JSlider instance, final ChangeListener changeListener) {
 		if (instance != null) {
 			instance.addChangeListener(changeListener);
 		}
@@ -800,7 +800,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 	}
 
-	private static Range<Integer> createRange(final Integer minValue, final Integer maxValue) {
+	private static Range<Integer> createRange(@Nullable final Integer minValue, @Nullable final Integer maxValue) {
 		//
 		if (minValue != null && maxValue != null) {
 			return Range.open(minValue, maxValue);
@@ -884,8 +884,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 	}
 
-	private static void setValue(final JSlider instance, final Method method, final Consumer<JSlider> consumer,
-			final boolean headless) {
+	private static void setValue(@Nullable final JSlider instance, final Method method,
+			final Consumer<JSlider> consumer, final boolean headless) {
 		//
 		try {
 			//
@@ -914,7 +914,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 	}
 
-	private static void setValue(final JSlider instance, final String string, final Consumer<JSlider> consumer) {
+	private static void setValue(@Nullable final JSlider instance, final String string,
+			final Consumer<JSlider> consumer) {
 		//
 		Integer i = valueOf(string);
 		//
@@ -954,7 +955,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 	}
 
-	private static <T> Stream<T> sorted(final Stream<T> instance, final Comparator<? super T> comparator) {
+	private static <T> Stream<T> sorted(@Nullable final Stream<T> instance,
+			@Nullable final Comparator<? super T> comparator) {
 		//
 		return instance != null && (comparator != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.sorted(comparator)
@@ -962,31 +964,31 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 	}
 
-	private static void setValue(final JSlider instance, final int n) {
+	private static void setValue(@Nullable final JSlider instance, final int n) {
 		if (instance != null) {
 			instance.setValue(n);
 		}
 	}
 
-	private static void setPaintLabels(final JSlider instance, final boolean b) {
+	private static void setPaintLabels(@Nullable final JSlider instance, final boolean b) {
 		if (instance != null) {
 			instance.setPaintLabels(b);
 		}
 	}
 
-	private static void setPaintTicks(final JSlider instance, final boolean b) {
+	private static void setPaintTicks(@Nullable final JSlider instance, final boolean b) {
 		if (instance != null) {
 			instance.setPaintTicks(b);
 		}
 	}
 
-	private static void setMajorTickSpacing(final JSlider instance, final int n) {
+	private static void setMajorTickSpacing(@Nullable final JSlider instance, final int n) {
 		if (instance != null) {
 			instance.setMajorTickSpacing(n);
 		}
 	}
 
-	private static void add(final Container instance, final Component comp, final Object constraints) {
+	private static void add(final Container instance, @Nullable final Component comp, final Object constraints) {
 		//
 		if (instance == null) {
 			//
