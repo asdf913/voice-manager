@@ -949,6 +949,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 	}
 
+	@Nullable
 	private static <T> Stream<T> sorted(@Nullable final Stream<T> instance,
 			@Nullable final Comparator<? super T> comparator) {
 		//
