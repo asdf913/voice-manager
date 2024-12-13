@@ -1446,7 +1446,8 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	}
 
 	private static void importVoice(final ObjectMap objectMap, @Nullable final File folder,
-			@Nullable final String voiceId, final ObjIntFunction<String, String> languageCodeToTextObjIntFunction,
+			@Nullable final String voiceId,
+			@Nullable final ObjIntFunction<String, String> languageCodeToTextObjIntFunction,
 			@Nullable final String preferredPronunciationAudioFormat, final String[] mp3Tags) throws Exception {
 		//
 		final ImportTask it = ObjectMap.getObject(objectMap, ImportTask.class);
@@ -1798,7 +1799,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	}
 
 	private static void importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(final ObjectMap objectMap,
-			final String filePath, final String preferredPronunciationAudioFormat) throws Exception {
+			final String filePath, @Nullable final String preferredPronunciationAudioFormat) throws Exception {
 		//
 		final ImportTask it = ObjectMap.getObject(objectMap, ImportTask.class);
 		//
@@ -2468,7 +2469,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 	}
 
 	private static <T, U, E extends Throwable> void accept(@Nullable final FailableBiConsumer<T, U, E> instance,
-			final T t, final U u) throws E {
+			final T t, @Nullable final U u) throws E {
 		if (instance != null) {
 			instance.accept(t, u);
 		}
