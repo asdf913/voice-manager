@@ -765,7 +765,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		}
 	}
 
-	private void setSpeechVolume(final Number speechVolume, final Number upperEnpoint) {
+	private void setSpeechVolume(@Nullable final Number speechVolume, final Number upperEnpoint) {
 		//
 		if (speechVolume != null) {
 			//
