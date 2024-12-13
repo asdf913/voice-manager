@@ -1447,7 +1447,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 
 	private static void importVoice(final ObjectMap objectMap, @Nullable final File folder,
 			@Nullable final String voiceId, final ObjIntFunction<String, String> languageCodeToTextObjIntFunction,
-			final String preferredPronunciationAudioFormat, final String[] mp3Tags) throws Exception {
+			@Nullable final String preferredPronunciationAudioFormat, final String[] mp3Tags) throws Exception {
 		//
 		final ImportTask it = ObjectMap.getObject(objectMap, ImportTask.class);
 		//
@@ -2463,7 +2463,7 @@ public class VoiceManagerImportBatchPanel extends JPanel
 		} // if
 	}
 
-	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, final U u) {
+	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, @Nullable final U u) {
 		return instance != null && instance.test(t, u);
 	}
 
