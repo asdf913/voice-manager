@@ -814,6 +814,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 	}
 
+	@Nullable
 	private static Integer toInteger(final Object object) {
 		//
 		Integer integer = null;
