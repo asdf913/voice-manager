@@ -3076,24 +3076,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	@Nullable
-	private static JTextComponent createProviderPlatformJTextComponent(final boolean isInstalled,
-			@Nullable final Provider provider) {
-		//
-		try {
-			//
-			return isInstalled ? new JTextField(Provider.getProviderPlatform(provider)) : new JTextField();
-			//
-		} catch (final Error e) {
-			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-			//
-		} // try
-			//
-		return null;
-		//
-	}
-
 	private static boolean isAnnotationPresent(@Nullable final AnnotatedElement instance,
 			@Nullable final Class<? extends Annotation> annotationClass) {
 		return instance != null && annotationClass != null && instance.isAnnotationPresent(annotationClass);
