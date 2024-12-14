@@ -97,8 +97,6 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 
 	private AccentDictionaryForJapaneseEducationMultimapFactoryBean instance = null;
 
-//	private IH ih = null;
-
 	@BeforeEach
 	void beforeEach() {
 		//

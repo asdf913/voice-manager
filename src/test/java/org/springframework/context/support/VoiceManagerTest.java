@@ -9947,16 +9947,6 @@ class VoiceManagerTest {
 			//
 			Assertions.assertNull(invoke(printStackTrace, null, new Throwable()));
 			//
-			// printStackTrace(java.lang.Throwable)
-			//
-//			final Method printStackTrace = CLASS_IH != null
-//					? CLASS_IH.getDeclaredMethod("printStackTrace", Throwable.class)
-//					: null;
-//			//
-//			Assertions.assertNull(invoke(printStackTrace, null, (Object) null));
-//			//
-//			Assertions.assertNull(invoke(printStackTrace, null, new Throwable()));
-			//
 		} // if
 			//
 	}

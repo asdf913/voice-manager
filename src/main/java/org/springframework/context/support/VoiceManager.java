@@ -2186,8 +2186,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				x -> testAndAccept(Objects::nonNull, Util.cast(Titled.class, x),
 						y -> jTabbedPane.addTab(getTitle(y), x)));
 		//
-//		jTabbedPane.addTab(TAB_TITLE_IMPORT_BATCH, createBatchImportPanel(cloneLayoutManager()));
-		//
 		jTabbedPane.addTab("Export", createExportPanel(cloneLayoutManager()));
 		//
 		jTabbedPane.addTab("Misc", createMiscellaneousPanel(cloneLayoutManager(), voiceIds));
@@ -12964,8 +12962,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		instance.setLayout(new MigLayout());
 		//
 		instance.setTitle("Voice Manager");
-		//
-		// instance.init();
 		//
 		instance.pack();
 		//
