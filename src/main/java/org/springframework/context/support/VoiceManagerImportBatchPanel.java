@@ -984,7 +984,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		}
 	}
 
-	private static void add(final Container instance, @Nullable final Component comp, final Object constraints) {
+	private static void add(@Nullable final Container instance, @Nullable final Component comp,
+			final Object constraints) {
 		//
 		if (instance == null) {
 			//
