@@ -369,9 +369,9 @@ class VoiceManagerTest {
 			METHOD_GET_IMAGE_FORMAT, METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY, METHOD_IS_ALL_CHARACTERS_ALLOWED,
 			METHOD_GET_VALUE_COLLECTION_BY_KEY, METHOD_CREATE_YOMI_NAME_MAP0, METHOD_CREATE_YOMI_NAME_MAP1,
 			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_SORTED, METHOD_GET_ID3V1_TAG,
-			METHOD_GET_ID3V2_TAG, METHOD_ADD_VALIDATION_DATA, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL,
-			METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG, METHOD_OPEN_STREAM, METHOD_SUBMIT,
-			METHOD_OPEN_CONNECTION, METHOD_FORMAT_HEX, METHOD_SET_SELECTED_INDEX = null;
+			METHOD_GET_ID3V2_TAG, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER,
+			METHOD_SHOW_OPEN_DIALOG, METHOD_OPEN_STREAM, METHOD_SUBMIT, METHOD_OPEN_CONNECTION, METHOD_FORMAT_HEX,
+			METHOD_SET_SELECTED_INDEX = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -987,9 +987,6 @@ class VoiceManagerTest {
 		(METHOD_GET_ID3V1_TAG = clz.getDeclaredMethod("getId3v1Tag", Mp3File.class)).setAccessible(true);
 		//
 		(METHOD_GET_ID3V2_TAG = clz.getDeclaredMethod("getId3v2Tag", Mp3File.class)).setAccessible(true);
-		//
-		(METHOD_ADD_VALIDATION_DATA = clz.getDeclaredMethod("addValidationData", Sheet.class, DataValidation.class))
-				.setAccessible(true);
 		//
 		(METHOD_CREATE_IMPORT_RESULT_PANEL = clz.getDeclaredMethod("createImportResultPanel", LayoutManager.class))
 				.setAccessible(true);
@@ -9424,21 +9421,6 @@ class VoiceManagerTest {
 				return (ID3v2) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAddValidationData() {
-		//
-		Assertions.assertDoesNotThrow(() -> addValidationData(null, null));
-		//
-	}
-
-	private static void addValidationData(final Sheet instance, final DataValidation dataValidation) throws Throwable {
-		try {
-			METHOD_ADD_VALIDATION_DATA.invoke(null, instance, dataValidation);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
