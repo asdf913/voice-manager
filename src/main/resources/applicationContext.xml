@@ -1094,6 +1094,26 @@
 			ref="LanguageCodeToTextObjIntFunction" />
 	</bean>
 
+	<!---->
+	<bean
+		class="org.springframework.context.support.VoiceManagerImportBatchPanel">
+		<property name="voiceFolder"
+			value="${org.springframework.context.support.VoiceManager.voiceFolder}" />
+		<property name="jlptLevels" ref="JlptLevelList" />
+		<property name="gaKuNenBeTsuKanJiMultimap"
+			ref="GaKuNenBeTsuKanJiMultimap" />
+		<property name="languageCodeToTextObjIntFunction"
+			ref="LanguageCodeToTextObjIntFunction" />
+		<property
+			name="onlineNHKJapanesePronunciationsAccentFailableFunction"
+			ref="OnlineNHKJapanesePronunciationsAccentFailableFunction" />
+		<property name="preferredPronunciationAudioFormat"
+			value="${org.springframework.context.support.VoiceManager.preferredPronunciationAudioFormat}" />
+		<property name="mp3Tags"
+			value="${org.springframework.context.support.VoiceManager.mp3Tags}" />
+		<property name="speechApi" ref="speechApi" />
+	</bean>
+
 	<!-- -->
 	<bean class="org.springframework.context.support.IpaSymbolGui">
 		<property name="layout" ref="MigLayout" />

@@ -155,7 +155,6 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
@@ -2187,7 +2186,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				x -> testAndAccept(Objects::nonNull, Util.cast(Titled.class, x),
 						y -> jTabbedPane.addTab(getTitle(y), x)));
 		//
-		jTabbedPane.addTab(TAB_TITLE_IMPORT_BATCH, createBatchImportPanel(cloneLayoutManager()));
+//		jTabbedPane.addTab(TAB_TITLE_IMPORT_BATCH, createBatchImportPanel(cloneLayoutManager()));
 		//
 		jTabbedPane.addTab("Export", createExportPanel(cloneLayoutManager()));
 		//
@@ -3170,100 +3169,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // for
 			//
 		return list;
-		//
-	}
-
-	private JPanel createBatchImportPanel(final LayoutManager layoutManager) {
-		//
-		final JPanel panel = new JPanel();
-		//
-		panel.setLayout(layoutManager);
-		//
-		add(panel, new JLabel("Import"));
-		//
-		add(panel, btnImport = new JButton("Import a Single Spreadsheet"), String.format(SPAN_ONLY_FORMAT, 2));
-		//
-		add(panel, btnImportWithinFolder = new JButton("Import SpreadSheet(s) Within a Folder"),
-				String.format("%1$s,span %2$s", WRAP, 2));
-		//
-		add(panel, new JLabel("Import Template"));
-		//
-		add(panel, cbImportFileTemplateGenerateBlankRow = new JCheckBox("Generate a Blank Row"));
-		//
-		cbImportFileTemplateGenerateBlankRow
-				.setSelected(Boolean.parseBoolean(PropertyResolverUtil.getProperty(propertyResolver,
-						"org.springframework.context.support.VoiceManager.importFileTemplateGenerateBlankRow")));
-		//
-		add(panel, btnImportFileTemplate = new JButton("Generate"), String.format("%1$s,span %2$s", WRAP, 3));
-		//
-		// Progress
-		//
-		add(panel, progressBarImport = new JProgressBar(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 5));
-		//
-		progressBarImport.setStringPainted(true);
-		//
-		add(panel, new JLabel("Current Processing File"));
-		//
-		final String wrap = String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 5);
-		//
-		add(panel, tfCurrentProcessingFile = new JTextField(), wrap);
-		//
-		add(panel, new JLabel("Current Processing Sheet"));
-		//
-		add(panel, tfCurrentProcessingSheetName = new JTextField(),
-				String.format("%1$s,wmin %2$s,span %3$s", GROWX, 300, 2));
-		//
-		add(panel, new JLabel("Voice"));
-		//
-		add(panel, tfCurrentProcessingVoice = new JTextField(), String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, 2));
-		//
-		add(panel, new JLabel("Import Result"));
-		//
-		JScrollPane scp = new JScrollPane(new JTable(tmImportResult = new DefaultTableModel(
-				new Object[] { "Number Of Sheet Processed", "Number of Voice Processed" }, 0)));
-		//
-		Dimension d = Util.getPreferredSize(scp);
-		//
-		if (d != null) {
-			//
-			scp.setMinimumSize(d = new Dimension((int) d.getWidth(), 40));
-			//
-			scp.setPreferredSize(d);
-			//
-		} // if
-			//
-		add(panel, scp, wrap);
-		//
-		add(panel, new JLabel("Import Exception"));
-		//
-		add(panel, scp = new JScrollPane(new JTable(tmImportException = new DefaultTableModel(
-				new Object[] { "Text", ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER, "Exception" }, 0))), wrap);
-		//
-		if ((d = Util.getPreferredSize(scp)) != null) {
-			//
-			scp.setMinimumSize(d = new Dimension((int) d.getWidth(), 55));
-			//
-			scp.setPreferredSize(d);
-			//
-		} // if
-			//
-		addActionListener(this, btnImport, btnImportWithinFolder, btnImportFileTemplate);
-		//
-		setEditable(false, tfCurrentProcessingFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice);
-		//
-		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
-		//
-		final boolean b = folder != null && folder.exists() && folder.isDirectory();
-		//
-		setEnabled(btnExecute, b);
-		//
-		if (!b) {
-			//
-			setToolTipText(btnExecute, String.format("Please create \"%1$s\" folder.", Util.getAbsolutePath(folder)));
-			//
-		} // if
-			//
-		return panel;
 		//
 	}
 
