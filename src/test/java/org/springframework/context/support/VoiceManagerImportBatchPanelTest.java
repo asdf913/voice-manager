@@ -123,8 +123,6 @@ class VoiceManagerImportBatchPanelTest {
 				//
 			} // if
 				//
-			System.out.println("method=" + m);// TODO
-			//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
 				invoke = Narcissus.invokeStaticMethod(m, os);
