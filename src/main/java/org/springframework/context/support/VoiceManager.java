@@ -868,8 +868,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Url("https://poi.apache.org/encryption.html")
 	private String poiEncryptionPageUrl = null;
 
-	private transient IValue0<List<String>> jlptLevels = null;
-
 	private transient LayoutManager layoutManager = null;
 
 	private transient IValue0<Multimap<String, String>> gaKuNenBeTsuKanJiMultimap = null;
@@ -1511,10 +1509,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				Util.toList(Util.map(Util.stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))),
 				new String[] {});
 		//
-	}
-
-	public void setJlptLevels(final List<String> jlptLevels) {
-		this.jlptLevels = Unit.with(jlptLevels);
 	}
 
 	public void setGaKuNenBeTsuKanJiListPageUrl(final String gaKuNenBeTsuKanJiListPageUrl) {
@@ -4653,33 +4647,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return Util.toList(
 				FailableStreamUtil.stream(FailableStreamUtil.map(fs, f -> FieldUtils.readField(f, instance, true))));
-		//
-	}
-
-	private static int showSaveDialog(@Nullable final JFileChooser instance, @Nullable final Component parent)
-			throws HeadlessException {
-		//
-		if (instance == null) {
-			//
-			return JFileChooser.ERROR_OPTION;
-			//
-		} // if
-			//
-		try {
-			//
-			if (Narcissus.getField(instance, JComponent.class.getDeclaredField("ui")) == null) {
-				//
-				return JFileChooser.ERROR_OPTION;
-				//
-			} // if
-				//
-		} catch (final NoSuchFieldException e) {
-			//
-			LoggerUtil.error(LOG, e.getMessage(), e);
-			//
-		} // try
-			//
-		return instance.showSaveDialog(parent);
 		//
 	}
 

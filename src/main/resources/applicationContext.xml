@@ -976,8 +976,6 @@
 		<property name="microsoftSpeechObjectLibraryAttributeNames"
 			value="${org.springframework.context.support.VoiceManager.microsoftSpeechObjectLibraryAttributeNames}" />
 		<!-- -->
-		<property name="jlptLevels" ref="JlptLevelList" />
-		<!-- -->
 		<property name="gaKuNenBeTsuKanJiListPageUrl"
 			ref="gaKuNenBeTsuKanJiListPageUrl" />
 		<property name="gaKuNenBeTsuKanJiMultimap"
