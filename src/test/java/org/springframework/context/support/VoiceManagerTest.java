@@ -367,10 +367,9 @@ class VoiceManagerTest {
 			METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_NUMERIC_CELL_VALUE, METHOD_SET_AUTO_FILTER,
 			METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT, METHOD_GET_IMAGE_FORMAT,
 			METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY, METHOD_IS_ALL_CHARACTERS_ALLOWED, METHOD_GET_VALUE_COLLECTION_BY_KEY,
-			METHOD_CREATE_YOMI_NAME_MAP0, METHOD_CREATE_YOMI_NAME_MAP1, METHOD_GET_NUMBER, METHOD_GET_RENDERER,
-			METHOD_SET_RENDERER, METHOD_SORTED, METHOD_GET_ID3V1_TAG, METHOD_GET_ID3V2_TAG,
-			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG,
-			METHOD_OPEN_STREAM, METHOD_SUBMIT, METHOD_OPEN_CONNECTION, METHOD_FORMAT_HEX,
+			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_SORTED, METHOD_GET_ID3V1_TAG,
+			METHOD_GET_ID3V2_TAG, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER,
+			METHOD_SHOW_OPEN_DIALOG, METHOD_OPEN_STREAM, METHOD_SUBMIT, METHOD_OPEN_CONNECTION, METHOD_FORMAT_HEX,
 			METHOD_SET_SELECTED_INDEX = null;
 
 	@BeforeAll
@@ -966,10 +965,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_VALUE_COLLECTION_BY_KEY = clz.getDeclaredMethod("getValueCollectionByKey", Iterable.class,
 				Object.class)).setAccessible(true);
-		//
-		(METHOD_CREATE_YOMI_NAME_MAP0 = clz.getDeclaredMethod("createYomiNameMap")).setAccessible(true);
-		//
-		(METHOD_CREATE_YOMI_NAME_MAP1 = clz.getDeclaredMethod("createYomiNameMap", Iterable.class)).setAccessible(true);
 		//
 		(METHOD_GET_NUMBER = clz.getDeclaredMethod("getNumber", Object.class, Iterable.class)).setAccessible(true);
 		//
@@ -9211,47 +9206,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Collection) {
 				return (Collection) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCreateYomiNameMap() throws Throwable {
-		//
-		Assertions.assertNotNull(createYomiNameMap());
-		//
-		Assertions.assertNull(createYomiNameMap(null));
-		//
-		Assertions.assertNull(createYomiNameMap(Collections.singleton(null)));
-		//
-		Assertions.assertNull(createYomiNameMap(Reflection.newProxy(Iterable.class, ih)));
-		//
-	}
-
-	private static Map<String, String> createYomiNameMap() throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_YOMI_NAME_MAP0.invoke(null);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Map) {
-				return (Map) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static Map<String, String> createYomiNameMap(final Iterable<Pair<String, String>> pairs) throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_YOMI_NAME_MAP1.invoke(null, pairs);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Map) {
-				return (Map) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
