@@ -1,6 +1,7 @@
 package org.springframework.context.support;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
 import java.io.Console;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -114,7 +115,9 @@ class VoiceManagerImportBatchPanelTest {
 					|| Boolean.logicalAnd(Objects.equals(name, "createRange"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Integer.class, Integer.class }))
 					|| Boolean.logicalAnd(Objects.equals(name, "createVolumeRange"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Object.class }))) {
+							Arrays.equals(parameterTypes, new Class<?>[] { Object.class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "actionPerformed"),
+							Arrays.equals(parameterTypes, new Class<?>[] { ActionEvent.class }))) {
 				//
 				continue;
 				//
