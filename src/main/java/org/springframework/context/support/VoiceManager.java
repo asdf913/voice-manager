@@ -689,10 +689,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
-	@Note("Import File Template")
-	@Group("Import")
-	private AbstractButton btnImportFileTemplate = null;
-
 	@Note("Import Spread Sheet File(s) within a specified folder")
 	@Group("Import")
 	private AbstractButton btnImportWithinFolder = null;
@@ -5175,31 +5171,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
-	private void actionPerformedForImportFileTemplate(final boolean headless, final JFileChooser jfc) {
-		//
-		setFileSelectionMode(jfc, JFileChooser.FILES_ONLY);
-		//
-		if (showSaveDialog(jfc, null) != JFileChooser.APPROVE_OPTION) {
-			//
-			return;
-			//
-		} // if
-			//
-		try {
-			//
-			FileUtils.writeByteArrayToFile(getSelectedFile(jfc),
-					createImportFileTemplateByteArray(isSelected(cbImportFileTemplateGenerateBlankRow),
-							IValue0Util.getValue0(jlptLevels),
-							MultimapUtil.keySet(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))));
-			//
-		} catch (final IOException e) {
-			//
-			errorOrAssertOrShowException(headless, e);
-			//
-		} // try
-			//
-	}
-
 	private void actionPerformedForExportBrowse(final boolean headless) {
 		//
 		try {
@@ -5679,13 +5650,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private void actionPerformedForImport(final Object source, final boolean headless) {
 		//
-		if (Objects.equals(source, btnImportFileTemplate)) {
-			//
-			actionPerformedForImportFileTemplate(headless, new JFileChooser("."));
-
-			return;
-			//
-		} else if (Objects.equals(source, btnImportWithinFolder)) {
+		if (Objects.equals(source, btnImportWithinFolder)) {
 			//
 			importByWorkbookFiles(
 					//

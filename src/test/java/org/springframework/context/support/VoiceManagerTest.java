@@ -370,9 +370,8 @@ class VoiceManagerTest {
 			METHOD_GET_VALUE_COLLECTION_BY_KEY, METHOD_CREATE_YOMI_NAME_MAP0, METHOD_CREATE_YOMI_NAME_MAP1,
 			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_SORTED, METHOD_GET_ID3V1_TAG,
 			METHOD_GET_ID3V2_TAG, METHOD_ADD_VALIDATION_DATA, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL,
-			METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG, METHOD_OPEN_STREAM,
-			METHOD_ACTION_PERFORMED_FOR_IMPORT_FILE_TEMPLATE, METHOD_SUBMIT, METHOD_OPEN_CONNECTION, METHOD_FORMAT_HEX,
-			METHOD_SET_SELECTED_INDEX = null;
+			METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG, METHOD_OPEN_STREAM, METHOD_SUBMIT,
+			METHOD_OPEN_CONNECTION, METHOD_FORMAT_HEX, METHOD_SET_SELECTED_INDEX = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -1007,10 +1006,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
-		//
-		(METHOD_ACTION_PERFORMED_FOR_IMPORT_FILE_TEMPLATE = clz
-				.getDeclaredMethod("actionPerformedForImportFileTemplate", Boolean.TYPE, JFileChooser.class))
-				.setAccessible(true);
 		//
 		(METHOD_SUBMIT = clz.getDeclaredMethod("submit", ExecutorService.class, Runnable.class)).setAccessible(true);
 		//
@@ -2706,26 +2701,6 @@ class VoiceManagerTest {
 		// btnImport
 		//
 		final boolean headless = GraphicsEnvironment.isHeadless();
-		//
-		if (headless) {
-			//
-			final AbstractButton btnImport = new JButton();
-			//
-			if (instance != null) {
-				//
-				FieldUtils.writeDeclaredField(instance, "btnImport", btnImport, true);
-				//
-			} // if
-				//
-				//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnImport, 0, null)));
-			//
-		} // if
-			//
-		final Class<?> clz = Util.getClass(instance != null ? instance.getToolkit() : null);
-		//
-		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
-				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
 		//
 		// btnExportBrowse
 		//
@@ -9599,26 +9574,6 @@ class VoiceManagerTest {
 				return (InputStream) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testActionPerformedForImportFileTemplate() {
-		//
-		Assertions.assertDoesNotThrow(() -> actionPerformedForImportFileTemplate(false, null));
-		//
-		Assertions.assertDoesNotThrow(() -> actionPerformedForImportFileTemplate(true, null));
-		//
-		Assertions.assertDoesNotThrow(() -> actionPerformedForImportFileTemplate(false,
-				Util.cast(JFileChooser.class, Narcissus.allocateInstance(JFileChooser.class))));
-		//
-	}
-
-	private void actionPerformedForImportFileTemplate(final boolean headless, final JFileChooser jfc) throws Throwable {
-		try {
-			METHOD_ACTION_PERFORMED_FOR_IMPORT_FILE_TEMPLATE.invoke(instance, headless, jfc);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
