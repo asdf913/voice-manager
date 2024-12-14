@@ -362,12 +362,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 
 	private JComboBox<Object> jcbVoiceId = null;
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.FIELD)
-	private @interface Url {
-		String value();
-	}
-
 	private transient ComboBoxModel<String> cbmVoiceId = null;
 
 	private transient PropertyResolver propertyResolver = null;
