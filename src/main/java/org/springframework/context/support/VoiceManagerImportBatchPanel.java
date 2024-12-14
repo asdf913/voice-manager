@@ -314,6 +314,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	@Note("Generate a Blank Row in Import File Template")
 	private AbstractButton cbImportFileTemplateGenerateBlankRow = null;
 
+	@Group("Import")
 	@Note("Import File Template")
 	private AbstractButton btnImportFileTemplate = null;
 
@@ -1093,20 +1094,10 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		final Object source = Util.getSource(evt);
 		//
-		final boolean headless = GraphicsEnvironment.isHeadless();
-		//
-//		final boolean nonTest = !isTestMode();
-		//
 		// Import
 		//
 		testAndRun(Util.contains(getObjectsByGroupAnnotation(this, "Import"), source),
-				() -> actionPerformedForImport(source, headless));
-		//
-//		if (Objects.equals(source, btnExecute)) {
-		//
-//			actionPerformedForExecute(headless, nonTest);
-		//
-//		} // if
+				() -> actionPerformedForImport(source, GraphicsEnvironment.isHeadless()));
 		//
 	}
 
@@ -4404,8 +4395,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 
 	private static List<?> getObjectsByGroupAnnotation(final Object instance, final String group) {
 		//
-		final FailableStream<Field> fs = new FailableStream<>(Util.filter(
-				testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManager.class), Arrays::stream, null), f -> {
+		final FailableStream<Field> fs = new FailableStream<>(Util.filter(testAndApply(Objects::nonNull,
+				Util.getDeclaredFields(VoiceManagerImportBatchPanel.class), Arrays::stream, null), f -> {
 					final Group g = isAnnotationPresent(f, Group.class) ? f.getAnnotation(Group.class) : null;
 					return StringUtils.equals(g != null ? g.value() : null, group);
 				}));
