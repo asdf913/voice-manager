@@ -4476,19 +4476,9 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 	}
 
-	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, final Object selectedItem) {
-		if (instance != null) {
-			instance.setSelectedItem(selectedItem);
-		}
-	}
-
 	@Nullable
 	private static <E> E getElementAt(@Nullable final ListModel<E> instance, final int index) {
 		return instance != null ? instance.getElementAt(index) : null;
-	}
-
-	private static int getSize(@Nullable final ListModel<?> instance) {
-		return instance != null ? instance.getSize() : 0;
 	}
 
 	@Nullable
