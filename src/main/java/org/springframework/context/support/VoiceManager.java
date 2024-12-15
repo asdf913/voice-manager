@@ -4024,15 +4024,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static Integer valueOf(@Nullable final String instance, final int base) {
-		try {
-			return StringUtils.isNotBlank(instance) ? Integer.valueOf(instance, base) : null;
-		} catch (final NumberFormatException e) {
-			return null;
-		}
-	}
-
-	@Nullable
 	private static IntStream map(@Nullable final IntStream instance, @Nullable final IntUnaryOperator mapper) {
 		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
 				? instance.map(mapper)
