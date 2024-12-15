@@ -3014,68 +3014,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	@Nullable
-	private static IValue0<?> getVoiceId(final ObjectMap objectMap,
-			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) {
-		//
-		final PropertyResolver propertyResolver = ObjectMap.getObject(objectMap, PropertyResolver.class);
-		//
-		final SpeechApi speechApi = ObjectMap.getObject(objectMap, SpeechApi.class);
-		//
-		final String[] voiceIds = ObjectMap.getObject(objectMap, String[].class);
-		//
-		final String voiceId = PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManager.voiceId");
-		//
-		List<?> temp = Util.toList(Util.filter(testAndApply(Objects::nonNull, voiceIds, Arrays::stream, null),
-				x -> Boolean.logicalOr(Objects.equals(x, voiceId),
-						Objects.equals(SpeechApi.getVoiceAttribute(speechApi, x, "Name"), voiceId))));
-		//
-		int size = IterableUtils.size(temp);
-		//
-		if (size == 1) {
-			//
-			return Unit.with(get(temp, 0));
-			//
-		} else if (size > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		final String voiceLanguage = PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManager.voiceLanguage");
-		//
-		if (StringUtils.isNotEmpty(voiceLanguage)) {
-			//
-			if ((size = IterableUtils.size(temp = Util
-					.toList(Util.filter(testAndApply(Objects::nonNull, voiceIds, Arrays::stream, null), x -> {
-						//
-						final String language = SpeechApi.getVoiceAttribute(speechApi, x, LANGUAGE);
-						//
-						return StringUtils.startsWithIgnoreCase(
-								ObjIntFunctionUtil.apply(languageCodeToTextObjIntFunction, language, 16), voiceLanguage)
-								|| Objects.equals(language, voiceLanguage);
-						//
-					})))) == 1) {
-				//
-				return Unit.with(get(temp, 0));
-				//
-			} else if (size > 1) {
-				//
-				throw new IllegalStateException(
-						String.format("There are more than one Voice %1$s found for Lanaguge \"%2$s\"",
-								Util.toList(Util.map(Util.stream(temp), x -> StringUtils.wrap(Util.toString(x), "\""))),
-								voiceLanguage));
-				//
-			} // if
-				//
-		} // if
-			//
-		return null;
-		//
-	}
-
+	
 	private static boolean isAnnotationPresent(@Nullable final AnnotatedElement instance,
 			@Nullable final Class<? extends Annotation> annotationClass) {
 		return instance != null && annotationClass != null && instance.isAnnotationPresent(annotationClass);
