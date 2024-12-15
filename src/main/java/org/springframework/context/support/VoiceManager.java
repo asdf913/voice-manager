@@ -3092,11 +3092,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static <T> T get(@Nullable final Supplier<T> instance) {
-		return instance != null ? instance.get() : null;
-	}
-
-	@Nullable
 	private static String getProtocol(@Nullable final URL instance) {
 		return instance != null ? instance.getProtocol() : null;
 	}
