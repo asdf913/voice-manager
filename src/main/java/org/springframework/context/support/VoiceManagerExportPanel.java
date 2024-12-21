@@ -177,8 +177,11 @@ public class VoiceManagerExportPanel extends JPanel
 	@Note("Export JLPT Sheet")
 	private AbstractButton cbExportJlptSheet = null;
 
-	private AbstractButton cbExportPresentation, cbEmbedAudioInPresentation, cbHideAudioImageInPresentation,
-			cbExportMicrosoftAccess, btnExport = null;
+	@Note("Export Presentation")
+	private AbstractButton cbExportPresentation = null;
+
+	private AbstractButton cbEmbedAudioInPresentation, cbHideAudioImageInPresentation, cbExportMicrosoftAccess,
+			btnExport = null;
 
 	private JProgressBar progressBarExport = null;
 
