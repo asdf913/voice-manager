@@ -808,8 +808,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient IValue0<List<JlptVocabulary>> jlptVocabularyList = null;
 
-	private String preferredPronunciationAudioFormat = null;
-
 	private Duration presentationSlideDuration = null;
 
 	@Nullable
@@ -1708,10 +1706,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setJlptVocabularyList(final List<JlptVocabulary> jlptVocabularyList) {
 		this.jlptVocabularyList = Unit.with(jlptVocabularyList);
-	}
-
-	public void setPreferredPronunciationAudioFormat(final String preferredPronunciationAudioFormat) {
-		this.preferredPronunciationAudioFormat = preferredPronunciationAudioFormat;
 	}
 
 	public void setPresentationSlideDuration(final Object object) {
