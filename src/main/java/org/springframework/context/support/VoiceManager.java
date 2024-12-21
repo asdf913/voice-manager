@@ -95,7 +95,6 @@ import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
@@ -238,15 +237,11 @@ import org.apache.poi.poifs.crypt.Encryptor;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellUtil;
-import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
-import org.apache.poi.ss.usermodel.FormulaEvaluatorUtil;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.RowUtil;
@@ -6525,223 +6520,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static Voice createVoice(final ObjectMap objectMap, final boolean first,
-			final AtomicReference<IntMap<Field>> arintMap) throws IllegalAccessException {
-		//
-		Voice voice = null;
-		//
-		final Row row = ObjectMap.getObject(objectMap, Row.class);
-		//
-		if (Util.iterator(row) != null) {
-			//
-			IntMap<Field> intMap = get(arintMap);
-			//
-			int columnIndex = 0;
-			//
-			Field f = null;
-			//
-			IValue0<?> value = null;
-			//
-			for (final Cell cell : row) {
-				//
-				if (cell == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (first) {
-					//
-					IntMap.setObject(
-							intMap = ObjectUtils.getIfNull(intMap, () -> Reflection.newProxy(IntMap.class, new IH())),
-							cell.getColumnIndex(),
-							Util.orElse(findFirst(Util.filter(
-									testAndApply(Objects::nonNull, FieldUtils.getAllFields(Voice.class), Arrays::stream,
-											null),
-									field -> Objects.equals(Util.getName(field), CellUtil.getStringCellValue(cell)))),
-									null));
-					//
-					set(arintMap, intMap);
-					//
-				} else if (IntMap.containsKey(intMap, columnIndex = cell.getColumnIndex())
-						&& (f = IntMap.getObject(intMap, columnIndex)) != null) {
-					//
-					ObjectMap.setObject(objectMap, Field.class, f);
-					//
-					ObjectMap.setObject(objectMap, Cell.class, cell);
-					//
-					ifElse((value = getValueFromCell(objectMap)) == null, () -> {
-						throw new IllegalStateException();
-					}, null);
-					//
-					FieldUtils.writeField(f, voice = getIfNull(voice, Voice::new), IValue0Util.getValue0(value), true);
-					//
-				} // if
-					//
-			} // for
-				//
-		} // if
-			//
-		return voice;
-		//
-	}
-
-	@Nullable
-	private static <V> V get(@Nullable final AtomicReference<V> instance) {
-		return instance != null ? instance.get() : null;
-	}
-
-	private static <V> void set(@Nullable final AtomicReference<V> instance, final V value) {
-		if (instance != null) {
-			instance.set(value);
-		}
-	}
-
-	@Nullable
-	@SuppressWarnings("java:S1612")
-	private static IValue0<?> getValueFromCell(final ObjectMap objectMap) {
-		//
-		final Field f = ObjectMap.getObject(objectMap, Field.class);
-		//
-		final Cell cell = ObjectMap.getObject(objectMap, Cell.class);
-		//
-		final Class<?> type = Util.getType(f);
-		//
-		final CellType cellType = CellUtil.getCellType(cell);
-		//
-		List<?> list = null;
-		//
-		IValue0<?> value = null;
-		//
-		if (Objects.equals(type, String.class)) {
-			//
-			if (Objects.equals(cellType, CellType.NUMERIC)) {
-				//
-				value = Unit.with(Util.toString(getNumericCellValue(cell)));
-				//
-			} else {
-				//
-				value = Unit.with(CellUtil.getStringCellValue(cell));
-				//
-			} // if
-				//
-		} else if (Util.isAssignableFrom(Enum.class, type) && (list = Util
-				.toList(Util.filter(testAndApply(Objects::nonNull, getEnumConstants(type), Arrays::stream, null), e -> {
-					//
-					final String name = name(Util.cast(Enum.class, e));
-					//
-					final String stringCellValue = CellUtil.getStringCellValue(cell);
-					//
-					return Objects.equals(name, stringCellValue) || (StringUtils.isNotEmpty(stringCellValue)
-							&& StringUtils.startsWithIgnoreCase(name, stringCellValue));
-					//
-				}))) != null) {
-			//
-			if (list.isEmpty()) {
-				//
-				value = Unit.with(null);
-				//
-			} else if (IterableUtils.size(list) == 1) {
-				//
-				value = Unit.with(get(list, 0));
-				//
-			} else {
-				//
-				throw new IllegalStateException("list.size()>1");
-				//
-			} // if
-				//
-		} else if (Objects.equals(type, Iterable.class)) {
-			//
-			value = Unit.with(
-					Util.toList(Util.map(Util.stream(getObjectList(ObjectMap.getObject(objectMap, ObjectMapper.class),
-							CellUtil.getStringCellValue(cell))), x -> Util.toString(x))));
-			//
-		} else if (Objects.equals(type, Integer.class)) {
-			//
-			value = getIntegerValueFromCell(objectMap);
-			//
-		} else if (Objects.equals(type, Boolean.class)) {
-			//
-			value = getBooleanValueFromCell(objectMap);
-			//
-		} // if
-			//
-		return value;
-		//
-	}
-
-	@Nullable
-	private static Double getNumericCellValue(@Nullable final Cell instance) {
-		return instance != null ? Double.valueOf(instance.getNumericCellValue()) : null;
-	}
-
-	private static IValue0<Integer> getIntegerValueFromCell(final ObjectMap objectMap) {
-		//
-		final Cell cell = ObjectMap.getObject(objectMap, Cell.class);
-		//
-		final CellType cellType = CellUtil.getCellType(cell);
-		//
-		IValue0<Integer> value = null;
-		//
-		final Double D = Objects.equals(cellType, CellType.NUMERIC) ? getNumericCellValue(cell) : null;
-		//
-		if (D != null) {
-			//
-			value = Unit.with(Integer.valueOf(D.intValue()));
-			//
-		} else {
-			//
-			value = Unit.with(valueOf(CellUtil.getStringCellValue(cell)));
-			//
-		} // if
-			//
-		return value;
-		//
-	}
-
-	@Nullable
-	private static IValue0<Boolean> getBooleanValueFromCell(final ObjectMap objectMap) {
-		//
-		final FormulaEvaluator formulaEvaluator = ObjectMap.getObject(objectMap, FormulaEvaluator.class);
-		//
-		final Cell cell = ObjectMap.getObject(objectMap, Cell.class);
-		//
-		final CellType cellType = CellUtil.getCellType(cell);
-		//
-		String string = null;
-		//
-		IValue0<Boolean> value = null;
-		//
-		if (Objects.equals(cellType, CellType.BOOLEAN)) {
-			//
-			value = Unit.with(cell != null ? cell.getBooleanCellValue() : null);
-			//
-		} else if (Objects.equals(cellType, CellType.FORMULA) && formulaEvaluator != null) {
-			//
-			value = Unit.with(getBooleanValue(FormulaEvaluatorUtil.evaluate(formulaEvaluator, cell)));
-			//
-		} else if (StringUtils.isNotEmpty(string = CellUtil.getStringCellValue(cell))) {
-			//
-			value = Unit.with(Boolean.valueOf(string));
-			//
-		} // if
-			//
-		return value;
-		//
-	}
-
-	@Nullable
-	private static Boolean getBooleanValue(@Nullable final CellValue instance) {
-		return instance != null ? Boolean.valueOf(instance.getBooleanValue()) : null;
-	}
-
-	@Nullable
-	private static File getParentFile(@Nullable final File instance) {
-		return instance != null ? instance.getParentFile() : null;
-	}
-
-	@Nullable
 	private static <T> Spliterator<T> spliterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.spliterator() : null;
 	}
@@ -6749,11 +6527,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static String getFilePath(@Nullable final Voice instance) {
 		return instance != null ? instance.getFilePath() : null;
-	}
-
-	@Nullable
-	private static <T> T[] getEnumConstants(@Nullable final Class<T> instance) {
-		return instance != null ? instance.getEnumConstants() : null;
 	}
 
 	@Nullable
