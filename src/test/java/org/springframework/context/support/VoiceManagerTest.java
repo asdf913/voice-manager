@@ -345,9 +345,9 @@ class VoiceManagerTest {
 			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML, METHOD_LENGTH,
 			METHOD_CREATE_ZIP_FILE, METHOD_RETRIEVE_ALL_VOICES, METHOD_SEARCH_VOICE_LIST_NAMES_BY_VOICE_ID,
 			METHOD_SET_LIST_NAMES, METHOD_SET_SOURCE, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML,
-			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_ACTION_PERFORMED_FOR_CONVERSION,
-			METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY, METHOD_GET_IF_NULL, METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE,
-			METHOD_GET_BOOLEAN_VALUE, METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM,
+			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY,
+			METHOD_GET_IF_NULL, METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE,
+			METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM,
 			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_SET_PREFERRED_WIDTH_2,
 			METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC,
 			METHOD_IMPORT_BY_WORK_BOOK_FILES, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS,
@@ -779,9 +779,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED = clz
 				.getDeclaredMethod("actionPerformedForSystemClipboardAnnotated", Boolean.TYPE, Object.class))
-				.setAccessible(true);
-		//
-		(METHOD_ACTION_PERFORMED_FOR_CONVERSION = clz.getDeclaredMethod("actionPerformedForConversion", Object.class))
 				.setAccessible(true);
 		//
 		(METHOD_TEST_AND_RUN = clz.getDeclaredMethod("testAndRun", Boolean.TYPE, FailableRunnable.class))
@@ -2436,24 +2433,7 @@ class VoiceManagerTest {
 	@Test
 	void testActionPerformed1() throws Throwable {
 		//
-		final Class<?> clz = Util.getClass(instance != null ? instance.getToolkit() : null);
-		//
-		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
-				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
-		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(EMPTY, 0, null)));
-		//
-		final AbstractButton btnConvertToKatakana = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnConvertToKatakana", btnConvertToKatakana, true);
-			//
-		} // if
-			//
-		ActionEvent actionEventBtnConvertToKatakana = new ActionEvent(btnConvertToKatakana, 0, null);
-		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToKatakana));
 		//
 		if (instance != null) {
 			//
@@ -2461,10 +2441,8 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToKatakana));
-		//
-		// btnExport
-		//
+			// btnExport
+			//
 		final AbstractButton btnExport = new JButton();
 		//
 		if (instance != null) {
@@ -7340,38 +7318,6 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED.invoke(instance, nonTest, source);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testActionPerformedForConversion() throws IllegalAccessException, IOException {
-		//
-		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{}",
-				() -> actionPerformedForConversion(EMPTY));
-		//
-		FieldUtils.writeDeclaredField(instance, "mapRomaji",
-				Collections.singleton(Collections.singletonMap(null, null)), true);
-		//
-		Assertions.assertDoesNotThrow(() -> actionPerformedForConversion(null));
-		//
-		final String string = "一";
-		//
-		final JTextComponent tfTextImport = new JTextField(string);
-		//
-		FieldUtils.writeDeclaredField(instance, "tfTextImport", tfTextImport, true);
-		//
-		FieldUtils.writeDeclaredField(instance, "mapRomaji",
-				Collections.singleton(Collections.singletonMap(string, null)), true);
-		//
-		Assertions.assertDoesNotThrow(() -> actionPerformedForConversion(null));
-		//
-	}
-
-	private void actionPerformedForConversion(final Object source) throws Throwable {
-		try {
-			METHOD_ACTION_PERFORMED_FOR_CONVERSION.invoke(instance, source);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

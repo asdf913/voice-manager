@@ -678,9 +678,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		String value();
 	}
 
-	@Group("Conversion")
-	private AbstractButton btnConvertToKatakana = null;
-
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
@@ -4242,11 +4239,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				FailableStreamUtil.stream(FailableStreamUtil.map(fs, f -> FieldUtils.readField(f, this, true))),
 				Objects::nonNull)), source), () -> actionPerformedForSystemClipboardAnnotated(nonTest, source));
 		//
-		// Conversion
-		//
-		testAndRun(Util.contains(getObjectsByGroupAnnotation(this, "Conversion"), source),
-				() -> actionPerformedForConversion(source));
-		//
 		// Pronunciation
 		//
 		testAndRun(Util.contains(getObjectsByGroupAnnotation(this, PRONUNCIATION), source),
@@ -5359,29 +5351,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final String string = IValue0Util.getValue0(stringValue);
 			//
 			testAndRun(nonTest, () -> setContents(clipboard, new StringSelection(string), null));
-			//
-			return;
-			//
-		} // if
-			//
-		throw new IllegalStateException();
-		//
-	}
-
-	private void actionPerformedForConversion(final Object source) {
-		//
-		Entry<JTextComponent, String> pair = null;
-		//
-		if (Objects.equals(source, btnConvertToKatakana)) {
-			//
-			pair = Pair.of(tfKatakana, testAndApply(Objects::nonNull, Util.getText(tfHiragana),
-					x -> KanaConverter.convertKana(x, KanaConverter.OP_ZEN_HIRA_TO_ZEN_KATA), null));
-			//
-		} // if
-			//
-		if (pair != null) {
-			//
-			Util.setText(Util.getKey(pair), Util.getValue(pair));
 			//
 			return;
 			//
