@@ -354,12 +354,11 @@ class VoiceManagerTest {
 			METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE, METHOD_GET_WRITER, METHOD_GET_WORK_BOOK_CLASS,
 			METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME, METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE,
 			METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL,
-			METHOD_GET_LEVEL, METHOD_ADD_ALL, METHOD_PLAY_AUDIO, METHOD_PRONOUNICATION_CHANGED,
-			METHOD_REMOVE_ELEMENT_AT, METHOD_GET_FILE, METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT,
-			METHOD_GET_AUDIO_FILE3, METHOD_GET_AUDIO_FILE4, METHOD_IS_ALL_ATTRIBUTES_MATCHED,
-			METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_NUMERIC_CELL_VALUE, METHOD_SET_AUTO_FILTER,
-			METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT, METHOD_GET_IMAGE_FORMAT,
-			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_SORTED,
+			METHOD_GET_LEVEL, METHOD_ADD_ALL, METHOD_PRONOUNICATION_CHANGED, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_FILE,
+			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE3, METHOD_GET_AUDIO_FILE4,
+			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_NUMERIC_CELL_VALUE,
+			METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT,
+			METHOD_GET_IMAGE_FORMAT, METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_SORTED,
 			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG,
 			METHOD_OPEN_STREAM, METHOD_SUBMIT, METHOD_FORMAT_HEX, METHOD_SET_SELECTED_INDEX,
 			METHOD_GET_TITLED_COMPONENT_MAP = null;
@@ -886,8 +885,6 @@ class VoiceManagerTest {
 		(METHOD_GET_LEVEL = clz.getDeclaredMethod("getLevel", JlptVocabulary.class)).setAccessible(true);
 		//
 		(METHOD_ADD_ALL = clz.getDeclaredMethod("addAll", Collection.class, Collection.class)).setAccessible(true);
-		//
-		(METHOD_PLAY_AUDIO = clz.getDeclaredMethod("playAudio", Pronunciation.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_PRONOUNICATION_CHANGED = clz.getDeclaredMethod("pronounicationChanged", Pronunciation.class,
 				MutableComboBoxModel.class, String.class, JTextComponent.class)).setAccessible(true);
@@ -8128,25 +8125,6 @@ class VoiceManagerTest {
 	private static <E> void addAll(final Collection<E> a, final Collection<? extends E> b) throws Throwable {
 		try {
 			METHOD_ADD_ALL.invoke(null, a, b);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testPlayAudio() {
-		//
-		final Pronunciation pronunciation = new Pronunciation();
-		//
-		pronunciation.setAudioUrls(Collections.singletonMap(null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> playAudio(pronunciation, null));
-		//
-	}
-
-	private static void playAudio(final Pronunciation pronunciation, final Object audioFormat) throws Throwable {
-		try {
-			METHOD_PLAY_AUDIO.invoke(null, pronunciation, audioFormat);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

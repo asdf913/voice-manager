@@ -402,8 +402,6 @@ import j2html.tags.Tag;
 import j2html.tags.TagUtil;
 import j2html.tags.specialized.ATag;
 import j2html.tags.specialized.ATagUtil;
-import javazoom.jl.player.Player;
-import javazoom.jl.player.PlayerUtil;
 import jnafilechooser.api.WindowsFolderBrowser;
 import mapper.VoiceMapper;
 import net.lingala.zip4j.model.ZipParameters;
@@ -749,9 +747,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@ExportButton
 	private AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = null;
-
-	@Group(PRONUNCIATION)
-	private AbstractButton btnPlayPronunciationAudio = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -4229,49 +4224,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void playAudio(@Nullable final Pronunciation pronunciation, @Nullable final Object audioFormat) {
-		//
-		final Set<Entry<String, String>> entrySet = Util.entrySet(getAudioUrls(pronunciation));
-		//
-		if (Util.iterator(entrySet) != null) {
-			//
-			for (final Entry<String, String> entry : entrySet) {
-				//
-				try {
-					//
-					if (Objects.equals(audioFormat, Util.getKey(entry)) && playAudio(Util.getValue(entry)) != null) {
-						//
-						break;
-						//
-					} // if
-						//
-				} catch (final Exception e) {
-					//
-					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-					//
-				} // try
-					//
-			} // for
-				//
-		} // if
-			//
-	}
-
 	@Nullable
 	private static Map<String, String> getAudioUrls(@Nullable final Pronunciation instnace) {
 		return instnace != null ? instnace.getAudioUrls() : null;
-	}
-
-	private static Object playAudio(@Nullable final String value) throws Exception {
-		//
-		try (final InputStream is = openStream(testAndApply(Objects::nonNull, value, x -> new URI(x).toURL(), null))) {
-			//
-			PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null));
-			//
-			return "";
-			//
-		} // try
-			//
 	}
 
 	private static void pronounicationChanged(@Nullable final Pronunciation pronunciation,
@@ -4942,13 +4897,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			pronounicationChanged(Util.cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
 					mcbmPronounicationAudioFormat, preferredPronunciationAudioFormat, tfPronunciationPageUrl);
-			//
-			return;
-			//
-		} else if (Objects.equals(source, btnPlayPronunciationAudio)) {
-			//
-			playAudio(Util.cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
-					getSelectedItem(mcbmPronounicationAudioFormat));
 			//
 			return;
 			//
