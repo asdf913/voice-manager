@@ -65,7 +65,6 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.EnvironmentAware;
-import org.springframework.context.support.VoiceManager.Note;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
