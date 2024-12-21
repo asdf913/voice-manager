@@ -107,7 +107,6 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.IntUnaryOperator;
 import java.util.function.LongBinaryOperator;
@@ -4254,109 +4253,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-	}
-
-	private static Function<Collection<?>, IValue0<?>> createFunctionForBtnConvertToHiraganaOrKatakana(
-			final String title) {
-		//
-		return vs -> {
-			//
-			final Object[] array = toArray(vs);
-			//
-			if (array == null || array.length == 0) {
-				//
-				return null;
-				//
-			} else if (array.length == 1) {
-				//
-				return Unit.with(array[0]);
-				//
-			} // if
-				//
-			if (GraphicsEnvironment.isHeadless()) {
-				//
-				final Console console = System.console();
-				//
-				PrintWriter pw = null;
-				//
-				for (int i = 0; i < array.length; i++) {
-					//
-					println(pw = ObjectUtils.getIfNull(pw, () -> writer(console)), i + " " + array[i]);
-					//
-				} // for
-					//
-				final Integer index = valueOf(readLine(console, "Item"));
-				//
-				return index != null && index >= 0 && index.intValue() < array.length
-						? Unit.with(array[index.intValue()])
-						: null;
-				//
-			} // if
-				//
-			final JList<?> jList = testAndApply(Objects::nonNull, array, JList::new, x -> new JList<>());
-			//
-			return JOptionPane.showConfirmDialog(null, jList, title,
-					JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION ? Unit.with(jList.getSelectedValue()) : null;
-			//
-		};
-		//
-	}
-
-	private static void println(@Nullable final PrintWriter instance, final String string) {
-		//
-		Object lock = null;
-		//
-		try {
-			//
-			lock = testAndApply(Objects::nonNull, instance,
-					x -> Narcissus.getObjectField(x, Writer.class.getDeclaredField("lock")), null);
-			//
-		} catch (final NoSuchFieldException e) {
-			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-			//
-		} // try
-			//
-		if (instance != null && lock != null) {
-			//
-			instance.println(string);
-			//
-		} // if
-			//
-	}
-
-	@Nullable
-	private static PrintWriter writer(@Nullable final Console instance) {
-		return instance != null ? instance.writer() : null;
-	}
-
-	@Nullable
-	private static String readLine(@Nullable final Console instance, final String fmt, final Object... args) {
-		//
-		// java.io.Console.writeLock
-		//
-		Object writeLock = null;
-		//
-		// java.io.Console.readLock
-		//
-		Object readLock = null;
-		//
-		try {
-			//
-			writeLock = testAndApply(Objects::nonNull, instance,
-					x -> Narcissus.getObjectField(x, Console.class.getDeclaredField("writeLock")), null);
-			//
-			readLock = testAndApply(Objects::nonNull, instance,
-					x -> Narcissus.getObjectField(x, Console.class.getDeclaredField("readLock")), null);
-			//
-		} catch (final NoSuchFieldException e) {
-			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-			//
-		} // try
-			//
-		return instance != null && writeLock != null && readLock != null ? instance.readLine(fmt, args) : null;
-		//
 	}
 
 	private static void playAudio(@Nullable final Pronunciation pronunciation, @Nullable final Object audioFormat) {

@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import java.lang.invoke.TypeDescriptor.OfField;
 import java.lang.reflect.AnnotatedElement;
@@ -84,7 +83,6 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.function.IntUnaryOperator;
 import java.util.function.LongBinaryOperator;
@@ -154,7 +152,6 @@ import org.apache.bcel.generic.ConstantPushInstruction;
 import org.apache.bcel.generic.DUP;
 import org.apache.bcel.generic.ICONST;
 import org.apache.bcel.generic.INVOKESPECIAL;
-import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.LDC;
@@ -362,7 +359,6 @@ class VoiceManagerTest {
 			METHOD_GET_LEVEL, METHOD_ADD_ALL, METHOD_PLAY_AUDIO, METHOD_PRONOUNICATION_CHANGED,
 			METHOD_REMOVE_ELEMENT_AT, METHOD_GET_FILE, METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT,
 			METHOD_GET_AUDIO_FILE3, METHOD_GET_AUDIO_FILE4, METHOD_IS_ALL_ATTRIBUTES_MATCHED,
-			METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER, METHOD_READ_LINE, METHOD_PRINT_LN,
 			METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_NUMERIC_CELL_VALUE, METHOD_SET_AUTO_FILTER,
 			METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT, METHOD_GET_IMAGE_FORMAT,
 			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_SORTED,
@@ -918,17 +914,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_IS_ALL_ATTRIBUTES_MATCHED = clz.getDeclaredMethod("isAllAttributesMatched", Map.class,
 				AttributeAccessor.class)).setAccessible(true);
-		//
-		(METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA = clz
-				.getDeclaredMethod("createFunctionForBtnConvertToHiraganaOrKatakana", String.class))
-				.setAccessible(true);
-		//
-		(METHOD_WRITER = clz.getDeclaredMethod("writer", Console.class)).setAccessible(true);
-		//
-		(METHOD_READ_LINE = clz.getDeclaredMethod("readLine", Console.class, String.class, Object[].class))
-				.setAccessible(true);
-		//
-		(METHOD_PRINT_LN = clz.getDeclaredMethod("println", PrintWriter.class, String.class)).setAccessible(true);
 		//
 		(METHOD_SET_PITCH_ACCENT_IMAGE = clz.getDeclaredMethod("setPitchAccentImage", Voice.class, ByteArray.class))
 				.setAccessible(true);
@@ -8476,221 +8461,6 @@ class VoiceManagerTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCreateFunctionForBtnConvertToHiraganaOrKatakana() throws Throwable {
-		//
-		final Function<Collection<?>, IValue0<?>> function = createFunctionForBtnConvertToHiraganaOrKatakana(null);
-		//
-		Assertions.assertNull(Util.apply(function, null));
-		//
-		Assertions.assertNull(Util.apply(function, Collections.emptySet()));
-		//
-		Assertions.assertEquals(Unit.with(EMPTY), Util.apply(function, Collections.singleton(EMPTY)));
-		//
-		if (GraphicsEnvironment.isHeadless()) {
-			//
-			Assertions.assertNull(Util.apply(function, Collections.nCopies(TWO, null)));
-			//
-		} // if
-			//
-	}
-
-	private static Function<Collection<?>, IValue0<?>> createFunctionForBtnConvertToHiraganaOrKatakana(
-			final String title) throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA.invoke(null, title);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Function) {
-				return (Function) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testWriter() throws Throwable {
-		//
-		if (!GraphicsEnvironment.isHeadless()) {
-			//
-			Assertions.assertNull(writer(null));
-			//
-		} // if
-			//
-		if (!isConsoleWriterMethodThrowException()) {
-			//
-			Assertions.assertNull(writer(Util.cast(Console.class, Narcissus.allocateInstance(Console.class))));
-			//
-		} // if
-			//
-	}
-
-	private static boolean isConsoleWriterMethodThrowException() throws Throwable {
-		//
-		final Class<?> clz = Console.class;
-		//
-		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(
-						String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))
-				: null) {
-			//
-			// java.io.Console.writer()
-			//
-			return Objects
-					.equals(Arrays.asList(INVOKESTATIC.class, ATHROW.class),
-							new FailableStream<>(
-									testAndApply(Objects::nonNull,
-											InstructionListUtil
-													.getInstructions(MethodGenUtil
-															.getInstructionList(testAndApply(Objects::nonNull,
-																	JavaClassUtil.getMethod(
-																			ClassParserUtil.parse(
-																					testAndApply(Objects::nonNull, is,
-																							x -> new ClassParser(x,
-																									null),
-																							null)),
-																			clz != null
-																					? clz.getDeclaredMethod("writer")
-																					: null),
-																	x -> new MethodGen(x, null, null), null))),
-											Arrays::stream, null))
-									.map(x -> Util.getClass(x)).collect(Collectors.toList()));
-			//
-		} // try
-			//
-	}
-
-	private static PrintWriter writer(final Console instance) throws Throwable {
-		try {
-			final Object obj = METHOD_WRITER.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof PrintWriter) {
-				return (PrintWriter) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testReadLine() throws Throwable {
-		//
-		if (!GraphicsEnvironment.isHeadless()) {
-			//
-			Assertions.assertNull(readLine(null, null));
-			//
-		} // if
-			//
-		final Console console = Util.cast(Console.class, Narcissus.allocateInstance(Console.class));
-		//
-		final boolean isConsoleReadLineMethodThrowException = isConsoleReadLineMethodThrowException();
-		//
-		if (!isConsoleReadLineMethodThrowException) {
-			//
-			Assertions.assertNull(readLine(console, null));
-			//
-		} // if
-			//
-		final List<Field> fs = Arrays.stream(Console.class.getDeclaredFields())
-				.filter(f -> f != null && Objects.equals(f.getName(), "writeLock")).toList();
-		//
-		final Field f = fs != null && fs.size() == 1 ? fs.get(0) : null;
-		//
-		if (f != null) {
-			//
-			Narcissus.setObjectField(console, f, new Object());
-			//
-		} // if
-			//
-		if (!isConsoleReadLineMethodThrowException) {
-			//
-			Assertions.assertNull(readLine(console, null));
-			//
-		} // if
-			//
-	}
-
-	private static boolean isConsoleReadLineMethodThrowException() throws Throwable {
-		//
-		final Class<?> clz = Console.class;
-		//
-		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(
-						String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))
-				: null) {
-			//
-			// java.io.Console.readLine(java.lang.String,java.lang.Object...)
-			//
-			return Objects
-					.equals(Arrays.asList(INVOKESTATIC.class, ATHROW.class),
-							new FailableStream<>(
-									testAndApply(Objects::nonNull,
-											InstructionListUtil
-													.getInstructions(
-															MethodGenUtil.getInstructionList(testAndApply(
-																	Objects::nonNull, JavaClassUtil.getMethod(
-																			ClassParserUtil.parse(
-																					testAndApply(Objects::nonNull, is,
-																							x -> new ClassParser(x,
-																									null),
-																							null)),
-																			clz != null ? clz.getDeclaredMethod(
-																					"readLine", String.class,
-																					Object[].class) : null),
-																	x -> new MethodGen(x, null, null), null))),
-											Arrays::stream, null))
-									.map(x -> Util.getClass(x)).collect(Collectors.toList()));
-			//
-		} // try
-			//
-	}
-
-	private static String readLine(final Console instance, final String fmt, final Object... args) throws Throwable {
-		try {
-			final Object obj = METHOD_READ_LINE.invoke(null, instance, fmt, args);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testPrintln() throws Throwable {
-		//
-		if (!GraphicsEnvironment.isHeadless()) {
-			//
-			Assertions.assertDoesNotThrow(() -> println(null, null));
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(
-				() -> println(Util.cast(PrintWriter.class, Narcissus.allocateInstance(PrintWriter.class)), null));
-		//
-		try (final OutputStream os = new ByteArrayOutputStream(); final PrintWriter pw = new PrintWriter(os)) {
-			//
-			Assertions.assertDoesNotThrow(() -> println(pw, null));
-			//
-		} // try
-			//
-	}
-
-	private static void println(final PrintWriter instance, final String x) throws Throwable {
-		try {
-			METHOD_PRINT_LN.invoke(null, instance, x);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
