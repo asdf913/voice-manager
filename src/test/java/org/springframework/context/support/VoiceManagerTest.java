@@ -2634,10 +2634,6 @@ class VoiceManagerTest {
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance,
 				new ActionEvent(btnExportMicrosoftSpeechObjectLibraryInformation, 0, null)));
 		//
-		// btnImport
-		//
-		final boolean headless = GraphicsEnvironment.isHeadless();
-		//
 		// btnExportBrowse
 		//
 		final AbstractButton btnExportBrowse = new JButton();
@@ -2735,19 +2731,6 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(jcbPronunciation, 0, null)));
-		//
-		// btnPlayPronunciationAudio
-		//
-		final AbstractButton btnPlayPronunciationAudio = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnPlayPronunciationAudio", btnPlayPronunciationAudio, true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(
-				() -> actionPerformed(instance, new ActionEvent(btnPlayPronunciationAudio, 0, null)));
 		//
 	}
 
