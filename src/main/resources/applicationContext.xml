@@ -1024,7 +1024,6 @@
 			value="${org.springframework.context.support.VoiceManager.jSoupParseTimeout}" />
 		<property name="messageDigestAlgorithm"
 			ref="messageDigestAlgorithm" />
-		<property name="ipaSymbolMultimap" ref="ipaMultimap" />
 		<!-- -->
 		<property name="jouYouKanJiList" ref="JouYouKanJiList" />
 		<!-- -->

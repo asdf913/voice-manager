@@ -877,8 +877,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private Duration jSoupParseTimeout = null;
 
-	private transient IValue0<Multimap<String, String>> ipaSymbolMultimap = null;
-
 	private String messageDigestAlgorithm = null;
 
 	private transient IValue0<List<String>> jouYouKanJiList = null;
@@ -1777,10 +1775,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		this.jSoupParseTimeout = testAndApply(StringUtils::isNotBlank, string, Duration::parse, null);
 		//
-	}
-
-	public void setIpaSymbolMultimap(final Multimap<String, String> ipaSymbolMultimap) {
-		this.ipaSymbolMultimap = Unit.with(ipaSymbolMultimap);
 	}
 
 	public void setGaKuNenBeTsuKanJiMultimap(final Multimap<String, String> gaKuNenBeTsuKanJiMultimap) {
