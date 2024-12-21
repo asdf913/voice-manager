@@ -2995,35 +2995,6 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final AbstractButton btnCopyHiragana = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnCopyHiragana", btnCopyHiragana, true);
-			//
-		} // if
-			//
-		executable = () -> actionPerformed(instance, new ActionEvent(btnCopyHiragana, 0, null));
-		//
-		if (throwableClassByGetSystemClipboard != null) {
-			//
-			if (isUnderWindows()) {
-				//
-				AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}", executable);
-				//
-			} else {
-				//
-				AssertionsUtil.assertThrowsAndEquals(HeadlessException.class,
-						String.format("{localizedMessage=%1$s, message=%1$s}", getHeadlessMessage()), executable);
-				//
-			} // if
-				//
-		} else {
-			//
-			Assertions.assertDoesNotThrow(executable);
-			//
-		} // if
-			//
 	}
 
 	private static Object getHeadlessMessage() throws NoSuchMethodException {
