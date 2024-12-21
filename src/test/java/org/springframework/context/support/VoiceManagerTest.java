@@ -1368,14 +1368,10 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof XPath) {
+			} else if (proxy instanceof XPath && Objects.equals(methodName, "evaluate")) {
 				//
-				if (Objects.equals(methodName, "evaluate")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
