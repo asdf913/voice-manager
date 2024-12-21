@@ -133,8 +133,10 @@ public class VoiceManagerExportPanel extends JPanel
 	@Note("Ordinal Position File Name Prefix")
 	private JTextComponent tfOrdinalPositionFileNamePrefix = null;
 
-	private JTextComponent tfJlptFolderNamePrefix, tfExportHtmlFileName, tfPresentationSlideDuration, tfPhraseCounter,
-			tfPhraseTotal = null;
+	@Note("JLPT Folder Name Prefix")
+	private JTextComponent tfJlptFolderNamePrefix = null;
+
+	private JTextComponent tfExportHtmlFileName, tfPresentationSlideDuration, tfPhraseCounter, tfPhraseTotal = null;
 
 	@Note("Over MP3 Title")
 	private AbstractButton cbOverMp3Title = null;
@@ -142,8 +144,11 @@ public class VoiceManagerExportPanel extends JPanel
 	@Note("Ordinal Position As File Name Prefix")
 	private AbstractButton cbOrdinalPositionAsFileNamePrefix = null;
 
-	private AbstractButton cbJlptAsFolder, cbExportHtml, cbExportListHtml, cbExportWebSpeechSynthesisHtml,
-			cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet, cbExportPresentation,
+	@Note("JLPT As Folder")
+	private AbstractButton cbJlptAsFolder = null;
+
+	private AbstractButton cbExportHtml, cbExportListHtml, cbExportWebSpeechSynthesisHtml, cbExportHtmlAsZip,
+			cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet, cbExportPresentation,
 			cbEmbedAudioInPresentation, cbHideAudioImageInPresentation, cbExportMicrosoftAccess, btnExport = null;
 
 	private JProgressBar progressBarExport = null;
