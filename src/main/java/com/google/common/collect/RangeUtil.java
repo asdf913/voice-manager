@@ -73,7 +73,7 @@ public abstract class RangeUtil {
 		return instance != null ? instance.getDeclaredField(name) : null;
 	}
 
-	public static Range<Integer> createRange(final Integer minValue, final Integer maxValue) {
+	public static Range<Integer> createRange(@Nullable final Integer minValue, @Nullable final Integer maxValue) {
 		//
 		if (minValue != null && maxValue != null) {
 			//
