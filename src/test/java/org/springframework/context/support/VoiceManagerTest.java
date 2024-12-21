@@ -276,10 +276,10 @@ class VoiceManagerTest {
 			METHOD_INT_VALUE, METHOD_LONG_VALUE, METHOD_GET_VALUE, METHOD_EXPORT, METHOD_MAP_INT_STREAM,
 			METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG, METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM,
 			METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_CREATE_WORK_BOOK_LIST,
-			METHOD_CREATE_VOICE_OBJECT_MAPPER, METHOD_CREATE_VOICE_OBJECT_MAP, METHOD_INVOKE, METHOD_ANNOTATION_TYPE,
-			METHOD_FIND_FIRST, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER,
-			METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ANY_MATCH, METHOD_NAME, METHOD_GET_SELECTED_ITEM,
-			METHOD_MATCHER, METHOD_MATCHES, METHOD_SET_VALUE_J_PROGRESS_BAR, METHOD_SET_STRING_J_PROGRESS_BAR,
+			METHOD_CREATE_VOICE_OBJECT_MAP, METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST,
+			METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER, METHOD_ADD_CONTAINER2,
+			METHOD_ADD_CONTAINER3, METHOD_ANY_MATCH, METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_MATCHER,
+			METHOD_MATCHES, METHOD_SET_VALUE_J_PROGRESS_BAR, METHOD_SET_STRING_J_PROGRESS_BAR,
 			METHOD_SET_STRING_COMMENT, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_VALUE_OF1, METHOD_DELETE,
 			METHOD_DELETE_ON_EXIT, METHOD_IS_SELECTED, METHOD_AND_PREDICATE, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR,
 			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_STRING_BUILDER, METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION,
@@ -3542,20 +3542,6 @@ class VoiceManagerTest {
 		return instance != null ? instance.iterator() : null;
 	}
 
-	private static Voice createVoice(final ObjectMapper objectMapper, final VoiceManager instance) throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_VOICE_OBJECT_MAPPER.invoke(null, objectMapper, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Voice) {
-				return (Voice) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
 	private static Voice createVoice(final Object objectMap, final boolean first, final AtomicReference<?> arintMap)
 			throws Throwable {
 		try {
@@ -4303,10 +4289,6 @@ class VoiceManagerTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
-	}
-
-	private static String nextAlphanumeric(final RandomStringUtils instance, final int count) {
-		return instance != null ? instance.nextAlphanumeric(count) : null;
 	}
 
 	@Test
