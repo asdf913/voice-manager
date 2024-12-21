@@ -171,7 +171,10 @@ public class VoiceManagerExportPanel extends JPanel
 	@Note("Remove Exported HTML After Zip")
 	private AbstractButton cbExportHtmlRemoveAfterZip = null;
 
-	private AbstractButton cbExportListSheet, cbExportJlptSheet, cbExportPresentation, cbEmbedAudioInPresentation,
+	@Note("Export List Sheet")
+	private AbstractButton cbExportListSheet = null;
+
+	private AbstractButton cbExportJlptSheet, cbExportPresentation, cbEmbedAudioInPresentation,
 			cbHideAudioImageInPresentation, cbExportMicrosoftAccess, btnExport = null;
 
 	private JProgressBar progressBarExport = null;
