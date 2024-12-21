@@ -367,7 +367,6 @@ import domain.Voice;
 import domain.Voice.ByteArray;
 import domain.Voice.Yomi;
 import domain.VoiceList;
-import fr.free.nrw.jakaroma.Jakaroma;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.cache.StringTemplateLoaderUtil;
@@ -783,8 +782,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private String[] tabOrders = null;
 
 	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
-
-	private transient Jakaroma jakaroma = null;
 
 	private transient Toolkit toolkit = null;
 
