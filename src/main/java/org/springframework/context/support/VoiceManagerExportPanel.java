@@ -65,6 +65,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.EnvironmentAware;
+import org.springframework.context.support.VoiceManager.Note;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
@@ -130,16 +131,21 @@ public class VoiceManagerExportPanel extends JPanel
 	@Note("Export Password")
 	private JTextComponent tfExportPassword = null;
 
-	private JTextComponent tfOrdinalPositionFileNamePrefix, tfJlptFolderNamePrefix, tfExportHtmlFileName,
-			tfPresentationSlideDuration, tfPhraseCounter, tfPhraseTotal = null;
+	@Note("Ordinal Position File Name Prefix")
+	private JTextComponent tfOrdinalPositionFileNamePrefix = null;
+
+	private JTextComponent tfJlptFolderNamePrefix, tfExportHtmlFileName, tfPresentationSlideDuration, tfPhraseCounter,
+			tfPhraseTotal = null;
 
 	@Note("Over MP3 Title")
 	private AbstractButton cbOverMp3Title = null;
 
-	private AbstractButton cbOrdinalPositionAsFileNamePrefix, cbJlptAsFolder, cbExportHtml, cbExportListHtml,
-			cbExportWebSpeechSynthesisHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet,
-			cbExportJlptSheet, cbExportPresentation, cbEmbedAudioInPresentation, cbHideAudioImageInPresentation,
-			cbExportMicrosoftAccess, btnExport = null;
+	@Note("Ordinal Position As File Name Prefix")
+	private AbstractButton cbOrdinalPositionAsFileNamePrefix = null;
+
+	private AbstractButton cbJlptAsFolder, cbExportHtml, cbExportListHtml, cbExportWebSpeechSynthesisHtml,
+			cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet, cbExportPresentation,
+			cbEmbedAudioInPresentation, cbHideAudioImageInPresentation, cbExportMicrosoftAccess, btnExport = null;
 
 	private JProgressBar progressBarExport = null;
 
