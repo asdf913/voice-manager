@@ -843,6 +843,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private String[] microsoftSpeechObjectLibraryAttributeNames = null;
 
+	@Nullable
 	private String[] tabOrders = null;
 
 	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
