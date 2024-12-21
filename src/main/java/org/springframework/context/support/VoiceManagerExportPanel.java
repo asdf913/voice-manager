@@ -3,6 +3,10 @@ package org.springframework.context.support;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;
@@ -117,13 +121,25 @@ public class VoiceManagerExportPanel extends JPanel
 
 	private FileFormat microsoftAccessFileFormat = null;
 
-	private JTextComponent tfExportPassword, tfOrdinalPositionFileNamePrefix, tfJlptFolderNamePrefix,
-			tfExportHtmlFileName, tfPresentationSlideDuration, tfPhraseCounter, tfPhraseTotal = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
 
-	private AbstractButton cbOverMp3Title, cbOrdinalPositionAsFileNamePrefix, cbJlptAsFolder, cbExportHtml,
-			cbExportListHtml, cbExportWebSpeechSynthesisHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip,
-			cbExportListSheet, cbExportJlptSheet, cbExportPresentation, cbEmbedAudioInPresentation,
-			cbHideAudioImageInPresentation, cbExportMicrosoftAccess, btnExport = null;
+	@Note("Export Password")
+	private JTextComponent tfExportPassword = null;
+
+	private JTextComponent tfOrdinalPositionFileNamePrefix, tfJlptFolderNamePrefix, tfExportHtmlFileName,
+			tfPresentationSlideDuration, tfPhraseCounter, tfPhraseTotal = null;
+
+	@Note("Over MP3 Title")
+	private AbstractButton cbOverMp3Title = null;
+
+	private AbstractButton cbOrdinalPositionAsFileNamePrefix, cbJlptAsFolder, cbExportHtml, cbExportListHtml,
+			cbExportWebSpeechSynthesisHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet,
+			cbExportJlptSheet, cbExportPresentation, cbEmbedAudioInPresentation, cbHideAudioImageInPresentation,
+			cbExportMicrosoftAccess, btnExport = null;
 
 	private JProgressBar progressBarExport = null;
 
