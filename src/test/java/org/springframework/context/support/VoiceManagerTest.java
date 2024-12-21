@@ -2754,18 +2754,6 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
 		//
-		// btnIpaSymbol
-		//
-		final AbstractButton btnIpaSymbol = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnIpaSymbol", btnIpaSymbol, true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnIpaSymbol, 0, null)));
-		//
 		// btnCheckPronounication
 		//
 		final AbstractButton btnCheckPronunciation = new JButton();

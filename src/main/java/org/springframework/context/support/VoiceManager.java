@@ -737,9 +737,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Check Pronunciation Page")
 	private AbstractButton btnPronunciationPageUrlCheck = null;
 
-	@Note("IPA Symbol")
-	private AbstractButton btnIpaSymbol = null;
-
 	@Note("TTS Voice")
 	private AbstractButton cbUseTtsVoice = null;
 
@@ -4247,10 +4244,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			actionPerformedForExport(headless);
 			//
-		} else if (Objects.equals(source, btnIpaSymbol)) {
-			//
-			actionPerformedForIpaSymbol(headless);
-			//
 		} // if
 			//
 	}
@@ -4982,29 +4975,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return instance.openConnection();
 		//
-	}
-
-	private void actionPerformedForIpaSymbol(final boolean headless) {
-		//
-		final Collection<String> values = MultimapUtil.get(IValue0Util.getValue0(ipaSymbolMultimap),
-				Util.getText(tfTextImport));
-		//
-		final int size = IterableUtils.size(values);
-		//
-		if (size == 1) {
-			//
-			Util.setText(tfIpaSymbol, Util.toString(IterableUtils.get(values, 0)));
-			//
-		} else if (!headless && !isTestMode()) {
-			//
-			final JList<Object> list = new JList<>(toArray(values));
-			//
-			JOptionPane.showMessageDialog(null, list, "IPA", JOptionPane.PLAIN_MESSAGE);
-			//
-			Util.setText(tfIpaSymbol, Util.toString(list.getSelectedValue()));
-			//
-		} // if
-			//
 	}
 
 	@Nullable
