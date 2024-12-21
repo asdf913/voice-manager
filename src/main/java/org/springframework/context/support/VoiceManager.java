@@ -754,9 +754,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@SystemClipboard
-	private AbstractButton btnCopyRomaji = null;
-
-	@SystemClipboard
 	private AbstractButton btnCopyHiragana = null;
 
 	@SystemClipboard
@@ -5320,11 +5317,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		IValue0<String> stringValue = null;
 		//
-		if (Objects.equals(source, btnCopyRomaji)) {
-			//
-			stringValue = Unit.with(Util.getText(tfRomaji));
-			//
-		} else if (Objects.equals(source, btnCopyHiragana)) {
+		if (Objects.equals(source, btnCopyHiragana)) {
 			//
 			stringValue = Unit.with(Util.getText(tfHiragana));
 			//

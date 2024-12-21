@@ -2902,39 +2902,8 @@ class VoiceManagerTest {
 		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
 				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
 		//
-		// btnCopyRomaji
+		// btnCopyKatakana
 		//
-		final AbstractButton btnCopyRomaji = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnCopyRomaji", btnCopyRomaji, true);
-			//
-		} // if
-			//
-		Executable executable = () -> actionPerformed(instance, new ActionEvent(btnCopyRomaji, 0, null));
-		//
-		if (throwableClassByGetSystemClipboard != null) {
-			//
-			if (isUnderWindows()) {
-				//
-				AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}", executable);
-				//
-			} else {
-				//
-				AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard,
-						String.format("{localizedMessage=%1$s, message=%1$s}", getHeadlessMessage()), executable);
-				//
-			} // if
-				//
-		} else {
-			//
-			Assertions.assertDoesNotThrow(executable);
-			//
-		} // if
-			//
-			// btnCopyKatakana
-			//
 		final AbstractButton btnCopyKatakana = new JButton();
 		//
 		if (instance != null) {
@@ -2943,7 +2912,7 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		executable = () -> actionPerformed(instance, new ActionEvent(btnCopyKatakana, 0, null));
+		Executable executable = () -> actionPerformed(instance, new ActionEvent(btnCopyKatakana, 0, null));
 		//
 		if (throwableClassByGetSystemClipboard != null) {
 			//
