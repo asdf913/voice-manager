@@ -21,6 +21,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -691,6 +692,7 @@ public class VoiceManagerExportPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static RuntimeException toRuntimeException(final Throwable instance) {
 		//
 		if (instance instanceof RuntimeException re) {
