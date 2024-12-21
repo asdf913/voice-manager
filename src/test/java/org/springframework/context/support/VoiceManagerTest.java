@@ -167,7 +167,6 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.function.FailableRunnable;
 import org.apache.commons.lang3.function.FailableSupplier;
-import org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunction;
 import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -213,7 +212,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.odftoolkit.odfdom.pkg.OdfPackage;
 import org.odftoolkit.odfdom.pkg.OdfPackageDocument;
-import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -280,7 +278,7 @@ class VoiceManagerTest {
 	private static final int THREE = 3;
 
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_BOOLEAN_MAP, CLASS_STRING_MAP, CLASS_IH, CLASS_EXPORT_TASK,
-			CLASS_IMPORT_TASK, CLASS_BYTE_CONVERTER = null;
+			CLASS_IMPORT_TASK = null;
 
 	private static Integer TEMP_FILE_MINIMUM_PREFIX_LENGTH = null;
 
@@ -890,8 +888,6 @@ class VoiceManagerTest {
 		//
 		CLASS_STRING_MAP = Class.forName("org.springframework.context.support.VoiceManager$StringMap");
 		//
-		CLASS_BYTE_CONVERTER = Class.forName("org.springframework.context.support.VoiceManager$ByteConverter");
-		//
 		TEMP_FILE_MINIMUM_PREFIX_LENGTH = Integer.valueOf(intValue(Util.cast(Number.class,
 				FieldUtils.readDeclaredStaticField(VoiceManager.class, "TEMP_FILE_MINIMUM_PREFIX_LENGTH", true)),
 				THREE));
@@ -906,8 +902,7 @@ class VoiceManagerTest {
 
 		private Set<Entry<?, ?>> entrySet = null;
 
-		private String toString, stringCellValue, providerName, providerVersion, artist, title, voiceAttribute, lpwstr,
-				sheetName, textContent, nodeName, dllPath, providerPlatform = null;
+		private String toString, stringCellValue, artist, title, voiceAttribute, textContent, nodeName, dllPath = null;
 
 		private Configuration configuration = null;
 
@@ -917,11 +912,9 @@ class VoiceManagerTest {
 
 		private Object value, min, max, selectedItem, nodeValue, key = null;
 
-		private Iterator<Row> rows = null;
-
 		private Iterator<Cell> cells = null;
 
-		private Boolean anyMatch, contains, isInstalled, isEmpty = null;
+		private Boolean anyMatch, isInstalled, isEmpty = null;
 
 		private String[] voiceIds = null;
 
@@ -937,9 +930,7 @@ class VoiceManagerTest {
 
 		private VoiceList voiceList = null;
 
-		private Workbook workbook = null;
-
-		private Integer numberOfSheets, length, columnIndex = null;
+		private Integer length, columnIndex = null;
 
 		private IntStream intStream = null;
 
@@ -966,8 +957,6 @@ class VoiceManagerTest {
 		private Collection<?> values = null;
 
 		private byte[] convertedByteArray = null;
-
-		private List<Pronunciation> pronunciations = null;
 
 		private String[] beanDefinitionNames = null;
 
@@ -1031,33 +1020,11 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof OnlineNHKJapanesePronunciationsAccentFailableFunction) {
-				//
-				if (Objects.equals(methodName, "apply")) {
-					//
-					return pronunciations;
-					//
-				} // if
-					//
 			} // if
 				//
 			if (proxy instanceof Iterable) {
 				//
-				if (proxy instanceof Sheet) {
-					//
-					if (Objects.equals(methodName, "getSheetName")) {
-						//
-						return sheetName;
-						//
-					} else if (Objects.equals(methodName, "getWorkbook")) {
-						//
-						return workbook;
-						//
-					} // if
-						//
-					return rows;
-					//
-				} else if (proxy instanceof Row) {
+				if (proxy instanceof Row) {
 					//
 					return cells;
 					//
@@ -1155,10 +1122,6 @@ class VoiceManagerTest {
 					//
 					return max;
 					//
-				} else if (Objects.equals(methodName, "collect")) {
-					//
-					return null;
-					//
 				} else if (Objects.equals(methodName, "anyMatch")) {
 					//
 					return anyMatch;
@@ -1239,30 +1202,13 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Provider) {
-				//
-				if (Objects.equals(methodName, "getProviderName")) {
-					//
-					return providerName;
-					//
-				} else if (Objects.equals(methodName, "getProviderVersion")) {
-					//
-					return providerVersion;
-					//
-				} else if (Objects.equals(methodName, "getProviderPlatform")) {
-					//
-					return providerPlatform;
-					//
-				} // if
-					//
 			} else if (proxy instanceof ID3v1) {
 				//
 				if (Objects.equals(methodName, "getArtist")) {
 					//
 					return artist;
 					//
-				}
-				if (Objects.equals(methodName, "getTitle")) {
+				} else if (Objects.equals(methodName, "getTitle")) {
 					//
 					return title;
 					//
@@ -1293,26 +1239,6 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "getAttribute") && args != null && args.length > 0) {
 					//
 					return MapUtils.getObject(getBeanDefinitionAttributes(), args[0]);
-					//
-				} // if
-					//
-			} else if (proxy instanceof CTProperty) {
-				//
-				if (Objects.equals(methodName, "getLpwstr")) {
-					//
-					return lpwstr;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Workbook) {
-				//
-				if (Objects.equals(methodName, "getNumberOfSheets")) {
-					//
-					return numberOfSheets;
-					//
-				} else if (Objects.equals(methodName, "getSheetName")) {
-					//
-					return sheetName;
 					//
 				} // if
 					//
@@ -1396,18 +1322,6 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Lookup) {
-				//
-				if (Objects.equals(methodName, "contains")) {
-					//
-					return contains;
-					//
-				} else if (Objects.equals(methodName, "get")) {
-					//
-					return null;
-					//
-				} // if
-					//
 			} else if (proxy instanceof Connection) {
 				//
 				if (Objects.equals(methodName, "prepareStatement")) {
@@ -1461,14 +1375,6 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "evaluate")) {
 					//
 					return null;
-					//
-				} // if
-					//
-			} else if (Util.isAssignableFrom(CLASS_BYTE_CONVERTER, Util.getClass(proxy))) {
-				//
-				if (Objects.equals(methodName, "convert")) {
-					//
-					return convertedByteArray;
 					//
 				} // if
 					//
@@ -1827,11 +1733,12 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(configurableListableBeanFactory));
 		//
-		Assertions.assertDoesNotThrow(() -> Util.put(ih.getBeanDefinitions(), null, beanDefinition));
+		Assertions
+				.assertDoesNotThrow(() -> Util.put(ih != null ? ih.getBeanDefinitions() : null, null, beanDefinition));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(configurableListableBeanFactory));
 		//
-		Assertions.assertDoesNotThrow(() -> Util.put(ih.getBeanDefinitions(), "format", null));
+		Assertions.assertDoesNotThrow(() -> Util.put(ih != null ? ih.getBeanDefinitions() : null, "format", null));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.postProcessBeanFactory(configurableListableBeanFactory));
 		//
@@ -1844,7 +1751,9 @@ class VoiceManagerTest {
 				"outputFolderFileNameExpressions");
 		//
 		if (outputFolderFileNameExpressions != null) {
+			//
 			outputFolderFileNameExpressions.setAccessible(true);
+			//
 		} // if
 			//
 		if (instance == null) {
@@ -1869,8 +1778,12 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(get(outputFolderFileNameExpressions, instance));
 		//
-		ih.entrySet = Collections.singleton(null);
-		//
+		if (ih != null) {
+			//
+			ih.entrySet = Collections.singleton(null);
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> instance.setOutputFolderFileNameExpressions(map));
 		//
 		Assertions.assertEquals(emptyMap, get(outputFolderFileNameExpressions, instance));
@@ -1924,12 +1837,20 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		instance.setSpeechApi(speechApi);
-		//
-		ih.voiceIds = new String[] {};
-		//
-		ih.isInstalled = Boolean.FALSE;
-		//
+		if (instance != null) {
+			//
+			instance.setSpeechApi(speechApi);
+			//
+		} // if
+			//
+		if (ih != null) {
+			//
+			ih.voiceIds = new String[] {};
+			//
+			ih.isInstalled = Boolean.FALSE;
+			//
+		} // if
+			//
 		if (headless) {
 			//
 			Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
@@ -1942,8 +1863,12 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		ih.isInstalled = Boolean.TRUE;
-		//
+		if (ih != null) {
+			//
+			ih.isInstalled = Boolean.TRUE;
+			//
+		} // if
+			//
 		final Class<?> clz = getClass();
 		//
 		final URL url = getResource(clz, "/help.html.ftl");
@@ -2018,8 +1943,12 @@ class VoiceManagerTest {
 				//
 		} // if
 			//
-		instance.setGaKuNenBeTsuKanJiListPageUrl(EMPTY);
-		//
+		if (instance != null) {
+			//
+			instance.setGaKuNenBeTsuKanJiListPageUrl(EMPTY);
+			//
+		} // if
+			//
 		if (url == null) {
 			//
 			Assertions.assertThrows(RuntimeException.class, () -> instance.afterPropertiesSet());
@@ -2046,8 +1975,12 @@ class VoiceManagerTest {
 				//
 		} // if
 			//
-		instance.setGaKuNenBeTsuKanJiListPageUrl(SPACE);
-		//
+		if (instance != null) {
+			//
+			instance.setGaKuNenBeTsuKanJiListPageUrl(SPACE);
+			//
+		} // if
+			//
 		if (url == null) {
 			//
 			Assertions.assertThrows(RuntimeException.class, () -> instance.afterPropertiesSet());
@@ -2757,8 +2690,12 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		ih.voiceAttribute = Integer.toString(LocaleID.AF.getLcid(), 16);
-		//
+		if (ih != null) {
+			//
+			ih.voiceAttribute = Integer.toString(LocaleID.AF.getLcid(), 16);
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> itemStateChanged(instance, null));
 		//
 		// org.springframework.context.support.VoiceManager.jcbJlptVocabulary
@@ -3212,8 +3149,12 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> insertOrUpdate(voiceMapper, voice));
 		//
-		ih.voice = new Voice();
-		//
+		if (ih != null) {
+			//
+			ih.voice = new Voice();
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> insertOrUpdate(voiceMapper, null));
 		//
 		Assertions.assertDoesNotThrow(() -> insertOrUpdate(voiceMapper, voice));
@@ -3226,8 +3167,12 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> insertOrUpdate(voiceMapper, voice));
 		//
-		ih.voiceList = new VoiceList();
-		//
+		if (ih != null) {
+			//
+			ih.voiceList = new VoiceList();
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> insertOrUpdate(voiceMapper, voice));
 		//
 	}
@@ -4396,7 +4341,7 @@ class VoiceManagerTest {
 		//
 		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, ih);
 		//
-		final Field fieldObjects = ih != null ? getDeclaredField(ih.getClass(), "objects") : null;
+		final Field fieldObjects = ih != null ? getDeclaredField(Util.getClass(ih), "objects") : null;
 		//
 		if (fieldObjects != null) {
 			//
@@ -4463,37 +4408,49 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null, null));
 		//
-		ih.beansOfType = Reflection.newProxy(Map.class, ih);
-		//
+		if (ih != null) {
+			//
+			ih.beansOfType = Reflection.newProxy(Map.class, ih);
+			//
+		} // if
+			//
 		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null, null));
 		//
-		ih.entrySet = Collections.singleton(null);
-		//
+		if (ih != null) {
+			//
+			ih.entrySet = Collections.singleton(null);
+			//
+		} // if
+			//
 		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null, null));
 		//
-		ih.beansOfType = Collections.singletonMap(null, null);
-		//
+		if (ih != null) {
+			//
+			ih.beansOfType = Collections.singletonMap(null, null);
+			//
+		} // if
+			//
 		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null, null));
 		//
-		Util.put(ih.getBeanDefinitions(), null, beanDefinition);
+		Util.put(ih != null ? ih.getBeanDefinitions() : null, null, beanDefinition);
 		//
 		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null, null));
 		//
 		final String format = toString(FieldUtils.readDeclaredStaticField(VoiceManager.class, "FORMAT", true));
 		//
-		Util.put(ih.getBeanDefinitionAttributes(), format, null);
+		Util.put(ih != null ? ih.getBeanDefinitionAttributes() : null, format, null);
 		//
 		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, format, null));
 		//
-		Util.put(ih.getBeanDefinitionAttributes(), format, "");
+		Util.put(ih != null ? ih.getBeanDefinitionAttributes() : null, format, "");
 		//
 		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, format, null));
 		//
 		Util.put((ih.beansOfType = new LinkedHashMap<Object, Object>(Collections.singletonMap(null, null))), "", null);
 		//
-		Util.put(ih.getBeanDefinitions(), "", beanDefinition);
+		Util.put(ih != null ? ih.getBeanDefinitions() : null, "", beanDefinition);
 		//
-		Util.put(ih.getBeanDefinitionAttributes(), format, null);
+		Util.put(ih != null ? ih.getBeanDefinitionAttributes() : null, format, null);
 		//
 		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{}",
 				() -> getByteConverter(configurableListableBeanFactory, format, null));
@@ -4843,8 +4800,12 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getTextContent(getNamedItem(namedNodeMap, null)));
 		//
-		ih.namedItem = node;
-		//
+		if (ih != null) {
+			//
+			ih.namedItem = node;
+			//
+		} // if
+			//
 		Assertions.assertNull(getTextContent(getNamedItem(namedNodeMap, null)));
 		//
 	}
@@ -4920,18 +4881,30 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(createMicrosoftSpeechObjectLibraryWorkbook(null, null, (String[]) null));
 		//
-		ih.voiceIds = new String[] {};
-		//
+		if (ih != null) {
+			//
+			ih.voiceIds = new String[] {};
+			//
+		} // if
+			//
 		Assertions.assertNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, null, (String[]) null));
 		//
-		ih.voiceIds = new String[] { null };
-		//
+		if (ih != null) {
+			//
+			ih.voiceIds = new String[] { null };
+			//
+		} // if
+			//
 		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, null, (String) null));
 		//
 		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, null, SPACE));
 		//
-		ih.errorGetVoiceAttribute = new Error();
-		//
+		if (ih != null) {
+			//
+			ih.errorGetVoiceAttribute = new Error();
+			//
+		} // if
+			//
 		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, null, SPACE));
 		//
 	}
@@ -6191,12 +6164,20 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> exportHtml(null, multimap, null, null, null));
 		//
-		ih.keySet = Reflection.newProxy(Set.class, ih);
-		//
+		if (ih != null) {
+			//
+			ih.keySet = Reflection.newProxy(Set.class, ih);
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> exportHtml(null, multimap, null, null, null));
 		//
-		ih.keySet = Collections.singleton(null);
-		//
+		if (ih != null) {
+			//
+			ih.keySet = Collections.singleton(null);
+			//
+		} // if
+			//
 		final Entry<?, UnaryOperator<Object>> pair = Pair.of(null, UnaryOperator.identity());
 		//
 		Assertions
@@ -6592,20 +6573,36 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null, null));
 		//
-		ih.multiMapEntries = Collections.singleton(null);
-		//
+		if (ih != null) {
+			//
+			ih.multiMapEntries = Collections.singleton(null);
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null, null));
 		//
-		ih.multiMapEntries = Reflection.newProxy(Collection.class, ih);
-		//
+		if (ih != null) {
+			//
+			ih.multiMapEntries = Reflection.newProxy(Collection.class, ih);
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null, null));
 		//
-		ih.multiMapEntries = Collections.singleton(Pair.of(null, EMPTY));
-		//
+		if (ih != null) {
+			//
+			ih.multiMapEntries = Collections.singleton(Pair.of(null, EMPTY));
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null, null));
 		//
-		ih.multiMapEntries = Collections.singleton(Pair.of(null, null));
-		//
+		if (ih != null) {
+			//
+			ih.multiMapEntries = Collections.singleton(Pair.of(null, null));
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null, null));
 		//
 	}
@@ -7456,12 +7453,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertFalse(isAllAttributesMatched(map, aa));
 		//
-		if (ih != null) {
-			//
-			Util.put(ih.getAttributeMap(), null, null);
-			//
-		} // if
-			//
+		Util.put(ih != null ? ih.getAttributeMap() : null, null, null);
+		//
 		Assertions.assertTrue(isAllAttributesMatched(map, aa));
 		//
 		if (ih != null) {
@@ -8915,8 +8908,12 @@ class VoiceManagerTest {
 			//
 			FieldUtils.writeDeclaredField(instance, "speechApi", speechApi, true);
 			//
-			ih.voiceAttribute = "A";
-			//
+			if (ih != null) {
+				//
+				ih.voiceAttribute = "A";
+				//
+			} // if
+				//
 			Assertions.assertNull(listCellRenderer1.getListCellRendererComponent(null, null, 0, false, false));
 			//
 			FieldUtils.writeDeclaredField(instance, "speechApi", null, true);
