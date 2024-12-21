@@ -114,8 +114,6 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import javax.annotation.Nullable;
 import javax.sound.sampled.AudioFormat;
@@ -5185,16 +5183,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static Integer incrementAndGet(@Nullable final AtomicInteger instance) {
 		return instance != null ? Integer.valueOf(instance.incrementAndGet()) : null;
-	}
-
-	@Nullable
-	private static ContentType getContentType(@Nullable final ContentInfo instance) {
-		return instance != null ? instance.getContentType() : null;
-	}
-
-	@Nullable
-	private static ZipEntry getEntry(@Nullable final ZipFile instance, final String name) {
-		return instance != null ? instance.getEntry(name) : null;
 	}
 
 	@Nullable
