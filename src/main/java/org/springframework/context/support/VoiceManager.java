@@ -754,9 +754,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@SystemClipboard
-	private AbstractButton btnCopyKatakana = null;
-
-	@SystemClipboard
 	private AbstractButton btnExportCopy = null;
 
 	@SystemClipboard
@@ -5314,11 +5311,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		IValue0<String> stringValue = null;
 		//
-		if (Objects.equals(source, btnCopyKatakana)) {
-			//
-			stringValue = Unit.with(Util.getText(tfKatakana));
-			//
-		} else if (Objects.equals(source, btnExportCopy)) {
+		if (Objects.equals(source, btnExportCopy)) {
 			//
 			stringValue = Unit.with(Util.getText(tfExportFile));
 			//
