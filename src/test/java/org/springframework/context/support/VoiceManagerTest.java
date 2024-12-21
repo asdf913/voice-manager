@@ -292,9 +292,8 @@ class VoiceManagerTest {
 			METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_CREATE_WORK_BOOK_LIST,
 			METHOD_CREATE_VOICE_OBJECT_MAPPER, METHOD_CREATE_VOICE_OBJECT_MAP, METHOD_INVOKE, METHOD_ANNOTATION_TYPE,
 			METHOD_FIND_FIRST, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER,
-			METHOD_IMPORT_VOICE_BY_ONLINE_NHK_JAPANESE_PRONUNCIATIONS_ACCENT_FAILABLE_FUNCTION, METHOD_ADD_CONTAINER2,
-			METHOD_ADD_CONTAINER3, METHOD_ANY_MATCH, METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_MATCHER,
-			METHOD_MATCHES, METHOD_SET_VALUE_J_PROGRESS_BAR, METHOD_SET_STRING_J_PROGRESS_BAR,
+			METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ANY_MATCH, METHOD_NAME, METHOD_GET_SELECTED_ITEM,
+			METHOD_MATCHER, METHOD_MATCHES, METHOD_SET_VALUE_J_PROGRESS_BAR, METHOD_SET_STRING_J_PROGRESS_BAR,
 			METHOD_SET_STRING_COMMENT, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_VALUE_OF1,
 			METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1,
 			METHOD_DELETE, METHOD_DELETE_ON_EXIT, METHOD_IS_SELECTED, METHOD_AND_PREDICATE,
@@ -433,10 +432,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER = clz.getDeclaredMethod("importVoice", CLASS_OBJECT_MAP,
 				BiConsumer.class, BiConsumer.class)).setAccessible(true);
-		//
-		(METHOD_IMPORT_VOICE_BY_ONLINE_NHK_JAPANESE_PRONUNCIATIONS_ACCENT_FAILABLE_FUNCTION = clz.getDeclaredMethod(
-				"importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction", CLASS_OBJECT_MAP, String.class))
-				.setAccessible(true);
 		//
 		(METHOD_ADD_CONTAINER2 = clz.getDeclaredMethod("add", Container.class, Component.class)).setAccessible(true);
 		//
@@ -3902,25 +3897,6 @@ class VoiceManagerTest {
 			final BiConsumer<Voice, Throwable> throwableConsumer) throws Throwable {
 		try {
 			METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER.invoke(null, objectMap, errorMessageConsumer, throwableConsumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testImportVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction() throws Throwable {
-		//
-		Assertions.assertDoesNotThrow(
-				() -> importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(null, null));
-		//
-
-	}
-
-	private static void importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(final Object objectMap,
-			final String filePath) throws Throwable {
-		try {
-			METHOD_IMPORT_VOICE_BY_ONLINE_NHK_JAPANESE_PRONUNCIATIONS_ACCENT_FAILABLE_FUNCTION.invoke(null, objectMap,
-					filePath);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

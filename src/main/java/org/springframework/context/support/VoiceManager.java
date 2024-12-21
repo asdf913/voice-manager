@@ -7564,53 +7564,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static void importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(final ObjectMap objectMap,
-			final String filePath) throws Exception {
-		//
-		final VoiceManager vm = ObjectMap.getObject(objectMap, VoiceManager.class);
-		//
-		final ImportTask it = ObjectMap.getObject(objectMap, ImportTask.class);
-		//
-		final Pronunciation pronunciation = testAndApply(x -> IterableUtils.size(x) == 1,
-				FailableFunctionUtil.apply(vm != null ? vm.onlineNHKJapanesePronunciationsAccentFailableFunction : null,
-						getText(it != null ? it.voice : null)),
-				x -> IterableUtils.get(x, 0), null);
-		//
-		if (pronunciation != null) {
-			//
-			Map<String, String> audioUrls = null;
-			//
-			String audioUrl = null;
-			//
-			if (StringUtils.isBlank(audioUrl = testAndApply(Util::containsKey, audioUrls = pronunciation.getAudioUrls(),
-					vm != null ? vm.preferredPronunciationAudioFormat : null, Util::get, null))) {
-				//
-				final Entry<String, String> entry = testAndApply(CollectionUtils::isNotEmpty, Util.entrySet(audioUrls),
-						x -> IterableUtils.get(x, 0), null);
-				//
-				audioUrl = Util.getValue(entry);
-				//
-			} // if
-				//
-			try (final InputStream is = openStream(
-					testAndApply(StringUtils::isNotBlank, audioUrl, x -> new URI(x).toURL(), null))) {
-				//
-				if (is != null && it != null
-						&& (it.file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH),
-								filePath)) != null) {
-					//
-					FileUtils.copyInputStreamToFile(is, it.file);
-					//
-					deleteOnExit(it.file);
-					//
-				} // if
-					//
-			} // try
-				//
-		} // if
-			//
-	}
-
 	@Nullable
 	@SuppressWarnings("java:S1612")
 	private static IValue0<?> getValueFromCell(final ObjectMap objectMap) {
