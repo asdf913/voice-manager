@@ -594,7 +594,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			add(new JLabel(SPEECH_RATE), "aligny top");
 			//
-			final Range<Integer> range = createRange(toInteger(testAndApply(predicate, "min", function, null)),
+			final Range<Integer> range = RangeUtil.createRange(
+					toInteger(testAndApply(predicate, "min", function, null)),
 					toInteger(testAndApply(predicate, "max", function, null)));
 			//
 			add(jPanel, jsSpeechRate = new JSlider(intValue(RangeUtil.lowerEndpoint(range), 0),
@@ -783,22 +784,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		final FailableBiFunction<String, String, Object, RuntimeException> biFunction = (a, b) -> Lookup.get(lookup, a,
 				b);
 		//
-		return createRange(toInteger(testAndApply(biPredicate, "volume", "min", biFunction, null)),
+		return RangeUtil.createRange(toInteger(testAndApply(biPredicate, "volume", "min", biFunction, null)),
 				toInteger(testAndApply(biPredicate, "volume", "max", biFunction, null)));
-		//
-	}
-
-	private static Range<Integer> createRange(@Nullable final Integer minValue, @Nullable final Integer maxValue) {
-		//
-		if (minValue != null && maxValue != null) {
-			return Range.open(minValue, maxValue);
-		} else if (minValue != null) {
-			return Range.atLeast(minValue);
-		} else if (maxValue != null) {
-			return Range.atMost(maxValue);
-		} // if
-			//
-		return Range.all();
 		//
 	}
 

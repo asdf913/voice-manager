@@ -3,6 +3,7 @@ package com.google.common.collect;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -63,7 +64,9 @@ class RangeUtilTest {
 			//
 			toString = Objects.toString(m);
 			//
-			if (Objects.equals(m.getReturnType(), Boolean.TYPE)) {
+			if (Objects.equals(m.getReturnType(), Boolean.TYPE)
+					|| Boolean.logicalAnd(Objects.equals(m.getName(), "createRange"),
+							Arrays.equals(m.getParameterTypes(), new Class<?>[] { Range.class, Range.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//

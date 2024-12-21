@@ -993,8 +993,10 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 		if (Boolean.logicalAnd(Util.test(predicate, "min"), Util.test(predicate, "max"))) {
 			//
-			addSpeedButtons(this, panel2, createRange(toInteger(testAndApply(predicate, "min", function, null)),
-					toInteger(testAndApply(predicate, "max", function, null))), width);
+			addSpeedButtons(this, panel2,
+					RangeUtil.createRange(toInteger(testAndApply(predicate, "min", function, null)),
+							toInteger(testAndApply(predicate, "max", function, null))),
+					width);
 			//
 		} // if
 			//
@@ -4304,7 +4306,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		final FailableBiFunction<String, String, Object, RuntimeException> biFunction = (a, b) -> Lookup.get(lookup, a,
 				b);
 		//
-		return createRange(toInteger(testAndApply(biPredicate, "volume", "min", biFunction, null)),
+		return RangeUtil.createRange(toInteger(testAndApply(biPredicate, "volume", "min", biFunction, null)),
 				toInteger(testAndApply(biPredicate, "volume", "max", biFunction, null)));
 		//
 	}
@@ -4391,20 +4393,6 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		} // if
 			//
 		return speechApi;
-		//
-	}
-
-	private static Range<Integer> createRange(@Nullable final Integer minValue, @Nullable final Integer maxValue) {
-		//
-		if (minValue != null && maxValue != null) {
-			return Range.open(minValue, maxValue);
-		} else if (minValue != null) {
-			return Range.atLeast(minValue);
-		} else if (maxValue != null) {
-			return Range.atMost(maxValue);
-		} // if
-			//
-		return Range.all();
 		//
 	}
 

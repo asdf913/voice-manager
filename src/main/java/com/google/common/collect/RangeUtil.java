@@ -73,4 +73,24 @@ public abstract class RangeUtil {
 		return instance != null ? instance.getDeclaredField(name) : null;
 	}
 
+	public static Range<Integer> createRange(final Integer minValue, final Integer maxValue) {
+		//
+		if (minValue != null && maxValue != null) {
+			//
+			return Range.open(minValue, maxValue);
+			//
+		} else if (minValue != null) {
+			//
+			return Range.atLeast(minValue);
+			//
+		} else if (maxValue != null) {
+			//
+			return Range.atMost(maxValue);
+			//
+		} // if
+			//
+		return Range.all();
+		//
+	}
+
 }

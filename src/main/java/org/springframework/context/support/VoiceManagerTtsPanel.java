@@ -361,7 +361,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 		if (Boolean.logicalAnd(Util.test(predicate, "min"), Util.test(predicate, "max"))) {
 			//
-			addSpeedButtons(this, createRange(toInteger(testAndApply(predicate, "min", function, null)),
+			addSpeedButtons(this, RangeUtil.createRange(toInteger(testAndApply(predicate, "min", function, null)),
 					toInteger(testAndApply(predicate, "max", function, null))));
 			//
 		} // if
@@ -1170,7 +1170,7 @@ public class VoiceManagerTtsPanel extends JPanel
 		final FailableBiFunction<String, String, Object, RuntimeException> biFunction = (a, b) -> Lookup.get(lookup, a,
 				b);
 		//
-		return createRange(toInteger(testAndApply(biPredicate, "volume", "min", biFunction, null)),
+		return RangeUtil.createRange(toInteger(testAndApply(biPredicate, "volume", "min", biFunction, null)),
 				toInteger(testAndApply(biPredicate, "volume", "max", biFunction, null)));
 		//
 	}
@@ -1416,20 +1416,6 @@ public class VoiceManagerTtsPanel extends JPanel
 	private static Object get(@Nullable final Field field, @Nullable final Object instance)
 			throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
-	}
-
-	private static Range<Integer> createRange(@Nullable final Integer minValue, @Nullable final Integer maxValue) {
-		//
-		if (minValue != null && maxValue != null) {
-			return Range.open(minValue, maxValue);
-		} else if (minValue != null) {
-			return Range.atLeast(minValue);
-		} else if (maxValue != null) {
-			return Range.atMost(maxValue);
-		} // if
-			//
-		return Range.all();
-		//
 	}
 
 	@Nullable
