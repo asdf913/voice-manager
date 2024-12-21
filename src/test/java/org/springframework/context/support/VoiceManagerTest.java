@@ -849,7 +849,6 @@ class VoiceManagerTest {
 
 		private Map<?, ?> attributeMap = null;
 
-
 		private Map<Object, BeanDefinition> getBeanDefinitions() {
 			if (beanDefinitions == null) {
 				beanDefinitions = new LinkedHashMap<>();
@@ -2377,12 +2376,6 @@ class VoiceManagerTest {
 			//
 			FieldUtils.writeDeclaredField(instance, "cbmVoiceId", new DefaultComboBoxModel<>(new Object[] { ZERO }),
 					true);
-			//
-		} // if
-			//
-		if (instance != null) {
-			//
-			instance.setImageFormat(null);
 			//
 		} // if
 			//

@@ -1035,9 +1035,6 @@
 		<property name="presentationSlideDuration"
 			value="${org.springframework.context.support.VoiceManager.presentationSlideDuration}" />
 		<!-- -->
-		<property name="imageFormat"
-			value="${org.springframework.context.support.VoiceManager.imageFormat}" />
-		<!-- -->
 		<property name="languageCodeToTextObjIntFunction"
 			ref="LanguageCodeToTextObjIntFunction" />
 	</bean>

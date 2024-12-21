@@ -346,7 +346,6 @@ import de.sciss.jump3r.mp3.Lame;
 import domain.JlptVocabulary;
 import domain.Pronunciation;
 import domain.Voice;
-import domain.Voice.Yomi;
 import domain.VoiceList;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.StringTemplateLoader;
@@ -578,8 +577,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private JTextComponent tfPresentationSlideDuration = null;
 
-	private transient ComboBoxModel<Yomi> cbmYomi = null;
-
 	@Note("Voice ID")
 	private transient ComboBoxModel<String> cbmVoiceId = null;
 
@@ -599,8 +596,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Note("For Import Panel")
 	private transient ComboBoxModel<?> cbmAudioFormatExecute = null;
-
-	private transient ComboBoxModel<Boolean> cbmIsKanji = null;
 
 	@Url("https://ja.wikipedia.org/wiki/%E5%B8%B8%E7%94%A8%E6%BC%A2%E5%AD%97%E4%B8%80%E8%A6%A7")
 	private transient ComboBoxModel<Boolean> cbmJouYouKanJi = null;
@@ -839,8 +834,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Nullable
 	private transient Collection<Map> mapRomaji = null;
-
-	private transient IValue0<String> imageFormat = null;
 
 	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
@@ -1803,10 +1796,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static Duration parse(CharSequence text) {
 		return StringUtils.isNotEmpty(text) ? Duration.parse(text) : null;
-	}
-
-	public void setImageFormat(final String imageFormat) {
-		this.imageFormat = Unit.with(imageFormat);
 	}
 
 	public void setLanguageCodeToTextObjIntFunction(
