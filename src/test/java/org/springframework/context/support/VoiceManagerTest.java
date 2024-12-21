@@ -92,8 +92,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -297,8 +295,8 @@ class VoiceManagerTest {
 			METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM,
 			METHOD_FOR_EACH_ITERABLE, METHOD_CREATE_WORK_BOOK_LIST, METHOD_CREATE_VOICE_OBJECT_MAPPER,
 			METHOD_CREATE_VOICE_OBJECT_MAP, METHOD_INVOKE, METHOD_ANNOTATION_TYPE, METHOD_FIND_FIRST,
-			METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE1, METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER,
-			METHOD_IMPORT_VOICE_OBJECT_MAP_FILE, METHOD_IMPORT_VOICE5, METHOD_IMPORT_VOICE_BY_SPEECH_API,
+			METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER, METHOD_IMPORT_VOICE_OBJECT_MAP_FILE,
+			METHOD_IMPORT_VOICE_BY_SPEECH_API,
 			METHOD_IMPORT_VOICE_BY_ONLINE_NHK_JAPANESE_PRONUNCIATIONS_ACCENT_FAILABLE_FUNCTION, METHOD_ADD_CONTAINER2,
 			METHOD_ADD_CONTAINER3, METHOD_ANY_MATCH, METHOD_NAME, METHOD_GET_SELECTED_ITEM, METHOD_MATCHER,
 			METHOD_MATCHES, METHOD_SET_VALUE_J_PROGRESS_BAR, METHOD_SET_STRING_J_PROGRESS_BAR,
@@ -344,13 +342,13 @@ class VoiceManagerTest {
 			METHOD_SET_LOCALE_ID_SHEET, METHOD_ADD_LOCALE_ID_ROW, METHOD_SET_FOCUS_CYCLE_ROOT,
 			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP,
 			METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE, METHOD_GET_WRITER, METHOD_GET_WORK_BOOK_CLASS,
-			METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME, METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE,
-			METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI, METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL,
-			METHOD_GET_LEVEL, METHOD_ADD_ALL, METHOD_PRONOUNICATION_CHANGED, METHOD_REMOVE_ELEMENT_AT, METHOD_GET_FILE,
-			METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT, METHOD_GET_AUDIO_FILE3, METHOD_GET_AUDIO_FILE4,
-			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_NUMERIC_CELL_VALUE,
-			METHOD_SET_AUTO_FILTER, METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT,
-			METHOD_GET_IMAGE_FORMAT, METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_SORTED,
+			METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME, METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE, METHOD_TO_MILLIS,
+			METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL, METHOD_ADD_ALL, METHOD_PRONOUNICATION_CHANGED,
+			METHOD_REMOVE_ELEMENT_AT, METHOD_GET_FILE, METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT,
+			METHOD_GET_AUDIO_FILE3, METHOD_GET_AUDIO_FILE4, METHOD_IS_ALL_ATTRIBUTES_MATCHED,
+			METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_NUMERIC_CELL_VALUE, METHOD_SET_AUTO_FILTER,
+			METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT, METHOD_GET_IMAGE_FORMAT,
+			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_SORTED,
 			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG,
 			METHOD_OPEN_STREAM, METHOD_SUBMIT, METHOD_FORMAT_HEX, METHOD_SET_SELECTED_INDEX,
 			METHOD_GET_TITLED_COMPONENT_MAP = null;
@@ -841,9 +839,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_PAGE_TITLE = clz.getDeclaredMethod("getPageTitle", String.class, Duration.class))
 				.setAccessible(true);
-		//
-		(METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI = clz.getDeclaredMethod("setHiraganaOrKatakanaAndRomaji",
-				Boolean.TYPE, Boolean.TYPE, Voice.class, Jakaroma.class)).setAccessible(true);
 		//
 		(METHOD_TO_MILLIS = clz.getDeclaredMethod("toMillis", Duration.class)).setAccessible(true);
 		//
@@ -4124,29 +4119,10 @@ class VoiceManagerTest {
 		return instance != null ? instance.nextAlphabetic(count) : null;
 	}
 
-	private void importVoice(final File file) throws Throwable {
-		try {
-			METHOD_IMPORT_VOICE1.invoke(instance, file);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
 	private static void importVoice(final Object objectMap, final BiConsumer<Voice, String> errorMessageConsumer,
 			final BiConsumer<Voice, Throwable> throwableConsumer) throws Throwable {
 		try {
 			METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER.invoke(null, objectMap, errorMessageConsumer, throwableConsumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static void importVoice(final Sheet sheet, final Object _objectMap, final String voiceId,
-			final BiConsumer<Voice, String> errorMessageConsumer, final BiConsumer<Voice, Throwable> throwableConsumer,
-			final Consumer<Voice> voiceConsumer, final Collection<Object> throwableStackTraceHexs) throws Throwable {
-		try {
-			METHOD_IMPORT_VOICE5.invoke(null, sheet, _objectMap, voiceId, errorMessageConsumer, throwableConsumer,
-					voiceConsumer, throwableStackTraceHexs);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7755,23 +7731,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testSetHiraganaOrKatakanaAndRomaji() {
-		//
-		Assertions.assertDoesNotThrow(() -> setHiraganaOrKatakanaAndRomaji(false, false, new Voice(), null));
-		//
-	}
-
-	private static void setHiraganaOrKatakanaAndRomaji(final boolean hiraganaKatakanaConversion,
-			final boolean hiraganaRomajiConversion, final Voice voice, final Jakaroma jakaroma) throws Throwable {
-		try {
-			METHOD_SET_HIRAGANA_OR_KATAKANA_AND_ROMAJI.invoke(null, hiraganaKatakanaConversion,
-					hiraganaRomajiConversion, voice, jakaroma);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testToMillis() throws Throwable {
 		//
 		final double second = 1.234;
@@ -10051,12 +10010,6 @@ class VoiceManagerTest {
 	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) {
 		if (instance != null) {
 			instance.accept(t, u);
-		}
-	}
-
-	private static <T> void accept(final Consumer<T> instance, final T t) {
-		if (instance != null) {
-			instance.accept(t);
 		}
 	}
 
