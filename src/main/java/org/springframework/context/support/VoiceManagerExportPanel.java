@@ -193,8 +193,8 @@ public class VoiceManagerExportPanel extends JPanel
 	 * https://github.com/apache/commons-lang/blob/master/src/main/java/org/apache/
 	 * commons/lang3/ObjectUtils.java#L597
 	 */
-	private static <T, E extends Throwable> T getIfNull(final T object, final FailableSupplier<T, E> defaultSupplier)
-			throws E {
+	private static <T, E extends Throwable> T getIfNull(@Nullable final T object,
+			final FailableSupplier<T, E> defaultSupplier) throws E {
 		return object != null ? object : get(defaultSupplier);
 	}
 
@@ -728,7 +728,8 @@ public class VoiceManagerExportPanel extends JPanel
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
