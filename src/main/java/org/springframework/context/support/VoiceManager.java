@@ -508,8 +508,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	 */
 	private static final String WMIN_ONLY_FORMAT = "wmin %1$s";
 
-	private static final String ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER = "Romaji";
-
 	private static final String HIRAGANA_WITH_FIRST_CAPTICALIZED_LETTER = "Hiragana";
 
 	private static final FailablePredicate<File, RuntimeException> EMPTY_FILE_PREDICATE = f -> f != null && f.exists()
@@ -544,7 +542,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Katakana")
 	private JTextComponent tfKatakana = null;
 
-	@Note(ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER)
+	@Note("Romaji")
 	private JTextComponent tfRomaji = null;
 
 	@Note("Speech Rate")
@@ -679,9 +677,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private @interface Group {
 		String value();
 	}
-
-	@Group("Conversion")
-	private AbstractButton btnConvertToRomaji = null;
 
 	@Group("Conversion")
 	private AbstractButton btnConvertToKatakana = null;
@@ -934,8 +929,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private transient Collection<Map> mapRomaji = null;
 
 	private transient IValue0<String> imageFormat = null;
-
-	private char[] allowedRomajiCharacters = null;
 
 	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
@@ -1911,10 +1904,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setImageFormat(final String imageFormat) {
 		this.imageFormat = Unit.with(imageFormat);
-	}
-
-	public void setAllowedRomajiCharacters(final char[] allowedRomajiCharacters) {
-		this.allowedRomajiCharacters = allowedRomajiCharacters;
 	}
 
 	public void setLanguageCodeToTextObjIntFunction(
@@ -5383,13 +5372,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		Entry<JTextComponent, String> pair = null;
 		//
-		if (Objects.equals(source, btnConvertToRomaji)) {
-			//
-			actionPerformedForBtnConvertToRomaji();
-			//
-			return;
-			//
-		} else if (Objects.equals(source, btnConvertToKatakana)) {
+		if (Objects.equals(source, btnConvertToKatakana)) {
 			//
 			pair = Pair.of(tfKatakana, testAndApply(Objects::nonNull, Util.getText(tfHiragana),
 					x -> KanaConverter.convertKana(x, KanaConverter.OP_ZEN_HIRA_TO_ZEN_KATA), null));
@@ -5405,71 +5388,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		throw new IllegalStateException();
-		//
-	}
-
-	private void actionPerformedForBtnConvertToRomaji() {
-		//
-		final String string = Util.getText(tfTextImport);
-		//
-		final IValue0<?> iValue0 = getIValue0FromMapsByKey(mapRomaji, string,
-				createFunctionForBtnConvertToHiraganaOrKatakana(ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER));
-		//
-		final String romaji = JakaromaUtil.convert(jakaroma = ObjectUtils.getIfNull(jakaroma, Jakaroma::new), string,
-				false, false);
-		//
-		if (iValue0 != null && StringUtils.isNotEmpty(Util.toString(IValue0Util.getValue0(iValue0)))
-				&& StringUtils.isNotBlank(romaji)) {
-			//
-			final List<Object> objects = new ArrayList<>(Collections.singleton(IValue0Util.getValue0(iValue0)));
-			//
-			if (isAllCharactersAllowed(romaji, allowedRomajiCharacters) && !Util.contains(objects, romaji)) {
-				//
-				Util.add(objects, romaji);
-				//
-			} // if
-				//
-			if (IterableUtils.size(objects) == 1) {
-				//
-				Util.setText(tfRomaji, Util.toString(IterableUtils.get(objects, 0)));
-				//
-				return;
-				//
-			} // if
-				//
-			final JList<?> list = new JList<>(toArray(objects));
-			//
-			if (!GraphicsEnvironment.isHeadless() && JOptionPane.showConfirmDialog(null, list,
-					ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-				//
-				Util.setText(tfRomaji, Util.toString(list.getSelectedValue()));
-				//
-				return;
-				//
-			} // if
-				//
-		} // if
-			//
-		Util.setText(tfRomaji, romaji);
-		//
-	}
-
-	private static boolean isAllCharactersAllowed(@Nullable final CharSequence cs,
-			@Nullable final char[] allowedChars) {
-		//
-		boolean allCharacterAllowed = true;
-		//
-		for (int i = 0; cs != null && allowedChars != null && allowedChars.length > 0 && i < cs.length(); i++) {
-			//
-			if (!(allCharacterAllowed = ArrayUtils.contains(allowedChars, cs.charAt(i)))) {
-				//
-				break;
-				//
-			} // if
-				//
-		} // for
-			//
-		return allCharacterAllowed;
 		//
 	}
 

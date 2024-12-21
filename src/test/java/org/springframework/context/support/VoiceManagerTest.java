@@ -365,10 +365,10 @@ class VoiceManagerTest {
 			METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER, METHOD_READ_LINE, METHOD_PRINT_LN,
 			METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_NUMERIC_CELL_VALUE, METHOD_SET_AUTO_FILTER,
 			METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT, METHOD_GET_IMAGE_FORMAT,
-			METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY, METHOD_IS_ALL_CHARACTERS_ALLOWED, METHOD_GET_VALUE_COLLECTION_BY_KEY,
-			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_SORTED,
-			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG,
-			METHOD_OPEN_STREAM, METHOD_SUBMIT, METHOD_OPEN_CONNECTION, METHOD_FORMAT_HEX, METHOD_SET_SELECTED_INDEX,
+			METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY, METHOD_GET_VALUE_COLLECTION_BY_KEY, METHOD_GET_NUMBER,
+			METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_SORTED, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL,
+			METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG, METHOD_OPEN_STREAM, METHOD_SUBMIT,
+			METHOD_OPEN_CONNECTION, METHOD_FORMAT_HEX, METHOD_SET_SELECTED_INDEX,
 			METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
@@ -954,9 +954,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY = clz.getDeclaredMethod("getIValue0FromMapsByKey", Iterable.class,
 				Object.class, Function.class)).setAccessible(true);
-		//
-		(METHOD_IS_ALL_CHARACTERS_ALLOWED = clz.getDeclaredMethod("isAllCharactersAllowed", CharSequence.class,
-				char[].class)).setAccessible(true);
 		//
 		(METHOD_GET_VALUE_COLLECTION_BY_KEY = clz.getDeclaredMethod("getValueCollectionByKey", Iterable.class,
 				Object.class)).setAccessible(true);
@@ -2445,16 +2442,6 @@ class VoiceManagerTest {
 				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(EMPTY, 0, null)));
-		//
-		final AbstractButton btnConvertToRomaji = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnConvertToRomaji", btnConvertToRomaji, true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnConvertToRomaji, 0, null)));
 		//
 		final AbstractButton btnConvertToKatakana = new JButton();
 		//
@@ -9135,35 +9122,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIsAllCharactersAllowed() throws Throwable {
-		//
-		Assertions.assertTrue(isAllCharactersAllowed(null, null));
-		//
-		Assertions.assertTrue(isAllCharactersAllowed(EMPTY, null));
-		//
-		Assertions.assertTrue(isAllCharactersAllowed(EMPTY, new char[] {}));
-		//
-		final String string = StringUtils.repeat(' ', 1);
-		//
-		Assertions.assertTrue(isAllCharactersAllowed(string, new char[] { ' ' }));
-		//
-		Assertions.assertFalse(isAllCharactersAllowed(string, new char[] { 'A' }));
-		//
-	}
-
-	private static boolean isAllCharactersAllowed(final CharSequence cs, final char[] allowedChars) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_ALL_CHARACTERS_ALLOWED.invoke(null, cs, allowedChars);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
