@@ -41,11 +41,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -344,9 +342,9 @@ class VoiceManagerTest {
 			METHOD_SET_LIST_NAMES, METHOD_SET_SOURCE, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML,
 			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY,
 			METHOD_GET_IF_NULL, METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE,
-			METHOD_GET_RESPONSE_CODE, METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM,
-			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_SET_PREFERRED_WIDTH_2,
-			METHOD_GET_VALUE_FROM_CELL, METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC,
+			METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM, METHOD_SET_PREFERRED_WIDTH_ARRAY,
+			METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_SET_PREFERRED_WIDTH_2, METHOD_GET_VALUE_FROM_CELL,
+			METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC,
 			METHOD_IMPORT_BY_WORK_BOOK_FILES, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS,
 			METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME, METHOD_EXPORT_MICROSOFT_ACCESS,
 			METHOD_IMPORT_RESULT_SET, METHOD_CREATE_VOICE_ID_WARNING_PANEL,
@@ -363,7 +361,7 @@ class VoiceManagerTest {
 			METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT, METHOD_GET_IMAGE_FORMAT,
 			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_SORTED,
 			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG,
-			METHOD_OPEN_STREAM, METHOD_SUBMIT, METHOD_OPEN_CONNECTION, METHOD_FORMAT_HEX, METHOD_SET_SELECTED_INDEX,
+			METHOD_OPEN_STREAM, METHOD_SUBMIT, METHOD_FORMAT_HEX, METHOD_SET_SELECTED_INDEX,
 			METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
@@ -790,9 +788,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_BOOLEAN_VALUE = clz.getDeclaredMethod("getBooleanValue", CellValue.class)).setAccessible(true);
 		//
-		(METHOD_GET_RESPONSE_CODE = clz.getDeclaredMethod("getResponseCode", HttpURLConnection.class))
-				.setAccessible(true);
-		//
 		(METHOD_TO_RUNTIME_EXCEPTION = clz.getDeclaredMethod("toRuntimeException", Throwable.class))
 				.setAccessible(true);
 		//
@@ -956,8 +951,6 @@ class VoiceManagerTest {
 		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
 		//
 		(METHOD_SUBMIT = clz.getDeclaredMethod("submit", ExecutorService.class, Runnable.class)).setAccessible(true);
-		//
-		(METHOD_OPEN_CONNECTION = clz.getDeclaredMethod("openConnection", URL.class)).setAccessible(true);
 		//
 		(METHOD_FORMAT_HEX = clz.getDeclaredMethod("formatHex", HexFormat.class, byte[].class)).setAccessible(true);
 		//
@@ -2660,21 +2653,6 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportBrowse, 0, null)));
 		//
-		// btnPronunciationPageUrlCheck
-		//
-		final AbstractButton btnPronunciationPageUrlCheck = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnPronunciationPageUrlCheck", btnPronunciationPageUrlCheck, true);
-			//
-		} // if
-			//
-		final ActionEvent actionEventBtnPronunciationPageUrlCheck = new ActionEvent(btnPronunciationPageUrlCheck, 0,
-				null);
-		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnPronunciationPageUrlCheck));
-		//
 		final JTextComponent tfPronunciationPageUrl = new JTextField();
 		//
 		if (instance != null) {
@@ -2685,24 +2663,10 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> Util.setText(tfPronunciationPageUrl, SPACE));
 		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnPronunciationPageUrlCheck));
-		//
 		Assertions.assertDoesNotThrow(() -> Util.setText(tfPronunciationPageUrl, "a"));
 		//
-		if (headless) {
-			//
-			Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnPronunciationPageUrlCheck));
-			//
-		} else {
-			//
-			AssertionsUtil.assertThrowsAndEquals(RuntimeException.class,
-					"{localizedMessage=org.opentest4j.AssertionFailedError: URI is not absolute ==> Unexpected exception thrown: java.lang.IllegalArgumentException: URI is not absolute, message=org.opentest4j.AssertionFailedError: URI is not absolute ==> Unexpected exception thrown: java.lang.IllegalArgumentException: URI is not absolute}",
-					() -> actionPerformed(instance, actionEventBtnPronunciationPageUrlCheck));
-			//
-		} // if
-			//
-			// btnExecute
-			//
+		// btnExecute
+		//
 		final AbstractButton btnExecute = new JButton();
 		//
 		if (instance != null) {
@@ -7243,27 +7207,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testGetResponseCode() throws Throwable {
-		//
-		Assertions.assertNull(getResponseCode(null));
-		//
-	}
-
-	private static Integer getResponseCode(final HttpURLConnection instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_RESPONSE_CODE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Integer) {
-				return (Integer) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testToRuntimeException() throws Throwable {
 		//
 		Assertions.assertNull(toRuntimeException(null));
@@ -8824,29 +8767,6 @@ class VoiceManagerTest {
 	private static void submit(final ExecutorService instance, final Runnable task) throws Throwable {
 		try {
 			METHOD_SUBMIT.invoke(null, instance, task);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testOpenConnection() throws Throwable {
-		//
-		Assertions.assertNull(openConnection(null));
-		//
-		Assertions.assertNull(openConnection(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));
-		//
-	}
-
-	private static URLConnection openConnection(final URL instance) throws Throwable {
-		try {
-			final Object obj = METHOD_OPEN_CONNECTION.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof URLConnection) {
-				return (URLConnection) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

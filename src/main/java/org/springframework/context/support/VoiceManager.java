@@ -58,11 +58,9 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -289,7 +287,6 @@ import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntList;
 import org.d2ab.function.ObjIntFunction;
 import org.d2ab.function.ObjIntFunctionUtil;
-import org.eclipse.jetty.http.HttpStatus;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -618,8 +615,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Pronunciation Page URL")
 	private JTextComponent tfPronunciationPageUrl = null;
 
-	private JTextComponent tfPronunciationPageStatusCode = null;
-
 	private JTextComponent tfPresentationSlideDuration = null;
 
 	private transient ComboBoxModel<Yomi> cbmYomi = null;
@@ -732,10 +727,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Note("Browse Button For Export Function")
 	private AbstractButton btnExportBrowse = null;
-
-	@Group(PRONUNCIATION)
-	@Note("Check Pronunciation Page")
-	private AbstractButton btnPronunciationPageUrlCheck = null;
 
 	@Note("TTS Voice")
 	private AbstractButton cbUseTtsVoice = null;
@@ -4889,89 +4880,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private void actionPerformedForPronunciationPageUrlCheck(final boolean headless) {
-		//
-		Util.setText(tfPronunciationPageStatusCode, null);
-		//
-		setBackground(tfPronunciationPageStatusCode, null);
-		//
-		final String urlString = Util.getText(tfPronunciationPageUrl);
-		//
-		if (StringUtils.isNotBlank(urlString)) {
-			//
-			try {
-				//
-				final Integer responseCode = getResponseCode(
-						Util.cast(HttpURLConnection.class, openConnection(new URI(urlString).toURL())));
-				//
-				Util.setText(tfPronunciationPageStatusCode, Integer.toString(responseCode));
-				//
-				if (responseCode != null) {
-					//
-					Color background = null;
-					//
-					if (HttpStatus.isSuccess(responseCode.intValue())) {
-						//
-						background = Color.GREEN;
-						//
-					} else if (Boolean.logicalOr(HttpStatus.isClientError(responseCode.intValue()),
-							HttpStatus.isServerError(responseCode.intValue()))) {
-						//
-						background = Color.RED;
-						//
-					} // if
-						//
-					setBackground(tfPronunciationPageStatusCode, background);
-					//
-				} // if
-					//
-			} catch (final Exception e) {
-				//
-				errorOrAssertOrShowException(headless, e);
-				//
-			} // try
-				//
-		} // if
-			//
-	}
-
-	@Nullable
-	private static URLConnection openConnection(@Nullable final URL instance) throws IOException {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		final List<Field> fs = Util.toList(Util.filter(Arrays.stream(Util.getDeclaredFields(URL.class)),
-				f -> Objects.equals(Util.getName(f), HANDLER)));
-		//
-		final int size = IterableUtils.size(fs);
-		//
-		if (size > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		final Field f = size == 1 ? IterableUtils.get(fs, 0) : null;
-		//
-		if (f != null && Narcissus.getField(instance, f) == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		return instance.openConnection();
-		//
-	}
-
-	@Nullable
-	private static Integer getResponseCode(@Nullable final HttpURLConnection instance) throws IOException {
-		return instance != null ? Integer.valueOf(instance.getResponseCode()) : null;
-	}
-
 	private static void setLanguage(@Nullable final Voice instance, final String language) {
 		if (instance != null) {
 			instance.setLanguage(language);
@@ -5034,12 +4942,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			pronounicationChanged(Util.cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
 					mcbmPronounicationAudioFormat, preferredPronunciationAudioFormat, tfPronunciationPageUrl);
-			//
-			return;
-			//
-		} else if (Objects.equals(source, btnPronunciationPageUrlCheck)) {
-			//
-			actionPerformedForPronunciationPageUrlCheck(GraphicsEnvironment.isHeadless());
 			//
 			return;
 			//
