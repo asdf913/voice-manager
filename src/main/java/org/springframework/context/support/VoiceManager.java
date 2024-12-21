@@ -760,10 +760,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = null;
 
 	@Group(PRONUNCIATION)
-	@Note("Check Pronunciation")
-	private AbstractButton btnCheckPronunciation = null;
-
-	@Group(PRONUNCIATION)
 	private AbstractButton btnPlayPronunciationAudio = null;
 
 	@Target(ElementType.FIELD)
@@ -5053,12 +5049,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			return;
 			//
-		} else if (Objects.equals(source, btnCheckPronunciation)) {
-			//
-			actionPerformedForBtnCheckPronunciation();
-			//
-			return;
-			//
 		} else if (Objects.equals(source, btnPlayPronunciationAudio)) {
 			//
 			playAudio(Util.cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
@@ -5414,48 +5404,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			IOUtils.closeQuietly(workbook);
 			//
 			testAndAccept(EMPTY_FILE_PREDICATE, file, FileUtils::deleteQuietly);
-			//
-		} // try
-			//
-	}
-
-	private void actionPerformedForBtnCheckPronunciation() {
-		//
-		// Remove all element(s) in "mcbmPronounication"
-		//
-		Util.forEach(reverseRange(0, getSize(mcbmPronunciation)), i -> removeElementAt(mcbmPronunciation, i));
-		//
-		// Remove all element(s) in "mcbmPronounicationAudioFormat"
-		//
-		Util.forEach(reverseRange(0, getSize(mcbmPronounicationAudioFormat)),
-				i -> removeElementAt(mcbmPronounicationAudioFormat, i));
-		//
-		try {
-			//
-			final List<Pronunciation> pronounications = FailableFunctionUtil
-					.apply(onlineNHKJapanesePronunciationsAccentFailableFunction, Util.getText(tfTextImport));
-			//
-			final IValue0<Pronunciation> pronunciation = IterableUtils.size(pronounications) == 1
-					? Unit.with(IterableUtils.get(pronounications, 0))
-					: null;
-			//
-			if (CollectionUtils.isNotEmpty(pronounications)) {
-				//
-				pronounications.add(0, null);
-				//
-			} // if
-				//
-			if (pronunciation != null) {
-				//
-				setSelectedItem(mcbmPronunciation, IValue0Util.getValue0(pronunciation));
-				//
-			} // if
-				//
-			forEach(pronounications, x -> addElement(mcbmPronunciation, x));
-			//
-		} catch (final IOException e) {
-			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
 		} // try
 			//
