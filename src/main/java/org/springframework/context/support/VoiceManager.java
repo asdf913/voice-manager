@@ -650,7 +650,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private transient ComboBoxModel<?> cbmAudioFormatExecute = null;
 
 	private transient ComboBoxModel<Boolean> cbmIsKanji = null;
-	
+
 	@Url("https://ja.wikipedia.org/wiki/%E5%B8%B8%E7%94%A8%E6%BC%A2%E5%AD%97%E4%B8%80%E8%A6%A7")
 	private transient ComboBoxModel<Boolean> cbmJouYouKanJi = null;
 
@@ -842,6 +842,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Nullable
 	private String[] microsoftSpeechObjectLibraryAttributeNames = null;
+
+	private String[] tabOrders = null;
 
 	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
@@ -1511,6 +1513,14 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
+	public void setTabOrders(final Object value) {
+		//
+		this.tabOrders = toArray(
+				Util.toList(Util.map(Util.stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))),
+				new String[] {});
+		//
+	}
+
 	public void setGaKuNenBeTsuKanJiListPageUrl(final String gaKuNenBeTsuKanJiListPageUrl) {
 		this.gaKuNenBeTsuKanJiListPageUrl = gaKuNenBeTsuKanJiListPageUrl;
 	}
@@ -2168,9 +2178,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				() -> add(craeteSpeechApiInstallationWarningJPanel(microsoftSpeechPlatformRuntimeDownloadPageUrl),
 						WRAP));
 		//
-		forEach(Util.stream(Util.entrySet(
-				getTitledComponentMap(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Component.class),
-						"TTS", "Import(Single)", "Import(Batch)"))), // TODO
+		forEach(Util.stream(Util.entrySet(getTitledComponentMap(
+				ListableBeanFactoryUtil.getBeansOfType(applicationContext, Component.class), tabOrders))),
 				x -> jTabbedPane.addTab(Util.getKey(x), Util.getValue(x)));
 		//
 		jTabbedPane.addTab("Export", createExportPanel(cloneLayoutManager()));

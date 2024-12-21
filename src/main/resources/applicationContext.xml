@@ -976,6 +976,9 @@
 		<property name="microsoftSpeechObjectLibraryAttributeNames"
 			value="${org.springframework.context.support.VoiceManager.microsoftSpeechObjectLibraryAttributeNames}" />
 		<!-- -->
+		<property name="tabOrders"
+			value="${org.springframework.context.support.VoiceManager.tabOrders}" />
+		<!-- -->
 		<property name="gaKuNenBeTsuKanJiListPageUrl"
 			ref="gaKuNenBeTsuKanJiListPageUrl" />
 		<property name="gaKuNenBeTsuKanJiMultimap"
