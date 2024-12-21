@@ -103,19 +103,19 @@ public class VoiceManagerExportPanel extends JPanel
 
 	private static final String PASSWORD = "Password";
 
-	private ComboBoxModel<Class> cbmWorkbookClass = null;
+	private transient ComboBoxModel<Class> cbmWorkbookClass = null;
 
-	private ComboBoxModel<EncryptionMode> cbmEncryptionMode = null;
+	private transient ComboBoxModel<EncryptionMode> cbmEncryptionMode = null;
 
-	private ComboBoxModel<CompressionLevel> cbmCompressionLevel = null;
+	private transient ComboBoxModel<CompressionLevel> cbmCompressionLevel = null;
 
-	private ComboBoxModel<FileFormat> cbmMicrosoftAccessFileFormat = null;
+	private transient ComboBoxModel<FileFormat> cbmMicrosoftAccessFileFormat = null;
 
-	private IValue0<Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> workbookClassFailableSupplierMap = null;
+	private transient IValue0<Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> workbookClassFailableSupplierMap = null;
 
 	private Class<?> workbookClass = null;
 
-	private PropertyResolver propertyResolver = null;
+	private transient PropertyResolver propertyResolver = null;
 
 	private Duration presentationSlideDuration = null;
 
