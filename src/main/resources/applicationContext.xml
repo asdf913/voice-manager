@@ -1029,10 +1029,6 @@
 		<!-- -->
 		<property name="jlptVocabularyList" ref="JlptVocabularyList" />
 		<!-- -->
-		<property
-			name="onlineNHKJapanesePronunciationsAccentFailableFunction"
-			ref="OnlineNHKJapanesePronunciationsAccentFailableFunction" />
-		<!-- -->
 		<property name="preferredPronunciationAudioFormat"
 			value="${org.springframework.context.support.VoiceManager.preferredPronunciationAudioFormat}" />
 		<!-- -->

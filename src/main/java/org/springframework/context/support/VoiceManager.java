@@ -227,7 +227,6 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.function.FailableRunnable;
 import org.apache.commons.lang3.function.FailableSupplier;
-import org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunction;
 import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -848,8 +847,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private transient IValue0<List<String>> jouYouKanJiList = null;
 
 	private transient IValue0<List<JlptVocabulary>> jlptVocabularyList = null;
-
-	private transient OnlineNHKJapanesePronunciationsAccentFailableFunction onlineNHKJapanesePronunciationsAccentFailableFunction = null;
 
 	private String preferredPronunciationAudioFormat = null;
 
@@ -1753,11 +1750,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setJlptVocabularyList(final List<JlptVocabulary> jlptVocabularyList) {
 		this.jlptVocabularyList = Unit.with(jlptVocabularyList);
-	}
-
-	public void setOnlineNHKJapanesePronunciationsAccentFailableFunction(
-			final OnlineNHKJapanesePronunciationsAccentFailableFunction onlineNHKJapanesePronunciationsAccentFailableFunction) {
-		this.onlineNHKJapanesePronunciationsAccentFailableFunction = onlineNHKJapanesePronunciationsAccentFailableFunction;
 	}
 
 	public void setPreferredPronunciationAudioFormat(final String preferredPronunciationAudioFormat) {
