@@ -136,7 +136,10 @@ public class VoiceManagerExportPanel extends JPanel
 	@Note("JLPT Folder Name Prefix")
 	private JTextComponent tfJlptFolderNamePrefix = null;
 
-	private JTextComponent tfExportHtmlFileName, tfPresentationSlideDuration, tfPhraseCounter, tfPhraseTotal = null;
+	@Note("Export HTML File Name")
+	private JTextComponent tfExportHtmlFileName = null;
+
+	private JTextComponent tfPresentationSlideDuration, tfPhraseCounter, tfPhraseTotal = null;
 
 	@Note("Over MP3 Title")
 	private AbstractButton cbOverMp3Title = null;
@@ -147,7 +150,10 @@ public class VoiceManagerExportPanel extends JPanel
 	@Note("JLPT As Folder")
 	private AbstractButton cbJlptAsFolder = null;
 
-	private AbstractButton cbExportHtml, cbExportListHtml, cbExportWebSpeechSynthesisHtml, cbExportHtmlAsZip,
+	@Note("Export HTML")
+	private AbstractButton cbExportHtml = null;
+
+	private AbstractButton cbExportListHtml, cbExportWebSpeechSynthesisHtml, cbExportHtmlAsZip,
 			cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet, cbExportPresentation,
 			cbEmbedAudioInPresentation, cbHideAudioImageInPresentation, cbExportMicrosoftAccess, btnExport = null;
 
