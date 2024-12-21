@@ -435,8 +435,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String COMPONENT = "component";
 
-	private static final String PRONUNCIATION = "Pronunciation";
-
 	/**
 	 * @see java.lang.String#format(java.lang.String,java.lang.Object...)
 	 * 
@@ -612,13 +610,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient MutableComboBoxModel<Pronunciation> mcbmPronunciation = null;
 
-	private transient MutableComboBoxModel<String> mcbmPronounicationAudioFormat = null;
-
 	private transient javax.swing.text.Document tfTextImportDocument = null;
-
-	@Group(PRONUNCIATION)
-	@Nullable
-	private JComboBox<Pronunciation> jcbPronunciation = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -4064,11 +4056,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				FailableStreamUtil.stream(FailableStreamUtil.map(fs, f -> FieldUtils.readField(f, this, true))),
 				Objects::nonNull)), source), () -> actionPerformedForSystemClipboardAnnotated(nonTest, source));
 		//
-		// Pronunciation
-		//
-		testAndRun(Util.contains(getObjectsByGroupAnnotation(this, PRONUNCIATION), source),
-				() -> actionPerformedForPronunciation(source));
-		//
 		if (Objects.equals(source, btnExportBrowse)) {
 			//
 			actionPerformedForExportBrowse(headless);
@@ -4076,45 +4063,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} else if (Objects.equals(source, btnExport)) {
 			//
 			actionPerformedForExport(headless);
-			//
-		} // if
-			//
-	}
-
-	@Nullable
-	private static Map<String, String> getAudioUrls(@Nullable final Pronunciation instnace) {
-		return instnace != null ? instnace.getAudioUrls() : null;
-	}
-
-	private static void pronounicationChanged(@Nullable final Pronunciation pronunciation,
-			final MutableComboBoxModel<String> mcbmAudioFormat, final String preferredPronunciationAudioFormat,
-			final JTextComponent jtc) {
-		//
-		Util.forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
-		//
-		setSelectedItem(mcbmAudioFormat, null);
-		//
-		final Map<String, String> audioUrls = getAudioUrls(pronunciation);
-		//
-		if (MapUtils.isNotEmpty(audioUrls)) {
-			//
-			addElement(mcbmAudioFormat, null);
-			//
-			audioUrls.forEach((k, v) -> addElement(mcbmAudioFormat, k));
-			//
-		} // if
-			//
-		if (Util.containsKey(audioUrls, preferredPronunciationAudioFormat)) {
-			//
-			setSelectedItem(mcbmAudioFormat, preferredPronunciationAudioFormat);
-			//
-		} // if
-			//
-		final String pageUrl = pronunciation != null ? pronunciation.getPageUrl() : null;
-		//
-		if (StringUtils.isNotBlank(pageUrl)) {
-			//
-			Util.setText(jtc, pageUrl);
 			//
 		} // if
 			//
@@ -4229,21 +4177,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			final String string = IValue0Util.getValue0(stringValue);
 			//
 			testAndRun(nonTest, () -> setContents(clipboard, new StringSelection(string), null));
-			//
-			return;
-			//
-		} // if
-			//
-		throw new IllegalStateException();
-		//
-	}
-
-	private void actionPerformedForPronunciation(final Object source) {
-		//
-		if (Objects.equals(source, jcbPronunciation)) {
-			//
-			pronounicationChanged(Util.cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
-					mcbmPronounicationAudioFormat, preferredPronunciationAudioFormat, tfPronunciationPageUrl);
 			//
 			return;
 			//

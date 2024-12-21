@@ -233,7 +233,6 @@ import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.Mp3File;
 
 import domain.JlptVocabulary;
-import domain.Pronunciation;
 import domain.Voice;
 import domain.VoiceList;
 import freemarker.cache.ClassTemplateLoader;
@@ -311,11 +310,11 @@ class VoiceManagerTest {
 			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
 			METHOD_GET_WRITER, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME,
 			METHOD_GET_PAGE_TITLE, METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL,
-			METHOD_ADD_ALL, METHOD_PRONOUNICATION_CHANGED, METHOD_REMOVE_ELEMENT_AT, METHOD_IS_ALL_ATTRIBUTES_MATCHED,
-			METHOD_SET_AUTO_FILTER, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT, METHOD_GET_NUMBER, METHOD_GET_RENDERER,
-			METHOD_SET_RENDERER, METHOD_SORTED, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL,
-			METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM, METHOD_SUBMIT, METHOD_FORMAT_HEX,
-			METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
+			METHOD_ADD_ALL, METHOD_REMOVE_ELEMENT_AT, METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_SET_AUTO_FILTER,
+			METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT, METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER,
+			METHOD_SORTED, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER,
+			METHOD_OPEN_STREAM, METHOD_SUBMIT, METHOD_FORMAT_HEX, METHOD_SET_SELECTED_INDEX,
+			METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -726,9 +725,6 @@ class VoiceManagerTest {
 		(METHOD_GET_LEVEL = clz.getDeclaredMethod("getLevel", JlptVocabulary.class)).setAccessible(true);
 		//
 		(METHOD_ADD_ALL = clz.getDeclaredMethod("addAll", Collection.class, Collection.class)).setAccessible(true);
-		//
-		(METHOD_PRONOUNICATION_CHANGED = clz.getDeclaredMethod("pronounicationChanged", Pronunciation.class,
-				MutableComboBoxModel.class, String.class, JTextComponent.class)).setAccessible(true);
 		//
 		(METHOD_REMOVE_ELEMENT_AT = clz.getDeclaredMethod("removeElementAt", MutableComboBoxModel.class, Integer.TYPE))
 				.setAccessible(true);
@@ -2381,18 +2377,6 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-			// jcbPronunciation
-			//
-		final JComboBox<?> jcbPronunciation = new JComboBox();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "jcbPronunciation", jcbPronunciation, true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(jcbPronunciation, 0, null)));
-		//
 	}
 
 	@Test
@@ -6367,32 +6351,6 @@ class VoiceManagerTest {
 	private static <E> void addAll(final Collection<E> a, final Collection<? extends E> b) throws Throwable {
 		try {
 			METHOD_ADD_ALL.invoke(null, a, b);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testPronounicationChanged() {
-		//
-		final Pronunciation pronunciation = new Pronunciation();
-		//
-		pronunciation.setAudioUrls(Collections.singletonMap(null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> pronounicationChanged(pronunciation, null, null, null));
-		//
-		pronunciation.setPageUrl("A");
-		//
-		Assertions.assertDoesNotThrow(() -> pronounicationChanged(pronunciation, null, null, null));
-		//
-	}
-
-	private static void pronounicationChanged(final Pronunciation pronunciation,
-			final MutableComboBoxModel<String> mcbmAudioFormat, final String preferredPronunciationAudioFormat,
-			final JTextComponent jtc) throws Throwable {
-		try {
-			METHOD_PRONOUNICATION_CHANGED.invoke(null, pronunciation, mcbmAudioFormat,
-					preferredPronunciationAudioFormat, jtc);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
