@@ -69,6 +69,7 @@ import java.util.Date;
 import java.util.HexFormat;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -369,7 +370,7 @@ class VoiceManagerTest {
 			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_SORTED, METHOD_GET_ID3V1_TAG,
 			METHOD_GET_ID3V2_TAG, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER,
 			METHOD_SHOW_OPEN_DIALOG, METHOD_OPEN_STREAM, METHOD_SUBMIT, METHOD_OPEN_CONNECTION, METHOD_FORMAT_HEX,
-			METHOD_SET_SELECTED_INDEX = null;
+			METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -994,6 +995,9 @@ class VoiceManagerTest {
 		(METHOD_FORMAT_HEX = clz.getDeclaredMethod("formatHex", HexFormat.class, byte[].class)).setAccessible(true);
 		//
 		(METHOD_SET_SELECTED_INDEX = clz.getDeclaredMethod("setSelectedIndex", JTabbedPane.class, Number.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_TITLED_COMPONENT_MAP = clz.getDeclaredMethod("getTitledComponentMap", Map.class, String[].class))
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
@@ -9512,6 +9516,93 @@ class VoiceManagerTest {
 	private static void setSelectedIndex(final JTabbedPane instance, final Number index) throws Throwable {
 		try {
 			METHOD_SET_SELECTED_INDEX.invoke(null, instance, index);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static class TitledComponent extends Component implements Titled {
+
+		private String title = null;
+
+		public TitledComponent(final String title) {
+			this.title = title;
+		}
+
+		@Override
+		public String getTitle() {
+			return title;
+		}
+
+	}
+
+	@Test
+	void testGetTitledComponentMap() throws Throwable {
+		//
+		final Map<String, Component> emptyMap = Collections.emptyMap();
+		//
+		Assertions.assertEquals(emptyMap, getTitledComponentMap(null, null));
+		//
+		final Map<String, Component> map = Reflection.newProxy(Map.class, ih);
+		//
+		Assertions.assertEquals(emptyMap, getTitledComponentMap(map, null));
+		//
+		if (ih != null) {
+			//
+			ih.entrySet = Collections.singleton(null);
+			//
+		} // if
+			//
+		Assertions.assertEquals(emptyMap, getTitledComponentMap(map, null));
+		//
+		if (ih != null) {
+			//
+			ih.entrySet = Collections.singleton(Pair.of(null, null));
+			//
+		} // if
+			//
+		Assertions.assertEquals(emptyMap, getTitledComponentMap(map, null));
+		//
+		final Object object = new TitledComponent(null);
+		//
+		if (ih != null) {
+			//
+			ih.entrySet = Collections.singleton(Pair.of(null, object));
+			//
+		} // if
+			//
+		Assertions.assertEquals(Collections.singletonMap(null, object), getTitledComponentMap(map, null));
+		//
+		final String a = "a";
+		//
+		final Object oa = new TitledComponent(a);
+		//
+		final String b = "b";
+		//
+		final Object ob = new TitledComponent(b);
+		//
+		if (ih != null) {
+			//
+			ih.entrySet = new LinkedHashSet<Map.Entry<?, ?>>(Arrays.asList(Pair.of(null, oa), Pair.of(null, ob)));
+			//
+		} // if
+			//
+		Assertions.assertEquals(Map.of(a, oa, b, ob), getTitledComponentMap(map, a, b));
+		//
+		Assertions.assertEquals(Map.of(b, ob, a, oa), getTitledComponentMap(map, b, a));
+		//
+	}
+
+	private static Map<String, Component> getTitledComponentMap(final Map<String, Component> cs, final String... orders)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TITLED_COMPONENT_MAP.invoke(null, cs, orders);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Map) {
+				return (Map) obj;
+			}
+			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -98,6 +98,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
 import java.util.Spliterator;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -649,7 +650,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private transient ComboBoxModel<?> cbmAudioFormatExecute = null;
 
 	private transient ComboBoxModel<Boolean> cbmIsKanji = null;
-
+	
 	@Url("https://ja.wikipedia.org/wiki/%E5%B8%B8%E7%94%A8%E6%BC%A2%E5%AD%97%E4%B8%80%E8%A6%A7")
 	private transient ComboBoxModel<Boolean> cbmJouYouKanJi = null;
 
@@ -2167,9 +2168,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				() -> add(craeteSpeechApiInstallationWarningJPanel(microsoftSpeechPlatformRuntimeDownloadPageUrl),
 						WRAP));
 		//
-		forEach(Util.values(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Component.class)),
-				x -> testAndAccept(Objects::nonNull, Util.cast(Titled.class, x),
-						y -> jTabbedPane.addTab(getTitle(y), x)));
+		forEach(Util.stream(Util.entrySet(
+				getTitledComponentMap(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Component.class),
+						"TTS", "Import(Single)", "Import(Batch)"))), // TODO
+				x -> jTabbedPane.addTab(Util.getKey(x), Util.getValue(x)));
 		//
 		jTabbedPane.addTab("Export", createExportPanel(cloneLayoutManager()));
 		//
@@ -2225,6 +2227,63 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 											predicate))));
 					//
 				});
+		//
+	}
+
+	private static Map<String, Component> getTitledComponentMap(final Map<String, Component> cs,
+			final String... orders) {
+		//
+		final Iterable<Entry<String, Component>> entrySet = Util.entrySet(cs);
+		//
+		Map<String, Component> m1 = null;
+		//
+		if (Util.iterator(entrySet) != null) {
+			//
+			Component c = null;
+			//
+			Titled titled = null;
+			//
+			for (final Entry<String, Component> entry : entrySet) {
+				//
+				if ((titled = Util.cast(Titled.class, c = Util.getValue(entry))) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				Util.put(m1 = ObjectUtils.getIfNull(m1, LinkedHashMap::new), getTitle(titled), c);
+				//
+			} // for
+				//
+		} // if
+			//
+		final Map<String, Component> m2 = new TreeMap<String, Component>((a, b) -> {
+			//
+			final int ia = ArrayUtils.indexOf(orders, a);
+			//
+			final int ib = ArrayUtils.indexOf(orders, b);
+			//
+			if (ia > ib) {
+				//
+				return 1;
+				//
+			} else if (ia < ib) {
+				//
+				return -1;
+				//
+			} // if
+				//
+			return 0;
+			//
+		});
+		//
+		if (m1 != null) {
+			//
+			m2.putAll(m1);
+			//
+		} // if
+			//
+		return m2;
 		//
 	}
 
@@ -3014,7 +3073,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	
 	private static boolean isAnnotationPresent(@Nullable final AnnotatedElement instance,
 			@Nullable final Class<? extends Annotation> annotationClass) {
 		return instance != null && annotationClass != null && instance.isAnnotationPresent(annotationClass);
