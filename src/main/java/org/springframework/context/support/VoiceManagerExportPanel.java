@@ -183,7 +183,10 @@ public class VoiceManagerExportPanel extends JPanel
 	@Note("Embed Audio In Presentation")
 	private AbstractButton cbEmbedAudioInPresentation = null;
 
-	private AbstractButton cbHideAudioImageInPresentation, cbExportMicrosoftAccess, btnExport = null;
+	@Note("Hide Audio Image In Presentation")
+	private AbstractButton cbHideAudioImageInPresentation = null;
+
+	private AbstractButton cbExportMicrosoftAccess, btnExport = null;
 
 	private JProgressBar progressBarExport = null;
 
