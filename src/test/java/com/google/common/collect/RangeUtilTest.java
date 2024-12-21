@@ -66,7 +66,7 @@ class RangeUtilTest {
 			//
 			if (Objects.equals(m.getReturnType(), Boolean.TYPE)
 					|| Boolean.logicalAnd(Objects.equals(m.getName(), "createRange"),
-							Arrays.equals(m.getParameterTypes(), new Class<?>[] { Range.class, Range.class }))) {
+							Arrays.equals(m.getParameterTypes(), new Class<?>[] { Integer.class, Integer.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
