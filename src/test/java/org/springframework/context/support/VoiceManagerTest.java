@@ -956,8 +956,6 @@ class VoiceManagerTest {
 
 		private Collection<?> values = null;
 
-		private byte[] convertedByteArray = null;
-
 		private String[] beanDefinitionNames = null;
 
 		private Map<?, ?> attributeMap = null;
