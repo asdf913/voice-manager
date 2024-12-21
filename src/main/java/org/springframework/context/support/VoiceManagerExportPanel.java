@@ -540,7 +540,7 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	private static void setEditable(final boolean editable, final JTextComponent... jtcs) {
+	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
 		//
 		JTextComponent jtc = null;
 		//
@@ -558,7 +558,7 @@ public class VoiceManagerExportPanel extends JPanel
 			//
 	}
 
-	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
+	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
 		//
 		AbstractButton ab = null;
 		//
@@ -574,7 +574,8 @@ public class VoiceManagerExportPanel extends JPanel
 			//
 	}
 
-	private static <T> Optional<T> reduce(final Stream<T> instance, final BinaryOperator<T> accumulator) {
+	private static <T> Optional<T> reduce(@Nullable final Stream<T> instance,
+			@Nullable final BinaryOperator<T> accumulator) {
 		//
 		return instance != null && (accumulator != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.reduce(accumulator)
@@ -590,7 +591,7 @@ public class VoiceManagerExportPanel extends JPanel
 		return instance != null ? instance.getFormat() : null;
 	}
 
-	private static <K, V> void putAll(final Map<K, V> a, final Map<? extends K, ? extends V> b) {
+	private static <K, V> void putAll(@Nullable final Map<K, V> a, @Nullable final Map<? extends K, ? extends V> b) {
 		if (a != null && b != null) {
 			a.putAll(b);
 		}
@@ -603,13 +604,14 @@ public class VoiceManagerExportPanel extends JPanel
 		}
 	}
 
-	private static void setToolTipText(final JComponent instance, final String toolTipText) {
+	private static void setToolTipText(@Nullable final JComponent instance, final String toolTipText) {
 		if (instance != null) {
 			instance.setToolTipText(toolTipText);
 		}
 	}
 
-	private static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator) {
+	private static <T> Optional<T> max(@Nullable final Stream<T> instance,
+			@Nullable final Comparator<? super T> comparator) {
 		//
 		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || comparator != null)
 				? instance.max(comparator)
@@ -669,7 +671,7 @@ public class VoiceManagerExportPanel extends JPanel
 		return instance != null ? instance.getRenderer() : null;
 	}
 
-	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) {
+	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, final Object selectedItem) {
 		if (instance != null) {
 			instance.setSelectedItem(selectedItem);
 		}
@@ -705,7 +707,8 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	private static <E extends Throwable> void testAndRun(final boolean b, final FailableRunnable<E> runnable) throws E {
+	private static <E extends Throwable> void testAndRun(final boolean b, @Nullable final FailableRunnable<E> runnable)
+			throws E {
 		//
 		if (b && runnable != null) {
 			//
@@ -742,7 +745,7 @@ public class VoiceManagerExportPanel extends JPanel
 		return clz != null ? clz.getDeclaredConstructor(parameterTypes) : null;
 	}
 
-	private static <T> T[] toArray(final Collection<T> instance, final T[] array) {
+	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.toArray(array)
