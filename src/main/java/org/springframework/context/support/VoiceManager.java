@@ -240,7 +240,6 @@ import org.apache.ibatis.session.SqlSessionFactoryUtil;
 import org.apache.poi.hssf.record.crypto.Biff8EncryptionKey;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.poifs.crypt.EncryptionInfo;
@@ -288,7 +287,6 @@ import org.jsoup.select.Elements;
 import org.odftoolkit.odfdom.doc.OdfPresentationDocument;
 import org.odftoolkit.odfdom.pkg.OdfPackage;
 import org.odftoolkit.odfdom.pkg.OdfPackageDocument;
-import org.openxmlformats.schemas.officeDocument.x2006.customProperties.CTProperty;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
@@ -356,7 +354,6 @@ import com.healthmarketscience.jackcess.util.ImportUtil;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.j256.simplemagic.ContentType;
-import com.mariten.kanatools.KanaConverter;
 import com.mpatric.mp3agic.BaseException;
 import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.Mp3File;
@@ -372,7 +369,6 @@ import domain.Voice.ByteArray;
 import domain.Voice.Yomi;
 import domain.VoiceList;
 import fr.free.nrw.jakaroma.Jakaroma;
-import fr.free.nrw.jakaroma.JakaromaUtil;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.cache.StringTemplateLoaderUtil;
@@ -6028,27 +6024,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static String getSheetName(@Nullable final Sheet instance) {
-		return instance != null ? instance.getSheetName() : null;
-	}
-
-	@Nullable
 	private static Integer getPhysicalNumberOfRows(@Nullable final Sheet instance) {
 		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfRows()) : null;
-	}
-
-	private static boolean contains(@Nullable final CustomProperties instance, final String name) {
-		return instance != null && instance.contains(name);
-	}
-
-	@Nullable
-	private static CTProperty getProperty(@Nullable final CustomProperties instance, final String name) {
-		return instance != null ? instance.getProperty(name) : null;
-	}
-
-	@Nullable
-	private static String getLpwstr(@Nullable final CTProperty instance) {
-		return instance != null ? instance.getLpwstr() : null;
 	}
 
 	@Override
@@ -7146,24 +7123,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void writeVoiceToFile(final ObjectMap objectMap, @Nullable final String text,
-			@Nullable final String voiceId, @Nullable final Integer rate, final Integer volume) {
-		//
-		final SpeechApi speechApi = ObjectMap.getObject(objectMap, SpeechApi.class);
-		//
-		if (speechApi != null) {
-			//
-			speechApi.writeVoiceToFile(text, voiceId
-			//
-					, intValue(rate, 0)// rate
-					//
-					, Math.min(Math.max(intValue(volume, 100), 0), 100)// volume
-					, ObjectMap.getObject(objectMap, File.class));
-			//
-		} // if
-			//
-	}
-
 	private Integer getRate() {
 		//
 		final Integer speechRate = getValue(jsSpeechRate);
@@ -7605,49 +7564,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static void importVoice(final ObjectMap objectMap, @Nullable final File folder, final String voiceId,
-			@Nullable final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) throws Exception {
-		//
-		final VoiceManager vm = ObjectMap.getObject(objectMap, VoiceManager.class);
-		//
-		final ImportTask it = ObjectMap.getObject(objectMap, ImportTask.class);
-		//
-		final Voice voice = it != null ? it.voice : null;
-		//
-		final String filePath = getFilePath(voice);
-		//
-		if (StringUtils.isNotBlank(filePath)) {
-			//
-			if (!(it.file = new File(filePath)).exists() && !(it.file = new File(folder, filePath)).exists()) {
-				//
-				it.file = null;
-				//
-			} // if
-				//
-			setSource(it.voice, StringUtils.defaultIfBlank(getSource(voice),
-					getMp3TagValue(it.file, x -> StringUtils.isNotBlank(Util.toString(x)), getMp3Tags(vm))));
-			//
-		} else {
-			//
-			if (Objects.equals(Boolean.FALSE, voice != null ? voice.getTts() : null)) {
-				//
-				importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(objectMap, filePath);
-				//
-			} // if
-				//
-			if ((it == null || it.file == null)
-					&& SpeechApi.isInstalled(ObjectMap.getObject(objectMap, SpeechApi.class))) {
-				//
-				ObjectMap.setObject(objectMap, ImportTask.class, it);
-				//
-				importVoiceBySpeechApi(objectMap, filePath, voiceId, languageCodeToTextObjIntFunction);
-				//
-			} // if
-				//
-		} // if
-			//
-	}
-
 	private static void importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(final ObjectMap objectMap,
 			final String filePath) throws Exception {
 		//
@@ -7693,81 +7609,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
-	}
-
-	private static void importVoiceBySpeechApi(final ObjectMap objectMap, @Nullable final String filePath,
-			final String voiceId, @Nullable final ObjIntFunction<String, String> languageCodeToTextObjIntFunction)
-			throws IllegalAccessException, InvocationTargetException, IOException {
-		//
-		final ImportTask it = ObjectMap.getObject(objectMap, ImportTask.class);
-		//
-		if (it == null) {
-			//
-			return;
-			//
-		} // if
-			//
-		final Voice voice = it.voice;
-		//
-		if ((it.file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), filePath)) != null) {
-			//
-			ObjectMap.setObject(objectMap, File.class, it.file);
-			//
-			final VoiceManager vm = ObjectMap.getObject(objectMap, VoiceManager.class);
-			//
-			writeVoiceToFile(objectMap, getText(voice),
-					//
-					// voiceId
-					//
-					voiceId
-					//
-					// rate
-					//
-					, getRate(vm),
-					//
-					// volume
-					//
-					Math.min(Math.max(intValue(getValue(vm != null ? vm.jsSpeechVolume : null), 100), 0), 100)
-			//
-			);
-			//
-			final ByteConverter byteConverter = ObjectMap.getObject(objectMap, ByteConverter.class);
-			//
-			testAndAccept(Objects::nonNull,
-					byteConverter != null ? byteConverter.convert(Files.readAllBytes(Path.of(toURI(it.file)))) : null,
-					x -> FileUtils.writeByteArrayToFile(it.file, x));
-			//
-			deleteOnExit(it.file);
-			//
-		} // if
-			//
-		if (voice != null) {
-			//
-			voice.setTts(Boolean.TRUE);
-			//
-		} // if
-			//
-		setSource(voice, StringUtils.defaultIfBlank(getSource(voice),
-				Provider.getProviderName(ObjectMap.getObject(objectMap, Provider.class))));
-		//
-		try {
-			//
-			setLanguage(voice, StringUtils.defaultIfBlank(getLanguage(voice), ObjIntFunctionUtil.apply(
-					languageCodeToTextObjIntFunction,
-					SpeechApi.getVoiceAttribute(ObjectMap.getObject(objectMap, SpeechApi.class), voiceId, LANGUAGE),
-					16)));
-			//
-		} catch (final Error e) {
-			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-			//
-		} // try
-			//
-	}
-
-	@Nullable
-	private static String[] getMp3Tags(@Nullable final VoiceManager instance) {
-		return instance != null ? instance.mp3Tags : null;
 	}
 
 	@Nullable
@@ -7925,65 +7766,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static Integer getCurrentSheetIndex(@Nullable final Sheet sheet) {
-		//
-		Integer currentSheetIndex = null;
-		//
-		final Workbook workbook = sheet != null ? sheet.getWorkbook() : null;
-		//
-		if (workbook != null) {
-			//
-			final int numberOfSheets = getNumberOfSheets(workbook);
-			//
-			for (int i = 0; i < numberOfSheets; i++) {
-				//
-				if (!Objects.equals(workbook.getSheetName(i), getSheetName(sheet))) {
-					continue;
-				} // if
-					//
-				if (currentSheetIndex == null) {
-					currentSheetIndex = Integer.valueOf(i);
-				} else {
-					throw new IllegalStateException();
-				} // if
-					//
-			} // for
-				//
-		} // if
-			//
-		return currentSheetIndex;
-		//
-	}
-
-	@Nullable
 	private static <T> T[] getEnumConstants(@Nullable final Class<T> instance) {
 		return instance != null ? instance.getEnumConstants() : null;
-	}
-
-	@Nullable
-	private static IValue0<Boolean> getBoolean(final CustomProperties instance, final String name) {
-		//
-		final CTProperty ctProperty = testAndApply(VoiceManager::contains, instance, name, VoiceManager::getProperty,
-				null);
-		//
-		final Boolean B = ctProperty != null ? ctProperty.getBool() : null;
-		//
-		IValue0<Boolean> result = null;
-		//
-		final String lLpwstr = getLpwstr(ctProperty);
-		//
-		if (StringUtils.isNotBlank(lLpwstr)) {
-			//
-			result = Unit.with(Boolean.valueOf(lLpwstr));
-			//
-		} else if (B != null) {
-			//
-			result = Unit.with(B);
-			//
-		} // if
-			//
-		return result;
-		//
 	}
 
 	@Nullable
@@ -7999,72 +7783,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static String getHiragana(@Nullable final Voice instance) {
 		return instance != null ? instance.getHiragana() : null;
-	}
-
-	private static void setHiraganaOrKatakana(@Nullable final Voice voice) {
-		//
-		final String hiragana = getHiragana(voice);
-		//
-		final String katakana = voice != null ? voice.getKatakana() : null;
-		//
-		final boolean isHiraganaBlank = StringUtils.isBlank(hiragana);
-		//
-		final boolean isKatakanaBlank = StringUtils.isBlank(katakana);
-		//
-		if ((isHiraganaBlank || isKatakanaBlank) && !(isHiraganaBlank && isKatakanaBlank)) {
-			//
-			if (isHiraganaBlank) {
-				//
-				voice.setHiragana(testAndApply(Objects::nonNull, katakana,
-						x -> KanaConverter.convertKana(x, KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA), null));
-				//
-			} else {
-				//
-				voice.setKatakana(testAndApply(Objects::nonNull, hiragana,
-						x -> KanaConverter.convertKana(x, KanaConverter.OP_ZEN_HIRA_TO_ZEN_KATA), null));
-				//
-			} // if
-				//
-		} // if
-			//
-	}
-
-	private static void setRomaji(final Voice voice, final Jakaroma jakaroma) {
-		//
-		final String romaji = getRomaji(voice);
-		//
-		final String hiragana = getHiragana(voice);
-		//
-		if (StringUtils.isBlank(romaji) && StringUtils.isNotBlank(hiragana)) {
-			//
-			voice.setRomaji(JakaromaUtil.convert(jakaroma, hiragana, false, false));
-			//
-		} // if
-			//
-	}
-
-	@Nullable
-	private static ObjectMap copyObjectMap(@Nullable final ObjectMap instance) {
-		//
-		if (instance != null && Proxy.isProxyClass(Util.getClass(instance))) {
-			//
-			final IH ihOld = Util.cast(IH.class, Proxy.getInvocationHandler(instance));
-			//
-			final IH ihNew = new IH();
-			//
-			if (ihOld != null) {
-				//
-				ihNew.objects = ObjectUtils.defaultIfNull(
-						testAndApply(Objects::nonNull, ihOld.objects, LinkedHashMap::new, null), ihNew.objects);
-				//
-			} // if
-				//
-			return Reflection.newProxy(ObjectMap.class, ihNew);
-			//
-		} // if
-			//
-		return null;
-		//
 	}
 
 	private static void shutdown(@Nullable final ExecutorService instance) {
