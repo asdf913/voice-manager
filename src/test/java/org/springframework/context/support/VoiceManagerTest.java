@@ -365,10 +365,9 @@ class VoiceManagerTest {
 			METHOD_CREATE_FUNCTION_FOR_BTN_CONVERT_TO_HIRAGANA, METHOD_WRITER, METHOD_READ_LINE, METHOD_PRINT_LN,
 			METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_NUMERIC_CELL_VALUE, METHOD_SET_AUTO_FILTER,
 			METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT, METHOD_GET_IMAGE_FORMAT,
-			METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY, METHOD_GET_VALUE_COLLECTION_BY_KEY, METHOD_GET_NUMBER,
-			METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_SORTED, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL,
-			METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG, METHOD_OPEN_STREAM, METHOD_SUBMIT,
-			METHOD_OPEN_CONNECTION, METHOD_FORMAT_HEX, METHOD_SET_SELECTED_INDEX,
+			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_SORTED,
+			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG,
+			METHOD_OPEN_STREAM, METHOD_SUBMIT, METHOD_OPEN_CONNECTION, METHOD_FORMAT_HEX, METHOD_SET_SELECTED_INDEX,
 			METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
@@ -948,12 +947,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_IMAGE_FORMAT = clz.getDeclaredMethod("getImageFormat", IValue0.class, Collection.class))
 				.setAccessible(true);
-		//
-		(METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY = clz.getDeclaredMethod("getIValue0FromMapsByKey", Iterable.class,
-				Object.class, Function.class)).setAccessible(true);
-		//
-		(METHOD_GET_VALUE_COLLECTION_BY_KEY = clz.getDeclaredMethod("getValueCollectionByKey", Iterable.class,
-				Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_NUMBER = clz.getDeclaredMethod("getNumber", Object.class, Iterable.class)).setAccessible(true);
 		//
@@ -2842,60 +2835,6 @@ class VoiceManagerTest {
 
 	@Test
 	void testActionPerformed3() throws Throwable {
-		//
-		// btnConvertToHiragana
-		//
-		final AbstractButton btnConvertToHiraganaOrKatakana = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnConvertToHiraganaOrKatakana", btnConvertToHiraganaOrKatakana,
-					true);
-			//
-		} // if
-			//
-		final ActionEvent actionEventBtnConvertToHiraganaOrKatakana = new ActionEvent(btnConvertToHiraganaOrKatakana, 0,
-				null);
-		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiraganaOrKatakana));
-		//
-		// org.springframework.context.support.VoiceManager.multimaps
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "multimapHiragana", Reflection.newProxy(Collection.class, ih),
-					true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiraganaOrKatakana));
-		//
-		final List<Multimap<?, ?>> multimaps = new ArrayList<>(Collections.singleton(null));
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "multimapHiragana", multimaps, true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiraganaOrKatakana));
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "tfTextImport", new JTextField(), true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiraganaOrKatakana));
-		//
-		multimaps.set(0, ImmutableMultimap.of(EMPTY, EMPTY));
-		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnConvertToHiraganaOrKatakana));
-		//
-	}
-
-	@Test
-	void testActionPerformed4() throws Throwable {
 		//
 		final Class<?> clz = Util.getClass(instance != null ? instance.getToolkit() : null);
 		//
@@ -8927,90 +8866,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetIValue0FromMapsByKey() throws Throwable {
-		//
-		final Iterable iterable = Reflection.newProxy(Iterable.class, ih);
-		//
-		Assertions.assertNull(getIValue0FromMapsByKey(iterable, null, null));
-		//
-		if (ih != null) {
-			//
-			ih.iterator = iterator(Collections.singleton(null));
-			//
-		} // if
-			//
-		Assertions.assertNull(getIValue0FromMapsByKey(iterable, null, null));
-		//
-		final Map<?, ?> map = Collections.singletonMap(null, null);
-		//
-		if (ih != null) {
-			//
-			ih.iterator = iterator(Collections.singleton(map));
-			//
-		} // if
-			//
-		Assertions.assertEquals(Unit.with(null), getIValue0FromMapsByKey(iterable, null, null));
-		//
-		if (ih != null) {
-			//
-			ih.iterator = iterator(Collections.nCopies(2, map));
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> getIValue0FromMapsByKey(iterable, null, null));
-		//
-	}
-
-	private static IValue0<?> getIValue0FromMapsByKey(final Iterable<Map> maps, final Object key,
-			final Function<Collection<?>, IValue0<?>> function) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY.invoke(null, maps, key, function);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof IValue0) {
-				return (IValue0) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetValueCollectionByKey() throws Throwable {
-		//
-		Assertions.assertNull(getValueCollectionByKey(null, null));
-		//
-		Assertions.assertNull(getValueCollectionByKey(Reflection.newProxy(Iterable.class, ih), null));
-		//
-		Assertions.assertNull(getValueCollectionByKey(Collections.emptySet(), null));
-		//
-		Assertions.assertNull(getValueCollectionByKey(Collections.singleton(null), null));
-		//
-		final Iterable<Map> maps = Collections.singleton(Collections.singletonMap(null, null));
-		//
-		Assertions.assertNull(getValueCollectionByKey(maps, EMPTY));
-		//
-		Assertions.assertEquals(Collections.singletonList(null), getValueCollectionByKey(maps, null));
-		//
-	}
-
-	private static Collection<Object> getValueCollectionByKey(final Iterable<Map> maps, final Object key)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_GET_VALUE_COLLECTION_BY_KEY.invoke(null, maps, key);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Collection) {
-				return (Collection) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

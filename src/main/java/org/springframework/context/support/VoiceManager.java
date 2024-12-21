@@ -508,8 +508,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	 */
 	private static final String WMIN_ONLY_FORMAT = "wmin %1$s";
 
-	private static final String HIRAGANA_WITH_FIRST_CAPTICALIZED_LETTER = "Hiragana";
-
 	private static final FailablePredicate<File, RuntimeException> EMPTY_FILE_PREDICATE = f -> f != null && f.exists()
 			&& isFile(f) && longValue(length(f), 0) == 0;
 
@@ -536,7 +534,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Text in Import Pnael")
 	private JTextComponent tfTextImport = null;
 
-	@Note(HIRAGANA_WITH_FIRST_CAPTICALIZED_LETTER)
+	@Note("Hiragana")
 	private JTextComponent tfHiragana = null;
 
 	@Note("Katakana")
@@ -745,8 +743,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Note("TTS Voice")
 	private AbstractButton cbUseTtsVoice = null;
-
-	private AbstractButton btnConvertToHiraganaOrKatakana = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -4256,10 +4252,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			actionPerformedForIpaSymbol(headless);
 			//
-		} else if (Objects.equals(source, btnConvertToHiraganaOrKatakana)) {
-			//
-			actionPerformedForBtnConvertToHiraganaOrKatakana();
-			//
 		} // if
 			//
 	}
@@ -5117,165 +5109,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-	}
-
-	private void actionPerformedForBtnConvertToHiraganaOrKatakana() {
-		//
-		final String textImport = Util.getText(tfTextImport);
-		//
-		// Hiragana
-		//
-		IValue0<?> ivHiragana = getIValue0ByKey(multimapHiragana, textImport,
-				createFunctionForBtnConvertToHiraganaOrKatakana(HIRAGANA_WITH_FIRST_CAPTICALIZED_LETTER));
-		//
-		if (ivHiragana == null) {
-			//
-			ivHiragana = getIValue0FromMapsByKey(mapHiragana, textImport,
-					createFunctionForBtnConvertToHiraganaOrKatakana(HIRAGANA_WITH_FIRST_CAPTICALIZED_LETTER));
-			//
-		} // if
-			//
-			// Katakana
-			//
-		final IValue0<?> ivKatakana = getIValue0ByKey(multimapKatakana, textImport,
-				createFunctionForBtnConvertToHiraganaOrKatakana("Katakana"));
-		//
-		if (ivHiragana != null && ivKatakana != null) {
-			//
-			Util.setText(tfHiragana, Util.toString(IValue0Util.getValue0(ivHiragana)));
-			//
-			Util.setText(tfKatakana, Util.toString(IValue0Util.getValue0(ivKatakana)));
-			//
-		} else if (ivHiragana != null) {
-			//
-			Util.setText(tfHiragana, Util.toString(IValue0Util.getValue0(ivHiragana)));
-			//
-		} else if (ivKatakana != null) {
-			//
-			Util.setText(tfKatakana, Util.toString(IValue0Util.getValue0(ivKatakana)));
-			//
-		} // if
-			//
-	}
-
-	@Nullable
-	private static IValue0<?> getIValue0ByKey(@Nullable final Iterable<Multimap> multimaps, @Nullable final Object key,
-			@Nullable final Function<Collection<?>, IValue0<?>> function) {
-		//
-		if (Util.iterator(multimaps) == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		IValue0<?> iValue0 = null;
-		//
-		int size = 0;
-		//
-		for (final Multimap multimap : multimaps) {
-			//
-			if (MultimapUtil.containsKey(multimap, key)) {
-				//
-				final Collection<?> collection = MultimapUtil.get(multimap, key);
-				//
-				if ((size = IterableUtils.size(collection)) == 1) {
-					//
-					if (iValue0 == null) {
-						//
-						iValue0 = Unit.with(IterableUtils.get(collection, 0));
-						//
-					} else {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-				} else if (size > 1 && function != null) {
-					//
-					iValue0 = Util.apply(function, collection);
-					//
-				} // if
-					//
-			} // if
-				//
-		} // for
-			//
-		return iValue0;
-		//
-	}
-
-	@Nullable
-	private static IValue0<?> getIValue0FromMapsByKey(@Nullable final Iterable<Map> maps, @Nullable final Object key,
-			final Function<Collection<?>, IValue0<?>> function) {
-		//
-		if (Util.iterator(maps) == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		IValue0<?> iValue0 = null;
-		//
-		Object value = null;
-		//
-		for (final Map map : maps) {
-			//
-			if (Util.containsKey(map, key)) {
-				//
-				value = Util.get(map, key);
-				//
-				if (iValue0 == null) {
-					//
-					iValue0 = Unit.with(value);
-					//
-				} else if (!Objects.equals(IValue0Util.getValue0(iValue0), value)) {
-					//
-					final IValue0<?> iv0 = Util.apply(function, getValueCollectionByKey(maps, key));
-					//
-					if (iv0 != null) {
-						//
-						return iv0;
-						//
-					} //
-						//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-			} // if
-				//
-		} // for
-			//
-		return iValue0;
-		//
-	}
-
-	@Nullable
-	private static Collection<Object> getValueCollectionByKey(@Nullable final Iterable<Map> maps,
-			@Nullable final Object key) {
-		//
-		if (Util.iterator(maps) == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		Collection<Object> vs = null;
-		//
-		for (final Map<?, ?> m : maps) {
-			//
-			if (m == null || !Util.containsKey(m, key)) {
-				//
-				continue;
-				//
-			} // if
-				//
-			Util.add(vs = ObjectUtils.getIfNull(vs, ArrayList::new), Util.get(m, key));
-			//
-		} // for
-			//
-		return vs;
-		//
 	}
 
 	@Nullable
