@@ -7462,18 +7462,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
-	private static class ImportVoiceParameters {
-
-		private ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
-
-		@Nullable
-		private static ObjIntFunction<String, String> getLanguageCodeToTextObjIntFunction(
-				@Nullable final ImportVoiceParameters instance) {
-			return instance != null ? instance.languageCodeToTextObjIntFunction : null;
-		}
-
-	}
-
 	private static void submit(@Nullable final ExecutorService instance, final Runnable task) {
 		if (instance != null) {
 			instance.submit(task);
