@@ -214,7 +214,7 @@ public class VoiceManagerExportPanel extends JPanel
 		return object != null ? object : get(defaultSupplier);
 	}
 
-	private static <T, E extends Throwable> T get(final FailableSupplier<T, E> instance) throws E {
+	private static <T, E extends Throwable> T get(@Nullable final FailableSupplier<T, E> instance) throws E {
 		return instance != null ? instance.get() : null;
 	}
 
@@ -576,11 +576,11 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	private static String getEmptyFilePath(final FileFormatDetails instance) {
+	private static String getEmptyFilePath(@Nullable final FileFormatDetails instance) {
 		return instance != null ? instance.getEmptyFilePath() : null;
 	}
 
-	private static JetFormat getFormat(final FileFormatDetails instance) {
+	private static JetFormat getFormat(@Nullable final FileFormatDetails instance) {
 		return instance != null ? instance.getFormat() : null;
 	}
 
@@ -611,19 +611,19 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	private static String[] getFileExtensions(final ContentType instance) {
+	private static String[] getFileExtensions(@Nullable final ContentType instance) {
 		return instance != null ? instance.getFileExtensions() : null;
 	}
 
-	private static String name(final Enum<?> instance) {
+	private static String name(@Nullable final Enum<?> instance) {
 		return instance != null ? instance.name() : null;
 	}
 
-	private static <T> Optional<T> findFirst(final Stream<T> instance) {
+	private static <T> Optional<T> findFirst(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.findFirst() : null;
 	}
 
-	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
+	private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
 			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
 			final boolean cellHasFocus) {
 		//
@@ -632,7 +632,8 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	private static <E> void setRenderer(final JComboBox<E> instance, final ListCellRenderer<? super E> aRenderer) {
+	private static <E> void setRenderer(@Nullable final JComboBox<E> instance,
+			final ListCellRenderer<? super E> aRenderer) {
 		//
 		if (instance == null) {
 			//
@@ -658,7 +659,7 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	private static <E> ListCellRenderer<? super E> getRenderer(final JComboBox<E> instance) {
+	private static <E> ListCellRenderer<? super E> getRenderer(@Nullable final JComboBox<E> instance) {
 		return instance != null ? instance.getRenderer() : null;
 	}
 
@@ -725,13 +726,13 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	private static <T> T newInstance(final Constructor<T> constructor, final Object... initargs)
+	private static <T> T newInstance(@Nullable final Constructor<T> constructor, final Object... initargs)
 			throws InstantiationException, IllegalAccessException, InvocationTargetException {
 		return constructor != null ? constructor.newInstance(initargs) : null;
 	}
 
-	private static <T> Constructor<T> getDeclaredConstructor(final Class<T> clz, final Class<?>... parameterTypes)
-			throws NoSuchMethodException {
+	private static <T> Constructor<T> getDeclaredConstructor(@Nullable final Class<T> clz,
+			final Class<?>... parameterTypes) throws NoSuchMethodException {
 		return clz != null ? clz.getDeclaredConstructor(parameterTypes) : null;
 	}
 
