@@ -556,6 +556,10 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		this.languageCodeToTextObjIntFunction = languageCodeToTextObjIntFunction;
 	}
 
+	public void setAllowedRomajiCharacters(final char[] allowedRomajiCharacters) {
+		this.allowedRomajiCharacters = allowedRomajiCharacters;
+	}
+
 	private static class BooleanComboBoxModelSupplier implements Supplier<ComboBoxModel<Boolean>> {
 
 		private Collection<Boolean> booleans = null;
