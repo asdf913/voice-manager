@@ -907,14 +907,10 @@ class VoiceManagerTest {
 					//
 			} // if
 				//
-			if (proxy instanceof Iterable) {
+			if (proxy instanceof Iterable && Objects.equals(methodName, "iterator")) {
 				//
-				if (Objects.equals(methodName, "iterator")) {
-					//
-					return iterator;
-					//
-				} // if
-					//
+				return iterator;
+				//
 			} // if
 				//
 			if (proxy instanceof VoiceMapper) {
