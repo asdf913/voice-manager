@@ -219,6 +219,7 @@ public class VoiceManagerExportPanel extends JPanel
 		return object != null ? object : get(defaultSupplier);
 	}
 
+	@Nullable
 	private static <T, E extends Throwable> T get(@Nullable final FailableSupplier<T, E> instance) throws E {
 		return instance != null ? instance.get() : null;
 	}
@@ -582,10 +583,12 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static String getEmptyFilePath(@Nullable final FileFormatDetails instance) {
 		return instance != null ? instance.getEmptyFilePath() : null;
 	}
 
+	@Nullable
 	private static JetFormat getFormat(@Nullable final FileFormatDetails instance) {
 		return instance != null ? instance.getFormat() : null;
 	}
@@ -618,18 +621,22 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static String[] getFileExtensions(@Nullable final ContentType instance) {
 		return instance != null ? instance.getFileExtensions() : null;
 	}
 
+	@Nullable
 	private static String name(@Nullable final Enum<?> instance) {
 		return instance != null ? instance.name() : null;
 	}
 
+	@Nullable
 	private static <T> Optional<T> findFirst(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.findFirst() : null;
 	}
 
+	@Nullable
 	private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
 			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
 			final boolean cellHasFocus) {
@@ -666,6 +673,7 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static <E> ListCellRenderer<? super E> getRenderer(@Nullable final JComboBox<E> instance) {
 		return instance != null ? instance.getRenderer() : null;
 	}
@@ -734,11 +742,13 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static <T> T newInstance(@Nullable final Constructor<T> constructor, final Object... initargs)
 			throws InstantiationException, IllegalAccessException, InvocationTargetException {
 		return constructor != null ? constructor.newInstance(initargs) : null;
 	}
 
+	@Nullable
 	private static <T> Constructor<T> getDeclaredConstructor(@Nullable final Class<T> clz,
 			final Class<?>... parameterTypes) throws NoSuchMethodException {
 		return clz != null ? clz.getDeclaredConstructor(parameterTypes) : null;
