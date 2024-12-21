@@ -260,7 +260,6 @@ import com.healthmarketscience.jackcess.impl.DatabaseImpl.FileFormatDetails;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentType;
 import com.mpatric.mp3agic.ID3v1;
-import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.Mp3File;
 
 import domain.JlptVocabulary;
@@ -368,9 +367,9 @@ class VoiceManagerTest {
 			METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT, METHOD_GET_IMAGE_FORMAT,
 			METHOD_GET_I_VALUE0_FROM_MAPS_BY_KEY, METHOD_IS_ALL_CHARACTERS_ALLOWED, METHOD_GET_VALUE_COLLECTION_BY_KEY,
 			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_SORTED, METHOD_GET_ID3V1_TAG,
-			METHOD_GET_ID3V2_TAG, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER,
-			METHOD_SHOW_OPEN_DIALOG, METHOD_OPEN_STREAM, METHOD_SUBMIT, METHOD_OPEN_CONNECTION, METHOD_FORMAT_HEX,
-			METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
+			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG,
+			METHOD_OPEN_STREAM, METHOD_SUBMIT, METHOD_OPEN_CONNECTION, METHOD_FORMAT_HEX, METHOD_SET_SELECTED_INDEX,
+			METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -970,8 +969,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_SORTED = clz.getDeclaredMethod("sorted", Stream.class, Comparator.class)).setAccessible(true);
-		//
-		(METHOD_GET_ID3V2_TAG = clz.getDeclaredMethod("getId3v2Tag", Mp3File.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_IMPORT_RESULT_PANEL = clz.getDeclaredMethod("createImportResultPanel", LayoutManager.class))
 				.setAccessible(true);
@@ -9272,29 +9269,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetId3v2Tag() throws Throwable {
-		//
-		Assertions.assertNull(getId3v2Tag(null));
-		//
-		Assertions.assertNull(getId3v2Tag(Util.cast(Mp3File.class, Narcissus.allocateInstance(Mp3File.class))));
-		//
-	}
-
-	private static ID3v2 getId3v2Tag(final Mp3File instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_ID3V2_TAG.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof ID3v2) {
-				return (ID3v2) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

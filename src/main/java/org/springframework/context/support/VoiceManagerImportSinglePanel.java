@@ -192,7 +192,6 @@ import com.j256.simplemagic.ContentInfoUtil;
 import com.mariten.kanatools.KanaConverter;
 import com.mpatric.mp3agic.BaseException;
 import com.mpatric.mp3agic.ID3v1;
-import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.Mp3File;
 import com.mpatric.mp3agic.Mp3FileUtil;
 
@@ -2501,7 +2500,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 			final Mp3File mp3File = new Mp3File(file);
 			//
-			return getMp3TagParirs(ObjectUtils.defaultIfNull(getId3v2Tag(mp3File), Mp3FileUtil.getId3v1Tag(mp3File)),
+			return getMp3TagParirs(
+					ObjectUtils.defaultIfNull(Mp3FileUtil.getId3v2Tag(mp3File), Mp3FileUtil.getId3v1Tag(mp3File)),
 					attributes);
 			//
 		} // if
@@ -2555,11 +2555,6 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 			//
 		return pairs;
 		//
-	}
-
-	@Nullable
-	private static ID3v2 getId3v2Tag(@Nullable final Mp3File instance) {
-		return instance != null ? instance.getId3v2Tag() : null;
 	}
 
 	@Nullable

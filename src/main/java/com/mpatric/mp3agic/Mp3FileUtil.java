@@ -6,4 +6,8 @@ public interface Mp3FileUtil {
 		return instance != null ? instance.getId3v1Tag() : null;
 	}
 
+	static ID3v2 getId3v2Tag(final Mp3File instance) {
+		return instance != null ? instance.getId3v2Tag() : null;
+	}
+
 }
