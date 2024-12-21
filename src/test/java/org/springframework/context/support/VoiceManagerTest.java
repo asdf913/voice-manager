@@ -20,8 +20,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -104,7 +102,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -184,9 +181,6 @@ import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.DataValidation;
-import org.apache.poi.ss.usermodel.DataValidationConstraint;
-import org.apache.poi.ss.usermodel.DataValidationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.RichTextString;
@@ -195,7 +189,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.SheetUtil;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookUtil;
-import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.util.LocaleID;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -226,8 +219,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.base.Predicates;
@@ -248,7 +239,6 @@ import com.mpatric.mp3agic.Mp3File;
 import domain.JlptVocabulary;
 import domain.Pronunciation;
 import domain.Voice;
-import domain.Voice.ByteArray;
 import domain.VoiceList;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.TemplateLoader;
@@ -280,25 +270,20 @@ class VoiceManagerTest {
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_BOOLEAN_MAP, CLASS_STRING_MAP, CLASS_IH, CLASS_EXPORT_TASK,
 			CLASS_IMPORT_TASK = null;
 
-	private static Integer TEMP_FILE_MINIMUM_PREFIX_LENGTH = null;
-
 	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION_CONTENT_INFO,
 			METHOD_GET_FILE_EXTENSION_FILE_FORMAT, METHOD_GET_FILE_EXTENSION_FAILABLE_SUPPLIER, METHOD_INSERT_OR_UPDATE,
 			METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
-			METHOD_INT_VALUE, METHOD_LONG_VALUE, METHOD_GET_VALUE, METHOD_GET_SOURCE_VOICE, METHOD_EXPORT,
-			METHOD_MAP_INT_STREAM, METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG, METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM,
+			METHOD_INT_VALUE, METHOD_LONG_VALUE, METHOD_GET_VALUE, METHOD_EXPORT, METHOD_MAP_INT_STREAM,
+			METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG, METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM,
 			METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_CREATE_WORK_BOOK_LIST,
 			METHOD_CREATE_VOICE_OBJECT_MAPPER, METHOD_CREATE_VOICE_OBJECT_MAP, METHOD_INVOKE, METHOD_ANNOTATION_TYPE,
 			METHOD_FIND_FIRST, METHOD_GET_PREFERRED_WIDTH, METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER,
 			METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ANY_MATCH, METHOD_NAME, METHOD_GET_SELECTED_ITEM,
 			METHOD_MATCHER, METHOD_MATCHES, METHOD_SET_VALUE_J_PROGRESS_BAR, METHOD_SET_STRING_J_PROGRESS_BAR,
-			METHOD_SET_STRING_COMMENT, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_VALUE_OF1,
-			METHOD_GET_MP3_TAG_VALUE_FILE, METHOD_GET_MP3_TAG_VALUE_LIST, METHOD_GET_MP3_TAG_PARIRS_ID3V1,
-			METHOD_DELETE, METHOD_DELETE_ON_EXIT, METHOD_IS_SELECTED, METHOD_AND_PREDICATE,
-			METHOD_AND_FAILABLE_PREDICATE, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_STRING_BUILDER,
-			METHOD_EXECUTE, METHOD_GET_BYTE_CONVERTER, METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION,
+			METHOD_SET_STRING_COMMENT, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_VALUE_OF1, METHOD_DELETE,
+			METHOD_DELETE_ON_EXIT, METHOD_IS_SELECTED, METHOD_AND_PREDICATE, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR,
+			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_CLEAR_STRING_BUILDER, METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION,
 			METHOD_TO_ARRAY_STREAM1, METHOD_TO_ARRAY_STREAM2, METHOD_GET_ID, METHOD_SET_MAXIMUM,
-			METHOD_GET_DATA_VALIDATION_HELPER, METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION,
 			METHOD_CREATE_EXPORT_TASK, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
 			METHOD_GET_ENUM_CONSTANTS, METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP, METHOD_NEW_DOCUMENT_BUILDER,
 			METHOD_PARSE, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_LIST,
@@ -306,11 +291,11 @@ class VoiceManagerTest {
 			METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING,
 			METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR, METHOD_TEST_AND_ACCEPT_PREDICATE,
 			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_PACKAGE, METHOD_BROWSE,
-			METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_GET_RATE0,
-			METHOD_GET_RATE_VOICE_MANAGER, METHOD_GET_RATE_FIELD_LIST, METHOD_IS_ANNOTATION_PRESENT,
-			METHOD_ENCODE_TO_STRING, METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT,
-			METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE2, METHOD_REDUCE3, METHOD_APPEND_STRING, METHOD_APPEND_CHAR,
-			METHOD_GET_RESOURCE_AS_STREAM, METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD,
+			METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH,
+			METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING, METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME,
+			METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE2, METHOD_REDUCE3,
+			METHOD_APPEND_STRING, METHOD_APPEND_CHAR, METHOD_GET_RESOURCE_AS_STREAM,
+			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_INSTRUCTION_ARRAY, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH,
 			METHOD_ITEM, METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_CREATE_JLPT_SHEET,
 			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
@@ -320,28 +305,24 @@ class VoiceManagerTest {
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
 			METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML, METHOD_LENGTH, METHOD_CREATE_ZIP_FILE,
 			METHOD_RETRIEVE_ALL_VOICES, METHOD_SEARCH_VOICE_LIST_NAMES_BY_VOICE_ID, METHOD_SET_LIST_NAMES,
-			METHOD_SET_SOURCE, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML,
+			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML,
 			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY,
-			METHOD_GET_IF_NULL, METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE,
-			METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM, METHOD_SET_PREFERRED_WIDTH_ARRAY,
-			METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_SET_PREFERRED_WIDTH_2, METHOD_GET_VALUE_FROM_CELL,
-			METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS,
-			METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME, METHOD_EXPORT_MICROSOFT_ACCESS,
-			METHOD_IMPORT_RESULT_SET, METHOD_CREATE_VOICE_ID_WARNING_PANEL,
+			METHOD_GET_IF_NULL, METHOD_GET_BOOLEAN_VALUE, METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM,
+			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_SET_PREFERRED_WIDTH_2,
+			METHOD_GET_VALUE_FROM_CELL, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC,
+			METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS, METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME,
+			METHOD_EXPORT_MICROSOFT_ACCESS, METHOD_IMPORT_RESULT_SET, METHOD_CREATE_VOICE_ID_WARNING_PANEL,
 			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_GET_EMPTY_FILE_PATH,
 			METHOD_SET_LOCALE_ID_SHEET, METHOD_ADD_LOCALE_ID_ROW, METHOD_SET_FOCUS_CYCLE_ROOT,
 			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP,
 			METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE, METHOD_GET_WRITER, METHOD_GET_WORK_BOOK_CLASS,
 			METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME, METHOD_IF_ELSE, METHOD_GET_PAGE_TITLE, METHOD_TO_MILLIS,
 			METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL, METHOD_ADD_ALL, METHOD_PRONOUNICATION_CHANGED,
-			METHOD_REMOVE_ELEMENT_AT, METHOD_GET_FILE, METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT,
-			METHOD_GET_AUDIO_FILE3, METHOD_GET_AUDIO_FILE4, METHOD_IS_ALL_ATTRIBUTES_MATCHED,
-			METHOD_SET_PITCH_ACCENT_IMAGE, METHOD_GET_NUMERIC_CELL_VALUE, METHOD_SET_AUTO_FILTER,
-			METHOD_CREATE_BYTE_ARRAY, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT, METHOD_GET_IMAGE_FORMAT,
-			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_SORTED,
-			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_SHOW_OPEN_DIALOG,
-			METHOD_OPEN_STREAM, METHOD_SUBMIT, METHOD_FORMAT_HEX, METHOD_SET_SELECTED_INDEX,
-			METHOD_GET_TITLED_COMPONENT_MAP = null;
+			METHOD_REMOVE_ELEMENT_AT, METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_GET_NUMERIC_CELL_VALUE,
+			METHOD_SET_AUTO_FILTER, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT, METHOD_GET_NUMBER, METHOD_GET_RENDERER,
+			METHOD_SET_RENDERER, METHOD_SORTED, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL,
+			METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM, METHOD_SUBMIT, METHOD_FORMAT_HEX,
+			METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -383,8 +364,6 @@ class VoiceManagerTest {
 		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Expression.class, EvaluationContext.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_SOURCE_VOICE = clz.getDeclaredMethod("getSource", Voice.class)).setAccessible(true);
-		//
 		(METHOD_EXPORT = clz.getDeclaredMethod("export", List.class, Map.class,
 				CLASS_OBJECT_MAP = Class.forName("org.springframework.context.support.VoiceManager$ObjectMap")))
 				.setAccessible(true);
@@ -412,9 +391,6 @@ class VoiceManagerTest {
 		(METHOD_CREATE_WORK_BOOK_LIST = clz.getDeclaredMethod("createWorkbook", List.class,
 				CLASS_BOOLEAN_MAP = Class.forName("org.springframework.context.support.VoiceManager$BooleanMap"),
 				FailableSupplier.class)).setAccessible(true);
-		//
-		(METHOD_CREATE_VOICE_OBJECT_MAPPER = clz.getDeclaredMethod("createVoice", ObjectMapper.class,
-				VoiceManager.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_VOICE_OBJECT_MAP = clz.getDeclaredMethod("createVoice", CLASS_OBJECT_MAP, Boolean.TYPE,
 				AtomicReference.class)).setAccessible(true);
@@ -462,15 +438,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_VALUE_OF1 = clz.getDeclaredMethod("valueOf", String.class)).setAccessible(true);
 		//
-		(METHOD_GET_MP3_TAG_VALUE_FILE = clz.getDeclaredMethod("getMp3TagValue", File.class, Predicate.class,
-				String[].class)).setAccessible(true);
-		//
-		(METHOD_GET_MP3_TAG_VALUE_LIST = clz.getDeclaredMethod("getMp3TagValue", List.class, Predicate.class))
-				.setAccessible(true);
-		//
-		(METHOD_GET_MP3_TAG_PARIRS_ID3V1 = clz.getDeclaredMethod("getMp3TagParirs", ID3v1.class, String[].class))
-				.setAccessible(true);
-		//
 		(METHOD_DELETE = clz.getDeclaredMethod("delete", File.class)).setAccessible(true);
 		//
 		(METHOD_DELETE_ON_EXIT = clz.getDeclaredMethod("deleteOnExit", File.class)).setAccessible(true);
@@ -491,11 +458,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_CLEAR_STRING_BUILDER = clz.getDeclaredMethod("clear", StringBuilder.class)).setAccessible(true);
 		//
-		(METHOD_EXECUTE = clz.getDeclaredMethod("execute", CLASS_OBJECT_MAP)).setAccessible(true);
-		//
-		(METHOD_GET_BYTE_CONVERTER = clz.getDeclaredMethod("getByteConverter", ConfigurableListableBeanFactory.class,
-				String.class, Object.class)).setAccessible(true);
-		//
 		(METHOD_ACCEPT = clz.getDeclaredMethod("accept", Consumer.class, Object.class, Object.class, Object[].class))
 				.setAccessible(true);
 		//
@@ -508,15 +470,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_SET_MAXIMUM = clz.getDeclaredMethod("setMaximum", JProgressBar.class, Integer.TYPE))
 				.setAccessible(true);
-		//
-		(METHOD_GET_DATA_VALIDATION_HELPER = clz.getDeclaredMethod("getDataValidationHelper", Sheet.class))
-				.setAccessible(true);
-		//
-		(METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT = clz.getDeclaredMethod("createExplicitListConstraint",
-				DataValidationHelper.class, String[].class)).setAccessible(true);
-		//
-		(METHOD_CREATE_VALIDATION = clz.getDeclaredMethod("createValidation", DataValidationHelper.class,
-				DataValidationConstraint.class, CellRangeAddressList.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_EXPORT_TASK = clz.getDeclaredMethod("createExportTask", CLASS_OBJECT_MAP, Integer.class,
 				Integer.class, Integer.class, Map.class, Table.class)).setAccessible(true);
@@ -588,12 +541,6 @@ class VoiceManagerTest {
 		(METHOD_GET_DECLARED_CLASSES = clz.getDeclaredMethod("getDeclaredClasses", Class.class)).setAccessible(true);
 		//
 		(METHOD_GET_DLL_PATH = clz.getDeclaredMethod("getDllPath", Object.class)).setAccessible(true);
-		//
-		(METHOD_GET_RATE0 = clz.getDeclaredMethod("getRate")).setAccessible(true);
-		//
-		(METHOD_GET_RATE_VOICE_MANAGER = clz.getDeclaredMethod("getRate", VoiceManager.class)).setAccessible(true);
-		//
-		(METHOD_GET_RATE_FIELD_LIST = clz.getDeclaredMethod("getRate", List.class)).setAccessible(true);
 		//
 		(METHOD_IS_ANNOTATION_PRESENT = clz.getDeclaredMethod("isAnnotationPresent", AnnotatedElement.class,
 				Class.class)).setAccessible(true);
@@ -690,8 +637,6 @@ class VoiceManagerTest {
 		(METHOD_SET_LIST_NAMES = clz.getDeclaredMethod("setListNames", Voice.class, Iterable.class))
 				.setAccessible(true);
 		//
-		(METHOD_SET_SOURCE = clz.getDeclaredMethod("setSource", Voice.class, String.class)).setAccessible(true);
-		//
 		(METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = clz.getDeclaredMethod("getPhysicalNumberOfRows", Sheet.class))
 				.setAccessible(true);
 		//
@@ -709,10 +654,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_IF_NULL = clz.getDeclaredMethod("getIfNull", Object.class, FailableSupplier.class))
 				.setAccessible(true);
-		//
-		(METHOD_SET_LANGUAGE = clz.getDeclaredMethod("setLanguage", Voice.class, String.class)).setAccessible(true);
-		//
-		(METHOD_GET_LANGUAGE = clz.getDeclaredMethod("getLanguage", Voice.class)).setAccessible(true);
 		//
 		(METHOD_GET_BOOLEAN_VALUE = clz.getDeclaredMethod("getBooleanValue", CellValue.class)).setAccessible(true);
 		//
@@ -813,37 +754,16 @@ class VoiceManagerTest {
 		(METHOD_REMOVE_ELEMENT_AT = clz.getDeclaredMethod("removeElementAt", MutableComboBoxModel.class, Integer.TYPE))
 				.setAccessible(true);
 		//
-		(METHOD_GET_FILE = clz.getDeclaredMethod("getFile", URL.class)).setAccessible(true);
-		//
-		(METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT = clz
-				.getDeclaredMethod("getPronunciationAudioFileByAudioFormat", Pronunciation.class, Object.class))
-				.setAccessible(true);
-		//
-		(METHOD_GET_AUDIO_FILE3 = clz.getDeclaredMethod("getAudioFile", Boolean.TYPE, Voice.class,
-				DefaultTableModel.class)).setAccessible(true);
-		//
-		(METHOD_GET_AUDIO_FILE4 = clz.getDeclaredMethod("getAudioFile", Boolean.TYPE, JFileChooser.class, Voice.class,
-				DefaultTableModel.class)).setAccessible(true);
-		//
 		(METHOD_IS_ALL_ATTRIBUTES_MATCHED = clz.getDeclaredMethod("isAllAttributesMatched", Map.class,
 				AttributeAccessor.class)).setAccessible(true);
-		//
-		(METHOD_SET_PITCH_ACCENT_IMAGE = clz.getDeclaredMethod("setPitchAccentImage", Voice.class, ByteArray.class))
-				.setAccessible(true);
 		//
 		(METHOD_GET_NUMERIC_CELL_VALUE = clz.getDeclaredMethod("getNumericCellValue", Cell.class)).setAccessible(true);
 		//
 		(METHOD_SET_AUTO_FILTER = clz.getDeclaredMethod("setAutoFilter", Sheet.class)).setAccessible(true);
 		//
-		(METHOD_CREATE_BYTE_ARRAY = clz.getDeclaredMethod("createByteArray", RenderedImage.class, String.class,
-				Boolean.TYPE)).setAccessible(true);
-		//
 		(METHOD_DOUBLE_VALUE = clz.getDeclaredMethod("doubleValue", Number.class, Double.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_ELEMENT_AT = clz.getDeclaredMethod("getElementAt", ListModel.class, Integer.TYPE))
-				.setAccessible(true);
-		//
-		(METHOD_GET_IMAGE_FORMAT = clz.getDeclaredMethod("getImageFormat", IValue0.class, Collection.class))
 				.setAccessible(true);
 		//
 		(METHOD_GET_NUMBER = clz.getDeclaredMethod("getNumber", Object.class, Iterable.class)).setAccessible(true);
@@ -862,9 +782,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_ADD_HYPER_LINK_LISTENER = clz.getDeclaredMethod("addHyperlinkListener", JEditorPane.class,
 				HyperlinkListener.class)).setAccessible(true);
-		//
-		(METHOD_SHOW_OPEN_DIALOG = clz.getDeclaredMethod("showOpenDialog", JFileChooser.class, Component.class))
-				.setAccessible(true);
 		//
 		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
 		//
@@ -888,10 +805,6 @@ class VoiceManagerTest {
 		//
 		CLASS_STRING_MAP = Class.forName("org.springframework.context.support.VoiceManager$StringMap");
 		//
-		TEMP_FILE_MINIMUM_PREFIX_LENGTH = Integer.valueOf(intValue(Util.cast(Number.class,
-				FieldUtils.readDeclaredStaticField(VoiceManager.class, "TEMP_FILE_MINIMUM_PREFIX_LENGTH", true)),
-				THREE));
-		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -902,7 +815,7 @@ class VoiceManagerTest {
 
 		private Set<Entry<?, ?>> entrySet = null;
 
-		private String toString, stringCellValue, artist, title, voiceAttribute, textContent, nodeName, dllPath = null;
+		private String toString, stringCellValue, title, voiceAttribute, textContent, nodeName, dllPath = null;
 
 		private Configuration configuration = null;
 
@@ -1202,21 +1115,9 @@ class VoiceManagerTest {
 					//
 			} else if (proxy instanceof ID3v1) {
 				//
-				if (Objects.equals(methodName, "getArtist")) {
-					//
-					return artist;
-					//
-				} else if (Objects.equals(methodName, "getTitle")) {
+				if (Objects.equals(methodName, "getTitle")) {
 					//
 					return title;
-					//
-				} // if
-					//
-			} else if (proxy instanceof ListCellRenderer) {
-				//
-				if (Objects.equals(methodName, "getListCellRendererComponent")) {
-					//
-					return null;
 					//
 				} // if
 					//
@@ -1233,10 +1134,6 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "hasAttribute") && args != null && args.length > 0) {
 					//
 					return Util.containsKey(getBeanDefinitionAttributes(), args[0]);
-					//
-				} else if (Objects.equals(methodName, "getAttribute") && args != null && args.length > 0) {
-					//
-					return MapUtils.getObject(getBeanDefinitionAttributes(), args[0]);
 					//
 				} // if
 					//
@@ -2507,13 +2404,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> Util.setText(tfPronunciationPageUrl, "a"));
 		//
-		// btnExecute
-		//
-		final AbstractButton btnExecute = new JButton();
-		//
 		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnExecute", btnExecute, true);
 			//
 			final AbstractButton cbUseTtsVoice = new JCheckBox();
 			//
@@ -2523,26 +2414,18 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		final ActionEvent actionEventBtnExecute = new ActionEvent(btnExecute, 0, null);
-		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
-		//
 		if (instance != null) {
 			//
 			FieldUtils.writeDeclaredField(instance, "speechApi", speechApi, true);
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
-		//
 		if (instance != null) {
 			//
 			FieldUtils.writeDeclaredField(instance, "voiceIds", new String[] { Integer.toString(ZERO) }, true);
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
-		//
 		if (instance != null) {
 			//
 			FieldUtils.writeDeclaredField(instance, "cbmVoiceId", new DefaultComboBoxModel<>(new Object[] { ZERO }),
@@ -2550,18 +2433,14 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
-		//
 		if (instance != null) {
 			//
 			instance.setImageFormat(null);
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExecute));
-		//
-		// mcbmPronunciation
-		//
+			// mcbmPronunciation
+			//
 		if (instance != null) {
 			//
 			FieldUtils.writeDeclaredField(instance, "mcbmPronunciation",
@@ -3296,29 +3175,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testGetSource() throws Throwable {
-		//
-		Assertions.assertNull(getSource((Voice) null));
-		//
-		Assertions.assertNull(getSource(new Voice()));
-		//
-	}
-
-	private static String getSource(final Voice instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_SOURCE_VOICE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testExport() throws Throwable {
 		//
 		Assertions.assertDoesNotThrow(() -> export(null, null, null));
@@ -3629,10 +3485,6 @@ class VoiceManagerTest {
 
 	@Test
 	void testCreateVoice() throws Throwable {
-		//
-		Assertions.assertNull(createVoice(null, null));
-		//
-		Assertions.assertNotNull(createVoice(null, instance));
 		//
 		// org.springframework.context.support.VoiceManager.ObjectMap
 		//
@@ -4083,93 +3935,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testGetMp3TagValue() throws Throwable {
-		//
-		Assertions.assertNull(getMp3TagValue((File) null, null));
-		//
-		Assertions.assertNull(getMp3TagValue(new File("NON_EXISTS"), null));
-		//
-		Assertions.assertNull(getMp3TagValue(new File("."), null));
-		//
-		Assertions.assertNull(getMp3TagValue(new File("pom.xml"), null));
-		//
-		Assertions.assertNull(getMp3TagValue(Collections.singletonList(null), null));
-		//
-		final List<Pair<String, ?>> pairs = Collections.singletonList(Pair.of(null, null));
-		//
-		Assertions.assertNull(getMp3TagValue(pairs, null));
-		//
-		Assertions.assertNull(getMp3TagValue(pairs, Predicates.alwaysFalse()));
-		//
-		Assertions.assertNull(getMp3TagValue(pairs, Predicates.alwaysTrue()));
-		//
-	}
-
-	private static String getMp3TagValue(final File file, final Predicate<Object> predicate, final String... attributes)
-			throws Throwable {
-		//
-		try {
-			final Object obj = METHOD_GET_MP3_TAG_VALUE_FILE.invoke(null, file, predicate, attributes);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static String getMp3TagValue(final List<Pair<String, ?>> pairs, final Predicate<Object> predicate)
-			throws Throwable {
-		//
-		try {
-			final Object obj = METHOD_GET_MP3_TAG_VALUE_LIST.invoke(null, pairs, predicate);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetMp3TagParirs() throws Throwable {
-		//
-		Assertions.assertNull(getMp3TagParirs((ID3v1) null));
-		//
-		final ID3v1 id3v1 = Reflection.newProxy(ID3v1.class, ih);
-		//
-		Assertions.assertNull(getMp3TagParirs(id3v1));
-		//
-		Assertions.assertNull(getMp3TagParirs(id3v1, (String[]) null));
-		//
-		Assertions.assertNull(getMp3TagParirs(id3v1, null, ""));
-		//
-		Assertions.assertEquals(Collections.singletonList(Pair.of("artist", null)), getMp3TagParirs(id3v1, "artist"));
-		//
-	}
-
-	private static List<Pair<String, ?>> getMp3TagParirs(final ID3v1 id3v1, final String... attributes)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_GET_MP3_TAG_PARIRS_ID3V1.invoke(null, id3v1, attributes);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof List) {
-				return (List) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testDelete() {
 		//
 		Assertions.assertDoesNotThrow(() -> delete(null));
@@ -4321,146 +4086,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testExecute() throws Throwable {
-		//
-		final Constructor<?> constructor = getDeclaredConstructor(CLASS_IH);
-		//
-		if (constructor != null) {
-			//
-			constructor.setAccessible(true);
-			//
-		} // if
-			//
-		final InvocationHandler ih = Util.cast(InvocationHandler.class, newInstance(constructor));
-		//
-		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, ih);
-		//
-		final Field fieldObjects = ih != null ? getDeclaredField(Util.getClass(ih), "objects") : null;
-		//
-		if (fieldObjects != null) {
-			//
-			fieldObjects.setAccessible(true);
-			//
-		} // if
-			//
-		Map<Object, Object> objects = getIfNull(Util.cast(Map.class, get(fieldObjects, ih)), LinkedHashMap::new);
-		//
-		final DefaultTableModel defaultTableModel = new DefaultTableModel();
-		//
-		Util.put(objects, File.class, null);
-		//
-		Util.put(objects, VoiceManager.class, instance);
-		//
-		Util.put(objects, Voice.class, null);
-		//
-		Util.put(objects, DefaultTableModel.class, null);
-		//
-		set(fieldObjects, ih, objects);
-		//
-		Assertions.assertDoesNotThrow(() -> execute(objectMap));
-		//
-		Util.put(objects, DefaultTableModel.class, defaultTableModel);
-		//
-		Assertions.assertDoesNotThrow(() -> execute(objectMap));
-		//
-		// !java.io.File.exists()
-		//
-		Util.put(objects, File.class, new File("NON_EXISTS"));
-		//
-		Assertions.assertDoesNotThrow(() -> execute(objectMap));
-		//
-		Util.put(objects, DefaultTableModel.class, null);
-		//
-		Assertions.assertDoesNotThrow(() -> execute(objectMap));
-		//
-		// !java.io.File.isFile()
-		//
-		Util.put(objects, File.class, new File("."));
-		//
-		Util.put(objects, DefaultTableModel.class, defaultTableModel);
-		//
-		Assertions.assertDoesNotThrow(() -> execute(objectMap));
-		//
-		Util.put(objects, DefaultTableModel.class, null);
-		//
-		Assertions.assertDoesNotThrow(() -> execute(objectMap));
-		//
-	}
-
-	private static void execute(final Object objectMap) throws Throwable {
-		try {
-			METHOD_EXECUTE.invoke(null, objectMap);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetByteConverter() throws Throwable {
-		//
-		Assertions.assertNull(getByteConverter(null, null, null));
-		//
-		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null, null));
-		//
-		if (ih != null) {
-			//
-			ih.beansOfType = Reflection.newProxy(Map.class, ih);
-			//
-		} // if
-			//
-		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null, null));
-		//
-		if (ih != null) {
-			//
-			ih.entrySet = Collections.singleton(null);
-			//
-		} // if
-			//
-		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null, null));
-		//
-		if (ih != null) {
-			//
-			ih.beansOfType = Collections.singletonMap(null, null);
-			//
-		} // if
-			//
-		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null, null));
-		//
-		Util.put(ih != null ? ih.getBeanDefinitions() : null, null, beanDefinition);
-		//
-		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, null, null));
-		//
-		final String format = toString(FieldUtils.readDeclaredStaticField(VoiceManager.class, "FORMAT", true));
-		//
-		Util.put(ih != null ? ih.getBeanDefinitionAttributes() : null, format, null);
-		//
-		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, format, null));
-		//
-		Util.put(ih != null ? ih.getBeanDefinitionAttributes() : null, format, "");
-		//
-		Assertions.assertNull(getByteConverter(configurableListableBeanFactory, format, null));
-		//
-		Util.put((ih.beansOfType = new LinkedHashMap<Object, Object>(Collections.singletonMap(null, null))), "", null);
-		//
-		Util.put(ih != null ? ih.getBeanDefinitions() : null, "", beanDefinition);
-		//
-		Util.put(ih != null ? ih.getBeanDefinitionAttributes() : null, format, null);
-		//
-		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{}",
-				() -> getByteConverter(configurableListableBeanFactory, format, null));
-		//
-	}
-
-	private static Object getByteConverter(final ConfigurableListableBeanFactory configurableListableBeanFactory,
-			final String attribute, final Object value) throws Throwable {
-		try {
-			return METHOD_GET_BYTE_CONVERTER.invoke(null, configurableListableBeanFactory, attribute, value);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testAccept() {
 		//
 		Assertions.assertDoesNotThrow(() -> accept(null, null, null, (Object[]) null));
@@ -4562,72 +4187,6 @@ class VoiceManagerTest {
 	private static void setMaximum(final JProgressBar instance, final int n) throws Throwable {
 		try {
 			METHOD_SET_MAXIMUM.invoke(null, instance, n);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetDataValidationHelper() throws Throwable {
-		//
-		Assertions.assertNull(getDataValidationHelper(null));
-		//
-	}
-
-	private static DataValidationHelper getDataValidationHelper(final Sheet instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_DATA_VALIDATION_HELPER.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof DataValidationHelper) {
-				return (DataValidationHelper) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCreateExplicitListConstraint() throws Throwable {
-		//
-		Assertions.assertNull(createExplicitListConstraint(null, null));
-		//
-	}
-
-	private static DataValidationConstraint createExplicitListConstraint(final DataValidationHelper instance,
-			final String[] listOfValues) throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT.invoke(null, instance, listOfValues);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof DataValidationConstraint) {
-				return (DataValidationConstraint) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCreateValidation() throws Throwable {
-		//
-		Assertions.assertNull(createValidation(null, null, null));
-		//
-	}
-
-	private static DataValidation createValidation(final DataValidationHelper instance,
-			final DataValidationConstraint constraint, final CellRangeAddressList cellRangeAddressList)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_VALIDATION.invoke(null, instance, constraint, cellRangeAddressList);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof DataValidation) {
-				return (DataValidation) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -5221,71 +4780,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetRate() throws Throwable {
-		//
-		Assertions.assertNull(getRate(instance));
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "jsSpeechRate", new JSlider(), true);
-			//
-		} // if
-			//
-		Assertions.assertNotNull(getRate());
-		//
-		Assertions.assertNull(getRate((VoiceManager) null));
-		//
-		Assertions.assertNull(getRate((List) null));
-		//
-		final List<Field> list = Collections.nCopies(TWO, null);
-		//
-		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{}", () -> getRate(list));
-		//
-	}
-
-	private Integer getRate() throws Throwable {
-		try {
-			final Object obj = METHOD_GET_RATE0.invoke(instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Integer) {
-				return (Integer) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static Integer getRate(final VoiceManager instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_RATE_VOICE_MANAGER.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Integer) {
-				return (Integer) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static Integer getRate(final List<Field> fs) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_RATE_FIELD_LIST.invoke(null, fs);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Integer) {
-				return (Integer) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
@@ -6116,21 +5610,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testSetSource() {
-		//
-		Assertions.assertDoesNotThrow(() -> setSource(null, null));
-		//
-	}
-
-	private static void setSource(final Voice instance, final String source) throws Throwable {
-		try {
-			METHOD_SET_SOURCE.invoke(null, instance, source);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testGetPhysicalNumberOfRows() throws Throwable {
 		//
 		Assertions.assertNull(getPhysicalNumberOfRows(null));
@@ -6299,42 +5778,6 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			return (T) METHOD_GET_IF_NULL.invoke(null, object, defaultSupplier);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetLanguage() throws Throwable {
-		//
-		Assertions.assertDoesNotThrow(() -> setLanguage(null, null));
-		//
-	}
-
-	private static void setLanguage(final Voice instance, final String language) throws Throwable {
-		try {
-			METHOD_SET_LANGUAGE.invoke(null, instance, language);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetLanguage() throws Throwable {
-		//
-		Assertions.assertNull(getLanguage(null));
-		//
-	}
-
-	private static String getLanguage(final Voice instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_LANGUAGE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7291,134 +6734,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testGetFile() throws Throwable {
-		//
-		Assertions.assertNull(getFile(null));
-		//
-		Assertions.assertNull(getFile(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));
-		//
-	}
-
-	private static String getFile(final URL instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_FILE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetPronunciationAudioFileByAudioFormat() throws Throwable {
-		//
-		final Pronunciation pronunciation = new Pronunciation();
-		//
-		final Map<String, String> audioUrls = new LinkedHashMap<>(Collections.singletonMap(null, EMPTY));
-		//
-		pronunciation.setAudioUrls(audioUrls);
-		//
-		Assertions.assertNull(getPronunciationAudioFileByAudioFormat(pronunciation, null));
-		//
-		audioUrls.put(null, SPACE);
-		//
-		Assertions.assertNull(getPronunciationAudioFileByAudioFormat(pronunciation, null));
-		//
-		final File file = File.createTempFile(
-				nextAlphanumeric(randomStringUtils, intValue(TEMP_FILE_MINIMUM_PREFIX_LENGTH, THREE)), null);
-		//
-		deleteOnExit(file);
-		//
-		audioUrls.put(null, file != null ? toString(toURL(toURI(file))) : null);
-		//
-		final File result = getPronunciationAudioFileByAudioFormat(pronunciation, null);
-		//
-		deleteOnExit(result);
-		//
-		Assertions.assertEquals(getName(file), getName(result));
-		//
-	}
-
-	private static File getPronunciationAudioFileByAudioFormat(final Pronunciation pronunciation,
-			final Object pronounicationAudioFormat) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_PRONUNCIATION_AUDIO_FILE_BY_AUDIO_FORMAT.invoke(null, pronunciation,
-					pronounicationAudioFormat);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof File) {
-				return (File) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetAudioFile() throws Throwable {
-		//
-		Assertions.assertNull(getAudioFile(true, null, null));
-		///
-		Assertions.assertNull(getAudioFile(true, null, null, null));
-		///
-		Assertions.assertNull(getAudioFile(false,
-				Util.cast(JFileChooser.class, Narcissus.allocateInstance(JFileChooser.class)), null, null));
-		//
-		if (GraphicsEnvironment.isHeadless()) {
-			//
-			final Executable executable = () -> getAudioFile(false, null, null);
-			//
-			if (isUnderWindows()) {
-				//
-				AssertionsUtil.assertThrowsAndEquals(HeadlessException.class, "{}", executable);
-				//
-			} else {
-				//
-				AssertionsUtil.assertThrowsAndEquals(HeadlessException.class,
-						String.format("{localizedMessage=%1$s, message=%1$s}", getHeadlessMessage()), executable);
-				//
-			} // if
-				//
-		} // if
-			//
-	}
-
-	private static File getAudioFile(final boolean headless, final Voice voice,
-			final DefaultTableModel defaultTableModel) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_AUDIO_FILE3.invoke(null, headless, voice, defaultTableModel);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof File) {
-				return (File) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static File getAudioFile(final boolean headless, final JFileChooser jfc, final Voice voice,
-			final DefaultTableModel defaultTableModel) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_AUDIO_FILE4.invoke(null, headless, jfc, voice, defaultTableModel);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof File) {
-				return (File) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testIsAllAttributesMatched() throws Throwable {
 		//
 		Assertions.assertTrue(isAllAttributesMatched(null, null));
@@ -7469,23 +6784,6 @@ class VoiceManagerTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetPitchAccentImage() {
-		//
-		Assertions.assertDoesNotThrow(() -> setPitchAccentImage(null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> setPitchAccentImage(new Voice(), null));
-		//
-	}
-
-	private static void setPitchAccentImage(final Voice instance, final ByteArray pitchAccentImage) throws Throwable {
-		try {
-			METHOD_SET_PITCH_ACCENT_IMAGE.invoke(null, instance, pitchAccentImage);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7560,40 +6858,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testCreateByteArray() throws Throwable {
-		//
-		if (objectMapper != null) {
-			//
-			objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
-			//
-		} // if
-			//
-		final RenderedImage renderedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-		//
-		Assertions.assertEquals("{\"content\":\"\",\"mimeType\":\"application/octet-stream\"}",
-				ObjectMapperUtil.writeValueAsString(objectMapper, createByteArray(renderedImage, null, false)));
-		//
-		Assertions.assertEquals("{\"content\":\"\",\"mimeType\":\"application/octet-stream\"}",
-				ObjectMapperUtil.writeValueAsString(objectMapper, createByteArray(renderedImage, EMPTY, false)));
-		//
-	}
-
-	private static ByteArray createByteArray(final RenderedImage image, final String format, final boolean headless)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_BYTE_ARRAY.invoke(null, image, format, headless);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof ByteArray) {
-				return (ByteArray) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testDoubleValue() throws Throwable {
 		//
 		final double d = 0;
@@ -7624,28 +6888,6 @@ class VoiceManagerTest {
 	private static <E> E getElementAt(final ListModel<E> instance, final int index) throws Throwable {
 		try {
 			return (E) METHOD_GET_ELEMENT_AT.invoke(null, instance, index);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetImageFormat() throws Throwable {
-		//
-		Assertions.assertNull(getImageFormat(null, null));
-		//
-	}
-
-	private static String getImageFormat(final IValue0<String> iValue0, final Collection<String> imageFormats)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_GET_IMAGE_FORMAT.invoke(null, iValue0, imageFormats);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -7805,25 +7047,6 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			METHOD_ADD_HYPER_LINK_LISTENER.invoke(null, instance, listener);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testShowOpenDialog() throws Throwable {
-		//
-		Assertions.assertEquals(JFileChooser.ERROR_OPTION, showOpenDialog(null, null));
-		//
-	}
-
-	private static int showOpenDialog(final JFileChooser instance, final Component parent) throws Throwable {
-		try {
-			final Object obj = METHOD_SHOW_OPEN_DIALOG.invoke(null, instance, parent);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -8628,10 +7851,14 @@ class VoiceManagerTest {
 			//
 		Assertions.assertNull(invoke(getNodeName, null, (Object) null));
 		//
-		Assertions.assertEquals(ih.nodeName = EMPTY, invoke(getNodeName, null, node));
-		//
-		// org.springframework.context.support.VoiceManager$ExportTask.getOutputFolder(org.springframework.context.support.VoiceManager)
-		//
+		if (ih != null) {
+			//
+			Assertions.assertEquals(ih.nodeName = EMPTY, invoke(getNodeName, null, node));
+			//
+		} // if
+			//
+			// org.springframework.context.support.VoiceManager$ExportTask.getOutputFolder(org.springframework.context.support.VoiceManager)
+			//
 		final Method getOutputFolder = CLASS_EXPORT_TASK != null
 				? CLASS_EXPORT_TASK.getDeclaredMethod("getOutputFolder", VoiceManager.class)
 				: null;
@@ -9385,10 +8612,6 @@ class VoiceManagerTest {
 			//
 		});
 		//
-		FieldUtils.writeDeclaredField(biConsumer, "headless", Boolean.FALSE, true);
-		//
-		FieldUtils.writeDeclaredField(biConsumer, "tableModel", new DefaultTableModel(), true);
-		//
 		Assertions.assertDoesNotThrow(() -> {
 			//
 			accept(biConsumer, null, null);
@@ -9415,31 +8638,6 @@ class VoiceManagerTest {
 			//
 		} // try
 			//
-	}
-
-	@Test
-	void testVoiceThrowableBiConsumer() throws Throwable {
-		//
-		final Constructor<?> constructor = getDeclaredConstructor(
-				Util.forName("org.springframework.context.support.VoiceManager$VoiceThrowableBiConsumer"), Boolean.TYPE,
-				DefaultTableModel.class);
-		//
-		if (constructor != null) {
-			//
-			constructor.setAccessible(true);
-			//
-		} // if
-			//
-		final BiConsumer<?, ?> biConsumer = Util.cast(BiConsumer.class, newInstance(constructor, Boolean.TRUE, null));
-		//
-		Assertions.assertDoesNotThrow(() -> accept(biConsumer, null, null));
-		//
-		FieldUtils.writeDeclaredField(biConsumer, "headless", Boolean.FALSE, true);
-		//
-		FieldUtils.writeDeclaredField(biConsumer, "tableModel", new DefaultTableModel(), true);
-		//
-		Assertions.assertDoesNotThrow(() -> accept(biConsumer, null, null));
-		//
 	}
 
 	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) {

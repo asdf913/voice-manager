@@ -9,7 +9,6 @@ import java.awt.Dimension;
 import java.awt.FocusTraversalPolicy;
 import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
-import java.awt.HeadlessException;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.Window;
@@ -25,8 +24,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -122,10 +119,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import javax.annotation.Nullable;
-import javax.imageio.ImageIO;
-import javax.imageio.spi.IIORegistry;
-import javax.imageio.spi.ImageWriterSpi;
-import javax.imageio.spi.ServiceRegistry;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -140,11 +133,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JProgressBar;
@@ -253,9 +244,6 @@ import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.DataValidation;
-import org.apache.poi.ss.usermodel.DataValidationConstraint;
-import org.apache.poi.ss.usermodel.DataValidationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.FormulaEvaluatorUtil;
@@ -268,7 +256,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.util.LocaleID;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.d2ab.collection.ints.IntCollectionUtil;
@@ -364,7 +351,6 @@ import de.sciss.jump3r.mp3.Lame;
 import domain.JlptVocabulary;
 import domain.Pronunciation;
 import domain.Voice;
-import domain.Voice.ByteArray;
 import domain.Voice.Yomi;
 import domain.VoiceList;
 import freemarker.cache.ClassTemplateLoader;
@@ -649,9 +635,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private @interface Group {
 		String value();
 	}
-
-	@Note("Execute")
-	private AbstractButton btnExecute = null;
 
 	@Note("Over MP3 Title")
 	private AbstractButton cbOverMp3Title = null;
@@ -3008,11 +2991,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static BufferedImage getPitchAccentImage(@Nullable final Pronunciation instance) {
-		return instance != null ? instance.getPitchAccentImage() : null;
-	}
-
-	@Nullable
 	private static String getProtocol(@Nullable final URL instance) {
 		return instance != null ? instance.getProtocol() : null;
 	}
@@ -3908,44 +3886,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private class VoiceIdListCellRenderer implements ListCellRenderer<Object> {
-
-		private ListCellRenderer<Object> listCellRenderer = null;
-
-		private String commonPrefix = null;
-
-		@Override
-		@Nullable
-		public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
-				final int index, final boolean isSelected, final boolean cellHasFocus) {
-			//
-			final String s = Util.toString(value);
-			//
-			try {
-				//
-				final String name = SpeechApi.getVoiceAttribute(speechApi, s, "Name");
-				//
-				if (StringUtils.isNotBlank(name)) {
-					//
-					return VoiceManager.getListCellRendererComponent(listCellRenderer, list, name, index, isSelected,
-							cellHasFocus);
-					//
-				} // if
-					//
-			} catch (final Error e) {
-				//
-				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-				//
-			} // try
-				//
-			return VoiceManager.getListCellRendererComponent(listCellRenderer, list,
-					StringUtils.startsWith(s, commonPrefix) ? StringUtils.substringAfter(s, commonPrefix) : value,
-					index, isSelected, cellHasFocus);
-			//
-		}
-
-	}
-
 	@Nullable
 	private static Integer toInteger(@Nullable final Object object) {
 		//
@@ -4145,11 +4085,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		testAndRun(Util.contains(getObjectsByGroupAnnotation(this, PRONUNCIATION), source),
 				() -> actionPerformedForPronunciation(source));
 		//
-		if (Objects.equals(source, btnExecute)) {
-			//
-			actionPerformedForExecute(headless, nonTest);
-			//
-		} else if (Objects.equals(source, btnExportBrowse)) {
+		if (Objects.equals(source, btnExportBrowse)) {
 			//
 			actionPerformedForExportBrowse(headless);
 			//
@@ -4241,337 +4177,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void setFileSelectionMode(@Nullable final JFileChooser instance, final int mode) {
-		if (instance != null) {
-			instance.setFileSelectionMode(mode);
-		}
-	}
-
-	@Nullable
-	private static File getSelectedFile(@Nullable final JFileChooser instance) {
-		return instance != null ? instance.getSelectedFile() : null;
-	}
-
-	private void actionPerformedForExecute(final boolean headless, final boolean nonTest) {
-		//
-		forEach(Stream.of(tfFile, tfFileLength, tfFileDigest), x -> Util.setText(x, null));
-		//
-		// try to retrieve the "Pronunciation" Audio File
-		//
-		File file = getPronunciationAudioFileByAudioFormat(
-				Util.cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
-				getSelectedItem(mcbmPronounicationAudioFormat));
-		//
-		deleteOnExit(file);
-		//
-		final Voice voice = createVoice(getObjectMapper(), this);
-		//
-		final boolean useTtsVoice = isSelected(cbUseTtsVoice);
-		//
-		if (file == null && useTtsVoice) {
-			//
-			try {
-				//
-				deleteOnExit(file = generateTtsAudioFile(headless, nonTest, voice));
-				//
-			} catch (final IllegalAccessException e) {
-				//
-				errorOrAssertOrShowException(headless, e);
-				//
-			} catch (final InvocationTargetException e) {
-				//
-				final Throwable targetException = e.getTargetException();
-				//
-				errorOrAssertOrShowException(headless,
-						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-								ExceptionUtils.getRootCause(e), e));
-				//
-			} // try
-				//
-		} // if
-			//
-		if (file == null && !useTtsVoice) {
-			//
-			try {
-				//
-				setSource(voice,
-						StringUtils.defaultIfBlank(getSource(voice),
-								getMp3TagValue(file = getAudioFile(headless, voice, tmImportException),
-										x -> StringUtils.isNotBlank(Util.toString(x)), mp3Tags)));
-				//
-			} catch (final IOException | BaseException | IllegalAccessException e) {
-				//
-				errorOrAssertOrShowException(headless, e);
-				//
-			} catch (final InvocationTargetException e) {
-				//
-				final Throwable targetException = e.getTargetException();
-				//
-				errorOrAssertOrShowException(headless,
-						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-								ExceptionUtils.getRootCause(e), e));
-				//
-			} // try
-				//
-		} // if
-			//
-			// Pronunciation PitchAccentImage
-			//
-		final RenderedImage pitchAccentImage = getPitchAccentImage(
-				Util.cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)));
-		//
-		try {
-			//
-			testAndAccept(x -> pitchAccentImage != null,
-					createByteArray(pitchAccentImage, getImageFormat(imageFormat, getImageFormats()), headless),
-					x -> setPitchAccentImage(voice, x));
-			//
-		} catch (final NoSuchFieldException e) {
-			//
-			throw ObjectUtils.getIfNull(toRuntimeException(e), RuntimeException::new);
-			//
-		} // try
-			//
-		SqlSession sqlSession = null;
-		//
-		try {
-			//
-			final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
-			//
-			ObjectMap.setObject(objectMap, File.class, file);
-			//
-			ObjectMap.setObject(objectMap, Voice.class, voice);
-			//
-			ObjectMap.setObject(objectMap, VoiceMapper.class,
-					org.apache.ibatis.session.ConfigurationUtil.getMapper(
-							SqlSessionFactoryUtil.getConfiguration(sqlSessionFactory), VoiceMapper.class,
-							sqlSession = SqlSessionFactoryUtil.openSession(sqlSessionFactory)));
-			//
-			ObjectMap.setObject(objectMap, VoiceManager.class, this);
-			//
-			ObjectMap.setObject(objectMap, String.class, voiceFolder);
-			//
-			ObjectMap.setObject(objectMap, DefaultTableModel.class, tmImportException);
-			//
-			try {
-				//
-				ObjectMap.setObject(objectMap, MessageDigest.class,
-						MessageDigest.getInstance(StringUtils.defaultIfBlank(messageDigestAlgorithm, SHA_512)));
-				//
-			} catch (final NoSuchAlgorithmException e) {
-				//
-				throw ObjectUtils.getIfNull(toRuntimeException(e), RuntimeException::new);
-				//
-			} // try
-				//
-			execute(objectMap);
-			//
-		} finally {
-			//
-			IOUtils.closeQuietly(sqlSession);
-			//
-		} // try
-			//
-	}
-
-	@Nullable
-	private static String getImageFormat(@Nullable final IValue0<String> iValue0,
-			@Nullable final Collection<String> imageFormats) {
-		//
-		String imageFormat = null;
-		//
-		if (iValue0 != null) {
-			//
-			imageFormat = IValue0Util.getValue0(iValue0);
-			//
-		} else {
-			//
-			if (CollectionUtils.isNotEmpty(imageFormats)) {
-				//
-				imageFormat = IterableUtils.get(imageFormats, 0);
-				//
-			} // if
-				//
-		} // if
-			//
-		return imageFormat;
-		//
-	}
-
-	@Nullable
-	private static List<String> getImageFormats() throws NoSuchFieldException {
-		//
-		final Map<?, ?> imageWriterSpis = Util.cast(Map.class,
-				testAndApply(Objects::nonNull,
-						Util.get(
-								Util.cast(Map.class,
-										Narcissus.getObjectField(IIORegistry.getDefaultInstance(),
-												getDeclaredField(ServiceRegistry.class, "categoryMap"))),
-								ImageWriterSpi.class),
-						x -> Narcissus.getField(x, getDeclaredField(Util.getClass(x), "map")), null));
-		//
-		final List<String> classNames = testAndApply(Objects::nonNull, Util.toList(
-				Util.map(Util.stream(Util.keySet(imageWriterSpis)), x -> Util.getName(Util.cast(Class.class, x)))),
-				ArrayList::new, null);
-		//
-		final String commonPrefix = StringUtils.getCommonPrefix(toArray(classNames, new String[] {}));
-		//
-		for (int i = 0; classNames != null && i < classNames.size(); i++) {
-			//
-			classNames.set(i, StringUtils
-					.substringBefore(StringUtils.replace(IterableUtils.get(classNames, i), commonPrefix, ""), '.'));
-			//
-		} // if
-			//
-		return classNames;
-		//
-	}
-
-	private static ByteArray createByteArray(@Nullable final RenderedImage image, @Nullable final String format,
-			final boolean headless) {
-		//
-		byte[] bs = null;
-		//
-		ContentInfo ci = null;
-		//
-		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-			//
-			if (image != null && format != null) {
-				//
-				ImageIO.write(image, format, baos);
-				//
-			} // if
-				//
-			ci = new ContentInfoUtil().findMatch(bs = toByteArray(baos));
-			//
-		} catch (final IOException e) {
-			//
-			errorOrAssertOrShowException(headless, e);
-			//
-		} // try
-			//
-		final ByteArray byteArray = new ByteArray();
-		//
-		byteArray.setContent(bs);
-		//
-		byteArray.setMimeType(getMimeType(ci));
-		//
-		return byteArray;
-		//
-	}
-
-	private static void setPitchAccentImage(@Nullable final Voice instance, final ByteArray pitchAccentImage) {
-		if (instance != null) {
-			instance.setPitchAccentImage(pitchAccentImage);
-		}
-	}
-
-	@Nullable
-	private static File getAudioFile(final boolean headless, final Voice voice,
-			final DefaultTableModel defaultTableModel) {
-		//
-		return getAudioFile(headless, new JFileChooser("."), voice, defaultTableModel);
-		//
-	}
-
-	@Nullable
-	private static File getAudioFile(final boolean headless, @Nullable final JFileChooser jfc, final Voice voice,
-			final DefaultTableModel defaultTableModel) {
-		//
-		setFileSelectionMode(jfc, JFileChooser.FILES_ONLY);
-		//
-		if (!headless && showOpenDialog(jfc, null) != JFileChooser.APPROVE_OPTION) {
-			//
-			clear(defaultTableModel);
-			//
-			ifElse(defaultTableModel != null,
-					() -> addRow(defaultTableModel,
-							new Object[] { getText(voice), getRomaji(voice), NO_FILE_SELECTED }),
-					() -> testAndRun(!GraphicsEnvironment.isHeadless() && !isTestMode(),
-							() -> JOptionPane.showMessageDialog(null, NO_FILE_SELECTED)));
-			//
-			return null;
-			//
-		} // if
-			//
-		return getSelectedFile(jfc);
-		//
-	}
-
-	private static int showOpenDialog(@Nullable final JFileChooser instance, @Nullable final Component parent)
-			throws HeadlessException {
-		//
-		if (instance == null) {
-			//
-			return JFileChooser.ERROR_OPTION;
-			//
-		} // if
-			//
-		try {
-			//
-			if (Narcissus.getField(instance, JComponent.class.getDeclaredField("ui")) == null) {
-				//
-				return JFileChooser.ERROR_OPTION;
-				//
-			} // if
-				//
-		} catch (final NoSuchFieldException e) {
-			//
-			LoggerUtil.error(LOG, e.getMessage(), e);
-			//
-		} // try
-			//
-		return instance.showOpenDialog(parent);
-		//
-	}
-
-	/**
-	 * Handle the case if "Pronunciation" is selected and "Pronunciation Audio
-	 * Format" is selected
-	 */
-	@Nullable
-	private static File getPronunciationAudioFileByAudioFormat(@Nullable final Pronunciation pronunciation,
-			@Nullable final Object pronounicationAudioFormat) {
-		//
-		URL url = null;
-		//
-		try {
-			//
-			url = testAndApply(StringUtils::isNotBlank,
-					Util.get(getAudioUrls(pronunciation), pronounicationAudioFormat), x -> new URI(x).toURL(), null);
-			//
-		} catch (final Exception e) {
-			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-			//
-		} // try
-			//
-		final File file = testAndApply(Objects::nonNull, StringUtils.substringAfterLast(getFile(url), '/'), File::new,
-				null);
-		//
-		try (final InputStream is = openStream(url)) {
-			//
-			if (and(Objects::nonNull, is, file)) {
-				//
-				FileUtils.copyInputStreamToFile(is, file);
-				//
-			} // if
-				//
-		} catch (final IOException e) {
-			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-			//
-		} // try
-			//
-		return file;
-		//
-	}
-
-	@Nullable
-	private static String getFile(@Nullable final URL instance) {
-		return instance != null ? instance.getFile() : null;
-	}
-
 	private static <E extends Throwable> void ifElse(final boolean condition, final FailableRunnable<E> runnableTrue,
 			@Nullable final FailableRunnable<E> runnableFalse) throws E {
 		//
@@ -4595,122 +4200,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // if
 			//
-	}
-
-	private static void addRow(@Nullable final DefaultTableModel instance, final Object[] rowData) {
-		//
-		if (instance != null) {
-			//
-			instance.addRow(rowData);
-			//
-		} // if
-			//
-	}
-
-	@Nullable
-	private String getVoiceIdForExecute(final boolean nonTest) {
-		//
-		String voiceId = Util.toString(getSelectedItem(cbmVoiceId));
-		//
-		if (StringUtils.isBlank(voiceId)) {
-			//
-			final ComboBoxModel<Object> cbmVoiceIdLocal = testAndApply(Objects::nonNull, voiceIds,
-					x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null);
-			//
-			JComboBox<Object> jcbVoiceIdLocal = null;
-			//
-			if (cbmVoiceIdLocal != null) {
-				//
-				final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer();
-				//
-				voiceIdListCellRenderer.listCellRenderer = getRenderer(
-						Util.cast(JComboBox.class, jcbVoiceIdLocal = new JComboBox<>(cbmVoiceIdLocal)));
-				//
-				jcbVoiceIdLocal.addItemListener(this);
-				//
-				voiceIdListCellRenderer.commonPrefix = String.join("",
-						StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
-				//
-				setRenderer(jcbVoiceIdLocal, voiceIdListCellRenderer);
-				//
-			} // if
-				//
-				// Show "Voice ID" option dialog if this method is not run under test case
-				//
-			testAndAccept((a, b) -> Objects.equals(a, Boolean.TRUE), nonTest, jcbVoiceIdLocal,
-					(a, b) -> JOptionPane.showMessageDialog(null, b, "Voice ID", JOptionPane.PLAIN_MESSAGE));
-			//
-			voiceId = Util.toString(getSelectedItem(cbmVoiceIdLocal));
-			//
-		} // if
-			//
-		return voiceId;
-		//
-	}
-
-	@Nullable
-	private File generateTtsAudioFile(final boolean headless, final boolean nonTest, final Voice voice)
-			throws IllegalAccessException, InvocationTargetException {
-		//
-		final String voiceId = getVoiceIdForExecute(nonTest);
-		//
-		if (voiceId == null) {
-			//
-			// Show "Please select a Voice" message if this method is not run under test
-			// case
-			//
-			testAndRun(nonTest, () -> JOptionPane.showMessageDialog(null, "Please select a Voice"));
-			//
-			return null;
-			//
-		} // if
-			//
-		File file = null;
-		//
-		if (speechApi != null) {
-			//
-			try {
-				//
-				speechApi.writeVoiceToFile(Util.getText(tfTextImport), voiceId
-				//
-						, intValue(getRate(), 0)// rate
-						//
-						, Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100)// volume
-						, file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null)
-				//
-				);
-				//
-				if (Objects.equals("wav", getFileExtension(Util.cast(ContentInfo.class,
-						testAndApply(Objects::nonNull, file, new ContentInfoUtil()::findMatch, null))))) {
-					//
-					final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory, FORMAT,
-							getSelectedItem(cbmAudioFormatExecute));
-					//
-					if (byteConverter != null) {
-						//
-						FileUtils.writeByteArrayToFile(file,
-								byteConverter.convert(Files.readAllBytes(Path.of(toURI(file)))));
-						//
-					} // if
-						//
-				} // if
-					//
-			} catch (final IOException e) {
-				//
-				errorOrAssertOrShowException(headless, e);
-				//
-			} // try
-				//
-		} // if
-			//
-		setLanguage(voice, StringUtils.defaultIfBlank(getLanguage(voice), ObjIntFunctionUtil.apply(
-				languageCodeToTextObjIntFunction, SpeechApi.getVoiceAttribute(speechApi, voiceId, LANGUAGE), 16)));
-		//
-		setSource(voice, StringUtils.defaultIfBlank(getSource(voice),
-				Provider.getProviderName(Util.cast(Provider.class, speechApi))));
-		//
-		return file;
-		//
 	}
 
 	@Nullable
@@ -4743,17 +4232,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		} // try
 			//
-	}
-
-	private static void setLanguage(@Nullable final Voice instance, final String language) {
-		if (instance != null) {
-			instance.setLanguage(language);
-		}
-	}
-
-	@Nullable
-	private static String getLanguage(@Nullable final Voice instance) {
-		return instance != null ? instance.getLanguage() : null;
 	}
 
 	private static <E extends Throwable> void testAndRun(final boolean b, @Nullable final FailableRunnable<E> runnable)
@@ -5338,17 +4816,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void setSource(@Nullable final Voice instance, @Nullable final String source) {
-		if (instance != null) {
-			instance.setSource(source);
-		}
-	}
-
-	@Nullable
-	private static String getSource(@Nullable final Voice instance) {
-		return instance != null ? instance.getSource() : null;
-	}
-
 	private static void setListNames(@Nullable final Voice instance, @Nullable final Iterable<String> listNames) {
 		if (instance != null) {
 			instance.setListNames(listNames);
@@ -5810,107 +5277,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null && instance.test(t, u);
 	}
 
-	private static class VoiceThrowableMessageBiConsumer implements BiConsumer<Voice, String> {
-
-		private boolean headless = false;
-
-		private DefaultTableModel tableModel = null;
-
-		private VoiceThrowableMessageBiConsumer(final boolean headless, final DefaultTableModel tableModel) {
-			this.headless = headless;
-			this.tableModel = tableModel;
-		}
-
-		@Override
-		public void accept(final Voice v, final String m) {
-			//
-			if (headless) {
-				//
-				try {
-					//
-					errorOrPrintln(LOG, getSystemPrintStreamByFieldName("err"), m);
-					//
-				} catch (final IllegalAccessException e) {
-					//
-					final RuntimeException runtimeException = toRuntimeException(e);
-					//
-					if (runtimeException != null) {
-						//
-						throw runtimeException;
-						//
-					} // if
-						//
-				} // try
-					//
-			} else {
-				//
-				if (tableModel != null) {
-					//
-					addRow(tableModel, new Object[] { getText(v), getRomaji(v), m });
-					//
-				} else {
-					//
-					JOptionPane.showMessageDialog(null, m);
-					//
-				} // if
-					//
-			} // if
-				//
-		}
-
-		private static void errorOrPrintln(@Nullable final Logger logger, @Nullable final PrintStream ps,
-				final String message) {
-			//
-			if (logger != null) {
-				//
-				logger.error(message);
-				//
-			} else if (ps != null) {
-				//
-				ps.println(message);
-				//
-			} // if
-				//
-		}
-
-	}
-
-	private static class VoiceThrowableBiConsumer implements BiConsumer<Voice, Throwable> {
-
-		private boolean headless = false;
-
-		private DefaultTableModel tableModel = null;
-
-		private VoiceThrowableBiConsumer(final boolean headless, final DefaultTableModel tableModel) {
-			this.headless = headless;
-			this.tableModel = tableModel;
-		}
-
-		@Override
-		public void accept(final Voice v, final Throwable e) {
-			//
-			if (headless) {
-				//
-				errorOrAssertOrShowException(headless, e);
-				//
-			} else {
-				//
-				if (tableModel != null) {
-					//
-					addRow(tableModel, new Object[] { getText(v), getRomaji(v), e });
-					//
-				} else {
-					//
-					JOptionPane.showMessageDialog(null, e);
-					//
-				} // if
-					//
-			} // if
-				//
-		}
-
-	}
-
 	@Nullable
 	private static PrintStream getSystemPrintStreamByFieldName(final String name) throws IllegalAccessException {
 		//
@@ -6085,51 +5451,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		} // if
 			//
 		return list;
-		//
-	}
-
-	@Nullable
-	private static ByteConverter getByteConverter(final ConfigurableListableBeanFactory configurableListableBeanFactory,
-			final String attribute, @Nullable final Object value) {
-		//
-		IValue0<ByteConverter> byteConverter = null;
-		//
-		final Map<String, ByteConverter> byteConverters = ListableBeanFactoryUtil
-				.getBeansOfType(configurableListableBeanFactory, ByteConverter.class);
-		//
-		final Set<Entry<String, ByteConverter>> entrySet = Util.entrySet(byteConverters);
-		//
-		if (entrySet != null) {
-			//
-			BeanDefinition bd = null;
-			//
-			for (final Entry<String, ByteConverter> en : entrySet) {
-				//
-				if (en == null
-						|| (bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(configurableListableBeanFactory,
-								Util.getKey(en))) == null
-						|| !bd.hasAttribute(attribute)
-						|| !Objects.equals(value, testAndApply(bd::hasAttribute, attribute, bd::getAttribute, null))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (byteConverter == null) {
-					//
-					byteConverter = Unit.with(Util.getValue(en));
-					//
-				} else {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-			} // for
-				//
-		} // if
-			//
-		return IValue0Util.getValue0(byteConverter);
 		//
 	}
 
@@ -6935,273 +6256,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static String getMp3TagValue(@Nullable final File file, final Predicate<Object> predicate,
-			final String... attributes)
-			throws BaseException, IOException, IllegalAccessException, InvocationTargetException {
-		//
-		return getMp3TagValue(getMp3TagParirs(file, attributes), predicate);
-		//
-	}
-
-	@Nullable
-	private static String getMp3TagValue(@Nullable final List<Pair<String, ?>> pairs,
-			@Nullable final Predicate<Object> predicate) {
-		//
-		String string = null;
-		//
-		for (int i = 0; i < IterableUtils.size(pairs); i++) {
-			//
-			if (Util.test(predicate, string = Util.toString(Util.getValue(Util.cast(Pair.class, get(pairs, i)))))
-					|| predicate == null) {
-				//
-				break;
-				//
-			} // if
-				//
-		} // for
-			//
-		return string;
-		//
-	}
-
-	@Nullable
-	private static List<Pair<String, ?>> getMp3TagParirs(@Nullable final File file, final String... attributes)
-			throws BaseException, IOException, IllegalAccessException, InvocationTargetException {
-		//
-		if (Objects.equals("mp3", getFileExtension(Util.cast(ContentInfo.class,
-				testAndApply(VoiceManager::isFile, file, new ContentInfoUtil()::findMatch, null))))) {
-			//
-			final Mp3File mp3File = new Mp3File(file);
-			//
-			return getMp3TagParirs(
-					ObjectUtils.defaultIfNull(Mp3FileUtil.getId3v2Tag(mp3File), Mp3FileUtil.getId3v1Tag(mp3File)),
-					attributes);
-			//
-		} // if
-			//
-		return null;
-		//
-	}
-
-	@Nullable
-	private static List<Pair<String, ?>> getMp3TagParirs(final ID3v1 id3v1, @Nullable final String... attributes)
-			throws IllegalAccessException, InvocationTargetException {
-		//
-		List<Pair<String, ?>> pairs = null;
-		//
-		Method[] ms = null;
-		//
-		List<Method> methods = null;
-		//
-		Method m = null;
-		//
-		for (int i = 0; attributes != null && i < attributes.length; i++) {
-			//
-			final String attribute = attributes[i];
-			//
-			if ((methods = Util.toList(Util.filter(
-					testAndApply(Objects::nonNull, ms = getIfNull(ms, () -> Util.getMethods(Util.getClass(id3v1))),
-							Arrays::stream, null),
-					a -> matches(matcher(Pattern.compile(String.format("get%1$s", StringUtils.capitalize(attribute))),
-							Util.getName(a)))))) == null
-					|| methods.isEmpty()) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if (IterableUtils.size(methods) == 1) {
-				//
-				if ((m = get(methods, 0)) != null && m.getParameterCount() == 0) {
-					//
-					Util.add(pairs = getIfNull(pairs, ArrayList::new), Pair.of(attribute, invoke(m, id3v1)));
-					//
-				} // if
-					//
-			} else {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
-		} // for
-			//
-		return pairs;
-		//
-	}
-
-	private static void execute(final ObjectMap objectMap) {
-		//
-		final File file = ObjectMap.getObject(objectMap, File.class);
-		//
-		final DefaultTableModel tmImportException = ObjectMap.getObject(objectMap, DefaultTableModel.class);
-		//
-		final Voice voice = ObjectMap.getObject(objectMap, Voice.class);
-		//
-		clear(tmImportException);
-		//
-		final boolean headless = GraphicsEnvironment.isHeadless();
-		//
-		final boolean nonTest = !isTestMode();
-		//
-		final boolean nonHeadlessAndnonTest = !headless && nonTest;
-		//
-		if (file == null) {
-			//
-			testAndAccept((a, b) -> a != null, tmImportException, NO_FILE_SELECTED,
-					//
-					(a, b) -> addRow(a, new Object[] { getText(voice), getRomaji(voice), b }),
-					//
-					(a, b) -> testAndRun(nonHeadlessAndnonTest, () -> JOptionPane.showMessageDialog(null, b))
-			//
-			);
-			//
-			return;
-			//
-		} else if (!file.exists()) {
-			//
-			testAndAccept((a, b) -> a != null, tmImportException,
-					String.format("File \"%1$s\" does not exist", Util.getAbsolutePath(file)),
-					//
-					(a, b) -> addRow(a, new Object[] { getText(voice), getRomaji(voice), b }),
-					//
-					(a, b) -> testAndRun(nonHeadlessAndnonTest, () -> JOptionPane.showMessageDialog(null, b))
-			//
-			);
-			//
-			return;
-			//
-		} else if (!isFile(file)) {
-			//
-			testAndAccept((a, b) -> a != null, tmImportException, "Not A Regular File Selected",
-					//
-					(a, b) -> addRow(a, new Object[] { getText(voice), getRomaji(voice), b }),
-					//
-					(a, b) -> testAndRun(nonHeadlessAndnonTest, () -> JOptionPane.showMessageDialog(null, b))
-			//
-			);
-			//
-			return;
-			//
-		} else if (longValue(length(file), 0) == 0) {
-			//
-			testAndAccept((a, b) -> a != null, tmImportException, "Empty File Selected",
-					//
-					(a, b) -> addRow(a, new Object[] { getText(voice), getRomaji(voice), b }),
-					//
-					(a, b) -> testAndRun(nonTest, () -> JOptionPane.showMessageDialog(null, b))
-			//
-			);
-			//
-			return;
-			//
-		} // if
-			//
-		SqlSession sqlSession = null;
-		//
-		try {
-			//
-			importVoice(objectMap, new VoiceThrowableMessageBiConsumer(headless, tmImportException),
-					new VoiceThrowableBiConsumer(headless, tmImportException));
-			//
-		} finally {
-			//
-			IOUtils.closeQuietly(sqlSession);
-			//
-		} // try
-			//
-	}
-
-	private Integer getRate() {
-		//
-		final Integer speechRate = getValue(jsSpeechRate);
-		//
-		return speechRate != null ? speechRate : getRate(Util.getText(tfSpeechRate));
-		//
-	}
-
-	private static Integer getRate(@Nullable final String string) {
-		//
-		Integer rate = valueOf(string);
-		//
-		if (rate == null) {
-			//
-			rate = getIfNull(rate,
-					() -> getRate(Util.toList(Util.filter(
-							testAndApply(Objects::nonNull, Util.getDeclaredFields(Integer.class), Arrays::stream, null),
-							f -> f != null
-									&& (Util.isAssignableFrom(Number.class, Util.getType(f))
-											|| Objects.equals(Integer.TYPE, Util.getType(f)))
-									&& Objects.equals(Util.getName(f), string)))));
-			//
-		} // if
-			//
-		return rate;
-		//
-	}
-
-	@Nullable
-	private static Integer getRate(@Nullable final List<Field> fs) {
-		//
-		if (fs != null && !fs.isEmpty()) {
-			//
-			final int size = IterableUtils.size(fs);
-			//
-			if (size > 1) {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
-			final Field f = get(fs, 0);
-			//
-			if (f != null && isStatic(f)) {
-				//
-				try {
-					//
-					final Number number = Util.cast(Number.class, get(f, null));
-					//
-					return number != null ? Integer.valueOf(number.intValue()) : null;
-					//
-				} catch (final IllegalAccessException e) {
-					//
-					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-					//
-				} // try
-					//
-			} // if
-				//
-		} // if
-			//
-		return null;
-		//
-	}
-
-	@Nullable
-	private static Integer getRate(@Nullable final VoiceManager instance) {
-		return instance != null ? instance.getRate() : null;
-	}
-
-	@Nullable
 	private static Annotation[] getDeclaredAnnotations(@Nullable final AnnotatedElement instance) {
 		return instance != null ? instance.getDeclaredAnnotations() : null;
-	}
-
-	@Nullable
-	private static DataValidationHelper getDataValidationHelper(@Nullable final Sheet instance) {
-		return instance != null ? instance.getDataValidationHelper() : null;
-	}
-
-	@Nullable
-	private static DataValidationConstraint createExplicitListConstraint(@Nullable final DataValidationHelper instance,
-			@Nullable final String[] listOfValues) {
-		return instance != null ? instance.createExplicitListConstraint(listOfValues) : null;
-	}
-
-	@Nullable
-	private static DataValidation createValidation(@Nullable final DataValidationHelper instance,
-			@Nullable final DataValidationConstraint constraint, final CellRangeAddressList cellRangeAddressList) {
-		return instance != null ? instance.createValidation(constraint, cellRangeAddressList) : null;
 	}
 
 	private static <T> boolean anyMatch(@Nullable final Stream<T> instance,
@@ -8258,52 +7314,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			return instance != null && instance.isArray();
 		}
 
-	}
-
-	@SuppressWarnings("java:S1612")
-	@Nullable
-	private static Voice createVoice(final ObjectMapper objectMapper, @Nullable final VoiceManager instance) {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		final Voice voice = new Voice();
-		//
-		voice.setLanguage(Util.getText(instance.tfLanguage));
-		//
-		voice.setText(Util.getText(instance.tfTextImport));
-		//
-		setSource(voice, Util.getText(instance.tfSource));
-		//
-		voice.setRomaji(Util.getText(instance.tfRomaji));
-		//
-		voice.setHiragana(Util.getText(instance.tfHiragana));
-		//
-		voice.setKatakana(Util.getText(instance.tfKatakana));
-		//
-		voice.setYomi(Util.cast(Yomi.class, getSelectedItem(instance.cbmYomi)));
-		//
-		setListNames(voice,
-				Util.toList(Util.map(Util.stream(getObjectList(objectMapper, Util.getText(instance.tfListNames))),
-						x -> Util.toString(x))));
-		//
-		voice.setJlptLevel(Util.toString(getSelectedItem(instance.cbmJlptLevel)));
-		//
-		voice.setIpaSymbol(Util.getText(instance.tfIpaSymbol));
-		//
-		voice.setIsKanji(Util.cast(Boolean.class, getSelectedItem(instance.cbmIsKanji)));
-		//
-		voice.setJouYouKanji(Util.cast(Boolean.class, getSelectedItem(instance.cbmJouYouKanJi)));
-		//
-		voice.setGaKuNenBeTsuKanJi(Util.toString(getSelectedItem(instance.cbmGaKuNenBeTsuKanJi)));
-		//
-		voice.setPronunciationPageUrl(Util.getText(instance.tfPronunciationPageUrl));
-		//
-		return voice;
-		//
 	}
 
 	@Nullable
