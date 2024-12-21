@@ -216,6 +216,7 @@ import com.mpatric.mp3agic.BaseException;
 import com.mpatric.mp3agic.ID3v1;
 import com.mpatric.mp3agic.ID3v2;
 import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.Mp3FileUtil;
 
 import domain.JlptVocabulary;
 import domain.Pronunciation;
@@ -1923,17 +1924,13 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			final Mp3File mp3File = new Mp3File(file);
 			//
-			return getMp3TagParirs(ObjectUtils.defaultIfNull(getId3v2Tag(mp3File), getId3v1Tag(mp3File)), attributes);
+			return getMp3TagParirs(ObjectUtils.defaultIfNull(getId3v2Tag(mp3File), Mp3FileUtil.getId3v1Tag(mp3File)),
+					attributes);
 			//
 		} // if
 			//
 		return null;
 		//
-	}
-
-	@Nullable
-	private static ID3v1 getId3v1Tag(@Nullable final Mp3File instance) {
-		return instance != null ? instance.getId3v1Tag() : null;
 	}
 
 	@Nullable

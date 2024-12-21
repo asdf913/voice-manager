@@ -971,8 +971,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_SORTED = clz.getDeclaredMethod("sorted", Stream.class, Comparator.class)).setAccessible(true);
 		//
-		(METHOD_GET_ID3V1_TAG = clz.getDeclaredMethod("getId3v1Tag", Mp3File.class)).setAccessible(true);
-		//
 		(METHOD_GET_ID3V2_TAG = clz.getDeclaredMethod("getId3v2Tag", Mp3File.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_IMPORT_RESULT_PANEL = clz.getDeclaredMethod("createImportResultPanel", LayoutManager.class))
@@ -9274,29 +9272,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetId3v1Tag() throws Throwable {
-		//
-		Assertions.assertNull(getId3v1Tag(null));
-		//
-		Assertions.assertNull(getId3v1Tag(Util.cast(Mp3File.class, Narcissus.allocateInstance(Mp3File.class))));
-		//
-	}
-
-	private static ID3v1 getId3v1Tag(final Mp3File instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_ID3V1_TAG.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof ID3v1) {
-				return (ID3v1) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
