@@ -142,7 +142,10 @@ public class VoiceManagerExportPanel extends JPanel
 	@Note("Presentation Slide Duration")
 	private JTextComponent tfPresentationSlideDuration = null;
 
-	private JTextComponent tfPhraseCounter, tfPhraseTotal = null;
+	@Note("Phrase Counter")
+	private JTextComponent tfPhraseCounter = null;
+
+	private JTextComponent tfPhraseTotal = null;
 
 	@Note("Over MP3 Title")
 	private AbstractButton cbOverMp3Title = null;
@@ -159,9 +162,12 @@ public class VoiceManagerExportPanel extends JPanel
 	@Note("Export List As HTML")
 	private AbstractButton cbExportListHtml = null;
 
-	private AbstractButton cbExportWebSpeechSynthesisHtml, cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip,
-			cbExportListSheet, cbExportJlptSheet, cbExportPresentation, cbEmbedAudioInPresentation,
-			cbHideAudioImageInPresentation, cbExportMicrosoftAccess, btnExport = null;
+	@Note("Export Web Speech Synthesis HTML")
+	private AbstractButton cbExportWebSpeechSynthesisHtml = null;
+
+	private AbstractButton cbExportHtmlAsZip, cbExportHtmlRemoveAfterZip, cbExportListSheet, cbExportJlptSheet,
+			cbExportPresentation, cbEmbedAudioInPresentation, cbHideAudioImageInPresentation, cbExportMicrosoftAccess,
+			btnExport = null;
 
 	private JProgressBar progressBarExport = null;
 
