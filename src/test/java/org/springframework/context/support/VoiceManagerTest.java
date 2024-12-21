@@ -309,7 +309,7 @@ class VoiceManagerTest {
 			METHOD_GET_EMPTY_FILE_PATH, METHOD_SET_LOCALE_ID_SHEET, METHOD_ADD_LOCALE_ID_ROW,
 			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
 			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
-			METHOD_GET_WRITER, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME, METHOD_IF_ELSE,
+			METHOD_GET_WRITER, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME,
 			METHOD_GET_PAGE_TITLE, METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL,
 			METHOD_ADD_ALL, METHOD_PRONOUNICATION_CHANGED, METHOD_REMOVE_ELEMENT_AT, METHOD_IS_ALL_ATTRIBUTES_MATCHED,
 			METHOD_SET_AUTO_FILTER, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT, METHOD_GET_NUMBER, METHOD_GET_RENDERER,
@@ -714,9 +714,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_SYSTEM_PRINT_STREAM_BY_FIELD_NAME = clz.getDeclaredMethod("getSystemPrintStreamByFieldName",
 				String.class)).setAccessible(true);
-		//
-		(METHOD_IF_ELSE = clz.getDeclaredMethod("ifElse", Boolean.TYPE, FailableRunnable.class, FailableRunnable.class))
-				.setAccessible(true);
 		//
 		(METHOD_GET_PAGE_TITLE = clz.getDeclaredMethod("getPageTitle", String.class, Duration.class))
 				.setAccessible(true);
@@ -6247,24 +6244,6 @@ class VoiceManagerTest {
 				return (PrintStream) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIfElse() {
-		//
-		Assertions.assertDoesNotThrow(() -> ifElse(false, null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> ifElse(true, Reflection.newProxy(FailableRunnable.class, ih), null));
-		//
-	}
-
-	private static <E extends Throwable> void ifElse(final boolean condition, final FailableRunnable<E> runnableTrue,
-			final FailableRunnable<E> runnableFalse) throws Throwable {
-		try {
-			METHOD_IF_ELSE.invoke(null, condition, runnableTrue, runnableFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

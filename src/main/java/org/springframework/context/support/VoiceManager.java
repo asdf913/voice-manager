@@ -4161,31 +4161,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static <E extends Throwable> void ifElse(final boolean condition, final FailableRunnable<E> runnableTrue,
-			@Nullable final FailableRunnable<E> runnableFalse) throws E {
-		//
-		if (condition) {
-			//
-			run(runnableTrue);
-			//
-		} else {
-			//
-			run(runnableFalse);
-			//
-		} // if
-			//
-	}
-
-	private static <E extends Throwable> void run(@Nullable final FailableRunnable<E> instance) throws E {
-		//
-		if (instance != null) {
-			//
-			instance.run();
-			//
-		} // if
-			//
-	}
-
 	@Nullable
 	private static File createTempFile(@Nullable final String prefix, @Nullable final String suffix)
 			throws IllegalAccessException, InvocationTargetException {
