@@ -29,7 +29,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.Console;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -85,7 +84,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HexFormat;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -214,7 +212,6 @@ import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.SerializationUtils;
@@ -240,21 +237,15 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryUtil;
-import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.record.crypto.Biff8EncryptionKey;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ooxml.POIXMLDocument;
-import org.apache.poi.ooxml.POIXMLDocumentUtil;
 import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
-import org.apache.poi.ooxml.POIXMLPropertiesUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
-import org.apache.poi.poifs.crypt.Decryptor;
 import org.apache.poi.poifs.crypt.EncryptionInfo;
 import org.apache.poi.poifs.crypt.EncryptionMode;
 import org.apache.poi.poifs.crypt.Encryptor;
-import org.apache.poi.poifs.filesystem.DirectoryNode;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -264,7 +255,6 @@ import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.CreationHelperUtil;
 import org.apache.poi.ss.usermodel.DataValidation;
 import org.apache.poi.ss.usermodel.DataValidationConstraint;
 import org.apache.poi.ss.usermodel.DataValidationHelper;
@@ -330,7 +320,6 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -402,7 +391,6 @@ import j2html.tags.Tag;
 import j2html.tags.TagUtil;
 import j2html.tags.specialized.ATag;
 import j2html.tags.specialized.ATagUtil;
-import jnafilechooser.api.WindowsFolderBrowser;
 import mapper.VoiceMapper;
 import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.model.enums.CompressionLevel;
@@ -670,10 +658,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
-
-	@Note("Import Spread Sheet File(s) within a specified folder")
-	@Group("Import")
-	private AbstractButton btnImportWithinFolder = null;
 
 	@Note("Over MP3 Title")
 	private AbstractButton cbOverMp3Title = null;
@@ -3057,33 +3041,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.item(index) : null;
 	}
 
-	@Nullable
-	private static List<Boolean> getBooleanValues() throws IllegalAccessException {
-		//
-		List<Boolean> list = null;
-		//
-		final List<Field> fs = Util.toList(
-				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(Boolean.class), Arrays::stream, null),
-						f -> Objects.equals(Util.getType(f), Boolean.class)));
-		//
-		Field f = null;
-		//
-		for (int i = 0; i < IterableUtils.size(fs); i++) {
-			//
-			if (!Objects.equals(Boolean.class, Util.getType(f = get(fs, i)))) {
-				//
-				continue;
-				//
-			} // if
-				//
-			Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), Util.cast(Boolean.class, get(f, null)));
-			//
-		} // for
-			//
-		return list;
-		//
-	}
-
 	private JPanel createImportResultPanel(final LayoutManager layoutManager) {
 		//
 		final JPanel panel = new JPanel();
@@ -4203,11 +4160,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		testAndRun(Util.contains(getObjectsByGroupAnnotation(this, PRONUNCIATION), source),
 				() -> actionPerformedForPronunciation(source));
 		//
-		// Import
-		//
-		testAndRun(Util.contains(getObjectsByGroupAnnotation(this, "Import"), source),
-				() -> actionPerformedForImport(source, headless));
-		//
 		if (Objects.equals(source, btnExecute)) {
 			//
 			actionPerformedForExecute(headless, nonTest);
@@ -4276,33 +4228,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static IntStream reverseRange(final int from, final int to) {
 		return map(IntStream.range(from, to), i -> to - i + from - 1);
-	}
-
-	private void importByWorkbookFiles(@Nullable final File[] fs, final boolean headless) {
-		//
-		File f = null;
-		//
-		for (int i = 0; fs != null && i < fs.length; i++) {
-			//
-			try {
-				//
-				if (!isFile(f = fs[i]) || getWorkbook(f) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-			} catch (final IOException | InvalidFormatException | GeneralSecurityException | SAXException
-					| ParserConfigurationException e) {
-				//
-				errorOrAssertOrShowException(headless, e);
-				//
-			} // try
-				//
-			importVoice(f);
-			//
-		} // for
-			//
 	}
 
 	private static boolean isTestMode() {
@@ -4897,24 +4822,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			pronounicationChanged(Util.cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
 					mcbmPronounicationAudioFormat, preferredPronunciationAudioFormat, tfPronunciationPageUrl);
-			//
-			return;
-			//
-		} // if
-			//
-		throw new IllegalStateException();
-		//
-	}
-
-	private void actionPerformedForImport(final Object source, final boolean headless) {
-		//
-		if (Objects.equals(source, btnImportWithinFolder)) {
-			//
-			importByWorkbookFiles(
-					//
-					listFiles(new WindowsFolderBrowser().showDialog(this))
-					//
-					, headless);
 			//
 			return;
 			//
@@ -5918,11 +5825,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null && instance.test(t, u);
 	}
 
-	@Nullable
-	private static File[] listFiles(@Nullable final File instance) {
-		return instance != null ? instance.listFiles() : null;
-	}
-
 	private static class VoiceThrowableMessageBiConsumer implements BiConsumer<Voice, String> {
 
 		private boolean headless = false;
@@ -6024,28 +5926,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
-	private static class VoiceConsumer implements Consumer<Voice> {
-
-		private JTextComponent jTextComponent = null;
-
-		private AtomicInteger atomicInteger = null;
-
-		private VoiceConsumer(final JTextComponent jTextComponent, final AtomicInteger atomicInteger) {
-			this.jTextComponent = jTextComponent;
-			this.atomicInteger = atomicInteger;
-		}
-
-		@Override
-		public void accept(final Voice v) {
-			//
-			Util.setText(jTextComponent, getText(v));
-			//
-			incrementAndGet(atomicInteger);
-			//
-		}
-
-	}
-
 	@Nullable
 	private static PrintStream getSystemPrintStreamByFieldName(final String name) throws IllegalAccessException {
 		//
@@ -6064,255 +5944,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? Integer.valueOf(instance.incrementAndGet()) : null;
 	}
 
-	@SuppressWarnings("java:S1612")
-	private void importVoice(final File file) {
-		//
-		final boolean headless = GraphicsEnvironment.isHeadless();
-		//
-		try (final Workbook workbook = getWorkbook(file)) {
-			//
-			if (workbook != null) {
-				//
-				Util.setText(tfCurrentProcessingFile, getName(file));
-				//
-			} // if
-				//
-			final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
-			//
-			final POIXMLDocument poiXmlDocument = Util.cast(POIXMLDocument.class, workbook);
-			//
-			final List<String> sheetExclued = Util.toList(Util.map(Util.stream(getObjectList(getObjectMapper(),
-					getLpwstr(testAndApply(VoiceManager::contains,
-							POIXMLPropertiesUtil.getCustomProperties(POIXMLDocumentUtil.getProperties(poiXmlDocument)),
-							"sheetExcluded", VoiceManager::getProperty, null)))),
-					x -> Util.toString(x)));
-			//
-			ObjectMap.setObject(objectMap, File.class, file);
-			//
-			ObjectMap.setObject(objectMap, VoiceManager.class, this);
-			//
-			ObjectMap.setObject(objectMap, String.class, voiceFolder);
-			//
-			ObjectMap.setObject(objectMap, SqlSessionFactory.class, sqlSessionFactory);
-			//
-			ObjectMap.setObject(objectMap, JProgressBar.class, progressBarImport);
-			//
-			ObjectMap.setObject(objectMap, Provider.class, Util.cast(Provider.class, speechApi));
-			//
-			ObjectMap.setObject(objectMap, SpeechApi.class, speechApi);
-			//
-			ObjectMap.setObject(objectMap, POIXMLDocument.class, poiXmlDocument);
-			//
-			ObjectMap.setObject(objectMap, Jakaroma.class, jakaroma = getIfNull(jakaroma, Jakaroma::new));
-			//
-			ObjectMap.setObject(objectMap, JSlider.class, jsSpeechVolume);
-			//
-			ObjectMap.setObject(objectMap, MessageDigest.class,
-					MessageDigest.getInstance(StringUtils.defaultIfBlank(messageDigestAlgorithm, SHA_512)));
-			//
-			BiConsumer<Voice, String> errorMessageConsumer = null;
-			//
-			BiConsumer<Voice, Throwable> throwableConsumer = null;
-			//
-			Consumer<Voice> voiceConsumer = null;
-			//
-			Sheet sheet = null;
-			//
-			accept(VoiceManager::clear, tmImportResult, tmImportException);
-			//
-			Integer numberOfSheetProcessed = null;
-			//
-			final AtomicInteger numberOfVoiceProcessed = new AtomicInteger();
-			//
-			IValue0<String> voiceId = null;
-			//
-			Collection<Object> throwableStackTraceHexs = null;
-			//
-			ImportVoiceParameters ivps = null;
-			//
-			for (int i = 0; i < intValue(getNumberOfSheets(workbook), 0); i++) {
-				//
-				if (Util.contains(sheetExclued, getSheetName(sheet = WorkbookUtil.getSheetAt(workbook, i)))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				setMaximum(progressBarImport, Math.max(0, (intValue(getPhysicalNumberOfRows(sheet), 0)) - 1));
-				//
-				ObjectMap.setObject(objectMap, ByteConverter.class,
-						getByteConverter(configurableListableBeanFactory, FORMAT,
-								getLpwstr(testAndApply(VoiceManager::contains,
-										POIXMLPropertiesUtil
-												.getCustomProperties(POIXMLDocumentUtil.getProperties(poiXmlDocument)),
-										"audioFormat", VoiceManager::getProperty, null))));
-				//
-				if ((ivps = ObjectUtils.getIfNull(ivps, ImportVoiceParameters::new)) != null) {
-					//
-					ivps.languageCodeToTextObjIntFunction = languageCodeToTextObjIntFunction;
-					//
-				} // if
-					//
-				ObjectMap.setObject(objectMap, ImportVoiceParameters.class, ivps);
-				//
-				if (voiceId == null) {
-					//
-					voiceId = Unit.with(getIfNull(Util.toString(getSelectedItem(cbmVoiceId)),
-							() -> getVoiceIdForExecute(!isTestMode())));
-					//
-				} // if
-					//
-				importVoice(sheet, objectMap, IValue0Util.getValue0(voiceId),
-						//
-						errorMessageConsumer = getIfNull(errorMessageConsumer,
-								() -> new VoiceThrowableMessageBiConsumer(headless, tmImportException)),
-						//
-						throwableConsumer = getIfNull(throwableConsumer,
-								() -> new VoiceThrowableBiConsumer(headless, tmImportException)),
-						//
-						voiceConsumer = getIfNull(voiceConsumer,
-								() -> new VoiceConsumer(tfCurrentProcessingVoice, numberOfVoiceProcessed))
-						//
-						, throwableStackTraceHexs = ObjectUtils.getIfNull(throwableStackTraceHexs, ArrayList::new)
-				//
-				);
-				//
-				Util.setText(tfCurrentProcessingSheetName, getSheetName(sheet));
-				//
-				numberOfSheetProcessed = Integer.valueOf(intValue(numberOfSheetProcessed, 0) + 1);
-				//
-			} // for
-				//
-			addRow(tmImportResult, new Object[] { numberOfSheetProcessed, numberOfVoiceProcessed });
-			//
-		} catch (final InvocationTargetException e) {
-			//
-			final Throwable targetException = e.getTargetException();
-			//
-			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(
-					ExceptionUtils.getRootCause(targetException), targetException, ExceptionUtils.getRootCause(e), e));
-			//
-		} catch (final Exception e) {
-			//
-			errorOrAssertOrShowException(headless, e);
-			//
-		} // try
-			//
-	}
-
-	@Nullable
-	private static Workbook getWorkbook(final File file) throws IOException, GeneralSecurityException,
-			InvalidFormatException, SAXException, ParserConfigurationException {
-		//
-		final ContentInfo ci = testAndApply(Objects::nonNull, file, new ContentInfoUtil()::findMatch, null);
-		//
-		final String message = getMessage(ci);
-		//
-		final String mimeType = getMimeType(ci);
-		//
-		if (Objects.equals(message, OLE_2_COMPOUND_DOCUMENT)) {
-			//
-			try (final POIFSFileSystem poifs = new POIFSFileSystem(file)) {
-				//
-				final List<String> oleEntryNames = getOleEntryNames(poifs);
-				//
-				if (Objects.equals(oleEntryNames,
-						Arrays.asList(Decryptor.DEFAULT_POIFS_ENTRY, EncryptionInfo.ENCRYPTION_INFO_ENTRY))) {
-					//
-					final Decryptor decryptor = Decryptor.getInstance(new EncryptionInfo(poifs));
-					//
-					if (decryptor != null && decryptor.verifyPassword(getPassword(System.console()))) {
-						//
-						try (final InputStream is = decryptor.getDataStream(poifs)) {
-							//
-							return new XSSFWorkbook(is);
-							//
-						} // try
-							//
-					} // if
-						//
-				} else if (Util.contains(oleEntryNames, "Workbook")) {
-					//
-					try {
-						//
-						return new HSSFWorkbook(poifs);
-						//
-					} catch (final EncryptedDocumentException e) {
-						//
-						Biff8EncryptionKey.setCurrentUserPassword(getPassword(System.console()));
-						//
-						try {
-							//
-							return new HSSFWorkbook(poifs);
-							//
-						} finally {
-							//
-							Biff8EncryptionKey.setCurrentUserPassword(null);
-							//
-						} // try
-							//
-					} // try
-						//
-				} // if
-					//
-			} // try
-				//
-		} else if (Boolean.logicalOr(Objects.equals(message, "Microsoft Office Open XML"),
-				Objects.equals(mimeType, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))) {
-			//
-			return new XSSFWorkbook(file);
-			//
-		} else if (Objects.equals(mimeType, "application/zip")) {
-			//
-			return getWorkbookByZipFile(file);
-			//
-		} // if
-			//
-		return null;
-		//
-	}
-
-	@Nullable
-	private static Workbook getWorkbookByZipFile(final File file)
-			throws IOException, SAXException, ParserConfigurationException, InvalidFormatException {
-		//
-		final ContentInfo ci = testAndApply(x -> x != null && x.isFile(), file, new ContentInfoUtil()::findMatch, null);
-		//
-		try (final ZipFile zf = testAndApply(x -> Objects.equals(ContentType.ZIP, getContentType(ci)), file,
-				ZipFile::new, null);
-				final InputStream is = testAndApply(Objects::nonNull,
-						testAndApply(Objects::nonNull, "[Content_Types].xml", x -> getEntry(zf, x), null),
-						x -> getInputStream(zf, x), null)) {
-			//
-			final NodeList childNodes = getChildNodes(getDocumentElement(
-					is != null ? parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), is) : null));
-			//
-			boolean isXlsx = false;
-			//
-			for (int i = 0; i < getLength(childNodes); i++) {
-				//
-				if (Objects.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml",
-						getTextContent(getNamedItem(getAttributes(item(childNodes, i)), "ContentType")))
-						&& (isXlsx = true)) {
-					//
-					break;
-					//
-				} // if
-					//
-			} // for
-				//
-			if (isXlsx) {
-				//
-				return new XSSFWorkbook(file);
-				//
-			} // if
-				//
-		} // try
-			//
-		return null;
-		//
-	}
-
 	@Nullable
 	private static ContentType getContentType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getContentType() : null;
@@ -6324,59 +5955,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static InputStream getInputStream(@Nullable final ZipFile instance, final ZipEntry entry)
-			throws IOException {
-		return instance != null ? instance.getInputStream(entry) : null;
-	}
-
-	@Nullable
 	private static NamedNodeMap getAttributes(@Nullable final Node instance) {
 		return instance != null ? instance.getAttributes() : null;
-	}
-
-	@Nullable
-	private static List<String> getOleEntryNames(@Nullable final POIFSFileSystem poifs) {
-		//
-		List<String> list = null;
-		//
-		final DirectoryNode root = poifs != null ? poifs.getRoot() : null;
-		//
-		final Iterator<org.apache.poi.poifs.filesystem.Entry> entries = root != null ? root.getEntries() : null;
-		//
-		org.apache.poi.poifs.filesystem.Entry entry = null;
-		//
-		while (entries != null && entries.hasNext()) {
-			//
-			if ((entry = entries.next()) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			Util.add(list = getIfNull(list, ArrayList::new), entry.getName());
-			//
-		} // while
-			//
-		return list;
-		//
-	}
-
-	@Nullable
-	private static String getPassword(@Nullable final Console console) {
-		//
-		if (GraphicsEnvironment.isHeadless()) {
-			//
-			return testAndApply(Objects::nonNull, console != null ? console.readPassword(PASSWORD) : null, String::new,
-					null);
-			//
-		} // if
-			//
-		final JTextComponent jtc = new JPasswordField();
-		//
-		return JOptionPane.showConfirmDialog(null, jtc, PASSWORD, JOptionPane.PLAIN_MESSAGE) == JOptionPane.OK_OPTION
-				? Util.getText(jtc)
-				: null;
-		//
 	}
 
 	@Nullable
@@ -6389,16 +5969,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static Document parse(@Nullable final DocumentBuilder instance, final InputStream is)
 			throws SAXException, IOException {
 		return instance != null ? instance.parse(is) : null;
-	}
-
-	@Nullable
-	private static Element getDocumentElement(@Nullable final Document instance) {
-		return instance != null ? instance.getDocumentElement() : null;
-	}
-
-	@Nullable
-	private static NodeList getChildNodes(@Nullable final Node instance) {
-		return instance != null ? instance.getChildNodes() : null;
 	}
 
 	@Nullable
@@ -7954,156 +7524,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			return instance != null ? instance.languageCodeToTextObjIntFunction : null;
 		}
 
-	}
-
-	private static void importVoice(@Nullable final Sheet sheet, final ObjectMap _objectMap, final String voiceId,
-			final BiConsumer<Voice, String> errorMessageConsumer, final BiConsumer<Voice, Throwable> throwableConsumer,
-			final Consumer<Voice> voiceConsumer, final Collection<Object> throwableStackTraceHexs) throws Exception {
-		//
-		final File folder = getParentFile(ObjectMap.getObject(_objectMap, File.class));
-		//
-		ExecutorService es = null;
-		//
-		try {
-			//
-			if (Util.iterator(sheet) == null) {
-				//
-				return;
-				//
-			} // if
-				//
-			boolean first = true;
-			//
-			Voice voice = null;
-			//
-			ImportTask it = null;
-			//
-			NumberFormat percentNumberFormat = null;
-			//
-			Jakaroma jakaroma = null;
-			//
-			final CustomProperties customProperties = POIXMLPropertiesUtil.getCustomProperties(
-					POIXMLDocumentUtil.getProperties(ObjectMap.getObject(_objectMap, POIXMLDocument.class)));
-			//
-			final boolean hiraganaKatakanaConversion = BooleanUtils.toBooleanDefaultIfNull(
-					IValue0Util.getValue0(getBoolean(customProperties, "hiraganaKatakanaConversion")), false);
-			//
-			final boolean hiraganaRomajiConversion = BooleanUtils.toBooleanDefaultIfNull(
-					IValue0Util.getValue0(getBoolean(customProperties, "hiraganaRomajiConversion")), false);
-			//
-			ObjectMapper objectMapper = null;
-			//
-			final Workbook workbook = sheet.getWorkbook();
-			//
-			final Integer numberOfSheets = getNumberOfSheets(workbook);
-			//
-			final int maxSheetNameLength = orElse(
-					max(mapToInt(
-							Util.map(testAndApply(Objects::nonNull, spliterator(workbook),
-									x -> StreamSupport.stream(x, false), null), VoiceManager::getSheetName),
-							StringUtils::length)),
-					0);
-			//
-			FormulaEvaluator formulaEvaluator = null;
-			//
-			AtomicReference<IntMap<Field>> arIntMap = null;
-			//
-			IH ih = null;
-			//
-			for (final Row row : sheet) {
-				//
-				if (Util.iterator(row) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				final ObjectMap objectMap = ObjectUtils.defaultIfNull(copyObjectMap(_objectMap), _objectMap);
-				//
-				ObjectMap.setObject(objectMap, Row.class, row);
-				//
-				ObjectMap.setObject(objectMap, ObjectMapper.class,
-						objectMapper = getIfNull(objectMapper, ObjectMapper::new));
-				//
-				ObjectMap.setObject(objectMap, FormulaEvaluator.class, formulaEvaluator = getIfNull(formulaEvaluator,
-						() -> CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(workbook))));
-				//
-				setHiraganaOrKatakanaAndRomaji(hiraganaKatakanaConversion, hiraganaRomajiConversion,
-						//
-						voice = createVoice(objectMap, first,
-								arIntMap = ObjectUtils.getIfNull(arIntMap, AtomicReference::new))
-						//
-						, jakaroma = ObjectUtils.getIfNull(jakaroma,
-								() -> ObjectMap.getObject(objectMap, Jakaroma.class)));
-				//
-				if (first) {
-					//
-					first = false;
-					//
-				} else {
-					//
-					if ((es = getIfNull(es, () -> Executors.newFixedThreadPool(1))) != null) {
-						//
-						(it = new ImportTask()).sheetCurrentAndTotal = Pair.of(getCurrentSheetIndex(sheet),
-								numberOfSheets);
-						//
-						it.currentSheetName = StringUtils.leftPad(getSheetName(sheet), maxSheetNameLength);
-						//
-						it.counter = Integer.valueOf(row.getRowNum());
-						//
-						it.count = Integer.valueOf(intValue(getPhysicalNumberOfRows(sheet), 0) - 1);
-						//
-						it.percentNumberFormat = getIfNull(percentNumberFormat, () -> new DecimalFormat("#%"));
-						//
-						if ((it.voice = voice) != null) {
-							//
-							ObjectMap.setObject(objectMap, ImportTask.class, it);
-							//
-							importVoice(objectMap, folder, voiceId,
-									ImportVoiceParameters.getLanguageCodeToTextObjIntFunction(
-											ObjectMap.getObject(objectMap, ImportVoiceParameters.class)));
-							//
-						} // if
-							//
-						it.objectMap = ObjectUtils.defaultIfNull(copyObjectMap(objectMap), objectMap);
-						//
-						it.errorMessageConsumer = errorMessageConsumer;
-						//
-						it.throwableConsumer = throwableConsumer;
-						//
-						it.voiceConsumer = voiceConsumer;
-						//
-						// Wrap the java.lang.Runnable by a java.lang.reflect.Proxy
-						//
-						(ih = new IH()).runnable = it;
-						//
-						ih.throwableStackTraceHexs = throwableStackTraceHexs;
-						//
-						submit(es, ObjectUtils.defaultIfNull(Reflection.newProxy(Runnable.class, ih), it));
-						//
-					} else {
-						//
-						ObjectMap.setObject(objectMap, Voice.class, voice);
-						//
-						ObjectMap.setObject(objectMap, File.class, testAndApply(Objects::nonNull, voice,
-								x -> new File(folder, getFilePath(x)), x -> folder));
-						//
-						importVoice(objectMap, errorMessageConsumer, throwableConsumer);
-						//
-						accept(voiceConsumer, voice);
-						//
-					} // if
-						//
-				} // if
-					//
-			} // for
-				//
-		} finally {
-			//
-			shutdown(es);
-			//
-		} // try
-			//
 	}
 
 	private static void submit(@Nullable final ExecutorService instance, final Runnable task) {

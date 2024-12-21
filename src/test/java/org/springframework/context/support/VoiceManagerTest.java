@@ -22,9 +22,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.Console;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -75,7 +73,6 @@ import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
@@ -185,7 +182,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ooxml.POIXMLProperties.CustomProperties;
 import org.apache.poi.poifs.crypt.EncryptionMode;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellValue;
@@ -231,11 +227,9 @@ import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.util.ReflectionUtils;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.zeroturnaround.zip.ZipUtil;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -317,10 +311,9 @@ class VoiceManagerTest {
 			METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM1, METHOD_TO_ARRAY_STREAM2, METHOD_GET_ID,
 			METHOD_SET_MAXIMUM, METHOD_GET_CURRENT_SHEET_INDEX, METHOD_GET_DATA_VALIDATION_HELPER,
 			METHOD_CREATE_EXPLICIT_LIST_CONSTRAINT, METHOD_CREATE_VALIDATION, METHOD_CREATE_EXPORT_TASK,
-			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_GET_ENUM_CONSTANTS, METHOD_LIST_FILES,
-			METHOD_GET_COLUMN_NAME, METHOD_PUT_ALL_MAP, METHOD_GET_WORK_BOOK, METHOD_GET_OLE_ENTRY_NAMES,
-			METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_DOCUMENT_ELEMENT, METHOD_GET_CHILD_NODES,
-			METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_PASS_WORD, METHOD_GET_LIST,
+			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_GET_ENUM_CONSTANTS, METHOD_GET_COLUMN_NAME,
+			METHOD_PUT_ALL_MAP, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_NAMED_ITEM,
+			METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_LIST,
 			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_CREATE_DRAWING_PATRIARCH,
 			METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING,
 			METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR, METHOD_TEST_AND_ACCEPT_PREDICATE,
@@ -337,17 +330,16 @@ class VoiceManagerTest {
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_EXPORT_JLPT,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_SET_SHEET_HEADER_ROW, METHOD_ENCRYPT,
-			METHOD_GET_WORKBOOK_BY_ZIP_FILE, METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML, METHOD_LENGTH,
-			METHOD_CREATE_ZIP_FILE, METHOD_RETRIEVE_ALL_VOICES, METHOD_SEARCH_VOICE_LIST_NAMES_BY_VOICE_ID,
-			METHOD_SET_LIST_NAMES, METHOD_SET_SOURCE, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML,
+			METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML, METHOD_LENGTH, METHOD_CREATE_ZIP_FILE,
+			METHOD_RETRIEVE_ALL_VOICES, METHOD_SEARCH_VOICE_LIST_NAMES_BY_VOICE_ID, METHOD_SET_LIST_NAMES,
+			METHOD_SET_SOURCE, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_EXPORT_HTML,
 			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY,
 			METHOD_GET_IF_NULL, METHOD_SET_LANGUAGE, METHOD_GET_LANGUAGE, METHOD_GET_BOOLEAN_VALUE,
 			METHOD_TO_RUNTIME_EXCEPTION, METHOD_GET_ALGORITHM, METHOD_SET_PREFERRED_WIDTH_ARRAY,
 			METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_SET_PREFERRED_WIDTH_2, METHOD_GET_VALUE_FROM_CELL,
 			METHOD_GET_MP3_TAGS, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC,
-			METHOD_IMPORT_BY_WORK_BOOK_FILES, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS,
-			METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME, METHOD_EXPORT_MICROSOFT_ACCESS,
-			METHOD_IMPORT_RESULT_SET, METHOD_CREATE_VOICE_ID_WARNING_PANEL,
+			METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS, METHOD_CREATE_MULTI_MAP_BY_LIST_NAMES, METHOD_GET_FIELD_BY_NAME,
+			METHOD_EXPORT_MICROSOFT_ACCESS, METHOD_IMPORT_RESULT_SET, METHOD_CREATE_VOICE_ID_WARNING_PANEL,
 			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_GET_EMPTY_FILE_PATH,
 			METHOD_SET_LOCALE_ID_SHEET, METHOD_ADD_LOCALE_ID_ROW, METHOD_SET_FOCUS_CYCLE_ROOT,
 			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP,
@@ -451,16 +443,11 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_PREFERRED_WIDTH = clz.getDeclaredMethod("getPreferredWidth", Component.class)).setAccessible(true);
 		//
-		(METHOD_IMPORT_VOICE1 = clz.getDeclaredMethod("importVoice", File.class)).setAccessible(true);
-		//
 		(METHOD_IMPORT_VOICE_OBJECT_MAP_BI_CONSUMER = clz.getDeclaredMethod("importVoice", CLASS_OBJECT_MAP,
 				BiConsumer.class, BiConsumer.class)).setAccessible(true);
 		//
 		(METHOD_IMPORT_VOICE_OBJECT_MAP_FILE = clz.getDeclaredMethod("importVoice", CLASS_OBJECT_MAP, File.class,
 				String.class, ObjIntFunction.class)).setAccessible(true);
-		//
-		(METHOD_IMPORT_VOICE5 = clz.getDeclaredMethod("importVoice", Sheet.class, CLASS_OBJECT_MAP, String.class,
-				BiConsumer.class, BiConsumer.class, Consumer.class, Collection.class)).setAccessible(true);
 		//
 		(METHOD_IMPORT_VOICE_BY_SPEECH_API = clz.getDeclaredMethod("importVoiceBySpeechApi", CLASS_OBJECT_MAP,
 				String.class, String.class, ObjIntFunction.class)).setAccessible(true);
@@ -584,25 +571,14 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_ENUM_CONSTANTS = clz.getDeclaredMethod("getEnumConstants", Class.class)).setAccessible(true);
 		//
-		(METHOD_LIST_FILES = clz.getDeclaredMethod("listFiles", File.class)).setAccessible(true);
-		//
 		(METHOD_GET_COLUMN_NAME = clz.getDeclaredMethod("getColumnName", Class.class, Field.class)).setAccessible(true);
 		//
 		(METHOD_PUT_ALL_MAP = clz.getDeclaredMethod("putAll", Map.class, Map.class)).setAccessible(true);
-		//
-		(METHOD_GET_WORK_BOOK = clz.getDeclaredMethod("getWorkbook", File.class)).setAccessible(true);
-		//
-		(METHOD_GET_OLE_ENTRY_NAMES = clz.getDeclaredMethod("getOleEntryNames", POIFSFileSystem.class))
-				.setAccessible(true);
 		//
 		(METHOD_NEW_DOCUMENT_BUILDER = clz.getDeclaredMethod("newDocumentBuilder", DocumentBuilderFactory.class))
 				.setAccessible(true);
 		//
 		(METHOD_PARSE = clz.getDeclaredMethod("parse", DocumentBuilder.class, InputStream.class)).setAccessible(true);
-		//
-		(METHOD_GET_DOCUMENT_ELEMENT = clz.getDeclaredMethod("getDocumentElement", Document.class)).setAccessible(true);
-		//
-		(METHOD_GET_CHILD_NODES = clz.getDeclaredMethod("getChildNodes", Node.class)).setAccessible(true);
 		//
 		(METHOD_GET_NAMED_ITEM = clz.getDeclaredMethod("getNamedItem", NamedNodeMap.class, String.class))
 				.setAccessible(true);
@@ -610,8 +586,6 @@ class VoiceManagerTest {
 		(METHOD_GET_TEXT_CONTENT = clz.getDeclaredMethod("getTextContent", Node.class)).setAccessible(true);
 		//
 		(METHOD_GET_NAME_FILE = clz.getDeclaredMethod("getName", File.class)).setAccessible(true);
-		//
-		(METHOD_GET_PASS_WORD = clz.getDeclaredMethod("getPassword", Console.class)).setAccessible(true);
 		//
 		(METHOD_GET_LIST = clz.getDeclaredMethod("get", List.class, Integer.TYPE)).setAccessible(true);
 		//
@@ -739,9 +713,6 @@ class VoiceManagerTest {
 		(METHOD_ENCRYPT = clz.getDeclaredMethod("encrypt", File.class, EncryptionMode.class, String.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_WORKBOOK_BY_ZIP_FILE = clz.getDeclaredMethod("getWorkbookByZipFile", File.class))
-				.setAccessible(true);
-		//
 		(METHOD_GET_ENCRYPTION_TABLE_HTML = clz.getDeclaredMethod("getEncryptionTableHtml", URL.class, Duration.class))
 				.setAccessible(true);
 		//
@@ -809,9 +780,6 @@ class VoiceManagerTest {
 				JTextComponent.class, ComboBoxModel.class)).setAccessible(true);
 		//
 		(METHOD_IS_STATIC = clz.getDeclaredMethod("isStatic", Member.class)).setAccessible(true);
-		//
-		(METHOD_IMPORT_BY_WORK_BOOK_FILES = clz.getDeclaredMethod("importByWorkbookFiles", File[].class, Boolean.TYPE))
-				.setAccessible(true);
 		//
 		(METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS = clz.getDeclaredMethod("actionPerformedForExportButtons",
 				Object.class, Boolean.TYPE)).setAccessible(true);
@@ -3960,13 +3928,9 @@ class VoiceManagerTest {
 	@Test
 	void testImportVoice() throws Throwable {
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(null));
-		//
 		Assertions.assertDoesNotThrow(() -> importVoice(null, (BiConsumer) null, null));
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(null, (File) null, null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> importVoice(null, null, null, null, null, null, null));
 		//
 		final Constructor<?> constructor = getDeclaredConstructor(CLASS_IH);
 		//
@@ -4013,24 +3977,20 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> importVoice(objectMap, (BiConsumer) null, null));
 		//
-		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null, null));
-		//
 		final Row row = Reflection.newProxy(Row.class, this.ih);
 		//
-		this.ih.rows = Iterators.forArray(null, row);
-		//
-		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null, null));
-		//
-		this.ih.rows = Iterators.forArray(null, row);
-		//
-		this.ih.cells = Iterators.forArray(null, cell);
-		//
-		this.ih.columnIndex = Integer.valueOf(0);
-		//
-		Assertions.assertDoesNotThrow(() -> importVoice(sheet, null, null, null, null, null, null));
-		//
-		// org.springframework.context.support.VoiceManager$importVoice(org.springframework.context.support.VoiceManager$ObjectMap,java.io.File,java.lang.String)
-		//
+		if (this.ih != null) {
+			//
+			this.ih.rows = Iterators.forArray(null, row);
+			//
+			this.ih.cells = Iterators.forArray(null, cell);
+			//
+			this.ih.columnIndex = Integer.valueOf(0);
+			//
+		} // if
+			//
+			// org.springframework.context.support.VoiceManager$importVoice(org.springframework.context.support.VoiceManager$ObjectMap,java.io.File,java.lang.String)
+			//
 		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
 				"{localizedMessage=Key [class org.springframework.context.support.VoiceManager] Not Found, message=Key [class org.springframework.context.support.VoiceManager] Not Found}",
 				() -> importVoice(objectMap, (File) null, null, null));
@@ -5357,29 +5317,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testListFiles() throws Throwable {
-		//
-		Assertions.assertNull(listFiles(null));
-		//
-		Assertions.assertNull(listFiles(new File("pom.xml")));
-		//
-	}
-
-	private static File[] listFiles(final File instance) throws Throwable {
-		try {
-			final Object obj = METHOD_LIST_FILES.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof File[]) {
-				return (File[]) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testGetColumnName() throws Throwable {
 		//
 		Assertions.assertNull(getColumnName(null, null));
@@ -5415,79 +5352,8 @@ class VoiceManagerTest {
 		}
 	}
 
-	@Test
-	void testGetWorkbook() throws Throwable {
-		//
-		final int tempFileMinimumPrefixLength = intValue(TEMP_FILE_MINIMUM_PREFIX_LENGTH, THREE);
-		//
-		final File folder = new File(".");
-		//
-		File file = File.createTempFile(nextAlphanumeric(randomStringUtils, tempFileMinimumPrefixLength), null, folder);
-		//
-		deleteOnExit(file);
-		//
-		try (final Workbook workbook = new HSSFWorkbook(); final OutputStream os = new FileOutputStream(file)) {
-			//
-			WorkbookUtil.write(workbook, os);
-			//
-			Assertions.assertNotNull(getWorkbook(file));
-			//
-		} // try
-			//
-		try (final Workbook workbook = new XSSFWorkbook(); final OutputStream os = new FileOutputStream(file)) {
-			//
-			WorkbookUtil.write(workbook, os);
-			//
-			Assertions.assertNotNull(getWorkbook(file));
-			//
-		} // try
-			//
-		ZipUtil.removeEntry(file, "[Content_Types].xml", file = File
-				.createTempFile(nextAlphanumeric(randomStringUtils, tempFileMinimumPrefixLength), null, folder));
-		//
-		deleteOnExit(file);
-		//
-		Assertions.assertNull(getWorkbook(file));
-		//
-	}
-
 	private static String nextAlphanumeric(final RandomStringUtils instance, final int count) {
 		return instance != null ? instance.nextAlphanumeric(count) : null;
-	}
-
-	private static Workbook getWorkbook(final File file) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_WORK_BOOK.invoke(null, file);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Workbook) {
-				return (Workbook) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetOleEntryNames() throws Throwable {
-		//
-		Assertions.assertNull(getOleEntryNames(null));
-		//
-	}
-
-	private static List<String> getOleEntryNames(final POIFSFileSystem poifs) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_OLE_ENTRY_NAMES.invoke(null, poifs);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof List) {
-				return (List) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -5518,47 +5384,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Document) {
 				return (Document) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetChildNodes() throws Throwable {
-		//
-		try (final InputStream is = new ByteArrayInputStream(
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?><a/>".getBytes())) {
-			//
-			Assertions.assertNotNull(getChildNodes(
-					getDocumentElement(parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), is))));
-			//
-		} // try
-			//
-	}
-
-	private static Element getDocumentElement(final Document instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_DOCUMENT_ELEMENT.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Element) {
-				return (Element) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static NodeList getChildNodes(final Node instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CHILD_NODES.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof NodeList) {
-				return (NodeList) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
@@ -5621,31 +5446,6 @@ class VoiceManagerTest {
 	private static String getName(final File instance) throws Throwable {
 		try {
 			final Object obj = METHOD_GET_NAME_FILE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetPassword() throws Throwable {
-		//
-		if (GraphicsEnvironment.isHeadless()) {
-			//
-			Assertions.assertNull(getPassword(null));
-			//
-		} // if
-			//
-	}
-
-	private static String getPassword(final Console console) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_PASS_WORD.invoke(null, console);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {
@@ -6757,47 +6557,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testGetWorkbookByZipFile() throws Throwable {
-		//
-		Assertions.assertNull(getWorkbookByZipFile(null));
-		//
-		Assertions.assertNull(getWorkbookByZipFile(new File(".")));
-		//
-		Assertions.assertNull(getWorkbookByZipFile(new File("pom.xml")));
-		//
-		final File file = File.createTempFile(randomAlphabetic(THREE), null);
-		//
-		deleteOnExit(file);
-		//
-		try (final ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(file))) {
-			//
-			zos.putNextEntry(new ZipEntry("/[Content_Types].xml"));
-			//
-			zos.write("1".getBytes());
-			//
-			zos.close();
-			//
-		} // try
-			//
-		Assertions.assertNull(getWorkbookByZipFile(file));
-		//
-	}
-
-	private static Workbook getWorkbookByZipFile(final File file) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_WORKBOOK_BY_ZIP_FILE.invoke(null, file);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Workbook) {
-				return (Workbook) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testGetEncryptionTableHtml() throws Throwable {
 		//
 		final URL url = toURL(toURI(new File("pom.xml")));
@@ -7456,23 +7215,6 @@ class VoiceManagerTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testImportByWorkbookFiles() {
-		//
-		Assertions.assertDoesNotThrow(() -> importByWorkbookFiles(null, false));
-		//
-		Assertions.assertDoesNotThrow(() -> importByWorkbookFiles(new File[] { null }, false));
-		//
-	}
-
-	private void importByWorkbookFiles(final File[] fs, final boolean headless) throws Throwable {
-		try {
-			METHOD_IMPORT_BY_WORK_BOOK_FILES.invoke(instance, fs, headless);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -10310,29 +10052,6 @@ class VoiceManagerTest {
 		if (instance != null) {
 			instance.accept(t, u);
 		}
-	}
-
-	@Test
-	void testVoiceConsumer() throws Throwable {
-		//
-		final Constructor<?> constructor = getDeclaredConstructor(
-				Util.forName("org.springframework.context.support.VoiceManager$VoiceConsumer"), JTextComponent.class,
-				AtomicInteger.class);
-		//
-		if (constructor != null) {
-			//
-			constructor.setAccessible(true);
-			//
-		} // if
-			//
-		final Consumer<?> consumer = Util.cast(Consumer.class, newInstance(constructor, null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> accept(consumer, null));
-		//
-		FieldUtils.writeDeclaredField(consumer, "atomicInteger", new AtomicInteger(), true);
-		//
-		Assertions.assertDoesNotThrow(() -> accept(consumer, null));
-		//
 	}
 
 	private static <T> void accept(final Consumer<T> instance, final T t) {
