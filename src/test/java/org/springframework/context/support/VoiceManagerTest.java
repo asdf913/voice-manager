@@ -2144,8 +2144,16 @@ class VoiceManagerTest {
 			//
 			if (uhe != null) {
 				//
-				Assertions.assertThrows(RuntimeException.class, () -> instance.afterPropertiesSet());
-				//
+				if (GraphicsEnvironment.isHeadless()) {
+					// )
+					Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+					//
+				} else {
+					// )
+					Assertions.assertThrows(RuntimeException.class, () -> instance.afterPropertiesSet());
+					//
+				} // if
+					//
 			} else {
 				//
 				Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
