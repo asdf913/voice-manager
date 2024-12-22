@@ -1485,7 +1485,7 @@ public class VoiceManagerExportPanel extends JPanel
 	}
 
 	@Nullable
-	private static Object invoke(@Nullable final Method method, final Object instance, final Object... args)
+	private static Object invoke(@Nullable final Method method, @Nullable final Object instance, final Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
 	}
@@ -1836,7 +1836,7 @@ public class VoiceManagerExportPanel extends JPanel
 			//
 	}
 
-	private static void importResultSet(final ObjectMap objectMap, final Iterable<String> tableNames)
+	private static void importResultSet(final ObjectMap objectMap, @Nullable final Iterable<String> tableNames)
 			throws IOException, SQLException {
 		//
 		final Database db = ObjectMap.getObject(objectMap, Database.class);
@@ -3353,7 +3353,7 @@ public class VoiceManagerExportPanel extends JPanel
 			return instance != null ? instance.progressBarExport : null;
 		}
 
-		private static void setStringFieldDefaultValue(final Object instance) {
+		private static void setStringFieldDefaultValue(@Nullable final Object instance) {
 			//
 			final Field[] fs = Util.getDeclaredFields(Util.getClass(instance));
 			//
@@ -3376,7 +3376,7 @@ public class VoiceManagerExportPanel extends JPanel
 
 		@Nullable
 		private static <T> T clone(@Nullable final ObjectMapper objectMapper, @Nullable final Class<T> clz,
-				final T instance) throws IOException {
+				@Nullable final T instance) throws IOException {
 			//
 			return objectMapper != null && clz != null
 					? objectMapper.readValue(ObjectMapperUtil.writeValueAsBytes(objectMapper, instance), clz)
@@ -3900,12 +3900,6 @@ public class VoiceManagerExportPanel extends JPanel
 			return instance != null ? instance.item(index) : null;
 		}
 
-		private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
-				final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
-			return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
-					: FailableFunctionUtil.apply(functionFalse, value);
-		}
-
 		@Nullable
 		private static Document parse(@Nullable final DocumentBuilder instance, final InputStream is)
 				throws SAXException, IOException {
@@ -4150,7 +4144,7 @@ public class VoiceManagerExportPanel extends JPanel
 				//
 		}
 
-		private static void replaceTextContent(final ObjectMap objectMap, final Map<?, ?> map) {
+		private static void replaceTextContent(final ObjectMap objectMap, @Nullable final Map<?, ?> map) {
 			//
 			final freemarker.template.Configuration configuration = ObjectMap.getObject(objectMap,
 					freemarker.template.Configuration.class);
@@ -4601,7 +4595,7 @@ public class VoiceManagerExportPanel extends JPanel
 		return instance != null ? instance.getId() : null;
 	}
 
-	private static <T, E extends Throwable> void forEach(final Iterable<T> items,
+	private static <T, E extends Throwable> void forEach(@Nullable final Iterable<T> items,
 			@Nullable final FailableConsumer<? super T, E> action) throws E {
 		//
 		if (Util.iterator(items) != null && (action != null || Proxy.isProxyClass(Util.getClass(items)))) {
@@ -4754,7 +4748,7 @@ public class VoiceManagerExportPanel extends JPanel
 			return instance != null ? instance.getObject(key) : null;
 		}
 
-		static <T> void setObject(@Nullable final ObjectMap instance, final Class<T> key, final T value) {
+		static <T> void setObject(@Nullable final ObjectMap instance, final Class<T> key, @Nullable final T value) {
 			if (instance != null) {
 				instance.setObject(key, value);
 			}
@@ -5091,7 +5085,7 @@ public class VoiceManagerExportPanel extends JPanel
 		}
 	}
 
-	private static void setCellComment(@Nullable final Cell instance, final Comment comment) {
+	private static void setCellComment(@Nullable final Cell instance, @Nullable final Comment comment) {
 		if (instance != null) {
 			instance.setCellComment(comment);
 		}
@@ -5109,7 +5103,7 @@ public class VoiceManagerExportPanel extends JPanel
 	}
 
 	@Nullable
-	private static Comment createCellComment(@Nullable final Drawing<?> instance, final ClientAnchor anchor) {
+	private static Comment createCellComment(@Nullable final Drawing<?> instance, @Nullable final ClientAnchor anchor) {
 		return instance != null ? instance.createCellComment(anchor) : null;
 	}
 
@@ -5216,7 +5210,7 @@ public class VoiceManagerExportPanel extends JPanel
 	}
 
 	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
-			final BiConsumer<T, U> a, final BiConsumer<T, U> b) {
+			final BiConsumer<T, U> a, @Nullable final BiConsumer<T, U> b) {
 		if (test(instance, t, u)) {
 			accept(a, t, u);
 		} else {
@@ -5319,8 +5313,8 @@ public class VoiceManagerExportPanel extends JPanel
 		}
 	}
 
-	private static <T, E extends Throwable> void testAndAccept(final FailablePredicate<T, E> predicate, final T value,
-			final FailableConsumer<T, E> consumer) throws E {
+	private static <T, E extends Throwable> void testAndAccept(final FailablePredicate<T, E> predicate,
+			@Nullable final T value, final FailableConsumer<T, E> consumer) throws E {
 		if (Util.test(predicate, value)) {
 			FailableConsumerUtil.accept(consumer, value);
 		}
@@ -5481,8 +5475,9 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
