@@ -459,26 +459,26 @@ public class VoiceManagerExportPanel extends JPanel
 	@SystemClipboard
 	private AbstractButton btnDllPathCopy = null;
 
-	private SpeechApi speechApi = null;
+	private transient SpeechApi speechApi = null;
 
-	private ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
+	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
 	private String[] microsoftSpeechObjectLibraryAttributeNames = null;
 
-	private SqlSessionFactory sqlSessionFactory = null;
+	private transient SqlSessionFactory sqlSessionFactory = null;
 
 	private String exportPresentationTemplate, folderInPresentation, messageDigestAlgorithm, voiceFolder,
 			exportHtmlTemplateFile, exportWebSpeechSynthesisHtmlTemplateFile, outputFolder = null;
 
 	private Map<String, String> outputFolderFileNameExpressions = null;
 
-	private Map<Object, Object> exportWebSpeechSynthesisHtmlTemplateProperties = null;
+	private transient Map<Object, Object> exportWebSpeechSynthesisHtmlTemplateProperties = null;
 
 	private Version freeMarkerVersion = null;
 
-	private freemarker.template.Configuration freeMarkerConfiguration = null;
+	private transient freemarker.template.Configuration freeMarkerConfiguration = null;
 
-	private ConfigurableListableBeanFactory configurableListableBeanFactory = null;
+	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
 	@Override
 	public String getTitle() {
