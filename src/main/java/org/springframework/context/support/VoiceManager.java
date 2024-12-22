@@ -32,7 +32,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -80,7 +79,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HexFormat;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -344,7 +342,6 @@ import de.sciss.jump3r.mp3.Lame;
 import domain.JlptVocabulary;
 import domain.Pronunciation;
 import domain.Voice;
-import domain.VoiceList;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.cache.StringTemplateLoaderUtil;
@@ -402,8 +399,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static final String WARNING = "Warning";
 
 	private static final String VALUE = "value";
-
-	private static final String NO_FILE_SELECTED = "No File Selected";
 
 	private static final String LANGUAGE = "Language";
 
@@ -5162,19 +5157,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static PrintStream getSystemPrintStreamByFieldName(final String name) throws IllegalAccessException {
-		//
-		final List<Field> fs = Util.toList(Util.filter(
-				testAndApply(Objects::nonNull, Util.getDeclaredFields(System.class), Arrays::stream, null),
-				f -> Objects.equals(Util.getType(f), PrintStream.class) && Objects.equals(Util.getName(f), name)));
-		//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-		//
-		return Util.cast(PrintStream.class, get(f, null));
-		//
-	}
-
-	@Nullable
 	private static Integer incrementAndGet(@Nullable final AtomicInteger instance) {
 		return instance != null ? Integer.valueOf(instance.incrementAndGet()) : null;
 	}
@@ -6197,142 +6179,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
-	private static class ImportTask implements Runnable {
-
-		private static final Logger LOG = LoggerFactory.getLogger(ImportTask.class);
-
-		private Pair<Integer, Integer> sheetCurrentAndTotal = null;
-
-		private Integer counter = null;
-
-		private Integer count = null;
-
-		private ObjectMap objectMap = null;
-
-		private BiConsumer<Voice, String> errorMessageConsumer = null;
-
-		private BiConsumer<Voice, Throwable> throwableConsumer = null;
-
-		private Consumer<Voice> voiceConsumer = null;
-
-		private Voice voice = null;
-
-		private File file = null;
-
-		private NumberFormat percentNumberFormat = null;
-
-		private String currentSheetName = null;
-
-		@Override
-		public void run() {
-			//
-			final Integer sheetCurrent = Util.getKey(sheetCurrentAndTotal);
-			//
-			final Integer sheetTotal = Util.getValue(sheetCurrentAndTotal);
-			//
-			final Fraction fraction1 = sheetTotal != null && sheetTotal.intValue() != 0
-					? Fraction.getFraction(intValue(sheetCurrent, 0), sheetTotal.intValue())
-					: null;
-			//
-			Fraction fraction2 = sheetTotal != null ? Fraction.getFraction(1, sheetTotal) : null;
-			//
-			if (fraction2 != null && count != null) {
-				//
-				fraction2 = fraction2.multiplyBy(Fraction.getFraction(intValue(counter, 0), count.intValue()));
-				//
-			} // if
-				//
-			final Fraction percentage = add(fraction1, fraction2);
-			//
-			try {
-				//
-				infoOrPrintln(LOG, getSystemPrintStreamByFieldName("out"),
-						String.format("%1$s %2$s/%3$s (%4$s) %5$s/%6$s", percentage != null
-								? StringUtils.leftPad(format(percentNumberFormat, doubleValue(percentage, 0)), 5, ' ')
-								: null,
-								StringUtils.leftPad(Util.toString(sheetCurrent),
-										StringUtils.length(Util.toString(ObjectUtils.max(sheetCurrent, sheetTotal))),
-										' '),
-								sheetTotal, currentSheetName,
-								StringUtils.leftPad(Util.toString(counter), StringUtils.length(Util.toString(count))),
-								count));
-				//
-			} catch (final IllegalAccessException e) {
-				//
-				final RuntimeException runtimeException = toRuntimeException(e);
-				//
-				if (runtimeException != null) {
-					//
-					throw runtimeException;
-					//
-				} // if
-					//
-			} // try
-				//
-			SqlSession sqlSession = null;
-			//
-			try {
-				//
-				final SqlSessionFactory sqlSessionFactory = ObjectMap.getObject(objectMap, SqlSessionFactory.class);
-				//
-				ObjectMap.setObject(objectMap, VoiceMapper.class,
-						org.apache.ibatis.session.ConfigurationUtil.getMapper(
-								SqlSessionFactoryUtil.getConfiguration(sqlSessionFactory), VoiceMapper.class,
-								sqlSession = SqlSessionFactoryUtil.openSession(sqlSessionFactory)));
-				//
-				ObjectMap.setObject(objectMap, Voice.class, voice);
-				//
-				ObjectMap.setObject(objectMap, File.class, file);
-				//
-				importVoice(objectMap, errorMessageConsumer, throwableConsumer);
-				//
-				if (counter != null) {
-					//
-					final JProgressBar progressBar = ObjectMap.getObject(objectMap, JProgressBar.class);
-					//
-					setValue(progressBar, counter.intValue());
-					//
-					if (count != null) {
-						//
-						final String string = String.format("%1$s/%2$s (%3$s)", counter, count,
-								format(percentNumberFormat, counter.intValue() * 1.0 / count.intValue()));
-						//
-						setToolTipText(progressBar, string);
-						//
-						setString(progressBar, string);
-						//
-					} // if
-						//
-					accept(voiceConsumer, voice);
-					//
-				} // if
-					//
-			} finally {
-				//
-				IOUtils.closeQuietly(sqlSession);
-				//
-			} // try
-				//
-		}
-
-		@Nullable
-		private static Fraction add(@Nullable final Fraction a, @Nullable final Fraction b) {
-			return a != null && b != null ? a.add(b) : a;
-		}
-
-		private static void infoOrPrintln(@Nullable final Logger logger, @Nullable final PrintStream ps,
-				final String value) {
-			//
-			if (logger != null && !LoggerUtil.isNOPLogger(logger)) {
-				logger.info(value);
-			} else if (ps != null) {
-				ps.println(value);
-			} // if
-				//
-		}
-
-	}
-
 	private static void setValue(@Nullable final JProgressBar instance, final int n) {
 		if (instance != null) {
 			instance.setValue(n);
@@ -6368,16 +6214,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		@Nullable
 		static <T> T getObject(@Nullable final IntMap<T> instance, final int key) {
 			return instance != null ? instance.getObject(key) : null;
-		}
-
-		static <T> boolean containsKey(@Nullable final IntMap<T> instance, final int key) {
-			return instance != null && instance.containsKey(key);
-		}
-
-		static <T> void setObject(@Nullable final IntMap<T> instance, final int key, @Nullable final T value) {
-			if (instance != null) {
-				instance.setObject(key, value);
-			}
 		}
 
 	}
@@ -6432,182 +6268,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static String name(@Nullable final Enum<?> instance) {
 		return instance != null ? instance.name() : null;
-	}
-
-	private static void importVoice(@Nullable final ObjectMap objectMap,
-			final BiConsumer<Voice, String> errorMessageConsumer,
-			final BiConsumer<Voice, Throwable> throwableConsumer) {
-		//
-		final File selectedFile = ObjectMap.getObject(objectMap, File.class);
-		//
-		final Voice voice = ObjectMap.getObject(objectMap, Voice.class);
-		//
-		if (!checkImportFile(selectedFile, voice, errorMessageConsumer)) {
-			//
-			return;
-			//
-		} // if
-			//
-		final HexFormat hexFormat = HexFormat.of();
-		//
-		try {
-			//
-			final String fileExtension = getFileExtension(new ContentInfoUtil().findMatch(selectedFile));
-			//
-			if (fileExtension == null) {
-				//
-				accept(errorMessageConsumer, voice, "File Extension is null");
-				//
-				return;
-				//
-			} else if (StringUtils.isEmpty(fileExtension)) {
-				//
-				accept(errorMessageConsumer, voice, "File Extension is Empty");
-				//
-				return;
-				//
-			} else if (StringUtils.isBlank(fileExtension)) {
-				//
-				accept(errorMessageConsumer, voice, "File Extension is Blank");
-				//
-				return;
-				//
-			} // if
-				//
-			String filePath = null;
-			//
-			final String text = getText(voice);
-			//
-			final String romaji = getRomaji(voice);
-			//
-			final VoiceMapper voiceMapper = ObjectMap.getObject(objectMap, VoiceMapper.class);
-			//
-			final Voice voiceOld = voiceMapper != null ? voiceMapper.searchByTextAndRomaji(text, romaji) : null;
-			//
-			final MessageDigest md = ObjectMap.getObject(objectMap, MessageDigest.class);
-			//
-			final String messageDigestAlgorithm = getAlgorithm(md);
-			//
-			Long length = length(selectedFile);
-			//
-			String fileDigest = formatHex(hexFormat, Util.digest(md, Files.readAllBytes(Path.of(toURI(selectedFile)))));
-			//
-			final String voiceFolder = ObjectMap.getObject(objectMap, String.class);
-			//
-			if (voiceOld == null || !Objects.equals(voiceOld.getFileLength(), length(selectedFile))
-					|| !Objects.equals(voiceOld.getFileDigestAlgorithm(), messageDigestAlgorithm)
-					|| !Objects.equals(voiceOld.getFileDigest(), fileDigest)) {
-				//
-				final StringBuilder fileName = new StringBuilder(
-						String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS_%1$tL.%2$s", new Date(), fileExtension));
-				//
-				File file = new File(voiceFolder, filePath = Util.toString(fileName));
-				//
-				if (file.exists()) {
-					//
-					file = new File(voiceFolder, filePath = Util.toString(
-							fileName.insert(StringUtils.lastIndexOf(fileName, '.') + 1, randomAlphabetic(2) + ".")));
-					//
-				} // if
-					//
-				FileUtils.copyFile(selectedFile, file);
-				//
-				length = length(file);
-				//
-				fileDigest = formatHex(hexFormat, Util.digest(md, Files.readAllBytes(Path.of(toURI(file)))));
-				//
-			} else {
-				//
-				final File file = new File(voiceFolder, getFilePath(voiceOld));
-				//
-				if (!file.exists()) {
-					//
-					FileUtils.copyFile(selectedFile, file);
-					//
-				} // if
-					//
-				filePath = getFilePath(voiceOld);
-				//
-			} // if
-				//
-			final VoiceManager voiceManager = ObjectMap.getObject(objectMap, VoiceManager.class);
-			//
-			if (voiceManager != null) {
-				//
-				Util.setText(voiceManager.tfFile, Objects.toString(filePath, Util.getText(voiceManager.tfFile)));
-				//
-				Util.setText(voiceManager.tfFileLength, Util.toString(length));
-				//
-				Util.setText(voiceManager.tfFileDigest, fileDigest);
-				//
-			} // if
-				//
-			if (voice != null) {
-				//
-				voice.setFilePath(filePath);
-				//
-				voice.setFileLength(length);
-				//
-				voice.setFileDigestAlgorithm(messageDigestAlgorithm);
-				//
-				voice.setFileDigest(fileDigest);
-				//
-				voice.setFileExtension(fileExtension);
-				//
-			} // if
-				//
-			insertOrUpdate(voiceMapper, voice);
-			//
-		} catch (final IOException e) {
-			//
-			accept(throwableConsumer, voice, e);
-			//
-		} // try
-			//
-	}
-
-	@Nullable
-	private static String formatHex(@Nullable final HexFormat instance, @Nullable final byte[] bytes) {
-		return instance != null && bytes != null ? instance.formatHex(bytes) : null;
-	}
-
-	private static boolean checkImportFile(@Nullable final File file, @Nullable final Voice voice,
-			final BiConsumer<Voice, String> errorMessageConsumer) {
-		//
-		if (file == null) {
-			//
-			accept(errorMessageConsumer, voice, NO_FILE_SELECTED);
-			//
-			return false;
-			//
-		} else if (!file.exists()) {
-			//
-			accept(errorMessageConsumer, voice,
-					String.format("File \"%1$s\" does not exist", Util.getAbsolutePath(file)));
-			//
-			return false;
-			//
-		} else if (!isFile(file)) {
-			//
-			accept(errorMessageConsumer, voice, "Not A Regular File Selected");
-			//
-			return false;
-			//
-		} else if (longValue(length(file), 0) == 0) {
-			//
-			accept(errorMessageConsumer, voice, "Empty File Selected");
-			//
-			return false;
-			//
-		} // if
-			//
-		return true;
-		//
-	}
-
-	@Nullable
-	private static String getAlgorithm(@Nullable final MessageDigest instance) {
-		return instance != null ? instance.getAlgorithm() : null;
 	}
 
 	private static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, @Nullable final T t,
@@ -9308,84 +8968,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getValue(evaluationContext) : null;
 	}
 
-	private static void insertOrUpdate(@Nullable final VoiceMapper instance, @Nullable final Voice voice) {
-		//
-		if (instance != null) {
-			//
-			instance.deleteUnusedVoiceList();
-			//
-			// voice
-			//
-			final Voice voiceOld = instance.searchByTextAndRomaji(getText(voice), getRomaji(voice));
-			//
-			if (voiceOld != null) {
-				//
-				setId(voice, getId(voiceOld));
-				//
-				setUpdateTs(voice, new Date());
-				//
-				instance.updateVoice(voice);
-				//
-			} else {
-				//
-				setCreateTs(voice, new Date());
-				//
-				instance.insertVoice(voice);
-				//
-			} // if
-				//
-				// voice_list
-				//
-			final Integer voiceId = getId(voice);
-			//
-			instance.deleteVoiceListByVoiceId(voiceId);
-			//
-			final Iterable<String> listNames = getListNames(voice);
-			//
-			if (Util.iterator(listNames) != null) {
-				//
-				VoiceList voiceListOld = null;
-				//
-				VoiceList voiceList = null;
-				//
-				for (final String listName : listNames) {
-					//
-					if ((voiceListOld = instance.searchVoiceListByName(listName)) == null) {
-						//
-						(voiceList = new VoiceList()).setName(listName);
-						//
-						instance.insertVoiceList(voiceList);
-						//
-					} // if
-						//
-					instance.insertVoiceListId(getId(ObjectUtils.defaultIfNull(voiceListOld, voiceList)), voiceId);
-					//
-				} // for
-					//
-			} // if
-				//
-		} // if
-			//
-	}
-
-	private static void setId(@Nullable final Voice instance, final Integer id) {
-		if (instance != null) {
-			instance.setId(id);
-		}
-	}
-
-	private static void setCreateTs(@Nullable final Voice instance, final Date createTs) {
-		if (instance != null) {
-			instance.setCreateTs(createTs);
-		}
-	}
-
-	private static void setUpdateTs(@Nullable final Voice instance, final Date updateTs) {
-		if (instance != null) {
-			instance.setUpdateTs(updateTs);
-		}
-	}
-
 	@Nullable
 	private static Integer getId(@Nullable final Voice instance) {
 		return instance != null ? instance.getId() : null;
@@ -9396,10 +8978,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getListNames() : null;
 	}
 
-	@Nullable
-	private static Integer getId(@Nullable final VoiceList instance) {
-		return instance != null ? instance.getId() : null;
-	}
 
 	@Nullable
 	private static String getFileExtension(@Nullable final ContentInfo ci) {
