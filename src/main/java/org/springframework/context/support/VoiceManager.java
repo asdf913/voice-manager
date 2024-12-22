@@ -506,12 +506,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private JTextComponent tfProviderPlatform = null;
 
-	@Note("Speech Language Code")
-	private JTextComponent tfSpeechLanguageCode = null;
-
-	@Note("Speech Language Name")
-	private JTextComponent tfSpeechLanguageName = null;
-
 	@Note("Language")
 	private JTextComponent tfLanguage = null;
 
@@ -567,9 +561,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private JTextComponent tfPronunciationPageUrl = null;
 
 	private JTextComponent tfPresentationSlideDuration = null;
-
-	@Note("Voice ID")
-	private transient ComboBoxModel<String> cbmVoiceId = null;
 
 	private transient ComboBoxModel<String> cbmGaKuNenBeTsuKanJi = null;
 
@@ -701,8 +692,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Note("Slider For Speech Rate")
 	private JSlider jsSpeechRate = null;
-
-	private JComboBox<Object> jcbVoiceId = null;
 
 	private JComboBox<JlptVocabulary> jcbJlptVocabulary = null;
 
@@ -5244,25 +5233,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Object source = Util.getSource(evt);
 		//
-		if (Objects.equals(source, jcbVoiceId)) {
-			//
-			try {
-				//
-				final String language = SpeechApi.getVoiceAttribute(speechApi,
-						Util.toString(getSelectedItem(cbmVoiceId)), LANGUAGE);
-				//
-				Util.setText(tfSpeechLanguageCode, language);
-				//
-				Util.setText(tfSpeechLanguageName, StringUtils.defaultIfBlank(
-						ObjIntFunctionUtil.apply(languageCodeToTextObjIntFunction, language, 16), language));
-				//
-			} catch (final Error e) {
-				//
-				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-				//
-			} // try
-				//
-		} else if (Objects.equals(source, jcbJlptVocabulary)) {
+		if (Objects.equals(source, jcbJlptVocabulary)) {
 			//
 			final JlptVocabulary jv = Util.cast(JlptVocabulary.class,
 					jcbJlptVocabulary != null ? jcbJlptVocabulary.getSelectedItem() : null);
@@ -8977,7 +8948,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static Iterable<String> getListNames(@Nullable final Voice instance) {
 		return instance != null ? instance.getListNames() : null;
 	}
-
 
 	@Nullable
 	private static String getFileExtension(@Nullable final ContentInfo ci) {

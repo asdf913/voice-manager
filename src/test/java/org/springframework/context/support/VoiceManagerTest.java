@@ -2304,44 +2304,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> Util.setText(tfPronunciationPageUrl, "a"));
 		//
-		if (instance != null) {
-			//
-			final AbstractButton cbUseTtsVoice = new JCheckBox();
-			//
-			cbUseTtsVoice.setSelected(true);
-			//
-			FieldUtils.writeDeclaredField(instance, "cbUseTtsVoice", cbUseTtsVoice, true);
-			//
-		} // if
-			//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "speechApi", speechApi, true);
-			//
-		} // if
-			//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "voiceIds", new String[] { Integer.toString(ZERO) }, true);
-			//
-		} // if
-			//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "cbmVoiceId", new DefaultComboBoxModel<>(new Object[] { ZERO }),
-					true);
-			//
-		} // if
-			//
-			// mcbmPronunciation
-			//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "mcbmPronunciation",
-					new DefaultComboBoxModel<>(new Object[] { null }), true);
-			//
-		} // if
-			//
 	}
 
 	@Test
