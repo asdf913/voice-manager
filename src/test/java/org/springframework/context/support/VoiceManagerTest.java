@@ -7443,12 +7443,6 @@ class VoiceManagerTest {
 		//
 	}
 
-	private static void run(final Runnable instance) {
-		if (instance != null) {
-			instance.run();
-		}
-	}
-
 	@Test
 	void testVoiceIdListCellRenderer() throws Throwable {
 		//
