@@ -1,18 +1,20 @@
 package org.springframework.context.support;
 
-import java.awt.event.ActionEvent;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import com.google.common.collect.Table;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
@@ -28,7 +30,7 @@ class VoiceManagerExportPanelTest {
 	}
 
 	@Test
-	void testNull() {
+	void testNull() throws ClassNotFoundException {
 		//
 		final Method[] ms = VoiceManagerExportPanel.class.getDeclaredMethods();
 		//
@@ -42,7 +44,9 @@ class VoiceManagerExportPanelTest {
 		//
 		Object[] os = null;
 		//
-		String toString = null;
+		String name, toString = null;
+		//
+		int parameterCount = 0;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
@@ -68,6 +72,18 @@ class VoiceManagerExportPanelTest {
 					//
 					list.add(Integer.valueOf(0));
 					//
+				} else if (Objects.equals(parameterType, Long.TYPE)) {
+					//
+					list.add(Long.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Double.TYPE)) {
+					//
+					list.add(Double.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Character.TYPE)) {
+					//
+					list.add(Character.valueOf(' '));
+					//
 				} else {
 					//
 					list.add(null);
@@ -76,30 +92,48 @@ class VoiceManagerExportPanelTest {
 					//
 			} // for
 				//
+			name = Util.getName(m);
+			//
+			parameterCount = m.getParameterCount();
+			//
 			os = toArray(list);
 			//
 			toString = Objects.toString(m);
 			//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
-				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
-				//
+				if (Util.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE, Long.TYPE, Double.TYPE),
+						m.getReturnType())) {
+					//
+					Assertions.assertNotNull(Narcissus.invokeStaticMethod(m, os), toString);
+					//
+				} else if (Boolean.logicalAnd(Objects.equals("getFieldOrder", name), parameterCount == 0)
+						|| Boolean.logicalAnd(Objects.equals("getVisibileVoiceFields", name), parameterCount == 0)
+						|| Boolean.logicalAnd(Objects.equals("getTempFileMinimumPrefixLength", name),
+								parameterCount == 0)
+						|| Boolean.logicalAnd(Objects.equals("getAccessibleObjectIsAccessibleMethod", name),
+								parameterCount == 0)
+						|| Boolean.logicalAnd(Objects.equals("toDurationIvalue0", name),
+								Arrays.equals(parameterTypes, new Class<?>[] { Object.class }))
+						|| Boolean.logicalAnd(Objects.equals("createExportTask", name),
+								Arrays.equals(parameterTypes, new Class<?>[] { Class.forName(
+										"org.springframework.context.support.VoiceManagerExportPanel$ObjectMap"),
+										Integer.class, Integer.class, Integer.class, Map.class, Table.class }))) {
+					//
+					Assertions.assertNotNull(Narcissus.invokeStaticMethod(m, os));
+					//
+				} else {
+					//
+					Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+					//
+				} // if
+					//
 			} else {
 				//
-				if (Boolean.logicalAnd(Objects.equals("getTitle", m.getName()), m.getParameterCount() == 0)
-						|| Boolean.logicalAnd(Objects.equals("getWorkbookClassFailableSupplierMap", m.getName()),
-								m.getParameterCount() == 0)) {
+				if (Boolean.logicalAnd(Objects.equals("getTitle", name), parameterCount == 0) || Boolean
+						.logicalAnd(Objects.equals("getWorkbookClassFailableSupplierMap", name), parameterCount == 0)) {
 					//
 					Assertions.assertNotNull(Narcissus.invokeMethod(instance, m, os), toString);
-					//
-				} else if (Boolean.logicalAnd(Objects.equals("actionPerformed", m.getName()),
-						Arrays.equals(parameterTypes, new Class<?>[] { ActionEvent.class }))) {
-					//
-					final Method method = m;
-					//
-					final Object[] objects = os;
-					//
-					Assertions.assertThrows(Throwable.class, () -> Narcissus.invokeMethod(instance, method, objects));
 					//
 				} else {
 					//

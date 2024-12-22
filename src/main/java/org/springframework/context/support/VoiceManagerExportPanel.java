@@ -1,31 +1,93 @@
 package org.springframework.context.support;
 
 import java.awt.Component;
+import java.awt.Desktop;
+import java.awt.GraphicsEnvironment;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.invoke.TypeDescriptor.OfField;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.GeneralSecurityException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
+import java.util.function.Consumer;
+import java.util.function.IntFunction;
+import java.util.function.LongBinaryOperator;
 import java.util.function.Predicate;
+import java.util.function.ToLongFunction;
+import java.util.function.UnaryOperator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
-import javax.annotation.Nullable;
+import javax.sql.DataSource;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -40,11 +102,53 @@ import javax.swing.JPasswordField;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ClassParserUtil;
+import org.apache.bcel.classfile.FieldOrMethodUtil;
+import org.apache.bcel.classfile.JavaClassUtil;
+import org.apache.bcel.generic.ICONST;
+import org.apache.bcel.generic.IF_ICMPGE;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.MethodGenUtil;
+import org.apache.bcel.generic.ObjectType;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.IteratorUtils;
+import org.apache.commons.dbutils.DbUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.function.FailableBiConsumer;
+import org.apache.commons.lang3.function.FailableBiFunction;
+import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -52,32 +156,124 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.function.FailableRunnable;
 import org.apache.commons.lang3.function.FailableSupplier;
+import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
+import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryUtil;
+import org.apache.poi.hssf.record.crypto.Biff8EncryptionKey;
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.poifs.crypt.EncryptionInfo;
 import org.apache.poi.poifs.crypt.EncryptionMode;
+import org.apache.poi.poifs.crypt.Encryptor;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellUtil;
+import org.apache.poi.ss.usermodel.ClientAnchor;
+import org.apache.poi.ss.usermodel.Comment;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.RichTextString;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.RowUtil;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.SheetUtil;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.WorkbookUtil;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.util.LocaleID;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.d2ab.function.ObjIntFunction;
+import org.d2ab.function.ObjIntFunctionUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.odftoolkit.odfdom.doc.OdfPresentationDocument;
+import org.odftoolkit.odfdom.pkg.OdfPackage;
+import org.odftoolkit.odfdom.pkg.OdfPackageDocument;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.ListableBeanFactoryUtil;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+import org.zeroturnaround.zip.FileSource;
+import org.zeroturnaround.zip.ZipEntrySource;
+import org.zeroturnaround.zip.ZipUtil;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.github.curiousoddman.rgxgen.RgxGen;
 import com.google.common.base.Functions;
+import com.google.common.base.Stopwatch;
+import com.google.common.base.StopwatchUtil;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapUtil;
+import com.google.common.collect.Table;
+import com.google.common.collect.TableUtil;
+import com.google.common.reflect.Reflection;
+import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.Database.FileFormat;
+import com.healthmarketscience.jackcess.DatabaseBuilder;
 import com.healthmarketscience.jackcess.impl.DatabaseImpl;
 import com.healthmarketscience.jackcess.impl.DatabaseImpl.FileFormatDetails;
 import com.healthmarketscience.jackcess.impl.JetFormat;
+import com.healthmarketscience.jackcess.util.ImportUtil;
+import com.j256.simplemagic.ContentInfo;
+import com.j256.simplemagic.ContentInfoUtil;
 import com.j256.simplemagic.ContentType;
+import com.mpatric.mp3agic.BaseException;
+import com.mpatric.mp3agic.ID3v1;
+import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.Mp3FileUtil;
+import com.mpatric.mp3agic.NotSupportedException;
 
+import domain.Voice;
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.cache.StringTemplateLoader;
+import freemarker.cache.StringTemplateLoaderUtil;
+import freemarker.cache.TemplateLoader;
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.template.ConfigurationUtil;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateHashModel;
+import freemarker.template.TemplateUtil;
+import freemarker.template.Version;
 import io.github.toolfactory.narcissus.Narcissus;
+import mapper.VoiceMapper;
+import net.lingala.zip4j.model.ZipParameters;
 import net.lingala.zip4j.model.enums.CompressionLevel;
+import net.lingala.zip4j.model.enums.EncryptionMethod;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerExportPanel extends JPanel
@@ -102,6 +298,54 @@ public class VoiceManagerExportPanel extends JPanel
 	private static final String GROWX = "growx";
 
 	private static final String PASSWORD = "Password";
+
+	private static final String KEY_NOT_FOUND_MESSAGE = "Key [%1$s] Not Found";
+
+	private static final String OVER_MP3_TITLE = "overMp3Title";
+
+	private static final String ORDINAL_POSITION_AS_FILE_NAME_PREFIX = "ordinalPositionAsFileNamePrefix";
+
+	private static final String EMBED_AUDIO_IN_PRESENTATION = "embedAudioInPresentation";
+
+	private static final String HIDE_AUDIO_IMAGE_IN_PRESENTATION = "hideAudioImageInPresentation";
+
+	private static final String FOLDER_IN_PRESENTATION = "folderInPresentation";
+
+	private static final String MESSAGE_DIGEST_ALGORITHM = "messageDigestAlgorithm";
+
+	private static final String EXPORT_PRESENTATION = "exportPresentation";
+
+	private static final String OLE_2_COMPOUND_DOCUMENT = "OLE 2 Compound Document";
+
+	private static final String LANGUAGE = "Language";
+
+	private static final String VALUE = "value";
+
+	private static final String VOICE = "voice";
+
+	private static final Pattern PATTERN_CONTENT_INFO_MESSAGE_MP3_1 = Pattern.compile("^MPEG ADTS, layer III.+$");
+
+	private static final Pattern PATTERN_CONTENT_INFO_MESSAGE_MP3_2 = Pattern
+			.compile("^Audio file with ID3 version (\\d+(\\.\\d+)?), MP3 encoding$");
+
+	private static final Pattern PATTERN_CONTENT_INFO_MESSAGE_MP3_3 = Pattern
+			.compile("^Audio file with ID3 version \\d+(\\.\\d+)?$");
+
+	private static final String SHA_512 = "SHA-512";
+
+	private static final FailablePredicate<File, RuntimeException> EMPTY_FILE_PREDICATE = f -> f != null && f.exists()
+			&& isFile(f) && longValue(length(f), 0) == 0;
+
+	private static final int TEMP_FILE_MINIMUM_PREFIX_LENGTH = intValue(getTempFileMinimumPrefixLength(), 3);
+
+	private static IValue0<Method> METHOD_RANDOM_ALPHABETIC = null;
+
+	/**
+	 * @see java.lang.String#format(java.lang.String,java.lang.Object...)
+	 * 
+	 * @see java.lang.Class#getResourceAsStream(java.lang.String)
+	 */
+	private static final String CLASS_RESOURCE_FORMAT = "/%1$s.class";
 
 	private transient ComboBoxModel<Class> cbmWorkbookClass = null;
 
@@ -189,9 +433,51 @@ public class VoiceManagerExportPanel extends JPanel
 	@Note("Export Microsoft Access")
 	private AbstractButton cbExportMicrosoftAccess = null;
 
-	private AbstractButton btnExport = null;
+	private AbstractButton btnExport, btnExportBrowse = null;
 
 	private JProgressBar progressBarExport = null;
+
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface ExportButton {
+	}
+
+	@ExportButton
+	private AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = null;
+
+	private JTextComponent tfExportFile, tfDllPath = null;
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.FIELD)
+	private @interface SystemClipboard {
+	}
+
+	@SystemClipboard
+	private AbstractButton btnExportCopy = null;
+
+	@SystemClipboard
+	private AbstractButton btnDllPathCopy = null;
+
+	private SpeechApi speechApi = null;
+
+	private ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
+
+	private String[] microsoftSpeechObjectLibraryAttributeNames = null;
+
+	private SqlSessionFactory sqlSessionFactory = null;
+
+	private String exportPresentationTemplate, folderInPresentation, messageDigestAlgorithm, voiceFolder,
+			exportHtmlTemplateFile, exportWebSpeechSynthesisHtmlTemplateFile, outputFolder = null;
+
+	private Map<String, String> outputFolderFileNameExpressions = null;
+
+	private Map<Object, Object> exportWebSpeechSynthesisHtmlTemplateProperties = null;
+
+	private Version freeMarkerVersion = null;
+
+	private freemarker.template.Configuration freeMarkerConfiguration = null;
+
+	private ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
 	@Override
 	public String getTitle() {
@@ -203,6 +489,127 @@ public class VoiceManagerExportPanel extends JPanel
 		this.propertyResolver = environment;
 	}
 
+	private static Integer getTempFileMinimumPrefixLength() {
+		//
+		Integer result = null;
+		//
+		final Class<?> clz = File.class;
+		//
+		try (final InputStream is = getResourceAsStream(clz,
+				String.format(CLASS_RESOURCE_FORMAT, StringUtils.replace(Util.getName(clz), ".", "/")))) {
+			//
+			final Object[] objectTypes = toArray(Util
+					.map(Stream.of("java.lang.String", "java.lang.String", "java.io.File"), ObjectType::getInstance));
+			//
+			final List<org.apache.bcel.classfile.Method> ms = Util
+					.toList(Util.filter(
+							testAndApply(Objects::nonNull,
+									JavaClassUtil.getMethods(ClassParserUtil.parse(
+											testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null))),
+									Arrays::stream, null),
+							m -> m != null && Objects.equals(FieldOrMethodUtil.getName(m), "createTempFile")
+									&& Objects.deepEquals(m.getArgumentTypes(), objectTypes)));
+			//
+			if (ms != null && !ms.isEmpty()) {
+				//
+				if (IterableUtils.size(ms) > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				result = getTempFileMinimumPrefixLength(get(ms, 0));
+				//
+			} // if
+				//
+		} catch (final IOException e) {
+			//
+			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+			//
+		} // try
+			//
+		return result;
+		//
+	}
+
+	private static Integer getTempFileMinimumPrefixLength(final org.apache.bcel.classfile.Method method) {
+		//
+		return getTempFileMinimumPrefixLength(InstructionListUtil.getInstructions(MethodGenUtil
+				.getInstructionList(testAndApply(Objects::nonNull, method, x -> new MethodGen(x, null, null), null))));
+		//
+	}
+
+	private static Integer getTempFileMinimumPrefixLength(final Instruction[] instructions) {
+		//
+		Integer result = null;
+		//
+		ICONST iconst = null;
+		//
+		Number value = null;
+		//
+		for (int i = 0; instructions != null && i < instructions.length; i++) {
+			//
+			if ((iconst = Util.cast(ICONST.class, instructions[i])) != null && i < instructions.length - 1
+					&& instructions[i + 1] instanceof IF_ICMPGE && (value = iconst.getValue()) != null) {
+				//
+				result = Integer.valueOf(value.intValue());
+				//
+				break;
+				//
+			} // if
+				//
+		} // for
+			//
+		return result;
+		//
+	}
+
+	private static Object[] toArray(final Stream<?> instance) {
+		return instance != null ? instance.toArray() : null;
+	}
+
+	private static InputStream getResourceAsStream(final Class<?> instance, final String name) {
+		return instance != null && name != null ? instance.getResourceAsStream(name) : null;
+	}
+
+	private static long longValue(final Number instance, final long defaultValue) {
+		return instance != null ? instance.longValue() : defaultValue;
+	}
+
+	private static boolean isFile(final File instance) {
+		return instance != null && instance.isFile();
+	}
+
+	private static Long length(final File instance) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		try {
+			//
+			if (Narcissus.getField(instance, getDeclaredField(File.class, "path")) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return Long.valueOf(instance.length());
+		//
+	}
+
+	private static Field getDeclaredField(final Class<?> instance, final String name) throws NoSuchFieldException {
+		return instance != null ? instance.getDeclaredField(name) : null;
+	}
+
 	private static class MicrosoftAccessFileFormatListCellRenderer implements ListCellRenderer<Object> {
 
 		private String commonPrefix = null;
@@ -210,7 +617,7 @@ public class VoiceManagerExportPanel extends JPanel
 		private ListCellRenderer<Object> listCellRenderer = null;
 
 		@Override
-		@Nullable
+
 		public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
 				final boolean isSelected, final boolean cellHasFocus) {
 			//
@@ -260,13 +667,12 @@ public class VoiceManagerExportPanel extends JPanel
 	 * https://github.com/apache/commons-lang/blob/master/src/main/java/org/apache/
 	 * commons/lang3/ObjectUtils.java#L597
 	 */
-	private static <T, E extends Throwable> T getIfNull(@Nullable final T object,
-			final FailableSupplier<T, E> defaultSupplier) throws E {
+	private static <T, E extends Throwable> T getIfNull(final T object, final FailableSupplier<T, E> defaultSupplier)
+			throws E {
 		return object != null ? object : get(defaultSupplier);
 	}
 
-	@Nullable
-	private static <T, E extends Throwable> T get(@Nullable final FailableSupplier<T, E> instance) throws E {
+	private static <T, E extends Throwable> T get(final FailableSupplier<T, E> instance) throws E {
 		return instance != null ? instance.get() : null;
 	}
 
@@ -300,7 +706,7 @@ public class VoiceManagerExportPanel extends JPanel
 		setRenderer(jcbClass, new ListCellRenderer<>() {
 
 			@Override
-			@Nullable
+
 			public Component getListCellRendererComponent(final JList<? extends Class> list, final Class value,
 					final int index, final boolean isSelected, final boolean cellHasFocus) {
 				//
@@ -583,11 +989,4183 @@ public class VoiceManagerExportPanel extends JPanel
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		throw new UnsupportedOperationException();// TODO
+		final VoiceManager voiceManager = VoiceManager.INSTANCE;
+		//
+		if (voiceManager != null) {
+			//
+			try {
+				//
+				accept(x -> Util.setText(Util.cast(JTextComponent.class, x), null),
+						FieldUtils.readDeclaredField(voiceManager, "tfCurrentProcessingSheetName", true),
+						FieldUtils.readDeclaredField(voiceManager, "tfCurrentProcessingVoice", true));
+				//
+				clear(Util.cast(DefaultTableModel.class,
+						FieldUtils.readDeclaredField(voiceManager, "tmImportResult", true)));
+				//
+			} catch (final IllegalAccessException e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} // try
+				//
+		} // if
+			//
+		final Object source = Util.getSource(evt);
+		//
+		final boolean headless = GraphicsEnvironment.isHeadless();
+		//
+		if (anyMatch(Util.stream(findFieldsByValue(Util.getDeclaredFields(getClass()), this, source)),
+				f -> isAnnotationPresent(f, ExportButton.class))) {
+			//
+			Util.setText(tfExportFile, null);
+			//
+			actionPerformedForExportButtons(source, headless);
+			//
+		} // if
+			//
+		final boolean nonTest = !isTestMode();
+		//
+		// if the "source" is one of the value of the field annotated with
+		// "@SystemClipboard", pass the "source" to
+		// "actionPerformedForSystemClipboardAnnotated(java.lang.Object)" method
+		//
+		final FailableStream<Field> fs = new FailableStream<>(Util.filter(
+				testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManager.class), Arrays::stream, null),
+				f -> isAnnotationPresent(f, SystemClipboard.class)));
+		//
+		testAndRun(Util.contains(Util.toList(Util.filter(
+				FailableStreamUtil.stream(FailableStreamUtil.map(fs, f -> FieldUtils.readField(f, this, true))),
+				Objects::nonNull)), source), () -> actionPerformedForSystemClipboardAnnotated(nonTest, source));
+		//
+		if (Objects.equals(source, btnExportBrowse)) {
+			//
+			actionPerformedForExportBrowse(headless);
+			//
+		} else if (Objects.equals(source, btnExport)) {
+			//
+			actionPerformedForExport(headless);
+			//
+		} // if
+			//
+	}
+
+	private void actionPerformedForExport(final boolean headless) {
+		//
+		try {
+			//
+			actionPerformedForExport(Util.get(IValue0Util.getValue0(getWorkbookClassFailableSupplierMap()),
+					getSelectedItem(cbmWorkbookClass)));
+			//
+		} catch (final IOException | IllegalAccessException | TemplateException | InvalidFormatException
+				| GeneralSecurityException | SQLException e) {
+			//
+			errorOrAssertOrShowException(headless, e);
+			//
+		} catch (final Exception e) {
+			//
+			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(e), e));
+			//
+		} // try
+			//
+	}
+
+	private static interface BooleanMap {
+
+		boolean getBoolean(final String key);
+
+		void setBoolean(final String key, final boolean value);
+
+		static boolean getBoolean(final BooleanMap instance, final String key) {
+			return instance != null && instance.getBoolean(key);
+		}
+
+		static void setBoolean(final BooleanMap instance, final String key, final boolean value) {
+			if (instance != null) {
+				instance.setBoolean(key, value);
+			}
+		}
+
+	}
+
+	private static interface IntMap<T> {
+
+		T getObject(final int key);
+
+		boolean containsKey(final int key);
+
+		void setObject(final int key, final T value);
+
+	}
+
+	private static interface IntIntMap {
+
+		int getInt(final int key);
+
+		boolean containsKey(final int key);
+
+		void setInt(final int key, final int value);
+
+	}
+
+	private static interface StringMap {
+
+		String getString(final String key);
+
+		void setString(final String key, final String value);
+
+		static String getString(final StringMap instance, final String key) {
+			return instance != null ? instance.getString(key) : null;
+		}
+
+		static void setString(final StringMap instance, final String key, final String value) {
+			if (instance != null) {
+				instance.setString(key, value);
+			}
+		}
+
+	}
+
+	private static class IH implements InvocationHandler {
+
+		private Collection<Object> throwableStackTraceHexs = null;
+
+		private Runnable runnable = null;
+
+		private Map<Object, Object> objects = null;
+
+		private Map<Object, Object> booleans = null;
+
+		private Map<Object, Object> intMapObjects = null;
+
+		private Map<Object, Object> intIntMapObjects = null;
+
+		private Map<Object, Object> strings = null;
+
+		private Map<Object, Object> getObjects() {
+			if (objects == null) {
+				objects = new LinkedHashMap<>();
+			}
+			return objects;
+		}
+
+		private Map<Object, Object> getBooleans() {
+			if (booleans == null) {
+				booleans = new LinkedHashMap<>();
+			}
+			return booleans;
+		}
+
+		private Map<Object, Object> getIntMapObjects() {
+			if (intMapObjects == null) {
+				intMapObjects = new LinkedHashMap<>();
+			}
+			return intMapObjects;
+		}
+
+		private Map<Object, Object> getIntIntMapObjects() {
+			if (intIntMapObjects == null) {
+				intIntMapObjects = new LinkedHashMap<>();
+			}
+			return intIntMapObjects;
+		}
+
+		private Map<Object, Object> getStrings() {
+			if (strings == null) {
+				strings = new LinkedHashMap<>();
+			}
+			return strings;
+		}
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = Util.getName(method);
+			//
+			IValue0<?> value = null;
+			//
+			if (proxy instanceof Runnable) {
+				//
+				if (runnable == null) {
+					//
+					throw new IllegalStateException("runnable is null");
+					//
+				} else if (runnable == proxy) {
+					//
+					throw new IllegalStateException("runnable==proxy");
+					//
+				} // if
+					//
+				value = handleRunnable(method, runnable, args, throwableStackTraceHexs);
+				//
+			} else if (proxy instanceof ObjectMap) {
+				//
+				value = handleObjectMap(methodName, getObjects(), args);
+				//
+			} else if (proxy instanceof BooleanMap) {
+				//
+				value = handleBooleanMap(methodName, getBooleans(), args);
+				//
+			} else if (proxy instanceof IntMap) {
+				//
+				value = handleIntMap(methodName, getIntMapObjects(), args);
+				//
+			} else if (proxy instanceof IntIntMap) {
+				//
+				value = handleIntIntMap(methodName, getIntIntMapObjects(), args);
+				//
+			} else if (proxy instanceof StringMap) {
+				//
+				value = handleStringMap(methodName, getStrings(), args);
+				//
+			} // if
+				//
+			if (value != null) {
+				//
+				return IValue0Util.getValue0(value);
+				//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+		private static IValue0<Object> handleRunnable(final Method method, final Runnable runnable, final Object[] args,
+				final Collection<Object> throwableStackTraceHexs) throws Throwable {
+			//
+			try {
+				//
+				if (Objects.equals(Util.getName(method), "run")) {
+					//
+					return Unit.with(VoiceManagerExportPanel.invoke(method, runnable, args));
+					//
+				} // if
+					//
+			} catch (final InvocationTargetException e) {
+				//
+				final Throwable targetExceptionRootCause = ExceptionUtils.getRootCause(e.getTargetException());
+				//
+				if (targetExceptionRootCause != null) {
+					//
+					try (final Writer w = new StringWriter(); final PrintWriter ps = new PrintWriter(w)) {
+						//
+						targetExceptionRootCause.printStackTrace(ps);
+						//
+						final String hex = testAndApply(Objects::nonNull, getBytes(Util.toString(w)),
+								DigestUtils::sha512Hex, null);
+						//
+						if (!Util.contains(throwableStackTraceHexs, hex)) {
+							//
+							if (LOG != null && !LoggerUtil.isNOPLogger(LOG)) {
+								//
+								LoggerUtil.error(LOG, null, targetExceptionRootCause);
+								//
+							} else {
+								//
+								printStackTrace(targetExceptionRootCause);
+								//
+							} // if
+								//
+							Util.add(throwableStackTraceHexs, hex);
+							//
+						} // if
+							//
+					} // try
+						//
+				} // if
+					//
+				throw ObjectUtils.getIfNull(targetExceptionRootCause, RuntimeException::new);
+				//
+			} // try
+				//
+			return null;
+			//
+		}
+
+		private static byte[] getBytes(final String instance) {
+			return instance != null ? instance.getBytes() : null;
+		}
+
+		private static void printStackTrace(final Throwable throwable) {
+			//
+			final List<Method> ms = Util.toList(Util.filter(
+					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Throwable.class), Arrays::stream, null),
+					m -> m != null && StringUtils.equals(Util.getName(m), "printStackTrace")
+							&& m.getParameterCount() == 0));
+			//
+			final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
+			//
+			try {
+				//
+				testAndAccept(m -> throwable != null || isStatic(m), method,
+						m -> VoiceManagerExportPanel.invoke(m, throwable));
+				//
+			} catch (final InvocationTargetException e) {
+				//
+				final Throwable targetException = e.getTargetException();
+				//
+				printStackTrace(ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+						ExceptionUtils.getRootCause(e), e));
+				//
+			} catch (final ReflectiveOperationException e) {
+				//
+				printStackTrace(throwable);
+				//
+			} // try
+				//
+		}
+
+		private static IValue0<Object> handleObjectMap(final String methodName, final Map<Object, Object> map,
+				final Object[] args) {
+			//
+			if (Objects.equals(methodName, "getObject") && args != null && args.length > 0) {
+				//
+				final Object key = args[0];
+				//
+				if (!Util.containsKey(map, key)) {
+					//
+					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
+							testAndApply(IH::isArray, Util.cast(Class.class, key), Util::getSimpleName, x -> key)));
+					//
+				} // if
+					//
+				return Unit.with(Util.get(map, key));
+				//
+			} else if (Objects.equals(methodName, "containsObject") && args != null && args.length > 0) {
+				//
+				return Unit.with(Boolean.valueOf(Util.containsKey(map, args[0])));
+				//
+			} else if (Objects.equals(methodName, "setObject") && args != null && args.length > 1) {
+				//
+				Util.put(map, args[0], args[1]);
+				//
+				return Unit.with(null);
+				//
+			} // if
+				//
+			return null;
+			//
+		}
+
+		private static IValue0<Object> handleBooleanMap(final String methodName, final Map<Object, Object> map,
+				final Object[] args) {
+			//
+			if (Objects.equals(methodName, "getBoolean") && args != null && args.length > 0) {
+				//
+				final Object key = args[0];
+				//
+				if (!Util.containsKey(map, key)) {
+					//
+					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
+					//
+				} // if
+					//
+				return Unit.with(Util.get(map, key));
+				//
+			} else if (Objects.equals(methodName, "setBoolean") && args != null && args.length > 1) {
+				//
+				Util.put(map, args[0], args[1]);
+				//
+				return Unit.with(null);
+				//
+			} // if
+				//
+			return null;
+			//
+		}
+
+		private static IValue0<Object> handleIntMap(final String methodName, final Map<Object, Object> map,
+				final Object[] args) {
+			//
+			if (Objects.equals(methodName, "getObject") && args != null && args.length > 0) {
+				//
+				final Object key = args[0];
+				//
+				if (!Util.containsKey(map, key)) {
+					//
+					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
+					//
+				} // if
+					//
+				return Unit.with(Util.get(map, key));
+				//
+			} else if (Objects.equals(methodName, "containsKey") && args != null && args.length > 0) {
+				//
+				return Unit.with(Util.containsKey(map, args[0]));
+				//
+			} else if (Objects.equals(methodName, "setObject") && args != null && args.length > 1) {
+				//
+				Util.put(map, args[0], args[1]);
+				//
+				return Unit.with(null);
+				//
+			} // if
+				//
+			return null;
+			//
+		}
+
+		private static IValue0<Object> handleIntIntMap(final String methodName, final Map<Object, Object> map,
+				final Object[] args) {
+			//
+			if (Objects.equals(methodName, "getInt") && args != null && args.length > 0) {
+				//
+				final Object key = args[0];
+				//
+				if (!Util.containsKey(map, key)) {
+					//
+					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
+					//
+				} // if
+					//
+				return Unit.with(Util.get(map, key));
+				//
+			} else if (Objects.equals(methodName, "containsKey") && args != null && args.length > 0) {
+				//
+				return Unit.with(Util.containsKey(map, args[0]));
+				//
+			} else if (Objects.equals(methodName, "setInt") && args != null && args.length > 1) {
+				//
+				Util.put(map, args[0], args[1]);
+				//
+				return Unit.with(null);
+				//
+			} // if
+				//
+			return null;
+			//
+		}
+
+		private static IValue0<Object> handleStringMap(final String methodName, final Map<Object, Object> map,
+				final Object[] args) {
+			//
+			if (Objects.equals(methodName, "getString") && args != null && args.length > 0) {
+				//
+				final Object key = args[0];
+				//
+				if (!Util.containsKey(map, key)) {
+					//
+					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
+					//
+				} // if
+					//
+				return Unit.with(Util.get(map, key));
+				//
+			} else if (Objects.equals(methodName, "setString") && args != null && args.length > 1) {
+				//
+				Util.put(map, args[0], args[1]);
+				//
+				return Unit.with(null);
+				//
+			} // if
+				//
+			return null;
+			//
+		}
+
+		private static boolean isArray(final OfField<?> instance) {
+			return instance != null && instance.isArray();
+		}
+
+	}
+
+	private static Object invoke(final Method method, final Object instance, Object... args)
+			throws IllegalAccessException, InvocationTargetException {
+		return method != null ? method.invoke(instance, args) : null;
+	}
+
+	private void actionPerformedForExport(final FailableSupplier<Workbook, RuntimeException> workbookSupplier)
+			throws IOException, IllegalAccessException, InvalidFormatException, GeneralSecurityException,
+			TemplateException, SQLException {
+		//
+		SqlSession sqlSession = null;
+		//
+		Workbook workbook = null;
+		//
+		File file = null;
+		//
+		try {
+			//
+			final VoiceMapper voiceMapper = org.apache.ibatis.session.ConfigurationUtil.getMapper(
+					SqlSessionFactoryUtil.getConfiguration(sqlSessionFactory), VoiceMapper.class,
+					sqlSession = SqlSessionFactoryUtil.openSession(sqlSessionFactory));
+			//
+			final List<Voice> voices = retrieveAllVoices(voiceMapper);
+			//
+			forEach(voices, v -> setListNames(v, searchVoiceListNamesByVoiceId(voiceMapper, getId(v))));
+			//
+			final IH ih = new IH();
+			//
+			ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, ih);
+			//
+			ObjectMap.setObject(objectMap, VoiceManagerExportPanel.class, this);
+			//
+			// org.springframework.context.support.VoiceManager$BooleanMap
+			//
+			final BooleanMap bm = Reflection.newProxy(BooleanMap.class, ih);
+			//
+			BooleanMap.setBoolean(bm, OVER_MP3_TITLE, isSelected(cbOverMp3Title));
+			//
+			BooleanMap.setBoolean(bm, ORDINAL_POSITION_AS_FILE_NAME_PREFIX,
+					isSelected(cbOrdinalPositionAsFileNamePrefix));
+			//
+			BooleanMap.setBoolean(bm, "jlptAsFolder", isSelected(cbJlptAsFolder));
+			//
+			BooleanMap.setBoolean(bm, EXPORT_PRESENTATION, isSelected(cbExportPresentation));
+			//
+			BooleanMap.setBoolean(bm, EMBED_AUDIO_IN_PRESENTATION, isSelected(cbEmbedAudioInPresentation));
+			//
+			BooleanMap.setBoolean(bm, HIDE_AUDIO_IMAGE_IN_PRESENTATION, !isSelected(cbHideAudioImageInPresentation));
+			//
+			ObjectMap.setObject(objectMap, BooleanMap.class, bm);
+			//
+			// org.springframework.context.support.VoiceManager$StringMap
+			//
+			final StringMap stringMap = Reflection.newProxy(StringMap.class, ih);
+			//
+			StringMap.setString(stringMap, "ordinalPositionFileNamePrefix",
+					Util.getText(tfOrdinalPositionFileNamePrefix));
+			//
+			StringMap.setString(stringMap, "exportPresentationTemplate", exportPresentationTemplate);
+			//
+			StringMap.setString(stringMap, "exportPassword", Util.getText(tfExportPassword));
+			//
+			StringMap.setString(stringMap, FOLDER_IN_PRESENTATION, folderInPresentation);
+			//
+			StringMap.setString(stringMap, "jlptFolderNamePrefix", Util.getText(tfJlptFolderNamePrefix));
+			//
+			StringMap.setString(stringMap, MESSAGE_DIGEST_ALGORITHM, messageDigestAlgorithm);
+			//
+			ObjectMap.setObject(objectMap, StringMap.class, stringMap);
+			//
+			// presentationSlideDuration
+			//
+			ObjectMap.setObject(objectMap, Duration.class,
+					ObjectUtils.defaultIfNull(
+							IValue0Util.getValue0(toDurationIvalue0(Util.getText(tfPresentationSlideDuration))),
+							presentationSlideDuration));
+			//
+			export(voices, outputFolderFileNameExpressions, objectMap);
+			//
+			// Export Spreadsheet
+			//
+			boolean fileToBeDeleted = false;
+			//
+			final String fileExtension = getFileExtension(workbookSupplier);
+			//
+			try (final OutputStream os = new FileOutputStream(
+					file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(),
+							StringUtils.defaultIfEmpty(fileExtension, "xlsx"))))) {
+				//
+				final BooleanMap booleanMap = Reflection.newProxy(BooleanMap.class, ih);
+				//
+				BooleanMap.setBoolean(booleanMap, "exportListSheet", isSelected(cbExportListSheet));
+				//
+				BooleanMap.setBoolean(booleanMap, "exportJlptSheet", isSelected(cbExportJlptSheet));
+				//
+				WorkbookUtil.write(workbook = createWorkbook(voices, booleanMap, workbookSupplier), os);
+				//
+				if (!(fileToBeDeleted = longValue(length(file), 0) == 0)) {
+					//
+					fileToBeDeleted = intValue(
+							getPhysicalNumberOfRows(testAndApply(x -> intValue(getNumberOfSheets(x), 0) == 1, workbook,
+									x -> WorkbookUtil.getSheetAt(x, 0), null)),
+							0) == 0;
+					//
+				} // if
+					//
+			} // try
+				//
+				// encrypt the file if "password" is set
+				//
+			encrypt(file, Util.cast(EncryptionMode.class, getSelectedItem(cbmEncryptionMode)),
+					Util.getText(tfExportPassword));
+			//
+			// Delete empty Spreadsheet
+			//
+			testAndAccept((a, b) -> Objects.equals(Boolean.TRUE, a), fileToBeDeleted, file, (a, b) -> delete(b));
+			//
+			// Export HTML file
+			//
+			if (isSelected(cbExportHtml)) {
+				//
+				final Version version = ObjectUtils.getIfNull(freeMarkerVersion,
+						freemarker.template.Configuration::getVersion);
+				//
+				ObjectMap.setObject(objectMap = Reflection.newProxy(ObjectMap.class, ih), Version.class, version);
+				//
+				final freemarker.template.Configuration configuration = ObjectUtils.getIfNull(freeMarkerConfiguration,
+						() -> new freemarker.template.Configuration(version));
+				//
+				testAndAccept(x -> getTemplateLoader(configuration) == null, configuration,
+						x -> ConfigurationUtil.setTemplateLoader(x, new ClassTemplateLoader(VoiceManager.class, "/")));
+				//
+				ObjectMap.setObject(objectMap, freemarker.template.Configuration.class, configuration);
+				//
+				ObjectMap.setObject(objectMap, TemplateHashModel.class, new BeansWrapper(version).getStaticModels());
+				//
+				List<File> files = null;
+				//
+				final Map<Object, Object> map = new LinkedHashMap<>();
+				//
+				Util.put(map, "folder", voiceFolder);
+				//
+				Util.put(map, "voices", voices);
+				//
+				Util.put(map, "Base64Encoder", Base64.getEncoder());
+				//
+				try (final Writer writer = new StringWriter()) {
+					//
+					ObjectMap.setObject(objectMap, Writer.class, writer);
+					//
+					exportHtml(objectMap, exportHtmlTemplateFile, map);
+					//
+					final StringBuilder sb = new StringBuilder(
+							StringUtils.defaultString(Util.getText(tfExportHtmlFileName)));
+					//
+					final String[] fileExtensions = getFileExtensions(ContentType.HTML);
+					//
+					if (!anyMatch(testAndApply(Objects::nonNull, fileExtensions, Arrays::stream, null),
+							x -> StringUtils.endsWithIgnoreCase(sb, StringUtils.join('.', x)))) {
+						//
+						// append "." if the file name does not ends with "."
+						//
+						testAndAccept(x -> !StringUtils.endsWith(x, "."), sb, x -> append(x, '.'));
+						//
+						append(sb, getLongestString(fileExtensions));
+						//
+					} // if
+						//
+					FileUtils.writeStringToFile(
+							file = new File(StringUtils.defaultIfBlank(Util.toString(sb), "export.html")),
+							Util.toString(writer), StandardCharsets.UTF_8);
+					//
+					Util.add(files = ObjectUtils.getIfNull(files, ArrayList::new), file);
+					//
+				} // try
+					//
+				final boolean exportWebSpeechSynthesisHtml = isSelected(cbExportWebSpeechSynthesisHtml);
+				//
+				if (exportWebSpeechSynthesisHtml) {
+
+					try (final Writer writer = new StringWriter()) {
+						//
+						ObjectMap.setObject(objectMap, Writer.class, writer);
+						//
+						putAll(map, exportWebSpeechSynthesisHtmlTemplateProperties);
+						//
+						exportHtml(objectMap, exportWebSpeechSynthesisHtmlTemplateFile, map);
+						//
+						final StringBuilder sb = new StringBuilder(
+								StringUtils.defaultString("WebSpeechSynthesis.html"));
+						//
+						final String[] fileExtensions = getFileExtensions(ContentType.HTML);
+						//
+						if (!anyMatch(testAndApply(Objects::nonNull, fileExtensions, Arrays::stream, null),
+								x -> StringUtils.endsWithIgnoreCase(sb, StringUtils.join('.', x)))) {
+							//
+							// append "." if the file name does not ends with "."
+							//
+							testAndAccept(x -> !StringUtils.endsWith(x, "."), sb, x -> append(x, '.'));
+							//
+							append(sb, getLongestString(fileExtensions));
+							//
+						} // if
+							//
+						FileUtils.writeStringToFile(
+								file = new File(
+										StringUtils.defaultIfBlank(Util.toString(sb), "WebSpeechSynthesis.html")),
+								Util.toString(writer), StandardCharsets.UTF_8);
+						//
+						Util.add(files = ObjectUtils.getIfNull(files, ArrayList::new), file);
+						//
+					} // try
+						//
+				} // if
+					//
+				if (isSelected(cbExportListHtml)) {
+					//
+					final Multimap<String, Voice> multimap = getVoiceMultimapByListName(voices);
+					//
+					exportHtml(objectMap, multimap, Pair.of(exportHtmlTemplateFile, x -> String.format("%1$s.html", x)),
+							null, files = ObjectUtils.getIfNull(files, ArrayList::new));
+					//
+					exportWebSpeechSynthesisHtml(exportWebSpeechSynthesisHtml, objectMap, multimap,
+							files = ObjectUtils.getIfNull(files, ArrayList::new));
+					//
+				} // if
+					//
+				if (isSelected(cbExportHtmlAsZip)
+						&& reduce(mapToLong(Util.stream(files), f -> longValue(length(f), 0)), 0, Long::sum) > 0) {
+					//
+					ObjectMap.setObject(objectMap, File.class,
+							file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.zip", new Date())));
+					//
+					ObjectMap.setObject(objectMap, EncryptionMethod.class, EncryptionMethod.ZIP_STANDARD);
+					//
+					ObjectMap.setObject(objectMap, CompressionLevel.class,
+							Util.cast(CompressionLevel.class, getSelectedItem(cbmCompressionLevel)));
+					//
+					createZipFile(objectMap, Util.getText(tfExportPassword), files);
+					//
+					// Delete HTML File(s) is "Remove HTML After ZIP" option is checked
+					//
+					testAndAccept((a, b) -> a, isSelected(cbExportHtmlRemoveAfterZip), files,
+							(a, b) -> forEach(b, VoiceManagerExportPanel::delete));
+					//
+				} // if
+					//
+			} // if
+				//
+				// Export Microsoft Access
+				//
+			if (isSelected(cbExportMicrosoftAccess)) {
+				//
+				final FileFormat fileFormat = Util.cast(FileFormat.class,
+						getSelectedItem(cbmMicrosoftAccessFileFormat));
+				//
+				ObjectMap.setObject(objectMap, File.class,
+						file = new File(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(),
+								StringUtils.substringAfter(getFileExtension(fileFormat), '.'))));
+				//
+				ObjectMap.setObject(objectMap, FileFormat.class, fileFormat);
+				//
+				exportMicrosoftAccess(objectMap, Util.values(
+						ListableBeanFactoryUtil.getBeansOfType(configurableListableBeanFactory, DataSource.class)));
+				//
+			} // if
+				//
+		} finally {
+			//
+			IOUtils.closeQuietly(sqlSession);
+			//
+			IOUtils.closeQuietly(workbook);
+			//
+			testAndAccept(EMPTY_FILE_PREDICATE, file, FileUtils::deleteQuietly);
+			//
+		} // try
+			//
+	}
+
+	private static void exportMicrosoftAccess(final ObjectMap objectMap, final Iterable<DataSource> dss)
+			throws IOException, SQLException {
+		//
+		final File file = ObjectMap.getObject(objectMap, File.class);
+		//
+		try (final Database db = create(setFileFormat(testAndApply(Objects::nonNull, file, DatabaseBuilder::new, null),
+				ObjectUtils.defaultIfNull(ObjectMap.getObject(objectMap, FileFormat.class), FileFormat.V2000)))) {
+			//
+			if (Util.iterator(dss) != null) {
+				//
+				for (final DataSource ds : dss) {
+					//
+					ObjectMap.setObject(objectMap, Database.class, db);
+					//
+					ObjectMap.setObject(objectMap, DataSource.class, ds);
+					//
+					exportMicrosoftAccess(objectMap);
+					//
+				} // for
+					//
+			} // if
+				//
+		} // try
+			//
+		try (final Database db = testAndApply(Objects::nonNull, file, DatabaseBuilder::open, null)) {
+			//
+			testAndAccept(CollectionUtils::isEmpty, getTableNames(db), x -> delete(file));
+			//
+		} // try
+			//
+	}
+
+	private static Database create(final DatabaseBuilder instance) throws IOException {
+		return instance != null ? instance.create() : null;
+	}
+
+	private static Set<String> getTableNames(final Database instance) throws IOException {
+		return instance != null ? instance.getTableNames() : null;
+	}
+
+	private static void exportMicrosoftAccess(final ObjectMap objectMap) throws IOException, SQLException {
+		//
+		try (final Connection connection = getConnection(ObjectMap.getObject(objectMap, DataSource.class))) {
+			//
+			// Retrieve all table name(s) from "information_schema.tables" table
+			//
+			final PreparedStatement ps = prepareStatement(connection,
+					"select distinct table_name from information_schema.tables where table_schema='PUBLIC' order by table_name");
+			//
+			ResultSet rs = executeQuery(ps);
+			//
+			Set<String> tableNames = null;
+			//
+			while (rs != null && rs.next()) {
+				//
+				Util.add(tableNames = getIfNull(tableNames, LinkedHashSet::new), rs.getString("table_name"));
+				//
+			} // while
+				//
+			DbUtils.closeQuietly(rs);
+			//
+			DbUtils.closeQuietly(ps);
+			//
+			ObjectMap.setObject(objectMap, Connection.class, connection);
+			//
+			importResultSet(objectMap, tableNames);
+			//
+		} // try
+			//
+	}
+
+	private static void importResultSet(final ObjectMap objectMap, final Iterable<String> tableNames)
+			throws IOException, SQLException {
+		//
+		final Database db = ObjectMap.getObject(objectMap, Database.class);
+		//
+		if (Util.iterator(tableNames) != null) {
+			//
+			final Connection connection = ObjectMap.getObject(objectMap, Connection.class);
+			//
+			for (final String tableName : tableNames) {
+				//
+				try (final ResultSet rs = executeQuery(
+						prepareStatement(connection, String.format("select * from %1$s", tableName)))) {
+					//
+					if (and(Objects::nonNull, rs, db, tableName)) {
+						//
+						ImportUtil.importResultSet(rs, db, tableName);
+						//
+					} // if
+						//
+				} // try
+					//
+			} // for
+				//
+		} // if
+			//
+	}
+
+	private static <T> boolean and(final Predicate<T> predicate, final T a, final T b, final T... values) {
+		//
+		boolean result = Util.test(predicate, a) && Util.test(predicate, b);
+		//
+		if (!result) {
+			//
+			return result;
+			//
+		} // if
+			//
+		for (int i = 0; values != null && i < values.length; i++) {
+			//
+			result &= Util.test(predicate, values[i]);
+			//
+		} // for
+			//
+		return result;
 		//
 	}
 
-	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
+	private static Connection getConnection(final DataSource instance) throws SQLException {
+		return instance != null ? instance.getConnection() : null;
+	}
+
+	private static PreparedStatement prepareStatement(final Connection instance, final String sql) throws SQLException {
+		return instance != null ? instance.prepareStatement(sql) : null;
+	}
+
+	private static ResultSet executeQuery(final PreparedStatement instance) throws SQLException {
+		return instance != null ? instance.executeQuery() : null;
+	}
+
+	private static DatabaseBuilder setFileFormat(final DatabaseBuilder instance, final Database.FileFormat fileFormat) {
+		return instance != null ? instance.setFileFormat(fileFormat) : instance;
+	}
+
+	private static void createZipFile(final ObjectMap objectMap, final String password, final Iterable<File> files)
+			throws IOException {
+		//
+		final ZipParameters zipParameters = new ZipParameters();
+		//
+		zipParameters.setEncryptFiles(StringUtils.isNotEmpty(password));
+		//
+		zipParameters
+				.setEncryptionMethod(ObjectUtils.firstNonNull(ObjectMap.getObject(objectMap, EncryptionMethod.class),
+						zipParameters.getEncryptionMethod(), EncryptionMethod.ZIP_STANDARD));
+		//
+		zipParameters
+				.setCompressionLevel(ObjectUtils.firstNonNull(ObjectMap.getObject(objectMap, CompressionLevel.class),
+						zipParameters.getCompressionLevel(), CompressionLevel.NORMAL));
+		//
+		try (final net.lingala.zip4j.ZipFile zipFile = testAndApply(Objects::nonNull,
+				ObjectMap.getObject(objectMap, File.class),
+				x -> new net.lingala.zip4j.ZipFile(x, toCharArray(password)), null)) {
+			//
+			forEach(files, x -> {
+				//
+				if (zipFile != null && x != null) {
+					//
+					zipFile.addFile(x, zipParameters);
+					//
+				} // if
+					//
+			});
+			//
+		} // try
+			//
+	}
+
+	private static char[] toCharArray(final String instance) {
+		return instance != null ? instance.toCharArray() : null;
+	}
+
+	private static long reduce(final LongStream instance, final long identity, final LongBinaryOperator op) {
+		return instance != null ? instance.reduce(identity, op) : identity;
+	}
+
+	private static <T> LongStream mapToLong(final Stream<T> instance, final ToLongFunction<? super T> mapper) {
+		//
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
+				? instance.mapToLong(mapper)
+				: null;
+		//
+	}
+
+	private void exportWebSpeechSynthesisHtml(final boolean condition, final ObjectMap objectMap,
+			final Multimap<String, Voice> multimap, final Collection<File> files)
+			throws IOException, TemplateException {
+		//
+		if (condition) {
+			//
+			exportHtml(objectMap, multimap,
+					//
+					Pair.of(exportWebSpeechSynthesisHtmlTemplateFile,
+							x -> String.format("%1$s.WebSpeechSynthesis.html", x)),
+					//
+					exportWebSpeechSynthesisHtmlTemplateProperties
+					//
+					, files);
+			//
+		} // if
+			//
+	}
+
+	private void exportHtml(final ObjectMap objectMap, final Multimap<String, Voice> multimap,
+			final Entry<?, UnaryOperator<Object>> filePair, final Map<Object, Object> parameters,
+			final Collection<File> files) throws IOException, TemplateException {
+		//
+		final Iterable<String> keySet = MultimapUtil.keySet(multimap);
+		//
+		if (Util.iterator(keySet) != null) {
+			//
+			File file = null;
+			//
+			for (final String key : keySet) {
+				//
+				final Map<Object, Object> map = new LinkedHashMap<>();
+				//
+				try (final Writer writer = testAndApply(
+						Objects::nonNull, file = testAndApply(Objects::nonNull,
+								Util.toString(Util.apply(Util.getValue(filePair), key)), File::new, null),
+						FileWriter::new, null)) {
+					//
+					ObjectMap.setObject(objectMap, Writer.class, writer);
+					//
+					Util.put(map, "folder", voiceFolder);
+					//
+					Util.put(map, "voices", MultimapUtil.get(multimap, key));
+					//
+					Util.put(map, "Base64Encoder", Base64.getEncoder());
+					//
+					final Collection<Entry<Object, Object>> entrySet = Util.entrySet(parameters);
+					//
+					if (Util.iterator(entrySet) != null) {
+						//
+						for (final Entry<?, ?> parameter : entrySet) {
+							//
+							if (parameter == null) {
+								//
+								continue;
+								//
+							} // if
+								//
+							Util.put(map, Util.toString(Util.getKey(parameter)), Util.getValue(parameter));
+							//
+						} // for
+							//
+					} // if
+						//
+					exportHtml(objectMap, Util.toString(Util.getKey(filePair)), map);
+					//
+					Util.add(files, file);
+					//
+				} finally {
+					//
+					testAndAccept(x -> intValue(length(x), 0) == 0, file, VoiceManagerExportPanel::delete);
+					//
+				} // try
+					//
+			} // for
+				//
+		} // if
+			//
+	}
+
+	private static String getFileExtension(final FileFormat instance) {
+		return instance != null ? instance.getFileExtension() : null;
+	}
+
+	private static Multimap<String, Voice> getVoiceMultimapByListName(final Iterable<Voice> voices) {
+		//
+		Multimap<String, Voice> multimap = null;
+		//
+		if (Util.iterator(voices) != null) {
+			//
+			Iterable<String> listNames = null;
+			//
+			for (final Voice v : voices) {
+				//
+				if (v == null || (listNames = v.getListNames()) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				for (final String listName : listNames) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), listName,
+							v);
+					//
+				} // for
+					//
+			} // for
+				//
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static String getLongestString(final String[] ss) {
+		//
+		return Util.orElse(max(testAndApply(Objects::nonNull, ss, Arrays::stream, null),
+				(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null);
+		//
+	}
+
+	private static void exportHtml(final ObjectMap objectMap, final String templateFile,
+			final Map<Object, Object> parameters) throws IOException, TemplateException {
+		//
+		final Version version = getIfNull(ObjectMap.getObject(objectMap, Version.class),
+				freemarker.template.Configuration::getVersion);
+		//
+		final freemarker.template.Configuration configuration = getIfNull(
+				ObjectMap.getObject(objectMap, freemarker.template.Configuration.class),
+				() -> new freemarker.template.Configuration(version));
+		//
+		testAndAccept(x -> getTemplateLoader(configuration) == null, configuration,
+				x -> ConfigurationUtil.setTemplateLoader(x, new ClassTemplateLoader(VoiceManager.class, "/")));
+		//
+		final Map<String, Object> map = new LinkedHashMap<>(
+				Collections.singletonMap("statics", getIfNull(ObjectMap.getObject(objectMap, TemplateHashModel.class),
+						() -> new BeansWrapper(version).getStaticModels())));
+		//
+		final Collection<Entry<Object, Object>> entrySet = Util.entrySet(parameters);
+		//
+		if (Util.iterator(entrySet) != null) {
+			//
+			for (final Entry<?, ?> parameter : entrySet) {
+				//
+				if (parameter == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				Util.put(map, Util.toString(Util.getKey(parameter)), Util.getValue(parameter));
+				//
+			} // for
+				//
+		} // if
+			//
+		TemplateUtil
+				.process(
+						testAndApply(Objects::nonNull, templateFile,
+								a -> ConfigurationUtil.getTemplate(configuration, a), null),
+						map, ObjectMap.getObject(objectMap, Writer.class));
+		//
+	}
+
+	private static StringBuilder append(final StringBuilder instance, final String string) {
+		return instance != null ? instance.append(string) : null;
+	}
+
+	private static StringBuilder append(final StringBuilder instance, final char c) {
+		return instance != null ? instance.append(c) : null;
+	}
+
+	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, final T t,
+			final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
+		if (test(instance, t, u)) {
+			accept(consumer, t, u);
+		} // if
+	}
+
+	private static <T, U, E extends Throwable> void accept(final FailableBiConsumer<T, U, E> instance, final T t,
+			final U u) throws E {
+		if (instance != null) {
+			instance.accept(t, u);
+		}
+	}
+
+	private static void delete(final File instance) throws IOException {
+		//
+		testAndAccept(Objects::nonNull, testAndApply(Objects::nonNull, toURI(instance), Path::of, null), Files::delete);
+		//
+	}
+
+	private static TemplateLoader getTemplateLoader(final freemarker.template.Configuration instance) {
+		return instance != null ? instance.getTemplateLoader() : null;
+	}
+
+	private static void encrypt(final File file, final EncryptionMode encryptionMode, final String password)
+			throws IOException, InvalidFormatException, GeneralSecurityException {
+		//
+		try (final InputStream is = testAndApply(x -> x != null && x.length > 0,
+				testAndApply(Objects::nonNull, file, FileUtils::readFileToByteArray, null), ByteArrayInputStream::new,
+				null); final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
+			//
+			if (wb instanceof XSSFWorkbook && StringUtils.isNotEmpty(password)) {
+				//
+				try (final POIFSFileSystem fs = new POIFSFileSystem()) {
+					//
+					final Encryptor encryptor = new EncryptionInfo(
+							ObjectUtils.defaultIfNull(encryptionMode, EncryptionMode.agile)).getEncryptor();
+					//
+					if (encryptor != null) {
+						//
+						encryptor.confirmPassword(password);
+						//
+					} // if
+						//
+					try (final OPCPackage opc = OPCPackage.open(file);
+							final OutputStream os = encryptor != null ? encryptor.getDataStream(fs) : null) {
+						//
+						opc.save(os);
+						//
+					} // try
+						//
+					try (final FileOutputStream fos = new FileOutputStream(file)) {
+						//
+						fs.writeFilesystem(fos);
+						//
+					} // try
+						//
+				} // try
+					//
+			} else if (wb instanceof HSSFWorkbook && StringUtils.isNotEmpty(password)) {
+				//
+				Biff8EncryptionKey.setCurrentUserPassword(password);
+				//
+				try (final POIFSFileSystem fs = new POIFSFileSystem(file, true);
+						final Workbook wb2 = new HSSFWorkbook(fs.getRoot(), true);
+						final OutputStream os = new FileOutputStream(file)) {
+					//
+					WorkbookUtil.write(wb2, os);
+					//
+				} finally {
+					//
+					Biff8EncryptionKey.setCurrentUserPassword(null);
+					//
+				} // try
+					//
+			} // if
+				//
+		} // try
+			//
+	}
+
+	private static Integer getNumberOfSheets(final Workbook instance) {
+		return instance != null ? Integer.valueOf(instance.getNumberOfSheets()) : null;
+	}
+
+	private static Workbook createWorkbook(final List<Voice> voices, final BooleanMap booleanMap,
+			final FailableSupplier<Workbook, RuntimeException> supplier) throws IllegalAccessException {
+		//
+		Workbook workbook = null;
+		//
+		setSheet(workbook = getIfNull(workbook, supplier), WorkbookUtil.createSheet(workbook), voices);
+		//
+		if (BooleanMap.getBoolean(booleanMap, "exportListSheet")) {
+			//
+			final Multimap<String, Voice> multimap = getVoiceMultimapByListName(voices);
+			//
+			final Set<String> keySet = MultimapUtil.keySet(multimap);
+			//
+			if (Util.iterator(keySet) != null) {
+				//
+				for (final String key : keySet) {
+					//
+					setSheet(workbook, WorkbookUtil.createSheet(workbook, key), MultimapUtil.get(multimap, key));
+					//
+				} // for
+					//
+			} // if
+				//
+		} // if
+			//
+		if (BooleanMap.getBoolean(booleanMap, "exportJlptSheet")) {
+			//
+			createJlptSheet(workbook, voices);
+			//
+		} // if
+			//
+		return workbook;
+		//
+	}
+
+	private static void createJlptSheet(final Workbook workbook, final Iterable<Voice> voices)
+			throws IllegalAccessException {
+		//
+		final Multimap<String, Voice> multimap = getVoiceMultimapByJlpt(voices);
+		//
+		final Set<String> keySet = MultimapUtil.keySet(multimap);
+		//
+		if (Util.iterator(keySet) != null) {
+			//
+			for (final String key : keySet) {
+				//
+				if (key == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				setSheet(workbook, StringUtils.length(key) > 0 ? WorkbookUtil.createSheet(workbook, key)
+						: WorkbookUtil.createSheet(workbook), MultimapUtil.get(multimap, key));
+				//
+			} // for
+				//
+		} // if
+			//
+	}
+
+	private static Multimap<String, Voice> getVoiceMultimapByJlpt(final Iterable<Voice> voices) {
+		//
+		Multimap<String, Voice> multimap = null;
+		//
+		if (Util.iterator(voices) != null) {
+			//
+			for (final Voice v : voices) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create),
+						getJlptLevel(v), v);
+				//
+			} // for
+				//
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static String getJlptLevel(final Voice instance) {
+		return instance != null ? instance.getJlptLevel() : null;
+	}
+
+	private static void setSheet(final Workbook workbook, final Sheet sheet, final Iterable<Voice> voices)
+			throws IllegalAccessException {
+		//
+		ObjectMap objectMap = null;
+		//
+		if (Util.iterator(voices) != null) {
+			//
+			Field[] fs = null;
+			//
+			final Class<?> spreadsheetColumnClass = Util.forName("domain.Voice$SpreadsheetColumn");
+			//
+			String[] fieldOrder = getFieldOrder();
+			//
+			for (final Voice voice : voices) {
+				//
+				if (voice == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+					// Filter out the "java.lang.reflect.Field" instance(s) which is/are annotated
+					// by "domain.Voice$Visibility" and its "values" method return "false"
+					//
+				testAndAccept(Objects::nonNull,
+						fs = getIfNull(fs, () -> toArray(getVisibileVoiceFields(), new Field[] {})), a ->
+						//
+						Arrays.sort(a, (x, y) -> Integer.compare(ArrayUtils.indexOf(fieldOrder, Util.getName(x)),
+								ArrayUtils.indexOf(fieldOrder, Util.getName(y))))
+				//
+				);
+				//
+				// header
+				//
+				setSheetHeaderRow(sheet, fs, spreadsheetColumnClass);
+				//
+				// content
+				//
+				if (objectMap == null) {
+					//
+					ObjectMap.setObject(
+							objectMap = getIfNull(objectMap, () -> Reflection.newProxy(ObjectMap.class, new IH())),
+							Sheet.class, sheet);
+					//
+					ObjectMap.setObject(objectMap, Field[].class, fs);
+					//
+					ObjectMap.setObject(objectMap, Workbook.class, workbook);
+					//
+				} // if
+					//
+				ObjectMap.setObject(objectMap, Voice.class, voice);
+				//
+				setContent(objectMap);
+				//
+			} // for
+				//
+		} // if
+			//
+		final Row row = ObjectMap.getObject(objectMap, Row.class);
+		//
+		if (sheet != null && row != null) {
+			//
+			final IValue0<?> writer = getWriter(sheet);
+			//
+			if (writer != null && IValue0Util.getValue0(writer) == null) {
+				//
+				return;
+				//
+			} // if
+				//
+			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
+					row.getFirstCellNum(), row.getLastCellNum() - 1));
+			//
+		} // if
+			//
+	}
+
+	private static void setSheetHeaderRow(final Sheet sheet, final Field[] fs, final Class<?> spreadsheetColumnClass) {
+		//
+		if (sheet != null && sheet.getLastRowNum() < 0) {
+			//
+			final Row row = SheetUtil.createRow(sheet, 0);
+			//
+			for (int j = 0; fs != null && j < fs.length; j++) {
+				//
+				CellUtil.setCellValue(RowUtil.createCell(row, j), getColumnName(spreadsheetColumnClass, fs[j]));
+				//
+			} // for
+				//
+		} // if
+			//
+	}
+
+	private static String getColumnName(final Class<?> spreadsheetColumnClass, final Field f) {
+		//
+		final String name = Util.getName(f);
+		//
+		final List<Annotation> annotations = Util
+				.toList(Util.filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
+						a -> Objects.equals(annotationType(a), spreadsheetColumnClass)));
+		//
+		if (annotations != null) {
+			//
+			int size = CollectionUtils.size(annotations);
+			//
+			final Annotation annotation = size == 1 ? get(annotations, 0) : null;
+			//
+			if (size == 1) {
+				//
+				final List<Method> ms = Util.toList(
+						Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(annotation)),
+								Arrays::stream, null), m -> Objects.equals(Util.getName(m), VALUE)));
+				//
+				final Method m = (size = CollectionUtils.size(ms)) == 1 ? get(ms, 0) : null;
+				//
+				if (m != null) {
+					//
+					return StringUtils.defaultIfBlank(Util.toString(Narcissus.invokeMethod(annotation, m)), name);
+					//
+				} else if (size > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} else if (size > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+		} // if
+			//
+		return name;
+		//
+	}
+
+	private static void setContent(final ObjectMap objectMap) throws IllegalAccessException {
+		//
+		final Sheet sheet = ObjectMap.getObject(objectMap, Sheet.class);
+		//
+		final Row row = sheet != null ? SheetUtil.createRow(sheet, sheet.getLastRowNum() + 1) : null;
+		//
+		ObjectMap.setObject(objectMap, Row.class, row);
+		//
+		if (row == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final Field[] fs = ObjectMap.getObject(objectMap, Field[].class);
+		//
+		Field f = null;
+		//
+		final Class<?> dateFormatClass = Util.forName("domain.Voice$DateFormat");
+		//
+		final Class<?> dataFormatClass = Util.forName("domain.Voice$DataFormat");
+		//
+		for (int j = 0; fs != null && j < fs.length; j++) {
+			//
+			if ((f = fs[j]) == null) {
+				//
+				continue;
+			} // if
+				//
+			setAccessible(f, true);
+			//
+			ObjectMap.setObject(objectMap, Field.class, f);
+			//
+			ObjectMap.setObject(objectMap, Cell.class, RowUtil.createCell(row, j));
+			//
+			setSheetCellValue(objectMap, get(f, ObjectMap.getObject(objectMap, Voice.class)), dataFormatClass,
+					dateFormatClass);
+			//
+		} // for
+			//
+	}
+
+	private static void setSheetCellValue(final ObjectMap objectMap, final Object value, final Class<?> dataFormatClass,
+			final Class<?> dateFormatClass) {
+		//
+		final Field field = ObjectMap.getObject(objectMap, Field.class);
+		//
+		final Cell cell = ObjectMap.getObject(objectMap, Cell.class);
+		//
+		Method m = null;
+		//
+		Annotation a = null;
+		//
+		if (value instanceof Number number) {
+			//
+			CellStyle cellStyle = null;
+			//
+			if ((m = Util
+					.orElse(findFirst(
+							Util.filter(
+									testAndApply(Objects::nonNull,
+											Util.getDeclaredMethods(annotationType(a = Util.orElse(
+													findFirst(Util.filter(testAndApply(Objects::nonNull,
+															getDeclaredAnnotations(field), Arrays::stream, null),
+															x -> Objects.equals(annotationType(x), dataFormatClass))),
+													null))),
+											Arrays::stream, null),
+									x -> Objects.equals(Util.getName(x), VALUE))),
+							null)) != null
+					&& (cellStyle = WorkbookUtil
+							.createCellStyle(ObjectMap.getObject(objectMap, Workbook.class))) != null) {
+				//
+				final short dataFormatIndex = HSSFDataFormat
+						.getBuiltinFormat(Util.toString(Narcissus.invokeMethod(a, m)));
+				//
+				if (dataFormatIndex >= 0) {
+					//
+					cellStyle.setDataFormat(dataFormatIndex);
+					//
+					CellUtil.setCellStyle(cell, cellStyle);
+					//
+				} // if
+					//
+			} // if
+				//
+			cell.setCellValue(doubleValue(number, 0));
+			//
+		} else if (value instanceof Date) {
+			//
+			if ((m = Util
+					.orElse(findFirst(
+							Util.filter(
+									testAndApply(Objects::nonNull,
+											Util.getDeclaredMethods(annotationType(a = Util.orElse(
+													findFirst(Util.filter(testAndApply(Objects::nonNull,
+															getDeclaredAnnotations(field), Arrays::stream, null),
+															x -> Objects.equals(annotationType(x), dateFormatClass))),
+													null))),
+											Arrays::stream, null),
+									x -> Objects.equals(Util.getName(x), VALUE))),
+							null)) != null) {
+				//
+				CellUtil.setCellValue(cell,
+						new SimpleDateFormat(Util.toString(Narcissus.invokeMethod(a, m))).format(value));
+				//
+			} else {
+				//
+				CellUtil.setCellValue(cell, Util.toString(value));
+				//
+			} // if
+				//
+		} else {
+			//
+			CellUtil.setCellValue(cell, Util.toString(value));
+			//
+		} // if
+			//
+	}
+
+	private static double doubleValue(final Number instance, final double defaultValue) {
+		return instance != null ? instance.doubleValue() : defaultValue;
+	}
+
+	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+		return field != null ? field.get(instance) : null;
+	}
+
+	private static void setAccessible(final AccessibleObject instance, final boolean flag) {
+		if (instance != null) {
+			instance.setAccessible(flag);
+		}
+	}
+
+	private static IValue0<Object> getWriter(final Object instance) {
+		//
+		final List<Field> fs = Util.toList(Util.filter(testAndApply(Objects::nonNull,
+				testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFields, null), Arrays::stream,
+				null), f -> Objects.equals(Util.getName(f), "_writer")));
+		//
+		final Field f = IterableUtils.size(fs) == 1 ? get(fs, 0) : null;
+		//
+		if (f != null) {
+			//
+			return Unit.with(Narcissus.getField(instance, f));
+			//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static List<Field> getVisibileVoiceFields() {
+		//
+		return Util.toList(FailableStreamUtil.stream(new FailableStream<>(
+				testAndApply(x -> x != null, FieldUtils.getAllFields(Voice.class), Arrays::stream, null)).filter(f -> {
+					//
+					final Annotation[] as = getDeclaredAnnotations(f);
+					//
+					Annotation a = null;
+					//
+					for (int i = 0; as != null && i < as.length; i++) {
+						//
+						if ((a = as[i]) == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						if (Objects.equals("domain.Voice$Visibility", Util.getName(annotationType(a)))) {
+							//
+							final Boolean visible = Util.cast(Boolean.class, MethodUtils.invokeMethod(a, VALUE));
+							//
+							if (visible != null) {
+								//
+								return visible.booleanValue();
+								//
+							} // if
+								//
+						} // if
+							//
+					} // for
+						//
+					return true;
+					//
+				} //
+		)));
+		//
+	}
+
+	private static Class<? extends Annotation> annotationType(final Annotation instance) {
+		return instance != null ? instance.annotationType() : null;
+	}
+
+	private static String[] getFieldOrder() {
+		//
+		final Annotation a = Util.orElse(findFirst(
+				Util.filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(Voice.class), Arrays::stream, null),
+						z -> Objects.equals(annotationType(z), Util.forName("domain.FieldOrder")))),
+				null);
+		//
+		final Method method = Util
+				.orElse(findFirst(Util.filter(Arrays.stream(Util.getDeclaredMethods(annotationType(a))),
+						z -> Objects.equals(Util.getName(z), VALUE))), null);
+		//
+		String[] orders = null;
+		//
+		final boolean headless = GraphicsEnvironment.isHeadless();
+		//
+		try {
+			//
+			orders = Util.cast(String[].class, Narcissus.invokeMethod(a, method));
+			//
+		} catch (final Exception e) {
+			//
+			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(e), e));
+			//
+		} // try
+			//
+		final List<String> fieldNames = Util
+				.toList(Util.map(Arrays.stream(FieldUtils.getAllFields(Voice.class)), Util::getName));
+		//
+		String fieldName = null;
+		//
+		for (int i = 0; i < IterableUtils.size(fieldNames); i++) {
+			//
+			if (!ArrayUtils.contains(orders, fieldName = get(fieldNames, i))) {
+				//
+				orders = ArrayUtils.add(orders, fieldName);
+				//
+			} // if
+				//
+		} // for
+			//
+		return orders;
+		//
+	}
+
+	private static Annotation[] getDeclaredAnnotations(final AnnotatedElement instance) {
+		return instance != null ? instance.getDeclaredAnnotations() : null;
+	}
+
+	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions,
+			final ObjectMap objectMap) {
+		//
+		EvaluationContext evaluationContext = null;
+		//
+		ExpressionParser expressionParser = null;
+		//
+		ExecutorService es = null;
+		//
+		ExportTask et = null;
+		//
+		NumberFormat percentNumberFormat = null;
+		//
+		final BooleanMap booleanMap = ObjectMap.getObject(objectMap, BooleanMap.class);
+		//
+		final VoiceManagerExportPanel voiceManagerExportPanel = ObjectMap.getObject(objectMap,
+				VoiceManagerExportPanel.class);
+		//
+		final StringMap stringMap = ObjectMap.getObject(objectMap, StringMap.class);
+		//
+		try {
+			//
+			int size = IterableUtils.size(voices);
+			//
+			Integer numberOfOrdinalPositionDigit = Integer.valueOf(StringUtils.length(Util.toString(Util.orElse(
+					max(Util.filter(Util.map(Util.stream(voices), x -> getOrdinalPosition(x)), Objects::nonNull),
+							ObjectUtils::compare),
+					null))));
+			//
+			String ordinalPositionFileNamePrefix = null;
+			//
+			Table<String, String, Voice> voiceFileNames = null;
+			//
+			ObjectMapper objectMapper = null;
+			//
+			final boolean jlptAsFolder = BooleanMap.getBoolean(booleanMap, "jlptAsFolder");
+			//
+			final AtomicInteger denominator = new AtomicInteger(2);
+			//
+			testAndRun(jlptAsFolder, () -> incrementAndGet(denominator));
+			//
+			final Fraction pharse = Fraction.getFraction(0, intValue(denominator, 2));
+			//
+			for (int i = 0; i < size; i++) {
+				//
+				(et = new ExportTask()).voiceManagerExportPanel = voiceManagerExportPanel;
+				//
+				et.counter = Integer.valueOf(i + 1);
+				//
+				et.pharse = pharse;
+				//
+				et.count = size;
+				//
+				et.percentNumberFormat = getIfNull(percentNumberFormat, () -> new DecimalFormat("#%"));
+				//
+				et.evaluationContext = evaluationContext = getIfNull(evaluationContext, StandardEvaluationContext::new);
+				//
+				et.expressionParser = expressionParser = getIfNull(expressionParser, SpelExpressionParser::new);
+				//
+				et.outputFolderFileNameExpressions = outputFolderFileNameExpressions;
+				//
+				et.voice = get(voices, i);
+				//
+				et.ordinalPositionDigit = numberOfOrdinalPositionDigit;
+				//
+				et.ordinalPositionFileNamePrefix = ordinalPositionFileNamePrefix = getIfNull(
+						ordinalPositionFileNamePrefix,
+						() -> StringMap.getString(stringMap, "ordinalPositionFileNamePrefix")
+				//
+				);
+				//
+				if (booleanMap != null) {
+					//
+					et.overMp3Title = booleanMap.getBoolean(OVER_MP3_TITLE);
+					//
+					et.ordinalPositionAsFileNamePrefix = booleanMap.getBoolean(ORDINAL_POSITION_AS_FILE_NAME_PREFIX);
+					//
+					et.exportPresentation = booleanMap.getBoolean(EXPORT_PRESENTATION);
+					//
+					et.embedAudioInPresentation = booleanMap.getBoolean(EMBED_AUDIO_IN_PRESENTATION);
+					//
+					et.hideAudioImageInPresentation = booleanMap.getBoolean(HIDE_AUDIO_IMAGE_IN_PRESENTATION);
+					//
+				} // if
+					//
+				et.voiceFileNames = voiceFileNames = getIfNull(voiceFileNames, HashBasedTable::create);
+				//
+				ObjectMap.setObjectIfAbsent(objectMap, ObjectMapper.class, objectMapper = getIfNull(objectMapper,
+						() -> new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY)));
+				//
+				et.objectMapper = objectMapper;
+				//
+				et.exportPresentationTemplate = StringMap.getString(stringMap, "exportPresentationTemplate");
+				//
+				et.folderInPresentation = StringMap.getString(stringMap, FOLDER_IN_PRESENTATION);
+				//
+				et.password = StringMap.getString(stringMap, "exportPassword");
+				//
+				et.messageDigestAlgorithm = StringMap.getString(stringMap, MESSAGE_DIGEST_ALGORITHM);
+				//
+				et.presentationSlideDuration = ObjectMap.getObject(objectMap, Duration.class);
+				//
+				submit(es = getIfNull(es, () -> Executors.newFixedThreadPool(1)), et);
+				//
+			} // for
+				//
+			final Multimap<String, Voice> multimap = createMultimapByListNames(voices);
+			//
+			Collection<Entry<String, Voice>> entries = MultimapUtil.entries(multimap);
+			//
+			if (Util.iterator(entries) != null) {
+				//
+				int coutner = 0;
+				//
+				size = MultimapUtil.size(multimap);
+				//
+				numberOfOrdinalPositionDigit = Integer
+						.valueOf(
+								StringUtils
+										.length(Util
+												.toString(
+														Util.orElse(
+																max(Util.filter(
+																		Util.map(
+																				Util.stream(
+																						MultimapUtil.values(multimap)),
+																				x -> getOrdinalPosition(x)),
+																		Objects::nonNull), ObjectUtils::compare),
+																null))));
+				//
+				final AtomicInteger numerator = new AtomicInteger(1);
+				//
+				testAndRun(jlptAsFolder, () -> incrementAndGet(numerator));
+				//
+				ObjectMap.setObjectIfAbsent(objectMap, Fraction.class, pharse);
+				//
+				for (final Entry<String, Voice> en : entries) {
+					//
+					if (en == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					ObjectMap.setObjectIfAbsent(objectMap, NumberFormat.class, percentNumberFormat = ObjectUtils
+							.getIfNull(percentNumberFormat, () -> new DecimalFormat("#%")));
+					//
+					ObjectMap.setObjectIfAbsent(objectMap, EvaluationContext.class, evaluationContext = ObjectUtils
+							.getIfNull(evaluationContext, StandardEvaluationContext::new));
+					//
+					ObjectMap.setObjectIfAbsent(objectMap, ExpressionParser.class,
+							expressionParser = getIfNull(expressionParser, SpelExpressionParser::new));
+					//
+					ObjectMap.setObject(objectMap, Voice.class, Util.getValue(en));
+					//
+					submit(es = getIfNull(es, () -> Executors.newFixedThreadPool(1)),
+							createExportTask(objectMap, size, Integer.valueOf(++coutner), numberOfOrdinalPositionDigit,
+									Collections.singletonMap(Util.getKey(en),
+											"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)"),
+									voiceFileNames = getIfNull(voiceFileNames, HashBasedTable::create)));
+					//
+				} // for
+					//
+			} // if
+				//
+				// JLPT
+				//
+			testAndRun(jlptAsFolder, () -> exportJlpt(objectMap, voices));
+			//
+		} finally {
+			//
+			shutdown(es);
+			//
+		} // try
+			//
+	}
+
+	private static Multimap<String, Voice> createMultimapByListNames(final Iterable<Voice> voices) {
+		//
+		Multimap<String, Voice> multimap = null;
+		//
+		if (Util.iterator(voices) != null) {
+			//
+			Iterable<String> listNames = null;
+			//
+			for (final Voice voice : voices) {
+				//
+				if (Util.iterator(listNames = getListNames(voice)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				for (final String listName : listNames) {
+					//
+					if (StringUtils.isEmpty(listName)) {
+						//
+						continue;
+						//
+					} // if
+						//
+					MultimapUtil.put(multimap = getIfNull(multimap, LinkedListMultimap::create), listName, voice);
+					//
+				} // for
+					//
+			} // for
+				//
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static Iterable<String> getListNames(final Voice instance) {
+		return instance != null ? instance.getListNames() : null;
+	}
+
+	private static void submit(final ExecutorService instance, final Runnable task) {
+		if (instance != null) {
+			instance.submit(task);
+		}
+	}
+
+	private static void exportJlpt(final ObjectMap objectMap, final List<Voice> voices) {
+		//
+		Multimap<String, Voice> multimap = null;
+		//
+		Voice v = null;
+		//
+		String jlptLevel = null;
+		//
+		for (int i = 0; i < IterableUtils.size(voices); i++) {
+			//
+			if ((jlptLevel = getJlptLevel(v = get(voices, i))) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			MultimapUtil.put(multimap = getIfNull(multimap, LinkedListMultimap::create), jlptLevel, v);
+			//
+		} // for
+			//
+		String jlptFolderNamePrefix = null;
+		//
+		StringBuilder folder = null;
+		//
+		final Collection<Entry<String, Voice>> entries = MultimapUtil.entries(multimap);
+		//
+		if (entries == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		int coutner = 0;
+		//
+		final int size = MultimapUtil.size(multimap);
+		//
+		final int numberOfOrdinalPositionDigit = StringUtils
+				.length(Util
+						.toString(
+								Util.orElse(
+										max(Util.filter(Util.map(Util.stream(MultimapUtil.values(multimap)),
+												x -> getOrdinalPosition(x)), Objects::nonNull), ObjectUtils::compare),
+										null)));
+		//
+		EvaluationContext evaluationContext = testAndApply(c -> ObjectMap.containsObject(objectMap, c),
+				EvaluationContext.class, c -> ObjectMap.getObject(objectMap, c), null);
+		//
+		ExpressionParser expressionParser = testAndApply(c -> ObjectMap.containsObject(objectMap, c),
+				ExpressionParser.class, c -> ObjectMap.getObject(objectMap, c), null);
+		//
+		ExecutorService es = testAndApply(c -> ObjectMap.containsObject(objectMap, c), ExecutorService.class,
+				c -> ObjectMap.getObject(objectMap, c), null);
+		//
+		final StringMap stringMap = testAndApply(c -> ObjectMap.containsObject(objectMap, c), StringMap.class,
+				c -> ObjectMap.getObject(objectMap, c), null);
+		//
+		Table<String, String, Voice> voiceFileNames = null;
+		//
+		for (final Entry<String, Voice> en : entries) {
+			//
+			if (en == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (!ObjectMap.containsObject(objectMap, EvaluationContext.class)) {
+				//
+				ObjectMap.setObject(objectMap, EvaluationContext.class,
+						evaluationContext = getIfNull(evaluationContext, StandardEvaluationContext::new));
+				//
+			} // if
+				//
+			if (!ObjectMap.containsObject(objectMap, ExpressionParser.class)) {
+				//
+				ObjectMap.setObject(objectMap, ExpressionParser.class,
+						expressionParser = getIfNull(expressionParser, SpelExpressionParser::new));
+				//
+			} // if
+				//
+				// java.time.Duration
+				//
+			testAndAccept((a, b) -> !ObjectMap.containsObject(a, b), objectMap, Duration.class,
+					(a, b) -> ObjectMap.setObject(a, b, null));
+			//
+			ObjectMap.setObject(objectMap, Voice.class, Util.getValue(en));
+			//
+			clear(folder = getIfNull(folder, StringBuilder::new));
+			//
+			if (folder != null) {
+				//
+				append(append(folder, StringUtils.defaultIfBlank(jlptFolderNamePrefix = getIfNull(jlptFolderNamePrefix,
+						() -> StringMap.getString(stringMap, "jlptFolderNamePrefix")), "")), Util.getKey(en));
+				//
+			} // if
+				//
+			submit(es = getIfNull(es, () -> Executors.newFixedThreadPool(1)),
+					createExportTask(objectMap, size, Integer.valueOf(++coutner), numberOfOrdinalPositionDigit,
+							Collections.singletonMap(Util.toString(folder),
+									"(#voice.text+'('+#voice.romaji+').'+#voice.fileExtension)"),
+							voiceFileNames = getIfNull(voiceFileNames, HashBasedTable::create)));
+			//
+		} // for
+			//
+	}
+
+	private static class ExportTask implements Runnable {
+
+		private static String FILE_NAME_PREFIX_PADDING = Util.orElse(
+				min(Util.stream(IteratorUtils.toList(RgxGen.parse("\\d").iterateUnique())), StringUtils::compare),
+				null);
+
+		@Note("Count")
+		private Integer count;
+
+		@Note("Counter")
+		private Integer counter;
+
+		private Integer ordinalPositionDigit;
+
+		private Voice voice = null;
+
+		private Map<String, String> outputFolderFileNameExpressions = null;
+
+		private EvaluationContext evaluationContext = null;
+
+		private ExpressionParser expressionParser = null;
+
+		private NumberFormat percentNumberFormat = null;
+
+		private boolean overMp3Title = false;
+
+		@Note("Ordinal Position As File Name Prefix")
+		private boolean ordinalPositionAsFileNamePrefix = false;
+
+		@Note("Export Presentation")
+		private boolean exportPresentation = false;
+
+		@Note("Embed Audio In Presentation")
+		private boolean embedAudioInPresentation = false;
+
+		private boolean hideAudioImageInPresentation = false;
+
+		private VoiceManagerExportPanel voiceManagerExportPanel = null;
+
+		private Fraction pharse = null;
+
+		private String ordinalPositionFileNamePrefix = null;
+
+		@Note("Export Presentation Template")
+		private String exportPresentationTemplate = null;
+
+		@Note("Folder In Presentation")
+		private String folderInPresentation = null;
+
+		private Table<String, String, Voice> voiceFileNames = null;
+
+		private ObjectMapper objectMapper = null;
+
+		private String password = null;
+
+		private String messageDigestAlgorithm = null;
+
+		private Duration presentationSlideDuration = null;
+
+		@Override
+		public void run() {
+			//
+			try {
+				//
+				final String filePath = getFilePath(voice);
+				//
+				final Set<Entry<String, String>> entrySet = Util.entrySet(outputFolderFileNameExpressions);
+				//
+				if (Boolean.logicalOr(filePath == null, Util.iterator(entrySet) == null)) {
+					//
+					return;
+					//
+				} // if
+					//
+				final Voice v = clone(objectMapper, Voice.class, voice);
+				//
+				setStringFieldDefaultValue(v);
+				//
+				setVariable(evaluationContext, VOICE, ObjectUtils.defaultIfNull(v, voice));
+				//
+				// key
+				//
+				String key = null;
+				//
+				// value
+				//
+				String value = null;
+				//
+				String ordinalPositionString, voiceFolder = null;
+				//
+				StringBuilder fileName = null;
+				//
+				File fileSource = null;
+				//
+				File fileDestination;
+				//
+				File folder = null;
+				//
+				JProgressBar progressBar = null;
+				//
+				final String outputFolder = getOutputFolder(voiceManagerExportPanel);
+				//
+				for (final Entry<String, String> folderFileNamePattern : entrySet) {
+					//
+					if (folderFileNamePattern == null || (key = Util.getKey(folderFileNamePattern)) == null
+							|| StringUtils.isBlank(value = Util.getValue(folderFileNamePattern))
+							|| !(fileSource = testAndApply(Objects::nonNull,
+									voiceFolder = getIfNull(voiceFolder, () -> getVoiceFolder(voiceManagerExportPanel)),
+									x -> new File(x, filePath), x -> new File(filePath))).exists()) {
+						//
+						continue;
+						//
+					} // if
+						//
+						// fileName
+						//
+					clear(fileName = getIfNull(fileName, StringBuilder::new));
+					//
+					if (ordinalPositionAsFileNamePrefix && StringUtils
+							.isNotBlank(ordinalPositionString = Util.toString(getOrdinalPosition(voice)))) {
+						//
+						append(append(fileName,
+								ordinalPositionDigit != null
+										? StringUtils.leftPad(ordinalPositionString, ordinalPositionDigit.intValue(),
+												StringUtils.defaultString(FILE_NAME_PREFIX_PADDING))
+										: ordinalPositionString),
+								StringUtils.defaultIfBlank(ordinalPositionFileNamePrefix, ""));
+						//
+					} // if
+						//
+					append(fileName, Util.toString(getValue(expressionParser, evaluationContext, value)));
+					//
+					// org.apache.commons.io.FileUtils.copyFile(java.io.File,java.io.File)
+					//
+					final String k = key;
+					//
+					FileUtils.copyFile(fileSource,
+							fileDestination = new File(Util.toString(testAndApply(Objects::nonNull,
+									folder = getIfNull(folder,
+											() -> testAndApply(Objects::nonNull, outputFolder, File::new, null)),
+									x -> new File(x, k), x -> new File(k))), Util.toString(fileName)));
+					//
+					TableUtil.put(voiceFileNames, fileDestination.getParent(), Util.toString(fileName), voice);
+					//
+					// Set MP3 Title if "overMp3Title" is true
+					//
+					testAndAccept(x -> overMp3Title, fileDestination, ExportTask::setMp3Title);
+					//
+				} // for
+					//
+				testAndAccept((a, b) -> b != null,
+						progressBar = getIfNull(progressBar, () -> getProgressBarExport(voiceManagerExportPanel)),
+						counter, (a, b) -> setValue(a, intValue(b, 0)));
+				//
+				if (counter != null && count != null) {
+					//
+					setMaximum(progressBar, count.intValue());
+					//
+					final String string = String.format("%1$s/%2$s (%3$s)", counter, count,
+							format(percentNumberFormat, counter.intValue() * 1.0 / count.intValue()));
+					//
+					setToolTipText(progressBar, string);
+					//
+					setString(progressBar, string);
+					//
+					// increment "numerator" in "org.apache.commons.lang3.math.Fraction" class by 1
+					//
+					testAndAccept(x -> Boolean.logicalAnd(counter.intValue() == count.intValue(), x != null), pharse,
+							x -> FieldUtils.writeDeclaredField(x, "numerator", intValue(getNumerator(x), 0) + 1, true));
+					//
+				} // if
+					//
+				showPharse(voiceManagerExportPanel, pharse);
+				//
+				if (and(Objects.equals(getNumerator(pharse), getDenominator(pharse)), Objects.equals(counter, count),
+						exportPresentation)) {
+					//
+					try (final InputStream is = getResourceAsStream(VoiceManager.class, exportPresentationTemplate)) {
+						//
+						final IH ih = new IH();
+						//
+						// org.springframework.context.support.VoiceManager$BooleanMap
+						//
+						final BooleanMap booleanMap = Reflection.newProxy(BooleanMap.class, ih);
+						//
+						BooleanMap.setBoolean(booleanMap, EMBED_AUDIO_IN_PRESENTATION, embedAudioInPresentation);
+						//
+						BooleanMap.setBoolean(booleanMap, HIDE_AUDIO_IMAGE_IN_PRESENTATION,
+								hideAudioImageInPresentation);
+						//
+						// org.springframework.context.support.VoiceManager$StringMap
+						//
+						final StringMap stringMap = Reflection.newProxy(StringMap.class, ih);
+						//
+						StringMap.setString(stringMap, FOLDER_IN_PRESENTATION, folderInPresentation);
+						//
+						StringMap.setString(stringMap, MESSAGE_DIGEST_ALGORITHM, messageDigestAlgorithm);
+						//
+						StringMap.setString(stringMap, "password", password);
+						//
+						// org.springframework.context.support.VoiceManager$ObjectMap
+						//
+						final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, ih);
+						//
+						ObjectMap.setObject(objectMap, InputStream.class, is);
+						//
+						ObjectMap.setObject(objectMap, BooleanMap.class, booleanMap);
+						//
+						ObjectMap.setObject(objectMap, StringMap.class, stringMap);
+						//
+						ObjectMap.setObject(objectMap, Duration.class, presentationSlideDuration);
+						//
+						generateOdfPresentationDocuments(objectMap, voiceFileNames);
+						//
+					} // try
+						//
+				} // if
+					//
+			} catch (final Exception e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} // try
+				//
+		}
+
+		/*
+		 * Copy from the below URL
+		 * 
+		 * https://github.com/apache/commons-lang/blob/master/src/main/java/org/apache/
+		 * commons/lang3/ObjectUtils.java#L597
+		 */
+		private static <T, E extends Throwable> T getIfNull(final T object,
+				final FailableSupplier<T, E> defaultSupplier) throws E {
+			return object != null ? object : get(defaultSupplier);
+		}
+
+		private static <T, E extends Throwable> T get(final FailableSupplier<T, E> instance) throws E {
+			return instance != null ? instance.get() : null;
+		}
+
+		private static void showPharse(final VoiceManagerExportPanel voiceManager, final Fraction pharse) {
+			//
+			if (voiceManager != null) {
+				//
+				Util.setText(voiceManager.tfPhraseCounter, Util.toString(getNumerator(pharse)));
+				//
+				Util.setText(voiceManager.tfPhraseTotal, Util.toString(getDenominator(pharse)));
+				//
+			} //
+				//
+		}
+
+		private static void setString(final JProgressBar instance, final String string) {
+			if (instance != null) {
+				instance.setString(string);
+			}
+		}
+
+		private static String format(final NumberFormat instance, final double number) {
+			return instance != null ? instance.format(number) : null;
+		}
+
+		private static void setMaximum(final JProgressBar instance, final int n) {
+			if (instance != null) {
+				instance.setMaximum(n);
+			}
+		}
+
+		private static InputStream getResourceAsStream(final Class<?> instance, final String name) {
+			return instance != null && name != null ? instance.getResourceAsStream(name) : null;
+		}
+
+		private static void setValue(final JProgressBar instance, final int n) {
+			if (instance != null) {
+				instance.setValue(n);
+			}
+		}
+
+		private static String getFilePath(final Voice instance) {
+			return instance != null ? instance.getFilePath() : null;
+		}
+
+		private static boolean and(final boolean a, final boolean b, final boolean... bs) {
+			//
+			boolean result = a && b;
+			//
+			if (!result) {
+				//
+				return false;
+				//
+			} // if
+				//
+			for (int i = 0; bs != null && i < bs.length; i++) {
+				//
+				if (!(result &= bs[i])) {
+					//
+					return false;
+					//
+				} // if
+					//
+			} // for
+				//
+			return result;
+			//
+		}
+
+		private static Integer getNumerator(final Fraction instnace) {
+			return instnace != null ? instnace.getNumerator() : null;
+		}
+
+		private static Integer getDenominator(final Fraction instnace) {
+			return instnace != null ? instnace.getDenominator() : null;
+		}
+
+		private static Object getValue(final ExpressionParser spelExpressionParser,
+				final EvaluationContext evaluationContext, final String expression) {
+			//
+			return getValue(parseExpression(spelExpressionParser, expression), evaluationContext);
+			//
+		}
+
+		private static Object getValue(final Expression instance, final EvaluationContext evaluationContext) {
+			return instance != null ? instance.getValue(evaluationContext) : null;
+		}
+
+		private static Expression parseExpression(final ExpressionParser instance, final String expressionString) {
+			return instance != null ? instance.parseExpression(expressionString) : null;
+		}
+
+		private static String getOutputFolder(final VoiceManagerExportPanel instance) {
+			return instance != null ? instance.outputFolder : null;
+		}
+
+		private static String getVoiceFolder(final VoiceManagerExportPanel instance) {
+			return instance != null ? instance.voiceFolder : null;
+		}
+
+		private static JProgressBar getProgressBarExport(final VoiceManagerExportPanel instance) {
+			return instance != null ? instance.progressBarExport : null;
+		}
+
+		private static void setStringFieldDefaultValue(final Object instance) {
+			//
+			final Field[] fs = Util.getDeclaredFields(Util.getClass(instance));
+			//
+			Field f = null;
+			//
+			for (int i = 0; fs != null && i < fs.length; i++) {
+				//
+				if ((f = fs[i]) == null || !Objects.equals(Util.getType(f), String.class)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				Narcissus.setField(instance, f,
+						StringUtils.defaultString(Util.toString(Narcissus.getField(instance, f))));
+				//
+			} // if
+				//
+		}
+
+		private static <T> T clone(final ObjectMapper objectMapper, final Class<T> clz, final T instance)
+				throws IOException {
+			//
+			return objectMapper != null && clz != null
+					? objectMapper.readValue(ObjectMapperUtil.writeValueAsBytes(objectMapper, instance), clz)
+					: null;
+			//
+		}
+
+		private static void setVariable(final EvaluationContext instance, final String name, final Object value) {
+			if (instance != null) {
+				instance.setVariable(name, value);
+			}
+		}
+
+		private static <T> Optional<T> min(final Stream<T> instance, final Comparator<? super T> comparator) {
+			//
+			return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || comparator != null)
+					? instance.min(comparator)
+					: null;
+			//
+		}
+
+		private static void setMp3Title(final File file)
+				throws IOException, BaseException, IllegalAccessException, InvocationTargetException {
+			//
+			final String fileExtension = getFileExtension(Util.cast(ContentInfo.class,
+					testAndApply(VoiceManagerExportPanel::isFile, file, new ContentInfoUtil()::findMatch, null)));
+			//
+			if (Objects.equals("mp3", fileExtension)) {
+				//
+				final File tempFile = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
+				//
+				deleteOnExit(tempFile);
+				//
+				FileUtils.copyFile(file, tempFile);
+				//
+				final Mp3File mp3File = new Mp3File(tempFile);
+				//
+				final ID3v1 id3v1 = ObjectUtils.defaultIfNull(Mp3FileUtil.getId3v2Tag(mp3File),
+						Mp3FileUtil.getId3v1Tag(mp3File));
+				//
+				final String titleOld = getTitle(id3v1);
+				//
+				String titleNew = titleOld;
+				//
+				if (StringUtils.isNotEmpty(titleNew)) {
+					//
+					final String fileName = getName(file);
+					//
+					if (StringUtils.isNotBlank(fileName) && StringUtils
+							.endsWith(titleNew = StringUtils.substringBeforeLast(fileName, fileExtension), ".")) {
+						//
+						titleNew = StringUtils.substringBeforeLast(titleNew, ".");
+						//
+					} // if
+						//
+					if (!Objects.equals(titleOld, titleNew)) {
+						//
+						id3v1.setTitle(titleNew);
+						//
+						save(mp3File, Util.getAbsolutePath(file));
+						//
+					} // if
+						//
+				} // if
+					//
+			} // if
+				//
+		}
+
+		private static void deleteOnExit(final File instance) {
+			if (instance != null) {
+				instance.deleteOnExit();
+			}
+		}
+
+		private static String getName(final File instance) {
+			return instance != null ? instance.getName() : null;
+		}
+
+		private static String randomAlphabetic(final int count) {
+			//
+			Method method = IValue0Util.getValue0(METHOD_RANDOM_ALPHABETIC);
+			//
+			try {
+				//
+				if (method == null) {
+					//
+					METHOD_RANDOM_ALPHABETIC = Unit
+							.with(method = RandomStringUtils.class.getDeclaredMethod("randomAlphabetic", Integer.TYPE));
+					//
+				} // if
+					//
+				return Util.toString(invoke(method, null, count));
+				//
+			} catch (final IllegalAccessException | NoSuchMethodException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} catch (final InvocationTargetException e) {
+				//
+				final Throwable targetException = e.getTargetException();
+				//
+				final Throwable throwable = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
+						targetException, ExceptionUtils.getRootCause(e));
+				//
+				throw ObjectUtils.getIfNull(toRuntimeException(throwable), RuntimeException::new);
+				//
+			} // try
+				//
+		}
+
+		private static String getFileExtension(final ContentInfo ci) {
+			//
+			final String message = getMessage(ci);
+			//
+			if (or(x -> matches(matcher(x, message)), PATTERN_CONTENT_INFO_MESSAGE_MP3_1,
+					PATTERN_CONTENT_INFO_MESSAGE_MP3_2, PATTERN_CONTENT_INFO_MESSAGE_MP3_3)) {
+				//
+				return "mp3";
+				//
+			} // if
+				//
+			final String name = ci != null ? ci.getName() : null;
+			//
+			if (Objects.equals(name, "wav") || Objects.equals(name, "flac")) {
+				//
+				return name;
+				//
+			} else if (Objects.equals(getMimeType(ci), "audio/x-hx-aac-adts")) {
+				//
+				return "aac";
+				//
+			} // if
+				//
+			return null;
+			//
+		}
+
+		private static <T> boolean or(final Predicate<T> predicate, final T a, final T b, final T... values) {
+			//
+			boolean result = Util.test(predicate, a) || Util.test(predicate, b);
+			//
+			if (result) {
+				//
+				return result;
+				//
+			} // if
+				//
+			for (int i = 0; values != null && i < values.length; i++) {
+				//
+				result |= Util.test(predicate, values[i]);
+				//
+			} // for
+				//
+			return result;
+			//
+		}
+
+		private static String getMimeType(final ContentInfo instance) {
+			return instance != null ? instance.getMimeType() : null;
+		}
+
+		private static String getTitle(final ID3v1 instance) {
+			return instance != null ? instance.getTitle() : null;
+		}
+
+		private static void save(final Mp3File instance, final String newFilename)
+				throws IOException, NotSupportedException {
+			//
+			if (instance == null) {
+				//
+				return;
+				//
+			} // if
+				//
+			try {
+				//
+				if (FieldUtils.readField(instance, "path", true) == null) {
+					//
+					return;
+					//
+				} // if
+					//
+			} catch (final IllegalAccessException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
+				//
+			instance.save(newFilename);
+			//
+		}
+
+		private static void generateOdfPresentationDocuments(final ObjectMap om,
+				final Table<String, String, Voice> table) throws Exception {
+			//
+			final Set<String> rowKeySet = rowKeySet(table);
+			//
+			if (rowKeySet == null) {
+				//
+				return;
+				//
+			} // if
+				//
+			final byte[] bs = testAndApply(Objects::nonNull, ObjectMap.getObject(om, InputStream.class),
+					IOUtils::toByteArray, null);
+			//
+			OdfPresentationDocument odfPd = null;
+			//
+			ObjectMap objectMap = null;
+			//
+			File file = null;
+			//
+			int counter = 0;
+			//
+			final int size = IterableUtils.size(rowKeySet);
+			//
+			Stopwatch stopwatch = null;
+			//
+			String elapsedString = null;
+			//
+			int maxElapsedStringLength = 0;
+			//
+			final StringMap stringMap = ObjectMap.getObject(om, StringMap.class);
+			//
+			for (final String rowKey : rowKeySet) {
+				//
+				if (objectMap == null) {
+					//
+					ObjectMap.setObject(objectMap = Reflection.newProxy(ObjectMap.class, new IH()), byte[].class, bs);
+					//
+					ObjectMap.setObject(objectMap, XPath.class, newXPath(XPathFactory.newDefaultInstance()));
+					//
+					ObjectMap.setObject(objectMap, Transformer.class, newTransformer(TransformerFactory.newInstance()));
+					//
+					ObjectMap.setObject(objectMap, BooleanMap.class, ObjectMap.getObject(om, BooleanMap.class));
+					//
+					ObjectMap.setObject(objectMap, Duration.class, ObjectMap.getObject(om, Duration.class));
+					//
+					ObjectMap.setObject(objectMap, StringMap.class, stringMap);
+					//
+				} // if
+					//
+				StringMap.setString(stringMap, "outputFolder", rowKey);
+				//
+				if ((odfPd = generateOdfPresentationDocument(objectMap, table.row(rowKey))) != null) {
+					//
+					final String[] fileExtensions = getFileExtensions(ContentType.OPENDOCUMENT_PRESENTATION);
+					//
+					start(reset(stopwatch = getIfNull(stopwatch, Stopwatch::createUnstarted)));
+					//
+					// Set "Password"
+					//
+					testAndAccept((a, b) -> StringUtils.isNotEmpty(b), odfPd.getPackage(),
+							StringMap.getString(stringMap, "password"), ExportTask::setPassword);
+					//
+					save(odfPd, file = new File(rowKey, String.join(".",
+							StringUtils.substringAfter(rowKey, File.separatorChar),
+							StringUtils.defaultIfBlank(
+									fileExtensions != null && fileExtensions.length == 1 ? fileExtensions[0] : null,
+									"odp"))));
+					//
+					info(LOG,
+							String.format("%1$s/%2$s,Elapsed=%3$s,File=%4$s",
+									StringUtils.leftPad(Integer.toString(++counter),
+											StringUtils.length(Integer.toString(size))),
+									size,
+									//
+									// elapsed
+									//
+									StringUtils.leftPad(elapsedString = Util.toString(StopwatchUtil.elapsed(stopwatch)),
+											maxElapsedStringLength),
+									//
+									// File
+									//
+									Util.getAbsolutePath(file)));
+					//
+					maxElapsedStringLength = Math.max(maxElapsedStringLength, StringUtils.length(elapsedString));
+					//
+				} // if
+					//
+			} // for
+				//
+		}
+
+		private static Stopwatch reset(final Stopwatch instance) {
+			return instance != null ? instance.reset() : instance;
+		}
+
+		private static Stopwatch start(final Stopwatch instance) {
+			//
+			if (instance == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+			try {
+				//
+				final Field ticker = Stopwatch.class.getDeclaredField("ticker");
+				//
+				setAccessible(ticker, true);
+				//
+				if (get(ticker, instance) == null) {
+					//
+					return instance;
+					//
+				} // if
+					//
+			} catch (final NoSuchFieldException | IllegalAccessException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
+				//
+			return instance.start();
+			//
+		}
+
+		private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+			return field != null ? field.get(instance) : null;
+		}
+
+		private static void save(final OdfPackageDocument instance, final File file) throws Exception {
+			//
+			if (instance == null) {
+				//
+				return;
+				//
+			} // if
+				//
+			try {
+				//
+				final Field mPackage = OdfPackageDocument.class.getDeclaredField("mPackage");
+				//
+				setAccessible(mPackage, true);
+				//
+				if (get(mPackage, instance) == null) {
+					//
+					return;
+					//
+				} // if
+					//
+			} catch (final NoSuchFieldException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
+				//
+			instance.save(file);
+			//
+		}
+
+		private static void setPassword(final OdfPackage instance, final String password) {
+			if (instance != null) {
+				instance.setPassword(password);
+			}
+		}
+
+		private static <R> Set<R> rowKeySet(final Table<R, ?, ?> instance) {
+			return instance != null ? instance.rowKeySet() : null;
+		}
+
+		private static void info(final Logger instance, final String message) {
+			if (instance != null) {
+				instance.info(message);
+			}
+		}
+
+		private static OdfPresentationDocument generateOdfPresentationDocument(final ObjectMap objectMap,
+				final Map<String, Voice> voices) throws Exception {
+			//
+			OdfPresentationDocument newOdfPresentationDocument = null;
+			//
+			try (final InputStream is = testAndApply(Objects::nonNull, ObjectMap.getObject(objectMap, byte[].class),
+					ByteArrayInputStream::new, null)) {
+				//
+				final Set<Entry<String, Voice>> entrySet = Util.entrySet(voices);
+				//
+				if (entrySet != null) {
+					//
+					final Document document = testAndApply(Objects::nonNull,
+							testAndApply(Objects::nonNull,
+									testAndApply(Objects::nonNull, is, x -> ZipUtil.unpackEntry(x, "content.xml"),
+											null),
+									ByteArrayInputStream::new, null),
+							x -> parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), x), null);
+					//
+					final XPath xp = ObjectMap.getObject(objectMap, XPath.class);
+					//
+					final NodeList pages = Util.cast(NodeList.class,
+							testAndApply(Objects::nonNull, document, x -> evaluate(xp,
+									"/*[local-name()='document-content']/*[local-name()='body']/*[local-name()='presentation']/*[local-name()='page']",
+									x, XPathConstants.NODESET), null));
+					//
+					final Node page = testAndApply(x -> getLength(x) == 1, pages, x -> item(x, 0), null);
+					//
+					final Node parentNode = getParentNode(page);
+					//
+					Node pageCloned = null;
+					//
+					Voice voice, temp = null;
+					//
+					final boolean embedAudioInPresentation = BooleanMap
+							.getBoolean(ObjectMap.getObject(objectMap, BooleanMap.class), EMBED_AUDIO_IN_PRESENTATION);
+					//
+					final boolean hideAudioImageInPresentation = BooleanMap.getBoolean(
+							ObjectMap.getObject(objectMap, BooleanMap.class), HIDE_AUDIO_IMAGE_IN_PRESENTATION);
+					//
+					final StringMap stringMap = ObjectMap.getObject(objectMap, StringMap.class);
+					//
+					final String folderInPresentation = StringMap.getString(stringMap, FOLDER_IN_PRESENTATION);
+					//
+					// Default Slide Duration
+					//
+					final Node style = Util.cast(Node.class, evaluate(xp,
+							"/*/*[local-name()='automatic-styles']/*[local-name()='style']/@*[local-name()='name']",
+							document, XPathConstants.NODE));
+					//
+					if (Objects.equals(getNodeValue(style), "dp1")) {
+						//
+						testAndAccept(Objects::nonNull, ObjectMap.getObject(objectMap, Duration.class),
+								x -> setNodeValue(Util.cast(Node.class, evaluate(xp,
+										"../*[local-name()='drawing-page-properties']/@*[local-name()='duration']",
+										style, XPathConstants.NODE)), Util.toString(x)));
+						//
+					} // if
+						//
+					for (final Entry<String, Voice> entry : entrySet) {
+						//
+						if (Boolean.logicalOr((voice = Util.getValue(entry)) == null,
+								(pageCloned = cloneNode(page, true)) == null)) {
+							//
+							continue;
+							//
+						} // if
+							//
+							// Set Slide Name
+							//
+						setNodeValue(getNamedItem(getAttributes(pageCloned), "draw:name"), getSlideName(voice));
+						//
+						// p
+						//
+						ObjectMap.setObject(objectMap, Node.class, pageCloned);
+						//
+						if (!ObjectMap.containsObject(objectMap, ObjectMapper.class)) {
+							//
+							ObjectMap.setObject(objectMap, ObjectMapper.class, new ObjectMapper());
+							//
+						} // if
+							//
+						if (!ObjectMap.containsObject(objectMap, Pattern.class)) {
+							//
+							ObjectMap.setObject(objectMap, Pattern.class, Pattern.compile("(\\w+:)?href"));
+							//
+						} // if
+							//
+						setStringFieldDefaultValue(
+								temp = clone(objectMap.getObject(ObjectMapper.class), Voice.class, voice));
+						//
+						ObjectMap.setObject(objectMap, Voice.class, ObjectUtils.defaultIfNull(temp, voice));
+						//
+						replaceText(objectMap, StringMap.getString(stringMap, MESSAGE_DIGEST_ALGORITHM));
+						//
+						// plugin
+						//
+						setPluginHref(objectMap, Util.getKey(entry), embedAudioInPresentation, folderInPresentation);
+						//
+						// Delete customShape with the name is "AudioCoverImage" if
+						// "hideAudioImageInPresentation" is true
+						//
+						testAndRun(hideAudioImageInPresentation,
+								() -> removeCustomShapeByName(objectMap, "AudioCoverImage"));
+						//
+						appendChild(parentNode, pageCloned);
+						//
+					} // for
+						//
+					removeChild(parentNode, page);
+					//
+					final StringWriter writer = new StringWriter();
+					//
+					transform(ObjectMap.getObject(objectMap, Transformer.class), new DOMSource(document),
+							new StreamResult(writer));
+					//
+					newOdfPresentationDocument = generateOdfPresentationDocument(Util.toString(writer),
+							StringMap.getString(stringMap, "outputFolder"), Util.keySet(voices),
+							embedAudioInPresentation, folderInPresentation);
+					//
+				} // if
+					//
+			} // try
+				//
+			return newOdfPresentationDocument;
+			//
+		}
+
+		private static Node getNamedItem(final NamedNodeMap instance, final String name) {
+			return instance != null ? instance.getNamedItem(name) : null;
+		}
+
+		private static NamedNodeMap getAttributes(final Node instance) {
+			return instance != null ? instance.getAttributes() : null;
+		}
+
+		private static Node item(final NodeList instance, final int index) {
+			return instance != null ? instance.item(index) : null;
+		}
+
+		private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+				final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+			return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+					: FailableFunctionUtil.apply(functionFalse, value);
+		}
+
+		private static Document parse(final DocumentBuilder instance, final InputStream is)
+				throws SAXException, IOException {
+			return instance != null ? instance.parse(is) : null;
+		}
+
+		private static DocumentBuilder newDocumentBuilder(final DocumentBuilderFactory instance)
+				throws ParserConfigurationException {
+			return instance != null ? instance.newDocumentBuilder() : null;
+		}
+
+		private static String getSlideName(final Voice voice) {
+			//
+			StringBuilder sb = null;
+			//
+			// text
+			//
+			final String text = getText(voice);
+			//
+			if (StringUtils.isNotBlank(text)) {
+				//
+				append(sb = ObjectUtils.getIfNull(sb, StringBuilder::new), text);
+				//
+			} // if
+				//
+				// hiragana and romaji
+				//
+			final String string = StringUtils
+					.trim(Util.collect(Util.filter(Util.stream(Arrays.asList(getHiragana(voice), getRomaji(voice))),
+							StringUtils::isNotBlank), Collectors.joining(" ")));
+			//
+			if (StringUtils.isNotBlank(string)) {
+				//
+				final int length = StringUtils.length(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
+				//
+				if (StringUtils.isNotBlank(sb)) {
+					//
+					append(sb, ' ');
+					//
+					append(sb, '(');
+					//
+				} // if
+					//
+				append(sb, string);
+				//
+				if (length > 0) {
+					//
+					append(sb, ')');
+					//
+				} // if
+					//
+			} // if
+				//
+			return Util.toString(sb);
+			//
+		}
+
+		private static String getText(final Voice instance) {
+			return instance != null ? instance.getText() : null;
+		}
+
+		private static String getRomaji(final Voice instance) {
+			return instance != null ? instance.getRomaji() : null;
+		}
+
+		private static String getHiragana(final Voice instance) {
+			return instance != null ? instance.getHiragana() : null;
+		}
+
+		private static void removeCustomShapeByName(final ObjectMap objectMap, final String name)
+				throws XPathExpressionException {
+			//
+			final StringBuilder sb = new StringBuilder("./*[local-name()='custom-shape']");
+			//
+			if (name != null) {
+				//
+				append(sb, "[@*[local-name()='name' and .='");
+				//
+				append(sb, name);
+				//
+				append(sb, "']]");
+				//
+			} // if
+				//
+			final NodeList customShapes = Util.cast(NodeList.class,
+					evaluate(ObjectMap.getObject(objectMap, XPath.class), Util.toString(sb),
+							ObjectMap.getObject(objectMap, Node.class), XPathConstants.NODESET));
+			//
+			Node customShape = null;
+			//
+			for (int i = 0; i < getLength(customShapes); i++) {
+				//
+				if ((customShape = item(customShapes, i)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				removeChild(getParentNode(customShape), customShape);
+				//
+			} // for
+				//
+		}
+
+		private static OdfPresentationDocument generateOdfPresentationDocument(final String string,
+				final String outputFolder, final Collection<String> voiceLKeySet,
+				final boolean embedAudioInPresentation, final String folderInPresentation) throws Exception {
+			//
+			final File file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
+			//
+			try (final OdfPresentationDocument newOdfPresentationDocument = OdfPresentationDocument
+					.newPresentationDocument()) {
+				//
+				save(newOdfPresentationDocument, file);
+				//
+				if (newOdfPresentationDocument != null) {
+					//
+					ZipUtil.replaceEntry(file, "content.xml", getBytes(string));
+					//
+					if (embedAudioInPresentation) {
+						//
+						ZipUtil.addEntries(file,
+								toArray(Util.map(Util.stream(voiceLKeySet),
+										x -> new FileSource(String.join("/", folderInPresentation, x),
+												new File(outputFolder, x))),
+										ZipEntrySource[]::new));
+						//
+					} // if
+						//
+					return OdfPresentationDocument.loadDocument(file);
+					//
+				} // if
+					//
+				return newOdfPresentationDocument;
+				//
+			} finally {
+				//
+				delete(file);
+				//
+			} // try
+				//
+		}
+
+		private static File createTempFile(final String prefix, final String suffix)
+				throws IllegalAccessException, InvocationTargetException {
+			//
+			final List<Method> ms = Util.toList(Util.filter(
+					testAndApply(Objects::nonNull, Util.getDeclaredMethods(File.class), Arrays::stream, null),
+					x -> Objects.equals(Util.getName(x), "createTempFile")
+							&& Arrays.equals(new Class<?>[] { String.class, String.class }, getParameterTypes(x))));
+			//
+			return Util.cast(File.class,
+					invoke(testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null), null,
+							prefix, suffix));
+			//
+		}
+
+		private static Class<?>[] getParameterTypes(final Executable instance) {
+			return instance != null ? instance.getParameterTypes() : null;
+		}
+
+		private static <T, A> A[] toArray(final Stream<T> instance, final IntFunction<A[]> generator) {
+			//
+			return instance != null && (generator != null || Proxy.isProxyClass(Util.getClass(instance)))
+					? instance.toArray(generator)
+					: null;
+			//
+		}
+
+		private static void replaceText(final ObjectMap objectMap, final String messageDigestAlgorithm)
+				throws XPathExpressionException, NoSuchAlgorithmException {
+			//
+			final NodeList ps = Util.cast(NodeList.class,
+					evaluate(ObjectMap.getObject(objectMap, XPath.class),
+							"./*[local-name()='frame']/*[local-name()='text-box']/*[local-name()='p']",
+							ObjectMap.getObject(objectMap, Node.class), XPathConstants.NODESET));
+			//
+			Map<String, Object> map = null;
+			//
+			ObjectMap.setObjectIfAbsent(objectMap, freemarker.template.Configuration.class,
+					new freemarker.template.Configuration(freemarker.template.Configuration.getVersion()));
+			//
+			ObjectMap.setObjectIfAbsent(objectMap, StringTemplateLoader.class, new StringTemplateLoader());
+			//
+			final freemarker.template.Configuration configuration = getIfNull(
+					ObjectMap.getObject(objectMap, freemarker.template.Configuration.class),
+					() -> new freemarker.template.Configuration(freemarker.template.Configuration.getVersion()));
+			//
+			final StringTemplateLoader stl = ObjectUtils
+					.getIfNull(ObjectMap.getObject(objectMap, StringTemplateLoader.class), StringTemplateLoader::new);
+			//
+			final boolean headless = GraphicsEnvironment.isHeadless();
+			//
+			ObjectMap om = null;
+			//
+			for (int i = 0; i < getLength(ps); i++) {
+				//
+				if (map == null) {
+					//
+					try {
+						//
+						map = describe(ObjectMap.getObject(objectMap, Voice.class));
+						//
+					} catch (final Throwable e) {
+						//
+						errorOrAssertOrShowException(headless, e);
+						//
+					} // try
+						//
+				} // if
+					//
+				if (om == null) {
+					//
+					ObjectMap.setObject(om = Reflection.newProxy(ObjectMap.class, new IH()),
+							freemarker.template.Configuration.class, configuration);
+					//
+					ObjectMap.setObject(om, StringTemplateLoader.class, stl);
+					//
+					if (!ObjectMap.containsObject(objectMap, MessageDigest.class)) {
+						//
+						ObjectMap.setObject(objectMap, MessageDigest.class,
+								MessageDigest.getInstance(Objects.toString(messageDigestAlgorithm, SHA_512)));
+						//
+					} // if
+						//
+					ObjectMap.setObject(om, MessageDigest.class, ObjectMap.getObject(objectMap, MessageDigest.class));
+					//
+				} // if
+					//
+				ObjectMap.setObject(om, Node.class, ps.item(i));
+				//
+				replaceTextContent(om, map);
+				//
+			} // for
+				//
+		}
+
+		private static void replaceTextContent(final ObjectMap objectMap, final Map<?, ?> map) {
+			//
+			final freemarker.template.Configuration configuration = ObjectMap.getObject(objectMap,
+					freemarker.template.Configuration.class);
+			//
+			final StringTemplateLoader stl = ObjectMap.getObject(objectMap, StringTemplateLoader.class);
+			//
+			testAndAccept(x -> getTemplateLoader(configuration) == null, configuration,
+					x -> ConfigurationUtil.setTemplateLoader(x, stl));
+			//
+			final Node node = ObjectMap.getObject(objectMap, Node.class);
+			//
+			final String textContent = getTextContent(node);
+			//
+			// template key
+			//
+			final String key = Collections.min(Arrays.asList(
+					//
+					textContent,
+					testAndApply(Objects::nonNull,
+							Util.digest(ObjectMap.getObject(objectMap, MessageDigest.class), getBytes(textContent)),
+							Hex::encodeHexString, null)
+			//
+			), (a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b)));
+			//
+			StringTemplateLoaderUtil.putTemplate(stl, key, textContent);
+			//
+			try (final Writer writer = new StringWriter()) {
+				//
+				TemplateUtil.process(ConfigurationUtil.getTemplate(configuration, key), map, writer);
+				//
+				setTextContent(node, Util.toString(writer));
+				//
+			} catch (final IOException | TemplateException e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} // try
+				//
+		}
+
+		private static String getTextContent(final Node instance) {
+			return instance != null ? instance.getTextContent() : null;
+		}
+
+		private static byte[] getBytes(final String instance) {
+			return instance != null ? instance.getBytes() : null;
+		}
+
+		private static void setTextContent(final Node instance, final String textContent) throws DOMException {
+			if (instance != null) {
+				instance.setTextContent(textContent);
+			}
+		}
+
+		private static Map<String, Object> describe(final Object data) throws Throwable {
+			//
+			try {
+				//
+				return testAndApply(Objects::nonNull, data, PropertyUtils::describe, null);
+				//
+			} catch (final InvocationTargetException e) {
+				//
+				final Throwable targetException = e.getTargetException();
+				//
+				throw ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
+						ExceptionUtils.getRootCause(e), e);
+				//
+			} // try
+				//
+		}
+
+		private static void setPluginHref(final ObjectMap objectMap, final String key,
+				final boolean embedAudioInPresentation, final String folder) throws XPathExpressionException {
+			//
+			final NodeList plugins = Util.cast(NodeList.class,
+					evaluate(ObjectMap.getObject(objectMap, XPath.class),
+							"./*[local-name()='frame']/*[local-name()='plugin']",
+							ObjectMap.getObject(objectMap, Node.class), XPathConstants.NODESET));
+			//
+			Node attribute = null;
+			//
+			NamedNodeMap attributes = null;
+			//
+			StringBuilder sb = null;
+			//
+			final Pattern pattern = ObjectMap.getObject(objectMap, Pattern.class);
+			//
+			for (int i = 0; i < getLength(plugins); i++) {
+				//
+				if ((attributes = getAttributes(item(plugins, i))) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				for (int j = 0; j < attributes.getLength(); j++) {
+					//
+					if (matches(matcher(pattern, getNodeName(attribute = attributes.item(j))))) {
+						//
+						clear(sb = getIfNull(sb, StringBuilder::new));
+						//
+						setNodeValue(
+								attribute, Util
+										.toString(append(
+												append(append(sb,
+														Boolean.logicalAnd(embedAudioInPresentation,
+																StringUtils.isNotBlank(folder)) ? folder : ".."),
+														'/'),
+												key)));
+						//
+					} // if
+						//
+				} // for
+					//
+			} // for
+				//
+		}
+
+		private static boolean matches(final Matcher instance) {
+			//
+			if (instance == null) {
+				//
+				return false;
+				//
+			} // if
+				//
+			try {
+				//
+				if (Narcissus.getObjectField(instance, Matcher.class.getDeclaredField("groups")) == null) {
+					//
+					return false;
+					//
+				} // if
+					//
+			} catch (final NoSuchFieldException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
+				//
+			return instance.matches();
+			//
+		}
+
+		private static Matcher matcher(final Pattern instance, final CharSequence input) {
+			//
+			if (instance == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+			try {
+				//
+				if (Narcissus.getObjectField(instance, Pattern.class.getDeclaredField("pattern")) == null) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} catch (final NoSuchFieldException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
+				//
+			return input != null ? instance.matcher(input) : null;
+			//
+		}
+
+		private static int getLength(final NodeList instance) {
+			return instance != null ? instance.getLength() : 0;
+		}
+
+		private static void setNodeValue(final Node instance, final String nodeValue) {
+			if (instance != null) {
+				instance.setNodeValue(nodeValue);
+			}
+		}
+
+		private static String getNodeValue(final Node instance) {
+			return instance != null ? instance.getNodeValue() : null;
+		}
+
+		private static String getNodeName(final Node instance) {
+			return instance != null ? instance.getNodeName() : null;
+		}
+
+		private static XPath newXPath(final XPathFactory instance) {
+			return instance != null ? instance.newXPath() : null;
+		}
+
+		private static Node getParentNode(final Node instance) {
+			return instance != null ? instance.getParentNode() : null;
+		}
+
+		private static void appendChild(final Node instance, final Node child) throws DOMException {
+			if (instance != null) {
+				instance.appendChild(child);
+			}
+		}
+
+		private static void removeChild(final Node instance, final Node child) throws DOMException {
+			if (instance != null) {
+				instance.removeChild(child);
+			}
+		}
+
+		private static Node cloneNode(final Node instance, final boolean deep) {
+			return instance != null ? instance.cloneNode(deep) : null;
+		}
+
+		private static Transformer newTransformer(final TransformerFactory instance)
+				throws TransformerConfigurationException {
+			return instance != null ? instance.newTransformer() : null;
+		}
+
+		private static void transform(final Transformer instance, final Source xmlSource, final Result outputTarget)
+				throws TransformerException {
+			if (instance != null) {
+				instance.transform(xmlSource, outputTarget);
+			}
+		}
+
+		private static Object evaluate(final XPath instance, final String expression, final Object item,
+				final QName returnType) throws XPathExpressionException {
+			return instance != null ? instance.evaluate(expression, item, returnType) : null;
+		}
+
+	}
+
+	private static ExportTask createExportTask(final ObjectMap objectMap, final Integer size, final Integer counter,
+			final Integer numberOfOrdinalPositionDigit, final Map<String, String> outputFolderFileNameExpressions,
+			final Table<String, String, Voice> voiceFileNames) {
+		//
+		final ExportTask et = new ExportTask();
+		//
+		et.pharse = testAndApply(c -> ObjectMap.containsObject(objectMap, c), Fraction.class,
+				c -> ObjectMap.getObject(objectMap, c), null);
+		//
+		et.counter = counter;
+		//
+		et.count = size;
+		//
+		et.percentNumberFormat = testAndApply(c -> ObjectMap.containsObject(objectMap, c), NumberFormat.class,
+				c -> ObjectMap.getObject(objectMap, c), null);
+		//
+		et.evaluationContext = ObjectMap.getObject(objectMap, EvaluationContext.class);
+		//
+		et.expressionParser = ObjectMap.getObject(objectMap, ExpressionParser.class);
+		//
+		et.objectMapper = testAndApply(c -> ObjectMap.containsObject(objectMap, c), ObjectMapper.class,
+				c -> ObjectMap.getObject(objectMap, c), null);
+		//
+		et.outputFolderFileNameExpressions = outputFolderFileNameExpressions;
+		//
+		et.voice = ObjectMap.getObject(objectMap, Voice.class);
+		//
+		et.ordinalPositionDigit = numberOfOrdinalPositionDigit;
+		//
+		final VoiceManagerExportPanel voiceManagerExportPanel = testAndApply(
+				c -> ObjectMap.containsObject(objectMap, c), VoiceManagerExportPanel.class,
+				c -> ObjectMap.getObject(objectMap, c), null);
+		//
+		et.ordinalPositionFileNamePrefix = Util.getText((et.voiceManagerExportPanel = voiceManagerExportPanel) != null
+				? voiceManagerExportPanel.tfOrdinalPositionFileNamePrefix
+				: null);
+		//
+		et.exportPresentationTemplate = voiceManagerExportPanel != null
+				? voiceManagerExportPanel.exportPresentationTemplate
+				: null;
+		//
+		et.folderInPresentation = voiceManagerExportPanel != null ? voiceManagerExportPanel.folderInPresentation : null;
+		//
+		et.password = Util.getText(voiceManagerExportPanel != null ? voiceManagerExportPanel.tfExportPassword : null);
+		//
+		final BooleanMap booleanMap = testAndApply(c -> ObjectMap.containsObject(objectMap, c), BooleanMap.class,
+				c -> ObjectMap.getObject(objectMap, c), null);
+		//
+		if (booleanMap != null) {
+			//
+			et.overMp3Title = booleanMap.getBoolean(OVER_MP3_TITLE);
+			//
+			et.ordinalPositionAsFileNamePrefix = booleanMap.getBoolean(ORDINAL_POSITION_AS_FILE_NAME_PREFIX);
+			//
+			et.exportPresentation = booleanMap.getBoolean(EXPORT_PRESENTATION);
+			//
+			et.embedAudioInPresentation = booleanMap.getBoolean(EMBED_AUDIO_IN_PRESENTATION);
+			//
+			et.hideAudioImageInPresentation = booleanMap.getBoolean(HIDE_AUDIO_IMAGE_IN_PRESENTATION);
+			//
+		} // if
+			//
+		et.voiceFileNames = voiceFileNames;
+		//
+		et.messageDigestAlgorithm = voiceManagerExportPanel != null ? voiceManagerExportPanel.messageDigestAlgorithm
+				: null;
+		//
+		et.presentationSlideDuration = ObjectMap.getObject(objectMap, Duration.class);
+		//
+		return et;
+		//
+	}
+
+	private static void clear(final StringBuilder instance) {
+		if (instance != null) {
+			instance.delete(0, instance.length());
+		}
+	}
+
+	private static void shutdown(final ExecutorService instance) {
+		if (instance != null) {
+			instance.shutdown();
+		}
+	}
+
+	private static Integer incrementAndGet(final AtomicInteger instance) {
+		return instance != null ? Integer.valueOf(instance.incrementAndGet()) : null;
+	}
+
+	private static Integer getOrdinalPosition(final Voice instance) {
+		return instance != null ? instance.getOrdinalPosition() : null;
+	}
+
+	private static String getFileExtension(final FailableSupplier<Workbook, RuntimeException> supplier)
+			throws IOException {
+		//
+		try (final Workbook wb = get(supplier); final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			WorkbookUtil.write(wb, baos);
+			//
+			if (Objects.equals(getMessage(new ContentInfoUtil().findMatch(baos.toByteArray())),
+					OLE_2_COMPOUND_DOCUMENT)) {
+				//
+				return "xls";
+				//
+			} // if
+				//
+		} // try
+			//
+		return null;
+		//
+	}
+
+	private static String getMessage(final ContentInfo instance) {
+		return instance != null ? instance.getMessage() : null;
+	}
+
+	private static IValue0<Duration> toDurationIvalue0(final Object object) {
+		//
+		IValue0<Duration> value = null;
+		//
+		if (object == null) {
+			//
+			value = Unit.with(null);
+			//
+		} else if (object instanceof Duration duration) {
+			//
+			value = Unit.with(duration);
+			//
+		} else if (object instanceof Number number) {
+			//
+			value = Unit.with(Duration.ofMillis(intValue(number, 0)));
+			//
+		} else if (object instanceof CharSequence) {
+			//
+			final String string = Util.toString(object);
+			//
+			DateTimeParseException dpe = null;
+			//
+			try {
+				//
+				return Unit.with(parse(string));
+				//
+			} catch (final DateTimeParseException e) {
+				//
+				dpe = e;
+				//
+			} // try
+				//
+			final Number number = valueOf(string);
+			//
+			if (number != null) {
+				//
+				return toDurationIvalue0(number);
+				//
+			} // if
+				//
+			throw dpe;
+			//
+		} else if (object instanceof char[] cs) {
+			//
+			return toDurationIvalue0(testAndApply(Objects::nonNull, cs, String::new, null));
+			//
+		} // if
+			//
+		return value;
+		//
+	}
+
+	private static Integer valueOf(final String instance) {
+		try {
+			return StringUtils.isNotBlank(instance) ? Integer.valueOf(instance) : null;
+		} catch (final NumberFormatException e) {
+			return null;
+		}
+	}
+
+	private static Duration parse(final CharSequence text) {
+		return StringUtils.isNotEmpty(text) ? Duration.parse(text) : null;
+	}
+
+	private static int intValue(final Number instance, final int defaultValue) {
+		return instance != null ? instance.intValue() : defaultValue;
+	}
+
+	private static void setListNames(final Voice instance, final Iterable<String> listNames) {
+		if (instance != null) {
+			instance.setListNames(listNames);
+		}
+	}
+
+	private static List<String> searchVoiceListNamesByVoiceId(final VoiceMapper instance, final Integer voiceId) {
+		return instance != null ? instance.searchVoiceListNamesByVoiceId(voiceId) : null;
+	}
+
+	private static boolean isSelected(final AbstractButton instance) {
+		return instance != null && instance.isSelected();
+	}
+
+	private static Integer getId(final Voice instance) {
+		return instance != null ? instance.getId() : null;
+	}
+
+	private static <T, E extends Throwable> void forEach(final Iterable<T> items,
+			final FailableConsumer<? super T, E> action) throws E {
+		//
+		if (Util.iterator(items) != null && (action != null || Proxy.isProxyClass(Util.getClass(items)))) {
+			//
+			for (final T item : items) {
+				//
+				FailableConsumerUtil.accept(action, item);
+				//
+			} // for
+				//
+		} // if
+			//
+	}
+
+	private static Object getSelectedItem(final ComboBoxModel<?> instance) {
+		return instance != null ? instance.getSelectedItem() : null;
+	}
+
+	private void actionPerformedForExportBrowse(final boolean headless) {
+		//
+		try {
+			//
+			final File file = testAndApply(Objects::nonNull, Util.getText(tfExportFile), File::new, null);
+			//
+			testAndAccept(Objects::nonNull, toURI(file), x -> browse(Desktop.getDesktop(), x));
+			//
+		} catch (final IOException e) {
+			//
+			errorOrAssertOrShowException(headless, e);
+			//
+		} // try
+			//
+	}
+
+	private static List<Voice> retrieveAllVoices(final VoiceMapper instance) {
+		return instance != null ? instance.retrieveAllVoices() : null;
+	}
+
+	private static void errorOrAssertOrShowException(final boolean headless, final Throwable throwable) {
+		//
+		TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(headless, LOG, throwable);
+		//
+	}
+
+	private static void browse(final Desktop instance, final URI uri) throws IOException {
+		if (instance != null) {
+			instance.browse(uri);
+		}
+	}
+
+	private static URI toURI(final File instance) {
+		return instance != null ? instance.toURI() : null;
+	}
+
+	private void actionPerformedForSystemClipboardAnnotated(final boolean nonTest, final Object source) {
+		//
+		final Clipboard clipboard = getSystemClipboard(getToolkit());
+		//
+		IValue0<String> stringValue = null;
+		//
+		if (Objects.equals(source, btnExportCopy)) {
+			//
+			stringValue = Unit.with(Util.getText(tfExportFile));
+			//
+		} else if (Objects.equals(source, btnDllPathCopy)) {
+			//
+			stringValue = Unit.with(Util.getText(tfDllPath));
+			//
+		} // if
+			//
+		if (stringValue != null) {
+			//
+			// if this method is not run under unit test, call
+			// "java.awt.datatransfer.Clipboard.setContents(java.awt.datatransfer.Transferable,java.awt.datatransfer.ClipboardOwner)"
+			// method
+			//
+			final String string = IValue0Util.getValue0(stringValue);
+			//
+			testAndRun(nonTest, () -> setContents(clipboard, new StringSelection(string), null));
+			//
+			return;
+			//
+		} // if
+			//
+		throw new IllegalStateException();
+		//
+	}
+
+	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner) {
+		if (instance != null) {
+			instance.setContents(contents, owner);
+		}
+	}
+
+	private static Clipboard getSystemClipboard(final Toolkit instance) {
+		return instance != null ? instance.getSystemClipboard() : null;
+	}
+
+	private void actionPerformedForExportButtons(final Object source, final boolean headless) {
+		//
+		if (Objects.equals(source, btnExportMicrosoftSpeechObjectLibraryInformation)) {
+			//
+			File file = null;
+			//
+			Workbook workbook = null;
+			//
+			try (final OutputStream os = new FileOutputStream(file = new File(
+					String.format("MicrosoftSpeechObjectLibrary_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
+				//
+				WorkbookUtil.write(workbook = createMicrosoftSpeechObjectLibraryWorkbook(speechApi,
+						languageCodeToTextObjIntFunction, microsoftSpeechObjectLibraryAttributeNames), os);
+				//
+				Util.setText(tfExportFile, Util.getAbsolutePath(file));
+				//
+			} catch (final IOException e) {
+				//
+				errorOrAssertOrShowException(headless, e);
+				//
+			} finally {
+				//
+				IOUtils.closeQuietly(workbook);
+				//
+				testAndAccept(EMPTY_FILE_PREDICATE, file, FileUtils::deleteQuietly);
+				// ini
+			} // try
+				//
+			return;
+			//
+		} // if
+			//
+		throw new IllegalStateException();
+		//
+	}
+
+	private static interface ObjectMap {
+
+		<T> T getObject(final Class<T> key);
+
+		boolean containsObject(final Class<?> key);
+
+		<T> void setObject(final Class<T> key, final T value);
+
+		static <T> T getObject(final ObjectMap instance, final Class<T> key) {
+			return instance != null ? instance.getObject(key) : null;
+		}
+
+		static <T> void setObject(final ObjectMap instance, final Class<T> key, final T value) {
+			if (instance != null) {
+				instance.setObject(key, value);
+			}
+		}
+
+		static <T> boolean containsObject(final ObjectMap instance, final Class<T> key) {
+			return instance != null && instance.containsObject(key);
+		}
+
+		static <T> void setObjectIfAbsent(final ObjectMap instance, final Class<T> key, final T value) {
+			//
+			if (!ObjectMap.containsObject(instance, key)) {
+				//
+				ObjectMap.setObject(instance, key, value);
+				//
+			} // if
+				//
+		}
+
+	}
+
+	private static Workbook createMicrosoftSpeechObjectLibraryWorkbook(final SpeechApi speechApi,
+			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction, final String... attributes) {
+		//
+		Workbook workbook = null;
+		//
+		Sheet sheet = null;
+		//
+		Row row = null;
+		//
+		final String[] voiceIds = SpeechApi.getVoiceIds(speechApi);
+		//
+		final String commonPrefix = String.join("",
+				StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
+		//
+		String voiceId = null;
+		//
+		final String[] as = toArray(Util.toList(
+				Util.filter(testAndApply(Objects::nonNull, attributes, Arrays::stream, null), StringUtils::isNotEmpty)),
+				new String[] {});
+		//
+		ObjectMap objectMap = null;
+		//
+		for (int i = 0; voiceIds != null && as != null && i < voiceIds.length; i++) {
+			//
+			if (sheet == null) {
+				//
+				setMicrosoftSpeechObjectLibrarySheetFirstRow(
+						sheet = WorkbookUtil.createSheet(workbook = getIfNull(workbook, XSSFWorkbook::new)), as);
+				//
+			} // if
+				//
+			if (sheet != null && (row = SheetUtil.createRow(sheet, sheet.getLastRowNum() + 1)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row != null ? row.getLastCellNum() : null, 0)),
+					commonPrefix);
+			//
+			CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row != null ? row.getLastCellNum() : 0, 0)),
+					StringUtils.defaultIfBlank(testAndApply(StringUtils::contains, commonPrefix, voiceId = voiceIds[i],
+							StringUtils::substringAfter, null), voiceId));
+			//
+			if (objectMap == null && (objectMap = Reflection.newProxy(ObjectMap.class, new IH())) != null) {
+				//
+				ObjectMap.setObject(objectMap, Workbook.class, workbook);
+				//
+				ObjectMap.setObject(objectMap, SpeechApi.class, speechApi);
+				//
+			} // if
+				//
+			ObjectMap.setObject(objectMap, Sheet.class, sheet);
+			//
+			ObjectMap.setObject(objectMap, Row.class, row);
+			//
+			setMicrosoftSpeechObjectLibrarySheet(objectMap, voiceId, as, languageCodeToTextObjIntFunction);
+			//
+		} // for
+			//
+		ObjectMap.setObject(objectMap, Sheet.class, WorkbookUtil.createSheet(workbook, "Locale ID"));
+		//
+		ObjectMap.setObject(objectMap, LocaleID[].class, LocaleID.values());
+		//
+		setLocaleIdSheet(objectMap);
+		//
+		setAutoFilter(sheet);
+		//
+		return workbook;
+		//
+	}
+
+	private static void setAutoFilter(final Sheet sheet) {
+		//
+		final Row row = sheet != null ? sheet.getRow(sheet.getLastRowNum()) : null;
+		//
+		if (sheet != null && row != null && sheet.getFirstRowNum() < sheet.getLastRowNum()) {
+			//
+			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
+					row.getFirstCellNum(), row.getLastCellNum() - 1));
+			//
+		} // if
+			//
+	}
+
+	private static void setLocaleIdSheet(final ObjectMap objectMap) {
+		//
+		final Sheet sheet = ObjectMap.getObject(objectMap, Sheet.class);
+		//
+		final LocaleID[] localeIds = ObjectMap.getObject(objectMap, LocaleID[].class);
+		//
+		LocaleID localeId = null;
+		//
+		List<Field> fs = null;
+		//
+		Row row = null;
+		//
+		Method methodIsAccessible = null;
+		//
+		for (int i = 0; localeIds != null && i < localeIds.length; i++) {
+			//
+			if ((localeId = localeIds[i]) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (fs == null) {
+				//
+				fs = Util.toList(sorted(Util.filter(
+						testAndApply(Objects::nonNull, FieldUtils.getAllFields(LocaleID.class), Arrays::stream, null),
+						x -> x != null && !Objects.equals(Util.getType(x), Util.getDeclaringClass(x))
+								&& !x.isSynthetic() && !isStatic(x)),
+						(a, b) -> StringUtils.compare(Util.getName(getPackage(Util.getDeclaringClass(a))),
+								Util.getName(getPackage(Util.getDeclaringClass(b))))));
+				//
+			} // if
+				//
+				// Header Row
+				//
+			addLocaleIdSheetHeaderRow(sheet, fs);
+			//
+			ObjectMap.setObject(objectMap, Method.class, methodIsAccessible = getIfNull(methodIsAccessible,
+					VoiceManagerExportPanel::getAccessibleObjectIsAccessibleMethod));
+			//
+			row = addLocaleIdRow(objectMap, fs, localeId);
+			//
+		} // for
+			//
+		if (sheet != null && row != null) {
+			//
+			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
+					row.getFirstCellNum(), row.getLastCellNum() - 1));
+			//
+		} // if
+			//
+	}
+
+	private static Row addLocaleIdRow(final ObjectMap objectMap, final List<Field> fs, final Object instance) {
+		//
+		final Sheet sheet = ObjectMap.getObject(objectMap, Sheet.class);
+		//
+		Field f = null;
+		//
+		Object value = null;
+		//
+		Row row = null;
+		//
+		for (int j = 0; fs != null && j < fs.size(); j++) {
+			//
+			if ((f = fs.get(j)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Objects.equals(Util.getType(f), Integer.TYPE)) {
+				//
+				value = Integer.valueOf(Narcissus.getIntField(instance, f));
+				//
+			} else {
+				//
+				value = Narcissus.getField(instance, f);
+				//
+			} // if
+				//
+			CellUtil.setCellValue(RowUtil.createCell(
+					row = getIfNull(row, () -> SheetUtil.createRow(sheet, intValue(getPhysicalNumberOfRows(sheet), 0))),
+					intValue(getPhysicalNumberOfCells(row), 0)), Util.toString(value));
+			//
+		} // for
+			//
+		return row;
+		//
+	}
+
+	private static Method getAccessibleObjectIsAccessibleMethod() {
+		//
+		final List<Method> ms = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.getDeclaredMethods(AccessibleObject.class), Arrays::stream, null),
+				m -> m != null && StringUtils.equals(Util.getName(m), "isAccessible") && m.getParameterCount() == 0));
+		//
+		return testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> get(x, 0), null);
+		//
+	}
+
+	private static <E> E get(final List<E> instance, final int index) {
+		return instance != null ? instance.get(index) : null;
+	}
+
+	private static void addLocaleIdSheetHeaderRow(final Sheet sheet, final List<Field> fs) {
+		//
+		final int physicalNumberOfRows = intValue(getPhysicalNumberOfRows(sheet), 0);
+		//
+		if (physicalNumberOfRows == 0) {
+			//
+			Row row = null;
+			//
+			for (int j = 0; fs != null && j < fs.size(); j++) {
+				//
+				CellUtil.setCellValue(RowUtil.createCell(
+						row = getIfNull(row, () -> SheetUtil.createRow(sheet, intValue(physicalNumberOfRows, 0))),
+						intValue(getPhysicalNumberOfCells(row), 0)), Util.getName(fs.get(j)));
+				//
+			} // for
+				//
+		} // if
+			//
+	}
+
+	private static Integer getPhysicalNumberOfCells(final Row instance) {
+		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfCells()) : null;
+	}
+
+	private static Integer getPhysicalNumberOfRows(final Sheet instance) {
+		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfRows()) : null;
+	}
+
+	private static Package getPackage(final Class<?> instance) {
+		return instance != null ? instance.getPackage() : null;
+	}
+
+	private static <T> Stream<T> sorted(final Stream<T> instance, final Comparator<? super T> comparator) {
+		//
+		return instance != null && (comparator != null || Proxy.isProxyClass(Util.getClass(instance)))
+				? instance.sorted(comparator)
+				: instance;
+		//
+	}
+
+	private static void setMicrosoftSpeechObjectLibrarySheet(final ObjectMap objectMap, final String voiceId,
+			final String[] attributes, final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) {
+		//
+		final Workbook workbook = ObjectMap.getObject(objectMap, Workbook.class);
+		//
+		final Sheet sheet = ObjectMap.getObject(objectMap, Sheet.class);
+		//
+		final Row row = ObjectMap.getObject(objectMap, Row.class);
+		//
+		Cell cell = null;
+		//
+		Drawing<?> drawing = null;
+		//
+		CreationHelper creationHelper = null;
+		//
+		Comment comment = null;
+		//
+		// attribute
+		//
+		String attribute = null;
+		//
+		// value
+		//
+		String value = null;
+		//
+		for (int j = 0; attributes != null && j < attributes.length; j++) {
+			//
+			if (drawing == null) {
+				//
+				drawing = createDrawingPatriarch(sheet);
+				//
+			} // if
+				//
+			if (creationHelper == null) {
+				//
+				creationHelper = WorkbookUtil.getCreationHelper(workbook);
+				//
+			} // if
+				//
+			try {
+				//
+				CellUtil.setCellValue(
+						cell = RowUtil.createCell(row, Math.max(row != null ? row.getLastCellNum() : 0, 0)),
+						value = SpeechApi.getVoiceAttribute(ObjectMap.getObject(objectMap, SpeechApi.class), voiceId,
+								attribute = attributes[j]));
+				//
+				if (Objects.equals(LANGUAGE, attribute)) {
+					//
+					setString(comment = createCellComment(drawing, createClientAnchor(creationHelper)),
+							createRichTextString(creationHelper,
+									ObjIntFunctionUtil.apply(languageCodeToTextObjIntFunction, value, 16)));
+					//
+					setCellComment(cell, comment);
+					//
+				} // if
+					//
+			} catch (final Error e) {
+				//
+				setString(comment = createCellComment(drawing, createClientAnchor(creationHelper)),
+						createRichTextString(creationHelper, e.getMessage()));
+				//
+				setAuthor(comment, Util.getName(Util.getClass(e)));
+				//
+				setCellComment(cell, comment);
+				//
+			} // try
+				//
+		} // for
+			//
+	}
+
+	private static void setAuthor(final Comment instance, final String string) {
+		if (instance != null) {
+			instance.setAuthor(string);
+		}
+	}
+
+	private static void setCellComment(final Cell instance, final Comment comment) {
+		if (instance != null) {
+			instance.setCellComment(comment);
+		}
+	}
+
+	private static void setString(final Comment instance, final RichTextString string) {
+		if (instance != null) {
+			instance.setString(string);
+		}
+	}
+
+	private static RichTextString createRichTextString(final CreationHelper instance, final String text) {
+		return instance != null ? instance.createRichTextString(text) : null;
+	}
+
+	private static Comment createCellComment(final Drawing<?> instance, final ClientAnchor anchor) {
+		return instance != null ? instance.createCellComment(anchor) : null;
+	}
+
+	private static ClientAnchor createClientAnchor(final CreationHelper instance) {
+		return instance != null ? instance.createClientAnchor() : null;
+	}
+
+	private static Drawing<?> createDrawingPatriarch(final Sheet instance) {
+		return instance != null ? instance.createDrawingPatriarch() : null;
+	}
+
+	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
+			final FailableBiFunction<T, U, R, E> functionFalse) throws E {
+		return predicate != null && predicate.test(t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
+				: FailableBiFunctionUtil.apply(functionFalse, t, u);
+	}
+
+	private static void setMicrosoftSpeechObjectLibrarySheetFirstRow(final Sheet sheet, final String[] columnNames) {
+		//
+		final Row row = sheet != null ? SheetUtil.createRow(sheet, sheet.getLastRowNum() + 1) : null;
+		//
+		if (row != null) {
+			//
+			CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), "Common Prefix");
+			//
+			CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), "ID");
+			//
+			for (int j = 0; columnNames != null && j < columnNames.length; j++) {
+				//
+				CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), columnNames[j]);
+				//
+			} // for
+				//
+		} // if
+			//
+	}
+
+	private static boolean isAnnotationPresent(final AnnotatedElement instance,
+			final Class<? extends Annotation> annotationClass) {
+		return instance != null && annotationClass != null && instance.isAnnotationPresent(annotationClass);
+	}
+
+	private static <T> boolean anyMatch(final Stream<T> instance, final Predicate<? super T> predicate) {
+		//
+		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
+				&& instance.anyMatch(predicate);
+		//
+	}
+
+	private static boolean isTestMode() {
+		return Util.forName("org.junit.jupiter.api.Test") != null;
+	}
+
+	private static void clear(final DefaultTableModel instance) {
+		//
+		final Collection<?> dataVector = instance != null ? instance.getDataVector() : null;
+		//
+		if (dataVector != null) {
+			//
+			dataVector.clear();
+			//
+		} // if
+			//
+	}
+
+	private static List<Field> findFieldsByValue(final Field[] fs, final Object instance, final Object value) {
+		//
+		Field f = null;
+		//
+		Object fieldValue = null;
+		//
+		List<Field> list = null;
+		//
+		for (int i = 0; fs != null && i < fs.length; i++) {
+			//
+			if ((f = fs[i]) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if ((fieldValue = testAndApply(VoiceManagerExportPanel::isStatic, f, Narcissus::getStaticField,
+					a -> testAndApply(Objects::nonNull, instance, b -> Narcissus.getField(b, a), null))) != value
+					|| !Objects.equals(fieldValue, value)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			testAndAccept((a, b) -> !Util.contains(a, b), list = ObjectUtils.getIfNull(list, ArrayList::new), f,
+					Util::add, null);
+			//
+		} // for
+			//
+		return list;
+		//
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+			final BiConsumer<T, U> a, final BiConsumer<T, U> b) {
+		if (test(instance, t, u)) {
+			accept(a, t, u);
+		} else {
+			accept(b, t, u);
+		} // if
+	}
+
+	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) {
+		if (instance != null) {
+			instance.accept(t, u);
+		}
+	}
+
+	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, final U u) {
+		return instance != null && instance.test(t, u);
+	}
+
+	private static boolean isStatic(final Member instance) {
+		return instance != null && Modifier.isStatic(instance.getModifiers());
+	}
+
+	private static <T> void accept(final Consumer<? super T> action, final T a, final T b, final T... values) {
+		//
+		accept(action, a);
+		//
+		accept(action, b);
+		//
+		for (int i = 0; values != null && i < values.length; i++) {
+			//
+			accept(action, values[i]);
+			//
+		} // for
+			//
+	}
+
+	private static <T> void accept(final Consumer<T> instance, final T value) {
+		if (instance != null) {
+			instance.accept(value);
+		}
+	}
+
+	private static void setEditable(final boolean editable, final JTextComponent... jtcs) {
 		//
 		JTextComponent jtc = null;
 		//
@@ -605,7 +5183,7 @@ public class VoiceManagerExportPanel extends JPanel
 			//
 	}
 
-	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
+	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
 		//
 		AbstractButton ab = null;
 		//
@@ -621,9 +5199,7 @@ public class VoiceManagerExportPanel extends JPanel
 			//
 	}
 
-	@Nullable
-	private static <T> Optional<T> reduce(@Nullable final Stream<T> instance,
-			@Nullable final BinaryOperator<T> accumulator) {
+	private static <T> Optional<T> reduce(final Stream<T> instance, final BinaryOperator<T> accumulator) {
 		//
 		return instance != null && (accumulator != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.reduce(accumulator)
@@ -631,17 +5207,15 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	@Nullable
-	private static String getEmptyFilePath(@Nullable final FileFormatDetails instance) {
+	private static String getEmptyFilePath(final FileFormatDetails instance) {
 		return instance != null ? instance.getEmptyFilePath() : null;
 	}
 
-	@Nullable
-	private static JetFormat getFormat(@Nullable final FileFormatDetails instance) {
+	private static JetFormat getFormat(final FileFormatDetails instance) {
 		return instance != null ? instance.getFormat() : null;
 	}
 
-	private static <K, V> void putAll(@Nullable final Map<K, V> a, @Nullable final Map<? extends K, ? extends V> b) {
+	private static <K, V> void putAll(final Map<K, V> a, final Map<? extends K, ? extends V> b) {
 		if (a != null && b != null) {
 			a.putAll(b);
 		}
@@ -654,15 +5228,13 @@ public class VoiceManagerExportPanel extends JPanel
 		}
 	}
 
-	private static void setToolTipText(@Nullable final JComponent instance, final String toolTipText) {
+	private static void setToolTipText(final JComponent instance, final String toolTipText) {
 		if (instance != null) {
 			instance.setToolTipText(toolTipText);
 		}
 	}
 
-	@Nullable
-	private static <T> Optional<T> max(@Nullable final Stream<T> instance,
-			@Nullable final Comparator<? super T> comparator) {
+	private static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator) {
 		//
 		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || comparator != null)
 				? instance.max(comparator)
@@ -670,23 +5242,19 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	@Nullable
-	private static String[] getFileExtensions(@Nullable final ContentType instance) {
+	private static String[] getFileExtensions(final ContentType instance) {
 		return instance != null ? instance.getFileExtensions() : null;
 	}
 
-	@Nullable
-	private static String name(@Nullable final Enum<?> instance) {
+	private static String name(final Enum<?> instance) {
 		return instance != null ? instance.name() : null;
 	}
 
-	@Nullable
-	private static <T> Optional<T> findFirst(@Nullable final Stream<T> instance) {
+	private static <T> Optional<T> findFirst(final Stream<T> instance) {
 		return instance != null ? instance.findFirst() : null;
 	}
 
-	@Nullable
-	private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
+	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
 			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
 			final boolean cellHasFocus) {
 		//
@@ -695,8 +5263,7 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	private static <E> void setRenderer(@Nullable final JComboBox<E> instance,
-			final ListCellRenderer<? super E> aRenderer) {
+	private static <E> void setRenderer(final JComboBox<E> instance, final ListCellRenderer<? super E> aRenderer) {
 		//
 		if (instance == null) {
 			//
@@ -722,12 +5289,11 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	@Nullable
-	private static <E> ListCellRenderer<? super E> getRenderer(@Nullable final JComboBox<E> instance) {
+	private static <E> ListCellRenderer<? super E> getRenderer(final JComboBox<E> instance) {
 		return instance != null ? instance.getRenderer() : null;
 	}
 
-	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, final Object selectedItem) {
+	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) {
 		if (instance != null) {
 			instance.setSelectedItem(selectedItem);
 		}
@@ -763,8 +5329,7 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	private static <E extends Throwable> void testAndRun(final boolean b, @Nullable final FailableRunnable<E> runnable)
-			throws E {
+	private static <E extends Throwable> void testAndRun(final boolean b, final FailableRunnable<E> runnable) throws E {
 		//
 		if (b && runnable != null) {
 			//
@@ -774,7 +5339,6 @@ public class VoiceManagerExportPanel extends JPanel
 			//
 	}
 
-	@Nullable
 	private static RuntimeException toRuntimeException(final Throwable instance) {
 		//
 		if (instance instanceof RuntimeException re) {
@@ -791,20 +5355,17 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	@Nullable
-	private static <T> T newInstance(@Nullable final Constructor<T> constructor, final Object... initargs)
+	private static <T> T newInstance(final Constructor<T> constructor, final Object... initargs)
 			throws InstantiationException, IllegalAccessException, InvocationTargetException {
 		return constructor != null ? constructor.newInstance(initargs) : null;
 	}
 
-	@Nullable
-	private static <T> Constructor<T> getDeclaredConstructor(@Nullable final Class<T> clz,
-			final Class<?>... parameterTypes) throws NoSuchMethodException {
+	private static <T> Constructor<T> getDeclaredConstructor(final Class<T> clz, final Class<?>... parameterTypes)
+			throws NoSuchMethodException {
 		return clz != null ? clz.getDeclaredConstructor(parameterTypes) : null;
 	}
 
-	@Nullable
-	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
+	private static <T> T[] toArray(final Collection<T> instance, final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.toArray(array)
@@ -812,9 +5373,8 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
-			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
-			throws E {
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
