@@ -5384,8 +5384,8 @@ public class VoiceManagerExportPanel extends JPanel
 		return constructor != null ? constructor.newInstance(initargs) : null;
 	}
 
-	private static <T> Constructor<T> getDeclaredConstructor(final Class<T> clz, final Class<?>... parameterTypes)
-			throws NoSuchMethodException {
+	private static <T> Constructor<T> getDeclaredConstructor(@Nullable final Class<T> clz,
+			final Class<?>... parameterTypes) throws NoSuchMethodException {
 		return clz != null ? clz.getDeclaredConstructor(parameterTypes) : null;
 	}
 
