@@ -2049,14 +2049,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(EMPTY, 0, null)));
 		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "tfHiragana", new JTextField(), true);
-			//
-		} // if
-			//
-			// btnExport
-			//
+		// btnExport
+		//
 		final AbstractButton btnExport = new JButton();
 		//
 		if (instance != null) {
@@ -2283,18 +2277,6 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportBrowse, 0, null)));
-		//
-		final JTextComponent tfPronunciationPageUrl = new JTextField();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "tfPronunciationPageUrl", tfPronunciationPageUrl, true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> Util.setText(tfPronunciationPageUrl, SPACE));
-		//
-		Assertions.assertDoesNotThrow(() -> Util.setText(tfPronunciationPageUrl, "a"));
 		//
 	}
 

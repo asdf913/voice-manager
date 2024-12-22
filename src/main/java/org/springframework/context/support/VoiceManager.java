@@ -475,39 +475,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("File Digest")
 	private JTextComponent tfFileDigest = null;
 
-	@Note("Text in TTS Pnael")
-	private JTextComponent tfTextTts = null;
-
 	@Note("Text in Import Pnael")
 	private JTextComponent tfTextImport = null;
 
-	@Note("Hiragana")
-	private JTextComponent tfHiragana = null;
-
-	@Note("Katakana")
-	private JTextComponent tfKatakana = null;
-
-	@Note("Romaji")
-	private JTextComponent tfRomaji = null;
-
 	@Note("Speech Rate")
 	private JTextComponent tfSpeechRate = null;
-
-	@Note("Source")
-	private JTextComponent tfSource = null;
-
-	@Note("Provider Name")
-	private JTextComponent tfProviderName = null;
-
-	@Note("Provider Version")
-	private JTextComponent tfProviderVersion = null;
-
-	@Note("Provider Platform")
-	@Nullable
-	private JTextComponent tfProviderPlatform = null;
-
-	@Note("Language")
-	private JTextComponent tfLanguage = null;
 
 	@Note("Current Processing File")
 	private JTextComponent tfCurrentProcessingFile = null;
@@ -526,12 +498,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Note("JLPT Folder Name Prefix")
 	private JTextComponent tfJlptFolderNamePrefix = null;
-
-	@Note("IPA Symbol")
-	private JTextComponent tfIpaSymbol = null;
-
-	@Note("Elapsed")
-	private JTextComponent tfElapsed = null;
 
 	@Note("File")
 	private JTextComponent tfFile = null;
@@ -553,9 +519,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Note("Export Password")
 	private JTextComponent tfExportPassword = null;
-
-	@Note("Pronunciation Page URL")
-	private JTextComponent tfPronunciationPageUrl = null;
 
 	private JTextComponent tfPresentationSlideDuration = null;
 
