@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.GraphicsEnvironment;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -100,6 +101,14 @@ class VoiceManagerExportPanelTest {
 			//
 			toString = Objects.toString(m);
 			//
+			if (Boolean.logicalAnd(Objects.equals(name, "actionPerformedForSystemClipboardAnnotated"),
+					Arrays.equals(parameterTypes, new Class<?>[] { Boolean.TYPE, Object.class }))
+					&& GraphicsEnvironment.isHeadless()) {
+				//
+				continue;
+				//
+			} // if
+				//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
 				if (Util.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE, Long.TYPE, Double.TYPE),
