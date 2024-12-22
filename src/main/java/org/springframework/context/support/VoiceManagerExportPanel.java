@@ -1083,7 +1083,7 @@ public class VoiceManagerExportPanel extends JPanel
 
 		void setBoolean(final String key, final boolean value);
 
-		static boolean getBoolean(final BooleanMap instance, final String key) {
+		static boolean getBoolean(@Nullable final BooleanMap instance, final String key) {
 			return instance != null && instance.getBoolean(key);
 		}
 
@@ -2287,7 +2287,7 @@ public class VoiceManagerExportPanel extends JPanel
 		return instance != null ? instance.getJlptLevel() : null;
 	}
 
-	private static void setSheet(final Workbook workbook, final Sheet sheet, final Iterable<Voice> voices)
+	private static void setSheet(final Workbook workbook, @Nullable final Sheet sheet, final Iterable<Voice> voices)
 			throws IllegalAccessException {
 		//
 		ObjectMap objectMap = null;
@@ -3233,7 +3233,7 @@ public class VoiceManagerExportPanel extends JPanel
 				//
 		}
 
-		private static void setString(final JProgressBar instance, final String string) {
+		private static void setString(@Nullable final JProgressBar instance, final String string) {
 			if (instance != null) {
 				instance.setString(string);
 			}
@@ -4692,7 +4692,7 @@ public class VoiceManagerExportPanel extends JPanel
 			}
 		}
 
-		static <T> boolean containsObject(final ObjectMap instance, final Class<T> key) {
+		static <T> boolean containsObject(@Nullable final ObjectMap instance, final Class<T> key) {
 			return instance != null && instance.containsObject(key);
 		}
 
@@ -5158,7 +5158,7 @@ public class VoiceManagerExportPanel extends JPanel
 		return instance != null && instance.test(t, u);
 	}
 
-	private static boolean isStatic(final Member instance) {
+	private static boolean isStatic(@Nullable final Member instance) {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
@@ -5248,13 +5248,14 @@ public class VoiceManagerExportPanel extends JPanel
 		}
 	}
 
-	private static void setToolTipText(final JComponent instance, final String toolTipText) {
+	private static void setToolTipText(@Nullable final JComponent instance, final String toolTipText) {
 		if (instance != null) {
 			instance.setToolTipText(toolTipText);
 		}
 	}
 
-	private static <T> Optional<T> max(final Stream<T> instance, final Comparator<? super T> comparator) {
+	private static <T> Optional<T> max(@Nullable final Stream<T> instance,
+			@Nullable final Comparator<? super T> comparator) {
 		//
 		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || comparator != null)
 				? instance.max(comparator)
@@ -5314,7 +5315,7 @@ public class VoiceManagerExportPanel extends JPanel
 		return instance != null ? instance.getRenderer() : null;
 	}
 
-	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) {
+	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, final Object selectedItem) {
 		if (instance != null) {
 			instance.setSelectedItem(selectedItem);
 		}
@@ -5350,7 +5351,8 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	private static <E extends Throwable> void testAndRun(final boolean b, final FailableRunnable<E> runnable) throws E {
+	private static <E extends Throwable> void testAndRun(final boolean b, @Nullable final FailableRunnable<E> runnable)
+			throws E {
 		//
 		if (b && runnable != null) {
 			//
@@ -5387,7 +5389,7 @@ public class VoiceManagerExportPanel extends JPanel
 		return clz != null ? clz.getDeclaredConstructor(parameterTypes) : null;
 	}
 
-	private static <T> T[] toArray(final Collection<T> instance, final T[] array) {
+	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.toArray(array)
