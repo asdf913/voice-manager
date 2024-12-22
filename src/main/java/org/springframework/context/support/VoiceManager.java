@@ -509,9 +509,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Language")
 	private JTextComponent tfLanguage = null;
 
-	@Note("Speech Volume")
-	private JTextComponent tfSpeechVolume = null;
-
 	@Note("Current Processing File")
 	private JTextComponent tfCurrentProcessingFile = null;
 
@@ -686,9 +683,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Note("Progress Bar For Export")
 	private JProgressBar progressBarExport = null;
-
-	@Note("Slider For Speech Volumne")
-	private JSlider jsSpeechVolume = null;
 
 	@Note("Slider For Speech Rate")
 	private JSlider jsSpeechRate = null;
@@ -5286,11 +5280,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Object source = Util.getSource(evt);
 		//
-		if (Objects.equals(source, jsSpeechVolume)) {
-			//
-			Util.setText(tfSpeechVolume, Util.toString(getValue(jsSpeechVolume)));
-			//
-		} else if (Objects.equals(source, jsSpeechRate)) {
+		if (Objects.equals(source, jsSpeechRate)) {
 			//
 			Util.setText(tfSpeechRate, Util.toString(getValue(jsSpeechRate)));
 			//

@@ -2141,14 +2141,6 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeak));
 		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "jsSpeechVolume", new JSlider(), true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeak));
-		//
 		final JTextComponent tfSpeechRate = new JTextField();
 		//
 		if (instance != null) {
