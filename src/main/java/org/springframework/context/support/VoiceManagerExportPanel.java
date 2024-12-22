@@ -2224,7 +2224,7 @@ public class VoiceManagerExportPanel extends JPanel
 		return instance != null ? Integer.valueOf(instance.getNumberOfSheets()) : null;
 	}
 
-	private static Workbook createWorkbook(final List<Voice> voices, final BooleanMap booleanMap,
+	private static Workbook createWorkbook(@Nullable final List<Voice> voices, final BooleanMap booleanMap,
 			final FailableSupplier<Workbook, RuntimeException> supplier) throws IllegalAccessException {
 		//
 		Workbook workbook = null;
@@ -2694,8 +2694,8 @@ public class VoiceManagerExportPanel extends JPanel
 		return instance != null ? instance.getDeclaredAnnotations() : null;
 	}
 
-	private static void export(final List<Voice> voices, final Map<String, String> outputFolderFileNameExpressions,
-			final ObjectMap objectMap) {
+	private static void export(@Nullable final List<Voice> voices,
+			final Map<String, String> outputFolderFileNameExpressions, final ObjectMap objectMap) {
 		//
 		EvaluationContext evaluationContext = null;
 		//
@@ -4053,7 +4053,7 @@ public class VoiceManagerExportPanel extends JPanel
 				//
 		}
 
-		private static File createTempFile(final String prefix, final String suffix)
+		private static File createTempFile(final String prefix, @Nullable final String suffix)
 				throws IllegalAccessException, InvocationTargetException {
 			//
 			final List<Method> ms = Util.toList(Util.filter(
@@ -4350,7 +4350,7 @@ public class VoiceManagerExportPanel extends JPanel
 			return instance != null ? instance.getParentNode() : null;
 		}
 
-		private static void appendChild(@Nullable final Node instance, final Node child) throws DOMException {
+		private static void appendChild(@Nullable final Node instance, @Nullable final Node child) throws DOMException {
 			if (instance != null) {
 				instance.appendChild(child);
 			}
@@ -4747,7 +4747,7 @@ public class VoiceManagerExportPanel extends JPanel
 
 		boolean containsObject(final Class<?> key);
 
-		<T> void setObject(final Class<T> key, final T value);
+		<T> void setObject(final Class<T> key, @Nullable final T value);
 
 		@Nullable
 		static <T> T getObject(@Nullable final ObjectMap instance, final Class<T> key) {
@@ -4861,7 +4861,7 @@ public class VoiceManagerExportPanel extends JPanel
 			//
 	}
 
-	private static void setLocaleIdSheet(final ObjectMap objectMap) {
+	private static void setLocaleIdSheet(@Nullable final ObjectMap objectMap) {
 		//
 		final Sheet sheet = ObjectMap.getObject(objectMap, Sheet.class);
 		//
@@ -5097,7 +5097,7 @@ public class VoiceManagerExportPanel extends JPanel
 		}
 	}
 
-	private static void setString(@Nullable final Comment instance, final RichTextString string) {
+	private static void setString(@Nullable final Comment instance, @Nullable final RichTextString string) {
 		if (instance != null) {
 			instance.setString(string);
 		}
@@ -5125,7 +5125,7 @@ public class VoiceManagerExportPanel extends JPanel
 
 	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
 			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
-			final FailableBiFunction<T, U, R, E> functionFalse) throws E {
+			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
