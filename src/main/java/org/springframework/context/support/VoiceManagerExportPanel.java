@@ -543,7 +543,7 @@ public class VoiceManagerExportPanel extends JPanel
 	}
 
 	@Nullable
-	private static Integer getTempFileMinimumPrefixLength(final Instruction[] instructions) {
+	private static Integer getTempFileMinimumPrefixLength(@Nullable final Instruction[] instructions) {
 		//
 		Integer result = null;
 		//
@@ -3291,7 +3291,7 @@ public class VoiceManagerExportPanel extends JPanel
 			return instance != null ? instance.getFilePath() : null;
 		}
 
-		private static boolean and(final boolean a, final boolean b, final boolean... bs) {
+		private static boolean and(final boolean a, final boolean b, @Nullable final boolean... bs) {
 			//
 			boolean result = a && b;
 			//
@@ -4744,6 +4744,7 @@ public class VoiceManagerExportPanel extends JPanel
 
 	private static interface ObjectMap {
 
+		@Nullable
 		<T> T getObject(final Class<T> key);
 
 		boolean containsObject(final Class<?> key);
