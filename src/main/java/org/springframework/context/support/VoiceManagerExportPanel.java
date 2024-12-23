@@ -2310,8 +2310,8 @@ public class VoiceManagerExportPanel extends JPanel
 		return instance != null ? instance.getJlptLevel() : null;
 	}
 
-	private static void setSheet(final Workbook workbook, @Nullable final Sheet sheet, final Iterable<Voice> voices)
-			throws IllegalAccessException {
+	private static void setSheet(final Workbook workbook, @Nullable final Sheet sheet,
+			@Nullable final Iterable<Voice> voices) throws IllegalAccessException {
 		//
 		ObjectMap objectMap = null;
 		//
@@ -5016,7 +5016,7 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	private static void setMicrosoftSpeechObjectLibrarySheet(final ObjectMap objectMap, final String voiceId,
+	private static void setMicrosoftSpeechObjectLibrarySheet(@Nullable final ObjectMap objectMap, final String voiceId,
 			final String[] attributes, final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) {
 		//
 		final Workbook workbook = ObjectMap.getObject(objectMap, Workbook.class);
