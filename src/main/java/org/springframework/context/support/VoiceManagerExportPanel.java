@@ -2146,7 +2146,7 @@ public class VoiceManagerExportPanel extends JPanel
 	}
 
 	private static <T, U, E extends Throwable> void accept(@Nullable final FailableBiConsumer<T, U, E> instance,
-			final T t, final U u) throws E {
+			final T t, @Nullable final U u) throws E {
 		if (instance != null) {
 			instance.accept(t, u);
 		}
