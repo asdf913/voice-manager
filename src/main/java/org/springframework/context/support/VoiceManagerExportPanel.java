@@ -3763,6 +3763,7 @@ public class VoiceManagerExportPanel extends JPanel
 			}
 		}
 
+		@Nullable
 		private static OdfPresentationDocument generateOdfPresentationDocument(final ObjectMap objectMap,
 				final Map<String, Voice> voices) throws Exception {
 			//
