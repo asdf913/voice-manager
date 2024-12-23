@@ -1866,7 +1866,8 @@ public class VoiceManagerExportPanel extends JPanel
 			//
 	}
 
-	private static <T> boolean and(final Predicate<T> predicate, final T a, final T b, @Nullable final T... values) {
+	private static <T> boolean and(final Predicate<T> predicate, @Nullable final T a, final T b,
+			@Nullable final T... values) {
 		//
 		boolean result = Util.test(predicate, a) && Util.test(predicate, b);
 		//
@@ -2138,7 +2139,7 @@ public class VoiceManagerExportPanel extends JPanel
 	}
 
 	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, final T t,
-			final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
+			@Nullable final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
 		if (test(instance, t, u)) {
 			accept(consumer, t, u);
 		} // if
@@ -2286,7 +2287,7 @@ public class VoiceManagerExportPanel extends JPanel
 	}
 
 	@Nullable
-	private static Multimap<String, Voice> getVoiceMultimapByJlpt(final Iterable<Voice> voices) {
+	private static Multimap<String, Voice> getVoiceMultimapByJlpt(@Nullable final Iterable<Voice> voices) {
 		//
 		Multimap<String, Voice> multimap = null;
 		//
@@ -4018,7 +4019,7 @@ public class VoiceManagerExportPanel extends JPanel
 		@Nullable
 		private static OdfPresentationDocument generateOdfPresentationDocument(final String string,
 				final String outputFolder, final Collection<String> voiceLKeySet,
-				final boolean embedAudioInPresentation, final String folderInPresentation) throws Exception {
+				final boolean embedAudioInPresentation, @Nullable final String folderInPresentation) throws Exception {
 			//
 			final File file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
 			//
@@ -4084,7 +4085,7 @@ public class VoiceManagerExportPanel extends JPanel
 			//
 		}
 
-		private static void replaceText(final ObjectMap objectMap, final String messageDigestAlgorithm)
+		private static void replaceText(final ObjectMap objectMap, @Nullable final String messageDigestAlgorithm)
 				throws XPathExpressionException, NoSuchAlgorithmException {
 			//
 			final NodeList ps = Util.cast(NodeList.class,
@@ -4223,7 +4224,7 @@ public class VoiceManagerExportPanel extends JPanel
 		}
 
 		private static void setPluginHref(final ObjectMap objectMap, final String key,
-				final boolean embedAudioInPresentation, final String folder) throws XPathExpressionException {
+				final boolean embedAudioInPresentation, @Nullable final String folder) throws XPathExpressionException {
 			//
 			final NodeList plugins = Util.cast(NodeList.class,
 					evaluate(ObjectMap.getObject(objectMap, XPath.class),
