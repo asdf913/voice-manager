@@ -2046,7 +2046,7 @@ public class VoiceManagerExportPanel extends JPanel
 	}
 
 	@Nullable
-	private static Multimap<String, Voice> getVoiceMultimapByListName(final Iterable<Voice> voices) {
+	private static Multimap<String, Voice> getVoiceMultimapByListName(@Nullable final Iterable<Voice> voices) {
 		//
 		Multimap<String, Voice> multimap = null;
 		//
@@ -2077,7 +2077,7 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	private static String getLongestString(final String[] ss) {
+	private static String getLongestString(@Nullable final String[] ss) {
 		//
 		return Util.orElse(max(testAndApply(Objects::nonNull, ss, Arrays::stream, null),
 				(a, b) -> Integer.compare(StringUtils.length(a), StringUtils.length(b))), null);
@@ -2259,7 +2259,7 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	private static void createJlptSheet(final Workbook workbook, final Iterable<Voice> voices)
+	private static void createJlptSheet(final Workbook workbook, @Nullable final Iterable<Voice> voices)
 			throws IllegalAccessException {
 		//
 		final Multimap<String, Voice> multimap = getVoiceMultimapByJlpt(voices);
