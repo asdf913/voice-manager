@@ -4014,6 +4014,7 @@ public class VoiceManagerExportPanel extends JPanel
 				//
 		}
 
+		@Nullable
 		private static OdfPresentationDocument generateOdfPresentationDocument(final String string,
 				final String outputFolder, final Collection<String> voiceLKeySet,
 				final boolean embedAudioInPresentation, final String folderInPresentation) throws Exception {
@@ -4776,6 +4777,7 @@ public class VoiceManagerExportPanel extends JPanel
 
 	}
 
+	@Nullable
 	private static Workbook createMicrosoftSpeechObjectLibraryWorkbook(final SpeechApi speechApi,
 			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction, final String... attributes) {
 		//
