@@ -4018,7 +4018,7 @@ public class VoiceManagerExportPanel extends JPanel
 
 		@Nullable
 		private static OdfPresentationDocument generateOdfPresentationDocument(final String string,
-				final String outputFolder, final Collection<String> voiceLKeySet,
+				@Nullable final String outputFolder, final Collection<String> voiceLKeySet,
 				final boolean embedAudioInPresentation, @Nullable final String folderInPresentation) throws Exception {
 			//
 			final File file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
@@ -5235,7 +5235,7 @@ public class VoiceManagerExportPanel extends JPanel
 		}
 	}
 
-	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, final U u) {
+	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, @Nullable final U u) {
 		return instance != null && instance.test(t, u);
 	}
 
