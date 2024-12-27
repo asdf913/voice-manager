@@ -139,6 +139,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.IteratorUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -229,6 +230,7 @@ import org.zeroturnaround.zip.ZipEntrySource;
 import org.zeroturnaround.zip.ZipUtil;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
@@ -480,6 +482,8 @@ public class VoiceManagerExportPanel extends JPanel
 
 	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
+	private ObjectMapper objectMapper = null;
+
 	@Override
 	public String getTitle() {
 		return "Export";
@@ -488,6 +492,364 @@ public class VoiceManagerExportPanel extends JPanel
 	@Override
 	public void setEnvironment(final Environment environment) {
 		this.propertyResolver = environment;
+	}
+
+	public void setExportHtmlTemplateFile(final String exportHtmlTemplateFile) {
+		this.exportHtmlTemplateFile = exportHtmlTemplateFile;
+	}
+
+	public void setExportPresentationTemplate(final String exportPresentationTemplate) {
+		this.exportPresentationTemplate = exportPresentationTemplate;
+	}
+
+	public void setExportWebSpeechSynthesisHtmlTemplateFile(final String exportWebSpeechSynthesisHtmlTemplateFile) {
+		this.exportWebSpeechSynthesisHtmlTemplateFile = exportWebSpeechSynthesisHtmlTemplateFile;
+	}
+
+	public void setExportWebSpeechSynthesisHtmlTemplateProperties(@Nullable final Object arg)
+			throws JsonProcessingException {
+		//
+		if (arg == null || arg instanceof Map) {
+			//
+			final Map<?, ?> map = (Map<?, ?>) arg;
+			//
+			if (Util.iterator(Util.entrySet(map)) != null) {
+				//
+				for (final Entry<?, ?> entry : Util.entrySet(map)) {
+					//
+					if (entry == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					Util.put(
+							exportWebSpeechSynthesisHtmlTemplateProperties = ObjectUtils
+									.getIfNull(exportWebSpeechSynthesisHtmlTemplateProperties, LinkedHashMap::new),
+							Util.getKey(entry), Util.getValue(entry));
+					//
+				} // for
+					//
+			} // if
+				//
+			if (Boolean.logicalAnd(Boolean.logicalAnd(map != null, MapUtils.isEmpty(map)),
+					exportWebSpeechSynthesisHtmlTemplateProperties == null)) {
+				//
+				exportWebSpeechSynthesisHtmlTemplateProperties = new LinkedHashMap<>();
+				//
+			} // if
+				//
+		} else if (arg instanceof CharSequence) {
+			//
+			setExportWebSpeechSynthesisHtmlTemplateProperties(
+					ObjectMapperUtil.readValue(getObjectMapper(), Util.toString(arg), Object.class));
+			//
+		} else {
+			//
+			throw new IllegalArgumentException();
+			//
+		} // if
+			//
+	}
+
+	public void setFolderInPresentation(final String folderInPresentation) {
+		this.folderInPresentation = folderInPresentation;
+	}
+
+	public void setFreeMarkerConfiguration(final freemarker.template.Configuration freeMarkerConfiguration) {
+		this.freeMarkerConfiguration = freeMarkerConfiguration;
+	}
+
+	public void setFreeMarkerVersion(final Version freeMarkerVersion) {
+		this.freeMarkerVersion = freeMarkerVersion;
+	}
+
+	public void setLanguageCodeToTextObjIntFunction(
+			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) {
+		this.languageCodeToTextObjIntFunction = languageCodeToTextObjIntFunction;
+	}
+
+	public void setMessageDigestAlgorithm(final String messageDigestAlgorithm) {
+		this.messageDigestAlgorithm = messageDigestAlgorithm;
+	}
+
+	public void setMicrosoftAccessFileFormat(final FileFormat microsoftAccessFileFormat) {
+		this.microsoftAccessFileFormat = microsoftAccessFileFormat;
+	}
+
+	public void setMicrosoftSpeechObjectLibraryAttributeNames(final Object value) {
+		//
+		this.microsoftSpeechObjectLibraryAttributeNames = toArray(
+				Util.toList(Util.map(Util.stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))),
+				new String[] {});
+		//
+	}
+
+	public void setOutputFolder(final String outputFolder) {
+		this.outputFolder = outputFolder;
+	}
+
+	public void setOutputFolderFileNameExpressions(final Object value) throws JsonProcessingException {
+		//
+		if (value == null) {
+			//
+			this.outputFolderFileNameExpressions = null;
+			//
+			return;
+			//
+		} // if
+			//
+		final Map<?, ?> map = Util.cast(Map.class, value);
+		//
+		if (Util.entrySet(map) != null) {
+			//
+			for (final Entry<?, ?> entry : Util.entrySet(map)) {
+				//
+				if (entry == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				Util.put(
+						outputFolderFileNameExpressions = ObjectUtils.getIfNull(outputFolderFileNameExpressions,
+								LinkedHashMap::new),
+						Util.toString(Util.getKey(entry)), Util.toString(Util.getValue(entry)));
+				//
+			} // for
+				//
+			outputFolderFileNameExpressions = ObjectUtils.getIfNull(outputFolderFileNameExpressions,
+					Collections::emptyMap);
+			//
+			return;
+			//
+		} // if
+			//
+		final Object object = testAndApply(StringUtils::isNotEmpty, Util.toString(value),
+				x -> ObjectMapperUtil.readValue(getObjectMapper(), x, Object.class), null);
+		//
+		if (object instanceof Map || object == null) {
+			setOutputFolderFileNameExpressions(object);
+		} else {
+			throw new IllegalArgumentException(Util.toString(Util.getClass(object)));
+		} // if
+			//
+	}
+
+	public void setPresentationSlideDuration(final Object object) {
+		//
+		final IValue0<Duration> value = toDurationIvalue0(object);
+		//
+		if (value != null) {
+			//
+			this.presentationSlideDuration = IValue0Util.getValue0(value);
+			//
+		} else {
+			//
+			throw new IllegalArgumentException(Util.toString(Util.getClass(object)));
+			//
+		} // if
+			//
+	}
+
+	public void setSpeechApi(final SpeechApi speechApi) {
+		this.speechApi = speechApi;
+	}
+
+	public void setSqlSessionFactory(final SqlSessionFactory sqlSessionFactory) {
+		this.sqlSessionFactory = sqlSessionFactory;
+	}
+
+	public void setVoiceFolder(final String voiceFolder) {
+		this.voiceFolder = voiceFolder;
+	}
+	
+	public void setWorkbookClass(final Object object) {
+		//
+		if (object instanceof Class<?>) {
+			//
+			workbookClass = (Class<?>) object;
+			//
+			return;
+			//
+		} // if
+			//
+		final String toString = Util.toString(object);
+		//
+		if ((workbookClass = Util.forName(toString)) != null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map = IValue0Util
+				.getValue0(getWorkbookClassFailableSupplierMap());
+		//
+		final List<Class<? extends Workbook>> classes = Util.toList(Util.filter(Util.stream(Util.keySet(map)),
+				x -> Boolean.logicalOr(Objects.equals(Util.getName(x), toString),
+						StringUtils.endsWithIgnoreCase(Util.getName(x), toString))));
+		//
+		final int size = IterableUtils.size(classes);
+		//
+		if (size == 1) {
+			//
+			workbookClass = get(classes, 0);
+			//
+			return;
+			//
+		} else if (size > 1) {
+			//
+			final IValue0<Class<? extends Workbook>> iValue0 = getWorkbookClass(map, "xlsx");
+			//
+			if (iValue0 != null) {
+				//
+				workbookClass = IValue0Util.getValue0(iValue0);
+				//
+				return;
+				//
+			} // if
+				//
+			throw new IllegalArgumentException();
+			//
+		} // if
+			//
+		final IValue0<Class<? extends Workbook>> iValue0 = getWorkbookClass(map, toString);
+		//
+		if (iValue0 != null) {
+			//
+			workbookClass = IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
+	}
+	
+	private static IValue0<Class<? extends Workbook>> getWorkbookClass(
+			 final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map,
+			final String string) {
+		//
+		final Set<Entry<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> entrySet = Util
+				.entrySet(map);
+		//
+		if (Util.iterator(entrySet) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		List<Class<? extends Workbook>> classes = null;
+		//
+		String message = null;
+		//
+		for (final Entry<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> en : entrySet) {
+			//
+			if (en == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			try (final Workbook wb = get(Util.getValue(en));
+					final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+				//
+				WorkbookUtil.write(wb, baos);
+				//
+				if (Boolean
+						.logicalOr(
+								Boolean.logicalAnd(StringUtils.equalsIgnoreCase("xls", string),
+										Objects.equals(OLE_2_COMPOUND_DOCUMENT,
+												message = getMessage(
+														new ContentInfoUtil().findMatch(baos.toByteArray())))),
+								Boolean.logicalAnd(StringUtils.equalsIgnoreCase("xlsx", string),
+										Objects.equals("Microsoft Office Open XML", message)))) {
+					//
+					testAndAccept((a, b) -> !Util.contains(a, b), classes = getIfNull(classes, ArrayList::new),
+							Util.getKey(en), Util::add);
+					//
+				} // if
+					//
+			} catch (final IOException e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} //
+		} // for
+			//
+		final int size = IterableUtils.size(classes);
+		//
+		if (size == 1) {
+			//
+			return Unit.with(get(classes, 0));
+			//
+		} else if (size > 1) {
+			//
+			throw new IllegalArgumentException();
+			//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static List<Object> getObjectList(final ObjectMapper objectMapper, final Object value) {
+		//
+		if (value == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Iterable<?> iterable = Util.cast(Iterable.class, value);
+		//
+		if (iterable != null) {
+			//
+			if (Util.iterator(iterable) == null) {
+				//
+				return null;
+				//
+			} //
+				//
+			List<Object> list = null;
+			//
+			for (final Object v : iterable) {
+				//
+				Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), v);
+				//
+			} // for
+				//
+			return ObjectUtils.getIfNull(list, ArrayList::new);
+			//
+		} // if
+			//
+		try {
+			//
+			final Object object = ObjectMapperUtil.readValue(objectMapper, Util.toString(value), Object.class);
+			//
+			if (object instanceof Iterable || object == null) {
+				//
+				return getObjectList(objectMapper, object);
+				//
+			} else if (object instanceof String || object instanceof Boolean || object instanceof Number) {
+				//
+				return getObjectList(objectMapper, Collections.singleton(object));
+				//
+			} else {
+				//
+				throw new IllegalArgumentException(Util.toString(Util.getClass(object)));
+				//
+			} // if
+		} catch (final JsonProcessingException e) {
+			//
+			return getObjectList(objectMapper, Collections.singleton(value));
+			//
+		} // try
+			//
+	}
+
+	private ObjectMapper getObjectMapper() {
+		if (objectMapper == null) {
+			objectMapper = new ObjectMapper();
+		}
+		return objectMapper;
 	}
 
 	@Nullable
@@ -993,6 +1355,22 @@ public class VoiceManagerExportPanel extends JPanel
 		addActionListener(this, btnExport);
 		//
 		setEditable(false, tfPhraseCounter, tfPhraseTotal);
+		//
+		// TODO
+		//
+		new FailableStream<>(Arrays.stream(getClass().getDeclaredFields())).forEach(f -> {
+			if (f == null) {
+				return;
+			}
+			final boolean isStatic = isStatic(f);
+			if (isStatic && Narcissus.getStaticField(f) == null) {
+				System.out.println(f);
+			} else if (!isStatic && Narcissus.getField(this, f) == null) {
+				System.out.println(f);
+			}
+		});
+		//
+		System.out.println();
 		//
 	}
 

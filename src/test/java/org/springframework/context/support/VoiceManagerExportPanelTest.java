@@ -139,8 +139,10 @@ class VoiceManagerExportPanelTest {
 					//
 			} else {
 				//
-				if (Boolean.logicalAnd(Objects.equals("getTitle", name), parameterCount == 0) || Boolean
-						.logicalAnd(Objects.equals("getWorkbookClassFailableSupplierMap", name), parameterCount == 0)) {
+				if (Boolean.logicalAnd(Objects.equals("getTitle", name), parameterCount == 0)
+						|| Boolean.logicalAnd(Objects.equals("getWorkbookClassFailableSupplierMap", name),
+								parameterCount == 0)
+						|| Boolean.logicalAnd(Objects.equals("getObjectMapper", name), parameterCount == 0)) {
 					//
 					Assertions.assertNotNull(Narcissus.invokeMethod(instance, m, os), toString);
 					//
