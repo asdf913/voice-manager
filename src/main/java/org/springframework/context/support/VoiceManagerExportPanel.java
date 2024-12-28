@@ -439,7 +439,7 @@ public class VoiceManagerExportPanel extends JPanel
 	@Note("Export Microsoft Access")
 	private AbstractButton cbExportMicrosoftAccess = null;
 
-	private AbstractButton btnExport, btnExportBrowse = null;
+	private AbstractButton btnExport = null;
 
 	private JProgressBar progressBarExport = null;
 
@@ -1428,11 +1428,7 @@ public class VoiceManagerExportPanel extends JPanel
 				FailableStreamUtil.stream(FailableStreamUtil.map(fs, f -> FieldUtils.readField(f, this, true))),
 				Objects::nonNull)), source), () -> actionPerformedForSystemClipboardAnnotated(nonTest, source));
 		//
-		if (Objects.equals(source, btnExportBrowse)) {
-			//
-			actionPerformedForExportBrowse(headless);
-			//
-		} else if (Objects.equals(source, btnExport)) {
+		if (Objects.equals(source, btnExport)) {
 			//
 			actionPerformedForExport(headless);
 			//
@@ -5003,22 +4999,6 @@ public class VoiceManagerExportPanel extends JPanel
 	@Nullable
 	private static Object getSelectedItem(@Nullable final ComboBoxModel<?> instance) {
 		return instance != null ? instance.getSelectedItem() : null;
-	}
-
-	private void actionPerformedForExportBrowse(final boolean headless) {
-		//
-		try {
-			//
-			final File file = testAndApply(Objects::nonNull, Util.getText(tfExportFile), File::new, null);
-			//
-			testAndAccept(Objects::nonNull, toURI(file), x -> browse(Desktop.getDesktop(), x));
-			//
-		} catch (final IOException e) {
-			//
-			errorOrAssertOrShowException(headless, e);
-			//
-		} // try
-			//
 	}
 
 	@Nullable
