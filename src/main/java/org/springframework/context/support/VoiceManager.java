@@ -3711,26 +3711,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private void actionPerformedForExport(final boolean headless) {
-		//
-		try {
-			//
-			actionPerformedForExport(Util.get(IValue0Util.getValue0(getWorkbookClassFailableSupplierMap()),
-					getSelectedItem(cbmWorkbookClass)));
-			//
-		} catch (final IOException | IllegalAccessException | TemplateException | InvalidFormatException
-				| GeneralSecurityException | SQLException e) {
-			//
-			errorOrAssertOrShowException(headless, e);
-			//
-		} catch (final Exception e) {
-			//
-			errorOrAssertOrShowException(headless, ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(e), e));
-			//
-		} // try
-			//
-	}
-
 	private void actionPerformedForExport(@Nullable final FailableSupplier<Workbook, RuntimeException> workbookSupplier)
 			throws IOException, IllegalAccessException, InvalidFormatException, GeneralSecurityException,
 			TemplateException, SQLException {
