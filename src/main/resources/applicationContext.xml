@@ -1016,8 +1016,6 @@
 			value="${org.springframework.context.support.VoiceManager.exportPresentationTemplate}" />
 		<property name="folderInPresentation"
 			value="${org.springframework.context.support.VoiceManager.folderInPresentation}" />
-		<property name="microsoftAccessFileFormat"
-			value="${org.springframework.context.support.VoiceManager.microsoftAccessFileFormat}" />
 		<property name="workbookClass"
 			value="${org.springframework.context.support.VoiceManager.workbookClass}" />
 		<property name="jSoupParseTimeout"

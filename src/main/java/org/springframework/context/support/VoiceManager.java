@@ -727,8 +727,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private String[] voiceIds = null;
 
-	private FileFormat microsoftAccessFileFormat = null;
-
 	private transient IValue0<Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> workbookClassFailableSupplierMap = null;
 
 	@Nullable
@@ -1474,35 +1472,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setFolderInPresentation(final String folderInPresentation) {
 		this.folderInPresentation = folderInPresentation;
-	}
-
-	public void setMicrosoftAccessFileFormat(final Object object) {
-		//
-		if (object instanceof FileFormat fileFormat) {
-			//
-			this.microsoftAccessFileFormat = fileFormat;
-			//
-			return;
-			//
-		} // if
-			//
-		final List<FileFormat> fileFormats = Util
-				.toList(Util.filter(testAndApply(Objects::nonNull, FileFormat.values(), Arrays::stream, null),
-						x -> StringUtils.startsWithIgnoreCase(name(x), Util.toString(object))
-								|| StringUtils.startsWithIgnoreCase(getFileExtension(x), Util.toString(object))));
-		//
-		final int size = IterableUtils.size(fileFormats);
-		//
-		if (size == 1) {
-			//
-			this.microsoftAccessFileFormat = IterableUtils.get(fileFormats, 0);
-			//
-		} else if (size > 1) {
-			//
-			throw new IllegalArgumentException();
-			//
-		} // if
-			//
 	}
 
 	private IValue0<Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> getWorkbookClassFailableSupplierMap() {
