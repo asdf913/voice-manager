@@ -5012,12 +5012,6 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	private static void browse(@Nullable final Desktop instance, final URI uri) throws IOException {
-		if (instance != null) {
-			instance.browse(uri);
-		}
-	}
-
 	@Nullable
 	private static URI toURI(@Nullable final File instance) {
 		return instance != null ? instance.toURI() : null;
