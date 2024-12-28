@@ -2799,33 +2799,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getRenderer() : null;
 	}
 
-	private static <E> void setRenderer(@Nullable final JComboBox<E> instance,
-			final ListCellRenderer<? super E> aRenderer) {
-		//
-		if (instance == null) {
-			//
-			return;
-			//
-		} // if
-			//
-		try {
-			//
-			if (Narcissus.invokeMethod(instance, Component.class.getDeclaredMethod("getObjectLock")) == null) {
-				//
-				return;
-				//
-			} // if
-				//
-		} catch (final NoSuchMethodException e) {
-			//
-			LoggerUtil.error(LOG, e.getMessage(), e);
-			//
-		} // try
-			//
-		instance.setRenderer(aRenderer);
-		//
-	}
-
 	private static void add(@Nullable final Container instance, @Nullable final Component comp) {
 		//
 		if (instance == null) {
@@ -2942,56 +2915,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		return panel;
 		//
-	}
-
-	private static class MicrosoftAccessFileFormatListCellRenderer implements ListCellRenderer<Object> {
-
-		private String commonPrefix = null;
-
-		private ListCellRenderer<Object> listCellRenderer = null;
-
-		@Override
-		@Nullable
-		public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
-				final boolean isSelected, final boolean cellHasFocus) {
-			//
-			final FileFormat fileFormat = Util.cast(FileFormat.class, value);
-			//
-			if (fileFormat != null) {
-				//
-				final String toString = Util.toString(value);
-				//
-				int idx = StringUtils.indexOf(toString, ' ');
-				//
-				StringBuilder sb = null;
-				//
-				if (idx >= 0) {
-					//
-					(sb = new StringBuilder(StringUtils.defaultString(toString))).insert(idx,
-							String.format(" (%1$s)", fileFormat.getFileExtension()));
-					//
-				} // if
-					//
-				if ((idx = StringUtils.indexOf(sb, commonPrefix)) >= 0
-						&& (sb = getIfNull(sb, () -> new StringBuilder(StringUtils.defaultString(toString)))) != null) {
-					//
-					sb.delete(idx, idx + StringUtils.length(commonPrefix));
-					//
-				} // if
-					//
-				if (sb != null) {
-					//
-					return VoiceManager.getListCellRendererComponent(this, list, sb, index, isSelected, cellHasFocus);
-					//
-				} // if
-					//
-			} // if
-				//
-			return VoiceManager.getListCellRendererComponent(listCellRenderer, list, value, index, isSelected,
-					cellHasFocus);
-			//
-		}
-
 	}
 
 	@Nullable

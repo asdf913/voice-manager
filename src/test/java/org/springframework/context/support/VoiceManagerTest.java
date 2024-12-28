@@ -306,9 +306,9 @@ class VoiceManagerTest {
 			METHOD_GET_WRITER, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_PAGE_TITLE, METHOD_TO_MILLIS,
 			METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL, METHOD_ADD_ALL, METHOD_REMOVE_ELEMENT_AT,
 			METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_SET_AUTO_FILTER, METHOD_DOUBLE_VALUE, METHOD_GET_ELEMENT_AT,
-			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SET_RENDERER, METHOD_SORTED,
-			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM,
-			METHOD_SUBMIT, METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
+			METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SORTED, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL,
+			METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM, METHOD_SUBMIT, METHOD_SET_SELECTED_INDEX,
+			METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -723,9 +723,6 @@ class VoiceManagerTest {
 		(METHOD_GET_NUMBER = clz.getDeclaredMethod("getNumber", Object.class, Iterable.class)).setAccessible(true);
 		//
 		(METHOD_GET_RENDERER = clz.getDeclaredMethod("getRenderer", JComboBox.class)).setAccessible(true);
-		//
-		(METHOD_SET_RENDERER = clz.getDeclaredMethod("setRenderer", JComboBox.class, ListCellRenderer.class))
-				.setAccessible(true);
 		//
 		(METHOD_SORTED = clz.getDeclaredMethod("sorted", Stream.class, Comparator.class)).setAccessible(true);
 		//
@@ -6292,23 +6289,6 @@ class VoiceManagerTest {
 				return (ListCellRenderer) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetRenderer() {
-		//
-		Assertions.assertDoesNotThrow(
-				() -> setRenderer(Util.cast(JComboBox.class, Narcissus.allocateInstance(JComboBox.class)), null));
-		//
-	}
-
-	private static <E> void setRenderer(final JComboBox<E> instance, final ListCellRenderer<? super E> aRenderer)
-			throws Throwable {
-		try {
-			METHOD_SET_RENDERER.invoke(null, instance, aRenderer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
