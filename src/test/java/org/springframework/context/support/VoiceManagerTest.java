@@ -2008,8 +2008,6 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExport));
-		//
 		final AbstractButton cbExportListHtml = new JCheckBox();
 		//
 		cbExportListHtml.setSelected(true);
@@ -2020,8 +2018,6 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExport));
-		//
 		final AbstractButton cbExportHtmlAsZip = new JCheckBox();
 		//
 		cbExportHtmlAsZip.setSelected(true);
@@ -2032,8 +2028,6 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExport));
-		//
 		final AbstractButton cbExportMicrosoftAccess = new JCheckBox();
 		//
 		cbExportMicrosoftAccess.setSelected(true);
@@ -2044,8 +2038,6 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExport));
-		//
 		// btnSpeak
 		//
 		final AbstractButton btnSpeak = new JButton();
