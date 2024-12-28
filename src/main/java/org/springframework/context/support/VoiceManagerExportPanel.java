@@ -4958,16 +4958,6 @@ public class VoiceManagerExportPanel extends JPanel
 		return instance != null ? instance.toURI() : null;
 	}
 
-	private void actionPerformedForSystemClipboardAnnotated(final boolean nonTest, final Object source) {
-	}
-
-	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
-			final ClipboardOwner owner) {
-		if (instance != null) {
-			instance.setContents(contents, owner);
-		}
-	}
-
 	@Nullable
 	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		return instance != null ? instance.getSystemClipboard() : null;
@@ -5385,21 +5375,12 @@ public class VoiceManagerExportPanel extends JPanel
 			//
 	}
 
-	private static boolean isAnnotationPresent(@Nullable final AnnotatedElement instance,
-			@Nullable final Class<? extends Annotation> annotationClass) {
-		return instance != null && annotationClass != null && instance.isAnnotationPresent(annotationClass);
-	}
-
 	private static <T> boolean anyMatch(@Nullable final Stream<T> instance,
 			@Nullable final Predicate<? super T> predicate) {
 		//
 		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
 				&& instance.anyMatch(predicate);
 		//
-	}
-
-	private static boolean isTestMode() {
-		return Util.forName("org.junit.jupiter.api.Test") != null;
 	}
 
 	private static void clear(@Nullable final DefaultTableModel instance) {
