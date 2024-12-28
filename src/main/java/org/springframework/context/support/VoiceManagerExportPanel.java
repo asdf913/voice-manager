@@ -663,7 +663,7 @@ public class VoiceManagerExportPanel extends JPanel
 	public void setVoiceFolder(final String voiceFolder) {
 		this.voiceFolder = voiceFolder;
 	}
-	
+
 	public void setWorkbookClass(final Object object) {
 		//
 		if (object instanceof Class<?>) {
@@ -722,9 +722,9 @@ public class VoiceManagerExportPanel extends JPanel
 		} // if
 			//
 	}
-	
+
 	private static IValue0<Class<? extends Workbook>> getWorkbookClass(
-			 final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map,
+			final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map,
 			final String string) {
 		//
 		final Set<Entry<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> entrySet = Util
