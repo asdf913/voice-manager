@@ -470,6 +470,7 @@ public class VoiceManagerExportPanel extends JPanel
 	private String exportPresentationTemplate, folderInPresentation, messageDigestAlgorithm, voiceFolder,
 			exportHtmlTemplateFile, exportWebSpeechSynthesisHtmlTemplateFile, outputFolder = null;
 
+	@Nullable
 	private Map<String, String> outputFolderFileNameExpressions = null;
 
 	private transient Map<Object, Object> exportWebSpeechSynthesisHtmlTemplateProperties = null;
