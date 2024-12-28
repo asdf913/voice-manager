@@ -1127,8 +1127,6 @@
 		</property>
 		<property name="freeMarkerVersion"
 			value="${org.springframework.context.support.VoiceManager.freeMarkerVersion}" />
-		<property name="languageCodeToTextObjIntFunction"
-			ref="LanguageCodeToTextObjIntFunction" />
 		<property name="messageDigestAlgorithm"
 			ref="messageDigestAlgorithm" />
 		<property name="microsoftAccessFileFormat"
@@ -1141,7 +1139,6 @@
 			value="${org.springframework.context.support.VoiceManager.outputFolderFileNameExpressions}" />
 		<property name="presentationSlideDuration"
 			value="${org.springframework.context.support.VoiceManager.presentationSlideDuration}" />
-		<property name="speechApi" ref="speechApi" />
 		<property name="sqlSessionFactory" ref="SqlSessionFactory" />
 		<property name="voiceFolder"
 			value="${org.springframework.context.support.VoiceManager.voiceFolder}" />

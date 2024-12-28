@@ -442,9 +442,6 @@ public class VoiceManagerExportPanel extends JPanel
 
 	private JProgressBar progressBarExport = null;
 
-	private transient SpeechApi speechApi = null;
-
-	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 	@Nullable
 	private String[] microsoftSpeechObjectLibraryAttributeNames = null;
 
@@ -546,11 +543,6 @@ public class VoiceManagerExportPanel extends JPanel
 		this.freeMarkerVersion = freeMarkerVersion;
 	}
 
-	public void setLanguageCodeToTextObjIntFunction(
-			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) {
-		this.languageCodeToTextObjIntFunction = languageCodeToTextObjIntFunction;
-	}
-
 	public void setMessageDigestAlgorithm(final String messageDigestAlgorithm) {
 		this.messageDigestAlgorithm = messageDigestAlgorithm;
 	}
@@ -632,10 +624,6 @@ public class VoiceManagerExportPanel extends JPanel
 			//
 		} // if
 			//
-	}
-
-	public void setSpeechApi(final SpeechApi speechApi) {
-		this.speechApi = speechApi;
 	}
 
 	public void setSqlSessionFactory(final SqlSessionFactory sqlSessionFactory) {
