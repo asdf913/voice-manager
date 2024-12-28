@@ -410,8 +410,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String HIDE_AUDIO_IMAGE_IN_PRESENTATION = "hideAudioImageInPresentation";
 
-	private static final String PASSWORD = "Password";
-
 	private static final String OLE_2_COMPOUND_DOCUMENT = "OLE 2 Compound Document";
 
 	private static final String VOICE = "voice";
