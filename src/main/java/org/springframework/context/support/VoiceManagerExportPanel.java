@@ -207,8 +207,10 @@ import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
@@ -230,8 +232,8 @@ import org.zeroturnaround.zip.ZipEntrySource;
 import org.zeroturnaround.zip.ZipUtil;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.github.curiousoddman.rgxgen.RgxGen;
@@ -280,7 +282,7 @@ import net.lingala.zip4j.model.enums.EncryptionMethod;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerExportPanel extends JPanel
-		implements Titled, InitializingBean, EnvironmentAware, ActionListener {
+		implements Titled, InitializingBean, EnvironmentAware, ActionListener, BeanFactoryPostProcessor {
 
 	private static final long serialVersionUID = -2806818680922579630L;
 
@@ -5869,6 +5871,14 @@ public class VoiceManagerExportPanel extends JPanel
 			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+	@Override
+	public void postProcessBeanFactory(final ConfigurableListableBeanFactory configurableListableBeanFactory)
+			throws BeansException {
+		//
+		this.configurableListableBeanFactory = configurableListableBeanFactory;
+		//
 	}
 
 }
