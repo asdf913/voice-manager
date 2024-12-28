@@ -1104,6 +1104,52 @@
 			value="${org.springframework.context.support.VoiceManager.mp3Tags}" />
 		<property name="speechApi" ref="speechApi" />
 	</bean>
+	
+	<!---->
+	<bean
+		class="org.springframework.context.support.VoiceManagerExportPanel">
+		<property name="exportHtmlTemplateFile"
+			value="${org.springframework.context.support.VoiceManager.exportHtmlTemplateFile}" />
+		<property name="exportPresentationTemplate"
+			value="${org.springframework.context.support.VoiceManager.exportPresentationTemplate}" />
+		<property name="exportWebSpeechSynthesisHtmlTemplateFile"
+			value="${org.springframework.context.support.VoiceManager.exportWebSpeechSynthesisHtmlTemplateFile}" />
+		<property
+			name="exportWebSpeechSynthesisHtmlTemplateProperties"
+			value="${org.springframework.context.support.VoiceManager.exportWebSpeechSynthesisHtmlTemplateProperties}" />
+		<property name="folderInPresentation"
+			value="${org.springframework.context.support.VoiceManager.folderInPresentation}" />	
+		<property name="freeMarkerConfiguration">
+			<bean class="freemarker.template.Configuration">
+				<constructor-arg index="0"
+					value="#{T(freemarker.template.Configuration).getVersion()}" />
+				<property name="templateLoader"
+					value="#{new freemarker.cache.ClassTemplateLoader(T(org.springframework.context.support.VoiceManager),'/')}" />
+			</bean>
+		</property>
+		<property name="freeMarkerVersion"
+			value="${org.springframework.context.support.VoiceManager.freeMarkerVersion}" />
+		<property name="languageCodeToTextObjIntFunction"
+			ref="LanguageCodeToTextObjIntFunction" />
+		<property name="messageDigestAlgorithm"
+			ref="messageDigestAlgorithm" />
+		<property name="microsoftAccessFileFormat"
+			value="${org.springframework.context.support.VoiceManager.microsoftAccessFileFormat}" />
+		<property name="microsoftSpeechObjectLibraryAttributeNames"
+			value="${org.springframework.context.support.VoiceManager.microsoftSpeechObjectLibraryAttributeNames}" />
+		<property name="outputFolder"
+			value="${org.springframework.context.support.VoiceManager.outputFolder}" />
+		<property name="outputFolderFileNameExpressions"
+			value="${org.springframework.context.support.VoiceManager.outputFolderFileNameExpressions}" />
+		<property name="presentationSlideDuration"
+			value="${org.springframework.context.support.VoiceManager.presentationSlideDuration}" />
+		<property name="speechApi" ref="speechApi" />
+		<property name="sqlSessionFactory" ref="SqlSessionFactory" />
+		<property name="voiceFolder"
+			value="${org.springframework.context.support.VoiceManager.voiceFolder}" />
+		<property name="workbookClass"
+			value="${org.springframework.context.support.VoiceManager.workbookClass}" />
+	</bean>
 
 	<!-- -->
 	<bean class="org.springframework.context.support.IpaSymbolGui">

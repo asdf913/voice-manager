@@ -1989,8 +1989,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				ListableBeanFactoryUtil.getBeansOfType(applicationContext, Component.class), tabOrders))),
 				x -> jTabbedPane.addTab(Util.getKey(x), Util.getValue(x)));
 		//
-		jTabbedPane.addTab("Export", createExportPanel(cloneLayoutManager()));
-		//
 		jTabbedPane.addTab("Misc", createMiscellaneousPanel(cloneLayoutManager(), voiceIds));
 		//
 		// maximum preferred height of all tab page(s)
@@ -2996,7 +2994,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
-	@SuppressWarnings("java:S1612")
 	private JPanel createExportPanel(final LayoutManager layoutManager) {
 		//
 		final JPanel panel = new JPanel();
