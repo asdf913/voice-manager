@@ -1327,22 +1327,6 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 		setEditable(false, tfPhraseCounter, tfPhraseTotal);
 		//
-		// TODO
-		//
-		new FailableStream<>(Arrays.stream(getClass().getDeclaredFields())).forEach(f -> {
-			if (f == null) {
-				return;
-			}
-			final boolean isStatic = isStatic(f);
-			if (isStatic && Narcissus.getStaticField(f) == null) {
-				System.out.println(f);
-			} else if (!isStatic && Narcissus.getField(this, f) == null) {
-				System.out.println(f);
-			}
-		});
-		//
-		System.out.println();
-		//
 	}
 
 	@Override
