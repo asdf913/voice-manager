@@ -360,6 +360,7 @@ public class VoiceManagerExportPanel extends JPanel
 
 	private transient IValue0<Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> workbookClassFailableSupplierMap = null;
 
+	@Nullable
 	private Class<?> workbookClass = null;
 
 	private transient PropertyResolver propertyResolver = null;
@@ -464,7 +465,7 @@ public class VoiceManagerExportPanel extends JPanel
 	private transient SpeechApi speechApi = null;
 
 	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
-
+	@Nullable
 	private String[] microsoftSpeechObjectLibraryAttributeNames = null;
 
 	private transient SqlSessionFactory sqlSessionFactory = null;
@@ -589,7 +590,7 @@ public class VoiceManagerExportPanel extends JPanel
 		this.outputFolder = outputFolder;
 	}
 
-	public void setOutputFolderFileNameExpressions(final Object value) throws JsonProcessingException {
+	public void setOutputFolderFileNameExpressions(@Nullable final Object value) throws JsonProcessingException {
 		//
 		if (value == null) {
 			//
@@ -723,6 +724,7 @@ public class VoiceManagerExportPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static IValue0<Class<? extends Workbook>> getWorkbookClass(
 			final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map,
 			final String string) {
@@ -790,7 +792,8 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 	}
 
-	private static List<Object> getObjectList(final ObjectMapper objectMapper, final Object value) {
+	@Nullable
+	private static List<Object> getObjectList(final ObjectMapper objectMapper, @Nullable final Object value) {
 		//
 		if (value == null) {
 			//
