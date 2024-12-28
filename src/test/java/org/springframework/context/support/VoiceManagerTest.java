@@ -1992,28 +1992,12 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(EMPTY, 0, null)));
 		//
-		// btnExport
-		//
-		final AbstractButton btnExport = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnExport", btnExport, true);
-			//
-		} // if
-			//
-		final ActionEvent actionEventBtnExport = new ActionEvent(btnExport, 0, null);
-		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExport));
-		//
 		if (instance != null) {
 			//
 			instance.setSqlSessionFactory(sqlSessionFactory);
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnExport));
-		//
 		final AbstractButton cbExportHtml = new JCheckBox();
 		//
 		cbExportHtml.setSelected(true);

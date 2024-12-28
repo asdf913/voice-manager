@@ -562,9 +562,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Ordinal Position As File Name Prefix")
 	private AbstractButton cbOrdinalPositionAsFileNamePrefix = null;
 
-	@Note("Export")
-	private AbstractButton btnExport = null;
-
 	@Note("Export HTML")
 	private AbstractButton cbExportHtml = null;
 
@@ -3555,10 +3552,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		if (Objects.equals(source, btnExportBrowse)) {
 			//
 			actionPerformedForExportBrowse(headless);
-			//
-		} else if (Objects.equals(source, btnExport)) {
-			//
-			actionPerformedForExport(headless);
 			//
 		} // if
 			//
