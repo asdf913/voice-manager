@@ -536,8 +536,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Url("https://ja.wikipedia.org/wiki/%E5%B8%B8%E7%94%A8%E6%BC%A2%E5%AD%97%E4%B8%80%E8%A6%A7")
 	private transient ComboBoxModel<Boolean> cbmJouYouKanJi = null;
 
-	private transient ComboBoxModel<Class> cbmWorkbookClass = null;
-
 	private transient ComboBoxModel<EncryptionMode> cbmEncryptionMode = null;
 
 	private transient ComboBoxModel<CompressionLevel> cbmCompressionLevel = null;
