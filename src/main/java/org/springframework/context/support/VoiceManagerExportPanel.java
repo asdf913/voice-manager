@@ -449,7 +449,7 @@ public class VoiceManagerExportPanel extends JPanel
 	@ExportButton
 	private AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = null;
 
-	private JTextComponent tfExportFile, tfDllPath = null;
+	private JTextComponent tfExportFile = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -458,9 +458,6 @@ public class VoiceManagerExportPanel extends JPanel
 
 	@SystemClipboard
 	private AbstractButton btnExportCopy = null;
-
-	@SystemClipboard
-	private AbstractButton btnDllPathCopy = null;
 
 	private transient SpeechApi speechApi = null;
 
@@ -5052,10 +5049,6 @@ public class VoiceManagerExportPanel extends JPanel
 		if (Objects.equals(source, btnExportCopy)) {
 			//
 			stringValue = Unit.with(Util.getText(tfExportFile));
-			//
-		} else if (Objects.equals(source, btnDllPathCopy)) {
-			//
-			stringValue = Unit.with(Util.getText(tfDllPath));
 			//
 		} // if
 			//
