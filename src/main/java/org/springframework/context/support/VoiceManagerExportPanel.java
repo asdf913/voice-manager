@@ -442,16 +442,6 @@ public class VoiceManagerExportPanel extends JPanel
 
 	private JProgressBar progressBarExport = null;
 
-	private JTextComponent tfExportFile = null;
-
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.FIELD)
-	private @interface SystemClipboard {
-	}
-
-	@SystemClipboard
-	private AbstractButton btnExportCopy = null;
-
 	private transient SpeechApi speechApi = null;
 
 	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
@@ -1392,27 +1382,9 @@ public class VoiceManagerExportPanel extends JPanel
 				//
 		} // if
 			//
-		final Object source = Util.getSource(evt);
-		//
-		final boolean headless = GraphicsEnvironment.isHeadless();
-		//
-		final boolean nonTest = !isTestMode();
-		//
-		// if the "source" is one of the value of the field annotated with
-		// "@SystemClipboard", pass the "source" to
-		// "actionPerformedForSystemClipboardAnnotated(java.lang.Object)" method
-		//
-		final FailableStream<Field> fs = new FailableStream<>(Util.filter(
-				testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManager.class), Arrays::stream, null),
-				f -> isAnnotationPresent(f, SystemClipboard.class)));
-		//
-		testAndRun(Util.contains(Util.toList(Util.filter(
-				FailableStreamUtil.stream(FailableStreamUtil.map(fs, f -> FieldUtils.readField(f, this, true))),
-				Objects::nonNull)), source), () -> actionPerformedForSystemClipboardAnnotated(nonTest, source));
-		//
-		if (Objects.equals(source, btnExport)) {
+		if (Objects.equals(Util.getSource(evt), btnExport)) {
 			//
-			actionPerformedForExport(headless);
+			actionPerformedForExport(GraphicsEnvironment.isHeadless());
 			//
 		} // if
 			//
@@ -5000,33 +4972,6 @@ public class VoiceManagerExportPanel extends JPanel
 	}
 
 	private void actionPerformedForSystemClipboardAnnotated(final boolean nonTest, final Object source) {
-		//
-		final Clipboard clipboard = getSystemClipboard(getToolkit());
-		//
-		IValue0<String> stringValue = null;
-		//
-		if (Objects.equals(source, btnExportCopy)) {
-			//
-			stringValue = Unit.with(Util.getText(tfExportFile));
-			//
-		} // if
-			//
-		if (stringValue != null) {
-			//
-			// if this method is not run under unit test, call
-			// "java.awt.datatransfer.Clipboard.setContents(java.awt.datatransfer.Transferable,java.awt.datatransfer.ClipboardOwner)"
-			// method
-			//
-			final String string = IValue0Util.getValue0(stringValue);
-			//
-			testAndRun(nonTest, () -> setContents(clipboard, new StringSelection(string), null));
-			//
-			return;
-			//
-		} // if
-			//
-		throw new IllegalStateException();
-		//
 	}
 
 	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
