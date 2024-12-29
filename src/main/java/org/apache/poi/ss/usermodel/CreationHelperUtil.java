@@ -10,4 +10,8 @@ public interface CreationHelperUtil {
 		return instance != null ? instance.createClientAnchor() : null;
 	}
 
+	static RichTextString createRichTextString(final CreationHelper instance, final String text) {
+		return instance != null ? instance.createRichTextString(text) : null;
+	}
+
 }

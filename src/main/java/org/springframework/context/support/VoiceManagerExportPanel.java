@@ -5271,7 +5271,7 @@ public class VoiceManagerExportPanel extends JPanel
 					//
 					setString(
 							comment = createCellComment(drawing, CreationHelperUtil.createClientAnchor(creationHelper)),
-							createRichTextString(creationHelper,
+							CreationHelperUtil.createRichTextString(creationHelper,
 									ObjIntFunctionUtil.apply(languageCodeToTextObjIntFunction, value, 16)));
 					//
 					setCellComment(cell, comment);
@@ -5281,7 +5281,7 @@ public class VoiceManagerExportPanel extends JPanel
 			} catch (final Error e) {
 				//
 				setString(comment = createCellComment(drawing, CreationHelperUtil.createClientAnchor(creationHelper)),
-						createRichTextString(creationHelper, e.getMessage()));
+						CreationHelperUtil.createRichTextString(creationHelper, e.getMessage()));
 				//
 				setAuthor(comment, Util.getName(Util.getClass(e)));
 				//
@@ -5309,11 +5309,6 @@ public class VoiceManagerExportPanel extends JPanel
 		if (instance != null) {
 			instance.setString(string);
 		}
-	}
-
-	@Nullable
-	private static RichTextString createRichTextString(@Nullable final CreationHelper instance, final String text) {
-		return instance != null ? instance.createRichTextString(text) : null;
 	}
 
 	@Nullable
