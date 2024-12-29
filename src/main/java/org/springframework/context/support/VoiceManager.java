@@ -628,47 +628,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	@Nullable
-	private static List<String> getBeanDefinitionNamesByClassAndAttributes(
-			final ConfigurableListableBeanFactory instnace, final Class<?> classToBeFound, final Map<?, ?> attributes) {
-		//
-		List<String> multimapBeanDefinitionNames = null;
-		//
-		final String[] beanDefinitionNames = ListableBeanFactoryUtil.getBeanDefinitionNames(instnace);
-		//
-		BeanDefinition bd = null;
-		//
-		Class<?> clz = null;
-		//
-		FactoryBean<?> fb = null;
-		//
-		String beanDefinitionName = null;
-		//
-		for (int i = 0; beanDefinitionNames != null && i < beanDefinitionNames.length; i++) {
-			//
-			if ((bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(instnace,
-					beanDefinitionName = beanDefinitionNames[i])) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if (((Util.isAssignableFrom(FactoryBean.class, clz = Util.forName(BeanDefinitionUtil.getBeanClassName(bd)))
-					&& (fb = Util.cast(FactoryBean.class, Narcissus.allocateInstance(clz))) != null
-					&& Util.isAssignableFrom(classToBeFound, FactoryBeanUtil.getObjectType(fb)))
-					|| Util.isAssignableFrom(classToBeFound, clz)) && isAllAttributesMatched(attributes, bd)) {
-				//
-				Util.add(multimapBeanDefinitionNames = ObjectUtils.getIfNull(multimapBeanDefinitionNames,
-						ArrayList::new), beanDefinitionName);
-				//
-			} // if
-				//
-		} // for
-			//
-		return multimapBeanDefinitionNames;
-		//
-	}
-
 	private static boolean isAllAttributesMatched(@Nullable final Map<?, ?> attributes,
 			@Nullable final AttributeAccessor aa) {
 		//
