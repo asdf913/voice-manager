@@ -4169,11 +4169,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	@Nullable
-	private static Annotation[] getDeclaredAnnotations(@Nullable final AnnotatedElement instance) {
-		return instance != null ? instance.getDeclaredAnnotations() : null;
-	}
-
 	private static <T> boolean anyMatch(@Nullable final Stream<T> instance,
 			@Nullable final Predicate<? super T> predicate) {
 		//
