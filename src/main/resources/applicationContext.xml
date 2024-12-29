@@ -990,8 +990,6 @@
 			value="${org.springframework.context.support.VoiceManager.mediaFormatPageUrl}" />
 		<property name="poiEncryptionPageUrl"
 			value="${org.springframework.context.support.VoiceManager.poiEncryptionPageUrl}" />
-		<property name="exportHtmlTemplateFile"
-			value="${org.springframework.context.support.VoiceManager.exportHtmlTemplateFile}" />
 		<property name="exportWebSpeechSynthesisHtmlTemplateFile"
 			value="${org.springframework.context.support.VoiceManager.exportWebSpeechSynthesisHtmlTemplateFile}" />
 		<property
