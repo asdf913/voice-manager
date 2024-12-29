@@ -5449,11 +5449,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return method != null ? method.invoke(instance, args) : null;
 	}
 
-	@Nullable
-	private static Object getValue(@Nullable final Expression instance, final EvaluationContext evaluationContext) {
-		return instance != null ? instance.getValue(evaluationContext) : null;
-	}
-
 	private static <T> boolean or(final Predicate<T> predicate, final T a, final T b, @Nullable final T... values) {
 		//
 		boolean result = Util.test(predicate, a) || Util.test(predicate, b);

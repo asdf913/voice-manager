@@ -231,8 +231,8 @@ class VoiceManagerTest {
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_IH, CLASS_EXPORT_TASK = null;
 
 	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3,
-			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_INT_VALUE, METHOD_LONG_VALUE, METHOD_GET_VALUE,
-			METHOD_MAP_INT_STREAM, METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG, METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM,
+			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_INT_VALUE, METHOD_LONG_VALUE, METHOD_MAP_INT_STREAM,
+			METHOD_MAP_TO_INT, METHOD_MAP_TO_LONG, METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM,
 			METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE,
 			METHOD_GET_PREFERRED_WIDTH, METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ANY_MATCH,
 			METHOD_GET_SELECTED_ITEM, METHOD_MATCHER, METHOD_MATCHES, METHOD_SET_STRING_COMMENT, METHOD_FORMAT,
@@ -290,9 +290,6 @@ class VoiceManagerTest {
 		(METHOD_INT_VALUE = clz.getDeclaredMethod("intValue", Number.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_LONG_VALUE = clz.getDeclaredMethod("longValue", Number.class, Long.TYPE)).setAccessible(true);
-		//
-		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Expression.class, EvaluationContext.class))
-				.setAccessible(true);
 		//
 		(METHOD_MAP_INT_STREAM = clz.getDeclaredMethod("map", IntStream.class, IntUnaryOperator.class))
 				.setAccessible(true);
@@ -2420,24 +2417,6 @@ class VoiceManagerTest {
 				return ((Long) obj).longValue();
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetValue() throws Throwable {
-		//
-		Assertions.assertNull(getValue(null, null));
-		//
-		Assertions.assertNull(getValue(Reflection.newProxy(Expression.class, ih), null));
-		//
-	}
-
-	private static Object getValue(final Expression instance, final EvaluationContext evaluationContext)
-			throws Throwable {
-		try {
-			return METHOD_GET_VALUE.invoke(null, instance, evaluationContext);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
