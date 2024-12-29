@@ -4474,11 +4474,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
-	@Nullable
-	private static Object getSelectedItem(@Nullable final ComboBoxModel<?> instance) {
-		return instance != null ? instance.getSelectedItem() : null;
-	}
-
 	private static <T> void forEach(@Nullable final Stream<T> instance, @Nullable final Consumer<? super T> action) {
 		//
 		if (instance != null && (action != null || Proxy.isProxyClass(Util.getClass(instance)))) {

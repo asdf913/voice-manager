@@ -223,11 +223,11 @@ class VoiceManagerTest {
 			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_INT_VALUE, METHOD_LONG_VALUE, METHOD_MAP_INT_STREAM,
 			METHOD_MAP_TO_INT, METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL_INT,
 			METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE, METHOD_GET_PREFERRED_WIDTH,
-			METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ANY_MATCH, METHOD_GET_SELECTED_ITEM, METHOD_MATCHER,
-			METHOD_MATCHES, METHOD_SET_STRING_COMMENT, METHOD_FORMAT, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE,
-			METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION,
-			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
-			METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_LIST,
+			METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ANY_MATCH, METHOD_MATCHER, METHOD_MATCHES,
+			METHOD_SET_STRING_COMMENT, METHOD_FORMAT, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR,
+			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION, METHOD_GET_TAB_INDEX_BY_TITLE,
+			METHOD_GET_DECLARED_FIELD, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_NAMED_ITEM,
+			METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_LIST,
 			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
 			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
 			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES,
@@ -302,8 +302,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_ANY_MATCH = clz.getDeclaredMethod("anyMatch", Stream.class, Predicate.class)).setAccessible(true);
-		//
-		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", ComboBoxModel.class)).setAccessible(true);
 		//
 		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, CharSequence.class)).setAccessible(true);
 		//
@@ -535,7 +533,7 @@ class VoiceManagerTest {
 
 		private String toString, voiceAttribute, textContent, dllPath = null;
 
-		private Object max, selectedItem = null;
+		private Object max = null;
 
 		private Boolean anyMatch, isInstalled, isEmpty = null;
 
@@ -665,14 +663,6 @@ class VoiceManagerTest {
 				if (Objects.equals(IntStream.class, returnType)) {
 					//
 					return proxy;
-					//
-				} // if
-					//
-			} else if (proxy instanceof ComboBoxModel) {
-				//
-				if (Objects.equals(methodName, "getSelectedItem")) {
-					//
-					return selectedItem;
 					//
 				} // if
 					//
@@ -2389,21 +2379,6 @@ class VoiceManagerTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetSelectedItem() throws Throwable {
-		//
-		Assertions.assertNull(getSelectedItem(Reflection.newProxy(ComboBoxModel.class, ih)));
-		//
-	}
-
-	private static Object getSelectedItem(final ComboBoxModel<?> instance) throws Throwable {
-		try {
-			return METHOD_GET_SELECTED_ITEM.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
