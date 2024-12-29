@@ -2652,10 +2652,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getProtocol() : null;
 	}
 
-	private static int getLength(@Nullable final NodeList instance) {
-		return instance != null ? instance.getLength() : 0;
-	}
-
 	@Nullable
 	private static Node item(@Nullable final NodeList instance, final int index) {
 		return instance != null ? instance.item(index) : null;
@@ -3817,12 +3813,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null && instance.isFile();
 	}
 
-	private static void setMaximum(@Nullable final JProgressBar instance, final int n) {
-		if (instance != null) {
-			instance.setMaximum(n);
-		}
-	}
-
 	private static <T> void accept(final Consumer<? super T> action, final T a, final T b,
 			@Nullable final T... values) {
 		//
@@ -4683,18 +4673,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void delete(@Nullable final File instance) throws IOException {
-		//
-		testAndAccept(Objects::nonNull, testAndApply(Objects::nonNull, toURI(instance), Path::of, null), Files::delete);
-		//
-	}
-
-	private static void deleteOnExit(@Nullable final File instance) {
-		if (instance != null) {
-			instance.deleteOnExit();
-		}
-	}
-
 	@Nullable
 	private static Annotation[] getDeclaredAnnotations(@Nullable final AnnotatedElement instance) {
 		return instance != null ? instance.getDeclaredAnnotations() : null;
@@ -4761,24 +4739,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			}
 		}
 
-	}
-
-	private static void setValue(@Nullable final JProgressBar instance, final int n) {
-		if (instance != null) {
-			instance.setValue(n);
-		}
-	}
-
-	private static void setString(@Nullable final JProgressBar instance, final String string) {
-		if (instance != null) {
-			instance.setString(string);
-		}
-	}
-
-	private static void setToolTipText(@Nullable final JComponent instance, final String toolTipText) {
-		if (instance != null) {
-			instance.setToolTipText(toolTipText);
-		}
 	}
 
 	@Nullable
@@ -5244,12 +5204,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			}
 		}
 
-	}
-
-	private static void clear(@Nullable final StringBuilder instance) {
-		if (instance != null) {
-			instance.delete(0, instance.length());
-		}
 	}
 
 	@Nullable
