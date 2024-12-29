@@ -2747,16 +2747,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
-			final JList<? extends E> list, @Nullable final E value, final int index, final boolean isSelected,
-			final boolean cellHasFocus) {
-		//
-		return instance != null ? instance.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-				: null;
-		//
-	}
-
-	@Nullable
 	private static Integer toInteger(@Nullable final Object object) {
 		//
 		Integer integer = null;
