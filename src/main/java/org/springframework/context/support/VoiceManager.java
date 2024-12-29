@@ -1125,11 +1125,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		this.jlptVocabularyList = Unit.with(jlptVocabularyList);
 	}
 
-	@Nullable
-	private static Duration parse(CharSequence text) {
-		return StringUtils.isNotEmpty(text) ? Duration.parse(text) : null;
-	}
-
 	public void setLanguageCodeToTextObjIntFunction(
 			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) {
 		this.languageCodeToTextObjIntFunction = languageCodeToTextObjIntFunction;
