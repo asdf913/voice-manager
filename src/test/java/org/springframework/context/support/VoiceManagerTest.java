@@ -89,11 +89,9 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -115,7 +113,6 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.bcel.classfile.ClassParser;
@@ -157,7 +154,6 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.ClientAnchor;
@@ -190,7 +186,6 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.AttributeAccessor;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
-import org.springframework.expression.ExpressionParser;
 import org.springframework.util.ReflectionUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -206,7 +201,6 @@ import com.google.common.reflect.Reflection;
 import com.healthmarketscience.jackcess.Database.FileFormat;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentType;
-import com.mpatric.mp3agic.ID3v1;
 
 import domain.JlptVocabulary;
 import domain.Voice;
@@ -244,23 +238,22 @@ class VoiceManagerTest {
 			METHOD_MAP_TO_LONG, METHOD_MAX_STREAM, METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL_INT,
 			METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE, METHOD_GET_PREFERRED_WIDTH,
 			METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ANY_MATCH, METHOD_GET_SELECTED_ITEM, METHOD_MATCHER,
-			METHOD_MATCHES, METHOD_SET_VALUE_J_PROGRESS_BAR, METHOD_SET_STRING_J_PROGRESS_BAR,
-			METHOD_SET_STRING_COMMENT, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_VALUE_OF1, METHOD_DELETE,
-			METHOD_DELETE_ON_EXIT, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL,
-			METHOD_CLEAR_STRING_BUILDER, METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM1,
-			METHOD_SET_MAXIMUM, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_NEW_DOCUMENT_BUILDER,
-			METHOD_PARSE, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_LIST,
-			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_CREATE_DRAWING_PATRIARCH,
-			METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING,
-			METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR, METHOD_TEST_AND_ACCEPT_PREDICATE,
-			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_PACKAGE, METHOD_BROWSE,
-			METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH,
-			METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING, METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME,
-			METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE2, METHOD_APPEND_STRING,
-			METHOD_APPEND_CHAR, METHOD_GET_RESOURCE_AS_STREAM, METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD,
-			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_INSTRUCTION_ARRAY, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH,
-			METHOD_ITEM, METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2,
-			METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC, METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE,
+			METHOD_MATCHES, METHOD_SET_STRING_COMMENT, METHOD_FORMAT, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE,
+			METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION,
+			METHOD_TO_ARRAY_STREAM1, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
+			METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
+			METHOD_GET_NAME_FILE, METHOD_GET_LIST, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK,
+			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR,
+			METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
+			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
+			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES,
+			METHOD_GET_DLL_PATH, METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING,
+			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_FILE_EXTENSIONS,
+			METHOD_REDUCE2, METHOD_APPEND_STRING, METHOD_APPEND_CHAR, METHOD_GET_RESOURCE_AS_STREAM,
+			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD,
+			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_INSTRUCTION_ARRAY, METHOD_GET_ATTRIBUTES, METHOD_ITEM,
+			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE,
+			METHOD_RANDOM_ALPHABETIC, METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT,
 			METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML, METHOD_LENGTH, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS,
 			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_TEST_AND_RUN, METHOD_TO_CHAR_ARRAY,
@@ -345,25 +338,12 @@ class VoiceManagerTest {
 		//
 		(METHOD_MATCHES = clz.getDeclaredMethod("matches", Matcher.class)).setAccessible(true);
 		//
-		(METHOD_SET_VALUE_J_PROGRESS_BAR = clz.getDeclaredMethod("setValue", JProgressBar.class, Integer.TYPE))
-				.setAccessible(true);
-		//
-		(METHOD_SET_STRING_J_PROGRESS_BAR = clz.getDeclaredMethod("setString", JProgressBar.class, String.class))
-				.setAccessible(true);
-		//
 		(METHOD_SET_STRING_COMMENT = clz.getDeclaredMethod("setString", Comment.class, RichTextString.class))
-				.setAccessible(true);
-		//
-		(METHOD_SET_TOOL_TIP_TEXT = clz.getDeclaredMethod("setToolTipText", JComponent.class, String.class))
 				.setAccessible(true);
 		//
 		(METHOD_FORMAT = clz.getDeclaredMethod("format", NumberFormat.class, Double.TYPE)).setAccessible(true);
 		//
 		(METHOD_VALUE_OF1 = clz.getDeclaredMethod("valueOf", String.class)).setAccessible(true);
-		//
-		(METHOD_DELETE = clz.getDeclaredMethod("delete", File.class)).setAccessible(true);
-		//
-		(METHOD_DELETE_ON_EXIT = clz.getDeclaredMethod("deleteOnExit", File.class)).setAccessible(true);
 		//
 		(METHOD_AND_FAILABLE_PREDICATE = clz.getDeclaredMethod("and", Object.class, FailablePredicate.class,
 				FailablePredicate.class, FailablePredicate[].class)).setAccessible(true);
@@ -374,8 +354,6 @@ class VoiceManagerTest {
 		(METHOD_CLEAR_DEFAULT_TABLE_MODEL = clz.getDeclaredMethod("clear", DefaultTableModel.class))
 				.setAccessible(true);
 		//
-		(METHOD_CLEAR_STRING_BUILDER = clz.getDeclaredMethod("clear", StringBuilder.class)).setAccessible(true);
-		//
 		(METHOD_ACCEPT = clz.getDeclaredMethod("accept", Consumer.class, Object.class, Object.class, Object[].class))
 				.setAccessible(true);
 		//
@@ -383,9 +361,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_TO_ARRAY_STREAM1 = clz.getDeclaredMethod("toArray", Stream.class)).setAccessible(true);
-		//
-		(METHOD_SET_MAXIMUM = clz.getDeclaredMethod("setMaximum", JProgressBar.class, Integer.TYPE))
-				.setAccessible(true);
 		//
 		(METHOD_GET_TAB_INDEX_BY_TITLE = clz.getDeclaredMethod("getTabIndexByTitle", List.class, Object.class))
 				.setAccessible(true);
@@ -480,8 +455,6 @@ class VoiceManagerTest {
 				.getDeclaredMethod("getTempFileMinimumPrefixLength", Instruction[].class)).setAccessible(true);
 		//
 		(METHOD_GET_ATTRIBUTES = clz.getDeclaredMethod("getAttributes", Node.class)).setAccessible(true);
-		//
-		(METHOD_GET_LENGTH = clz.getDeclaredMethod("getLength", NodeList.class)).setAccessible(true);
 		//
 		(METHOD_ITEM = clz.getDeclaredMethod("item", NodeList.class, Integer.TYPE)).setAccessible(true);
 		//
@@ -638,11 +611,9 @@ class VoiceManagerTest {
 
 		private Set<Entry<?, ?>> entrySet = null;
 
-		private String toString, title, voiceAttribute, textContent, nodeName, dllPath = null;
+		private String toString, voiceAttribute, textContent, dllPath = null;
 
-		private Expression expression = null;
-
-		private Object value, min, max, selectedItem, nodeValue, key = null;
+		private Object value, max, selectedItem, key = null;
 
 		private Boolean anyMatch, isInstalled, isEmpty = null;
 
@@ -658,15 +629,13 @@ class VoiceManagerTest {
 
 		private Object[] toArray = null;
 
-		private Integer length = null;
-
 		private IntStream intStream = null;
 
 		private LongStream longStream = null;
 
 		private Collection<Entry<?, ?>> multiMapEntries = null;
 
-		private Node namedItem, parentNode, appendChild, removeChild, cloneNode, item = null;
+		private Node namedItem, item = null;
 
 		private NamedNodeMap attributes = null;
 
@@ -766,14 +735,6 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof ExpressionParser) {
-				//
-				if (Objects.equals(methodName, "parseExpression")) {
-					//
-					return expression;
-					//
-				} // if
-					//
 			} else if (proxy instanceof Expression) {
 				//
 				if (Objects.equals(methodName, "getValue")) {
@@ -787,10 +748,6 @@ class VoiceManagerTest {
 				if (Objects.equals(Stream.class, returnType)) {
 					//
 					return proxy;
-					//
-				} else if (Objects.equals(methodName, "min")) {
-					//
-					return min;
 					//
 				} else if (Objects.equals(methodName, "max")) {
 					//
@@ -856,14 +813,6 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof ID3v1) {
-				//
-				if (Objects.equals(methodName, "getTitle")) {
-					//
-					return title;
-					//
-				} // if
-					//
 			} else if (proxy instanceof ConfigurableListableBeanFactory) {
 				//
 				if (Objects.equals(methodName, "getBeanDefinition") && args != null && args.length > 0) {
@@ -902,43 +851,15 @@ class VoiceManagerTest {
 					//
 					return textContent;
 					//
-				} else if (Objects.equals(methodName, "getNodeName")) {
-					//
-					return nodeName;
-					//
-				} else if (Objects.equals(methodName, "getParentNode")) {
-					//
-					return parentNode;
-					//
-				} else if (Objects.equals(methodName, "appendChild")) {
-					//
-					return appendChild;
-					//
-				} else if (Objects.equals(methodName, "removeChild")) {
-					//
-					return removeChild;
-					//
-				} else if (Objects.equals(methodName, "cloneNode")) {
-					//
-					return cloneNode;
-					//
 				} else if (Objects.equals(methodName, "getAttributes")) {
 					//
 					return attributes;
-					//
-				} else if (Objects.equals(methodName, "getNodeValue")) {
-					//
-					return nodeValue;
 					//
 				} // if
 					//
 			} else if (proxy instanceof NodeList) {
 				//
-				if (Objects.equals(methodName, "getLength")) {
-					//
-					return length;
-					//
-				} else if (Objects.equals(methodName, "item")) {
+				if (Objects.equals(methodName, "item")) {
 					//
 					return item;
 					//
@@ -984,10 +905,6 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof XPath && Objects.equals(methodName, "evaluate")) {
-				//
-				return null;
-				//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -1022,8 +939,6 @@ class VoiceManagerTest {
 
 	private IH ih = null;
 
-	private SqlSessionFactory sqlSessionFactory = null;
-
 	private Stream<?> stream = null;
 
 	private SpeechApi speechApi = null;
@@ -1050,8 +965,6 @@ class VoiceManagerTest {
 
 	private ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
-	private RandomStringUtils randomStringUtils;
-
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
@@ -1070,9 +983,7 @@ class VoiceManagerTest {
 		instance = !GraphicsEnvironment.isHeadless() ? newInstance(constructor)
 				: Util.cast(VoiceManager.class, Narcissus.allocateInstance(VoiceManager.class));
 		//
-		sqlSessionFactory = Reflection.newProxy(SqlSessionFactory.class, ih = new IH());
-		//
-		stream = Reflection.newProxy(Stream.class, ih);
+		stream = Reflection.newProxy(Stream.class, ih = new IH());
 		//
 		speechApi = Reflection.newProxy(SpeechApi.class, ih);
 		//
@@ -1095,8 +1006,6 @@ class VoiceManagerTest {
 		collection = Reflection.newProxy(Collection.class, ih);
 		//
 		configurableListableBeanFactory = Reflection.newProxy(ConfigurableListableBeanFactory.class, ih);
-		//
-		randomStringUtils = RandomStringUtils.secureStrong();
 		//
 	}
 
@@ -2912,55 +2821,15 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testSetValue() {
-		//
-		Assertions.assertDoesNotThrow(() -> setValue(new JProgressBar(), 0));
-		//
-	}
-
-	private static void setValue(final JProgressBar instance, final int n) throws Throwable {
-		try {
-			METHOD_SET_VALUE_J_PROGRESS_BAR.invoke(null, instance, n);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testSetString() {
-		//
-		Assertions.assertDoesNotThrow(() -> setString(new JProgressBar(), null));
 		//
 		Assertions.assertDoesNotThrow(() -> setString((Comment) null, null));
 		//
 	}
 
-	private static void setString(final JProgressBar instance, final String string) throws Throwable {
-		try {
-			METHOD_SET_STRING_J_PROGRESS_BAR.invoke(null, instance, string);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
 	private static void setString(final Comment instance, final RichTextString string) throws Throwable {
 		try {
 			METHOD_SET_STRING_COMMENT.invoke(null, instance, string);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetToolTipText() {
-		//
-		Assertions.assertDoesNotThrow(() -> setToolTipText(new JTextField(), null));
-		//
-	}
-
-	private static void setToolTipText(final JComponent instance, final String toolTipText) throws Throwable {
-		try {
-			METHOD_SET_TOOL_TIP_TEXT.invoke(null, instance, toolTipText);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -3015,42 +2884,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testDelete() {
-		//
-		Assertions.assertDoesNotThrow(() -> delete(null));
-		//
-		Assertions
-				.assertDoesNotThrow(() -> delete(File.createTempFile(nextAlphabetic(randomStringUtils, THREE), null)));
-		//
-	}
-
-	private static void delete(final File instance) throws Throwable {
-		try {
-			METHOD_DELETE.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testDeleteOnExit() {
-		//
-		Assertions.assertDoesNotThrow(() -> deleteOnExit(null));
-		//
-		Assertions.assertDoesNotThrow(
-				() -> deleteOnExit(File.createTempFile(nextAlphabetic(randomStringUtils, THREE), null)));
-		//
-	}
-
-	private static void deleteOnExit(final File instance) throws Throwable {
-		try {
-			METHOD_DELETE_ON_EXIT.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testAnd() throws Throwable {
 		//
 		Assertions.assertFalse(and((Object) null, FailablePredicate.truePredicate(), null));
@@ -3097,25 +2930,13 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> clear((DefaultTableModel) null));
 		//
-		Assertions.assertDoesNotThrow(() -> clear((StringBuilder) null));
-		//
 		Assertions.assertDoesNotThrow(() -> clear(new DefaultTableModel()));
-		//
-		Assertions.assertDoesNotThrow(() -> clear(new StringBuilder()));
 		//
 	}
 
 	private static void clear(final DefaultTableModel instance) throws Throwable {
 		try {
 			METHOD_CLEAR_DEFAULT_TABLE_MODEL.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static void clear(final StringBuilder instance) throws Throwable {
-		try {
-			METHOD_CLEAR_STRING_BUILDER.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -3190,21 +3011,6 @@ class VoiceManagerTest {
 				? instance.toArray(generator)
 				: null;
 		//
-	}
-
-	@Test
-	void testSetMaximum() {
-		//
-		Assertions.assertDoesNotThrow(() -> setMaximum(new JProgressBar(), 0));
-		//
-	}
-
-	private static void setMaximum(final JProgressBar instance, final int n) throws Throwable {
-		try {
-			METHOD_SET_MAXIMUM.invoke(null, instance, n);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
@@ -3998,31 +3804,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof NamedNodeMap) {
 				return (NamedNodeMap) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetLength() throws Throwable {
-		//
-		if (ih != null) {
-			//
-			ih.length = Integer.valueOf(ZERO);
-			//
-		} // if
-			//
-		Assertions.assertEquals(ZERO, getLength(nodeList));
-		//
-	}
-
-	private static int getLength(final NodeList instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_LENGTH.invoke(null, instance);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
