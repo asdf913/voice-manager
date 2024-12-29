@@ -3081,39 +3081,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static String randomAlphabetic(final int count) {
-		//
-		Method method = IValue0Util.getValue0(METHOD_RANDOM_ALPHABETIC);
-		//
-		try {
-			//
-			if (method == null) {
-				//
-				METHOD_RANDOM_ALPHABETIC = Unit
-						.with(method = RandomStringUtils.class.getDeclaredMethod("randomAlphabetic", Integer.TYPE));
-				//
-			} // if
-				//
-			return Util.toString(invoke(method, null, count));
-			//
-		} catch (final IllegalAccessException | NoSuchMethodException e) {
-			//
-			throw new RuntimeException(e);
-			//
-		} catch (final InvocationTargetException e) {
-			//
-			final Throwable targetException = e.getTargetException();
-			//
-			final Throwable throwable = ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException),
-					targetException, ExceptionUtils.getRootCause(e));
-			//
-			throw ObjectUtils.getIfNull(toRuntimeException(throwable), RuntimeException::new);
-			//
-		} // try
-			//
-	}
-
-	@Nullable
 	private static String[] getFileExtensions(@Nullable final ContentType instance) {
 		return instance != null ? instance.getFileExtensions() : null;
 	}

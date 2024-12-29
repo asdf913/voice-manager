@@ -237,21 +237,21 @@ class VoiceManagerTest {
 			METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH,
 			METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING, METHOD_GET_FILE_EXTENSIONS, METHOD_APPEND_STRING,
 			METHOD_APPEND_CHAR, METHOD_GET_ATTRIBUTES, METHOD_GET_OS_VERSION_INFO_EX_MAP,
-			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
-			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE,
-			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT,
-			METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML, METHOD_LENGTH, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS,
-			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL,
-			METHOD_TO_RUNTIME_EXCEPTION, METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_ITERABLE,
-			METHOD_SET_PREFERRED_WIDTH_2, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT, METHOD_IS_STATIC,
-			METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS, METHOD_GET_FIELD_BY_NAME, METHOD_CREATE_VOICE_ID_WARNING_PANEL,
-			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_SET_FOCUS_CYCLE_ROOT,
-			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP,
-			METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_PAGE_TITLE,
-			METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL, METHOD_ADD_ALL,
-			METHOD_REMOVE_ELEMENT_AT, METHOD_SET_AUTO_FILTER, METHOD_GET_ELEMENT_AT, METHOD_GET_NUMBER, METHOD_SORTED,
-			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM,
-			METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
+			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_GET_MEDIA_FORMAT_LINK,
+			METHOD_GET_EVENT_TYPE, METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW,
+			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML, METHOD_LENGTH,
+			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED,
+			METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL, METHOD_TO_RUNTIME_EXCEPTION, METHOD_SET_PREFERRED_WIDTH_ARRAY,
+			METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_SET_PREFERRED_WIDTH_2, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT,
+			METHOD_IS_STATIC, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS, METHOD_GET_FIELD_BY_NAME,
+			METHOD_CREATE_VOICE_ID_WARNING_PANEL, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL,
+			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
+			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
+			METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_PAGE_TITLE, METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL,
+			METHOD_GET_LEVEL, METHOD_ADD_ALL, METHOD_REMOVE_ELEMENT_AT, METHOD_SET_AUTO_FILTER, METHOD_GET_ELEMENT_AT,
+			METHOD_GET_NUMBER, METHOD_SORTED, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL,
+			METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM, METHOD_SET_SELECTED_INDEX,
+			METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -410,8 +410,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_SET_VISIBLE = clz.getDeclaredMethod("setVisible", Component.class, Boolean.TYPE)).setAccessible(true);
 		//
-		(METHOD_RANDOM_ALPHABETIC = clz.getDeclaredMethod("randomAlphabetic", Integer.TYPE)).setAccessible(true);
-		//
 		(METHOD_GET_MEDIA_FORMAT_LINK = clz.getDeclaredMethod("getMediaFormatLink", String.class)).setAccessible(true);
 		//
 		(METHOD_GET_EVENT_TYPE = clz.getDeclaredMethod("getEventType", HyperlinkEvent.class)).setAccessible(true);
@@ -547,7 +545,7 @@ class VoiceManagerTest {
 
 		private String toString, voiceAttribute, textContent, dllPath = null;
 
-		private Object value, max, selectedItem = null;
+		private Object max, selectedItem = null;
 
 		private Boolean anyMatch, isInstalled, isEmpty = null;
 
@@ -565,19 +563,15 @@ class VoiceManagerTest {
 
 		private IntStream intStream = null;
 
-		private LongStream longStream = null;
-
 		private Collection<Entry<?, ?>> multiMapEntries = null;
 
-		private Node namedItem, item = null;
+		private Node namedItem = null;
 
 		private NamedNodeMap attributes = null;
 
 		private javax.swing.text.Document document = null;
 
 		private Collection<?> values = null;
-
-		private String[] beanDefinitionNames = null;
 
 		private Map<Object, BeanDefinition> getBeanDefinitions() {
 			if (beanDefinitions == null) {
@@ -622,10 +616,6 @@ class VoiceManagerTest {
 					//
 					return beansOfType;
 					//
-				} else if (Objects.equals(methodName, "getBeanDefinitionNames")) {
-					//
-					return beanDefinitionNames;
-					//
 				} // if
 					//
 			} // if
@@ -660,14 +650,6 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Expression) {
-				//
-				if (Objects.equals(methodName, "getValue")) {
-					//
-					return value;
-					//
-				} // if
-					//
 			} else if (proxy instanceof Stream) {
 				//
 				if (Objects.equals(Stream.class, returnType)) {
@@ -686,15 +668,7 @@ class VoiceManagerTest {
 					//
 					return intStream;
 					//
-				} else if (Objects.equals(methodName, "mapToLong")) {
-					//
-					return longStream;
-					//
 				} else if (Objects.equals(methodName, "toArray")) {
-					//
-					return null;
-					//
-				} else if (Objects.equals(methodName, "reduce")) {
 					//
 					return null;
 					//
@@ -779,14 +753,6 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "getAttributes")) {
 					//
 					return attributes;
-					//
-				} // if
-					//
-			} else if (proxy instanceof NodeList) {
-				//
-				if (Objects.equals(methodName, "item")) {
-					//
-					return item;
 					//
 				} // if
 					//
@@ -3337,27 +3303,6 @@ class VoiceManagerTest {
 	private static void setVisible(final Component instance, final boolean b) throws Throwable {
 		try {
 			METHOD_SET_VISIBLE.invoke(null, instance, b);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testRandomAlphabetic() throws Throwable {
-		//
-		Assertions.assertNotEquals(randomAlphabetic(THREE), randomAlphabetic(THREE));
-		//
-	}
-
-	private static String randomAlphabetic(final int count) throws Throwable {
-		try {
-			final Object obj = METHOD_RANDOM_ALPHABETIC.invoke(null, count);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
