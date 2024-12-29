@@ -606,14 +606,10 @@ class VoiceManagerTest {
 				//
 			} // if
 				//
-			if (proxy instanceof ListableBeanFactory) {
+			if (proxy instanceof ListableBeanFactory && Objects.equals(methodName, "getBeansOfType")) {
 				//
-				if (Objects.equals(methodName, "getBeansOfType")) {
-					//
-					return beansOfType;
-					//
-				} // if
-					//
+				return beansOfType;
+				//
 			} // if
 				//
 			if (proxy instanceof Iterable && Objects.equals(methodName, "iterator")) {
