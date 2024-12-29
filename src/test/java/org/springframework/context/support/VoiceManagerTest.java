@@ -244,7 +244,7 @@ class VoiceManagerTest {
 			METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH,
 			METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING, METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME,
 			METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE2, METHOD_APPEND_STRING,
-			METHOD_APPEND_CHAR, METHOD_GET_RESOURCE_AS_STREAM, METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD,
+			METHOD_APPEND_CHAR, METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_INSTRUCTION_ARRAY, METHOD_GET_ATTRIBUTES, METHOD_ITEM,
 			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE,
 			METHOD_RANDOM_ALPHABETIC, METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE,
@@ -426,9 +426,6 @@ class VoiceManagerTest {
 		(METHOD_APPEND_STRING = clz.getDeclaredMethod("append", StringBuilder.class, String.class)).setAccessible(true);
 		//
 		(METHOD_APPEND_CHAR = clz.getDeclaredMethod("append", StringBuilder.class, Character.TYPE)).setAccessible(true);
-		//
-		(METHOD_GET_RESOURCE_AS_STREAM = clz.getDeclaredMethod("getResourceAsStream", Class.class, String.class))
-				.setAccessible(true);
 		//
 		(METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD = clz.getDeclaredMethod("getTempFileMinimumPrefixLength",
 				org.apache.bcel.classfile.Method.class)).setAccessible(true);
@@ -3489,29 +3486,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof StringBuilder) {
 				return (StringBuilder) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetResourceAsStream() throws Throwable {
-		//
-		Assertions.assertNull(getResourceAsStream(null, null));
-		//
-		Assertions.assertNull(getResourceAsStream(Object.class, null));
-		//
-	}
-
-	private static InputStream getResourceAsStream(final Class<?> instance, final String name) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_RESOURCE_AS_STREAM.invoke(null, instance, name);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof InputStream) {
-				return (InputStream) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

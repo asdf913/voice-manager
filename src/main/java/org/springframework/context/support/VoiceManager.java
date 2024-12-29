@@ -918,11 +918,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	@Nullable
-	private static InputStream getResourceAsStream(@Nullable final Class<?> instance, @Nullable final String name) {
-		return instance != null && name != null ? instance.getResourceAsStream(name) : null;
-	}
-
 	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance,
 			@Nullable final Object selectedItem) {
 		if (instance != null) {
@@ -4250,6 +4245,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 			} // try
 				//
+		}
+
+		@Nullable
+		private static InputStream getResourceAsStream(@Nullable final Class<?> instance, @Nullable final String name) {
+			return instance != null && name != null ? instance.getResourceAsStream(name) : null;
 		}
 
 		@Nullable
