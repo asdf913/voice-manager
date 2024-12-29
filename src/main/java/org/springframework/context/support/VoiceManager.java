@@ -3398,26 +3398,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static Multimap<String, Voice> getVoiceMultimapByJlpt(@Nullable final Iterable<Voice> voices) {
-		//
-		Multimap<String, Voice> multimap = null;
-		//
-		if (Util.iterator(voices) != null) {
-			//
-			for (final Voice v : voices) {
-				//
-				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create),
-						getJlptLevel(v), v);
-				//
-			} // for
-				//
-		} // if
-			//
-		return multimap;
-		//
-	}
-
-	@Nullable
 	private static String getJlptLevel(@Nullable final Voice instance) {
 		return instance != null ? instance.getJlptLevel() : null;
 	}
