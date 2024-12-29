@@ -242,9 +242,8 @@ class VoiceManagerTest {
 			METHOD_CREATE_CELL_COMMENT, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR, METHOD_TEST_AND_ACCEPT_PREDICATE,
 			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_PACKAGE, METHOD_BROWSE,
 			METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH,
-			METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING, METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME,
-			METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE2, METHOD_APPEND_STRING, METHOD_APPEND_CHAR,
-			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD,
+			METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING, METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE2,
+			METHOD_APPEND_STRING, METHOD_APPEND_CHAR, METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_INSTRUCTION_ARRAY, METHOD_GET_ATTRIBUTES, METHOD_ITEM,
 			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE,
 			METHOD_RANDOM_ALPHABETIC, METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE,
@@ -410,9 +409,6 @@ class VoiceManagerTest {
 				Class.class)).setAccessible(true);
 		//
 		(METHOD_ENCODE_TO_STRING = clz.getDeclaredMethod("encodeToString", Encoder.class, byte[].class))
-				.setAccessible(true);
-		//
-		(METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME = clz.getDeclaredMethod("getVoiceMultimapByListName", Iterable.class))
 				.setAccessible(true);
 		//
 		(METHOD_GET_FILE_EXTENSIONS = clz.getDeclaredMethod("getFileExtensions", ContentType.class))
@@ -3345,39 +3341,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetVoiceMultimapByListName() throws Throwable {
-		//
-		Assertions.assertNull(getVoiceMultimapByListName(Collections.singleton(null)));
-		//
-		Assertions.assertNull(getVoiceMultimapByListName(Reflection.newProxy(Iterable.class, ih)));
-		//
-		final Voice voice = new Voice();
-		//
-		final Iterable<Voice> voices = Collections.singleton(voice);
-		//
-		Assertions.assertNull(getVoiceMultimapByListName(voices));
-		//
-		voice.setListNames(Collections.singleton(EMPTY));
-		//
-		Assertions.assertEquals(ImmutableMultimap.of(EMPTY, voice), getVoiceMultimapByListName(voices));
-		//
-	}
-
-	private static Multimap<String, Voice> getVoiceMultimapByListName(final Iterable<Voice> voices) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME.invoke(null, voices);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Multimap) {
-				return (Multimap) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -3366,38 +3366,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static Multimap<String, Voice> getVoiceMultimapByListName(@Nullable final Iterable<Voice> voices) {
-		//
-		Multimap<String, Voice> multimap = null;
-		//
-		if (Util.iterator(voices) != null) {
-			//
-			Iterable<String> listNames = null;
-			//
-			for (final Voice v : voices) {
-				//
-				if (v == null || (listNames = v.getListNames()) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				for (final String listName : listNames) {
-					//
-					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedListMultimap::create), listName,
-							v);
-					//
-				} // for
-					//
-			} // for
-				//
-		} // if
-			//
-		return multimap;
-		//
-	}
-
-	@Nullable
 	private static List<Field> findFieldsByValue(@Nullable final Field[] fs, final Object instance,
 			final Object value) {
 		//
