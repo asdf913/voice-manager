@@ -5081,11 +5081,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static Integer getOrdinalPosition(@Nullable final Voice instance) {
-		return instance != null ? instance.getOrdinalPosition() : null;
-	}
-
-	@Nullable
 	private static Workbook createMicrosoftSpeechObjectLibraryWorkbook(final SpeechApi speechApi,
 			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction, final String... attributes) {
 		//
