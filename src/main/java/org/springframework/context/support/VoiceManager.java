@@ -878,32 +878,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	@Nullable
-	private static Integer getTempFileMinimumPrefixLength(@Nullable final Instruction[] instructions) {
-		//
-		Integer result = null;
-		//
-		ICONST iconst = null;
-		//
-		Number value = null;
-		//
-		for (int i = 0; instructions != null && i < instructions.length; i++) {
-			//
-			if ((iconst = Util.cast(ICONST.class, instructions[i])) != null && i < instructions.length - 1
-					&& instructions[i + 1] instanceof IF_ICMPGE && (value = iconst.getValue()) != null) {
-				//
-				result = Integer.valueOf(value.intValue());
-				//
-				break;
-				//
-			} // if
-				//
-		} // for
-			//
-		return result;
-		//
-	}
-
 	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance,
 			@Nullable final Object selectedItem) {
 		if (instance != null) {

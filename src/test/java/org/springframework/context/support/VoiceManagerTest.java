@@ -241,8 +241,7 @@ class VoiceManagerTest {
 			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
 			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES,
 			METHOD_GET_DLL_PATH, METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING, METHOD_GET_FILE_EXTENSIONS,
-			METHOD_REDUCE2, METHOD_APPEND_STRING, METHOD_APPEND_CHAR,
-			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_INSTRUCTION_ARRAY, METHOD_GET_ATTRIBUTES, METHOD_ITEM,
+			METHOD_REDUCE2, METHOD_APPEND_STRING, METHOD_APPEND_CHAR, METHOD_GET_ATTRIBUTES, METHOD_ITEM,
 			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE,
 			METHOD_RANDOM_ALPHABETIC, METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT,
@@ -415,9 +414,6 @@ class VoiceManagerTest {
 		(METHOD_APPEND_STRING = clz.getDeclaredMethod("append", StringBuilder.class, String.class)).setAccessible(true);
 		//
 		(METHOD_APPEND_CHAR = clz.getDeclaredMethod("append", StringBuilder.class, Character.TYPE)).setAccessible(true);
-		//
-		(METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_INSTRUCTION_ARRAY = clz
-				.getDeclaredMethod("getTempFileMinimumPrefixLength", Instruction[].class)).setAccessible(true);
 		//
 		(METHOD_GET_ATTRIBUTES = clz.getDeclaredMethod("getAttributes", Node.class)).setAccessible(true);
 		//
@@ -3400,34 +3396,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof StringBuilder) {
 				return (StringBuilder) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetTempFileMinimumPrefixLength() throws Throwable {
-		//
-		Assertions.assertNull(getTempFileMinimumPrefixLength((Instruction[]) null));
-		//
-		final ICONST iconst = new ICONST(0);
-		//
-		Assertions.assertNull(getTempFileMinimumPrefixLength(new Instruction[] { iconst }));
-		//
-		Assertions.assertNull(getTempFileMinimumPrefixLength(new Instruction[] { iconst, null }));
-		//
-	}
-
-	private static Integer getTempFileMinimumPrefixLength(final Instruction[] instructions) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_INSTRUCTION_ARRAY.invoke(null,
-					(Object) instructions);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Integer) {
-				return (Integer) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
