@@ -808,14 +808,10 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof DocumentEvent) {
+			} else if (proxy instanceof DocumentEvent && Objects.equals(methodName, "getDocument")) {
 				//
-				if (Objects.equals(methodName, "getDocument")) {
-					//
-					return document;
-					//
-				} // if
-					//
+				return document;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
