@@ -4792,13 +4792,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 		private Map<Object, Object> objects = null;
 
-		private Map<Object, Object> booleans = null;
-
 		private Map<Object, Object> intMapObjects = null;
 
 		private Map<Object, Object> intIntMapObjects = null;
-
-		private Map<Object, Object> strings = null;
 
 		private Map<Object, Object> getObjects() {
 			if (objects == null) {
