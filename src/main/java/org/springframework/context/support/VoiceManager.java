@@ -232,8 +232,6 @@ import org.springframework.core.AttributeAccessor;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
-import org.springframework.expression.EvaluationContext;
-import org.springframework.expression.Expression;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
