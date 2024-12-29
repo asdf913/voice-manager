@@ -3785,12 +3785,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private static void setBackground(@Nullable final Component instance, @Nullable final Color color) {
-		if (instance != null) {
-			instance.setBackground(color);
-		}
-	}
-
 	@Nullable
 	private static javax.swing.text.Document getDocument(@Nullable final DocumentEvent instance) {
 		return instance != null ? instance.getDocument() : null;
