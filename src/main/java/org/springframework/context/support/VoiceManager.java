@@ -3398,11 +3398,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static String getJlptLevel(@Nullable final Voice instance) {
-		return instance != null ? instance.getJlptLevel() : null;
-	}
-
-	@Nullable
 	private static List<Field> findFieldsByValue(@Nullable final Field[] fs, final Object instance,
 			final Object value) {
 		//
