@@ -235,11 +235,11 @@ class VoiceManagerTest {
 			METHOD_TO_ARRAY_COLLECTION, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
 			METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
 			METHOD_GET_NAME_FILE, METHOD_GET_LIST, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK,
-			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_CREATE_CELL_COMMENT, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
-			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
-			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES,
-			METHOD_GET_DLL_PATH, METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING, METHOD_GET_FILE_EXTENSIONS,
-			METHOD_REDUCE2, METHOD_APPEND_STRING, METHOD_APPEND_CHAR, METHOD_GET_ATTRIBUTES, METHOD_ITEM,
+			METHOD_CREATE_CELL_COMMENT, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR, METHOD_TEST_AND_ACCEPT_PREDICATE,
+			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_PACKAGE, METHOD_BROWSE,
+			METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH,
+			METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING, METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE2,
+			METHOD_APPEND_STRING, METHOD_APPEND_CHAR, METHOD_GET_ATTRIBUTES, METHOD_ITEM,
 			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE,
 			METHOD_RANDOM_ALPHABETIC, METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT,
@@ -364,9 +364,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK = clz.getDeclaredMethod(
 				"createMicrosoftSpeechObjectLibraryWorkbook", SpeechApi.class, ObjIntFunction.class, String[].class))
-				.setAccessible(true);
-		//
-		(METHOD_CREATE_DRAWING_PATRIARCH = clz.getDeclaredMethod("createDrawingPatriarch", Sheet.class))
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_CELL_COMMENT = clz.getDeclaredMethod("createCellComment", Drawing.class, ClientAnchor.class))
@@ -2974,23 +2971,10 @@ class VoiceManagerTest {
 	@Test
 	void testSetCellComment() {
 		//
-		Assertions.assertDoesNotThrow(() -> setCellComment(null,
-				createCellComment(createDrawingPatriarch(null), CreationHelperUtil.createClientAnchor(null))));
+		Assertions
+				.assertDoesNotThrow(() -> setCellComment(null, createCellComment(SheetUtil.createDrawingPatriarch(null),
+						CreationHelperUtil.createClientAnchor(null))));
 		//
-	}
-
-	private static Drawing<?> createDrawingPatriarch(final Sheet instance) throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_DRAWING_PATRIARCH.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Drawing) {
-				return (Drawing) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private static Comment createCellComment(final Drawing<?> instance, final ClientAnchor anchor) throws Throwable {

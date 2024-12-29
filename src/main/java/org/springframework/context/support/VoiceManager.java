@@ -4736,7 +4736,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 			if (drawing == null) {
 				//
-				drawing = createDrawingPatriarch(sheet);
+				drawing = SheetUtil.createDrawingPatriarch(sheet);
 				//
 			} // if
 				//
@@ -4905,11 +4905,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static Integer getPhysicalNumberOfCells(@Nullable final Row instance) {
 		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfCells()) : null;
-	}
-
-	@Nullable
-	private static Drawing<?> createDrawingPatriarch(@Nullable final Sheet instance) {
-		return instance != null ? instance.createDrawingPatriarch() : null;
 	}
 
 	@Nullable

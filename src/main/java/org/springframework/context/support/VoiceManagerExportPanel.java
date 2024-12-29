@@ -5250,7 +5250,7 @@ public class VoiceManagerExportPanel extends JPanel
 			//
 			if (drawing == null) {
 				//
-				drawing = createDrawingPatriarch(sheet);
+				drawing = SheetUtil.createDrawingPatriarch(sheet);
 				//
 			} // if
 				//
@@ -5314,11 +5314,6 @@ public class VoiceManagerExportPanel extends JPanel
 	@Nullable
 	private static Comment createCellComment(@Nullable final Drawing<?> instance, @Nullable final ClientAnchor anchor) {
 		return instance != null ? instance.createCellComment(anchor) : null;
-	}
-
-	@Nullable
-	private static Drawing<?> createDrawingPatriarch(@Nullable final Sheet instance) {
-		return instance != null ? instance.createDrawingPatriarch() : null;
 	}
 
 	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
