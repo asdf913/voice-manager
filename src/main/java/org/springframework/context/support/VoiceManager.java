@@ -966,50 +966,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static Integer getTempFileMinimumPrefixLength() {
-		//
-		Integer result = null;
-		//
-		final Class<?> clz = File.class;
-		//
-		try (final InputStream is = getResourceAsStream(clz,
-				String.format(CLASS_RESOURCE_FORMAT, StringUtils.replace(Util.getName(clz), ".", "/")))) {
-			//
-			final Object[] objectTypes = toArray(Util
-					.map(Stream.of("java.lang.String", "java.lang.String", "java.io.File"), ObjectType::getInstance));
-			//
-			final List<org.apache.bcel.classfile.Method> ms = Util
-					.toList(Util.filter(
-							testAndApply(Objects::nonNull,
-									JavaClassUtil.getMethods(ClassParserUtil.parse(
-											testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null))),
-									Arrays::stream, null),
-							m -> m != null && Objects.equals(FieldOrMethodUtil.getName(m), "createTempFile")
-									&& Objects.deepEquals(m.getArgumentTypes(), objectTypes)));
-			//
-			if (ms != null && !ms.isEmpty()) {
-				//
-				if (IterableUtils.size(ms) > 1) {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-				result = getTempFileMinimumPrefixLength(get(ms, 0));
-				//
-			} // if
-				//
-		} catch (final IOException e) {
-			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-			//
-		} // try
-			//
-		return result;
-		//
-	}
-
-	@Nullable
 	private static Object[] toArray(@Nullable final Stream<?> instance) {
 		return instance != null ? instance.toArray() : null;
 	}
