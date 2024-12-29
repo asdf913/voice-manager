@@ -3076,11 +3076,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static char[] toCharArray(@Nullable final String instance) {
-		return instance != null ? instance.toCharArray() : null;
-	}
-
-	@Nullable
 	private static Integer getValue(@Nullable final JSlider instance) {
 		return instance != null ? Integer.valueOf(instance.getValue()) : null;
 	}
