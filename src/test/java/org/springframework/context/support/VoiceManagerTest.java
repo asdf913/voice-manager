@@ -35,6 +35,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -109,7 +110,6 @@ import javax.swing.event.HyperlinkEvent.EventType;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
-import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Result;
@@ -184,7 +184,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.odftoolkit.odfdom.pkg.OdfPackage;
-import org.odftoolkit.odfdom.pkg.OdfPackageDocument;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -202,17 +201,13 @@ import org.w3c.dom.NodeList;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.base.Predicates;
-import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Table;
 import com.google.common.reflect.Reflection;
 import com.healthmarketscience.jackcess.Database.FileFormat;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentType;
 import com.mpatric.mp3agic.ID3v1;
-import com.mpatric.mp3agic.Mp3File;
 
 import domain.JlptVocabulary;
 import domain.Voice;
@@ -254,17 +249,16 @@ class VoiceManagerTest {
 			METHOD_SET_STRING_COMMENT, METHOD_SET_TOOL_TIP_TEXT, METHOD_FORMAT, METHOD_VALUE_OF1, METHOD_DELETE,
 			METHOD_DELETE_ON_EXIT, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL,
 			METHOD_CLEAR_STRING_BUILDER, METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION, METHOD_TO_ARRAY_STREAM1,
-			METHOD_TO_ARRAY_STREAM2, METHOD_SET_MAXIMUM, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
-			METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
-			METHOD_GET_NAME_FILE, METHOD_GET_LIST, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK,
-			METHOD_CREATE_DRAWING_PATRIARCH, METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR,
-			METHOD_CREATE_RICH_TEXT_STRING, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR,
-			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
-			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES,
-			METHOD_GET_DLL_PATH, METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING,
-			METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME, METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_FILE_EXTENSIONS,
-			METHOD_REDUCE2, METHOD_APPEND_STRING, METHOD_APPEND_CHAR, METHOD_GET_RESOURCE_AS_STREAM,
-			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD,
+			METHOD_SET_MAXIMUM, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_NEW_DOCUMENT_BUILDER,
+			METHOD_PARSE, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_LIST,
+			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_CREATE_DRAWING_PATRIARCH,
+			METHOD_CREATE_CELL_COMMENT, METHOD_CREATE_CLIENT_ANCHOR, METHOD_CREATE_RICH_TEXT_STRING,
+			METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR, METHOD_TEST_AND_ACCEPT_PREDICATE,
+			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_PACKAGE, METHOD_BROWSE,
+			METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH,
+			METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING, METHOD_GET_VOICE_MULTI_MAP_BY_LIST_NAME,
+			METHOD_GET_VOICE_MULTI_MAP_BY_JLPT, METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE2, METHOD_APPEND_STRING,
+			METHOD_APPEND_CHAR, METHOD_GET_RESOURCE_AS_STREAM, METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_METHOD,
 			METHOD_GET_TEMP_FILE_MINIMUM_PREFIX_LENGTH_INSTRUCTION_ARRAY, METHOD_GET_ATTRIBUTES, METHOD_GET_LENGTH,
 			METHOD_ITEM, METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2,
 			METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC, METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE,
@@ -630,10 +624,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
-		//
-		(METHOD_TO_ARRAY_STREAM2 = (CLASS_EXPORT_TASK = Class
-				.forName("org.springframework.context.support.VoiceManager$ExportTask"))
-				.getDeclaredMethod("toArray", Stream.class, IntFunction.class)).setAccessible(true);
 		//
 		CLASS_STRING_MAP = Class.forName("org.springframework.context.support.VoiceManager$StringMap");
 		//
@@ -3265,12 +3255,12 @@ class VoiceManagerTest {
 		}
 	}
 
-	private static <T, A> A[] toArray(final Stream<T> instance, final IntFunction<A[]> generator) throws Throwable {
-		try {
-			return (A[]) METHOD_TO_ARRAY_STREAM2.invoke(null, instance, generator);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
+	private static <T, A> A[] toArray(final Stream<T> instance, final IntFunction<A[]> generator) {
+		//
+		return instance != null && (generator != null || Proxy.isProxyClass(Util.getClass(instance)))
+				? instance.toArray(generator)
+				: null;
+		//
 	}
 
 	@Test
@@ -5718,24 +5708,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(invoke(showPharse, null, this.instance, Fraction.ZERO));
 		//
-		// org.springframework.context.support.VoiceManager$ExportTask.generateOdfPresentationDocuments(java.io.InputStream,boolean,com.google.common.collect.Table)
-		//
-		final Method generateOdfPresentationDocuments = CLASS_EXPORT_TASK != null
-				? CLASS_EXPORT_TASK.getDeclaredMethod("generateOdfPresentationDocuments", CLASS_OBJECT_MAP, Table.class)
-				: null;
-		//
-		if (generateOdfPresentationDocuments != null) {
-			//
-			generateOdfPresentationDocuments.setAccessible(true);
-			//
-		} // if
-			//
-		Assertions.assertNull(invoke(generateOdfPresentationDocuments, null, null, null));
-		//
-		AssertionsUtil.assertThrowsAndEquals(InvocationTargetException.class, "{}",
-				() -> invoke(generateOdfPresentationDocuments, null, null,
-						ImmutableTable.of(EMPTY, EMPTY, new Voice())));
-		//
 		// org.springframework.context.support.VoiceManager$ExportTask.newXPath(javax.xml.xpath.XPathFactory)
 		//
 		final Method newXPath = CLASS_EXPORT_TASK != null
@@ -5989,66 +5961,6 @@ class VoiceManagerTest {
 			//
 		Assertions.assertNull(invoke(setPassword, null, newInstance(constructor), null));
 		//
-		// org.springframework.context.support.VoiceManager$ExportTask.getNodeName(org.w3c.dom.Node)
-		//
-		final Method getNodeName = CLASS_EXPORT_TASK != null
-				? CLASS_EXPORT_TASK.getDeclaredMethod("getNodeName", Node.class)
-				: null;
-		//
-		if (getNodeName != null) {
-			//
-			getNodeName.setAccessible(true);
-			//
-		} // if
-			//
-		Assertions.assertNull(invoke(getNodeName, null, (Object) null));
-		//
-		if (ih != null) {
-			//
-			Assertions.assertEquals(ih.nodeName = EMPTY, invoke(getNodeName, null, node));
-			//
-		} // if
-			//
-			// org.springframework.context.support.VoiceManager$ExportTask.getOutputFolder(org.springframework.context.support.VoiceManager)
-			//
-		final Method getOutputFolder = CLASS_EXPORT_TASK != null
-				? CLASS_EXPORT_TASK.getDeclaredMethod("getOutputFolder", VoiceManager.class)
-				: null;
-		//
-		if (getOutputFolder != null) {
-			//
-			getOutputFolder.setAccessible(true);
-			//
-		} // if
-			//
-		if (instance != null) {
-			//
-			instance.setOutputFolder(EMPTY);
-			//
-		} // if
-			//
-		Assertions.assertEquals(EMPTY, invoke(getOutputFolder, null, instance));
-		//
-		// org.springframework.context.support.VoiceManager$ExportTask.getVoiceFolder(org.springframework.context.support.VoiceManager)
-		//
-		final Method getVoiceFolder = CLASS_EXPORT_TASK != null
-				? CLASS_EXPORT_TASK.getDeclaredMethod("getVoiceFolder", VoiceManager.class)
-				: null;
-		//
-		if (getVoiceFolder != null) {
-			//
-			getVoiceFolder.setAccessible(true);
-			//
-		} // if
-			//
-		if (instance != null) {
-			//
-			instance.setVoiceFolder(EMPTY);
-			//
-		} // if
-			//
-		Assertions.assertEquals(EMPTY, invoke(getVoiceFolder, null, instance));
-		//
 		// org.springframework.context.support.VoiceManager$ExportTask.getProgressBarExport(org.springframework.context.support.VoiceManager)
 		//
 		final Method getProgressBarExport = CLASS_EXPORT_TASK != null
@@ -6094,162 +6006,6 @@ class VoiceManagerTest {
 		Assertions.assertNull(invoke(getNodeValue, null, (Object) null));
 		//
 		Assertions.assertNull(invoke(getNodeValue, null, node));
-		//
-		// org.springframework.context.support.VoiceManager$ExportTask.getSlideName(domain.Voice)
-		//
-		final Method getSlideName = CLASS_EXPORT_TASK != null
-				? CLASS_EXPORT_TASK.getDeclaredMethod("getSlideName", Voice.class)
-				: null;
-		//
-		if (getSlideName != null) {
-			//
-			getSlideName.setAccessible(true);
-			//
-		} // if
-			//
-		Assertions.assertNull(invoke(getSlideName, null, (Object) null));
-		//
-		final Voice voice = new Voice();
-		//
-		final String hiragana = "H";
-		//
-		voice.setHiragana(hiragana);
-		//
-		Assertions.assertEquals(hiragana, invoke(getSlideName, null, voice));
-		//
-		final String romaji = "R";
-		//
-		voice.setRomaji(romaji);
-		//
-		Assertions.assertEquals(String.join(" ", hiragana, romaji), invoke(getSlideName, null, voice));
-		//
-		final String text = "T";
-		//
-		voice.setText(text);
-		//
-		Assertions.assertEquals(String.format("%1$s (%2$s)", text, String.join(" ", hiragana, romaji)),
-				invoke(getSlideName, null, voice));
-		//
-	}
-
-	@Test
-	void testExportTask3() throws Throwable {
-		//
-		// org.springframework.context.support.VoiceManager$ExportTask.describe(java.lang.Object)
-		//
-		final Method describe = CLASS_EXPORT_TASK != null
-				? CLASS_EXPORT_TASK.getDeclaredMethod("describe", Object.class)
-				: null;
-		//
-		if (describe != null) {
-			//
-			describe.setAccessible(true);
-			//
-		} // if
-			//
-		Assertions.assertNull(invoke(describe, null, (Object) null));
-		//
-		// org.springframework.context.support.VoiceManager$ExportTask.parseExpression(org.springframework.expression.ExpressionParser,java.lang.String)
-		//
-		final Method parseExpression = CLASS_EXPORT_TASK != null
-				? CLASS_EXPORT_TASK.getDeclaredMethod("parseExpression", ExpressionParser.class, String.class)
-				: null;
-		//
-		if (parseExpression != null) {
-			//
-			parseExpression.setAccessible(true);
-			//
-		} // if
-			//
-		Assertions.assertNull(invoke(parseExpression, null, null, null));
-		//
-		Assertions.assertNull(invoke(parseExpression, null, Reflection.newProxy(ExpressionParser.class, ih), null));
-		//
-		// org.springframework.context.support.VoiceManager$ExportTask.and(boolean,boolean,boolean...)
-		//
-		final Method and = CLASS_EXPORT_TASK != null
-				? CLASS_EXPORT_TASK.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)
-				: null;
-		//
-		Assertions.assertEquals(Boolean.FALSE, invoke(and, null, Boolean.TRUE, Boolean.FALSE, null));
-		//
-		Assertions.assertEquals(Boolean.TRUE, invoke(and, null, Boolean.TRUE, Boolean.TRUE, null));
-		//
-		Assertions.assertEquals(Boolean.FALSE, invoke(and, null, Boolean.TRUE, Boolean.TRUE, new boolean[] { false }));
-		//
-		Assertions.assertEquals(Boolean.TRUE, invoke(and, null, Boolean.TRUE, Boolean.TRUE, new boolean[] { true }));
-		//
-		// org.springframework.context.support.VoiceManager$ExportTask.evaluate(javax.xml.xpath.XPath,java.lang.String,java.lang.Object,javax.xml.namespace.QName)
-		//
-		final Method evaluate = CLASS_EXPORT_TASK != null
-				? CLASS_EXPORT_TASK.getDeclaredMethod("evaluate", XPath.class, String.class, Object.class, QName.class)
-				: null;
-		//
-		Assertions.assertNull(invoke(evaluate, null, null, null, null, null));
-		//
-		Assertions.assertNull(invoke(evaluate, null, Reflection.newProxy(XPath.class, ih), null, null, null));
-		//
-		// org.springframework.context.support.VoiceManager$ExportTask.getTitle(com.mpatric.mp3agic.ID3v1)
-		//
-		final Method getTitle = CLASS_EXPORT_TASK != null ? CLASS_EXPORT_TASK.getDeclaredMethod("getTitle", ID3v1.class)
-				: null;
-		//
-		Assertions.assertNull(invoke(getTitle, null, (Object) null));
-		//
-		Assertions.assertNull(invoke(getTitle, null, Reflection.newProxy(ID3v1.class, ih)));
-		//
-		// org.springframework.context.support.VoiceManager$ExportTask.save(com.mpatric.mp3agic.Mp3File,java.lang.String)
-		//
-		final Method saveMp3File = CLASS_EXPORT_TASK != null
-				? CLASS_EXPORT_TASK.getDeclaredMethod("save", Mp3File.class, String.class)
-				: null;
-		//
-		Assertions.assertNull(invoke(saveMp3File, null, null, null));
-		//
-		Assertions.assertNull(invoke(saveMp3File, null, Narcissus.allocateInstance(Mp3File.class), null));
-		//
-		// org.springframework.context.support.VoiceManager$ExportTask.save(org.odftoolkit.odfdom.pkg.OdfPackageDocument,java.io.File)
-		//
-		final Method saveOdfPackageDocument = CLASS_EXPORT_TASK != null
-				? CLASS_EXPORT_TASK.getDeclaredMethod("save", OdfPackageDocument.class, File.class)
-				: null;
-		//
-		Assertions.assertNull(invoke(saveOdfPackageDocument, null, null, null));
-		//
-		Assertions.assertNull(
-				invoke(saveOdfPackageDocument, null, Narcissus.allocateInstance(OdfPackageDocument.class), null));
-		//
-		// org.springframework.context.support.VoiceManager$ExportTask.reset(com.google.common.base.Stopwatch)
-		//
-		final Method reset = CLASS_EXPORT_TASK != null ? CLASS_EXPORT_TASK.getDeclaredMethod("reset", Stopwatch.class)
-				: null;
-		//
-		Assertions.assertNull(invoke(reset, null, (Object) null));
-		//
-		Stopwatch stopwatch = Stopwatch.createStarted();
-		//
-		Assertions.assertSame(stopwatch, invoke(reset, null, stopwatch));
-		//
-		Assertions.assertSame(stopwatch = Util.cast(Stopwatch.class, Narcissus.allocateInstance(Stopwatch.class)),
-				invoke(reset, null, stopwatch));
-		//
-		// org.springframework.context.support.VoiceManager$ExportTask.start(com.google.common.base.Stopwatch)
-		//
-		final Method start = CLASS_EXPORT_TASK != null ? CLASS_EXPORT_TASK.getDeclaredMethod("start", Stopwatch.class)
-				: null;
-		//
-		Assertions.assertNull(invoke(start, null, (Object) null));
-		//
-		Assertions.assertSame(stopwatch = Stopwatch.createUnstarted(), invoke(start, null, stopwatch));
-		//
-		Assertions.assertSame(stopwatch = Util.cast(Stopwatch.class, Narcissus.allocateInstance(Stopwatch.class)),
-				invoke(start, null, stopwatch));
-		//
-		// org.springframework.context.support.VoiceManager$ExportTask.setTextContent(org.w3c.dom.Node,java.lang.String)
-		//
-		Assertions.assertNull(invoke(CLASS_EXPORT_TASK != null
-				? CLASS_EXPORT_TASK.getDeclaredMethod("setTextContent", Node.class, String.class)
-				: null, null, node, null));
 		//
 	}
 
