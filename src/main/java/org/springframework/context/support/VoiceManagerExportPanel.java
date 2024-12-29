@@ -180,6 +180,7 @@ import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.CreationHelperUtil;
 import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.DrawingUtil;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.RowUtil;
@@ -5270,7 +5271,8 @@ public class VoiceManagerExportPanel extends JPanel
 				if (Objects.equals(LANGUAGE, attribute)) {
 					//
 					setString(
-							comment = createCellComment(drawing, CreationHelperUtil.createClientAnchor(creationHelper)),
+							comment = DrawingUtil.createCellComment(drawing,
+									CreationHelperUtil.createClientAnchor(creationHelper)),
 							CreationHelperUtil.createRichTextString(creationHelper,
 									ObjIntFunctionUtil.apply(languageCodeToTextObjIntFunction, value, 16)));
 					//
@@ -5280,7 +5282,9 @@ public class VoiceManagerExportPanel extends JPanel
 					//
 			} catch (final Error e) {
 				//
-				setString(comment = createCellComment(drawing, CreationHelperUtil.createClientAnchor(creationHelper)),
+				setString(
+						comment = DrawingUtil.createCellComment(drawing,
+								CreationHelperUtil.createClientAnchor(creationHelper)),
 						CreationHelperUtil.createRichTextString(creationHelper, e.getMessage()));
 				//
 				setAuthor(comment, Util.getName(Util.getClass(e)));
@@ -5309,11 +5313,6 @@ public class VoiceManagerExportPanel extends JPanel
 		if (instance != null) {
 			instance.setString(string);
 		}
-	}
-
-	@Nullable
-	private static Comment createCellComment(@Nullable final Drawing<?> instance, @Nullable final ClientAnchor anchor) {
-		return instance != null ? instance.createCellComment(anchor) : null;
 	}
 
 	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
