@@ -591,10 +591,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private transient Collection<Multimap> multimapHiragana = null;
 
 	@Nullable
-	@Note("Katakana")
-	private transient Collection<Multimap> multimapKatakana = null;
-
-	@Nullable
 	private transient Collection<Map> mapHiragana = null;
 
 	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
@@ -729,15 +725,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				Util.stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
 						Collections.singletonMap(VALUE, "hiragana"))),
 				x -> Util.cast(Map.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
-		//
-		// Get the "Bean Definition" which class could be assigned as a
-		// "com.google.common.collect.Multimap" and the "Bean Definition" has "value"
-		// attribute which value is "katakana"
-		//
-		multimapKatakana = Util.toList(Util.map(
-				Util.stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Multimap.class,
-						Collections.singletonMap(VALUE, "katakana"))),
-				x -> Util.cast(Multimap.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
 		//
 	}
 
