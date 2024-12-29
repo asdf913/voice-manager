@@ -3081,11 +3081,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static String[] getFileExtensions(@Nullable final ContentType instance) {
-		return instance != null ? instance.getFileExtensions() : null;
-	}
-
-	@Nullable
 	private static List<Field> findFieldsByValue(@Nullable final Field[] fs, final Object instance,
 			final Object value) {
 		//
