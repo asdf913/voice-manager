@@ -2272,11 +2272,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getProtocol() : null;
 	}
 
-	@Nullable
-	private static Node item(@Nullable final NodeList instance, final int index) {
-		return instance != null ? instance.item(index) : null;
-	}
-
 	private JPanel createImportResultPanel(final LayoutManager layoutManager) {
 		//
 		final JPanel panel = new JPanel();
