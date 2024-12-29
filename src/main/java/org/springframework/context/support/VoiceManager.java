@@ -4809,13 +4809,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			return objects;
 		}
 
-		private Map<Object, Object> getBooleans() {
-			if (booleans == null) {
-				booleans = new LinkedHashMap<>();
-			}
-			return booleans;
-		}
-
 		private Map<Object, Object> getIntMapObjects() {
 			if (intMapObjects == null) {
 				intMapObjects = new LinkedHashMap<>();
@@ -4828,13 +4821,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				intIntMapObjects = new LinkedHashMap<>();
 			}
 			return intIntMapObjects;
-		}
-
-		private Map<Object, Object> getStrings() {
-			if (strings == null) {
-				strings = new LinkedHashMap<>();
-			}
-			return strings;
 		}
 
 		@Override
