@@ -520,8 +520,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private String voiceFolder = null;
 
-	private String outputFolder = null;
-
 	@Nullable
 	private Map<String, String> outputFolderFileNameExpressions = null;
 
@@ -1093,10 +1091,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setVoiceFolder(final String voiceFolder) {
 		this.voiceFolder = voiceFolder;
-	}
-
-	public void setOutputFolder(final String outputFolder) {
-		this.outputFolder = outputFolder;
 	}
 
 	public void setSpeechApi(final SpeechApi speechApi) {
