@@ -229,7 +229,7 @@ class VoiceManagerTest {
 
 	private static final int THREE = 3;
 
-	private static Class<?> CLASS_OBJECT_MAP, CLASS_BOOLEAN_MAP, CLASS_STRING_MAP, CLASS_IH, CLASS_EXPORT_TASK = null;
+	private static Class<?> CLASS_OBJECT_MAP, CLASS_BOOLEAN_MAP, CLASS_IH, CLASS_EXPORT_TASK = null;
 
 	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION_CONTENT_INFO,
 			METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
@@ -595,8 +595,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
-		//
-		CLASS_STRING_MAP = Class.forName("org.springframework.context.support.VoiceManager$StringMap");
 		//
 		CLASS_OBJECT_MAP = Class.forName("org.springframework.context.support.VoiceManager$ObjectMap");
 		//
@@ -6152,48 +6150,6 @@ class VoiceManagerTest {
 		} // if
 			//
 		Assertions.assertNull(invoke(setBoolean, null, null, null, Boolean.FALSE));
-		//
-	}
-
-	@Test
-	void testStringMap() throws Throwable {
-		//
-		// org.springframework.context.support.VoiceManager$StringMap.getString(org.springframework.context.support.VoiceManager$StringMap,java.lang.String)
-		//
-		final Method getString = CLASS_STRING_MAP != null
-				? CLASS_STRING_MAP.getDeclaredMethod("getString", CLASS_STRING_MAP, String.class)
-				: null;
-		//
-		if (getString != null) {
-			//
-			getString.setAccessible(true);
-			//
-		} // if
-			//
-		Assertions.assertNull(invoke(getString, null, null, null));
-		//
-		final Object stringMap = Reflection.newProxy(CLASS_STRING_MAP, createVoiceManagerIH());
-		//
-		AssertionsUtil.assertThrowsAndEquals(InvocationTargetException.class, "{}",
-				() -> invoke(getString, null, stringMap, null));
-		//
-		// org.springframework.context.support.VoiceManager$StringMap.setString(java.lang.String,java.lang.String)
-		//
-		final Method setString = CLASS_STRING_MAP != null
-				? CLASS_STRING_MAP.getDeclaredMethod("setString", CLASS_STRING_MAP, String.class, String.class)
-				: null;
-		//
-		if (setString != null) {
-			//
-			setString.setAccessible(true);
-			//
-		} // if
-			//
-		Assertions.assertNull(invoke(setString, null, null, null, null));
-		//
-		Assertions.assertNull(invoke(setString, null, stringMap, null, null));
-		//
-		Assertions.assertNull(invoke(getString, null, stringMap, null));
 		//
 	}
 

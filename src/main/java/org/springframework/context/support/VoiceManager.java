@@ -4716,25 +4716,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	}
 
-	private static interface StringMap {
-
-		String getString(final String key);
-
-		void setString(final String key, @Nullable final String value);
-
-		@Nullable
-		static String getString(@Nullable final StringMap instance, final String key) {
-			return instance != null ? instance.getString(key) : null;
-		}
-
-		static void setString(@Nullable final StringMap instance, final String key, @Nullable final String value) {
-			if (instance != null) {
-				instance.setString(key, value);
-			}
-		}
-
-	}
-
 	@Nullable
 	private static String format(@Nullable final NumberFormat instance, final double number) {
 		return instance != null ? instance.format(number) : null;
@@ -4892,10 +4873,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			} else if (proxy instanceof IntIntMap) {
 				//
 				value = handleIntIntMap(methodName, getIntIntMapObjects(), args);
-				//
-			} else if (proxy instanceof StringMap) {
-				//
-				value = handleStringMap(methodName, getStrings(), args);
 				//
 			} // if
 				//
@@ -5104,34 +5081,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				return Unit.with(Util.containsKey(map, args[0]));
 				//
 			} else if (Objects.equals(methodName, "setInt") && args != null && args.length > 1) {
-				//
-				Util.put(map, args[0], args[1]);
-				//
-				return Unit.with(null);
-				//
-			} // if
-				//
-			return null;
-			//
-		}
-
-		@Nullable
-		private static IValue0<Object> handleStringMap(final String methodName, final Map<Object, Object> map,
-				@Nullable final Object[] args) {
-			//
-			if (Objects.equals(methodName, "getString") && args != null && args.length > 0) {
-				//
-				final Object key = args[0];
-				//
-				if (!Util.containsKey(map, key)) {
-					//
-					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
-					//
-				} // if
-					//
-				return Unit.with(Util.get(map, key));
-				//
-			} else if (Objects.equals(methodName, "setString") && args != null && args.length > 1) {
 				//
 				Util.put(map, args[0], args[1]);
 				//
