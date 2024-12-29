@@ -5454,34 +5454,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getValue(evaluationContext) : null;
 	}
 
-	@Nullable
-	private static String getFileExtension(@Nullable final ContentInfo ci) {
-		//
-		final String message = getMessage(ci);
-		//
-		if (or(x -> matches(matcher(x, message)), PATTERN_CONTENT_INFO_MESSAGE_MP3_1,
-				PATTERN_CONTENT_INFO_MESSAGE_MP3_2, PATTERN_CONTENT_INFO_MESSAGE_MP3_3)) {
-			//
-			return "mp3";
-			//
-		} // if
-			//
-		final String name = ci != null ? ci.getName() : null;
-		//
-		if (Objects.equals(name, "wav") || Objects.equals(name, "flac")) {
-			//
-			return name;
-			//
-		} else if (Objects.equals(getMimeType(ci), "audio/x-hx-aac-adts")) {
-			//
-			return "aac";
-			//
-		} // if
-			//
-		return null;
-		//
-	}
-
 	private static <T> boolean or(final Predicate<T> predicate, final T a, final T b, @Nullable final T... values) {
 		//
 		boolean result = Util.test(predicate, a) || Util.test(predicate, b);
