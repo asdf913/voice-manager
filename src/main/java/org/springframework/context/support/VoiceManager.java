@@ -441,12 +441,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private JComboBox<JlptVocabulary> jcbJlptVocabulary = null;
 
-	@Note("List Name(s)")
-	private JLabel jlListNames = null;
-
-	@Note("List Count")
-	private JLabel jlListNameCount = null;
-
 	@Note("Import Result")
 	private DefaultTableModel tmImportResult = null;
 

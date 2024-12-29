@@ -1947,18 +1947,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> keyReleased(instance, null));
 		//
-		final JLabel jLabel = new JLabel();
+		// tfTextImport
 		//
-		Assertions.assertDoesNotThrow(() -> keyReleased(instance, new KeyEvent(jLabel, 0, 0, 0, 0, ' ')));
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "jlListNames", jLabel, true);
-			//
-		} // if
-			//
-			// tfTextImport
-			//
 		final JTextComponent tfTextImport = new JTextField();
 		//
 		if (instance != null) {
