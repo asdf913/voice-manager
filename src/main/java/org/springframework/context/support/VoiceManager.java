@@ -4269,16 +4269,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			return instance != null && instance.containsObject(key);
 		}
 
-		static <T> void setObjectIfAbsent(final ObjectMap instance, final Class<T> key, final T value) {
-			//
-			if (!ObjectMap.containsObject(instance, key)) {
-				//
-				ObjectMap.setObject(instance, key, value);
-				//
-			} // if
-				//
-		}
-
 	}
 
 	@Nullable
