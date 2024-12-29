@@ -334,8 +334,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String HANDLER = "handler";
 
-	private static final int TEMP_FILE_MINIMUM_PREFIX_LENGTH = intValue(getTempFileMinimumPrefixLength(), 3);
-
 	private static final Pattern PATTERN_CONTENT_INFO_MESSAGE_MP3_1 = Pattern.compile("^MPEG ADTS, layer III.+$");
 
 	private static final Pattern PATTERN_CONTENT_INFO_MESSAGE_MP3_2 = Pattern
@@ -356,27 +354,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String LANGUAGE = "Language";
 
-	private static final String EXPORT_PRESENTATION = "exportPresentation";
-
-	private static final String OVER_MP3_TITLE = "overMp3Title";
-
-	private static final String ORDINAL_POSITION_AS_FILE_NAME_PREFIX = "ordinalPositionAsFileNamePrefix";
-
 	private static final String KEY_NOT_FOUND_MESSAGE = "Key [%1$s] Not Found";
 
-	private static final String EMBED_AUDIO_IN_PRESENTATION = "embedAudioInPresentation";
-
-	private static final String HIDE_AUDIO_IMAGE_IN_PRESENTATION = "hideAudioImageInPresentation";
-
 	private static final String OLE_2_COMPOUND_DOCUMENT = "OLE 2 Compound Document";
-
-	private static final String VOICE = "voice";
-
-	private static final String SHA_512 = "SHA-512";
-
-	private static final String FOLDER_IN_PRESENTATION = "folderInPresentation";
-
-	private static final String MESSAGE_DIGEST_ALGORITHM = "messageDigestAlgorithm";
 
 	private static final String COMPONENT = "component";
 
@@ -433,9 +413,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Speech Rate")
 	private JTextComponent tfSpeechRate = null;
 
-	@Note("Current Processing File")
-	private JTextComponent tfCurrentProcessingFile = null;
-
 	@Note("Current Processing Sheet")
 	private JTextComponent tfCurrentProcessingSheetName = null;
 
@@ -448,31 +425,11 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("DLL Path")
 	private JTextComponent tfDllPath = null;
 
-	@Note("JLPT Folder Name Prefix")
-	private JTextComponent tfJlptFolderNamePrefix = null;
-
 	@Note("File")
 	private JTextComponent tfFile = null;
 
-	@Note("Phrase Counter")
-	private JTextComponent tfPhraseCounter = null;
-
-	@Note("Phrase Total")
-	private JTextComponent tfPhraseTotal = null;
-
-	@Note("Ordinal Position File Name Prefix")
-	private JTextComponent tfOrdinalPositionFileNamePrefix = null;
-
 	@Note("Export File")
 	private JTextComponent tfExportFile = null;
-
-	@Note("Export HTML File Name")
-	private JTextComponent tfExportHtmlFileName = null;
-
-	@Note("Export Password")
-	private JTextComponent tfExportPassword = null;
-
-	private JTextComponent tfPresentationSlideDuration = null;
 
 	private transient ComboBoxModel<String> cbmGaKuNenBeTsuKanJi = null;
 
@@ -493,12 +450,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Url("https://ja.wikipedia.org/wiki/%E5%B8%B8%E7%94%A8%E6%BC%A2%E5%AD%97%E4%B8%80%E8%A6%A7")
 	private transient ComboBoxModel<Boolean> cbmJouYouKanJi = null;
-
-	private transient ComboBoxModel<EncryptionMode> cbmEncryptionMode = null;
-
-	private transient ComboBoxModel<CompressionLevel> cbmCompressionLevel = null;
-
-	private transient ComboBoxModel<FileFormat> cbmMicrosoftAccessFileFormat = null;
 
 	private transient MutableComboBoxModel<JlptVocabulary> mcbmJlptVocabulary = null;
 
@@ -611,8 +562,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Import Result")
 	private DefaultTableModel tmImportResult = null;
 
-	private transient SqlSessionFactory sqlSessionFactory = null;
-
 	private String voiceFolder = null;
 
 	private String outputFolder = null;
@@ -631,8 +580,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Nullable
 	private String[] tabOrders = null;
-
-	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
 	private transient Toolkit toolkit = null;
 
@@ -672,10 +619,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private Version freeMarkerVersion = null;
 
-	private String exportPresentationTemplate = null;
-
-	private String folderInPresentation = null;
-
 	private String[] voiceIds = null;
 
 	private transient IValue0<Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> workbookClassFailableSupplierMap = null;
@@ -688,13 +631,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private Duration jSoupParseTimeout = null;
 
-	private String messageDigestAlgorithm = null;
-
 	private transient IValue0<List<String>> jouYouKanJiList = null;
 
 	private transient IValue0<List<JlptVocabulary>> jlptVocabularyList = null;
-
-	private Duration presentationSlideDuration = null;
 
 	@Nullable
 	private transient Collection<Multimap> multimapHiragana = null;
@@ -797,8 +736,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 		} // if
 			//
-		this.configurableListableBeanFactory = configurableListableBeanFactory;
-		//
 		final Collection<?> formats = getByteConverterAttributeValues(configurableListableBeanFactory, FORMAT);
 		//
 		// cbmAudioFormatWrite
@@ -1198,10 +1135,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	public void setSqlSessionFactory(final SqlSessionFactory sqlSessionFactory) {
-		this.sqlSessionFactory = sqlSessionFactory;
-	}
-
 	public void setVoiceFolder(final String voiceFolder) {
 		this.voiceFolder = voiceFolder;
 	}
@@ -1329,10 +1262,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		this.exportWebSpeechSynthesisHtmlTemplateFile = exportWebSpeechSynthesisHtmlTemplateFile;
 	}
 
-	public void setMessageDigestAlgorithm(final String messageDigestAlgorithm) {
-		this.messageDigestAlgorithm = messageDigestAlgorithm;
-	}
-
 	public void setExportWebSpeechSynthesisHtmlTemplateProperties(@Nullable final Object arg)
 			throws JsonProcessingException {
 		//
@@ -1415,14 +1344,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setFreeMarkerConfiguration(final freemarker.template.Configuration freeMarkerConfiguration) {
 		this.freeMarkerConfiguration = freeMarkerConfiguration;
-	}
-
-	public void setExportPresentationTemplate(final String exportPresentationTemplate) {
-		this.exportPresentationTemplate = exportPresentationTemplate;
-	}
-
-	public void setFolderInPresentation(final String folderInPresentation) {
-		this.folderInPresentation = folderInPresentation;
 	}
 
 	private IValue0<Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> getWorkbookClassFailableSupplierMap() {
@@ -1563,22 +1484,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setJlptVocabularyList(final List<JlptVocabulary> jlptVocabularyList) {
 		this.jlptVocabularyList = Unit.with(jlptVocabularyList);
-	}
-
-	public void setPresentationSlideDuration(final Object object) {
-		//
-		final IValue0<Duration> value = toDurationIvalue0(object);
-		//
-		if (value != null) {
-			//
-			this.presentationSlideDuration = IValue0Util.getValue0(value);
-			//
-		} else {
-			//
-			throw new IllegalArgumentException(Util.toString(Util.getClass(object)));
-			//
-		} // if
-			//
 	}
 
 	@Nullable

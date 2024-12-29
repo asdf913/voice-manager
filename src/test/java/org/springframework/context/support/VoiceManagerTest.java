@@ -45,7 +45,6 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.text.NumberFormat;
 import java.time.Duration;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -1161,70 +1160,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testSetPresentationSlideDuration() throws NoSuchFieldException, IllegalAccessException, IOException {
-		//
-		final Field presentationSlideDuration = VoiceManager.class.getDeclaredField("presentationSlideDuration");
-		//
-		if (presentationSlideDuration != null) {
-			//
-			presentationSlideDuration.setAccessible(true);
-			//
-		} // if
-			//
-			// java.lang.CharSequence
-			//
-		AssertionsUtil.assertThrowsAndEquals(DateTimeParseException.class,
-				"{parsedString=A, localizedMessage=Text cannot be parsed to a Duration, errorIndex=0, message=Text cannot be parsed to a Duration}",
-				() -> setPresentationSlideDuration(instance, "A"));
-		//
-		Assertions.assertDoesNotThrow(() -> setPresentationSlideDuration(instance, Integer.toString(ONE)));
-		//
-		Assertions.assertEquals(Duration.ofMillis(ONE), get(presentationSlideDuration, instance));
-		//
-		Assertions.assertDoesNotThrow(() -> setPresentationSlideDuration(instance, EMPTY));
-		//
-		Assertions.assertNull(get(presentationSlideDuration, instance));
-		//
-		final String string = String.format("PT%1$sS", ONE);
-		//
-		Assertions.assertDoesNotThrow(() -> setPresentationSlideDuration(instance, string));
-		//
-		final Duration duration = Duration.ofSeconds(ONE);
-		//
-		Assertions.assertEquals(duration, get(presentationSlideDuration, instance));
-		//
-		// java.time.Duration
-		//
-		Assertions.assertDoesNotThrow(() -> setPresentationSlideDuration(instance, duration));
-		//
-		Assertions.assertSame(duration, get(presentationSlideDuration, instance));
-		//
-		// char[]
-		//
-		Assertions.assertDoesNotThrow(() -> setPresentationSlideDuration(instance, new char[] {}));
-		//
-		Assertions.assertNull(get(presentationSlideDuration, instance));
-		//
-		Assertions.assertDoesNotThrow(
-				() -> setPresentationSlideDuration(instance, string != null ? string.toCharArray() : null));
-		//
-		Assertions.assertEquals(duration, get(presentationSlideDuration, instance));
-		//
-		// java.lang.Object
-		//
-		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
-				"{localizedMessage=class java.lang.Object, message=class java.lang.Object}",
-				() -> setPresentationSlideDuration(instance, new Object()));
-		//
-	}
-
-	private static void setPresentationSlideDuration(final VoiceManager instance, final Object object) {
-		if (instance != null) {
-			instance.setPresentationSlideDuration(object);
-		}
-	}
-
-	@Test
 	void testGetMimeTypeAndBase64EncodedString() throws IOException {
 		//
 		Assertions.assertEquals(Pair.of(null, null), VoiceManager.getMimeTypeAndBase64EncodedString(null, null));
@@ -1807,12 +1742,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(EMPTY, 0, null)));
 		//
-		if (instance != null) {
-			//
-			instance.setSqlSessionFactory(sqlSessionFactory);
-			//
-		} // if
-			//
 		final AbstractButton cbExportHtml = new JCheckBox();
 		//
 		cbExportHtml.setSelected(true);
