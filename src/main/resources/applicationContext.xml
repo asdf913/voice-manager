@@ -963,11 +963,8 @@
 	<!-- -->
 	<bean class="org.springframework.context.support.VoiceManager">
 		<property name="layout" ref="MigLayout" />
-		<property name="sqlSessionFactory" ref="SqlSessionFactory" />
 		<property name="voiceFolder"
 			value="${org.springframework.context.support.VoiceManager.voiceFolder}" />
-		<property name="outputFolder"
-			value="${org.springframework.context.support.VoiceManager.outputFolder}" />
 		<property name="outputFolderFileNameExpressions"
 			value="${org.springframework.context.support.VoiceManager.outputFolderFileNameExpressions}" />
 		<property name="speechApi" ref="speechApi" />
@@ -1012,23 +1009,14 @@
 					value="#{new freemarker.cache.ClassTemplateLoader(T(org.springframework.context.support.VoiceManager),'/')}" />
 			</bean>
 		</property>
-		<property name="exportPresentationTemplate"
-			value="${org.springframework.context.support.VoiceManager.exportPresentationTemplate}" />
-		<property name="folderInPresentation"
-			value="${org.springframework.context.support.VoiceManager.folderInPresentation}" />
 		<property name="workbookClass"
 			value="${org.springframework.context.support.VoiceManager.workbookClass}" />
 		<property name="jSoupParseTimeout"
 			value="${org.springframework.context.support.VoiceManager.jSoupParseTimeout}" />
-		<property name="messageDigestAlgorithm"
-			ref="messageDigestAlgorithm" />
 		<!-- -->
 		<property name="jouYouKanJiList" ref="JouYouKanJiList" />
 		<!-- -->
 		<property name="jlptVocabularyList" ref="JlptVocabularyList" />
-		<!-- -->
-		<property name="presentationSlideDuration"
-			value="${org.springframework.context.support.VoiceManager.presentationSlideDuration}" />
 		<!-- -->
 		<property name="languageCodeToTextObjIntFunction"
 			ref="LanguageCodeToTextObjIntFunction" />
