@@ -1224,59 +1224,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static IValue0<Duration> toDurationIvalue0(@Nullable final Object object) {
-		//
-		IValue0<Duration> value = null;
-		//
-		if (object == null) {
-			//
-			value = Unit.with(null);
-			//
-		} else if (object instanceof Duration duration) {
-			//
-			value = Unit.with(duration);
-			//
-		} else if (object instanceof Number number) {
-			//
-			value = Unit.with(Duration.ofMillis(intValue(number, 0)));
-			//
-		} else if (object instanceof CharSequence) {
-			//
-			final String string = Util.toString(object);
-			//
-			DateTimeParseException dpe = null;
-			//
-			try {
-				//
-				return Unit.with(parse(string));
-				//
-			} catch (final DateTimeParseException e) {
-				//
-				dpe = e;
-				//
-			} // try
-				//
-			final Number number = valueOf(string);
-			//
-			if (number != null) {
-				//
-				return toDurationIvalue0(number);
-				//
-			} // if
-				//
-			throw dpe;
-			//
-		} else if (object instanceof char[] cs) {
-			//
-			return toDurationIvalue0(testAndApply(Objects::nonNull, cs, String::new, null));
-			//
-		} // if
-			//
-		return value;
-		//
-	}
-
-	@Nullable
 	private static Duration parse(CharSequence text) {
 		return StringUtils.isNotEmpty(text) ? Duration.parse(text) : null;
 	}
