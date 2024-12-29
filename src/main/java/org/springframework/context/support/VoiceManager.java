@@ -2796,16 +2796,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static <T> LongStream mapToLong(@Nullable final Stream<T> instance,
-			@Nullable final ToLongFunction<? super T> mapper) {
-		//
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
-				? instance.mapToLong(mapper)
-				: null;
-		//
-	}
-
-	@Nullable
 	private static <T> Optional<T> max(@Nullable final Stream<T> instance,
 			@Nullable final Comparator<? super T> comparator) {
 		//
