@@ -590,9 +590,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private transient Collection<Multimap> multimapHiragana = null;
 
-	@Nullable
-	private transient Collection<Map> mapHiragana = null;
-
 	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
 	private VoiceManager() {
@@ -716,15 +713,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				Util.stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Multimap.class,
 						Collections.singletonMap(VALUE, "hiragana"))),
 				x -> Util.cast(Multimap.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
-		//
-		// Get the "Bean Definition" which class could be assigned as a "java.util.Map"
-		// and the "Bean Definition" has "value" attribute which value
-		// is "hiragana"
-		//
-		mapHiragana = Util.toList(Util.map(
-				Util.stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Map.class,
-						Collections.singletonMap(VALUE, "hiragana"))),
-				x -> Util.cast(Map.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
 		//
 	}
 
