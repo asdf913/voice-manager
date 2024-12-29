@@ -3941,8 +3941,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(reduce(stream, null));
 		//
-		final long l = 0;
-		//
 	}
 
 	private static <T> Optional<T> reduce(final Stream<T> instance, final BinaryOperator<T> accumulator)
