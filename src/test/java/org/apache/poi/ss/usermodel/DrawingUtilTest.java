@@ -9,8 +9,6 @@ import java.util.Objects;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.google.common.base.StopwatchUtil;
-
 import io.github.toolfactory.narcissus.Narcissus;
 
 class DrawingUtilTest {
