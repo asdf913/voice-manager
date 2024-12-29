@@ -255,7 +255,7 @@ class VoiceManagerTest {
 			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
 			METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_PAGE_TITLE, METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL,
 			METHOD_GET_LEVEL, METHOD_ADD_ALL, METHOD_REMOVE_ELEMENT_AT, METHOD_IS_ALL_ATTRIBUTES_MATCHED,
-			METHOD_SET_AUTO_FILTER, METHOD_GET_ELEMENT_AT, METHOD_GET_NUMBER, METHOD_GET_RENDERER, METHOD_SORTED,
+			METHOD_SET_AUTO_FILTER, METHOD_GET_ELEMENT_AT, METHOD_GET_NUMBER, METHOD_SORTED,
 			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM,
 			METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
 
@@ -535,8 +535,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_NUMBER = clz.getDeclaredMethod("getNumber", Object.class, Iterable.class)).setAccessible(true);
-		//
-		(METHOD_GET_RENDERER = clz.getDeclaredMethod("getRenderer", JComboBox.class)).setAccessible(true);
 		//
 		(METHOD_SORTED = clz.getDeclaredMethod("sorted", Stream.class, Comparator.class)).setAccessible(true);
 		//
@@ -4490,27 +4488,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetRenderer() throws Throwable {
-		//
-		Assertions.assertNull(getRenderer(Util.cast(JComboBox.class, Narcissus.allocateInstance(JComboBox.class))));
-		//
-	}
-
-	private static <E> ListCellRenderer<? super E> getRenderer(final JComboBox<E> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_RENDERER.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof ListCellRenderer) {
-				return (ListCellRenderer) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
