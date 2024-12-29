@@ -3379,22 +3379,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	@Nullable
-	private static File createTempFile(@Nullable final String prefix, @Nullable final String suffix)
-			throws IllegalAccessException, InvocationTargetException {
-		//
-		final List<Method> ms = Util.toList(
-				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredMethods(File.class), Arrays::stream, null),
-						x -> Objects.equals(Util.getName(x), "createTempFile")
-								&& Arrays.equals(new Class<?>[] { String.class, String.class }, getParameterTypes(x))));
-		//
-		return Util.cast(File.class,
-				invoke(testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null), null,
-						prefix, suffix));
-		//
-
-	}
-
 	private void actionPerformedForExportBrowse(final boolean headless) {
 		//
 		try {
