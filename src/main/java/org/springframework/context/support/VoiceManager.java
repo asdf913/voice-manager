@@ -154,7 +154,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -236,7 +235,6 @@ import com.google.common.collect.RangeUtil;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
-import com.j256.simplemagic.ContentType;
 
 import de.sciss.jump3r.lowlevel.LameEncoder;
 import de.sciss.jump3r.mp3.Lame;

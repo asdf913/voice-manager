@@ -76,7 +76,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import javax.sound.sampled.AudioFormat;
@@ -178,19 +177,16 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.expression.EvaluationContext;
-import org.springframework.expression.Expression;
 import org.springframework.util.ReflectionUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Multimap;
 import com.google.common.reflect.Reflection;
 import com.healthmarketscience.jackcess.Database.FileFormat;
-import com.j256.simplemagic.ContentType;
 
 import domain.JlptVocabulary;
 import domain.Voice;
