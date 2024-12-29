@@ -2304,16 +2304,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	@Nullable
-	private static <T> Optional<T> reduce(@Nullable final Stream<T> instance,
-			@Nullable final BinaryOperator<T> accumulator) {
-		//
-		return instance != null && (accumulator != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.reduce(accumulator)
-				: null;
-		//
-	}
-
 	private JPanel createMiscellaneousPanel(final LayoutManager layoutManager, final String[] voiceIds) {
 		//
 		final JPanel panel = new JPanel();

@@ -237,8 +237,8 @@ class VoiceManagerTest {
 			METHOD_CREATE_CELL_COMMENT, METHOD_SET_CELL_COMMENT, METHOD_SET_AUTHOR, METHOD_TEST_AND_ACCEPT_PREDICATE,
 			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_PACKAGE, METHOD_BROWSE,
 			METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH,
-			METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING, METHOD_GET_FILE_EXTENSIONS, METHOD_REDUCE2,
-			METHOD_APPEND_STRING, METHOD_APPEND_CHAR, METHOD_GET_ATTRIBUTES, METHOD_GET_OS_VERSION_INFO_EX_MAP,
+			METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING, METHOD_GET_FILE_EXTENSIONS, METHOD_APPEND_STRING,
+			METHOD_APPEND_CHAR, METHOD_GET_ATTRIBUTES, METHOD_GET_OS_VERSION_INFO_EX_MAP,
 			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_RANDOM_ALPHABETIC,
 			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT,
@@ -402,8 +402,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_GET_FILE_EXTENSIONS = clz.getDeclaredMethod("getFileExtensions", ContentType.class))
 				.setAccessible(true);
-		//
-		(METHOD_REDUCE2 = clz.getDeclaredMethod("reduce", Stream.class, BinaryOperator.class)).setAccessible(true);
 		//
 		(METHOD_APPEND_STRING = clz.getDeclaredMethod("append", StringBuilder.class, String.class)).setAccessible(true);
 		//
@@ -3246,30 +3244,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof String[]) {
 				return (String[]) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testReduce() throws Throwable {
-		//
-		Assertions.assertNull(reduce(Stream.empty(), null));
-		//
-		Assertions.assertNull(reduce(stream, null));
-		//
-	}
-
-	private static <T> Optional<T> reduce(final Stream<T> instance, final BinaryOperator<T> accumulator)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_REDUCE2.invoke(null, instance, accumulator);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Optional) {
-				return (Optional) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
