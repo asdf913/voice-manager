@@ -302,8 +302,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static final String WARNING = "Warning";
 
-	private static final String VALUE = "value";
-
 	private static final String LANGUAGE = "Language";
 
 	private static final String KEY_NOT_FOUND_MESSAGE = "Key [%1$s] Not Found";
@@ -415,56 +413,8 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		String value();
 	}
 
-	@Note("Over MP3 Title")
-	private AbstractButton cbOverMp3Title = null;
-
-	@Note("Ordinal Position As File Name Prefix")
-	private AbstractButton cbOrdinalPositionAsFileNamePrefix = null;
-
-	@Note("Export HTML")
-	private AbstractButton cbExportHtml = null;
-
-	@Note("Export List As HTML")
-	private AbstractButton cbExportListHtml = null;
-
-	@Note("Export Web Speech Synthesis HTML")
-	private AbstractButton cbExportWebSpeechSynthesisHtml = null;
-
-	@Note("Export HTML as ZIP")
-	private AbstractButton cbExportHtmlAsZip = null;
-
-	@Note("Remove Exported HTML After Zip")
-	private AbstractButton cbExportHtmlRemoveAfterZip = null;
-
-	@Note("Export List Sheet")
-	private AbstractButton cbExportListSheet = null;
-
-	@Note("Export JLPT Sheet")
-	private AbstractButton cbExportJlptSheet = null;
-
-	@Note("Export Presentation")
-	private AbstractButton cbExportPresentation = null;
-
-	@Note("Embed Audio In Presentation")
-	private AbstractButton cbEmbedAudioInPresentation = null;
-
-	@Note("Hide Audio Image In Presentation")
-	private AbstractButton cbHideAudioImageInPresentation = null;
-
-	@Note("Export Microsoft Access")
-	private AbstractButton cbExportMicrosoftAccess = null;
-
-	@Note("Generate a Blank Row in Import File Template")
-	private AbstractButton cbImportFileTemplateGenerateBlankRow = null;
-
-	@Note("JLPT As Folder")
-	private AbstractButton cbJlptAsFolder = null;
-
 	@Note("Browse Button For Export Function")
 	private AbstractButton btnExportBrowse = null;
-
-	@Note("TTS Voice")
-	private AbstractButton cbUseTtsVoice = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)

@@ -87,7 +87,6 @@ import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
@@ -1638,48 +1637,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(EMPTY, 0, null)));
 		//
-		final AbstractButton cbExportHtml = new JCheckBox();
+		// btnSpeak
 		//
-		cbExportHtml.setSelected(true);
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "cbExportHtml", cbExportHtml, true);
-			//
-		} // if
-			//
-		final AbstractButton cbExportListHtml = new JCheckBox();
-		//
-		cbExportListHtml.setSelected(true);
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "cbExportListHtml", cbExportListHtml, true);
-			//
-		} // if
-			//
-		final AbstractButton cbExportHtmlAsZip = new JCheckBox();
-		//
-		cbExportHtmlAsZip.setSelected(true);
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "cbExportHtmlAsZip", cbExportHtmlAsZip, true);
-			//
-		} // if
-			//
-		final AbstractButton cbExportMicrosoftAccess = new JCheckBox();
-		//
-		cbExportMicrosoftAccess.setSelected(true);
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "cbExportMicrosoftAccess", cbExportMicrosoftAccess, true);
-			//
-		} // if
-			//
-			// btnSpeak
-			//
 		final AbstractButton btnSpeak = new JButton();
 		//
 		final ActionEvent actionEventBtnSpeak = new ActionEvent(btnSpeak, 0, null);
