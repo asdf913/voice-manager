@@ -441,12 +441,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		String value();
 	}
 
-	@Note("Progress Bar For Import")
-	private JProgressBar progressBarImport = null;
-
-	@Note("Progress Bar For Export")
-	private JProgressBar progressBarExport = null;
-
 	@Note("Slider For Speech Rate")
 	private JSlider jsSpeechRate = null;
 
@@ -458,9 +452,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("List Count")
 	private JLabel jlListNameCount = null;
 
-	@Note("Import Exception")
-	private DefaultTableModel tmImportException = null;
-
 	@Note("Import Result")
 	private DefaultTableModel tmImportResult = null;
 
@@ -470,10 +461,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private Map<String, String> outputFolderFileNameExpressions = null;
 
 	private transient SpeechApi speechApi = null;
-
-	@Note("MP3 Tag(s)")
-	@Nullable
-	private String[] mp3Tags = null;
 
 	@Nullable
 	private String[] microsoftSpeechObjectLibraryAttributeNames = null;
@@ -1002,15 +989,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			objectMapper = new ObjectMapper();
 		}
 		return objectMapper;
-	}
-
-	@SuppressWarnings("java:S1612")
-	public void setMp3Tags(final Object value) {
-		//
-		mp3Tags = toArray(
-				Util.toList(Util.map(Util.stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))),
-				new String[] {});
-		//
 	}
 
 	@SuppressWarnings("java:S1612")
