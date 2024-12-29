@@ -328,8 +328,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static final FailablePredicate<File, RuntimeException> EMPTY_FILE_PREDICATE = f -> f != null && f.exists()
 			&& isFile(f) && longValue(length(f), 0) == 0;
 
-	private static IValue0<Method> METHOD_RANDOM_ALPHABETIC = null;
-
 	private transient ApplicationContext applicationContext = null;
 
 	private transient PropertyResolver propertyResolver = null;
