@@ -625,34 +625,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 	}
 
-	private static boolean isAllAttributesMatched(@Nullable final Map<?, ?> attributes,
-			@Nullable final AttributeAccessor aa) {
-		//
-		if (Util.iterator(Util.entrySet(attributes)) != null) {
-			//
-			for (final Entry<?, ?> entry : Util.entrySet(attributes)) {
-				//
-				if (entry == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (aa != null && (!aa.hasAttribute(Util.toString(Util.getKey(entry)))
-						|| !Objects.equals(aa.getAttribute(Util.toString(Util.getKey(entry))), Util.getValue(entry)))) {
-					//
-					return false;
-					//
-				} // if
-					//
-			} // for
-				//
-		} // if
-			//
-		return true;
-		//
-	}
-
 	private static <E> void addAll(@Nullable final Collection<E> a, @Nullable final Collection<? extends E> b) {
 		if (a != null && (b != null || Proxy.isProxyClass(Util.getClass(a)))) {
 			a.addAll(b);

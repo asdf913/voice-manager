@@ -252,10 +252,10 @@ class VoiceManagerTest {
 			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
 			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
 			METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_PAGE_TITLE, METHOD_TO_MILLIS, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL,
-			METHOD_GET_LEVEL, METHOD_ADD_ALL, METHOD_REMOVE_ELEMENT_AT, METHOD_IS_ALL_ATTRIBUTES_MATCHED,
-			METHOD_SET_AUTO_FILTER, METHOD_GET_ELEMENT_AT, METHOD_GET_NUMBER, METHOD_SORTED,
-			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM,
-			METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
+			METHOD_GET_LEVEL, METHOD_ADD_ALL, METHOD_REMOVE_ELEMENT_AT, METHOD_SET_AUTO_FILTER, METHOD_GET_ELEMENT_AT,
+			METHOD_GET_NUMBER, METHOD_SORTED, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL,
+			METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM, METHOD_SET_SELECTED_INDEX,
+			METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -523,9 +523,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_REMOVE_ELEMENT_AT = clz.getDeclaredMethod("removeElementAt", MutableComboBoxModel.class, Integer.TYPE))
 				.setAccessible(true);
-		//
-		(METHOD_IS_ALL_ATTRIBUTES_MATCHED = clz.getDeclaredMethod("isAllAttributesMatched", Map.class,
-				AttributeAccessor.class)).setAccessible(true);
 		//
 		(METHOD_SET_AUTO_FILTER = clz.getDeclaredMethod("setAutoFilter", Sheet.class)).setAccessible(true);
 		//
@@ -4329,62 +4326,6 @@ class VoiceManagerTest {
 	private static void removeElementAt(final MutableComboBoxModel<?> instance, final int index) throws Throwable {
 		try {
 			METHOD_REMOVE_ELEMENT_AT.invoke(null, instance, index);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIsAllAttributesMatched() throws Throwable {
-		//
-		Assertions.assertTrue(isAllAttributesMatched(null, null));
-		//
-		final Map<?, ?> map = Reflection.newProxy(Map.class, ih);
-		//
-		Assertions.assertTrue(isAllAttributesMatched(map, null));
-		//
-		if (ih != null) {
-			//
-			ih.entrySet = Collections.singleton(null);
-			//
-		} // if
-			//
-		Assertions.assertTrue(isAllAttributesMatched(map, null));
-		//
-		if (ih != null) {
-			//
-			ih.entrySet = Collections.singleton(Reflection.newProxy(Entry.class, ih));
-			//
-		} // if
-			//
-		Assertions.assertTrue(isAllAttributesMatched(map, null));
-		//
-		final AttributeAccessor aa = Reflection.newProxy(AttributeAccessor.class, ih);
-		//
-		Assertions.assertFalse(isAllAttributesMatched(map, aa));
-		//
-		Util.put(ih != null ? ih.getAttributeMap() : null, null, null);
-		//
-		Assertions.assertTrue(isAllAttributesMatched(map, aa));
-		//
-		if (ih != null) {
-			//
-			ih.value = EMPTY;
-			//
-		} // if
-			//
-		Assertions.assertFalse(isAllAttributesMatched(map, aa));
-		//
-	}
-
-	private static boolean isAllAttributesMatched(final Map<?, ?> attributes, final AttributeAccessor aa)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_IS_ALL_ATTRIBUTES_MATCHED.invoke(null, attributes, aa);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
