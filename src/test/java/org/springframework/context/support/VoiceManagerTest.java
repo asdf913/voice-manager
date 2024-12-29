@@ -1951,26 +1951,14 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> keyReleased(instance, new KeyEvent(jLabel, 0, 0, 0, 0, ' ')));
 		//
-		final JTextComponent tfListNames = new JTextField();
-		//
 		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "tfListNames", tfListNames, true);
 			//
 			FieldUtils.writeDeclaredField(instance, "jlListNames", jLabel, true);
 			//
 		} // if
 			//
-		final KeyEvent keyEventTfListNames = new KeyEvent(tfListNames, 0, 0, 0, 0, ' ');
-		//
-		Assertions.assertDoesNotThrow(() -> keyReleased(instance, keyEventTfListNames));
-		//
-		Util.setText(tfListNames, "{}");
-		//
-		Assertions.assertDoesNotThrow(() -> keyReleased(instance, keyEventTfListNames));
-		//
-		// tfTextImport
-		//
+			// tfTextImport
+			//
 		final JTextComponent tfTextImport = new JTextField();
 		//
 		if (instance != null) {

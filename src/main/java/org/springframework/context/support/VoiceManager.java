@@ -355,7 +355,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("File Digest")
 	private JTextComponent tfFileDigest = null;
 
-	@Note("Text in Import Pnael")
+	@Note("Text in Import Panel")
 	private JTextComponent tfTextImport = null;
 
 	@Note("Speech Rate")
@@ -366,9 +366,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Note("Current Processing Voice")
 	private JTextComponent tfCurrentProcessingVoice = null;
-
-	@Note("List Name(s)")
-	private JTextComponent tfListNames = null;
 
 	@Note("DLL Path")
 	private JTextComponent tfDllPath = null;
@@ -3554,33 +3551,9 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 		final Object source = Util.getSource(evt);
 		//
-		final JTextComponent jtf = Util.cast(JTextComponent.class, source);
-		//
-		if (Objects.equals(source, tfListNames)) {
+		if (Objects.equals(source, tfTextImport)) {
 			//
-			try {
-				//
-				setBackground(jtf, Color.WHITE);
-				//
-				final ObjectMapper om = getObjectMapper();
-				//
-				final List<?> list = getObjectList(om, Util.getText(jtf));
-				//
-				Util.setText(jlListNames, ObjectMapperUtil.writeValueAsString(om, list));
-				//
-				Util.setText(jlListNameCount, Integer.toString(IterableUtils.size(list)));
-				//
-			} catch (final Exception e) {
-				//
-				accept(x -> Util.setText(x, null), jlListNames, jlListNameCount);
-				//
-				setBackground(jtf, Color.RED);
-				//
-			} // try
-				//
-		} else if (Objects.equals(source, tfTextImport)) {
-			//
-			keyReleasedForTextImport(jtf);
+			keyReleasedForTextImport(Util.cast(JTextComponent.class, source));
 			//
 		} // if
 			//
