@@ -587,9 +587,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient IValue0<List<JlptVocabulary>> jlptVocabularyList = null;
 
-	@Nullable
-	private transient Collection<Multimap> multimapHiragana = null;
-
 	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
 	private VoiceManager() {
@@ -704,15 +701,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		setSelectedItem(cbmAudioFormatWrite, audioFormat);
 		//
 		setSelectedItem(cbmAudioFormatExecute, audioFormat);
-		//
-		// Get the "Bean Definition" which class could be assigned as a
-		// "com.google.common.collect.Multimap" and the "Bean Definition" has "value"
-		// attribute which value is "hiragana"
-		//
-		multimapHiragana = Util.toList(Util.map(
-				Util.stream(getBeanDefinitionNamesByClassAndAttributes(configurableListableBeanFactory, Multimap.class,
-						Collections.singletonMap(VALUE, "hiragana"))),
-				x -> Util.cast(Multimap.class, BeanFactoryUtil.getBean(configurableListableBeanFactory, x))));
 		//
 	}
 
