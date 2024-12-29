@@ -229,7 +229,7 @@ class VoiceManagerTest {
 
 	private static final int THREE = 3;
 
-	private static Class<?> CLASS_OBJECT_MAP, CLASS_BOOLEAN_MAP, CLASS_IH, CLASS_EXPORT_TASK = null;
+	private static Class<?> CLASS_OBJECT_MAP, CLASS_IH, CLASS_EXPORT_TASK = null;
 
 	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_GET_FILE_EXTENSION_CONTENT_INFO,
 			METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
@@ -597,8 +597,6 @@ class VoiceManagerTest {
 		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
 		//
 		CLASS_OBJECT_MAP = Class.forName("org.springframework.context.support.VoiceManager$ObjectMap");
-		//
-		CLASS_BOOLEAN_MAP = Class.forName("org.springframework.context.support.VoiceManager$BooleanMap");
 		//
 	}
 
@@ -5173,22 +5171,6 @@ class VoiceManagerTest {
 			//
 			AssertionsUtil.assertThrowsAndEquals(Throwable.class, "{localizedMessage=setObject, message=setObject}",
 					() -> ih.invoke(objectMap, setObject, empty));
-			//
-			// org.springframework.context.support.VoiceManager$BooleanMap.setBoolean(java.lang.String,boolean)
-			//
-			final Object booleanMap = Reflection.newProxy(CLASS_BOOLEAN_MAP, ih);
-			//
-			final Method setBoolean = CLASS_BOOLEAN_MAP != null
-					? CLASS_BOOLEAN_MAP.getDeclaredMethod("setBoolean", String.class, Boolean.TYPE)
-					: null;
-			//
-			AssertionsUtil.assertThrowsAndEquals(Throwable.class, "{localizedMessage=setBoolean, message=setBoolean}",
-					() -> ih.invoke(booleanMap, setBoolean, null));
-			//
-			AssertionsUtil.assertThrowsAndEquals(Throwable.class, "{localizedMessage=setBoolean, message=setBoolean}",
-					() -> ih.invoke(booleanMap, setBoolean, empty));
-			//
-			Assertions.assertDoesNotThrow(() -> ih.invoke(booleanMap, setBoolean, new Object[] { null, null }));
 			//
 			// org.springframework.context.support.VoiceManager$IntMap.getObject(int)
 			//

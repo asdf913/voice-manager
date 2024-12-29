@@ -4862,10 +4862,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				value = handleObjectMap(methodName, getObjects(), args);
 				//
-			} else if (proxy instanceof BooleanMap) {
-				//
-				value = handleBooleanMap(methodName, getBooleans(), args);
-				//
 			} else if (proxy instanceof IntMap) {
 				//
 				value = handleIntMap(methodName, getIntMapObjects(), args);
@@ -5001,34 +4997,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		}
 
 		@Nullable
-		private static IValue0<Object> handleBooleanMap(final String methodName, final Map<Object, Object> map,
-				@Nullable final Object[] args) {
-			//
-			if (Objects.equals(methodName, "getBoolean") && args != null && args.length > 0) {
-				//
-				final Object key = args[0];
-				//
-				if (!Util.containsKey(map, key)) {
-					//
-					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
-					//
-				} // if
-					//
-				return Unit.with(Util.get(map, key));
-				//
-			} else if (Objects.equals(methodName, "setBoolean") && args != null && args.length > 1) {
-				//
-				Util.put(map, args[0], args[1]);
-				//
-				return Unit.with(null);
-				//
-			} // if
-				//
-			return null;
-			//
-		}
-
-		@Nullable
 		private static IValue0<Object> handleIntMap(final String methodName, final Map<Object, Object> map,
 				@Nullable final Object[] args) {
 			//
@@ -5129,24 +5097,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static Integer getOrdinalPosition(@Nullable final Voice instance) {
 		return instance != null ? instance.getOrdinalPosition() : null;
-	}
-
-	private static interface BooleanMap {
-
-		boolean getBoolean(final String key);
-
-		void setBoolean(final String key, final boolean value);
-
-		static boolean getBoolean(@Nullable final BooleanMap instance, final String key) {
-			return instance != null && instance.getBoolean(key);
-		}
-
-		static void setBoolean(@Nullable final BooleanMap instance, final String key, final boolean value) {
-			if (instance != null) {
-				instance.setBoolean(key, value);
-			}
-		}
-
 	}
 
 	@Nullable
