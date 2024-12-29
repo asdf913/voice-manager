@@ -494,9 +494,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private transient IValue0<String> microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle = null;
 
-	@Note("Export Web Speech Synthesis HTML Template File")
-	private String exportWebSpeechSynthesisHtmlTemplateFile = null;
-
 	private transient freemarker.template.Configuration freeMarkerConfiguration = null;
 
 	private Version freeMarkerVersion = null;
@@ -984,10 +981,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	public void setPoiEncryptionPageUrl(final String poiEncryptionPageUrl) {
 		this.poiEncryptionPageUrl = poiEncryptionPageUrl;
-	}
-
-	public void setExportWebSpeechSynthesisHtmlTemplateFile(final String exportWebSpeechSynthesisHtmlTemplateFile) {
-		this.exportWebSpeechSynthesisHtmlTemplateFile = exportWebSpeechSynthesisHtmlTemplateFile;
 	}
 
 	public void setExportWebSpeechSynthesisHtmlTemplateProperties(@Nullable final Object arg)
