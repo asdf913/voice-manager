@@ -879,14 +879,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static Integer getTempFileMinimumPrefixLength(final org.apache.bcel.classfile.Method method) {
-		//
-		return getTempFileMinimumPrefixLength(InstructionListUtil.getInstructions(MethodGenUtil
-				.getInstructionList(testAndApply(Objects::nonNull, method, x -> new MethodGen(x, null, null), null))));
-		//
-	}
-
-	@Nullable
 	private static Integer getTempFileMinimumPrefixLength(@Nullable final Instruction[] instructions) {
 		//
 		Integer result = null;
