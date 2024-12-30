@@ -342,9 +342,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Text in Import Panel")
 	private JTextComponent tfTextImport = null;
 
-	@Note("Speech Rate")
-	private JTextComponent tfSpeechRate = null;
-
 	@Note("Current Processing Sheet")
 	private JTextComponent tfCurrentProcessingSheetName = null;
 
