@@ -261,7 +261,7 @@ import net.sourceforge.javaflacencoder.StreamConfiguration;
 
 @Title("Voice Manager")
 public class VoiceManager extends JFrame implements ActionListener, ItemListener, KeyListener, EnvironmentAware,
-		BeanFactoryPostProcessor, InitializingBean, DocumentListener, ApplicationContextAware {
+		BeanFactoryPostProcessor, InitializingBean, ApplicationContextAware {
 
 	private static final long serialVersionUID = 6093437131552718994L;
 
@@ -3425,14 +3425,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	@Override
-	public void insertUpdate(final DocumentEvent evt) {
-	}
-
-	@Override
-	public void removeUpdate(final DocumentEvent evt) {
-	}
-
 	@Nullable
 	private static String getKanji(@Nullable final JlptVocabulary instance) {
 		return instance != null ? instance.getKanji() : null;
@@ -3483,11 +3475,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private static int getSize(@Nullable final ListModel<?> instance) {
 		return instance != null ? instance.getSize() : 0;
-	}
-
-	@Override
-	public void changedUpdate(final DocumentEvent evt) {
-		//
 	}
 
 	@Nullable
