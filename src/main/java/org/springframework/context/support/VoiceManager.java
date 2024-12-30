@@ -1189,11 +1189,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static Object[] toArray(@Nullable final Collection<?> instance) {
-		return instance != null ? instance.toArray() : null;
-	}
-
-	@Nullable
 	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
