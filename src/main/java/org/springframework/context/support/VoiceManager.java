@@ -238,7 +238,6 @@ import com.j256.simplemagic.ContentInfoUtil;
 import de.sciss.jump3r.lowlevel.LameEncoder;
 import de.sciss.jump3r.mp3.Lame;
 import domain.JlptVocabulary;
-import domain.Pronunciation;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.ext.beans.BeansWrapper;
