@@ -1711,7 +1711,7 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testStateChanged() throws IllegalAccessException {
+	void testStateChanged() {
 		//
 		Assertions.assertDoesNotThrow(() -> stateChanged(instance, null));
 		//
