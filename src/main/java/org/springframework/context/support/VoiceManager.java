@@ -379,10 +379,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient MutableComboBoxModel<JlptVocabulary> mcbmJlptVocabulary = null;
 
-	private transient MutableComboBoxModel<Pronunciation> mcbmPronunciation = null;
-
-	private transient javax.swing.text.Document tfTextImportDocument = null;
-
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
 	private @interface Group {
@@ -3432,32 +3428,10 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Override
 	public void insertUpdate(final DocumentEvent evt) {
-		//
-		if (Objects.equals(getDocument(evt), tfTextImportDocument)) {
-			//
-			setJlptVocabularyAndLevel(this);
-			//
-			// Remove all element(s) in "mcbmPronounication"
-			//
-			Util.forEach(reverseRange(0, getSize(mcbmPronunciation)), i -> removeElementAt(mcbmPronunciation, i));
-			//
-		} // if
-			//
 	}
 
 	@Override
 	public void removeUpdate(final DocumentEvent evt) {
-		//
-		if (Objects.equals(getDocument(evt), tfTextImportDocument)) {
-			//
-			setJlptVocabularyAndLevel(this);
-			//
-			// Remove all element(s) in "mcbmPronounication"
-			//
-			Util.forEach(reverseRange(0, getSize(mcbmPronunciation)), i -> removeElementAt(mcbmPronunciation, i));
-			//
-		} // if
-			//
 	}
 
 	private static void setJlptVocabularyAndLevel(@Nullable final VoiceManager instance) {

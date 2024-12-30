@@ -1900,17 +1900,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> removeUpdate(instance, null));
 		//
-		Util.setText(tfTextImport, A);
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "cbmJlptLevel",
-					new DefaultComboBoxModel<>(new String[] { null, null }), true);
-			//
-		} // if
-			//
-		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class, "{}", () -> removeUpdate(instance, null));
-		//
 	}
 
 	private static void removeUpdate(final DocumentListener instance, final DocumentEvent evt) {
