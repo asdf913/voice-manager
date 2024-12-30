@@ -4192,11 +4192,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getRomaji() : null;
 	}
 
-	@Nullable
-	private static String getHiragana(@Nullable final Voice instance) {
-		return instance != null ? instance.getHiragana() : null;
-	}
-
 	private static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, @Nullable final T t,
 			@Nullable final U u) {
 		if (instance != null) {
