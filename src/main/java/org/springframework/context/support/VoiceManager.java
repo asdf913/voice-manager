@@ -4182,11 +4182,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.getFilePath() : null;
 	}
 
-	@Nullable
-	private static String getText(@Nullable final Voice instance) {
-		return instance != null ? instance.getText() : null;
-	}
-
 	private static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, @Nullable final T t,
 			@Nullable final U u) {
 		if (instance != null) {
