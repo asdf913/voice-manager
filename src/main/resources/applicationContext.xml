@@ -1010,8 +1010,6 @@
 		<!-- -->
 		<property name="jouYouKanJiList" ref="JouYouKanJiList" />
 		<!-- -->
-		<property name="jlptVocabularyList" ref="JlptVocabularyList" />
-		<!-- -->
 		<property name="languageCodeToTextObjIntFunction"
 			ref="LanguageCodeToTextObjIntFunction" />
 	</bean>

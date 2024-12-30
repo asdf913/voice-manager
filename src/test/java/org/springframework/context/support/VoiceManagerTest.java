@@ -514,8 +514,6 @@ class VoiceManagerTest {
 
 		private String toString, voiceAttribute, textContent, dllPath = null;
 
-		private Object max = null;
-
 		private Boolean anyMatch, isInstalled, isEmpty = null;
 
 		private String[] voiceIds = null;
@@ -537,8 +535,6 @@ class VoiceManagerTest {
 		private Node namedItem = null;
 
 		private NamedNodeMap attributes = null;
-
-		private javax.swing.text.Document document = null;
 
 		private Collection<?> values = null;
 
@@ -620,10 +616,6 @@ class VoiceManagerTest {
 				if (Objects.equals(Stream.class, returnType)) {
 					//
 					return proxy;
-					//
-				} else if (Objects.equals(methodName, "max")) {
-					//
-					return max;
 					//
 				} else if (Objects.equals(methodName, "anyMatch")) {
 					//
@@ -721,10 +713,6 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof DocumentEvent && Objects.equals(methodName, "getDocument")) {
-				//
-				return document;
-				//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -775,10 +763,6 @@ class VoiceManagerTest {
 
 	private org.jsoup.nodes.Element element = null;
 
-	private DocumentEvent documentEvent = null;
-
-	private javax.swing.text.Document document = null;
-
 	private Collection<?> collection = null;
 
 	private ConfigurableListableBeanFactory configurableListableBeanFactory = null;
@@ -814,10 +798,6 @@ class VoiceManagerTest {
 		iterable = Reflection.newProxy(Iterable.class, ih);
 		//
 		logger = Reflection.newProxy(Logger.class, ih);
-		//
-		documentEvent = Reflection.newProxy(DocumentEvent.class, ih);
-		//
-		document = Reflection.newProxy(javax.swing.text.Document.class, ih);
 		//
 		collection = Reflection.newProxy(Collection.class, ih);
 		//
