@@ -2781,16 +2781,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static <T> Optional<T> max(@Nullable final Stream<T> instance,
-			@Nullable final Comparator<? super T> comparator) {
-		//
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || comparator != null)
-				? instance.max(comparator)
-				: null;
-		//
-	}
-
-	@Nullable
 	private static OptionalInt max(@Nullable final IntStream instance) {
 		return instance != null ? instance.max() : null;
 	}
