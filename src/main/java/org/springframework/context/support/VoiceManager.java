@@ -2893,12 +2893,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 	}
 
-	private static void removeElementAt(@Nullable final MutableComboBoxModel<?> instance, final int index) {
-		if (instance != null) {
-			instance.removeElementAt(index);
-		}
-	}
-
 	/**
 	 * @see <a href="https://stackoverflow.com/a/24011264">list - Java 8 stream
 	 *      reverse order - Stack Overflow</a>
