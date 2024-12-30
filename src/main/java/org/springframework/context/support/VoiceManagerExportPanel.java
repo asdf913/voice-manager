@@ -5275,7 +5275,7 @@ public class VoiceManagerExportPanel extends JPanel
 							CreationHelperUtil.createRichTextString(creationHelper,
 									ObjIntFunctionUtil.apply(languageCodeToTextObjIntFunction, value, 16)));
 					//
-					setCellComment(cell, comment);
+					CellUtil.setCellComment(cell, comment);
 					//
 				} // if
 					//
@@ -5288,7 +5288,7 @@ public class VoiceManagerExportPanel extends JPanel
 				//
 				setAuthor(comment, Util.getName(Util.getClass(e)));
 				//
-				setCellComment(cell, comment);
+				CellUtil.setCellComment(cell, comment);
 				//
 			} // try
 				//
@@ -5299,12 +5299,6 @@ public class VoiceManagerExportPanel extends JPanel
 	private static void setAuthor(@Nullable final Comment instance, final String string) {
 		if (instance != null) {
 			instance.setAuthor(string);
-		}
-	}
-
-	private static void setCellComment(@Nullable final Cell instance, @Nullable final Comment comment) {
-		if (instance != null) {
-			instance.setCellComment(comment);
 		}
 	}
 

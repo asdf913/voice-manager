@@ -258,4 +258,10 @@ public interface CellUtil {
 		return instance != null ? instance.getClass() : null;
 	}
 
+	static void setCellComment(final Cell instance, final Comment comment) {
+		if (instance != null) {
+			instance.setCellComment(comment);
+		}
+	}
+
 }

@@ -4616,7 +4616,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 							CreationHelperUtil.createRichTextString(creationHelper,
 									ObjIntFunctionUtil.apply(languageCodeToTextObjIntFunction, value, 16)));
 					//
-					setCellComment(cell, comment);
+					CellUtil.setCellComment(cell, comment);
 					//
 				} // if
 					//
@@ -4629,7 +4629,7 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 				//
 				setAuthor(comment, Util.getName(Util.getClass(e)));
 				//
-				setCellComment(cell, comment);
+				CellUtil.setCellComment(cell, comment);
 				//
 			} // try
 				//
@@ -4774,12 +4774,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	private static void setAuthor(@Nullable final Comment instance, @Nullable final String string) {
 		if (instance != null) {
 			instance.setAuthor(string);
-		}
-	}
-
-	private static void setCellComment(@Nullable final Cell instance, @Nullable final Comment comment) {
-		if (instance != null) {
-			instance.setCellComment(comment);
 		}
 	}
 
