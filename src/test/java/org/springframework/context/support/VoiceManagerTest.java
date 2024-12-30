@@ -1438,16 +1438,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeechRateSlower));
 		//
-		final JSlider jsSpeechRate = new JSlider();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "jsSpeechRate", jsSpeechRate, true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeechRateSlower));
-		//
 		// btnSpeechRateNormal
 		//
 		final AbstractButton btnSpeechRateNormal = new JButton();
@@ -1456,28 +1446,12 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeechRateNormal));
 		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "jsSpeechRate", null, true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeechRateNormal));
-		//
 		// btnSpeechRateFaster
 		//
 		final AbstractButton btnSpeechRateFaster = new JButton();
 		//
 		final ActionEvent actionEventBtnSpeechRateFaster = new ActionEvent(btnSpeechRateFaster, 0, null);
 		//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeechRateFaster));
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "jsSpeechRate", jsSpeechRate, true);
-			//
-		} // if
-			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, actionEventBtnSpeechRateFaster));
 		//
 	}
@@ -1755,26 +1729,6 @@ class VoiceManagerTest {
 		Assertions.assertDoesNotThrow(() -> stateChanged(instance, null));
 		//
 		Assertions.assertDoesNotThrow(() -> stateChanged(instance, new ChangeEvent("")));
-		//
-		final JSlider jsSpeechRate = new JSlider();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "jsSpeechRate", jsSpeechRate, true);
-			//
-		} // if
-			//
-		final ChangeEvent changeEvent = new ChangeEvent(jsSpeechRate);
-		//
-		Assertions.assertDoesNotThrow(() -> stateChanged(instance, changeEvent));
-		//
-		jsSpeechRate.setValue(jsSpeechRate.getMinimum());
-		//
-		Assertions.assertDoesNotThrow(() -> stateChanged(instance, changeEvent));
-		//
-		jsSpeechRate.setValue(jsSpeechRate.getMaximum());
-		//
-		Assertions.assertDoesNotThrow(() -> stateChanged(instance, changeEvent));
 		//
 	}
 

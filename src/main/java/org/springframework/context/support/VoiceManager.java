@@ -420,9 +420,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		String value();
 	}
 
-	@Note("Slider For Speech Rate")
-	private JSlider jsSpeechRate = null;
-
 	private JComboBox<JlptVocabulary> jcbJlptVocabulary = null;
 
 	@Note("Import Result")
@@ -3336,15 +3333,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Override
 	public void stateChanged(final ChangeEvent evt) {
-		//
-		final Object source = Util.getSource(evt);
-		//
-		if (Objects.equals(source, jsSpeechRate)) {
-			//
-			Util.setText(tfSpeechRate, Util.toString(getValue(jsSpeechRate)));
-			//
-		} // if
-			//
 	}
 
 	@Override
