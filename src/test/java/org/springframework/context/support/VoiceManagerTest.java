@@ -704,14 +704,10 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof InnerClass.InnerInterface) {
+			} else if (proxy instanceof InnerClass.InnerInterface && Objects.equals(methodName, "getDllPath")) {
 				//
-				if (Objects.equals(methodName, "getDllPath")) {
-					//
-					return dllPath;
-					//
-				} // if
-					//
+				return dllPath;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
