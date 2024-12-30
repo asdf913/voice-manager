@@ -1710,15 +1710,6 @@ class VoiceManagerTest {
 		}
 	}
 
-	@Test
-	void testStateChanged() {
-		//
-		Assertions.assertDoesNotThrow(() -> stateChanged(instance, null));
-		//
-		Assertions.assertDoesNotThrow(() -> stateChanged(instance, new ChangeEvent("")));
-		//
-	}
-
 	private static void stateChanged(final ChangeListener instance, final ChangeEvent evt) {
 		if (instance != null) {
 			instance.stateChanged(evt);

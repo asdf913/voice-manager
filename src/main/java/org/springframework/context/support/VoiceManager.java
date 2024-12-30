@@ -261,8 +261,8 @@ import net.sourceforge.javaflacencoder.FLACStreamOutputStream;
 import net.sourceforge.javaflacencoder.StreamConfiguration;
 
 @Title("Voice Manager")
-public class VoiceManager extends JFrame implements ActionListener, ItemListener, ChangeListener, KeyListener,
-		EnvironmentAware, BeanFactoryPostProcessor, InitializingBean, DocumentListener, ApplicationContextAware {
+public class VoiceManager extends JFrame implements ActionListener, ItemListener, KeyListener, EnvironmentAware,
+		BeanFactoryPostProcessor, InitializingBean, DocumentListener, ApplicationContextAware {
 
 	private static final long serialVersionUID = 6093437131552718994L;
 
@@ -3326,10 +3326,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return list;
 		//
-	}
-
-	@Override
-	public void stateChanged(final ChangeEvent evt) {
 	}
 
 	@Override
