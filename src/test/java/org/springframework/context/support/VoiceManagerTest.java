@@ -1788,18 +1788,6 @@ class VoiceManagerTest {
 		}
 	}
 
-	private static void insertUpdate(final DocumentListener instance, final DocumentEvent evt) {
-		if (instance != null) {
-			instance.insertUpdate(evt);
-		}
-	}
-
-	private static void removeUpdate(final DocumentListener instance, final DocumentEvent evt) {
-		if (instance != null) {
-			instance.removeUpdate(evt);
-		}
-	}
-
 	@Test
 	void testGetSystemClipboard() throws Throwable {
 		//
