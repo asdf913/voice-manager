@@ -3416,11 +3416,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	}
 
 	@Nullable
-	private static String getKana(@Nullable final JlptVocabulary instance) {
-		return instance != null ? instance.getKana() : null;
-	}
-
-	@Nullable
 	private static String getLevel(@Nullable final JlptVocabulary instance) {
 		return instance != null ? instance.getLevel() : null;
 	}
