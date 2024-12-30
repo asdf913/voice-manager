@@ -4118,10 +4118,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			}
 		}
 
-		static <T> boolean containsObject(@Nullable final ObjectMap instance, final Class<T> key) {
-			return instance != null && instance.containsObject(key);
-		}
-
 	}
 
 	@Nullable
