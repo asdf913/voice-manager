@@ -255,8 +255,8 @@ import net.sourceforge.javaflacencoder.FLACStreamOutputStream;
 import net.sourceforge.javaflacencoder.StreamConfiguration;
 
 @Title("Voice Manager")
-public class VoiceManager extends JFrame implements ActionListener, ItemListener, EnvironmentAware,
-		BeanFactoryPostProcessor, InitializingBean, ApplicationContextAware {
+public class VoiceManager extends JFrame implements ActionListener, EnvironmentAware, BeanFactoryPostProcessor,
+		InitializingBean, ApplicationContextAware {
 
 	private static final long serialVersionUID = 6093437131552718994L;
 
@@ -3226,10 +3226,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Nullable
 	private static Integer getPhysicalNumberOfRows(@Nullable final Sheet instance) {
 		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfRows()) : null;
-	}
-
-	@Override
-	public void itemStateChanged(final ItemEvent evt) {
 	}
 
 	@Nullable
