@@ -350,8 +350,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("Export File")
 	private JTextComponent tfExportFile = null;
 
-	private transient ComboBoxModel<String> cbmGaKuNenBeTsuKanJi = null;
-
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
 	private @interface Url {
