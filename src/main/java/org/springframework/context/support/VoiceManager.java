@@ -400,8 +400,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		String value();
 	}
 
-	private JComboBox<JlptVocabulary> jcbJlptVocabulary = null;
-
 	@Note("Import Result")
 	private DefaultTableModel tmImportResult = null;
 
@@ -3232,22 +3230,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Override
 	public void itemStateChanged(final ItemEvent evt) {
-		//
-		final Object source = Util.getSource(evt);
-		//
-		if (Objects.equals(source, jcbJlptVocabulary)) {
-			//
-			final JlptVocabulary jv = Util.cast(JlptVocabulary.class,
-					jcbJlptVocabulary != null ? jcbJlptVocabulary.getSelectedItem() : null);
-			//
-			if (jv != null) {
-				//
-				setSelectedItemByString(cbmJlptLevel, getLevel(jv));
-				//
-			} // if
-				//
-		} // if
-			//
 	}
 
 	@Nullable

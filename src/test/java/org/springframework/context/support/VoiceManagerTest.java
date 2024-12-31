@@ -1548,53 +1548,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testItemStateChanged() throws IllegalAccessException {
-		//
-		if (instance != null) {
-			//
-			Assertions.assertDoesNotThrow(() -> instance.itemStateChanged(null));
-			//
-		} // if
-			//
-		final ItemSelectable itemSelectable = Reflection.newProxy(ItemSelectable.class, ih);
-		//
-		Assertions.assertDoesNotThrow(() -> itemStateChanged(instance, new ItemEvent(itemSelectable, 0, "", 0)));
-		//
-		if (instance != null) {
-			//
-			instance.setSpeechApi(speechApi);
-			//
-		} // if
-			//
-		if (ih != null) {
-			//
-			ih.voiceAttribute = Integer.toString(LocaleID.AF.getLcid(), 16);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> itemStateChanged(instance, null));
-		//
-		// org.springframework.context.support.VoiceManager.jcbJlptVocabulary
-		//
-		final JComboBox<Object> jcbJlptVocabulary = new JComboBox<>();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "jcbJlptVocabulary", jcbJlptVocabulary, true);
-			//
-		} // if
-			//
-		final ItemEvent itemEvent = new ItemEvent(jcbJlptVocabulary, ZERO, null, ZERO);
-		//
-		Assertions.assertDoesNotThrow(() -> itemStateChanged(instance, itemEvent));
-		//
-		jcbJlptVocabulary.addItem(new JlptVocabulary());
-		//
-		Assertions.assertDoesNotThrow(() -> itemStateChanged(instance, itemEvent));
-		//
-	}
-
-	@Test
 	void testSetjSoupParseTimeout() throws NoSuchFieldException, IllegalAccessException {
 		//
 		final Field jSoupParseTimeout = VoiceManager.class.getDeclaredField("jSoupParseTimeout");
