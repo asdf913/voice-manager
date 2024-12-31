@@ -337,9 +337,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 	@Note("File Digest")
 	private JTextComponent tfFileDigest = null;
 
-	@Note("Text in Import Panel")
-	private JTextComponent tfTextImport = null;
-
 	@Note("Current Processing Sheet")
 	private JTextComponent tfCurrentProcessingSheetName = null;
 
@@ -3320,15 +3317,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Override
 	public void keyReleased(final KeyEvent evt) {
-		//
-		final Object source = Util.getSource(evt);
-		//
-		if (Objects.equals(source, tfTextImport)) {
-			//
-			keyReleasedForTextImport(Util.cast(JTextComponent.class, source));
-			//
-		} // if
-			//
 	}
 
 	private void keyReleasedForTextImport(@Nullable final JTextComponent jTextComponent) {
