@@ -3305,32 +3305,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		//
 	}
 
-	private void keyReleasedForTextImport(@Nullable final JTextComponent jTextComponent) {
-		//
-		keyReleasedForTextImport(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap), jTextComponent,
-				cbmGaKuNenBeTsuKanJi);
-		//
-		// 常用漢字
-		//
-		final String text = Util.getText(jTextComponent);
-		//
-		final List<String> list = IValue0Util.getValue0(jouYouKanJiList);
-		//
-		if (StringUtils.isEmpty(text) || CollectionUtils.isEmpty(list)) {
-			//
-			setSelectedItem(cbmJouYouKanJi, null);
-			//
-		} else if (jouYouKanJiList != null) {
-			//
-			setSelectedItem(cbmJouYouKanJi,
-					StringUtils.length(text) <= orElse(max(mapToInt(Util.stream(list), StringUtils::length)), 0)
-							? Util.contains(list, text)
-							: null);
-			//
-		} // if
-			//
-	}
-
 	private static void keyReleasedForTextImport(final Multimap<String, String> multiMap,
 			@Nullable final JTextComponent jTextComponent, final ComboBoxModel<String> comboBoxModel) {
 		//
