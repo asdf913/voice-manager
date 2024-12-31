@@ -976,8 +976,6 @@
 		<!-- -->
 		<property name="gaKuNenBeTsuKanJiListPageUrl"
 			ref="gaKuNenBeTsuKanJiListPageUrl" />
-		<property name="gaKuNenBeTsuKanJiMultimap"
-			ref="GaKuNenBeTsuKanJiMultimap" />
 		<property
 			name="microsoftSpeechPlatformRuntimeDownloadPageUrl"
 			value="${org.springframework.context.support.VoiceManager.microsoftSpeechPlatformRuntimeDownloadPageUrl}" />
@@ -1007,8 +1005,6 @@
 			value="${org.springframework.context.support.VoiceManager.workbookClass}" />
 		<property name="jSoupParseTimeout"
 			value="${org.springframework.context.support.VoiceManager.jSoupParseTimeout}" />
-		<!-- -->
-		<property name="jouYouKanJiList" ref="JouYouKanJiList" />
 		<!-- -->
 		<property name="languageCodeToTextObjIntFunction"
 			ref="LanguageCodeToTextObjIntFunction" />

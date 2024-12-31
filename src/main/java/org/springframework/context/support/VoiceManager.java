@@ -442,8 +442,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	private transient LayoutManager layoutManager = null;
 
-	private transient IValue0<Multimap<String, String>> gaKuNenBeTsuKanJiMultimap = null;
-
 	@Nullable
 	private transient IValue0<String> microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle = null;
 
@@ -462,8 +460,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 
 	@Nullable
 	private Duration jSoupParseTimeout = null;
-
-	private transient IValue0<List<String>> jouYouKanJiList = null;
 
 	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
@@ -1075,14 +1071,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		this.jSoupParseTimeout = testAndApply(StringUtils::isNotBlank, string, Duration::parse, null);
 		//
-	}
-
-	public void setGaKuNenBeTsuKanJiMultimap(final Multimap<String, String> gaKuNenBeTsuKanJiMultimap) {
-		this.gaKuNenBeTsuKanJiMultimap = Unit.with(gaKuNenBeTsuKanJiMultimap);
-	}
-
-	public void setJouYouKanJiList(final List<String> jouYouKanJiList) {
-		this.jouYouKanJiList = Unit.with(jouYouKanJiList);
 	}
 
 	public void setLanguageCodeToTextObjIntFunction(
