@@ -728,8 +728,6 @@ class VoiceManagerTest {
 
 	private BeanDefinition beanDefinition = null;
 
-	private Multimap<?, ?> multimap = null;
-
 	private Node node = null;
 
 	private Iterable<?> iterable = null;
@@ -765,8 +763,6 @@ class VoiceManagerTest {
 		speechApi = Reflection.newProxy(SpeechApi.class, ih);
 		//
 		beanDefinition = Reflection.newProxy(BeanDefinition.class, ih);
-		//
-		multimap = Reflection.newProxy(Multimap.class, ih);
 		//
 		node = Reflection.newProxy(Node.class, ih);
 		//
