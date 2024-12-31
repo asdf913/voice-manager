@@ -1682,43 +1682,6 @@ class VoiceManagerTest {
 		}
 	}
 
-	@Test
-	void testKeyTyped() {
-		//
-		Assertions.assertDoesNotThrow(() -> {
-			//
-			if (instance != null) {
-				//
-				instance.keyTyped(null);
-				//
-			} // if
-				//
-		});
-		//
-	}
-
-	@Test
-	void testKeyPressed() {
-		//
-		Assertions.assertDoesNotThrow(() -> {
-			//
-			if (instance != null) {
-				//
-				instance.keyPressed(null);
-				//
-			} // if
-				//
-		});
-		//
-	}
-
-	@Test
-	void testKeyReleased() throws Throwable {
-		//
-		Assertions.assertDoesNotThrow(() -> keyReleased(instance, null));
-		//
-	}
-
 	private static void keyReleased(final KeyListener instance, final KeyEvent keyEvent) {
 		if (instance != null) {
 			instance.keyReleased(keyEvent);

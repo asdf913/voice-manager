@@ -259,7 +259,7 @@ import net.sourceforge.javaflacencoder.FLACStreamOutputStream;
 import net.sourceforge.javaflacencoder.StreamConfiguration;
 
 @Title("Voice Manager")
-public class VoiceManager extends JFrame implements ActionListener, ItemListener, KeyListener, EnvironmentAware,
+public class VoiceManager extends JFrame implements ActionListener, ItemListener, EnvironmentAware,
 		BeanFactoryPostProcessor, InitializingBean, ApplicationContextAware {
 
 	private static final long serialVersionUID = 6093437131552718994L;
@@ -3303,46 +3303,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return list;
 		//
-	}
-
-	@Override
-	public void keyTyped(final KeyEvent evt) {
-		//
-	}
-
-	@Override
-	public void keyPressed(final KeyEvent evt) {
-		//
-	}
-
-	@Override
-	public void keyReleased(final KeyEvent evt) {
-	}
-
-	private void keyReleasedForTextImport(@Nullable final JTextComponent jTextComponent) {
-		//
-		keyReleasedForTextImport(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap), jTextComponent,
-				cbmGaKuNenBeTsuKanJi);
-		//
-		// 常用漢字
-		//
-		final String text = Util.getText(jTextComponent);
-		//
-		final List<String> list = IValue0Util.getValue0(jouYouKanJiList);
-		//
-		if (StringUtils.isEmpty(text) || CollectionUtils.isEmpty(list)) {
-			//
-			setSelectedItem(cbmJouYouKanJi, null);
-			//
-		} else if (jouYouKanJiList != null) {
-			//
-			setSelectedItem(cbmJouYouKanJi,
-					StringUtils.length(text) <= orElse(max(mapToInt(Util.stream(list), StringUtils::length)), 0)
-							? Util.contains(list, text)
-							: null);
-			//
-		} // if
-			//
 	}
 
 	private static void keyReleasedForTextImport(final Multimap<String, String> multiMap,
