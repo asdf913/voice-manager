@@ -2759,10 +2759,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 		return instance != null ? instance.max() : null;
 	}
 
-	private static int orElse(@Nullable final OptionalInt instance, final int other) {
-		return instance != null ? instance.orElse(other) : other;
-	}
-
 	private static void setEnabled(final boolean b, final Component instance, @Nullable final Component... cs) {
 		//
 		setEnabled(instance, b);
@@ -3301,59 +3297,6 @@ public class VoiceManager extends JFrame implements ActionListener, ItemListener
 			//
 		return list;
 		//
-	}
-
-	private static void keyReleasedForTextImport(final Multimap<String, String> multiMap,
-			@Nullable final JTextComponent jTextComponent, final ComboBoxModel<String> comboBoxModel) {
-		//
-		final Collection<Entry<String, String>> entries = MultimapUtil.entries(multiMap);
-		//
-		if (Util.iterator(entries) == null) {
-			//
-			return;
-			//
-		} // if
-			//
-		List<String> list = null;
-		//
-		String key = null;
-		//
-		for (final Entry<String, String> en : entries) {
-			//
-			if (en == null || !StringUtils.equals(Util.getValue(en), Util.getText(jTextComponent))) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if (!Util.contains(list = getIfNull(list, ArrayList::new), key = Util.getKey(en))) {
-				//
-				Util.add(list, key);
-				//
-			} else {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
-		} // for
-			//
-		final int size = CollectionUtils.size(list);
-		//
-		if (size == 1) {
-			//
-			setSelectedItem(comboBoxModel, get(list, 0));
-			//
-		} else if (size < 1) {
-			//
-			setSelectedItem(comboBoxModel, null);
-			//
-		} else {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
 	}
 
 	@Nullable

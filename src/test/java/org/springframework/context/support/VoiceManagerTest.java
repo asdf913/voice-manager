@@ -214,31 +214,31 @@ class VoiceManagerTest {
 
 	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3,
 			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_INT_VALUE, METHOD_LONG_VALUE, METHOD_MAP_INT_STREAM,
-			METHOD_MAP_TO_INT, METHOD_MAX_INT_STREAM, METHOD_OR_ELSE_OPTIONAL_INT, METHOD_FOR_EACH_STREAM,
-			METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE, METHOD_GET_PREFERRED_WIDTH, METHOD_ADD_CONTAINER2,
-			METHOD_ADD_CONTAINER3, METHOD_ANY_MATCH, METHOD_MATCHER, METHOD_MATCHES, METHOD_SET_STRING_COMMENT,
-			METHOD_FORMAT, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL,
-			METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD,
-			METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT,
-			METHOD_GET_NAME_FILE, METHOD_GET_LIST, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK,
-			METHOD_SET_AUTHOR, METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE,
-			METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI_FILE, METHOD_TO_URI_URL,
-			METHOD_GET_DECLARED_CLASSES, METHOD_GET_DLL_PATH, METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING,
-			METHOD_APPEND_STRING, METHOD_APPEND_CHAR, METHOD_GET_ATTRIBUTES, METHOD_GET_OS_VERSION_INFO_EX_MAP,
+			METHOD_MAP_TO_INT, METHOD_MAX_INT_STREAM, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE,
+			METHOD_GET_PREFERRED_WIDTH, METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ANY_MATCH, METHOD_MATCHER,
+			METHOD_MATCHES, METHOD_SET_STRING_COMMENT, METHOD_FORMAT, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE,
+			METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION,
+			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
+			METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_LIST,
+			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_SET_AUTHOR,
+			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
+			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES,
+			METHOD_GET_DLL_PATH, METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING, METHOD_APPEND_STRING,
+			METHOD_APPEND_CHAR, METHOD_GET_ATTRIBUTES, METHOD_GET_OS_VERSION_INFO_EX_MAP,
 			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_GET_MEDIA_FORMAT_LINK,
 			METHOD_GET_EVENT_TYPE, METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML, METHOD_LENGTH,
 			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED,
 			METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL, METHOD_TO_RUNTIME_EXCEPTION, METHOD_SET_PREFERRED_WIDTH_ARRAY,
-			METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_SET_PREFERRED_WIDTH_2, METHOD_KEY_RELEASED_FOR_TEXT_IMPORT,
-			METHOD_IS_STATIC, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS, METHOD_GET_FIELD_BY_NAME,
-			METHOD_CREATE_VOICE_ID_WARNING_PANEL, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL,
-			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
-			METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP, METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE,
-			METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_PAGE_TITLE, METHOD_TO_MILLIS, METHOD_GET_LEVEL, METHOD_ADD_ALL,
-			METHOD_SET_AUTO_FILTER, METHOD_GET_ELEMENT_AT, METHOD_GET_NUMBER, METHOD_SORTED,
-			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM,
-			METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
+			METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_SET_PREFERRED_WIDTH_2, METHOD_IS_STATIC,
+			METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS, METHOD_GET_FIELD_BY_NAME, METHOD_CREATE_VOICE_ID_WARNING_PANEL,
+			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_SET_FOCUS_CYCLE_ROOT,
+			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP,
+			METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_PAGE_TITLE,
+			METHOD_TO_MILLIS, METHOD_GET_LEVEL, METHOD_ADD_ALL, METHOD_SET_AUTO_FILTER, METHOD_GET_ELEMENT_AT,
+			METHOD_GET_NUMBER, METHOD_SORTED, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL,
+			METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM, METHOD_SET_SELECTED_INDEX,
+			METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -271,9 +271,6 @@ class VoiceManagerTest {
 		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
 		//
 		(METHOD_MAX_INT_STREAM = clz.getDeclaredMethod("max", IntStream.class)).setAccessible(true);
-		//
-		(METHOD_OR_ELSE_OPTIONAL_INT = clz.getDeclaredMethod("orElse", OptionalInt.class, Integer.TYPE))
-				.setAccessible(true);
 		//
 		(METHOD_FOR_EACH_STREAM = clz.getDeclaredMethod("forEach", Stream.class, Consumer.class)).setAccessible(true);
 		//
@@ -427,9 +424,6 @@ class VoiceManagerTest {
 		(METHOD_SET_PREFERRED_WIDTH_2 = clz.getDeclaredMethod("setPreferredWidth", Component.class, Supplier.class))
 				.setAccessible(true);
 		//
-		(METHOD_KEY_RELEASED_FOR_TEXT_IMPORT = clz.getDeclaredMethod("keyReleasedForTextImport", Multimap.class,
-				JTextComponent.class, ComboBoxModel.class)).setAccessible(true);
-		//
 		(METHOD_IS_STATIC = clz.getDeclaredMethod("isStatic", Member.class)).setAccessible(true);
 		//
 		(METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS = clz.getDeclaredMethod("actionPerformedForExportButtons",
@@ -528,8 +522,6 @@ class VoiceManagerTest {
 		private Object[] toArray = null;
 
 		private IntStream intStream = null;
-
-		private Collection<Entry<?, ?>> multiMapEntries = null;
 
 		private Node namedItem = null;
 
@@ -673,14 +665,6 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "hasAttribute") && args != null && args.length > 0) {
 					//
 					return Util.containsKey(getBeanDefinitionAttributes(), args[0]);
-					//
-				} // if
-					//
-			} else if (proxy instanceof Multimap) {
-				//
-				if (Objects.equals(methodName, "entries")) {
-					//
-					return multiMapEntries;
 					//
 				} // if
 					//
@@ -1682,12 +1666,6 @@ class VoiceManagerTest {
 		}
 	}
 
-	private static void keyReleased(final KeyListener instance, final KeyEvent keyEvent) {
-		if (instance != null) {
-			instance.keyReleased(keyEvent);
-		}
-	}
-
 	@Test
 	void testGetSystemClipboard() throws Throwable {
 		//
@@ -1894,25 +1872,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof OptionalInt) {
 				return (OptionalInt) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testOrElse() throws Throwable {
-		//
-		Assertions.assertEquals(ZERO, orElse(OptionalInt.empty(), ZERO));
-		//
-	}
-
-	private static int orElse(final OptionalInt instance, final int other) throws Throwable {
-		try {
-			final Object obj = METHOD_OR_ELSE_OPTIONAL_INT.invoke(null, instance, other);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
@@ -3236,54 +3195,6 @@ class VoiceManagerTest {
 	private static void setPreferredWidth(final Component component, final Supplier<Double> supplier) throws Throwable {
 		try {
 			METHOD_SET_PREFERRED_WIDTH_2.invoke(null, component, supplier);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testKeyReleasedForTextImport() {
-		//
-		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null, null));
-		//
-		if (ih != null) {
-			//
-			ih.multiMapEntries = Collections.singleton(null);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null, null));
-		//
-		if (ih != null) {
-			//
-			ih.multiMapEntries = Reflection.newProxy(Collection.class, ih);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null, null));
-		//
-		if (ih != null) {
-			//
-			ih.multiMapEntries = Collections.singleton(Pair.of(null, EMPTY));
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null, null));
-		//
-		if (ih != null) {
-			//
-			ih.multiMapEntries = Collections.singleton(Pair.of(null, null));
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> keyReleasedForTextImport((Multimap) multimap, null, null));
-		//
-	}
-
-	private static void keyReleasedForTextImport(final Multimap<String, String> multiMap,
-			final JTextComponent jTextComponent, final ComboBoxModel<String> comboBoxModel) throws Throwable {
-		try {
-			METHOD_KEY_RELEASED_FOR_TEXT_IMPORT.invoke(null, multiMap, jTextComponent, comboBoxModel);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
