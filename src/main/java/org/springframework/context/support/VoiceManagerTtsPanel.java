@@ -311,20 +311,22 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 					//
 					for (int i = 0; i < IterableUtils.size(fs); i++) {
 						//
-						if (getObject(
-								Util.cast(
-										FactoryBean.class, MapUtils
-												.getObject(
-														Util.cast(Map.class,
-																Narcissus.getObjectField(acbf,
-																		IterableUtils.get(fs, i))),
-														Util.getKey(entry)))) instanceof LayoutManager lm) {
-							//
-							setLayout(lm);
-							//
-							//
-						} // if
-							//
+						testAndAccept(
+								Objects::nonNull, Util
+										.cast(LayoutManager.class,
+												getObject(
+														Util.cast(
+																FactoryBean.class, MapUtils
+																		.getObject(
+																				Util.cast(Map.class,
+																						Narcissus.getObjectField(acbf,
+																								IterableUtils.get(fs,
+																										i))),
+																				Util.getKey(entry))))),
+								x -> {
+									setLayout(x);
+								});
+						//
 					} // for
 						//
 				} // if
