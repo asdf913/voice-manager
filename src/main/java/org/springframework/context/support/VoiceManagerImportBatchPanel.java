@@ -1135,13 +1135,12 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		final VoiceManager voiceManager = VoiceManager.INSTANCE;
 		//
+		accept(x -> Util.setText(Util.cast(JTextComponent.class, x), null), tfCurrentProcessingSheetName,
+				tfCurrentProcessingVoice);
+		//
 		if (voiceManager != null) {
 			//
 			try {
-				//
-				accept(x -> Util.setText(Util.cast(JTextComponent.class, x), null),
-						FieldUtils.readDeclaredField(voiceManager, "tfCurrentProcessingSheetName", true),
-						FieldUtils.readDeclaredField(voiceManager, "tfCurrentProcessingVoice", true));
 				//
 				clear(Util.cast(DefaultTableModel.class,
 						FieldUtils.readDeclaredField(voiceManager, "tmImportResult", true)));

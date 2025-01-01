@@ -1396,10 +1396,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 			try {
 				//
-				accept(x -> Util.setText(Util.cast(JTextComponent.class, x), null),
-						FieldUtils.readDeclaredField(voiceManager, "tfCurrentProcessingSheetName", true),
-						FieldUtils.readDeclaredField(voiceManager, "tfCurrentProcessingVoice", true));
-				//
 				clear(Util.cast(DefaultTableModel.class,
 						FieldUtils.readDeclaredField(voiceManager, "tmImportResult", true)));
 				//
