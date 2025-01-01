@@ -3113,11 +3113,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@Nullable
-	private static NamedNodeMap getAttributes(@Nullable final Node instance) {
-		return instance != null ? instance.getAttributes() : null;
-	}
-
-	@Nullable
 	private static DocumentBuilder newDocumentBuilder(@Nullable final DocumentBuilderFactory instance)
 			throws ParserConfigurationException {
 		return instance != null ? instance.newDocumentBuilder() : null;
