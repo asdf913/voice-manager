@@ -2098,7 +2098,7 @@ public class VoiceManagerExportPanel extends JPanel
 			//
 	}
 
-	private static File toFile(final Path instance) {
+	private static File toFile(@Nullable final Path instance) {
 		return instance != null ? instance.toFile() : null;
 	}
 
