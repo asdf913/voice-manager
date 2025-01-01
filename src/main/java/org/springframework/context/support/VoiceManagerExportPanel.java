@@ -175,6 +175,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellUtil;
 import org.apache.poi.ss.usermodel.Comment;
+import org.apache.poi.ss.usermodel.CommentUtil;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.CreationHelperUtil;
 import org.apache.poi.ss.usermodel.Drawing;
@@ -5274,7 +5275,7 @@ public class VoiceManagerExportPanel extends JPanel
 				//
 				if (Objects.equals(LANGUAGE, attribute)) {
 					//
-					setString(
+					CommentUtil.setString(
 							comment = DrawingUtil.createCellComment(drawing,
 									CreationHelperUtil.createClientAnchor(creationHelper)),
 							CreationHelperUtil.createRichTextString(creationHelper,
@@ -5286,7 +5287,7 @@ public class VoiceManagerExportPanel extends JPanel
 					//
 			} catch (final Error e) {
 				//
-				setString(
+				CommentUtil.setString(
 						comment = DrawingUtil.createCellComment(drawing,
 								CreationHelperUtil.createClientAnchor(creationHelper)),
 						CreationHelperUtil.createRichTextString(creationHelper, e.getMessage()));
@@ -5304,12 +5305,6 @@ public class VoiceManagerExportPanel extends JPanel
 	private static void setAuthor(@Nullable final Comment instance, final String string) {
 		if (instance != null) {
 			instance.setAuthor(string);
-		}
-	}
-
-	private static void setString(@Nullable final Comment instance, @Nullable final RichTextString string) {
-		if (instance != null) {
-			instance.setString(string);
 		}
 	}
 

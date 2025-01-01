@@ -157,6 +157,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellUtil;
 import org.apache.poi.ss.usermodel.Comment;
+import org.apache.poi.ss.usermodel.CommentUtil;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.CreationHelperUtil;
 import org.apache.poi.ss.usermodel.Drawing;
@@ -4169,7 +4170,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 				if (Objects.equals(LANGUAGE, attribute)) {
 					//
-					setString(
+					CommentUtil.setString(
 							comment = DrawingUtil.createCellComment(drawing,
 									CreationHelperUtil.createClientAnchor(creationHelper)),
 							CreationHelperUtil.createRichTextString(creationHelper,
@@ -4181,7 +4182,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 			} catch (final Error e) {
 				//
-				setString(
+				CommentUtil.setString(
 						comment = DrawingUtil.createCellComment(drawing,
 								CreationHelperUtil.createClientAnchor(creationHelper)),
 						CreationHelperUtil.createRichTextString(creationHelper, e.getMessage()));
@@ -4322,12 +4323,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	@Nullable
 	private static Integer getPhysicalNumberOfCells(@Nullable final Row instance) {
 		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfCells()) : null;
-	}
-
-	private static void setString(@Nullable final Comment instance, @Nullable final RichTextString string) {
-		if (instance != null) {
-			instance.setString(string);
-		}
 	}
 
 	private static void setAuthor(@Nullable final Comment instance, @Nullable final String string) {
