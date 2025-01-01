@@ -1864,7 +1864,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		if (StringUtils.isNotBlank(filePath)) {
 			//
 			if (!(it.file = Path.of(filePath).toFile()).exists()
-					&& !(it.file = Path.of(folder.getAbsolutePath(), filePath).toFile()).exists()) {
+					&& !(it.file = Path.of(Util.getAbsolutePath(folder), filePath).toFile()).exists()) {
 				//
 				it.file = null;
 				//
