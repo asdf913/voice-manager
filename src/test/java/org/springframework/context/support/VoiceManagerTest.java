@@ -210,7 +210,7 @@ class VoiceManagerTest {
 			METHOD_SET_PREFERRED_WIDTH_2, METHOD_IS_STATIC, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS,
 			METHOD_GET_FIELD_BY_NAME, METHOD_CREATE_VOICE_ID_WARNING_PANEL,
 			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_SET_FOCUS_CYCLE_ROOT,
-			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP,
+			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
 			METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_PAGE_TITLE,
 			METHOD_TO_MILLIS, METHOD_ADD_ALL, METHOD_SET_AUTO_FILTER, METHOD_GET_NUMBER, METHOD_SORTED,
 			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM,
@@ -394,9 +394,6 @@ class VoiceManagerTest {
 				FocusTraversalPolicy.class)).setAccessible(true);
 		//
 		(METHOD_GET_COMPONENTS = clz.getDeclaredMethod("getComponents", Container.class)).setAccessible(true);
-		//
-		(METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP = clz.getDeclaredMethod("getWorkbookClassFailableSupplierMap"))
-				.setAccessible(true);
 		//
 		(METHOD_GET_DECLARED_CONSTRUCTOR = clz.getDeclaredMethod("getDeclaredConstructor", Class.class, Class[].class))
 				.setAccessible(true);
@@ -2904,38 +2901,8 @@ class VoiceManagerTest {
 		}
 	}
 
-	@Test
-	void testGetWorkbookClassFailableSupplierMap() throws Throwable {
-		//
-		final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map = IValue0Util
-				.getValue0(getWorkbookClassFailableSupplierMap());
-		//
-		if (map != null) {
-			//
-			map.forEach((k, v) -> {
-				//
-				Assertions.assertNotNull(v != null ? v.get() : null);
-				//
-			});
-			//
-		} // if
-			//
-	}
+	
 
-	private IValue0<Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> getWorkbookClassFailableSupplierMap()
-			throws Throwable {
-		try {
-			final Object obj = METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP.invoke(instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof IValue0) {
-				return (IValue0) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
 
 	@Test
 	void testgGetDeclaredConstructor() throws Throwable {

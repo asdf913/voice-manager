@@ -910,37 +910,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		this.freeMarkerConfiguration = freeMarkerConfiguration;
 	}
 
-	private IValue0<Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> getWorkbookClassFailableSupplierMap() {
-		//
-		if (workbookClassFailableSupplierMap == null) {
-			//
-			workbookClassFailableSupplierMap = Unit.with(Util.collect(
-					Util.stream(new Reflections("org.apache.poi").getSubTypesOf(Workbook.class)),
-					Collectors.toMap(Functions.identity(), x -> new FailableSupplier<Workbook, RuntimeException>() {
-
-						@Override
-						@Nullable
-						public Workbook get() throws RuntimeException {
-							try {
-								//
-								return Util.cast(Workbook.class, newInstance(getDeclaredConstructor(x)));
-								//
-							} catch (final NoSuchMethodException | InstantiationException | IllegalAccessException
-									| InvocationTargetException e) {
-								//
-								throw ObjectUtils.getIfNull(toRuntimeException(e), RuntimeException::new);
-								//
-							} // try
-						}
-
-					})));
-			//
-		} // if
-			//
-		return workbookClassFailableSupplierMap;
-		//
-	}
-
 	public void setjSoupParseTimeout(@Nullable final Object object) {
 		//
 		if (object == null) {
