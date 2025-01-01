@@ -441,6 +441,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 	}
 
+	@Nullable
 	private static File toFile(@Nullable final Path instance) {
 		return instance != null ? instance.toFile() : null;
 	}
