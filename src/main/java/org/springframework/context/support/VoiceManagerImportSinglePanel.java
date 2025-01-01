@@ -1105,6 +1105,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static IValue0<LayoutManager> getLayoutManager(final ApplicationContext applicationContext)
 			throws Exception {
 		//
