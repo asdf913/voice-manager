@@ -3106,11 +3106,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@Nullable
-	private static Node getNamedItem(@Nullable final NamedNodeMap instance, final String name) {
-		return instance != null ? instance.getNamedItem(name) : null;
-	}
-
-	@Nullable
 	private static String getTextContent(@Nullable final Node instance) {
 		return instance != null ? instance.getTextContent() : null;
 	}

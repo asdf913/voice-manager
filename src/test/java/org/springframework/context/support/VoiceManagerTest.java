@@ -201,8 +201,8 @@ class VoiceManagerTest {
 			METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ANY_MATCH, METHOD_MATCHER, METHOD_MATCHES,
 			METHOD_SET_STRING_COMMENT, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR,
 			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION, METHOD_GET_TAB_INDEX_BY_TITLE,
-			METHOD_GET_DECLARED_FIELD, METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE,
-			METHOD_GET_LIST, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_SET_AUTHOR,
+			METHOD_GET_DECLARED_FIELD, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_LIST,
+			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_SET_AUTHOR,
 			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
 			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES,
 			METHOD_GET_DLL_PATH, METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING, METHOD_APPEND_STRING,
@@ -294,9 +294,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_DECLARED_FIELD = clz.getDeclaredMethod("getDeclaredField", Class.class, String.class))
-				.setAccessible(true);
-		//
-		(METHOD_GET_NAMED_ITEM = clz.getDeclaredMethod("getNamedItem", NamedNodeMap.class, String.class))
 				.setAccessible(true);
 		//
 		(METHOD_GET_TEXT_CONTENT = clz.getDeclaredMethod("getTextContent", Node.class)).setAccessible(true);
@@ -468,7 +465,7 @@ class VoiceManagerTest {
 
 		private Set<Entry<?, ?>> entrySet = null;
 
-		private String toString, voiceAttribute, textContent, dllPath = null;
+		private String toString, voiceAttribute, dllPath = null;
 
 		private Boolean anyMatch, isInstalled, isEmpty = null;
 
@@ -483,12 +480,6 @@ class VoiceManagerTest {
 		private Map<Object, Object> beanDefinitionAttributes = null;
 
 		private Object[] toArray = null;
-
-		private IntStream intStream = null;
-
-		private Node namedItem = null;
-
-		private NamedNodeMap attributes = null;
 
 		private Collection<?> values = null;
 
@@ -575,10 +566,6 @@ class VoiceManagerTest {
 					//
 					return anyMatch;
 					//
-				} else if (Objects.equals(methodName, "mapToInt")) {
-					//
-					return intStream;
-					//
 				} else if (Objects.equals(methodName, "toArray")) {
 					//
 					return null;
@@ -628,26 +615,6 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "hasAttribute") && args != null && args.length > 0) {
 					//
 					return Util.containsKey(getBeanDefinitionAttributes(), args[0]);
-					//
-				} // if
-					//
-			} else if (proxy instanceof NamedNodeMap) {
-				//
-				if (Objects.equals(methodName, "getNamedItem")) {
-					//
-					return namedItem;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Node) {
-				//
-				if (Objects.equals(methodName, "getTextContent")) {
-					//
-					return textContent;
-					//
-				} else if (Objects.equals(methodName, "getAttributes")) {
-					//
-					return attributes;
 					//
 				} // if
 					//
@@ -2115,34 +2082,8 @@ class VoiceManagerTest {
 	@Test
 	void testGetTextContent() throws Throwable {
 		//
-		Assertions.assertNull(getTextContent(getNamedItem(null, null)));
+		Assertions.assertNull(getTextContent(null));
 		//
-		final NamedNodeMap namedNodeMap = Reflection.newProxy(NamedNodeMap.class, ih);
-		//
-		Assertions.assertNull(getTextContent(getNamedItem(namedNodeMap, null)));
-		//
-		if (ih != null) {
-			//
-			ih.namedItem = node;
-			//
-		} // if
-			//
-		Assertions.assertNull(getTextContent(getNamedItem(namedNodeMap, null)));
-		//
-	}
-
-	private static Node getNamedItem(final NamedNodeMap instance, final String name) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_NAMED_ITEM.invoke(null, instance, name);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Node) {
-				return (Node) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private static String getTextContent(final Node instance) throws Throwable {
