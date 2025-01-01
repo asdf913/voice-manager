@@ -4025,7 +4025,8 @@ public class VoiceManagerExportPanel extends JPanel
 			return field != null ? field.get(instance) : null;
 		}
 
-		private static void save(@Nullable final OdfPackageDocument instance, final File file) throws Exception {
+		private static void save(@Nullable final OdfPackageDocument instance, @Nullable final File file)
+				throws Exception {
 			//
 			if (instance == null) {
 				//
