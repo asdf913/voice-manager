@@ -2468,7 +2468,7 @@ public class VoiceManagerExportPanel extends JPanel
 		return instance != null ? instance.getTemplateLoader() : null;
 	}
 
-	private static void encrypt(final File file, final EncryptionMode encryptionMode, final String password)
+	private static void encrypt(@Nullable final File file, final EncryptionMode encryptionMode, final String password)
 			throws IOException, InvalidFormatException, GeneralSecurityException {
 		//
 		try (final InputStream is = testAndApply(x -> x != null && x.length > 0,
