@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
@@ -260,7 +261,7 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 			//
 			System.out.println(file.getAbsolutePath());
 			//
-			try (final OutputStream os = new FileOutputStream(file)) {
+			try (final OutputStream os = Files.newOutputStream(file != null ? file.toPath() : null)) {
 				//
 				wb.write(os);
 				//

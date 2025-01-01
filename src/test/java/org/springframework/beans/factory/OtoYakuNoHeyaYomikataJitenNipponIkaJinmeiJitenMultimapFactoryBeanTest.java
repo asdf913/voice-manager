@@ -1,7 +1,6 @@
 package org.springframework.beans.factory;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -11,6 +10,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Base64;
@@ -218,7 +218,8 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			//
 			final File file = Path.of("OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimap.xlsx").toFile();
 			//
-			try (final Workbook wb = WorkbookFactory.create(true); final OutputStream os = new FileOutputStream(file)) {
+			try (final Workbook wb = WorkbookFactory.create(true);
+					final OutputStream os = Files.newOutputStream(file != null ? file.toPath() : null)) {
 				//
 				final Sheet sheet = WorkbookUtil.createSheet(wb);
 				//

@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +36,6 @@ import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Path;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
@@ -1873,9 +1871,12 @@ public class VoiceManagerExportPanel extends JPanel
 			//
 			final String fileExtension = getFileExtension(workbookSupplier);
 			//
-			try (final OutputStream os = new FileOutputStream(
-					file = Path.of(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(),
-							StringUtils.defaultIfEmpty(fileExtension, "xlsx"))).toFile())) {
+			final Path path = Path.of(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(),
+					StringUtils.defaultIfEmpty(fileExtension, "xlsx")));
+			//
+			file = path != null ? path.toFile() : null;
+			//
+			try (final OutputStream os = Files.newOutputStream(path)) {
 				//
 				final BooleanMap booleanMap = Reflection.newProxy(BooleanMap.class, ih);
 				//
@@ -2494,7 +2495,7 @@ public class VoiceManagerExportPanel extends JPanel
 						//
 					} // try
 						//
-					try (final FileOutputStream fos = new FileOutputStream(file)) {
+					try (final OutputStream fos = Files.newOutputStream(file != null ? file.toPath() : null)) {
 						//
 						fs.writeFilesystem(fos);
 						//
@@ -2508,7 +2509,7 @@ public class VoiceManagerExportPanel extends JPanel
 				//
 				try (final POIFSFileSystem fs = new POIFSFileSystem(file, true);
 						final Workbook wb2 = new HSSFWorkbook(fs.getRoot(), true);
-						final OutputStream os = new FileOutputStream(file)) {
+						final OutputStream os = Files.newOutputStream(file != null ? file.toPath() : null)) {
 					//
 					WorkbookUtil.write(wb2, os);
 					//

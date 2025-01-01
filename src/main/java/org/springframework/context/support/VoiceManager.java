@@ -23,7 +23,6 @@ import java.awt.event.MouseEvent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -54,7 +53,6 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,7 +70,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.TreeMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -2917,13 +2914,14 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		if (Objects.equals(source, btnExportMicrosoftSpeechObjectLibraryInformation)) {
 			//
-			File file = null;
+			final Path path = Path
+					.of(String.format("MicrosoftSpeechObjectLibrary_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date()));
+			//
+			final File file = path != null ? path.toFile() : null;
 			//
 			Workbook workbook = null;
 			//
-			try (final OutputStream os = new FileOutputStream(file = Path
-					.of(String.format("MicrosoftSpeechObjectLibrary_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date()))
-					.toFile())) {
+			try (final OutputStream os = Files.newOutputStream(path)) {
 				//
 				WorkbookUtil.write(workbook = createMicrosoftSpeechObjectLibraryWorkbook(speechApi,
 						languageCodeToTextObjIntFunction, microsoftSpeechObjectLibraryAttributeNames), os);

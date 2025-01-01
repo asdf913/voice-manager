@@ -1,7 +1,6 @@
 package org.springframework.beans.factory;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.InvocationHandler;
@@ -9,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
@@ -186,7 +186,8 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 			//
 			final File file = Path.of("TiZuKiGouKanjiHiraganaMapFactoryBean.xlsx").toFile();
 			//
-			try (final Workbook wb = WorkbookFactory.create(true); final OutputStream os = new FileOutputStream(file)) {
+			try (final Workbook wb = WorkbookFactory.create(true);
+					final OutputStream os = Files.newOutputStream(file != null ? file.toPath() : null)) {
 				//
 				final Sheet sheet = WorkbookUtil.createSheet(wb);
 				//
