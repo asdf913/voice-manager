@@ -356,7 +356,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 			final Path path = Path.of(String.format("学年別漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date()));
 			//
-			final File file = path != null ? path.toFile() : null;
+			final File file = toFile(path);
 			//
 			Workbook workbook = null;
 			//
@@ -439,6 +439,10 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 		} // if
 			//
+	}
+
+	private static File toFile(final Path instance) {
+		return instance != null ? instance.toFile() : null;
 	}
 
 	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) {
