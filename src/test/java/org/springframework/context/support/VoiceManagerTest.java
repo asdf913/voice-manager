@@ -202,7 +202,7 @@ class VoiceManagerTest {
 
 	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3,
 			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_INT_VALUE, METHOD_LONG_VALUE, METHOD_MAP_INT_STREAM,
-			METHOD_MAP_TO_INT, METHOD_MAX_INT_STREAM, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE,
+			METHOD_MAX_INT_STREAM, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE,
 			METHOD_GET_PREFERRED_WIDTH, METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ANY_MATCH, METHOD_MATCHER,
 			METHOD_MATCHES, METHOD_SET_STRING_COMMENT, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR,
 			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION, METHOD_GET_TAB_INDEX_BY_TITLE,
@@ -254,8 +254,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_MAP_INT_STREAM = clz.getDeclaredMethod("map", IntStream.class, IntUnaryOperator.class))
 				.setAccessible(true);
-		//
-		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
 		//
 		(METHOD_MAX_INT_STREAM = clz.getDeclaredMethod("max", IntStream.class)).setAccessible(true);
 		//
@@ -1742,34 +1740,6 @@ class VoiceManagerTest {
 	private static IntStream map(final IntStream instance, final IntUnaryOperator mapper) throws Throwable {
 		try {
 			final Object obj = METHOD_MAP_INT_STREAM.invoke(null, instance, mapper);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof IntStream) {
-				return (IntStream) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMapToInt() throws Throwable {
-		//
-		Assertions.assertNull(mapToInt(stream, null));
-		//
-		final Stream<?> empty = Stream.empty();
-		//
-		Assertions.assertNull(mapToInt(empty, null));
-		//
-		Assertions.assertNotNull(mapToInt(empty, x -> 0));
-		//
-	}
-
-	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_MAP_TO_INT.invoke(null, instance, mapper);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IntStream) {

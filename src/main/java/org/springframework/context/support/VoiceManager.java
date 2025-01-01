@@ -2713,16 +2713,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@Nullable
-	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
-			@Nullable final ToIntFunction<? super T> mapper) {
-		//
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
-				? instance.mapToInt(mapper)
-				: null;
-		//
-	}
-
-	@Nullable
 	private static OptionalInt max(@Nullable final IntStream instance) {
 		return instance != null ? instance.max() : null;
 	}
