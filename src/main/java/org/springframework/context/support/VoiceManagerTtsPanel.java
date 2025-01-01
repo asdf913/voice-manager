@@ -324,9 +324,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 																	Narcissus.getObjectField(acbf,
 																			IterableUtils.get(fs, i))),
 															Util.getKey(entry))))),
-							x -> {
-								setLayout(x);
-							});
+							this::setLayout);
 					//
 				} // for
 					//
