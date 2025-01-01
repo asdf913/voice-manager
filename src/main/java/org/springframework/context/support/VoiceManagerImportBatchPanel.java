@@ -557,56 +557,10 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		//
-		setLayout(new MigLayout());
+		setLayout(ObjectUtils.getIfNull(IValue0Util.getValue0(getLayoutManager(applicationContext)), MigLayout::new));
 		//
-		final Iterable<Entry<String, Object>> entrySet = Util
-				.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class));
+		// Voice Id
 		//
-		if (Util.iterator(entrySet) != null) {
-			//
-			AutowireCapableBeanFactory acbf = null;
-			//
-			List<Field> fs = null;
-			//
-			for (final Entry<String, Object> entry : entrySet) {
-				//
-				if (!(Util.getValue(entry) instanceof LayoutManager)) {
-					//
-					continue;
-					//
-				} // if
-					//
-				fs = Util.toList(Util.filter(
-						Util.stream(FieldUtils.getAllFieldsList(Util.getClass(
-								acbf = ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext)))),
-						x -> Objects.equals(Util.getName(x), "singletonObjects")));
-				//
-				for (int i = 0; i < IterableUtils.size(fs); i++) {
-					//
-					testAndAccept(
-							Objects::nonNull, Util
-									.cast(LayoutManager.class,
-											FactoryBeanUtil
-													.getObject(
-															Util.cast(
-																	FactoryBean.class, MapUtils
-																			.getObject(
-																					Util.cast(Map.class,
-																							Narcissus.getObjectField(
-																									acbf,
-																									IterableUtils.get(
-																											fs, i))),
-																					Util.getKey(entry))))),
-							this::setLayout);
-					//
-				} // for
-					//
-			} // for
-				//
-		} // if
-			//
-			// Voice Id
-			//
 		add(new JLabel("Voice Id"));
 		//
 		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds = SpeechApi.getVoiceIds(speechApi),
@@ -801,6 +755,71 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		} // if
 			//
 		addChangeListener(this, jsSpeechVolume, jsSpeechRate);
+		//
+	}
+
+	private static IValue0<LayoutManager> getLayoutManager(final ApplicationContext applicationContext)
+			throws Exception {
+		//
+		final Iterable<Entry<String, Object>> entrySet = Util
+				.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class));
+		//
+		if (Util.iterator(entrySet) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		IValue0<LayoutManager> iValue0 = null;
+		//
+		AutowireCapableBeanFactory acbf = null;
+		//
+		List<Field> fs = null;
+		//
+		LayoutManager lm = null;
+		//
+		for (final Entry<String, Object> entry : entrySet) {
+			//
+			if (!(Util.getValue(entry) instanceof LayoutManager)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			fs = Util.toList(Util.filter(
+					Util.stream(FieldUtils.getAllFieldsList(Util.getClass(
+							acbf = ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext)))),
+					x -> Objects.equals(Util.getName(x), "singletonObjects")));
+			//
+			for (int i = 0; i < IterableUtils.size(fs); i++) {
+				//
+				if ((lm = Util
+						.cast(LayoutManager.class,
+								FactoryBeanUtil
+										.getObject(Util.cast(FactoryBean.class,
+												MapUtils.getObject(
+														Util.cast(Map.class,
+																Narcissus.getObjectField(acbf,
+																		IterableUtils.get(fs, i))),
+														Util.getKey(entry)))))) != null) {
+					//
+					if (iValue0 == null) {
+						//
+						iValue0 = Unit.with(lm);
+						//
+					} else {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+		return iValue0;
 		//
 	}
 
