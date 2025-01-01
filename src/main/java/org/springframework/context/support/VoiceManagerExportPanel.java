@@ -3559,6 +3559,7 @@ public class VoiceManagerExportPanel extends JPanel
 				//
 		}
 
+		@Nullable
 		private static String getParent(@Nullable final File instance) {
 			return instance != null ? instance.getParent() : null;
 		}
