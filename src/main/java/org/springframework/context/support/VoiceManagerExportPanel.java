@@ -3475,7 +3475,8 @@ public class VoiceManagerExportPanel extends JPanel
 									x -> toFile(Path.of(x.getAbsolutePath(), k)), x -> toFile(Path.of(k)))),
 							Util.toString(fileName))));
 					//
-					TableUtil.put(voiceFileNames, fileDestination.getParent(), Util.toString(fileName), voice);
+					TableUtil.put(voiceFileNames, fileDestination != null ? fileDestination.getParent() : null,
+							Util.toString(fileName), voice);
 					//
 					// Set MP3 Title if "overMp3Title" is true
 					//
