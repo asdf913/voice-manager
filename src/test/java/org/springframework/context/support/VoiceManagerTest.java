@@ -200,9 +200,9 @@ class VoiceManagerTest {
 
 	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3,
 			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_INT_VALUE, METHOD_LONG_VALUE, METHOD_MAP_INT_STREAM,
-			METHOD_MAX_INT_STREAM, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE,
-			METHOD_GET_PREFERRED_WIDTH, METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ANY_MATCH, METHOD_MATCHER,
-			METHOD_MATCHES, METHOD_SET_STRING_COMMENT, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR,
+			METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE, METHOD_GET_PREFERRED_WIDTH,
+			METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ANY_MATCH, METHOD_MATCHER, METHOD_MATCHES,
+			METHOD_SET_STRING_COMMENT, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR,
 			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION, METHOD_GET_TAB_INDEX_BY_TITLE,
 			METHOD_GET_DECLARED_FIELD, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_NAMED_ITEM,
 			METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_LIST,
@@ -252,8 +252,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_MAP_INT_STREAM = clz.getDeclaredMethod("map", IntStream.class, IntUnaryOperator.class))
 				.setAccessible(true);
-		//
-		(METHOD_MAX_INT_STREAM = clz.getDeclaredMethod("max", IntStream.class)).setAccessible(true);
 		//
 		(METHOD_FOR_EACH_STREAM = clz.getDeclaredMethod("forEach", Stream.class, Consumer.class)).setAccessible(true);
 		//
@@ -1742,27 +1740,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof IntStream) {
 				return (IntStream) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMax() throws Throwable {
-		//
-		Assertions.assertNotNull(max(IntStream.empty()));
-		//
-	}
-
-	private static OptionalInt max(final IntStream instance) throws Throwable {
-		try {
-			final Object obj = METHOD_MAX_INT_STREAM.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof OptionalInt) {
-				return (OptionalInt) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -2710,11 +2710,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				: instance;
 	}
 
-	@Nullable
-	private static OptionalInt max(@Nullable final IntStream instance) {
-		return instance != null ? instance.max() : null;
-	}
-
 	private static void setEnabled(final boolean b, final Component instance, @Nullable final Component... cs) {
 		//
 		setEnabled(instance, b);
