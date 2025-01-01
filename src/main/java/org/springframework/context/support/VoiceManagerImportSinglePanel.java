@@ -6,6 +6,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
+import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
@@ -167,11 +168,14 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.FactoryBeanUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionUtil;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactoryUtil;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.support.VoiceManager.ByteConverter;
 import org.springframework.core.AttributeAccessor;
@@ -209,8 +213,9 @@ import javazoom.jl.player.PlayerUtil;
 import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
 
-public class VoiceManagerImportSinglePanel extends JPanel implements Titled, InitializingBean, EnvironmentAware,
-		DocumentListener, ItemListener, KeyListener, ChangeListener, ActionListener, BeanFactoryPostProcessor {
+public class VoiceManagerImportSinglePanel extends JPanel
+		implements Titled, InitializingBean, EnvironmentAware, DocumentListener, ItemListener, KeyListener,
+		ChangeListener, ActionListener, BeanFactoryPostProcessor, ApplicationContextAware {
 
 	private static final long serialVersionUID = -3130553405296925918L;
 
@@ -484,6 +489,8 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 
 	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
+	private transient ApplicationContext applicationContext = null;
+
 	@Override
 	public String getTitle() {
 		return "Import(Single)";
@@ -492,6 +499,11 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 	@Override
 	public void setEnvironment(final Environment environment) {
 		this.propertyResolver = environment;
+	}
+
+	@Override
+	public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
 	}
 
 	public void setGaKuNenBeTsuKanJiMultimap(final Multimap<String, String> gaKuNenBeTsuKanJiMultimap) {
@@ -682,8 +694,54 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 		//
 		setLayout(new MigLayout());
 		//
-		// Language
+		final Iterable<Entry<String, Object>> entrySet = Util
+				.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class));
 		//
+		if (Util.iterator(entrySet) != null) {
+			//
+			AutowireCapableBeanFactory acbf = null;
+			//
+			List<Field> fs = null;
+			//
+			for (final Entry<String, Object> entry : entrySet) {
+				//
+				if (!(Util.getValue(entry) instanceof LayoutManager)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				fs = Util.toList(Util.filter(
+						Util.stream(FieldUtils.getAllFieldsList(
+								Util.getClass(acbf = applicationContext.getAutowireCapableBeanFactory()))),
+						x -> Objects.equals(Util.getName(x), "singletonObjects")));
+				//
+				for (int i = 0; i < IterableUtils.size(fs); i++) {
+					//
+					testAndAccept(
+							Objects::nonNull, Util
+									.cast(LayoutManager.class,
+											FactoryBeanUtil
+													.getObject(
+															Util.cast(
+																	FactoryBean.class, MapUtils
+																			.getObject(
+																					Util.cast(Map.class,
+																							Narcissus.getObjectField(
+																									acbf,
+																									IterableUtils.get(
+																											fs, i))),
+																					Util.getKey(entry))))),
+							this::setLayout);
+					//
+				} // for
+					//
+			} // for
+				//
+		} // if
+			//
+			// Language
+			//
 		add(new JLabel(LANGUAGE));
 		//
 		add(tfLanguage = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
