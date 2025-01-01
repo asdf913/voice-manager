@@ -5,6 +5,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -67,6 +68,7 @@ import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -91,12 +93,16 @@ import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactoryUtil;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.support.VoiceManager.ByteConverter;
 import org.springframework.core.env.Environment;
@@ -112,8 +118,8 @@ import com.google.common.reflect.Reflection;
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
-public class VoiceManagerTtsPanel extends JPanel
-		implements Titled, InitializingBean, EnvironmentAware, ItemListener, ActionListener, ChangeListener {
+public class VoiceManagerTtsPanel extends JPanel implements Titled, InitializingBean, EnvironmentAware, ItemListener,
+		ActionListener, ChangeListener, ApplicationContextAware {
 
 	private static final long serialVersionUID = 8338161986346369694L;
 
@@ -188,6 +194,11 @@ public class VoiceManagerTtsPanel extends JPanel
 	@Override
 	public void setEnvironment(final Environment environment) {
 		this.propertyResolver = environment;
+	}
+
+	@Override
+	public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
 	}
 
 	public void setSpeechApi(final SpeechApi speechApi) {
@@ -280,6 +291,47 @@ public class VoiceManagerTtsPanel extends JPanel
 		//
 		setLayout(new MigLayout());
 		//
+		final Iterable<Entry<String, Object>> entrySet = Util
+				.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class));
+		//
+		if (Util.iterator(entrySet) != null) {
+			//
+			AutowireCapableBeanFactory acbf = null;
+			//
+			List<Field> fs = null;
+			//
+			FactoryBean<Object> fb = null;
+			//
+			for (final Entry<String, Object> entry : entrySet) {
+				//
+				if (Util.getValue(entry) instanceof LayoutManager) {
+					//
+					fs = Util.toList(Util.filter(
+							Util.stream(FieldUtils.getAllFieldsList(
+									Util.getClass(acbf = applicationContext.getAutowireCapableBeanFactory()))),
+							x -> Objects.equals(Util.getName(x), "singletonObjects")));
+					//
+					for (int i = 0; i < IterableUtils.size(fs); i++) {
+						//
+						if ((fb = Util.cast(FactoryBean.class,
+								MapUtils.getObject(
+										Util.cast(Map.class, Narcissus.getObjectField(acbf, IterableUtils.get(fs, i))),
+										Util.getKey(entry)))) != null
+								&& fb.getObject() instanceof LayoutManager lm) {
+							//
+							setLayout(lm);
+							//
+							//
+						} // if
+							//
+					} // for
+						//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
 		add(new JLabel("Text"));
 		//
 		add(tfTextTts = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
