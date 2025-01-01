@@ -2945,11 +2945,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@Nullable
-	private static Integer getValue(@Nullable final JSlider instance) {
-		return instance != null ? Integer.valueOf(instance.getValue()) : null;
-	}
-
-	@Nullable
 	private static List<Field> findFieldsByValue(@Nullable final Field[] fs, final Object instance,
 			final Object value) {
 		//
