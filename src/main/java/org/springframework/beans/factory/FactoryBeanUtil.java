@@ -43,6 +43,7 @@ public interface FactoryBeanUtil {
 		//
 	}
 
+	@Nullable
 	static <T> T getObject(@Nullable final FactoryBean<T> instance) throws Exception {
 		return instance != null ? instance.getObject() : null;
 	}
