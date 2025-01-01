@@ -3256,11 +3256,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 	}
 
-	@Nullable
-	private static javax.swing.text.Document getDocument(@Nullable final DocumentEvent instance) {
-		return instance != null ? instance.getDocument() : null;
-	}
-
 	static interface ByteConverter {
 
 		@Nullable
