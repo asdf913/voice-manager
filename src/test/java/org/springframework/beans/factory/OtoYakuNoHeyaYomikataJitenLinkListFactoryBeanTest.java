@@ -2,7 +2,6 @@ package org.springframework.beans.factory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
@@ -58,10 +57,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.fasterxml.jackson.databind.cfg.MapperBuilder;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper.Builder;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
-import com.fasterxml.jackson.databind.json.JsonMapper.Builder;
 
 class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 
