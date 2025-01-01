@@ -421,9 +421,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private transient IValue0<Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> workbookClassFailableSupplierMap = null;
 
-	@Nullable
-	private Class<?> workbookClass = null;
-
 	private transient Map<Object, Object> exportWebSpeechSynthesisHtmlTemplateProperties = null;
 
 	@Nullable
@@ -942,65 +939,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		return workbookClassFailableSupplierMap;
 		//
-	}
-
-	public void setWorkbookClass(final Object object) {
-		//
-		if (object instanceof Class<?>) {
-			//
-			workbookClass = (Class<?>) object;
-			//
-			return;
-			//
-		} // if
-			//
-		final String toString = Util.toString(object);
-		//
-		if ((workbookClass = Util.forName(toString)) != null) {
-			//
-			return;
-			//
-		} // if
-			//
-		final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map = IValue0Util
-				.getValue0(getWorkbookClassFailableSupplierMap());
-		//
-		final List<Class<? extends Workbook>> classes = Util.toList(Util.filter(Util.stream(Util.keySet(map)),
-				x -> Boolean.logicalOr(Objects.equals(Util.getName(x), toString),
-						StringUtils.endsWithIgnoreCase(Util.getName(x), toString))));
-		//
-		final int size = IterableUtils.size(classes);
-		//
-		if (size == 1) {
-			//
-			workbookClass = get(classes, 0);
-			//
-			return;
-			//
-		} else if (size > 1) {
-			//
-			final IValue0<Class<? extends Workbook>> iValue0 = getWorkbookClass(map, "xlsx");
-			//
-			if (iValue0 != null) {
-				//
-				workbookClass = IValue0Util.getValue0(iValue0);
-				//
-				return;
-				//
-			} // if
-				//
-			throw new IllegalArgumentException();
-			//
-		} // if
-			//
-		final IValue0<Class<? extends Workbook>> iValue0 = getWorkbookClass(map, toString);
-		//
-		if (iValue0 != null) {
-			//
-			workbookClass = IValue0Util.getValue0(iValue0);
-			//
-		} // if
-			//
 	}
 
 	public void setjSoupParseTimeout(@Nullable final Object object) {

@@ -1102,61 +1102,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testSetWorkbookClass() throws Throwable {
-		//
-		final Field workbookClass = VoiceManager.class.getDeclaredField("workbookClass");
-		//
-		if (workbookClass != null) {
-			//
-			workbookClass.setAccessible(true);
-			//
-		} // if
-			//
-		if (instance != null) {
-			//
-			Assertions.assertDoesNotThrow(() -> instance.setWorkbookClass(null));
-			//
-			Assertions.assertNull(get(workbookClass, instance));
-			//
-			// java.lang.Class
-			//
-			final Class<?> clz = Class.class;
-			//
-			Assertions.assertDoesNotThrow(() -> instance.setWorkbookClass(clz));
-			//
-			Assertions.assertSame(clz, get(workbookClass, instance));
-			//
-			// java.lang.String
-			//
-			final String toString = Util.getName(String.class);
-			//
-			Assertions.assertDoesNotThrow(() -> instance.setWorkbookClass(toString));
-			//
-			Assertions.assertSame(Util.forName(toString), get(workbookClass, instance));
-			//
-			// org.apache.poi.hssf.usermodel.HSSFWorkbook
-			//
-			Assertions.assertDoesNotThrow(() -> instance.setWorkbookClass("HSSFWorkbook"));
-			//
-			Assertions.assertSame(HSSFWorkbook.class, get(workbookClass, instance));
-			//
-			// xls
-			//
-			Assertions.assertDoesNotThrow(() -> instance.setWorkbookClass("xls"));
-			//
-			Assertions.assertSame(HSSFWorkbook.class, get(workbookClass, instance));
-			//
-			// xlsx
-			//
-			Assertions.assertDoesNotThrow(() -> instance.setWorkbookClass("xlsx"));
-			//
-			Assertions.assertSame(XSSFWorkbook.class, get(workbookClass, instance));
-			//
-		} // if
-			//
-	}
-
-	@Test
 	void testSetExportWebSpeechSynthesisHtmlTemplateProperties()
 			throws NoSuchFieldException, IllegalAccessException, IOException {
 		//
