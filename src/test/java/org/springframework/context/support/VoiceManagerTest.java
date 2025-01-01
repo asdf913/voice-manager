@@ -81,7 +81,6 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
-import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -172,7 +171,6 @@ import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 import com.healthmarketscience.jackcess.Database.FileFormat;
 
-import domain.JlptVocabulary;
 import domain.Voice;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.TemplateLoader;
