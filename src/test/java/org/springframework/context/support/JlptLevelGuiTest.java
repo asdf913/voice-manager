@@ -12,7 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
@@ -22,6 +21,7 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -978,7 +978,7 @@ class JlptLevelGuiTest {
 		Assertions.assertDoesNotThrow(
 				() -> browse(!GraphicsEnvironment.isHeadless() ? Desktop.getDesktop() : mock, null));
 		//
-		Assertions.assertDoesNotThrow(() -> browse(mock, new File(".").toURI()));
+		Assertions.assertDoesNotThrow(() -> browse(mock, Paths.get(".").toFile().toURI()));
 		//
 	}
 

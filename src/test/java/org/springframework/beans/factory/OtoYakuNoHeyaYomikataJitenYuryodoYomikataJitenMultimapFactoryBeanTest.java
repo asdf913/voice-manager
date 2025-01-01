@@ -5,6 +5,7 @@ import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -215,7 +216,8 @@ class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
 				//
 			} // if
 				//
-			final File file = new File("OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean.txt");
+			final File file = Paths.get("OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean.txt")
+					.toFile();
 			//
 			FileUtils.writeLines(file, MultimapUtil.entries(getObject(instance)));
 			//

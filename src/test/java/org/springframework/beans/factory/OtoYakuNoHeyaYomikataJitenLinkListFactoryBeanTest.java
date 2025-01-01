@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -255,7 +256,7 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 			//
 			final Workbook wb = createWorkbook(links);
 			//
-			final File file = new File(String.format("links_%1$tY%1$tm%1$td.xlsx", new Date()));
+			final File file = Paths.get(String.format("links_%1$tY%1$tm%1$td.xlsx", new Date())).toFile();
 			//
 			System.out.println(file.getAbsolutePath());
 			//

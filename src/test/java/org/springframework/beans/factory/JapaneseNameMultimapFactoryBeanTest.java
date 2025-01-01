@@ -1,9 +1,9 @@
 package org.springframework.beans.factory;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Paths;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
@@ -62,7 +62,7 @@ class JapaneseNameMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(getObject(instance));
 		//
-		instance.setUrl(new File("pom.xml").toURI().toURL().toString());
+		instance.setUrl(Paths.get("pom.xml").toFile().toURI().toURL().toString());
 		//
 		Assertions.assertNull(getObject(instance));
 		//
@@ -214,7 +214,7 @@ class JapaneseNameMultimapFactoryBeanTest {
 	@Test
 	void testCreateMultimapByUrl() throws Throwable {
 		//
-		final String url = Util.toString(new File("pom.xml").toURI().toURL());
+		final String url = Util.toString(Paths.get("pom.xml").toFile().toURI().toURL());
 		//
 		AssertionsUtil.assertThrowsAndEquals(ValidationException.class,
 				"{localizedMessage=java.net.URISyntaxException: Expected authority at index 7: file://, message=java.net.URISyntaxException: Expected authority at index 7: file://}",

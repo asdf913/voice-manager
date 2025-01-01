@@ -17,6 +17,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -749,7 +750,7 @@ class IniAsPropertiesResourceTest {
 		//
 		Assertions.assertFalse(exists((File) null));
 		//
-		Assertions.assertFalse(exists(new File("non_exists")));
+		Assertions.assertFalse(exists(Paths.get("non_exists").toFile()));
 		//
 	}
 

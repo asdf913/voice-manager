@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URI;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -361,8 +362,8 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 			Workbook workbook = null;
 			//
-			try (final OutputStream os = new FileOutputStream(
-					file = new File(String.format("常用漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
+			try (final OutputStream os = new FileOutputStream(file = Paths
+					.get(String.format("常用漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())).toFile())) {
 				//
 				CustomPropertiesUtil.addProperty(
 						POIXMLPropertiesUtil

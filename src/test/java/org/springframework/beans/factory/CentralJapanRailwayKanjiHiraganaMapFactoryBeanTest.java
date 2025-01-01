@@ -3,6 +3,7 @@ package org.springframework.beans.factory;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -60,7 +61,7 @@ class CentralJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setUrl(Util.toString(new File("pom.xml").toURI().toURL()));
+			instance.setUrl(Util.toString(Paths.get("pom.xml").toFile().toURI().toURL()));
 			//
 		} // if
 			//

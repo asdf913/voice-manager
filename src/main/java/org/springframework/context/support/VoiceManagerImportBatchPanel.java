@@ -34,6 +34,7 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
@@ -1829,7 +1830,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 						ObjectMap.setObject(objectMap, Voice.class, voice);
 						//
 						ObjectMap.setObject(objectMap, File.class, testAndApply(Objects::nonNull, voice,
-								x -> new File(folder, getFilePath(x)), x -> folder));
+								x -> Paths.get(folder.getAbsolutePath(), getFilePath(x)).toFile(), x -> folder));
 						//
 						importVoice(objectMap, errorMessageConsumer, throwableConsumer);
 						//
@@ -1862,7 +1863,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		if (StringUtils.isNotBlank(filePath)) {
 			//
-			if (!(it.file = new File(filePath)).exists() && !(it.file = new File(folder, filePath)).exists()) {
+			if (!(it.file = Paths.get(filePath).toFile()).exists()
+					&& !(it.file = Paths.get(folder.getAbsolutePath(), filePath).toFile()).exists()) {
 				//
 				it.file = null;
 				//
@@ -3302,12 +3304,14 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				final StringBuilder fileName = new StringBuilder(
 						String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS_%1$tL.%2$s", new Date(), fileExtension));
 				//
-				File file = new File(voiceFolder, filePath = Util.toString(fileName));
+				File file = Paths.get(voiceFolder, filePath = Util.toString(fileName)).toFile();
 				//
 				if (file.exists()) {
 					//
-					file = new File(voiceFolder, filePath = Util.toString(
-							fileName.insert(StringUtils.lastIndexOf(fileName, '.') + 1, randomAlphabetic(2) + ".")));
+					file = Paths
+							.get(voiceFolder, filePath = Util.toString(fileName
+									.insert(StringUtils.lastIndexOf(fileName, '.') + 1, randomAlphabetic(2) + ".")))
+							.toFile();
 					//
 				} // if
 					//
@@ -3319,7 +3323,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 			} else {
 				//
-				final File file = new File(voiceFolder, getFilePath(voiceOld));
+				final File file = Paths.get(voiceFolder, getFilePath(voiceOld)).toFile();
 				//
 				if (!file.exists()) {
 					//

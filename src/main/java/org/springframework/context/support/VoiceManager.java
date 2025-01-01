@@ -54,6 +54,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -2929,8 +2930,9 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			Workbook workbook = null;
 			//
-			try (final OutputStream os = new FileOutputStream(file = new File(
-					String.format("MicrosoftSpeechObjectLibrary_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())))) {
+			try (final OutputStream os = new FileOutputStream(file = Paths
+					.get(String.format("MicrosoftSpeechObjectLibrary_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date()))
+					.toFile())) {
 				//
 				WorkbookUtil.write(workbook = createMicrosoftSpeechObjectLibraryWorkbook(speechApi,
 						languageCodeToTextObjIntFunction, microsoftSpeechObjectLibraryAttributeNames), os);
@@ -3038,7 +3040,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	public static Pair<String, String> getMimeTypeAndBase64EncodedString(@Nullable final String folderPath,
 			@Nullable final String filePath) throws IOException {
 		//
-		final File f = folderPath != null && filePath != null ? new File(folderPath, filePath)
+		final File f = folderPath != null && filePath != null ? Paths.get(folderPath, filePath).toFile()
 				: testAndApply(Objects::nonNull, filePath, File::new, null);
 		//
 		final ContentInfo ci = testAndApply(VoiceManager::isFile, f, new ContentInfoUtil()::findMatch, null);
