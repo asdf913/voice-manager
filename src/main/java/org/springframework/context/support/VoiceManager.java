@@ -3113,11 +3113,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@Nullable
-	private static Integer incrementAndGet(@Nullable final AtomicInteger instance) {
-		return instance != null ? Integer.valueOf(instance.incrementAndGet()) : null;
-	}
-
-	@Nullable
 	private static NamedNodeMap getAttributes(@Nullable final Node instance) {
 		return instance != null ? instance.getAttributes() : null;
 	}
