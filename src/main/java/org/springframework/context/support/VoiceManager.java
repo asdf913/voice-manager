@@ -346,9 +346,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		String value();
 	}
 
-	@Url("https://www.jlpt.jp/about/levelsummary.html")
-	private transient ComboBoxModel<String> cbmJlptLevel = null;
-
 	@Note("For Write Voice in TTS Panel")
 	private transient ComboBoxModel<?> cbmAudioFormatWrite = null;
 
