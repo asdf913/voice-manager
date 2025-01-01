@@ -5,6 +5,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -115,6 +116,7 @@ import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.ObjectType;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -182,12 +184,19 @@ import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.FactoryBeanUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactoryUtil;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationContextUtil;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.support.VoiceManager.ByteConverter;
 import org.springframework.core.env.Environment;
@@ -229,7 +238,7 @@ import mapper.VoiceMapper;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerImportBatchPanel extends JPanel implements Titled, InitializingBean, EnvironmentAware,
-		ActionListener, BeanFactoryPostProcessor, ItemListener, ChangeListener {
+		ActionListener, BeanFactoryPostProcessor, ItemListener, ChangeListener, ApplicationContextAware {
 
 	private static final long serialVersionUID = 8152096292066653831L;
 
@@ -387,6 +396,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 
 	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
+	private transient ApplicationContext applicationContext = null;
+
 	private String[] voiceIds = null;
 
 	private transient OnlineNHKJapanesePronunciationsAccentFailableFunction onlineNHKJapanesePronunciationsAccentFailableFunction = null;
@@ -399,6 +410,11 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	@Override
 	public void setEnvironment(final Environment environment) {
 		this.propertyResolver = environment;
+	}
+
+	@Override
+	public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
 	}
 
 	public void setVoiceFolder(final String voiceFolder) {
@@ -543,8 +559,54 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		setLayout(new MigLayout());
 		//
-		// Voice Id
+		final Iterable<Entry<String, Object>> entrySet = Util
+				.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class));
 		//
+		if (Util.iterator(entrySet) != null) {
+			//
+			AutowireCapableBeanFactory acbf = null;
+			//
+			List<Field> fs = null;
+			//
+			for (final Entry<String, Object> entry : entrySet) {
+				//
+				if (!(Util.getValue(entry) instanceof LayoutManager)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				fs = Util.toList(Util.filter(
+						Util.stream(FieldUtils.getAllFieldsList(Util.getClass(
+								acbf = ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext)))),
+						x -> Objects.equals(Util.getName(x), "singletonObjects")));
+				//
+				for (int i = 0; i < IterableUtils.size(fs); i++) {
+					//
+					testAndAccept(
+							Objects::nonNull, Util
+									.cast(LayoutManager.class,
+											FactoryBeanUtil
+													.getObject(
+															Util.cast(
+																	FactoryBean.class, MapUtils
+																			.getObject(
+																					Util.cast(Map.class,
+																							Narcissus.getObjectField(
+																									acbf,
+																									IterableUtils.get(
+																											fs, i))),
+																					Util.getKey(entry))))),
+							this::setLayout);
+					//
+				} // for
+					//
+			} // for
+				//
+		} // if
+			//
+			// Voice Id
+			//
 		add(new JLabel("Voice Id"));
 		//
 		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds = SpeechApi.getVoiceIds(speechApi),
