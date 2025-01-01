@@ -3475,8 +3475,7 @@ public class VoiceManagerExportPanel extends JPanel
 									x -> toFile(Path.of(x.getAbsolutePath(), k)), x -> toFile(Path.of(k)))),
 							Util.toString(fileName))));
 					//
-					TableUtil.put(voiceFileNames, fileDestination != null ? fileDestination.getParent() : null,
-							Util.toString(fileName), voice);
+					TableUtil.put(voiceFileNames, getParent(fileDestination), Util.toString(fileName), voice);
 					//
 					// Set MP3 Title if "overMp3Title" is true
 					//
@@ -3558,6 +3557,10 @@ public class VoiceManagerExportPanel extends JPanel
 				//
 			} // try
 				//
+		}
+
+		private static String getParent(final File instance) {
+			return instance != null ? instance.getParent() : null;
 		}
 
 		private static void showPharse(@Nullable final VoiceManagerExportPanel voiceManager, final Fraction pharse) {
