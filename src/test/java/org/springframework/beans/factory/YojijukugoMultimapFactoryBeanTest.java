@@ -3,7 +3,7 @@ package org.springframework.beans.factory;
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.stream.IntStream;
 
 import org.apache.poi.ss.usermodel.Row;
@@ -66,7 +66,7 @@ class YojijukugoMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(getObject(instance));
 		//
-		instance.setUrl(Util.toString(Paths.get("pom.xml").toFile().toURI().toURL()));
+		instance.setUrl(Util.toString(Path.of("pom.xml").toFile().toURI().toURL()));
 		//
 		Assertions.assertNull(getObject(instance));
 		//
@@ -170,7 +170,7 @@ class YojijukugoMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(createMultimapByUrl(" ", null));
 		//
-		final String url = Util.toString(Paths.get("pom.xml").toFile().toURI().toURL());
+		final String url = Util.toString(Path.of("pom.xml").toFile().toURI().toURL());
 		//
 		AssertionsUtil.assertThrowsAndEquals(ValidationException.class,
 				"{localizedMessage=java.net.URISyntaxException: Expected authority at index 7: file://, message=java.net.URISyntaxException: Expected authority at index 7: file://}",

@@ -23,7 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URL;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1051,7 +1051,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	@Test
 	void testOpenStream() throws Throwable {
 		//
-		Assertions.assertNotNull(openStream(Paths.get("pom.xml").toFile().toURI().toURL()));
+		Assertions.assertNotNull(openStream(Path.of("pom.xml").toFile().toURI().toURL()));
 		//
 		Assertions.assertNull(openStream(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));
 		//

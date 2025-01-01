@@ -14,7 +14,7 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -513,7 +513,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 		//
 		Assertions.assertFalse(exists(null));
 		//
-		Assertions.assertFalse(exists(Paths.get("non_exists").toFile()));
+		Assertions.assertFalse(exists(Path.of("non_exists").toFile()));
 		//
 	}
 
@@ -659,7 +659,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 		//
 		Assertions.assertFalse(isFile(null));
 		//
-		Assertions.assertFalse(isFile(Paths.get(".").toFile()));
+		Assertions.assertFalse(isFile(Path.of(".").toFile()));
 		//
 	}
 

@@ -49,7 +49,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -2910,12 +2910,12 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 				final StringBuilder fileName = new StringBuilder(
 						String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS_%1$tL.%2$s", new Date(), fileExtension));
 				//
-				File file = Paths.get(voiceFolder, filePath = Util.toString(fileName)).toFile();
+				File file = Path.of(voiceFolder, filePath = Util.toString(fileName)).toFile();
 				//
 				if (file.exists()) {
 					//
-					file = Paths
-							.get(voiceFolder, filePath = Util.toString(fileName
+					file = Path
+							.of(voiceFolder, filePath = Util.toString(fileName
 									.insert(StringUtils.lastIndexOf(fileName, '.') + 1, randomAlphabetic(2) + ".")))
 							.toFile();
 					//
@@ -2929,7 +2929,7 @@ public class VoiceManagerImportSinglePanel extends JPanel implements Titled, Ini
 				//
 			} else {
 				//
-				final File file = Paths.get(voiceFolder, getFilePath(voiceOld)).toFile();
+				final File file = Path.of(voiceFolder, getFilePath(voiceOld)).toFile();
 				//
 				if (!file.exists()) {
 					//

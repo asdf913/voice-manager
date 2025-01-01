@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -978,7 +978,7 @@ class JlptLevelGuiTest {
 		Assertions.assertDoesNotThrow(
 				() -> browse(!GraphicsEnvironment.isHeadless() ? Desktop.getDesktop() : mock, null));
 		//
-		Assertions.assertDoesNotThrow(() -> browse(mock, Paths.get(".").toFile().toURI()));
+		Assertions.assertDoesNotThrow(() -> browse(mock, Path.of(".").toFile().toURI()));
 		//
 	}
 

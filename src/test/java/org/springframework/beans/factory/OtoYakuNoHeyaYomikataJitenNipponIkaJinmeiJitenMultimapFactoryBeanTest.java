@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Base64.Decoder;
@@ -216,7 +216,7 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			//
 			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
 			//
-			final File file = Paths.get("OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimap.xlsx").toFile();
+			final File file = Path.of("OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimap.xlsx").toFile();
 			//
 			try (final Workbook wb = WorkbookFactory.create(true); final OutputStream os = new FileOutputStream(file)) {
 				//

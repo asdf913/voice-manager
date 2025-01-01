@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -96,7 +96,7 @@ class SpeechApiSystemSpeechImplTest {
 				"{localizedMessage=Invalid memory access, message=Invalid memory access}",
 				() -> instance.writeVoiceToFile(null, null, 0, 0, null));
 		//
-		final File file = Paths.get(".").toFile();
+		final File file = Path.of(".").toFile();
 		//
 		AssertionsUtil.assertThrowsAndEquals(Error.class,
 				"{localizedMessage=Invalid memory access, message=Invalid memory access}",

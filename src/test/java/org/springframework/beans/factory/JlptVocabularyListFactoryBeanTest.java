@@ -10,7 +10,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -223,7 +223,7 @@ class JlptVocabularyListFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setUrls(Arrays.asList(Paths.get(".").toFile().toURI().toURL().toString()));
+			instance.setUrls(Arrays.asList(Path.of(".").toFile().toURI().toURL().toString()));
 			//
 		} // if
 			//
@@ -231,7 +231,7 @@ class JlptVocabularyListFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setUrls(Arrays.asList(Paths.get("pom.xml").toFile().toURI().toURL().toString()));
+			instance.setUrls(Arrays.asList(Path.of("pom.xml").toFile().toURI().toURL().toString()));
 			//
 		} // if
 			//

@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
@@ -189,7 +189,7 @@ class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBeanTest {
 				//
 			} // if
 				//
-			final File file = Paths.get("OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBean.txt")
+			final File file = Path.of("OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBean.txt")
 					.toFile();
 			//
 			FileUtils.writeLines(file, MultimapUtil.entries(getObject(instance)));

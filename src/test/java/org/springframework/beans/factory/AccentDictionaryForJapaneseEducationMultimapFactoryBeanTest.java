@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -127,7 +127,7 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		if (instance != null) {
 			//
-			instance.setUrl(Paths.get("pom.xml").toFile().toURI().toURL().toString());
+			instance.setUrl(Path.of("pom.xml").toFile().toURI().toURL().toString());
 			//
 		} // if
 			//
@@ -199,7 +199,7 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 		//
 		Assertions.assertNull(createMultimap(" ", null, null));
 		//
-		final String url = Paths.get("pom.xml").toFile().toURI().toURL().toString();
+		final String url = Path.of("pom.xml").toFile().toURI().toURL().toString();
 		//
 		AssertionsUtil.assertThrowsAndEquals(ValidationException.class,
 				"{localizedMessage=java.net.URISyntaxException: Expected authority at index 7: file://, message=java.net.URISyntaxException: Expected authority at index 7: file://}",
@@ -259,7 +259,7 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 	@Test
 	void testCreateMultimapByUrl() throws IOException {
 		//
-		final String url = Paths.get("pom.xml").toFile().toURI().toURL().toString();
+		final String url = Path.of("pom.xml").toFile().toURI().toURL().toString();
 		//
 		AssertionsUtil.assertThrowsAndEquals(ValidationException.class,
 				"{localizedMessage=java.net.URISyntaxException: Expected authority at index 7: file://, message=java.net.URISyntaxException: Expected authority at index 7: file://}",

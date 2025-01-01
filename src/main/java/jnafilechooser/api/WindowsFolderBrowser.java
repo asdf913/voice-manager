@@ -14,7 +14,7 @@ package jnafilechooser.api;
 
 import java.awt.Window;
 import java.io.File;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 
 import jnafilechooser.win32.Ole32;
 import jnafilechooser.win32.Shell32;
@@ -83,7 +83,7 @@ public class WindowsFolderBrowser {
 			Shell32.SHGetPathFromIDListW(pidl, path);
 			final String filePath = path.getWideString(0);
 			Ole32.CoTaskMemFree(pidl);
-			return Paths.get(filePath).toFile();
+			return Path.of(filePath).toFile();
 		}
 		return null;
 	}

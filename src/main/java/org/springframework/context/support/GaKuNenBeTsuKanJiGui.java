@@ -22,7 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -358,8 +358,8 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 			Workbook workbook = null;
 			//
-			try (final OutputStream os = new FileOutputStream(file = Paths
-					.get(String.format("学年別漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())).toFile())) {
+			try (final OutputStream os = new FileOutputStream(
+					file = Path.of(String.format("学年別漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date())).toFile())) {
 				//
 				CustomPropertiesUtil.addProperty(
 						POIXMLPropertiesUtil

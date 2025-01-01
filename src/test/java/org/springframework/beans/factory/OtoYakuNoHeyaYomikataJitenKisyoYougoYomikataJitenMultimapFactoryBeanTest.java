@@ -5,7 +5,7 @@ import java.lang.Character.UnicodeBlock;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -216,7 +216,7 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 				//
 			} // if
 				//
-			final File file = Paths.get("OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBean.txt")
+			final File file = Path.of("OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBean.txt")
 					.toFile();
 			//
 			new FailableStream<>(Stream.of("text", "description")).forEach(x -> {

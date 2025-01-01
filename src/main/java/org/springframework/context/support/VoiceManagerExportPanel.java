@@ -38,7 +38,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -1874,7 +1874,7 @@ public class VoiceManagerExportPanel extends JPanel
 			final String fileExtension = getFileExtension(workbookSupplier);
 			//
 			try (final OutputStream os = new FileOutputStream(
-					file = Paths.get(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(),
+					file = Path.of(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(),
 							StringUtils.defaultIfEmpty(fileExtension, "xlsx"))).toFile())) {
 				//
 				final BooleanMap booleanMap = Reflection.newProxy(BooleanMap.class, ih);
@@ -1957,7 +1957,7 @@ public class VoiceManagerExportPanel extends JPanel
 					} // if
 						//
 					FileUtils.writeStringToFile(
-							file = Paths.get(StringUtils.defaultIfBlank(Util.toString(sb), "export.html")).toFile(),
+							file = Path.of(StringUtils.defaultIfBlank(Util.toString(sb), "export.html")).toFile(),
 							Util.toString(writer), StandardCharsets.UTF_8);
 					//
 					Util.add(files = ObjectUtils.getIfNull(files, ArrayList::new), file);
@@ -1992,8 +1992,8 @@ public class VoiceManagerExportPanel extends JPanel
 							//
 						} // if
 							//
-						FileUtils.writeStringToFile(file = Paths
-								.get(StringUtils.defaultIfBlank(Util.toString(sb), "WebSpeechSynthesis.html")).toFile(),
+						FileUtils.writeStringToFile(file = Path
+								.of(StringUtils.defaultIfBlank(Util.toString(sb), "WebSpeechSynthesis.html")).toFile(),
 								Util.toString(writer), StandardCharsets.UTF_8);
 						//
 						Util.add(files = ObjectUtils.getIfNull(files, ArrayList::new), file);
@@ -2017,8 +2017,8 @@ public class VoiceManagerExportPanel extends JPanel
 				if (isSelected(cbExportHtmlAsZip)
 						&& reduce(mapToLong(Util.stream(files), f -> longValue(length(f), 0)), 0, Long::sum) > 0) {
 					//
-					ObjectMap.setObject(objectMap, File.class, file = Paths
-							.get(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.zip", new Date())).toFile());
+					ObjectMap.setObject(objectMap, File.class, file = Path
+							.of(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.zip", new Date())).toFile());
 					//
 					ObjectMap.setObject(objectMap, EncryptionMethod.class, EncryptionMethod.ZIP_STANDARD);
 					//
@@ -2045,8 +2045,8 @@ public class VoiceManagerExportPanel extends JPanel
 				//
 				ObjectMap
 						.setObject(objectMap, File.class,
-								file = Paths
-										.get(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(),
+								file = Path
+										.of(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s", new Date(),
 												StringUtils.substringAfter(getFileExtension(fileFormat), '.')))
 										.toFile());
 				//
@@ -3438,8 +3438,7 @@ public class VoiceManagerExportPanel extends JPanel
 							|| StringUtils.isBlank(value = Util.getValue(folderFileNamePattern))
 							|| !(fileSource = testAndApply(Objects::nonNull,
 									voiceFolder = getIfNull(voiceFolder, () -> getVoiceFolder(voiceManagerExportPanel)),
-									x -> Paths.get(x, filePath).toFile(), x -> Paths.get(filePath).toFile()))
-									.exists()) {
+									x -> Path.of(x, filePath).toFile(), x -> Path.of(filePath).toFile())).exists()) {
 						//
 						continue;
 						//
@@ -3467,11 +3466,11 @@ public class VoiceManagerExportPanel extends JPanel
 					//
 					final String k = key;
 					//
-					FileUtils.copyFile(fileSource, fileDestination = Paths.get(
+					FileUtils.copyFile(fileSource, fileDestination = Path.of(
 							Util.toString(testAndApply(Objects::nonNull,
 									folder = getIfNull(folder,
 											() -> testAndApply(Objects::nonNull, outputFolder, File::new, null)),
-									x -> Paths.get(x.getAbsolutePath(), k).toFile(), x -> Paths.get(k).toFile())),
+									x -> Path.of(x.getAbsolutePath(), k).toFile(), x -> Path.of(k).toFile())),
 							Util.toString(fileName)).toFile());
 					//
 					TableUtil.put(voiceFileNames, fileDestination.getParent(), Util.toString(fileName), voice);
@@ -3953,7 +3952,7 @@ public class VoiceManagerExportPanel extends JPanel
 					testAndAccept((a, b) -> StringUtils.isNotEmpty(b), odfPd.getPackage(),
 							StringMap.getString(stringMap, "password"), ExportTask::setPassword);
 					//
-					save(odfPd, file = Paths.get(rowKey, String.join(".",
+					save(odfPd, file = Path.of(rowKey, String.join(".",
 							StringUtils.substringAfter(rowKey, File.separatorChar),
 							StringUtils.defaultIfBlank(
 									fileExtensions != null && fileExtensions.length == 1 ? fileExtensions[0] : null,
@@ -4344,7 +4343,7 @@ public class VoiceManagerExportPanel extends JPanel
 						ZipUtil.addEntries(file,
 								toArray(Util.map(Util.stream(voiceLKeySet),
 										x -> new FileSource(String.join("/", folderInPresentation, x),
-												Paths.get(outputFolder, x).toFile())),
+												Path.of(outputFolder, x).toFile())),
 										ZipEntrySource[]::new));
 						//
 					} // if

@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 import java.net.ConnectException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.nio.file.spi.FileSystemProvider;
 import java.util.Collections;
 import java.util.Iterator;
@@ -121,7 +121,7 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 		Assertions.assertEquals(Collections.emptyMap(), getObject(instance));
 		//
-		final File file = Paths.get("pom.xml").toFile();
+		final File file = Path.of("pom.xml").toFile();
 		//
 		final String url = file != null ? file.toURI().toURL().toString() : null;
 		//

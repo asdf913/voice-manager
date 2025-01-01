@@ -9,7 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
@@ -184,7 +184,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 			instance.setUrl(Util.toString(Util.get(properties,
 					"org.springframework.beans.factory.TiZuKiGouKanjiHiraganaMapFactoryBean.url")));
 			//
-			final File file = Paths.get("TiZuKiGouKanjiHiraganaMapFactoryBean.xlsx").toFile();
+			final File file = Path.of("TiZuKiGouKanjiHiraganaMapFactoryBean.xlsx").toFile();
 			//
 			try (final Workbook wb = WorkbookFactory.create(true); final OutputStream os = new FileOutputStream(file)) {
 				//

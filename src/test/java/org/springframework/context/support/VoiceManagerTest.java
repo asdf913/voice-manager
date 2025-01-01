@@ -38,7 +38,7 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -757,7 +757,7 @@ class VoiceManagerTest {
 	@AfterEach
 	void afterEach() {
 		//
-		final File file = Paths.get(".html").toFile();
+		final File file = Path.of(".html").toFile();
 		//
 		if (file.exists() && file.isFile() && file.length() == 0) {
 			//
@@ -2210,7 +2210,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(getName((File) null));
 		//
-		Assertions.assertNotNull(getName(Paths.get(".").toFile()));
+		Assertions.assertNotNull(getName(Path.of(".").toFile()));
 		//
 	}
 
@@ -2437,7 +2437,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(toURI(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));
 		//
-		final File file = Paths.get("").toFile();
+		final File file = Path.of("").toFile();
 		//
 		Assertions.assertNotNull(toURI(file));
 		//
@@ -2796,7 +2796,7 @@ class VoiceManagerTest {
 	@Test
 	void testGetEncryptionTableHtml() throws Throwable {
 		//
-		final URL url = toURL(toURI(Paths.get("pom.xml").toFile()));
+		final URL url = toURL(toURI(Path.of("pom.xml").toFile()));
 		//
 		Assertions.assertNull(getEncryptionTableHtml(url, null));
 		//
@@ -3331,11 +3331,11 @@ class VoiceManagerTest {
 		if (GraphicsEnvironment.isHeadless()) {
 			//
 			Assertions.assertDoesNotThrow(
-					() -> getPageTitle(toString(Paths.get("pom.xml").toFile().toURI().toURL()), null));
+					() -> getPageTitle(toString(Path.of("pom.xml").toFile().toURI().toURL()), null));
 			//
 		} else {
 			//
-			final String string = toString(toURL(Paths.get("pom.xml").toFile().toURI()));
+			final String string = toString(toURL(Path.of("pom.xml").toFile().toURI()));
 			//
 			AssertionsUtil.assertThrowsAndEquals(RuntimeException.class,
 					"{localizedMessage=org.opentest4j.AssertionFailedError: java.net.URISyntaxException: Expected authority at index 7: file:// ==> Unexpected exception thrown: org.jsoup.helper.ValidationException: java.net.URISyntaxException: Expected authority at index 7: file://, message=org.opentest4j.AssertionFailedError: java.net.URISyntaxException: Expected authority at index 7: file:// ==> Unexpected exception thrown: org.jsoup.helper.ValidationException: java.net.URISyntaxException: Expected authority at index 7: file://}",
@@ -3932,9 +3932,9 @@ class VoiceManagerTest {
 			//
 		Assertions.assertNull(invoke(setMp3Title, null, (Object) null));
 		//
-		Assertions.assertNull(invoke(setMp3Title, null, Paths.get(".").toFile()));
+		Assertions.assertNull(invoke(setMp3Title, null, Path.of(".").toFile()));
 		//
-		Assertions.assertNull(invoke(setMp3Title, null, Paths.get("pom.xml").toFile()));
+		Assertions.assertNull(invoke(setMp3Title, null, Path.of("pom.xml").toFile()));
 		//
 		// org.springframework.context.support.VoiceManager.ExportTask.min(java.util.stream.Stream,java.util.Comparator)
 		//
@@ -4572,11 +4572,11 @@ class VoiceManagerTest {
 			//
 			Assertions.assertFalse(predicate.test(null));
 			//
-			Assertions.assertFalse(predicate.test(Paths.get("non_exixts")));
+			Assertions.assertFalse(predicate.test(Path.of("non_exixts")));
 			//
-			Assertions.assertFalse(predicate.test(Paths.get(".")));
+			Assertions.assertFalse(predicate.test(Path.of(".")));
 			//
-			Assertions.assertFalse(predicate.test(Paths.get("pom.xml")));
+			Assertions.assertFalse(predicate.test(Path.of("pom.xml")));
 			//
 		} // if
 			//
