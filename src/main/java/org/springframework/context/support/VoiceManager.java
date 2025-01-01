@@ -3106,11 +3106,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@Nullable
-	private static String getName(@Nullable final File instance) {
-		return instance != null ? instance.getName() : null;
-	}
-
-	@Nullable
 	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
