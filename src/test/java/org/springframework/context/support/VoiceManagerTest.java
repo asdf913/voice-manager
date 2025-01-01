@@ -204,10 +204,10 @@ class VoiceManagerTest {
 			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_INT_VALUE, METHOD_LONG_VALUE, METHOD_MAP_INT_STREAM,
 			METHOD_MAP_TO_INT, METHOD_MAX_INT_STREAM, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE,
 			METHOD_GET_PREFERRED_WIDTH, METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ANY_MATCH, METHOD_MATCHER,
-			METHOD_MATCHES, METHOD_SET_STRING_COMMENT, METHOD_FORMAT, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE,
-			METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION,
-			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE,
-			METHOD_GET_NAMED_ITEM, METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_LIST,
+			METHOD_MATCHES, METHOD_SET_STRING_COMMENT, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR,
+			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_ACCEPT, METHOD_TO_ARRAY_COLLECTION, METHOD_GET_TAB_INDEX_BY_TITLE,
+			METHOD_GET_DECLARED_FIELD, METHOD_NEW_DOCUMENT_BUILDER, METHOD_PARSE, METHOD_GET_NAMED_ITEM,
+			METHOD_GET_TEXT_CONTENT, METHOD_GET_NAME_FILE, METHOD_GET_LIST,
 			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_SET_AUTHOR,
 			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
 			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES,
@@ -282,8 +282,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_SET_STRING_COMMENT = clz.getDeclaredMethod("setString", Comment.class, RichTextString.class))
 				.setAccessible(true);
-		//
-		(METHOD_FORMAT = clz.getDeclaredMethod("format", NumberFormat.class, Double.TYPE)).setAccessible(true);
 		//
 		(METHOD_VALUE_OF1 = clz.getDeclaredMethod("valueOf", String.class)).setAccessible(true);
 		//
@@ -1992,27 +1990,6 @@ class VoiceManagerTest {
 	private static void setString(final Comment instance, final RichTextString string) throws Throwable {
 		try {
 			METHOD_SET_STRING_COMMENT.invoke(null, instance, string);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testFormat() throws Throwable {
-		//
-		Assertions.assertNull(format(null, 0d));
-		//
-	}
-
-	private static String format(final NumberFormat instance, final double number) throws Throwable {
-		try {
-			final Object obj = METHOD_FORMAT.invoke(null, instance, number);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -3760,11 +3760,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	}
 
-	@Nullable
-	private static String format(@Nullable final NumberFormat instance, final double number) {
-		return instance != null ? instance.format(number) : null;
-	}
-
 	private static interface IntMap<T> {
 
 		@Nullable
