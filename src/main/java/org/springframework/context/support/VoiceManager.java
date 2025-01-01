@@ -3700,11 +3700,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 		void setObject(final int key, @Nullable final T value);
 
-		@Nullable
-		static <T> T getObject(@Nullable final IntMap<T> instance, final int key) {
-			return instance != null ? instance.getObject(key) : null;
-		}
-
 	}
 
 	private static interface IntIntMap {
