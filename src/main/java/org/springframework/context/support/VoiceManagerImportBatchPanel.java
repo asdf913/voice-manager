@@ -758,6 +758,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 	}
 
+	@Nullable
 	private static IValue0<LayoutManager> getLayoutManager(final ApplicationContext applicationContext)
 			throws Exception {
 		//
