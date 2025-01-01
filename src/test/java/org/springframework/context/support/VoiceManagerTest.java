@@ -209,7 +209,7 @@ class VoiceManagerTest {
 			METHOD_GET_FIELD_BY_NAME, METHOD_CREATE_VOICE_ID_WARNING_PANEL,
 			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_SET_FOCUS_CYCLE_ROOT,
 			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
-			METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_PAGE_TITLE,
+			METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE, METHOD_GET_PAGE_TITLE,
 			METHOD_TO_MILLIS, METHOD_ADD_ALL, METHOD_SET_AUTO_FILTER, METHOD_GET_NUMBER, METHOD_SORTED,
 			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM,
 			METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
@@ -399,9 +399,6 @@ class VoiceManagerTest {
 		(METHOD_NEW_INSTANCE = clz.getDeclaredMethod("newInstance", Constructor.class, Object[].class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_WORK_BOOK_CLASS = clz.getDeclaredMethod("getWorkbookClass", Map.class, String.class))
-				.setAccessible(true);
-		//
 		(METHOD_GET_PAGE_TITLE = clz.getDeclaredMethod("getPageTitle", String.class, Duration.class))
 				.setAccessible(true);
 		//
@@ -547,14 +544,6 @@ class VoiceManagerTest {
 				} else if (Objects.equals(methodName, "toArray")) {
 					//
 					return null;
-					//
-				} // if
-					//
-			} else if (proxy instanceof IntStream) {
-				//
-				if (Objects.equals(IntStream.class, returnType)) {
-					//
-					return proxy;
 					//
 				} // if
 					//
@@ -2934,50 +2923,6 @@ class VoiceManagerTest {
 	private static <T> T newInstance(final Constructor<T> constructor, final Object... initargs) throws Throwable {
 		try {
 			return (T) METHOD_NEW_INSTANCE.invoke(null, constructor, initargs);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetWorkbookClass() throws Throwable {
-		//
-		Assertions.assertNull(getWorkbookClass(null, null));
-		//
-		final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map = Reflection
-				.newProxy(Map.class, ih);
-		//
-		Assertions.assertNull(getWorkbookClass(map, null));
-		//
-		if (ih != null) {
-			//
-			ih.entrySet = Reflection.newProxy(Set.class, ih);
-			//
-		} // if
-			//
-		Assertions.assertNull(getWorkbookClass(map, null));
-		//
-		if (ih != null) {
-			//
-			ih.entrySet = Collections.singleton(null);
-			//
-		} // if
-			//
-		Assertions.assertNull(getWorkbookClass(map, null));
-		//
-	}
-
-	private static IValue0<Class<? extends Workbook>> getWorkbookClass(
-			final Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>> map, final String string)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_GET_WORK_BOOK_CLASS.invoke(null, map, string);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof IValue0) {
-				return (IValue0) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
