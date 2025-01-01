@@ -1595,12 +1595,6 @@ class VoiceManagerTest {
 			//
 	}
 
-	private static void itemStateChanged(final ItemListener instance, final ItemEvent itemEvent) {
-		if (instance != null) {
-			instance.itemStateChanged(itemEvent);
-		}
-	}
-
 	private static void stateChanged(final ChangeListener instance, final ChangeEvent evt) {
 		if (instance != null) {
 			instance.stateChanged(evt);

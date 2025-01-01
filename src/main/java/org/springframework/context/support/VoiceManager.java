@@ -3263,34 +3263,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		return instance != null ? instance.getLevel() : null;
 	}
 
-	private static void setSelectedItemByString(@Nullable final ComboBoxModel<String> cbm, final String string) {
-		//
-		IntList intList = null;
-		//
-		for (int i = 0; i < getSize(cbm); i++) {
-			//
-			if (StringUtils.equalsAnyIgnoreCase(getElementAt(cbm, i), string)) {
-				//
-				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i);
-				//
-			} // if
-				//
-		} // for
-			//
-		final int size = intList != null ? intList.size() : 0;
-		//
-		if (size > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} else if (size == 1) {
-			//
-			setSelectedItem(cbm, getElementAt(cbm, intList.get(0)));
-			//
-		} // if
-			//
-	}
-
 	@Nullable
 	private static <E> E getElementAt(@Nullable final ListModel<E> instance, final int index) {
 		return instance != null ? instance.getElementAt(index) : null;
