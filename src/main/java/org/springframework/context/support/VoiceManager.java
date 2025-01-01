@@ -3111,12 +3111,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@Nullable
-	private static Document parse(@Nullable final DocumentBuilder instance, final InputStream is)
-			throws SAXException, IOException {
-		return instance != null ? instance.parse(is) : null;
-	}
-
-	@Nullable
 	private static Node getNamedItem(@Nullable final NamedNodeMap instance, final String name) {
 		return instance != null ? instance.getNamedItem(name) : null;
 	}
