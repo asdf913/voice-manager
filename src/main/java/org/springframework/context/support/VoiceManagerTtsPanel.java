@@ -548,6 +548,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
+	@Nullable
 	private static <T> T getObject(@Nullable final FactoryBean<T> instance) throws Exception {
 		return instance != null ? instance.getObject() : null;
 	}
