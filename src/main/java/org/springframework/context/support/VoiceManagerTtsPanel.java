@@ -300,8 +300,6 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 			List<Field> fs = null;
 			//
-			FactoryBean<Object> fb = null;
-			//
 			for (final Entry<String, Object> entry : entrySet) {
 				//
 				if (Util.getValue(entry) instanceof LayoutManager) {
@@ -313,11 +311,14 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 					//
 					for (int i = 0; i < IterableUtils.size(fs); i++) {
 						//
-						if ((fb = Util.cast(FactoryBean.class,
-								MapUtils.getObject(
-										Util.cast(Map.class, Narcissus.getObjectField(acbf, IterableUtils.get(fs, i))),
-										Util.getKey(entry)))) != null
-								&& fb.getObject() instanceof LayoutManager lm) {
+						if (getObject(
+								Util.cast(
+										FactoryBean.class, MapUtils
+												.getObject(
+														Util.cast(Map.class,
+																Narcissus.getObjectField(acbf,
+																		IterableUtils.get(fs, i))),
+														Util.getKey(entry)))) instanceof LayoutManager lm) {
 							//
 							setLayout(lm);
 							//
@@ -545,6 +546,10 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 						null)), 0),
 				cs);
 		//
+	}
+
+	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
+		return instance != null ? instance.getObject() : null;
 	}
 
 	private static <T, E extends Throwable> void forEach(@Nullable final Iterable<T> items,
