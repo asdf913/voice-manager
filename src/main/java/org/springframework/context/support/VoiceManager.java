@@ -4187,7 +4187,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 								CreationHelperUtil.createClientAnchor(creationHelper)),
 						CreationHelperUtil.createRichTextString(creationHelper, e.getMessage()));
 				//
-				setAuthor(comment, Util.getName(Util.getClass(e)));
+				CommentUtil.setAuthor(comment, Util.getName(Util.getClass(e)));
 				//
 				CellUtil.setCellComment(cell, comment);
 				//
@@ -4323,12 +4323,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	@Nullable
 	private static Integer getPhysicalNumberOfCells(@Nullable final Row instance) {
 		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfCells()) : null;
-	}
-
-	private static void setAuthor(@Nullable final Comment instance, @Nullable final String string) {
-		if (instance != null) {
-			instance.setAuthor(string);
-		}
 	}
 
 	@Nullable

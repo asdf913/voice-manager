@@ -8,4 +8,10 @@ public interface CommentUtil {
 		}
 	}
 
+	static void setAuthor(final Comment instance, final String string) {
+		if (instance != null) {
+			instance.setAuthor(string);
+		}
+	}
+
 }

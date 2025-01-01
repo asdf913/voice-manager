@@ -5292,7 +5292,7 @@ public class VoiceManagerExportPanel extends JPanel
 								CreationHelperUtil.createClientAnchor(creationHelper)),
 						CreationHelperUtil.createRichTextString(creationHelper, e.getMessage()));
 				//
-				setAuthor(comment, Util.getName(Util.getClass(e)));
+				CommentUtil.setAuthor(comment, Util.getName(Util.getClass(e)));
 				//
 				CellUtil.setCellComment(cell, comment);
 				//
@@ -5300,12 +5300,6 @@ public class VoiceManagerExportPanel extends JPanel
 				//
 		} // for
 			//
-	}
-
-	private static void setAuthor(@Nullable final Comment instance, final String string) {
-		if (instance != null) {
-			instance.setAuthor(string);
-		}
 	}
 
 	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
