@@ -2693,13 +2693,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		}
 	}
 
-	@Nullable
-	private static IntStream map(@Nullable final IntStream instance, @Nullable final IntUnaryOperator mapper) {
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
-				? instance.map(mapper)
-				: instance;
-	}
-
 	private static void setEnabled(final boolean b, final Component instance, @Nullable final Component... cs) {
 		//
 		setEnabled(instance, b);
