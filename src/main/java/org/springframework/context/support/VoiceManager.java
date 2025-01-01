@@ -416,8 +416,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private String[] voiceIds = null;
 
-	private transient IValue0<Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> workbookClassFailableSupplierMap = null;
-
 	private transient Map<Object, Object> exportWebSpeechSynthesisHtmlTemplateProperties = null;
 
 	@Nullable
