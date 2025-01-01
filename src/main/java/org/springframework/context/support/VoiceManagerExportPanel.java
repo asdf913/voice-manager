@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
+import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
@@ -204,10 +205,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.FactoryBeanUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationContextUtil;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
@@ -277,8 +284,8 @@ import net.lingala.zip4j.model.enums.CompressionLevel;
 import net.lingala.zip4j.model.enums.EncryptionMethod;
 import net.miginfocom.swing.MigLayout;
 
-public class VoiceManagerExportPanel extends JPanel
-		implements Titled, InitializingBean, EnvironmentAware, ActionListener, BeanFactoryPostProcessor {
+public class VoiceManagerExportPanel extends JPanel implements Titled, InitializingBean, EnvironmentAware,
+		ActionListener, BeanFactoryPostProcessor, ApplicationContextAware {
 
 	private static final long serialVersionUID = -2806818680922579630L;
 
@@ -458,6 +465,8 @@ public class VoiceManagerExportPanel extends JPanel
 
 	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
+	private transient ApplicationContext applicationContext = null;
+
 	private ObjectMapper objectMapper = null;
 
 	@Override
@@ -468,6 +477,11 @@ public class VoiceManagerExportPanel extends JPanel
 	@Override
 	public void setEnvironment(final Environment environment) {
 		this.propertyResolver = environment;
+	}
+
+	@Override
+	public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
 	}
 
 	public void setExportHtmlTemplateFile(final String exportHtmlTemplateFile) {
@@ -1022,8 +1036,54 @@ public class VoiceManagerExportPanel extends JPanel
 		//
 		setLayout(new MigLayout());
 		//
-		// Microsoft Excel Format
+		final Iterable<Entry<String, Object>> entrySet = Util
+				.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class));
 		//
+		if (Util.iterator(entrySet) != null) {
+			//
+			AutowireCapableBeanFactory acbf = null;
+			//
+			List<Field> fs = null;
+			//
+			for (final Entry<String, Object> entry : entrySet) {
+				//
+				if (!(Util.getValue(entry) instanceof LayoutManager)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				fs = Util.toList(Util.filter(
+						Util.stream(FieldUtils.getAllFieldsList(Util.getClass(
+								acbf = ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext)))),
+						x -> Objects.equals(Util.getName(x), "singletonObjects")));
+				//
+				for (int i = 0; i < IterableUtils.size(fs); i++) {
+					//
+					testAndAccept(
+							Objects::nonNull, Util
+									.cast(LayoutManager.class,
+											FactoryBeanUtil
+													.getObject(
+															Util.cast(
+																	FactoryBean.class, MapUtils
+																			.getObject(
+																					Util.cast(Map.class,
+																							Narcissus.getObjectField(
+																									acbf,
+																									IterableUtils.get(
+																											fs, i))),
+																					Util.getKey(entry))))),
+							this::setLayout);
+					//
+				} // for
+					//
+			} // for
+				//
+		} // if
+			//
+			// Microsoft Excel Format
+			//
 		add(new JLabel("Workbook Implementation"), String.format(SPAN_ONLY_FORMAT, 5));
 		//
 		final List<Class<? extends Workbook>> classes = testAndApply(Objects::nonNull,
