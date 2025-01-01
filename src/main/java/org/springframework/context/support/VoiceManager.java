@@ -3257,11 +3257,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@Nullable
-	private static String getLevel(@Nullable final JlptVocabulary instance) {
-		return instance != null ? instance.getLevel() : null;
-	}
-
-	@Nullable
 	private static <E> E getElementAt(@Nullable final ListModel<E> instance, final int index) {
 		return instance != null ? instance.getElementAt(index) : null;
 	}
