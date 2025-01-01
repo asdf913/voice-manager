@@ -104,6 +104,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactoryUtil;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationContextUtil;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.support.VoiceManager.ByteConverter;
 import org.springframework.core.env.Environment;
@@ -310,8 +311,8 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 				} // if
 					//
 				fs = Util.toList(Util.filter(
-						Util.stream(FieldUtils.getAllFieldsList(
-								Util.getClass(acbf = applicationContext.getAutowireCapableBeanFactory()))),
+						Util.stream(FieldUtils.getAllFieldsList(Util.getClass(
+								acbf = ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext)))),
 						x -> Objects.equals(Util.getName(x), "singletonObjects")));
 				//
 				for (int i = 0; i < IterableUtils.size(fs); i++) {
