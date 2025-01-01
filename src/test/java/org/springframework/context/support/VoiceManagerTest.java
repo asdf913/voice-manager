@@ -225,9 +225,9 @@ class VoiceManagerTest {
 			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_SET_FOCUS_CYCLE_ROOT,
 			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_WORKBOOK_CLASS_FAILABLE_SUPPLIER_MAP,
 			METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE, METHOD_GET_WORK_BOOK_CLASS, METHOD_GET_PAGE_TITLE,
-			METHOD_TO_MILLIS, METHOD_ADD_ALL, METHOD_SET_AUTO_FILTER, METHOD_GET_ELEMENT_AT, METHOD_GET_NUMBER,
-			METHOD_SORTED, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER,
-			METHOD_OPEN_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
+			METHOD_TO_MILLIS, METHOD_ADD_ALL, METHOD_SET_AUTO_FILTER, METHOD_GET_NUMBER, METHOD_SORTED,
+			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM,
+			METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -456,9 +456,6 @@ class VoiceManagerTest {
 		(METHOD_ADD_ALL = clz.getDeclaredMethod("addAll", Collection.class, Collection.class)).setAccessible(true);
 		//
 		(METHOD_SET_AUTO_FILTER = clz.getDeclaredMethod("setAutoFilter", Sheet.class)).setAccessible(true);
-		//
-		(METHOD_GET_ELEMENT_AT = clz.getDeclaredMethod("getElementAt", ListModel.class, Integer.TYPE))
-				.setAccessible(true);
 		//
 		(METHOD_GET_NUMBER = clz.getDeclaredMethod("getNumber", Object.class, Iterable.class)).setAccessible(true);
 		//
@@ -3521,21 +3518,6 @@ class VoiceManagerTest {
 	private static void setAutoFilter(final Sheet sheet) throws Throwable {
 		try {
 			METHOD_SET_AUTO_FILTER.invoke(null, sheet);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetElementAt() throws Throwable {
-		//
-		Assertions.assertNull(getElementAt(null, ONE));
-		//
-	}
-
-	private static <E> E getElementAt(final ListModel<E> instance, final int index) throws Throwable {
-		try {
-			return (E) METHOD_GET_ELEMENT_AT.invoke(null, instance, index);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -3257,11 +3257,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@Nullable
-	private static <E> E getElementAt(@Nullable final ListModel<E> instance, final int index) {
-		return instance != null ? instance.getElementAt(index) : null;
-	}
-
-	@Nullable
 	private static javax.swing.text.Document getDocument(@Nullable final DocumentEvent instance) {
 		return instance != null ? instance.getDocument() : null;
 	}
