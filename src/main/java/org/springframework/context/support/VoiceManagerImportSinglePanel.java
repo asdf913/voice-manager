@@ -1112,58 +1112,60 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		final Iterable<Entry<String, Object>> entrySet = Util
 				.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class));
 		//
+		if (Util.iterator(entrySet) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
 		IValue0<LayoutManager> iValue0 = null;
 		//
-		if (Util.iterator(entrySet) != null) {
+		AutowireCapableBeanFactory acbf = null;
+		//
+		List<Field> fs = null;
+		//
+		LayoutManager lm = null;
+		//
+		for (final Entry<String, Object> entry : entrySet) {
 			//
-			AutowireCapableBeanFactory acbf = null;
-			//
-			List<Field> fs = null;
-			//
-			LayoutManager lm = null;
-			//
-			for (final Entry<String, Object> entry : entrySet) {
+			if (!(Util.getValue(entry) instanceof LayoutManager)) {
 				//
-				if (!(Util.getValue(entry) instanceof LayoutManager)) {
-					//
-					continue;
-					//
-				} // if
-					//
-				fs = Util.toList(Util.filter(
-						Util.stream(FieldUtils.getAllFieldsList(Util.getClass(
-								acbf = ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext)))),
-						x -> Objects.equals(Util.getName(x), "singletonObjects")));
+				continue;
 				//
-				for (int i = 0; i < IterableUtils.size(fs); i++) {
+			} // if
+				//
+			fs = Util.toList(Util.filter(
+					Util.stream(FieldUtils.getAllFieldsList(Util.getClass(
+							acbf = ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext)))),
+					x -> Objects.equals(Util.getName(x), "singletonObjects")));
+			//
+			for (int i = 0; i < IterableUtils.size(fs); i++) {
+				//
+				if ((lm = Util
+						.cast(LayoutManager.class,
+								FactoryBeanUtil
+										.getObject(Util.cast(FactoryBean.class,
+												MapUtils.getObject(
+														Util.cast(Map.class,
+																Narcissus.getObjectField(acbf,
+																		IterableUtils.get(fs, i))),
+														Util.getKey(entry)))))) != null) {
 					//
-					if ((lm = Util
-							.cast(LayoutManager.class,
-									FactoryBeanUtil
-											.getObject(Util.cast(FactoryBean.class,
-													MapUtils.getObject(
-															Util.cast(Map.class,
-																	Narcissus.getObjectField(acbf,
-																			IterableUtils.get(fs, i))),
-															Util.getKey(entry)))))) != null) {
+					if (iValue0 == null) {
 						//
-						if (iValue0 == null) {
-							//
-							iValue0 = Unit.with(lm);
-							//
-						} else {
-							//
-							throw new IllegalStateException();
-							//
-						} // if
-							//
+						iValue0 = Unit.with(lm);
+						//
+					} else {
+						//
+						throw new IllegalStateException();
+						//
 					} // if
 						//
-				} // for
+				} // if
 					//
 			} // for
 				//
-		} // if
+		} // for
 			//
 		return iValue0;
 		//
