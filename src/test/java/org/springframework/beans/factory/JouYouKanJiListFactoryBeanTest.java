@@ -90,7 +90,7 @@ class JouYouKanJiListFactoryBeanTest {
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -98,7 +98,7 @@ class JouYouKanJiListFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNotNull(getObject(instance));
+		Assertions.assertNotNull(FactoryBeanUtil.getObject(instance));
 		//
 		final IH ih = new IH();
 		//
@@ -110,7 +110,7 @@ class JouYouKanJiListFactoryBeanTest {
 			//
 		ih.exists = Boolean.TRUE;
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -118,7 +118,7 @@ class JouYouKanJiListFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Collections.emptyList(), getObject(instance));
+		Assertions.assertEquals(Collections.emptyList(), FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -126,7 +126,7 @@ class JouYouKanJiListFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		final int one = 1;
 		//
@@ -136,7 +136,7 @@ class JouYouKanJiListFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Collections.singletonList(Integer.toString(one)), getObject(instance));
+		Assertions.assertEquals(Collections.singletonList(Integer.toString(one)), FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -144,7 +144,7 @@ class JouYouKanJiListFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Collections.emptyList(), getObject(instance));
+		Assertions.assertEquals(Collections.emptyList(), FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -153,12 +153,8 @@ class JouYouKanJiListFactoryBeanTest {
 		} // if
 			//
 		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class, "{}",
-				() -> getObject(instance));
+				() -> FactoryBeanUtil.getObject(instance));
 		//
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
-		return instance != null ? instance.getObject() : null;
 	}
 
 	@Test

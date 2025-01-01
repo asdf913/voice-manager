@@ -171,7 +171,7 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 				//
 			} // if
 				//
-			Assertions.assertDoesNotThrow(() -> instance != null ? instance.getObject() : null);
+			Assertions.assertDoesNotThrow(() -> FactoryBeanUtil.getObject(instance));
 			//
 		} // if
 			//

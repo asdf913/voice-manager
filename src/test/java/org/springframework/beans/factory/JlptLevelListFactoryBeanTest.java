@@ -26,7 +26,7 @@ class JlptLevelListFactoryBeanTest {
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(instance != null ? instance.getObject() : null);
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 	}
 

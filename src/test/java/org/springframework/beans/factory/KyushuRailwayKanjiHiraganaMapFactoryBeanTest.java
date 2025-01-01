@@ -50,12 +50,8 @@ class KyushuRailwayKanjiHiraganaMapFactoryBeanTest {
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instnace) throws Exception {
-		return instnace != null ? instnace.getObject() : null;
 	}
 
 	@Test

@@ -244,7 +244,7 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 				//
 			} // if
 				//
-			final List<Link> links = instance != null ? instance.getObject() : null;
+			final List<Link> links = FactoryBeanUtil.getObject(instance);
 			//
 			new FailableStream<>(ObjectUtils.getIfNull(Util.stream(links), Stream::empty)).forEach(x -> {
 				//
@@ -268,7 +268,7 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 				//
 		} else {
 			//
-			Assertions.assertNull(getObject(instance));
+			Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 			//
 		} // if
 			//
@@ -322,7 +322,7 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 		Assertions.assertEquals("[{\"number\":1,\"text\":\"\"}]",
 				ObjectMapperUtil.writeValueAsString(setDefaultPropertyInclusion(
 						build(configure(JsonMapper.builder(), MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true)),
-						Include.NON_NULL), getObject(instance)));
+						Include.NON_NULL), FactoryBeanUtil.getObject(instance)));
 		//
 		if (instance != null) {
 			//
@@ -337,7 +337,7 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 				//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -352,7 +352,7 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 				//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 	}
 
@@ -368,10 +368,6 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 	private static MapperBuilder<JsonMapper, Builder> configure(final MapperBuilder<JsonMapper, Builder> instance,
 			final MapperFeature feature, final boolean state) {
 		return instance != null ? instance.configure(feature, state) : instance;
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
-		return instance != null ? instance.getObject() : null;
 	}
 
 	private static Workbook createWorkbook(final Iterable<Link> links)

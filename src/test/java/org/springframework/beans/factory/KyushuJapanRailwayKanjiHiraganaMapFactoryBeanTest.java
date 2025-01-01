@@ -97,7 +97,7 @@ class KyushuJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -105,7 +105,7 @@ class KyushuJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -113,12 +113,8 @@ class KyushuJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
-		return instance != null ? instance.getObject() : null;
 	}
 
 	@Test

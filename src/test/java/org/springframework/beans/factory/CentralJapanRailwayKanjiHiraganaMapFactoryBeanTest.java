@@ -40,7 +40,7 @@ class CentralJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	@Test
 	void testGetObject() throws Throwable {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -48,7 +48,7 @@ class CentralJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -56,7 +56,7 @@ class CentralJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -64,12 +64,8 @@ class CentralJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(JsonParseException.class, () -> getObject(instance));
+		Assertions.assertThrows(JsonParseException.class, () -> FactoryBeanUtil.getObject(instance));
 		//
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instnace) throws Exception {
-		return instnace != null ? instnace.getObject() : null;
 	}
 
 	@Test

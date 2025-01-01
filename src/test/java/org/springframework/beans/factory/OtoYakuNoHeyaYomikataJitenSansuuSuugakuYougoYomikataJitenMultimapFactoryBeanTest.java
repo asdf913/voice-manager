@@ -112,7 +112,7 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -122,7 +122,7 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		final Link link = Reflection.newProxy(Link.class, new IH());
 		//
@@ -132,7 +132,7 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -140,7 +140,7 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 			//
 		} // if
 			//
-		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
+		Assertions.assertThrows(IllegalStateException.class, () -> FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -152,7 +152,7 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -160,7 +160,7 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 			//
 		} // if
 			//
-		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
+		Assertions.assertThrows(IllegalStateException.class, () -> FactoryBeanUtil.getObject(instance));
 		//
 		final Map<Object, Object> properties = System.getProperties();
 		//
@@ -176,7 +176,7 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 				//
 			} // if
 				//
-			final Multimap<String, String> multimap = getObject(instance);
+			final Multimap<String, String> multimap = FactoryBeanUtil.getObject(instance);
 			//
 			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
 			//
@@ -223,10 +223,6 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 			//
 		} // if
 			//
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
-		return instance != null ? instance.getObject() : null;
 	}
 
 	private static Row createRow(final Sheet instance) {

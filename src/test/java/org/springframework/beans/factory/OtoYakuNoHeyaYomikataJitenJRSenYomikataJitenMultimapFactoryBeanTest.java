@@ -89,7 +89,7 @@ class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -97,7 +97,7 @@ class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -105,7 +105,7 @@ class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		final Link link = Reflection.newProxy(Link.class, ih);
 		//
@@ -115,7 +115,7 @@ class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
+		Assertions.assertThrows(IllegalStateException.class, () -> FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -123,7 +123,7 @@ class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -131,11 +131,11 @@ class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		FieldUtils.writeDeclaredField(instance, "text", null, true);
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -143,7 +143,7 @@ class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -151,7 +151,7 @@ class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -159,7 +159,7 @@ class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
+		Assertions.assertThrows(IllegalStateException.class, () -> FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -167,7 +167,7 @@ class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		final Map<Object, Object> properties = System.getProperties();
 		//
@@ -185,16 +185,12 @@ class OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBeanTest {
 				//
 			final File file = Path.of("OtoYakuNoHeyaYomikataJitenJRSenYomikataJitenMultimapFactoryBean.txt").toFile();
 			//
-			FileUtils.writeLines(file, MultimapUtil.entries(getObject(instance)));
+			FileUtils.writeLines(file, MultimapUtil.entries(FactoryBeanUtil.getObject(instance)));
 			//
 			System.out.println(file.getAbsolutePath());
 			//
 		} // if
 			//
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
-		return instance != null ? instance.getObject() : null;
 	}
 
 	@Test

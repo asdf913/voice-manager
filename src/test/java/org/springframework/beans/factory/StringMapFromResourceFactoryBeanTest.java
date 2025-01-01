@@ -164,7 +164,7 @@ class StringMapFromResourceFactoryBeanTest {
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -174,7 +174,7 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 		FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		// org.springframework.beans.factory.HSSFWorkbook
 		//
@@ -192,7 +192,7 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 			AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
 					"{localizedMessage=There is no sheet in the workbook, message=There is no sheet in the workbook}",
-					() -> getObject(instance));
+					() -> FactoryBeanUtil.getObject(instance));
 			//
 		} // try
 			//
@@ -212,7 +212,7 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 			AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
 					"{localizedMessage=There is no sheet in the workbook, message=There is no sheet in the workbook}",
-					() -> getObject(instance));
+					() -> FactoryBeanUtil.getObject(instance));
 			//
 		} // try
 			//
@@ -232,7 +232,7 @@ class StringMapFromResourceFactoryBeanTest {
 			//
 			AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
 					"{localizedMessage=There are more than one sheet in the workbook, message=There are more than one sheet in the workbook}",
-					() -> getObject(instance));
+					() -> FactoryBeanUtil.getObject(instance));
 			//
 		} // try
 			//
@@ -250,7 +250,7 @@ class StringMapFromResourceFactoryBeanTest {
 				//
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
-			Assertions.assertNull(getObject(instance));
+			Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 			//
 		} // try
 			//
@@ -278,7 +278,7 @@ class StringMapFromResourceFactoryBeanTest {
 				//
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
-			Assertions.assertEquals(Collections.emptyMap(), getObject(instance));
+			Assertions.assertEquals(Collections.emptyMap(), FactoryBeanUtil.getObject(instance));
 			//
 		} // try
 			//
@@ -304,7 +304,7 @@ class StringMapFromResourceFactoryBeanTest {
 				//
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
-			Assertions.assertEquals(Collections.emptyMap(), getObject(instance));
+			Assertions.assertEquals(Collections.emptyMap(), FactoryBeanUtil.getObject(instance));
 			//
 		} // try
 			//
@@ -330,11 +330,11 @@ class StringMapFromResourceFactoryBeanTest {
 				//
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
-			final Map<String, String> map = getObject(instance);
+			final Map<String, String> map = FactoryBeanUtil.getObject(instance);
 			//
 			Assertions.assertEquals(Collections.emptyMap(), map);
 			//
-			Assertions.assertSame(map, getObject(instance));
+			Assertions.assertSame(map, FactoryBeanUtil.getObject(instance));
 			//
 		} // try
 			//
@@ -359,7 +359,8 @@ class StringMapFromResourceFactoryBeanTest {
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
 			AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
-					"{localizedMessage=Sheet [ ] not found, message=Sheet [ ] not found}", () -> getObject(instance));
+					"{localizedMessage=Sheet [ ] not found, message=Sheet [ ] not found}",
+					() -> FactoryBeanUtil.getObject(instance));
 			//
 		} // try
 			//
@@ -377,14 +378,10 @@ class StringMapFromResourceFactoryBeanTest {
 				//
 			FieldUtils.writeDeclaredField(instance, "iValue0", null, true);
 			//
-			Assertions.assertNull(getObject(instance));
+			Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 			//
 		} // try
 			//
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
-		return instance != null ? instance.getObject() : null;
 	}
 
 	@Test

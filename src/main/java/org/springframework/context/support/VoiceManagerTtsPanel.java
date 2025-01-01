@@ -95,6 +95,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.FactoryBeanUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -318,12 +319,17 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 					testAndAccept(
 							Objects::nonNull, Util
 									.cast(LayoutManager.class,
-											getObject(Util.cast(FactoryBean.class,
-													MapUtils.getObject(
-															Util.cast(Map.class,
-																	Narcissus.getObjectField(acbf,
-																			IterableUtils.get(fs, i))),
-															Util.getKey(entry))))),
+											FactoryBeanUtil
+													.getObject(
+															Util.cast(
+																	FactoryBean.class, MapUtils
+																			.getObject(
+																					Util.cast(Map.class,
+																							Narcissus.getObjectField(
+																									acbf,
+																									IterableUtils.get(
+																											fs, i))),
+																					Util.getKey(entry))))),
 							this::setLayout);
 					//
 				} // for
@@ -545,11 +551,6 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 						null)), 0),
 				cs);
 		//
-	}
-
-	@Nullable
-	private static <T> T getObject(@Nullable final FactoryBean<T> instance) throws Exception {
-		return instance != null ? instance.getObject() : null;
 	}
 
 	private static <T, E extends Throwable> void forEach(@Nullable final Iterable<T> items,

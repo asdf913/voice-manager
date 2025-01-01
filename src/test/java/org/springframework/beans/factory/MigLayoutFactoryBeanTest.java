@@ -133,37 +133,42 @@ class MigLayoutFactoryBeanTest {
 		//
 		Assertions.assertEquals(
 				"MigLayout[colConstraints=,lastSize=0,layoutConstraints=,rowConstraints=,scrConstrMap={}]",
-				ToStringBuilder.reflectionToString(instance.getObject(), ToStringStyle.SHORT_PREFIX_STYLE));
+				ToStringBuilder.reflectionToString(FactoryBeanUtil.getObject(instance),
+						ToStringStyle.SHORT_PREFIX_STYLE));
 		//
 		instance.setArguments(new String[] {});
 		//
 		Assertions.assertEquals(
 				"MigLayout[colConstraints=,lastSize=0,layoutConstraints=,rowConstraints=,scrConstrMap={}]",
-				ToStringBuilder.reflectionToString(instance.getObject(), ToStringStyle.SHORT_PREFIX_STYLE));
+				ToStringBuilder.reflectionToString(FactoryBeanUtil.getObject(instance),
+						ToStringStyle.SHORT_PREFIX_STYLE));
 		//
 		instance.setArguments(new String[] { "" });
 		//
 		Assertions.assertEquals(
 				"MigLayout[colConstraints=,lastSize=0,layoutConstraints=,rowConstraints=,scrConstrMap={}]",
-				ToStringBuilder.reflectionToString(instance.getObject(), ToStringStyle.SHORT_PREFIX_STYLE));
+				ToStringBuilder.reflectionToString(FactoryBeanUtil.getObject(instance),
+						ToStringStyle.SHORT_PREFIX_STYLE));
 		//
 		instance.setArguments(new String[] { "", "" });
 		//
 		Assertions.assertEquals(
 				"MigLayout[colConstraints=,lastSize=0,layoutConstraints=,rowConstraints=,scrConstrMap={}]",
-				ToStringBuilder.reflectionToString(instance.getObject(), ToStringStyle.SHORT_PREFIX_STYLE));
+				ToStringBuilder.reflectionToString(FactoryBeanUtil.getObject(instance),
+						ToStringStyle.SHORT_PREFIX_STYLE));
 		//
 		instance.setArguments(new String[] { "", "", "" });
 		//
 		Assertions.assertEquals(
 				"MigLayout[colConstraints=,lastSize=0,layoutConstraints=,rowConstraints=,scrConstrMap={}]",
-				ToStringBuilder.reflectionToString(instance.getObject(), ToStringStyle.SHORT_PREFIX_STYLE));
+				ToStringBuilder.reflectionToString(FactoryBeanUtil.getObject(instance),
+						ToStringStyle.SHORT_PREFIX_STYLE));
 		//
 		instance.setArguments(new String[] { "", "", "", "" });
 		//
 		AssertionsUtil.assertThrowsAndEquals(IllegalStateException.class,
 				"{localizedMessage=java.lang.reflect.Constructor is null, message=java.lang.reflect.Constructor is null}",
-				() -> instance.getObject());
+				() -> FactoryBeanUtil.getObject(instance));
 		//
 	}
 

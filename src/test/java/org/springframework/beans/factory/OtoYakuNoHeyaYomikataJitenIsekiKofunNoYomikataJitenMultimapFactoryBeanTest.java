@@ -89,7 +89,7 @@ class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBeanTest
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		final Entry<Field, Object> entry = TestUtil.getFieldWithUrlAnnotationAndValue(
 				OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBean.class);
@@ -98,24 +98,20 @@ class OtoYakuNoHeyaYomikataJitenIsekiKofunNoYomikataJitenMultimapFactoryBeanTest
 		//
 		Narcissus.setObjectField(instance, url, "");
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		Narcissus.setObjectField(instance, url, " ");
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (isSystemPropertiesContainsTestGetObject) {
 			//
 			Narcissus.setObjectField(instance, url, Util.getValue(entry));
 			//
-			Assertions.assertDoesNotThrow(() -> getObject(instance));
+			Assertions.assertDoesNotThrow(() -> FactoryBeanUtil.getObject(instance));
 			//
 		} // if
 			//
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
-		return instance != null ? instance.getObject() : null;
 	}
 
 	@Test

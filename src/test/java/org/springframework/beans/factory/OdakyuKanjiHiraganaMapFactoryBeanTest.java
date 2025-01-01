@@ -46,7 +46,7 @@ class OdakyuKanjiHiraganaMapFactoryBeanTest {
 	@Test
 	void testGetObject() throws Throwable {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		Assertions.assertNull(getObject(Collections.singletonList(null)));
 		//
@@ -65,10 +65,6 @@ class OdakyuKanjiHiraganaMapFactoryBeanTest {
 		//
 		Assertions.assertEquals(Collections.singletonMap("", ""), getObject(elements));
 		//
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instnace) throws Exception {
-		return instnace != null ? instnace.getObject() : null;
 	}
 
 	private static Map<String, String> getObject(final List<Element> es) throws Throwable {

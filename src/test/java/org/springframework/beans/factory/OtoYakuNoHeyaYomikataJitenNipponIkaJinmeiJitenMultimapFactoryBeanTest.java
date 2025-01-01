@@ -127,7 +127,7 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -135,7 +135,7 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -143,7 +143,7 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		final Link link = Reflection.newProxy(Link.class, ih);
 		//
@@ -153,7 +153,7 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -161,7 +161,7 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
+		Assertions.assertThrows(IllegalStateException.class, () -> FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -171,7 +171,7 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			//
 		FieldUtils.writeDeclaredField(instance, "text", null, true);
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -179,7 +179,7 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		final Map<Object, Object> properties = System.getProperties();
 		//
@@ -212,7 +212,7 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 					//
 			} // if
 				//
-			final Multimap<String, String> multimap = getObject(instance);
+			final Multimap<String, String> multimap = FactoryBeanUtil.getObject(instance);
 			//
 			final Iterable<Entry<String, String>> entries = MultimapUtil.entries(multimap);
 			//
@@ -264,7 +264,7 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(IllegalArgumentException.class, () -> getObject(instance));
+		Assertions.assertThrows(IllegalArgumentException.class, () -> FactoryBeanUtil.getObject(instance));
 		//
 		final Decoder decoder = Base64.getDecoder();
 		//
@@ -275,7 +275,7 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (Util.containsKey(properties,
 				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBean.sheetName")) {
@@ -287,7 +287,7 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 				//
 			} // if
 				//
-			Assertions.assertNull(getObject(instance));
+			Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 			//
 		} // if
 			//
@@ -321,10 +321,6 @@ class OtoYakuNoHeyaYomikataJitenNipponIkaJinmeiJitenMultimapFactoryBeanTest {
 			//
 		return p;
 		//
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
-		return instance != null ? instance.getObject() : null;
 	}
 
 	@Test

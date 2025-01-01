@@ -180,7 +180,7 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 	@Test
 	void testGetObject() throws Throwable {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -189,7 +189,8 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 		} // if
 			//
 		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
-				"{localizedMessage=URI is not absolute, message=URI is not absolute}", () -> getObject(instance));
+				"{localizedMessage=URI is not absolute, message=URI is not absolute}",
+				() -> FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -204,7 +205,8 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 		} // if
 			//
 		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
-				"{localizedMessage=URI is not absolute, message=URI is not absolute}", () -> getObject(instance));
+				"{localizedMessage=URI is not absolute, message=URI is not absolute}",
+				() -> FactoryBeanUtil.getObject(instance));
 		//
 		if (ih != null) {
 			//
@@ -213,7 +215,8 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 		} // if
 			//
 		AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
-				"{localizedMessage=URI is not absolute, message=URI is not absolute}", () -> getObject(instance));
+				"{localizedMessage=URI is not absolute, message=URI is not absolute}",
+				() -> FactoryBeanUtil.getObject(instance));
 		//
 		try (final InputStream is = new ByteArrayInputStream("".getBytes())) {
 			//
@@ -224,7 +227,8 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 			} // if
 				//
 			AssertionsUtil.assertThrowsAndEquals(IllegalArgumentException.class,
-					"{localizedMessage=URI is not absolute, message=URI is not absolute}", () -> getObject(instance));
+					"{localizedMessage=URI is not absolute, message=URI is not absolute}",
+					() -> FactoryBeanUtil.getObject(instance));
 			//
 		} // try
 			//
@@ -339,10 +343,6 @@ class GaKuNenBeTsuKanJiMultimapFactoryBeanTest {
 
 	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
-		return instance != null ? instance.getObject() : null;
 	}
 
 	@Test

@@ -94,7 +94,7 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -104,7 +104,7 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		final Link link = Reflection.newProxy(Link.class, new IH());
 		//
@@ -114,7 +114,7 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -122,7 +122,7 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
+		Assertions.assertThrows(IllegalStateException.class, () -> FactoryBeanUtil.getObject(instance));
 		//
 		FieldUtils.writeDeclaredField(instance, "text", null, true);
 		//
@@ -132,7 +132,7 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			///
-		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
+		Assertions.assertThrows(IllegalStateException.class, () -> FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -140,11 +140,11 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		FieldUtils.writeDeclaredField(instance, "description", null, true);
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		final Map<Object, Object> properties = System.getProperties();
 		//
@@ -160,16 +160,12 @@ class OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBeanTest {
 				//
 			final File file = Path.of("OtoYakuNoHeyaYomikataJitenTennoYomikataJitenMultimapFactoryBean.txt").toFile();
 			//
-			FileUtils.writeLines(file, MultimapUtil.entries(getObject(instance)));
+			FileUtils.writeLines(file, MultimapUtil.entries(FactoryBeanUtil.getObject(instance)));
 			//
 			System.out.println(file.getAbsolutePath());
 			//
 		} // if
 			//
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
-		return instance != null ? instance.getObject() : null;
 	}
 
 	@Test

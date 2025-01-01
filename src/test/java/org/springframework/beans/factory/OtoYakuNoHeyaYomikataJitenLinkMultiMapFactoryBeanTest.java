@@ -158,7 +158,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -166,7 +166,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -174,7 +174,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -182,7 +182,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		final Map<?, ?> systemProperties = System.getProperties();
 		//
@@ -191,7 +191,7 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 			instance.setUrl(Util.toString(Util.get(systemProperties,
 					"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.url")));
 			//
-			Assertions.assertNotNull(getObject(instance));
+			Assertions.assertNotNull(FactoryBeanUtil.getObject(instance));
 			//
 		} //
 			//
@@ -200,10 +200,6 @@ class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBeanTest {
 	private static boolean isUrlSet(final Map<?, ?> map) {
 		return Util.containsKey(map,
 				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean.url");
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
-		return instance != null ? instance.getObject() : null;
 	}
 
 	@Test

@@ -111,7 +111,7 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -119,7 +119,7 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Collections.emptyMap(), getObject(instance));
+		Assertions.assertEquals(Collections.emptyMap(), FactoryBeanUtil.getObject(instance));
 		//
 		final File file = Path.of("pom.xml").toFile();
 		//
@@ -131,12 +131,8 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(Collections.emptyMap(), getObject(instance));
+		Assertions.assertEquals(Collections.emptyMap(), FactoryBeanUtil.getObject(instance));
 		//
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instnace) throws Exception {
-		return instnace != null ? instnace.getObject() : null;
 	}
 
 	@Test

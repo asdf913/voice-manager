@@ -139,7 +139,7 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 	@Test
 	void testGetObject() throws Throwable {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -149,9 +149,9 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		Assertions.assertNull(getObject(null, null, null));
 		//
@@ -171,10 +171,6 @@ class OdakyuBusKanjiHiraganaMapFactoryBeanTest {
 								ObjectMapperUtil.readValue(objectMapper, "{\"code\":null,\"count\":1}", Object.class)),
 						null));
 		//
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
-		return instance != null ? instance.getObject() : null;
 	}
 
 	private static Map<String, String> getObject(final Configuration configuration, final List<?> items,

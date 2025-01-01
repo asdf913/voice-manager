@@ -36,7 +36,7 @@ class AllowedRomajiCharacterArrayFactoryBeanTest {
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(instance != null ? instance.getObject() : null);
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -44,7 +44,7 @@ class AllowedRomajiCharacterArrayFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(instance != null ? instance.getObject() : null);
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 	}
 

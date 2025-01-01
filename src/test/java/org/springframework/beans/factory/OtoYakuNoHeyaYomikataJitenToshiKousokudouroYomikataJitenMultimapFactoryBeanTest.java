@@ -145,7 +145,7 @@ class OtoYakuNoHeyaYomikataJitenToshiKousokudouroYomikataJitenMultimapFactoryBea
 			//
 			Narcissus.setObjectField(instance, url, entry != null ? entry.getValue() : null);
 			//
-			Assertions.assertDoesNotThrow(() -> instance != null ? instance.getObject() : null);
+			Assertions.assertDoesNotThrow(() -> FactoryBeanUtil.getObject(instance));
 			//
 		} // if
 			//

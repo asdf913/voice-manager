@@ -45,7 +45,7 @@ class BufferedImageTypeFactoryBeanTest {
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		// java.lang.Number
 		//
@@ -53,7 +53,7 @@ class BufferedImageTypeFactoryBeanTest {
 		//
 		setValue(instance, Integer.valueOf(one));
 		//
-		Assertions.assertEquals(Integer.valueOf(one), getObject(instance));
+		Assertions.assertEquals(Integer.valueOf(one), FactoryBeanUtil.getObject(instance));
 		//
 		// java.lang.CharSequence
 		//
@@ -61,30 +61,27 @@ class BufferedImageTypeFactoryBeanTest {
 		//
 		setValue(instance, empty);
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		setValue(instance, empty.toCharArray());
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		setValue(instance, empty.getBytes());
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		setValue(instance, Integer.toString(one));
 		//
-		Assertions.assertEquals(Integer.valueOf(one), getObject(instance));
+		Assertions.assertEquals(Integer.valueOf(one), FactoryBeanUtil.getObject(instance));
 		//
 		final String string = "TYPE_INT_ARGB";
 		//
 		setValue(instance, string);
 		//
-		Assertions.assertEquals(FieldUtils.readDeclaredStaticField(BufferedImage.class, string), getObject(instance));
+		Assertions.assertEquals(FieldUtils.readDeclaredStaticField(BufferedImage.class, string),
+				FactoryBeanUtil.getObject(instance));
 		//
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instnace) throws Exception {
-		return instnace != null ? instnace.getObject() : null;
 	}
 
 	private static void setValue(final BufferedImageTypeFactoryBean instance, final Object value) {

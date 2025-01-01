@@ -56,25 +56,25 @@ class YojijukugoMultimapFactoryBeanTest {
 	@Test
 	void testGetObject() throws Throwable {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		instance.setUrl("");
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		instance.setUrl(" ");
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		instance.setUrl(Util.toString(Path.of("pom.xml").toFile().toURI().toURL()));
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		// org.springframework.beans.factory.YojijukugoMultimapFactoryBean.resource
 		//
 		instance.setResource(new ByteArrayResource("".getBytes()));
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		byte[] bs = null;
 		//
@@ -88,7 +88,7 @@ class YojijukugoMultimapFactoryBeanTest {
 			//
 		instance.setResource(new ByteArrayResource(bs));
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		// 1 Sheet and 1 Row
 		//
@@ -140,18 +140,14 @@ class YojijukugoMultimapFactoryBeanTest {
 			//
 		instance.setResource(new ByteArrayResource(bs));
 		//
-		Assertions.assertEquals("{=[]}", Util.toString(getObject(instance)));
+		Assertions.assertEquals("{=[]}", Util.toString(FactoryBeanUtil.getObject(instance)));
 		//
 		// org.odftoolkit.simple.SpreadsheetDocument
 		//
 		instance.setResource(new ClassPathResource("yojijukugo.ods"));
 		//
-		Assertions.assertNotNull(getObject(instance));
+		Assertions.assertNotNull(FactoryBeanUtil.getObject(instance));
 		//
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
-		return instance != null ? instance.getObject() : null;
 	}
 
 	@Test

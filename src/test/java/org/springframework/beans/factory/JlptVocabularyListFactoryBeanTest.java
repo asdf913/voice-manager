@@ -209,7 +209,7 @@ class JlptVocabularyListFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -217,7 +217,7 @@ class JlptVocabularyListFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		// java.io.File.File
 		//
@@ -227,7 +227,7 @@ class JlptVocabularyListFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNotNull(getObject(instance));
+		Assertions.assertNotNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -235,7 +235,7 @@ class JlptVocabularyListFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNotNull(getObject(instance));
+		Assertions.assertNotNull(FactoryBeanUtil.getObject(instance));
 		//
 		// org.springframework.core.io.Resource
 		//
@@ -253,7 +253,7 @@ class JlptVocabularyListFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		try (final InputStream is = new ByteArrayInputStream(EMPTY.getBytes())) {
 			//
@@ -263,7 +263,7 @@ class JlptVocabularyListFactoryBeanTest {
 				//
 			} // if
 				//
-			Assertions.assertNull(getObject(instance));
+			Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 			//
 		} // try
 			//
@@ -288,7 +288,7 @@ class JlptVocabularyListFactoryBeanTest {
 				//
 			} // if
 				//
-			Assertions.assertNull(getObject(instance));
+			Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 			//
 		} // try
 			//
@@ -329,10 +329,12 @@ class JlptVocabularyListFactoryBeanTest {
 				//
 			} // if
 				//
-			Assertions.assertEquals(String.format("[{\"level\":\"%1$s\"}]", level),
-					ObjectMapperUtil
-							.writeValueAsString(new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY)
-									.setSerializationInclusion(Include.NON_NULL), getObject(instance)));
+			Assertions
+					.assertEquals(String.format("[{\"level\":\"%1$s\"}]", level),
+							ObjectMapperUtil.writeValueAsString(
+									new ObjectMapper().setVisibility(PropertyAccessor.ALL, Visibility.ANY)
+											.setSerializationInclusion(Include.NON_NULL),
+									FactoryBeanUtil.getObject(instance)));
 			//
 		} // try
 			//
@@ -348,14 +350,10 @@ class JlptVocabularyListFactoryBeanTest {
 				//
 			AssertionsUtil.assertThrowsAndEquals(EmptyFileException.class,
 					"{localizedMessage=The supplied file was empty (zero bytes long), message=The supplied file was empty (zero bytes long)}",
-					() -> getObject(instance));
+					() -> FactoryBeanUtil.getObject(instance));
 			//
 		} // try
 			//
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
-		return instance != null ? instance.getObject() : null;
 	}
 
 	@Test

@@ -110,7 +110,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		final Map<Object, Object> properties = System.getProperties();
 		//
@@ -120,7 +120,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		final Link link = Reflection.newProxy(Link.class, new IH());
 		//
@@ -132,7 +132,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
+		Assertions.assertThrows(IllegalStateException.class, () -> FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -140,7 +140,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -148,7 +148,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -156,7 +156,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -164,7 +164,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -176,7 +176,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(IllegalStateException.class, () -> getObject(instance));
+		Assertions.assertThrows(IllegalStateException.class, () -> FactoryBeanUtil.getObject(instance));
 		//
 		if (Util.containsKey(properties,
 				"org.springframework.beans.factory.TiZuKiGouKanjiHiraganaMapFactoryBean.url")) {
@@ -191,7 +191,7 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 				//
 				final Sheet sheet = WorkbookUtil.createSheet(wb);
 				//
-				final Iterable<Entry<String, String>> entrySet = Util.entrySet(getObject(instance));
+				final Iterable<Entry<String, String>> entrySet = Util.entrySet(FactoryBeanUtil.getObject(instance));
 				//
 				if (Util.iterator(entrySet) != null) {
 					//
@@ -236,10 +236,6 @@ class TiZuKiGouKanjiHiraganaMapFactoryBeanTest {
 
 	private static Cell createCell(final Row instance) {
 		return instance != null ? instance.createCell(instance.getPhysicalNumberOfCells()) : null;
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
-		return instance != null ? instance.getObject() : null;
 	}
 
 	@Test

@@ -57,7 +57,7 @@ class OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBeanTest {
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -65,7 +65,7 @@ class OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals(ImmutableMultimap.of(), getObject(instance));
+		Assertions.assertEquals(ImmutableMultimap.of(), FactoryBeanUtil.getObject(instance));
 		//
 		final Map<Object, Object> systemProperties = System.getProperties();
 		//
@@ -83,7 +83,7 @@ class OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBeanTest {
 			//
 		} // if
 			//
-		final Multimap<String, Frame> fs = getObject(instance);
+		final Multimap<String, Frame> fs = FactoryBeanUtil.getObject(instance);
 		//
 		Assertions.assertEquals("{\"empty\":false}", ObjectMapperUtil.writeValueAsString(
 				objectMapper != null ? objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY) : null, fs));
@@ -91,10 +91,6 @@ class OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBeanTest {
 		new FailableStream<>(Util.stream(fs != null ? fs.values() : null))
 				.forEach(x -> ObjectMapperUtil.writeValueAsString(new ObjectMapper(), x));
 		//
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
-		return instance != null ? instance.getObject() : null;
 	}
 
 	@Test

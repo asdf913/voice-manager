@@ -60,11 +60,11 @@ class JapaneseNameMultimapFactoryBeanTest {
 	@Test
 	void testGetObject() throws Throwable {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		instance.setUrl(Path.of("pom.xml").toFile().toURI().toURL().toString());
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		byte[] bs = null;
 		//
@@ -98,7 +98,7 @@ class JapaneseNameMultimapFactoryBeanTest {
 			//
 		setResource(instance, new ByteArrayResource(bs));
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		// 2 Row(s) with 2 Cell(s) respectively
 		//
@@ -132,7 +132,7 @@ class JapaneseNameMultimapFactoryBeanTest {
 			//
 		setResource(instance, new ByteArrayResource(bs));
 		//
-		Assertions.assertEquals("{=[]}", Util.toString(getObject(instance)));
+		Assertions.assertEquals("{=[]}", Util.toString(FactoryBeanUtil.getObject(instance)));
 		//
 		// xls
 		//
@@ -146,7 +146,7 @@ class JapaneseNameMultimapFactoryBeanTest {
 			//
 		setResource(instance, new ByteArrayResource(bs));
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 	}
 
@@ -154,10 +154,6 @@ class JapaneseNameMultimapFactoryBeanTest {
 		if (instance != null) {
 			instance.setResource(resource);
 		}
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
-		return instance != null ? instance.getObject() : null;
 	}
 
 	@Test

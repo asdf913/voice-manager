@@ -82,7 +82,7 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 		//
 		final Multimap<?, ?> multimap = ImmutableMultimap.of();
 		//
-		Assertions.assertEquals(multimap, getObject(instance));
+		Assertions.assertEquals(multimap, FactoryBeanUtil.getObject(instance));
 		//
 		final Entry<Field, Object> entry = TestUtil.getFieldWithUrlAnnotationAndValue(
 				OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBean.class);
@@ -91,24 +91,20 @@ class OtoYakuNoHeyaYomikataJitenNengouGengouNoYomikataJitenMultimapFactoryBeanTe
 		//
 		Narcissus.setObjectField(instance, url, "");
 		//
-		Assertions.assertEquals(multimap, getObject(instance));
+		Assertions.assertEquals(multimap, FactoryBeanUtil.getObject(instance));
 		//
 		Narcissus.setObjectField(instance, url, " ");
 		//
-		Assertions.assertEquals(multimap, getObject(instance));
+		Assertions.assertEquals(multimap, FactoryBeanUtil.getObject(instance));
 		//
 		if (isSystemPropertiesContainsTestGetObject) {
 			//
 			Narcissus.setObjectField(instance, url, Util.getValue(entry));
 			//
-			Assertions.assertDoesNotThrow(() -> getObject(instance));
+			Assertions.assertDoesNotThrow(() -> FactoryBeanUtil.getObject(instance));
 			//
 		} // if
 			//
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
-		return instance != null ? instance.getObject() : null;
 	}
 
 	@Test

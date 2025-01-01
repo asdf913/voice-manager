@@ -107,7 +107,7 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 	@Test
 	void testGetObject() throws Exception {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -115,7 +115,7 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -123,7 +123,7 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -131,7 +131,7 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -139,12 +139,8 @@ class AccentDictionaryForJapaneseEducationMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNotNull(getObject(instance));
+		Assertions.assertNotNull(FactoryBeanUtil.getObject(instance));
 		//
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instnace) throws Exception {
-		return instnace != null ? instnace.getObject() : null;
 	}
 
 	@Test

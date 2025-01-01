@@ -87,7 +87,7 @@ class IpaMultimapFactoryBeanTest {
 	@Test
 	void testGetObject() throws Throwable {
 		//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (instance != null) {
 			//
@@ -101,7 +101,7 @@ class IpaMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		if (ih != null) {
 			//
@@ -109,7 +109,7 @@ class IpaMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(getObject(instance));
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
 		//
 		final String key = "KEY";
 		//
@@ -126,7 +126,7 @@ class IpaMultimapFactoryBeanTest {
 			} // if
 				//
 			Assertions.assertEquals(Util.toString(ImmutableMultimap.of(key, value)),
-					Util.toString(getObject(instance)));
+					Util.toString(FactoryBeanUtil.getObject(instance)));
 			//
 		} // try
 			//
@@ -136,12 +136,8 @@ class IpaMultimapFactoryBeanTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> getObject(instance));
+		Assertions.assertDoesNotThrow(() -> FactoryBeanUtil.getObject(instance));
 		//
-	}
-
-	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
-		return instance != null ? instance.getObject() : null;
 	}
 
 }
