@@ -305,9 +305,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	@Note("File Digest")
 	private JTextComponent tfFileDigest = null;
 
-	@Note("Current Processing Voice")
-	private JTextComponent tfCurrentProcessingVoice = null;
-
 	@Note("DLL Path")
 	private JTextComponent tfDllPath = null;
 
@@ -2595,8 +2592,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
-		//
-		accept(x -> Util.setText(x, null), tfCurrentProcessingVoice);
 		//
 		clear(tmImportResult);
 		//
