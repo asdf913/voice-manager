@@ -194,6 +194,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 	@Url("https://www.microsoft.com/en-us/download/details.aspx?id=27224")
 	private String microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl = null;
 
+	@Nullable
 	private transient IValue0<String> microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle = null;
 
 	private JTextComponent tfDllPath, tfExportFile = null;
