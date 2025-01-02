@@ -1456,6 +1456,12 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		}
 
+		private static void browse(@Nullable final Desktop instance, final URI uri) throws IOException {
+			if (instance != null) {
+				instance.browse(uri);
+			}
+		}
+
 		private JLabelLink(@Nullable final ATag aTag) {
 			//
 			super(getChildrenAsString(aTag));
@@ -2112,12 +2118,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	@Nullable
 	private static String encodeToString(@Nullable final Encoder instance, @Nullable final byte[] src) {
 		return instance != null && src != null ? instance.encodeToString(src) : null;
-	}
-
-	private static void browse(@Nullable final Desktop instance, final URI uri) throws IOException {
-		if (instance != null) {
-			instance.browse(uri);
-		}
 	}
 
 	@Nullable
