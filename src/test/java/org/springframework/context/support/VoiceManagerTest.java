@@ -3491,8 +3491,7 @@ class VoiceManagerTest {
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
-			if ((m = ms[i]) == null // || !Modifier.isStatic(m.getModifiers())
-					|| m.isSynthetic()
+			if ((m = ms[i]) == null || m.isSynthetic()
 					|| Boolean.logicalAnd(Objects.equals(Util.getName(m), "main"),
 							Arrays.equals(m.getParameterTypes(), new Class<?>[] { String[].class }))
 					|| and(!GraphicsEnvironment.isHeadless(),
@@ -3500,7 +3499,9 @@ class VoiceManagerTest {
 							m.getParameterCount() == 0)
 					|| and(!Objects.equals(Util.getName(Util.getClass(provider(FileSystems.getDefault()))),
 							"sun.nio.fs.WindowsFileSystemProvider"),
-							Objects.equals(Util.getName(m), "getOsVersionInfoEx"), m.getParameterCount() == 0)) {
+							Util.contains(Arrays.asList("getOsVersionInfoEx", "getOsVersionInfoExMap"),
+									Util.getName(m)),
+							m.getParameterCount() == 0)) {
 				//
 				continue;
 				//
