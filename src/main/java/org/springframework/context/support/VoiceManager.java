@@ -2951,14 +2951,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 	}
 
-	private static <T> boolean anyMatch(@Nullable final Stream<T> instance,
-			@Nullable final Predicate<? super T> predicate) {
-		//
-		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
-				&& instance.anyMatch(predicate);
-		//
-	}
-
 	private static interface ObjectMap {
 
 		@Nullable
