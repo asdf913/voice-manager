@@ -257,7 +257,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		return instance != null ? instance.longValue() : defaultValue;
 	}
 
-	private static boolean isFile(final File instance) {
+	private static boolean isFile(@Nullable final File instance) {
 		return instance != null && instance.isFile();
 	}
 
@@ -326,12 +326,6 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 
 			});
 			//
-		}
-
-		private static void browse(final Desktop instance, final URI uri) throws IOException {
-			if (instance != null) {
-				instance.browse(uri);
-			}
 		}
 
 		private JLabelLink(final ATag aTag) {
@@ -661,7 +655,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 	}
 
-	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner) {
+	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
+			final ClipboardOwner owner) {
 		if (instance != null) {
 			instance.setContents(contents, owner);
 		}
@@ -672,7 +667,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		return instance != null ? instance.getSystemClipboard() : null;
 	}
 
-	private static <E extends Throwable> void testAndRun(final boolean b, final FailableRunnable<E> runnable) throws E {
+	private static <E extends Throwable> void testAndRun(final boolean b, @Nullable final FailableRunnable<E> runnable)
+			throws E {
 		//
 		if (b && runnable != null) {
 			//
@@ -732,6 +728,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 
 		<T> void setObject(final Class<T> key, final T value);
 
+		@Nullable
 		static <T> T getObject(@Nullable final ObjectMap instance, final Class<T> key) {
 			return instance != null ? instance.getObject(key) : null;
 		}
@@ -885,7 +882,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 
 		@Nullable
 		private static IValue0<Object> handleObjectMap(final String methodName, final Map<Object, Object> map,
-				final Object[] args) {
+				@Nullable final Object[] args) {
 			//
 			if (Objects.equals(methodName, "getObject") && args != null && args.length > 0) {
 				//
@@ -916,7 +913,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 		}
 
-		private static boolean isArray(final OfField<?> instance) {
+		private static boolean isArray(@Nullable final OfField<?> instance) {
 			return instance != null && instance.isArray();
 		}
 
@@ -995,7 +992,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 	}
 
 	private static void setMicrosoftSpeechObjectLibrarySheetFirstRow(@Nullable final Sheet sheet,
-			final String[] columnNames) {
+			@Nullable final String[] columnNames) {
 		//
 		final Row row = sheet != null ? SheetUtil.createRow(sheet, sheet.getLastRowNum() + 1) : null;
 		//
@@ -1087,7 +1084,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 	}
 
 	@Nullable
-	private static Row addLocaleIdRow(final ObjectMap objectMap, final List<Field> fs, final Object instance) {
+	private static Row addLocaleIdRow(final ObjectMap objectMap, @Nullable final List<Field> fs,
+			final Object instance) {
 		//
 		final Sheet sheet = ObjectMap.getObject(objectMap, Sheet.class);
 		//
@@ -1135,7 +1133,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 	}
 
-	private static void addLocaleIdSheetHeaderRow(final Sheet sheet, final List<Field> fs) {
+	private static void addLocaleIdSheetHeaderRow(final Sheet sheet, @Nullable final List<Field> fs) {
 		//
 		final int physicalNumberOfRows = intValue(getPhysicalNumberOfRows(sheet), 0);
 		//
@@ -1181,7 +1179,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfCells()) : null;
 	}
 
-	private static <T> Stream<T> sorted(final Stream<T> instance, final Comparator<? super T> comparator) {
+	private static <T> Stream<T> sorted(@Nullable final Stream<T> instance,
+			@Nullable final Comparator<? super T> comparator) {
 		//
 		return instance != null && (comparator != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.sorted(comparator)
@@ -1264,14 +1263,14 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 	}
 
-	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
 			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
 			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
 
-	private static <T> T[] toArray(final Collection<T> instance, final T[] array) {
+	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.toArray(array)
@@ -1279,7 +1278,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 	}
 
-	private static <T> boolean anyMatch(final Stream<T> instance, final Predicate<? super T> predicate) {
+	private static <T> boolean anyMatch(@Nullable final Stream<T> instance,
+			@Nullable final Predicate<? super T> predicate) {
 		//
 		return instance != null && (predicate != null || Proxy.isProxyClass(Util.getClass(instance)))
 				&& instance.anyMatch(predicate);
@@ -1287,7 +1287,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 	}
 
 	@Nullable
-	private static List<Field> findFieldsByValue(final Field[] fs, final Object instance, final Object value) {
+	private static List<Field> findFieldsByValue(@Nullable final Field[] fs, final Object instance,
+			@Nullable final Object value) {
 		//
 		Field f = null;
 		//
@@ -1335,11 +1336,11 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		}
 	}
 
-	private static boolean isStatic(final Member instance) {
+	private static boolean isStatic(@Nullable final Member instance) {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
-	private static void setEnabled(final boolean b, final Component instance, final Component... cs) {
+	private static void setEnabled(final boolean b, final Component instance, @Nullable final Component... cs) {
 		//
 		setEnabled(instance, b);
 		//
@@ -1351,13 +1352,13 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 	}
 
-	private static void setEnabled(final Component instance, final boolean b) {
+	private static void setEnabled(@Nullable final Component instance, final boolean b) {
 		if (instance != null) {
 			instance.setEnabled(b);
 		}
 	}
 
-	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs) {
+	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
 		//
 		AbstractButton ab = null;
 		//
@@ -1373,7 +1374,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 	}
 
-	private static void setEditable(final boolean editable, final JTextComponent... jtcs) {
+	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
 		//
 		JTextComponent jtc = null;
 		//
@@ -1411,7 +1412,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 	}
 
-	private static void setPreferredWidth(final int width, final Component... cs) {
+	private static void setPreferredWidth(final int width, @Nullable final Component... cs) {
 		//
 		Component c = null;
 		//
@@ -1474,8 +1475,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 	}
 
-	private static boolean isAnnotationPresent(final AnnotatedElement instance,
-			final Class<? extends Annotation> annotationClass) {
+	private static boolean isAnnotationPresent(@Nullable final AnnotatedElement instance,
+			@Nullable final Class<? extends Annotation> annotationClass) {
 		return instance != null && annotationClass != null && instance.isAnnotationPresent(annotationClass);
 	}
 
@@ -1512,12 +1513,12 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		} // if
 	}
 
-	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, final U u) {
+	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, final U u) {
 		return instance != null && instance.test(t, u);
 	}
 
-	private static <T, U, E extends Throwable> void accept(final FailableBiConsumer<T, U, E> instance, final T t,
-			final U u) throws E {
+	private static <T, U, E extends Throwable> void accept(@Nullable final FailableBiConsumer<T, U, E> instance,
+			final T t, final U u) throws E {
 		if (instance != null) {
 			instance.accept(t, u);
 		}
