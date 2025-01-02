@@ -1316,33 +1316,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		return instance != null ? instance.getComponents() : null;
 	}
 
-	private static JPanel createVoiceIdWarningPanel(@Nullable final VoiceManager instance) {
-		//
-		final JPanel jPanelWarning = new JPanel();
-		//
-		jPanelWarning.setBorder(BorderFactory.createTitledBorder(WARNING));
-		//
-		final IValue0<String> pageTitle = instance != null
-				? instance.getMicrosoftSpeechPlatformRuntimeLanguagesDownloadPageTitle()
-				: null;
-		//
-		final String title = StringUtils.defaultIfBlank(IValue0Util.getValue0(pageTitle),
-				"Download Microsoft Speech Platform - Runtime Languages (Version 11) from Official Microsoft Download Center");
-		//
-		final String microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl = instance != null
-				? instance.microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl
-				: null;
-		//
-		add(jPanelWarning,
-				pageTitle != null
-						? new JLabelLink(ContainerTagUtil.withText(
-								new ATag().withHref(microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl), title))
-						: new JLabel(title));
-		//
-		return jPanelWarning;
-		//
-	}
-
 	private static JPanel createMicrosoftWindowsCompatibilityWarningJPanel(final LayoutManager lm,
 			final String microsoftWindowsCompatibilitySettingsPageUrl) {
 		//

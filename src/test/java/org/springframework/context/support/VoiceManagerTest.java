@@ -204,12 +204,11 @@ class VoiceManagerTest {
 			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED,
 			METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL, METHOD_TO_RUNTIME_EXCEPTION, METHOD_SET_PREFERRED_WIDTH_ARRAY,
 			METHOD_SET_PREFERRED_WIDTH_2, METHOD_IS_STATIC, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS,
-			METHOD_GET_FIELD_BY_NAME, METHOD_CREATE_VOICE_ID_WARNING_PANEL,
-			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_SET_FOCUS_CYCLE_ROOT,
-			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_DECLARED_CONSTRUCTOR,
-			METHOD_NEW_INSTANCE, METHOD_GET_PAGE_TITLE, METHOD_TO_MILLIS, METHOD_ADD_ALL, METHOD_SET_AUTO_FILTER,
-			METHOD_GET_NUMBER, METHOD_SORTED, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL,
-			METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM, METHOD_SET_SELECTED_INDEX,
+			METHOD_GET_FIELD_BY_NAME, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL,
+			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
+			METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE, METHOD_GET_PAGE_TITLE, METHOD_TO_MILLIS,
+			METHOD_ADD_ALL, METHOD_SET_AUTO_FILTER, METHOD_GET_NUMBER, METHOD_SORTED, METHOD_CREATE_IMPORT_RESULT_PANEL,
+			METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM, METHOD_SET_SELECTED_INDEX,
 			METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
@@ -363,9 +362,6 @@ class VoiceManagerTest {
 				Object.class, Boolean.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_FIELD_BY_NAME = clz.getDeclaredMethod("getFieldByName", Class.class, String.class))
-				.setAccessible(true);
-		//
-		(METHOD_CREATE_VOICE_ID_WARNING_PANEL = clz.getDeclaredMethod("createVoiceIdWarningPanel", VoiceManager.class))
 				.setAccessible(true);
 		//
 		(METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL = clz.getDeclaredMethod(
@@ -2705,29 +2701,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Field) {
 				return (Field) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCreateVoiceIdWarningPanel() throws Throwable {
-		//
-		Assertions.assertNotNull(createVoiceIdWarningPanel(null));
-		//
-		Assertions.assertNotNull(createVoiceIdWarningPanel(instance));
-		//
-	}
-
-	private static JPanel createVoiceIdWarningPanel(final VoiceManager instance) throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_VOICE_ID_WARNING_PANEL.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof JPanel) {
-				return (JPanel) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
