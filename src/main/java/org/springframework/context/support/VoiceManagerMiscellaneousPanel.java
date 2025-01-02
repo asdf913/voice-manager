@@ -253,7 +253,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		this.propertyResolver = environment;
 	}
 
-	private static long longValue(final Number instance, final long defaultValue) {
+	private static long longValue(@Nullable final Number instance, final long defaultValue) {
 		return instance != null ? instance.longValue() : defaultValue;
 	}
 
@@ -262,7 +262,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 	}
 
 	@Nullable
-	private static Long length(final File instance) {
+	private static Long length(@Nullable final File instance) {
 		//
 		if (instance == null) {
 			//
@@ -288,7 +288,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 	}
 
-	private static Field getDeclaredField(final Class<?> instance, final String name) throws NoSuchFieldException {
+	private static Field getDeclaredField(@Nullable final Class<?> instance, final String name)
+			throws NoSuchFieldException {
 		return instance != null ? instance.getDeclaredField(name) : null;
 	}
 
@@ -340,7 +341,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 		}
 
-		private static String getValue(final Attribute instance) {
+		private static String getValue(@Nullable final Attribute instance) {
 			return instance != null ? instance.getValue() : null;
 		}
 
@@ -366,7 +367,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 				//
 		}
 
-		private static <T> Spliterator<T> spliterator(final Iterable<T> instance) {
+		private static <T> Spliterator<T> spliterator(@Nullable final Iterable<T> instance) {
 			return instance != null ? instance.spliterator() : null;
 		}
 
@@ -403,11 +404,11 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 				//
 		}
 
-		private static String getName(final Attribute instance) {
+		private static String getName(@Nullable final Attribute instance) {
 			return instance != null ? instance.getName() : null;
 		}
 
-		private static Color darker(final Color instance) {
+		private static Color darker(@Nullable final Color instance) {
 			return instance != null ? instance.darker() : null;
 		}
 
@@ -614,7 +615,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		}
 	}
 
-	private static URI toURI(final File instance) {
+	private static URI toURI(@Nullable final File instance) {
 		return instance != null ? instance.toURI() : null;
 	}
 
@@ -658,7 +659,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		}
 	}
 
-	private static Clipboard getSystemClipboard(final Toolkit instance) {
+	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		return instance != null ? instance.getSystemClipboard() : null;
 	}
 
@@ -726,7 +727,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			return instance != null ? instance.getObject(key) : null;
 		}
 
-		static <T> void setObject(final ObjectMap instance, final Class<T> key, final T value) {
+		static <T> void setObject(@Nullable final ObjectMap instance, final Class<T> key, final T value) {
 			if (instance != null) {
 				instance.setObject(key, value);
 			}
@@ -794,7 +795,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 				//
 				if (Objects.equals(Util.getName(method), "run")) {
 					//
-					return Unit.with(invoke(method, runnable, args));
+					return Unit.with(VoiceManagerMiscellaneousPanel.invoke(method, runnable, args));
 					//
 				} // if
 					//
@@ -839,7 +840,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 		}
 
-		private static byte[] getBytes(final String instance) {
+		private static byte[] getBytes(@Nullable final String instance) {
 			return instance != null ? instance.getBytes() : null;
 		}
 
@@ -854,7 +855,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 			try {
 				//
-				testAndAccept(m -> throwable != null || isStatic(m), method, m -> invoke(m, throwable));
+				testAndAccept(m -> throwable != null || isStatic(m), method,
+						m -> VoiceManagerMiscellaneousPanel.invoke(m, throwable));
 				//
 			} catch (final InvocationTargetException e) {
 				//
@@ -869,11 +871,6 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 				//
 			} // try
 				//
-		}
-
-		private static Object invoke(final Method method, final Object instance, Object... args)
-				throws IllegalAccessException, InvocationTargetException {
-			return method != null ? method.invoke(instance, args) : null;
 		}
 
 		@Nullable
@@ -987,7 +984,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 	}
 
-	private static void setMicrosoftSpeechObjectLibrarySheetFirstRow(final Sheet sheet, final String[] columnNames) {
+	private static void setMicrosoftSpeechObjectLibrarySheetFirstRow(@Nullable final Sheet sheet,
+			final String[] columnNames) {
 		//
 		final Row row = sheet != null ? SheetUtil.createRow(sheet, sheet.getLastRowNum() + 1) : null;
 		//
@@ -1007,7 +1005,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 	}
 
-	private static void setAutoFilter(final Sheet sheet) {
+	private static void setAutoFilter(@Nullable final Sheet sheet) {
 		//
 		final Row row = sheet != null ? sheet.getRow(sheet.getLastRowNum()) : null;
 		//
@@ -1073,7 +1071,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 	}
 
-	private static Package getPackage(final Class<?> instance) {
+	private static Package getPackage(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getPackage() : null;
 	}
 
@@ -1146,7 +1144,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 	}
 
-	private static Integer getPhysicalNumberOfRows(final Sheet instance) {
+	private static Integer getPhysicalNumberOfRows(@Nullable final Sheet instance) {
 		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfRows()) : null;
 	}
 
@@ -1161,11 +1159,11 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		return object != null ? object : get(defaultSupplier);
 	}
 
-	private static <T, E extends Throwable> T get(final FailableSupplier<T, E> instance) throws E {
+	private static <T, E extends Throwable> T get(@Nullable final FailableSupplier<T, E> instance) throws E {
 		return instance != null ? instance.get() : null;
 	}
 
-	private static Integer getPhysicalNumberOfCells(final Row instance) {
+	private static Integer getPhysicalNumberOfCells(@Nullable final Row instance) {
 		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfCells()) : null;
 	}
 
@@ -1419,15 +1417,15 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 	}
 
-	private static StringBuilder append(final StringBuilder instance, final char c) {
+	private static StringBuilder append(@Nullable final StringBuilder instance, final char c) {
 		return instance != null ? instance.append(c) : null;
 	}
 
-	private static StringBuilder append(final StringBuilder instance, final String string) {
+	private static StringBuilder append(@Nullable final StringBuilder instance, final String string) {
 		return instance != null ? instance.append(string) : null;
 	}
 
-	private static int intValue(final Number instance, final int defaultValue) {
+	private static int intValue(@Nullable final Number instance, final int defaultValue) {
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
@@ -1570,12 +1568,12 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 	}
 
-	private static Object invoke(final Method method, final Object instance, Object... args)
+	private static Object invoke(@Nullable final Method method, final Object instance, Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
 	}
 
-	private static Object get(final Field field, final Object instance) throws IllegalAccessException {
+	private static Object get(@Nullable final Field field, final Object instance) throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
 	}
 
@@ -1585,7 +1583,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 	}
 
-	private static Class<?>[] getDeclaredClasses(final Class<?> instance) {
+	private static Class<?>[] getDeclaredClasses(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredClasses() : null;
 	}
 
@@ -1629,7 +1627,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 	}
 
-	private static Long toMillis(final Duration instance) {
+	private static Long toMillis(@Nullable final Duration instance) {
 		return instance != null ? Long.valueOf(instance.toMillis()) : null;
 	}
 
@@ -1651,7 +1649,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 	}
 
-	private static <E> E get(final List<E> instance, final int index) {
+	private static <E> E get(@Nullable final List<E> instance, final int index) {
 		return instance != null ? instance.get(index) : null;
 	}
 
