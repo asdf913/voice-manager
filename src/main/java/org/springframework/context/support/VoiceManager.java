@@ -320,9 +320,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@SystemClipboard
-	private AbstractButton btnExportCopy = null;
-
-	@SystemClipboard
 	private AbstractButton btnDllPathCopy = null;
 
 	@Target(ElementType.FIELD)
@@ -2329,11 +2326,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		IValue0<String> stringValue = null;
 		//
-		if (Objects.equals(source, btnExportCopy)) {
-			//
-			stringValue = Unit.with(Util.getText(tfExportFile));
-			//
-		} else if (Objects.equals(source, btnDllPathCopy)) {
+		if (Objects.equals(source, btnDllPathCopy)) {
 			//
 			stringValue = Unit.with(Util.getText(tfDllPath));
 			//

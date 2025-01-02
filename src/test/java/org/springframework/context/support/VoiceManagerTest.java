@@ -1318,18 +1318,6 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-			// btnExportCopy
-			//
-		final AbstractButton btnExportCopy = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnExportCopy", btnExportCopy, true);
-			//
-		} // if
-			//
-		executable = () -> actionPerformed(instance, new ActionEvent(btnExportCopy, 0, null));
-		//
 		if (throwableClassByGetSystemClipboard != null) {
 			//
 			if (isUnderWindows()) {
