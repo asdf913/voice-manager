@@ -334,11 +334,12 @@ public class MapReportGui extends JFrame
 		//
 		final List<String> columns = new ArrayList<>(Collections.singleton("Key"));
 		//
-		columns.addAll(Util.toList(IntStream
-				.range(0,
-						orElse(max(mapToInt(Util.stream(Util.entrySet(asMap(mm))),
-								x -> IterableUtils.size(Util.getValue(x)))), 0))
-				.mapToObj(x -> String.format("Value %1$s", x + 1))));
+		Util.addAll(columns,
+				Util.toList(IntStream
+						.range(0,
+								orElse(max(mapToInt(Util.stream(Util.entrySet(asMap(mm))),
+										x -> IterableUtils.size(Util.getValue(x)))), 0))
+						.mapToObj(x -> String.format("Value %1$s", x + 1))));
 		//
 		dtm = new DefaultTableModel(columns.toArray(), 0);
 		//

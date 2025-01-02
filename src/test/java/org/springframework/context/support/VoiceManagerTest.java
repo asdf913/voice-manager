@@ -165,8 +165,8 @@ class VoiceManagerTest {
 			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_2, METHOD_IS_STATIC, METHOD_GET_FIELD_BY_NAME,
 			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_SET_FOCUS_CYCLE_ROOT,
 			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_DECLARED_CONSTRUCTOR,
-			METHOD_NEW_INSTANCE, METHOD_ADD_ALL, METHOD_GET_NUMBER, METHOD_CREATE_IMPORT_RESULT_PANEL,
-			METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
+			METHOD_NEW_INSTANCE, METHOD_GET_NUMBER, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_SET_SELECTED_INDEX,
+			METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -279,8 +279,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_NEW_INSTANCE = clz.getDeclaredMethod("newInstance", Constructor.class, Object[].class))
 				.setAccessible(true);
-		//
-		(METHOD_ADD_ALL = clz.getDeclaredMethod("addAll", Collection.class, Collection.class)).setAccessible(true);
 		//
 		(METHOD_GET_NUMBER = clz.getDeclaredMethod("getNumber", Object.class, Iterable.class)).setAccessible(true);
 		//
@@ -1907,29 +1905,6 @@ class VoiceManagerTest {
 	private static <T> T newInstance(final Constructor<T> constructor, final Object... initargs) throws Throwable {
 		try {
 			return (T) METHOD_NEW_INSTANCE.invoke(null, constructor, initargs);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAddAll() {
-		//
-		Assertions.assertDoesNotThrow(() -> addAll(null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> addAll(Collections.emptyList(), null));
-		//
-		final Collection<Object> collection = new ArrayList<>();
-		//
-		Assertions.assertDoesNotThrow(() -> addAll(collection, collection));
-		//
-		Assertions.assertDoesNotThrow(() -> addAll(collection, null));
-		//
-	}
-
-	private static <E> void addAll(final Collection<E> a, final Collection<? extends E> b) throws Throwable {
-		try {
-			METHOD_ADD_ALL.invoke(null, a, b);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

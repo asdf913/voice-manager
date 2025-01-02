@@ -330,7 +330,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			for (final Object obj : bpps) {
 				//
-				addAll(ms = ObjectUtils.getIfNull(ms, ArrayList::new), Util.toList(Util.filter(
+				Util.addAll(ms = ObjectUtils.getIfNull(ms, ArrayList::new), Util.toList(Util.filter(
 						testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(obj)), Arrays::stream,
 								null),
 						m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "setTitle"), Arrays.equals(
@@ -408,12 +408,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	private static void setAccessible(@Nullable final AccessibleObject instance, final boolean flag) {
 		if (instance != null) {
 			instance.setAccessible(flag);
-		}
-	}
-
-	private static <E> void addAll(@Nullable final Collection<E> a, @Nullable final Collection<? extends E> b) {
-		if (a != null && (b != null || Proxy.isProxyClass(Util.getClass(a)))) {
-			a.addAll(b);
 		}
 	}
 

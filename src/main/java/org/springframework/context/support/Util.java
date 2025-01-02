@@ -258,6 +258,12 @@ public abstract class Util {
 		}
 	}
 
+	static <E> void addAll(final Collection<E> a, final Collection<? extends E> b) {
+		if (a != null && (b != null || Proxy.isProxyClass(Util.getClass(a)))) {
+			a.addAll(b);
+		}
+	}
+
 	@Nullable
 	static <K> K getKey(@Nullable final Entry<K, ?> instance) {
 		return instance != null ? instance.getKey() : null;
