@@ -404,6 +404,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 			//
 	}
 
+	@Nullable
 	private static String getEncryptionTableHtml(final URL url, final Duration timeout) throws IOException {
 		//
 		org.jsoup.nodes.Document document = testAndApply(
@@ -443,6 +444,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		return instance != null ? Long.valueOf(instance.toMillis()) : null;
 	}
 
+	@Nullable
 	private static ATag getMediaFormatLink(final String url) throws Exception {
 		//
 		InputStream is = null;
