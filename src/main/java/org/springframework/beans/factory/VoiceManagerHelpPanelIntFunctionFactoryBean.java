@@ -62,6 +62,7 @@ import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 
 import freemarker.ext.beans.BeansWrapper;
+import freemarker.template.Configuration;
 import freemarker.template.ConfigurationUtil;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateUtil;
@@ -90,7 +91,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 	@Url("https://poi.apache.org/encryption.html")
 	private String poiEncryptionPageUrl = null;
 
-	private freemarker.template.Configuration freeMarkerConfiguration = null;
+	private Configuration freeMarkerConfiguration = null;
 
 	@Nullable
 	private Duration jSoupParseTimeout = null;
@@ -103,7 +104,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		this.poiEncryptionPageUrl = poiEncryptionPageUrl;
 	}
 
-	public void setFreeMarkerConfiguration(final freemarker.template.Configuration freeMarkerConfiguration) {
+	public void setFreeMarkerConfiguration(final Configuration freeMarkerConfiguration) {
 		this.freeMarkerConfiguration = freeMarkerConfiguration;
 	}
 
@@ -168,7 +169,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 			try (final Writer writer = new StringWriter()) {
 				//
 				final Map<Object, Object> map = new LinkedHashMap<>(Collections.singletonMap("statics",
-						new BeansWrapper(freemarker.template.Configuration.getVersion()).getStaticModels()));
+						new BeansWrapper(Configuration.getVersion()).getStaticModels()));
 				//
 				Util.put(map, "mediaFormatLink", getMediaFormatLink(mediaFormatPageUrl));
 				//
