@@ -180,7 +180,7 @@ public class VoiceManagerHelpPanel extends JScrollPane implements Titled, Initia
 		//
 	}
 
-	private static void browse(final Desktop instance, final URI uri) throws IOException {
+	private static void browse(@Nullable final Desktop instance, final URI uri) throws IOException {
 		if (instance != null) {
 			instance.browse(uri);
 		}
@@ -255,7 +255,7 @@ public class VoiceManagerHelpPanel extends JScrollPane implements Titled, Initia
 		return instance != null ? instance.getBytes() : null;
 	}
 
-	private static void setEditable(final boolean editable, final JTextComponent... jtcs) {
+	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
 		//
 		JTextComponent jtc = null;
 		//
@@ -383,7 +383,7 @@ public class VoiceManagerHelpPanel extends JScrollPane implements Titled, Initia
 		//
 	}
 
-	private static boolean isStatic(final Member instance) {
+	private static boolean isStatic(@Nullable final Member instance) {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
