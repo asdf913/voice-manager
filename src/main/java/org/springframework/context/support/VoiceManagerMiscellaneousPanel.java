@@ -1254,7 +1254,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 
 	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
 			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
-			final FailableBiFunction<T, U, R, E> functionFalse) throws E {
+			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
@@ -1317,7 +1317,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		} // if
 	}
 
-	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) {
+	private static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, final T t, final U u) {
 		if (instance != null) {
 			instance.accept(t, u);
 		}
@@ -1575,7 +1575,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		return method != null ? method.invoke(instance, args) : null;
 	}
 
-	private static Object get(@Nullable final Field field, final Object instance) throws IllegalAccessException {
+	private static Object get(@Nullable final Field field, @Nullable final Object instance)
+			throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
 	}
 
