@@ -920,6 +920,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 
 	}
 
+	@Nullable
 	private static Workbook createMicrosoftSpeechObjectLibraryWorkbook(final SpeechApi speechApi,
 			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction, final String... attributes) {
 		//
