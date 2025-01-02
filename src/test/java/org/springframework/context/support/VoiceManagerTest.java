@@ -168,14 +168,13 @@ class VoiceManagerTest {
 			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_BROWSE, METHOD_TO_URI_FILE, METHOD_TO_URI_URL,
 			METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2,
 			METHOD_SET_VISIBLE, METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE,
-			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML,
-			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL,
-			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_2, METHOD_IS_STATIC, METHOD_GET_FIELD_BY_NAME,
-			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_SET_FOCUS_CYCLE_ROOT,
-			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_DECLARED_CONSTRUCTOR,
-			METHOD_NEW_INSTANCE, METHOD_TO_MILLIS, METHOD_ADD_ALL, METHOD_GET_NUMBER, METHOD_CREATE_IMPORT_RESULT_PANEL,
-			METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM, METHOD_SET_SELECTED_INDEX,
-			METHOD_GET_TITLED_COMPONENT_MAP = null;
+			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML, METHOD_TEST_AND_RUN,
+			METHOD_GET_IF_NULL, METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_2, METHOD_IS_STATIC,
+			METHOD_GET_FIELD_BY_NAME, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL,
+			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
+			METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE, METHOD_TO_MILLIS, METHOD_ADD_ALL, METHOD_GET_NUMBER,
+			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM,
+			METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -263,9 +262,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_HTML = clz.getDeclaredMethod("html", org.jsoup.nodes.Element.class)).setAccessible(true);
-		//
-		(METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = clz.getDeclaredMethod("getPhysicalNumberOfRows", Sheet.class))
-				.setAccessible(true);
 		//
 		(METHOD_TEST_AND_RUN = clz.getDeclaredMethod("testAndRun", Boolean.TYPE, FailableRunnable.class))
 				.setAccessible(true);
@@ -1894,27 +1890,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetPhysicalNumberOfRows() throws Throwable {
-		//
-		Assertions.assertNull(getPhysicalNumberOfRows(null));
-		//
-	}
-
-	private static Integer getPhysicalNumberOfRows(final Sheet instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_PHYSICAL_NUMBER_OF_ROWS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Integer) {
-				return (Integer) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
