@@ -1813,11 +1813,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@Nullable
-	private static URL getURL(@Nullable final HyperlinkEvent instance) {
-		return instance != null ? instance.getURL() : null;
-	}
-
-	@Nullable
 	private static URI toURI(@Nullable final URL instance) throws URISyntaxException {
 		//
 		if (instance == null) {
