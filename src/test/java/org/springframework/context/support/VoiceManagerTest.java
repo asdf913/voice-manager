@@ -167,7 +167,7 @@ class VoiceManagerTest {
 			METHOD_GET_IF_NULL, METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_2, METHOD_IS_STATIC,
 			METHOD_GET_FIELD_BY_NAME, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL,
 			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
-			METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE, METHOD_TO_MILLIS, METHOD_ADD_ALL, METHOD_GET_NUMBER,
+			METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE, METHOD_ADD_ALL, METHOD_GET_NUMBER,
 			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_OPEN_STREAM, METHOD_SET_SELECTED_INDEX,
 			METHOD_GET_TITLED_COMPONENT_MAP = null;
 
@@ -288,8 +288,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_NEW_INSTANCE = clz.getDeclaredMethod("newInstance", Constructor.class, Object[].class))
 				.setAccessible(true);
-		//
-		(METHOD_TO_MILLIS = clz.getDeclaredMethod("toMillis", Duration.class)).setAccessible(true);
 		//
 		(METHOD_ADD_ALL = clz.getDeclaredMethod("addAll", Collection.class, Collection.class)).setAccessible(true);
 		//
@@ -2040,31 +2038,6 @@ class VoiceManagerTest {
 	private static <T> T newInstance(final Constructor<T> constructor, final Object... initargs) throws Throwable {
 		try {
 			return (T) METHOD_NEW_INSTANCE.invoke(null, constructor, initargs);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testToMillis() throws Throwable {
-		//
-		final double second = 1.234;
-		//
-		Assertions.assertEquals(
-				Long.valueOf(BigDecimal.valueOf(second).multiply(BigDecimal.valueOf(1000)).longValueExact()),
-				toMillis(Duration.parse(String.format("PT%1$sS", second))));
-		//
-	}
-
-	private static Long toMillis(final Duration instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_MILLIS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Long) {
-				return (Long) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

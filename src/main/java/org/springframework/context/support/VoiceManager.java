@@ -1413,11 +1413,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 	}
 
-	@Nullable
-	private static Long toMillis(@Nullable final Duration instance) {
-		return instance != null ? Long.valueOf(instance.toMillis()) : null;
-	}
-
 	private static class JLabelLink extends JLabel {
 
 		private static final long serialVersionUID = 8848505138795752227L;
