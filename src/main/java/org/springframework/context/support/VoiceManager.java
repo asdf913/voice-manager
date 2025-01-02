@@ -3236,26 +3236,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 	}
 
-	private static void addLocaleIdSheetHeaderRow(final Sheet sheet, @Nullable final List<Field> fs) {
-		//
-		final int physicalNumberOfRows = intValue(getPhysicalNumberOfRows(sheet), 0);
-		//
-		if (physicalNumberOfRows == 0) {
-			//
-			Row row = null;
-			//
-			for (int j = 0; fs != null && j < fs.size(); j++) {
-				//
-				CellUtil.setCellValue(RowUtil.createCell(
-						row = getIfNull(row, () -> SheetUtil.createRow(sheet, intValue(physicalNumberOfRows, 0))),
-						intValue(getPhysicalNumberOfCells(row), 0)), Util.getName(fs.get(j)));
-				//
-			} // for
-				//
-		} // if
-			//
-	}
-
 	@Nullable
 	private static Integer getPhysicalNumberOfCells(@Nullable final Row instance) {
 		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfCells()) : null;
