@@ -2926,12 +2926,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		return instance != null && instance.isFile();
 	}
 
-	private static <T> void accept(@Nullable final Consumer<T> instance, final T value) {
-		if (instance != null) {
-			instance.accept(value);
-		}
-	}
-
 	@Nullable
 	private static Integer getPhysicalNumberOfRows(@Nullable final Sheet instance) {
 		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfRows()) : null;
