@@ -2944,13 +2944,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		return instance != null ? instance.spliterator() : null;
 	}
 
-	private static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, @Nullable final T t,
-			@Nullable final U u) {
-		if (instance != null) {
-			instance.accept(t, u);
-		}
-	}
-
 	private static <T, U, E extends Throwable> void accept(@Nullable final FailableBiConsumer<T, U, E> instance,
 			final T t, @Nullable final U u) throws E {
 		if (instance != null) {
