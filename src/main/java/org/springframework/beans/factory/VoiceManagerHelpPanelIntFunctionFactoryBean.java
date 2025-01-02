@@ -1,6 +1,7 @@
-package org.springframework.context.support;
+package org.springframework.beans.factory;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.IOException;
@@ -27,11 +28,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.IntFunction;
 import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkEvent.EventType;
@@ -54,7 +56,6 @@ import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
-import org.springframework.beans.factory.InitializingBean;
 
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
@@ -68,13 +69,13 @@ import j2html.tags.ContainerTagUtil;
 import j2html.tags.TagUtil;
 import j2html.tags.specialized.ATag;
 
-public class VoiceManagerHelpPanel extends JScrollPane implements Titled, InitializingBean {
+public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<IntFunction<JScrollPane>> {
 
-	private static final long serialVersionUID = 6912789824080220210L;
-
-	private static Logger LOG = LoggerFactory.getLogger(VoiceManagerHelpPanel.class);
+	private static Logger LOG = LoggerFactory.getLogger(VoiceManagerHelpPanelIntFunctionFactoryBean.class);
 
 	private static final String HANDLER = "handler";
+
+	private static final String COMPONENT = "component";
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -92,102 +93,181 @@ public class VoiceManagerHelpPanel extends JScrollPane implements Titled, Initia
 
 	private Duration jSoupParseTimeout = null;
 
-	@Override
-	public String getTitle() {
-		return "Help";
+	public void setMediaFormatPageUrl(final String mediaFormatPageUrl) {
+		this.mediaFormatPageUrl = mediaFormatPageUrl;
+	}
+
+	public void setPoiEncryptionPageUrl(final String poiEncryptionPageUrl) {
+		this.poiEncryptionPageUrl = poiEncryptionPageUrl;
+	}
+
+	public void setFreeMarkerConfiguration(final freemarker.template.Configuration freeMarkerConfiguration) {
+		this.freeMarkerConfiguration = freeMarkerConfiguration;
+	}
+
+	public void setjSoupParseTimeout(final Object object) {
+		//
+		if (object == null) {
+			//
+			this.jSoupParseTimeout = null;
+			//
+			return;
+			//
+		} else if (object instanceof Duration duration) {
+			//
+			this.jSoupParseTimeout = duration;
+			//
+			return;
+			//
+		} else if (object instanceof Number number) {
+			//
+			this.jSoupParseTimeout = Duration.ofMillis(longValue(number, 0));
+			//
+			return;
+			//
+		} // if
+			//
+		final String string = Util.toString(object);
+		//
+		final Integer integer = valueOf(string);
+		//
+		if (integer != null) {
+			//
+			setjSoupParseTimeout(integer);
+			//
+			return;
+			//
+		} // if
+			//
+		this.jSoupParseTimeout = testAndApply(StringUtils::isNotBlank, string, Duration::parse, null);
+		//
+	}
+
+	private static Integer valueOf(final String instance) {
+		try {
+			return StringUtils.isNotBlank(instance) ? Integer.valueOf(instance) : null;
+		} catch (final NumberFormatException e) {
+			return null;
+		}
+	}
+
+	private static long longValue(final Number instance, final long defaultValue) {
+		return instance != null ? instance.longValue() : defaultValue;
 	}
 
 	@Override
-	public void afterPropertiesSet() throws Exception {
+	public IntFunction<JScrollPane> getObject() throws Exception {
 		//
-		JEditorPane jep = null;
-		//
-		try (final Writer writer = new StringWriter()) {
+		return x -> {
 			//
-			final Map<Object, Object> map = new LinkedHashMap<>(Collections.singletonMap("statics",
-					new BeansWrapper(freemarker.template.Configuration.getVersion()).getStaticModels()));
+			JEditorPane jep = null;
 			//
-			Util.put(map, "mediaFormatLink", getMediaFormatLink(mediaFormatPageUrl));
-			//
-			Util.put(map, "encryptionTableHtml",
-					getEncryptionTableHtml(
-							testAndApply(StringUtils::isNotBlank, poiEncryptionPageUrl, x -> new URI(x).toURL(), null),
-							jSoupParseTimeout));
-			//
-			TemplateUtil.process(ConfigurationUtil.getTemplate(freeMarkerConfiguration, "help.html.ftl"), map, writer);
-			//
-			final String html = Util.toString(writer);
-			//
-			setEditable(false, jep = new JEditorPane(StringUtils
-					.defaultIfBlank(getMimeType(new ContentInfoUtil().findMatch(getBytes(html))), "text/html"), html));
-			//
-		} catch (final IOException | TemplateException e) {
-			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-			//
-		} catch (final Exception e) {
-			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(
-					ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(e), e));
-			//
-		} // try
-			//
-		addHyperlinkListener(jep, x -> {
-			//
-			try {
+			try (final Writer writer = new StringWriter()) {
 				//
-				if (Objects.equals(EventType.ACTIVATED, getEventType(x))) {
-					//
-					browse(Desktop.getDesktop(), toURI(getURL(x)));
-					//
-				} // if
-					//
-			} catch (final IOException | URISyntaxException e) {
+				final Map<Object, Object> map = new LinkedHashMap<>(Collections.singletonMap("statics",
+						new BeansWrapper(freemarker.template.Configuration.getVersion()).getStaticModels()));
+				//
+				Util.put(map, "mediaFormatLink", getMediaFormatLink(mediaFormatPageUrl));
+				//
+				Util.put(map, "encryptionTableHtml", getEncryptionTableHtml(
+						testAndApply(StringUtils::isNotBlank, poiEncryptionPageUrl, y -> new URI(y).toURL(), null),
+						jSoupParseTimeout));
+				//
+				TemplateUtil.process(ConfigurationUtil.getTemplate(freeMarkerConfiguration, "help.html.ftl"), map,
+						writer);
+				//
+				final String html = Util.toString(writer);
+				//
+				setEditable(false, jep = new JEditorPane(StringUtils.defaultIfBlank(
+						getMimeType(new ContentInfoUtil().findMatch(getBytes(html))), "text/html"), html));
+				//
+			} catch (final IOException | TemplateException e) {
 				//
 				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 				//
+			} catch (final Exception e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(
+						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(e), e));
+				//
 			} // try
 				//
-		});
-		//
-		final JScrollPane jsp = new JScrollPane(jep);
-		//
-		final Double preferredHeight = 0.0d;
-		// getMaxPagePreferredHeight(jTabbedPane);//TODO
-		//
-		jsp.setPreferredSize(new Dimension(intValue(getPreferredWidth(jsp), 0),
-				intValue(preferredHeight, intValue(getPreferredHeight(jsp), 0))));
-		//
-		add(jsp);
-		//
+			addHyperlinkListener(jep, y -> {
+				//
+				try {
+					//
+					if (Objects.equals(EventType.ACTIVATED, getEventType(y))) {
+						//
+						browse(Desktop.getDesktop(), toURI(getURL(y)));
+						//
+					} // if
+						//
+				} catch (final IOException | URISyntaxException e) {
+					//
+					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+					//
+				} // try
+					//
+			});
+			//
+			final JScrollPane jsp = new JScrollPane(jep);
+			//
+			jsp.setPreferredSize(new Dimension(intValue(getPreferredWidth(jsp), 0),
+					intValue(x, intValue(getPreferredHeight(jsp), 0))));
+			//
+			final JPanel jPanel = new JPanel();
+			//
+			add(jPanel, jsp);
+			//
+			jsp.setName("Help");
+			//
+			return jsp;
+			//
+		};
 	}
 
-	@Nullable
-	private static Double getPreferredHeight(final Component c) {
-		//
-		final Dimension d = Util.getPreferredSize(c);
-		//
-		return d != null ? Double.valueOf(d.getHeight()) : null;
-		//
+	@Override
+	public Class<?> getObjectType() {
+		return IntFunction.class;
 	}
 
-	@Nullable
-	private static Double getPreferredWidth(final Component c) {
+	private static void add(final Container instance, final Component comp) {
 		//
-		final Dimension d = Util.getPreferredSize(c);
-		//
-		return d != null ? Double.valueOf(d.getWidth()) : null;
-		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} //
+			//
+		try {
+			//
+			if (Narcissus.getObjectField(instance, getDeclaredField(Container.class, COMPONENT)) == null) {
+				//
+				return;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		if (comp != null) {
+			//
+			instance.add(comp);
+			//
+		} // if
+			//
 	}
 
-	private static void browse(@Nullable final Desktop instance, final URI uri) throws IOException {
+	private static void browse(final Desktop instance, final URI uri) throws IOException {
 		if (instance != null) {
 			instance.browse(uri);
 		}
 	}
 
-	@Nullable
-	private static URI toURI(@Nullable final URL instance) throws URISyntaxException {
+	private static URI toURI(final URL instance) throws URISyntaxException {
 		//
 		if (instance == null) {
 			//
@@ -213,17 +293,65 @@ public class VoiceManagerHelpPanel extends JScrollPane implements Titled, Initia
 		//
 	}
 
-	@Nullable
-	private static URL getURL(@Nullable final HyperlinkEvent instance) {
+	private static Double getPreferredWidth(final Component c) {
+		//
+		final Dimension d = getPreferredSize(c);
+		//
+		return d != null ? Double.valueOf(d.getWidth()) : null;
+		//
+	}
+
+	private static Double getPreferredHeight(final Component c) {
+		//
+		final Dimension d = getPreferredSize(c);
+		//
+		return d != null ? Double.valueOf(d.getHeight()) : null;
+		//
+	}
+
+	public static Dimension getPreferredSize(final Component instance) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		try {
+			//
+			if (Narcissus.getStaticField(Narcissus.findField(Util.getClass(instance), "LOCK")) == null) {
+				//
+				return null;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+		return instance.getPreferredSize();
+		//
+	}
+
+	private static URL getURL(final HyperlinkEvent instance) {
 		return instance != null ? instance.getURL() : null;
 	}
 
-	@Nullable
-	private static EventType getEventType(@Nullable final HyperlinkEvent instance) {
+	private static EventType getEventType(final HyperlinkEvent instance) {
 		return instance != null ? instance.getEventType() : null;
 	}
 
-	private static void addHyperlinkListener(@Nullable final JEditorPane instance, final HyperlinkListener listener) {
+	private static byte[] getBytes(final String instance) {
+		return instance != null ? instance.getBytes() : null;
+	}
+
+	private static String getMimeType(final ContentInfo instance) {
+		return instance != null ? instance.getMimeType() : null;
+	}
+
+	private static void addHyperlinkListener(final JEditorPane instance, final HyperlinkListener listener) {
 		//
 		if (instance == null) {
 			//
@@ -249,17 +377,7 @@ public class VoiceManagerHelpPanel extends JScrollPane implements Titled, Initia
 		//
 	}
 
-	@Nullable
-	private static String getMimeType(@Nullable final ContentInfo instance) {
-		return instance != null ? instance.getMimeType() : null;
-	}
-
-	@Nullable
-	private static byte[] getBytes(@Nullable final String instance) {
-		return instance != null ? instance.getBytes() : null;
-	}
-
-	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
+	private static void setEditable(final boolean editable, final JTextComponent... jtcs) {
 		//
 		JTextComponent jtc = null;
 		//
@@ -275,7 +393,6 @@ public class VoiceManagerHelpPanel extends JScrollPane implements Titled, Initia
 			//
 	}
 
-	@Nullable
 	private static String getEncryptionTableHtml(final URL url, final Duration timeout) throws IOException {
 		//
 		org.jsoup.nodes.Document document = testAndApply(
@@ -296,26 +413,22 @@ public class VoiceManagerHelpPanel extends JScrollPane implements Titled, Initia
 		//
 	}
 
-	@Nullable
-	private static String html(@Nullable final org.jsoup.nodes.Element instance) {
+	private static String html(final org.jsoup.nodes.Element instance) {
 		return instance != null ? instance.html() : null;
 	}
 
-	@Nullable
-	private static String getProtocol(@Nullable final URL instance) {
+	private static String getProtocol(final URL instance) {
 		return instance != null ? instance.getProtocol() : null;
 	}
 
-	private static int intValue(@Nullable final Number instance, final int defaultValue) {
+	private static int intValue(final Number instance, final int defaultValue) {
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
-	@Nullable
-	private static Long toMillis(@Nullable final Duration instance) {
+	private static Long toMillis(final Duration instance) {
 		return instance != null ? Long.valueOf(instance.toMillis()) : null;
 	}
 
-	@Nullable
 	private static ATag getMediaFormatLink(final String url) throws Exception {
 		//
 		InputStream is = null;
@@ -325,8 +438,8 @@ public class VoiceManagerHelpPanel extends JScrollPane implements Titled, Initia
 		try {
 			//
 			final List<Method> ms = Util.toList(Util.filter(
-					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.forName("com.sun.jna.Platform")),
-							Arrays::stream, null),
+					testAndApply(Objects::nonNull, getDeclaredMethods(forName("com.sun.jna.Platform")), Arrays::stream,
+							null),
 					m -> m != null && Objects.equals(m.getReturnType(), Boolean.TYPE) && m.getParameterCount() == -0));
 			//
 			Method m = null;
@@ -392,12 +505,23 @@ public class VoiceManagerHelpPanel extends JScrollPane implements Titled, Initia
 		//
 	}
 
-	private static boolean isStatic(@Nullable final Member instance) {
+	private static Method[] getDeclaredMethods(final Class<?> instance) throws SecurityException {
+		return instance != null ? instance.getDeclaredMethods() : null;
+	}
+
+	private static Class<?> forName(final String className) {
+		try {
+			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
+		} catch (final ClassNotFoundException e) {
+			return null;
+		}
+	}
+
+	private static boolean isStatic(final Member instance) {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
-	@Nullable
-	private static InputStream openStream(@Nullable final URL instance) throws IOException {
+	private static InputStream openStream(final URL instance) throws IOException {
 		//
 		if (instance == null) {
 			//
@@ -422,15 +546,12 @@ public class VoiceManagerHelpPanel extends JScrollPane implements Titled, Initia
 		return instance.openStream();
 	}
 
-	@Nullable
-	private static Field getDeclaredField(@Nullable final Class<?> instance, final String name)
-			throws NoSuchFieldException {
+	private static Field getDeclaredField(final Class<?> instance, final String name) throws NoSuchFieldException {
 		return instance != null ? instance.getDeclaredField(name) : null;
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
-			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
-			throws E {
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}

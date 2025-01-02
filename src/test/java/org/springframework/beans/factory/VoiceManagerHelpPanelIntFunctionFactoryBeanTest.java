@@ -1,4 +1,4 @@
-package org.springframework.context.support;
+package org.springframework.beans.factory;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -13,12 +13,12 @@ import org.junit.jupiter.api.Test;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
-class VoiceManagerHelpPanelTest {
+public class VoiceManagerHelpPanelIntFunctionFactoryBeanTest {
 
 	@Test
 	void testNull() {
 		//
-		final Method[] ms = VoiceManagerHelpPanel.class.getDeclaredMethods();
+		final Method[] ms = VoiceManagerHelpPanelIntFunctionFactoryBean.class.getDeclaredMethods();
 		//
 		Method m = null;
 		//
@@ -34,7 +34,7 @@ class VoiceManagerHelpPanelTest {
 		//
 		Object invoke = null;
 		//
-		VoiceManagerHelpPanel instance = null;
+		VoiceManagerHelpPanelIntFunctionFactoryBean instance = null;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
@@ -62,6 +62,10 @@ class VoiceManagerHelpPanelTest {
 					//
 					Util.add(collection, Boolean.FALSE);
 					//
+				} else if (Objects.equals(parameterType, Long.TYPE)) {
+					//
+					Util.add(collection, Long.valueOf(0));
+					//
 				} else {
 					//
 					Util.add(collection, null);
@@ -80,7 +84,7 @@ class VoiceManagerHelpPanelTest {
 				//
 				invoke = Narcissus.invokeStaticMethod(m, os);
 				//
-				if (Util.contains(Arrays.asList(Integer.TYPE, Boolean.TYPE), m.getReturnType())) {
+				if (Util.contains(Arrays.asList(Long.TYPE, Integer.TYPE, Boolean.TYPE), m.getReturnType())) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
@@ -92,10 +96,12 @@ class VoiceManagerHelpPanelTest {
 					//
 			} else {
 				//
-				invoke = Narcissus.invokeMethod(instance = ObjectUtils.getIfNull(instance, VoiceManagerHelpPanel::new),
-						m, os);
+				invoke = Narcissus.invokeMethod(
+						instance = ObjectUtils.getIfNull(instance, VoiceManagerHelpPanelIntFunctionFactoryBean::new), m,
+						os);
 				//
-				if (Boolean.logicalAnd(Util.contains(Arrays.asList("getTitle"), name), m.getParameterCount() == 0)) {
+				if (Boolean.logicalAnd(Util.contains(Arrays.asList("getObject", "getObjectType"), name),
+						m.getParameterCount() == 0)) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
