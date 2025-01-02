@@ -1114,7 +1114,7 @@
 		<property name="workbookClass"
 			value="${org.springframework.context.support.VoiceManager.workbookClass}" />
 	</bean>
-	
+
 	<!---->
 	<bean
 		class="org.springframework.context.support.VoiceManagerMiscellaneousPanel">
@@ -1128,6 +1128,25 @@
 			ref="LanguageCodeToTextObjIntFunction" />
 		<property name="microsoftSpeechObjectLibraryAttributeNames"
 			value="${org.springframework.context.support.VoiceManager.microsoftSpeechObjectLibraryAttributeNames}" />
+	</bean>
+
+	<!---->
+	<bean
+		class="org.springframework.beans.factory.VoiceManagerHelpPanelIntFunctionFactoryBean">
+		<property name="mediaFormatPageUrl"
+			value="${org.springframework.context.support.VoiceManager.mediaFormatPageUrl}" />
+		<property name="poiEncryptionPageUrl"
+			value="${org.springframework.context.support.VoiceManager.poiEncryptionPageUrl}" />
+		<property name="freeMarkerConfiguration">
+			<bean class="freemarker.template.Configuration">
+				<constructor-arg index="0"
+					value="#{T(freemarker.template.Configuration).getVersion()}" />
+				<property name="templateLoader"
+					value="#{new freemarker.cache.ClassTemplateLoader(T(org.springframework.beans.factory.VoiceManagerHelpPanelIntFunctionFactoryBean),'/')}" />
+			</bean>
+		</property>
+		<property name="jSoupParseTimeout"
+			value="${org.springframework.context.support.VoiceManager.jSoupParseTimeout}" />
 	</bean>
 
 	<!-- -->

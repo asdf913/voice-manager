@@ -60,6 +60,7 @@ import java.util.Spliterator;
 import java.util.TreeMap;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
@@ -959,9 +960,26 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		testAndAccept(x -> getTemplateLoader(configuration) == null, configuration,
 				x -> ConfigurationUtil.setTemplateLoader(x, new ClassTemplateLoader(VoiceManager.class, "/")));
 		//
-		jTabbedPane.addTab("Help", createHelpPanel(preferredHeight, configuration, mediaFormatPageUrl,
-				poiEncryptionPageUrl, jSoupParseTimeout));
+		final Set<Entry<String, IntFunction>> entrySet = Util
+				.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, IntFunction.class));
 		//
+		if (Util.iterator(entrySet) != null) {
+			//
+			IntFunction intFunction = null;
+			//
+			for (final Entry<String, IntFunction> entry : entrySet) {
+				//
+				if ((intFunction = Util.getValue(entry)) != null && preferredHeight != null
+						&& intFunction.apply(preferredHeight.intValue()) instanceof Component c) {
+					//
+					jTabbedPane.add(c.getName(), c);
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
 		final List<?> pages = Util.cast(List.class, testAndApply(Objects::nonNull, jTabbedPane,
 				x -> Narcissus.getField(x, getDeclaredField(Util.getClass(x), "pages")), null));
 		//
