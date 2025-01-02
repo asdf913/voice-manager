@@ -92,6 +92,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 
 	private transient freemarker.template.Configuration freeMarkerConfiguration = null;
 
+	@Nullable
 	private Duration jSoupParseTimeout = null;
 
 	public void setMediaFormatPageUrl(final String mediaFormatPageUrl) {
@@ -296,6 +297,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		//
 	}
 
+	@Nullable
 	private static Double getPreferredWidth(final Component c) {
 		//
 		final Dimension d = getPreferredSize(c);
@@ -304,6 +306,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		//
 	}
 
+	@Nullable
 	private static Double getPreferredHeight(final Component c) {
 		//
 		final Dimension d = getPreferredSize(c);
@@ -339,18 +342,22 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		//
 	}
 
+	@Nullable
 	private static URL getURL(@Nullable final HyperlinkEvent instance) {
 		return instance != null ? instance.getURL() : null;
 	}
 
+	@Nullable
 	private static EventType getEventType(@Nullable final HyperlinkEvent instance) {
 		return instance != null ? instance.getEventType() : null;
 	}
 
+	@Nullable
 	private static byte[] getBytes(@Nullable final String instance) {
 		return instance != null ? instance.getBytes() : null;
 	}
 
+	@Nullable
 	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
@@ -417,10 +424,12 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		//
 	}
 
+	@Nullable
 	private static String html(@Nullable final org.jsoup.nodes.Element instance) {
 		return instance != null ? instance.html() : null;
 	}
 
+	@Nullable
 	private static String getProtocol(@Nullable final URL instance) {
 		return instance != null ? instance.getProtocol() : null;
 	}
@@ -429,6 +438,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
+	@Nullable
 	private static Long toMillis(@Nullable final Duration instance) {
 		return instance != null ? Long.valueOf(instance.toMillis()) : null;
 	}
@@ -509,6 +519,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		//
 	}
 
+	@Nullable
 	private static Method[] getDeclaredMethods(@Nullable final Class<?> instance) throws SecurityException {
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
@@ -552,6 +563,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		return instance.openStream();
 	}
 
+	@Nullable
 	private static Field getDeclaredField(@Nullable final Class<?> instance, final String name)
 			throws NoSuchFieldException {
 		return instance != null ? instance.getDeclaredField(name) : null;
