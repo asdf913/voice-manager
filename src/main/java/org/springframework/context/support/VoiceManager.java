@@ -1827,11 +1827,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@Nullable
-	private static String html(@Nullable final org.jsoup.nodes.Element instance) {
-		return instance != null ? instance.html() : null;
-	}
-
-	@Nullable
 	private static ATag getMediaFormatLink(final String url) throws Exception {
 		//
 		InputStream is = null;
