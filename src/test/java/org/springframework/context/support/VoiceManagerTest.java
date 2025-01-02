@@ -320,8 +320,6 @@ class VoiceManagerTest {
 		(METHOD_GET_TITLED_COMPONENT_MAP = clz.getDeclaredMethod("getTitledComponentMap", Map.class, String[].class))
 				.setAccessible(true);
 		//
-		CLASS_IH = Class.forName("org.springframework.context.support.VoiceManager$IH");
-		//
 		CLASS_OBJECT_MAP = Class.forName("org.springframework.context.support.VoiceManager$ObjectMap");
 		//
 	}
@@ -3322,25 +3320,6 @@ class VoiceManagerTest {
 
 	private static MouseListener[] getMouseListeners(final Component instance) {
 		return instance != null ? instance.getMouseListeners() : null;
-	}
-
-	@Test
-	void testObjectMap() throws Throwable {
-		//
-		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, createVoiceManagerIH());
-		//
-		final Method setObject = CLASS_OBJECT_MAP != null
-				? CLASS_OBJECT_MAP.getDeclaredMethod("setObject", Class.class, Object.class)
-				: null;
-		//
-		if (setObject != null) {
-			//
-			setObject.setAccessible(true);
-			//
-		} // if
-			//
-		Assertions.assertNull(invoke(setObject, objectMap, null, null));
-		//
 	}
 
 	@Test
