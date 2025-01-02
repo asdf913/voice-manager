@@ -2208,16 +2208,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		return constructor != null ? constructor.newInstance(initargs) : null;
 	}
 
-	private static Method getAccessibleObjectIsAccessibleMethod() {
-		//
-		final List<Method> ms = Util.toList(Util.filter(
-				testAndApply(Objects::nonNull, Util.getDeclaredMethods(AccessibleObject.class), Arrays::stream, null),
-				m -> m != null && StringUtils.equals(Util.getName(m), "isAccessible") && m.getParameterCount() == 0));
-		//
-		return testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> get(x, 0), null);
-		//
-	}
-
 	/*
 	 * Copy from the below URL
 	 * 
