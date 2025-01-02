@@ -1004,8 +1004,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 	}
 
-	private static void add(final Iterable<Entry<String, IntFunction>> entrySet, final Number preferredHeight,
-			final Container container) throws NoSuchMethodException {
+	private static void add(final Iterable<Entry<String, IntFunction>> entrySet, @Nullable final Number preferredHeight,
+			@Nullable final Container container) throws NoSuchMethodException {
 
 		if (Util.iterator(entrySet) != null) {
 			//
