@@ -1128,8 +1128,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				ListableBeanFactoryUtil.getBeansOfType(applicationContext, Component.class), tabOrders))),
 				x -> jTabbedPane.addTab(Util.getKey(x), Util.getValue(x)));
 		//
-		jTabbedPane.addTab("Misc", createMiscellaneousPanel(cloneLayoutManager(), voiceIds));
-		//
 		// maximum preferred height of all tab page(s)
 		//
 		final Double preferredHeight = getMaxPagePreferredHeight(jTabbedPane);

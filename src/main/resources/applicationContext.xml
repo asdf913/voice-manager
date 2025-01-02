@@ -1090,7 +1090,7 @@
 			name="exportWebSpeechSynthesisHtmlTemplateProperties"
 			value="${org.springframework.context.support.VoiceManager.exportWebSpeechSynthesisHtmlTemplateProperties}" />
 		<property name="folderInPresentation"
-			value="${org.springframework.context.support.VoiceManager.folderInPresentation}" />	
+			value="${org.springframework.context.support.VoiceManager.folderInPresentation}" />
 		<property name="freeMarkerConfiguration">
 			<bean class="freemarker.template.Configuration">
 				<constructor-arg index="0"
@@ -1118,6 +1118,21 @@
 			value="${org.springframework.context.support.VoiceManager.voiceFolder}" />
 		<property name="workbookClass"
 			value="${org.springframework.context.support.VoiceManager.workbookClass}" />
+	</bean>
+	
+	<!---->
+	<bean
+		class="org.springframework.context.support.VoiceManagerMiscellaneousPanel">
+		<property name="speechApi" ref="speechApi" />
+		<property
+			name="microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl"
+			value="${org.springframework.context.support.VoiceManager.microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl}" />
+		<property name="jSoupParseTimeout"
+			value="${org.springframework.context.support.VoiceManager.jSoupParseTimeout}" />
+		<property name="languageCodeToTextObjIntFunction"
+			ref="LanguageCodeToTextObjIntFunction" />
+		<property name="microsoftSpeechObjectLibraryAttributeNames"
+			value="${org.springframework.context.support.VoiceManager.microsoftSpeechObjectLibraryAttributeNames}" />
 	</bean>
 
 	<!-- -->
