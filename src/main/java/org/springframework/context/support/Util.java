@@ -258,7 +258,7 @@ public abstract class Util {
 		}
 	}
 
-	static <E> void addAll(final Collection<E> a, final Collection<? extends E> b) {
+	static <E> void addAll(@Nullable final Collection<E> a, @Nullable final Collection<? extends E> b) {
 		if (a != null && (b != null || Proxy.isProxyClass(Util.getClass(a)))) {
 			a.addAll(b);
 		}
