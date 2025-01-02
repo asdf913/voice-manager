@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
@@ -161,6 +162,7 @@ public class VoiceManagerHelpPanel extends JScrollPane implements Titled, Initia
 		//
 	}
 
+	@Nullable
 	private static Double getPreferredHeight(final Component c) {
 		//
 		final Dimension d = Util.getPreferredSize(c);
@@ -169,6 +171,7 @@ public class VoiceManagerHelpPanel extends JScrollPane implements Titled, Initia
 		//
 	}
 
+	@Nullable
 	private static Double getPreferredWidth(final Component c) {
 		//
 		final Dimension d = Util.getPreferredSize(c);
@@ -183,6 +186,7 @@ public class VoiceManagerHelpPanel extends JScrollPane implements Titled, Initia
 		}
 	}
 
+	@Nullable
 	private static URI toURI(final URL instance) throws URISyntaxException {
 		//
 		if (instance == null) {
@@ -383,6 +387,7 @@ public class VoiceManagerHelpPanel extends JScrollPane implements Titled, Initia
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
+	@Nullable
 	private static InputStream openStream(final URL instance) throws IOException {
 		//
 		if (instance == null) {
