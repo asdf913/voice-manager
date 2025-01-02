@@ -172,9 +172,8 @@ class VoiceManagerTest {
 			METHOD_GET_PREFERRED_WIDTH, METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_MATCHER, METHOD_MATCHES,
 			METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL,
 			METHOD_TO_ARRAY_COLLECTION, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_GET_LIST,
-			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_TEST_AND_ACCEPT_PREDICATE,
-			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI_FILE,
-			METHOD_TO_URI_URL, METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP,
+			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_GET_PACKAGE, METHOD_BROWSE,
+			METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP,
 			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_GET_MEDIA_FORMAT_LINK,
 			METHOD_GET_EVENT_TYPE, METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML, METHOD_LENGTH,
@@ -243,10 +242,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_LIST = clz.getDeclaredMethod("get", List.class, Integer.TYPE)).setAccessible(true);
-		//
-		(METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK = clz.getDeclaredMethod(
-				"createMicrosoftSpeechObjectLibraryWorkbook", SpeechApi.class, ObjIntFunction.class, String[].class))
-				.setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT_PREDICATE = clz.getDeclaredMethod("testAndAccept", FailablePredicate.class,
 				Object.class, FailableConsumer.class)).setAccessible(true);
@@ -362,15 +357,11 @@ class VoiceManagerTest {
 
 	private static class IH implements InvocationHandler {
 
-		private Error errorGetVoiceAttribute = null;
-
 		private Set<Entry<?, ?>> entrySet = null;
 
-		private String toString, voiceAttribute, dllPath = null;
+		private String toString = null;
 
-		private Boolean anyMatch, isInstalled, isEmpty = null;
-
-		private String[] voiceIds = null;
+		private Boolean isInstalled, isEmpty = null;
 
 		private Iterator<?> iterator = null;
 
@@ -463,10 +454,6 @@ class VoiceManagerTest {
 					//
 					return proxy;
 					//
-				} else if (Objects.equals(methodName, "anyMatch")) {
-					//
-					return anyMatch;
-					//
 				} else if (Objects.equals(methodName, "toArray")) {
 					//
 					return null;
@@ -475,21 +462,7 @@ class VoiceManagerTest {
 					//
 			} else if (proxy instanceof SpeechApi) {
 				//
-				if (Objects.equals(methodName, "getVoiceIds")) {
-					//
-					return voiceIds;
-					//
-				} else if (Objects.equals(methodName, "getVoiceAttribute")) {
-					//
-					if (errorGetVoiceAttribute != null) {
-						//
-						throw errorGetVoiceAttribute;
-						//
-					} // if
-						//
-					return voiceAttribute;
-					//
-				} else if (Objects.equals(methodName, "isInstalled")) {
+				if (Objects.equals(methodName, "isInstalled")) {
 					//
 					return isInstalled;
 					//
@@ -511,10 +484,6 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof InnerClass.InnerInterface && Objects.equals(methodName, "getDllPath")) {
-				//
-				return dllPath;
-				//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -831,8 +800,6 @@ class VoiceManagerTest {
 		} // if
 			//
 		if (ih != null) {
-			//
-			ih.voiceIds = new String[] {};
 			//
 			ih.isInstalled = Boolean.FALSE;
 			//
@@ -1660,56 +1627,6 @@ class VoiceManagerTest {
 	private static <E> E get(final List<E> instance, final int index) throws Throwable {
 		try {
 			return (E) METHOD_GET_LIST.invoke(null, instance, index);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testCreateMicrosoftSpeechObjectLibraryWorkbook() throws Throwable {
-		//
-		Assertions.assertNull(createMicrosoftSpeechObjectLibraryWorkbook(null, null, (String[]) null));
-		//
-		if (ih != null) {
-			//
-			ih.voiceIds = new String[] {};
-			//
-		} // if
-			//
-		Assertions.assertNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, null, (String[]) null));
-		//
-		if (ih != null) {
-			//
-			ih.voiceIds = new String[] { null };
-			//
-		} // if
-			//
-		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, null, (String) null));
-		//
-		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, null, SPACE));
-		//
-		if (ih != null) {
-			//
-			ih.errorGetVoiceAttribute = new Error();
-			//
-		} // if
-			//
-		Assertions.assertNotNull(createMicrosoftSpeechObjectLibraryWorkbook(speechApi, null, SPACE));
-		//
-	}
-
-	private static Workbook createMicrosoftSpeechObjectLibraryWorkbook(final SpeechApi speechApi,
-			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction, final String... attributes)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK.invoke(null, speechApi,
-					languageCodeToTextObjIntFunction, attributes);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Workbook) {
-				return (Workbook) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -3299,12 +3216,6 @@ class VoiceManagerTest {
 			//
 			FieldUtils.writeDeclaredField(instance, "speechApi", speechApi, true);
 			//
-			if (ih != null) {
-				//
-				ih.voiceAttribute = "A";
-				//
-			} // if
-				//
 			Assertions.assertNull(listCellRenderer1.getListCellRendererComponent(null, null, 0, false, false));
 			//
 			FieldUtils.writeDeclaredField(instance, "speechApi", null, true);
