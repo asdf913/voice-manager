@@ -2323,20 +2323,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		return Util.forName("org.junit.jupiter.api.Test") != null;
 	}
 
-	@Nullable
-	private static List<?> getObjectsByGroupAnnotation(final Object instance, final String group) {
-		//
-		final FailableStream<Field> fs = new FailableStream<>(Util.filter(
-				testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManager.class), Arrays::stream, null), f -> {
-					final Group g = isAnnotationPresent(f, Group.class) ? f.getAnnotation(Group.class) : null;
-					return StringUtils.equals(g != null ? g.value() : null, group);
-				}));
-		//
-		return Util.toList(
-				FailableStreamUtil.stream(FailableStreamUtil.map(fs, f -> FieldUtils.readField(f, instance, true))));
-		//
-	}
-
 	private void actionPerformedForExportBrowse(final boolean headless) {
 		//
 		try {
