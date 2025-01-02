@@ -88,7 +88,7 @@ public class VoiceManagerHelpPanel extends JScrollPane implements Titled, Initia
 	@Url("https://poi.apache.org/encryption.html")
 	private String poiEncryptionPageUrl = null;
 
-	private freemarker.template.Configuration freeMarkerConfiguration = null;
+	private transient freemarker.template.Configuration freeMarkerConfiguration = null;
 
 	private Duration jSoupParseTimeout = null;
 
