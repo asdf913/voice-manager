@@ -1279,66 +1279,6 @@ class VoiceManagerTest {
 		//
 	}
 
-	@Test
-	void testActionPerformed3() throws Throwable {
-		//
-		final Class<?> clz = Util.getClass(instance != null ? instance.getToolkit() : null);
-		//
-		final Class<? extends Throwable> throwableClassByGetSystemClipboard = getThrowingThrowableClass(clz,
-				clz != null ? clz.getDeclaredMethod("getSystemClipboard") : null);
-		//
-		// btnDllPathCopy
-		//
-		final AbstractButton btnDllPathCopy = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnDllPathCopy", btnDllPathCopy, true);
-			//
-		} // if
-			//
-		Executable executable = () -> actionPerformed(instance, new ActionEvent(btnDllPathCopy, 0, null));
-		//
-		if (throwableClassByGetSystemClipboard != null) {
-			//
-			if (isUnderWindows()) {
-				//
-				AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}", executable);
-				//
-			} else {
-				//
-				AssertionsUtil.assertThrowsAndEquals(HeadlessException.class,
-						String.format("{localizedMessage=%1$s, message=%1$s}", getHeadlessMessage()), executable);
-				//
-			} // if
-				//
-		} else {
-			//
-			Assertions.assertDoesNotThrow(executable);
-			//
-		} // if
-			//
-		if (throwableClassByGetSystemClipboard != null) {
-			//
-			if (isUnderWindows()) {
-				//
-				AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}", executable);
-				//
-			} else {
-				//
-				AssertionsUtil.assertThrowsAndEquals(HeadlessException.class,
-						String.format("{localizedMessage=%1$s, message=%1$s}", getHeadlessMessage()), executable);
-				//
-			} // if
-				//
-		} else {
-			//
-			Assertions.assertDoesNotThrow(executable);
-			//
-		} // if
-			//
-	}
-
 	private static Object getHeadlessMessage() throws NoSuchMethodException {
 		return Narcissus.invokeStaticMethod(GraphicsEnvironment.class.getDeclaredMethod("getHeadlessMessage"));
 	}

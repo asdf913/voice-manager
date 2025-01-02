@@ -313,9 +313,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	private @interface SystemClipboard {
 	}
 
-	@SystemClipboard
-	private AbstractButton btnDllPathCopy = null;
-
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface ExportButton {
@@ -2320,12 +2317,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		IValue0<String> stringValue = null;
 		//
-		if (Objects.equals(source, btnDllPathCopy)) {
-			//
-			stringValue = Unit.with(Util.getText(tfDllPath));
-			//
-		} // if
-			//
 		if (stringValue != null) {
 			//
 			// if this method is not run under unit test, call
