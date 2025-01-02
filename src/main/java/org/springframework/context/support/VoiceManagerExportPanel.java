@@ -71,7 +71,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
-import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.LongBinaryOperator;
 import java.util.function.Predicate;
