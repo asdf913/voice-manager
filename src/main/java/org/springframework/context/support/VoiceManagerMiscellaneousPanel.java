@@ -579,7 +579,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		} // if
 			//
 			// Find the maximum width of the "java.awt.Component" instance from the field
-			// with "org.springframework.context.support.VoiceManager.Group" annotation with
+			// with "org.springframework.context.support.VoiceManagerMiscellaneousPanel$Group" annotation with
 			// same value (i.e. "Short Export Button"),
 			// then set the maximum width to each "java.awt.Component" in the list.
 			//
@@ -663,7 +663,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		// "actionPerformedForSystemClipboardAnnotated(java.lang.Object)" method
 		//
 		final FailableStream<Field> fs = new FailableStream<>(Util.filter(
-				testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManager.class), Arrays::stream, null),
+				testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManagerMiscellaneousPanel.class), Arrays::stream, null),
 				f -> isAnnotationPresent(f, SystemClipboard.class)));
 		//
 		testAndRun(Util.contains(Util.toList(Util.filter(
@@ -1552,7 +1552,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 	private static List<?> getObjectsByGroupAnnotation(final Object instance, final String group) {
 		//
 		final FailableStream<Field> fs = new FailableStream<>(Util.filter(
-				testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManager.class), Arrays::stream, null), f -> {
+				testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManagerMiscellaneousPanel.class), Arrays::stream, null), f -> {
 					final Group g = isAnnotationPresent(f, Group.class) ? f.getAnnotation(Group.class) : null;
 					return StringUtils.equals(g != null ? g.value() : null, group);
 				}));
