@@ -3,7 +3,6 @@ package org.springframework.context.support;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Desktop;
 import java.awt.FocusTraversalPolicy;
 import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
