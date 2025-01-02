@@ -3180,11 +3180,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@Nullable
-	private static Integer getPhysicalNumberOfCells(@Nullable final Row instance) {
-		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfCells()) : null;
-	}
-
-	@Nullable
 	private static Object invoke(@Nullable final Method method, @Nullable final Object instance, Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
