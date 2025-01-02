@@ -3180,46 +3180,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@Nullable
-	private static Row addLocaleIdRow(@Nullable final ObjectMap objectMap, @Nullable final List<Field> fs,
-			final Object instance) {
-		//
-		final Sheet sheet = ObjectMap.getObject(objectMap, Sheet.class);
-		//
-		Field f = null;
-		//
-		Object value = null;
-		//
-		Row row = null;
-		//
-		for (int j = 0; fs != null && j < fs.size(); j++) {
-			//
-			if ((f = fs.get(j)) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if (Objects.equals(Util.getType(f), Integer.TYPE)) {
-				//
-				value = Integer.valueOf(Narcissus.getIntField(instance, f));
-				//
-			} else {
-				//
-				value = Narcissus.getField(instance, f);
-				//
-			} // if
-				//
-			CellUtil.setCellValue(RowUtil.createCell(
-					row = getIfNull(row, () -> SheetUtil.createRow(sheet, intValue(getPhysicalNumberOfRows(sheet), 0))),
-					intValue(getPhysicalNumberOfCells(row), 0)), Util.toString(value));
-			//
-		} // for
-			//
-		return row;
-		//
-	}
-
-	@Nullable
 	private static Integer getPhysicalNumberOfCells(@Nullable final Row instance) {
 		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfCells()) : null;
 	}
