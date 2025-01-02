@@ -5470,21 +5470,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
-	private static <T> void accept(final Consumer<? super T> action, final T a, final T b,
-			@Nullable final T... values) {
-		//
-		accept(action, a);
-		//
-		accept(action, b);
-		//
-		for (int i = 0; values != null && i < values.length; i++) {
-			//
-			accept(action, values[i]);
-			//
-		} // for
-			//
-	}
-
 	private static <T> void accept(@Nullable final Consumer<T> instance, final T value) {
 		if (instance != null) {
 			instance.accept(value);
