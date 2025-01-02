@@ -1520,19 +1520,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 	}
 
-	private IValue0<String> getMicrosoftSpeechPlatformRuntimeLanguagesDownloadPageTitle() {
-		//
-		if (microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle == null) {
-			//
-			microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle = getPageTitle(
-					microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl, jSoupParseTimeout);
-			//
-		} // if
-			//
-		return microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle;
-		//
-	}
-
 	@Nullable
 	private static IValue0<String> getPageTitle(final String url, final Duration timeout) {
 		//
