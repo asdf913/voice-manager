@@ -185,17 +185,16 @@ class VoiceManagerTest {
 
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_IH, CLASS_EXPORT_TASK = null;
 
-	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_TEST_AND_APPLY4,
-			METHOD_TEST_AND_APPLY5, METHOD_INT_VALUE, METHOD_LONG_VALUE, METHOD_FOR_EACH_STREAM,
-			METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE, METHOD_GET_PREFERRED_WIDTH, METHOD_ADD_CONTAINER2,
-			METHOD_ADD_CONTAINER3, METHOD_ANY_MATCH, METHOD_MATCHER, METHOD_MATCHES, METHOD_VALUE_OF1,
-			METHOD_AND_FAILABLE_PREDICATE, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_TO_ARRAY_COLLECTION,
-			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_GET_LIST,
-			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_TEST_AND_ACCEPT_PREDICATE,
-			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_PACKAGE, METHOD_BROWSE,
-			METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING,
-			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE,
-			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE,
+	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
+			METHOD_INT_VALUE, METHOD_LONG_VALUE, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE,
+			METHOD_GET_PREFERRED_WIDTH, METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ANY_MATCH, METHOD_MATCHER,
+			METHOD_MATCHES, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR,
+			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_TO_ARRAY_COLLECTION, METHOD_GET_TAB_INDEX_BY_TITLE,
+			METHOD_GET_DECLARED_FIELD, METHOD_GET_LIST, METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK,
+			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE,
+			METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_IS_ANNOTATION_PRESENT,
+			METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2,
+			METHOD_SET_VISIBLE, METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT,
 			METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML, METHOD_LENGTH, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS,
 			METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL, METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_2,
@@ -212,9 +211,6 @@ class VoiceManagerTest {
 		final Class<?> clz = VoiceManager.class;
 		//
 		(METHOD_GET_SYSTEM_CLIP_BOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
-		//
-		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
-				ClipboardOwner.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY4 = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -1188,56 +1184,6 @@ class VoiceManagerTest {
 		//
 	}
 
-	private static Class<? extends Throwable> getThrowingThrowableClass(final Class<?> clz, final Method method)
-			throws Throwable {
-		//
-		try (final InputStream is = clz != null
-				? clz.getResourceAsStream(
-						String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))
-				: null) {
-			//
-			final JavaClass javaClass = ClassParserUtil
-					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
-			//
-			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(javaClass, method);
-			//
-			final Instruction[] instructions = InstructionListUtil.getInstructions(MethodGenUtil
-					.getInstructionList(testAndApply(Objects::nonNull, m, x -> new MethodGen(x, null, null), null)));
-			//
-			ObjectType objectType = null;
-			//
-			String className = null;
-			//
-			if (!Objects.equals(
-					FailableStreamUtil.map(
-							new FailableStream<>(testAndApply(Objects::nonNull, instructions, Arrays::stream, null)),
-							x -> Util.getClass(x)).collect(Collectors.toList()),
-					Arrays.asList(NEW.class, DUP.class, INVOKESPECIAL.class, ATHROW.class))) {
-				//
-				return null;
-				//
-			} // if
-				//
-			for (int i = 0; instructions != null && i < instructions.length; i++) {
-				//
-				if ((instructions[i]) instanceof NEW _new) {
-					//
-					className = (objectType = _new != null
-							? _new.getLoadClassType(new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(m)))
-							: null) != null ? objectType.getClassName() : null;
-					//
-				} // if
-					//
-			} // for
-				//
-			final Class<?> classTemp = Util.forName(className);
-			//
-			return Util.isAssignableFrom(Throwable.class, classTemp) ? (Class<? extends Throwable>) classTemp : null;
-			//
-		} // try
-			//
-	}
-
 	@Test
 	void testActionPerformed2() throws Throwable {
 		//
@@ -1253,10 +1199,6 @@ class VoiceManagerTest {
 			//
 		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportBrowse, 0, null)));
 		//
-	}
-
-	private static Object getHeadlessMessage() throws NoSuchMethodException {
-		return Narcissus.invokeStaticMethod(GraphicsEnvironment.class.getDeclaredMethod("getHeadlessMessage"));
 	}
 
 	private static void actionPerformed(final ActionListener instance, final ActionEvent actionEvent) {
@@ -1338,24 +1280,6 @@ class VoiceManagerTest {
 				return (Clipboard) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetContents() {
-		//
-		Assertions.assertDoesNotThrow(() -> setContents(null, null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> setContents(new Clipboard(null), null, null));
-		//
-	}
-
-	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner)
-			throws Throwable {
-		try {
-			METHOD_SET_CONTENTS.invoke(null, instance, contents, owner);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

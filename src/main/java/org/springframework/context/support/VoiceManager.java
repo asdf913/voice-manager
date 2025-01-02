@@ -2241,10 +2241,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 	}
 
-	private static boolean isTestMode() {
-		return Util.forName("org.junit.jupiter.api.Test") != null;
-	}
-
 	private void actionPerformedForExportBrowse(final boolean headless) {
 		//
 		try {
@@ -3685,13 +3681,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	@Nullable
 	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		return instance != null ? instance.getSystemClipboard() : null;
-	}
-
-	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
-			final ClipboardOwner owner) {
-		if (instance != null) {
-			instance.setContents(contents, owner);
-		}
 	}
 
 	private static boolean matches(@Nullable final Matcher instance) {
