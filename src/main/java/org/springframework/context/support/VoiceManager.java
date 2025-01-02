@@ -528,7 +528,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			init();
 			//
-		} catch (final NoSuchFieldException e) {
+		} catch (final NoSuchFieldException | NoSuchMethodException e) {
 			//
 			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
 			//
@@ -864,7 +864,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		}
 	}
 
-	private void init() throws NoSuchFieldException {
+	private void init() throws NoSuchFieldException, NoSuchMethodException {
 		//
 		final Field[] fs = Util.getDeclaredFields(VoiceManager.class);
 		//
@@ -960,26 +960,11 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		testAndAccept(x -> getTemplateLoader(configuration) == null, configuration,
 				x -> ConfigurationUtil.setTemplateLoader(x, new ClassTemplateLoader(VoiceManager.class, "/")));
 		//
-		final Set<Entry<String, IntFunction>> entrySet = Util
-				.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, IntFunction.class));
+		// Help Panel
 		//
-		if (Util.iterator(entrySet) != null) {
-			//
-			IntFunction intFunction = null;
-			//
-			for (final Entry<String, IntFunction> entry : entrySet) {
-				//
-				if ((intFunction = Util.getValue(entry)) != null && preferredHeight != null
-						&& intFunction.apply(preferredHeight.intValue()) instanceof Component c) {
-					//
-					jTabbedPane.add(c.getName(), c);
-					//
-				} // if
-					//
-			} // for
-				//
-		} // if
-			//
+		add(Util.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, IntFunction.class)),
+				preferredHeight, jTabbedPane);
+		//
 		final List<?> pages = Util.cast(List.class, testAndApply(Objects::nonNull, jTabbedPane,
 				x -> Narcissus.getField(x, getDeclaredField(Util.getClass(x), "pages")), null));
 		//
@@ -1017,6 +1002,29 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 				});
 		//
+	}
+
+	private static void add(final Iterable<Entry<String, IntFunction>> entrySet, final Number preferredHeight,
+			final Container container) throws NoSuchMethodException {
+
+		if (Util.iterator(entrySet) != null) {
+			//
+			IntFunction intFunction = null;
+			//
+			for (final Entry<String, IntFunction> entry : entrySet) {
+				//
+				if ((intFunction = Util.getValue(entry)) != null && preferredHeight != null
+						&& intFunction.apply(preferredHeight.intValue()) instanceof Component c && container != null
+						&& Narcissus.invokeMethod(c, Component.class.getDeclaredMethod("getObjectLock")) != null) {
+					//
+					container.add(c.getName(), c);
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
 	}
 
 	private static Map<String, Component> getTitledComponentMap(final Map<String, Component> cs,

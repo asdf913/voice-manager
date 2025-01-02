@@ -90,6 +90,7 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.LDC;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -161,9 +162,9 @@ class VoiceManagerTest {
 
 	private static Method METHOD_TEST_AND_APPLY4, METHOD_INT_VALUE, METHOD_LONG_VALUE, METHOD_FOR_EACH_STREAM,
 			METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE, METHOD_GET_PREFERRED_WIDTH, METHOD_ADD_CONTAINER2,
-			METHOD_ADD_CONTAINER3, METHOD_MATCHER, METHOD_MATCHES, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE,
-			METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_TO_ARRAY_COLLECTION, METHOD_GET_TAB_INDEX_BY_TITLE,
-			METHOD_GET_DECLARED_FIELD, METHOD_GET_LIST, METHOD_TEST_AND_ACCEPT_PREDICATE,
+			METHOD_ADD_CONTAINER3, METHOD_ADD_ITERABLE, METHOD_MATCHER, METHOD_MATCHES, METHOD_VALUE_OF1,
+			METHOD_AND_FAILABLE_PREDICATE, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_TO_ARRAY_COLLECTION,
+			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_GET_LIST, METHOD_TEST_AND_ACCEPT_PREDICATE,
 			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_BROWSE, METHOD_TO_URI_FILE, METHOD_TO_URI_URL,
 			METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2,
 			METHOD_SET_VISIBLE, METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE,
@@ -200,6 +201,9 @@ class VoiceManagerTest {
 		(METHOD_ADD_CONTAINER2 = clz.getDeclaredMethod("add", Container.class, Component.class)).setAccessible(true);
 		//
 		(METHOD_ADD_CONTAINER3 = clz.getDeclaredMethod("add", Container.class, Component.class, Object.class))
+				.setAccessible(true);
+		//
+		(METHOD_ADD_ITERABLE = clz.getDeclaredMethod("add", Iterable.class, Number.class, Container.class))
 				.setAccessible(true);
 		//
 		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, CharSequence.class)).setAccessible(true);
@@ -1289,6 +1293,22 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> add(new JPanel(), component, null));
 		//
+		Assertions.assertDoesNotThrow(() -> add(Collections.singleton(null), null, null));
+		//
+		final Iterable<Entry<String, IntFunction>> entrySet1 = Util.entrySet(Map.of("", x -> null));
+		//
+		Assertions.assertDoesNotThrow(() -> add(entrySet1, null, null));
+		//
+		Assertions.assertDoesNotThrow(() -> add(entrySet1, Integer.valueOf(0), null));
+		//
+		final Iterable<Entry<String, IntFunction>> entrySet2 = Util.entrySet(Map.of("", x -> container));
+		//
+		final Number number = Integer.valueOf(0);
+		//
+		Assertions.assertDoesNotThrow(() -> add(entrySet2, number, null));
+		//
+		Assertions.assertDoesNotThrow(() -> add(entrySet2, number, container));
+		//
 	}
 
 	private static void add(final Container instance, final Component comp) throws Throwable {
@@ -1305,7 +1325,15 @@ class VoiceManagerTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
 
+	private static void add(final Iterable<Entry<String, IntFunction>> entrySet, final Number preferredHeight,
+			final Container container) throws Throwable {
+		try {
+			METHOD_ADD_ITERABLE.invoke(null, entrySet, preferredHeight, container);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
@@ -3439,6 +3467,159 @@ class VoiceManagerTest {
 				//
 		} // if
 			//
+	}
+
+	@Test
+	void testNull() throws Throwable {
+		//
+		final Method[] ms = VoiceManager.class.getDeclaredMethods();
+		//
+		Method m = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
+		Class<?> parameterType = null;
+		//
+		Collection<Object> collection = null;
+		//
+		Object[] os = null;
+		//
+		String name, toString = null;
+		//
+		Object invoke = null;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ms[i]) == null // || !Modifier.isStatic(m.getModifiers())
+					|| m.isSynthetic()
+					|| Boolean.logicalAnd(Objects.equals(Util.getName(m), "main"),
+							Arrays.equals(m.getParameterTypes(), new Class<?>[] { String[].class }))
+					|| and(!GraphicsEnvironment.isHeadless(),
+							Util.contains(Arrays.asList("init", "afterPropertiesSet"), Util.getName(m)),
+							m.getParameterCount() == 0)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			parameterTypes = m.getParameterTypes();
+			//
+			if ((collection = ObjectUtils.getIfNull(collection, ArrayList::new)) != null) {
+				//
+				collection.clear();
+				//
+			} // if
+				//
+			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
+				//
+				if (Objects.equals(parameterType = parameterTypes[j], Boolean.TYPE)) {
+					//
+					Util.add(collection, Boolean.TRUE);
+					//
+				} else if (Objects.equals(parameterType, Integer.TYPE)) {
+					//
+					Util.add(collection, Integer.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Long.TYPE)) {
+					//
+					Util.add(collection, Long.valueOf(0));
+					//
+				} else {
+					//
+					Util.add(collection, null);
+					//
+				} // if
+					//
+			} // if
+				//
+			os = toArray(collection);
+			//
+			name = Util.getName(m);
+			//
+			toString = Objects.toString(m);
+			//
+			System.out.println(toString);// TODO
+			//
+			if (isStatic(m)) {
+				//
+				invoke = Narcissus.invokeStaticMethod(m, os);
+				//
+				if (Util.contains(Arrays.asList(Integer.TYPE, Boolean.TYPE, Long.TYPE), m.getReturnType())
+						|| Boolean.logicalAnd(Util.contains(
+								Arrays.asList("getOsVersionInfoEx", "getOsVersionInfoExMap", "IsWindows10OrGreater"),
+								name), m.getParameterCount() == 0)
+						|| Boolean.logicalAnd(Objects.equals(name, "createMicrosoftWindowsCompatibilityWarningJPanel"),
+								Arrays.equals(parameterTypes, new Class<?>[] { LayoutManager.class, String.class }))
+						|| Boolean.logicalAnd(Objects.equals(name, "getTitledComponentMap"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Map.class, String[].class }))
+						|| Boolean.logicalAnd(Objects.equals(name, "getMimeTypeAndBase64EncodedString"),
+								Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class }))
+						|| Boolean.logicalAnd(Objects.equals(name, "craeteSpeechApiInstallationWarningJPanel"),
+								Arrays.equals(parameterTypes, new Class<?>[] { String.class }))
+						|| Boolean.logicalAnd(Objects.equals(name, "createHelpPanel"),
+								Arrays.equals(parameterTypes,
+										new Class<?>[] { Number.class, freemarker.template.Configuration.class,
+												String.class, String.class, Duration.class }))
+						|| Boolean.logicalAnd(Objects.equals(name, "createFocusableComponentPredicate"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Collection.class }))) {
+					//
+					Assertions.assertNotNull(invoke, toString);
+					//
+				} else {
+					//
+					Assertions.assertNull(invoke, toString);
+					//
+				} // if
+					//
+			} else {
+				//
+				invoke = Narcissus.invokeMethod(instance, m, os);
+				//
+				if (Boolean.logicalAnd(Util.contains(Arrays.asList("getToolkit", "getObjectMapper"), name),
+						m.getParameterCount() == 0)
+						|| Boolean.logicalAnd(Objects.equals(name, "createImportResultPanel"),
+								Arrays.equals(parameterTypes, new Class<?>[] { LayoutManager.class }))) {
+					//
+					Assertions.assertNotNull(invoke, toString);
+					//
+				} else {
+					//
+					Assertions.assertNull(invoke, toString);
+					//
+				} // if
+					//
+			} // if
+				//
+		} // for
+			//
+	}
+
+	private static boolean and(final boolean a, final boolean b, final boolean... bs) {
+		//
+		boolean result = a && b;
+		//
+		if (!result) {
+			//
+			return false;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if (!(result &= bs[i])) {
+				//
+				return false;
+				//
+			} // if
+				//
+		} // for
+			//
+		return result;
+		//
+	}
+
+	private static Object[] toArray(final Collection<?> instance) {
+		return instance != null ? instance.toArray() : null;
 	}
 
 }
