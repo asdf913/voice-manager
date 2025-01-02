@@ -78,10 +78,9 @@ class JouYouKanjiGuiTest {
 			METHOD_GET_CSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY, METHOD_SET_PREFERRED_WIDTH,
 			METHOD_SET_SELECTED_ITEM, METHOD_GET_BOOLEAN_VALUES, METHOD_TO_ARRAY, METHOD_MATCHER,
 			METHOD_GET_EXPRESSION_AS_CSS_STRING, METHOD_GET_INDEXED_COLORS, METHOD_GET_STYLES_SOURCE,
-			METHOD_GET_PROPERTY, METHOD_INT_VALUE, METHOD_TO_MILLIS, METHOD_SET_FILL_BACK_GROUND_COLOR,
-			METHOD_SET_FILL_PATTERN, METHOD_SPLITERATOR, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
-			METHOD_MAP_TO_INT, METHOD_MAX, METHOD_OR_ELSE, METHOD_SET_AUTO_FILTER,
-			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = null;
+			METHOD_GET_PROPERTY, METHOD_TO_MILLIS, METHOD_SET_FILL_BACK_GROUND_COLOR, METHOD_SET_FILL_PATTERN,
+			METHOD_SPLITERATOR, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_MAP_TO_INT, METHOD_MAX,
+			METHOD_OR_ELSE, METHOD_SET_AUTO_FILTER, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -123,8 +122,6 @@ class JouYouKanjiGuiTest {
 		(METHOD_GET_STYLES_SOURCE = clz.getDeclaredMethod("getStylesSource", XSSFWorkbook.class)).setAccessible(true);
 		//
 		(METHOD_GET_PROPERTY = clz.getDeclaredMethod("getProperty", CSSDeclaration.class)).setAccessible(true);
-		//
-		(METHOD_INT_VALUE = clz.getDeclaredMethod("intValue", Number.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_TO_MILLIS = clz.getDeclaredMethod("toMillis", Duration.class)).setAccessible(true);
 		//
@@ -887,25 +884,6 @@ class JouYouKanjiGuiTest {
 	}
 
 	@Test
-	void testIntValue() throws Throwable {
-		//
-		Assertions.assertEquals(ONE, intValue(null, ONE));
-		//
-	}
-
-	private static int intValue(final Number instance, final int defaultValue) throws Throwable {
-		try {
-			final Object obj = METHOD_INT_VALUE.invoke(null, instance, defaultValue);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testToMillis() throws Throwable {
 		//
 		Assertions.assertNull(toMillis(null));
@@ -1127,7 +1105,7 @@ class JouYouKanjiGuiTest {
 			//
 			ih.row = Reflection.newProxy(Row.class, ih);
 			//
-			ih.firstRowNum = Integer.valueOf(intValue(ih.lastRowNum = Integer.valueOf(ONE), 0) - 1);
+			ih.firstRowNum = Integer.valueOf(Util.intValue(ih.lastRowNum = Integer.valueOf(ONE), 0) - 1);
 			//
 			ih.firstCellNum = Short.valueOf((short) -1);
 			//

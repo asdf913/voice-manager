@@ -444,9 +444,9 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		final Integer upperEnpoint = testAndApply(RangeUtil::hasUpperBound, speechVolumeRange, RangeUtil::upperEndpoint,
 				null);
 		//
-		add(jsSpeechVolume = new JSlider(
-				intValue(testAndApply(RangeUtil::hasLowerBound, speechVolumeRange, RangeUtil::lowerEndpoint, null), 0),
-				intValue(upperEnpoint, 100)), String.format("%1$s,span %2$s", GROWX, 3));
+		add(jsSpeechVolume = new JSlider(Util
+				.intValue(testAndApply(RangeUtil::hasLowerBound, speechVolumeRange, RangeUtil::lowerEndpoint, null), 0),
+				Util.intValue(upperEnpoint, 100)), String.format("%1$s,span %2$s", GROWX, 3));
 		//
 		setSpeechVolume(valueOf(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.speechVolume")), upperEnpoint);
@@ -546,7 +546,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		final Collection<Component> cs = getObjectsByGroupAnnotation(this, "TTS Button", Component.class);
 		//
 		setPreferredWidth(
-				intValue(getPreferredWidth(testAndApply(CollectionUtils::isNotEmpty, cs,
+				Util.intValue(getPreferredWidth(testAndApply(CollectionUtils::isNotEmpty, cs,
 						x -> Collections.max(x,
 								(a, b) -> ObjectUtils.compare(getPreferredWidth(a), getPreferredWidth(b))),
 						null)), 0),
@@ -656,9 +656,9 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 			final String voiceId = Util.toString(getSelectedItem(cbmVoiceId));
 			//
-			final int rate = intValue(getRate(), 0);
+			final int rate = Util.intValue(getRate(), 0);
 			//
-			final int volume = Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100);
+			final int volume = Math.min(Math.max(Util.intValue(getValue(jsSpeechVolume), 100), 0), 100);
 			//
 			if (Arrays.equals(getParameterTypes(method),
 					new Class<?>[] { String.class, String.class, Integer.TYPE, Integer.TYPE })) {
@@ -719,9 +719,9 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		//
 		writeVoiceToFile(objectMap, Util.getText(tfTextTts), Util.toString(getSelectedItem(cbmVoiceId))
 		//
-				, intValue(getRate(), 0)// rate
+				, Util.intValue(getRate(), 0)// rate
 				//
-				, Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100)// volume
+				, Math.min(Math.max(Util.intValue(getValue(jsSpeechVolume), 100), 0), 100)// volume
 		);
 		//
 		final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory, FORMAT,
@@ -801,9 +801,9 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 			speechApi.writeVoiceToFile(text, voiceId
 			//
-					, intValue(rate, 0)// rate
+					, Util.intValue(rate, 0)// rate
 					//
-					, Math.min(Math.max(intValue(volume, 100), 0), 100)// volume
+					, Math.min(Math.max(Util.intValue(volume, 100), 0), 100)// volume
 					, ObjectMap.getObject(objectMap, File.class));
 			//
 		} // if
@@ -854,7 +854,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		//
 		if (Objects.equals(source, btnSpeechRateSlower)) {
 			//
-			integer = Integer.valueOf(intValue(getValue(jsSpeechRate), 0) - 1);
+			integer = Integer.valueOf(Util.intValue(getValue(jsSpeechRate), 0) - 1);
 			//
 		} else if (Objects.equals(source, btnSpeechRateNormal)) {
 			//
@@ -862,7 +862,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 		} else if (Objects.equals(source, btnSpeechRateFaster)) {
 			//
-			integer = Integer.valueOf(intValue(getValue(jsSpeechRate), 0) + 1);
+			integer = Integer.valueOf(Util.intValue(getValue(jsSpeechRate), 0) + 1);
 			//
 		} // if
 			//
@@ -986,9 +986,9 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 			if (jsSpeechRate != null) {
 				//
-				setEnabled(btnSpeechRateSlower, intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMinimum());
+				setEnabled(btnSpeechRateSlower, Util.intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMinimum());
 				//
-				setEnabled(btnSpeechRateFaster, intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMaximum());
+				setEnabled(btnSpeechRateFaster, Util.intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMaximum());
 				//
 			} // if
 				//
@@ -1204,7 +1204,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		//
 		if (speechVolume != null) {
 			//
-			setValue(jsSpeechVolume, Math.min(speechVolume.intValue(), intValue(upperEnpoint, 100)));
+			setValue(jsSpeechVolume, Math.min(speechVolume.intValue(), Util.intValue(upperEnpoint, 100)));
 			//
 		} else if (upperEnpoint != null) {
 			//
@@ -1253,8 +1253,8 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		add(instance, new JLabel(SPEECH_RATE), "aligny top");
 		//
 		final JSlider jsSpeechRate = instance != null
-				? instance.jsSpeechRate = new JSlider(intValue(RangeUtil.lowerEndpoint(range), 0),
-						intValue(RangeUtil.upperEndpoint(range), 0))
+				? instance.jsSpeechRate = new JSlider(Util.intValue(RangeUtil.lowerEndpoint(range), 0),
+						Util.intValue(RangeUtil.upperEndpoint(range), 0))
 				: null;
 		//
 		add(instance, jsSpeechRate, String.format("%1$s,span %2$s", GROWX, 7));
@@ -1488,7 +1488,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 		} else if (object instanceof Number number) {
 			//
-			integer = Integer.valueOf(intValue(number, 0));
+			integer = Integer.valueOf(Util.intValue(number, 0));
 			//
 		} else {
 			//
@@ -1507,10 +1507,6 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		} catch (final NumberFormatException e) {
 			return null;
 		}
-	}
-
-	private static int intValue(@Nullable final Number instance, final int defaultValue) {
-		return instance != null ? instance.intValue() : defaultValue;
 	}
 
 	private static Object getInstance(final SpeechApi speechApi) {

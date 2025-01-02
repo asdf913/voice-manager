@@ -244,7 +244,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 
 	private static Logger LOG = LoggerFactory.getLogger(VoiceManagerImportBatchPanel.class);
 
-	private static final int TEMP_FILE_MINIMUM_PREFIX_LENGTH = intValue(getTempFileMinimumPrefixLength(), 3);
+	private static final int TEMP_FILE_MINIMUM_PREFIX_LENGTH = Util.intValue(getTempFileMinimumPrefixLength(), 3);
 
 	/**
 	 * @see java.lang.String#format(java.lang.String,java.lang.Object...)
@@ -614,8 +614,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 					toInteger(testAndApply(predicate, "min", function, null)),
 					toInteger(testAndApply(predicate, "max", function, null)));
 			//
-			add(jPanel, jsSpeechRate = new JSlider(intValue(RangeUtil.lowerEndpoint(range), 0),
-					intValue(RangeUtil.upperEndpoint(range), 0)), String.format("growx,wmin %1$s", 300));
+			add(jPanel, jsSpeechRate = new JSlider(Util.intValue(RangeUtil.lowerEndpoint(range), 0),
+					Util.intValue(RangeUtil.upperEndpoint(range), 0)), String.format("growx,wmin %1$s", 300));
 			//
 			setMajorTickSpacing(jsSpeechRate, 1);
 			//
@@ -651,9 +651,9 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				null);
 		//
 		add(jPanel,
-				jsSpeechVolume = new JSlider(intValue(
+				jsSpeechVolume = new JSlider(Util.intValue(
 						testAndApply(RangeUtil::hasLowerBound, speechVolumeRange, RangeUtil::lowerEndpoint, null), 0),
-						intValue(upperEnpoint, 100)),
+						Util.intValue(upperEnpoint, 100)),
 				String.format("%1$s,wmin %2$s", GROWX, 300));
 		//
 		setSpeechVolume(valueOf(PropertyResolverUtil.getProperty(propertyResolver,
@@ -847,7 +847,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		if (speechVolume != null) {
 			//
-			setValue(jsSpeechVolume, Math.min(speechVolume.intValue(), intValue(upperEnpoint, 100)));
+			setValue(jsSpeechVolume, Math.min(speechVolume.intValue(), Util.intValue(upperEnpoint, 100)));
 			//
 		} else if (upperEnpoint != null) {
 			//
@@ -882,7 +882,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 		} else if (object instanceof Number number) {
 			//
-			integer = Integer.valueOf(intValue(number, 0));
+			integer = Integer.valueOf(Util.intValue(number, 0));
 			//
 		} else {
 			//
@@ -1253,9 +1253,9 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			if (jsSpeechRate != null) {
 				//
-				setEnabled(btnSpeechRateSlower, intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMinimum());
+				setEnabled(btnSpeechRateSlower, Util.intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMinimum());
 				//
-				setEnabled(btnSpeechRateFaster, intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMaximum());
+				setEnabled(btnSpeechRateFaster, Util.intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMaximum());
 				//
 			} // if
 				//
@@ -1497,7 +1497,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			StringMap stringMap = null;
 			//
-			for (int i = 0; i < intValue(getNumberOfSheets(workbook), 0); i++) {
+			for (int i = 0; i < Util.intValue(getNumberOfSheets(workbook), 0); i++) {
 				//
 				if (Util.contains(sheetExclued, getSheetName(sheet = WorkbookUtil.getSheetAt(workbook, i)))) {
 					//
@@ -1505,7 +1505,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 					//
 				} // if
 					//
-				setMaximum(progressBarImport, Math.max(0, (intValue(getPhysicalNumberOfRows(sheet), 0)) - 1));
+				setMaximum(progressBarImport, Math.max(0, (Util.intValue(getPhysicalNumberOfRows(sheet), 0)) - 1));
 				//
 				ObjectMap.setObject(objectMap, ByteConverter.class,
 						getByteConverter(configurableListableBeanFactory, FORMAT,
@@ -1555,7 +1555,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 				Util.setText(tfCurrentProcessingSheetName, getSheetName(sheet));
 				//
-				numberOfSheetProcessed = Integer.valueOf(intValue(numberOfSheetProcessed, 0) + 1);
+				numberOfSheetProcessed = Integer.valueOf(Util.intValue(numberOfSheetProcessed, 0) + 1);
 				//
 			} // for
 				//
@@ -1611,14 +1611,14 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			final Integer sheetTotal = Util.getValue(sheetCurrentAndTotal);
 			//
 			final Fraction fraction1 = sheetTotal != null && sheetTotal.intValue() != 0
-					? Fraction.getFraction(intValue(sheetCurrent, 0), sheetTotal.intValue())
+					? Fraction.getFraction(Util.intValue(sheetCurrent, 0), sheetTotal.intValue())
 					: null;
 			//
 			Fraction fraction2 = sheetTotal != null ? Fraction.getFraction(1, sheetTotal) : null;
 			//
 			if (fraction2 != null && count != null) {
 				//
-				fraction2 = fraction2.multiplyBy(Fraction.getFraction(intValue(counter, 0), count.intValue()));
+				fraction2 = fraction2.multiplyBy(Fraction.getFraction(Util.intValue(counter, 0), count.intValue()));
 				//
 			} // if
 				//
@@ -1872,7 +1872,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 						//
 						it.counter = Integer.valueOf(row.getRowNum());
 						//
-						it.count = Integer.valueOf(intValue(getPhysicalNumberOfRows(sheet), 0) - 1);
+						it.count = Integer.valueOf(Util.intValue(getPhysicalNumberOfRows(sheet), 0) - 1);
 						//
 						it.percentNumberFormat = getIfNull(percentNumberFormat, () -> new DecimalFormat("#%"));
 						//
@@ -2104,7 +2104,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 					//
 					// volume
 					//
-					Math.min(Math.max(intValue(getValue(ObjectMap.getObject(objectMap, JSlider.class)), 100), 0), 100)
+					Math.min(Math.max(Util.intValue(getValue(ObjectMap.getObject(objectMap, JSlider.class)), 100), 0),
+							100)
 			//
 			);
 			//
@@ -2151,9 +2152,9 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			speechApi.writeVoiceToFile(text, voiceId
 			//
-					, intValue(rate, 0)// rate
+					, Util.intValue(rate, 0)// rate
 					//
-					, Math.min(Math.max(intValue(volume, 100), 0), 100)// volume
+					, Math.min(Math.max(Util.intValue(volume, 100), 0), 100)// volume
 					, ObjectMap.getObject(objectMap, File.class));
 			//
 		} // if
@@ -4142,7 +4143,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			final boolean headless, final Collection<String> jlptValues,
 			final Collection<String> gaKuNenBeTsuKanJiValues) {
 		//
-		final Row row = SheetUtil.createRow(sheet, intValue(getPhysicalNumberOfRows(sheet), 0));
+		final Row row = SheetUtil.createRow(sheet, Util.intValue(getPhysicalNumberOfRows(sheet), 0));
 		//
 		ObjectMap objectMap = null;
 		//
@@ -4348,10 +4349,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	private static Object get(@Nullable final Field field, @Nullable final Object instance)
 			throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
-	}
-
-	private static int intValue(@Nullable final Number instance, final int defaultValue) {
-		return instance != null ? instance.intValue() : defaultValue;
 	}
 
 	@Nullable

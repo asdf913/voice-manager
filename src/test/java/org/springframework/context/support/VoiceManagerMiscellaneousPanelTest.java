@@ -48,7 +48,9 @@ class VoiceManagerMiscellaneousPanelTest {
 					Boolean.logicalAnd(Objects.equals(Util.getName(m), "actionPerformedForExportBrowse"),
 							Arrays.equals(m.getParameterTypes(), new Object[] { Boolean.TYPE }))))
 					|| Boolean.logicalAnd(Objects.equals(Util.getName(m), "cloneLayoutManager"),
-							m.getParameterCount() == 0)) {
+							m.getParameterCount() == 0)
+					|| Boolean.logicalAnd(Objects.equals(Util.getName(m), "actionPerformedForExportButtons"),
+							Arrays.equals(m.getParameterTypes(), new Object[] { Object.class, Boolean.TYPE }))) {
 				//
 				continue;
 				//

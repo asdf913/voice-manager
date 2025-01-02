@@ -579,7 +579,9 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		} // if
 			//
 			// Find the maximum width of the "java.awt.Component" instance from the field
-			// with "org.springframework.context.support.VoiceManagerMiscellaneousPanel$Group" annotation with
+			// with
+			// "org.springframework.context.support.VoiceManagerMiscellaneousPanel$Group"
+			// annotation with
 			// same value (i.e. "Short Export Button"),
 			// then set the maximum width to each "java.awt.Component" in the list.
 			//
@@ -587,7 +589,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 		if (CollectionUtils.isNotEmpty(cs)) {
 			//
-			setPreferredWidth(intValue(getPreferredWidth(
+			setPreferredWidth(Util.intValue(getPreferredWidth(
 					Collections.max(cs, (a, b) -> ObjectUtils.compare(getPreferredWidth(a), getPreferredWidth(b)))), 0),
 					cs);
 			//
@@ -662,9 +664,9 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		// "@SystemClipboard", pass the "source" to
 		// "actionPerformedForSystemClipboardAnnotated(java.lang.Object)" method
 		//
-		final FailableStream<Field> fs = new FailableStream<>(Util.filter(
-				testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManagerMiscellaneousPanel.class), Arrays::stream, null),
-				f -> isAnnotationPresent(f, SystemClipboard.class)));
+		final FailableStream<Field> fs = new FailableStream<>(
+				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManagerMiscellaneousPanel.class),
+						Arrays::stream, null), f -> isAnnotationPresent(f, SystemClipboard.class)));
 		//
 		testAndRun(Util.contains(Util.toList(Util.filter(
 				FailableStreamUtil.stream(FailableStreamUtil.map(fs, f -> FieldUtils.readField(f, this, true))),
@@ -1199,8 +1201,9 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			} // if
 				//
 			CellUtil.setCellValue(RowUtil.createCell(
-					row = getIfNull(row, () -> SheetUtil.createRow(sheet, intValue(getPhysicalNumberOfRows(sheet), 0))),
-					intValue(getPhysicalNumberOfCells(row), 0)), Util.toString(value));
+					row = getIfNull(row,
+							() -> SheetUtil.createRow(sheet, Util.intValue(getPhysicalNumberOfRows(sheet), 0))),
+					Util.intValue(getPhysicalNumberOfCells(row), 0)), Util.toString(value));
 			//
 		} // for
 			//
@@ -1220,7 +1223,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 
 	private static void addLocaleIdSheetHeaderRow(final Sheet sheet, @Nullable final List<Field> fs) {
 		//
-		final int physicalNumberOfRows = intValue(getPhysicalNumberOfRows(sheet), 0);
+		final int physicalNumberOfRows = Util.intValue(getPhysicalNumberOfRows(sheet), 0);
 		//
 		if (physicalNumberOfRows == 0) {
 			//
@@ -1229,8 +1232,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			for (int j = 0; fs != null && j < fs.size(); j++) {
 				//
 				CellUtil.setCellValue(RowUtil.createCell(
-						row = getIfNull(row, () -> SheetUtil.createRow(sheet, intValue(physicalNumberOfRows, 0))),
-						intValue(getPhysicalNumberOfCells(row), 0)), Util.getName(fs.get(j)));
+						row = getIfNull(row, () -> SheetUtil.createRow(sheet, Util.intValue(physicalNumberOfRows, 0))),
+						Util.intValue(getPhysicalNumberOfCells(row), 0)), Util.getName(fs.get(j)));
 				//
 			} // for
 				//
@@ -1529,10 +1532,6 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		return instance != null ? instance.append(string) : null;
 	}
 
-	private static int intValue(@Nullable final Number instance, final int defaultValue) {
-		return instance != null ? instance.intValue() : defaultValue;
-	}
-
 	@Nullable
 	private static Double getPreferredWidth(final Component c) {
 		//
@@ -1551,8 +1550,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 
 	private static List<?> getObjectsByGroupAnnotation(final Object instance, final String group) {
 		//
-		final FailableStream<Field> fs = new FailableStream<>(Util.filter(
-				testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManagerMiscellaneousPanel.class), Arrays::stream, null), f -> {
+		final FailableStream<Field> fs = new FailableStream<>(Util.filter(testAndApply(Objects::nonNull,
+				Util.getDeclaredFields(VoiceManagerMiscellaneousPanel.class), Arrays::stream, null), f -> {
 					final Group g = isAnnotationPresent(f, Group.class) ? f.getAnnotation(Group.class) : null;
 					return StringUtils.equals(g != null ? g.value() : null, group);
 				}));
@@ -1716,13 +1715,12 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			return Unit
 					.with(ElementUtil
 							.text(testAndApply(x -> IterableUtils.size(x) == 1,
-									ElementUtil
-											.getElementsByTag(
-													testAndApply(Objects::nonNull,
-															testAndApply(StringUtils::isNotBlank, url,
-																	x -> new URI(x).toURL(), null),
-															x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null),
-													"title"),
+									ElementUtil.getElementsByTag(
+											testAndApply(Objects::nonNull,
+													testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(),
+															null),
+													x -> Jsoup.parse(x, Util.intValue(toMillis(timeout), 0)), null),
+											"title"),
 									x -> get(x, 0), null)));
 			//
 		} catch (final Exception e) {

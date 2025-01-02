@@ -391,11 +391,11 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				IOUtils.closeQuietly(workbook);
 				//
 				final IntStream intStream = mapToInt(testAndApply(Objects::nonNull, spliterator(workbook),
-						x -> StreamSupport.stream(x, false), null), x -> intValue(getPhysicalNumberOfRows(x), 0));
+						x -> StreamSupport.stream(x, false), null), x -> Util.intValue(getPhysicalNumberOfRows(x), 0));
 				//
 				final Integer totalPhysicalNumberOfRows = intStream != null ? Integer.valueOf(intStream.sum()) : null;
 				//
-				testAndAccept(x -> intValue(totalPhysicalNumberOfRows, 0) == 0, file, FileUtils::deleteQuietly);
+				testAndAccept(x -> Util.intValue(totalPhysicalNumberOfRows, 0) == 0, file, FileUtils::deleteQuietly);
 				//
 			} // try
 				//
@@ -487,7 +487,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 			final Document document = testAndApply(Objects::nonNull,
 					testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null),
-					x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null);
+					x -> Jsoup.parse(x, Util.intValue(toMillis(timeout), 0)), null);
 			//
 			final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
 			//
@@ -696,10 +696,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	@Nullable
 	private static String getProperty(@Nullable final CSSDeclaration instance) {
 		return instance != null ? instance.getProperty() : null;
-	}
-
-	private static int intValue(@Nullable final Number instance, final int defaultValue) {
-		return instance != null ? instance.intValue() : defaultValue;
 	}
 
 	@Nullable

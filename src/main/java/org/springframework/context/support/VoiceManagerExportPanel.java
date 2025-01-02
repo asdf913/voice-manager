@@ -343,7 +343,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 	private static final FailablePredicate<File, RuntimeException> EMPTY_FILE_PREDICATE = f -> f != null && f.exists()
 			&& isFile(f) && longValue(length(f), 0) == 0;
 
-	private static final int TEMP_FILE_MINIMUM_PREFIX_LENGTH = intValue(getTempFileMinimumPrefixLength(), 3);
+	private static final int TEMP_FILE_MINIMUM_PREFIX_LENGTH = Util.intValue(getTempFileMinimumPrefixLength(), 3);
 
 	private static IValue0<Method> METHOD_RANDOM_ALPHABETIC = null;
 
@@ -1941,9 +1941,9 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				if (!(fileToBeDeleted = longValue(length(file = toFile(path)), 0) == 0)) {
 					//
-					fileToBeDeleted = intValue(
-							getPhysicalNumberOfRows(testAndApply(x -> intValue(getNumberOfSheets(x), 0) == 1, workbook,
-									x -> WorkbookUtil.getSheetAt(x, 0), null)),
+					fileToBeDeleted = Util.intValue(
+							getPhysicalNumberOfRows(testAndApply(x -> Util.intValue(getNumberOfSheets(x), 0) == 1,
+									workbook, x -> WorkbookUtil.getSheetAt(x, 0), null)),
 							0) == 0;
 					//
 				} // if
@@ -2392,7 +2392,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 				} finally {
 					//
-					testAndAccept(x -> intValue(length(x), 0) == 0, file, VoiceManagerExportPanel::delete);
+					testAndAccept(x -> Util.intValue(length(x), 0) == 0, file, VoiceManagerExportPanel::delete);
 					//
 				} // try
 					//
@@ -3097,7 +3097,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 			testAndRun(jlptAsFolder, () -> incrementAndGet(denominator));
 			//
-			final Fraction pharse = Fraction.getFraction(0, intValue(denominator, 2));
+			final Fraction pharse = Fraction.getFraction(0, Util.intValue(denominator, 2));
 			//
 			for (int i = 0; i < size; i++) {
 				//
@@ -3540,7 +3540,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 				testAndAccept((a, b) -> b != null,
 						progressBar = getIfNull(progressBar, () -> getProgressBarExport(voiceManagerExportPanel)),
-						counter, (a, b) -> setValue(a, intValue(b, 0)));
+						counter, (a, b) -> setValue(a, Util.intValue(b, 0)));
 				//
 				if (counter != null && count != null) {
 					//
@@ -3556,7 +3556,8 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					// increment "numerator" in "org.apache.commons.lang3.math.Fraction" class by 1
 					//
 					testAndAccept(x -> Boolean.logicalAnd(counter.intValue() == count.intValue(), x != null), pharse,
-							x -> FieldUtils.writeDeclaredField(x, "numerator", intValue(getNumerator(x), 0) + 1, true));
+							x -> FieldUtils.writeDeclaredField(x, "numerator", Util.intValue(getNumerator(x), 0) + 1,
+									true));
 					//
 				} // if
 					//
@@ -4895,7 +4896,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 		} else if (object instanceof Number number) {
 			//
-			value = Unit.with(Duration.ofMillis(intValue(number, 0)));
+			value = Unit.with(Duration.ofMillis(Util.intValue(number, 0)));
 			//
 		} else if (object instanceof CharSequence) {
 			//
@@ -4945,10 +4946,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 	@Nullable
 	private static Duration parse(final CharSequence text) {
 		return StringUtils.isNotEmpty(text) ? Duration.parse(text) : null;
-	}
-
-	private static int intValue(@Nullable final Number instance, final int defaultValue) {
-		return instance != null ? instance.intValue() : defaultValue;
 	}
 
 	private static void setListNames(@Nullable final Voice instance, final Iterable<String> listNames) {
@@ -5219,8 +5216,9 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			} // if
 				//
 			CellUtil.setCellValue(RowUtil.createCell(
-					row = getIfNull(row, () -> SheetUtil.createRow(sheet, intValue(getPhysicalNumberOfRows(sheet), 0))),
-					intValue(getPhysicalNumberOfCells(row), 0)), Util.toString(value));
+					row = getIfNull(row,
+							() -> SheetUtil.createRow(sheet, Util.intValue(getPhysicalNumberOfRows(sheet), 0))),
+					Util.intValue(getPhysicalNumberOfCells(row), 0)), Util.toString(value));
 			//
 		} // for
 			//
@@ -5245,7 +5243,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 
 	private static void addLocaleIdSheetHeaderRow(final Sheet sheet, @Nullable final List<Field> fs) {
 		//
-		final int physicalNumberOfRows = intValue(getPhysicalNumberOfRows(sheet), 0);
+		final int physicalNumberOfRows = Util.intValue(getPhysicalNumberOfRows(sheet), 0);
 		//
 		if (physicalNumberOfRows == 0) {
 			//
@@ -5254,8 +5252,8 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			for (int j = 0; fs != null && j < fs.size(); j++) {
 				//
 				CellUtil.setCellValue(RowUtil.createCell(
-						row = getIfNull(row, () -> SheetUtil.createRow(sheet, intValue(physicalNumberOfRows, 0))),
-						intValue(getPhysicalNumberOfCells(row), 0)), Util.getName(fs.get(j)));
+						row = getIfNull(row, () -> SheetUtil.createRow(sheet, Util.intValue(physicalNumberOfRows, 0))),
+						Util.intValue(getPhysicalNumberOfCells(row), 0)), Util.getName(fs.get(j)));
 				//
 			} // for
 				//

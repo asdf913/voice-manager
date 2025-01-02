@@ -252,7 +252,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 
 	private static final String NO_FILE_SELECTED = "No File Selected";
 
-	private static final int TEMP_FILE_MINIMUM_PREFIX_LENGTH = intValue(getTempFileMinimumPrefixLength(), 3);
+	private static final int TEMP_FILE_MINIMUM_PREFIX_LENGTH = Util.intValue(getTempFileMinimumPrefixLength(), 3);
 
 	/**
 	 * @see java.lang.String#format(java.lang.String,java.lang.Object...)
@@ -1038,9 +1038,9 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				null);
 		//
 		add(panel2,
-				jsSpeechVolume = new JSlider(intValue(
+				jsSpeechVolume = new JSlider(Util.intValue(
 						testAndApply(RangeUtil::hasLowerBound, speechVolumeRange, RangeUtil::lowerEndpoint, null), 0),
-						intValue(upperEnpoint, 100)),
+						Util.intValue(upperEnpoint, 100)),
 				String.format(WMIN_ONLY_FORMAT, width));
 		//
 		setSpeechVolume(valueOf(PropertyResolverUtil.getProperty(propertyResolver,
@@ -3315,9 +3315,9 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 				speechApi.writeVoiceToFile(Util.getText(tfTextImport), voiceId
 				//
-						, intValue(getRate(), 0)// rate
+						, Util.intValue(getRate(), 0)// rate
 						//
-						, Math.min(Math.max(intValue(getValue(jsSpeechVolume), 100), 0), 100)// volume
+						, Math.min(Math.max(Util.intValue(getValue(jsSpeechVolume), 100), 0), 100)// volume
 						, file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null)
 				//
 				);
@@ -4167,7 +4167,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		if (speechVolume != null) {
 			//
-			setValue(jsSpeechVolume, Math.min(speechVolume.intValue(), intValue(upperEnpoint, 100)));
+			setValue(jsSpeechVolume, Math.min(speechVolume.intValue(), Util.intValue(upperEnpoint, 100)));
 			//
 		} else if (upperEnpoint != null) {
 			//
@@ -4190,8 +4190,8 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		add(container, new JLabel(SPEECH_RATE), String.format(ALIGN_FORMAT, "50%"));
 		//
 		final JSlider jsSpeechRate = instance != null
-				? instance.jsSpeechRate = new JSlider(intValue(RangeUtil.lowerEndpoint(range), 0),
-						intValue(RangeUtil.upperEndpoint(range), 0))
+				? instance.jsSpeechRate = new JSlider(Util.intValue(RangeUtil.lowerEndpoint(range), 0),
+						Util.intValue(RangeUtil.upperEndpoint(range), 0))
 				: null;
 		//
 		add(container, jsSpeechRate, String.format(WMIN_ONLY_FORMAT, width));
@@ -4504,7 +4504,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} else if (object instanceof Number number) {
 			//
-			integer = Integer.valueOf(intValue(number, 0));
+			integer = Integer.valueOf(Util.intValue(number, 0));
 			//
 		} else {
 			//
@@ -4523,10 +4523,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		} catch (final NumberFormatException e) {
 			return null;
 		}
-	}
-
-	private static int intValue(@Nullable final Number instance, final int defaultValue) {
-		return instance != null ? instance.intValue() : defaultValue;
 	}
 
 	private static <T> void accept(final Consumer<? super T> action, final T a, final T b,

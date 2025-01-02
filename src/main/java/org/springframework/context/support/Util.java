@@ -1568,4 +1568,8 @@ public abstract class Util {
 		return instance != null && input != null ? instance.digest(input) : null;
 	}
 
+	static int intValue(final Number instance, final int defaultValue) {
+		return instance != null ? instance.intValue() : defaultValue;
+	}
+
 }

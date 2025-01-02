@@ -687,7 +687,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		} else if (value instanceof Number number) {
 			//
-			this.freeMarkerVersion = new Version(intValue(number, 0));
+			this.freeMarkerVersion = new Version(Util.intValue(number, 0));
 			//
 		} // if
 			//
@@ -1598,14 +1598,14 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			final int size = IterableUtils.size(components);
 			//
-			return size != 0 ? get(components, (intValue(indexOf(components, aComponent), -1) + 1) % size) : null;
+			return size != 0 ? get(components, (Util.intValue(indexOf(components, aComponent), -1) + 1) % size) : null;
 			//
 		}
 
 		@Nullable
 		public Component getComponentBefore(final Container focusCycleRoot, final Component aComponent) {
 			//
-			int idx = intValue(indexOf(components, aComponent), -1) - 1;
+			int idx = Util.intValue(indexOf(components, aComponent), -1) - 1;
 			//
 			if (idx < 0) {
 				//
@@ -1782,7 +1782,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		} else if (object instanceof Number number) {
 			//
-			integer = Integer.valueOf(intValue(number, 0));
+			integer = Integer.valueOf(Util.intValue(number, 0));
 			//
 		} else {
 			//
@@ -1825,10 +1825,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		} // for
 			//
-	}
-
-	private static int intValue(@Nullable final Number instance, final int defaultValue) {
-		return instance != null ? instance.intValue() : defaultValue;
 	}
 
 	@Override
@@ -2033,7 +2029,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					flac.openFLACStream();
 					//
 					AudioStreamEncoder.encodeAudioInputStream(ais,
-							Math.max(intValue(audioStreamEncoderByteArrayLength, 0), 2), flac, false);
+							Math.max(Util.intValue(audioStreamEncoderByteArrayLength, 0), 2), flac, false);
 					//
 				} // if
 					//
@@ -2264,7 +2260,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 					//
 				} else if (Boolean.logicalAnd(in instanceof LDC, index != null)) {
 					//
-					count = Integer.valueOf(intValue(count, 0) + 1);
+					count = Integer.valueOf(Util.intValue(count, 0) + 1);
 					//
 					if (i < ins.length - 2 && ins[i + 2] instanceof ASTORE) {
 						//
