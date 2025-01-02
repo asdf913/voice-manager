@@ -1946,11 +1946,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@Nullable
-	private static byte[] getBytes(@Nullable final String instance) {
-		return instance != null ? instance.getBytes() : null;
-	}
-
-	@Nullable
 	private static Integer toInteger(@Nullable final Object object) {
 		//
 		Integer integer = null;
