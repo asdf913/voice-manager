@@ -611,7 +611,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 	}
 
-	private static void browse(final Desktop instance, final URI uri) throws IOException {
+	private static void browse(@Nullable final Desktop instance, final URI uri) throws IOException {
 		if (instance != null) {
 			instance.browse(uri);
 		}
