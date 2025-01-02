@@ -346,6 +346,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		}
 
 		@SuppressWarnings("java:S1612")
+		@Nullable
 		private static String getChildrenAsString(final ContainerTag<?> instance) {
 			//
 			try {
@@ -371,6 +372,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			return instance != null ? instance.spliterator() : null;
 		}
 
+		@Nullable
 		private static Attribute getAttributeByName(final Tag<?> instance, final String name) {
 			//
 			try {
