@@ -3170,16 +3170,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@Nullable
-	private static <T> Stream<T> sorted(@Nullable final Stream<T> instance,
-			@Nullable final Comparator<? super T> comparator) {
-		//
-		return instance != null && (comparator != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.sorted(comparator)
-				: instance;
-		//
-	}
-
-	@Nullable
 	private static Object invoke(@Nullable final Method method, @Nullable final Object instance, Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
