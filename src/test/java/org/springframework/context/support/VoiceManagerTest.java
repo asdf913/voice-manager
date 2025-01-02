@@ -3499,8 +3499,8 @@ class VoiceManagerTest {
 							m.getParameterCount() == 0)
 					|| and(!Objects.equals(Util.getName(Util.getClass(provider(FileSystems.getDefault()))),
 							"sun.nio.fs.WindowsFileSystemProvider"),
-							Util.contains(Arrays.asList("getOsVersionInfoEx", "getOsVersionInfoExMap"),
-									Util.getName(m)),
+							Util.contains(Arrays.asList("getOsVersionInfoEx", "getOsVersionInfoExMap",
+									"IsWindows10OrGreater"), Util.getName(m)),
 							m.getParameterCount() == 0)) {
 				//
 				continue;
