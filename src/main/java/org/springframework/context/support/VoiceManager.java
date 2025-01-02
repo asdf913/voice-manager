@@ -304,11 +304,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	@Note("Browse Button For Export Function")
 	private AbstractButton btnExportBrowse = null;
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.FIELD)
-	private @interface SystemClipboard {
-	}
-
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface ExportButton {
