@@ -90,7 +90,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 	@Url("https://poi.apache.org/encryption.html")
 	private String poiEncryptionPageUrl = null;
 
-	private transient freemarker.template.Configuration freeMarkerConfiguration = null;
+	private freemarker.template.Configuration freeMarkerConfiguration = null;
 
 	@Nullable
 	private Duration jSoupParseTimeout = null;
