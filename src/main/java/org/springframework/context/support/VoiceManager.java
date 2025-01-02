@@ -259,9 +259,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private ObjectMapper objectMapper = null;
 
-	@Url("https://ja.wikipedia.org/wiki/%E5%AD%A6%E5%B9%B4%E5%88%A5%E6%BC%A2%E5%AD%97%E9%85%8D%E5%BD%93%E8%A1%A8")
-	private String gaKuNenBeTsuKanJiListPageUrl = null;
-
 	private String microsoftSpeechPlatformRuntimeDownloadPageUrl = null;
 
 	@Url("https://support.microsoft.com/en-us/windows/make-older-apps-or-programs-compatible-with-windows-10-783d6dd7-b439-bdb0-0490-54eea0f45938")
@@ -594,10 +591,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				Util.toList(Util.map(Util.stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))),
 				new String[] {});
 		//
-	}
-
-	public void setGaKuNenBeTsuKanJiListPageUrl(final String gaKuNenBeTsuKanJiListPageUrl) {
-		this.gaKuNenBeTsuKanJiListPageUrl = gaKuNenBeTsuKanJiListPageUrl;
 	}
 
 	public void setMicrosoftSpeechPlatformRuntimeDownloadPageUrl(

@@ -822,12 +822,6 @@ class VoiceManagerTest {
 				//
 		} // if
 			//
-		if (instance != null) {
-			//
-			instance.setGaKuNenBeTsuKanJiListPageUrl(EMPTY);
-			//
-		} // if
-			//
 		if (url == null) {
 			//
 			Assertions.assertThrows(RuntimeException.class, () -> instance.afterPropertiesSet());
@@ -852,12 +846,6 @@ class VoiceManagerTest {
 				//
 			} // if
 				//
-		} // if
-			//
-		if (instance != null) {
-			//
-			instance.setGaKuNenBeTsuKanJiListPageUrl(SPACE);
-			//
 		} // if
 			//
 		if (url == null) {

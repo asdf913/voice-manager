@@ -972,8 +972,6 @@
 		<property name="tabOrders"
 			value="${org.springframework.context.support.VoiceManager.tabOrders}" />
 		<!-- -->
-		<property name="gaKuNenBeTsuKanJiListPageUrl"
-			ref="gaKuNenBeTsuKanJiListPageUrl" />
 		<property
 			name="microsoftSpeechPlatformRuntimeDownloadPageUrl"
 			value="${org.springframework.context.support.VoiceManager.microsoftSpeechPlatformRuntimeDownloadPageUrl}" />
