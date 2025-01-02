@@ -2242,22 +2242,9 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		clear(tmImportResult);
 		//
-		final Object source = Util.getSource(evt);
-		//
-		final boolean headless = GraphicsEnvironment.isHeadless();
-		//
-		if (anyMatch(Util.stream(findFieldsByValue(Util.getDeclaredFields(getClass()), this, source)),
-				f -> isAnnotationPresent(f, ExportButton.class))) {
+		if (Objects.equals(Util.getSource(evt), btnExportBrowse)) {
 			//
-			Util.setText(tfExportFile, null);
-			//
-			actionPerformedForExportButtons(source, headless);
-			//
-		} // if
-			//
-		if (Objects.equals(source, btnExportBrowse)) {
-			//
-			actionPerformedForExportBrowse(headless);
+			actionPerformedForExportBrowse(GraphicsEnvironment.isHeadless());
 			//
 		} // if
 			//
@@ -2292,12 +2279,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		} // if
 			//
-	}
-
-	private void actionPerformedForExportButtons(final Object source, final boolean headless) {
-		//
-		throw new IllegalStateException();
-		//
 	}
 
 	@Nullable
