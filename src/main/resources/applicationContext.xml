@@ -1003,9 +1003,6 @@
 		</property>
 		<property name="jSoupParseTimeout"
 			value="${org.springframework.context.support.VoiceManager.jSoupParseTimeout}" />
-		<!-- -->
-		<property name="languageCodeToTextObjIntFunction"
-			ref="LanguageCodeToTextObjIntFunction" />
 	</bean>
 
 	<!---->

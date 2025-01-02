@@ -322,8 +322,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	@Nullable
 	private Duration jSoupParseTimeout = null;
 
-	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
-
 	private VoiceManager() {
 	}
 
@@ -798,11 +796,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		this.jSoupParseTimeout = testAndApply(StringUtils::isNotBlank, string, Duration::parse, null);
 		//
-	}
-
-	public void setLanguageCodeToTextObjIntFunction(
-			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) {
-		this.languageCodeToTextObjIntFunction = languageCodeToTextObjIntFunction;
 	}
 
 	@Nullable
