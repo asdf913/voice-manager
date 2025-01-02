@@ -61,6 +61,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -259,6 +260,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		return instance != null && instance.isFile();
 	}
 
+	@Nullable
 	private static Long length(final File instance) {
 		//
 		if (instance == null) {
@@ -783,6 +785,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 		}
 
+		@Nullable
 		private static IValue0<Object> handleRunnable(final Method method, final Runnable runnable, final Object[] args,
 				final Collection<Object> throwableStackTraceHexs) throws Throwable {
 			//
@@ -872,6 +875,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			return method != null ? method.invoke(instance, args) : null;
 		}
 
+		@Nullable
 		private static IValue0<Object> handleObjectMap(final String methodName, final Map<Object, Object> map,
 				final Object[] args) {
 			//
@@ -1072,6 +1076,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		return instance != null ? instance.getPackage() : null;
 	}
 
+	@Nullable
 	private static Row addLocaleIdRow(final ObjectMap objectMap, final List<Field> fs, final Object instance) {
 		//
 		final Sheet sheet = ObjectMap.getObject(objectMap, Sheet.class);
@@ -1268,6 +1273,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static List<Field> findFieldsByValue(final Field[] fs, final Object instance, final Object value) {
 		//
 		Field f = null;
@@ -1424,6 +1430,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
+	@Nullable
 	private static Double getPreferredWidth(final Component c) {
 		//
 		final Dimension d = Util.getPreferredSize(c);
@@ -1501,6 +1508,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		}
 	}
 
+	@Nullable
 	private static IValue0<Object> getDllPath(final Object instance) {
 		//
 		final Class<?>[] declaredClasses = getDeclaredClasses(Util.getClass(instance));
@@ -1593,6 +1601,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static IValue0<String> getPageTitle(final String url, final Duration timeout) {
 		//
 		try {
