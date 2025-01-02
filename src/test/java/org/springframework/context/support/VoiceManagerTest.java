@@ -188,7 +188,7 @@ class VoiceManagerTest {
 
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_IH, CLASS_EXPORT_TASK = null;
 
-	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_SET_ENABLED_2, METHOD_SET_ENABLED_3,
+	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_SET_ENABLED_2,
 			METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_INT_VALUE, METHOD_LONG_VALUE, METHOD_FOR_EACH_STREAM,
 			METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE, METHOD_GET_PREFERRED_WIDTH, METHOD_ADD_CONTAINER2,
 			METHOD_ADD_CONTAINER3, METHOD_ANY_MATCH, METHOD_MATCHER, METHOD_MATCHES, METHOD_VALUE_OF1,
@@ -203,8 +203,8 @@ class VoiceManagerTest {
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML, METHOD_LENGTH,
 			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED,
 			METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL, METHOD_TO_RUNTIME_EXCEPTION, METHOD_SET_PREFERRED_WIDTH_ARRAY,
-			METHOD_SET_PREFERRED_WIDTH_ITERABLE, METHOD_SET_PREFERRED_WIDTH_2, METHOD_IS_STATIC,
-			METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS, METHOD_GET_FIELD_BY_NAME, METHOD_CREATE_VOICE_ID_WARNING_PANEL,
+			METHOD_SET_PREFERRED_WIDTH_2, METHOD_IS_STATIC, METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS,
+			METHOD_GET_FIELD_BY_NAME, METHOD_CREATE_VOICE_ID_WARNING_PANEL,
 			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_SET_FOCUS_CYCLE_ROOT,
 			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_DECLARED_CONSTRUCTOR,
 			METHOD_NEW_INSTANCE, METHOD_GET_PAGE_TITLE, METHOD_TO_MILLIS, METHOD_ADD_ALL, METHOD_SET_AUTO_FILTER,
@@ -223,9 +223,6 @@ class VoiceManagerTest {
 				ClipboardOwner.class)).setAccessible(true);
 		//
 		(METHOD_SET_ENABLED_2 = clz.getDeclaredMethod("setEnabled", Component.class, Boolean.TYPE)).setAccessible(true);
-		//
-		(METHOD_SET_ENABLED_3 = clz.getDeclaredMethod("setEnabled", Boolean.TYPE, Component.class, Component[].class))
-				.setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY4 = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -355,9 +352,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_SET_PREFERRED_WIDTH_ARRAY = clz.getDeclaredMethod("setPreferredWidth", Integer.TYPE, Component[].class))
-				.setAccessible(true);
-		//
-		(METHOD_SET_PREFERRED_WIDTH_ITERABLE = clz.getDeclaredMethod("setPreferredWidth", Integer.TYPE, Iterable.class))
 				.setAccessible(true);
 		//
 		(METHOD_SET_PREFERRED_WIDTH_2 = clz.getDeclaredMethod("setPreferredWidth", Component.class, Supplier.class))
@@ -1488,21 +1482,11 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow((() -> setEnabled(null, false)));
 		//
-		Assertions.assertDoesNotThrow((() -> setEnabled(false, null, (Component[]) null)));
-		//
 	}
 
 	private static void setEnabled(final Component instance, final boolean b) throws Throwable {
 		try {
 			METHOD_SET_ENABLED_2.invoke(null, instance, b);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static void setEnabled(final boolean b, final Component instance, final Component... cs) throws Throwable {
-		try {
-			METHOD_SET_ENABLED_3.invoke(null, b, instance, cs);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -2632,12 +2616,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> setPreferredWidth(ZERO, (Component) null));
 		//
-		Assertions.assertDoesNotThrow(() -> setPreferredWidth(ZERO, (Iterable) null));
-		//
-		Assertions.assertDoesNotThrow(() -> setPreferredWidth(ZERO, (Iterable) iterable));
-		//
-		Assertions.assertDoesNotThrow(() -> setPreferredWidth(ZERO, Collections.singleton(null)));
-		//
 		final MH mh = new MH();
 		//
 		final ProxyFactory proxyFactory = new ProxyFactory();
@@ -2663,14 +2641,6 @@ class VoiceManagerTest {
 	private static void setPreferredWidth(final int width, final Component... cs) throws Throwable {
 		try {
 			METHOD_SET_PREFERRED_WIDTH_ARRAY.invoke(null, width, cs);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static void setPreferredWidth(final int width, final Iterable<Component> cs) throws Throwable {
-		try {
-			METHOD_SET_PREFERRED_WIDTH_ITERABLE.invoke(null, width, cs);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

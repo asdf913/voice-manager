@@ -2333,18 +2333,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		}
 	}
 
-	private static void setEnabled(final boolean b, final Component instance, @Nullable final Component... cs) {
-		//
-		setEnabled(instance, b);
-		//
-		for (int i = 0; cs != null && i < cs.length; i++) {
-			//
-			setEnabled(cs[i], b);
-			//
-		} // for
-			//
-	}
-
 	private static void setEnabled(@Nullable final Component instance, final boolean b) {
 		if (instance != null) {
 			instance.setEnabled(b);
@@ -2389,22 +2377,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private static long longValue(@Nullable final Number instance, final long defaultValue) {
 		return instance != null ? instance.longValue() : defaultValue;
-	}
-
-	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
-		//
-		AbstractButton ab = null;
-		//
-		for (int i = 0; abs != null && i < abs.length; i++) {
-			//
-			if ((ab = abs[i]) == null) {
-				continue;
-			} // if
-				//
-			ab.addActionListener(actionListener);
-			//
-		} // for
-			//
 	}
 
 	@Override
@@ -4037,28 +4009,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			c.setPreferredSize(new Dimension(width, (int) d.getHeight()));
 			//
 		} // for
-			//
-	}
-
-	private static void setPreferredWidth(final int width, @Nullable final Iterable<Component> cs) {
-		//
-		if (Util.iterator(cs) != null) {
-			//
-			Dimension d = null;
-			//
-			for (final Component c : cs) {
-				//
-				if (c == null || (d = Util.getPreferredSize(c)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				c.setPreferredSize(new Dimension(width, (int) d.getHeight()));
-				//
-			} // for
-				//
-		} // if
 			//
 	}
 
