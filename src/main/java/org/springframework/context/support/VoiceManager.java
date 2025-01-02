@@ -3236,59 +3236,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 	}
 
-	private static void setLocaleIdSheet(@Nullable final ObjectMap objectMap) {
-		//
-		final Sheet sheet = ObjectMap.getObject(objectMap, Sheet.class);
-		//
-		final LocaleID[] localeIds = ObjectMap.getObject(objectMap, LocaleID[].class);
-		//
-		LocaleID localeId = null;
-		//
-		List<Field> fs = null;
-		//
-		Row row = null;
-		//
-		Method methodIsAccessible = null;
-		//
-		for (int i = 0; localeIds != null && i < localeIds.length; i++) {
-			//
-			if ((localeId = localeIds[i]) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if (fs == null) {
-				//
-				fs = Util.toList(sorted(Util.filter(
-						testAndApply(Objects::nonNull, FieldUtils.getAllFields(LocaleID.class), Arrays::stream, null),
-						x -> x != null && !Objects.equals(Util.getType(x), Util.getDeclaringClass(x))
-								&& !x.isSynthetic() && !isStatic(x)),
-						(a, b) -> StringUtils.compare(Util.getName(getPackage(Util.getDeclaringClass(a))),
-								Util.getName(getPackage(Util.getDeclaringClass(b))))));
-				//
-			} // if
-				//
-				// Header Row
-				//
-			addLocaleIdSheetHeaderRow(sheet, fs);
-			//
-			ObjectMap.setObject(objectMap, Method.class, methodIsAccessible = getIfNull(methodIsAccessible,
-					VoiceManager::getAccessibleObjectIsAccessibleMethod));
-			//
-			row = addLocaleIdRow(objectMap, fs, localeId);
-			//
-		} // for
-			//
-		if (sheet != null && row != null) {
-			//
-			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
-					row.getFirstCellNum(), row.getLastCellNum() - 1));
-			//
-		} // if
-			//
-	}
-
 	@Nullable
 	private static <T> Stream<T> sorted(@Nullable final Stream<T> instance,
 			@Nullable final Comparator<? super T> comparator) {
