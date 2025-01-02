@@ -167,13 +167,13 @@ class VoiceManagerTest {
 
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_IH, CLASS_EXPORT_TASK = null;
 
-	private static Method METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
-			METHOD_INT_VALUE, METHOD_LONG_VALUE, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE,
-			METHOD_GET_PREFERRED_WIDTH, METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_MATCHER, METHOD_MATCHES,
-			METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL,
-			METHOD_TO_ARRAY_COLLECTION, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_GET_LIST,
-			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_GET_PACKAGE, METHOD_BROWSE,
-			METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP,
+	private static Method METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_INT_VALUE, METHOD_LONG_VALUE,
+			METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE, METHOD_GET_PREFERRED_WIDTH,
+			METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_MATCHER, METHOD_MATCHES, METHOD_VALUE_OF1,
+			METHOD_AND_FAILABLE_PREDICATE, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_TO_ARRAY_COLLECTION,
+			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_GET_LIST, METHOD_TEST_AND_ACCEPT_PREDICATE,
+			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI_FILE,
+			METHOD_TO_URI_URL, METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP,
 			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_GET_MEDIA_FORMAT_LINK,
 			METHOD_GET_EVENT_TYPE, METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML, METHOD_LENGTH,
@@ -189,8 +189,6 @@ class VoiceManagerTest {
 	static void beforeAll() throws Throwable {
 		//
 		final Class<?> clz = VoiceManager.class;
-		//
-		(METHOD_GET_SYSTEM_CLIP_BOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY4 = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -1201,27 +1199,6 @@ class VoiceManagerTest {
 	private static void stateChanged(final ChangeListener instance, final ChangeEvent evt) {
 		if (instance != null) {
 			instance.stateChanged(evt);
-		}
-	}
-
-	@Test
-	void testGetSystemClipboard() throws Throwable {
-		//
-		Assertions.assertNull(getSystemClipboard(null));
-		//
-	}
-
-	private static Clipboard getSystemClipboard(final Toolkit instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_SYSTEM_CLIP_BOARD.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Clipboard) {
-				return (Clipboard) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
 		}
 	}
 

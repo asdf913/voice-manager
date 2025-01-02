@@ -3536,11 +3536,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 	}
 
-	@Nullable
-	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
-		return instance != null ? instance.getSystemClipboard() : null;
-	}
-
 	private static boolean matches(@Nullable final Matcher instance) {
 		//
 		if (instance == null) {
