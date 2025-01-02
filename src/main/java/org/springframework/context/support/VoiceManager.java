@@ -261,9 +261,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	@Note("For Import Panel")
 	private transient ComboBoxModel<?> cbmAudioFormatExecute = null;
 
-	@Note("Browse Button For Export Function")
-	private AbstractButton btnExportBrowse = null;
-
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -2129,28 +2126,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		clear(tmImportResult);
 		//
-		if (Objects.equals(Util.getSource(evt), btnExportBrowse)) {
-			//
-			actionPerformedForExportBrowse(GraphicsEnvironment.isHeadless());
-			//
-		} // if
-			//
-	}
-
-	private void actionPerformedForExportBrowse(final boolean headless) {
-		//
-		try {
-			//
-			final File file = testAndApply(Objects::nonNull, Util.getText(tfExportFile), File::new, null);
-			//
-			testAndAccept(Objects::nonNull, toURI(file), x -> browse(Desktop.getDesktop(), x));
-			//
-		} catch (final IOException e) {
-			//
-			errorOrAssertOrShowException(headless, e);
-			//
-		} // try
-			//
 	}
 
 	private static <E extends Throwable> void testAndRun(final boolean b, @Nullable final FailableRunnable<E> runnable)

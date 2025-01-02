@@ -1076,23 +1076,6 @@ class VoiceManagerTest {
 		//
 	}
 
-	@Test
-	void testActionPerformed2() throws Throwable {
-		//
-		// btnExportBrowse
-		//
-		final AbstractButton btnExportBrowse = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnExportBrowse", btnExportBrowse, true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance, new ActionEvent(btnExportBrowse, 0, null)));
-		//
-	}
-
 	private static void actionPerformed(final ActionListener instance, final ActionEvent actionEvent) {
 		if (instance != null) {
 			instance.actionPerformed(actionEvent);
