@@ -406,8 +406,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private Version freeMarkerVersion = null;
 
-	private String[] voiceIds = null;
-
 	private transient Map<Object, Object> exportWebSpeechSynthesisHtmlTemplateProperties = null;
 
 	@Nullable
@@ -1078,24 +1076,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						microsoftWindowsCompatibilitySettingsPageUrl);
 				//
 			} // if
-				//
-			try {
-				//
-				voiceIds = SpeechApi.getVoiceIds(speechApi);
-				//
-			} catch (final Error e) {
-				//
-				final boolean headless = GraphicsEnvironment.isHeadless();
-				//
-				testAndRun(headless, () -> errorOrAssertOrShowException(true, e));
-				//
-				if (!headless) {
-					//
-					jPanelWarning = createVoiceIdWarningPanel(this);
-					//
-				} // if
-					//
-			} // try
 				//
 			testAndAccept(Objects::nonNull, jPanelWarning, x -> {
 				//
