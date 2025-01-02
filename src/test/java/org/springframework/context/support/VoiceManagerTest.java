@@ -173,7 +173,7 @@ class VoiceManagerTest {
 			METHOD_TO_URI_URL, METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP,
 			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_GET_MEDIA_FORMAT_LINK,
 			METHOD_GET_EVENT_TYPE, METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML,
-			METHOD_LENGTH, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL,
+			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL,
 			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_2, METHOD_IS_STATIC, METHOD_GET_FIELD_BY_NAME,
 			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_SET_FOCUS_CYCLE_ROOT,
 			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_DECLARED_CONSTRUCTOR,
@@ -272,8 +272,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_HTML = clz.getDeclaredMethod("html", org.jsoup.nodes.Element.class)).setAccessible(true);
-		//
-		(METHOD_LENGTH = clz.getDeclaredMethod("length", File.class)).setAccessible(true);
 		//
 		(METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = clz.getDeclaredMethod("getPhysicalNumberOfRows", Sheet.class))
 				.setAccessible(true);
@@ -1944,29 +1942,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testLength() throws Throwable {
-		//
-		Assertions.assertNull(length(null));
-		//
-		Assertions.assertNull(length(Util.cast(File.class, Narcissus.allocateInstance(File.class))));
-		//
-	}
-
-	private static Long length(final File instance) throws Throwable {
-		try {
-			final Object obj = METHOD_LENGTH.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Long) {
-				return (Long) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
