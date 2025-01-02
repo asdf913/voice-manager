@@ -136,7 +136,6 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.poi.ss.usermodel.Sheet;
 import org.d2ab.function.ObjIntFunction;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -2301,11 +2300,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private static boolean isFile(@Nullable final File instance) {
 		return instance != null && instance.isFile();
-	}
-
-	@Nullable
-	private static Integer getPhysicalNumberOfRows(@Nullable final Sheet instance) {
-		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfRows()) : null;
 	}
 
 	@Nullable
