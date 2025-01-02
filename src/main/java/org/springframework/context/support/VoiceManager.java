@@ -3236,27 +3236,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 	}
 
-	private static void setMicrosoftSpeechObjectLibrarySheetFirstRow(@Nullable final Sheet sheet,
-			@Nullable final String[] columnNames) {
-		//
-		final Row row = sheet != null ? SheetUtil.createRow(sheet, sheet.getLastRowNum() + 1) : null;
-		//
-		if (row != null) {
-			//
-			CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), "Common Prefix");
-			//
-			CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), "ID");
-			//
-			for (int j = 0; columnNames != null && j < columnNames.length; j++) {
-				//
-				CellUtil.setCellValue(RowUtil.createCell(row, Math.max(row.getLastCellNum(), 0)), columnNames[j]);
-				//
-			} // for
-				//
-		} // if
-			//
-	}
-
 	private static void setMicrosoftSpeechObjectLibrarySheet(@Nullable final ObjectMap objectMap, final String voiceId,
 			final String[] attributes, final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) {
 		//
