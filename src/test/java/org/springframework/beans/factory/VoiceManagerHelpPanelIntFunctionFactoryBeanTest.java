@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
-public class VoiceManagerHelpPanelIntFunctionFactoryBeanTest {
+class VoiceManagerHelpPanelIntFunctionFactoryBeanTest {
 
 	@Test
 	void testNull() {
