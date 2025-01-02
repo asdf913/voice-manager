@@ -1244,20 +1244,6 @@ class VoiceManagerTest {
 	@Test
 	void testActionPerformed2() throws Throwable {
 		//
-		// btnExportMicrosoftSpeechObjectLibraryInformation
-		//
-		final AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = new JButton();
-		//
-		if (instance != null) {
-			//
-			FieldUtils.writeDeclaredField(instance, "btnExportMicrosoftSpeechObjectLibraryInformation",
-					btnExportMicrosoftSpeechObjectLibraryInformation, true);
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> actionPerformed(instance,
-				new ActionEvent(btnExportMicrosoftSpeechObjectLibraryInformation, 0, null)));
-		//
 		// btnExportBrowse
 		//
 		final AbstractButton btnExportBrowse = new JButton();

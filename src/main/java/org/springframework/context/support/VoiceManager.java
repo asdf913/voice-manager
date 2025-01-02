@@ -318,9 +318,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	private @interface ExportButton {
 	}
 
-	@ExportButton
-	private AbstractButton btnExportMicrosoftSpeechObjectLibraryInformation = null;
-
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -2299,38 +2296,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private void actionPerformedForExportButtons(final Object source, final boolean headless) {
 		//
-		if (Objects.equals(source, btnExportMicrosoftSpeechObjectLibraryInformation)) {
-			//
-			final Path path = Path
-					.of(String.format("MicrosoftSpeechObjectLibrary_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date()));
-			//
-			final File file = path != null ? path.toFile() : null;
-			//
-			Workbook workbook = null;
-			//
-			try (final OutputStream os = Files.newOutputStream(path)) {
-				//
-				WorkbookUtil.write(workbook = createMicrosoftSpeechObjectLibraryWorkbook(speechApi,
-						languageCodeToTextObjIntFunction, microsoftSpeechObjectLibraryAttributeNames), os);
-				//
-				Util.setText(tfExportFile, Util.getAbsolutePath(file));
-				//
-			} catch (final IOException e) {
-				//
-				errorOrAssertOrShowException(headless, e);
-				//
-			} finally {
-				//
-				IOUtils.closeQuietly(workbook);
-				//
-				testAndAccept(EMPTY_FILE_PREDICATE, file, FileUtils::deleteQuietly);
-				// ini
-			} // try
-				//
-			return;
-			//
-		} // if
-			//
 		throw new IllegalStateException();
 		//
 	}
