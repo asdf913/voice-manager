@@ -3543,8 +3543,6 @@ class VoiceManagerTest {
 			//
 			toString = Objects.toString(m);
 			//
-			System.out.println(toString);// TODO
-			//
 			if (isStatic(m)) {
 				//
 				invoke = Narcissus.invokeStaticMethod(m, os);
