@@ -2832,12 +2832,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			return instance != null ? instance.getObject(key) : null;
 		}
 
-		static <T> void setObject(@Nullable final ObjectMap instance, final Class<T> key, @Nullable final T value) {
-			if (instance != null) {
-				instance.setObject(key, value);
-			}
-		}
-
 	}
 
 	@Nullable
