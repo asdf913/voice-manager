@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.GraphicsEnvironment;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.time.Duration;
@@ -39,22 +40,24 @@ class VoiceManagerMiscellaneousPanelTest {
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
-			if ((m = ms[i]) == null
-					// ||!Modifier.isStatic(m.getModifiers())
-					|| m.isSynthetic()) {
+			if ((m = ms[i]) == null || m.isSynthetic() || (GraphicsEnvironment.isHeadless() && Boolean.logicalOr(
+					Boolean.logicalAnd(Objects.equals(Util.getName(m), "actionPerformedForSystemClipboardAnnotated"),
+							Arrays.equals(m.getParameterTypes(), new Object[] { Boolean.TYPE, Object.class })),
+					Boolean.logicalAnd(Objects.equals(Util.getName(m), "actionPerformedForExportButtons"),
+							Arrays.equals(m.getParameterTypes(), new Object[] { Object.class, Boolean.TYPE }))))) {
 				//
 				continue;
 				//
 			} // if
 				//
-			parameterTypes = m.getParameterTypes();
-			//
 			if ((collection = ObjectUtils.getIfNull(collection, ArrayList::new)) != null) {
 				//
 				collection.clear();
 				//
 			} // if
 				//
+			parameterTypes = m.getParameterTypes();
+			//
 			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
 				//
 				if (Objects.equals(parameterType = parameterTypes[j], Integer.TYPE)) {
@@ -81,9 +84,9 @@ class VoiceManagerMiscellaneousPanelTest {
 					//
 			} // for
 				//
-			os = toArray(collection);
-			//
 			name = Util.getName(m);
+			//
+			os = toArray(collection);
 			//
 			toString = Objects.toString(m);
 			//
