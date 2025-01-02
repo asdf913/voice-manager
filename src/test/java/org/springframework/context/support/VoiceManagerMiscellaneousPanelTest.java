@@ -40,11 +40,13 @@ class VoiceManagerMiscellaneousPanelTest {
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
-			if ((m = ms[i]) == null || m.isSynthetic() || (GraphicsEnvironment.isHeadless() && Boolean.logicalOr(
+			if ((m = ms[i]) == null || m.isSynthetic() || (GraphicsEnvironment.isHeadless() && or(
 					Boolean.logicalAnd(Objects.equals(Util.getName(m), "actionPerformedForSystemClipboardAnnotated"),
 							Arrays.equals(m.getParameterTypes(), new Object[] { Boolean.TYPE, Object.class })),
 					Boolean.logicalAnd(Objects.equals(Util.getName(m), "actionPerformedForExportButtons"),
-							Arrays.equals(m.getParameterTypes(), new Object[] { Object.class, Boolean.TYPE }))))) {
+							Arrays.equals(m.getParameterTypes(), new Object[] { Object.class, Boolean.TYPE })),
+					Boolean.logicalAnd(Objects.equals(Util.getName(m), "actionPerformedForExportBrowse"),
+							Arrays.equals(m.getParameterTypes(), new Object[] { Boolean.TYPE }))))) {
 				//
 				continue;
 				//
@@ -86,7 +88,7 @@ class VoiceManagerMiscellaneousPanelTest {
 				//
 			name = Util.getName(m);
 			//
-			System.out.println(name);//TODO
+			System.out.println(name);// TODO
 			//
 			os = toArray(collection);
 			//
