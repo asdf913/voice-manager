@@ -299,11 +299,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
-	private @interface ExportButton {
-	}
-
-	@Target(ElementType.FIELD)
-	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
 		String value();
 	}
