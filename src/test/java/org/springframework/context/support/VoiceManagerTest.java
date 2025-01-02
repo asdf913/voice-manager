@@ -32,6 +32,7 @@ import java.net.UnknownHostException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.nio.file.spi.FileSystemProvider;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -3496,7 +3497,10 @@ class VoiceManagerTest {
 							Arrays.equals(m.getParameterTypes(), new Class<?>[] { String[].class }))
 					|| and(!GraphicsEnvironment.isHeadless(),
 							Util.contains(Arrays.asList("init", "afterPropertiesSet"), Util.getName(m)),
-							m.getParameterCount() == 0)) {
+							m.getParameterCount() == 0)
+					|| and(!Objects.equals(Util.getName(Util.getClass(provider(FileSystems.getDefault()))),
+							"sun.nio.fs.WindowsFileSystemProvider"),
+							Objects.equals(Util.getName(m), "getOsVersionInfoEx"), m.getParameterCount() == 0)) {
 				//
 				continue;
 				//
@@ -3592,6 +3596,10 @@ class VoiceManagerTest {
 				//
 		} // for
 			//
+	}
+
+	private static FileSystemProvider provider(final FileSystem instance) {
+		return instance != null ? instance.provider() : null;
 	}
 
 	private static boolean and(final boolean a, final boolean b, final boolean... bs) {
