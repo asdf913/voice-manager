@@ -266,26 +266,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	 */
 	private static final String CLASS_RESOURCE_FORMAT = "/%1$s.class";
 
-	/**
-	 * @see java.lang.String#format(java.lang.String,java.lang.Object...)
-	 * 
-	 * @see net.miginfocom.layout.ConstraintParser#parseComponentConstraint(java.lang.String)
-	 * 
-	 * @see <a href=
-	 *      "https://github.com/mikaelgrev/miglayout/blob/master/core/src/main/java/net/miginfocom/layout/ConstraintParser.java#L534">net.miginfocom.layout.ConstraintParser.parseComponentConstraint(java.lang.String)&nbsp;Line&nbsp;534&nbsp;at&nbsp;master&nbsp;·&nbsp;mikaelgrev/miglayout</a>
-	 */
-	private static final String SPAN_ONLY_FORMAT = "span %1$s";
-
-	/**
-	 * @see java.lang.String#format(java.lang.String,java.lang.Object...)
-	 * 
-	 * @see net.miginfocom.layout.ConstraintParser#parseComponentConstraint(java.lang.String)
-	 * 
-	 * @see <a href=
-	 *      "https://github.com/mikaelgrev/miglayout/blob/master/core/src/main/java/net/miginfocom/layout/ConstraintParser.java#L780">net.miginfocom.layout.ConstraintParser.parseComponentConstraint(java.lang.String)&nbsp;Line&nbsp;534&nbsp;at&nbsp;master&nbsp;·&nbsp;mikaelgrev/miglayout</a>
-	 */
-	private static final String WMIN_ONLY_FORMAT = "wmin %1$s";
-
 	private static final FailablePredicate<File, RuntimeException> EMPTY_FILE_PREDICATE = f -> f != null && f.exists()
 			&& isFile(f) && longValue(length(f), 0) == 0;
 
@@ -2266,7 +2246,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	private static StringBuilder append(@Nullable final StringBuilder instance, final char c) {
 		return instance != null ? instance.append(c) : null;
 	}
-
 
 	@Nullable
 	private static Class<?>[] getDeclaredClasses(@Nullable final Class<?> instance) {
