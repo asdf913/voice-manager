@@ -736,7 +736,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			return instance != null ? instance.getObject(key) : null;
 		}
 
-		static <T> void setObject(@Nullable final ObjectMap instance, final Class<T> key, final T value) {
+		static <T> void setObject(@Nullable final ObjectMap instance, final Class<T> key, @Nullable final T value) {
 			if (instance != null) {
 				instance.setObject(key, value);
 			}
@@ -1028,7 +1028,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 	}
 
-	private static void setLocaleIdSheet(final ObjectMap objectMap) {
+	private static void setLocaleIdSheet(@Nullable final ObjectMap objectMap) {
 		//
 		final Sheet sheet = ObjectMap.getObject(objectMap, Sheet.class);
 		//
@@ -1189,7 +1189,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 	}
 
-	private static void setMicrosoftSpeechObjectLibrarySheet(final ObjectMap objectMap, final String voiceId,
+	private static void setMicrosoftSpeechObjectLibrarySheet(@Nullable final ObjectMap objectMap, final String voiceId,
 			final String[] attributes, final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) {
 		//
 		final Workbook workbook = ObjectMap.getObject(objectMap, Workbook.class);
