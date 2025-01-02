@@ -2284,12 +2284,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		}
 	}
 
-	private static void setEnabled(@Nullable final Component instance, final boolean b) {
-		if (instance != null) {
-			instance.setEnabled(b);
-		}
-	}
-
 	@Nullable
 	private static <T, R, E extends Throwable> R testAndApply(@Nullable final Predicate<T> predicate,
 			@Nullable final T value, final FailableFunction<T, R, E> functionTrue,
