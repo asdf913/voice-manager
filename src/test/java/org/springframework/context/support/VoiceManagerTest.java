@@ -195,9 +195,9 @@ class VoiceManagerTest {
 			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_GET_LIST,
 			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_TEST_AND_ACCEPT_PREDICATE,
 			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_PACKAGE, METHOD_BROWSE,
-			METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_GET_DECLARED_CLASSES, METHOD_IS_ANNOTATION_PRESENT,
-			METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2,
-			METHOD_SET_VISIBLE, METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE,
+			METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_IS_ANNOTATION_PRESENT, METHOD_ENCODE_TO_STRING,
+			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE,
+			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE,
 			METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW, METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT,
 			METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML, METHOD_LENGTH, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS,
 			METHOD_ACTION_PERFORMED_FOR_SYSTEM_CLIPBOARD_ANNOTATED, METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL,
@@ -293,8 +293,6 @@ class VoiceManagerTest {
 		(METHOD_TO_URI_FILE = clz.getDeclaredMethod("toURI", File.class)).setAccessible(true);
 		//
 		(METHOD_TO_URI_URL = clz.getDeclaredMethod("toURI", URL.class)).setAccessible(true);
-		//
-		(METHOD_GET_DECLARED_CLASSES = clz.getDeclaredMethod("getDeclaredClasses", Class.class)).setAccessible(true);
 		//
 		(METHOD_IS_ANNOTATION_PRESENT = clz.getDeclaredMethod("isAnnotationPresent", AnnotatedElement.class,
 				Class.class)).setAccessible(true);
@@ -2104,27 +2102,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof URI) {
 				return (URI) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetDeclaredClasses() throws Throwable {
-		//
-		Assertions.assertNull(getDeclaredClasses(null));
-		//
-	}
-
-	private static Class<?>[] getDeclaredClasses(final Class<?> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_DECLARED_CLASSES.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class<?>[]) {
-				return (Class<?>[]) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

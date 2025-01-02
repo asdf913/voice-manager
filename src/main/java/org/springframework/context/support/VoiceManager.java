@@ -2208,11 +2208,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@Nullable
-	private static Class<?>[] getDeclaredClasses(@Nullable final Class<?> instance) {
-		return instance != null ? instance.getDeclaredClasses() : null;
-	}
-
-	@Nullable
 	private static Integer toInteger(@Nullable final Object object) {
 		//
 		Integer integer = null;
