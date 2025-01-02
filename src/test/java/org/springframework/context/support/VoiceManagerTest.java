@@ -3178,7 +3178,7 @@ class VoiceManagerTest {
 		//
 		Class<?> parameterType = null;
 		//
-		Collection<Object> collection = null;
+		Collection<Object> c = null;
 		//
 		Object[] os = null;
 		//
@@ -3206,9 +3206,9 @@ class VoiceManagerTest {
 				//
 			parameterTypes = m.getParameterTypes();
 			//
-			if ((collection = ObjectUtils.getIfNull(collection, ArrayList::new)) != null) {
+			if ((c = ObjectUtils.getIfNull(c, ArrayList::new)) != null) {
 				//
-				collection.clear();
+				c.clear();
 				//
 			} // if
 				//
@@ -3216,25 +3216,25 @@ class VoiceManagerTest {
 				//
 				if (Objects.equals(parameterType = parameterTypes[j], Boolean.TYPE)) {
 					//
-					Util.add(collection, Boolean.TRUE);
+					Util.add(c, Boolean.TRUE);
 					//
 				} else if (Objects.equals(parameterType, Integer.TYPE)) {
 					//
-					Util.add(collection, Integer.valueOf(0));
+					Util.add(c, Integer.valueOf(0));
 					//
 				} else if (Objects.equals(parameterType, Long.TYPE)) {
 					//
-					Util.add(collection, Long.valueOf(0));
+					Util.add(c, Long.valueOf(0));
 					//
 				} else {
 					//
-					Util.add(collection, null);
+					Util.add(c, null);
 					//
 				} // if
 					//
 			} // if
 				//
-			os = toArray(collection);
+			os = toArray(c);
 			//
 			name = Util.getName(m);
 			//
