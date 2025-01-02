@@ -262,6 +262,78 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		this.propertyResolver = environment;
 	}
 
+	public void setSpeechApi(final SpeechApi speechApi) {
+		this.speechApi = speechApi;
+	}
+
+	@Override
+	public void setLayout(final LayoutManager layoutManager) {
+		///
+		super.setLayout(this.layoutManager = layoutManager);
+		//
+	}
+
+	public void setjSoupParseTimeout(@Nullable final Object object) {
+		//
+		if (object == null) {
+			//
+			this.jSoupParseTimeout = null;
+			//
+			return;
+			//
+		} else if (object instanceof Duration duration) {
+			//
+			this.jSoupParseTimeout = duration;
+			//
+			return;
+			//
+		} else if (object instanceof Number number) {
+			//
+			this.jSoupParseTimeout = Duration.ofMillis(longValue(number, 0));
+			//
+			return;
+			//
+		} // if
+			//
+		final String string = Util.toString(object);
+		//
+		final Integer integer = valueOf(string);
+		//
+		if (integer != null) {
+			//
+			setjSoupParseTimeout(integer);
+			//
+			return;
+			//
+		} // if
+			//
+		this.jSoupParseTimeout = testAndApply(StringUtils::isNotBlank, string, Duration::parse, null);
+		//
+	}
+
+	private static Integer valueOf(final String instance) {
+		try {
+			return StringUtils.isNotBlank(instance) ? Integer.valueOf(instance) : null;
+		} catch (final NumberFormatException e) {
+			return null;
+		}
+	}
+
+	public void setMicrosoftSpeechPlatformRuntimeLanguagesDownloadPageUrl(
+			final String microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl) {
+		this.microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl = microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl;
+	}
+
+	public void setLanguageCodeToTextObjIntFunction(
+			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) {
+		this.languageCodeToTextObjIntFunction = languageCodeToTextObjIntFunction;
+	}
+
+	public void setMicrosoftSpeechObjectLibraryAttributeNames(
+			final String[] microsoftSpeechObjectLibraryAttributeNames) {
+		this.microsoftSpeechObjectLibraryAttributeNames = microsoftSpeechObjectLibraryAttributeNames;
+	}
+
 	private static long longValue(@Nullable final Number instance, final long defaultValue) {
 		return instance != null ? instance.longValue() : defaultValue;
 	}
@@ -554,7 +626,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		addActionListener(this, btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy, btnExportBrowse,
 				btnDllPathCopy);
 		//
-		setEnabled(SpeechApi.isInstalled(speechApi) && voiceIds != null,
+		setEnabled(SpeechApi.isInstalled(speechApi) && (voiceIds = SpeechApi.getVoiceIds(speechApi)) != null,
 				btnExportMicrosoftSpeechObjectLibraryInformation);
 		//
 		if (panelDllPath != null) {
