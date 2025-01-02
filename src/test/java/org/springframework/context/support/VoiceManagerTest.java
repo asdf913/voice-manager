@@ -174,8 +174,8 @@ class VoiceManagerTest {
 			METHOD_GET_FIELD_BY_NAME, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL,
 			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
 			METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE, METHOD_TO_MILLIS, METHOD_ADD_ALL, METHOD_GET_NUMBER,
-			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM,
-			METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
+			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_OPEN_STREAM, METHOD_SET_SELECTED_INDEX,
+			METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -312,9 +312,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_URL = clz.getDeclaredMethod("getURL", HyperlinkEvent.class)).setAccessible(true);
-		//
-		(METHOD_ADD_HYPER_LINK_LISTENER = clz.getDeclaredMethod("addHyperlinkListener", JEditorPane.class,
-				HyperlinkListener.class)).setAccessible(true);
 		//
 		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
 		//
@@ -2243,25 +2240,6 @@ class VoiceManagerTest {
 				return (URL) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAddHyperlinkListener() {
-		//
-		Assertions.assertDoesNotThrow(() -> addHyperlinkListener(null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> addHyperlinkListener(
-				Util.cast(JEditorPane.class, Narcissus.allocateInstance(JEditorPane.class)), null));
-		//
-	}
-
-	private static void addHyperlinkListener(final JEditorPane instance, final HyperlinkListener listener)
-			throws Throwable {
-		try {
-			METHOD_ADD_HYPER_LINK_LISTENER.invoke(null, instance, listener);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

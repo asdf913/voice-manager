@@ -1814,32 +1814,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 	}
 
-	private static void addHyperlinkListener(@Nullable final JEditorPane instance, final HyperlinkListener listener) {
-		//
-		if (instance == null) {
-			//
-			return;
-			//
-		} // if
-			//
-		try {
-			//
-			if (Narcissus.getObjectField(instance, JComponent.class.getDeclaredField("listenerList")) == null) {
-				//
-				return;
-				//
-			} // if
-				//
-		} catch (final NoSuchFieldException e) {
-			//
-			LoggerUtil.error(LOG, e.getMessage(), e);
-			//
-		} // try
-			//
-		instance.addHyperlinkListener(listener);
-		//
-	}
-
 	@Nullable
 	private static URL getURL(@Nullable final HyperlinkEvent instance) {
 		return instance != null ? instance.getURL() : null;
