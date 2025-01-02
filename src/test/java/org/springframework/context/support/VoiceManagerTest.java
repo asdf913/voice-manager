@@ -474,14 +474,11 @@ class VoiceManagerTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof BeanDefinition) {
+			} else if (proxy instanceof BeanDefinition && Objects.equals(methodName, "hasAttribute") && args != null
+					&& args.length > 0) {
 				//
-				if (Objects.equals(methodName, "hasAttribute") && args != null && args.length > 0) {
-					//
-					return Util.containsKey(getBeanDefinitionAttributes(), args[0]);
-					//
-				} // if
-					//
+				return Util.containsKey(getBeanDefinitionAttributes(), args[0]);
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
