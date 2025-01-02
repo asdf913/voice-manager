@@ -3559,10 +3559,6 @@ class VoiceManagerTest {
 								Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class }))
 						|| Boolean.logicalAnd(Objects.equals(name, "craeteSpeechApiInstallationWarningJPanel"),
 								Arrays.equals(parameterTypes, new Class<?>[] { String.class }))
-						|| Boolean.logicalAnd(Objects.equals(name, "createHelpPanel"),
-								Arrays.equals(parameterTypes,
-										new Class<?>[] { Number.class, freemarker.template.Configuration.class,
-												String.class, String.class, Duration.class }))
 						|| Boolean.logicalAnd(Objects.equals(name, "createFocusableComponentPredicate"),
 								Arrays.equals(parameterTypes, new Class<?>[] { Collection.class }))) {
 					//
