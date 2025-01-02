@@ -2840,17 +2840,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	}
 
-	private static interface IntMap<T> {
-
-		@Nullable
-		T getObject(final int key);
-
-		boolean containsKey(final int key);
-
-		void setObject(final int key, @Nullable final T value);
-
-	}
-
 	@Nullable
 	private static <T> Spliterator<T> spliterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.spliterator() : null;
