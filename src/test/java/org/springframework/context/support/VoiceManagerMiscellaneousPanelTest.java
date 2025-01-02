@@ -86,6 +86,8 @@ class VoiceManagerMiscellaneousPanelTest {
 				//
 			name = Util.getName(m);
 			//
+			System.out.println(name);//TODO
+			//
 			os = toArray(collection);
 			//
 			toString = Objects.toString(m);
