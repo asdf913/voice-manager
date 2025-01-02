@@ -205,10 +205,9 @@ class VoiceManagerTest {
 			METHOD_ACTION_PERFORMED_FOR_EXPORT_BUTTONS, METHOD_GET_FIELD_BY_NAME,
 			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_SET_FOCUS_CYCLE_ROOT,
 			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_DECLARED_CONSTRUCTOR,
-			METHOD_NEW_INSTANCE, METHOD_GET_PAGE_TITLE, METHOD_TO_MILLIS, METHOD_ADD_ALL, METHOD_SET_AUTO_FILTER,
-			METHOD_GET_NUMBER, METHOD_SORTED, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL,
-			METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM, METHOD_SET_SELECTED_INDEX,
-			METHOD_GET_TITLED_COMPONENT_MAP = null;
+			METHOD_NEW_INSTANCE, METHOD_TO_MILLIS, METHOD_ADD_ALL, METHOD_SET_AUTO_FILTER, METHOD_GET_NUMBER,
+			METHOD_SORTED, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER,
+			METHOD_OPEN_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -368,9 +367,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_NEW_INSTANCE = clz.getDeclaredMethod("newInstance", Constructor.class, Object[].class))
-				.setAccessible(true);
-		//
-		(METHOD_GET_PAGE_TITLE = clz.getDeclaredMethod("getPageTitle", String.class, Duration.class))
 				.setAccessible(true);
 		//
 		(METHOD_TO_MILLIS = clz.getDeclaredMethod("toMillis", Duration.class)).setAccessible(true);
@@ -2703,46 +2699,6 @@ class VoiceManagerTest {
 	private static <T> T newInstance(final Constructor<T> constructor, final Object... initargs) throws Throwable {
 		try {
 			return (T) METHOD_NEW_INSTANCE.invoke(null, constructor, initargs);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetPageTitle() throws Throwable {
-		//
-		Assertions.assertEquals(Unit.with(null), getPageTitle(null, null));
-		//
-		Assertions.assertEquals(Unit.with(null), getPageTitle(EMPTY, null));
-		//
-		Assertions.assertEquals(Unit.with(null), getPageTitle(SPACE, null));
-		//
-		if (GraphicsEnvironment.isHeadless()) {
-			//
-			Assertions.assertDoesNotThrow(
-					() -> getPageTitle(toString(Path.of("pom.xml").toFile().toURI().toURL()), null));
-			//
-		} else {
-			//
-			final String string = toString(toURL(Path.of("pom.xml").toFile().toURI()));
-			//
-			AssertionsUtil.assertThrowsAndEquals(RuntimeException.class,
-					"{localizedMessage=org.opentest4j.AssertionFailedError: java.net.URISyntaxException: Expected authority at index 7: file:// ==> Unexpected exception thrown: org.jsoup.helper.ValidationException: java.net.URISyntaxException: Expected authority at index 7: file://, message=org.opentest4j.AssertionFailedError: java.net.URISyntaxException: Expected authority at index 7: file:// ==> Unexpected exception thrown: org.jsoup.helper.ValidationException: java.net.URISyntaxException: Expected authority at index 7: file://}",
-					() -> getPageTitle(string, null));
-			//
-		} // if
-			//
-	}
-
-	private static Unit<String> getPageTitle(final String url, final Duration timeout) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_PAGE_TITLE.invoke(null, url, timeout);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Unit) {
-				return (Unit) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

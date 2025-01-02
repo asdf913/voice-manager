@@ -1521,33 +1521,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@Nullable
-	private static IValue0<String> getPageTitle(final String url, final Duration timeout) {
-		//
-		try {
-			//
-			return Unit
-					.with(ElementUtil
-							.text(testAndApply(x -> IterableUtils.size(x) == 1,
-									ElementUtil
-											.getElementsByTag(
-													testAndApply(Objects::nonNull,
-															testAndApply(StringUtils::isNotBlank, url,
-																	x -> new URI(x).toURL(), null),
-															x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null),
-													"title"),
-									x -> get(x, 0), null)));
-			//
-		} catch (final Exception e) {
-			//
-			TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-			//
-		} // try
-			//
-		return null;
-		//
-	}
-
-	@Nullable
 	private static Long toMillis(@Nullable final Duration instance) {
 		return instance != null ? Long.valueOf(instance.toMillis()) : null;
 	}
