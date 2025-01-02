@@ -2237,7 +2237,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		}
 
 		@Nullable
-		private static Integer createQuality(final Instruction[] ins) {
+		private static Integer createQuality(@Nullable final Instruction[] ins) {
 			//
 			Instruction in = null;
 			//
