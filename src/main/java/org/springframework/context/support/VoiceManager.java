@@ -2295,66 +2295,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		return instance != null ? instance.append(c) : null;
 	}
 
-	@Nullable
-	private static IValue0<Object> getDllPath(final Object instance) {
-		//
-		final Class<?>[] declaredClasses = getDeclaredClasses(Util.getClass(instance));
-		//
-		List<Field> fs = null;
-		//
-		Field f = null;
-		//
-		List<Method> ms = null;
-		//
-		Method m = null;
-		//
-		IValue0<Object> dllPath = null;
-		//
-		final boolean headless = GraphicsEnvironment.isHeadless();
-		//
-		for (int i = 0; declaredClasses != null && i < declaredClasses.length; i++) {
-			//
-			final Class<?> declaredClass = declaredClasses[i];
-			//
-			if (declaredClass == null
-					//
-					|| (fs = Util.toList(Util.filter(
-							testAndApply(Objects::nonNull, Util.getDeclaredFields(declaredClass), Arrays::stream, null),
-							x -> Objects.equals(Util.getType(x), declaredClass)))) == null
-					|| IterableUtils.size(fs) != 1 || (f = get(fs, 0)) == null
-					//
-					|| (ms = Util
-							.toList(Util.filter(
-									testAndApply(Objects::nonNull, Util.getDeclaredMethods(declaredClass),
-											Arrays::stream, null),
-									x -> Objects.equals(Util.getName(x), "getDllPath")))) == null
-					|| IterableUtils.size(ms) != 1 || (m = get(ms, 0)) == null) {
-				continue;
-			} // if
-				//
-			try {
-				//
-				dllPath = Unit.with(invoke(m, get(f, null)));
-				//
-			} catch (final IllegalAccessException e) {
-				//
-				errorOrAssertOrShowException(headless, e);
-				//
-			} catch (final InvocationTargetException e) {
-				//
-				final Throwable targetException = e.getTargetException();
-				//
-				errorOrAssertOrShowException(headless,
-						ObjectUtils.firstNonNull(ExceptionUtils.getRootCause(targetException), targetException,
-								ExceptionUtils.getRootCause(e), e));
-				//
-			} // try
-				//
-		} // for
-			//
-		return dllPath;
-		//
-	}
 
 	@Nullable
 	private static Class<?>[] getDeclaredClasses(@Nullable final Class<?> instance) {
