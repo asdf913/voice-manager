@@ -282,9 +282,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	private transient SpeechApi speechApi = null;
 
 	@Nullable
-	private String[] microsoftSpeechObjectLibraryAttributeNames = null;
-
-	@Nullable
 	private String[] tabOrders = null;
 
 	private transient Toolkit toolkit = null;
@@ -630,15 +627,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			objectMapper = new ObjectMapper();
 		}
 		return objectMapper;
-	}
-
-	@SuppressWarnings("java:S1612")
-	public void setMicrosoftSpeechObjectLibraryAttributeNames(final Object value) {
-		//
-		this.microsoftSpeechObjectLibraryAttributeNames = toArray(
-				Util.toList(Util.map(Util.stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))),
-				new String[] {});
-		//
 	}
 
 	public void setTabOrders(final Object value) {

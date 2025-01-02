@@ -931,17 +931,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testSetMicrosoftSpeechObjectLibraryAttributeNames() {
-		//
-		if (instance != null) {
-			//
-			Assertions.assertDoesNotThrow(() -> instance.setMicrosoftSpeechObjectLibraryAttributeNames(null));
-			//
-		} // if
-			//
-	}
-
-	@Test
 	void testSetExportWebSpeechSynthesisHtmlTemplateProperties()
 			throws NoSuchFieldException, IllegalAccessException, IOException {
 		//
