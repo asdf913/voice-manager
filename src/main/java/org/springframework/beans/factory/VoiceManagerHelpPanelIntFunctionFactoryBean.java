@@ -465,13 +465,8 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 			//
 			for (int i = 0; i < IterableUtils.size(ms); i++) {
 				//
-				if ((m = IterableUtils.get(ms, i)) == null || !isStatic(m)) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (!Objects.equals(Boolean.TRUE, Narcissus.invokeStaticMethod(m))) {
+				if ((m = IterableUtils.get(ms, i)) == null || !isStatic(m)
+						|| !Objects.equals(Boolean.TRUE, Narcissus.invokeStaticMethod(m))) {
 					//
 					continue;
 					//

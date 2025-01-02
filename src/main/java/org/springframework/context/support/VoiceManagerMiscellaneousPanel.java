@@ -1388,14 +1388,10 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 		for (int i = 0; fs != null && i < fs.length; i++) {
 			//
-			if ((f = fs[i]) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if ((fieldValue = testAndApply(VoiceManagerMiscellaneousPanel::isStatic, f, Narcissus::getStaticField,
-					a -> testAndApply(Objects::nonNull, instance, b -> Narcissus.getField(b, a), null))) != value
+			if ((f = fs[i]) == null
+					|| (fieldValue = testAndApply(VoiceManagerMiscellaneousPanel::isStatic, f,
+							Narcissus::getStaticField, a -> testAndApply(Objects::nonNull, instance,
+									b -> Narcissus.getField(b, a), null))) != value
 					|| !Objects.equals(fieldValue, value)) {
 				//
 				continue;
