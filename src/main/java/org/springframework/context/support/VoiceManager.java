@@ -1766,11 +1766,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		return instance != null ? instance.get(index) : null;
 	}
 
-	@Nullable
-	private static String getProtocol(@Nullable final URL instance) {
-		return instance != null ? instance.getProtocol() : null;
-	}
-
 	private JPanel createImportResultPanel(final LayoutManager layoutManager) {
 		//
 		final JPanel panel = new JPanel();
