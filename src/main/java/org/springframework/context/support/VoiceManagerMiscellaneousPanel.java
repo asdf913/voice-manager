@@ -298,6 +298,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 
 		private static final long serialVersionUID = 8848505138795752227L;
 
+		@Nullable
 		private String url = null;
 
 		{
@@ -1585,6 +1586,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static Object invoke(@Nullable final Method method, final Object instance, Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
