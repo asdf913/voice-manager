@@ -3236,19 +3236,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 	}
 
-	private static void setAutoFilter(@Nullable final Sheet sheet) {
-		//
-		final Row row = sheet != null ? sheet.getRow(sheet.getLastRowNum()) : null;
-		//
-		if (sheet != null && row != null && sheet.getFirstRowNum() < sheet.getLastRowNum()) {
-			//
-			sheet.setAutoFilter(new CellRangeAddress(sheet.getFirstRowNum(), sheet.getLastRowNum() - 1,
-					row.getFirstCellNum(), row.getLastCellNum() - 1));
-			//
-		} // if
-			//
-	}
-
 	private static void setMicrosoftSpeechObjectLibrarySheetFirstRow(@Nullable final Sheet sheet,
 			@Nullable final String[] columnNames) {
 		//

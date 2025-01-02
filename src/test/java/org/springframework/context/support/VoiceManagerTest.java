@@ -178,9 +178,9 @@ class VoiceManagerTest {
 			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_2, METHOD_IS_STATIC, METHOD_GET_FIELD_BY_NAME,
 			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_SET_FOCUS_CYCLE_ROOT,
 			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_DECLARED_CONSTRUCTOR,
-			METHOD_NEW_INSTANCE, METHOD_TO_MILLIS, METHOD_ADD_ALL, METHOD_SET_AUTO_FILTER, METHOD_GET_NUMBER,
-			METHOD_SORTED, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER,
-			METHOD_OPEN_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
+			METHOD_NEW_INSTANCE, METHOD_TO_MILLIS, METHOD_ADD_ALL, METHOD_GET_NUMBER, METHOD_SORTED,
+			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_GET_URL, METHOD_ADD_HYPER_LINK_LISTENER, METHOD_OPEN_STREAM,
+			METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -321,8 +321,6 @@ class VoiceManagerTest {
 		(METHOD_TO_MILLIS = clz.getDeclaredMethod("toMillis", Duration.class)).setAccessible(true);
 		//
 		(METHOD_ADD_ALL = clz.getDeclaredMethod("addAll", Collection.class, Collection.class)).setAccessible(true);
-		//
-		(METHOD_SET_AUTO_FILTER = clz.getDeclaredMethod("setAutoFilter", Sheet.class)).setAccessible(true);
 		//
 		(METHOD_GET_NUMBER = clz.getDeclaredMethod("getNumber", Object.class, Iterable.class)).setAccessible(true);
 		//
@@ -2294,43 +2292,6 @@ class VoiceManagerTest {
 	private static <E> void addAll(final Collection<E> a, final Collection<? extends E> b) throws Throwable {
 		try {
 			METHOD_ADD_ALL.invoke(null, a, b);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetAutoFilter() throws Throwable {
-		//
-		try (final Workbook wb = new XSSFWorkbook()) {
-			//
-			final Sheet sheet = wb.createSheet();
-			//
-			Assertions.assertDoesNotThrow(() -> setAutoFilter(sheet));
-			//
-			SheetUtil.createRow(sheet, sheet != null ? sheet.getPhysicalNumberOfRows() : 0);
-			//
-			Assertions.assertDoesNotThrow(() -> setAutoFilter(sheet));
-			//
-			SheetUtil.createRow(sheet, sheet != null ? sheet.getPhysicalNumberOfRows() : 0);
-			//
-			final Row row = sheet != null ? sheet.getRow(sheet.getLastRowNum()) : null;
-			//
-			if (row != null) {
-				//
-				row.createCell(row.getPhysicalNumberOfCells());
-				//
-			} // if
-				//
-			Assertions.assertDoesNotThrow(() -> setAutoFilter(sheet));
-			//
-		} // try
-			//
-	}
-
-	private static void setAutoFilter(final Sheet sheet) throws Throwable {
-		try {
-			METHOD_SET_AUTO_FILTER.invoke(null, sheet);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
