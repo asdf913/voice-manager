@@ -303,9 +303,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private transient LayoutManager layoutManager = null;
 
-	@Nullable
-	private transient IValue0<String> microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle = null;
-
 	private transient freemarker.template.Configuration freeMarkerConfiguration = null;
 
 	private Version freeMarkerVersion = null;
