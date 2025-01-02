@@ -106,7 +106,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		this.freeMarkerConfiguration = freeMarkerConfiguration;
 	}
 
-	public void setjSoupParseTimeout(final Object object) {
+	public void setjSoupParseTimeout(@Nullable final Object object) {
 		//
 		if (object == null) {
 			//
@@ -153,7 +153,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		}
 	}
 
-	private static long longValue(final Number instance, final long defaultValue) {
+	private static long longValue(@Nullable final Number instance, final long defaultValue) {
 		return instance != null ? instance.longValue() : defaultValue;
 	}
 
@@ -233,7 +233,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		return IntFunction.class;
 	}
 
-	private static void add(final Container instance, @Nullable final Component comp) {
+	private static void add(@Nullable final Container instance, @Nullable final Component comp) {
 		//
 		if (instance == null) {
 			//
@@ -270,7 +270,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 	}
 
 	@Nullable
-	private static URI toURI(final URL instance) throws URISyntaxException {
+	private static URI toURI(@Nullable final URL instance) throws URISyntaxException {
 		//
 		if (instance == null) {
 			//
@@ -313,7 +313,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 	}
 
 	@Nullable
-	public static Dimension getPreferredSize(final Component instance) {
+	public static Dimension getPreferredSize(@Nullable final Component instance) {
 		//
 		if (instance == null) {
 			//
@@ -339,23 +339,23 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		//
 	}
 
-	private static URL getURL(final HyperlinkEvent instance) {
+	private static URL getURL(@Nullable final HyperlinkEvent instance) {
 		return instance != null ? instance.getURL() : null;
 	}
 
-	private static EventType getEventType(final HyperlinkEvent instance) {
+	private static EventType getEventType(@Nullable final HyperlinkEvent instance) {
 		return instance != null ? instance.getEventType() : null;
 	}
 
-	private static byte[] getBytes(final String instance) {
+	private static byte[] getBytes(@Nullable final String instance) {
 		return instance != null ? instance.getBytes() : null;
 	}
 
-	private static String getMimeType(final ContentInfo instance) {
+	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
 
-	private static void addHyperlinkListener(final JEditorPane instance, final HyperlinkListener listener) {
+	private static void addHyperlinkListener(@Nullable final JEditorPane instance, final HyperlinkListener listener) {
 		//
 		if (instance == null) {
 			//
@@ -417,19 +417,19 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		//
 	}
 
-	private static String html(final org.jsoup.nodes.Element instance) {
+	private static String html(@Nullable final org.jsoup.nodes.Element instance) {
 		return instance != null ? instance.html() : null;
 	}
 
-	private static String getProtocol(final URL instance) {
+	private static String getProtocol(@Nullable final URL instance) {
 		return instance != null ? instance.getProtocol() : null;
 	}
 
-	private static int intValue(final Number instance, final int defaultValue) {
+	private static int intValue(@Nullable final Number instance, final int defaultValue) {
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
-	private static Long toMillis(final Duration instance) {
+	private static Long toMillis(@Nullable final Duration instance) {
 		return instance != null ? Long.valueOf(instance.toMillis()) : null;
 	}
 
@@ -509,7 +509,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		//
 	}
 
-	private static Method[] getDeclaredMethods(final Class<?> instance) throws SecurityException {
+	private static Method[] getDeclaredMethods(@Nullable final Class<?> instance) throws SecurityException {
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
@@ -527,7 +527,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 	}
 
 	@Nullable
-	private static InputStream openStream(final URL instance) throws IOException {
+	private static InputStream openStream(@Nullable final URL instance) throws IOException {
 		//
 		if (instance == null) {
 			//
@@ -552,7 +552,8 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		return instance.openStream();
 	}
 
-	private static Field getDeclaredField(final Class<?> instance, final String name) throws NoSuchFieldException {
+	private static Field getDeclaredField(@Nullable final Class<?> instance, final String name)
+			throws NoSuchFieldException {
 		return instance != null ? instance.getDeclaredField(name) : null;
 	}
 
