@@ -180,9 +180,9 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 	private static final FailablePredicate<File, RuntimeException> EMPTY_FILE_PREDICATE = f -> f != null && f.exists()
 			&& isFile(f) && longValue(length(f), 0) == 0;
 
-	private ApplicationContext applicationContext = null;
+	private transient ApplicationContext applicationContext = null;
 
-	private SpeechApi speechApi = null;
+	private transient SpeechApi speechApi = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
@@ -193,7 +193,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 	@Url("https://www.microsoft.com/en-us/download/details.aspx?id=27224")
 	private String microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl = null;
 
-	private IValue0<String> microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle = null;
+	private transient IValue0<String> microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle = null;
 
 	private JTextComponent tfDllPath, tfExportFile = null;
 
@@ -220,13 +220,13 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 
 	private String[] voiceIds = null;
 
-	private LayoutManager layoutManager = null;
+	private transient LayoutManager layoutManager = null;
 
-	private PropertyResolver propertyResolver = null;
+	private transient PropertyResolver propertyResolver = null;
 
 	private Duration jSoupParseTimeout = null;
 
-	private ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
+	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
 	private String[] microsoftSpeechObjectLibraryAttributeNames = null;
 
