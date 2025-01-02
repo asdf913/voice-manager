@@ -660,23 +660,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
-	@Nullable
-	private static RuntimeException toRuntimeException(final Throwable instance) {
-		//
-		if (instance instanceof RuntimeException re) {
-			//
-			return re;
-			//
-		} else if (instance instanceof Throwable) {
-			//
-			return new RuntimeException(instance);
-			//
-		} // if
-			//
-		return null;
-		//
-	}
-
 	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance,
 			@Nullable final Object selectedItem) {
 		if (instance != null) {
