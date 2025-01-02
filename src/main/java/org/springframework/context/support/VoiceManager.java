@@ -258,9 +258,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	 */
 	private static final String CLASS_RESOURCE_FORMAT = "/%1$s.class";
 
-	private static final FailablePredicate<File, RuntimeException> EMPTY_FILE_PREDICATE = f -> f != null && f.exists()
-			&& isFile(f) && longValue(length(f), 0) == 0;
-
 	private transient ApplicationContext applicationContext = null;
 
 	private transient PropertyResolver propertyResolver = null;

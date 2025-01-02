@@ -3478,26 +3478,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testEmptyFilePredicate() throws Throwable {
-		//
-		final Predicate<Object> predicate = Util.cast(Predicate.class,
-				FieldUtils.readDeclaredStaticField(VoiceManager.class, "EMPTY_FILE_PREDICATE", true));
-		//
-		if (predicate != null) {
-			//
-			Assertions.assertFalse(predicate.test(null));
-			//
-			Assertions.assertFalse(predicate.test(Path.of("non_exixts")));
-			//
-			Assertions.assertFalse(predicate.test(Path.of(".")));
-			//
-			Assertions.assertFalse(predicate.test(Path.of("pom.xml")));
-			//
-		} // if
-			//
-	}
-
-	@Test
 	void testJLabelLink() throws Throwable {
 		//
 		final Class<?> clz = Util.forName("org.springframework.context.support.VoiceManager$JLabelLink");
