@@ -305,12 +305,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	@Note("For Import Panel")
 	private transient ComboBoxModel<?> cbmAudioFormatExecute = null;
 
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.FIELD)
-	private @interface Group {
-		String value();
-	}
-
 	@Note("Browse Button For Export Function")
 	private AbstractButton btnExportBrowse = null;
 
