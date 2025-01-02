@@ -1839,15 +1839,9 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 	}
 
-	
 	@Nullable
 	private static String html(@Nullable final org.jsoup.nodes.Element instance) {
 		return instance != null ? instance.html() : null;
-	}
-
-	@Nullable
-	private static EventType getEventType(@Nullable final HyperlinkEvent instance) {
-		return instance != null ? instance.getEventType() : null;
 	}
 
 	@Nullable
