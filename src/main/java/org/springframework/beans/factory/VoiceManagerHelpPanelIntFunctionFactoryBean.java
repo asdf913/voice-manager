@@ -31,6 +31,7 @@ import java.util.Objects;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
@@ -231,7 +232,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		return IntFunction.class;
 	}
 
-	private static void add(final Container instance, final Component comp) {
+	private static void add(final Container instance, @Nullable final Component comp) {
 		//
 		if (instance == null) {
 			//
@@ -261,7 +262,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 			//
 	}
 
-	private static void browse(final Desktop instance, final URI uri) throws IOException {
+	private static void browse(@Nullable final Desktop instance, final URI uri) throws IOException {
 		if (instance != null) {
 			instance.browse(uri);
 		}
@@ -377,7 +378,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		//
 	}
 
-	private static void setEditable(final boolean editable, final JTextComponent... jtcs) {
+	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
 		//
 		JTextComponent jtc = null;
 		//
@@ -517,7 +518,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		}
 	}
 
-	private static boolean isStatic(final Member instance) {
+	private static boolean isStatic(@Nullable final Member instance) {
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
