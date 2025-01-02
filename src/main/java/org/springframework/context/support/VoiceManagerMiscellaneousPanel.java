@@ -727,7 +727,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 
 		boolean containsObject(final Class<?> key);
 
-		<T> void setObject(final Class<T> key, final T value);
+		<T> void setObject(final Class<T> key, @Nullable final T value);
 
 		@Nullable
 		static <T> T getObject(@Nullable final ObjectMap instance, final Class<T> key) {
@@ -1085,7 +1085,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 	}
 
 	@Nullable
-	private static Row addLocaleIdRow(final ObjectMap objectMap, @Nullable final List<Field> fs,
+	private static Row addLocaleIdRow(@Nullable final ObjectMap objectMap, @Nullable final List<Field> fs,
 			final Object instance) {
 		//
 		final Sheet sheet = ObjectMap.getObject(objectMap, Sheet.class);
@@ -1677,7 +1677,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		return instance != null ? instance.get(index) : null;
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
