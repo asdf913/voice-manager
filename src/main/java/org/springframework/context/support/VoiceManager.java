@@ -2271,41 +2271,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		return constructor != null ? constructor.newInstance(initargs) : null;
 	}
 
-	@Nullable
-	private static List<Field> findFieldsByValue(@Nullable final Field[] fs, final Object instance,
-			final Object value) {
-		//
-		Field f = null;
-		//
-		Object fieldValue = null;
-		//
-		List<Field> list = null;
-		//
-		for (int i = 0; fs != null && i < fs.length; i++) {
-			//
-			if ((f = fs[i]) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if ((fieldValue = testAndApply(VoiceManager::isStatic, f, Narcissus::getStaticField,
-					a -> testAndApply(Objects::nonNull, instance, b -> Narcissus.getField(b, a), null))) != value
-					|| !Objects.equals(fieldValue, value)) {
-				//
-				continue;
-				//
-			} // if
-				//
-			testAndAccept((a, b) -> !Util.contains(a, b), list = ObjectUtils.getIfNull(list, ArrayList::new), f,
-					Util::add, null);
-			//
-		} // for
-			//
-		return list;
-		//
-	}
-
 	private static Method getAccessibleObjectIsAccessibleMethod() {
 		//
 		final List<Method> ms = Util.toList(Util.filter(

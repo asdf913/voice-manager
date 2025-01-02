@@ -173,8 +173,8 @@ class VoiceManagerTest {
 			METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL,
 			METHOD_TO_ARRAY_COLLECTION, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_GET_LIST,
 			METHOD_CREATE_MICROSOFT_SPEECH_OBJECT_LIBRARY_WORK_BOOK, METHOD_TEST_AND_ACCEPT_PREDICATE,
-			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_FIND_FIELDS_BY_VALUE, METHOD_GET_PACKAGE, METHOD_BROWSE,
-			METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP,
+			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI_FILE,
+			METHOD_TO_URI_URL, METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP,
 			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_GET_MEDIA_FORMAT_LINK,
 			METHOD_GET_EVENT_TYPE, METHOD_SET_MICROSOFT_SPEECH_OBJECT_LIBRARY_SHEET_FIRST_ROW,
 			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML, METHOD_LENGTH,
@@ -253,9 +253,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_TEST_AND_ACCEPT_BI_PREDICATE = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class,
 				Object.class, FailableBiConsumer.class)).setAccessible(true);
-		//
-		(METHOD_FIND_FIELDS_BY_VALUE = clz.getDeclaredMethod("findFieldsByValue", Field[].class, Object.class,
-				Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_PACKAGE = clz.getDeclaredMethod("getPackage", Class.class)).setAccessible(true);
 		//
@@ -1759,46 +1756,6 @@ class VoiceManagerTest {
 			final U u, final FailableBiConsumer<T, U, E> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT_BI_PREDICATE.invoke(null, biPredicate, t, u, consumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testFindFieldsByValue() throws Throwable {
-		//
-		Assertions.assertNull(findFieldsByValue(null, null, null));
-		//
-		Assertions.assertNull(findFieldsByValue(new Field[] { null }, null, null));
-		//
-		Assertions.assertNotNull(findFieldsByValue(FieldUtils.getAllFields(VoiceManager.class), null, null));
-		//
-		final Field f = ArrayList.class.getDeclaredField("size");
-		//
-		final Field[] fs = new Field[] { f };
-		//
-		Assertions.assertNotNull(findFieldsByValue(fs, null, null));
-		//
-		final Collection<?> collection = new ArrayList<>();
-		//
-		Assertions.assertNull(findFieldsByValue(fs, collection, null));
-		//
-		Assertions.assertNull(findFieldsByValue(fs, collection, Integer.valueOf(1)));
-		//
-		Assertions.assertEquals(Collections.singletonList(f), findFieldsByValue(fs, collection, Integer.valueOf(0)));
-		//
-	}
-
-	private static List<Field> findFieldsByValue(final Field[] fs, final Object instance, final Object value)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_FIND_FIELDS_BY_VALUE.invoke(null, fs, instance, value);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof List) {
-				return (List) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
