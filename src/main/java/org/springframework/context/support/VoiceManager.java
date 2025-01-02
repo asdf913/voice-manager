@@ -2208,11 +2208,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@Nullable
-	private static StringBuilder append(@Nullable final StringBuilder instance, @Nullable final String string) {
-		return instance != null ? instance.append(string) : null;
-	}
-
-	@Nullable
 	private static StringBuilder append(@Nullable final StringBuilder instance, final char c) {
 		return instance != null ? instance.append(c) : null;
 	}
