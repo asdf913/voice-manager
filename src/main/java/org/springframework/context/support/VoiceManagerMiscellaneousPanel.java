@@ -235,6 +235,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 
 	private transient PropertyResolver propertyResolver = null;
 
+	@Nullable
 	private Duration jSoupParseTimeout = null;
 
 	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
@@ -311,6 +312,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static Integer valueOf(final String instance) {
 		try {
 			return StringUtils.isNotBlank(instance) ? Integer.valueOf(instance) : null;
