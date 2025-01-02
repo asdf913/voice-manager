@@ -319,8 +319,6 @@ class VoiceManagerTest {
 		(METHOD_GET_TITLED_COMPONENT_MAP = clz.getDeclaredMethod("getTitledComponentMap", Map.class, String[].class))
 				.setAccessible(true);
 		//
-		CLASS_OBJECT_MAP = Class.forName("org.springframework.context.support.VoiceManager$ObjectMap");
-		//
 	}
 
 	private static class IH implements InvocationHandler {
