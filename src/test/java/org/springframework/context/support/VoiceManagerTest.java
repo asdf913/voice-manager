@@ -167,7 +167,7 @@ class VoiceManagerTest {
 			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_SET_FOCUS_CYCLE_ROOT,
 			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_DECLARED_CONSTRUCTOR,
 			METHOD_NEW_INSTANCE, METHOD_ADD_ALL, METHOD_GET_NUMBER, METHOD_CREATE_IMPORT_RESULT_PANEL,
-			METHOD_OPEN_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
+			METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -289,8 +289,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_CREATE_IMPORT_RESULT_PANEL = clz.getDeclaredMethod("createImportResultPanel", LayoutManager.class))
 				.setAccessible(true);
-		//
-		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
 		//
 		(METHOD_SET_SELECTED_INDEX = clz.getDeclaredMethod("setSelectedIndex", JTabbedPane.class, Number.class))
 				.setAccessible(true);
@@ -2053,27 +2051,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof JPanel) {
 				return (JPanel) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testOpenStream() throws Throwable {
-		//
-		Assertions.assertNull(openStream(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));
-		//
-	}
-
-	private static InputStream openStream(final URL instance) throws Throwable {
-		try {
-			final Object obj = METHOD_OPEN_STREAM.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof InputStream) {
-				return (InputStream) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

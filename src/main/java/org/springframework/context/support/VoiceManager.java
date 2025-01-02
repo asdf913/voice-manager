@@ -1820,32 +1820,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@Nullable
-	private static InputStream openStream(@Nullable final URL instance) throws IOException {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		try {
-			//
-			if (Narcissus.getField(instance, getDeclaredField(Util.getClass(instance), HANDLER)) == null) {
-				//
-				return null;
-				//
-			} // if
-				//
-		} catch (final NoSuchFieldException e) {
-			//
-			LoggerUtil.error(LOG, e.getMessage(), e);
-			//
-		} // try
-			//
-		return instance.openStream();
-	}
-
-	@Nullable
 	private static Integer toInteger(@Nullable final Object object) {
 		//
 		Integer integer = null;
