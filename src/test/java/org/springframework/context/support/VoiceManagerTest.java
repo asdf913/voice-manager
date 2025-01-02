@@ -165,10 +165,10 @@ class VoiceManagerTest {
 			METHOD_ADD_CONTAINER3, METHOD_MATCHER, METHOD_MATCHES, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE,
 			METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_TO_ARRAY_COLLECTION, METHOD_GET_TAB_INDEX_BY_TITLE,
 			METHOD_GET_DECLARED_FIELD, METHOD_GET_LIST, METHOD_TEST_AND_ACCEPT_PREDICATE,
-			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI_FILE,
-			METHOD_TO_URI_URL, METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP,
-			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_GET_MEDIA_FORMAT_LINK,
-			METHOD_GET_EVENT_TYPE, METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML,
+			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_BROWSE, METHOD_TO_URI_FILE, METHOD_TO_URI_URL,
+			METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2,
+			METHOD_SET_VISIBLE, METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE,
+			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML,
 			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS, METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL,
 			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_2, METHOD_IS_STATIC, METHOD_GET_FIELD_BY_NAME,
 			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_SET_FOCUS_CYCLE_ROOT,
@@ -235,8 +235,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_TEST_AND_ACCEPT_BI_PREDICATE = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class,
 				Object.class, FailableBiConsumer.class)).setAccessible(true);
-		//
-		(METHOD_GET_PACKAGE = clz.getDeclaredMethod("getPackage", Class.class)).setAccessible(true);
 		//
 		(METHOD_BROWSE = clz.getDeclaredMethod("browse", Desktop.class, URI.class)).setAccessible(true);
 		//
@@ -1612,27 +1610,6 @@ class VoiceManagerTest {
 			final U u, final FailableBiConsumer<T, U, E> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT_BI_PREDICATE.invoke(null, biPredicate, t, u, consumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetPackage() throws Throwable {
-		//
-		Assertions.assertNull(getPackage(null));
-		//
-	}
-
-	private static Package getPackage(final Class<?> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_PACKAGE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Package) {
-				return (Package) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

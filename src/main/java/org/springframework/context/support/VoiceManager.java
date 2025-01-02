@@ -2263,11 +2263,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		return instance != null ? instance.toURI() : null;
 	}
 
-	@Nullable
-	private static Package getPackage(@Nullable final Class<?> instance) {
-		return instance != null ? instance.getPackage() : null;
-	}
-
 	@Override
 	public Toolkit getToolkit() {
 		//
