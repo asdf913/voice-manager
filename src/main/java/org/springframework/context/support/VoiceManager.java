@@ -221,9 +221,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	@Note("File Digest")
 	private JTextComponent tfFileDigest = null;
 
-	@Note("DLL Path")
-	private JTextComponent tfDllPath = null;
-
 	@Note("File")
 	private JTextComponent tfFile = null;
 
