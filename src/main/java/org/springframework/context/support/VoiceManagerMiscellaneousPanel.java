@@ -197,7 +197,16 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 	@Nullable
 	private transient IValue0<String> microsoftSpeechPlatformRuntimeLanguagesDownloadPageTitle = null;
 
-	private JTextComponent tfDllPath, tfExportFile = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("DLL Path")
+	private JTextComponent tfDllPath = null;
+
+	private JTextComponent tfExportFile = null;
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
