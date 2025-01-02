@@ -275,6 +275,7 @@ public class VoiceManagerHelpPanel extends JScrollPane implements Titled, Initia
 			//
 	}
 
+	@Nullable
 	private static String getEncryptionTableHtml(final URL url, final Duration timeout) throws IOException {
 		//
 		org.jsoup.nodes.Document document = testAndApply(
