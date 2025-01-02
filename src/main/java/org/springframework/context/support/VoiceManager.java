@@ -1839,27 +1839,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 	}
 
-	@Nullable
-	private static String getEncryptionTableHtml(final URL url, final Duration timeout) throws IOException {
-		//
-		org.jsoup.nodes.Document document = testAndApply(
-				x -> StringUtils.equalsAnyIgnoreCase(getProtocol(x), ProtocolUtil.getAllowProtocols()), url,
-				x -> Jsoup.parse(x, intValue(toMillis(timeout), 0)), null);
-		//
-		if (document == null) {
-			//
-			document = testAndApply(Objects::nonNull,
-					testAndApply(Objects::nonNull, url, x -> IOUtils.toString(x, StandardCharsets.UTF_8), null),
-					Jsoup::parse, null);
-			//
-		} // if
-			//
-		final Elements h2s = ElementUtil.selectXpath(document, "//h2[text()=\"Supported feature matrix\"]");
-		//
-		return html(ElementUtil.nextElementSibling(IterableUtils.size(h2s) == 1 ? IterableUtils.get(h2s, 0) : null));
-		//
-	}
-
+	
 	@Nullable
 	private static String html(@Nullable final org.jsoup.nodes.Element instance) {
 		return instance != null ? instance.html() : null;

@@ -165,13 +165,13 @@ class VoiceManagerTest {
 			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_GET_LIST, METHOD_TEST_AND_ACCEPT_PREDICATE,
 			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_ENCODE_TO_STRING,
 			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE,
-			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT,
-			METHOD_GET_ENCRYPTION_TABLE_HTML, METHOD_HTML, METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL,
-			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_2, METHOD_IS_STATIC, METHOD_GET_FIELD_BY_NAME,
-			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_SET_FOCUS_CYCLE_ROOT,
-			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_DECLARED_CONSTRUCTOR,
-			METHOD_NEW_INSTANCE, METHOD_TO_MILLIS, METHOD_ADD_ALL, METHOD_GET_NUMBER, METHOD_CREATE_IMPORT_RESULT_PANEL,
-			METHOD_OPEN_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
+			METHOD_GET_MEDIA_FORMAT_LINK, METHOD_GET_EVENT_TYPE, METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_HTML,
+			METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL, METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_2,
+			METHOD_IS_STATIC, METHOD_GET_FIELD_BY_NAME, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL,
+			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
+			METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE, METHOD_TO_MILLIS, METHOD_ADD_ALL, METHOD_GET_NUMBER,
+			METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_OPEN_STREAM, METHOD_SET_SELECTED_INDEX,
+			METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -254,9 +254,6 @@ class VoiceManagerTest {
 		(METHOD_GET_EVENT_TYPE = clz.getDeclaredMethod("getEventType", HyperlinkEvent.class)).setAccessible(true);
 		//
 		(METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT = clz.getDeclaredMethod("getMaxPagePreferredHeight", Object.class))
-				.setAccessible(true);
-		//
-		(METHOD_GET_ENCRYPTION_TABLE_HTML = clz.getDeclaredMethod("getEncryptionTableHtml", URL.class, Duration.class))
 				.setAccessible(true);
 		//
 		(METHOD_HTML = clz.getDeclaredMethod("html", org.jsoup.nodes.Element.class)).setAccessible(true);
@@ -1810,31 +1807,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Double) {
 				return (Double) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetEncryptionTableHtml() throws Throwable {
-		//
-		final URL url = toURL(toURI(Path.of("pom.xml").toFile()));
-		//
-		Assertions.assertNull(getEncryptionTableHtml(url, null));
-		//
-		Assertions.assertNull(getEncryptionTableHtml(url, Duration.ZERO));
-		//
-	}
-
-	private static String getEncryptionTableHtml(final URL url, final Duration timeout) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_ENCRYPTION_TABLE_HTML.invoke(null, url, timeout);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
