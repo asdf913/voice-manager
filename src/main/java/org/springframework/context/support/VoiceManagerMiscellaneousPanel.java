@@ -1155,8 +1155,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 	 * https://github.com/apache/commons-lang/blob/master/src/main/java/org/apache/
 	 * commons/lang3/ObjectUtils.java#L597
 	 */
-	private static <T, E extends Throwable> T getIfNull(final T object, final FailableSupplier<T, E> defaultSupplier)
-			throws E {
+	private static <T, E extends Throwable> T getIfNull(@Nullable final T object,
+			final FailableSupplier<T, E> defaultSupplier) throws E {
 		return object != null ? object : get(defaultSupplier);
 	}
 
@@ -1308,7 +1308,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 	}
 
 	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
-			final BiConsumer<T, U> a, final BiConsumer<T, U> b) {
+			final BiConsumer<T, U> a, @Nullable final BiConsumer<T, U> b) {
 		if (test(instance, t, u)) {
 			accept(a, t, u);
 		} else {
@@ -1655,13 +1655,14 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static <T, E extends Throwable> void testAndAccept(final FailablePredicate<T, E> predicate, final T value,
-			final FailableConsumer<T, E> consumer) throws E {
+	private static <T, E extends Throwable> void testAndAccept(final FailablePredicate<T, E> predicate,
+			@Nullable final T value, final FailableConsumer<T, E> consumer) throws E {
 		if (Util.test(predicate, value)) {
 			FailableConsumerUtil.accept(consumer, value);
 		}
