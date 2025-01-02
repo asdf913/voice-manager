@@ -2258,20 +2258,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		} // if
 			//
-		final boolean nonTest = !isTestMode();
-		//
-		// if the "source" is one of the value of the field annotated with
-		// "@SystemClipboard", pass the "source" to
-		// "actionPerformedForSystemClipboardAnnotated(java.lang.Object)" method
-		//
-		final FailableStream<Field> fs = new FailableStream<>(Util.filter(
-				testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManager.class), Arrays::stream, null),
-				f -> isAnnotationPresent(f, SystemClipboard.class)));
-		//
-		testAndRun(Util.contains(Util.toList(Util.filter(
-				FailableStreamUtil.stream(FailableStreamUtil.map(fs, f -> FieldUtils.readField(f, this, true))),
-				Objects::nonNull)), source), () -> actionPerformedForSystemClipboardAnnotated(nonTest, source));
-		//
 		if (Objects.equals(source, btnExportBrowse)) {
 			//
 			actionPerformedForExportBrowse(headless);
@@ -2309,30 +2295,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		} // if
 			//
-	}
-
-	private void actionPerformedForSystemClipboardAnnotated(final boolean nonTest, final Object source) {
-		//
-		final Clipboard clipboard = getSystemClipboard(getToolkit());
-		//
-		IValue0<String> stringValue = null;
-		//
-		if (stringValue != null) {
-			//
-			// if this method is not run under unit test, call
-			// "java.awt.datatransfer.Clipboard.setContents(java.awt.datatransfer.Transferable,java.awt.datatransfer.ClipboardOwner)"
-			// method
-			//
-			final String string = IValue0Util.getValue0(stringValue);
-			//
-			testAndRun(nonTest, () -> setContents(clipboard, new StringSelection(string), null));
-			//
-			return;
-			//
-		} // if
-			//
-		throw new IllegalStateException();
-		//
 	}
 
 	private void actionPerformedForExportButtons(final Object source, final boolean headless) {
