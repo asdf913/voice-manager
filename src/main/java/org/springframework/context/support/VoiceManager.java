@@ -1838,10 +1838,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
-	private static long longValue(@Nullable final Number instance, final long defaultValue) {
-		return instance != null ? instance.longValue() : defaultValue;
-	}
-
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
