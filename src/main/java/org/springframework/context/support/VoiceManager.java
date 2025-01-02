@@ -2324,14 +2324,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	}
 
 	@Nullable
-	private static <T> List<T> getObjectsByGroupAnnotation(final Object instance, final String group,
-			final Class<T> clz) {
-		//
-		return Util.toList(Util.map(Util.stream(getObjectsByGroupAnnotation(instance, group)), x -> Util.cast(clz, x)));
-		//
-	}
-
-	@Nullable
 	private static List<?> getObjectsByGroupAnnotation(final Object instance, final String group) {
 		//
 		final FailableStream<Field> fs = new FailableStream<>(Util.filter(
