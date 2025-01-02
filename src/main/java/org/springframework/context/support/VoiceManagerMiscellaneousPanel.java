@@ -1180,6 +1180,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		return instance != null ? Integer.valueOf(instance.getPhysicalNumberOfCells()) : null;
 	}
 
+	@Nullable
 	private static <T> Stream<T> sorted(@Nullable final Stream<T> instance,
 			@Nullable final Comparator<? super T> comparator) {
 		//
@@ -1271,6 +1272,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
 
+	@Nullable
 	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
