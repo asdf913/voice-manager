@@ -144,6 +144,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		//
 	}
 
+	@Nullable
 	private static Integer valueOf(final String instance) {
 		try {
 			return StringUtils.isNotBlank(instance) ? Integer.valueOf(instance) : null;
@@ -268,6 +269,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		}
 	}
 
+	@Nullable
 	private static URI toURI(final URL instance) throws URISyntaxException {
 		//
 		if (instance == null) {
@@ -310,6 +312,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		//
 	}
 
+	@Nullable
 	public static Dimension getPreferredSize(final Component instance) {
 		//
 		if (instance == null) {
@@ -510,6 +513,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
+	@Nullable
 	private static Class<?> forName(final String className) {
 		try {
 			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
@@ -522,6 +526,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
+	@Nullable
 	private static InputStream openStream(final URL instance) throws IOException {
 		//
 		if (instance == null) {
