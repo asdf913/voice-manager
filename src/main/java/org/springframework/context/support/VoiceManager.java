@@ -217,8 +217,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private static final String WARNING = "Warning";
 
-	private static final String KEY_NOT_FOUND_MESSAGE = "Key [%1$s] Not Found";
-
 	private static final String COMPONENT = "component";
 
 	/**
