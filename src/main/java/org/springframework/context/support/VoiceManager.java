@@ -227,9 +227,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	@Note("File")
 	private JTextComponent tfFile = null;
 
-	@Note("Export File")
-	private JTextComponent tfExportFile = null;
-
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
 	private @interface Url {
