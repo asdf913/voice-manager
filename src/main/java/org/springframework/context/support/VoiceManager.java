@@ -571,7 +571,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 	}
 
-	
 	private static void errorOrAssertOrShowException(final boolean headless, final Throwable throwable) {
 		//
 		TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(headless, LOG, throwable);
@@ -2135,14 +2134,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			@Nullable final FailableFunction<T, R, E> functionFalse) throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
-	}
-
-	@Nullable
-	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
-			@Nullable final U u, final FailableBiFunction<T, U, R, E> functionTrue,
-			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
-		return predicate != null && predicate.test(t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
-				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
 
 	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {

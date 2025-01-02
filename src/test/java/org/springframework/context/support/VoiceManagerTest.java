@@ -161,11 +161,11 @@ class VoiceManagerTest {
 
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_IH, CLASS_EXPORT_TASK = null;
 
-	private static Method METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_INT_VALUE, METHOD_LONG_VALUE,
-			METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE, METHOD_GET_PREFERRED_WIDTH,
-			METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_MATCHER, METHOD_MATCHES, METHOD_VALUE_OF1,
-			METHOD_AND_FAILABLE_PREDICATE, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_TO_ARRAY_COLLECTION,
-			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_DECLARED_FIELD, METHOD_GET_LIST, METHOD_TEST_AND_ACCEPT_PREDICATE,
+	private static Method METHOD_TEST_AND_APPLY4, METHOD_INT_VALUE, METHOD_LONG_VALUE, METHOD_FOR_EACH_STREAM,
+			METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE, METHOD_GET_PREFERRED_WIDTH, METHOD_ADD_CONTAINER2,
+			METHOD_ADD_CONTAINER3, METHOD_MATCHER, METHOD_MATCHES, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE,
+			METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_TO_ARRAY_COLLECTION, METHOD_GET_TAB_INDEX_BY_TITLE,
+			METHOD_GET_DECLARED_FIELD, METHOD_GET_LIST, METHOD_TEST_AND_ACCEPT_PREDICATE,
 			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_GET_PACKAGE, METHOD_BROWSE, METHOD_TO_URI_FILE,
 			METHOD_TO_URI_URL, METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP,
 			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_GET_MEDIA_FORMAT_LINK,
@@ -185,9 +185,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_TEST_AND_APPLY4 = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
-		//
-		(METHOD_TEST_AND_APPLY5 = clz.getDeclaredMethod("testAndApply", BiPredicate.class, Object.class, Object.class,
-				FailableBiFunction.class, FailableBiFunction.class)).setAccessible(true);
 		//
 		(METHOD_INT_VALUE = clz.getDeclaredMethod("intValue", Number.class, Integer.TYPE)).setAccessible(true);
 		//
@@ -1189,13 +1186,7 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(testAndApply(null, null, null, x -> x));
 		//
-		Assertions.assertNull(testAndApply(null, null, null, null, null));
-		//
 		Assertions.assertNull(testAndApply(Predicates.alwaysTrue(), null, null, x -> x));
-		//
-		Assertions.assertNull(testAndApply((a, b) -> false, null, null, null, null));
-		//
-		Assertions.assertNull(testAndApply((a, b) -> true, null, null, (a, b) -> null, null));
 		//
 	}
 
@@ -1204,16 +1195,6 @@ class VoiceManagerTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY4.invoke(null, predicate, value, functionTrue, functionFalse);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
-			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
-			final FailableBiFunction<T, U, R, E> functionFalse) throws Throwable {
-		try {
-			return (R) METHOD_TEST_AND_APPLY5.invoke(null, predicate, t, u, functionTrue, functionFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
