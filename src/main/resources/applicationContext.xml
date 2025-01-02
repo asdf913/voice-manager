@@ -999,8 +999,6 @@
 					value="#{new freemarker.cache.ClassTemplateLoader(T(org.springframework.context.support.VoiceManager),'/')}" />
 			</bean>
 		</property>
-		<property name="jSoupParseTimeout"
-			value="${org.springframework.context.support.VoiceManager.jSoupParseTimeout}" />
 	</bean>
 
 	<!---->

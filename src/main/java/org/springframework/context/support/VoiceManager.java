@@ -291,9 +291,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private transient Map<Object, Object> exportWebSpeechSynthesisHtmlTemplateProperties = null;
 
-	@Nullable
-	private Duration jSoupParseTimeout = null;
-
 	private VoiceManager() {
 	}
 
@@ -721,44 +718,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	public void setFreeMarkerConfiguration(final freemarker.template.Configuration freeMarkerConfiguration) {
 		this.freeMarkerConfiguration = freeMarkerConfiguration;
-	}
-
-	public void setjSoupParseTimeout(@Nullable final Object object) {
-		//
-		if (object == null) {
-			//
-			this.jSoupParseTimeout = null;
-			//
-			return;
-			//
-		} else if (object instanceof Duration duration) {
-			//
-			this.jSoupParseTimeout = duration;
-			//
-			return;
-			//
-		} else if (object instanceof Number number) {
-			//
-			this.jSoupParseTimeout = Duration.ofMillis(longValue(number, 0));
-			//
-			return;
-			//
-		} // if
-			//
-		final String string = Util.toString(object);
-		//
-		final Integer integer = valueOf(string);
-		//
-		if (integer != null) {
-			//
-			setjSoupParseTimeout(integer);
-			//
-			return;
-			//
-		} // if
-			//
-		this.jSoupParseTimeout = testAndApply(StringUtils::isNotBlank, string, Duration::parse, null);
-		//
 	}
 
 	@Nullable

@@ -1051,57 +1051,6 @@ class VoiceManagerTest {
 		} // if
 	}
 
-	@Test
-	void testSetjSoupParseTimeout() throws NoSuchFieldException, IllegalAccessException {
-		//
-		final Field jSoupParseTimeout = VoiceManager.class.getDeclaredField("jSoupParseTimeout");
-		//
-		if (jSoupParseTimeout != null) {
-			//
-			jSoupParseTimeout.setAccessible(true);
-			//
-		} // if
-			//
-		if (instance != null) {
-			//
-			// null
-			//
-			Assertions.assertDoesNotThrow(() -> instance.setjSoupParseTimeout(null));
-			//
-			Assertions.assertNull(get(jSoupParseTimeout, instance));
-			//
-			// java.time.Duration
-			//
-			final Duration duration = Duration.ZERO;
-			//
-			Assertions.assertDoesNotThrow(() -> instance.setjSoupParseTimeout(duration));
-			//
-			Assertions.assertSame(duration, get(jSoupParseTimeout, instance));
-			//
-			// java.lang.Number as java.lang.String
-			//
-			Assertions.assertDoesNotThrow(() -> instance.setjSoupParseTimeout(Integer.toString(ZERO)));
-			//
-			Assertions.assertSame(duration, get(jSoupParseTimeout, instance));
-			//
-			// java.lang.String
-			//
-			Assertions.assertDoesNotThrow(() -> instance.setjSoupParseTimeout(EMPTY));
-			//
-			Assertions.assertNull(get(jSoupParseTimeout, instance));
-			//
-			Assertions.assertDoesNotThrow(() -> instance.setjSoupParseTimeout(SPACE));
-			//
-			Assertions.assertNull(get(jSoupParseTimeout, instance));
-			//
-			Assertions.assertDoesNotThrow(() -> instance.setjSoupParseTimeout("PT0S"));
-			//
-			Assertions.assertSame(duration, get(jSoupParseTimeout, instance));
-			//
-		} // if
-			//
-	}
-
 	private static void stateChanged(final ChangeListener instance, final ChangeEvent evt) {
 		if (instance != null) {
 			instance.stateChanged(evt);
