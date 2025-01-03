@@ -1153,7 +1153,7 @@ public abstract class Util {
 			//
 			put(map, "com.google.gson.JsonArray", "elements");
 			//
-			put(map, "com.google.gson.internal.NonNullElementWrapperList", "delegate");
+			put(map, "com.google.gson.internal.NonNullElementWrapperList", DELEGATE);
 			//
 			if ((iValue0 = iterator(clz, instance, map)) != null) {
 				//
