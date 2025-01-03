@@ -3,7 +3,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
@@ -17,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -40,10 +40,12 @@ import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.fontbox.ttf.OTFParser;
+import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecification;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
@@ -51,9 +53,9 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
-import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntList;
 import org.junit.jupiter.api.Assertions;
@@ -76,50 +78,36 @@ public class PdfTest {
 		final Path pathHtml = Path.of("test.html");
 		//
 		FileUtils.writeStringToFile(toFile(pathHtml),
-				"<span style=\"font-size:64px\"><ruby>席<rt>せき</rt></ruby>をお<ruby>譲<rt>ゆず</rt></ruby>りください。</span>",
+				"<div style=\"font-size:64px;text-align:center;display:block;margin-left: auto;margin-right: auto\"><ruby>席<rt>せき</rt></ruby>をお<ruby>譲<rt>ゆず</rt></ruby>りください。</div>",
 				"utf-8", false);
 		//
-		final Path pathImage = Path.of("test1.png");
-		//
-		System.out.println(getAbsolutePath(toFile(pathImage)));
-		//
-		FileUtils.writeByteArrayToFile(toFile(pathImage), screenshot(pathHtml), false);
-		//
-		final BufferedImage bi = chop(ImageIO.read(toFile(pathImage)));
-		//
-		final Path pathChoppedImage = Path.of("test2.png");
-		//
-		System.out.println(getAbsolutePath(toFile(pathChoppedImage)));
-		//
-		try (final OutputStream os = Files.newOutputStream(pathChoppedImage)) {
-			//
-			if (bi != null) {
-				//
-				ImageIO.write(bi, "png", os);
-				//
-			} // if
-				//
-		} // try
-			//
 		final File file = toFile(Path.of("test.pdf"));
 		//
-		try (final PDDocument document = new PDDocument()) {
+		System.out.println(getAbsolutePath(file));
+		//
+		FileUtils.writeByteArrayToFile(file, pdf(pathHtml), false);
+		//
+		final PDDocument document = Loader.loadPDF(file);
+		//
+		if (document != null && document.getNumberOfPages() > 0) {
 			//
-			final PDPage pd = new PDPage();
+			final PDPage pd = document.getPage(0);
 			//
-			document.addPage(pd);
+			final PDFRenderer pdfRenderer = new PDFRenderer(document);
 			//
-			final PDPageContentStream cs = new PDPageContentStream(document, pd);
+			final Path page1Path = Path.of("page1.png");
 			//
-			final PDImageXObject pdfImageXObject = PDImageXObject.createFromByteArray(document,
-					Files.readAllBytes(pathChoppedImage), getName(toFile(pathChoppedImage)));
+			toFile(page1Path).deleteOnExit();
 			//
-			final PDRectangle md = pd.getMediaBox();
+			System.out.println(getAbsolutePath(toFile(page1Path)));
 			//
-			cs.drawImage(pdfImageXObject, (getWidth(md) - getWidth(pdfImageXObject)) / 2,
-					getHeight(md) - getHeight(pdfImageXObject));
+			final BufferedImage bi = pdfRenderer.renderImage(0);
 			//
-			System.out.println(getAbsolutePath(file));
+			ImageIO.write(bi, "png", toFile(page1Path));
+			//
+			final Integer largestY = getLargestY(bi);
+			//
+			final PDPageContentStream cs = new PDPageContentStream(document, pd, AppendMode.PREPEND, true);
 			//
 			final Path pathAudio = Path.of("test.wav");
 			//
@@ -189,6 +177,8 @@ public class PdfTest {
 				//
 				float lastHeight = 0;
 				//
+				final PDRectangle md = getMediaBox(pd);
+				//
 				try (final InputStream is = Files.newInputStream(pathAudio)) {
 					//
 					final PDEmbeddedFile pdfEmbeddedFile = new PDEmbeddedFile(document, is);
@@ -209,12 +199,12 @@ public class PdfTest {
 					//
 					// Position on the page
 					//
-					attachment.setRectangle(new PDRectangle(index++ * size,
-							getHeight(md) - getHeight(pdfImageXObject) - size, size, size));
+					attachment.setRectangle(
+							new PDRectangle(index++ * size, getHeight(md) - intValue(largestY, 0) - size, size, size));
 					//
 					attachment.setContents(value = entry.getValue());
 					//
-					add(pd.getAnnotations(), attachment);
+					add(getAnnotations(pd), attachment);
 					//
 					// Label (Speed)
 					//
@@ -231,7 +221,7 @@ public class PdfTest {
 					} // if
 						//
 					cs.newLineAtOffset((index - 1) * size + getTextWidth(value, font, fontSize) / 2,
-							lastHeight = (getHeight(md) - getHeight(pdfImageXObject) - size
+							lastHeight = (getHeight(md) - intValue(largestY, 0) - size
 							//
 									- (font.getFontDescriptor().getAscent() / 1000 * fontSize)
 									+ (font.getFontDescriptor().getDescent() / 1000 * fontSize))
@@ -273,8 +263,58 @@ public class PdfTest {
 			//
 			document.save(file);
 			//
-		} // try
+		} // if
 			//
+	}
+
+	private static List<PDAnnotation> getAnnotations(final PDPage instance) throws IOException {
+		return instance != null ? instance.getAnnotations() : null;
+	}
+
+	private static PDRectangle getMediaBox(final PDPage instance) {
+		return instance != null ? instance.getMediaBox() : null;
+	}
+
+	private static int intValue(final Number instance, final int defaultValue) {
+		return instance != null ? instance.intValue() : defaultValue;
+	}
+
+	private static Integer getLargestY(final BufferedImage bi) {
+		//
+		Color color = null;
+		//
+		IntList ily = null;
+		//
+		for (int y = 0; bi != null && y < bi.getHeight(); y++) {
+			//
+			for (int x = 0; x < bi.getWidth(); x++) {
+				//
+				if (color == null) {
+					//
+					color = new Color(bi.getRGB(x, y));
+					//
+				} else {
+					//
+					if (!Objects.equals(color, new Color(bi.getRGB(x, y)))) {
+						//
+						if (!contains(ily = ObjectUtils.getIfNull(ily, IntList::create), y)) {
+							//
+							IntCollectionUtil.addInt(ily, y);
+							//
+						} // if
+							//
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+		sortInts(ily);
+		//
+		return ily != null && !ily.isEmpty() ? ily.getInt(ily.size() - 1) : null;
+		//
 	}
 
 	private static void setSubject(final PDDocumentInformation instance, final String keywords) {
@@ -339,23 +379,11 @@ public class PdfTest {
 		return instance != null ? instance.getHeight() : 0;
 	}
 
-	private static int getHeight(final PDImage instance) {
-		return instance != null ? instance.getHeight() : 0;
-	}
-
-	private static float getWidth(final PDRectangle instance) {
-		return instance != null ? instance.getWidth() : 0;
-	}
-
-	private static int getWidth(final PDImage instance) {
-		return instance != null ? instance.getWidth() : 0;
-	}
-
 	private static String getName(final File instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static byte[] screenshot(final Path pathHtml) throws MalformedURLException {
+	private static byte[] pdf(final Path pathHtml) throws MalformedURLException {
 		//
 		try (final Playwright playwright = Playwright.create()) {
 			//
@@ -365,7 +393,7 @@ public class PdfTest {
 				//
 				testAndAccept(Objects::nonNull, toString(toURL(toURI(toFile(pathHtml)))), page::navigate);
 				//
-				return page.screenshot();
+				return page.pdf();
 				//
 			} // if
 				//
@@ -405,70 +433,6 @@ public class PdfTest {
 		return instance != null ? instance.toURI() : null;
 	}
 
-	private static BufferedImage chop(final BufferedImage bi) {
-		//
-		Color color = null;
-		//
-		IntList ilx = null;
-		//
-		IntList ily = null;
-		//
-		for (int y = 0; bi != null && y < bi.getHeight(); y++) {
-			//
-			for (int x = 0; x < bi.getWidth(); x++) {
-				//
-				if (color == null) {
-					//
-					color = new Color(bi.getRGB(x, y));
-					//
-				} else {
-					//
-					if (!Objects.equals(color, new Color(bi.getRGB(x, y)))) {
-						//
-						if (!contains(ilx = ObjectUtils.getIfNull(ilx, IntList::create), x)) {
-							//
-							IntCollectionUtil.addInt(ilx, x);
-							//
-						} // if
-							//
-						if (!contains(ily = ObjectUtils.getIfNull(ily, IntList::create), y)) {
-							//
-							IntCollectionUtil.addInt(ily, y);
-							//
-						} // if
-							//
-					} // if
-						//
-				} // if
-					//
-			} // for
-				//
-		} // for
-			//
-		System.out.println(color);
-		//
-		sortInts(ilx);
-		//
-		System.out.println(ilx);
-		//
-		sortInts(ily);
-		//
-		System.out.println(ily);
-		//
-		if (ilx != null && ily != null) {
-			//
-			final int x = ilx.getInt(0);
-			//
-			final int y = ily.getInt(0);
-			//
-			return bi.getSubimage(x, y, ilx.getInt(ilx.size() - 1) - x + 1, ily.getInt(ily.size() - 1) - y + 1);
-			//
-		} // if
-			//
-		return bi;
-		//
-	}
-
 	private static boolean contains(final Collection<?> instance, final Object o) {
 		return instance != null && instance.contains(o);
 	}
@@ -505,6 +469,8 @@ public class PdfTest {
 		//
 		Class<?>[] parameterTypes = null;
 		//
+		Class<?> parameterType = null;
+		//
 		Collection<Object> collection = null;
 		//
 		Object invokeStaticMethod = null;
@@ -531,9 +497,13 @@ public class PdfTest {
 			//
 			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
 				//
-				if (Objects.equals(parameterTypes[j], Float.TYPE)) {
+				if (Objects.equals(parameterType = parameterTypes[j], Float.TYPE)) {
 					//
 					add(collection, Float.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Integer.TYPE)) {
+					//
+					add(collection, Integer.valueOf(0));
 					//
 				} else {
 					//
@@ -548,7 +518,7 @@ public class PdfTest {
 			toString = toString(m);
 			//
 			if (contains(Arrays.asList(Float.TYPE, Boolean.TYPE, Integer.TYPE), m.getReturnType())
-					|| Boolean.logicalAnd(Objects.equals(m.getName(), "screenshot"),
+					|| Boolean.logicalAnd(Objects.equals(m.getName(), "pdf"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Path.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
