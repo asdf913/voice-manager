@@ -264,9 +264,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	@Url("https://support.microsoft.com/en-us/windows/make-older-apps-or-programs-compatible-with-windows-10-783d6dd7-b439-bdb0-0490-54eea0f45938")
 	private String microsoftWindowsCompatibilitySettingsPageUrl = null;
 
-	@Url("https://poi.apache.org/encryption.html")
-	private String poiEncryptionPageUrl = null;
-
 	private transient LayoutManager layoutManager = null;
 
 	private transient freemarker.template.Configuration freeMarkerConfiguration = null;
@@ -595,10 +592,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	public void setMicrosoftWindowsCompatibilitySettingsPageUrl(
 			final String microsoftWindowsCompatibilitySettingsPageUrl) {
 		this.microsoftWindowsCompatibilitySettingsPageUrl = microsoftWindowsCompatibilitySettingsPageUrl;
-	}
-
-	public void setPoiEncryptionPageUrl(final String poiEncryptionPageUrl) {
-		this.poiEncryptionPageUrl = poiEncryptionPageUrl;
 	}
 
 	public void setExportWebSpeechSynthesisHtmlTemplateProperties(@Nullable final Object arg)
