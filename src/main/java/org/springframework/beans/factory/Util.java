@@ -1339,6 +1339,15 @@ abstract class Util {
 						"it.unimi.dsi.fastutil.shorts.ShortLinkedOpenHashSet"),
 						Collectors.toMap(Function.identity(), x -> "link")));
 		//
+		putAll(map, collect(Stream.of("org.apache.pdfbox.cos.COSArray", "org.apache.pdfbox.cos.COSIncrement"),
+				Collectors.toMap(Function.identity(), x -> "objects")));
+		//
+		put(map, "org.apache.pdfbox.pdmodel.PDPageTree", "root");
+		//
+		put(map, "org.apache.pdfbox.pdmodel.common.COSArrayList", "actual");
+		//
+		put(map, "org.apache.pdfbox.pdmodel.interactive.form.PDFieldTree", "acroForm");
+		//
 		if (!executeForEachMethod(map, name, instance, (a, b) -> FieldUtils.readDeclaredField(a, b, true) == null)) {
 			//
 			return false;

@@ -1143,6 +1143,14 @@ public abstract class Util {
 					"it.unimi.dsi.fastutil.objects.ObjectOpenHashBigSet",
 					"it.unimi.dsi.fastutil.objects.ReferenceOpenHashBigSet");
 			//
+			putAll(map, "objects", "org.apache.pdfbox.cos.COSArray", "org.apache.pdfbox.cos.COSIncrement");
+			//
+			put(map, "org.apache.pdfbox.pdmodel.PDPageTree", "root");
+			//
+			put(map, "org.apache.pdfbox.pdmodel.common.COSArrayList", "actual");
+			//
+			put(map, "org.apache.pdfbox.pdmodel.interactive.form.PDFieldTree", "acroForm");
+			//
 			if ((iValue0 = iterator(clz, instance, map)) != null) {
 				//
 				return IValue0Util.getValue0(iValue0);
