@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.nio.file.Path;
 
 import org.apache.fontbox.ttf.OTFParser;
-import org.apache.fontbox.ttf.TrueTypeFont;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -31,14 +30,11 @@ public class PdfTest {
 			//
 			try (final InputStream is = PdfTest.class.getResourceAsStream("\\NotoSansCJKjp-Regular.otf")) {
 				//
-				final OTFParser otfParser = new OTFParser();
-//				font = PDType0Font.load(document, is);
-				TrueTypeFont ttf = otfParser.parseEmbedded(is);
-				font = PDType0Font.load(document, ttf, false);
+				font = PDType0Font.load(document, new OTFParser().parseEmbedded(is), false);
 				//
 			} // try
 				//
-			int fontSize = 48;
+			int fontSize = 64;
 			//
 			cs.setFont(font, fontSize);
 			//
