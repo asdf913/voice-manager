@@ -1,14 +1,17 @@
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Objects;
 
 import javax.imageio.ImageIO;
@@ -22,6 +25,8 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.d2ab.collection.ints.IntCollectionUtil;
+import org.d2ab.collection.ints.IntList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -33,8 +38,6 @@ import com.microsoft.playwright.Page.ScreenshotOptions;
 import com.microsoft.playwright.Playwright;
 
 import io.github.toolfactory.narcissus.Narcissus;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
 
 public class PdfTest {
 
@@ -46,7 +49,7 @@ public class PdfTest {
 			//
 			document.addPage(pd);
 			//
-			final File file = Path.of("test.pdf").toFile();
+			final File file = toFile(Path.of("test.pdf"));
 			//
 			final PDPageContentStream cs = new PDPageContentStream(document, pd);
 			//
@@ -76,13 +79,13 @@ public class PdfTest {
 			//
 			cs.close();
 			//
-			System.out.println(file.getAbsolutePath());
+			System.out.println(getAbsolutePath(file));
 			//
 			document.save(file);
 			//
 		} // try
 			//
-		final Path image = Path.of("test.png");
+		final Path image = Path.of("test1.png");
 		//
 		try (final Playwright playwright = Playwright.create()) {
 			//
@@ -96,7 +99,7 @@ public class PdfTest {
 			//
 			final File f = toFile(Path.of("test.html"));
 			//
-			System.out.println(f.getAbsolutePath());
+			System.out.println(getAbsolutePath(f));
 			//
 			FileUtils.writeStringToFile(f,
 					"<span style=\"font-size:64px\"><ruby>席<rt>せき</rt></ruby>をお<ruby>譲<rt>ゆず</rt></ruby>りください。</span>",
@@ -104,9 +107,9 @@ public class PdfTest {
 			//
 			if (page != null) {
 				//
-				page.navigate(f.toURI().toURL().toString());
+				page.navigate(Objects.toString(f.toURI().toURL()));
 				//
-				System.out.println(toFile(image).getAbsolutePath());
+				System.out.println(getAbsolutePath(toFile(image)));
 				//
 				page.screenshot(new ScreenshotOptions().setPath(image));
 				//
@@ -114,7 +117,25 @@ public class PdfTest {
 				//
 		} // try
 			//
-		final BufferedImage bi = ImageIO.read(toFile(image));
+		final BufferedImage bi = chop(ImageIO.read(toFile(image)));
+		//
+		final Path path = Path.of("test2.png");
+		//
+		System.out.println(getAbsolutePath(toFile(path)));
+		//
+		try (final OutputStream os = new FileOutputStream(toFile(path))) {
+			//
+			if (bi != null) {
+				//
+				ImageIO.write(bi, "png", os);
+				//
+			} // if
+				//
+		} // try
+			//
+	}
+
+	private static BufferedImage chop(final BufferedImage bi) {
 		//
 		Color color = null;
 		//
@@ -128,23 +149,21 @@ public class PdfTest {
 				//
 				if (color == null) {
 					//
-					System.out.println("L114,y=" + y + ",x=" + x);
-					//
 					color = new Color(bi.getRGB(y, x));
 					//
 				} else {
 					//
 					if (!Objects.equals(color, new Color(bi.getRGB(y, x)))) {
 						//
-						if ((ilx = ObjectUtils.getIfNull(ilx, IntArrayList::new)) != null && !ilx.contains(x)) {
+						if ((ilx = ObjectUtils.getIfNull(ilx, IntList::create)) != null && !contains(ilx, x)) {
 							//
-							ilx.add(x);
+							IntCollectionUtil.addInt(ilx, x);
 							//
 						} // if
 							//
-						if ((ily = ObjectUtils.getIfNull(ily, IntArrayList::new)) != null && !ily.contains(y)) {
+						if ((ily = ObjectUtils.getIfNull(ily, IntList::create)) != null && !contains(ily, y)) {
 							//
-							ily.add(y);
+							IntCollectionUtil.addInt(ily, x);
 							//
 						} // if
 							//
@@ -158,22 +177,40 @@ public class PdfTest {
 			//
 		System.out.println(color);
 		//
-		if (ilx != null) {
-			//
-			ilx.sort(Integer::compare);
-			//
-		} // if
-			//
+		sort(ilx, Integer::compare);
+		//
 		System.out.println(ilx);
 		//
-		if (ily != null) {
+		sort(ily, Integer::compare);
+		//
+		System.out.println(ily);
+		//
+		if (ilx != null && ily != null) {
 			//
-			ily.sort(Integer::compare);
+			final int x = ilx.getInt(0);
+			//
+			final int y = ily.getInt(0);
+			//
+			return bi.getSubimage(y, x, ily.getInt(ily.size() - 1) - y + 1, ilx.getInt(ilx.size() - 1) - x + 1);
 			//
 		} // if
 			//
-		System.out.println(ily);
+		return bi;
 		//
+	}
+
+	private static boolean contains(final Collection<?> instance, final Object o) {
+		return instance != null && instance.contains(o);
+	}
+
+	private static void sort(final IntList instance, final Comparator<? super Integer> comparator) {
+		if (instance != null) {
+			instance.sort(comparator);
+		}
+	}
+
+	private static String getAbsolutePath(final File instance) {
+		return instance != null ? instance.getAbsolutePath() : null;
 	}
 
 	private static File toFile(final Path instance) {
@@ -240,7 +277,7 @@ public class PdfTest {
 			//
 			toString = Objects.toString(m);
 			//
-			if (Objects.equals(m.getReturnType(), Float.TYPE)) {
+			if (contains(Arrays.asList(Float.TYPE, Boolean.TYPE), m.getReturnType())) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
