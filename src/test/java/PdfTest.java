@@ -208,10 +208,19 @@ public class PdfTest {
 					//
 					cs.setFont(font, fontSize);
 					//
-					cs.newLineAtOffset((index - 1) * size, getHeight(md) - getHeight(pdfImageXObject) - size
-					//
-							- (font.getFontDescriptor().getAscent() / 1000 * fontSize)
-							+ (font.getFontDescriptor().getDescent() / 1000 * fontSize)
+					if (matches(matcher = matcher(
+							pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("^(\\d+%).+$")), value))
+							&& groupCount(matcher) > 0) {
+						//
+						value = matcher.group(1);
+						//
+					} // if
+						//
+					cs.newLineAtOffset((index - 1) * size + getTextWidth(value, font, fontSize) / 2,
+							getHeight(md) - getHeight(pdfImageXObject) - size
+							//
+									- (font.getFontDescriptor().getAscent() / 1000 * fontSize)
+									+ (font.getFontDescriptor().getDescent() / 1000 * fontSize)
 					//
 					);
 					//
@@ -219,19 +228,9 @@ public class PdfTest {
 //							pd.getMediaBox().getHeight() - (font.getFontDescriptor().getAscent() / 1000 * fontSize)
 //									+ (font.getFontDescriptor().getDescent() / 1000 * fontSize));
 					//
-					if (matches(matcher = matcher(
-							pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("^(\\d+%).+$")), value))
-							&& groupCount(matcher) > 0) {
-						//
-						cs.showText(matcher.group(1));
-						//
-					} else {
-						//
-						cs.showText(value);
-						//
-					} // if
-						//
-						//
+					cs.showText(value);
+					//
+					//
 					cs.endText();
 					//
 				} // try
@@ -416,14 +415,14 @@ public class PdfTest {
 		return instance != null ? instance.toFile() : null;
 	}
 
-//	private static float getTextWidth(final String text, final PDFont font, final float fontSize) throws IOException {
-//		float width = 0;
-//		for (int i = 0; i < StringUtils.length(text); i++) {
-//			// Get the width of each character and add it to the total width
-//			width += font.getWidth(text.charAt(i)) / 1000.0f;
-//		}
-//		return width * fontSize;
-//	}
+	private static float getTextWidth(final String text, final PDFont font, final float fontSize) throws IOException {
+		float width = 0;
+		for (int i = 0; i < StringUtils.length(text); i++) {
+			// Get the width of each character and add it to the total width
+			width += font.getWidth(text.charAt(i)) / 1000.0f;
+		}
+		return width * fontSize;
+	}
 
 	@Test
 	void testNull() {
