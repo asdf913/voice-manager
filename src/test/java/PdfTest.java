@@ -415,15 +415,15 @@ public class PdfTest {
 		//
 		for (int y = 0; bi != null && y < bi.getHeight(); y++) {
 			//
-			for (int x = 0; x < bi.getHeight(); x++) {
+			for (int x = 0; x < bi.getWidth(); x++) {
 				//
 				if (color == null) {
 					//
-					color = new Color(bi.getRGB(y, x));
+					color = new Color(bi.getRGB(x, y));
 					//
 				} else {
 					//
-					if (!Objects.equals(color, new Color(bi.getRGB(y, x)))) {
+					if (!Objects.equals(color, new Color(bi.getRGB(x, y)))) {
 						//
 						if (!contains(ilx = ObjectUtils.getIfNull(ilx, IntList::create), x)) {
 							//
@@ -461,7 +461,7 @@ public class PdfTest {
 			//
 			final int y = ily.getInt(0);
 			//
-			return bi.getSubimage(y, x, ily.getInt(ily.size() - 1) - y + 1, ilx.getInt(ilx.size() - 1) - x + 1);
+			return bi.getSubimage(x, y, ilx.getInt(ilx.size() - 1) - x + 1, ily.getInt(ily.size() - 1) - y + 1);
 			//
 		} // if
 			//
