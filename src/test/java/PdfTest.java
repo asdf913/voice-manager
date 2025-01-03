@@ -113,7 +113,7 @@ public class PdfTest {
 //			cs.endText();
 			//
 			final PDImageXObject pdfImageXObject = PDImageXObject.createFromByteArray(document,
-					FileUtils.readFileToByteArray(toFile(pathChoppedImage)), getName(toFile(pathChoppedImage)));
+					Files.readAllBytes(pathChoppedImage), getName(toFile(pathChoppedImage)));
 			//
 			final PDRectangle md = pd.getMediaBox();
 			//
