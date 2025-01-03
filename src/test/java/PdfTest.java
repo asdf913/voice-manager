@@ -63,6 +63,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.support.SpeechApi;
 import org.springframework.context.support.SpeechApiImpl;
 
+import com.j256.simplemagic.ContentInfo;
+import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.BrowserType;
@@ -183,7 +185,7 @@ public class PdfTest {
 					//
 					final PDEmbeddedFile pdfEmbeddedFile = new PDEmbeddedFile(document, is);
 					//
-					pdfEmbeddedFile.setSubtype("audio/wav");
+					pdfEmbeddedFile.setSubtype(getMimeType(pathAudio));
 					//
 					pdfEmbeddedFile.setSize((int) toFile(pathAudio).length());
 					//
@@ -264,6 +266,18 @@ public class PdfTest {
 			document.save(file);
 			//
 		} // if
+			//
+	}
+
+	private static String getMimeType(final Path path) throws IOException {
+		//
+		try (final InputStream is = testAndApply(Objects::nonNull, path, Files::newInputStream, null)) {
+			//
+			final ContentInfo ci = testAndApply(Objects::nonNull, is, new ContentInfoUtil()::findMatch, null);
+			//
+			return ci != null ? ci.getMimeType() : null;
+			//
+		} // try
 			//
 	}
 
