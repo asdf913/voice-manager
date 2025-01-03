@@ -95,6 +95,8 @@ abstract class Util {
 
 	private static final String VALUE = "value";
 
+	private static final String DELEGATE = "delegate";
+
 	private Util() {
 	}
 
@@ -892,7 +894,7 @@ abstract class Util {
 				"redBlackTree", "com.github.andrewoma.dexx.collection.Vector", "pointer",
 				"com.github.andrewoma.dexx.collection.internal.base.MappedIterable", "from",
 				"com.google.common.collect.EnumMultiset", "enumConstants", "com.google.common.collect.EvictingQueue",
-				"delegate", "com.healthmarketscience.jackcess.impl.DatabaseImpl", "_tableFinder"));
+				DELEGATE, "com.healthmarketscience.jackcess.impl.DatabaseImpl", "_tableFinder"));
 		//
 		putAll(map,
 				Map.of("com.healthmarketscience.jackcess.impl.IndexCursorImpl", "_entryCursor",
@@ -931,7 +933,7 @@ abstract class Util {
 						"org.apache.ibatis.cursor.defaults.DefaultCursor", "cursorIterator",
 						"org.apache.jena.atlas.lib.Map2", "map2", "org.apache.jena.atlas.lib.tuple.TupleN", "tuple",
 						"org.apache.jena.ext.com.google.common.collect.EnumMultiset", "enumConstants",
-						"org.apache.jena.ext.com.google.common.collect.EvictingQueue", "delegate",
+						"org.apache.jena.ext.com.google.common.collect.EvictingQueue", DELEGATE,
 						"org.apache.logging.log4j.message.StructuredDataCollectionMessage", "structuredDataMessageList",
 						"org.apache.poi.ddf.EscherContainerRecord", "_childRecords",
 						"org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate", "records",
@@ -1350,7 +1352,7 @@ abstract class Util {
 		//
 		put(map, "com.google.gson.JsonArray", "elements");
 		//
-		put(map, "com.google.gson.internal.NonNullElementWrapperList", "delegate");
+		put(map, "com.google.gson.internal.NonNullElementWrapperList", DELEGATE);
 		//
 		if (!executeForEachMethod(map, name, instance, (a, b) -> FieldUtils.readDeclaredField(a, b, true) == null)) {
 			//
