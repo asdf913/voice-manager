@@ -147,7 +147,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 		//
 		if (speechApi != null) {
 			//
-			speechApi.writeVoiceToFile(text, voiceId, 0, volume, file);
+			speechApi.writeVoiceToFile(text, voiceId, rate, volume, file);
 			//
 		} // if
 			//
