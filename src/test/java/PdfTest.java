@@ -201,7 +201,7 @@ public class PdfTest {
 					// Position on the page
 					//
 					attachment.setRectangle(new PDRectangle(index++ * size,
-							getHeight(md) - getHeight(pdfImageXObject) * 2 - size, size, size));
+							getHeight(md) - getHeight(pdfImageXObject) - size, size, size));
 					//
 					attachment.setContents(entry.getValue());
 					//
