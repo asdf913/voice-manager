@@ -965,8 +965,6 @@
 		<property name="layout" ref="MigLayout" />
 		<property name="voiceFolder"
 			value="${org.springframework.context.support.VoiceManager.voiceFolder}" />
-		<property name="outputFolderFileNameExpressions"
-			value="${org.springframework.context.support.VoiceManager.outputFolderFileNameExpressions}" />
 		<property name="speechApi" ref="speechApi" />
 		<!-- -->
 		<property name="tabOrders"

@@ -247,9 +247,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private String voiceFolder = null;
 
-	@Nullable
-	private Map<String, String> outputFolderFileNameExpressions = null;
-
 	private transient SpeechApi speechApi = null;
 
 	@Nullable
@@ -518,53 +515,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	public void setSpeechApi(final SpeechApi speechApi) {
 		this.speechApi = speechApi;
-	}
-
-	public void setOutputFolderFileNameExpressions(@Nullable final Object value) throws JsonProcessingException {
-		//
-		if (value == null) {
-			//
-			this.outputFolderFileNameExpressions = null;
-			//
-			return;
-			//
-		} // if
-			//
-		final Map<?, ?> map = Util.cast(Map.class, value);
-		//
-		if (Util.entrySet(map) != null) {
-			//
-			for (final Entry<?, ?> entry : Util.entrySet(map)) {
-				//
-				if (entry == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				Util.put(
-						outputFolderFileNameExpressions = ObjectUtils.getIfNull(outputFolderFileNameExpressions,
-								LinkedHashMap::new),
-						Util.toString(Util.getKey(entry)), Util.toString(Util.getValue(entry)));
-				//
-			} // for
-				//
-			outputFolderFileNameExpressions = ObjectUtils.getIfNull(outputFolderFileNameExpressions,
-					Collections::emptyMap);
-			//
-			return;
-			//
-		} // if
-			//
-		final Object object = testAndApply(StringUtils::isNotEmpty, Util.toString(value),
-				x -> ObjectMapperUtil.readValue(getObjectMapper(), x, Object.class), null);
-		//
-		if (object instanceof Map || object == null) {
-			setOutputFolderFileNameExpressions(object);
-		} else {
-			throw new IllegalArgumentException(Util.toString(Util.getClass(object)));
-		} // if
-			//
 	}
 
 	private ObjectMapper getObjectMapper() {
