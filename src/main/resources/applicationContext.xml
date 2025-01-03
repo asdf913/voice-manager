@@ -977,9 +977,6 @@
 			value="${org.springframework.context.support.VoiceManager.microsoftSpeechPlatformRuntimeDownloadPageUrl}" />
 		<property name="microsoftWindowsCompatibilitySettingsPageUrl"
 			value="${org.springframework.context.support.VoiceManager.microsoftWindowsCompatibilitySettingsPageUrl}" />
-		<property
-			name="exportWebSpeechSynthesisHtmlTemplateProperties"
-			value="${org.springframework.context.support.VoiceManager.exportWebSpeechSynthesisHtmlTemplateProperties}" />
 		<property name="freeMarkerVersion"
 			value="${org.springframework.context.support.VoiceManager.freeMarkerVersion}" />
 		<property name="freeMarkerConfiguration">

@@ -270,8 +270,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private Version freeMarkerVersion = null;
 
-	private transient Map<Object, Object> exportWebSpeechSynthesisHtmlTemplateProperties = null;
-
 	private VoiceManager() {
 	}
 
@@ -592,52 +590,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	public void setMicrosoftWindowsCompatibilitySettingsPageUrl(
 			final String microsoftWindowsCompatibilitySettingsPageUrl) {
 		this.microsoftWindowsCompatibilitySettingsPageUrl = microsoftWindowsCompatibilitySettingsPageUrl;
-	}
-
-	public void setExportWebSpeechSynthesisHtmlTemplateProperties(@Nullable final Object arg)
-			throws JsonProcessingException {
-		//
-		if (arg == null || arg instanceof Map) {
-			//
-			final Map<?, ?> map = (Map<?, ?>) arg;
-			//
-			if (Util.iterator(Util.entrySet(map)) != null) {
-				//
-				for (final Entry<?, ?> entry : Util.entrySet(map)) {
-					//
-					if (entry == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					Util.put(
-							exportWebSpeechSynthesisHtmlTemplateProperties = ObjectUtils
-									.getIfNull(exportWebSpeechSynthesisHtmlTemplateProperties, LinkedHashMap::new),
-							Util.getKey(entry), Util.getValue(entry));
-					//
-				} // for
-					//
-			} // if
-				//
-			if (Boolean.logicalAnd(Boolean.logicalAnd(map != null, MapUtils.isEmpty(map)),
-					exportWebSpeechSynthesisHtmlTemplateProperties == null)) {
-				//
-				exportWebSpeechSynthesisHtmlTemplateProperties = new LinkedHashMap<>();
-				//
-			} // if
-				//
-		} else if (arg instanceof CharSequence) {
-			//
-			setExportWebSpeechSynthesisHtmlTemplateProperties(
-					ObjectMapperUtil.readValue(getObjectMapper(), Util.toString(arg), Object.class));
-			//
-		} else {
-			//
-			throw new IllegalArgumentException();
-			//
-		} // if
-			//
 	}
 
 	public void setFreeMarkerVersion(final Object value) {
