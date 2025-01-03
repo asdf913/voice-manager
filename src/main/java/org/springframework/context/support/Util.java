@@ -1151,6 +1151,10 @@ public abstract class Util {
 			//
 			put(map, "org.apache.pdfbox.pdmodel.interactive.form.PDFieldTree", "acroForm");
 			//
+			put(map, "com.google.gson.JsonArray", "elements");
+			//
+			put(map, "com.google.gson.internal.NonNullElementWrapperList", "delegate");
+			//
 			if ((iValue0 = iterator(clz, instance, map)) != null) {
 				//
 				return IValue0Util.getValue0(iValue0);
