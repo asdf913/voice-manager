@@ -3,20 +3,28 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.fontbox.ttf.OTFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import com.google.common.base.Objects;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.BrowserType;
@@ -24,6 +32,7 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Page.ScreenshotOptions;
 import com.microsoft.playwright.Playwright;
 
+import io.github.toolfactory.narcissus.Narcissus;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 
@@ -125,7 +134,7 @@ public class PdfTest {
 					//
 				} else {
 					//
-					if (!Objects.equal(color, new Color(bi.getRGB(y, x)))) {
+					if (!Objects.equals(color, new Color(bi.getRGB(y, x)))) {
 						//
 						if ((ilx = ObjectUtils.getIfNull(ilx, IntArrayList::new)) != null && !ilx.contains(x)) {
 							//
@@ -173,11 +182,79 @@ public class PdfTest {
 
 	private static float getTextWidth(final String text, final PDFont font, final float fontSize) throws IOException {
 		float width = 0;
-		for (int i = 0; i < text.length(); i++) {
+		for (int i = 0; i < StringUtils.length(text); i++) {
 			// Get the width of each character and add it to the total width
 			width += font.getWidth(text.charAt(i)) / 1000.0f;
 		}
 		return width * fontSize;
+	}
+
+	@Test
+	void testNull() {
+		//
+		final Method[] ms = PdfTest.class.getDeclaredMethods();
+		//
+		Method m = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
+		Collection<Object> collection = null;
+		//
+		Object invokeStaticMethod = null;
+		//
+		String toString = null;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ms[i]) == null || !Modifier.isStatic(m.getModifiers()) || m.isSynthetic() || Boolean.logicalAnd(
+					Objects.equals(m.getName(), "main"), Arrays.equals(m.getParameterTypes(), new Class<?>[] {}))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if ((collection = ObjectUtils.getIfNull(collection, ArrayList::new)) != null) {
+				//
+				collection.clear();
+				//
+			} // if
+				//
+			parameterTypes = m.getParameterTypes();
+			//
+			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
+				//
+				if (Objects.equals(parameterTypes[j], Float.TYPE)) {
+					//
+					collection.add(Float.valueOf(0));
+					//
+				} else {
+					//
+					collection.add(null);
+					//
+				} // if
+					//
+			} // if
+				//
+			invokeStaticMethod = Narcissus.invokeStaticMethod(m, toArray(collection));
+			//
+			toString = Objects.toString(m);
+			//
+			if (Objects.equals(m.getReturnType(), Float.TYPE)) {
+				//
+				Assertions.assertNotNull(invokeStaticMethod, toString);
+				//
+			} else {
+				//
+				Assertions.assertNull(invokeStaticMethod, toString);
+				//
+			} // if
+				//
+		} // for
+			//
+	}
+
+	private static Object[] toArray(final Collection<?> instance) {
+		return instance != null ? instance.toArray() : null;
 	}
 
 }
