@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -19,17 +20,25 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableBiFunction;
+import org.apache.commons.lang3.function.FailableBiFunctionUtil;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.fontbox.ttf.OTFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -40,7 +49,6 @@ import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
@@ -148,6 +156,8 @@ public class PdfTest {
 			//
 			final int fontSize = 14;
 			//
+			Duration duration = null;
+			//
 			for (final Entry<Integer, String> entry : map.entrySet()) {
 				//
 				if (entry == null || (key = entry.getKey()) == null) {
@@ -161,7 +171,7 @@ public class PdfTest {
 				//
 				final int size = 60;
 				//
-				PDFont font = null;
+				final PDFont font = new PDType1Font(FontName.HELVETICA);
 				//
 //				try (final InputStream is = PdfTest.class.getResourceAsStream("\\NotoSansCJKjp-Regular.otf")) {
 				//
@@ -169,11 +179,11 @@ public class PdfTest {
 				//
 //				} // try
 				//
-				font = new PDType1Font(FontName.HELVETICA);
-				//
 				Pattern pattern = null;
 				//
 				Matcher matcher = null;
+				//
+				float lastHeight = 0;
 				//
 				try (final InputStream is = Files.newInputStream(pathAudio)) {
 					//
@@ -202,7 +212,7 @@ public class PdfTest {
 					//
 					add(pd.getAnnotations(), attachment);
 					//
-					// Label
+					// Label (Speed)
 					//
 					cs.beginText();
 					//
@@ -217,10 +227,10 @@ public class PdfTest {
 					} // if
 						//
 					cs.newLineAtOffset((index - 1) * size + getTextWidth(value, font, fontSize) / 2,
-							getHeight(md) - getHeight(pdfImageXObject) - size
+							lastHeight = (getHeight(md) - getHeight(pdfImageXObject) - size
 							//
 									- (font.getFontDescriptor().getAscent() / 1000 * fontSize)
-									+ (font.getFontDescriptor().getDescent() / 1000 * fontSize)
+									+ (font.getFontDescriptor().getDescent() / 1000 * fontSize))
 					//
 					);
 					//
@@ -230,9 +240,27 @@ public class PdfTest {
 					//
 					cs.showText(value);
 					//
-					//
 					cs.endText();
 					//
+					// Label (Duration)
+					//
+					if ((duration = getAudioDuration(toFile(pathAudio))) != null) {
+						//
+						cs.beginText();
+						//
+						cs.setFont(font, fontSize);
+						//
+						cs.newLineAtOffset((index - 1) * size + getTextWidth(value, font, fontSize) / 2,
+								lastHeight - (font.getFontDescriptor().getAscent() / 1000 * fontSize)
+										+ (font.getFontDescriptor().getDescent() / 1000 * fontSize)
+						//
+						);
+						cs.showText(String.format("%1$s s", duration.toMillis() / 1000d));
+						//
+						cs.endText();
+						//
+					} // if
+						//
 				} // try
 					//
 			} // for
@@ -243,6 +271,40 @@ public class PdfTest {
 			//
 		} // try
 			//
+	}
+
+	private static Duration getAudioDuration(final File file) throws Exception {
+		//
+		final AudioFileFormat fileFormat = testAndApply(Objects::nonNull, file, AudioSystem::getAudioFileFormat, null);
+		//
+		return testAndApply((a, b) -> a != null && b != null, fileFormat, getFormat(fileFormat),
+				(a, b) -> Duration.parse(String.format("PT%1$sS", a.getFrameLength() / b.getFrameRate())), null);
+		//
+	}
+
+	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
+			final FailableBiFunction<T, U, R, E> functionFalse) throws E {
+		return test(predicate, t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
+				: FailableBiFunctionUtil.apply(functionFalse, t, u);
+	}
+
+	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, final U u) {
+		return instance != null && instance.test(t, u);
+	}
+
+	private static AudioFormat getFormat(final AudioFileFormat instance) {
+		return instance != null ? instance.getFormat() : null;
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+	private static <T> boolean test(final Predicate<T> instance, final T value) {
+		return instance != null && instance.test(value);
 	}
 
 	private static int groupCount(final Matcher instance) {
