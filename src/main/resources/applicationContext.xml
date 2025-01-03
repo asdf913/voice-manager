@@ -977,8 +977,6 @@
 			value="${org.springframework.context.support.VoiceManager.microsoftSpeechPlatformRuntimeDownloadPageUrl}" />
 		<property name="microsoftWindowsCompatibilitySettingsPageUrl"
 			value="${org.springframework.context.support.VoiceManager.microsoftWindowsCompatibilitySettingsPageUrl}" />
-		<property name="mediaFormatPageUrl"
-			value="${org.springframework.context.support.VoiceManager.mediaFormatPageUrl}" />
 		<property name="poiEncryptionPageUrl"
 			value="${org.springframework.context.support.VoiceManager.poiEncryptionPageUrl}" />
 		<property

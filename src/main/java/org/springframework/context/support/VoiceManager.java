@@ -264,9 +264,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	@Url("https://support.microsoft.com/en-us/windows/make-older-apps-or-programs-compatible-with-windows-10-783d6dd7-b439-bdb0-0490-54eea0f45938")
 	private String microsoftWindowsCompatibilitySettingsPageUrl = null;
 
-	@Url("https://help.libreoffice.org/latest/en-US/text/shared/01/moviesound.html")
-	private String mediaFormatPageUrl = null;
-
 	@Url("https://poi.apache.org/encryption.html")
 	private String poiEncryptionPageUrl = null;
 
@@ -598,10 +595,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	public void setMicrosoftWindowsCompatibilitySettingsPageUrl(
 			final String microsoftWindowsCompatibilitySettingsPageUrl) {
 		this.microsoftWindowsCompatibilitySettingsPageUrl = microsoftWindowsCompatibilitySettingsPageUrl;
-	}
-
-	public void setMediaFormatPageUrl(final String mediaFormatPageUrl) {
-		this.mediaFormatPageUrl = mediaFormatPageUrl;
 	}
 
 	public void setPoiEncryptionPageUrl(final String poiEncryptionPageUrl) {
