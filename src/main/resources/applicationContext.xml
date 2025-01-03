@@ -975,9 +975,6 @@
 		<property
 			name="microsoftSpeechPlatformRuntimeDownloadPageUrl"
 			value="${org.springframework.context.support.VoiceManager.microsoftSpeechPlatformRuntimeDownloadPageUrl}" />
-		<property
-			name="microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl"
-			value="${org.springframework.context.support.VoiceManager.microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl}" />
 		<property name="microsoftWindowsCompatibilitySettingsPageUrl"
 			value="${org.springframework.context.support.VoiceManager.microsoftWindowsCompatibilitySettingsPageUrl}" />
 		<property name="mediaFormatPageUrl"

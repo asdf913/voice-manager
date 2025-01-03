@@ -264,9 +264,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	@Url("https://support.microsoft.com/en-us/windows/make-older-apps-or-programs-compatible-with-windows-10-783d6dd7-b439-bdb0-0490-54eea0f45938")
 	private String microsoftWindowsCompatibilitySettingsPageUrl = null;
 
-	@Url("https://www.microsoft.com/en-us/download/details.aspx?id=27224")
-	private String microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl = null;
-
 	@Url("https://help.libreoffice.org/latest/en-US/text/shared/01/moviesound.html")
 	private String mediaFormatPageUrl = null;
 
@@ -596,11 +593,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	public void setMicrosoftSpeechPlatformRuntimeDownloadPageUrl(
 			final String microsoftSpeechPlatformRuntimeDownloadPageUrl) {
 		this.microsoftSpeechPlatformRuntimeDownloadPageUrl = microsoftSpeechPlatformRuntimeDownloadPageUrl;
-	}
-
-	public void setMicrosoftSpeechPlatformRuntimeLanguagesDownloadPageUrl(
-			final String microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl) {
-		this.microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl = microsoftSpeechPlatformRuntimeLanguagesDownloadPageUrl;
 	}
 
 	public void setMicrosoftWindowsCompatibilitySettingsPageUrl(
