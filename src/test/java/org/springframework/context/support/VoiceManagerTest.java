@@ -295,7 +295,7 @@ class VoiceManagerTest {
 
 		private String toString = null;
 
-		private Boolean isInstalled, isEmpty = null;
+		private Boolean isInstalled = null;
 
 		private Iterator<?> iterator = null;
 
@@ -371,10 +371,6 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "entrySet")) {
 					//
 					return entrySet;
-					//
-				} else if (Objects.equals(methodName, "isEmpty")) {
-					//
-					return isEmpty;
 					//
 				} else if (Objects.equals(methodName, "values")) {
 					//
