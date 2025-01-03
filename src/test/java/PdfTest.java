@@ -206,8 +206,9 @@ public class PdfTest {
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
-			if ((m = ms[i]) == null || !Modifier.isStatic(m.getModifiers()) || m.isSynthetic() || Boolean.logicalAnd(
-					Objects.equals(m.getName(), "main"), Arrays.equals(m.getParameterTypes(), new Class<?>[] {}))) {
+			if ((m = ms[i]) == null || !Modifier.isStatic(m.getModifiers()) || m.isSynthetic()
+					|| Boolean.logicalAnd(Objects.equals(m.getName(), "main"),
+							Arrays.equals(m.getParameterTypes(), new Class<?>[] { String[].class }))) {
 				//
 				continue;
 				//
