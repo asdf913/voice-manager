@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Objects;
 
 import javax.imageio.ImageIO;
@@ -163,7 +162,7 @@ public class PdfTest {
 							//
 						if ((ily = ObjectUtils.getIfNull(ily, IntList::create)) != null && !contains(ily, y)) {
 							//
-							IntCollectionUtil.addInt(ily, x);
+							IntCollectionUtil.addInt(ily, y);
 							//
 						} // if
 							//
@@ -177,11 +176,11 @@ public class PdfTest {
 			//
 		System.out.println(color);
 		//
-		sort(ilx, Integer::compare);
+		sortInts(ilx);
 		//
 		System.out.println(ilx);
 		//
-		sort(ily, Integer::compare);
+		sortInts(ily);
 		//
 		System.out.println(ily);
 		//
@@ -203,9 +202,9 @@ public class PdfTest {
 		return instance != null && instance.contains(o);
 	}
 
-	private static void sort(final IntList instance, final Comparator<? super Integer> comparator) {
+	private static void sortInts(final IntList instance) {
 		if (instance != null) {
-			instance.sort(comparator);
+			instance.sortInts();
 		}
 	}
 
