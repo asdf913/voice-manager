@@ -1,12 +1,12 @@
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -123,7 +123,7 @@ public class PdfTest {
 		//
 		System.out.println(getAbsolutePath(toFile(path)));
 		//
-		try (final OutputStream os = new FileOutputStream(toFile(path))) {
+		try (final OutputStream os = Files.newOutputStream(path)) {
 			//
 			if (bi != null) {
 				//
