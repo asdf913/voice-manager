@@ -6,12 +6,17 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import javax.imageio.ImageIO;
 
@@ -84,7 +89,37 @@ public class PdfTest {
 			//
 		} // try
 			//
-		final Path image = Path.of("test1.png");
+		final Path pathHtml = Path.of("test.html");
+		//
+		FileUtils.writeStringToFile(toFile(pathHtml),
+				"<span style=\"font-size:64px\"><ruby>席<rt>せき</rt></ruby>をお<ruby>譲<rt>ゆず</rt></ruby>りください。</span>",
+				"utf-8", false);
+		//
+		final Path pathImage = Path.of("test1.png");
+		//
+		System.out.println(getAbsolutePath(toFile(pathImage)));
+		//
+		FileUtils.writeByteArrayToFile(toFile(pathImage), screenshot(pathHtml), false);
+		//
+		final BufferedImage bi = chop(ImageIO.read(toFile(pathImage)));
+		//
+		final Path pathChoppedImage = Path.of("test2.png");
+		//
+		System.out.println(getAbsolutePath(toFile(pathChoppedImage)));
+		//
+		try (final OutputStream os = Files.newOutputStream(pathChoppedImage)) {
+			//
+			if (bi != null) {
+				//
+				ImageIO.write(bi, "png", os);
+				//
+			} // if
+				//
+		} // try
+			//
+	}
+
+	private static byte[] screenshot(final Path pathHtml) throws MalformedURLException {
 		//
 		try (final Playwright playwright = Playwright.create()) {
 			//
@@ -96,42 +131,36 @@ public class PdfTest {
 			//
 			final Page page = browserContext != null ? browserContext.newPage() : null;
 			//
-			final File f = toFile(Path.of("test.html"));
-			//
-			System.out.println(getAbsolutePath(f));
-			//
-			FileUtils.writeStringToFile(f,
-					"<span style=\"font-size:64px\"><ruby>席<rt>せき</rt></ruby>をお<ruby>譲<rt>ゆず</rt></ruby>りください。</span>",
-					"utf-8", false);
-			//
 			if (page != null) {
 				//
-				page.navigate(Objects.toString(f.toURI().toURL()));
+				testAndAccept(Objects::nonNull, toString(toURL(toURI(toFile(pathHtml)))), page::navigate);
 				//
-				System.out.println(getAbsolutePath(toFile(image)));
-				//
-				page.screenshot(new ScreenshotOptions().setPath(image));
+				return page.screenshot();
 				//
 			} // if
 				//
 		} // try
 			//
-		final BufferedImage bi = chop(ImageIO.read(toFile(image)));
+		return null;
 		//
-		final Path path = Path.of("test2.png");
-		//
-		System.out.println(getAbsolutePath(toFile(path)));
-		//
-		try (final OutputStream os = Files.newOutputStream(path)) {
-			//
-			if (bi != null) {
-				//
-				ImageIO.write(bi, "png", os);
-				//
-			} // if
-				//
-		} // try
-			//
+	}
+
+	private static String toString(final Object instance) {
+		return instance != null ? instance.toString() : null;
+	}
+
+	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer) {
+		if (predicate != null && predicate.test(value) && consumer != null) {
+			consumer.accept(value);
+		}
+	}
+
+	private static URL toURL(final URI instance) throws MalformedURLException {
+		return instance != null ? instance.toURL() : null;
+	}
+
+	private static URI toURI(final File instance) {
+		return instance != null ? instance.toURI() : null;
 	}
 
 	private static BufferedImage chop(final BufferedImage bi) {
@@ -274,9 +303,11 @@ public class PdfTest {
 				//
 			invokeStaticMethod = Narcissus.invokeStaticMethod(m, toArray(collection));
 			//
-			toString = Objects.toString(m);
+			toString = toString(m);
 			//
-			if (contains(Arrays.asList(Float.TYPE, Boolean.TYPE), m.getReturnType())) {
+			if (contains(Arrays.asList(Float.TYPE, Boolean.TYPE), m.getReturnType())
+					|| Boolean.logicalAnd(Objects.equals(m.getName(), "screenshot"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Path.class }))) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
