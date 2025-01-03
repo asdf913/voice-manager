@@ -2141,7 +2141,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		}
 
-		private static boolean equalsTypecode(final NEWARRAY instance, final byte b) {
+		private static boolean equalsTypecode(@Nullable final NEWARRAY instance, final byte b) {
 			return instance != null && instance.getTypecode() == b;
 		}
 
