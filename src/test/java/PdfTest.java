@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
@@ -20,6 +21,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 
@@ -28,17 +31,17 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fontbox.ttf.OTFParser;
-import org.apache.pdfbox.cos.COSName;
-import org.apache.pdfbox.cos.COSStream;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecification;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
-import org.apache.pdfbox.pdmodel.common.filespecification.PDFileSpecification;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
@@ -99,30 +102,6 @@ public class PdfTest {
 			//
 			final PDPageContentStream cs = new PDPageContentStream(document, pd);
 			//
-//			cs.beginText();
-			//
-//			PDFont font = null;
-			//
-//			try (final InputStream is = PdfTest.class.getResourceAsStream("\\NotoSansCJKjp-Regular.otf")) {
-
-//				font = PDType0Font.load(document, new OTFParser().parseEmbedded(is), false);
-
-//			} // try
-			//
-//			int fontSize = 64;
-			//
-//			cs.setFont(font, fontSize);
-			//
-//			final String text = "席をお譲りください";
-			//
-//			cs.newLineAtOffset((pd.getMediaBox().getWidth() - getTextWidth(text, font, fontSize)) / 2,
-//					pd.getMediaBox().getHeight() - (font.getFontDescriptor().getAscent() / 1000 * fontSize)
-//							+ (font.getFontDescriptor().getDescent() / 1000 * fontSize));
-			//
-//			cs.showText(text);
-			//
-//			cs.endText();
-			//
 			final PDImageXObject pdfImageXObject = PDImageXObject.createFromByteArray(document,
 					Files.readAllBytes(pathChoppedImage), getName(toFile(pathChoppedImage)));
 			//
@@ -130,8 +109,6 @@ public class PdfTest {
 			//
 			cs.drawImage(pdfImageXObject, (getWidth(md) - getWidth(pdfImageXObject)) / 2,
 					getHeight(md) - getHeight(pdfImageXObject));
-			//
-			IOUtils.closeQuietly(cs);
 			//
 			System.out.println(getAbsolutePath(file));
 			//
@@ -167,6 +144,10 @@ public class PdfTest {
 			//
 			Integer key = null;
 			//
+			String value = null;
+			//
+			final int fontSize = 14;
+			//
 			for (final Entry<Integer, String> entry : map.entrySet()) {
 				//
 				if (entry == null || (key = entry.getKey()) == null) {
@@ -179,6 +160,20 @@ public class PdfTest {
 						toFile(pathAudio));
 				//
 				final int size = 60;
+				//
+				PDFont font = null;
+				//
+//				try (final InputStream is = PdfTest.class.getResourceAsStream("\\NotoSansCJKjp-Regular.otf")) {
+				//
+//					font = PDType0Font.load(document, new OTFParser().parseEmbedded(is), false);
+				//
+//				} // try
+				//
+				font = new PDType1Font(FontName.HELVETICA);
+				//
+				Pattern pattern = null;
+				//
+				Matcher matcher = null;
 				//
 				try (final InputStream is = Files.newInputStream(pathAudio)) {
 					//
@@ -203,18 +198,64 @@ public class PdfTest {
 					attachment.setRectangle(new PDRectangle(index++ * size,
 							getHeight(md) - getHeight(pdfImageXObject) - size, size, size));
 					//
-					attachment.setContents(entry.getValue());
+					attachment.setContents(value = entry.getValue());
 					//
 					add(pd.getAnnotations(), attachment);
+					//
+					// Label
+					//
+					cs.beginText();
+					//
+					cs.setFont(font, fontSize);
+					//
+					cs.newLineAtOffset((index - 1) * size, getHeight(md) - getHeight(pdfImageXObject) - size
+					//
+							- (font.getFontDescriptor().getAscent() / 1000 * fontSize)
+							+ (font.getFontDescriptor().getDescent() / 1000 * fontSize)
+					//
+					);
+					//
+//					cs.newLineAtOffset((pd.getMediaBox().getWidth() - getTextWidth(text, font, fontSize)) / 2,
+//							pd.getMediaBox().getHeight() - (font.getFontDescriptor().getAscent() / 1000 * fontSize)
+//									+ (font.getFontDescriptor().getDescent() / 1000 * fontSize));
+					//
+					if (matches(matcher = matcher(
+							pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("^(\\d+%).+$")), value))
+							&& groupCount(matcher) > 0) {
+						//
+						cs.showText(matcher.group(1));
+						//
+					} else {
+						//
+						cs.showText(value);
+						//
+					} // if
+						//
+						//
+					cs.endText();
 					//
 				} // try
 					//
 			} // for
 				//
+			IOUtils.close(cs);
+			//
 			document.save(file);
 			//
 		} // try
 			//
+	}
+
+	private static int groupCount(final Matcher instance) {
+		return instance != null ? instance.groupCount() : 0;
+	}
+
+	private static boolean matches(final Matcher instance) {
+		return instance != null && instance.matches();
+	}
+
+	private static Matcher matcher(final Pattern instance, final CharSequence input) {
+		return instance != null ? instance.matcher(input) : null;
 	}
 
 	private static <E> void add(final Collection<E> instance, final E item) {
