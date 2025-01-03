@@ -1,5 +1,4 @@
 import java.awt.Color;
-import java.awt.Desktop;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
@@ -166,15 +165,17 @@ public class PdfTest {
 			//
 			int index = 0;
 			//
+			Integer key = null;
+			//
 			for (final Entry<Integer, String> entry : map.entrySet()) {
 				//
-				if (entry == null || entry.getKey() == null) {
+				if (entry == null || (key = entry.getKey()) == null) {
 					//
 					continue;
 					//
 				} // if
 					//
-				speechApi.writeVoiceToFile("席をお譲りください", "TTS_MS_JA-JP_HARUKA_11.0", entry.getKey().intValue(), 100,
+				speechApi.writeVoiceToFile("席をお譲りください", "TTS_MS_JA-JP_HARUKA_11.0", key.intValue(), 100,
 						toFile(pathAudio));
 				//
 				final int size = 60;
@@ -187,19 +188,24 @@ public class PdfTest {
 					//
 					pdfEmbeddedFile.setSize((int) toFile(pathAudio).length());
 					//
-					PDAnnotationFileAttachment attachment = new PDAnnotationFileAttachment();
+					final PDAnnotationFileAttachment attachment = new PDAnnotationFileAttachment();
 					//
-					PDFileSpecification fileSpec = new PDComplexFileSpecification();
+					final PDComplexFileSpecification fileSpec = new PDComplexFileSpecification();
+					//
 					fileSpec.setFile(getName(toFile(pathAudio)));
-					((PDComplexFileSpecification) fileSpec).setEmbeddedFile(pdfEmbeddedFile);
-
+					//
+					fileSpec.setEmbeddedFile(pdfEmbeddedFile);
+					//
 					attachment.setFile(fileSpec);
+					//
 					// Position on the page
+					//
 					attachment.setRectangle(new PDRectangle(index++ * size,
 							getHeight(md) - getHeight(pdfImageXObject) * 2 - size, size, size));
+					//
 					attachment.setContents(entry.getValue());
 					//
-					pd.getAnnotations().add(attachment);
+					add(pd.getAnnotations(), attachment);
 					//
 				} // try
 					//
@@ -209,6 +215,12 @@ public class PdfTest {
 			//
 		} // try
 			//
+	}
+
+	private static <E> void add(final Collection<E> instance, final E item) {
+		if (instance != null) {
+			instance.add(item);
+		}
 	}
 
 	private static float getHeight(final PDRectangle instance) {
@@ -235,13 +247,7 @@ public class PdfTest {
 		//
 		try (final Playwright playwright = Playwright.create()) {
 			//
-			final BrowserType browserType = playwright != null ? playwright.chromium() : null;
-			//
-			final Browser browser = browserType != null ? browserType.launch() : null;
-			//
-			final BrowserContext browserContext = browser != null ? browser.newContext() : null;
-			//
-			final Page page = browserContext != null ? browserContext.newPage() : null;
+			final Page page = newPage(newContext(launch(playwright != null ? playwright.chromium() : null)));
 			//
 			if (page != null) {
 				//
@@ -255,6 +261,18 @@ public class PdfTest {
 			//
 		return null;
 		//
+	}
+
+	private static Browser launch(final BrowserType instance) {
+		return instance != null ? instance.launch() : null;
+	}
+
+	private static BrowserContext newContext(final Browser instance) {
+		return instance != null ? instance.newContext() : null;
+	}
+
+	private static Page newPage(final BrowserContext instance) {
+		return instance != null ? instance.newPage() : null;
 	}
 
 	private static String toString(final Object instance) {
@@ -295,13 +313,13 @@ public class PdfTest {
 					//
 					if (!Objects.equals(color, new Color(bi.getRGB(y, x)))) {
 						//
-						if ((ilx = ObjectUtils.getIfNull(ilx, IntList::create)) != null && !contains(ilx, x)) {
+						if (!contains(ilx = ObjectUtils.getIfNull(ilx, IntList::create), x)) {
 							//
 							IntCollectionUtil.addInt(ilx, x);
 							//
 						} // if
 							//
-						if ((ily = ObjectUtils.getIfNull(ily, IntList::create)) != null && !contains(ily, y)) {
+						if (!contains(ily = ObjectUtils.getIfNull(ily, IntList::create), y)) {
 							//
 							IntCollectionUtil.addInt(ily, y);
 							//
@@ -403,11 +421,11 @@ public class PdfTest {
 				//
 				if (Objects.equals(parameterTypes[j], Float.TYPE)) {
 					//
-					collection.add(Float.valueOf(0));
+					add(collection, Float.valueOf(0));
 					//
 				} else {
 					//
-					collection.add(null);
+					add(collection, null);
 					//
 				} // if
 					//
