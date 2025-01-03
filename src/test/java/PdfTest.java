@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 
 import org.apache.fontbox.ttf.OTFParser;
 import org.apache.fontbox.ttf.TrueTypeFont;
@@ -20,7 +21,7 @@ public class PdfTest {
 			//
 			document.addPage(page);
 			//
-			final File file = new File("test.pdf");
+			final File file = Paths.get("test.pdf").toFile();
 			//
 			final PDPageContentStream cs = new PDPageContentStream(document, page);
 			//
