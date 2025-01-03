@@ -564,7 +564,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 	public void setMicrosoftSpeechObjectLibraryAttributeNames(final Object value) {
 		//
 		this.microsoftSpeechObjectLibraryAttributeNames = toArray(
-				Util.toList(Util.map(Util.stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))),
+				Util.toList(Util.map(Util.stream(getObjectList(getObjectMapper(), value)), Util::toString)),
 				new String[] {});
 		//
 	}
