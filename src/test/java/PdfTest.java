@@ -21,14 +21,18 @@ import java.util.function.Predicate;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fontbox.ttf.OTFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntList;
 import org.junit.jupiter.api.Assertions;
@@ -38,7 +42,6 @@ import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
-import com.microsoft.playwright.Page.ScreenshotOptions;
 import com.microsoft.playwright.Playwright;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -47,48 +50,6 @@ public class PdfTest {
 
 	public static void main(final String[] args) throws Exception {
 		//
-		try (final PDDocument document = new PDDocument()) {
-			//
-			final PDPage pd = new PDPage();
-			//
-			document.addPage(pd);
-			//
-			final File file = toFile(Path.of("test.pdf"));
-			//
-			final PDPageContentStream cs = new PDPageContentStream(document, pd);
-			//
-			cs.beginText();
-			//
-			PDFont font = null;
-			//
-			try (final InputStream is = PdfTest.class.getResourceAsStream("\\NotoSansCJKjp-Regular.otf")) {
-				//
-				font = PDType0Font.load(document, new OTFParser().parseEmbedded(is), false);
-				//
-			} // try
-				//
-			int fontSize = 64;
-			//
-			cs.setFont(font, fontSize);
-			//
-			final String text = "席をお譲りください";
-			//
-			cs.newLineAtOffset((pd.getMediaBox().getWidth() - getTextWidth(text, font, fontSize)) / 2,
-					pd.getMediaBox().getHeight() - (font.getFontDescriptor().getAscent() / 1000 * fontSize)
-							+ (font.getFontDescriptor().getDescent() / 1000 * fontSize));
-			//
-			cs.showText(text);
-			//
-			cs.endText();
-			//
-			cs.close();
-			//
-			System.out.println(getAbsolutePath(file));
-			//
-			document.save(file);
-			//
-		} // try
-			//
 		final Path pathHtml = Path.of("test.html");
 		//
 		FileUtils.writeStringToFile(toFile(pathHtml),
@@ -117,6 +78,76 @@ public class PdfTest {
 				//
 		} // try
 			//
+		try (final PDDocument document = new PDDocument()) {
+			//
+			final PDPage pd = new PDPage();
+			//
+			document.addPage(pd);
+			//
+			final File file = toFile(Path.of("test.pdf"));
+			//
+			final PDPageContentStream cs = new PDPageContentStream(document, pd);
+			//
+//			cs.beginText();
+			//
+//			PDFont font = null;
+			//
+//			try (final InputStream is = PdfTest.class.getResourceAsStream("\\NotoSansCJKjp-Regular.otf")) {
+			//
+//				font = PDType0Font.load(document, new OTFParser().parseEmbedded(is), false);
+			//
+//			} // try
+			//
+//			int fontSize = 64;
+			//
+//			cs.setFont(font, fontSize);
+			//
+//			final String text = "席をお譲りください";
+			//
+//			cs.newLineAtOffset((pd.getMediaBox().getWidth() - getTextWidth(text, font, fontSize)) / 2,
+//					pd.getMediaBox().getHeight() - (font.getFontDescriptor().getAscent() / 1000 * fontSize)
+//							+ (font.getFontDescriptor().getDescent() / 1000 * fontSize));
+			//
+//			cs.showText(text);
+			//
+//			cs.endText();
+			//
+			final PDImageXObject pdfImageXObject = PDImageXObject.createFromByteArray(document,
+					FileUtils.readFileToByteArray(toFile(pathChoppedImage)), getName(toFile(pathChoppedImage)));
+			//
+			final PDRectangle md = pd.getMediaBox();
+			//
+			cs.drawImage(pdfImageXObject, (getWidth(md) - getWidth(pdfImageXObject)) / 2,
+					getHeight(md) - getHeight(pdfImageXObject));
+			//
+			IOUtils.closeQuietly(cs);
+			//
+			System.out.println(getAbsolutePath(file));
+			//
+			document.save(file);
+			//
+		} // try
+			//
+	}
+
+	private static float getHeight(final PDRectangle instance) {
+		return instance != null ? instance.getHeight() : 0;
+	}
+
+	private static int getHeight(final PDImage instance) {
+		return instance != null ? instance.getHeight() : 0;
+	}
+
+	private static float getWidth(final PDRectangle instance) {
+		return instance != null ? instance.getWidth() : 0;
+	}
+
+	private static int getWidth(final PDImage instance) {
+		return instance != null ? instance.getWidth() : 0;
+	}
+
+	private static String getName(final File instance) {
+		return instance != null ? instance.getName() : null;
 	}
 
 	private static byte[] screenshot(final Path pathHtml) throws MalformedURLException {
@@ -305,7 +336,7 @@ public class PdfTest {
 			//
 			toString = toString(m);
 			//
-			if (contains(Arrays.asList(Float.TYPE, Boolean.TYPE), m.getReturnType())
+			if (contains(Arrays.asList(Float.TYPE, Boolean.TYPE, Integer.TYPE), m.getReturnType())
 					|| Boolean.logicalAnd(Objects.equals(m.getName(), "screenshot"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Path.class }))) {
 				//
