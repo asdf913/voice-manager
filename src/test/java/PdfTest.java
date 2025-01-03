@@ -41,6 +41,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.fontbox.ttf.OTFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -158,6 +159,10 @@ public class PdfTest {
 			//
 			Duration duration = null;
 			//
+			final String text = "席をお譲りください";
+			//
+			setSubject(document.getDocumentInformation(), text);
+			//
 			for (final Entry<Integer, String> entry : map.entrySet()) {
 				//
 				if (entry == null || (key = entry.getKey()) == null) {
@@ -166,8 +171,7 @@ public class PdfTest {
 					//
 				} // if
 					//
-				speechApi.writeVoiceToFile("席をお譲りください", "TTS_MS_JA-JP_HARUKA_11.0", key.intValue(), 100,
-						toFile(pathAudio));
+				speechApi.writeVoiceToFile(text, "TTS_MS_JA-JP_HARUKA_11.0", key.intValue(), 100, toFile(pathAudio));
 				//
 				final int size = 60;
 				//
@@ -271,6 +275,12 @@ public class PdfTest {
 			//
 		} // try
 			//
+	}
+
+	private static void setSubject(final PDDocumentInformation instance, final String keywords) {
+		if (instance != null) {
+			instance.setSubject(keywords);
+		}
 	}
 
 	private static Duration getAudioDuration(final File file) throws Exception {
