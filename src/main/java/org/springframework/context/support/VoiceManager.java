@@ -2119,8 +2119,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			for (int i = 0; ins != null && i < length; i++) {
 				//
-				if ((in = ins[i]) instanceof NEWARRAY newArray && newArray != null
-						&& newArray.getTypecode() == Const.T_FLOAT) {
+				if ((in = ins[i]) instanceof NEWARRAY newArray && equalsTypecode(newArray, Const.T_FLOAT)) {
 					//
 					index = Integer.valueOf(i);
 					//
@@ -2140,6 +2139,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 			return count != null ? Integer.valueOf(count.intValue()) : null;
 			//
+		}
+
+		private static boolean equalsTypecode(final NEWARRAY instance, final byte b) {
+			return instance != null && instance.getTypecode() == b;
 		}
 
 		/**
