@@ -1,7 +1,7 @@
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
@@ -14,6 +14,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -25,18 +29,26 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fontbox.ttf.OTFParser;
+import org.apache.pdfbox.cos.COSName;
+import org.apache.pdfbox.cos.COSStream;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecification;
+import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
+import org.apache.pdfbox.pdmodel.common.filespecification.PDFileSpecification;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
 import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.support.SpeechApi;
+import org.springframework.context.support.SpeechApiImpl;
 
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
@@ -78,13 +90,13 @@ public class PdfTest {
 				//
 		} // try
 			//
+		final File file = toFile(Path.of("test.pdf"));
+		//
 		try (final PDDocument document = new PDDocument()) {
 			//
 			final PDPage pd = new PDPage();
 			//
 			document.addPage(pd);
-			//
-			final File file = toFile(Path.of("test.pdf"));
 			//
 			final PDPageContentStream cs = new PDPageContentStream(document, pd);
 			//
@@ -93,9 +105,9 @@ public class PdfTest {
 //			PDFont font = null;
 			//
 //			try (final InputStream is = PdfTest.class.getResourceAsStream("\\NotoSansCJKjp-Regular.otf")) {
-			//
+
 //				font = PDType0Font.load(document, new OTFParser().parseEmbedded(is), false);
-			//
+
 //			} // try
 			//
 //			int fontSize = 64;
@@ -124,6 +136,75 @@ public class PdfTest {
 			//
 			System.out.println(getAbsolutePath(file));
 			//
+			final Path pathAudio = Path.of("test.wav");
+			//
+			System.out.println(getAbsolutePath(toFile(pathAudio)));
+			//
+			// 100% Speed
+			//
+			final SpeechApi speechApi = new SpeechApiImpl();
+			//
+			final Map<Integer, String> map = new LinkedHashMap<>(Collections.singletonMap(0, "100% Speed"));
+			//
+			map.put(-1, "90% Speed");
+			//
+			map.put(-2, "80% Speed");
+			//
+			map.put(-3, "70% Speed");
+			//
+			map.put(-4, "60% Speed");
+			//
+			map.put(-5, "50% Speed");
+			//
+			map.put(-6, "40% Speed");
+			//
+			map.put(-7, "30% Speed");
+			//
+			map.put(-8, "20% Speed");
+			//
+			map.put(-9, "10% Speed");
+			//
+			int index = 0;
+			//
+			for (final Entry<Integer, String> entry : map.entrySet()) {
+				//
+				if (entry == null || entry.getKey() == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				speechApi.writeVoiceToFile("席をお譲りください", "TTS_MS_JA-JP_HARUKA_11.0", entry.getKey().intValue(), 100,
+						toFile(pathAudio));
+				//
+				final int size = 60;
+				//
+				try (final InputStream is = Files.newInputStream(pathAudio)) {
+					//
+					final PDEmbeddedFile pdfEmbeddedFile = new PDEmbeddedFile(document, is);
+					//
+					pdfEmbeddedFile.setSubtype("audio/wav");
+					//
+					pdfEmbeddedFile.setSize((int) toFile(pathAudio).length());
+					//
+					PDAnnotationFileAttachment attachment = new PDAnnotationFileAttachment();
+					//
+					PDFileSpecification fileSpec = new PDComplexFileSpecification();
+					fileSpec.setFile(getName(toFile(pathAudio)));
+					((PDComplexFileSpecification) fileSpec).setEmbeddedFile(pdfEmbeddedFile);
+
+					attachment.setFile(fileSpec);
+					// Position on the page
+					attachment.setRectangle(new PDRectangle(index++ * size,
+							getHeight(md) - getHeight(pdfImageXObject) * 2 - size, size, size));
+					attachment.setContents(entry.getValue());
+					//
+					pd.getAnnotations().add(attachment);
+					//
+				} // try
+					//
+			} // for
+				//
 			document.save(file);
 			//
 		} // try
@@ -276,14 +357,14 @@ public class PdfTest {
 		return instance != null ? instance.toFile() : null;
 	}
 
-	private static float getTextWidth(final String text, final PDFont font, final float fontSize) throws IOException {
-		float width = 0;
-		for (int i = 0; i < StringUtils.length(text); i++) {
-			// Get the width of each character and add it to the total width
-			width += font.getWidth(text.charAt(i)) / 1000.0f;
-		}
-		return width * fontSize;
-	}
+//	private static float getTextWidth(final String text, final PDFont font, final float fontSize) throws IOException {
+//		float width = 0;
+//		for (int i = 0; i < StringUtils.length(text); i++) {
+//			// Get the width of each character and add it to the total width
+//			width += font.getWidth(text.charAt(i)) / 1000.0f;
+//		}
+//		return width * fontSize;
+//	}
 
 	@Test
 	void testNull() {
