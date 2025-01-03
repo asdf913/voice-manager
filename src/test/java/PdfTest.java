@@ -295,14 +295,11 @@ public class PdfTest {
 					//
 				} else {
 					//
-					if (!Objects.equals(color, new Color(bi.getRGB(x, y)))) {
+					if (!Objects.equals(color, new Color(bi.getRGB(x, y)))
+							&& !contains(ily = ObjectUtils.getIfNull(ily, IntList::create), y)) {
 						//
-						if (!contains(ily = ObjectUtils.getIfNull(ily, IntList::create), y)) {
-							//
-							IntCollectionUtil.addInt(ily, y);
-							//
-						} // if
-							//
+						IntCollectionUtil.addInt(ily, y);
+						//
 					} // if
 						//
 				} // if
