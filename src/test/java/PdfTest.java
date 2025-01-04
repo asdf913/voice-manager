@@ -174,7 +174,7 @@ public class PdfTest {
 					//
 				speechApi.writeVoiceToFile(text, "TTS_MS_JA-JP_HARUKA_11.0", key.intValue(), 100, toFile(pathAudio));
 				//
-				final int size = 60;
+				final int size = 61;
 				//
 				final PDFont font = new PDType1Font(FontName.HELVETICA);
 				//
