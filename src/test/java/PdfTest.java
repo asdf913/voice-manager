@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -65,6 +66,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.support.SpeechApi;
 import org.springframework.context.support.SpeechApiImpl;
 
+import com.helger.css.ECSSUnit;
+import com.helger.css.propertyvalue.CSSSimpleValueWithUnit;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.Browser;
@@ -86,7 +89,7 @@ public class PdfTest {
 		final Map<String, String> style = new LinkedHashMap<>(
 				Map.of("text-align", "center", "display", "block", "margin-left", "auto", "margin-right", "auto"));
 		//
-		style.put("font-size", StringUtils.joinWith("", fontSize, "px"));
+		style.put("font-size", new CSSSimpleValueWithUnit(new BigDecimal(fontSize), ECSSUnit.PX).getFormatted());
 		//
 		FileUtils.writeStringToFile(toFile(pathHtml),
 				String.format("<div style=\"%1$s\"><ruby>席<rt>せき</rt></ruby>をお<ruby>譲<rt>ゆず</rt></ruby>りください。</div>",
