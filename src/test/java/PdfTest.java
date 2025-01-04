@@ -20,11 +20,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioFileFormat;
@@ -81,9 +83,16 @@ public class PdfTest {
 		//
 		int fontSize = 80;
 		//
-		FileUtils.writeStringToFile(toFile(pathHtml), String.format(
-				"<div style=\"font-size:%1$spx;text-align:center;display:block;margin-left: auto;margin-right: auto\"><ruby>席<rt>せき</rt></ruby>をお<ruby>譲<rt>ゆず</rt></ruby>りください。</div>",
-				fontSize), "utf-8", false);
+		final Map<String, String> style = new LinkedHashMap<>(
+				Map.of("text-align", "center", "display", "block", "margin-left", "auto", "margin-right", "auto"));
+		//
+		style.put("font-size", StringUtils.joinWith("", fontSize, "px"));
+		//
+		FileUtils.writeStringToFile(toFile(pathHtml),
+				String.format("<div style=\"%1$s\"><ruby>席<rt>せき</rt></ruby>をお<ruby>譲<rt>ゆず</rt></ruby>りください。</div>",
+						entrySet(style).stream().map(x -> StringUtils.joinWith(":", getKey(x), getValue(x)))
+								.collect(Collectors.joining(";"))),
+				"utf-8", false);
 		//
 		final File file = toFile(Path.of("test.pdf"));
 		//
@@ -101,7 +110,7 @@ public class PdfTest {
 			//
 			final Path page1Path = Path.of("page1.png");
 			//
-			toFile(page1Path).deleteOnExit();
+			deleteOnExit(toFile(page1Path));
 			//
 			System.out.println(getAbsolutePath(toFile(page1Path)));
 			//
@@ -155,7 +164,7 @@ public class PdfTest {
 			//
 			setSubject(document.getDocumentInformation(), text);
 			//
-			for (final Entry<Integer, String> entry : map.entrySet()) {
+			for (final Entry<Integer, String> entry : entrySet(map)) {
 				//
 				if (entry == null || (key = entry.getKey()) == null) {
 					//
@@ -191,13 +200,13 @@ public class PdfTest {
 					//
 					pdfEmbeddedFile.setSize((int) toFile(pathAudio).length());
 					//
-					final PDAnnotationFileAttachment attachment = new PDAnnotationFileAttachment();
-					//
 					final PDComplexFileSpecification fileSpec = new PDComplexFileSpecification();
 					//
 					fileSpec.setFile(getName(toFile(pathAudio)));
 					//
 					fileSpec.setEmbeddedFile(pdfEmbeddedFile);
+					//
+					final PDAnnotationFileAttachment attachment = new PDAnnotationFileAttachment();
 					//
 					attachment.setFile(fileSpec);
 					//
@@ -269,6 +278,24 @@ public class PdfTest {
 			//
 		} // if
 			//
+	}
+
+	private static void deleteOnExit(final File instance) {
+		if (instance != null) {
+			instance.deleteOnExit();
+		}
+	}
+
+	private static <K> K getKey(final Entry<K, ?> instance) {
+		return instance != null ? instance.getKey() : null;
+	}
+
+	private static <V> V getValue(final Entry<?, V> instance) {
+		return instance != null ? instance.getValue() : null;
+	}
+
+	private static <K, V> Set<Entry<K, V>> entrySet(final Map<K, V> instance) {
+		return instance != null ? instance.entrySet() : null;
 	}
 
 	private static String getMimeType(final Path path) throws IOException {
