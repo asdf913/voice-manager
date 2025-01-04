@@ -79,9 +79,11 @@ public class PdfTest {
 		//
 		final Path pathHtml = Path.of("test.html");
 		//
-		FileUtils.writeStringToFile(toFile(pathHtml),
-				"<div style=\"font-size:64px;text-align:center;display:block;margin-left: auto;margin-right: auto\"><ruby>席<rt>せき</rt></ruby>をお<ruby>譲<rt>ゆず</rt></ruby>りください。</div>",
-				"utf-8", false);
+		int fontSize = 80;
+		//
+		FileUtils.writeStringToFile(toFile(pathHtml), String.format(
+				"<div style=\"font-size:%1$spx;text-align:center;display:block;margin-left: auto;margin-right: auto\"><ruby>席<rt>せき</rt></ruby>をお<ruby>譲<rt>ゆず</rt></ruby>りください。</div>",
+				fontSize), "utf-8", false);
 		//
 		final File file = toFile(Path.of("test.pdf"));
 		//
@@ -145,7 +147,7 @@ public class PdfTest {
 			//
 			String value = null;
 			//
-			final int fontSize = 14;
+			fontSize = 14;
 			//
 			Duration duration = null;
 			//
