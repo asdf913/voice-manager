@@ -297,11 +297,11 @@ public class VoiceManagerPdfPanel {
 			//
 	}
 
-	private static List<PDAnnotation> getAnnotations(final PDPage instance) throws IOException {
+	private static List<PDAnnotation> getAnnotations(@Nullable final PDPage instance) throws IOException {
 		return instance != null ? instance.getAnnotations() : null;
 	}
 
-	private static PDRectangle getMediaBox(final PDPage instance) {
+	private static PDRectangle getMediaBox(@Nullable final PDPage instance) {
 		return instance != null ? instance.getMediaBox() : null;
 	}
 
@@ -366,7 +366,7 @@ public class VoiceManagerPdfPanel {
 		return instance != null && instance.test(t, u);
 	}
 
-	private static AudioFormat getFormat(final AudioFileFormat instance) {
+	private static AudioFormat getFormat(@Nullable final AudioFileFormat instance) {
 		return instance != null ? instance.getFormat() : null;
 	}
 
@@ -380,7 +380,7 @@ public class VoiceManagerPdfPanel {
 		return instance != null && instance.test(value);
 	}
 
-	private static int groupCount(final Matcher instance) {
+	private static int groupCount(@Nullable final Matcher instance) {
 		return instance != null ? instance.groupCount() : 0;
 	}
 
@@ -388,15 +388,15 @@ public class VoiceManagerPdfPanel {
 		return instance != null && instance.matches();
 	}
 
-	private static Matcher matcher(final Pattern instance, final CharSequence input) {
+	private static Matcher matcher(@Nullable final Pattern instance, final CharSequence input) {
 		return instance != null ? instance.matcher(input) : null;
 	}
 
-	private static float getHeight(final PDRectangle instance) {
+	private static float getHeight(@Nullable final PDRectangle instance) {
 		return instance != null ? instance.getHeight() : 0;
 	}
 
-	private static String getName(final File instance) {
+	private static String getName(@Nullable final File instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
@@ -424,11 +424,11 @@ public class VoiceManagerPdfPanel {
 		return instance != null ? instance.launch() : null;
 	}
 
-	private static BrowserContext newContext(final Browser instance) {
+	private static BrowserContext newContext(@Nullable final Browser instance) {
 		return instance != null ? instance.newContext() : null;
 	}
 
-	private static Page newPage(final BrowserContext instance) {
+	private static Page newPage(@Nullable final BrowserContext instance) {
 		return instance != null ? instance.newPage() : null;
 	}
 
@@ -439,11 +439,11 @@ public class VoiceManagerPdfPanel {
 		}
 	}
 
-	private static URL toURL(final URI instance) throws MalformedURLException {
+	private static URL toURL(@Nullable final URI instance) throws MalformedURLException {
 		return instance != null ? instance.toURL() : null;
 	}
 
-	private static URI toURI(final File instance) {
+	private static URI toURI(@Nullable final File instance) {
 		return instance != null ? instance.toURI() : null;
 	}
 
@@ -453,11 +453,11 @@ public class VoiceManagerPdfPanel {
 		}
 	}
 
-	private static String getAbsolutePath(final File instance) {
+	private static String getAbsolutePath(@Nullable final File instance) {
 		return instance != null ? instance.getAbsolutePath() : null;
 	}
 
-	private static File toFile(final Path instance) {
+	private static File toFile(@Nullable final Path instance) {
 		return instance != null ? instance.toFile() : null;
 	}
 
