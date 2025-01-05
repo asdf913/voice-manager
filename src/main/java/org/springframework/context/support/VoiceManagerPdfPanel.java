@@ -297,10 +297,12 @@ public class VoiceManagerPdfPanel {
 			//
 	}
 
+	@Nullable
 	private static List<PDAnnotation> getAnnotations(@Nullable final PDPage instance) throws IOException {
 		return instance != null ? instance.getAnnotations() : null;
 	}
 
+	@Nullable
 	private static PDRectangle getMediaBox(@Nullable final PDPage instance) {
 		return instance != null ? instance.getMediaBox() : null;
 	}
@@ -367,6 +369,7 @@ public class VoiceManagerPdfPanel {
 		return instance != null && instance.test(t, u);
 	}
 
+	@Nullable
 	private static AudioFormat getFormat(@Nullable final AudioFileFormat instance) {
 		return instance != null ? instance.getFormat() : null;
 	}
@@ -390,6 +393,7 @@ public class VoiceManagerPdfPanel {
 		return instance != null && instance.matches();
 	}
 
+	@Nullable
 	private static Matcher matcher(@Nullable final Pattern instance, final CharSequence input) {
 		return instance != null ? instance.matcher(input) : null;
 	}
@@ -398,6 +402,7 @@ public class VoiceManagerPdfPanel {
 		return instance != null ? instance.getHeight() : 0;
 	}
 
+	@Nullable
 	private static String getName(@Nullable final File instance) {
 		return instance != null ? instance.getName() : null;
 	}
@@ -427,10 +432,12 @@ public class VoiceManagerPdfPanel {
 		return instance != null ? instance.launch() : null;
 	}
 
+	@Nullable
 	private static BrowserContext newContext(@Nullable final Browser instance) {
 		return instance != null ? instance.newContext() : null;
 	}
 
+	@Nullable
 	private static Page newPage(@Nullable final BrowserContext instance) {
 		return instance != null ? instance.newPage() : null;
 	}
@@ -442,10 +449,12 @@ public class VoiceManagerPdfPanel {
 		}
 	}
 
+	@Nullable
 	private static URL toURL(@Nullable final URI instance) throws MalformedURLException {
 		return instance != null ? instance.toURL() : null;
 	}
 
+	@Nullable
 	private static URI toURI(@Nullable final File instance) {
 		return instance != null ? instance.toURI() : null;
 	}
@@ -456,10 +465,12 @@ public class VoiceManagerPdfPanel {
 		}
 	}
 
+	@Nullable
 	private static String getAbsolutePath(@Nullable final File instance) {
 		return instance != null ? instance.getAbsolutePath() : null;
 	}
 
+	@Nullable
 	private static File toFile(@Nullable final Path instance) {
 		return instance != null ? instance.toFile() : null;
 	}
