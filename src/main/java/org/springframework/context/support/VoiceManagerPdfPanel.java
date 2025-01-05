@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -88,7 +89,7 @@ public class VoiceManagerPdfPanel {
 								Util.map(Util.stream(Util.entrySet(style)),
 										x -> StringUtils.joinWith(":", Util.getKey(x), Util.getValue(x))),
 								Collectors.joining(";"))),
-				"utf-8", false);
+				StandardCharsets.UTF_8, false);
 		//
 		final File file = toFile(Path.of("test.pdf"));
 		//
