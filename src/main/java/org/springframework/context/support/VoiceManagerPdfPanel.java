@@ -1,10 +1,10 @@
+package org.springframework.context.support;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -12,8 +12,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -21,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -61,10 +58,6 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachme
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntList;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.springframework.context.support.SpeechApi;
-import org.springframework.context.support.SpeechApiImpl;
 
 import com.helger.css.ECSSUnit;
 import com.helger.css.propertyvalue.CSSSimpleValueWithUnit;
@@ -76,9 +69,7 @@ import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 
-import io.github.toolfactory.narcissus.Narcissus;
-
-public class PdfTest {
+public class VoiceManagerPdfPanel {
 
 	public static void main(final String[] args) throws Exception {
 		//
@@ -93,8 +84,10 @@ public class PdfTest {
 		//
 		FileUtils.writeStringToFile(toFile(pathHtml),
 				String.format("<div style=\"%1$s\"><ruby>席<rt>せき</rt></ruby>をお<ruby>譲<rt>ゆず</rt></ruby>りください。</div>",
-						entrySet(style).stream().map(x -> StringUtils.joinWith(":", getKey(x), getValue(x)))
-								.collect(Collectors.joining(";"))),
+						Util.collect(
+								Util.map(Util.stream(Util.entrySet(style)),
+										x -> StringUtils.joinWith(":", Util.getKey(x), Util.getValue(x))),
+								Collectors.joining(";"))),
 				"utf-8", false);
 		//
 		final File file = toFile(Path.of("test.pdf"));
@@ -167,15 +160,16 @@ public class PdfTest {
 			//
 			setSubject(document.getDocumentInformation(), text);
 			//
-			for (final Entry<Integer, String> entry : entrySet(map)) {
+			for (final Entry<Integer, String> entry : Util.entrySet(map)) {
 				//
-				if (entry == null || (key = entry.getKey()) == null) {
+				if (entry == null || (key = Util.getKey(entry)) == null) {
 					//
 					continue;
 					//
 				} // if
 					//
-				speechApi.writeVoiceToFile(text, "TTS_MS_JA-JP_HARUKA_11.0", key.intValue(), 100, toFile(pathAudio));
+				speechApi.writeVoiceToFile(text, "TTS_MS_JA-JP_HARUKA_11.0", Util.intValue(key, 0), 100,
+						toFile(pathAudio));
 				//
 				final int size = 61;
 				//
@@ -215,12 +209,12 @@ public class PdfTest {
 					//
 					// Position on the page
 					//
-					attachment.setRectangle(
-							new PDRectangle(index++ * size, getHeight(md) - intValue(largestY, 0) - size, size, size));
+					attachment.setRectangle(new PDRectangle(index++ * size,
+							getHeight(md) - Util.intValue(largestY, 0) - size, size, size));
 					//
 					attachment.setContents(value = entry.getValue());
 					//
-					add(getAnnotations(pd), attachment);
+					Util.add(getAnnotations(pd), attachment);
 					//
 					// Label (Speed)
 					//
@@ -237,7 +231,7 @@ public class PdfTest {
 					} // if
 						//
 					cs.newLineAtOffset((index - 1) * size + getTextWidth(value, font, fontSize) / 2,
-							lastHeight = (getHeight(md) - intValue(largestY, 0) - size
+							lastHeight = (getHeight(md) - Util.intValue(largestY, 0) - size
 							//
 									- (font.getFontDescriptor().getAscent() / 1000 * fontSize)
 									+ (font.getFontDescriptor().getDescent() / 1000 * fontSize))
@@ -289,18 +283,6 @@ public class PdfTest {
 		}
 	}
 
-	private static <K> K getKey(final Entry<K, ?> instance) {
-		return instance != null ? instance.getKey() : null;
-	}
-
-	private static <V> V getValue(final Entry<?, V> instance) {
-		return instance != null ? instance.getValue() : null;
-	}
-
-	private static <K, V> Set<Entry<K, V>> entrySet(final Map<K, V> instance) {
-		return instance != null ? instance.entrySet() : null;
-	}
-
 	private static String getMimeType(final Path path) throws IOException {
 		//
 		try (final InputStream is = testAndApply(Objects::nonNull, path, Files::newInputStream, null)) {
@@ -321,10 +303,6 @@ public class PdfTest {
 		return instance != null ? instance.getMediaBox() : null;
 	}
 
-	private static int intValue(final Number instance, final int defaultValue) {
-		return instance != null ? instance.intValue() : defaultValue;
-	}
-
 	private static Integer getLargestY(final BufferedImage bi) {
 		//
 		Color color = null;
@@ -342,7 +320,7 @@ public class PdfTest {
 				} else {
 					//
 					if (!Objects.equals(color, new Color(bi.getRGB(x, y)))
-							&& !contains(ily = ObjectUtils.getIfNull(ily, IntList::create), y)) {
+							&& !Util.contains(ily = ObjectUtils.getIfNull(ily, IntList::create), y)) {
 						//
 						IntCollectionUtil.addInt(ily, y);
 						//
@@ -412,12 +390,6 @@ public class PdfTest {
 		return instance != null ? instance.matcher(input) : null;
 	}
 
-	private static <E> void add(final Collection<E> instance, final E item) {
-		if (instance != null) {
-			instance.add(item);
-		}
-	}
-
 	private static float getHeight(final PDRectangle instance) {
 		return instance != null ? instance.getHeight() : 0;
 	}
@@ -434,7 +406,7 @@ public class PdfTest {
 			//
 			if (page != null) {
 				//
-				testAndAccept(Objects::nonNull, toString(toURL(toURI(toFile(pathHtml)))), page::navigate);
+				testAndAccept(Objects::nonNull, Util.toString(toURL(toURI(toFile(pathHtml)))), page::navigate);
 				//
 				return page.pdf();
 				//
@@ -458,10 +430,6 @@ public class PdfTest {
 		return instance != null ? instance.newPage() : null;
 	}
 
-	private static String toString(final Object instance) {
-		return instance != null ? instance.toString() : null;
-	}
-
 	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer) {
 		if (predicate != null && predicate.test(value) && consumer != null) {
 			consumer.accept(value);
@@ -474,10 +442,6 @@ public class PdfTest {
 
 	private static URI toURI(final File instance) {
 		return instance != null ? instance.toURI() : null;
-	}
-
-	private static boolean contains(final Collection<?> instance, final Object o) {
-		return instance != null && instance.contains(o);
 	}
 
 	private static void sortInts(final IntList instance) {
@@ -501,83 +465,6 @@ public class PdfTest {
 			width += font.getWidth(text.charAt(i)) / 1000.0f;
 		}
 		return width * fontSize;
-	}
-
-	@Test
-	void testNull() {
-		//
-		final Method[] ms = PdfTest.class.getDeclaredMethods();
-		//
-		Method m = null;
-		//
-		Class<?>[] parameterTypes = null;
-		//
-		Class<?> parameterType = null;
-		//
-		Collection<Object> collection = null;
-		//
-		Object invokeStaticMethod = null;
-		//
-		String toString = null;
-		//
-		for (int i = 0; ms != null && i < ms.length; i++) {
-			//
-			if ((m = ms[i]) == null || !Modifier.isStatic(m.getModifiers()) || m.isSynthetic()
-					|| Boolean.logicalAnd(Objects.equals(m.getName(), "main"),
-							Arrays.equals(m.getParameterTypes(), new Class<?>[] { String[].class }))) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if ((collection = ObjectUtils.getIfNull(collection, ArrayList::new)) != null) {
-				//
-				collection.clear();
-				//
-			} // if
-				//
-			parameterTypes = m.getParameterTypes();
-			//
-			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
-				//
-				if (Objects.equals(parameterType = parameterTypes[j], Float.TYPE)) {
-					//
-					add(collection, Float.valueOf(0));
-					//
-				} else if (Objects.equals(parameterType, Integer.TYPE)) {
-					//
-					add(collection, Integer.valueOf(0));
-					//
-				} else {
-					//
-					add(collection, null);
-					//
-				} // if
-					//
-			} // if
-				//
-			invokeStaticMethod = Narcissus.invokeStaticMethod(m, toArray(collection));
-			//
-			toString = toString(m);
-			//
-			if (contains(Arrays.asList(Float.TYPE, Boolean.TYPE, Integer.TYPE), m.getReturnType())
-					|| Boolean.logicalAnd(Objects.equals(m.getName(), "pdf"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Path.class }))) {
-				//
-				Assertions.assertNotNull(invokeStaticMethod, toString);
-				//
-			} else {
-				//
-				Assertions.assertNull(invokeStaticMethod, toString);
-				//
-			} // if
-				//
-		} // for
-			//
-	}
-
-	private static Object[] toArray(final Collection<?> instance) {
-		return instance != null ? instance.toArray() : null;
 	}
 
 }
