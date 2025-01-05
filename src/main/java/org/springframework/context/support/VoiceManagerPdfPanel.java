@@ -285,7 +285,7 @@ public class VoiceManagerPdfPanel {
 		}
 	}
 
-	private static String getMimeType(final Path path) throws IOException {
+	private static String getMimeType(@Nullable final Path path) throws IOException {
 		//
 		try (final InputStream is = testAndApply(Objects::nonNull, path, Files::newInputStream, null)) {
 			//
@@ -402,7 +402,7 @@ public class VoiceManagerPdfPanel {
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static byte[] pdf(final Path pathHtml) throws MalformedURLException {
+	private static byte[] pdf(@Nullable final Path pathHtml) throws MalformedURLException {
 		//
 		try (final Playwright playwright = Playwright.create()) {
 			//
