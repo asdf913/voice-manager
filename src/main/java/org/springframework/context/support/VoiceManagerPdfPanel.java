@@ -27,6 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
@@ -356,7 +357,7 @@ public class VoiceManagerPdfPanel {
 
 	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
 			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
-			final FailableBiFunction<T, U, R, E> functionFalse) throws E {
+			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return test(predicate, t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
@@ -419,7 +420,7 @@ public class VoiceManagerPdfPanel {
 		//
 	}
 
-	private static Browser launch(final BrowserType instance) {
+	private static Browser launch(@Nullable final BrowserType instance) {
 		return instance != null ? instance.launch() : null;
 	}
 
@@ -445,7 +446,7 @@ public class VoiceManagerPdfPanel {
 		return instance != null ? instance.toURI() : null;
 	}
 
-	private static void sortInts(final IntList instance) {
+	private static void sortInts(@Nullable final IntList instance) {
 		if (instance != null) {
 			instance.sortInts();
 		}
