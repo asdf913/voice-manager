@@ -305,6 +305,7 @@ public class VoiceManagerPdfPanel {
 		return instance != null ? instance.getMediaBox() : null;
 	}
 
+	@Nullable
 	private static Integer getLargestY(@Nullable final BufferedImage bi) {
 		//
 		Color color = null;
@@ -420,6 +421,7 @@ public class VoiceManagerPdfPanel {
 		//
 	}
 
+	@Nullable
 	private static Browser launch(@Nullable final BrowserType instance) {
 		return instance != null ? instance.launch() : null;
 	}
