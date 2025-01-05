@@ -407,6 +407,7 @@ public class VoiceManagerPdfPanel {
 		return instance != null ? instance.getName() : null;
 	}
 
+	@Nullable
 	private static byte[] pdf(@Nullable final Path pathHtml) throws MalformedURLException {
 		//
 		try (final Playwright playwright = Playwright.create()) {
