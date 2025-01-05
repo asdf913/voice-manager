@@ -279,7 +279,7 @@ public class VoiceManagerPdfPanel {
 			//
 	}
 
-	private static void deleteOnExit(final File instance) {
+	private static void deleteOnExit(@Nullable final File instance) {
 		if (instance != null) {
 			instance.deleteOnExit();
 		}
@@ -305,7 +305,7 @@ public class VoiceManagerPdfPanel {
 		return instance != null ? instance.getMediaBox() : null;
 	}
 
-	private static Integer getLargestY(final BufferedImage bi) {
+	private static Integer getLargestY(@Nullable final BufferedImage bi) {
 		//
 		Color color = null;
 		//
@@ -340,7 +340,7 @@ public class VoiceManagerPdfPanel {
 		//
 	}
 
-	private static void setSubject(final PDDocumentInformation instance, final String keywords) {
+	private static void setSubject(@Nullable final PDDocumentInformation instance, final String keywords) {
 		if (instance != null) {
 			instance.setSubject(keywords);
 		}
@@ -362,7 +362,7 @@ public class VoiceManagerPdfPanel {
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
 
-	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, final U u) {
+	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, final U u) {
 		return instance != null && instance.test(t, u);
 	}
 
@@ -376,7 +376,7 @@ public class VoiceManagerPdfPanel {
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static <T> boolean test(final Predicate<T> instance, final T value) {
+	private static <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 
@@ -384,7 +384,7 @@ public class VoiceManagerPdfPanel {
 		return instance != null ? instance.groupCount() : 0;
 	}
 
-	private static boolean matches(final Matcher instance) {
+	private static boolean matches(@Nullable final Matcher instance) {
 		return instance != null && instance.matches();
 	}
 
@@ -432,7 +432,8 @@ public class VoiceManagerPdfPanel {
 		return instance != null ? instance.newPage() : null;
 	}
 
-	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer) {
+	private static <T> void testAndAccept(@Nullable final Predicate<T> predicate, final T value,
+			@Nullable final Consumer<T> consumer) {
 		if (predicate != null && predicate.test(value) && consumer != null) {
 			consumer.accept(value);
 		}
