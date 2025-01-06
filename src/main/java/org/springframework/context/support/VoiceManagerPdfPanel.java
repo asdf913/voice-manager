@@ -72,9 +72,14 @@ import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 
-public class VoiceManagerPdfPanel extends JPanel {
+public class VoiceManagerPdfPanel extends JPanel implements Titled {
 
 	private static final long serialVersionUID = 284477348908531649L;
+
+	@Override
+	public String getTitle() {
+		return "PDF";
+	}
 
 	public static void main(final String[] args) throws Exception {
 		//
