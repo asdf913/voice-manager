@@ -32,6 +32,7 @@ import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
+import javax.swing.JPanel;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -71,7 +72,9 @@ import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 
-public class VoiceManagerPdfPanel {
+public class VoiceManagerPdfPanel extends JPanel {
+
+	private static final long serialVersionUID = 284477348908531649L;
 
 	public static void main(final String[] args) throws Exception {
 		//
