@@ -29,15 +29,16 @@ class VoiceManagerPdfPanelTest {
 		//
 		Collection<Object> collection = null;
 		//
-		Object invokeStaticMethod = null;
+		Object invoke = null;
 		//
 		String toString = null;
 		//
+		VoiceManagerPdfPanel instance = null;
+		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
-			if ((m = ms[i]) == null || !Modifier.isStatic(m.getModifiers()) || m.isSynthetic()
-					|| Boolean.logicalAnd(Objects.equals(m.getName(), "main"),
-							Arrays.equals(m.getParameterTypes(), new Class<?>[] { String[].class }))) {
+			if ((m = ms[i]) == null || m.isSynthetic() || Boolean.logicalAnd(Objects.equals(m.getName(), "main"),
+					Arrays.equals(m.getParameterTypes(), new Class<?>[] { String[].class }))) {
 				//
 				continue;
 				//
@@ -69,20 +70,39 @@ class VoiceManagerPdfPanelTest {
 					//
 			} // if
 				//
-			invokeStaticMethod = Narcissus.invokeStaticMethod(m, toArray(collection));
-			//
 			toString = Util.toString(m);
 			//
-			if (Util.contains(Arrays.asList(Float.TYPE, Boolean.TYPE, Integer.TYPE), m.getReturnType())
-					|| Boolean.logicalAnd(Objects.equals(m.getName(), "pdf"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Path.class }))) {
+			if (Modifier.isStatic(m.getModifiers())) {
 				//
-				Assertions.assertNotNull(invokeStaticMethod, toString);
+				invoke = Narcissus.invokeStaticMethod(m, toArray(collection));
 				//
+				if (Util.contains(Arrays.asList(Float.TYPE, Boolean.TYPE, Integer.TYPE), m.getReturnType())
+						|| Boolean.logicalAnd(Objects.equals(m.getName(), "pdf"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Path.class }))) {
+					//
+					Assertions.assertNotNull(invoke, toString);
+					//
+				} else {
+					//
+					Assertions.assertNull(invoke, toString);
+					//
+				} // if
+					//
 			} else {
 				//
-				Assertions.assertNull(invokeStaticMethod, toString);
+				invoke = Narcissus.invokeMethod(instance = ObjectUtils.getIfNull(instance, VoiceManagerPdfPanel::new),
+						m, toArray(collection));
 				//
+				if (Boolean.logicalAnd(Objects.equals(m.getName(), "getTitle"), m.getParameterCount() == 0)) {
+					//
+					Assertions.assertNotNull(invoke, toString);
+					//
+				} else {
+					//
+					Assertions.assertNull(invoke, toString);
+					//
+				} // if
+					//
 			} // if
 				//
 		} // for
