@@ -60,6 +60,7 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachme
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntList;
+import org.springframework.beans.factory.InitializingBean;
 
 import com.helger.css.ECSSUnit;
 import com.helger.css.propertyvalue.CSSSimpleValueWithUnit;
@@ -71,13 +72,18 @@ import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 
-public class VoiceManagerPdfPanel extends JPanel implements Titled {
+public class VoiceManagerPdfPanel extends JPanel implements Titled, InitializingBean {
 
 	private static final long serialVersionUID = 284477348908531649L;
 
 	@Override
 	public String getTitle() {
 		return "PDF";
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		// TODO
 	}
 
 	public static void main(final String[] args) throws Exception {
