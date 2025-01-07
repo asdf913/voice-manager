@@ -115,6 +115,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			style.put("font-size", new CSSSimpleValueWithUnit(new BigDecimal(fontSize), ECSSUnit.PX).getFormatted());
 			//
+			final File file = toFile(Path.of("test.pdf"));
+			//
+			System.out.println(getAbsolutePath(file));
+			//
+			PDDocument document = null;
+			//
 			try {
 				//
 				FileUtils.writeStringToFile(toFile(pathHtml),
@@ -126,25 +132,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 										Collectors.joining(";"))),
 						StandardCharsets.UTF_8, false);
 				//
+				document = Loader.loadPDF(pdf(pathHtml));
+				//
 			} catch (final IOException e) {
-				//
-				LoggerUtil.error(LOG, e.getMessage(), e);
-				//
-			} // try
-				//
-			final File file = toFile(Path.of("test.pdf"));
-			//
-			System.out.println(getAbsolutePath(file));
-			//
-			PDDocument document = null;
-			//
-			try {
-				//
-				FileUtils.writeByteArrayToFile(file, pdf(pathHtml), false);
-				//
-				document = Loader.loadPDF(file);
-				//
-			} catch (final Exception e) {
 				//
 				LoggerUtil.error(LOG, e.getMessage(), e);
 				//
