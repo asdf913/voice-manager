@@ -134,60 +134,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				document = Loader.loadPDF(pdf(pathHtml));
 				//
-			} catch (final IOException e) {
-				//
-				LoggerUtil.error(LOG, e.getMessage(), e);
-				//
-			} // try
-				//
-			if (document != null && document.getNumberOfPages() > 0) {
-				//
-				final PDPage pd = document.getPage(0);
-				//
-				final PDFRenderer pdfRenderer = new PDFRenderer(document);
-				//
-				final Path page1Path = Path.of("page1.png");
-				//
-				deleteOnExit(toFile(page1Path));
-				//
-				System.out.println(getAbsolutePath(toFile(page1Path)));
-				//
-				BufferedImage bi = null;
-				//
-				try {
-					//
-					bi = pdfRenderer.renderImage(0);
-					//
-					ImageIO.write(bi, "png", toFile(page1Path));
-					//
-				} catch (final IOException e) {
-					//
-					LoggerUtil.error(LOG, e.getMessage(), e);
-					//
-				} // try
-					//
-				final Integer largestY = getLargestY(bi);
-				//
-				PDPageContentStream cs = null;
-				//
-				try {
-					//
-					cs = new PDPageContentStream(document, pd, AppendMode.PREPEND, true);
-					//
-				} catch (final IOException e) {
-					//
-					LoggerUtil.error(LOG, e.getMessage(), e);
-					//
-				} // try
-					//
-				final Path pathAudio = Path.of("test.wav");
-				//
-				System.out.println(getAbsolutePath(toFile(pathAudio)));
-				//
-				// 100% Speed
-				//
-				final SpeechApi speechApi = new SpeechApiImpl();
-				//
 				final Map<Integer, String> map = new LinkedHashMap<>(Collections.singletonMap(0, "100% Speed"));
 				//
 				map.put(-1, "90% Speed");
@@ -208,147 +154,177 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				map.put(-9, "10% Speed");
 				//
-				int index = 0;
+				addTextAndVoice(document, file, 14, map, "席をお譲りください", "TTS_MS_JA-JP_HARUKA_11.0", 100,
+						new PDType1Font(FontName.HELVETICA), 61, new SpeechApiImpl());
 				//
-				Integer key = null;
+			} catch (final IOException e) {
 				//
-				String value = null;
+				LoggerUtil.error(LOG, e.getMessage(), e);
 				//
-				fontSize = 14;
+			} // try
 				//
-				Duration duration = null;
+		} // if
+			//
+	}
+
+	private static void addTextAndVoice(final PDDocument document, final File file, final int fontSize,
+			final Map<Integer, String> map, final String text, final String voiceId, final int volume,
+			final PDFont font, final int size, final SpeechApi speechApi) throws IOException {
+		//
+		if (document != null && document.getNumberOfPages() > 0) {
+			//
+			final PDPage pd = document.getPage(0);
+			//
+			final PDFRenderer pdfRenderer = new PDFRenderer(document);
+			//
+			final Path page1Path = Path.of("page1.png");
+			//
+			System.out.println(getAbsolutePath(toFile(page1Path)));
+			//
+			final BufferedImage bi = pdfRenderer.renderImage(0);
+			//
+			ImageIO.write(bi, "png", toFile(page1Path));
+			//
+			final Integer largestY = getLargestY(bi);
+			//
+			delete(toFile(page1Path));
+			//
+			final PDPageContentStream cs = new PDPageContentStream(document, pd, AppendMode.PREPEND, true);
+			//
+			final Path pathAudio = Path.of("test.wav");
+			//
+			System.out.println(getAbsolutePath(toFile(pathAudio)));
+			//
+			int index = 0;
+			//
+			Integer key = null;
+			//
+			String value = null;
+			//
+			Duration duration = null;
+			//
+			setSubject(document.getDocumentInformation(), text);
+			//
+			PDEmbeddedFile pdfEmbeddedFile = null;
+			//
+			PDComplexFileSpecification fileSpec = null;
+			//
+			PDAnnotationFileAttachment attachment = null;
+			//
+			for (final Entry<Integer, String> entry : Util.entrySet(map)) {
 				//
-				final String text = "席をお譲りください";
-				//
-				setSubject(document.getDocumentInformation(), text);
-				//
-				for (final Entry<Integer, String> entry : Util.entrySet(map)) {
+				if (entry == null || (key = Util.getKey(entry)) == null) {
 					//
-					if (entry == null || (key = Util.getKey(entry)) == null) {
+					continue;
+					//
+				} // if
+					//
+				if (speechApi != null) {
+					//
+					speechApi.writeVoiceToFile(text, voiceId, Util.intValue(key, 0), volume, toFile(pathAudio));
+					//
+				} // if
+					//
+//				try (final InputStream is = PdfTest.class.getResourceAsStream("\\NotoSansCJKjp-Regular.otf")) {
+				//
+//					font = PDType0Font.load(document, new OTFParser().parseEmbedded(is), false);
+				//
+//				} // try
+				//
+				Pattern pattern = null;
+				//
+				Matcher matcher = null;
+				//
+				float lastHeight = 0;
+				//
+				final PDRectangle md = getMediaBox(pd);
+				//
+				try (final InputStream is = Files.newInputStream(pathAudio)) {
+					//
+					(pdfEmbeddedFile = new PDEmbeddedFile(document, is)).setSubtype(getMimeType(pathAudio));
+					//
+					pdfEmbeddedFile.setSize((int) toFile(pathAudio).length());
+					//
+					(fileSpec = new PDComplexFileSpecification()).setFile(getName(toFile(pathAudio)));
+					//
+					fileSpec.setEmbeddedFile(pdfEmbeddedFile);
+					//
+					(attachment = new PDAnnotationFileAttachment()).setFile(fileSpec);
+					//
+					// Position on the page
+					//
+					attachment.setRectangle(new PDRectangle(index++ * size,
+							getHeight(md) - Util.intValue(largestY, 0) - size, size, size));
+					//
+					attachment.setContents(value = entry.getValue());
+					//
+					Util.add(getAnnotations(pd), attachment);
+					//
+					// Label (Speed)
+					//
+					cs.beginText();
+					//
+					cs.setFont(font, fontSize);
+					//
+					if (matches(matcher = matcher(
+							pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("^(\\d+%).+$")), value))
+							&& groupCount(matcher) > 0) {
 						//
-						continue;
+						value = matcher.group(1);
 						//
 					} // if
 						//
-					speechApi.writeVoiceToFile(text, "TTS_MS_JA-JP_HARUKA_11.0", Util.intValue(key, 0), 100,
-							toFile(pathAudio));
+					cs.newLineAtOffset((index - 1) * size + getTextWidth(value, font, fontSize) / 2,
+							lastHeight = (getHeight(md) - Util.intValue(largestY, 0) - size
+							//
+									- (font.getFontDescriptor().getAscent() / 1000 * fontSize)
+									+ (font.getFontDescriptor().getDescent() / 1000 * fontSize))
 					//
-					final int size = 61;
+					);
 					//
-					final PDFont font = new PDType1Font(FontName.HELVETICA);
+//					cs.newLineAtOffset((pd.getMediaBox().getWidth() - getTextWidth(text, font, fontSize)) / 2,
+//							pd.getMediaBox().getHeight() - (font.getFontDescriptor().getAscent() / 1000 * fontSize)
+//									+ (font.getFontDescriptor().getDescent() / 1000 * fontSize));
 					//
-//					try (final InputStream is = PdfTest.class.getResourceAsStream("\\NotoSansCJKjp-Regular.otf")) {
+					cs.showText(value);
 					//
-//						font = PDType0Font.load(document, new OTFParser().parseEmbedded(is), false);
+					cs.endText();
 					//
-//					} // try
+					// Label (Duration)
 					//
-					Pattern pattern = null;
-					//
-					Matcher matcher = null;
-					//
-					float lastHeight = 0;
-					//
-					final PDRectangle md = getMediaBox(pd);
-					//
-					try (final InputStream is = Files.newInputStream(pathAudio)) {
-						//
-						final PDEmbeddedFile pdfEmbeddedFile = new PDEmbeddedFile(document, is);
-						//
-						pdfEmbeddedFile.setSubtype(getMimeType(pathAudio));
-						//
-						pdfEmbeddedFile.setSize((int) toFile(pathAudio).length());
-						//
-						final PDComplexFileSpecification fileSpec = new PDComplexFileSpecification();
-						//
-						fileSpec.setFile(getName(toFile(pathAudio)));
-						//
-						fileSpec.setEmbeddedFile(pdfEmbeddedFile);
-						//
-						final PDAnnotationFileAttachment attachment = new PDAnnotationFileAttachment();
-						//
-						attachment.setFile(fileSpec);
-						//
-						// Position on the page
-						//
-						attachment.setRectangle(new PDRectangle(index++ * size,
-								getHeight(md) - Util.intValue(largestY, 0) - size, size, size));
-						//
-						attachment.setContents(value = entry.getValue());
-						//
-						Util.add(getAnnotations(pd), attachment);
-						//
-						// Label (Speed)
+					if ((duration = getAudioDuration(toFile(pathAudio))) != null) {
 						//
 						cs.beginText();
 						//
 						cs.setFont(font, fontSize);
 						//
-						if (matches(matcher = matcher(
-								pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("^(\\d+%).+$")), value))
-								&& groupCount(matcher) > 0) {
-							//
-							value = matcher.group(1);
-							//
-						} // if
-							//
 						cs.newLineAtOffset((index - 1) * size + getTextWidth(value, font, fontSize) / 2,
-								lastHeight = (getHeight(md) - Util.intValue(largestY, 0) - size
-								//
-										- (font.getFontDescriptor().getAscent() / 1000 * fontSize)
-										+ (font.getFontDescriptor().getDescent() / 1000 * fontSize))
+								lastHeight - (font.getFontDescriptor().getAscent() / 1000 * fontSize)
+										+ (font.getFontDescriptor().getDescent() / 1000 * fontSize)
 						//
 						);
-						//
-//						cs.newLineAtOffset((pd.getMediaBox().getWidth() - getTextWidth(text, font, fontSize)) / 2,
-//								pd.getMediaBox().getHeight() - (font.getFontDescriptor().getAscent() / 1000 * fontSize)
-//										+ (font.getFontDescriptor().getDescent() / 1000 * fontSize));
-						//
-						cs.showText(value);
+						cs.showText(String.format("%1$s s", duration.toMillis() / 1000d));
 						//
 						cs.endText();
 						//
-						// Label (Duration)
+					} // if
 						//
-						if ((duration = getAudioDuration(toFile(pathAudio))) != null) {
-							//
-							cs.beginText();
-							//
-							cs.setFont(font, fontSize);
-							//
-							cs.newLineAtOffset((index - 1) * size + getTextWidth(value, font, fontSize) / 2,
-									lastHeight - (font.getFontDescriptor().getAscent() / 1000 * fontSize)
-											+ (font.getFontDescriptor().getDescent() / 1000 * fontSize)
-							//
-							);
-							cs.showText(String.format("%1$s s", duration.toMillis() / 1000d));
-							//
-							cs.endText();
-							//
-						} // if
-							//
-					} catch (final Exception e) {
-						//
-						LoggerUtil.error(LOG, e.getMessage(), e);
-						//
-					} // try
-						//
-				} // for
-					//
-				try {
-					//
-					IOUtils.close(cs);
-					//
-					document.save(file);
-					//
-				} catch (IOException e) {
+				} catch (final Exception e) {
 					//
 					LoggerUtil.error(LOG, e.getMessage(), e);
 					//
+				} finally {
+					//
+					delete(toFile(pathAudio));
+					//
 				} // try
 					//
-			} // if
+			} // for
 				//
+			IOUtils.close(cs);
+			//
+			document.save(file);
+			//
 		} // if
 			//
 	}
@@ -363,9 +339,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static void deleteOnExit(@Nullable final File instance) {
+	private static void delete(@Nullable final File instance) {
 		if (instance != null) {
-			instance.deleteOnExit();
+			instance.delete();
 		}
 	}
 
