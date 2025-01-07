@@ -1116,6 +1116,11 @@
 
 	<!---->
 	<bean
+		class="org.springframework.context.support.VoiceManagerPdfPanel">
+	</bean>
+
+	<!---->
+	<bean
 		class="org.springframework.beans.factory.VoiceManagerHelpPanelIntFunctionFactoryBean">
 		<property name="mediaFormatPageUrl"
 			value="${org.springframework.context.support.VoiceManager.mediaFormatPageUrl}" />
