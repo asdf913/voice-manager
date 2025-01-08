@@ -90,11 +90,17 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static final Logger LOG = LoggerFactory.getLogger(VoiceManagerPdfPanel.class);
 
+	private SpeechApi speechApi = null;
+
 	private AbstractButton btnExecute = null;
 
 	@Override
 	public String getTitle() {
 		return "PDF";
+	}
+
+	public void setSpeechApi(final SpeechApi speechApi) {
+		this.speechApi = speechApi;
 	}
 
 	@Override
@@ -167,7 +173,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					objectMap.setObject(PDDocument.class, document);
 					//
-					objectMap.setObject(SpeechApi.class, new SpeechApiImpl());
+					objectMap.setObject(SpeechApi.class, speechApi);
 					//
 					objectMap.setObject(PDFont.class, new PDType1Font(FontName.HELVETICA));
 					//
