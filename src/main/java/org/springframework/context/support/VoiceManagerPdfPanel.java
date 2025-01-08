@@ -210,7 +210,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 		@Override
 		@Nullable
-		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
 			//
 			final String methodName = Util.getName(method);
 			//
@@ -243,7 +243,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		}
 
-		private static boolean isArray(final OfField<?> instance) {
+		private static boolean isArray(@Nullable final OfField<?> instance) {
 			return instance != null && instance.isArray();
 		}
 
