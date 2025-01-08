@@ -193,6 +193,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 		<T> void setObject(final Class<T> key, @Nullable final T value);
 
+		static <T> T getObject(final ObjectMap instance, final Class<T> key) {
+			return instance != null ? instance.getObject(key) : null;
+		}
+
 	}
 
 	private static class IH implements InvocationHandler {
@@ -253,7 +257,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			final Map<Integer, String> map, final String text, final String voiceId, final int volume, final int size)
 			throws IOException {
 		//
-		final PDDocument document = objectMap != null ? objectMap.getObject(PDDocument.class) : null;
+		final PDDocument document = ObjectMap.getObject(objectMap, PDDocument.class);
 		//
 		if (document != null && document.getNumberOfPages() > 0) {
 			//
@@ -303,7 +307,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // if
 					//
-				final SpeechApi speechApi = objectMap != null ? objectMap.getObject(SpeechApi.class) : null;
+				final SpeechApi speechApi = ObjectMap.getObject(objectMap, SpeechApi.class);
 				//
 				if (speechApi != null) {
 					//
@@ -350,7 +354,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					cs.beginText();
 					//
-					final PDFont font = objectMap != null ? objectMap.getObject(PDFont.class) : null;
+					final PDFont font = ObjectMap.getObject(objectMap, PDFont.class);
 					//
 					cs.setFont(font, fontSize);
 					//
@@ -411,7 +415,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			IOUtils.close(cs);
 			//
-			final File file = objectMap != null ? objectMap.getObject(File.class) : null;
+			final File file = ObjectMap.getObject(objectMap, File.class);
 			//
 			document.save(file);
 			//
