@@ -1,6 +1,5 @@
 package org.springframework.context.support;
 
-import java.awt.event.ActionEvent;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.nio.file.Path;
