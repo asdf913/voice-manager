@@ -329,8 +329,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					(pdfEmbeddedFile = new PDEmbeddedFile(document, is)).setSubtype(getMimeType(pathAudio));
 					//
-					pdfEmbeddedFile.setSize((int) toFile(pathAudio).length());
+					final File file = toFile(pathAudio);
 					//
+					if (file != null) {
+						//
+						pdfEmbeddedFile.setSize((int) file.length());
+						//
+					} // if
+						//
 					(fileSpec = new PDComplexFileSpecification()).setFile(getName(toFile(pathAudio)));
 					//
 					fileSpec.setEmbeddedFile(pdfEmbeddedFile);
