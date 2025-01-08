@@ -191,7 +191,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 		<T> T getObject(final Class<?> clz);
 
-		<T> void setObject(final Class<T> key, final T value);
+		<T> void setObject(final Class<T> key, @Nullable final T value);
 
 	}
 
@@ -249,8 +249,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	}
 
-	private static void addTextAndVoice(final ObjectMap objectMap, final int fontSize, final Map<Integer, String> map,
-			final String text, final String voiceId, final int volume, final int size) throws IOException {
+	private static void addTextAndVoice(@Nullable final ObjectMap objectMap, final int fontSize,
+			final Map<Integer, String> map, final String text, final String voiceId, final int volume, final int size)
+			throws IOException {
 		//
 		final PDDocument document = objectMap != null ? objectMap.getObject(PDDocument.class) : null;
 		//
