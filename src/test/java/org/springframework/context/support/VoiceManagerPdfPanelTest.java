@@ -31,14 +31,115 @@ class VoiceManagerPdfPanelTest {
 		//
 		Object invoke = null;
 		//
-		String toString = null;
+		String name, toString = null;
+		//
+		Object[] os = null;
 		//
 		VoiceManagerPdfPanel instance = null;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
-			if ((m = ms[i]) == null || m.isSynthetic() || Boolean.logicalAnd(Objects.equals(m.getName(), "main"),
-					Arrays.equals(m.getParameterTypes(), new Class<?>[] { String[].class }))) {
+			if ((m = ms[i]) == null || m.isSynthetic()
+					|| Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "main"),
+							Arrays.equals(m.getParameterTypes(), new Class<?>[] { String[].class }))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if ((collection = ObjectUtils.getIfNull(collection, ArrayList::new)) != null) {
+				//
+				collection.clear();
+				//
+			} // if
+				//
+			parameterTypes = m.getParameterTypes();
+			//
+			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
+				//
+				if (Objects.equals(parameterType = parameterTypes[j], Float.TYPE)) {
+					//
+					Util.add(collection, Float.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Integer.TYPE)) {
+					//
+					Util.add(collection, Integer.valueOf(0));
+					//
+				} else {
+					//
+					Util.add(collection, null);
+					//
+				} // if
+					//
+			} // if
+				//
+			os = toArray(collection);
+			//
+			toString = Util.toString(m);
+			//
+			if (Modifier.isStatic(m.getModifiers())) {
+				//
+				invoke = Narcissus.invokeStaticMethod(m, os);
+				//
+				if (Util.contains(Arrays.asList(Float.TYPE, Boolean.TYPE, Integer.TYPE), m.getReturnType())
+						|| Boolean.logicalAnd(Objects.equals(name, "pdf"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Path.class }))) {
+					//
+					Assertions.assertNotNull(invoke, toString);
+					//
+				} else {
+					//
+					Assertions.assertNull(invoke, toString);
+					//
+				} // if
+					//
+			} else {
+				//
+				invoke = Narcissus.invokeMethod(instance = ObjectUtils.getIfNull(instance, VoiceManagerPdfPanel::new),
+						m, os);
+				//
+				if (Boolean.logicalAnd(Objects.equals(name, "getTitle"), m.getParameterCount() == 0)) {
+					//
+					Assertions.assertNotNull(invoke, toString);
+					//
+				} else {
+					//
+					Assertions.assertNull(invoke, toString);
+					//
+				} // if
+					//
+			} // if
+				//
+		} // for
+			//
+	}
+
+	@Test
+	void testIH() {
+		//
+		final Class<?> clz = Util.forName("org.springframework.context.support.VoiceManagerPdfPanel$IH");
+		//
+		final Method[] ms = Util.getDeclaredMethods(clz);
+		//
+		Method m = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
+		Class<?> parameterType = null;
+		//
+		Collection<Object> collection = null;
+		//
+		Object invoke, instance = null;
+		//
+		String name, toString = null;
+		//
+		Object[] os = null;
+		//
+		for (int i = 0; ms != null && i < ms.length; i++) {
+			//
+			if ((m = ms[i]) == null || m.isSynthetic()
+					|| Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "main"),
+							Arrays.equals(m.getParameterTypes(), new Class<?>[] { String[].class }))) {
 				//
 				continue;
 				//
@@ -72,13 +173,13 @@ class VoiceManagerPdfPanelTest {
 				//
 			toString = Util.toString(m);
 			//
+			os = toArray(collection);
+			//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
-				invoke = Narcissus.invokeStaticMethod(m, toArray(collection));
+				invoke = Narcissus.invokeStaticMethod(m, os);
 				//
-				if (Util.contains(Arrays.asList(Float.TYPE, Boolean.TYPE, Integer.TYPE), m.getReturnType())
-						|| Boolean.logicalAnd(Objects.equals(m.getName(), "pdf"),
-								Arrays.equals(parameterTypes, new Class<?>[] { Path.class }))) {
+				if (Util.contains(Arrays.asList(Float.TYPE, Boolean.TYPE, Integer.TYPE), m.getReturnType())) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
@@ -90,16 +191,30 @@ class VoiceManagerPdfPanelTest {
 					//
 			} else {
 				//
-				invoke = Narcissus.invokeMethod(instance = ObjectUtils.getIfNull(instance, VoiceManagerPdfPanel::new),
-						m, toArray(collection));
-				//
-				if (Boolean.logicalAnd(Objects.equals(m.getName(), "getTitle"), m.getParameterCount() == 0)) {
+				if (instance == null && clz != null) {
 					//
-					Assertions.assertNotNull(invoke, toString);
+					instance = Narcissus.allocateInstance(clz);
 					//
-				} else {
+				} // if
 					//
-					Assertions.assertNull(invoke, toString);
+				if (Objects.equals(name = Util.getName(m), "invoke") && Arrays.equals(parameterTypes,
+						new Class<?>[] { Object.class, Method.class, Object[].class })) {
+					//
+					final Object instance_ = instance;
+					//
+					final Method m_ = m;
+					//
+					final Object[] os_ = os;
+					//
+					Assertions.assertThrows(Throwable.class, () -> Narcissus.invokeMethod(instance_, m_, os_));
+					//
+					continue;
+					//
+				} // if
+					//
+				if (Boolean.logicalAnd(Objects.equals(name, "getObjects"), m.getParameterCount() == 0)) {
+					//
+					Assertions.assertNotNull(Narcissus.invokeMethod(instance, m, os), toString);
 					//
 				} // if
 					//

@@ -7,6 +7,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.invoke.TypeDescriptor.OfField;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -37,6 +40,7 @@ import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -69,6 +73,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.InitializingBean;
 
+import com.google.common.reflect.Reflection;
 import com.helger.css.ECSSUnit;
 import com.helger.css.propertyvalue.CSSSimpleValueWithUnit;
 import com.j256.simplemagic.ContentInfo;
@@ -154,8 +159,23 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				map.put(-9, "10% Speed");
 				//
-				addTextAndVoice(document, file, 14, map, "席をお譲りください", "TTS_MS_JA-JP_HARUKA_11.0", 100,
-						new PDType1Font(FontName.HELVETICA), 61, new SpeechApiImpl());
+				final IH ih = new IH();
+				//
+				final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, ih);
+				//
+				if (objectMap != null) {
+					//
+					objectMap.setObject(PDDocument.class, document);
+					//
+					objectMap.setObject(SpeechApi.class, new SpeechApiImpl());
+					//
+					objectMap.setObject(PDFont.class, new PDType1Font(FontName.HELVETICA));
+					//
+					objectMap.setObject(File.class, file);
+					//
+				} // if
+					//
+				addTextAndVoice(objectMap, 14, map, "席をお譲りください", "TTS_MS_JA-JP_HARUKA_11.0", 100, 61);
 				//
 			} catch (final IOException e) {
 				//
@@ -167,9 +187,71 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static void addTextAndVoice(final PDDocument document, final File file, final int fontSize,
-			final Map<Integer, String> map, final String text, final String voiceId, final int volume,
-			final PDFont font, final int size, final SpeechApi speechApi) throws IOException {
+	private static interface ObjectMap {
+
+		<T> T getObject(final Class<?> clz);
+
+		<T> void setObject(final Class<T> key, final T value);
+
+	}
+
+	private static class IH implements InvocationHandler {
+
+		private static final String KEY_NOT_FOUND_MESSAGE = "Key [%1$s] Not Found";
+
+		private Map<Object, Object> objects = null;
+
+		private Map<Object, Object> getObjects() {
+			if (objects == null) {
+				objects = new LinkedHashMap<>();
+			}
+			return objects;
+		}
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = Util.getName(method);
+			//
+			if (proxy instanceof ObjectMap) {
+				//
+				if (Objects.equals(methodName, "getObject") && args != null && args.length > 0) {
+					//
+					final Object key = args[0];
+					//
+					if (!Util.containsKey(getObjects(), key)) {
+						//
+						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
+								testAndApply(IH::isArray, Util.cast(Class.class, key), Util::getSimpleName, x -> key)));
+						//
+					} // if
+						//
+					return MapUtils.getObject(getObjects(), key);
+					//
+				} else if (Objects.equals(methodName, "setObject") && args != null && args.length > 1) {
+					//
+					Util.put(getObjects(), args[0], args[1]);
+					//
+					return null;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+		private static boolean isArray(final OfField<?> instance) {
+			return instance != null && instance.isArray();
+		}
+
+	}
+
+	private static void addTextAndVoice(final ObjectMap objectMap, final int fontSize, final Map<Integer, String> map,
+			final String text, final String voiceId, final int volume, final int size) throws IOException {
+		//
+		final PDDocument document = objectMap != null ? objectMap.getObject(PDDocument.class) : null;
 		//
 		if (document != null && document.getNumberOfPages() > 0) {
 			//
@@ -219,6 +301,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // if
 					//
+				final SpeechApi speechApi = objectMap != null ? objectMap.getObject(SpeechApi.class) : null;
+				//
 				if (speechApi != null) {
 					//
 					speechApi.writeVoiceToFile(text, voiceId, Util.intValue(key, 0), volume, toFile(pathAudio));
@@ -263,6 +347,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					// Label (Speed)
 					//
 					cs.beginText();
+					//
+					final PDFont font = objectMap != null ? objectMap.getObject(PDFont.class) : null;
 					//
 					cs.setFont(font, fontSize);
 					//
@@ -322,6 +408,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			} // for
 				//
 			IOUtils.close(cs);
+			//
+			final File file = objectMap != null ? objectMap.getObject(File.class) : null;
 			//
 			document.save(file);
 			//
