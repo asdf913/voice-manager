@@ -269,7 +269,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final Integer largestY = getLargestY(bi);
 			//
-			delete(toFile(page1Path));
+			Files.delete(page1Path);
 			//
 			final PDPageContentStream cs = new PDPageContentStream(document, pd, AppendMode.PREPEND, true);
 			//
@@ -401,7 +401,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} finally {
 					//
-					delete(toFile(pathAudio));
+					Files.delete(pathAudio);
 					//
 				} // try
 					//
@@ -425,12 +425,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		instance.actionPerformed(new ActionEvent(instance.btnExecute, 0, null));
 		//
-	}
-
-	private static void delete(@Nullable final File instance) {
-		if (instance != null) {
-			instance.delete();
-		}
 	}
 
 	private static String getMimeType(@Nullable final Path path) throws IOException {
