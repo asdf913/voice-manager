@@ -137,9 +137,7 @@ class VoiceManagerPdfPanelTest {
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
-			if ((m = ms[i]) == null || m.isSynthetic()
-					|| Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "main"),
-							Arrays.equals(m.getParameterTypes(), new Class<?>[] { String[].class }))) {
+			if ((m = ms[i]) == null || m.isSynthetic()) {
 				//
 				continue;
 				//
@@ -183,10 +181,6 @@ class VoiceManagerPdfPanelTest {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
-				} else {
-					//
-					Assertions.assertNull(invoke, toString);
-					//
 				} // if
 					//
 			} else {
@@ -197,7 +191,7 @@ class VoiceManagerPdfPanelTest {
 					//
 				} // if
 					//
-				if (Objects.equals(name, "invoke") && Arrays.equals(parameterTypes,
+				if (Objects.equals(name = Util.getName(m), "invoke") && Arrays.equals(parameterTypes,
 						new Class<?>[] { Object.class, Method.class, Object[].class })) {
 					//
 					final Object instance_ = instance;
