@@ -209,6 +209,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		}
 
 		@Override
+		@Nullable
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
 			final String methodName = Util.getName(method);
