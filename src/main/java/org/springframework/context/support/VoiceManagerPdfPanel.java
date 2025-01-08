@@ -420,7 +420,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	private static void writeVoiceToFile(final SpeechApi instance, final String text, final String voiceId,
-			final int rate, final int volume, final File file) {
+			final int rate, final int volume, @Nullable final File file) {
 		if (instance != null) {
 			instance.writeVoiceToFile(text, voiceId, rate, volume, file);
 		}
