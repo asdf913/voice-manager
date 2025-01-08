@@ -307,14 +307,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // if
 					//
-				final SpeechApi speechApi = ObjectMap.getObject(objectMap, SpeechApi.class);
+				writeVoiceToFile(ObjectMap.getObject(objectMap, SpeechApi.class), text, voiceId, Util.intValue(key, 0),
+						volume, toFile(pathAudio));
 				//
-				if (speechApi != null) {
-					//
-					speechApi.writeVoiceToFile(text, voiceId, Util.intValue(key, 0), volume, toFile(pathAudio));
-					//
-				} // if
-					//
 //				try (final InputStream is = PdfTest.class.getResourceAsStream("\\NotoSansCJKjp-Regular.otf")) {
 				//
 //					font = PDType0Font.load(document, new OTFParser().parseEmbedded(is), false);
@@ -421,6 +416,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
+	}
+
+	private static void writeVoiceToFile(final SpeechApi instance, final String text, final String voiceId,
+			final int rate, final int volume, final File file) {
+		if (instance != null) {
+			instance.writeVoiceToFile(text, voiceId, rate, volume, file);
+		}
 	}
 
 	public static void main(final String[] args) throws Exception {
