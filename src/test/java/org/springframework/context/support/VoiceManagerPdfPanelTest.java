@@ -197,7 +197,7 @@ class VoiceManagerPdfPanelTest {
 					//
 				} // if
 					//
-				if (Objects.equals(name = Util.getName(m), "invoke") && Arrays.equals(parameterTypes,
+				if (Objects.equals(name, "invoke") && Arrays.equals(parameterTypes,
 						new Class<?>[] { Object.class, Method.class, Object[].class })) {
 					//
 					final Object instance_ = instance;
