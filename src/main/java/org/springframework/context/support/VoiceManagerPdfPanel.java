@@ -366,9 +366,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					cs.setFont(font, fontSize);
 					//
-					if (matches(matcher = matcher(
-							pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("^(\\d+%).+$")), value))
-							&& groupCount(matcher) > 0) {
+					if (and(matcher = matcher(
+							pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("^(\\d+%).+$")), value),
+							x -> matches(x), x -> groupCount(x) > 0)) {
 						//
 						value = matcher.group(1);
 						//
@@ -429,6 +429,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
+	}
+
+	private static <T> boolean and(final T value, final Predicate<T> a, final Predicate<T> b) {
+		return Util.test(a, value) && Util.test(b, value);
 	}
 
 	private static void writeVoiceToFile(@Nullable final SpeechApi instance, final String text, final String voiceId,
