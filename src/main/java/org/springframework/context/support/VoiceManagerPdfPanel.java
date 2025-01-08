@@ -534,12 +534,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
-		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
-	}
-
-	private static <T> boolean test(@Nullable final Predicate<T> instance, @Nullable final T value) {
-		return instance != null && instance.test(value);
 	}
 
 	private static int groupCount(@Nullable final Matcher instance) {
