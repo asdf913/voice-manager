@@ -302,7 +302,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			for (final Entry<Integer, String> entry : Util.entrySet(map)) {
 				//
-				if (entry == null || (key = Util.getKey(entry)) == null) {
+				if ((key = Util.getKey(entry)) == null) {
 					//
 					continue;
 					//
@@ -342,7 +342,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					attachment.setRectangle(new PDRectangle(index++ * size,
 							getHeight(md) - Util.intValue(largestY, 0) - size, size, size));
 					//
-					attachment.setContents(value = entry.getValue());
+					attachment.setContents(value = Util.getValue(entry));
 					//
 					Util.add(getAnnotations(pd), attachment);
 					//
