@@ -113,7 +113,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final Path pathHtml = Path.of("test.html");
 			//
-			int fontSize = 80;
+			final int fontSize = 80;
 			//
 			final Map<String, String> style = new LinkedHashMap<>(
 					Map.of("text-align", "center", "display", "block", "margin-left", "auto", "margin-right", "auto"));
