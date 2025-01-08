@@ -516,7 +516,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		}
 	}
 
-	private static Duration getAudioDuration(final File file) throws Exception {
+	private static Duration getAudioDuration(@Nullable final File file) throws Exception {
 		//
 		final AudioFileFormat fileFormat = testAndApply(Objects::nonNull, file, AudioSystem::getAudioFileFormat, null);
 		//
