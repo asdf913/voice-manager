@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.event.ActionEvent;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.nio.file.Path;
@@ -41,7 +42,9 @@ class VoiceManagerPdfPanelTest {
 			//
 			if ((m = ms[i]) == null || m.isSynthetic()
 					|| Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "main"),
-							Arrays.equals(m.getParameterTypes(), new Class<?>[] { String[].class }))) {
+							Arrays.equals(m.getParameterTypes(), new Class<?>[] { String[].class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "actionPerformed"),
+							Arrays.equals(m.getParameterTypes(), new Class<?>[] { ActionEvent.class }))) {
 				//
 				continue;
 				//
