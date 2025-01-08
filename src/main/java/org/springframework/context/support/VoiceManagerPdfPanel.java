@@ -90,7 +90,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static final Logger LOG = LoggerFactory.getLogger(VoiceManagerPdfPanel.class);
 
-	private SpeechApi speechApi = null;
+	private transient SpeechApi speechApi = null;
 
 	private AbstractButton btnExecute = null;
 
