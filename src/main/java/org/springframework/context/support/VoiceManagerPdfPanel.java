@@ -193,6 +193,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 		<T> void setObject(final Class<T> key, @Nullable final T value);
 
+		@Nullable
 		static <T> T getObject(@Nullable final ObjectMap instance, final Class<T> key) {
 			return instance != null ? instance.getObject(key) : null;
 		}
