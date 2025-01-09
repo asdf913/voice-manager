@@ -432,7 +432,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static String group(final MatchResult instance, final int group) {
+	private static String group(@Nullable final MatchResult instance, final int group) {
 		return instance != null ? instance.group(group) : null;
 	}
 
