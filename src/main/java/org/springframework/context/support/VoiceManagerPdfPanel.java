@@ -431,7 +431,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static <T> boolean and(final T value, final Predicate<T> a, final Predicate<T> b) {
+	private static <T> boolean and(@Nullable final T value, final Predicate<T> a, final Predicate<T> b) {
 		return Util.test(a, value) && Util.test(b, value);
 	}
 
