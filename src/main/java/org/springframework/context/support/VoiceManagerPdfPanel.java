@@ -440,7 +440,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		}
 	}
 
-	private static void setSize(final PDEmbeddedFile instance, final int size) {
+	private static void setSize(@Nullable final PDEmbeddedFile instance, final int size) {
 		if (instance != null) {
 			instance.setSize(size);
 		}
