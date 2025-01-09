@@ -338,7 +338,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					if (file != null) {
 						//
-						pdfEmbeddedFile.setSize(Util.intValue(length(file), 0));
+						setSize(pdfEmbeddedFile, Util.intValue(length(file), 0));
 						//
 					} // if
 						//
@@ -428,6 +428,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
+	}
+
+	private static void setSize(final PDEmbeddedFile instance, final int size) {
+		if (instance != null) {
+			instance.setSize(size);
+		}
 	}
 
 	private static Long length(final File instance) {
