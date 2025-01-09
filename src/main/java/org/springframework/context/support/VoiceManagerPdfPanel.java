@@ -326,8 +326,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				Pattern pattern = null;
 				//
-				Matcher matcher = null;
-				//
 				float lastHeight = 0;
 				//
 				final PDRectangle md = getMediaBox(pd);
@@ -372,7 +370,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					cs.newLineAtOffset((index - 1) * size + getTextWidth(
 							//
 							value = testAndApply(x -> and(x, y -> matches(y), y -> groupCount(y) > 0),
-									matcher = matcher(pattern = ObjectUtils.getIfNull(pattern,
+									matcher(pattern = ObjectUtils.getIfNull(pattern,
 											() -> Pattern.compile("^(\\d+%).+$")), value),
 									x -> group(x, 1), x -> value_)
 							//
