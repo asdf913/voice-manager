@@ -367,17 +367,17 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					cs.setFont(font, fontSize);
 					//
-					if (and(matcher = matcher(
-							pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("^(\\d+%).+$")), value),
-							x -> matches(x), x -> groupCount(x) > 0)) {
-						//
-						value = group(matcher, 1);
-						//
-					} // if
-						//
-					cs.newLineAtOffset((index - 1) * size + getTextWidth(value, font, fontSize) / 2,
-							lastHeight = (getHeight(md) - Util.intValue(largestY, 0) - size
+					final String value_ = value;
+					//
+					cs.newLineAtOffset((index - 1) * size + getTextWidth(
 							//
+							value = testAndApply(x -> and(x, y -> matches(y), y -> groupCount(y) > 0),
+									matcher = matcher(pattern = ObjectUtils.getIfNull(pattern,
+											() -> Pattern.compile("^(\\d+%).+$")), value),
+									x -> group(x, 1), x -> value_)
+							//
+							, font, fontSize) / 2, lastHeight = (getHeight(md) - Util.intValue(largestY, 0) - size
+					//
 									- (font.getFontDescriptor().getAscent() / 1000 * fontSize)
 									+ (font.getFontDescriptor().getDescent() / 1000 * fontSize))
 					//
