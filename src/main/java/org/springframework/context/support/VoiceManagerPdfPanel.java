@@ -27,6 +27,7 @@ import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -370,7 +371,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 							pattern = ObjectUtils.getIfNull(pattern, () -> Pattern.compile("^(\\d+%).+$")), value),
 							x -> matches(x), x -> groupCount(x) > 0)) {
 						//
-						value = matcher.group(1);
+						value = group(matcher, 1);
 						//
 					} // if
 						//
@@ -429,6 +430,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
+	}
+
+	private static String group(final MatchResult instance, final int group) {
+		return instance != null ? instance.group(group) : null;
 	}
 
 	private static <T> boolean and(@Nullable final T value, final Predicate<T> a, final Predicate<T> b) {
