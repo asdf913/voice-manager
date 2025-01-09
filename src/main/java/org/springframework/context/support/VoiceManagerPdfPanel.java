@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -334,14 +335,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					(pdfEmbeddedFile = new PDEmbeddedFile(document, is)).setSubtype(getMimeType(pathAudio));
 					//
-					final File file = toFile(pathAudio);
+					testAndAccept((a, b) -> b != null, pdfEmbeddedFile, toFile(pathAudio), (a, b) -> {
+						setSize(a, Util.intValue(length(b), 0));
+					});
 					//
-					if (file != null) {
-						//
-						setSize(pdfEmbeddedFile, Util.intValue(length(file), 0));
-						//
-					} // if
-						//
 					(fileSpec = new PDComplexFileSpecification()).setFile(getName(toFile(pathAudio)));
 					//
 					fileSpec.setEmbeddedFile(pdfEmbeddedFile);
@@ -428,6 +425,19 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (test(instance, t, u)) {
+			accept(consumer, t, u);
+		} // if
+	}
+
+	private static <T, U> void accept(final BiConsumer<T, U> instance, final T t, final U u) {
+		if (instance != null) {
+			instance.accept(t, u);
+		}
 	}
 
 	private static void setSize(final PDEmbeddedFile instance, final int size) {
