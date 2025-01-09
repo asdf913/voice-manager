@@ -427,7 +427,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, @Nullable final U u,
 			final BiConsumer<T, U> consumer) {
 		if (test(instance, t, u)) {
 			accept(consumer, t, u);
