@@ -387,7 +387,7 @@ public class VoiceManagerPdfPanel extends JPanel
 		}
 
 		private static IValue0<Object> handleStringMap(final String methodName, final Map<Object, Object> map,
-				final Object[] args) {
+				@Nullable final Object[] args) {
 			//
 			if (Objects.equals(methodName, "getString") && args != null && args.length > 0) {
 				//
