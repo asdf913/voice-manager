@@ -121,7 +121,7 @@ public class VoiceManagerPdfPanel extends JPanel
 
 	private JTextComponent tfText = null;
 
-	private ApplicationContext applicationContext = null;
+	private transient ApplicationContext applicationContext = null;
 
 	@Override
 	public String getTitle() {
