@@ -1,6 +1,7 @@
 package org.springframework.context.support;
 
 import java.awt.Color;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -8,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.invoke.TypeDescriptor.OfField;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -40,8 +42,13 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.text.JTextComponent;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -51,6 +58,7 @@ import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.fontbox.ttf.OTFParser;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -76,7 +84,15 @@ import org.javatuples.valueintf.IValue0Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.FactoryBeanUtil;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.ListableBeanFactoryUtil;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationContextUtil;
 
 import com.google.common.reflect.Reflection;
 import com.helger.css.ECSSUnit;
@@ -89,7 +105,11 @@ import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 
-public class VoiceManagerPdfPanel extends JPanel implements Titled, InitializingBean, ActionListener {
+import io.github.toolfactory.narcissus.Narcissus;
+import net.miginfocom.swing.MigLayout;
+
+public class VoiceManagerPdfPanel extends JPanel
+		implements Titled, InitializingBean, ActionListener, ApplicationContextAware {
 
 	private static final long serialVersionUID = 284477348908531649L;
 
@@ -99,9 +119,18 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private AbstractButton btnExecute = null;
 
+	private JTextComponent tfText = null;
+
+	private ApplicationContext applicationContext = null;
+
 	@Override
 	public String getTitle() {
 		return "PDF";
+	}
+
+	@Override
+	public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
 	}
 
 	public void setSpeechApi(final SpeechApi speechApi) {
@@ -110,6 +139,64 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		//
+		setLayout(new MigLayout());
+		//
+		final Iterable<Entry<String, Object>> entrySet = Util
+				.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class));
+		//
+		if (Util.iterator(entrySet) != null) {
+			//
+			AutowireCapableBeanFactory acbf = null;
+			//
+			List<Field> fs = null;
+			//
+			for (final Entry<String, Object> entry : entrySet) {
+				//
+				if (!(Util.getValue(entry) instanceof LayoutManager)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				fs = Util.toList(Util.filter(
+						Util.stream(FieldUtils.getAllFieldsList(Util.getClass(
+								acbf = ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext)))),
+						x -> Objects.equals(Util.getName(x), "singletonObjects")));
+				//
+				for (int i = 0; i < IterableUtils.size(fs); i++) {
+					//
+					testAndAccept(
+							Objects::nonNull, Util
+									.cast(LayoutManager.class,
+											FactoryBeanUtil
+													.getObject(
+															Util.cast(
+																	FactoryBean.class, MapUtils
+																			.getObject(
+																					Util.cast(Map.class,
+																							Narcissus.getObjectField(
+																									acbf,
+																									IterableUtils.get(
+																											fs, i))),
+																					Util.getKey(entry))))),
+							this::setLayout);
+					//
+				} // for
+					//
+			} // for
+				//
+		} // if
+			//
+		final JComponent jLabel = new JLabel("Text");
+		//
+		jLabel.setToolTipText("Voice");
+		//
+		add(jLabel);
+		//
+		add(tfText = new JTextField(), "growx,wrap");
+		//
+		add(new JLabel());
 		//
 		add(btnExecute = new JButton("Execute"));
 		//
@@ -176,7 +263,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				if (stringMap != null) {
 					//
-					stringMap.setString("text", "席をお譲りください");
+					stringMap.setString("text", Util.getText(tfText));
 					//
 					stringMap.setString("voiceId", "TTS_MS_JA-JP_HARUKA_11.0");
 					//
