@@ -230,7 +230,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 		} // if
 			//
-		add(jsp, "growx,wrap");
+		add(jsp, StringUtils.joinWith(",", "growx", "wrap"));
 		//
 		final JComponent jLabel = new JLabel("Text");
 		//
@@ -239,7 +239,8 @@ public class VoiceManagerPdfPanel extends JPanel
 		add(jLabel);
 		//
 		add(tfText = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManagerPdfPanel.text")), "growx,wrap");
+				"org.springframework.context.support.VoiceManagerPdfPanel.text")),
+				StringUtils.joinWith(",", "growx", "wrap"));
 		//
 		add(new JLabel());
 		//
