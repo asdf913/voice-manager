@@ -226,6 +226,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 		void setString(final String key, final String value);
 
+		static String getString(final StringMap instance, final String key) {
+			return instance != null ? instance.getString(key) : null;
+		}
 	}
 
 	private static class IH implements InvocationHandler {
@@ -353,7 +356,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final StringMap stringMap = ObjectMap.getObject(objectMap, StringMap.class);
 			//
-			final String text = stringMap != null ? stringMap.getString("text") : null;
+			final String text = StringMap.getString(stringMap, "text");
 			//
 			setSubject(document.getDocumentInformation(), text);
 			//
@@ -372,8 +375,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				} // if
 					//
 				writeVoiceToFile(ObjectMap.getObject(objectMap, SpeechApi.class), text,
-						stringMap != null ? stringMap.getString("voiceId") : null, Util.intValue(key, 0), volume,
-						toFile(pathAudio));
+						StringMap.getString(stringMap, "voiceId"), Util.intValue(key, 0), volume, toFile(pathAudio));
 				//
 //				try (final InputStream is = PdfTest.class.getResourceAsStream("\\NotoSansCJKjp-Regular.otf")) {
 				//
