@@ -501,6 +501,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		}
 	}
 
+	@Nullable
 	private static Long length(@Nullable final File instance) {
 		return instance != null ? Long.valueOf(instance.length()) : null;
 	}
