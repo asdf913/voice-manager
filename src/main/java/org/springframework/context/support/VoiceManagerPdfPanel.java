@@ -269,12 +269,19 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 			try {
 				//
+				final StringBuilder sb = new StringBuilder(Util.getText(taHtml));
+				//
 				FileUtils
-						.writeStringToFile(toFile(pathHtml),
-								String.format(Util.getText(taHtml),
-										Util.collect(Util.map(Util.stream(Util.entrySet(style)),
-												x -> StringUtils.joinWith(":", Util.getKey(x), Util.getValue(x))),
-												Collectors.joining(";"))),
+						.writeStringToFile(
+								toFile(pathHtml), Util
+										.toString(
+												append(sb.insert(0,
+														String.format("<div style=\"%1$s\">", Util.collect(
+																Util.map(Util.stream(Util.entrySet(style)),
+																		x -> StringUtils.joinWith(":", Util.getKey(x),
+																				Util.getValue(x))),
+																Collectors.joining(";")))),
+														"</div>")),
 								StandardCharsets.UTF_8, false);
 				//
 				document = Loader.loadPDF(pdf(pathHtml));
@@ -337,6 +344,10 @@ public class VoiceManagerPdfPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static StringBuilder append(final StringBuilder instance, final String str) {
+		return instance != null ? instance.append(str) : instance;
 	}
 
 	private static interface ObjectMap {
