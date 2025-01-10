@@ -93,6 +93,10 @@ import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationContextUtil;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.PropertyResolver;
+import org.springframework.core.env.PropertyResolverUtil;
 
 import com.google.common.reflect.Reflection;
 import com.helger.css.ECSSUnit;
@@ -109,7 +113,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerPdfPanel extends JPanel
-		implements Titled, InitializingBean, ActionListener, ApplicationContextAware {
+		implements Titled, InitializingBean, ActionListener, ApplicationContextAware, EnvironmentAware {
 
 	private static final long serialVersionUID = 284477348908531649L;
 
@@ -123,6 +127,8 @@ public class VoiceManagerPdfPanel extends JPanel
 
 	private transient ApplicationContext applicationContext = null;
 
+	private PropertyResolver propertyResolver = null;
+
 	@Override
 	public String getTitle() {
 		return "PDF";
@@ -131,6 +137,11 @@ public class VoiceManagerPdfPanel extends JPanel
 	@Override
 	public void setApplicationContext(final ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
+	}
+
+	@Override
+	public void setEnvironment(final Environment environment) {
+		this.propertyResolver = environment;
 	}
 
 	public void setSpeechApi(final SpeechApi speechApi) {
@@ -194,7 +205,8 @@ public class VoiceManagerPdfPanel extends JPanel
 		//
 		add(jLabel);
 		//
-		add(tfText = new JTextField(), "growx,wrap");
+		add(tfText = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManagerPdfPanel.text")), "growx,wrap");
 		//
 		add(new JLabel());
 		//
