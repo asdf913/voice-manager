@@ -611,7 +611,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
 
-	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, final U u) {
+	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, @Nullable final U u) {
 		return instance != null && instance.test(t, u);
 	}
 
