@@ -70,6 +70,9 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachme
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntList;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -282,32 +285,44 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // if
 					//
-			} else if (proxy instanceof StringMap) {
+			} // if
 				//
-				if (Objects.equals(methodName, "setString") && args != null && args.length > 1) {
-					//
-					Util.put(getStrings(), args[0], args[1]);
-					//
-					return null;
-					//
-				} else if (Objects.equals(methodName, "getString") && args != null && args.length > 0) {
-					//
-					final Object key = args[0];
-					//
-					if (!Util.containsKey(getStrings(), key)) {
-						//
-						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
-								testAndApply(IH::isArray, Util.cast(Class.class, key), Util::getSimpleName, x -> key)));
-						//
-					} // if
-						//
-					return MapUtils.getObject(getStrings(), key);
-					//
-				} // if
-					//
+			final IValue0<?> iValue0 = handleStringMap(methodName, getStrings(), args);
+			//
+			if (iValue0 != null) {
+				//
+				return IValue0Util.getValue0(iValue0);
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
+			//
+		}
+
+		private static IValue0<Object> handleStringMap(final String methodName, final Map<Object, Object> map,
+				final Object[] args) {
+			//
+			if (Objects.equals(methodName, "getString") && args != null && args.length > 0) {
+				//
+				final Object key = args[0];
+				//
+				if (!Util.containsKey(map, key)) {
+					//
+					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE, key));
+					//
+				} // if
+					//
+				return Unit.with(Util.get(map, key));
+				//
+			} else if (Objects.equals(methodName, "setString") && args != null && args.length > 1) {
+				//
+				Util.put(map, args[0], args[1]);
+				//
+				return Unit.with(null);
+				//
+			} // if
+				//
+			return null;
 			//
 		}
 
