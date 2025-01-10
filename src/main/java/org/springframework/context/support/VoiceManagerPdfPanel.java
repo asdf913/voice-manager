@@ -46,8 +46,10 @@ import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.swing.AbstractButton;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComponent;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -59,12 +61,14 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.fontbox.ttf.OTFParser;
 import org.apache.pdfbox.Loader;
@@ -141,7 +145,9 @@ public class VoiceManagerPdfPanel extends JPanel
 	@Note("HTML")
 	private JTextComponent taHtml = null;
 
-	private JTextComponent tfText = null;
+	private JTextComponent tfText, tfFontSize = null;
+
+	private ComboBoxModel<ECSSUnit> cbmFontSize = null;
 
 	private transient ApplicationContext applicationContext = null;
 
@@ -217,6 +223,18 @@ public class VoiceManagerPdfPanel extends JPanel
 				//
 		} // if
 			//
+			// Font Size
+			//
+		add(new JLabel("Font Size"));
+		//
+		add(tfFontSize = new JTextField(), "growx");
+		//
+		add(new JComboBox<>(
+				cbmFontSize = new DefaultComboBoxModel<>(ArrayUtils.insert(0, ECSSUnit.values(), (ECSSUnit) null))),
+				"wrap");
+		//
+		// HTML
+		//
 		add(new JLabel("HTML"));
 		//
 		final JScrollPane jsp = new JScrollPane(taHtml = new JTextArea(PropertyResolverUtil
@@ -230,17 +248,17 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 		} // if
 			//
-		add(jsp, StringUtils.joinWith(",", "growx", "wrap"));
+		final int span = 2;
 		//
-		final JComponent jLabel = new JLabel("Text");
+		add(jsp, String.format("%1$s,%2$s,span %3$s", "growx", "wrap", span));
 		//
-		jLabel.setToolTipText("Voice");
+		// Text
 		//
-		add(jLabel);
+		add(new JLabel("Text"));
 		//
 		add(tfText = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManagerPdfPanel.text")),
-				StringUtils.joinWith(",", "growx", "wrap"));
+				String.format("%1$s,%2$s,span %3$s", "growx", "wrap", span));
 		//
 		add(new JLabel());
 		//
@@ -257,13 +275,21 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 			final Path pathHtml = Path.of("test.html");
 			//
-			final int fontSize = 80;
-			//
 			final Map<String, String> style = new LinkedHashMap<>(
 					Map.of("text-align", "center", "display", "block", "margin-left", "auto", "margin-right", "auto"));
 			//
-			style.put("font-size", new CSSSimpleValueWithUnit(new BigDecimal(fontSize), ECSSUnit.PX).getFormatted());
+			final BigDecimal fontSize = testAndApply(x -> NumberUtils.isCreatable(x), Util.getText(tfFontSize),
+					x -> NumberUtils.createBigDecimal(x), null);
 			//
+			final ECSSUnit ecssUnit = Util.cast(ECSSUnit.class,
+					cbmFontSize != null ? cbmFontSize.getSelectedItem() : null);
+			//
+			if (fontSize != null && ecssUnit != null) {
+				//
+				style.put("font-size", new CSSSimpleValueWithUnit(fontSize, ecssUnit).getFormatted());
+				//
+			} // if
+				//
 			final File file = toFile(Path.of("test.pdf"));
 			//
 			System.out.println(getAbsolutePath(file));
