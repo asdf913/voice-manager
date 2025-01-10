@@ -127,7 +127,7 @@ public class VoiceManagerPdfPanel extends JPanel
 
 	private transient ApplicationContext applicationContext = null;
 
-	private PropertyResolver propertyResolver = null;
+	private transient PropertyResolver propertyResolver = null;
 
 	@Override
 	public String getTitle() {
