@@ -132,6 +132,8 @@ public class VoiceManagerPdfPanel extends JPanel
 
 	private static final Logger LOG = LoggerFactory.getLogger(VoiceManagerPdfPanel.class);
 
+	private static final String GROWX = "growx";
+
 	private transient SpeechApi speechApi = null;
 
 	private AbstractButton btnExecute = null;
@@ -227,7 +229,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 		add(new JLabel("Font Size"));
 		//
-		add(tfFontSize = new JTextField(), "growx");
+		add(tfFontSize = new JTextField(), GROWX);
 		//
 		add(new JComboBox<>(
 				cbmFontSize = new DefaultComboBoxModel<>(ArrayUtils.insert(0, ECSSUnit.values(), (ECSSUnit) null))),
@@ -250,7 +252,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 		final int span = 2;
 		//
-		add(jsp, String.format("%1$s,%2$s,span %3$s", "growx", "wrap", span));
+		add(jsp, String.format("%1$s,%2$s,span %3$s", GROWX, "wrap", span));
 		//
 		// Text
 		//
@@ -258,7 +260,7 @@ public class VoiceManagerPdfPanel extends JPanel
 		//
 		add(tfText = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManagerPdfPanel.text")),
-				String.format("%1$s,%2$s,span %3$s", "growx", "wrap", span));
+				String.format("%1$s,%2$s,span %3$s", GROWX, "wrap", span));
 		//
 		add(new JLabel());
 		//
