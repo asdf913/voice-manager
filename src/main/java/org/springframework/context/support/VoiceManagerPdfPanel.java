@@ -169,6 +169,16 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				final IH ih = new IH();
 				//
+				final StringMap stringMap = Reflection.newProxy(StringMap.class, ih);
+				//
+				if (stringMap != null) {
+					//
+					stringMap.setString("text", "席をお譲りください");
+					//
+					stringMap.setString("voiceId", "TTS_MS_JA-JP_HARUKA_11.0");
+					//
+				} // if
+					//
 				final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, ih);
 				//
 				if (objectMap != null) {
@@ -181,9 +191,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					objectMap.setObject(File.class, file);
 					//
+					objectMap.setObject(StringMap.class, stringMap);
+					//
 				} // if
 					//
-				addTextAndVoice(objectMap, 14, map, "席をお譲りください", "TTS_MS_JA-JP_HARUKA_11.0", 100, 61);
+				addTextAndVoice(objectMap, 14, map, 100, 61);
 				//
 			} catch (final IOException e) {
 				//
@@ -208,17 +220,34 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	}
 
+	private static interface StringMap {
+
+		String getString(final String key);
+
+		void setString(final String key, final String value);
+
+	}
+
 	private static class IH implements InvocationHandler {
 
 		private static final String KEY_NOT_FOUND_MESSAGE = "Key [%1$s] Not Found";
 
 		private Map<Object, Object> objects = null;
 
+		private Map<Object, Object> strings = null;
+
 		private Map<Object, Object> getObjects() {
 			if (objects == null) {
 				objects = new LinkedHashMap<>();
 			}
 			return objects;
+		}
+
+		private Map<Object, Object> getStrings() {
+			if (strings == null) {
+				strings = new LinkedHashMap<>();
+			}
+			return strings;
 		}
 
 		@Override
@@ -250,6 +279,29 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // if
 					//
+			} else if (proxy instanceof StringMap) {
+				//
+				if (Objects.equals(methodName, "setString") && args != null && args.length > 1) {
+					//
+					Util.put(getStrings(), args[0], args[1]);
+					//
+					return null;
+					//
+				} else if (Objects.equals(methodName, "getString") && args != null && args.length > 0) {
+					//
+					final Object key = args[0];
+					//
+					if (!Util.containsKey(getStrings(), key)) {
+						//
+						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
+								testAndApply(IH::isArray, Util.cast(Class.class, key), Util::getSimpleName, x -> key)));
+						//
+					} // if
+						//
+					return MapUtils.getObject(getStrings(), key);
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -263,8 +315,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	private static void addTextAndVoice(@Nullable final ObjectMap objectMap, final int fontSize,
-			final Map<Integer, String> map, final String text, final String voiceId, final int volume, final int size)
-			throws IOException {
+			final Map<Integer, String> map, final int volume, final int size) throws IOException {
 		//
 		final PDDocument document = ObjectMap.getObject(objectMap, PDDocument.class);
 		//
@@ -300,6 +351,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			Duration duration = null;
 			//
+			final StringMap stringMap = ObjectMap.getObject(objectMap, StringMap.class);
+			//
+			final String text = stringMap != null ? stringMap.getString("text") : null;
+			//
 			setSubject(document.getDocumentInformation(), text);
 			//
 			PDEmbeddedFile pdfEmbeddedFile = null;
@@ -316,8 +371,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // if
 					//
-				writeVoiceToFile(ObjectMap.getObject(objectMap, SpeechApi.class), text, voiceId, Util.intValue(key, 0),
-						volume, toFile(pathAudio));
+				writeVoiceToFile(ObjectMap.getObject(objectMap, SpeechApi.class), text,
+						stringMap != null ? stringMap.getString("voiceId") : null, Util.intValue(key, 0), volume,
+						toFile(pathAudio));
 				//
 //				try (final InputStream is = PdfTest.class.getResourceAsStream("\\NotoSansCJKjp-Regular.otf")) {
 				//
