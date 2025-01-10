@@ -1,6 +1,7 @@
 package org.springframework.context.support;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -45,6 +46,8 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
@@ -123,7 +126,7 @@ public class VoiceManagerPdfPanel extends JPanel
 
 	private AbstractButton btnExecute = null;
 
-	private JTextComponent tfText = null;
+	private JTextComponent taHtml, tfText = null;
 
 	private transient ApplicationContext applicationContext = null;
 
@@ -199,6 +202,21 @@ public class VoiceManagerPdfPanel extends JPanel
 				//
 		} // if
 			//
+		add(new JLabel("HTML"));
+		//
+		final JScrollPane jsp = new JScrollPane(taHtml = new JTextArea(PropertyResolverUtil
+				.getProperty(propertyResolver, "org.springframework.context.support.VoiceManagerPdfPanel.html")));
+		//
+		final Dimension preferredSize = jsp.getPreferredSize();
+		//
+		if (preferredSize != null) {
+			//
+			jsp.setPreferredSize(new Dimension((int) preferredSize.getWidth(), (int) preferredSize.getHeight() * 2));
+			//
+		} // if
+			//
+		add(jsp, "growx,wrap");
+		//
 		final JComponent jLabel = new JLabel("Text");
 		//
 		jLabel.setToolTipText("Voice");
@@ -238,14 +256,13 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 			try {
 				//
-				FileUtils.writeStringToFile(toFile(pathHtml),
-						String.format(
-								"<div style=\"%1$s\"><ruby>席<rt>せき</rt></ruby>をお<ruby>譲<rt>ゆず</rt></ruby>りください。</div>",
-								Util.collect(
-										Util.map(Util.stream(Util.entrySet(style)),
+				FileUtils
+						.writeStringToFile(toFile(pathHtml),
+								String.format(Util.getText(taHtml),
+										Util.collect(Util.map(Util.stream(Util.entrySet(style)),
 												x -> StringUtils.joinWith(":", Util.getKey(x), Util.getValue(x))),
-										Collectors.joining(";"))),
-						StandardCharsets.UTF_8, false);
+												Collectors.joining(";"))),
+								StandardCharsets.UTF_8, false);
 				//
 				document = Loader.loadPDF(pdf(pathHtml));
 				//
