@@ -346,7 +346,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 	}
 
-	private static StringBuilder append(final StringBuilder instance, final String str) {
+	private static StringBuilder append(@Nullable final StringBuilder instance, final String str) {
 		return instance != null ? instance.append(str) : instance;
 	}
 
