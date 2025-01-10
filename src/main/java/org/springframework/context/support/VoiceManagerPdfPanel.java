@@ -316,6 +316,7 @@ public class VoiceManagerPdfPanel extends JPanel
 
 		void setString(final String key, final String value);
 
+		@Nullable
 		static String getString(@Nullable final StringMap instance, final String key) {
 			return instance != null ? instance.getString(key) : null;
 		}
@@ -386,6 +387,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 		}
 
+		@Nullable
 		private static IValue0<Object> handleStringMap(final String methodName, final Map<Object, Object> map,
 				@Nullable final Object[] args) {
 			//
