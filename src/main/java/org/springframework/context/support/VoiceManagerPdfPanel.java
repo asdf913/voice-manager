@@ -117,6 +117,8 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import j2html.rendering.FlatHtml;
+import j2html.rendering.HtmlBuilder;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerPdfPanel extends JPanel
@@ -269,20 +271,18 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 			try {
 				//
-				final StringBuilder sb = new StringBuilder(Util.getText(taHtml));
+				final HtmlBuilder<StringBuilder> htmlBuilder = FlatHtml.inMemory();
 				//
-				FileUtils
-						.writeStringToFile(
-								toFile(pathHtml), Util
-										.toString(
-												append(sb.insert(0,
-														String.format("<div style=\"%1$s\">", Util.collect(
-																Util.map(Util.stream(Util.entrySet(style)),
-																		x -> StringUtils.joinWith(":", Util.getKey(x),
-																				Util.getValue(x))),
-																Collectors.joining(";")))),
-														"</div>")),
-								StandardCharsets.UTF_8, false);
+				FileUtils.writeStringToFile(toFile(pathHtml), Util.toString(htmlBuilder != null
+						? htmlBuilder
+								.appendStartTag(
+										"div")
+								.appendAttribute("style",
+										Util.collect(Util.map(Util.stream(Util.entrySet(style)),
+												x -> StringUtils.joinWith(":", Util.getKey(x), Util.getValue(x))),
+												Collectors.joining(";")))
+								.completeTag().appendUnescapedText(Util.getText(taHtml)).appendEndTag("div").output()
+						: null), StandardCharsets.UTF_8, false);
 				//
 				document = Loader.loadPDF(pdf(pathHtml));
 				//
