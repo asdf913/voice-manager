@@ -333,17 +333,17 @@ public class VoiceManagerPdfPanel extends JPanel
 		//
 	}
 
-	private static Entry<String, Object> getNumberAndUnit(final String s) {
+	private static Entry<String, Object> getNumberAndUnit(final String input) {
 		//
-		final StringBuilder sb = testAndApply(Objects::nonNull, s, StringBuilder::new, null);
+		final StringBuilder sb = testAndApply(Objects::nonNull, input, StringBuilder::new, null);
 		//
-		String strNumber = null;
+		String s = null, strNumber = null;
 		//
 		for (int i = StringUtils.length(sb) - 1; i >= 0; i--) {
 			//
-			if (NumberUtils.isCreatable(sb.substring(0, i))) {
+			if (NumberUtils.isCreatable(s = sb.substring(0, i))) {
 				//
-				strNumber = Util.toString(sb);
+				strNumber = Util.toString(s);
 				//
 				sb.delete(0, i);
 				//
