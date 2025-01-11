@@ -348,6 +348,22 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 			add(jcbVoiceId, String.format("%1$s,span %2$s", "wrap", span));
 			//
+			final String s = PropertyResolverUtil.getProperty(propertyResolver,
+					"org.springframework.context.support.VoiceManagerPdfPanel.voiceId");
+			//
+			Object element = null;
+			//
+			for (int i = 0; i < cbmVoiceId.getSize(); i++) {
+				//
+				if (s != null && Util.contains(Arrays.asList(element = cbmVoiceId.getElementAt(i),
+						speechApi.getVoiceAttribute(Util.toString(element), "Name")), s)) {
+					//
+					cbmVoiceId.setSelectedItem(element);
+					//
+				} // if
+					//
+			} // for
+				//
 		} // if
 			//
 		add(btnExecute = new JButton("Execute"));
