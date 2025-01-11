@@ -159,7 +159,7 @@ public class VoiceManagerPdfPanel extends JPanel
 
 	private transient ComboBoxModel<ECSSUnit> cbmFontSize = null;
 
-	private ComboBoxModel<String> cbmVoiceId = null;
+	private transient ComboBoxModel<String> cbmVoiceId = null;
 
 	private transient ApplicationContext applicationContext = null;
 
