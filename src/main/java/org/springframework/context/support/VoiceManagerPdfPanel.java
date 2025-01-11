@@ -375,52 +375,54 @@ public class VoiceManagerPdfPanel extends JPanel
 	private static LayoutManager getLayoutManager(final AutowireCapableBeanFactory acbf,
 			final Iterable<Entry<String, Object>> entrySet) throws Exception {
 		//
+		if (Util.iterator(entrySet) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
 		IValue0<LayoutManager> iValue0 = null;
 		//
-		if (Util.iterator(entrySet) != null) {
+		List<Field> fs = null;
+		//
+		for (final Entry<String, Object> entry : entrySet) {
 			//
-			List<Field> fs = null;
+			if (!(Util.getValue(entry) instanceof LayoutManager)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(acbf))),
+					x -> Objects.equals(Util.getName(x), "singletonObjects")));
 			//
-			for (final Entry<String, Object> entry : entrySet) {
+			for (int i = 0; i < IterableUtils.size(fs); i++) {
 				//
-				if (!(Util.getValue(entry) instanceof LayoutManager)) {
+				if (FactoryBeanUtil
+						.getObject(
+								Util.cast(
+										FactoryBean.class, MapUtils
+												.getObject(
+														Util.cast(Map.class,
+																Narcissus.getObjectField(acbf,
+																		IterableUtils.get(fs, i))),
+														Util.getKey(entry)))) instanceof LayoutManager lm) {
 					//
-					continue;
-					//
-				} // if
-					//
-				fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(acbf))),
-						x -> Objects.equals(Util.getName(x), "singletonObjects")));
-				//
-				for (int i = 0; i < IterableUtils.size(fs); i++) {
-					//
-					if (FactoryBeanUtil
-							.getObject(
-									Util.cast(
-											FactoryBean.class, MapUtils
-													.getObject(
-															Util.cast(Map.class,
-																	Narcissus.getObjectField(acbf,
-																			IterableUtils.get(fs, i))),
-															Util.getKey(entry)))) instanceof LayoutManager lm) {
+					if (iValue0 == null) {
 						//
-						if (iValue0 == null) {
-							//
-							iValue0 = Unit.with(lm);
-							//
-						} else {
-							//
-							throw new IllegalStateException();
-							//
-						} // if
-							//
+						iValue0 = Unit.with(lm);
+						//
+					} else {
+						//
+						throw new IllegalStateException();
+						//
 					} // if
 						//
-				} // for
+				} // if
 					//
 			} // for
 				//
-		} // if
+		} // for
 			//
 		return IValue0Util.getValue0(iValue0);
 		//
