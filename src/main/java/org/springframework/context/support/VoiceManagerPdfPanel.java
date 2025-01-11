@@ -330,7 +330,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 			final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer();
 			//
-			voiceIdListCellRenderer.listCellRenderer = getRenderer(jcbVoiceId);
+			voiceIdListCellRenderer.listCellRenderer = getRenderer(Util.cast(JComboBox.class, jcbVoiceId));
 			//
 			voiceIdListCellRenderer.commonPrefix = String.join("",
 					StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
