@@ -407,8 +407,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			final BigDecimal fontSize = testAndApply(NumberUtils::isCreatable, Util.getText(tfFontSize),
 					NumberUtils::createBigDecimal, null);
 			//
-			final ECSSUnit ecssUnit = Util.cast(ECSSUnit.class,
-					cbmFontSize != null ? cbmFontSize.getSelectedItem() : null);
+			final ECSSUnit ecssUnit = Util.cast(ECSSUnit.class, getSelectedItem(cbmFontSize));
 			//
 			if (fontSize != null && ecssUnit != null) {
 				//
@@ -467,8 +466,7 @@ public class VoiceManagerPdfPanel extends JPanel
 					//
 					stringMap.setString("text", Util.getText(tfText));
 					//
-					stringMap.setString("voiceId",
-							cbmVoiceId != null ? Util.toString(cbmVoiceId.getSelectedItem()) : null);
+					stringMap.setString("voiceId", Util.toString(getSelectedItem(cbmVoiceId)));
 					//
 				} // if
 					//
@@ -498,6 +496,10 @@ public class VoiceManagerPdfPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static Object getSelectedItem(final ComboBoxModel<?> instance) {
+		return instance != null ? instance.getSelectedItem() : null;
 	}
 
 	private static interface ObjectMap {
