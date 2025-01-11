@@ -1,6 +1,7 @@
 package org.springframework.context.support;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
@@ -51,10 +52,12 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
@@ -92,6 +95,7 @@ import org.d2ab.collection.ints.IntList;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -154,6 +158,8 @@ public class VoiceManagerPdfPanel extends JPanel
 
 	private transient ComboBoxModel<ECSSUnit> cbmFontSize = null;
 
+	private ComboBoxModel<String> cbmVoiceId = null;
+
 	private transient ApplicationContext applicationContext = null;
 
 	private transient PropertyResolver propertyResolver = null;
@@ -175,6 +181,52 @@ public class VoiceManagerPdfPanel extends JPanel
 
 	public void setSpeechApi(final SpeechApi speechApi) {
 		this.speechApi = speechApi;
+	}
+
+	private class VoiceIdListCellRenderer implements ListCellRenderer<Object> {
+
+		private ListCellRenderer<Object> listCellRenderer = null;
+
+		private String commonPrefix = null;
+
+		@Override
+		public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
+				final int index, final boolean isSelected, final boolean cellHasFocus) {
+			//
+			final String s = Util.toString(value);
+			//
+			try {
+				//
+				final String name = SpeechApi.getVoiceAttribute(speechApi, s, "Name");
+				//
+				if (StringUtils.isNotBlank(name)) {
+					//
+					return getListCellRendererComponent(listCellRenderer, list, name, index, isSelected, cellHasFocus);
+					//
+				} // if
+					//
+			} catch (final Error e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} // try
+				//
+			return getListCellRendererComponent(listCellRenderer, list,
+					StringUtils.startsWith(s, commonPrefix) ? StringUtils.substringAfter(s, commonPrefix) : value,
+					index, isSelected, cellHasFocus);
+			//
+		}
+
+		private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
+				final JList<? extends E> list, final E value, final int index, final boolean isSelected,
+				final boolean cellHasFocus) {
+			//
+			return instance != null
+					? instance.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+					: null;
+			//
+		}
+
 	}
 
 	@Override
@@ -232,7 +284,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 		add(new JLabel("Font Size"));
 		//
-		add(tfFontSize = new JTextField(), GROWX);
+		add(tfFontSize = new JTextField(), String.format("%1$s,wmin %2$s", GROWX, 100));
 		//
 		add(new JComboBox<>(
 				cbmFontSize = new DefaultComboBoxModel<>(ArrayUtils.insert(0, ECSSUnit.values(), (ECSSUnit) null))),
@@ -265,12 +317,38 @@ public class VoiceManagerPdfPanel extends JPanel
 				"org.springframework.context.support.VoiceManagerPdfPanel.text")),
 				String.format("%1$s,%2$s,span %3$s", GROWX, "wrap", span));
 		//
-		add(new JLabel());
+		// Voice ID
 		//
+		add(new JLabel("Voice Id"));
+		//
+		final String[] voiceIds = SpeechApi.getVoiceIds(speechApi);
+		//
+		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
+				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
+			//
+			final JComboBox<Object> jcbVoiceId = new JComboBox<>(Util.cast(ComboBoxModel.class, cbmVoiceId));
+			//
+			final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer();
+			//
+			voiceIdListCellRenderer.listCellRenderer = getRenderer(jcbVoiceId);
+			//
+			voiceIdListCellRenderer.commonPrefix = String.join("",
+					StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
+			//
+			jcbVoiceId.setRenderer(voiceIdListCellRenderer);
+			//
+			add(jcbVoiceId, String.format("%1$s,span %2$s", "wrap", span));
+			//
+		} // if
+			//
 		add(btnExecute = new JButton("Execute"));
 		//
 		btnExecute.addActionListener(this);
 		//
+	}
+
+	private static <E> ListCellRenderer<? super E> getRenderer(final JComboBox<E> instance) {
+		return instance != null ? instance.getRenderer() : null;
 	}
 
 	@Override
@@ -346,7 +424,8 @@ public class VoiceManagerPdfPanel extends JPanel
 					//
 					stringMap.setString("text", Util.getText(tfText));
 					//
-					stringMap.setString("voiceId", "TTS_MS_JA-JP_HARUKA_11.0");
+					stringMap.setString("voiceId",
+							cbmVoiceId != null ? Util.toString(cbmVoiceId.getSelectedItem()) : null);
 					//
 				} // if
 					//
