@@ -219,6 +219,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 		}
 
+		@Nullable
 		private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
 				final JList<? extends E> list, final E value, final int index, final boolean isSelected,
 				final boolean cellHasFocus) {
@@ -395,10 +396,12 @@ public class VoiceManagerPdfPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static String name(@Nullable final Enum<?> instance) {
 		return instance != null ? instance.name() : null;
 	}
 
+	@Nullable
 	private static <E> ListCellRenderer<? super E> getRenderer(@Nullable final JComboBox<E> instance) {
 		return instance != null ? instance.getRenderer() : null;
 	}
