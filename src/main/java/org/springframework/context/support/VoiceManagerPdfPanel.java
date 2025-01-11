@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
@@ -236,56 +237,15 @@ public class VoiceManagerPdfPanel extends JPanel
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		//
-		setLayout(new MigLayout());
+		setLayout(
+				ObjectUtils.getIfNull(
+						getLayoutManager(ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext),
+								Util.entrySet(
+										ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
+						MigLayout::new));
 		//
-		final Iterable<Entry<String, Object>> entrySet = Util
-				.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class));
+		// Font Size
 		//
-		if (Util.iterator(entrySet) != null) {
-			//
-			AutowireCapableBeanFactory acbf = null;
-			//
-			List<Field> fs = null;
-			//
-			for (final Entry<String, Object> entry : entrySet) {
-				//
-				if (!(Util.getValue(entry) instanceof LayoutManager)) {
-					//
-					continue;
-					//
-				} // if
-					//
-				fs = Util.toList(Util.filter(
-						Util.stream(FieldUtils.getAllFieldsList(Util.getClass(
-								acbf = ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext)))),
-						x -> Objects.equals(Util.getName(x), "singletonObjects")));
-				//
-				for (int i = 0; i < IterableUtils.size(fs); i++) {
-					//
-					testAndAccept(
-							Objects::nonNull, Util
-									.cast(LayoutManager.class,
-											FactoryBeanUtil
-													.getObject(
-															Util.cast(
-																	FactoryBean.class, MapUtils
-																			.getObject(
-																					Util.cast(Map.class,
-																							Narcissus.getObjectField(
-																									acbf,
-																									IterableUtils.get(
-																											fs, i))),
-																					Util.getKey(entry))))),
-							this::setLayout);
-					//
-				} // for
-					//
-			} // for
-				//
-		} // if
-			//
-			// Font Size
-			//
 		add(new JLabel("Font Size"));
 		//
 		final Entry<String, Object> entry = getNumberAndUnit(PropertyResolverUtil.getProperty(propertyResolver,
@@ -410,6 +370,60 @@ public class VoiceManagerPdfPanel extends JPanel
 		} // if
 			//
 		return Pair.of(strNumber, ecssUnit);
+		//
+	}
+
+	private static LayoutManager getLayoutManager(final AutowireCapableBeanFactory acbf,
+			final Iterable<Entry<String, Object>> entrySet) throws Exception {
+		//
+		IValue0<LayoutManager> iValue0 = null;
+		//
+		if (Util.iterator(entrySet) != null) {
+			//
+			List<Field> fs = null;
+			//
+			for (final Entry<String, Object> entry : entrySet) {
+				//
+				if (!(Util.getValue(entry) instanceof LayoutManager)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(acbf))),
+						x -> Objects.equals(Util.getName(x), "singletonObjects")));
+				//
+				for (int i = 0; i < IterableUtils.size(fs); i++) {
+					//
+					if (FactoryBeanUtil
+							.getObject(
+									Util.cast(
+											FactoryBean.class, MapUtils
+													.getObject(
+															Util.cast(Map.class,
+																	Narcissus.getObjectField(acbf,
+																			IterableUtils.get(fs, i))),
+															Util.getKey(entry)))) instanceof LayoutManager lm) {
+						//
+						if (iValue0 == null) {
+							//
+							iValue0 = Unit.with(lm);
+							//
+						} else {
+							//
+							throw new IllegalStateException();
+							//
+						} // if
+							//
+					} // if
+						//
+				} // for
+					//
+			} // for
+				//
+		} // if
+			//
+		return IValue0Util.getValue0(iValue0);
 		//
 	}
 
