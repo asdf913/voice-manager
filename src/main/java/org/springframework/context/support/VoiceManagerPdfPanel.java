@@ -851,7 +851,7 @@ public class VoiceManagerPdfPanel extends JPanel
 		return a != null && b != null && !b.equals(BigDecimal.valueOf(0)) ? a.divide(b) : a;
 	}
 
-	private static float floatValue(final Number instance, final float defaultValue) {
+	private static float floatValue(@Nullable final Number instance, final float defaultValue) {
 		return instance != null ? instance.floatValue() : defaultValue;
 	}
 
