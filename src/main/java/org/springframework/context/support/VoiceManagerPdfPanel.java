@@ -691,11 +691,9 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 			final BufferedImage bi = pdfRenderer.renderImage(0);
 			//
-			final int mapSize = MapUtils.size(map);
-			//
-			final float size = bi != null && mapSize != 0
-					? floatValue(divide(BigDecimal.valueOf(bi.getWidth()), BigDecimal.valueOf(mapSize)), defaultSize)
-					: defaultSize;
+			final float size = floatValue(testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), getWidth(bi),
+					MapUtils.size(map), (a, b) -> divide(BigDecimal.valueOf(a), BigDecimal.valueOf(b)), null),
+					defaultSize);
 			//
 			ImageIO.write(bi, "png", toFile(page1Path));
 			//
@@ -845,6 +843,10 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 		} // if
 			//
+	}
+
+	private static Integer getWidth(final BufferedImage instance) {
+		return instance != null ? Integer.valueOf(instance.getWidth()) : null;
 	}
 
 	@Nullable
