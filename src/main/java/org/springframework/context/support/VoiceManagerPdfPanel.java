@@ -325,6 +325,8 @@ public class VoiceManagerPdfPanel extends JPanel
 				//
 		} // if
 			//
+		add(new JLabel());
+		//
 		add(btnExecute = new JButton("Execute"));
 		//
 		btnExecute.addActionListener(this);
