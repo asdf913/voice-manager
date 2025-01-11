@@ -517,7 +517,7 @@ public class VoiceManagerPdfPanel extends JPanel
 
 		String getString(final String key);
 
-		void setString(final String key, final String value);
+		void setString(final String key, @Nullable final String value);
 
 		@Nullable
 		static String getString(@Nullable final StringMap instance, final String key) {
