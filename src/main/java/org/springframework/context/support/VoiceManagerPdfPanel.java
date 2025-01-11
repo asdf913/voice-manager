@@ -675,7 +675,7 @@ public class VoiceManagerPdfPanel extends JPanel
 	}
 
 	private static void addTextAndVoice(@Nullable final ObjectMap objectMap, final float fontSize,
-			final Map<Integer, String> map, final int volume, final int defaultSize) throws IOException {
+			final Map<Integer, String> map, final int volume, final float defaultSize) throws IOException {
 		//
 		final PDDocument document = ObjectMap.getObject(objectMap, PDDocument.class);
 		//
