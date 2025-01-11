@@ -156,7 +156,7 @@ public class VoiceManagerPdfPanel extends JPanel
 	@Note("Text")
 	private JTextComponent tfText = null;
 
-	private JTextComponent tfFontSize = null;
+	private JTextComponent tfFontSize1 = null;
 
 	private transient ComboBoxModel<ECSSUnit> cbmFontSize = null;
 
@@ -248,9 +248,9 @@ public class VoiceManagerPdfPanel extends JPanel
 		add(new JLabel("Font Size"));
 		//
 		final Entry<String, Object> entry = getNumberAndUnit(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManagerPdfPanel.fontSize"));
+				"org.springframework.context.support.VoiceManagerPdfPanel.fontSize1"));
 		//
-		add(tfFontSize = new JTextField(Util.getKey(entry)), String.format("%1$s,wmin %2$s", GROWX, 100));
+		add(tfFontSize1 = new JTextField(Util.getKey(entry)), String.format("%1$s,wmin %2$s", GROWX, 100));
 		//
 		add(new JComboBox<>(
 				cbmFontSize = new DefaultComboBoxModel<>(ArrayUtils.insert(0, ECSSUnit.values(), (ECSSUnit) null))),
@@ -451,7 +451,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			final Map<String, String> style = new LinkedHashMap<>(
 					Map.of("text-align", "center", "display", "block", "margin-left", "auto", "margin-right", "auto"));
 			//
-			final BigDecimal fontSize = testAndApply(NumberUtils::isCreatable, Util.getText(tfFontSize),
+			final BigDecimal fontSize = testAndApply(NumberUtils::isCreatable, Util.getText(tfFontSize1),
 					NumberUtils::createBigDecimal, null);
 			//
 			final ECSSUnit ecssUnit = Util.cast(ECSSUnit.class, getSelectedItem(cbmFontSize));
