@@ -673,7 +673,7 @@ public class VoiceManagerPdfPanel extends JPanel
 	}
 
 	private static void addTextAndVoice(@Nullable final ObjectMap objectMap, final float fontSize,
-			final Map<Integer, String> map, final int volume, final int size) throws IOException {
+			final Map<Integer, String> map, final int volume, final int defaultSize) throws IOException {
 		//
 		final PDDocument document = ObjectMap.getObject(objectMap, PDDocument.class);
 		//
@@ -688,6 +688,12 @@ public class VoiceManagerPdfPanel extends JPanel
 			System.out.println(getAbsolutePath(toFile(page1Path)));
 			//
 			final BufferedImage bi = pdfRenderer.renderImage(0);
+			//
+			final int mapSize = MapUtils.size(map);
+			//
+			final float size = bi != null && mapSize != 0
+					? floatValue(divide(BigDecimal.valueOf(bi.getWidth()), BigDecimal.valueOf(mapSize)), defaultSize)
+					: defaultSize;
 			//
 			ImageIO.write(bi, "png", toFile(page1Path));
 			//
@@ -837,6 +843,14 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 		} // if
 			//
+	}
+
+	private static BigDecimal divide(final BigDecimal a, final BigDecimal b) {
+		return a != null && b != null && !b.equals(BigDecimal.valueOf(0)) ? a.divide(b) : a;
+	}
+
+	private static float floatValue(final Number instance, final float defaultValue) {
+		return instance != null ? instance.floatValue() : defaultValue;
 	}
 
 	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, @Nullable final U u,
