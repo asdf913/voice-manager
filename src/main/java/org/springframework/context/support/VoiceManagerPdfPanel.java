@@ -152,7 +152,7 @@ public class VoiceManagerPdfPanel extends JPanel
 
 	private JTextComponent tfFontSize = null;
 
-	private ComboBoxModel<ECSSUnit> cbmFontSize = null;
+	private transient ComboBoxModel<ECSSUnit> cbmFontSize = null;
 
 	private transient ApplicationContext applicationContext = null;
 
