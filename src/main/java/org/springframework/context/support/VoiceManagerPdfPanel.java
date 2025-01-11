@@ -511,6 +511,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static Object getSelectedItem(@Nullable final ComboBoxModel<?> instance) {
 		return instance != null ? instance.getSelectedItem() : null;
 	}
