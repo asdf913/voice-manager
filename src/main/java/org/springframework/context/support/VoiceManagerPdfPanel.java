@@ -156,7 +156,7 @@ public class VoiceManagerPdfPanel extends JPanel
 	@Note("Text")
 	private JTextComponent tfText = null;
 
-	private JTextComponent tfFontSize1 = null;
+	private JTextComponent tfFontSize1, tfFontSize2 = null;
 
 	private transient ComboBoxModel<ECSSUnit> cbmFontSize1 = null;
 
@@ -247,7 +247,7 @@ public class VoiceManagerPdfPanel extends JPanel
 		//
 		add(new JLabel("Font Size"));
 		//
-		final Entry<String, Object> entry = getNumberAndUnit(PropertyResolverUtil.getProperty(propertyResolver,
+		Entry<String, Object> entry = getNumberAndUnit(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManagerPdfPanel.fontSize1"));
 		//
 		add(tfFontSize1 = new JTextField(Util.getKey(entry)), String.format("%1$s,wmin %2$s", GROWX, 100));
@@ -276,6 +276,16 @@ public class VoiceManagerPdfPanel extends JPanel
 		final int span = 2;
 		//
 		add(jsp, String.format("%1$s,%2$s,span %3$s", GROWX, "wrap", span));
+		//
+		// Font Size
+		//
+		add(new JLabel("Font Size"));
+		//
+		add(tfFontSize2 = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManagerPdfPanel.fontSize2")),
+				String.format("%1$s,%2$s,wmin %3$s", GROWX, "wrap", 100));
+		//
+		cbmFontSize1.setSelectedItem(Util.getValue(entry));
 		//
 		// Text
 		//
@@ -333,14 +343,34 @@ public class VoiceManagerPdfPanel extends JPanel
 		//
 		final Double width = getWidth(btnExecute.getPreferredSize());
 		//
-		final Double height = getHeight(tfFontSize1.getPreferredSize());
-		//
-		if (width != null && height != null) {
+		if (width != null) {
 			//
-			tfFontSize1.setMaximumSize(new Dimension(width.intValue(), height.intValue()));
+			Double height = getHeight(getPreferredSize(tfFontSize1));
 			//
+			if (height != null) {
+				//
+				setMaximumSize(tfFontSize1, new Dimension(width.intValue(), height.intValue()));
+				//
+			} // if
+				//
+			if ((height = getHeight(getPreferredSize(tfFontSize2))) != null) {
+				//
+				setMaximumSize(tfFontSize2, new Dimension(width.intValue(), height.intValue()));
+				//
+			} // if
+				//
 		} // if
 			//
+	}
+
+	private static Dimension getPreferredSize(final Component instance) {
+		return instance != null ? instance.getPreferredSize() : null;
+	}
+
+	private static void setMaximumSize(final Component instance, final Dimension maximumSize) {
+		if (instance != null) {
+			instance.setMaximumSize(maximumSize);
+		}
 	}
 
 	private static Double getHeight(final Dimension instance) {
@@ -551,7 +581,8 @@ public class VoiceManagerPdfPanel extends JPanel
 					//
 				} // if
 					//
-				addTextAndVoice(objectMap, 14, map, 100, 61);
+				addTextAndVoice(objectMap, floatValue(testAndApply(NumberUtils::isCreatable, Util.getText(tfFontSize2),
+						NumberUtils::createNumber, null), 14), map, 100, 61);
 				//
 			} catch (final IOException e) {
 				//
