@@ -26,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -284,11 +285,49 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 		add(new JLabel("Font Size"));
 		//
-		add(tfFontSize = new JTextField(), String.format("%1$s,wmin %2$s", GROWX, 100));
+		final StringBuilder sb = testAndApply(Objects::nonNull, PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManagerPdfPanel.fontSize"), StringBuilder::new, null);
+		//
+		String strNumber = null;
+		//
+		for (int i = StringUtils.length(sb) - 1; i >= 0; i--) {
+			//
+			if (NumberUtils.isCreatable(sb.substring(0, i))) {
+				//
+				strNumber = Util.toString(sb);
+				//
+				sb.delete(0, i);
+				//
+				break;
+				//
+			} // if
+				//
+		} // while
+			//
+		Object ecssUnit = null;
+		//
+		final List<ECSSUnit> list = Util.toList(Util.filter(Arrays.stream(ECSSUnit.values()),
+				x -> StringUtils.equalsIgnoreCase(name(x), Util.toString(sb))));
+		//
+		final int size = IterableUtils.size(list);
+		//
+		if (size == 1) {
+			//
+			ecssUnit = IterableUtils.get(list, 0);
+			//
+		} else if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		add(tfFontSize = new JTextField(strNumber), String.format("%1$s,wmin %2$s", GROWX, 100));
 		//
 		add(new JComboBox<>(
 				cbmFontSize = new DefaultComboBoxModel<>(ArrayUtils.insert(0, ECSSUnit.values(), (ECSSUnit) null))),
 				"wrap");
+		//
+		cbmFontSize.setSelectedItem(ecssUnit);
 		//
 		// HTML
 		//
@@ -345,6 +384,10 @@ public class VoiceManagerPdfPanel extends JPanel
 		//
 		btnExecute.addActionListener(this);
 		//
+	}
+
+	private static String name(final Enum<?> instance) {
+		return instance != null ? instance.name() : null;
 	}
 
 	private static <E> ListCellRenderer<? super E> getRenderer(final JComboBox<E> instance) {
