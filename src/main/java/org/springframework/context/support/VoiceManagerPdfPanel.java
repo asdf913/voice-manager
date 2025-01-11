@@ -845,6 +845,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static Integer getWidth(@Nullable final BufferedImage instance) {
 		return instance != null ? Integer.valueOf(instance.getWidth()) : null;
 	}
