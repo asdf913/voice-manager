@@ -331,6 +331,24 @@ public class VoiceManagerPdfPanel extends JPanel
 		//
 		btnExecute.addActionListener(this);
 		//
+		final Double width = getWidth(btnExecute.getPreferredSize());
+		//
+		final Double height = getHeight(tfFontSize1.getPreferredSize());
+		//
+		if (width != null && height != null) {
+			//
+			tfFontSize1.setMaximumSize(new Dimension(width.intValue(), height.intValue()));
+			//
+		} // if
+			//
+	}
+
+	private static Double getHeight(final Dimension instance) {
+		return instance != null ? Double.valueOf(instance.getHeight()) : null;
+	}
+
+	private static Double getWidth(final Dimension instance) {
+		return instance != null ? Double.valueOf(instance.getWidth()) : null;
 	}
 
 	private static Entry<String, Object> getNumberAndUnit(final String input) {
