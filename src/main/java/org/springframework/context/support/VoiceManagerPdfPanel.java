@@ -373,11 +373,11 @@ public class VoiceManagerPdfPanel extends JPanel
 		}
 	}
 
-	private static Double getHeight(final Dimension instance) {
+	private static Double getHeight(@Nullable final Dimension instance) {
 		return instance != null ? Double.valueOf(instance.getHeight()) : null;
 	}
 
-	private static Double getWidth(final Dimension instance) {
+	private static Double getWidth(@Nullable final Dimension instance) {
 		return instance != null ? Double.valueOf(instance.getWidth()) : null;
 	}
 
