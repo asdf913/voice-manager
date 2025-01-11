@@ -82,8 +82,11 @@ class VoiceManagerPdfPanelTest {
 				invoke = Narcissus.invokeStaticMethod(m, os);
 				//
 				if (Util.contains(Arrays.asList(Float.TYPE, Boolean.TYPE, Integer.TYPE), m.getReturnType())
-						|| Boolean.logicalAnd(Objects.equals(name, "pdf"),
-								Arrays.equals(parameterTypes, new Class<?>[] { Path.class }))) {
+						|| Boolean.logicalOr(
+								Boolean.logicalAnd(Objects.equals(name, "pdf"),
+										Arrays.equals(parameterTypes, new Class<?>[] { Path.class })),
+								Boolean.logicalAnd(Objects.equals(name, "getNumberAndUnit"),
+										Arrays.equals(parameterTypes, new Class<?>[] { String.class })))) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//

@@ -74,6 +74,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.fontbox.ttf.OTFParser;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -285,49 +286,16 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 		add(new JLabel("Font Size"));
 		//
-		final StringBuilder sb = testAndApply(Objects::nonNull, PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManagerPdfPanel.fontSize"), StringBuilder::new, null);
+		final Entry<String, Object> entry = getNumberAndUnit(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManagerPdfPanel.fontSize"));
 		//
-		String strNumber = null;
-		//
-		for (int i = StringUtils.length(sb) - 1; i >= 0; i--) {
-			//
-			if (NumberUtils.isCreatable(sb.substring(0, i))) {
-				//
-				strNumber = Util.toString(sb);
-				//
-				sb.delete(0, i);
-				//
-				break;
-				//
-			} // if
-				//
-		} // while
-			//
-		Object ecssUnit = null;
-		//
-		final List<ECSSUnit> list = Util.toList(Util.filter(Arrays.stream(ECSSUnit.values()),
-				x -> StringUtils.equalsIgnoreCase(name(x), Util.toString(sb))));
-		//
-		final int size = IterableUtils.size(list);
-		//
-		if (size == 1) {
-			//
-			ecssUnit = IterableUtils.get(list, 0);
-			//
-		} else if (size > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		add(tfFontSize = new JTextField(strNumber), String.format("%1$s,wmin %2$s", GROWX, 100));
+		add(tfFontSize = new JTextField(Util.getKey(entry)), String.format("%1$s,wmin %2$s", GROWX, 100));
 		//
 		add(new JComboBox<>(
 				cbmFontSize = new DefaultComboBoxModel<>(ArrayUtils.insert(0, ECSSUnit.values(), (ECSSUnit) null))),
 				"wrap");
 		//
-		cbmFontSize.setSelectedItem(ecssUnit);
+		cbmFontSize.setSelectedItem(Util.getValue(entry));
 		//
 		// HTML
 		//
@@ -383,6 +351,47 @@ public class VoiceManagerPdfPanel extends JPanel
 		add(btnExecute = new JButton("Execute"));
 		//
 		btnExecute.addActionListener(this);
+		//
+	}
+
+	private static Entry<String, Object> getNumberAndUnit(final String s) {
+		//
+		final StringBuilder sb = testAndApply(Objects::nonNull, s, StringBuilder::new, null);
+		//
+		String strNumber = null;
+		//
+		for (int i = StringUtils.length(sb) - 1; i >= 0; i--) {
+			//
+			if (NumberUtils.isCreatable(sb.substring(0, i))) {
+				//
+				strNumber = Util.toString(sb);
+				//
+				sb.delete(0, i);
+				//
+				break;
+				//
+			} // if
+				//
+		} // while
+			//
+		Object ecssUnit = null;
+		//
+		final List<ECSSUnit> list = Util.toList(Util.filter(Arrays.stream(ECSSUnit.values()),
+				x -> StringUtils.equalsIgnoreCase(name(x), Util.toString(sb))));
+		//
+		final int size = IterableUtils.size(list);
+		//
+		if (size == 1) {
+			//
+			ecssUnit = IterableUtils.get(list, 0);
+			//
+		} else if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		return Pair.of(strNumber, ecssUnit);
 		//
 	}
 
