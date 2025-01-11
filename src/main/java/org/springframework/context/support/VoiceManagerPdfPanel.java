@@ -982,7 +982,7 @@ public class VoiceManagerPdfPanel extends JPanel
 		//
 	}
 
-	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, @Nullable final T t,
 			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
 			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return test(predicate, t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
