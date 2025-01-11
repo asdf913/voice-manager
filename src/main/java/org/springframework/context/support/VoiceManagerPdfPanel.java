@@ -158,7 +158,7 @@ public class VoiceManagerPdfPanel extends JPanel
 
 	private JTextComponent tfFontSize1 = null;
 
-	private transient ComboBoxModel<ECSSUnit> cbmFontSize = null;
+	private transient ComboBoxModel<ECSSUnit> cbmFontSize1 = null;
 
 	private transient ComboBoxModel<String> cbmVoiceId = null;
 
@@ -253,10 +253,10 @@ public class VoiceManagerPdfPanel extends JPanel
 		add(tfFontSize1 = new JTextField(Util.getKey(entry)), String.format("%1$s,wmin %2$s", GROWX, 100));
 		//
 		add(new JComboBox<>(
-				cbmFontSize = new DefaultComboBoxModel<>(ArrayUtils.insert(0, ECSSUnit.values(), (ECSSUnit) null))),
+				cbmFontSize1 = new DefaultComboBoxModel<>(ArrayUtils.insert(0, ECSSUnit.values(), (ECSSUnit) null))),
 				"wrap");
 		//
-		cbmFontSize.setSelectedItem(Util.getValue(entry));
+		cbmFontSize1.setSelectedItem(Util.getValue(entry));
 		//
 		// HTML
 		//
@@ -454,7 +454,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			final BigDecimal fontSize = testAndApply(NumberUtils::isCreatable, Util.getText(tfFontSize1),
 					NumberUtils::createBigDecimal, null);
 			//
-			final ECSSUnit ecssUnit = Util.cast(ECSSUnit.class, getSelectedItem(cbmFontSize));
+			final ECSSUnit ecssUnit = Util.cast(ECSSUnit.class, getSelectedItem(cbmFontSize1));
 			//
 			if (fontSize != null && ecssUnit != null) {
 				//
