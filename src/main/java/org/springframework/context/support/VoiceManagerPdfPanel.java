@@ -283,8 +283,8 @@ public class VoiceManagerPdfPanel extends JPanel
 			final Map<String, String> style = new LinkedHashMap<>(
 					Map.of("text-align", "center", "display", "block", "margin-left", "auto", "margin-right", "auto"));
 			//
-			final BigDecimal fontSize = testAndApply(x -> NumberUtils.isCreatable(x), Util.getText(tfFontSize),
-					x -> NumberUtils.createBigDecimal(x), null);
+			final BigDecimal fontSize = testAndApply(NumberUtils::isCreatable, Util.getText(tfFontSize),
+					NumberUtils::createBigDecimal, null);
 			//
 			final ECSSUnit ecssUnit = Util.cast(ECSSUnit.class,
 					cbmFontSize != null ? cbmFontSize.getSelectedItem() : null);
