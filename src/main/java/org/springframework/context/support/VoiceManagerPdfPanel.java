@@ -847,6 +847,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static BigDecimal divide(@Nullable final BigDecimal a, @Nullable final BigDecimal b) {
 		return a != null && b != null && !b.equals(BigDecimal.valueOf(0)) ? a.divide(b) : a;
 	}
