@@ -1056,16 +1056,18 @@ public class VoiceManagerPdfPanel extends JPanel
 					//
 					final double ratioWidth = width / floatValue(getWidth(bi), width);
 					//
-					final double ratioHeight = md.getHeight() / floatValue(getHeight(bi), md.getHeight());
+					final float pdfHeight = getHeight(md, 0);
+					//
+					final double ratioHeight = pdfHeight / floatValue(getHeight(bi), pdfHeight);
 					//
 					if (ratioWidth < ratioHeight) {
 						//
-						final int height = bi != null ? bi.getHeight() : 0;
+						final int imageHeight = bi != null ? bi.getHeight() : 0;
 						//
 						final double ratio = Math.min(ratioWidth, ratioHeight);
 						//
 						cs.drawImage(PDImageXObject.createFromByteArray(document, bs, null), 0,
-								lastHeight - (float) (height * ratio), width, (float) (height * ratio));
+								lastHeight - (float) (imageHeight * ratio), width, (float) (imageHeight * ratio));
 						//
 					} else {
 						//
@@ -1085,6 +1087,10 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 		} // if
 			//
+	}
+
+	private static float getHeight(final PDRectangle instance, final float defaultValue) {
+		return instance != null ? instance.getHeight() : defaultValue;
 	}
 
 	private static float getWidth(@Nullable final PDRectangle instance, final float defaultValue) {
