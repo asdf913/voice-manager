@@ -1039,40 +1039,22 @@ public class VoiceManagerPdfPanel extends JPanel
 				//
 				// Image
 				//
-			try (final InputStream is2 = openStream(testAndApply(StringUtils::isNotEmpty,
-					StringMap.getString(stringMap, "imageUrl"), URL::new, null))) {
+			final ObjectMap om = Reflection.newProxy(ObjectMap.class, new IH());
+			//
+			if (om != null) {
 				//
-				final byte[] bs = testAndApply(Objects::nonNull, is2, IOUtils::toByteArray, null);
+				om.setObject(PDDocument.class, document);
 				//
-				if ((bi = toBufferedImage(bs)) != null) {
-					//
-					final float width = getWidth(md, 0);
-					//
-					final double ratioWidth = width / floatValue(getWidth(bi), width);
-					//
-					final float pdfHeight = getHeight(md, 0);
-					//
-					final double ratioHeight = pdfHeight / floatValue(getHeight(bi), pdfHeight);
-					//
-					if (ratioWidth < ratioHeight) {
-						//
-						final int imageHeight = Util.intValue(getHeight(bi), 0);
-						//
-						final double ratio = Math.min(ratioWidth, ratioHeight);
-						//
-						cs.drawImage(PDImageXObject.createFromByteArray(document, bs, null), 0,
-								lastHeight - (float) (imageHeight * ratio), width, (float) (imageHeight * ratio));
-						//
-					} else {
-						//
-						// TODO
-						//
-					} // if
-						//
-				} // if
-					//
-			} // try
+				om.setObject(String.class, StringMap.getString(stringMap, "imageUrl"));
 				//
+				om.setObject(PDRectangle.class, md);
+				//
+				om.setObject(PDPageContentStream.class, cs);
+				//
+			} // if
+				//
+			addImageByUrl(om, lastHeight);
+			//
 			IOUtils.close(cs);
 			//
 			final File file = ObjectMap.getObject(objectMap, File.class);
@@ -1081,6 +1063,58 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 		} // if
 			//
+	}
+
+	private static void addImageByUrl(final ObjectMap objectMap, final float lastHeight)
+			throws MalformedURLException, IOException {
+
+		try (final InputStream is = openStream(
+				testAndApply(StringUtils::isNotEmpty, ObjectMap.getObject(objectMap, String.class), URL::new, null))) {
+			//
+			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
+			//
+			final BufferedImage bi = toBufferedImage(bs);
+			//
+			if (bi != null) {
+				//
+				final PDRectangle md = ObjectMap.getObject(objectMap, PDRectangle.class);
+				//
+				final float width = getWidth(md, 0);
+				//
+				final double ratioWidth = width / floatValue(getWidth(bi), width);
+				//
+				final float pdfHeight = getHeight(md, 0);
+				//
+				final double ratioHeight = pdfHeight / floatValue(getHeight(bi), pdfHeight);
+				//
+				if (ratioWidth < ratioHeight) {
+					//
+					final int imageHeight = Util.intValue(getHeight(bi), 0);
+					//
+					final double ratio = Math.min(ratioWidth, ratioHeight);
+					//
+					drawImage(ObjectMap.getObject(objectMap, PDPageContentStream.class),
+							PDImageXObject.createFromByteArray(ObjectMap.getObject(objectMap, PDDocument.class), bs,
+									null),
+							0, lastHeight - (float) (imageHeight * ratio), width, (float) (imageHeight * ratio));
+					//
+				} else {
+					//
+					// TODO
+					//
+				} // if
+					//
+			} // if
+				//
+		} // try
+			//
+	}
+
+	private static void drawImage(final PDPageContentStream instance, final PDImageXObject image, final float x,
+			final float y, final float width, final float height) throws IOException {
+		if (instance != null) {
+			instance.drawImage(image, x, y, width, height);
+		}
 	}
 
 	private static BufferedImage toBufferedImage(final byte[] bs) throws IOException {
