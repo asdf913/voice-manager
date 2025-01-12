@@ -164,7 +164,10 @@ public class VoiceManagerPdfPanel extends JPanel
 	@Note("Font Size 2")
 	private JTextComponent tfFontSize2 = null;
 
-	private JTextComponent tfImageUrl, tfUrlMimeType = null;
+	@Note("Image URL")
+	private JTextComponent tfImageUrl = null;
+
+	private JTextComponent tfUrlMimeType = null;
 
 	private transient ComboBoxModel<ECSSUnit> cbmFontSize1 = null;
 
