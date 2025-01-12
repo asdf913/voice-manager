@@ -614,6 +614,17 @@ public class VoiceManagerPdfPanel extends JPanel
 					//
 				} // if
 					//
+				final FloatMap floatMap = Reflection.newProxy(FloatMap.class, ih);
+				//
+				if (floatMap != null) {
+					//
+					floatMap.setFloat("fontSize", floatValue(testAndApply(NumberUtils::isCreatable,
+							Util.getText(tfFontSize2), NumberUtils::createNumber, null), 14));
+					//
+					floatMap.setFloat("defaultSize", floatValue(pdAnnotationRectangleSize, 61));
+					//
+				} // if
+					//
 				final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, ih);
 				//
 				if (objectMap != null) {
@@ -628,12 +639,11 @@ public class VoiceManagerPdfPanel extends JPanel
 					//
 					objectMap.setObject(StringMap.class, stringMap);
 					//
+					objectMap.setObject(FloatMap.class, floatMap);
+					//
 				} // if
 					//
-				addTextAndVoice(objectMap,
-						floatValue(testAndApply(NumberUtils::isCreatable, Util.getText(tfFontSize2),
-								NumberUtils::createNumber, null), 14),
-						map, 100, floatValue(pdAnnotationRectangleSize, 61));
+				addTextAndVoice(objectMap, map, 100);
 				//
 			} catch (final IOException e) {
 				//
@@ -663,6 +673,14 @@ public class VoiceManagerPdfPanel extends JPanel
 
 	}
 
+	private static interface FloatMap {
+
+		float getFloat(final String key);
+
+		void setFloat(final String key, final float i);
+
+	}
+
 	private static interface StringMap {
 
 		String getString(final String key);
@@ -683,6 +701,8 @@ public class VoiceManagerPdfPanel extends JPanel
 
 		private Map<Object, Object> strings = null;
 
+		private Map<Object, Object> floats = null;
+
 		private Map<Object, Object> getObjects() {
 			if (objects == null) {
 				objects = new LinkedHashMap<>();
@@ -695,6 +715,13 @@ public class VoiceManagerPdfPanel extends JPanel
 				strings = new LinkedHashMap<>();
 			}
 			return strings;
+		}
+
+		private Map<Object, Object> getFloats() {
+			if (floats == null) {
+				floats = new LinkedHashMap<>();
+			}
+			return floats;
 		}
 
 		@Override
@@ -721,6 +748,29 @@ public class VoiceManagerPdfPanel extends JPanel
 				} else if (Objects.equals(methodName, "setObject") && args != null && args.length > 1) {
 					//
 					Util.put(getObjects(), args[0], args[1]);
+					//
+					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof FloatMap) {
+				//
+				if (Objects.equals(methodName, "getFloat") && args != null && args.length > 0) {
+					//
+					final Object key = args[0];
+					//
+					if (!Util.containsKey(getFloats(), key)) {
+						//
+						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
+								testAndApply(IH::isArray, Util.cast(Class.class, key), Util::getSimpleName, x -> key)));
+						//
+					} // if
+						//
+					return MapUtils.getObject(getFloats(), key);
+					//
+				} else if (Objects.equals(methodName, "setFloat") && args != null && args.length > 1) {
+					//
+					Util.put(getFloats(), args[0], args[1]);
 					//
 					return null;
 					//
@@ -774,8 +824,8 @@ public class VoiceManagerPdfPanel extends JPanel
 
 	}
 
-	private static void addTextAndVoice(@Nullable final ObjectMap objectMap, final float fontSize,
-			final Map<Integer, String> map, final int volume, final float defaultSize) throws IOException {
+	private static void addTextAndVoice(@Nullable final ObjectMap objectMap, final Map<Integer, String> map,
+			final int volume) throws IOException {
 		//
 		final PDDocument document = ObjectMap.getObject(objectMap, PDDocument.class);
 		//
@@ -791,9 +841,12 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 			final BufferedImage bi = pdfRenderer.renderImage(0);
 			//
-			final float size = floatValue(testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), getWidth(bi),
-					MapUtils.size(map), (a, b) -> divide(BigDecimal.valueOf(a), BigDecimal.valueOf(b)), null),
-					defaultSize);
+			final FloatMap floatMap = ObjectMap.getObject(objectMap, FloatMap.class);
+			//
+			final float size = floatValue(
+					testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), getWidth(bi), MapUtils.size(map),
+							(a, b) -> divide(BigDecimal.valueOf(a), BigDecimal.valueOf(b)), null),
+					floatMap != null ? floatMap.getFloat("defaultSize") : (float) 61.2);
 			//
 			ImageIO.write(bi, "png", toFile(page1Path));
 			//
@@ -877,6 +930,8 @@ public class VoiceManagerPdfPanel extends JPanel
 					cs.beginText();
 					//
 					final PDFont font = ObjectMap.getObject(objectMap, PDFont.class);
+					//
+					final float fontSize = floatMap != null ? floatMap.getFloat("fontSize") : 14;
 					//
 					cs.setFont(font, fontSize);
 					//
