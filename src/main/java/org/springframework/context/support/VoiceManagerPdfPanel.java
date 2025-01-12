@@ -406,6 +406,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static Dimension getPreferredSize(@Nullable final Component instance) {
 		return instance != null ? instance.getPreferredSize() : null;
 	}
