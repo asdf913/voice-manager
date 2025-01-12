@@ -1091,6 +1091,7 @@ public class VoiceManagerPdfPanel extends JPanel
 		return instance != null ? instance.getWidth() : defaultValue;
 	}
 
+	@Nullable
 	private static InputStream openStream(@Nullable final URL instance) throws IOException {
 		return instance != null ? instance.openStream() : null;
 	}
@@ -1100,6 +1101,7 @@ public class VoiceManagerPdfPanel extends JPanel
 		return instance != null ? Integer.valueOf(instance.getWidth()) : null;
 	}
 
+	@Nullable
 	private static Integer getHeight(@Nullable final BufferedImage instance) {
 		return instance != null ? Integer.valueOf(instance.getHeight()) : null;
 	}
