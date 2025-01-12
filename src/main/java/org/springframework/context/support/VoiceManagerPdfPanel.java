@@ -161,7 +161,7 @@ public class VoiceManagerPdfPanel extends JPanel
 	@Note("Font Size 1")
 	private JTextComponent tfFontSize1 = null;
 
-	private JTextComponent tfFontSize2 = null;
+	private JTextComponent tfFontSize2, tfImageUrl = null;
 
 	private transient ComboBoxModel<ECSSUnit> cbmFontSize1 = null;
 
@@ -402,6 +402,14 @@ public class VoiceManagerPdfPanel extends JPanel
 				//
 		} // if
 			//
+			// Image Url
+			//
+		add(new JLabel("Image URL"));
+		//
+		add(tfImageUrl = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManagerPdfPanel.imageUrl")),
+				String.format("%1$s,%2$s,span %3$s", GROWX, "wrap", span));
+		//
 		add(new JLabel());
 		//
 		add(btnExecute = new JButton("Execute"));
@@ -632,6 +640,8 @@ public class VoiceManagerPdfPanel extends JPanel
 					stringMap.setString("text", Util.getText(tfText));
 					//
 					stringMap.setString("voiceId", Util.toString(getSelectedItem(cbmVoiceId)));
+					//
+					stringMap.setString("imageUrl", Util.getText(tfImageUrl));
 					//
 				} // if
 					//
@@ -1021,39 +1031,40 @@ public class VoiceManagerPdfPanel extends JPanel
 					//
 			} // for
 				//
-				// TODO
-				//
 				// Image
 				//
-			try (final InputStream is2 = new URL(
-					"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEizqiNPBQ_vdoQRVilGCXfZu4zDnE4Mj2TS98qpnaZZzHtjM3qWk33ridxqjyPHFaUWL-nLT8F0_o23DXov_HPY_Ux2Tuk_GMOVnsKsQZcDL3iANiNj0zByjA-Y7GeeGQqOF7VzvEE1-uU/s800/train_yuzuru_ninpu.png")
-					.openStream()) {
+			try (final InputStream is2 = openStream(testAndApply(StringUtils::isNotEmpty,
+					StringMap.getString(stringMap, "imageUrl"), URL::new, null))) {
 				//
-				final byte[] bs = IOUtils.toByteArray(is2);
+				final byte[] bs = testAndApply(Objects::nonNull, is2, IOUtils::toByteArray, null);
 				//
-				try (final InputStream is3 = new ByteArrayInputStream(bs)) {
+				try (final InputStream is3 = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null)) {
 					//
-					bi = ImageIO.read(is3);
+					bi = testAndApply(Objects::nonNull, is3, ImageIO::read, null);
 					//
 				} // try
 					//
-				final double ratioWidth = md.getWidth() / getWidth(bi);
-				//
-				final double ratioHeight = md.getHeight() / bi.getHeight();
-				//
-				final double ratio = Math.min(ratioWidth, ratioHeight);
-				//
-				if (ratioWidth < ratioHeight) {
+				if (bi != null) {
 					//
-					final int height = bi != null ? bi.getHeight() : 0;
+					final double ratioWidth = md.getWidth() / floatValue(getWidth(bi), md.getWidth());
 					//
-					cs.drawImage(PDImageXObject.createFromByteArray(document, bs, null), 0,
-							lastHeight - (float) (height * ratio), md.getWidth(), (float) (height * ratio));
+					final double ratioHeight = md.getHeight() / floatValue(getHeight(bi), md.getHeight());
 					//
-				} else {
-					//
-					// TODO
-					//
+					if (ratioWidth < ratioHeight) {
+						//
+						final int height = bi != null ? bi.getHeight() : 0;
+						//
+						final double ratio = Math.min(ratioWidth, ratioHeight);
+						//
+						cs.drawImage(PDImageXObject.createFromByteArray(document, bs, null), 0,
+								lastHeight - (float) (height * ratio), md.getWidth(), (float) (height * ratio));
+						//
+					} else {
+						//
+						// TODO
+						//
+					} // if
+						//
 				} // if
 					//
 			} // try
@@ -1068,9 +1079,17 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 	}
 
+	private static InputStream openStream(final URL instance) throws IOException {
+		return instance != null ? instance.openStream() : null;
+	}
+
 	@Nullable
 	private static Integer getWidth(@Nullable final BufferedImage instance) {
 		return instance != null ? Integer.valueOf(instance.getWidth()) : null;
+	}
+
+	private static Integer getHeight(final BufferedImage instance) {
+		return instance != null ? Integer.valueOf(instance.getHeight()) : null;
 	}
 
 	@Nullable
