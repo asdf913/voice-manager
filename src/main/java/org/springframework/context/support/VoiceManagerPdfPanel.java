@@ -675,6 +675,10 @@ public class VoiceManagerPdfPanel extends JPanel
 
 		void setFloat(final String key, final float i);
 
+		private static float getFloat(final FloatMap instance, final String key, final float defaultValue) {
+			return instance != null ? instance.getFloat(key) : defaultValue;
+		}
+
 	}
 
 	private static interface StringMap {
@@ -842,7 +846,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			final float size = floatValue(
 					testAndApply((a, b) -> Boolean.logicalAnd(a != null, b != null), getWidth(bi), MapUtils.size(map),
 							(a, b) -> divide(BigDecimal.valueOf(a), BigDecimal.valueOf(b)), null),
-					floatMap != null ? floatMap.getFloat("defaultSize") : (float) 61.2);
+					FloatMap.getFloat(floatMap, "defaultSize", (float) 61.2));
 			//
 			ImageIO.write(bi, "png", toFile(page1Path));
 			//
@@ -927,7 +931,7 @@ public class VoiceManagerPdfPanel extends JPanel
 					//
 					final PDFont font = ObjectMap.getObject(objectMap, PDFont.class);
 					//
-					final float fontSize = floatMap != null ? floatMap.getFloat("fontSize") : 14;
+					final float fontSize = FloatMap.getFloat(floatMap, "fontSize", 14);
 					//
 					cs.setFont(font, fontSize);
 					//
