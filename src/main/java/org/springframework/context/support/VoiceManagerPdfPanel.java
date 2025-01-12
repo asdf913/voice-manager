@@ -753,40 +753,45 @@ public class VoiceManagerPdfPanel extends JPanel
 					//
 				} // if
 					//
-			} else if (proxy instanceof FloatMap) {
-				//
-				if (Objects.equals(methodName, "getFloat") && args != null && args.length > 0) {
-					//
-					final Object key = args[0];
-					//
-					if (!Util.containsKey(getFloats(), key)) {
-						//
-						throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
-								testAndApply(IH::isArray, Util.cast(Class.class, key), Util::getSimpleName, x -> key)));
-						//
-					} // if
-						//
-					return MapUtils.getObject(getFloats(), key);
-					//
-				} else if (Objects.equals(methodName, "setFloat") && args != null && args.length > 1) {
-					//
-					Util.put(getFloats(), args[0], args[1]);
-					//
-					return null;
-					//
-				} // if
-					//
 			} // if
 				//
-			final IValue0<?> iValue0 = handleStringMap(methodName, getStrings(), args);
+			IValue0<?> iValue0 = handleStringMap(methodName, getStrings(), args);
 			//
-			if (iValue0 != null) {
+			if (iValue0 != null || (iValue0 = handleFloatMap(methodName, getFloats(), args)) != null) {
 				//
 				return IValue0Util.getValue0(iValue0);
 				//
 			} // if
 				//
 			throw new Throwable(methodName);
+			//
+		}
+
+		private static IValue0<Object> handleFloatMap(final String methodName, final Map<Object, Object> map,
+				final Object[] args) {
+			//
+			if (Objects.equals(methodName, "getFloat") && args != null && args.length > 0) {
+				//
+				final Object key = args[0];
+				//
+				if (!Util.containsKey(map, key)) {
+					//
+					throw new IllegalStateException(String.format(KEY_NOT_FOUND_MESSAGE,
+							testAndApply(IH::isArray, Util.cast(Class.class, key), Util::getSimpleName, x -> key)));
+					//
+				} // if
+					//
+				return Unit.with(MapUtils.getObject(map, key));
+				//
+			} else if (Objects.equals(methodName, "setFloat") && args != null && args.length > 1) {
+				//
+				Util.put(map, args[0], args[1]);
+				//
+				return Unit.with(null);
+				//
+			} // if
+				//
+			return null;
 			//
 		}
 
