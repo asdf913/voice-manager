@@ -768,6 +768,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 		}
 
+		@Nullable
 		private static IValue0<Object> handleFloatMap(final String methodName, final Map<Object, Object> map,
 				final Object[] args) {
 			//
