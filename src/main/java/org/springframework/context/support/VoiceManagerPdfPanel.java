@@ -1067,9 +1067,26 @@ public class VoiceManagerPdfPanel extends JPanel
 
 	private static void addImageByUrl(final ObjectMap objectMap, final float lastHeight)
 			throws MalformedURLException, IOException {
-
-		try (final InputStream is = openStream(
-				testAndApply(StringUtils::isNotEmpty, ObjectMap.getObject(objectMap, String.class), URL::new, null))) {
+		//
+		URL url = null;
+		//
+		final String string = ObjectMap.getObject(objectMap, String.class);
+		//
+		if (StringUtils.isNotBlank(string)) {
+			//
+			try {
+				//
+				url = new URL(string);
+				//
+			} catch (final MalformedURLException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // if
+				//
+		} // if
+			//
+		try (final InputStream is = openStream(url)) {
 			//
 			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
 			//
