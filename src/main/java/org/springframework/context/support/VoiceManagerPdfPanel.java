@@ -1105,8 +1105,9 @@ public class VoiceManagerPdfPanel extends JPanel
 			final VoiceManagerPdfPanel voiceManagerPdfPanel = ObjectMap.getObject(objectMap,
 					VoiceManagerPdfPanel.class);
 			//
-			Util.setText(voiceManagerPdfPanel != null ? voiceManagerPdfPanel.tfUrlMimeType : null,
-					getMimeType(testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null)));
+			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
+			//
+			Util.setText(voiceManagerPdfPanel != null ? voiceManagerPdfPanel.tfUrlMimeType : null, getMimeType(ci));
 			//
 			final BufferedImage bi = toBufferedImage(bs);
 			//
@@ -1248,7 +1249,9 @@ public class VoiceManagerPdfPanel extends JPanel
 		//
 		try (final InputStream is = testAndApply(Objects::nonNull, path, Files::newInputStream, null)) {
 			//
-			return getMimeType(testAndApply(Objects::nonNull, is, new ContentInfoUtil()::findMatch, null));
+			final ContentInfo ci = testAndApply(Objects::nonNull, is, new ContentInfoUtil()::findMatch, null);
+			//
+			return getMimeType(ci);
 			//
 		} // try
 			//
