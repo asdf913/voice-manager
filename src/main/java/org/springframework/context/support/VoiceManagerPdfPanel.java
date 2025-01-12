@@ -1062,7 +1062,7 @@ public class VoiceManagerPdfPanel extends JPanel
 					//
 					if (ratioWidth < ratioHeight) {
 						//
-						final int imageHeight = bi != null ? bi.getHeight() : 0;
+						final int imageHeight = Util.intValue(getHeight(bi), 0);
 						//
 						final double ratio = Math.min(ratioWidth, ratioHeight);
 						//
