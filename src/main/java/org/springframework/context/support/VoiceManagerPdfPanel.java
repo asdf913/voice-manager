@@ -1046,7 +1046,9 @@ public class VoiceManagerPdfPanel extends JPanel
 					//
 				if (bi != null) {
 					//
-					final double ratioWidth = md.getWidth() / floatValue(getWidth(bi), md.getWidth());
+					final float width = getWidth(md, 0);
+					//
+					final double ratioWidth = width / floatValue(getWidth(bi), width);
 					//
 					final double ratioHeight = md.getHeight() / floatValue(getHeight(bi), md.getHeight());
 					//
@@ -1057,7 +1059,7 @@ public class VoiceManagerPdfPanel extends JPanel
 						final double ratio = Math.min(ratioWidth, ratioHeight);
 						//
 						cs.drawImage(PDImageXObject.createFromByteArray(document, bs, null), 0,
-								lastHeight - (float) (height * ratio), md.getWidth(), (float) (height * ratio));
+								lastHeight - (float) (height * ratio), width, (float) (height * ratio));
 						//
 					} else {
 						//
@@ -1077,6 +1079,10 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 		} // if
 			//
+	}
+
+	private static float getWidth(final PDRectangle instance, final float defaultValue) {
+		return instance != null ? instance.getWidth() : defaultValue;
 	}
 
 	private static InputStream openStream(final URL instance) throws IOException {
