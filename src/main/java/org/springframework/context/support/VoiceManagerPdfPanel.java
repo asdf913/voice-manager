@@ -7,6 +7,7 @@ import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -89,6 +90,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -862,13 +864,15 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 			final PDPage pd = document.getPage(0);
 			//
+			final PDRectangle md = getMediaBox(pd);
+			//
 			final PDFRenderer pdfRenderer = new PDFRenderer(document);
 			//
 			final Path page1Path = Path.of("page1.png");
 			//
 			System.out.println(getAbsolutePath(toFile(page1Path)));
 			//
-			final BufferedImage bi = pdfRenderer.renderImage(0);
+			BufferedImage bi = pdfRenderer.renderImage(0);
 			//
 			final FloatMap floatMap = ObjectMap.getObject(objectMap, FloatMap.class);
 			//
@@ -909,6 +913,8 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 			PDAnnotationFileAttachment attachment = null;
 			//
+			float lastHeight = 0;
+			//
 			for (final Entry<Integer, String> entry : Util.entrySet(map)) {
 				//
 				if ((key = Util.getKey(entry)) == null) {
@@ -927,10 +933,6 @@ public class VoiceManagerPdfPanel extends JPanel
 //				} // try
 				//
 				Pattern pattern = null;
-				//
-				float lastHeight = 0;
-				//
-				final PDRectangle md = getMediaBox(pd);
 				//
 				try (final InputStream is = Files.newInputStream(pathAudio)) {
 					//
@@ -997,7 +999,7 @@ public class VoiceManagerPdfPanel extends JPanel
 						cs.setFont(font, fontSize);
 						//
 						cs.newLineAtOffset((index - 1) * size + getTextWidth(value, font, fontSize) / 2,
-								lastHeight - (font.getFontDescriptor().getAscent() / 1000 * fontSize)
+								lastHeight = lastHeight - (font.getFontDescriptor().getAscent() / 1000 * fontSize)
 										+ (font.getFontDescriptor().getDescent() / 1000 * fontSize)
 						//
 						);
@@ -1018,6 +1020,43 @@ public class VoiceManagerPdfPanel extends JPanel
 				} // try
 					//
 			} // for
+				//
+				// TODO
+				//
+				// Image
+				//
+			try (final InputStream is2 = new URL(
+					"https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEizqiNPBQ_vdoQRVilGCXfZu4zDnE4Mj2TS98qpnaZZzHtjM3qWk33ridxqjyPHFaUWL-nLT8F0_o23DXov_HPY_Ux2Tuk_GMOVnsKsQZcDL3iANiNj0zByjA-Y7GeeGQqOF7VzvEE1-uU/s800/train_yuzuru_ninpu.png")
+					.openStream()) {
+				//
+				final byte[] bs = IOUtils.toByteArray(is2);
+				//
+				try (final InputStream is3 = new ByteArrayInputStream(bs)) {
+					//
+					bi = ImageIO.read(is3);
+					//
+				} // try
+					//
+				final double ratioWidth = md.getWidth() / getWidth(bi);
+				//
+				final double ratioHeight = md.getHeight() / bi.getHeight();
+				//
+				final double ratio = Math.min(ratioWidth, ratioHeight);
+				//
+				if (ratioWidth < ratioHeight) {
+					//
+					final int height = bi != null ? bi.getHeight() : 0;
+					//
+					cs.drawImage(PDImageXObject.createFromByteArray(document, bs, null), 0,
+							lastHeight - (float) (height * ratio), md.getWidth(), (float) (height * ratio));
+					//
+				} else {
+					//
+					// TODO
+					//
+				} // if
+					//
+			} // try
 				//
 			IOUtils.close(cs);
 			//
