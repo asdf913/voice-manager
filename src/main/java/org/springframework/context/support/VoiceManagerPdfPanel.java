@@ -161,7 +161,10 @@ public class VoiceManagerPdfPanel extends JPanel
 	@Note("Font Size 1")
 	private JTextComponent tfFontSize1 = null;
 
-	private JTextComponent tfFontSize2, tfImageUrl = null;
+	@Note("Font Size 2")
+	private JTextComponent tfFontSize2 = null;
+
+	private JTextComponent tfImageUrl = null;
 
 	private transient ComboBoxModel<ECSSUnit> cbmFontSize1 = null;
 
@@ -171,7 +174,10 @@ public class VoiceManagerPdfPanel extends JPanel
 
 	private transient PropertyResolver propertyResolver = null;
 
-	private Number pdAnnotationRectangleSize, speechVolume = null;
+	@Note("org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation.rectangle Size")
+	private Number pdAnnotationRectangleSize = null;
+
+	private Number speechVolume = null;
 
 	@Override
 	public String getTitle() {
