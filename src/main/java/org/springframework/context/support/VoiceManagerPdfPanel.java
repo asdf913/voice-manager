@@ -367,7 +367,7 @@ public class VoiceManagerPdfPanel extends JPanel
 		return instance != null ? instance.getPreferredSize() : null;
 	}
 
-	private static void setMaximumSize(final Component instance, final Dimension maximumSize) {
+	private static void setMaximumSize(@Nullable final Component instance, final Dimension maximumSize) {
 		if (instance != null) {
 			instance.setMaximumSize(maximumSize);
 		}
