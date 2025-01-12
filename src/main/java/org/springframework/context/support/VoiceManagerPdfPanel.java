@@ -1044,13 +1044,7 @@ public class VoiceManagerPdfPanel extends JPanel
 				//
 				final byte[] bs = testAndApply(Objects::nonNull, is2, IOUtils::toByteArray, null);
 				//
-				try (final InputStream is3 = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null)) {
-					//
-					bi = testAndApply(Objects::nonNull, is3, ImageIO::read, null);
-					//
-				} // try
-					//
-				if (bi != null) {
+				if ((bi = toBufferedImage(b)) != null) {
 					//
 					final float width = getWidth(md, 0);
 					//
@@ -1086,6 +1080,16 @@ public class VoiceManagerPdfPanel extends JPanel
 			document.save(file);
 			//
 		} // if
+			//
+	}
+
+	private static BufferedImage toBufferedImage(final byte[] bs) throws IOException {
+		//
+		try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null)) {
+			//
+			return testAndApply(Objects::nonNull, is, ImageIO::read, null);
+			//
+		} // try
 			//
 	}
 
