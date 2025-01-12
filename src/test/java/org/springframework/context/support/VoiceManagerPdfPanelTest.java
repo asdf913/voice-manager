@@ -114,12 +114,13 @@ class VoiceManagerPdfPanelTest {
 				//
 				invoke = Narcissus.invokeStaticMethod(m, os);
 				//
-				if (Util.contains(Arrays.asList(Float.TYPE, Boolean.TYPE, Integer.TYPE), m.getReturnType())
-						|| Boolean.logicalOr(
-								Boolean.logicalAnd(Objects.equals(name, "pdf"),
-										Arrays.equals(parameterTypes, new Class<?>[] { Path.class })),
-								Boolean.logicalAnd(Objects.equals(name, "getNumberAndUnit"),
-										Arrays.equals(parameterTypes, new Class<?>[] { String.class })))) {
+				if (Util.contains(Arrays.asList(Float.TYPE, Boolean.TYPE, Integer.TYPE), m.getReturnType()) || or(
+						Boolean.logicalAnd(Objects.equals(name, "pdf"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Path.class })),
+						Boolean.logicalAnd(Objects.equals(name, "getNumberAndUnit"),
+								Arrays.equals(parameterTypes, new Class<?>[] { String.class })),
+						Boolean.logicalAnd(Objects.equals(name, "getNumber"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Object.class })))) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
@@ -148,6 +149,30 @@ class VoiceManagerPdfPanelTest {
 				//
 		} // for
 			//
+	}
+
+	private static boolean or(final boolean a, final boolean b, final boolean... bs) {
+		//
+		boolean result = a || b;
+		//
+		if (result) {
+			//
+			return result;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if (result |= bs[i]) {
+				//
+				return result;
+				//
+			} // if
+				//
+		} // for
+			//
+		return result;
+		//
 	}
 
 	@Test

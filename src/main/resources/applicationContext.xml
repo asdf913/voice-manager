@@ -1120,6 +1120,8 @@
 		<property name="speechApi" ref="speechApi" />
 		<property name="pdAnnotationRectangleSize"
 			value="${org.springframework.context.support.VoiceManagerPdfPanel.pdAnnotationRectangleSize}" />
+		<property name="speechVolume"
+			value="${org.springframework.context.support.VoiceManagerPdfPanel.speechVolume}" />
 	</bean>
 
 	<!---->

@@ -169,7 +169,7 @@ public class VoiceManagerPdfPanel extends JPanel
 
 	private transient PropertyResolver propertyResolver = null;
 
-	private Number pdAnnotationRectangleSize = null;
+	private Number pdAnnotationRectangleSize, speechVolume = null;
 
 	@Override
 	public String getTitle() {
@@ -190,25 +190,49 @@ public class VoiceManagerPdfPanel extends JPanel
 		this.speechApi = speechApi;
 	}
 
-	public void setPdAnnotationRectangleSize(@Nullable final Object pdAnnotationRectangleSize) {
+	public void setPdAnnotationRectangleSize(final Object pdAnnotationRectangleSize) {
+		//
+		final IValue0<Number> iValue0 = getNumber(pdAnnotationRectangleSize);
+		//
+		if (iValue0 != null) {
+			//
+			this.pdAnnotationRectangleSize = IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
+	}
+
+	public void setSpeechVolume(final Object speechVolume) {
+		//
+		final IValue0<Number> iValue0 = getNumber(speechVolume);
+		//
+		if (iValue0 != null) {
+			//
+			this.speechVolume = IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
+	}
+
+	private static IValue0<Number> getNumber(final Object object) {
 		//
 		IValue0<Number> iValue0 = null;
 		//
-		if (pdAnnotationRectangleSize == null) {
+		if (object == null) {
 			//
 			iValue0 = Unit.with(null);
 			//
-		} else if (pdAnnotationRectangleSize instanceof Number number) {
+		} else if (object instanceof Number number) {
 			//
 			iValue0 = Unit.with(number);
 			//
-		} else if (pdAnnotationRectangleSize instanceof String string && NumberUtils.isCreatable(string)) {
+		} else if (object instanceof String string && NumberUtils.isCreatable(string)) {
 			//
 			iValue0 = Unit.with(NumberUtils.createNumber(string));
 			//
 		} // if
 			//
-		final String string = Util.toString(pdAnnotationRectangleSize);
+		final String string = Util.toString(object);
 		//
 		if (iValue0 == null && NumberUtils.isCreatable(string)) {
 			//
@@ -216,16 +240,14 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 		} // if
 			//
-		if (iValue0 != null) {
-			//
-			this.pdAnnotationRectangleSize = IValue0Util.getValue0(iValue0);
-			//
-		} else {
+		if (iValue0 == null) {
 			//
 			throw new IllegalArgumentException();
 			//
 		} // if
 			//
+		return iValue0;
+		//
 	}
 
 	private class VoiceIdListCellRenderer implements ListCellRenderer<Object> {
@@ -640,7 +662,7 @@ public class VoiceManagerPdfPanel extends JPanel
 					//
 				} // if
 					//
-				addTextAndVoice(objectMap, map, 100);
+				addTextAndVoice(objectMap, map, Util.intValue(speechVolume, 100));
 				//
 			} catch (final IOException e) {
 				//
