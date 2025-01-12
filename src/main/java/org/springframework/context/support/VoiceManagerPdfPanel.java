@@ -214,7 +214,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 	}
 
-	private static IValue0<Number> getNumber(final Object object) {
+	private static IValue0<Number> getNumber(@Nullable final Object object) {
 		//
 		IValue0<Number> iValue0 = null;
 		//
