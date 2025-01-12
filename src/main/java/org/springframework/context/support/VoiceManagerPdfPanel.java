@@ -164,7 +164,7 @@ public class VoiceManagerPdfPanel extends JPanel
 	@Note("Font Size 2")
 	private JTextComponent tfFontSize2 = null;
 
-	private JTextComponent tfImageUrl = null;
+	private JTextComponent tfImageUrl, tfUrlMimeType = null;
 
 	private transient ComboBoxModel<ECSSUnit> cbmFontSize1 = null;
 
@@ -346,7 +346,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 		} // if
 			//
-		final int span = 2;
+		final int span = 3;
 		//
 		add(jsp, String.format("%1$s,%2$s,span %3$s", GROWX, "wrap", span));
 		//
@@ -414,7 +414,11 @@ public class VoiceManagerPdfPanel extends JPanel
 		//
 		add(tfImageUrl = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManagerPdfPanel.imageUrl")),
-				String.format("%1$s,%2$s,span %3$s", GROWX, "wrap", span));
+				String.format("%1$s,span %2$s", GROWX, span - 1));
+		//
+		add(tfUrlMimeType = new JTextField(), String.format("%1$s,wmin %2$s", "wrap", 65));
+		//
+		tfUrlMimeType.setEditable(false);
 		//
 		add(new JLabel());
 		//
@@ -578,6 +582,8 @@ public class VoiceManagerPdfPanel extends JPanel
 		//
 		if (Objects.equals(Util.getSource(evt), btnExecute)) {
 			//
+			Util.setText(tfUrlMimeType, "");
+			//
 			final Path pathHtml = Path.of("test.html");
 			//
 			final Map<String, String> style = new LinkedHashMap<>(
@@ -677,6 +683,8 @@ public class VoiceManagerPdfPanel extends JPanel
 					objectMap.setObject(StringMap.class, stringMap);
 					//
 					objectMap.setObject(FloatMap.class, floatMap);
+					//
+					objectMap.setObject(VoiceManagerPdfPanel.class, this);
 					//
 				} // if
 					//
@@ -1051,6 +1059,8 @@ public class VoiceManagerPdfPanel extends JPanel
 				//
 				om.setObject(PDPageContentStream.class, cs);
 				//
+				om.setObject(VoiceManagerPdfPanel.class, ObjectMap.getObject(objectMap, VoiceManagerPdfPanel.class));
+				//
 			} // if
 				//
 			addImageByUrl(om, lastHeight);
@@ -1089,6 +1099,18 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
 			//
+			final ContentInfo ci = new ContentInfoUtil().findMatch(bs);
+			//
+			if (ci != null) {
+				//
+				final VoiceManagerPdfPanel voiceManagerPdfPanel = ObjectMap.getObject(objectMap,
+						VoiceManagerPdfPanel.class);
+				//
+				Util.setText(voiceManagerPdfPanel != null ? voiceManagerPdfPanel.tfUrlMimeType : null,
+						ci.getMimeType());
+				//
+			} // if
+				//
 			final BufferedImage bi = toBufferedImage(bs);
 			//
 			if (bi != null) {
