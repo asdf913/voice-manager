@@ -1093,7 +1093,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 	}
 
-	private static float getHeight(final PDRectangle instance, final float defaultValue) {
+	private static float getHeight(@Nullable final PDRectangle instance, final float defaultValue) {
 		return instance != null ? instance.getHeight() : defaultValue;
 	}
 
