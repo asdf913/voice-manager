@@ -1127,8 +1127,8 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 	}
 
-	private static void drawImage(final PDPageContentStream instance, final PDImageXObject image, final float x,
-			final float y, final float width, final float height) throws IOException {
+	private static void drawImage(@Nullable final PDPageContentStream instance, final PDImageXObject image,
+			final float x, final float y, final float width, final float height) throws IOException {
 		if (instance != null) {
 			instance.drawImage(image, x, y, width, height);
 		}
