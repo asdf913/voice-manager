@@ -202,14 +202,10 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 			iValue0 = Unit.with(number);
 			//
-		} else if (pdAnnotationRectangleSize instanceof String string) {
+		} else if (pdAnnotationRectangleSize instanceof String string && NumberUtils.isCreatable(string)) {
 			//
-			if (NumberUtils.isCreatable(string)) {
-				//
-				iValue0 = Unit.with(NumberUtils.createNumber(string));
-				//
-			} // if
-				//
+			iValue0 = Unit.with(NumberUtils.createNumber(string));
+			//
 		} // if
 			//
 		final String string = Util.toString(pdAnnotationRectangleSize);
