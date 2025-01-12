@@ -676,7 +676,7 @@ public class VoiceManagerPdfPanel extends JPanel
 
 		void setFloat(final String key, final float i);
 
-		private static float getFloat(final FloatMap instance, final String key, final float defaultValue) {
+		private static float getFloat(@Nullable final FloatMap instance, final String key, final float defaultValue) {
 			return instance != null ? instance.getFloat(key) : defaultValue;
 		}
 
