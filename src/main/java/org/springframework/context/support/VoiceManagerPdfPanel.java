@@ -1099,7 +1099,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
 			//
-			final ContentInfo ci = new ContentInfoUtil().findMatch(bs);
+			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
 			//
 			if (ci != null) {
 				//
