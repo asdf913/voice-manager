@@ -165,7 +165,7 @@ class VoiceManagerPdfPanelTest {
 		//
 		Collection<Object> collection = null;
 		//
-		Object invoke, instance = null;
+		Object invoke, object = null;
 		//
 		String name, toString = null;
 		//
@@ -221,16 +221,16 @@ class VoiceManagerPdfPanelTest {
 					//
 			} else {
 				//
-				if (instance == null && clz != null) {
+				if (object == null && clz != null) {
 					//
-					instance = Narcissus.allocateInstance(clz);
+					object = Narcissus.allocateInstance(clz);
 					//
 				} // if
 					//
 				if (Objects.equals(name = Util.getName(m), "invoke") && Arrays.equals(parameterTypes,
 						new Class<?>[] { Object.class, Method.class, Object[].class })) {
 					//
-					final Object instance_ = instance;
+					final Object instance_ = object;
 					//
 					final Method m_ = m;
 					//
@@ -244,7 +244,7 @@ class VoiceManagerPdfPanelTest {
 					//
 				if (Boolean.logicalAnd(Objects.equals(name, "getObjects"), m.getParameterCount() == 0)) {
 					//
-					Assertions.assertNotNull(Narcissus.invokeMethod(instance, m, os), toString);
+					Assertions.assertNotNull(Narcissus.invokeMethod(object, m, os), toString);
 					//
 				} // if
 					//
