@@ -1102,18 +1102,12 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
 			//
-			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
+			final VoiceManagerPdfPanel voiceManagerPdfPanel = ObjectMap.getObject(objectMap,
+					VoiceManagerPdfPanel.class);
 			//
-			if (ci != null) {
-				//
-				final VoiceManagerPdfPanel voiceManagerPdfPanel = ObjectMap.getObject(objectMap,
-						VoiceManagerPdfPanel.class);
-				//
-				Util.setText(voiceManagerPdfPanel != null ? voiceManagerPdfPanel.tfUrlMimeType : null,
-						ci.getMimeType());
-				//
-			} // if
-				//
+			Util.setText(voiceManagerPdfPanel != null ? voiceManagerPdfPanel.tfUrlMimeType : null,
+					getMimeType(testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null)));
+			//
 			final BufferedImage bi = toBufferedImage(bs);
 			//
 			if (bi != null) {
@@ -1254,12 +1248,14 @@ public class VoiceManagerPdfPanel extends JPanel
 		//
 		try (final InputStream is = testAndApply(Objects::nonNull, path, Files::newInputStream, null)) {
 			//
-			final ContentInfo ci = testAndApply(Objects::nonNull, is, new ContentInfoUtil()::findMatch, null);
-			//
-			return ci != null ? ci.getMimeType() : null;
+			return getMimeType(testAndApply(Objects::nonNull, is, new ContentInfoUtil()::findMatch, null));
 			//
 		} // try
 			//
+	}
+
+	private static String getMimeType(final ContentInfo instance) {
+		return instance != null ? instance.getMimeType() : null;
 	}
 
 	@Nullable
