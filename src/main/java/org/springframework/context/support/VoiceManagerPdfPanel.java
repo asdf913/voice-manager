@@ -1044,7 +1044,7 @@ public class VoiceManagerPdfPanel extends JPanel
 				//
 				final byte[] bs = testAndApply(Objects::nonNull, is2, IOUtils::toByteArray, null);
 				//
-				if ((bi = toBufferedImage(b)) != null) {
+				if ((bi = toBufferedImage(bs)) != null) {
 					//
 					final float width = getWidth(md, 0);
 					//
