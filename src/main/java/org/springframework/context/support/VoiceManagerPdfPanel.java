@@ -190,7 +190,7 @@ public class VoiceManagerPdfPanel extends JPanel
 		this.speechApi = speechApi;
 	}
 
-	public void setPdAnnotationRectangleSize(final Object pdAnnotationRectangleSize) {
+	public void setPdAnnotationRectangleSize(@Nullable final Object pdAnnotationRectangleSize) {
 		//
 		IValue0<Number> iValue0 = null;
 		//
@@ -406,7 +406,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 	}
 
-	private static Dimension getPreferredSize(final Component instance) {
+	private static Dimension getPreferredSize(@Nullable final Component instance) {
 		return instance != null ? instance.getPreferredSize() : null;
 	}
 
