@@ -1065,7 +1065,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 	}
 
-	private static void addImageByUrl(final ObjectMap objectMap, final float lastHeight)
+	private static void addImageByUrl(@Nullable final ObjectMap objectMap, final float lastHeight)
 			throws MalformedURLException, IOException {
 		//
 		URL url = null;
