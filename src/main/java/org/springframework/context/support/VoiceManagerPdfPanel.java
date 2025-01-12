@@ -770,7 +770,7 @@ public class VoiceManagerPdfPanel extends JPanel
 
 		@Nullable
 		private static IValue0<Object> handleFloatMap(final String methodName, final Map<Object, Object> map,
-				final Object[] args) {
+				@Nullable final Object[] args) {
 			//
 			if (Objects.equals(methodName, "getFloat") && args != null && args.length > 0) {
 				//
