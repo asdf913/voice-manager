@@ -166,6 +166,8 @@ public class VoiceManagerPdfPanel extends JPanel
 
 	private transient PropertyResolver propertyResolver = null;
 
+	private Number pdAnnotationRectangleSize = null;
+
 	@Override
 	public String getTitle() {
 		return "PDF";
@@ -183,6 +185,48 @@ public class VoiceManagerPdfPanel extends JPanel
 
 	public void setSpeechApi(final SpeechApi speechApi) {
 		this.speechApi = speechApi;
+	}
+
+	public void setPdAnnotationRectangleSize(final Object pdAnnotationRectangleSize) {
+		//
+		IValue0<Number> iValue0 = null;
+		//
+		if (pdAnnotationRectangleSize == null) {
+			//
+			iValue0 = Unit.with(null);
+			//
+		} else if (pdAnnotationRectangleSize instanceof Number number) {
+			//
+			iValue0 = Unit.with(number);
+			//
+		} else if (pdAnnotationRectangleSize instanceof String string) {
+			//
+			if (NumberUtils.isCreatable(string)) {
+				//
+				iValue0 = Unit.with(NumberUtils.createNumber(string));
+				//
+			} // if
+				//
+		} // if
+			//
+		final String string = Util.toString(pdAnnotationRectangleSize);
+		//
+		if (iValue0 == null && NumberUtils.isCreatable(string)) {
+			//
+			iValue0 = Unit.with(NumberUtils.createNumber(string));
+			//
+		} // if
+			//
+		if (iValue0 != null) {
+			//
+			this.pdAnnotationRectangleSize = IValue0Util.getValue0(iValue0);
+			//
+		} else {
+			//
+			throw new IllegalArgumentException();
+			//
+		} // if
+			//
 	}
 
 	private class VoiceIdListCellRenderer implements ListCellRenderer<Object> {
@@ -583,8 +627,10 @@ public class VoiceManagerPdfPanel extends JPanel
 					//
 				} // if
 					//
-				addTextAndVoice(objectMap, floatValue(testAndApply(NumberUtils::isCreatable, Util.getText(tfFontSize2),
-						NumberUtils::createNumber, null), 14), map, 100, 61);
+				addTextAndVoice(objectMap,
+						floatValue(testAndApply(NumberUtils::isCreatable, Util.getText(tfFontSize2),
+								NumberUtils::createNumber, null), 14),
+						map, 100, floatValue(pdAnnotationRectangleSize, 61));
 				//
 			} catch (final IOException e) {
 				//

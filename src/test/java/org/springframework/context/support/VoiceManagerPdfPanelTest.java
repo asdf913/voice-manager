@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.nio.file.Path;
@@ -10,11 +11,45 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
 class VoiceManagerPdfPanelTest {
+
+	private VoiceManagerPdfPanel instance = null;
+
+	@BeforeEach
+	private void beforeEach() {
+		//
+		instance = new VoiceManagerPdfPanel();
+		//
+	}
+
+	@Test
+	void testSetPdAnnotationRectangleSize() throws NoSuchFieldException {
+		//
+		final Field pdAnnotationRectangleSize = VoiceManagerPdfPanel.class
+				.getDeclaredField("pdAnnotationRectangleSize");
+		//
+		if (instance != null) {
+			//
+			final Number number = Integer.valueOf(0);
+			//
+			instance.setPdAnnotationRectangleSize(number);
+			//
+			Assertions.assertEquals(number, Narcissus.getField(instance, pdAnnotationRectangleSize));
+			//
+			instance.setPdAnnotationRectangleSize(Util.toString(number));
+			//
+			Assertions.assertEquals(number, Narcissus.getField(instance, pdAnnotationRectangleSize));
+			//
+			Assertions.assertThrows(IllegalArgumentException.class, () -> instance.setPdAnnotationRectangleSize(""));
+			//
+		} // if
+			//
+	}
 
 	@Test
 	void testNull() {
@@ -34,8 +69,6 @@ class VoiceManagerPdfPanelTest {
 		String name, toString = null;
 		//
 		Object[] os = null;
-		//
-		VoiceManagerPdfPanel instance = null;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
