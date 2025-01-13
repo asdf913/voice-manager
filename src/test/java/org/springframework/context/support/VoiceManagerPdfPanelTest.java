@@ -11,8 +11,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
 
+import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
@@ -29,7 +31,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class VoiceManagerPdfPanelTest {
 
-	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_SELECTED_ITEM = null;
+	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_SELECTED_ITEM, METHOD_IS_SELECTED = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -39,6 +41,8 @@ class VoiceManagerPdfPanelTest {
 		(METHOD_SET_FONT_SIZE_AND_UNIT = clz.getDeclaredMethod("setFontSizeAndUnit", Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", ComboBoxModel.class)).setAccessible(true);
+		//
+		(METHOD_IS_SELECTED = clz.getDeclaredMethod("isSelected", AbstractButton.class)).setAccessible(true);
 		//
 	}
 
@@ -157,6 +161,31 @@ class VoiceManagerPdfPanelTest {
 	}
 
 	@Test
+	void testIsSelected() throws Throwable {
+		//
+		final AbstractButton ab = new JButton();
+		//
+		Assertions.assertFalse(isSelected(ab));
+		//
+		ab.setSelected(true);
+		//
+		Assertions.assertTrue(isSelected(ab));
+		//
+	}
+
+	private static boolean isSelected(final AbstractButton instance) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_SELECTED.invoke(null, instance);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testNull() {
 		//
 		final Method[] ms = VoiceManagerPdfPanel.class.getDeclaredMethods();
@@ -202,6 +231,10 @@ class VoiceManagerPdfPanelTest {
 				} else if (Objects.equals(parameterType, Integer.TYPE)) {
 					//
 					Util.add(collection, Integer.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Boolean.TYPE)) {
+					//
+					Util.add(collection, Boolean.FALSE);
 					//
 				} else {
 					//

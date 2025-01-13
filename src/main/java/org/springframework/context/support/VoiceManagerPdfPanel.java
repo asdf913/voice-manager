@@ -52,6 +52,7 @@ import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -152,7 +153,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private transient SpeechApi speechApi = null;
 
-	private AbstractButton btnExecute = null;
+	private AbstractButton btnExecute, cbIsOriginalSize = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
@@ -504,6 +505,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		tfUrlMimeType.setEditable(false);
 		//
+		add(new JLabel("Original Size"));
+		//
+		add(cbIsOriginalSize = new JCheckBox(), "wrap");
+		//
 		add(new JLabel());
 		//
 		add(btnExecute = new JButton("Execute"));
@@ -761,7 +766,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				addTextAndVoice(objectMap,
 						ObjectUtils.getIfNull(speechSpeedMap, VoiceManagerPdfPanel::getDefaultSpeechSpeedMap),
-						Util.intValue(speechVolume, 100));
+						Util.intValue(speechVolume, 100), isSelected(cbIsOriginalSize));
 				//
 			} catch (final IOException e) {
 				//
@@ -771,6 +776,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // if
 			//
+	}
+
+	private static boolean isSelected(final AbstractButton instance) {
+		return instance != null && instance.isSelected();
 	}
 
 	@Override
@@ -1096,7 +1105,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	private static void addTextAndVoice(@Nullable final ObjectMap objectMap, final Map<Integer, String> map,
-			final int volume) throws IOException {
+			final int volume, final boolean isOrginialSize) throws IOException {
 		//
 		final PDDocument document = ObjectMap.getObject(objectMap, PDDocument.class);
 		//
@@ -1279,7 +1288,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // if
 				//
-			addImageByUrl(om, lastHeight);
+			addImageByUrl(om, lastHeight, isOrginialSize);
 			//
 			IOUtils.close(cs);
 			//
@@ -1291,7 +1300,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static void addImageByUrl(@Nullable final ObjectMap objectMap, final float lastHeight) throws IOException {
+	private static void addImageByUrl(@Nullable final ObjectMap objectMap, final float lastHeight,
+			final boolean isOrginialSize) throws IOException {
 		//
 		URL url = null;
 		//
@@ -1349,15 +1359,19 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				if (imageWidth < width && imageHeight < pdfHeight) {
 					//
-					// TODO
-					//
-					// drawImage(cs, image, (width - imageWidth) / 2, lastHeight - getHeight(bi),
-					// imageWidth, imageHeight);
-					//
-					drawImage(cs, image, (float) ((width - imageWidth * ratio) / 2),
-							(float) (lastHeight - (getHeight(bi) * ratio)), (float) (imageWidth * ratio),
-							(float) (imageHeight * ratio));
-					//
+					if (isOrginialSize) {
+						//
+						drawImage(cs, image, (width - imageWidth) / 2, lastHeight - getHeight(bi), imageWidth,
+								imageHeight);
+						//
+					} else {
+						//
+						drawImage(cs, image, (float) ((width - imageWidth * ratio) / 2),
+								(float) (lastHeight - (getHeight(bi) * ratio)), (float) (imageWidth * ratio),
+								(float) (imageHeight * ratio));
+						//
+					} // if
+						//
 				} else {
 					//
 					drawImage(cs, image, 0, lastHeight - (float) (imageHeight * ratio), width,
