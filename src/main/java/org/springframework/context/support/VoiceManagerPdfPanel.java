@@ -530,7 +530,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static void addDocumentListener(final Document instance, final DocumentListener listener) {
+	private static void addDocumentListener(@Nullable final Document instance, final DocumentListener listener) {
 		if (instance != null) {
 			instance.addDocumentListener(listener);
 		}
@@ -817,7 +817,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object anItem) {
+	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, final Object anItem) {
 		if (instance != null) {
 			instance.setSelectedItem(anItem);
 		}
