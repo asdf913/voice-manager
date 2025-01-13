@@ -813,10 +813,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			// TODO
 			//
-			fontSizeAndUnitMap = Map.of(Integer.valueOf(9), "88px", Integer.valueOf(10), "80px", Integer.valueOf(11),
-					"72px", Integer.valueOf(12), "66px", Integer.valueOf(13), "61px", Integer.valueOf(14), "56px",
-					Integer.valueOf(15), "53px", Integer.valueOf(16), "50px", Integer.valueOf(18), "43px",
-					Integer.valueOf(19), "42px", Integer.valueOf(30), "26px");
+			fontSizeAndUnitMap = new LinkedHashMap<>(Map.of(Integer.valueOf(9), "88px", Integer.valueOf(10), "80px",
+					Integer.valueOf(11), "72px", Integer.valueOf(12), "66px", Integer.valueOf(13), "61px",
+					Integer.valueOf(14), "56px", Integer.valueOf(15), "53px", Integer.valueOf(16), "50px",
+					Integer.valueOf(18), "43px", Integer.valueOf(19), "42px"));
+			//
+			putAll(fontSizeAndUnitMap, Map.of(Integer.valueOf(30), "26px"));
 			//
 		} // if
 			//
@@ -853,6 +855,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // if
 			//
+	}
+
+	private static <K, V> void putAll(final Map<K, V> a, final Map<? extends K, ? extends V> b) {
+		if (a != null && b != null) {
+			a.putAll(b);
+		}
 	}
 
 	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, @Nullable final Object anItem) {
