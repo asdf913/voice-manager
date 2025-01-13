@@ -1725,7 +1725,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				final String value) {
 			//
 			if (logger != null && !LoggerUtil.isNOPLogger(logger)) {
-				logger.info(value);
+				LoggerUtil.info(logger, value);
 			} else if (ps != null) {
 				ps.println(value);
 			} // if

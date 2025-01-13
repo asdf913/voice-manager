@@ -4021,7 +4021,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 									fileExtensions != null && fileExtensions.length == 1 ? fileExtensions[0] : null,
 									"odp")))));
 					//
-					info(LOG,
+					LoggerUtil.info(LOG,
 							String.format("%1$s/%2$s,Elapsed=%3$s,File=%4$s",
 									StringUtils.leftPad(Integer.toString(++counter),
 											StringUtils.length(Integer.toString(size))),
@@ -4125,12 +4125,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		@Nullable
 		private static <R> Set<R> rowKeySet(@Nullable final Table<R, ?, ?> instance) {
 			return instance != null ? instance.rowKeySet() : null;
-		}
-
-		private static void info(@Nullable final Logger instance, final String message) {
-			if (instance != null) {
-				instance.info(message);
-			}
 		}
 
 		@Nullable

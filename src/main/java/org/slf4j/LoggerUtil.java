@@ -52,6 +52,16 @@ public class LoggerUtil {
 			//
 	}
 
+	public static void info(final Logger instance, final String msg) {
+		//
+		if (instance != null) {
+			//
+			instance.info(msg);
+			//
+		} // if
+			//
+	}
+
 	public static boolean isNOPLogger(final Logger instance) {
 		//
 		final Class<?> clz = getClass(instance);
