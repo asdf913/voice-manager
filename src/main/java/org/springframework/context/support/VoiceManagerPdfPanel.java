@@ -691,7 +691,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			final File file = toFile(Path
 					.of(StringUtils.joinWith(".", StringUtils.defaultIfBlank(Util.getText(tfText), "test"), "pdf")));
 			//
-			System.out.println(getAbsolutePath(file));
+			LoggerUtil.info(LOG, getAbsolutePath(file));
 			//
 			PDDocument document = null;
 			//
@@ -844,7 +844,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			setSelectedItem(cbmFontSize1, ECSSUnit.PX);
 			//
 		} // if
-		//
+			//
 	}
 
 	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, final Object anItem) {
@@ -1093,7 +1093,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final Path page1Path = Path.of("page1.png");
 			//
-			System.out.println(getAbsolutePath(toFile(page1Path)));
+			LoggerUtil.info(LOG, getAbsolutePath(toFile(page1Path)));
 			//
 			BufferedImage bi = pdfRenderer.renderImage(0);
 			//
@@ -1114,7 +1114,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final Path pathAudio = Path.of("test.wav");
 			//
-			System.out.println(getAbsolutePath(toFile(pathAudio)));
+			LoggerUtil.info(LOG, getAbsolutePath(toFile(pathAudio)));
 			//
 			int index = 0;
 			//
