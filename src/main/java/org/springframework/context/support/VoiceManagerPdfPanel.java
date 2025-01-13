@@ -195,6 +195,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Nullable
 	private Map<Integer, String> speechSpeedMap = null;
 
+	private Map<Integer, String> fontSizeAndUnitMap = null;
+
 	@Override
 	public String getTitle() {
 		return "PDF";
@@ -805,44 +807,48 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private void setFontSizeAndUnit(final int length) {// TODO
+	private void setFontSizeAndUnit(final int length) {
 		//
-		if (length == 10) {
+		if (fontSizeAndUnitMap == null) {
 			//
-			Util.setText(tfFontSize1, Integer.toString(80));
+			// TODO
 			//
-			setSelectedItem(cbmFontSize1, ECSSUnit.PX);
+			fontSizeAndUnitMap = Map.of(Integer.valueOf(10), "80px", Integer.valueOf(12), "66px", Integer.valueOf(14),
+					"56px", Integer.valueOf(16), "50px", Integer.valueOf(18), "43px", Integer.valueOf(19), "42px");
 			//
-		} else if (length == 12) {
+		} // if
 			//
-			Util.setText(tfFontSize1, Integer.toString(66));
+		final Integer key = Integer.valueOf(length);
+		//
+		if (Util.containsKey(fontSizeAndUnitMap, key)) {
 			//
-			setSelectedItem(cbmFontSize1, ECSSUnit.PX);
+			final StringBuilder sb = testAndApply(Objects::nonNull, MapUtils.getObject(fontSizeAndUnitMap, key),
+					StringBuilder::new, null);
 			//
-		} else if (length == 14) {
+			final ECSSUnit[] us = ECSSUnit.values();
 			//
-			Util.setText(tfFontSize1, Integer.toString(56));
+			ECSSUnit u = null;
 			//
-			setSelectedItem(cbmFontSize1, ECSSUnit.PX);
+			String name = null;
 			//
-		} else if (length == 16) {
-			//
-			Util.setText(tfFontSize1, Integer.toString(50));
-			//
-			setSelectedItem(cbmFontSize1, ECSSUnit.PX);
-			//
-		} else if (length == 18) {
-			//
-			Util.setText(tfFontSize1, Integer.toString(43));
-			//
-			setSelectedItem(cbmFontSize1, ECSSUnit.PX);
-			//
-		} else if (length == 19) {
-			//
-			Util.setText(tfFontSize1, Integer.toString(42));
-			//
-			setSelectedItem(cbmFontSize1, ECSSUnit.PX);
-			//
+			for (int i = 0; i < StringUtils.length(sb); i++) {
+				//
+				for (int j = 0; us != null && i < us.length; j++) {
+					//
+					if (StringUtils.endsWithIgnoreCase(Util.toString(sb), name = name(u = us[j]))) {
+						//
+						Util.setText(tfFontSize1, sb.substring(0, StringUtils.length(sb) - StringUtils.length(name)));
+						//
+						setSelectedItem(cbmFontSize1, u);
+						//
+						return;
+						//
+					} // if
+						//
+				} // for
+					//
+			} // for
+				//
 		} // if
 			//
 	}
