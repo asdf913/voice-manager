@@ -153,13 +153,16 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private transient SpeechApi speechApi = null;
 
-	private AbstractButton btnExecute, cbIsOriginalSize = null;
-
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
 		String value();
 	}
+
+	@Note("Execute")
+	private AbstractButton btnExecute = null;
+
+	private AbstractButton cbIsOriginalSize = null;
 
 	@Note("HTML")
 	private JTextComponent taHtml = null;
