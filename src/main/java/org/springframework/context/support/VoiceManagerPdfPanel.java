@@ -295,8 +295,8 @@ public class VoiceManagerPdfPanel extends JPanel
 					//
 					if (Util.getKey(entry) instanceof CharSequence cs) {
 						//
-						if (NumberUtils.isCreatable(s = Util.toString(cs))
-								&& (n = NumberUtils.createNumber(s)) != null) {
+						if ((n = testAndApply(NumberUtils::isCreatable, s = Util.toString(cs),
+								NumberUtils::createNumber, null)) != null) {
 							//
 							i = Integer.valueOf(n.intValue());
 							//
