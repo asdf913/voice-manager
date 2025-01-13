@@ -854,7 +854,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, final Object anItem) {
+	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, @Nullable final Object anItem) {
 		if (instance != null) {
 			instance.setSelectedItem(anItem);
 		}
