@@ -285,8 +285,6 @@ public class VoiceManagerPdfPanel extends JPanel
 				//
 				Integer i = null;
 				//
-				String s = null;
-				//
 				Number n = null;
 				//
 				for (final Entry<?, ?> entry : entrySet) {
@@ -295,8 +293,8 @@ public class VoiceManagerPdfPanel extends JPanel
 					//
 					if (Util.getKey(entry) instanceof CharSequence cs) {
 						//
-						if ((n = testAndApply(NumberUtils::isCreatable, s = Util.toString(cs),
-								NumberUtils::createNumber, null)) != null) {
+						if ((n = testAndApply(NumberUtils::isCreatable, Util.toString(cs), NumberUtils::createNumber,
+								null)) != null) {
 							//
 							i = Integer.valueOf(n.intValue());
 							//
