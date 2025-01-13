@@ -1341,13 +1341,30 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				final PDImageXObject image = PDImageXObject
 						.createFromByteArray(ObjectMap.getObject(objectMap, PDDocument.class), bs, null);
 				//
+				final int imageWidth = Util.intValue(getWidth(bi), 1);
+				//
 				final int imageHeight = Util.intValue(getHeight(bi), 0);
 				//
 				final double ratio = Math.min(ratioWidth, ratioHeight);
 				//
-				drawImage(cs, image, 0, lastHeight - (float) (imageHeight * ratio), width,
-						(float) (imageHeight * ratio));
-				//
+				if (imageWidth < width && imageHeight < pdfHeight) {
+					//
+					// TODO
+					//
+					// drawImage(cs, image, (width - imageWidth) / 2, lastHeight - getHeight(bi),
+					// imageWidth, imageHeight);
+					//
+					drawImage(cs, image, (float) ((width - imageWidth * ratio) / 2),
+							(float) (lastHeight - (getHeight(bi) * ratio)), (float) (imageWidth * ratio),
+							(float) (imageHeight * ratio));
+					//
+				} else {
+					//
+					drawImage(cs, image, 0, lastHeight - (float) (imageHeight * ratio), width,
+							(float) (imageHeight * ratio));
+					//
+				} // if
+					//
 			} // if
 				//
 		} // try
