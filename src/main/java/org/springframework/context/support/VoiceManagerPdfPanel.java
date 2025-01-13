@@ -823,18 +823,22 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		}
 	}
 
+	@Nullable
 	private static String replaceAll(@Nullable final String instance, final String regex, final String replacement) {
 		return instance != null ? instance.replaceAll(regex, replacement) : instance;
 	}
 
+	@Nullable
 	private static String text(@Nullable final Element instance) {
 		return instance != null ? instance.text() : null;
 	}
 
+	@Nullable
 	private static Element body(@Nullable final org.jsoup.nodes.Document instance) {
 		return instance != null ? instance.body() : null;
 	}
 
+	@Nullable
 	private static Document getDocument(@Nullable final DocumentEvent instance) {
 		return instance != null ? instance.getDocument() : null;
 	}
