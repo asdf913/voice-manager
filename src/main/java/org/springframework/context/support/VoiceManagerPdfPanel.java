@@ -751,24 +751,20 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, ih);
 				//
-				if (objectMap != null) {
-					//
-					objectMap.setObject(PDDocument.class, document);
-					//
-					objectMap.setObject(SpeechApi.class, speechApi);
-					//
-					objectMap.setObject(PDFont.class, new PDType1Font(FontName.HELVETICA));
-					//
-					objectMap.setObject(File.class, file);
-					//
-					objectMap.setObject(StringMap.class, stringMap);
-					//
-					objectMap.setObject(FloatMap.class, floatMap);
-					//
-					objectMap.setObject(VoiceManagerPdfPanel.class, this);
-					//
-				} // if
-					//
+				ObjectMap.setObject(objectMap, PDDocument.class, document);
+				//
+				ObjectMap.setObject(objectMap, SpeechApi.class, speechApi);
+				//
+				ObjectMap.setObject(objectMap, PDFont.class, new PDType1Font(FontName.HELVETICA));
+				//
+				ObjectMap.setObject(objectMap, File.class, file);
+				//
+				ObjectMap.setObject(objectMap, StringMap.class, stringMap);
+				//
+				ObjectMap.setObject(objectMap, FloatMap.class, floatMap);
+				//
+				ObjectMap.setObject(objectMap, VoiceManagerPdfPanel.class, this);
+				//
 				addTextAndVoice(objectMap,
 						ObjectUtils.getIfNull(speechSpeedMap, VoiceManagerPdfPanel::getDefaultSpeechSpeedMap),
 						Util.intValue(speechVolume, 100), isSelected(cbIsOriginalSize));
@@ -945,6 +941,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		@Nullable
 		static <T> T getObject(@Nullable final ObjectMap instance, final Class<T> key) {
 			return instance != null ? instance.getObject(key) : null;
+		}
+
+		static <T> void setObject(final ObjectMap instance, final Class<T> key, final T value) {
+			if (instance != null) {
+				instance.setObject(key, value);
+			}
 		}
 
 	}
@@ -1290,20 +1292,17 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			final ObjectMap om = Reflection.newProxy(ObjectMap.class, new IH());
 			//
-			if (om != null) {
-				//
-				om.setObject(PDDocument.class, document);
-				//
-				om.setObject(String.class, StringMap.getString(stringMap, "imageUrl"));
-				//
-				om.setObject(PDRectangle.class, md);
-				//
-				om.setObject(PDPageContentStream.class, cs);
-				//
-				om.setObject(VoiceManagerPdfPanel.class, ObjectMap.getObject(objectMap, VoiceManagerPdfPanel.class));
-				//
-			} // if
-				//
+			ObjectMap.setObject(om, PDDocument.class, document);
+			//
+			ObjectMap.setObject(om, String.class, StringMap.getString(stringMap, "imageUrl"));
+			//
+			ObjectMap.setObject(om, PDRectangle.class, md);
+			//
+			ObjectMap.setObject(om, PDPageContentStream.class, cs);
+			//
+			ObjectMap.setObject(om, VoiceManagerPdfPanel.class,
+					ObjectMap.getObject(objectMap, VoiceManagerPdfPanel.class));
+			//
 			addImageByUrl(om, lastHeight, isOrginialSize);
 			//
 			IOUtils.close(cs);
