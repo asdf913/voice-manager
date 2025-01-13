@@ -818,7 +818,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					Integer.valueOf(14), "56px", Integer.valueOf(15), "53px", Integer.valueOf(16), "50px",
 					Integer.valueOf(18), "43px", Integer.valueOf(19), "42px"));
 			//
-			putAll(fontSizeAndUnitMap, Map.of(Integer.valueOf(30), "26px"));
+			putAll(fontSizeAndUnitMap, Map.of(Integer.valueOf(30), "26px", Integer.valueOf(36), "22px"));
 			//
 		} // if
 			//
