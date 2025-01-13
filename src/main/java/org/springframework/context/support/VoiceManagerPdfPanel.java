@@ -177,7 +177,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private JTextComponent tfUrlMimeType = null;
 
-	private Document taHtmlDocument = null;
+	private transient Document taHtmlDocument = null;
 
 	private transient ComboBoxModel<ECSSUnit> cbmFontSize1 = null;
 
