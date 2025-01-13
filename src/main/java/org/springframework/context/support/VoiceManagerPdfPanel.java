@@ -825,6 +825,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			setSelectedItem(cbmFontSize1, ECSSUnit.PX);
 			//
+		} else if (length == 16) {
+			//
+			Util.setText(tfFontSize1, Integer.toString(50));
+			//
+			setSelectedItem(cbmFontSize1, ECSSUnit.PX);
+			//
 		} else if (length == 18) {
 			//
 			Util.setText(tfFontSize1, Integer.toString(43));
