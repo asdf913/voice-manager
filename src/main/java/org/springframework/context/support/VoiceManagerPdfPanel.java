@@ -816,7 +816,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			fontSizeAndUnitMap = Map.of(Integer.valueOf(9), "88px", Integer.valueOf(10), "80px", Integer.valueOf(11),
 					"72px", Integer.valueOf(12), "66px", Integer.valueOf(13), "61px", Integer.valueOf(14), "56px",
 					Integer.valueOf(15), "53px", Integer.valueOf(16), "50px", Integer.valueOf(18), "43px",
-					Integer.valueOf(19), "42px");
+					Integer.valueOf(19), "42px", Integer.valueOf(30), "26px");
 			//
 		} // if
 			//
