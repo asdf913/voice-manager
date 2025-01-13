@@ -185,6 +185,7 @@ public class VoiceManagerPdfPanel extends JPanel
 
 	private Number speechVolume = null;
 
+	@Nullable
 	private Map<Integer, String> speechSpeedMap = null;
 
 	@Override
