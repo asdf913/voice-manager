@@ -1,6 +1,7 @@
 package org.springframework.context.support;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.nio.file.Path;
@@ -10,16 +11,36 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
 
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JTextField;
+import javax.swing.text.JTextComponent;
+
 import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.helger.css.ECSSUnit;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
 class VoiceManagerPdfPanelTest {
+
+	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_SELECTED_ITEM = null;
+
+	@BeforeAll
+	static void beforeAll() throws ReflectiveOperationException {
+		//
+		final Class<?> clz = VoiceManagerPdfPanel.class;
+		//
+		(METHOD_SET_FONT_SIZE_AND_UNIT = clz.getDeclaredMethod("setFontSizeAndUnit", Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", ComboBoxModel.class)).setAccessible(true);
+		//
+	}
 
 	private VoiceManagerPdfPanel instance = null;
 
@@ -68,6 +89,71 @@ class VoiceManagerPdfPanelTest {
 		Assertions.assertEquals(Collections.singletonMap(Integer.valueOf(1), "2"),
 				Narcissus.getField(instance, VoiceManagerPdfPanel.class.getDeclaredField("speechSpeedMap")));
 		//
+	}
+
+	@Test
+	void testSetFontSizeAndUnit() throws Throwable {
+		//
+		final JTextComponent tfFontSize1 = new JTextField();
+		//
+		Narcissus.setField(instance, VoiceManagerPdfPanel.class.getDeclaredField("tfFontSize1"), tfFontSize1);
+		//
+		final ComboBoxModel<?> cbmFontSize1 = new DefaultComboBoxModel<>();
+		//
+		Narcissus.setField(instance, VoiceManagerPdfPanel.class.getDeclaredField("cbmFontSize1"), cbmFontSize1);
+		//
+		setFontSizeAndUnit(19);
+		//
+		Assertions.assertEquals("42", Util.getText(tfFontSize1));
+		//
+		Assertions.assertEquals(ECSSUnit.PX, getSelectedItem(cbmFontSize1));
+		//
+		setFontSizeAndUnit(18);
+		//
+		Assertions.assertEquals("43", Util.getText(tfFontSize1));
+		//
+		Assertions.assertEquals(ECSSUnit.PX, getSelectedItem(cbmFontSize1));
+		//
+		setFontSizeAndUnit(16);
+		//
+		Assertions.assertEquals("50", Util.getText(tfFontSize1));
+		//
+		Assertions.assertEquals(ECSSUnit.PX, getSelectedItem(cbmFontSize1));
+		//
+		setFontSizeAndUnit(14);
+		//
+		Assertions.assertEquals("56", Util.getText(tfFontSize1));
+		//
+		Assertions.assertEquals(ECSSUnit.PX, getSelectedItem(cbmFontSize1));
+		//
+		setFontSizeAndUnit(12);
+		//
+		Assertions.assertEquals("66", Util.getText(tfFontSize1));
+		//
+		Assertions.assertEquals(ECSSUnit.PX, getSelectedItem(cbmFontSize1));
+		//
+		setFontSizeAndUnit(10);
+		//
+		Assertions.assertEquals("80", Util.getText(tfFontSize1));
+		//
+		Assertions.assertEquals(ECSSUnit.PX, getSelectedItem(cbmFontSize1));
+		//
+	}
+
+	private static Object getSelectedItem(final ComboBoxModel<?> instance) throws Throwable {
+		try {
+			return METHOD_GET_SELECTED_ITEM.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private void setFontSizeAndUnit(final int length) throws Throwable {
+		try {
+			METHOD_SET_FONT_SIZE_AND_UNIT.invoke(instance, length);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
