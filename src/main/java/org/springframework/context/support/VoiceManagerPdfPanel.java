@@ -1120,27 +1120,22 @@ public class VoiceManagerPdfPanel extends JPanel
 				//
 				final double ratioWidth = width / floatValue(getWidth(bi), width);
 				//
-				final float pdfHeight = getHeight(md, 0);
+				final float pdfHeight = Math.min(getHeight(md, 0), lastHeight);
 				//
 				final double ratioHeight = pdfHeight / floatValue(getHeight(bi), pdfHeight);
 				//
-				if (ratioWidth < ratioHeight) {
-					//
-					final int imageHeight = Util.intValue(getHeight(bi), 0);
-					//
-					final double ratio = Math.min(ratioWidth, ratioHeight);
-					//
-					drawImage(ObjectMap.getObject(objectMap, PDPageContentStream.class),
-							PDImageXObject.createFromByteArray(ObjectMap.getObject(objectMap, PDDocument.class), bs,
-									null),
-							0, lastHeight - (float) (imageHeight * ratio), width, (float) (imageHeight * ratio));
-					//
-				} else {
-					//
-					// TODO
-					//
-				} // if
-					//
+				final PDPageContentStream cs = ObjectMap.getObject(objectMap, PDPageContentStream.class);
+				//
+				final PDImageXObject image = PDImageXObject
+						.createFromByteArray(ObjectMap.getObject(objectMap, PDDocument.class), bs, null);
+				//
+				final int imageHeight = Util.intValue(getHeight(bi), 0);
+				//
+				final double ratio = Math.min(ratioWidth, ratioHeight);
+				//
+				drawImage(cs, image, 0, lastHeight - (float) (imageHeight * ratio), width,
+						(float) (imageHeight * ratio));
+				//
 			} // if
 				//
 		} // try
