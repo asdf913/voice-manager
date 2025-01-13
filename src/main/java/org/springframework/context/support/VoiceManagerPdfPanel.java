@@ -734,6 +734,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					stringMap.setString("imageUrl", Util.getText(tfImageUrl));
 					//
+					stringMap.setString("html", Util.getText(taHtml));
+					//
 				} // if
 					//
 				final FloatMap floatMap = Reflection.newProxy(FloatMap.class, ih);
@@ -1157,8 +1159,18 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final String text = StringMap.getString(stringMap, "text");
 			//
-			setSubject(document.getDocumentInformation(), text);
+			final PDDocumentInformation pdDocumentInformation = document.getDocumentInformation();
 			//
+			setSubject(pdDocumentInformation, text);
+			//
+			if (pdDocumentInformation != null) {
+				//
+				pdDocumentInformation.setCustomMetadataValue("html", StringMap.getString(stringMap, "html"));
+				//
+				pdDocumentInformation.setCustomMetadataValue("text", StringMap.getString(stringMap, "text"));
+				//
+			} // if
+				//
 			PDEmbeddedFile pdfEmbeddedFile = null;
 			//
 			PDComplexFileSpecification fileSpec = null;
