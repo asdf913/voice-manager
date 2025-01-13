@@ -60,6 +60,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
@@ -99,6 +102,8 @@ import org.d2ab.collection.ints.IntList;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,8 +141,8 @@ import j2html.rendering.FlatHtml;
 import j2html.rendering.HtmlBuilder;
 import net.miginfocom.swing.MigLayout;
 
-public class VoiceManagerPdfPanel extends JPanel
-		implements Titled, InitializingBean, ActionListener, ApplicationContextAware, EnvironmentAware {
+public class VoiceManagerPdfPanel extends JPanel implements Titled, InitializingBean, ActionListener,
+		ApplicationContextAware, EnvironmentAware, DocumentListener {
 
 	private static final long serialVersionUID = 284477348908531649L;
 
@@ -171,6 +176,8 @@ public class VoiceManagerPdfPanel extends JPanel
 	private JTextComponent tfImageUrl = null;
 
 	private JTextComponent tfUrlMimeType = null;
+
+	private Document taHtmlDocument = null;
 
 	private transient ComboBoxModel<ECSSUnit> cbmFontSize1 = null;
 
@@ -398,14 +405,18 @@ public class VoiceManagerPdfPanel extends JPanel
 				cbmFontSize1 = new DefaultComboBoxModel<>(ArrayUtils.insert(0, ECSSUnit.values(), (ECSSUnit) null))),
 				"wrap");
 		//
-		cbmFontSize1.setSelectedItem(Util.getValue(entry));
+		setSelectedItem(cbmFontSize1, Util.getValue(entry));
 		//
 		// HTML
 		//
 		add(new JLabel("HTML"));
 		//
-		final JScrollPane jsp = new JScrollPane(taHtml = new JTextArea(PropertyResolverUtil
-				.getProperty(propertyResolver, "org.springframework.context.support.VoiceManagerPdfPanel.html")));
+		final String html = PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManagerPdfPanel.html");
+		//
+		final JScrollPane jsp = new JScrollPane(taHtml = new JTextArea(html));
+		//
+		addDocumentListener(taHtmlDocument = taHtml.getDocument(), this);
 		//
 		final Dimension preferredSize = jsp.getPreferredSize();
 		//
@@ -427,7 +438,10 @@ public class VoiceManagerPdfPanel extends JPanel
 				"org.springframework.context.support.VoiceManagerPdfPanel.fontSize2")),
 				String.format("%1$s,%2$s,wmin %3$s", GROWX, "wrap", 100));
 		//
-		cbmFontSize1.setSelectedItem(Util.getValue(entry));
+		setSelectedItem(cbmFontSize1, Util.getValue(entry));
+		//
+		setFontSizeAndUnit(StringUtils.length(replaceAll(
+				text(body(testAndApply(Objects::nonNull, html, Jsoup::parse, null))), "\\([^\\(\\)]+\\)", "")));// TODO
 		//
 		// Text
 		//
@@ -469,7 +483,7 @@ public class VoiceManagerPdfPanel extends JPanel
 				if (s != null && Util.contains(Arrays.asList(element = cbmVoiceId.getElementAt(i),
 						speechApi.getVoiceAttribute(Util.toString(element), "Name")), s)) {
 					//
-					cbmVoiceId.setSelectedItem(element);
+					setSelectedItem(cbmVoiceId, element);
 					//
 				} // if
 					//
@@ -515,6 +529,12 @@ public class VoiceManagerPdfPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static void addDocumentListener(final Document instance, final DocumentListener listener) {
+		if (instance != null) {
+			instance.addDocumentListener(listener);
+		}
 	}
 
 	@Nullable
@@ -750,6 +770,71 @@ public class VoiceManagerPdfPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	@Override
+	public void changedUpdate(final DocumentEvent evt) {
+		//
+	}
+
+	@Override
+	public void insertUpdate(final DocumentEvent evt) {
+		//
+		if (Objects.equals(getDocument(evt), taHtmlDocument)) {
+			//
+			setFontSizeAndUnit(StringUtils.length(
+					replaceAll(text(body(testAndApply(Objects::nonNull, Util.getText(taHtml), Jsoup::parse, null))),
+							"\\([^\\(\\)]+\\)", "")));// TODO
+			//
+		} // if
+			//
+	}
+
+	@Override
+	public void removeUpdate(final DocumentEvent evt) {
+		//
+		if (Objects.equals(getDocument(evt), taHtmlDocument)) {
+			//
+			setFontSizeAndUnit(StringUtils.length(
+					replaceAll(text(body(testAndApply(Objects::nonNull, Util.getText(taHtml), Jsoup::parse, null))),
+							"\\([^\\(\\)]+\\)", "")));// TODO
+			//
+		} // if
+			//
+	}
+
+	private void setFontSizeAndUnit(final int length) {// TODO
+		//
+		if (length == 14) {
+			//
+			Util.setText(tfFontSize1, Integer.toString(56));
+			//
+			setSelectedItem(cbmFontSize1, ECSSUnit.PX);
+			//
+		} // if
+			//
+	}
+
+	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object anItem) {
+		if (instance != null) {
+			instance.setSelectedItem(anItem);
+		}
+	}
+
+	private static String replaceAll(final String instance, final String regex, final String replacement) {
+		return instance != null ? instance.replaceAll(regex, replacement) : instance;
+	}
+
+	private static String text(final Element instance) {
+		return instance != null ? instance.text() : null;
+	}
+
+	private static Element body(final org.jsoup.nodes.Document instance) {
+		return instance != null ? instance.body() : null;
+	}
+
+	private static Document getDocument(final DocumentEvent instance) {
+		return instance != null ? instance.getDocument() : null;
 	}
 
 	private static Map<Integer, String> getDefaultSpeechSpeedMap() {
