@@ -279,46 +279,52 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 		} else if (object instanceof Map m) {
 			//
-			final Iterable<Entry<?, ?>> entrySet = Util.entrySet(m);
+			setSpeechSpeedMap(m);
 			//
-			if (Util.iterator(entrySet) != null) {
-				//
-				Integer i = null;
-				//
-				Number n = null;
-				//
-				for (final Entry<?, ?> entry : entrySet) {
-					//
-					i = null;
-					//
-					if (Util.getKey(entry) instanceof CharSequence cs) {
-						//
-						if ((n = testAndApply(NumberUtils::isCreatable, Util.toString(cs), NumberUtils::createNumber,
-								null)) != null) {
-							//
-							i = Integer.valueOf(n.intValue());
-							//
-						} else {
-							//
-							throw new IllegalArgumentException();
-							//
-						} // if
-							//
-					} // if
-						//
-					Util.put(speechSpeedMap = ObjectUtils.getIfNull(speechSpeedMap, LinkedHashMap::new), i,
-							Util.toString(Util.getValue(entry)));
-					//
-				} // for
-					//
-			} // if
-				//
 			return;
 			//
 		} // if
 			//
 		throw new IllegalArgumentException();
 		//
+	}
+
+	public void setSpeechSpeedMap(final Map map) {
+		//
+		final Iterable<Entry<?, ?>> entrySet = Util.entrySet(map);
+		//
+		if (Util.iterator(entrySet) != null) {
+			//
+			Integer i = null;
+			//
+			Number n = null;
+			//
+			for (final Entry<?, ?> entry : entrySet) {
+				//
+				i = null;
+				//
+				if (Util.getKey(entry) instanceof CharSequence cs) {
+					//
+					if ((n = testAndApply(NumberUtils::isCreatable, Util.toString(cs), NumberUtils::createNumber,
+							null)) != null) {
+						//
+						i = Integer.valueOf(n.intValue());
+						//
+					} else {
+						//
+						throw new IllegalArgumentException();
+						//
+					} // if
+						//
+				} // if
+					//
+				Util.put(speechSpeedMap = ObjectUtils.getIfNull(speechSpeedMap, LinkedHashMap::new), i,
+						Util.toString(Util.getValue(entry)));
+				//
+			} // for
+				//
+		} // if
+			//
 	}
 
 	private class VoiceIdListCellRenderer implements ListCellRenderer<Object> {
