@@ -823,19 +823,19 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		}
 	}
 
-	private static String replaceAll(final String instance, final String regex, final String replacement) {
+	private static String replaceAll(@Nullable final String instance, final String regex, final String replacement) {
 		return instance != null ? instance.replaceAll(regex, replacement) : instance;
 	}
 
-	private static String text(final Element instance) {
+	private static String text(@Nullable final Element instance) {
 		return instance != null ? instance.text() : null;
 	}
 
-	private static Element body(final org.jsoup.nodes.Document instance) {
+	private static Element body(@Nullable final org.jsoup.nodes.Document instance) {
 		return instance != null ? instance.body() : null;
 	}
 
-	private static Document getDocument(final DocumentEvent instance) {
+	private static Document getDocument(@Nullable final DocumentEvent instance) {
 		return instance != null ? instance.getDocument() : null;
 	}
 
