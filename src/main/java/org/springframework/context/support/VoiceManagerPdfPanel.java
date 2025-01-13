@@ -117,6 +117,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.reflect.Reflection;
 import com.helger.css.ECSSUnit;
 import com.helger.css.propertyvalue.CSSSimpleValueWithUnit;
@@ -181,6 +184,8 @@ public class VoiceManagerPdfPanel extends JPanel
 	private Number pdAnnotationRectangleSize = null;
 
 	private Number speechVolume = null;
+
+	private Map<Integer, String> speechSpeedMap = null;
 
 	@Override
 	public String getTitle() {
@@ -258,6 +263,62 @@ public class VoiceManagerPdfPanel extends JPanel
 		} // if
 			//
 		return iValue0;
+		//
+	}
+
+	public void setSpeechSpeedMap(final String string) throws JsonProcessingException {
+		//
+		final Object object = ObjectMapperUtil.readValue(new ObjectMapper(), string, Object.class);
+		//
+		if (object == null) {
+			//
+			this.speechSpeedMap = null;
+			//
+			return;
+			//
+		} else if (object instanceof Map m) {
+			//
+			final Iterable<Entry<?, ?>> entrySet = Util.entrySet(m);
+			//
+			if (Util.iterator(entrySet) != null) {
+				//
+				Integer i = null;
+				//
+				String s = null;
+				//
+				Number n = null;
+				//
+				for (final Entry<?, ?> entry : entrySet) {
+					//
+					i = null;
+					//
+					if (Util.getKey(entry) instanceof CharSequence cs) {
+						//
+						if (NumberUtils.isCreatable(s = Util.toString(cs))
+								&& (n = NumberUtils.createNumber(s)) != null) {
+							//
+							i = Integer.valueOf(n.intValue());
+							//
+						} else {
+							//
+							throw new IllegalArgumentException();
+							//
+						} // if
+							//
+					} // if
+						//
+					Util.put(speechSpeedMap = ObjectUtils.getIfNull(speechSpeedMap, LinkedHashMap::new), i,
+							Util.toString(Util.getValue(entry)));
+					//
+				} // for
+					//
+			} // if
+				//
+			return;
+			//
+		} // if
+			//
+		throw new IllegalArgumentException();
 		//
 	}
 
@@ -627,26 +688,6 @@ public class VoiceManagerPdfPanel extends JPanel
 				//
 				document = Loader.loadPDF(pdf(pathHtml));
 				//
-				final Map<Integer, String> map = new LinkedHashMap<>(Collections.singletonMap(0, "100% Speed"));
-				//
-				map.put(-1, "90% Speed");
-				//
-				map.put(-2, "80% Speed");
-				//
-				map.put(-3, "70% Speed");
-				//
-				map.put(-4, "60% Speed");
-				//
-				map.put(-5, "50% Speed");
-				//
-				map.put(-6, "40% Speed");
-				//
-				map.put(-7, "30% Speed");
-				//
-				map.put(-8, "20% Speed");
-				//
-				map.put(-9, "10% Speed");
-				//
 				final IH ih = new IH();
 				//
 				final StringMap stringMap = Reflection.newProxy(StringMap.class, ih);
@@ -692,7 +733,9 @@ public class VoiceManagerPdfPanel extends JPanel
 					//
 				} // if
 					//
-				addTextAndVoice(objectMap, map, Util.intValue(speechVolume, 100));
+				addTextAndVoice(objectMap,
+						ObjectUtils.getIfNull(speechSpeedMap, VoiceManagerPdfPanel::getDefaultSpeechSpeedMap),
+						Util.intValue(speechVolume, 100));
 				//
 			} catch (final IOException e) {
 				//
@@ -702,6 +745,32 @@ public class VoiceManagerPdfPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static Map<Integer, String> getDefaultSpeechSpeedMap() {
+		//
+		final Map<Integer, String> map = new LinkedHashMap<>(Collections.singletonMap(0, "100% Speed"));
+		//
+		map.put(-1, "90% Speed");
+		//
+		map.put(-2, "80% Speed");
+		//
+		map.put(-3, "70% Speed");
+		//
+		map.put(-4, "60% Speed");
+		//
+		map.put(-5, "50% Speed");
+		//
+		map.put(-6, "40% Speed");
+		//
+		map.put(-7, "30% Speed");
+		//
+		map.put(-8, "20% Speed");
+		//
+		map.put(-9, "10% Speed");
+		//
+		return map;
+		//
 	}
 
 	@Nullable

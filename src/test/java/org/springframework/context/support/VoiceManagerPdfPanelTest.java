@@ -7,12 +7,15 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
@@ -49,6 +52,22 @@ class VoiceManagerPdfPanelTest {
 			//
 		} // if
 			//
+	}
+
+	@Test
+	void testSetSpeechSpeedMap() throws NoSuchFieldException, JsonProcessingException {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		instance.setSpeechSpeedMap("{\"1\":2}");
+		//
+		Assertions.assertEquals(Collections.singletonMap(Integer.valueOf(1), "2"),
+				Narcissus.getField(instance, VoiceManagerPdfPanel.class.getDeclaredField("speechSpeedMap")));
+		//
 	}
 
 	@Test
@@ -120,7 +139,9 @@ class VoiceManagerPdfPanelTest {
 						Boolean.logicalAnd(Objects.equals(name, "getNumberAndUnit"),
 								Arrays.equals(parameterTypes, new Class<?>[] { String.class })),
 						Boolean.logicalAnd(Objects.equals(name, "getNumber"),
-								Arrays.equals(parameterTypes, new Class<?>[] { Object.class })))) {
+								Arrays.equals(parameterTypes, new Class<?>[] { Object.class })),
+						Boolean.logicalAnd(Objects.equals(name, "getDefaultSpeechSpeedMap"),
+								m.getParameterCount() == 0))) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
