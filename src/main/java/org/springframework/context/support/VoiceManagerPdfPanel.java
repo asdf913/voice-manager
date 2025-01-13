@@ -440,8 +440,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		setSelectedItem(cbmFontSize1, Util.getValue(entry));
 		//
-		setFontSizeAndUnit(StringUtils.length(replaceAll(
-				text(body(testAndApply(Objects::nonNull, html, Jsoup::parse, null))), "\\([^\\(\\)]+\\)", "")));// TODO
+		setFontSizeAndUnit(html);
 		//
 		// Text
 		//
@@ -782,9 +781,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		if (Objects.equals(getDocument(evt), taHtmlDocument)) {
 			//
-			setFontSizeAndUnit(StringUtils.length(
-					replaceAll(text(body(testAndApply(Objects::nonNull, Util.getText(taHtml), Jsoup::parse, null))),
-							"\\([^\\(\\)]+\\)", "")));// TODO
+			setFontSizeAndUnit(Util.getText(taHtml));
 			//
 		} // if
 			//
@@ -795,12 +792,17 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		if (Objects.equals(getDocument(evt), taHtmlDocument)) {
 			//
-			setFontSizeAndUnit(StringUtils.length(
-					replaceAll(text(body(testAndApply(Objects::nonNull, Util.getText(taHtml), Jsoup::parse, null))),
-							"\\([^\\(\\)]+\\)", "")));// TODO
+			setFontSizeAndUnit(Util.getText(taHtml));
 			//
 		} // if
 			//
+	}
+
+	private void setFontSizeAndUnit(final String html) {
+		//
+		setFontSizeAndUnit(StringUtils.length(replaceAll(
+				text(body(testAndApply(Objects::nonNull, html, Jsoup::parse, null))), "\\([^\\(\\)]+\\)", "")));// TODO
+		//
 	}
 
 	private void setFontSizeAndUnit(final int length) {// TODO
