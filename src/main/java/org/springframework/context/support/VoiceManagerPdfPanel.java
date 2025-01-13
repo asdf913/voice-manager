@@ -603,7 +603,8 @@ public class VoiceManagerPdfPanel extends JPanel
 				//
 			} // if
 				//
-			final File file = toFile(Path.of("test.pdf"));
+			final File file = toFile(Path
+					.of(StringUtils.joinWith(".", StringUtils.defaultIfBlank(Util.getText(tfText), "test"), "pdf")));
 			//
 			System.out.println(getAbsolutePath(file));
 			//
