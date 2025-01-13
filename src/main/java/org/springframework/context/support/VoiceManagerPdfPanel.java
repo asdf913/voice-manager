@@ -1257,7 +1257,7 @@ public class VoiceManagerPdfPanel extends JPanel
 			//
 	}
 
-	private static String getMimeType(final ContentInfo instance) {
+	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
 	}
 
