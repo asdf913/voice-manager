@@ -1316,7 +1316,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static void setCustomMetadataValue(final PDDocumentInformation instance, final String fieldName,
+	private static void setCustomMetadataValue(@Nullable final PDDocumentInformation instance, final String fieldName,
 			final String fieldValue) {
 		if (instance != null) {
 			instance.setCustomMetadataValue(fieldName, fieldValue);
