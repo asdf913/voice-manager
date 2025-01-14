@@ -1164,11 +1164,18 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			setSubject(pdDocumentInformation, text);
 			//
+			final SpeechApi speechApi = ObjectMap.getObject(objectMap, SpeechApi.class);
+			//
+			final String voiceId = StringMap.getString(stringMap, "voiceId");
+			//
 			if (pdDocumentInformation != null) {
 				//
 				pdDocumentInformation.setCustomMetadataValue("html", StringMap.getString(stringMap, "html"));
 				//
 				pdDocumentInformation.setCustomMetadataValue("text", StringMap.getString(stringMap, "text"));
+				//
+				pdDocumentInformation.setCustomMetadataValue("voice",
+						speechApi != null ? speechApi.getVoiceAttribute(voiceId, "Name") : null);
 				//
 			} // if
 				//
@@ -1188,8 +1195,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // if
 					//
-				writeVoiceToFile(ObjectMap.getObject(objectMap, SpeechApi.class), text,
-						StringMap.getString(stringMap, "voiceId"), Util.intValue(key, 0), volume, toFile(pathAudio));
+				writeVoiceToFile(speechApi, text, voiceId, Util.intValue(key, 0), volume, toFile(pathAudio));
 				//
 //				try (final InputStream is = PdfTest.class.getResourceAsStream("\\NotoSansCJKjp-Regular.otf")) {
 				//
