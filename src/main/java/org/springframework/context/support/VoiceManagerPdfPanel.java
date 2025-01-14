@@ -20,9 +20,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -179,7 +181,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Image URL")
 	private JTextComponent tfImageUrl = null;
 
-	private JTextComponent tfUrlMimeType = null;
+	private JTextComponent tfImageUrlStateCode, tfUrlMimeType = null;
 
 	private transient Document taHtmlDocument = null;
 
@@ -432,7 +434,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
-		final int span = 3;
+		final int span = 4;
 		//
 		add(jsp, String.format("%1$s,%2$s,span %3$s", GROWX, "wrap", span));
 		//
@@ -502,11 +504,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(tfImageUrl = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManagerPdfPanel.imageUrl")),
-				String.format("%1$s,span %2$s", GROWX, span - 1));
+				String.format("%1$s,span %2$s", GROWX, span - 2));
+		//
+		add(tfImageUrlStateCode = new JTextField(), String.format("wmin %1$s", 27));
 		//
 		add(tfUrlMimeType = new JTextField(), String.format("%1$s,wmin %2$s", "wrap", 65));
 		//
-		tfUrlMimeType.setEditable(false);
+		setEditable(false, tfImageUrlStateCode, tfUrlMimeType);
 		//
 		add(new JLabel("Original Size"));
 		//
@@ -538,6 +542,27 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // if
 			//
+	}
+
+	private static void setEditable(final boolean flag, final JTextComponent a, final JTextComponent b,
+			final JTextComponent... bs) {
+		//
+		setEditable(a, flag);
+		//
+		setEditable(b, flag);
+		//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			setEditable(bs[i], flag);
+			//
+		} //
+			//
+	}
+
+	private static void setEditable(final JTextComponent instance, final boolean flag) {
+		if (instance != null) {
+			instance.setEditable(flag);
+		}
 	}
 
 	private static void addDocumentListener(@Nullable final Document instance, final DocumentListener listener) {
@@ -680,7 +705,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		if (Objects.equals(Util.getSource(evt), btnExecute)) {
 			//
-			Util.setText(tfUrlMimeType, "");
+			setText("", tfImageUrlStateCode, tfUrlMimeType);
 			//
 			final Path pathHtml = Path.of("test.html");
 			//
@@ -776,6 +801,21 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			} // try
 				//
 		} // if
+			//
+	}
+
+	private static void setText(final String string, final JTextComponent a, final JTextComponent b,
+			final JTextComponent... jtcs) {
+		//
+		Util.setText(a, string);
+		//
+		Util.setText(b, string);
+		//
+		for (int i = 0; jtcs != null && i < jtcs.length; i++) {
+			//
+			Util.setText(jtcs[i], string);
+			//
+		} // for
 			//
 	}
 
@@ -1344,17 +1384,30 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // if
 			//
-		try (final InputStream is = openStream(url)) {
+		final URLConnection urlConnection = url != null ? url.openConnection() : null;
+		//
+		final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class, urlConnection);
+		//
+		final VoiceManagerPdfPanel voiceManagerPdfPanel = ObjectMap.getObject(objectMap, VoiceManagerPdfPanel.class);
+		//
+		final JTextComponent tfImageUrlStateCode = voiceManagerPdfPanel != null
+				? voiceManagerPdfPanel.tfImageUrlStateCode
+				: null;
+		//
+		try (final InputStream is = urlConnection != null ? urlConnection.getInputStream() : null) {
 			//
 			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
-			//
-			final VoiceManagerPdfPanel voiceManagerPdfPanel = ObjectMap.getObject(objectMap,
-					VoiceManagerPdfPanel.class);
 			//
 			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
 			//
 			Util.setText(voiceManagerPdfPanel != null ? voiceManagerPdfPanel.tfUrlMimeType : null, getMimeType(ci));
 			//
+			if (httpURLConnection != null) {
+				//
+				Util.setText(tfImageUrlStateCode, Integer.toString(httpURLConnection.getResponseCode()));
+				//
+			} // if
+				//
 			final BufferedImage bi = toBufferedImage(bs);
 			//
 			if (bi != null) {
@@ -1402,6 +1455,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // if
 					//
+			} // if
+				//
+		} catch (final IOException e) {
+			//
+			if (httpURLConnection != null) {
+				//
+				Util.setText(tfImageUrlStateCode, Integer.toString(httpURLConnection.getResponseCode()));
+				//
 			} // if
 				//
 		} // try
