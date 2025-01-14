@@ -1165,21 +1165,17 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			setSubject(pdDocumentInformation, text);
 			//
+			setCustomMetadataValue(pdDocumentInformation, "html", StringMap.getString(stringMap, "html"));
+			//
+			setCustomMetadataValue(pdDocumentInformation, "text", StringMap.getString(stringMap, "text"));
+			//
 			final SpeechApi speechApi = ObjectMap.getObject(objectMap, SpeechApi.class);
 			//
 			final String voiceId = StringMap.getString(stringMap, "voiceId");
 			//
-			if (pdDocumentInformation != null) {
-				//
-				pdDocumentInformation.setCustomMetadataValue("html", StringMap.getString(stringMap, "html"));
-				//
-				pdDocumentInformation.setCustomMetadataValue("text", StringMap.getString(stringMap, "text"));
-				//
-				pdDocumentInformation.setCustomMetadataValue("voice",
-						speechApi != null ? speechApi.getVoiceAttribute(voiceId, "Name") : null);
-				//
-			} // if
-				//
+			setCustomMetadataValue(pdDocumentInformation, "voice",
+					speechApi != null ? speechApi.getVoiceAttribute(voiceId, "Name") : null);
+			//
 			PDEmbeddedFile pdfEmbeddedFile = null;
 			//
 			PDComplexFileSpecification fileSpec = null;
@@ -1318,6 +1314,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
+	}
+
+	private static void setCustomMetadataValue(final PDDocumentInformation instance, final String fieldName,
+			final String fieldValue) {
+		if (instance != null) {
+			instance.setCustomMetadataValue(fieldName, fieldValue);
+		}
 	}
 
 	private static void addImageByUrl(@Nullable final ObjectMap objectMap, final float lastHeight,
