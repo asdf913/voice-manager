@@ -1577,8 +1577,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return Util.test(a, value) && Util.test(b, value);
 	}
 
-	private static void writeVoiceToFile(@Nullable final SpeechApi instance, final String text, final String voiceId,
-			final int rate, final int volume, @Nullable final File file) {
+	private static void writeVoiceToFile(@Nullable final SpeechApi instance, @Nullable final String text,
+			final String voiceId, final int rate, final int volume, @Nullable final File file) {
 		if (instance != null) {
 			instance.writeVoiceToFile(text, voiceId, rate, volume, file);
 		}
