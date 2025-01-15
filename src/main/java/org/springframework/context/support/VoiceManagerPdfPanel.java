@@ -976,6 +976,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static interface ObjectMap {
 
+		@Nullable
 		<T> T getObject(final Class<?> clz);
 
 		<T> void setObject(final Class<T> key, @Nullable final T value);
@@ -1473,7 +1474,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static URLConnection openConnection(final URL instance) throws IOException {
+	private static URLConnection openConnection(@Nullable final URL instance) throws IOException {
 		return instance != null ? instance.openConnection() : null;
 	}
 
