@@ -1398,7 +1398,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				? voiceManagerPdfPanel.tfImageUrlStateCode
 				: null;
 		//
-		try (final InputStream is = urlConnection != null ? urlConnection.getInputStream() : null) {
+		try (final InputStream is = getInputStream(urlConnection)) {
 			//
 			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
 			//
@@ -1472,6 +1472,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // try
 			//
+	}
+
+	private static InputStream getInputStream(final URLConnection instance) throws IOException {
+		return instance != null ? instance.getInputStream() : null;
 	}
 
 	private static URLConnection openConnection(@Nullable final URL instance) throws IOException {
