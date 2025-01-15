@@ -1478,6 +1478,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null ? instance.getInputStream() : null;
 	}
 
+	@Nullable
 	private static URLConnection openConnection(@Nullable final URL instance) throws IOException {
 		return instance != null ? instance.openConnection() : null;
 	}
