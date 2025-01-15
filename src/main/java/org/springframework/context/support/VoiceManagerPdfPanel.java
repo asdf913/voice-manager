@@ -1644,7 +1644,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static void setSubject(@Nullable final PDDocumentInformation instance, final String keywords) {
+	private static void setSubject(@Nullable final PDDocumentInformation instance, @Nullable final String keywords) {
 		if (instance != null) {
 			instance.setSubject(keywords);
 		}
