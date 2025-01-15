@@ -181,7 +181,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Image URL")
 	private JTextComponent tfImageUrl = null;
 
-	private JTextComponent tfImageUrlStateCode, tfImageUrlMimeType = null;
+	@Note("Image URL State Code")
+	private JTextComponent tfImageUrlStateCode = null;
+
+	private JTextComponent tfImageUrlMimeType = null;
 
 	private transient Document taHtmlDocument = null;
 
@@ -1400,7 +1403,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
 			//
-			Util.setText(voiceManagerPdfPanel != null ? voiceManagerPdfPanel.tfImageUrlMimeType : null, getMimeType(ci));
+			Util.setText(voiceManagerPdfPanel != null ? voiceManagerPdfPanel.tfImageUrlMimeType : null,
+					getMimeType(ci));
 			//
 			if (httpURLConnection != null) {
 				//
