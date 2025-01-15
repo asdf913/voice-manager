@@ -75,8 +75,10 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableBiFunctionUtil;
+import org.apache.commons.lang3.function.FailableBiPredicate;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -152,6 +154,17 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	private static final Logger LOG = LoggerFactory.getLogger(VoiceManagerPdfPanel.class);
 
 	private static final String GROWX = "growx";
+
+	private static final FailableBiConsumer<JTextComponent, HttpURLConnection, IOException> J_TEXT_COMPONENT_HTTP_URL_CONNECTION_FAILABLE_BI_PREDICATE = (
+			a, b) -> {
+		//
+		if (b != null) {
+			//
+			Util.setText(a, Integer.toString(b.getResponseCode()));
+			//
+		} // if
+			//
+	};
 
 	private transient SpeechApi speechApi = null;
 
@@ -1407,12 +1420,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			Util.setText(voiceManagerPdfPanel != null ? voiceManagerPdfPanel.tfImageUrlMimeType : null,
 					getMimeType(ci));
 			//
-			if (httpURLConnection != null) {
-				//
-				Util.setText(tfImageUrlStateCode, Integer.toString(httpURLConnection.getResponseCode()));
-				//
-			} // if
-				//
+			accept(J_TEXT_COMPONENT_HTTP_URL_CONNECTION_FAILABLE_BI_PREDICATE, tfImageUrlStateCode, httpURLConnection);
+			//
 			final BufferedImage bi = toBufferedImage(bs);
 			//
 			if (bi != null) {
@@ -1464,14 +1473,17 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} catch (final IOException e) {
 			//
-			if (httpURLConnection != null) {
-				//
-				Util.setText(tfImageUrlStateCode, Integer.toString(httpURLConnection.getResponseCode()));
-				//
-			} // if
-				//
+			accept(J_TEXT_COMPONENT_HTTP_URL_CONNECTION_FAILABLE_BI_PREDICATE, tfImageUrlStateCode, httpURLConnection);
+			//
 		} // try
 			//
+	}
+
+	private static <T, U, E extends Exception> void accept(final FailableBiConsumer<T, U, E> instance, final T t,
+			final U u) throws E {
+		if (instance != null) {
+			instance.accept(t, u);
+		}
 	}
 
 	private static InputStream getInputStream(@Nullable final URLConnection instance) throws IOException {
