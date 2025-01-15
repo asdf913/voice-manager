@@ -545,7 +545,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	private static void setEditable(final boolean flag, final JTextComponent a, final JTextComponent b,
-			final JTextComponent... bs) {
+			@Nullable final JTextComponent... bs) {
 		//
 		setEditable(a, flag);
 		//
@@ -559,7 +559,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static void setEditable(final JTextComponent instance, final boolean flag) {
+	private static void setEditable(@Nullable final JTextComponent instance, final boolean flag) {
 		if (instance != null) {
 			instance.setEditable(flag);
 		}
@@ -805,7 +805,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	private static void setText(final String string, final JTextComponent a, final JTextComponent b,
-			final JTextComponent... jtcs) {
+			@Nullable final JTextComponent... jtcs) {
 		//
 		Util.setText(a, string);
 		//
