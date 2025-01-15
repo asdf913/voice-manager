@@ -1438,7 +1438,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				final double ratio = Math.min(ratioWidth, ratioHeight);
 				//
-				if (imageWidth < width && imageHeight < pdfHeight) {
+				if (Boolean.logicalAnd(imageWidth < width, imageHeight < pdfHeight)) {
 					//
 					if (isOrginialSize) {
 						//
