@@ -181,7 +181,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Image URL")
 	private JTextComponent tfImageUrl = null;
 
-	private JTextComponent tfImageUrlStateCode, tfUrlMimeType = null;
+	private JTextComponent tfImageUrlStateCode, tfImageUrlMimeType = null;
 
 	private transient Document taHtmlDocument = null;
 
@@ -508,9 +508,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(tfImageUrlStateCode = new JTextField(), String.format("wmin %1$s", 27));
 		//
-		add(tfUrlMimeType = new JTextField(), String.format("%1$s,wmin %2$s", "wrap", 65));
+		add(tfImageUrlMimeType = new JTextField(), String.format("%1$s,wmin %2$s", "wrap", 65));
 		//
-		setEditable(false, tfImageUrlStateCode, tfUrlMimeType);
+		setEditable(false, tfImageUrlStateCode, tfImageUrlMimeType);
 		//
 		add(new JLabel("Original Size"));
 		//
@@ -705,7 +705,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		if (Objects.equals(Util.getSource(evt), btnExecute)) {
 			//
-			setText("", tfImageUrlStateCode, tfUrlMimeType);
+			setText("", tfImageUrlStateCode, tfImageUrlMimeType);
 			//
 			final Path pathHtml = Path.of("test.html");
 			//
@@ -1400,7 +1400,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
 			//
-			Util.setText(voiceManagerPdfPanel != null ? voiceManagerPdfPanel.tfUrlMimeType : null, getMimeType(ci));
+			Util.setText(voiceManagerPdfPanel != null ? voiceManagerPdfPanel.tfImageUrlMimeType : null, getMimeType(ci));
 			//
 			if (httpURLConnection != null) {
 				//
