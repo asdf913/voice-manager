@@ -1420,7 +1420,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					Util.getText(voiceManagerPdfPanel != null ? voiceManagerPdfPanel.tfImageFile : null), File::new,
 					null);
 			//
-			if (exists(f) && isFile(f)) {
+			if (Boolean.logicalAnd(exists(f), isFile(f))) {
 				//
 				ObjectMap.setObject(om, byte[].class, Files.readAllBytes(toPath(f)));
 				//
