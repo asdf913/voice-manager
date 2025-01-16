@@ -1512,7 +1512,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		}
 	}
 
-	private static BufferedImage toBufferedImage(final byte[] bs) throws IOException {
+	private static BufferedImage toBufferedImage(@Nullable final byte[] bs) throws IOException {
 		//
 		try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null)) {
 			//
