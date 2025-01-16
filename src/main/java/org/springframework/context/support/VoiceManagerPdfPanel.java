@@ -1416,8 +1416,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			ObjectMap.setObject(om, VoiceManagerPdfPanel.class,
 					ObjectMap.getObject(objectMap, VoiceManagerPdfPanel.class));
 			//
-			final File f = testAndApply(Objects::nonNull,
-					Util.getText(voiceManagerPdfPanel != null ? voiceManagerPdfPanel.tfImageFile : null), File::new,
+			final File f = testAndApply(Objects::nonNull, Util.getText(getTfImageFile(voiceManagerPdfPanel)), File::new,
 					null);
 			//
 			if (Boolean.logicalAnd(exists(f), isFile(f))) {
@@ -1440,6 +1439,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
+	}
+
+	private static JTextComponent getTfImageFile(final VoiceManagerPdfPanel instance) {
+		return instance != null ? instance.tfImageFile : null;
 	}
 
 	@Nullable
