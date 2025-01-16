@@ -56,6 +56,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -176,7 +177,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
-	private AbstractButton cbIsOriginalSize = null;
+	private AbstractButton cbIsOriginalSize, btnImageFile = null;
 
 	@Note("HTML")
 	private JTextComponent taHtml = null;
@@ -196,7 +197,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Image URL State Code")
 	private JTextComponent tfImageUrlStateCode = null;
 
-	private JTextComponent tfImageUrlMimeType = null;
+	private JTextComponent tfImageUrlMimeType, tfImageFile = null;
 
 	private transient Document taHtmlDocument = null;
 
@@ -527,6 +528,16 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		setEditable(false, tfImageUrlStateCode, tfImageUrlMimeType);
 		//
+		// Image File
+		//
+		add(new JLabel("Image File"));
+		//
+		add(tfImageFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, span - 1));
+		//
+		add(btnImageFile = new JButton("Select"), "wrap");
+		//
+		// Original Size
+		//
 		add(new JLabel("Original Size"));
 		//
 		add(cbIsOriginalSize = new JCheckBox(), "wrap");
@@ -535,7 +546,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(btnExecute = new JButton("Execute"));
 		//
-		btnExecute.addActionListener(this);
+		addActionListener(this, btnImageFile, btnExecute);
 		//
 		final Double width = getWidth(btnExecute.getPreferredSize());
 		//
@@ -557,6 +568,27 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // if
 			//
+	}
+
+	private void addActionListener(final ActionListener l, final AbstractButton a, final AbstractButton b,
+			final AbstractButton... as) {
+		//
+		addActionListener(a, l);
+		//
+		addActionListener(b, l);
+		//
+		for (int i = 0; as != null && i < as.length; i++) {
+			//
+			addActionListener(as[i], l);
+			//
+		} // for
+			//
+	}
+
+	private static void addActionListener(final AbstractButton instance, final ActionListener l) {
+		if (instance != null) {
+			instance.addActionListener(l);
+		}
 	}
 
 	private static void setEditable(final boolean flag, final JTextComponent a, final JTextComponent b,
@@ -718,7 +750,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		if (Objects.equals(Util.getSource(evt), btnExecute)) {
+		final Object source = Util.getSource(evt);
+		//
+		if (Objects.equals(source, btnExecute)) {
 			//
 			setText("", tfImageUrlStateCode, tfImageUrlMimeType);
 			//
@@ -815,8 +849,22 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // try
 				//
+		} else if (Objects.equals(source, btnImageFile)) {
+			//
+			final JFileChooser jfc = new JFileChooser(".");
+			//
+			if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+				//
+				Util.setText(tfImageFile, Util.getAbsolutePath(getAbsoluteFile(jfc.getSelectedFile())));
+				//
+			} // if
+				//
 		} // if
 			//
+	}
+
+	private static File getAbsoluteFile(final File instance) {
+		return instance != null ? instance.getAbsoluteFile() : null;
 	}
 
 	private static void setText(final String string, final JTextComponent a, final JTextComponent b,
@@ -1351,22 +1399,41 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			ObjectMap.setObject(om, PDDocument.class, document);
 			//
-			ObjectMap.setObject(om, String.class, StringMap.getString(stringMap, "imageUrl"));
-			//
 			ObjectMap.setObject(om, PDRectangle.class, md);
 			//
 			ObjectMap.setObject(om, PDPageContentStream.class, cs);
 			//
+			final VoiceManagerPdfPanel voiceManagerPdfPanel = ObjectMap.getObject(objectMap,
+					VoiceManagerPdfPanel.class);
+			//
 			ObjectMap.setObject(om, VoiceManagerPdfPanel.class,
 					ObjectMap.getObject(objectMap, VoiceManagerPdfPanel.class));
 			//
-			addImageByUrl(om, lastHeight, isOrginialSize);
+			final File f = testAndApply(Objects::nonNull,
+					Util.getText(voiceManagerPdfPanel != null ? voiceManagerPdfPanel.tfImageFile : null), File::new,
+					null);
 			//
+			if (f != null && f.exists() && f.isFile()) {
+				//
+				if (om != null) {
+					//
+					om.setObject(byte[].class, Files.readAllBytes(f.toPath()));
+					//
+				} // if
+					//
+				addImage(om, lastHeight, isOrginialSize);
+				//
+			} else {
+				//
+				ObjectMap.setObject(om, String.class, StringMap.getString(stringMap, "imageUrl"));
+				//
+				addImageByUrl(om, lastHeight, isOrginialSize);
+				//
+			} // if
+				//
 			IOUtils.close(cs);
 			//
-			final File file = ObjectMap.getObject(objectMap, File.class);
-			//
-			document.save(file);
+			document.save(ObjectMap.getObject(objectMap, File.class));
 			//
 		} // if
 			//
