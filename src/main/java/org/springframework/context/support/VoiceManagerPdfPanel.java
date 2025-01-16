@@ -1420,7 +1420,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					Util.getText(voiceManagerPdfPanel != null ? voiceManagerPdfPanel.tfImageFile : null), File::new,
 					null);
 			//
-			if (exists(f) && f.isFile()) {
+			if (exists(f) && isFile(f)) {
 				//
 				ObjectMap.setObject(om, byte[].class, Files.readAllBytes(toPath(f)));
 				//
@@ -1444,6 +1444,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static Path toPath(@Nullable final File instance) {
 		return instance != null ? instance.toPath() : null;
+	}
+
+	private static boolean isFile(final File instance) {
+		return instance != null && instance.isFile();
 	}
 
 	private static boolean exists(@Nullable final File instance) {
