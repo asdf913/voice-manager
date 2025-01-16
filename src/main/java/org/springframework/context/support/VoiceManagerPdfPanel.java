@@ -1421,7 +1421,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			if (Boolean.logicalAnd(exists(f), isFile(f))) {
 				//
-				ObjectMap.setObject(om, byte[].class, Files.readAllBytes(toPath(f)));
+				ObjectMap.setObject(om, byte[].class, Files.readAllBytes(Util.toPath(f)));
 				//
 				addImage(om, lastHeight, isOrginialSize);
 				//
@@ -1448,11 +1448,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Nullable
 	private static JTextComponent getTfImageFile(@Nullable final VoiceManagerPdfPanel instance) {
 		return instance != null ? instance.tfImageFile : null;
-	}
-
-	@Nullable
-	private static Path toPath(@Nullable final File instance) {
-		return instance != null ? instance.toPath() : null;
 	}
 
 	private static boolean isFile(@Nullable final File instance) {

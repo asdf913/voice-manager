@@ -2551,7 +2551,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 						//
 					} // try
 						//
-					try (final OutputStream fos = Files.newOutputStream(file != null ? file.toPath() : null)) {
+					try (final OutputStream fos = Files.newOutputStream(Util.toPath(file))) {
 						//
 						fs.writeFilesystem(fos);
 						//
@@ -2565,7 +2565,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				try (final POIFSFileSystem fs = new POIFSFileSystem(file, true);
 						final Workbook wb2 = new HSSFWorkbook(fs.getRoot(), true);
-						final OutputStream os = Files.newOutputStream(file != null ? file.toPath() : null)) {
+						final OutputStream os = Files.newOutputStream(file.toPath(file))) {
 					//
 					WorkbookUtil.write(wb2, os);
 					//

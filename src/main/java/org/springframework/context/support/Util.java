@@ -11,6 +11,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1582,6 +1583,10 @@ public abstract class Util {
 
 	static int intValue(@Nullable final Number instance, final int defaultValue) {
 		return instance != null ? instance.intValue() : defaultValue;
+	}
+
+	static Path toPath(final File instance) {
+		return instance != null ? instance.toPath() : null;
 	}
 
 }
