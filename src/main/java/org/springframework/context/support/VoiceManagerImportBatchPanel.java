@@ -3229,7 +3229,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	private static Workbook getWorkbookByZipFile(final File file)
 			throws IOException, SAXException, ParserConfigurationException, InvalidFormatException {
 		//
-		final ContentInfo ci = testAndApply(x -> Util.isFile(x), file, new ContentInfoUtil()::findMatch, null);
+		final ContentInfo ci = testAndApply(Util::isFile, file, new ContentInfoUtil()::findMatch, null);
 		//
 		try (final ZipFile zf = testAndApply(x -> Objects.equals(ContentType.ZIP, getContentType(ci)), file,
 				ZipFile::new, null);
