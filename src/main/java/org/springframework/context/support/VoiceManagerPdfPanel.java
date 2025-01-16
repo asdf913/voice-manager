@@ -1420,9 +1420,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					Util.getText(voiceManagerPdfPanel != null ? voiceManagerPdfPanel.tfImageFile : null), File::new,
 					null);
 			//
-			if (f != null && f.exists() && f.isFile()) {
+			if (exists(f) && f.isFile()) {
 				//
-				ObjectMap.setObject(om, byte[].class, Files.readAllBytes(f.toPath()));
+				ObjectMap.setObject(om, byte[].class, Files.readAllBytes(toPath(f)));
 				//
 				addImage(om, lastHeight, isOrginialSize);
 				//
@@ -1440,6 +1440,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
+	}
+
+	private static Path toPath(final File instance) {
+		return instance != null ? instance.toPath() : null;
+	}
+
+	private static boolean exists(final File instance) {
+		return instance != null && instance.exists();
 	}
 
 	private static void setCustomMetadataValue(@Nullable final PDDocumentInformation instance, final String fieldName,
