@@ -1284,7 +1284,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			final String voiceId = StringMap.getString(stringMap, "voiceId");
 			//
 			setCustomMetadataValue(pdDocumentInformation, "voice",
-					speechApi != null ? speechApi.getVoiceAttribute(voiceId, "Name") : null);
+					SpeechApi.getVoiceAttribute(speechApi, voiceId, "Name"));
 			//
 			PDEmbeddedFile pdfEmbeddedFile = null;
 			//
