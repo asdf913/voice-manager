@@ -1414,60 +1414,17 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
 			//
-			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
-			//
 			Util.setText(voiceManagerPdfPanel != null ? voiceManagerPdfPanel.tfImageUrlMimeType : null,
-					getMimeType(ci));
+					getMimeType(testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null)));
 			//
 			accept(J_TEXT_COMPONENT_HTTP_URL_CONNECTION_FAILABLE_BI_PREDICATE, tfImageUrlStateCode, httpURLConnection);
 			//
-			final BufferedImage bi = toBufferedImage(bs);
-			//
-			if (bi != null) {
+			if (toBufferedImage(bs) != null && objectMap != null) {
 				//
-				final PDRectangle md = ObjectMap.getObject(objectMap, PDRectangle.class);
+				objectMap.setObject(byte[].class, bs);
 				//
-				final float width = getWidth(md, 0);
+				addImage(objectMap, lastHeight, isOrginialSize);
 				//
-				final double ratioWidth = width / floatValue(getWidth(bi), width);
-				//
-				final float pdfHeight = Math.min(getHeight(md, 0), lastHeight);
-				//
-				final double ratioHeight = pdfHeight / floatValue(getHeight(bi), pdfHeight);
-				//
-				final PDPageContentStream cs = ObjectMap.getObject(objectMap, PDPageContentStream.class);
-				//
-				final PDImageXObject image = PDImageXObject
-						.createFromByteArray(ObjectMap.getObject(objectMap, PDDocument.class), bs, null);
-				//
-				final int imageWidth = Util.intValue(getWidth(bi), 1);
-				//
-				final int imageHeight = Util.intValue(getHeight(bi), 0);
-				//
-				final double ratio = Math.min(ratioWidth, ratioHeight);
-				//
-				if (Boolean.logicalAnd(imageWidth < width, imageHeight < pdfHeight)) {
-					//
-					if (isOrginialSize) {
-						//
-						drawImage(cs, image, (width - imageWidth) / 2, lastHeight - getHeight(bi), imageWidth,
-								imageHeight);
-						//
-					} else {
-						//
-						drawImage(cs, image, (float) ((width - imageWidth * ratio) / 2),
-								(float) (lastHeight - (getHeight(bi) * ratio)), (float) (imageWidth * ratio),
-								(float) (imageHeight * ratio));
-						//
-					} // if
-						//
-				} else {
-					//
-					drawImage(cs, image, 0, lastHeight - (float) (imageHeight * ratio), width,
-							(float) (imageHeight * ratio));
-					//
-				} // if
-					//
 			} // if
 				//
 		} catch (final IOException e) {
@@ -1475,6 +1432,57 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			accept(J_TEXT_COMPONENT_HTTP_URL_CONNECTION_FAILABLE_BI_PREDICATE, tfImageUrlStateCode, httpURLConnection);
 			//
 		} // try
+			//
+	}
+
+	private static void addImage(@Nullable final ObjectMap objectMap, final float lastHeight,
+			final boolean isOrginialSize) throws IOException {
+		//
+		final byte[] bs = ObjectMap.getObject(objectMap, byte[].class);
+		//
+		final BufferedImage bi = toBufferedImage(bs);
+		//
+		final PDRectangle md = ObjectMap.getObject(objectMap, PDRectangle.class);
+		//
+		final float width = getWidth(md, 0);
+		//
+		final double ratioWidth = width / floatValue(getWidth(bi), width);
+		//
+		final float pdfHeight = Math.min(getHeight(md, 0), lastHeight);
+		//
+		final double ratioHeight = pdfHeight / floatValue(getHeight(bi), pdfHeight);
+		//
+		final PDPageContentStream cs = ObjectMap.getObject(objectMap, PDPageContentStream.class);
+		//
+		final PDImageXObject image = testAndApply(Objects::nonNull, bs,
+				x -> PDImageXObject.createFromByteArray(ObjectMap.getObject(objectMap, PDDocument.class), x, null),
+				null);
+		//
+		final int imageWidth = Util.intValue(getWidth(bi), 1);
+		//
+		final int imageHeight = Util.intValue(getHeight(bi), 0);
+		//
+		final double ratio = Math.min(ratioWidth, ratioHeight);
+		//
+		if (Boolean.logicalAnd(imageWidth < width, imageHeight < pdfHeight)) {
+			//
+			if (isOrginialSize) {
+				//
+				drawImage(cs, image, (width - imageWidth) / 2, lastHeight - getHeight(bi), imageWidth, imageHeight);
+				//
+			} else {
+				//
+				drawImage(cs, image, (float) ((width - imageWidth * ratio) / 2),
+						(float) (lastHeight - (getHeight(bi) * ratio)), (float) (imageWidth * ratio),
+						(float) (imageHeight * ratio));
+				//
+			} // if
+				//
+		} else {
+			//
+			drawImage(cs, image, 0, lastHeight - (float) (imageHeight * ratio), width, (float) (imageHeight * ratio));
+			//
+		} // if
 			//
 	}
 
