@@ -1227,7 +1227,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		final PDDocument document = ObjectMap.getObject(objectMap, PDDocument.class);
 		//
-		if (document != null && document.getNumberOfPages() > 0) {
+		if (getNumberOfPages(document) > 0) {
 			//
 			final PDPage pd = document.getPage(0);
 			//
@@ -1439,6 +1439,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
+	}
+
+	private static int getNumberOfPages(final PDDocument instance) {
+		return instance != null ? instance.getNumberOfPages() : 0;
 	}
 
 	private static JTextComponent getTfImageFile(final VoiceManagerPdfPanel instance) {
