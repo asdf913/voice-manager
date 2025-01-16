@@ -177,7 +177,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
-	private AbstractButton cbIsOriginalSize, btnImageFile = null;
+	@Note("Is Original Size")
+	private AbstractButton cbIsOriginalSize = null;
+
+	private AbstractButton btnImageFile = null;
 
 	@Note("HTML")
 	private JTextComponent taHtml = null;
@@ -197,7 +200,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Image URL State Code")
 	private JTextComponent tfImageUrlStateCode = null;
 
-	private JTextComponent tfImageUrlMimeType, tfImageFile = null;
+	@Note("Image URL Mime Type")
+	private JTextComponent tfImageUrlMimeType = null;
+
+	private JTextComponent tfImageFile = null;
 
 	private transient Document taHtmlDocument = null;
 
