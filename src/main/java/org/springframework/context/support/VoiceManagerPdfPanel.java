@@ -1447,7 +1447,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null ? instance.toPath() : null;
 	}
 
-	private static boolean isFile(final File instance) {
+	private static boolean isFile(@Nullable final File instance) {
 		return instance != null && instance.isFile();
 	}
 
