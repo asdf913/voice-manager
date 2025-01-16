@@ -1441,7 +1441,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static int getNumberOfPages(final PDDocument instance) {
+	private static int getNumberOfPages(@Nullable final PDDocument instance) {
 		return instance != null ? instance.getNumberOfPages() : 0;
 	}
 
