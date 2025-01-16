@@ -1445,6 +1445,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null ? instance.getNumberOfPages() : 0;
 	}
 
+	@Nullable
 	private static JTextComponent getTfImageFile(@Nullable final VoiceManagerPdfPanel instance) {
 		return instance != null ? instance.tfImageFile : null;
 	}
