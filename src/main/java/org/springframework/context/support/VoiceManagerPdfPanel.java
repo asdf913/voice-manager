@@ -1414,8 +1414,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
 			//
+			final ContentInfo ci = testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null);
+			//
 			Util.setText(voiceManagerPdfPanel != null ? voiceManagerPdfPanel.tfImageUrlMimeType : null,
-					getMimeType(testAndApply(Objects::nonNull, bs, new ContentInfoUtil()::findMatch, null)));
+					getMimeType(ci));
 			//
 			accept(J_TEXT_COMPONENT_HTTP_URL_CONNECTION_FAILABLE_BI_PREDICATE, tfImageUrlStateCode, httpURLConnection);
 			//
