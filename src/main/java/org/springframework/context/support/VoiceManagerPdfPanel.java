@@ -577,7 +577,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	private void addActionListener(final ActionListener l, final AbstractButton a, final AbstractButton b,
-			final AbstractButton... as) {
+			@Nullable final AbstractButton... as) {
 		//
 		addActionListener(a, l);
 		//
@@ -591,7 +591,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static void addActionListener(final AbstractButton instance, final ActionListener l) {
+	private static void addActionListener(@Nullable final AbstractButton instance, final ActionListener l) {
 		if (instance != null) {
 			instance.addActionListener(l);
 		}
