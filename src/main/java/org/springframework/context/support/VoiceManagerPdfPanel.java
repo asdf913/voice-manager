@@ -863,7 +863,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static File getAbsoluteFile(final File instance) {
+	private static File getAbsoluteFile(@Nullable final File instance) {
 		return instance != null ? instance.getAbsoluteFile() : null;
 	}
 
