@@ -1422,12 +1422,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			if (f != null && f.exists() && f.isFile()) {
 				//
-				if (om != null) {
-					//
-					om.setObject(byte[].class, Files.readAllBytes(f.toPath()));
-					//
-				} // if
-					//
+				ObjectMap.setObject(om, byte[].class, Files.readAllBytes(f.toPath()));
+				//
 				addImage(om, lastHeight, isOrginialSize);
 				//
 			} else {
