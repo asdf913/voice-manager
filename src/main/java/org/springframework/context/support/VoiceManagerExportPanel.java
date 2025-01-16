@@ -341,7 +341,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 	private static final String SHA_512 = "SHA-512";
 
 	private static final FailablePredicate<File, RuntimeException> EMPTY_FILE_PREDICATE = f -> f != null && f.exists()
-			&& isFile(f) && longValue(length(f), 0) == 0;
+			&& Util.isFile(f) && longValue(length(f), 0) == 0;
 
 	private static final int TEMP_FILE_MINIMUM_PREFIX_LENGTH = Util.intValue(getTempFileMinimumPrefixLength(), 3);
 
@@ -924,10 +924,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 
 	private static long longValue(@Nullable final Number instance, final long defaultValue) {
 		return instance != null ? instance.longValue() : defaultValue;
-	}
-
-	private static boolean isFile(@Nullable final File instance) {
-		return instance != null && instance.isFile();
 	}
 
 	@Nullable
@@ -3780,7 +3776,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				throws IOException, BaseException, IllegalAccessException, InvocationTargetException {
 			//
 			final String fileExtension = getFileExtension(Util.cast(ContentInfo.class,
-					testAndApply(VoiceManagerExportPanel::isFile, file, new ContentInfoUtil()::findMatch, null)));
+					testAndApply(Util::isFile, file, new ContentInfoUtil()::findMatch, null)));
 			//
 			if (Objects.equals("mp3", fileExtension)) {
 				//

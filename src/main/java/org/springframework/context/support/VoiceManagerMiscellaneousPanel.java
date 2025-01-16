@@ -179,7 +179,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 	private static final String LANGUAGE = "Language";
 
 	private static final FailablePredicate<File, RuntimeException> EMPTY_FILE_PREDICATE = f -> f != null && f.exists()
-			&& isFile(f) && longValue(length(f), 0) == 0;
+			&& Util.isFile(f) && longValue(length(f), 0) == 0;
 
 	private transient ApplicationContext applicationContext = null;
 
@@ -338,10 +338,6 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 
 	private static long longValue(@Nullable final Number instance, final long defaultValue) {
 		return instance != null ? instance.longValue() : defaultValue;
-	}
-
-	private static boolean isFile(@Nullable final File instance) {
-		return instance != null && instance.isFile();
 	}
 
 	@Nullable

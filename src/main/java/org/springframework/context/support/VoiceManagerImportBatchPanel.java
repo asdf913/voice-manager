@@ -1202,7 +1202,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			try {
 				//
-				if (!isFile(f = fs[i]) || getWorkbook(f) == null) {
+				if (!Util.isFile(f = fs[i]) || getWorkbook(f) == null) {
 					//
 					continue;
 					//
@@ -1988,7 +1988,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			throws BaseException, IOException, IllegalAccessException, InvocationTargetException {
 		//
 		if (Objects.equals("mp3", getFileExtension(Util.cast(ContentInfo.class,
-				testAndApply(VoiceManagerImportBatchPanel::isFile, file, new ContentInfoUtil()::findMatch, null))))) {
+				testAndApply(Util::isFile, file, new ContentInfoUtil()::findMatch, null))))) {
 			//
 			final Mp3File mp3File = new Mp3File(file);
 			//
@@ -3229,7 +3229,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	private static Workbook getWorkbookByZipFile(final File file)
 			throws IOException, SAXException, ParserConfigurationException, InvalidFormatException {
 		//
-		final ContentInfo ci = testAndApply(x -> x != null && x.isFile(), file, new ContentInfoUtil()::findMatch, null);
+		final ContentInfo ci = testAndApply(x -> Util.isFile(x), file, new ContentInfoUtil()::findMatch, null);
 		//
 		try (final ZipFile zf = testAndApply(x -> Objects.equals(ContentType.ZIP, getContentType(ci)), file,
 				ZipFile::new, null);
@@ -3838,7 +3838,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			return false;
 			//
-		} else if (!isFile(file)) {
+		} else if (!Util.isFile(file)) {
 			//
 			accept(errorMessageConsumer, voice, "Not A Regular File Selected");
 			//
@@ -3858,10 +3858,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 
 	private static long longValue(@Nullable final Number instance, final long defaultValue) {
 		return instance != null ? instance.longValue() : defaultValue;
-	}
-
-	private static boolean isFile(@Nullable final File instance) {
-		return instance != null && instance.isFile();
 	}
 
 	private static int showOpenDialog(@Nullable final JFileChooser instance, @Nullable final Component parent)

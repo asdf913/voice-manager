@@ -2577,7 +2577,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			throws BaseException, IOException, IllegalAccessException, InvocationTargetException {
 		//
 		if (Objects.equals("mp3", getFileExtension(Util.cast(ContentInfo.class,
-				testAndApply(VoiceManagerImportSinglePanel::isFile, file, new ContentInfoUtil()::findMatch, null))))) {
+				testAndApply(Util::isFile, file, new ContentInfoUtil()::findMatch, null))))) {
 			//
 			final Mp3File mp3File = new Mp3File(file);
 			//
@@ -2887,7 +2887,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 			return;
 			//
-		} else if (!isFile(file)) {
+		} else if (!Util.isFile(file)) {
 			//
 			testAndAccept((a, b) -> a != null, tmImportException, "Not A Regular File Selected",
 					//
@@ -3217,7 +3217,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 			return false;
 			//
-		} else if (!isFile(file)) {
+		} else if (!Util.isFile(file)) {
 			//
 			accept(errorMessageConsumer, voice, "Not A Regular File Selected");
 			//
@@ -3264,10 +3264,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		return Long.valueOf(instance.length());
 		//
-	}
-
-	private static boolean isFile(@Nullable final File instance) {
-		return instance != null && instance.isFile();
 	}
 
 	private static void addRow(@Nullable final DefaultTableModel instance, final Object[] rowData) {

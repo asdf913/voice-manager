@@ -1745,7 +1745,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		final File f = folderPath != null && filePath != null ? Path.of(folderPath, filePath).toFile()
 				: testAndApply(Objects::nonNull, filePath, File::new, null);
 		//
-		final ContentInfo ci = testAndApply(VoiceManager::isFile, f, new ContentInfoUtil()::findMatch, null);
+		final ContentInfo ci = testAndApply(Util::isFile, f, new ContentInfoUtil()::findMatch, null);
 		//
 		String mimeType = getMimeType(ci);
 		//
@@ -1757,7 +1757,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		} // if
 			//
-		return Pair.of(mimeType, testAndApply(VoiceManager::isFile, f,
+		return Pair.of(mimeType, testAndApply(Util::isFile, f,
 				x -> encodeToString(Base64.getEncoder(), Files.readAllBytes(Path.of(toURI(x)))), null));
 		//
 	}
@@ -1811,10 +1811,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	@Nullable
 	private static String getMessage(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMessage() : null;
-	}
-
-	private static boolean isFile(@Nullable final File instance) {
-		return instance != null && instance.isFile();
 	}
 
 	@Nullable
