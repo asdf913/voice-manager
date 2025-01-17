@@ -532,13 +532,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(tfImageUrlMimeType = new JTextField(), String.format("%1$s,wmin %2$s", "wrap", 65));
 		//
-		setEditable(false, tfImageUrlStateCode, tfImageUrlMimeType);
-		//
 		// Image File
 		//
 		add(new JLabel("Image File"));
 		//
 		add(tfImageFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, span - 1));
+		//
+		setEditable(false, tfImageUrlStateCode, tfImageUrlMimeType, tfImageFile);
 		//
 		add(btnImageFile = new JButton("Select"), "wrap");
 		//
