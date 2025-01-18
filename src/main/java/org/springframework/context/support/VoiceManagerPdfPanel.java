@@ -964,30 +964,32 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static <T extends Appendable> T output(final HtmlBuilder<T> instance) {
+	private static <T extends Appendable> T output(@Nullable final HtmlBuilder<T> instance) {
 		return instance != null ? instance.output() : null;
 	}
 
-	private static <T extends Appendable> HtmlBuilder<T> appendEndTag(final HtmlBuilder<T> instance, final String name)
-			throws IOException {
+	private static <T extends Appendable> HtmlBuilder<T> appendEndTag(@Nullable final HtmlBuilder<T> instance,
+			final String name) throws IOException {
 		return instance != null ? instance.appendEndTag(name) : null;
 	}
 
-	private static <T extends Appendable> HtmlBuilder<T> appendUnescapedText(final HtmlBuilder<T> instance,
+	private static <T extends Appendable> HtmlBuilder<T> appendUnescapedText(@Nullable final HtmlBuilder<T> instance,
 			final String txt) throws IOException {
 		return instance != null ? instance.appendUnescapedText(txt) : null;
 	}
 
-	private static HtmlBuilder<? extends Appendable> completeTag(final TagBuilder instance) throws IOException {
+	private static HtmlBuilder<? extends Appendable> completeTag(@Nullable final TagBuilder instance)
+			throws IOException {
 		return instance != null ? instance.completeTag() : null;
 	}
 
-	private static TagBuilder appendAttribute(final TagBuilder instance, final String name, final String value)
-			throws IOException {
+	private static TagBuilder appendAttribute(@Nullable final TagBuilder instance, final String name,
+			final String value) throws IOException {
 		return instance != null ? instance.appendAttribute(name, value) : null;
 	}
 
-	private static TagBuilder appendStartTag(final HtmlBuilder<?> instance, final String name) throws IOException {
+	private static TagBuilder appendStartTag(@Nullable final HtmlBuilder<?> instance, final String name)
+			throws IOException {
 		return instance != null ? instance.appendStartTag(name) : null;
 	}
 
