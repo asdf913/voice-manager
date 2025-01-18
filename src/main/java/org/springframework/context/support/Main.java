@@ -384,7 +384,7 @@ public class Main {
 			//
 			try {
 				//
-				if (Narcissus.getObjectField(instance, Component.class.getDeclaredField("peer")) == null) {
+				if (Narcissus.getObjectField(instance, Util.getDeclaredField(Component.class, "peer")) == null) {
 					//
 					final List<Method> ms = Util.toList(Util.filter(
 							testAndApply(Objects::nonNull, Narcissus.getDeclaredMethods(Component.class),

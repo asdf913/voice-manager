@@ -935,10 +935,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						} else if (i > 0 && ins[i - 1] instanceof GETSTATIC getstatic && Boolean.logicalAnd(
 								Boolean.logicalOr(in instanceof IF_ACMPNE, in instanceof IF_ACMPEQ),
 								!Util.contains(allowedFileType = ObjectUtils.getIfNull(allowedFileType, ArrayList::new),
-										object = Narcissus.getStaticField(
-												(clz = Util.forName(getstatic.getFieldType(cpg).getClassName())) != null
-														? clz.getDeclaredField(getstatic.getFieldName(cpg))
-														: null)))) {
+										object = Narcissus.getStaticField(Util.getDeclaredField(
+												clz = Util.forName(getstatic.getFieldType(cpg).getClassName()),
+												getstatic.getFieldName(cpg)))))) {
 							//
 							Util.add(allowedFileType, object);
 							//

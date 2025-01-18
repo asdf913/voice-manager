@@ -156,15 +156,14 @@ class VoiceManagerTest {
 			METHOD_GET_PREFERRED_WIDTH, METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ADD_ITERABLE,
 			METHOD_MATCHER, METHOD_MATCHES, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR,
 			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_TO_ARRAY_COLLECTION, METHOD_GET_TAB_INDEX_BY_TITLE,
-			METHOD_GET_DECLARED_FIELD, METHOD_GET_LIST, METHOD_TEST_AND_ACCEPT_PREDICATE,
-			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_TO_URI_FILE, METHOD_TO_URI_URL, METHOD_ENCODE_TO_STRING,
-			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE,
-			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL,
-			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_2, METHOD_IS_STATIC, METHOD_GET_FIELD_BY_NAME,
-			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_SET_FOCUS_CYCLE_ROOT,
-			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_DECLARED_CONSTRUCTOR,
-			METHOD_NEW_INSTANCE, METHOD_GET_NUMBER, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_SET_SELECTED_INDEX,
-			METHOD_GET_TITLED_COMPONENT_MAP = null;
+			METHOD_GET_LIST, METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_TO_URI_FILE,
+			METHOD_TO_URI_URL, METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP,
+			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT,
+			METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL, METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_2,
+			METHOD_IS_STATIC, METHOD_GET_FIELD_BY_NAME, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL,
+			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
+			METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE, METHOD_GET_NUMBER, METHOD_CREATE_IMPORT_RESULT_PANEL,
+			METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -211,9 +210,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_TAB_INDEX_BY_TITLE = clz.getDeclaredMethod("getTabIndexByTitle", List.class, Object.class))
-				.setAccessible(true);
-		//
-		(METHOD_GET_DECLARED_FIELD = clz.getDeclaredMethod("getDeclaredField", Class.class, String.class))
 				.setAccessible(true);
 		//
 		(METHOD_GET_LIST = clz.getDeclaredMethod("get", List.class, Integer.TYPE)).setAccessible(true);
@@ -1216,27 +1212,6 @@ class VoiceManagerTest {
 	}
 
 	@Test
-	void testGetDeclaredField() throws Throwable {
-		//
-		Assertions.assertNull(getDeclaredField(null, null));
-		//
-	}
-
-	private static Field getDeclaredField(final Class<?> instance, final String name) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_DECLARED_FIELD.invoke(null, instance, name);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Field) {
-				return (Field) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testGet() throws Throwable {
 		//
 		Assertions.assertNull(get(null, 0));
@@ -1454,7 +1429,7 @@ class VoiceManagerTest {
 		final Object jTabbedPane = new JTabbedPane();
 		//
 		final List<?> pages = Util.cast(List.class,
-				Narcissus.getObjectField(jTabbedPane, getDeclaredField(JTabbedPane.class, "pages")));
+				Narcissus.getObjectField(jTabbedPane, Util.getDeclaredField(JTabbedPane.class, "pages")));
 		//
 		Util.add(pages, null);
 		//
@@ -2548,7 +2523,7 @@ class VoiceManagerTest {
 				? clz.getDeclaredMethod("setAudioStreamEncoderByteArrayLength", Object.class)
 				: null;
 		//
-		final Field audioStreamEncoderByteArrayLength = getDeclaredField(clz, "audioStreamEncoderByteArrayLength");
+		final Field audioStreamEncoderByteArrayLength = Util.getDeclaredField(clz, "audioStreamEncoderByteArrayLength");
 		//
 		if (audioStreamEncoderByteArrayLength != null) {
 			//

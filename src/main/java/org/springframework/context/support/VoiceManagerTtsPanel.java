@@ -826,7 +826,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 		try {
 			//
-			if (Narcissus.getField(instance, JComponent.class.getDeclaredField("ui")) == null) {
+			if (Narcissus.getField(instance, Util.getDeclaredField(JComponent.class, "ui")) == null) {
 				//
 				return JFileChooser.ERROR_OPTION;
 				//
@@ -1414,7 +1414,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 		try {
 			//
-			if (Narcissus.getObjectField(instance, getDeclaredField(Container.class, COMPONENT)) == null) {
+			if (Narcissus.getObjectField(instance, Util.getDeclaredField(Container.class, COMPONENT)) == null) {
 				//
 				return;
 				//
@@ -1445,7 +1445,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 		try {
 			//
-			if (Narcissus.getObjectField(instance, getDeclaredField(Container.class, COMPONENT)) == null) {
+			if (Narcissus.getObjectField(instance, Util.getDeclaredField(Container.class, COMPONENT)) == null) {
 				//
 				return;
 				//
@@ -1463,12 +1463,6 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static Field getDeclaredField(@Nullable final Class<?> instance, final String name)
-			throws NoSuchFieldException {
-		return instance != null ? instance.getDeclaredField(name) : null;
 	}
 
 	@Nullable

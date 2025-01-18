@@ -1631,10 +1631,10 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		try {
 			//
 			writeLock = testAndApply(Objects::nonNull, instance,
-					x -> Narcissus.getObjectField(x, Console.class.getDeclaredField("writeLock")), null);
+					x -> Narcissus.getObjectField(x, Util.getDeclaredField(Console.class, "writeLock")), null);
 			//
 			readLock = testAndApply(Objects::nonNull, instance,
-					x -> Narcissus.getObjectField(x, Console.class.getDeclaredField("readLock")), null);
+					x -> Narcissus.getObjectField(x, Util.getDeclaredField(Console.class, "readLock")), null);
 			//
 		} catch (final NoSuchFieldException e) {
 			//
@@ -1653,7 +1653,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		try {
 			//
 			lock = testAndApply(Objects::nonNull, instance,
-					x -> Narcissus.getObjectField(x, Writer.class.getDeclaredField("lock")), null);
+					x -> Narcissus.getObjectField(x, Util.getDeclaredField(Writer.class, "lock")), null);
 			//
 		} catch (final NoSuchFieldException e) {
 			//
@@ -2711,7 +2711,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		try {
 			//
-			if (Narcissus.getField(instance, JComponent.class.getDeclaredField("ui")) == null) {
+			if (Narcissus.getField(instance, Util.getDeclaredField(JComponent.class, "ui")) == null) {
 				//
 				return JFileChooser.ERROR_OPTION;
 				//
@@ -3250,7 +3250,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		try {
 			//
-			if (Narcissus.getField(instance, getDeclaredField(File.class, "path")) == null) {
+			if (Narcissus.getField(instance, Util.getDeclaredField(File.class, "path")) == null) {
 				//
 				return null;
 				//
@@ -3502,7 +3502,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		try {
 			//
-			if (Narcissus.getObjectField(instance, Matcher.class.getDeclaredField("groups")) == null) {
+			if (Narcissus.getObjectField(instance, Util.getDeclaredField(Matcher.class, "groups")) == null) {
 				//
 				return false;
 				//
@@ -3529,7 +3529,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		try {
 			//
-			if (Narcissus.getObjectField(instance, Pattern.class.getDeclaredField("pattern")) == null) {
+			if (Narcissus.getObjectField(instance, Util.getDeclaredField(Pattern.class, "pattern")) == null) {
 				//
 				return null;
 				//
@@ -3861,7 +3861,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		try {
 			//
-			if (Narcissus.getField(instance, getDeclaredField(Util.getClass(instance), HANDLER)) == null) {
+			if (Narcissus.getField(instance, Util.getDeclaredField(Util.getClass(instance), HANDLER)) == null) {
 				//
 				return null;
 				//
@@ -3954,9 +3954,9 @@ public class VoiceManagerImportSinglePanel extends JPanel
 						Util.get(
 								Util.cast(Map.class,
 										Narcissus.getObjectField(IIORegistry.getDefaultInstance(),
-												getDeclaredField(ServiceRegistry.class, "categoryMap"))),
+												Util.getDeclaredField(ServiceRegistry.class, "categoryMap"))),
 								ImageWriterSpi.class),
-						x -> Narcissus.getField(x, getDeclaredField(Util.getClass(x), "map")), null));
+						x -> Narcissus.getField(x, Util.getDeclaredField(Util.getClass(x), "map")), null));
 		//
 		final List<String> classNames = testAndApply(Objects::nonNull, Util.toList(
 				Util.map(Util.stream(Util.keySet(imageWriterSpis)), x -> Util.getName(Util.cast(Class.class, x)))),
@@ -4435,7 +4435,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		try {
 			//
-			if (Narcissus.getObjectField(instance, getDeclaredField(Container.class, COMPONENT)) == null) {
+			if (Narcissus.getObjectField(instance, Util.getDeclaredField(Container.class, COMPONENT)) == null) {
 				//
 				return;
 				//
@@ -4633,7 +4633,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				try {
 					//
 					raster = testAndApply(Objects::nonNull, pitchAccentImage,
-							x -> Narcissus.getObjectField(x, getDeclaredField(Util.getClass(x), "raster")), null);
+							x -> Narcissus.getObjectField(x, Util.getDeclaredField(Util.getClass(x), "raster")), null);
 					//
 				} catch (final NoSuchFieldException e) {
 					//
@@ -4660,12 +4660,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 
 		};
 		//
-	}
-
-	@Nullable
-	private static Field getDeclaredField(@Nullable final Class<?> instance, final String name)
-			throws NoSuchFieldException {
-		return instance != null ? instance.getDeclaredField(name) : null;
 	}
 
 	private static <E extends Throwable> void testAndRun(final boolean b, @Nullable final FailableRunnable<E> runnable)

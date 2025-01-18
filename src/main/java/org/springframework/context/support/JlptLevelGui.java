@@ -447,7 +447,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			throws IOException, NoSuchFieldException {
 		//
 		if (instance != null && uri != null
-				&& Narcissus.getObjectField(instance, Desktop.class.getDeclaredField("peer")) != null) {
+				&& Narcissus.getObjectField(instance, Util.getDeclaredField(Desktop.class, "peer")) != null) {
 			//
 			instance.browse(uri);
 			//

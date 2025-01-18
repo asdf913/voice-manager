@@ -475,9 +475,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 						Util.get(
 								Util.cast(Map.class,
 										Narcissus.getObjectField(IIORegistry.getDefaultInstance(),
-												getDeclaredField(ServiceRegistry.class, "categoryMap"))),
+												Util.getDeclaredField(ServiceRegistry.class, "categoryMap"))),
 								ImageWriterSpi.class),
-						x -> Narcissus.getField(x, getDeclaredField(Util.getClass(x), "map")), null));
+						x -> Narcissus.getField(x, Util.getDeclaredField(Util.getClass(x), "map")), null));
 		//
 		final List<String> classNames = testAndApply(Objects::nonNull, Util.toList(
 				Util.map(Util.stream(Util.keySet(imageWriterSpis)), x -> Util.getName(Util.cast(Class.class, x)))),
@@ -842,7 +842,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		try {
 			//
 			raster = testAndApply(Objects::nonNull, pitchAccentImage,
-					x -> Narcissus.getObjectField(x, getDeclaredField(Util.getClass(x), "raster")), null);
+					x -> Narcissus.getObjectField(x, Util.getDeclaredField(Util.getClass(x), "raster")), null);
 			//
 		} catch (final NoSuchFieldException e) {
 			//
@@ -878,7 +878,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		try {
 			//
 			raster = testAndApply(Objects::nonNull, pitchAccentImage,
-					x -> Narcissus.getObjectField(x, getDeclaredField(Util.getClass(x), "raster")), null);
+					x -> Narcissus.getObjectField(x, Util.getDeclaredField(Util.getClass(x), "raster")), null);
 			//
 		} catch (final NoSuchFieldException e) {
 			//
@@ -934,12 +934,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static Field getDeclaredField(@Nullable final Class<?> instance, final String name)
-			throws NoSuchFieldException {
-		return instance != null ? instance.getDeclaredField(name) : null;
 	}
 
 	private static <T> void forEach(@Nullable final Iterable<T> instance, @Nullable final Consumer<? super T> action) {

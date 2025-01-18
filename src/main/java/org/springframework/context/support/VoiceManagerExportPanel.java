@@ -937,7 +937,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 		try {
 			//
-			if (Narcissus.getField(instance, getDeclaredField(File.class, "path")) == null) {
+			if (Narcissus.getField(instance, Util.getDeclaredField(File.class, "path")) == null) {
 				//
 				return null;
 				//
@@ -951,12 +951,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 		return Long.valueOf(instance.length());
 		//
-	}
-
-	@Nullable
-	private static Field getDeclaredField(@Nullable final Class<?> instance, final String name)
-			throws NoSuchFieldException {
-		return instance != null ? instance.getDeclaredField(name) : null;
 	}
 
 	private static class MicrosoftAccessFileFormatListCellRenderer implements ListCellRenderer<Object> {
@@ -4056,7 +4050,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 			try {
 				//
-				final Field ticker = Stopwatch.class.getDeclaredField("ticker");
+				final Field ticker = Util.getDeclaredField(Stopwatch.class, "ticker");
 				//
 				setAccessible(ticker, true);
 				//
@@ -4092,7 +4086,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 			try {
 				//
-				final Field mPackage = OdfPackageDocument.class.getDeclaredField("mPackage");
+				final Field mPackage = Util.getDeclaredField(OdfPackageDocument.class, "mPackage");
 				//
 				setAccessible(mPackage, true);
 				//
@@ -4639,7 +4633,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 			try {
 				//
-				if (Narcissus.getObjectField(instance, Matcher.class.getDeclaredField("groups")) == null) {
+				if (Narcissus.getObjectField(instance, Util.getDeclaredField(Matcher.class, "groups")) == null) {
 					//
 					return false;
 					//
@@ -4666,7 +4660,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 			try {
 				//
-				if (Narcissus.getObjectField(instance, Pattern.class.getDeclaredField("pattern")) == null) {
+				if (Narcissus.getObjectField(instance, Util.getDeclaredField(Pattern.class, "pattern")) == null) {
 					//
 					return null;
 					//

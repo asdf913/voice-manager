@@ -351,7 +351,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 		try {
 			//
-			if (Narcissus.getField(instance, getDeclaredField(File.class, "path")) == null) {
+			if (Narcissus.getField(instance, Util.getDeclaredField(File.class, "path")) == null) {
 				//
 				return null;
 				//
@@ -365,12 +365,6 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 		return Long.valueOf(instance.length());
 		//
-	}
-
-	@Nullable
-	private static Field getDeclaredField(@Nullable final Class<?> instance, final String name)
-			throws NoSuchFieldException {
-		return instance != null ? instance.getDeclaredField(name) : null;
 	}
 
 	private static class JLabelLink extends JLabel {

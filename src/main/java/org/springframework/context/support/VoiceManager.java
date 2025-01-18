@@ -735,7 +735,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			// If the "component" field in "ava.awt.Container" class is null, call "return"
 			// at once and stop the rest statement(s).
 			//
-		if (Narcissus.getObjectField(this, Container.class.getDeclaredField(COMPONENT)) == null) {
+		if (Narcissus.getObjectField(this, Util.getDeclaredField(Container.class, COMPONENT)) == null) {
 			//
 			return;
 			//
@@ -766,7 +766,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				preferredHeight, jTabbedPane);
 		//
 		final List<?> pages = Util.cast(List.class, testAndApply(Objects::nonNull, jTabbedPane,
-				x -> Narcissus.getField(x, getDeclaredField(Util.getClass(x), "pages")), null));
+				x -> Narcissus.getField(x, Util.getDeclaredField(Util.getClass(x), "pages")), null));
 		//
 		setSelectedIndex(jTabbedPane, getTabIndexByTitle(pages, PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.tabTitle")));
@@ -788,7 +788,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		forEach(Util.toList(Util.map(
 				FailableStreamUtil.stream(FailableStreamUtil.map(new FailableStream<>(Util.stream(pages)),
-						x -> Narcissus.getObjectField(x, getDeclaredField(Util.getClass(x), COMPONENT)))),
+						x -> Narcissus.getObjectField(x, Util.getDeclaredField(Util.getClass(x), COMPONENT)))),
 				x -> Util.cast(Container.class, x))), c -> {
 					//
 					// https://stackoverflow.com/questions/35508128/setting-personalized-focustraversalpolicy-on-tab-in-jtabbedpane
@@ -1057,7 +1057,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		Double preferredHeight = null;
 		//
 		final List<?> pages = Util.cast(List.class, testAndApply(Objects::nonNull, jTabbedPane,
-				x -> Narcissus.getObjectField(x, getDeclaredField(JTabbedPane.class, "pages")), null));
+				x -> Narcissus.getObjectField(x, Util.getDeclaredField(JTabbedPane.class, "pages")), null));
 		//
 		Object page = null;
 		//
@@ -1069,7 +1069,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			if (f == null) {
 				//
-				f = getDeclaredField(Util.getClass(page), COMPONENT);
+				f = Util.getDeclaredField(Util.getClass(page), COMPONENT);
 				//
 			} // if
 				//
@@ -1420,12 +1420,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 	}
 
-	@Nullable
-	private static Field getDeclaredField(@Nullable final Class<?> instance, final String name)
-			throws NoSuchFieldException {
-		return instance != null ? instance.getDeclaredField(name) : null;
-	}
-
 	private LayoutManager cloneLayoutManager() {
 		//
 		final LayoutManager layoutManagerDefault = null;
@@ -1522,7 +1516,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		try {
 			//
-			if (Narcissus.getObjectField(instance, getDeclaredField(Container.class, COMPONENT)) == null) {
+			if (Narcissus.getObjectField(instance, Util.getDeclaredField(Container.class, COMPONENT)) == null) {
 				//
 				return;
 				//
@@ -1553,7 +1547,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		try {
 			//
-			if (Narcissus.getObjectField(instance, getDeclaredField(Container.class, COMPONENT)) == null) {
+			if (Narcissus.getObjectField(instance, Util.getDeclaredField(Container.class, COMPONENT)) == null) {
 				//
 				return;
 				//
@@ -1622,7 +1616,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		try {
 			//
-			if (Narcissus.getField(instance, URL.class.getDeclaredField(HANDLER)) == null) {
+			if (Narcissus.getField(instance, Util.getDeclaredField(URL.class, HANDLER)) == null) {
 				//
 				return null;
 				//
@@ -2405,7 +2399,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		try {
 			//
-			if (Narcissus.getObjectField(instance, Pattern.class.getDeclaredField("pattern")) == null) {
+			if (Narcissus.getObjectField(instance, Util.getDeclaredField(Pattern.class, "pattern")) == null) {
 				//
 				return null;
 				//
@@ -2431,7 +2425,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		try {
 			//
-			if (Narcissus.getObjectField(instance, Matcher.class.getDeclaredField("groups")) == null) {
+			if (Narcissus.getObjectField(instance, Util.getDeclaredField(Matcher.class, "groups")) == null) {
 				//
 				return false;
 				//
