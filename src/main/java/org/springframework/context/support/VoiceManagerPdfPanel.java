@@ -947,21 +947,36 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // try
 					//
-				if (Util.contains(allowedFileType, fileType)) {
+				testAndRun(Util.contains(allowedFileType, fileType), () -> {
 					//
 					Util.setText(tfImageFile, Util.getAbsolutePath(file));
 					//
-				} else {
+				}, () -> {
 					//
 					JOptionPane.showMessageDialog(null, "Please select an image file");
 					//
 					Util.setText(tfImageFile, null);
 					//
-				} // if
+				});
+				//
 			} // if
 				//
 		} // if
 			//
+	}
+
+	private static void testAndRun(final boolean b, final Runnable ra, final Runnable rb) {
+		if (b) {
+			run(ra);
+		} else {
+			run(rb);
+		}
+	}
+
+	private static void run(final Runnable instance) {
+		if (instance != null) {
+			instance.run();
+		}
 	}
 
 	private static <T extends Appendable> T output(@Nullable final HtmlBuilder<T> instance) {
