@@ -260,6 +260,10 @@ class VoiceManagerPdfPanelTest {
 						Boolean.logicalAnd(Objects.equals(name, "getNumber"),
 								Arrays.equals(parameterTypes, new Class<?>[] { Object.class })),
 						Boolean.logicalAnd(Objects.equals(name, "getDefaultSpeechSpeedMap"),
+								m.getParameterCount() == 0),
+						Boolean.logicalAnd(
+								Objects.equals(name,
+										"getPDImageXObjectCreateFromByteArrayDetectFileTypeMethodAndAllowedFileTypes"),
 								m.getParameterCount() == 0))) {
 					//
 					Assertions.assertNotNull(invoke, toString);

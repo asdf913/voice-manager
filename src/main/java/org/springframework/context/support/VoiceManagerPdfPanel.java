@@ -78,6 +78,7 @@ import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.FieldOrMethodUtil;
 import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.FieldInstructionUtil;
 import org.apache.bcel.generic.GETSTATIC;
 import org.apache.bcel.generic.IF_ACMPEQ;
 import org.apache.bcel.generic.IF_ACMPNE;
@@ -103,6 +104,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.fontbox.ttf.OTFParser;
 import org.apache.pdfbox.Loader;
@@ -875,72 +877,18 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				final File file = getAbsoluteFile(jfc.getSelectedFile());
 				//
-				Class<?> clz = PDImageXObject.class;
-				//
 				Collection<Object> allowedFileType = null;
 				//
 				Object fileType = null;
 				//
-				try (final InputStream is = Util.getResourceAsStream(clz,
-						String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))) {
+				try {
 					//
-					// org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject.createFromByteArray(org.apache.pdfbox.pdmodel.PDDocument,byte[],java.lang.String)
+					final Entry<Method, Collection<Object>> entry = getPDImageXObjectCreateFromByteArrayDetectFileTypeMethodAndAllowedFileTypes();
 					//
-					final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
-							ClassParserUtil
-									.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),
-							Util.getDeclaredMethod(clz, "createFromByteArray", PDDocument.class, byte[].class,
-									String.class));
+					allowedFileType = Util.getValue(entry);
 					//
-					final Instruction[] ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
-							testAndApply(Objects::nonNull, m, x -> new MethodGen(x, null, null), null)));
+					fileType = Narcissus.invokeStaticMethod(Util.getKey(entry), Files.readAllBytes(Util.toPath(file)));
 					//
-					final ConstantPool cp = FieldOrMethodUtil.getConstantPool(m);
-					//
-					final ConstantPoolGen cpg = new ConstantPoolGen(cp);
-					//
-					Instruction in = null;
-					//
-					INVOKESTATIC invokestatic = null;
-					//
-					Object object = null;
-					//
-					Type[] argumentTypes = null;
-					//
-					for (int i = 0; i < length(ins); i++) {
-						//
-						if ((in = ArrayUtils.get(ins, i)) instanceof INVOKESTATIC temp && invokestatic == null) {
-							//
-							if (length((argumentTypes = InvokeInstructionUtil.getArgumentTypes(invokestatic = temp,
-									cpg))) == 1) {
-								//
-								fileType = Narcissus.invokeStaticMethod(
-										//
-										Util.getDeclaredMethod(
-												clz = Util
-														.forName(InvokeInstructionUtil.getClassName(invokestatic, cpg)),
-												InvokeInstructionUtil.getMethodName(invokestatic, cpg),
-												Util.forName(TypeUtil.getClassName(ArrayUtils.get(argumentTypes, 0)))),
-										Files.readAllBytes(file.toPath()));
-								//
-							} // if
-								//
-						} else if (i > 0 && ArrayUtils.get(ins, i - 1) instanceof GETSTATIC getstatic
-								&& Boolean.logicalAnd(
-										Boolean.logicalOr(in instanceof IF_ACMPNE, in instanceof IF_ACMPEQ),
-										!Util.contains(
-												allowedFileType = ObjectUtils.getIfNull(allowedFileType,
-														ArrayList::new),
-												object = Narcissus.getStaticField(Util.getDeclaredField(
-														clz = Util.forName(getstatic.getFieldType(cpg).getClassName()),
-														getstatic.getFieldName(cpg)))))) {
-							//
-							Util.add(allowedFileType, object);
-							//
-						} // if
-							//
-					} // for
-						//
 				} catch (final IOException | NoSuchMethodException | NoSuchFieldException e) {
 					//
 					LoggerUtil.error(LOG, e.getMessage(), e);
@@ -960,6 +908,99 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // if
 			//
+	}
+
+	private static Entry<Method, Collection<Object>> getPDImageXObjectCreateFromByteArrayDetectFileTypeMethodAndAllowedFileTypes()
+			throws IOException, NoSuchMethodException, NoSuchFieldException {
+		//
+		Class<?> clz = PDImageXObject.class;
+		//
+		Collection<Object> allowedFileType = null;
+		//
+		MutablePair<Method, Collection<Object>> entry = null;
+		//
+		try (final InputStream is = Util.getResourceAsStream(clz,
+				String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))) {
+			//
+			// org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject.createFromByteArray(org.apache.pdfbox.pdmodel.PDDocument,byte[],java.lang.String)
+			//
+			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
+					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),
+					Util.getDeclaredMethod(clz, "createFromByteArray", PDDocument.class, byte[].class, String.class));
+			//
+			final Instruction[] ins = InstructionListUtil.getInstructions(MethodGenUtil
+					.getInstructionList(testAndApply(Objects::nonNull, m, x -> new MethodGen(x, null, null), null)));
+			//
+			final ConstantPool cp = FieldOrMethodUtil.getConstantPool(m);
+			//
+			final ConstantPoolGen cpg = new ConstantPoolGen(cp);
+			//
+			Instruction in = null;
+			//
+			INVOKESTATIC invokestatic = null;
+			//
+			Object object = null;
+			//
+			Type[] argumentTypes = null;
+			//
+			List<Field> fs = null;
+			//
+			int size = 0;
+			//
+			for (int i = 0; i < length(ins); i++) {
+				//
+				if ((in = ArrayUtils.get(ins, i)) instanceof INVOKESTATIC temp && invokestatic == null) {
+					//
+					if (length(
+							(argumentTypes = InvokeInstructionUtil.getArgumentTypes(invokestatic = temp, cpg))) == 1) {
+						//
+						if ((entry = ObjectUtils.getIfNull(entry, MutablePair::new)) != null) {
+							//
+							entry.setLeft(Util.getDeclaredMethod(
+									clz = Util.forName(InvokeInstructionUtil.getClassName(invokestatic, cpg)),
+									InvokeInstructionUtil.getMethodName(invokestatic, cpg),
+									Util.forName(TypeUtil.getClassName(ArrayUtils.get(argumentTypes, 0)))));
+							//
+						} // if
+							//
+					} // if
+						//
+				} else if (i > 0 && ArrayUtils.get(ins, i - 1) instanceof GETSTATIC getstatic
+						&& Boolean.logicalOr(in instanceof IF_ACMPNE, in instanceof IF_ACMPEQ)) {
+					//
+					if ((size = IterableUtils.size(fs = Util.toList(Util.filter(
+							Arrays.stream(Util.getDeclaredFields(
+									Util.forName(TypeUtil.getClassName(getstatic.getFieldType(cpg))))),
+							f -> Objects.equals(Util.getName(f),
+									FieldInstructionUtil.getFieldName(getstatic, cpg)))))) > 1) {
+						//
+						throw new IllegalStateException();
+						//
+					} else if (size == 1) {
+						//
+						if (!Util.contains(allowedFileType = ObjectUtils.getIfNull(allowedFileType, ArrayList::new),
+								object = Narcissus.getStaticField(IterableUtils.get(fs, 0)))) {
+							//
+							Util.add(allowedFileType, object);
+							//
+						} // if
+							//
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+		} // try
+			//
+		if ((entry = ObjectUtils.getIfNull(entry, MutablePair::new)) != null) {
+			//
+			entry.setValue(allowedFileType);
+			//
+		} // if
+			//
+		return entry;
+		//
 	}
 
 	private static void testAndRun(final boolean b, final Runnable ra, final Runnable rb) {
