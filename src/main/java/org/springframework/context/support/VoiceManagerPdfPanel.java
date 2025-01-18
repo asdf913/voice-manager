@@ -973,7 +973,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		}
 	}
 
-	private static void run(final Runnable instance) {
+	private static void run(@Nullable final Runnable instance) {
 		if (instance != null) {
 			instance.run();
 		}
