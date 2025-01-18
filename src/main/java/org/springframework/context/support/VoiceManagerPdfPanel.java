@@ -788,8 +788,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					Map.of("text-align", "center", "display", "block", "margin-left", "auto", "margin-right", "auto"));
 			//
 			testAndAccept(
-					(a, b) -> a != null && b != null, testAndApply(NumberUtils::isCreatable, Util.getText(tfFontSize1),
-							NumberUtils::createBigDecimal, null),
+					(a, b) -> Boolean.logicalAnd(a != null, b != null), testAndApply(NumberUtils::isCreatable,
+							Util.getText(tfFontSize1), NumberUtils::createBigDecimal, null),
 					Util.cast(ECSSUnit.class, getSelectedItem(cbmFontSize1)), (a, b) -> {
 						Util.put(style, "font-size", new CSSSimpleValueWithUnit(a, b).getFormatted());
 					});
