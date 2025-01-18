@@ -821,18 +821,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				final StringMap stringMap = Reflection.newProxy(StringMap.class, ih);
 				//
-				if (stringMap != null) {
-					//
-					stringMap.setString("text", Util.getText(tfText));
-					//
-					stringMap.setString("voiceId", Util.toString(getSelectedItem(cbmVoiceId)));
-					//
-					stringMap.setString("imageUrl", Util.getText(tfImageUrl));
-					//
-					stringMap.setString("html", Util.getText(taHtml));
-					//
-				} // if
-					//
+				StringMap.setString(stringMap, "text", Util.getText(tfText));
+				//
+				StringMap.setString(stringMap, "voiceId", Util.toString(getSelectedItem(cbmVoiceId)));
+				//
+				StringMap.setString(stringMap, "imageUrl", Util.getText(tfImageUrl));
+				//
+				StringMap.setString(stringMap, "html", Util.getText(taHtml));
+				//
 				final FloatMap floatMap = Reflection.newProxy(FloatMap.class, ih);
 				//
 				FloatMap.setFloat(floatMap, "fontSize", floatValue(testAndApply(NumberUtils::isCreatable,
@@ -1185,6 +1181,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		@Nullable
 		static String getString(@Nullable final StringMap instance, final String key) {
 			return instance != null ? instance.getString(key) : null;
+		}
+
+		private static void setString(final StringMap instance, final String key, final String value) {
+			if (instance != null) {
+				instance.setString(key, value);
+			}
 		}
 	}
 
