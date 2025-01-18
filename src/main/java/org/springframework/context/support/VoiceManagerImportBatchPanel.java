@@ -1905,7 +1905,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 						ObjectMap.setObject(objectMap, Voice.class, voice);
 						//
 						ObjectMap.setObject(objectMap, File.class, testAndApply(Objects::nonNull, voice,
-								x -> Path.of(folder.getAbsolutePath(), getFilePath(x)).toFile(), x -> folder));
+								x -> Util.toFile(Path.of(folder.getAbsolutePath(), getFilePath(x))), x -> folder));
 						//
 						importVoice(objectMap, errorMessageConsumer, throwableConsumer);
 						//
@@ -1938,8 +1938,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		if (StringUtils.isNotBlank(filePath)) {
 			//
-			if (!(it.file = Path.of(filePath).toFile()).exists()
-					&& !(it.file = Path.of(Util.getAbsolutePath(folder), filePath).toFile()).exists()) {
+			if (!(it.file = Util.toFile(Path.of(filePath))).exists()
+					&& !(it.file = Util.toFile(Path.of(Util.getAbsolutePath(folder), filePath))).exists()) {
 				//
 				it.file = null;
 				//
@@ -3380,14 +3380,12 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				final StringBuilder fileName = new StringBuilder(
 						String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS_%1$tL.%2$s", new Date(), fileExtension));
 				//
-				File file = Path.of(voiceFolder, filePath = Util.toString(fileName)).toFile();
+				File file = Util.toFile(Path.of(voiceFolder, filePath = Util.toString(fileName)));
 				//
 				if (file.exists()) {
 					//
-					file = Path
-							.of(voiceFolder, filePath = Util.toString(fileName
-									.insert(StringUtils.lastIndexOf(fileName, '.') + 1, randomAlphabetic(2) + ".")))
-							.toFile();
+					file = Util.toFile(Path.of(voiceFolder, filePath = Util.toString(
+							fileName.insert(StringUtils.lastIndexOf(fileName, '.') + 1, randomAlphabetic(2) + "."))));
 					//
 				} // if
 					//
@@ -3399,7 +3397,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 			} else {
 				//
-				final File file = Path.of(voiceFolder, getFilePath(voiceOld)).toFile();
+				final File file = Util.toFile(Path.of(voiceFolder, getFilePath(voiceOld)));
 				//
 				if (!file.exists()) {
 					//

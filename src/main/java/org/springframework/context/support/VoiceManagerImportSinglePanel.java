@@ -2979,14 +2979,12 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				final StringBuilder fileName = new StringBuilder(
 						String.format("%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS_%1$tL.%2$s", new Date(), fileExtension));
 				//
-				File file = Path.of(voiceFolder, filePath = Util.toString(fileName)).toFile();
+				File file = Util.toFile(Path.of(voiceFolder, filePath = Util.toString(fileName)));
 				//
 				if (file.exists()) {
 					//
-					file = Path
-							.of(voiceFolder, filePath = Util.toString(fileName
-									.insert(StringUtils.lastIndexOf(fileName, '.') + 1, randomAlphabetic(2) + ".")))
-							.toFile();
+					file = Util.toFile(Path.of(voiceFolder, filePath = Util.toString(
+							fileName.insert(StringUtils.lastIndexOf(fileName, '.') + 1, randomAlphabetic(2) + "."))));
 					//
 				} // if
 					//
@@ -2998,7 +2996,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 			} else {
 				//
-				final File file = Path.of(voiceFolder, getFilePath(voiceOld)).toFile();
+				final File file = Util.toFile(Path.of(voiceFolder, getFilePath(voiceOld)));
 				//
 				if (!file.exists()) {
 					//

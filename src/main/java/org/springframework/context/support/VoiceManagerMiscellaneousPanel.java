@@ -765,7 +765,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			final Path path = Path
 					.of(String.format("MicrosoftSpeechObjectLibrary_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date()));
 			//
-			final File file = path != null ? path.toFile() : null;
+			final File file = Util.toFile(path);
 			//
 			Workbook workbook = null;
 			//

@@ -797,7 +797,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					Util.cast(ECSSUnit.class, getSelectedItem(cbmFontSize1)),
 					(a, b) -> Util.put(style, "font-size", new CSSSimpleValueWithUnit(a, b).getFormatted()));
 			//
-			final File file = toFile(Path
+			final File file = Util.toFile(Path
 					.of(StringUtils.joinWith(".", StringUtils.defaultIfBlank(Util.getText(tfText), "test"), "pdf")));
 			//
 			LoggerUtil.info(LOG, getAbsolutePath(file));
@@ -809,7 +809,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				final HtmlBuilder<StringBuilder> htmlBuilder = FlatHtml.inMemory();
 				//
 				FileUtils
-						.writeStringToFile(toFile(pathHtml),
+						.writeStringToFile(Util.toFile(pathHtml),
 								Util.toString(
 										output(appendEndTag(
 												appendUnescapedText(completeTag(appendAttribute(
@@ -1434,7 +1434,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final Path page1Path = Path.of("page1.png");
 			//
-			LoggerUtil.info(LOG, getAbsolutePath(toFile(page1Path)));
+			LoggerUtil.info(LOG, getAbsolutePath(Util.toFile(page1Path)));
 			//
 			BufferedImage bi = pdfRenderer.renderImage(0);
 			//
@@ -1445,7 +1445,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 							(a, b) -> divide(BigDecimal.valueOf(a), BigDecimal.valueOf(b)), null),
 					FloatMap.getFloat(floatMap, "defaultSize", (float) 61.2));
 			//
-			ImageIO.write(bi, "png", toFile(page1Path));
+			ImageIO.write(bi, "png", Util.toFile(page1Path));
 			//
 			final Integer largestY = getLargestY(bi);
 			//
@@ -1455,7 +1455,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final Path pathAudio = Path.of("test.wav");
 			//
-			LoggerUtil.info(LOG, getAbsolutePath(toFile(pathAudio)));
+			LoggerUtil.info(LOG, getAbsolutePath(Util.toFile(pathAudio)));
 			//
 			int index = 0;
 			//
@@ -1500,7 +1500,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // if
 					//
-				writeVoiceToFile(speechApi, text, voiceId, Util.intValue(key, 0), volume, toFile(pathAudio));
+				writeVoiceToFile(speechApi, text, voiceId, Util.intValue(key, 0), volume, Util.toFile(pathAudio));
 				//
 //				try (final InputStream is = PdfTest.class.getResourceAsStream("\\NotoSansCJKjp-Regular.otf")) {
 				//
@@ -1514,10 +1514,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					(pdfEmbeddedFile = new PDEmbeddedFile(document, is)).setSubtype(getMimeType(pathAudio));
 					//
-					testAndAccept((a, b) -> b != null, pdfEmbeddedFile, toFile(pathAudio),
+					testAndAccept((a, b) -> b != null, pdfEmbeddedFile, Util.toFile(pathAudio),
 							(a, b) -> setSize(a, Util.intValue(length(b), 0)));
 					//
-					(fileSpec = new PDComplexFileSpecification()).setFile(getName(toFile(pathAudio)));
+					(fileSpec = new PDComplexFileSpecification()).setFile(getName(Util.toFile(pathAudio)));
 					//
 					fileSpec.setEmbeddedFile(pdfEmbeddedFile);
 					//
@@ -1568,7 +1568,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					// Label (Duration)
 					//
-					if ((duration = getAudioDuration(toFile(pathAudio))) != null) {
+					if ((duration = getAudioDuration(Util.toFile(pathAudio))) != null) {
 						//
 						cs.beginText();
 						//
@@ -2016,7 +2016,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			if (page != null) {
 				//
-				testAndAccept(Objects::nonNull, Util.toString(toURL(toURI(toFile(pathHtml)))), page::navigate);
+				testAndAccept(Objects::nonNull, Util.toString(toURL(toURI(Util.toFile(pathHtml)))), page::navigate);
 				//
 				return page.pdf();
 				//
@@ -2069,11 +2069,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Nullable
 	private static String getAbsolutePath(@Nullable final File instance) {
 		return instance != null ? instance.getAbsolutePath() : null;
-	}
-
-	@Nullable
-	private static File toFile(@Nullable final Path instance) {
-		return instance != null ? instance.toFile() : null;
 	}
 
 	private static float getTextWidth(final String text, final PDFont font, final float fontSize) throws IOException {

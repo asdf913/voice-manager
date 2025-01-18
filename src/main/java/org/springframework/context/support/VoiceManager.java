@@ -1737,7 +1737,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	public static Pair<String, String> getMimeTypeAndBase64EncodedString(@Nullable final String folderPath,
 			@Nullable final String filePath) throws IOException {
 		//
-		final File f = folderPath != null && filePath != null ? Path.of(folderPath, filePath).toFile()
+		final File f = folderPath != null && filePath != null ? Util.toFile(Path.of(folderPath, filePath))
 				: testAndApply(Objects::nonNull, filePath, File::new, null);
 		//
 		final ContentInfo ci = testAndApply(Util::isFile, f, new ContentInfoUtil()::findMatch, null);

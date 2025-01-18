@@ -356,7 +356,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 			final Path path = Path.of(String.format("学年別漢字_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.xlsx", new Date()));
 			//
-			final File file = toFile(path);
+			final File file = Util.toFile(path);
 			//
 			Workbook workbook = null;
 			//
@@ -381,8 +381,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 				IOUtils.closeQuietly(workbook);
 				//
-				testAndAccept(f -> and(exists(f),
-						Util.isFile(f), longValue(length(f), 0) == 0), file,
+				testAndAccept(f -> and(exists(f), Util.isFile(f), longValue(length(f), 0) == 0), file,
 						FileUtils::deleteQuietly);
 				//
 			} // try
@@ -440,11 +439,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static File toFile(@Nullable final Path instance) {
-		return instance != null ? instance.toFile() : null;
 	}
 
 	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) {
@@ -568,8 +562,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 	private static boolean exists(@Nullable final File instance) {
 		return instance != null && instance.exists();
 	}
-
-
 
 	@Nullable
 	private static Long length(@Nullable final File instance) {
