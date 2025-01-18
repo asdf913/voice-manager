@@ -35,6 +35,7 @@ import org.apache.bcel.generic.INVOKESPECIAL;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.InvokeInstruction;
+import org.apache.bcel.generic.InvokeInstructionUtil;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.NEW;
@@ -475,7 +476,7 @@ public class Main {
 				//
 				if (ins[i] instanceof InvokeInstruction ii) {
 					//
-					className = getClassName(ii, cpg = ObjectUtils.getIfNull(cpg,
+					className = InvokeInstructionUtil.getClassName(ii, cpg = ObjectUtils.getIfNull(cpg,
 							() -> testAndApply(Objects::nonNull, cp, ConstantPoolGen::new, null)));
 					//
 				} // if
@@ -516,11 +517,6 @@ public class Main {
 			//
 		return false;
 		//
-	}
-
-	@Nullable
-	private static String getClassName(@Nullable final InvokeInstruction instance, final ConstantPoolGen cpg) {
-		return instance != null ? instance.getClassName(cpg) : null;
 	}
 
 	private static void setVisible(@Nullable final Component instance, boolean b) {

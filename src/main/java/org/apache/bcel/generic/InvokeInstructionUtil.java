@@ -28,4 +28,8 @@ public interface InvokeInstructionUtil {
 		return instance != null ? instance.getClass() : null;
 	}
 
+	static String getClassName(final InvokeInstruction instance, final ConstantPoolGen cpg) {
+		return instance != null ? instance.getClassName(cpg) : null;
+	}
+
 }

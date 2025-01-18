@@ -926,7 +926,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 								fileType = Narcissus.invokeStaticMethod(
 										//
 										Util.getDeclaredMethod(
-												clz = Util.forName((invokestatic = temp).getClassName(cpg)),
+												clz = Util
+														.forName(InvokeInstructionUtil.getClassName(invokestatic, cpg)),
 												InvokeInstructionUtil.getMethodName(invokestatic, cpg),
 												Util.forName(TypeUtil.getClassName(ArrayUtils.get(argumentTypes, 0)))),
 										Files.readAllBytes(file.toPath()));

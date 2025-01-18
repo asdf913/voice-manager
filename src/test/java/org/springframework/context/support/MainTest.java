@@ -64,8 +64,7 @@ class MainTest {
 
 	private static Method METHOD_GET_INSTANCE, METHOD_SHOW_MESSAGE_DIALOG_OR_PRINT_LN, METHOD_GET_BEAN_NAMES_FOR_TYPE,
 			METHOD_PACK, METHOD_SET_VISIBLE, METHOD_TEST_AND_APPLY, METHOD_GET_SELECTED_VALUE, METHOD_GET_CLASS3,
-			METHOD_IS_RAISE_THROWABLE_ONLY, METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_CLASS_NAME,
-			METHOD_GET_METHOD = null;
+			METHOD_IS_RAISE_THROWABLE_ONLY, METHOD_ERROR_OR_PRINT_STACK_TRACE, METHOD_GET_METHOD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -98,9 +97,6 @@ class MainTest {
 		//
 		(METHOD_ERROR_OR_PRINT_STACK_TRACE = clz.getDeclaredMethod("errorOrPrintStackTrace", Logger.class,
 				Throwable.class)).setAccessible(true);
-		//
-		(METHOD_GET_CLASS_NAME = clz.getDeclaredMethod("getClassName", InvokeInstruction.class, ConstantPoolGen.class))
-				.setAccessible(true);
 		//
 		(METHOD_GET_METHOD = clz.getDeclaredMethod("getMethod", Class.class, String.class, Class[].class))
 				.setAccessible(true);
@@ -550,27 +546,6 @@ class MainTest {
 	private static void errorOrPrintStackTrace(final Logger logger, final Throwable throwable) throws Throwable {
 		try {
 			METHOD_ERROR_OR_PRINT_STACK_TRACE.invoke(null, logger, throwable);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetClassName() throws Throwable {
-		//
-		Assertions.assertNull(getClassName(null, null));
-		//
-	}
-
-	private static String getClassName(final InvokeInstruction instance, final ConstantPoolGen cpg) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CLASS_NAME.invoke(null, instance, cpg);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
