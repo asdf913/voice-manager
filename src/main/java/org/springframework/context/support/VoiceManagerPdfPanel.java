@@ -977,15 +977,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						//
 						throw new IllegalStateException();
 						//
-					} else if (size == 1) {
+					} else if (size == 1
+							&& !Util.contains(allowedFileType = ObjectUtils.getIfNull(allowedFileType, ArrayList::new),
+									object = Narcissus.getStaticField(IterableUtils.get(fs, 0)))) {
 						//
-						if (!Util.contains(allowedFileType = ObjectUtils.getIfNull(allowedFileType, ArrayList::new),
-								object = Narcissus.getStaticField(IterableUtils.get(fs, 0)))) {
-							//
-							Util.add(allowedFileType, object);
-							//
-						} // if
-							//
+						Util.add(allowedFileType, object);
+						//
 					} // if
 						//
 				} // if
