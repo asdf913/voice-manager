@@ -2869,7 +2869,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 			return;
 			//
-		} else if (!file.exists()) {
+		} else if (!Util.exists(file)) {
 			//
 			testAndAccept((a, b) -> a != null, tmImportException,
 					String.format("File \"%1$s\" does not exist", Util.getAbsolutePath(file)),
@@ -2981,7 +2981,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 				File file = Util.toFile(Path.of(voiceFolder, filePath = Util.toString(fileName)));
 				//
-				if (file.exists()) {
+				if (Util.exists(file)) {
 					//
 					file = Util.toFile(Path.of(voiceFolder, filePath = Util.toString(
 							fileName.insert(StringUtils.lastIndexOf(fileName, '.') + 1, randomAlphabetic(2) + "."))));
@@ -2998,7 +2998,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 				final File file = Util.toFile(Path.of(voiceFolder, getFilePath(voiceOld)));
 				//
-				if (!file.exists()) {
+				if (!Util.exists(file)) {
 					//
 					FileUtils.copyFile(selectedFile, file);
 					//
@@ -3203,7 +3203,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 			return false;
 			//
-		} else if (!file.exists()) {
+		} else if (!Util.exists(file)) {
 			//
 			accept(errorMessageConsumer, voice,
 					String.format("File \"%1$s\" does not exist", Util.getAbsolutePath(file)));

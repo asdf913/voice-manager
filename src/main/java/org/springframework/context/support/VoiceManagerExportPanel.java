@@ -340,7 +340,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 
 	private static final String SHA_512 = "SHA-512";
 
-	private static final FailablePredicate<File, RuntimeException> EMPTY_FILE_PREDICATE = f -> f != null && f.exists()
+	private static final FailablePredicate<File, RuntimeException> EMPTY_FILE_PREDICATE = f -> Util.exists(f)
 			&& Util.isFile(f) && longValue(length(f), 0) == 0;
 
 	private static final int TEMP_FILE_MINIMUM_PREFIX_LENGTH = Util.intValue(getTempFileMinimumPrefixLength(), 3);
@@ -3473,10 +3473,9 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 					if (folderFileNamePattern == null || (key = Util.getKey(folderFileNamePattern)) == null
 							|| StringUtils.isBlank(value = Util.getValue(folderFileNamePattern))
-							|| !(fileSource = testAndApply(Objects::nonNull,
+							|| !Util.exists(fileSource = testAndApply(Objects::nonNull,
 									voiceFolder = getIfNull(voiceFolder, () -> getVoiceFolder(voiceManagerExportPanel)),
-									x -> Util.toFile(Path.of(x, filePath)), x -> Util.toFile(Path.of(filePath))))
-									.exists()) {
+									x -> Util.toFile(Path.of(x, filePath)), x -> Util.toFile(Path.of(filePath))))) {
 						//
 						continue;
 						//

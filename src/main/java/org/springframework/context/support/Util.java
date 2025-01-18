@@ -1586,6 +1586,10 @@ public abstract class Util {
 		return instance != null && instance.isFile();
 	}
 
+	static boolean exists(final File instance) {
+		return instance != null && instance.exists();
+	}
+
 	static File toFile(@Nullable final Path instance) {
 		return instance != null ? instance.toFile() : null;
 	}

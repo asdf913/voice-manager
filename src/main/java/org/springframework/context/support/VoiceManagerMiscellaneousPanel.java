@@ -178,7 +178,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 
 	private static final String LANGUAGE = "Language";
 
-	private static final FailablePredicate<File, RuntimeException> EMPTY_FILE_PREDICATE = f -> f != null && f.exists()
+	private static final FailablePredicate<File, RuntimeException> EMPTY_FILE_PREDICATE = f -> Util.exists(f)
 			&& Util.isFile(f) && longValue(length(f), 0) == 0;
 
 	private transient ApplicationContext applicationContext = null;

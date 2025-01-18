@@ -14,7 +14,6 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -58,9 +57,9 @@ import javassist.util.proxy.ProxyUtil;
 class GaKuNenBeTsuKanJiGuiTest {
 
 	private static Method METHOD_CREATE_WORK_BOOK, METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE,
-			METHOD_GET_PARAMETER_TYPES, METHOD_EXISTS, METHOD_AND, METHOD_IIF, METHOD_TEST_AND_ACCEPT3,
-			METHOD_TEST_AND_ACCEPT4, METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_LENGTH, METHOD_LONG_VALUE,
-			METHOD_SET_SELECTED_ITEM, METHOD_SET_PREFERRED_WIDTH, METHOD_MAX, METHOD_CREATE_DIMENSION_COMPARATOR = null;
+			METHOD_GET_PARAMETER_TYPES, METHOD_AND, METHOD_IIF, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
+			METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_LENGTH, METHOD_LONG_VALUE, METHOD_SET_SELECTED_ITEM,
+			METHOD_SET_PREFERRED_WIDTH, METHOD_MAX, METHOD_CREATE_DIMENSION_COMPARATOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -77,8 +76,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_PARAMETER_TYPES = clz.getDeclaredMethod("getParameterTypes", Executable.class)).setAccessible(true);
-		//
-		(METHOD_EXISTS = clz.getDeclaredMethod("exists", File.class)).setAccessible(true);
 		//
 		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
@@ -498,27 +495,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 				return null;
 			} else if (obj instanceof Class<?>[]) {
 				return (Class<?>[]) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testExists() throws Throwable {
-		//
-		Assertions.assertFalse(exists(null));
-		//
-		Assertions.assertFalse(exists(Path.of("non_exists").toFile()));
-		//
-	}
-
-	private static boolean exists(final File instance) throws Throwable {
-		try {
-			final Object obj = METHOD_EXISTS.invoke(null, instance);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -739,7 +739,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
 		//
-		final boolean b = folder != null && folder.exists() && folder.isDirectory();
+		final boolean b = folder != null && Util.exists(folder) && folder.isDirectory();
 		//
 		setEnabled(btnExecute, b);
 		//
@@ -1938,8 +1938,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		if (StringUtils.isNotBlank(filePath)) {
 			//
-			if (!(it.file = Util.toFile(Path.of(filePath))).exists()
-					&& !(it.file = Util.toFile(Path.of(Util.getAbsolutePath(folder), filePath))).exists()) {
+			if (!Util.exists(it.file = Util.toFile(Path.of(filePath)))
+					&& !Util.exists(it.file = Util.toFile(Path.of(Util.getAbsolutePath(folder), filePath)))) {
 				//
 				it.file = null;
 				//
@@ -3382,7 +3382,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 				File file = Util.toFile(Path.of(voiceFolder, filePath = Util.toString(fileName)));
 				//
-				if (file.exists()) {
+				if (Util.exists(file)) {
 					//
 					file = Util.toFile(Path.of(voiceFolder, filePath = Util.toString(
 							fileName.insert(StringUtils.lastIndexOf(fileName, '.') + 1, randomAlphabetic(2) + "."))));
@@ -3399,7 +3399,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 				final File file = Util.toFile(Path.of(voiceFolder, getFilePath(voiceOld)));
 				//
-				if (!file.exists()) {
+				if (!Util.exists(file)) {
 					//
 					FileUtils.copyFile(selectedFile, file);
 					//
@@ -3818,7 +3818,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			return false;
 			//
-		} else if (!file.exists()) {
+		} else if (!Util.exists(file)) {
 			//
 			accept(errorMessageConsumer, voice,
 					String.format("File \"%1$s\" does not exist", Util.getAbsolutePath(file)));

@@ -381,7 +381,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 				IOUtils.closeQuietly(workbook);
 				//
-				testAndAccept(f -> and(exists(f), Util.isFile(f), longValue(length(f), 0) == 0), file,
+				testAndAccept(f -> and(Util.exists(f), Util.isFile(f), longValue(length(f), 0) == 0), file,
 						FileUtils::deleteQuietly);
 				//
 			} // try
@@ -557,10 +557,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 		} // if
 			//
-	}
-
-	private static boolean exists(@Nullable final File instance) {
-		return instance != null && instance.exists();
 	}
 
 	@Nullable
