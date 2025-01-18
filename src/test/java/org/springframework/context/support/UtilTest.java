@@ -145,7 +145,7 @@ class UtilTest {
 			//
 			if (self instanceof InvokeInstruction) {
 				//
-				if (Util.contains(Arrays.asList("getMethodName"), methodName)) {
+				if (Util.contains(Arrays.asList("getMethodName", "getArgumentTypes"), methodName)) {
 					//
 					return null;
 					//
