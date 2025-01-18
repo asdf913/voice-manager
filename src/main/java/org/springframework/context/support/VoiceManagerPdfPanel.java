@@ -787,17 +787,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			final Map<String, String> style = new LinkedHashMap<>(
 					Map.of("text-align", "center", "display", "block", "margin-left", "auto", "margin-right", "auto"));
 			//
-			final BigDecimal fontSize = testAndApply(NumberUtils::isCreatable, Util.getText(tfFontSize1),
-					NumberUtils::createBigDecimal, null);
+			testAndAccept(
+					(a, b) -> a != null && b != null, testAndApply(NumberUtils::isCreatable, Util.getText(tfFontSize1),
+							NumberUtils::createBigDecimal, null),
+					Util.cast(ECSSUnit.class, getSelectedItem(cbmFontSize1)), (a, b) -> {
+						Util.put(style, "font-size", new CSSSimpleValueWithUnit(a, b).getFormatted());
+					});
 			//
-			final ECSSUnit ecssUnit = Util.cast(ECSSUnit.class, getSelectedItem(cbmFontSize1));
-			//
-			if (fontSize != null && ecssUnit != null) {
-				//
-				style.put("font-size", new CSSSimpleValueWithUnit(fontSize, ecssUnit).getFormatted());
-				//
-			} // if
-				//
 			final File file = toFile(Path
 					.of(StringUtils.joinWith(".", StringUtils.defaultIfBlank(Util.getText(tfText), "test"), "pdf")));
 			//
