@@ -1168,7 +1168,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			return instance != null ? instance.getFloat(key) : defaultValue;
 		}
 
-		private static void setFloat(final FloatMap instance, final String key, final float i) {
+		private static void setFloat(@Nullable final FloatMap instance, final String key, final float i) {
 			if (instance != null) {
 				instance.setFloat(key, i);
 			}
