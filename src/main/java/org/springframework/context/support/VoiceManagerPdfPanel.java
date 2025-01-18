@@ -955,15 +955,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					if (length(
 							(argumentTypes = InvokeInstructionUtil.getArgumentTypes(invokestatic = temp, cpg))) == 1) {
 						//
-						if ((entry = ObjectUtils.getIfNull(entry, MutablePair::new)) != null) {
-							//
-							entry.setLeft(Util.getDeclaredMethod(
-									clz = Util.forName(InvokeInstructionUtil.getClassName(invokestatic, cpg)),
-									InvokeInstructionUtil.getMethodName(invokestatic, cpg),
-									Util.forName(TypeUtil.getClassName(ArrayUtils.get(argumentTypes, 0)))));
-							//
-						} // if
-							//
+						setLeft(entry = ObjectUtils.getIfNull(entry, MutablePair::new),
+								Util.getDeclaredMethod(
+										clz = Util.forName(InvokeInstructionUtil.getClassName(invokestatic, cpg)),
+										InvokeInstructionUtil.getMethodName(invokestatic, cpg),
+										Util.forName(TypeUtil.getClassName(ArrayUtils.get(argumentTypes, 0)))));
+						//
 					} // if
 						//
 				} else if (i > 0 && ArrayUtils.get(ins, i - 1) instanceof GETSTATIC getstatic
@@ -995,6 +992,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		return entry;
 		//
+	}
+
+	private static <L> void setLeft(final MutablePair<L, ?> instance, final L left) {
+		if (instance != null) {
+			instance.setLeft(left);
+		}
 	}
 
 	private static <V> void setValue(final Entry<?, V> instance, final V value) {
