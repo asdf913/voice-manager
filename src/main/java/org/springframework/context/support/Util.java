@@ -52,12 +52,10 @@ import org.apache.bcel.generic.INVOKEINTERFACE;
 import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
-import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.InvokeInstructionUtil;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.ReferenceType;
-import org.apache.bcel.generic.Type;
 import org.apache.bcel.generic.TypeUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
@@ -1379,13 +1377,14 @@ public abstract class Util {
 				if (Objects.equals(TypeUtil.getClassName(getReferenceType(invokeStatic, cpg)),
 						"java.util.stream.Stream")
 						&& Objects.equals(InvokeInstructionUtil.getMethodName(invokeStatic, cpg), "of")
-						&& Objects.equals(
-								collect(Util.map(Arrays.stream(getArgumentTypes(invokeStatic, cpg)), Util::toString),
-										Collectors.joining(",")),
-								"java.lang.Object[]")
+						&& Objects.equals(collect(
+								Util.map(Arrays.stream(InvokeInstructionUtil.getArgumentTypes(invokeStatic, cpg)),
+										Util::toString),
+								Collectors.joining(",")), "java.lang.Object[]")
 						&& Objects.equals(InvokeInstructionUtil.getMethodName(invokeInterface, cpg), "iterator")
 						&& Objects.equals(Util.collect(
-								Util.map(Arrays.stream(getArgumentTypes(invokeInterface, cpg)), Util::toString),
+								Util.map(Arrays.stream(InvokeInstructionUtil.getArgumentTypes(invokeInterface, cpg)),
+										Util::toString),
 								Collectors.joining(",")), "")) {
 					//
 					return FieldInstructionUtil.getFieldName(getField, cpg);
@@ -1460,24 +1459,6 @@ public abstract class Util {
 		} // if
 			//
 		return cpg != null ? instance.getReferenceType(cpg) : null;
-		//
-	}
-
-	@Nullable
-	private static Type[] getArgumentTypes(@Nullable final InvokeInstruction instance,
-			@Nullable final ConstantPoolGen cpg) {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} else if (ProxyFactory.isProxyClass(getClass(instance))) {
-			//
-			return instance.getArgumentTypes(cpg);
-			//
-		} // if
-			//
-		return cpg != null ? instance.getArgumentTypes(cpg) : null;
 		//
 	}
 

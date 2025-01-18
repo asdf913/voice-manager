@@ -921,7 +921,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						//
 						if ((in = ins[i]) instanceof INVOKESTATIC temp && invokestatic == null) {
 							//
-							if (length((argumentTypes = (invokestatic = temp).getArgumentTypes(cpg))) == 1) {
+							if (length((argumentTypes = InvokeInstructionUtil.getArgumentTypes(invokestatic = temp,
+									cpg))) == 1) {
 								//
 								fileType = Narcissus.invokeStaticMethod(
 										//

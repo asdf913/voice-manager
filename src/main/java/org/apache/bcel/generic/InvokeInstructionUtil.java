@@ -32,4 +32,20 @@ public interface InvokeInstructionUtil {
 		return instance != null ? instance.getClassName(cpg) : null;
 	}
 
+	static Type[] getArgumentTypes(final InvokeInstruction instance, final ConstantPoolGen cpg) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} else if (ProxyFactory.isProxyClass(getClass(instance))) {
+			//
+			return instance.getArgumentTypes(cpg);
+			//
+		} // if
+			//
+		return cpg != null ? instance.getArgumentTypes(cpg) : null;
+		//
+	}
+
 }
