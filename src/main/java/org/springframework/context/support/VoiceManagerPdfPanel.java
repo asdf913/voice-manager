@@ -105,6 +105,7 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.MutablePairUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.fontbox.ttf.OTFParser;
 import org.apache.pdfbox.Loader;
@@ -955,7 +956,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					if (length(
 							(argumentTypes = InvokeInstructionUtil.getArgumentTypes(invokestatic = temp, cpg))) == 1) {
 						//
-						setLeft(entry = ObjectUtils.getIfNull(entry, MutablePair::new),
+						MutablePairUtil.setLeft(entry = ObjectUtils.getIfNull(entry, MutablePair::new),
 								Util.getDeclaredMethod(
 										clz = Util.forName(InvokeInstructionUtil.getClassName(invokestatic, cpg)),
 										InvokeInstructionUtil.getMethodName(invokestatic, cpg),
@@ -992,12 +993,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		return entry;
 		//
-	}
-
-	private static <L> void setLeft(@Nullable final MutablePair<L, ?> instance, final L left) {
-		if (instance != null) {
-			instance.setLeft(left);
-		}
 	}
 
 	private static <V> void setValue(@Nullable final Entry<?, V> instance, @Nullable final V value) {
