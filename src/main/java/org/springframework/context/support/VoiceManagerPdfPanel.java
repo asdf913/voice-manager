@@ -970,7 +970,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static int length(final Object[] instance) {
+	private static int length(@Nullable final Object[] instance) {
 		return instance != null ? instance.length : 0;
 	}
 
