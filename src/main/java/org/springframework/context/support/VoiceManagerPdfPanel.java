@@ -84,6 +84,7 @@ import org.apache.bcel.generic.IF_ACMPNE;
 import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.InvokeInstructionUtil;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.Type;
@@ -926,7 +927,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 										//
 										Util.getDeclaredMethod(
 												clz = Util.forName((invokestatic = temp).getClassName(cpg)),
-												invokestatic.getMethodName(cpg),
+												InvokeInstructionUtil.getMethodName(invokestatic, cpg),
 												Util.forName(TypeUtil.getClassName(ArrayUtils.get(argumentTypes, 0)))),
 										Files.readAllBytes(file.toPath()));
 								//
