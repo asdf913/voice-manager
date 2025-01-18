@@ -876,10 +876,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				Object fileType = null;
 				//
-				try (final InputStream is = clz != null
-						? clz.getResourceAsStream(
-								String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
-						: null) {
+				try (final InputStream is = Util.getResourceAsStream(clz,
+						String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))) {
 					//
 					// org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject.createFromByteArray(org.apache.pdfbox.pdmodel.PDDocument,byte[],java.lang.String)
 					//

@@ -841,7 +841,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		final Class<?> clz = File.class;
 		//
-		try (final InputStream is = getResourceAsStream(clz,
+		try (final InputStream is = Util.getResourceAsStream(clz,
 				String.format(CLASS_RESOURCE_FORMAT, StringUtils.replace(Util.getName(clz), ".", "/")))) {
 			//
 			final Object[] objectTypes = toArray(Util
@@ -915,11 +915,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 	@Nullable
 	private static Object[] toArray(@Nullable final Stream<?> instance) {
 		return instance != null ? instance.toArray() : null;
-	}
-
-	@Nullable
-	private static InputStream getResourceAsStream(@Nullable final Class<?> instance, @Nullable final String name) {
-		return instance != null && name != null ? instance.getResourceAsStream(name) : null;
 	}
 
 	private static long longValue(@Nullable final Number instance, final long defaultValue) {
@@ -3556,7 +3551,8 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				if (and(Objects.equals(getNumerator(pharse), getDenominator(pharse)), Objects.equals(counter, count),
 						exportPresentation)) {
 					//
-					try (final InputStream is = getResourceAsStream(VoiceManager.class, exportPresentationTemplate)) {
+					try (final InputStream is = Util.getResourceAsStream(VoiceManager.class,
+							exportPresentationTemplate)) {
 						//
 						final IH ih = new IH();
 						//

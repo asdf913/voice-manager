@@ -2053,7 +2053,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			final Class<?> clz = Lame.class;
 			//
-			try (final InputStream is = getResourceAsStream(clz,
+			try (final InputStream is = Util.getResourceAsStream(clz,
 					String.format(CLASS_RESOURCE_FORMAT, StringUtils.replace(Util.getName(clz), ".", "/")))) {
 				//
 				final org.apache.bcel.classfile.Method[] ms = JavaClassUtil.getMethods(
@@ -2086,11 +2086,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 			} // try
 				//
-		}
-
-		@Nullable
-		private static InputStream getResourceAsStream(@Nullable final Class<?> instance, @Nullable final String name) {
-			return instance != null && name != null ? instance.getResourceAsStream(name) : null;
 		}
 
 		@Nullable
@@ -2149,7 +2144,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			final Class<?> clz = LameEncoder.class;
 			//
-			try (final InputStream is = getResourceAsStream(clz,
+			try (final InputStream is = Util.getResourceAsStream(clz,
 					String.format(CLASS_RESOURCE_FORMAT, StringUtils.replace(Util.getName(clz), ".", "/")))) {
 				//
 				final List<org.apache.bcel.classfile.Method> ms = Util

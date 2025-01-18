@@ -1401,7 +1401,7 @@ public abstract class Util {
 	}
 
 	@Nullable
-	private static InputStream getResourceAsStream(@Nullable final Class<?> instance, @Nullable final String name) {
+	static InputStream getResourceAsStream(@Nullable final Class<?> instance, @Nullable final String name) {
 		return instance != null && name != null ? instance.getResourceAsStream(name) : null;
 	}
 

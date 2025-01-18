@@ -463,7 +463,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		final Class<?> clz = File.class;
 		//
-		try (final InputStream is = getResourceAsStream(clz,
+		try (final InputStream is = Util.getResourceAsStream(clz,
 				String.format(CLASS_RESOURCE_FORMAT, StringUtils.replace(Util.getName(clz), ".", "/")))) {
 			//
 			final Object[] objectTypes = toArray(Util
@@ -503,11 +503,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	@Nullable
 	private static Object[] toArray(@Nullable final Stream<?> instance) {
 		return instance != null ? instance.toArray() : null;
-	}
-
-	@Nullable
-	private static InputStream getResourceAsStream(@Nullable final Class<?> instance, @Nullable final String name) {
-		return instance != null && name != null ? instance.getResourceAsStream(name) : null;
 	}
 
 	@Nullable
