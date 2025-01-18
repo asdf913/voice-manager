@@ -1161,7 +1161,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 		try {
 			//
-			if (Narcissus.invokeMethod(instance, Component.class.getDeclaredMethod("getObjectLock")) == null) {
+			if (Narcissus.invokeMethod(instance, Util.getDeclaredMethod(Component.class, "getObjectLock")) == null) {
 				//
 				return;
 				//

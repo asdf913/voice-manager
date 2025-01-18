@@ -895,14 +895,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					// org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject.createFromByteArray(org.apache.pdfbox.pdmodel.PDDocument,byte[],java.lang.String)
 					//
-					final org.apache.bcel.classfile.Method m = JavaClassUtil
-							.getMethod(
-									ClassParserUtil.parse(
-											testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),
-									clz != null
-											? clz.getDeclaredMethod("createFromByteArray", PDDocument.class,
-													byte[].class, String.class)
-											: null);
+					final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
+							ClassParserUtil
+									.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),
+							Util.getDeclaredMethod(clz, "createFromByteArray", PDDocument.class, byte[].class,
+									String.class));
 					//
 					final Instruction[] ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
 							testAndApply(Objects::nonNull, m, x -> new MethodGen(x, null, null), null)));
@@ -928,7 +925,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 								//
 								fileType = Narcissus.invokeStaticMethod(
 										//
-										(clz = Util.forName((invokestatic = temp).getClassName(cpg))).getDeclaredMethod(
+										Util.getDeclaredMethod(
+												clz = Util.forName((invokestatic = temp).getClassName(cpg)),
 												invokestatic.getMethodName(cpg),
 												Util.forName(
 														TypeUtil.getClassName(invokestatic.getArgumentTypes(cpg)[0]))),

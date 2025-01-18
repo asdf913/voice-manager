@@ -205,7 +205,7 @@ public class Main {
 				} // if
 					//
 				add(pv, Util.getName(f),
-						Narcissus.invokeMethod(instance, getDeclaredMethod(Util.getClass(instance), "value")));
+						Narcissus.invokeMethod(instance, Util.getDeclaredMethod(Util.getClass(instance), "value")));
 				//
 			} // for
 				//
@@ -258,12 +258,6 @@ public class Main {
 		@Nullable
 		private static ModuleInfo getModuleInfo(@Nullable final ClassInfo instance) {
 			return instance != null ? instance.getModuleInfo() : null;
-		}
-
-		@Nullable
-		private static Method getDeclaredMethod(@Nullable final Class<?> instance, final String name,
-				final Class<?>... parameterTypes) throws NoSuchMethodException {
-			return instance != null ? instance.getDeclaredMethod(name, parameterTypes) : null;
 		}
 
 		@Nullable

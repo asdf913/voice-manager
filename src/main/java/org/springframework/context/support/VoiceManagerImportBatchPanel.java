@@ -2966,7 +2966,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 		try {
 			//
-			if (Narcissus.invokeMethod(instance, Component.class.getDeclaredMethod("getObjectLock")) == null) {
+			if (Narcissus.invokeMethod(instance, Util.getDeclaredMethod(Component.class, "getObjectLock")) == null) {
 				//
 				return;
 				//
@@ -3583,8 +3583,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			if (method == null) {
 				//
-				METHOD_RANDOM_ALPHABETIC = Unit
-						.with(method = RandomStringUtils.class.getDeclaredMethod("randomAlphabetic", Integer.TYPE));
+				METHOD_RANDOM_ALPHABETIC = Unit.with(
+						method = Util.getDeclaredMethod(RandomStringUtils.class, "randomAlphabetic", Integer.TYPE));
 				//
 			} // if
 				//

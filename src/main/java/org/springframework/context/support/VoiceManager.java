@@ -815,7 +815,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 				if ((intFunction = Util.getValue(entry)) != null && preferredHeight != null
 						&& intFunction.apply(preferredHeight.intValue()) instanceof Component c && container != null
-						&& Narcissus.invokeMethod(c, Component.class.getDeclaredMethod("getObjectLock")) != null) {
+						&& Narcissus.invokeMethod(c,
+								Util.getDeclaredMethod(Component.class, "getObjectLock")) != null) {
 					//
 					container.add(c.getName(), c);
 					//
