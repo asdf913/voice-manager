@@ -400,7 +400,7 @@ public abstract class Util {
 		return instance != null ? instance.apply(value) : null;
 	}
 
-	static Field getDeclaredField(final Class<?> instance, final String name) throws NoSuchFieldException {
+	static Field getDeclaredField(@Nullable final Class<?> instance, final String name) throws NoSuchFieldException {
 		return instance != null ? instance.getDeclaredField(name) : null;
 	}
 
