@@ -29,7 +29,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -59,6 +61,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -69,6 +72,22 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ClassParserUtil;
+import org.apache.bcel.classfile.ConstantPool;
+import org.apache.bcel.classfile.FieldOrMethodUtil;
+import org.apache.bcel.classfile.JavaClassUtil;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.GETSTATIC;
+import org.apache.bcel.generic.IF_ACMPEQ;
+import org.apache.bcel.generic.IF_ACMPNE;
+import org.apache.bcel.generic.INVOKESTATIC;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.MethodGenUtil;
+import org.apache.bcel.generic.Type;
+import org.apache.bcel.generic.TypeUtil;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
@@ -861,8 +880,100 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//
-				Util.setText(tfImageFile, Util.getAbsolutePath(getAbsoluteFile(jfc.getSelectedFile())));
+				final File file = getAbsoluteFile(jfc.getSelectedFile());
 				//
+				Class<?> clz = PDImageXObject.class;
+				//
+				Collection<Object> allowedFileType = null;
+				//
+				Object fileType = null;
+				//
+				try (final InputStream is = clz != null
+						? clz.getResourceAsStream(
+								String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
+						: null) {
+					//
+					// org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject.createFromByteArray(org.apache.pdfbox.pdmodel.PDDocument,byte[],java.lang.String)
+					//
+					final org.apache.bcel.classfile.Method m = JavaClassUtil
+							.getMethod(
+									ClassParserUtil.parse(
+											testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),
+									clz != null
+											? clz.getDeclaredMethod("createFromByteArray", PDDocument.class,
+													byte[].class, String.class)
+											: null);
+					//
+					final Instruction[] ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
+							testAndApply(Objects::nonNull, m, x -> new MethodGen(x, null, null), null)));
+					//
+					final ConstantPool cp = FieldOrMethodUtil.getConstantPool(m);
+					//
+					final ConstantPoolGen cpg = new ConstantPoolGen(cp);
+					//
+					Instruction in = null;
+					//
+					INVOKESTATIC invokestatic = null;
+					//
+					Object object = null;
+					//
+					Type[] argumentTypes = null;
+					//
+					for (int i = 0; ins != null && i < ins.length; i++) {
+						//
+						if ((in = ins[i]) instanceof INVOKESTATIC temp && invokestatic == null) {
+							//
+							if ((argumentTypes = (invokestatic = temp).getArgumentTypes(cpg)) != null
+									&& argumentTypes.length == 1) {
+								//
+								fileType = Narcissus.invokeStaticMethod(
+										//
+										(clz = Util.forName((invokestatic = temp).getClassName(cpg))).getDeclaredMethod(
+												invokestatic.getMethodName(cpg),
+												Util.forName(
+														TypeUtil.getClassName(invokestatic.getArgumentTypes(cpg)[0]))),
+										Files.readAllBytes(file.toPath()));
+								//
+							} // if
+								//
+						} else if (i > 0 && ins[i - 1] instanceof GETSTATIC getstatic) {
+							//
+							if (in instanceof IF_ACMPNE || in instanceof IF_ACMPEQ) {
+								//
+								if (!Util.contains(
+										allowedFileType = ObjectUtils.getIfNull(allowedFileType, ArrayList::new),
+										object = Narcissus.getStaticField(
+												(clz = Util.forName(getstatic.getFieldType(cpg).getClassName())) != null
+														? clz.getDeclaredField(getstatic.getFieldName(cpg))
+														: null))) {
+									//
+									Util.add(allowedFileType, object);
+									//
+								} // if
+									//
+							} // if
+								//
+						} // if
+							//
+					} // for
+						//
+				} catch (final IOException | NoSuchMethodException | NoSuchFieldException e) {
+					//
+					LoggerUtil.error(LOG, e.getMessage(), e);
+					//
+				} // try
+					//
+				if (Util.contains(allowedFileType, fileType)) {
+					//
+					Util.setText(tfImageFile, Util.getAbsolutePath(file));
+					//
+				} else {
+					//
+					JOptionPane.showMessageDialog(null, "Please select an image file");
+					//
+					Util.setText(tfImageFile, null);
+					//
+				} // if
 			} // if
 				//
 		} // if
