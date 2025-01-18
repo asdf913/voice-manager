@@ -409,6 +409,7 @@ public abstract class Util {
 		return instance != null ? instance.getDeclaredFields() : null;
 	}
 
+	@Nullable
 	static Method getDeclaredMethod(@Nullable final Class<?> instance, final String name,
 			final Class<?>... parameterTypes) throws NoSuchMethodException {
 		return instance != null ? instance.getDeclaredMethod(name, parameterTypes) : null;
