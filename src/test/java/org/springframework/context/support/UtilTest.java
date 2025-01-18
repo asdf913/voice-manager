@@ -180,6 +180,8 @@ class UtilTest {
 		//
 		stream = Reflection.newProxy(Stream.class, new IH());
 		//
+		mh = new MH();
+		//
 	}
 
 	@Test
