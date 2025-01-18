@@ -835,15 +835,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				final FloatMap floatMap = Reflection.newProxy(FloatMap.class, ih);
 				//
-				if (floatMap != null) {
-					//
-					floatMap.setFloat("fontSize", floatValue(testAndApply(NumberUtils::isCreatable,
-							Util.getText(tfFontSize2), NumberUtils::createNumber, null), 14));
-					//
-					floatMap.setFloat("defaultSize", floatValue(pdAnnotationRectangleSize, 61));
-					//
-				} // if
-					//
+				FloatMap.setFloat(floatMap, "fontSize", floatValue(testAndApply(NumberUtils::isCreatable,
+						Util.getText(tfFontSize2), NumberUtils::createNumber, null), 14));
+				//
+				FloatMap.setFloat(floatMap, "defaultSize", floatValue(pdAnnotationRectangleSize, 61));
+				//
 				final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, ih);
 				//
 				ObjectMap.setObject(objectMap, PDDocument.class, document);
@@ -1170,6 +1166,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 		private static float getFloat(@Nullable final FloatMap instance, final String key, final float defaultValue) {
 			return instance != null ? instance.getFloat(key) : defaultValue;
+		}
+
+		private static void setFloat(final FloatMap instance, final String key, final float i) {
+			if (instance != null) {
+				instance.setFloat(key, i);
+			}
 		}
 
 	}
