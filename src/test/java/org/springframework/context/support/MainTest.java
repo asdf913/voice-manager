@@ -36,7 +36,6 @@ import org.apache.bcel.generic.INVOKESPECIAL;
 import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
-import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.InvokeInstructionUtil;
 import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.MethodGen;
