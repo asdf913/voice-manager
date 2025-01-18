@@ -1586,7 +1586,7 @@ public abstract class Util {
 		return instance != null && instance.isFile();
 	}
 
-	static File toFile(final Path instance) {
+	static File toFile(@Nullable final Path instance) {
 		return instance != null ? instance.toFile() : null;
 	}
 
