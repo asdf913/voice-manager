@@ -1181,7 +1181,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			return instance != null ? instance.getString(key) : null;
 		}
 
-		private static void setString(final StringMap instance, final String key, final String value) {
+		private static void setString(@Nullable final StringMap instance, final String key, final String value) {
 			if (instance != null) {
 				instance.setString(key, value);
 			}
