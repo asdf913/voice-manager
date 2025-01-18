@@ -979,30 +979,36 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		}
 	}
 
+	@Nullable
 	private static <T extends Appendable> T output(@Nullable final HtmlBuilder<T> instance) {
 		return instance != null ? instance.output() : null;
 	}
 
+	@Nullable
 	private static <T extends Appendable> HtmlBuilder<T> appendEndTag(@Nullable final HtmlBuilder<T> instance,
 			final String name) throws IOException {
 		return instance != null ? instance.appendEndTag(name) : null;
 	}
 
+	@Nullable
 	private static <T extends Appendable> HtmlBuilder<T> appendUnescapedText(@Nullable final HtmlBuilder<T> instance,
 			final String txt) throws IOException {
 		return instance != null ? instance.appendUnescapedText(txt) : null;
 	}
 
+	@Nullable
 	private static HtmlBuilder<? extends Appendable> completeTag(@Nullable final TagBuilder instance)
 			throws IOException {
 		return instance != null ? instance.completeTag() : null;
 	}
 
+	@Nullable
 	private static TagBuilder appendAttribute(@Nullable final TagBuilder instance, final String name,
 			final String value) throws IOException {
 		return instance != null ? instance.appendAttribute(name, value) : null;
 	}
 
+	@Nullable
 	private static TagBuilder appendStartTag(@Nullable final HtmlBuilder<?> instance, final String name)
 			throws IOException {
 		return instance != null ? instance.appendStartTag(name) : null;
