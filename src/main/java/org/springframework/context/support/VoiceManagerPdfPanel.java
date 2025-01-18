@@ -910,6 +910,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
+	@Nullable
 	private static Entry<Method, Collection<Object>> getPDImageXObjectCreateFromByteArrayDetectFileTypeMethodAndAllowedFileTypes()
 			throws IOException, NoSuchMethodException, NoSuchFieldException {
 		//
