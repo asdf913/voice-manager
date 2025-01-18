@@ -1586,7 +1586,7 @@ public abstract class Util {
 		return instance != null && instance.isFile();
 	}
 
-	static boolean exists(final File instance) {
+	static boolean exists(@Nullable final File instance) {
 		return instance != null && instance.exists();
 	}
 
