@@ -164,6 +164,7 @@ import com.microsoft.playwright.Playwright;
 import io.github.toolfactory.narcissus.Narcissus;
 import j2html.rendering.FlatHtml;
 import j2html.rendering.HtmlBuilder;
+import j2html.rendering.TagBuilder;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerPdfPanel extends JPanel implements Titled, InitializingBean, ActionListener,
@@ -804,16 +805,20 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				final HtmlBuilder<StringBuilder> htmlBuilder = FlatHtml.inMemory();
 				//
-				FileUtils.writeStringToFile(toFile(pathHtml), Util.toString(htmlBuilder != null
-						? htmlBuilder
-								.appendStartTag(
-										"div")
-								.appendAttribute("style",
-										Util.collect(Util.map(Util.stream(Util.entrySet(style)),
-												x -> StringUtils.joinWith(":", Util.getKey(x), Util.getValue(x))),
-												Collectors.joining(";")))
-								.completeTag().appendUnescapedText(Util.getText(taHtml)).appendEndTag("div").output()
-						: null), StandardCharsets.UTF_8, false);
+				FileUtils
+						.writeStringToFile(toFile(pathHtml),
+								Util.toString(
+										output(appendEndTag(
+												appendUnescapedText(completeTag(appendAttribute(
+														appendStartTag(htmlBuilder, "div"), "style",
+														Util.collect(
+																Util.map(Util.stream(Util.entrySet(style)),
+																		x -> StringUtils.joinWith(":", Util.getKey(x),
+																				Util.getValue(x))),
+																Collectors.joining(";")))),
+														Util.getText(taHtml)),
+												"div"))),
+								StandardCharsets.UTF_8, false);
 				//
 				document = Loader.loadPDF(pdf(pathHtml));
 				//
@@ -957,6 +962,33 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // if
 			//
+	}
+
+	private static <T extends Appendable> T output(final HtmlBuilder<T> instance) {
+		return instance != null ? instance.output() : null;
+	}
+
+	private static <T extends Appendable> HtmlBuilder<T> appendEndTag(final HtmlBuilder<T> instance, final String name)
+			throws IOException {
+		return instance != null ? instance.appendEndTag(name) : null;
+	}
+
+	private static <T extends Appendable> HtmlBuilder<T> appendUnescapedText(final HtmlBuilder<T> instance,
+			final String txt) throws IOException {
+		return instance != null ? instance.appendUnescapedText(txt) : null;
+	}
+
+	private static HtmlBuilder<? extends Appendable> completeTag(final TagBuilder instance) throws IOException {
+		return instance != null ? instance.completeTag() : null;
+	}
+
+	private static TagBuilder appendAttribute(final TagBuilder instance, final String name, final String value)
+			throws IOException {
+		return instance != null ? instance.appendAttribute(name, value) : null;
+	}
+
+	private static TagBuilder appendStartTag(final HtmlBuilder<?> instance, final String name) throws IOException {
+		return instance != null ? instance.appendStartTag(name) : null;
 	}
 
 	private static int length(@Nullable final Object[] instance) {
