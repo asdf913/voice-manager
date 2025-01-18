@@ -920,16 +920,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						//
 						if ((in = ins[i]) instanceof INVOKESTATIC temp && invokestatic == null) {
 							//
-							if ((argumentTypes = (invokestatic = temp).getArgumentTypes(cpg)) != null
-									&& argumentTypes.length == 1) {
+							if (length((argumentTypes = (invokestatic = temp).getArgumentTypes(cpg))) == 1) {
 								//
 								fileType = Narcissus.invokeStaticMethod(
 										//
 										Util.getDeclaredMethod(
 												clz = Util.forName((invokestatic = temp).getClassName(cpg)),
 												invokestatic.getMethodName(cpg),
-												Util.forName(
-														TypeUtil.getClassName(invokestatic.getArgumentTypes(cpg)[0]))),
+												Util.forName(TypeUtil.getClassName(ArrayUtils.get(argumentTypes, 0)))),
 										Files.readAllBytes(file.toPath()));
 								//
 							} // if
@@ -973,6 +971,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // if
 			//
+	}
+
+	private static int length(final Object[] instance) {
+		return instance != null ? instance.length : 0;
 	}
 
 	@Nullable
