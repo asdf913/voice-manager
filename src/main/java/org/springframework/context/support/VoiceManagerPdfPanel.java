@@ -889,7 +889,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					fileType = Narcissus.invokeStaticMethod(Util.getKey(entry), Files.readAllBytes(Util.toPath(file)));
 					//
-				} catch (final IOException | NoSuchMethodException | NoSuchFieldException e) {
+				} catch (final IOException | NoSuchMethodException e) {
 					//
 					LoggerUtil.error(LOG, e.getMessage(), e);
 					//
@@ -912,7 +912,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	@Nullable
 	private static Entry<Method, Collection<Object>> getPDImageXObjectCreateFromByteArrayDetectFileTypeMethodAndAllowedFileTypes()
-			throws IOException, NoSuchMethodException, NoSuchFieldException {
+			throws IOException, NoSuchMethodException {
 		//
 		Class<?> clz = PDImageXObject.class;
 		//
