@@ -994,7 +994,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static <L> void setLeft(final MutablePair<L, ?> instance, final L left) {
+	private static <L> void setLeft(@Nullable final MutablePair<L, ?> instance, final L left) {
 		if (instance != null) {
 			instance.setLeft(left);
 		}
