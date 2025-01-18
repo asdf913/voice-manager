@@ -902,9 +902,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					Type[] argumentTypes = null;
 					//
-					for (int i = 0; ins != null && i < ins.length; i++) {
+					for (int i = 0; i < length(ins); i++) {
 						//
-						if ((in = ins[i]) instanceof INVOKESTATIC temp && invokestatic == null) {
+						if ((in = ArrayUtils.get(ins, i)) instanceof INVOKESTATIC temp && invokestatic == null) {
 							//
 							if (length((argumentTypes = InvokeInstructionUtil.getArgumentTypes(invokestatic = temp,
 									cpg))) == 1) {
@@ -920,12 +920,15 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 								//
 							} // if
 								//
-						} else if (i > 0 && ins[i - 1] instanceof GETSTATIC getstatic && Boolean.logicalAnd(
-								Boolean.logicalOr(in instanceof IF_ACMPNE, in instanceof IF_ACMPEQ),
-								!Util.contains(allowedFileType = ObjectUtils.getIfNull(allowedFileType, ArrayList::new),
-										object = Narcissus.getStaticField(Util.getDeclaredField(
-												clz = Util.forName(getstatic.getFieldType(cpg).getClassName()),
-												getstatic.getFieldName(cpg)))))) {
+						} else if (i > 0 && ArrayUtils.get(ins, i - 1) instanceof GETSTATIC getstatic
+								&& Boolean.logicalAnd(
+										Boolean.logicalOr(in instanceof IF_ACMPNE, in instanceof IF_ACMPEQ),
+										!Util.contains(
+												allowedFileType = ObjectUtils.getIfNull(allowedFileType,
+														ArrayList::new),
+												object = Narcissus.getStaticField(Util.getDeclaredField(
+														clz = Util.forName(getstatic.getFieldType(cpg).getClassName()),
+														getstatic.getFieldName(cpg)))))) {
 							//
 							Util.add(allowedFileType, object);
 							//
