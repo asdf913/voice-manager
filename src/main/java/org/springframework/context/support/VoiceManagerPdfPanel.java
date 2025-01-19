@@ -992,11 +992,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} else if (isDataFlavorSupported(transferable, DataFlavor.javaFileListFlavor)) {
 					//
-					final Iterable<?> iterable = Util.cast(Iterable.class,
-							transferable.getTransferData(DataFlavor.javaFileListFlavor));
-					//
-					final File file = Util.cast(File.class, testAndApply(x -> IterableUtils.size(x) == 1, iterable,
-							x -> IterableUtils.get(x, 0), null));
+					final File file = Util.cast(File.class,
+							testAndApply(x -> IterableUtils.size(x) == 1,
+									Util.cast(Iterable.class,
+											transferable.getTransferData(DataFlavor.javaFileListFlavor)),
+									x -> IterableUtils.get(x, 0), null));
 					//
 					final Entry<Method, Collection<Object>> entry = getPDImageXObjectCreateFromByteArrayDetectFileTypeMethodAndAllowedFileTypes();
 					//
