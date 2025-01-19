@@ -68,6 +68,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -225,7 +226,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Image File")
 	private AbstractButton btnImageFile = null;
 
-	private AbstractButton btnImageFromClipboard, btnImageClear = null;
+	private AbstractButton btnImageFromClipboard, btnImageClear, btnImageView = null;
 
 	@Note("HTML")
 	private JTextComponent taHtml = null;
@@ -480,7 +481,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(new JComboBox<>(
 				cbmFontSize1 = new DefaultComboBoxModel<>(ArrayUtils.insert(0, ECSSUnit.values(), (ECSSUnit) null))),
-				WRAP);
+				String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		setSelectedItem(cbmFontSize1, Util.getValue(entry));
 		//
@@ -503,7 +504,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
-		final int span = 4;
+		final int span = 5;
 		//
 		add(jsp, String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, span));
 		//
@@ -593,9 +594,15 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(new JLabel("Image From Clipboard"));
 		//
-		add(btnImageFromClipboard = new JButton("Copy"));
+		final JPanel panel = new JPanel();
 		//
-		add(btnImageClear = new JButton("Clear"), WRAP);
+		panel.add(btnImageFromClipboard = new JButton("Copy"));
+		//
+		panel.add(btnImageClear = new JButton("Clear"));
+		//
+		panel.add(btnImageView = new JButton("View"));
+		//
+		add(panel, String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		// Original Size
 		//
@@ -637,6 +644,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // if
 			//
+		actionPerformed(new ActionEvent(btnImageClear, 0, null));
+		//
 	}
 
 	private static <T> void forEach(@Nullable final FailableStream<T> instance, final FailableConsumer<T, ?> action) {
@@ -980,7 +989,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // for
 				//
-			if (isDataFlavorSupported(transferable, DataFlavor.imageFlavor)) {
+			final boolean isImageFlavorSupported = isDataFlavorSupported(transferable, DataFlavor.imageFlavor);
+			//
+			setEnabled(isImageFlavorSupported, btnImageClear, btnImageView);
+			//
+			if (isImageFlavorSupported) {
 				//
 				try {
 					//
@@ -997,10 +1010,36 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} else if (Objects.equals(source, btnImageClear)) {
 			//
-			renderedImage = null;
+			setEnabled((renderedImage = null) != null, btnImageClear, btnImageView);
+			//
+		} else if (Objects.equals(source, btnImageView)) {
+			//
+			JOptionPane.showMessageDialog(null,
+					testAndApply(Objects::nonNull, Util.cast(BufferedImage.class, renderedImage), ImageIcon::new, null),
+					"Image", JOptionPane.PLAIN_MESSAGE, null);
 			//
 		} // if
 			//
+	}
+
+	private static void setEnabled(final boolean enabled, final Component a, final Component b, final Component... cs) {
+		//
+		setEnabled(a, enabled);
+		//
+		setEnabled(b, enabled);
+		//
+		for (int i = 0; i < length(cs); i++) {
+			//
+			setEnabled(ArrayUtils.get(cs, i), enabled);
+			//
+		} // for
+			//
+	}
+
+	private static void setEnabled(final Component instance, final boolean b) {
+		if (instance != null) {
+			instance.setEnabled(b);
+		}
 	}
 
 	private static boolean isDataFlavorSupported(@Nullable final Transferable instance, final DataFlavor flavor) {
