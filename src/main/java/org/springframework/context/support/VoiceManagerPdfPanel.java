@@ -966,12 +966,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
-		if (actionPerformedForBtnImageFromClipboard(source)) {
-			//
-			return;
-			//
-		} // if
-			//
+		actionPerformedForBtnImageFromClipboard(source);
+		//
 	}
 
 	private boolean actionPerformedForBtnImageFromClipboard(final Object source) {
