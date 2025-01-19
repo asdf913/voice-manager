@@ -983,10 +983,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null && instance.isDataFlavorSupported(flavor);
 	}
 
+	@Nullable
 	private static Transferable getContents(@Nullable final Clipboard instance, final Object requestor) {
 		return instance != null ? instance.getContents(requestor) : null;
 	}
 
+	@Nullable
 	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		return instance != null ? instance.getSystemClipboard() : null;
 	}
