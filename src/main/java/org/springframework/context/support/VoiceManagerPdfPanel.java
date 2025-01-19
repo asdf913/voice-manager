@@ -997,13 +997,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						f -> Boolean.logicalAnd(Objects.equals(DataFlavor.class, Util.getType(f)), Util.isStatic(f))),
 				FailableStream::new, null);
 		//
-		final Iterable<Entry<String, DataFlavor>> entrySet = Util
-				.entrySet(Util.collect(FailableStreamUtil.stream(fs), Collectors.toMap(Util::getName, f -> {
-					//
-					return testAndApply(Util::isStatic, f,
-							x -> Util.cast(DataFlavor.class, Narcissus.getStaticField(x)), null);
-					//
-				})));
+		final Iterable<Entry<String, DataFlavor>> entrySet = Util.entrySet(Util.collect(FailableStreamUtil.stream(fs),
+				Collectors.toMap(Util::getName, f -> testAndApply(Util::isStatic, f,
+						x -> Util.cast(DataFlavor.class, Narcissus.getStaticField(x)), null))));
 		//
 		Entry<String, DataFlavor> entry = null;
 		//
