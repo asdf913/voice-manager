@@ -17,6 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -953,40 +954,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final Transferable transferable = getContents(getSystemClipboard(Toolkit.getDefaultToolkit()), null);
 			//
-			final FailableStream<Field> fs = testAndApply(Objects::nonNull, Util.filter(
-					testAndApply(Objects::nonNull, Util.getDeclaredFields(DataFlavor.class), Arrays::stream, null),
-					f -> Boolean.logicalAnd(Objects.equals(DataFlavor.class, Util.getType(f)), Util.isStatic(f))),
-					FailableStream::new, null);
+			debug(System.out, transferable);
 			//
-			final Iterable<Entry<String, DataFlavor>> entrySet = Util
-					.entrySet(Util.collect(FailableStreamUtil.stream(fs), Collectors.toMap(Util::getName, f -> {
-						//
-						return testAndApply(x -> Util.isStatic(x), f,
-								x -> Util.cast(DataFlavor.class, Narcissus.getStaticField(x)), null);
-						//
-					})));
-			//
-			Entry<String, DataFlavor> entry = null;
-			//
-			DataFlavor df = null;
-			//
-			final int maxLength1 = orElse(max(mapToInt(Util.map(
-					testAndApply(Objects::nonNull, spliterator(entrySet), x -> StreamSupport.stream(x, false), null),
-					Util::getKey), StringUtils::length)), 0);
-			//
-			final int maxLength2 = orElse(max(mapToInt(Util.map(
-					testAndApply(Objects::nonNull, spliterator(entrySet), x -> StreamSupport.stream(x, false), null),
-					x -> Util.toString(Util.getValue(x))), StringUtils::length)), 0);
-			//
-			for (int i = 0; i < IterableUtils.size(entrySet); i++) {
-				//
-				System.out.println(StringUtils.joinWith("\t",
-						StringUtils.rightPad(Util.getKey(entry = IterableUtils.get(entrySet, i)), maxLength1),
-						StringUtils.rightPad(Util.toString(df = Util.getValue(entry)), maxLength2),
-						isDataFlavorSupported(transferable, df)));// TODO
-				//
-			} // for
-				//
 			final boolean isImageFlavorSupported = isDataFlavorSupported(transferable, DataFlavor.imageFlavor);
 			//
 			setEnabled(isImageFlavorSupported, btnImageClear, btnImageView);
@@ -1018,6 +987,52 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
+	}
+
+	private static void debug(final PrintStream ps, final Transferable transferable) {
+		//
+		final FailableStream<Field> fs = testAndApply(Objects::nonNull,
+				Util.filter(
+						testAndApply(Objects::nonNull, Util.getDeclaredFields(DataFlavor.class), Arrays::stream, null),
+						f -> Boolean.logicalAnd(Objects.equals(DataFlavor.class, Util.getType(f)), Util.isStatic(f))),
+				FailableStream::new, null);
+		//
+		final Iterable<Entry<String, DataFlavor>> entrySet = Util
+				.entrySet(Util.collect(FailableStreamUtil.stream(fs), Collectors.toMap(Util::getName, f -> {
+					//
+					return testAndApply(x -> Util.isStatic(x), f,
+							x -> Util.cast(DataFlavor.class, Narcissus.getStaticField(x)), null);
+					//
+				})));
+		//
+		Entry<String, DataFlavor> entry = null;
+		//
+		DataFlavor df = null;
+		//
+		final int maxLength1 = orElse(max(mapToInt(Util.map(
+				testAndApply(Objects::nonNull, spliterator(entrySet), x -> StreamSupport.stream(x, false), null),
+				Util::getKey), StringUtils::length)), 0);
+		//
+		final int maxLength2 = orElse(max(mapToInt(Util.map(
+				testAndApply(Objects::nonNull, spliterator(entrySet), x -> StreamSupport.stream(x, false), null),
+				x -> Util.toString(Util.getValue(x))), StringUtils::length)), 0);
+		//
+		for (int i = 0; i < IterableUtils.size(entrySet); i++) {
+			//
+			println(ps,
+					StringUtils.joinWith("\t",
+							StringUtils.rightPad(Util.getKey(entry = IterableUtils.get(entrySet, i)), maxLength1),
+							StringUtils.rightPad(Util.toString(df = Util.getValue(entry)), maxLength2),
+							isDataFlavorSupported(transferable, df)));// TODO
+			//
+		} // for
+			//
+	}
+
+	private static void println(final PrintStream instance, final String string) {
+		if (instance != null) {
+			instance.println(string);
+		}
 	}
 
 	private static void setEnabled(final boolean enabled, final Component a, final Component b, final Component... cs) {
