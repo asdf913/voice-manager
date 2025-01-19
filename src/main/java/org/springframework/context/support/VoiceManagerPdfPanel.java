@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
+import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -603,6 +604,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		add(new JLabel("Image From Clipboard"));
 		//
 		final JPanel panel = new JPanel();
+		//
+		final GridLayout gridLayout = new GridLayout();
+		//
+		gridLayout.setHgap(7);
+		//
+		panel.setLayout(gridLayout);
 		//
 		panel.add(btnImageFromClipboard = new JButton("Copy"));
 		//
