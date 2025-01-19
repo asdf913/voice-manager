@@ -271,7 +271,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private Map<Integer, String> fontSizeAndUnitMap = null;
 
-	private RenderedImage renderedImage = null;
+	private transient RenderedImage renderedImage = null;
 
 	@Override
 	public String getTitle() {
