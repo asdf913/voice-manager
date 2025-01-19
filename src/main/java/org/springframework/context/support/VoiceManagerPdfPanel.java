@@ -945,7 +945,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					FailableStream::new, null);
 			//
 			final Iterable<Entry<String, DataFlavor>> entrySet = Util
-					.entrySet(fs != null ? fs.collect(Collectors.toMap(Util::getName, f -> {
+					.entrySet(Util.collect(FailableStreamUtil.stream(fs), Collectors.toMap(Util::getName, f -> {
 						//
 						if (f != null && Modifier.isStatic(f.getModifiers())) {
 							//
@@ -955,7 +955,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 							//
 						return null;
 						//
-					})) : null);
+					})));
 			//
 			Entry<String, DataFlavor> entry = null;
 			//
