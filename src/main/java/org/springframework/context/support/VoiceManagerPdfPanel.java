@@ -969,17 +969,21 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					testAndApply(Objects::nonNull, spliterator(entrySet), x -> StreamSupport.stream(x, false), null),
 					x -> Util.toString(Util.getValue(x))), StringUtils::length)), 0);
 			//
-			for (int i = 0; i < IterableUtils.size(entrySet) && transferable != null; i++) {
+			for (int i = 0; i < IterableUtils.size(entrySet); i++) {
 				//
 				System.out.println(StringUtils.joinWith("\t",
 						StringUtils.rightPad(Util.getKey(entry = IterableUtils.get(entrySet, i)), maxLength1),
 						StringUtils.rightPad(Util.toString(df = Util.getValue(entry)), maxLength2),
-						transferable.isDataFlavorSupported(df)));// TODO
+						isDataFlavorSupported(transferable, df)));// TODO
 				//
 			} // for
 				//
 		} // if
 			//
+	}
+
+	private static boolean isDataFlavorSupported(final Transferable instance, final DataFlavor flavor) {
+		return instance != null && instance.isDataFlavorSupported(flavor);
 	}
 
 	private static Transferable getContents(final Clipboard instance, final Object requestor) {
