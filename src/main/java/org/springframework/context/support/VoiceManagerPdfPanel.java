@@ -1077,7 +1077,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	@Nullable
-	private static Transferable getContents(@Nullable final Clipboard instance, final Object requestor) {
+	private static Transferable getContents(@Nullable final Clipboard instance, @Nullable final Object requestor) {
 		return instance != null ? instance.getContents(requestor) : null;
 	}
 
