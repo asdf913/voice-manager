@@ -1034,7 +1034,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static void setEnabled(final Component instance, final boolean b) {
+	private static void setEnabled(@Nullable final Component instance, final boolean b) {
 		if (instance != null) {
 			instance.setEnabled(b);
 		}
