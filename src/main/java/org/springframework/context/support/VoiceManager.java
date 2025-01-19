@@ -665,10 +665,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			try {
 				//
-				testAndAccept(
-						x -> and(x, y -> Objects.equals(Util.getDeclaringClass(y), Util.getType(y)),
-								y -> Util.isStatic(y), y -> get(y, null) == null),
-						fs[i], x -> Narcissus.setStaticField(x, this));
+				testAndAccept(x -> and(x, y -> Objects.equals(Util.getDeclaringClass(y), Util.getType(y)),
+						Util::isStatic, y -> get(y, null) == null), fs[i], x -> Narcissus.setStaticField(x, this));
 				//
 			} catch (final IllegalArgumentException | IllegalAccessException e) {
 				//
