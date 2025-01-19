@@ -958,13 +958,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			final Iterable<Entry<String, DataFlavor>> entrySet = Util
 					.entrySet(Util.collect(FailableStreamUtil.stream(fs), Collectors.toMap(Util::getName, f -> {
 						//
-						if (Util.isStatic(f)) {
-							//
-							return Util.cast(DataFlavor.class, Narcissus.getStaticField(f));
-							//
-						} // if
-							//
-						return null;
+						testAndApply(x -> Util.isStatic(x), f,
+								x -> Util.cast(DataFlavor.class, Narcissus.getStaticField(x)), null);
+						//
+						return testAndApply(x -> Util.isStatic(x), f,
+								x -> Util.cast(DataFlavor.class, Narcissus.getStaticField(x)), null);
 						//
 					})));
 			//
