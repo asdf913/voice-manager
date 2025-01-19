@@ -3,6 +3,7 @@ package org.springframework.context.support;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -953,9 +954,32 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // if
 				//
-		} else if (Objects.equals(source, btnImageFromClipboard)) {
+		} else if (Objects.equals(source, btnImageClear)) {
 			//
-			final Transferable transferable = getContents(getSystemClipboard(Toolkit.getDefaultToolkit()), null);
+			setEnabled((renderedImage = null) != null, btnImageClear, btnImageView);
+			//
+		} else if (Objects.equals(source, btnImageView)) {
+			//
+			JOptionPane.showMessageDialog(null,
+					testAndApply(Objects::nonNull, Util.cast(BufferedImage.class, renderedImage), ImageIcon::new, null),
+					"Image", JOptionPane.PLAIN_MESSAGE, null);
+			//
+		} // if
+			//
+		if (actionPerformedForBtnImageFromClipboard(source)) {
+			//
+			return;
+			//
+		} // if
+			//
+	}
+
+	private boolean actionPerformedForBtnImageFromClipboard(final Object source) {
+		//
+		if (Objects.equals(source, btnImageFromClipboard)) {
+			//
+			final Transferable transferable = getContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(),
+					Toolkit.getDefaultToolkit(), x -> getSystemClipboard(x), null), null);
 			//
 			debug(System.out, transferable);
 			//
@@ -978,18 +1002,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 			} // if
 				//
-		} else if (Objects.equals(source, btnImageClear)) {
-			//
-			setEnabled((renderedImage = null) != null, btnImageClear, btnImageView);
-			//
-		} else if (Objects.equals(source, btnImageView)) {
-			//
-			JOptionPane.showMessageDialog(null,
-					testAndApply(Objects::nonNull, Util.cast(BufferedImage.class, renderedImage), ImageIcon::new, null),
-					"Image", JOptionPane.PLAIN_MESSAGE, null);
+			return true;
 			//
 		} // if
 			//
+		return false;
+		//
 	}
 
 	private static void debug(final PrintStream ps, final Transferable transferable) {

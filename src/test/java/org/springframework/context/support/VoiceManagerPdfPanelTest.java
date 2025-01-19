@@ -279,7 +279,8 @@ class VoiceManagerPdfPanelTest {
 				invoke = Narcissus.invokeMethod(instance = ObjectUtils.getIfNull(instance, VoiceManagerPdfPanel::new),
 						m, os);
 				//
-				if (Boolean.logicalAnd(Objects.equals(name, "getTitle"), m.getParameterCount() == 0)) {
+				if (Objects.equals(Boolean.TYPE, m.getReturnType())
+						|| Boolean.logicalAnd(Objects.equals(name, "getTitle"), m.getParameterCount() == 0)) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
