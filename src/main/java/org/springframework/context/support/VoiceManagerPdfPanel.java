@@ -1028,7 +1028,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static void println(final PrintStream instance, final String string) {
+	private static void println(@Nullable final PrintStream instance, final String string) {
 		if (instance != null) {
 			instance.println(string);
 		}
