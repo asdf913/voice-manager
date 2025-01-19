@@ -988,6 +988,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null ? instance.getSystemClipboard() : null;
 	}
 
+	@Nullable
 	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
 			@Nullable final ToIntFunction<? super T> mapper) {
 		//
