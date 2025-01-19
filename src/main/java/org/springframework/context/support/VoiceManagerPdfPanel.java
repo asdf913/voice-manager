@@ -8,9 +8,11 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +25,6 @@ import java.lang.invoke.TypeDescriptor.OfField;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
@@ -224,7 +225,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Image File")
 	private AbstractButton btnImageFile = null;
 
-	private AbstractButton btnImageFromClipboard = null;
+	private AbstractButton btnImageFromClipboard, btnImageClear = null;
 
 	@Note("HTML")
 	private JTextComponent taHtml = null;
@@ -268,6 +269,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	private Map<Integer, String> speechSpeedMap = null;
 
 	private Map<Integer, String> fontSizeAndUnitMap = null;
+
+	private RenderedImage renderedImage = null;
 
 	@Override
 	public String getTitle() {
@@ -590,7 +593,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(new JLabel("Image From Clipboard"));
 		//
-		add(btnImageFromClipboard = new JButton("Copy"), WRAP);
+		add(btnImageFromClipboard = new JButton("Copy"));
+		//
+		add(btnImageClear = new JButton("Clear"), WRAP);
 		//
 		// Original Size
 		//
@@ -975,6 +980,25 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // for
 				//
+			if (isDataFlavorSupported(transferable, DataFlavor.imageFlavor)) {
+				//
+				try {
+					//
+					renderedImage = Util.cast(RenderedImage.class,
+							transferable.getTransferData(DataFlavor.imageFlavor));
+					//
+				} catch (final UnsupportedFlavorException | IOException e) {
+					//
+					LoggerUtil.error(LOG, e.getMessage(), e);
+					//
+				} // try
+					//
+			} // if
+				//
+		} else if (Objects.equals(source, btnImageClear)) {
+			//
+			renderedImage = null;
+			//
 		} // if
 			//
 	}
