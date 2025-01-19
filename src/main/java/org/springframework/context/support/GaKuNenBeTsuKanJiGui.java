@@ -19,7 +19,6 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -411,9 +410,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			try {
 				//
 				final Multimap<?, ?> multimap = Util.cast(Multimap.class,
-						m != null && Modifier.isStatic(m.getModifiers())
-								? Narcissus.invokeStaticMethod(m, gaKuNenBeTsuKanJiListPageUrl, null)
-								: null);
+						Util.isStatic(m) ? Narcissus.invokeStaticMethod(m, gaKuNenBeTsuKanJiListPageUrl, null) : null);
 				//
 				final ObjectMapper om = getObjectMapper();
 				//

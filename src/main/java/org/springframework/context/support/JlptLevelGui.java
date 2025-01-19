@@ -22,7 +22,6 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.time.Duration;
@@ -363,10 +362,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			//
 			try {
 				//
-				final boolean matched = Objects.equals(
-						m != null && Modifier.isStatic(m.getModifiers()) ? Narcissus.invokeStaticMethod(m, url, null)
-								: null,
-						jlptLevels);
+				final boolean matched = Objects
+						.equals(Util.isStatic(m) ? Narcissus.invokeStaticMethod(m, url, null) : null, jlptLevels);
 				//
 				Util.setText(jlCompare, iif(matched, "Matched", "Not Matched"));
 				//

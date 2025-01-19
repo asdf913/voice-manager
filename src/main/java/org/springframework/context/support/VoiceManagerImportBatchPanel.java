@@ -27,9 +27,7 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URL;
@@ -2199,7 +2197,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 			final Field f = get(fs, 0);
 			//
-			if (f != null && isStatic(f)) {
+			if (Util.isStatic(f)) {
 				//
 				try {
 					//
@@ -2219,10 +2217,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 		return null;
 		//
-	}
-
-	private static boolean isStatic(@Nullable final Member instance) {
-		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
 	@Nullable

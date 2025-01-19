@@ -20,7 +20,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
@@ -160,7 +159,7 @@ class VoiceManagerTest {
 			METHOD_TO_URI_URL, METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP,
 			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT,
 			METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL, METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_2,
-			METHOD_IS_STATIC, METHOD_GET_FIELD_BY_NAME, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL,
+			METHOD_GET_FIELD_BY_NAME, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL,
 			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
 			METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE, METHOD_GET_NUMBER, METHOD_CREATE_IMPORT_RESULT_PANEL,
 			METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
@@ -248,8 +247,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_SET_PREFERRED_WIDTH_2 = clz.getDeclaredMethod("setPreferredWidth", Component.class, Supplier.class))
 				.setAccessible(true);
-		//
-		(METHOD_IS_STATIC = clz.getDeclaredMethod("isStatic", Member.class)).setAccessible(true);
 		//
 		(METHOD_GET_FIELD_BY_NAME = clz.getDeclaredMethod("getFieldByName", Class.class, String.class))
 				.setAccessible(true);
@@ -1527,27 +1524,6 @@ class VoiceManagerTest {
 	private static void setPreferredWidth(final Component component, final Supplier<Double> supplier) throws Throwable {
 		try {
 			METHOD_SET_PREFERRED_WIDTH_2.invoke(null, component, supplier);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIsStatic() throws Throwable {
-		//
-		Assertions.assertFalse(isStatic(null));
-		//
-		Assertions.assertTrue(isStatic(Objects.class.getDeclaredMethod("hashCode", Object.class)));
-		//
-	}
-
-	private static boolean isStatic(final Member instance) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_STATIC.invoke(null, instance);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -2993,7 +2969,7 @@ class VoiceManagerTest {
 			//
 			toString = Objects.toString(m);
 			//
-			if (isStatic(m)) {
+			if (Util.isStatic(m)) {
 				//
 				invoke = Narcissus.invokeStaticMethod(m, os);
 				//

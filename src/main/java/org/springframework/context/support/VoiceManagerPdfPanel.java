@@ -937,17 +937,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			final Transferable transferable = getContents(getSystemClipboard(Toolkit.getDefaultToolkit()), null);
 			//
 			final FailableStream<Field> fs = testAndApply(Objects::nonNull,
-					Util.filter(
-							testAndApply(Objects::nonNull, Util.getDeclaredFields(DataFlavor.class), Arrays::stream,
-									null),
-							f -> f != null && Objects.equals(DataFlavor.class, Util.getType(f))
-									&& Modifier.isStatic(f.getModifiers())),
+					Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(DataFlavor.class), Arrays::stream,
+							null), f -> Objects.equals(DataFlavor.class, Util.getType(f)) && Util.isStatic(f)),
 					FailableStream::new, null);
 			//
 			final Iterable<Entry<String, DataFlavor>> entrySet = Util
 					.entrySet(Util.collect(FailableStreamUtil.stream(fs), Collectors.toMap(Util::getName, f -> {
 						//
-						if (f != null && Modifier.isStatic(f.getModifiers())) {
+						if (Util.isStatic(f)) {
 							//
 							return Util.cast(DataFlavor.class, Narcissus.getStaticField(f));
 							//

@@ -2,7 +2,6 @@ package org.springframework.context.support;
 
 import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Assertions;
@@ -11,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 class SpeechApiImplTest {
 
-	private static Method METHOD_GET_PARAMETER_COUNT, METHOD_IS_STATIC, METHOD_INVOKE, METHOD_AND = null;
+	private static Method METHOD_GET_PARAMETER_COUNT, METHOD_INVOKE, METHOD_AND = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -22,12 +21,6 @@ class SpeechApiImplTest {
 				: null) != null) {
 			//
 			METHOD_GET_PARAMETER_COUNT.setAccessible(true);
-			//
-		} // if
-			//
-		if ((METHOD_IS_STATIC = clz != null ? clz.getDeclaredMethod("isStatic", Member.class) : null) != null) {
-			//
-			METHOD_IS_STATIC.setAccessible(true);
 			//
 		} // if
 			//
@@ -74,27 +67,6 @@ class SpeechApiImplTest {
 			final Object obj = METHOD_GET_PARAMETER_COUNT.invoke(null, instance);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIsStatic() throws Throwable {
-		//
-		Assertions.assertFalse(isStatic(null));
-		//
-		Assertions.assertFalse(isStatic(Object.class.getDeclaredMethod("toString")));
-		//
-	}
-
-	private static boolean isStatic(final Member instance) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_STATIC.invoke(null, instance);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

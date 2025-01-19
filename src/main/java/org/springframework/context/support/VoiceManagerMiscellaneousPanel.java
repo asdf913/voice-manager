@@ -34,9 +34,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -938,7 +936,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 			try {
 				//
-				testAndAccept(m -> throwable != null || isStatic(m), method,
+				testAndAccept(m -> throwable != null || Util.isStatic(m), method,
 						m -> VoiceManagerMiscellaneousPanel.invoke(m, throwable));
 				//
 			} catch (final InvocationTargetException e) {
@@ -1129,7 +1127,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 				fs = Util.toList(sorted(Util.filter(
 						testAndApply(Objects::nonNull, FieldUtils.getAllFields(LocaleID.class), Arrays::stream, null),
 						x -> x != null && !Objects.equals(Util.getType(x), Util.getDeclaringClass(x))
-								&& !x.isSynthetic() && !isStatic(x)),
+								&& !x.isSynthetic() && !Util.isStatic(x)),
 						(a, b) -> StringUtils.compare(Util.getName(getPackage(Util.getDeclaringClass(a))),
 								Util.getName(getPackage(Util.getDeclaringClass(b))))));
 				//
@@ -1378,10 +1376,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 		for (int i = 0; fs != null && i < fs.length; i++) {
 			//
-			if ((f = fs[i]) == null
-					|| (fieldValue = testAndApply(VoiceManagerMiscellaneousPanel::isStatic, f,
-							Narcissus::getStaticField, a -> testAndApply(Objects::nonNull, instance,
-									b -> Narcissus.getField(b, a), null))) != value
+			if ((f = fs[i]) == null || (fieldValue = testAndApply(Util::isStatic, f, Narcissus::getStaticField,
+					a -> testAndApply(Objects::nonNull, instance, b -> Narcissus.getField(b, a), null))) != value
 					|| !Objects.equals(fieldValue, value)) {
 				//
 				continue;
@@ -1410,10 +1406,6 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		if (instance != null) {
 			instance.accept(t, u);
 		}
-	}
-
-	private static boolean isStatic(@Nullable final Member instance) {
-		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
 	private static void setEnabled(final boolean b, final Component instance, @Nullable final Component... cs) {

@@ -31,9 +31,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -441,9 +439,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		if (f != null) {
 			//
-			final Number number = Util.cast(Number.class,
-					testAndApply(VoiceManager::isStatic, f, Narcissus::getStaticField,
-							a -> testAndApply(Objects::nonNull, instance, b -> Narcissus.getField(b, f), null)));
+			final Number number = Util.cast(Number.class, testAndApply(Util::isStatic, f, Narcissus::getStaticField,
+					a -> testAndApply(Objects::nonNull, instance, b -> Narcissus.getField(b, f), null)));
 			//
 			if (number != null || Util.isAssignableFrom(Number.class, Util.getType(f))) {
 				//
@@ -495,10 +492,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(headless, LOG, throwable);
 		//
-	}
-
-	private static boolean isStatic(@Nullable final Member instance) {
-		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
 	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance,
@@ -672,8 +665,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			try {
 				//
-				testAndAccept(x -> and(x, y -> Objects.equals(Util.getDeclaringClass(y), Util.getType(y)),
-						y -> isStatic(y), y -> get(y, null) == null), fs[i], x -> Narcissus.setStaticField(x, this));
+				testAndAccept(
+						x -> and(x, y -> Objects.equals(Util.getDeclaringClass(y), Util.getType(y)),
+								y -> Util.isStatic(y), y -> get(y, null) == null),
+						fs[i], x -> Narcissus.setStaticField(x, this));
 				//
 			} catch (final IllegalArgumentException | IllegalAccessException e) {
 				//
@@ -1103,7 +1098,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 							Util.getDeclaredMethods(Util.forName("com.sun.jna.platform.win32.VersionHelpers")),
 							Arrays::stream, null),
 					m -> m != null && Objects.equals(Util.getName(m), "IsWindows10OrGreater")
-							&& m.getParameterCount() == 0 && isStatic(m)));
+							&& m.getParameterCount() == 0 && Util.isStatic(m)));
 			//
 			if (ms == null || ms.isEmpty()) {
 				//
@@ -1180,7 +1175,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		final List<Field> fs = Util
 				.toList(Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(clz), Arrays::stream, null),
 						f -> Objects.equals(Util.getName(f), "INSTANCE") && Objects.equals(Util.getType(f), clz)
-								&& isStatic(f)));
+								&& Util.isStatic(f)));
 		//
 		final Field f = IterableUtils.size(fs) == 1 ? get(fs, 0) : null;
 		//

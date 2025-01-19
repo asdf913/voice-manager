@@ -1644,7 +1644,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 			try {
 				//
-				testAndAccept(m -> throwable != null || isStatic(m), method,
+				testAndAccept(m -> throwable != null || Util.isStatic(m), method,
 						m -> VoiceManagerExportPanel.invoke(m, throwable));
 				//
 			} catch (final InvocationTargetException e) {
@@ -5130,7 +5130,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				fs = Util.toList(sorted(Util.filter(
 						testAndApply(Objects::nonNull, FieldUtils.getAllFields(LocaleID.class), Arrays::stream, null),
 						x -> x != null && !Objects.equals(Util.getType(x), Util.getDeclaringClass(x))
-								&& !x.isSynthetic() && !isStatic(x)),
+								&& !x.isSynthetic() && !Util.isStatic(x)),
 						(a, b) -> StringUtils.compare(Util.getName(getPackage(Util.getDeclaringClass(a))),
 								Util.getName(getPackage(Util.getDeclaringClass(b))))));
 				//
@@ -5398,7 +5398,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 			} // if
 				//
-			if ((fieldValue = testAndApply(VoiceManagerExportPanel::isStatic, f, Narcissus::getStaticField,
+			if ((fieldValue = testAndApply(Util::isStatic, f, Narcissus::getStaticField,
 					a -> testAndApply(Objects::nonNull, instance, b -> Narcissus.getField(b, a), null))) != value
 					|| !Objects.equals(fieldValue, value)) {
 				//
@@ -5432,10 +5432,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 
 	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, @Nullable final U u) {
 		return instance != null && instance.test(t, u);
-	}
-
-	private static boolean isStatic(@Nullable final Member instance) {
-		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
 	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {

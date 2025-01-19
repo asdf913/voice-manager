@@ -40,9 +40,7 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -2317,7 +2315,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 			try {
 				//
-				testAndAccept(m -> throwable != null || isStatic(m), method,
+				testAndAccept(m -> throwable != null || Util.isStatic(m), method,
 						m -> VoiceManagerImportSinglePanel.invoke(m, throwable));
 				//
 			} catch (final InvocationTargetException e) {
@@ -3606,7 +3604,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 			final Field f = IterableUtils.get(fs, 0);
 			//
-			if (f != null && isStatic(f)) {
+			if (Util.isStatic(f)) {
 				//
 				try {
 					//
@@ -4043,10 +4041,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		if (instance != null) {
 			instance.accept(t, u);
 		}
-	}
-
-	private static boolean isStatic(@Nullable final Member instance) {
-		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
 	@Nullable

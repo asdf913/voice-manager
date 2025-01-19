@@ -3,9 +3,7 @@ package org.springframework.context.support;
 import java.io.File;
 import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -50,7 +48,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 			final List<Method> ms = Util.toList(Util.filter(
 					Arrays.stream(Util.getDeclaredMethods(Util.forName("com.sun.jna.platform.win32.VersionHelpers"))),
 					m -> and(Objects.equals(Util.getName(m), "IsWindows10OrGreater"), getParameterCount(m) == 0,
-							isStatic(m))));
+							Util.isStatic(m))));
 			//
 			if (ms == null || ms.isEmpty()) {
 				//
@@ -102,10 +100,6 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 
 	private static int getParameterCount(@Nullable final Executable instance) {
 		return instance != null ? instance.getParameterCount() : 0;
-	}
-
-	private static boolean isStatic(@Nullable final Member instance) {
-		return instance != null && Modifier.isStatic(instance.getModifiers());
 	}
 
 	@Override
