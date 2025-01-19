@@ -634,7 +634,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static <T> void forEach(final FailableStream<T> instance, final FailableConsumer<T, ?> action) {
+	private static <T> void forEach(@Nullable final FailableStream<T> instance, final FailableConsumer<T, ?> action) {
 		if (instance != null) {
 			instance.forEach(action);
 		}
@@ -989,7 +989,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper) {
+	private static <T> IntStream mapToInt(@Nullable final Stream<T> instance,
+			@Nullable final ToIntFunction<? super T> mapper) {
 		//
 		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
 				? instance.mapToInt(mapper)
