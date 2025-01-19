@@ -934,9 +934,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} else if (Objects.equals(source, btnImageFromClipboard)) {
 			//
-			final Clipboard clipboard = getSystemClipboard(Toolkit.getDefaultToolkit());
-			//
-			final Transferable transferable = clipboard != null ? clipboard.getContents(null) : null;
+			final Transferable transferable = getContents(getSystemClipboard(Toolkit.getDefaultToolkit()), null);
 			//
 			final FailableStream<Field> fs = testAndApply(Objects::nonNull,
 					Util.filter(
@@ -982,6 +980,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // if
 			//
+	}
+
+	private static Transferable getContents(final Clipboard instance, final Object requestor) {
+		return instance != null ? instance.getContents(requestor) : null;
 	}
 
 	private static Clipboard getSystemClipboard(final Toolkit instance) {
