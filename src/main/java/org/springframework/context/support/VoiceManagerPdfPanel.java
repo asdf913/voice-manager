@@ -936,9 +936,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final Transferable transferable = getContents(getSystemClipboard(Toolkit.getDefaultToolkit()), null);
 			//
-			final FailableStream<Field> fs = testAndApply(Objects::nonNull,
-					Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(DataFlavor.class), Arrays::stream,
-							null), f -> Objects.equals(DataFlavor.class, Util.getType(f)) && Util.isStatic(f)),
+			final FailableStream<Field> fs = testAndApply(Objects::nonNull, Util.filter(
+					testAndApply(Objects::nonNull, Util.getDeclaredFields(DataFlavor.class), Arrays::stream, null),
+					f -> Boolean.logicalAnd(Objects.equals(DataFlavor.class, Util.getType(f)), Util.isStatic(f))),
 					FailableStream::new, null);
 			//
 			final Iterable<Entry<String, DataFlavor>> entrySet = Util
