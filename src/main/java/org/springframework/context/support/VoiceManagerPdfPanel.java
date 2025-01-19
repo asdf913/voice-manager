@@ -986,7 +986,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null && instance.isDataFlavorSupported(flavor);
 	}
 
-	private static Transferable getContents(final Clipboard instance, final Object requestor) {
+	private static Transferable getContents(@Nullable final Clipboard instance, final Object requestor) {
 		return instance != null ? instance.getContents(requestor) : null;
 	}
 
