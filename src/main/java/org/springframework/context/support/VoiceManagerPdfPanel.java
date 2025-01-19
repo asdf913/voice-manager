@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -19,6 +23,8 @@ import java.lang.invoke.TypeDescriptor.OfField;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -38,14 +44,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.OptionalInt;
+import java.util.Spliterator;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
@@ -100,10 +112,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableBiFunctionUtil;
+import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
+import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.MutablePairUtil;
 import org.apache.commons.lang3.tuple.Pair;
@@ -206,7 +221,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Is Original Size")
 	private AbstractButton cbIsOriginalSize = null;
 
-	private AbstractButton btnImageFile = null;
+	private AbstractButton btnImageFile, btnImageFromClipboard = null;
 
 	@Note("HTML")
 	private JTextComponent taHtml = null;
@@ -568,6 +583,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(btnImageFile = new JButton("Select"), WRAP);
 		//
+		// Image From Clip board
+		//
+		add(new JLabel("Image From Clipboard"));
+		//
+		add(btnImageFromClipboard = new JButton("Copy"), WRAP);
+		//
 		// Original Size
 		//
 		add(new JLabel("Original Size"));
@@ -578,7 +599,18 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(btnExecute = new JButton("Execute"));
 		//
-		addActionListener(this, btnImageFile, btnExecute);
+		final FailableStream<Field> fs = testAndApply(Objects::nonNull,
+				Util.filter(
+						testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManagerPdfPanel.class),
+								Arrays::stream, null),
+						f -> Util.isAssignableFrom(AbstractButton.class, Util.getType(f))),
+				FailableStream::new, null);
+		//
+		forEach(FailableStreamUtil.map(fs, f -> {
+			return Util.cast(AbstractButton.class, f != null ? f.get(this) : null);
+		}), x -> {
+			addActionListener(x, this);
+		});
 		//
 		final Double width = getWidth(btnExecute.getPreferredSize());
 		//
@@ -602,19 +634,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private void addActionListener(final ActionListener l, final AbstractButton a, final AbstractButton b,
-			@Nullable final AbstractButton... as) {
-		//
-		addActionListener(a, l);
-		//
-		addActionListener(b, l);
-		//
-		for (int i = 0; as != null && i < as.length; i++) {
-			//
-			addActionListener(as[i], l);
-			//
-		} // for
-			//
+	private static <T> void forEach(final FailableStream<T> instance, final FailableConsumer<T, ?> action) {
+		if (instance != null) {
+			instance.forEach(action);
+		}
 	}
 
 	private static void addActionListener(@Nullable final AbstractButton instance, final ActionListener l) {
@@ -909,8 +932,81 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // if
 				//
+		} else if (Objects.equals(source, btnImageFromClipboard)) {
+			//
+			final Toolkit toolkit = Toolkit.getDefaultToolkit();
+			//
+			final Clipboard clipboard = toolkit != null ? toolkit.getSystemClipboard() : null;
+			//
+			final Transferable transferable = clipboard != null ? clipboard.getContents(null) : null;
+			//
+			final FailableStream<Field> fs = testAndApply(Objects::nonNull,
+					Util.filter(
+							testAndApply(Objects::nonNull, Util.getDeclaredFields(DataFlavor.class), Arrays::stream,
+									null),
+							f -> f != null && Objects.equals(DataFlavor.class, Util.getType(f))
+									&& Modifier.isStatic(f.getModifiers())),
+					FailableStream::new, null);
+			//
+			final Iterable<Entry<String, DataFlavor>> entrySet = Util
+					.entrySet(fs != null ? fs.collect(Collectors.toMap(f -> Util.getName(f), f -> {
+						//
+						if (f != null && Modifier.isStatic(f.getModifiers())) {
+							//
+							return Util.cast(DataFlavor.class, Narcissus.getStaticField(f));
+							//
+						} // if
+							//
+						return null;
+						//
+					})) : null);
+			//
+			Entry<String, DataFlavor> entry = null;
+			//
+			DataFlavor df = null;
+			//
+			final int maxLength1 = orElse(
+					max(mapToInt(
+							Util.map(testAndApply(Objects::nonNull, spliterator(entrySet),
+									x -> StreamSupport.stream(x, false), null), x -> Util.getKey(x)),
+							x -> StringUtils.length(x))),
+					0);
+			//
+			final int maxLength2 = orElse(max(mapToInt(Util.map(
+					testAndApply(Objects::nonNull, spliterator(entrySet), x -> StreamSupport.stream(x, false), null),
+					x -> Util.toString(Util.getValue(x))), x -> StringUtils.length(x))), 0);
+			//
+			for (int i = 0; i < IterableUtils.size(entrySet) && transferable != null; i++) {
+				//
+				System.out.println(StringUtils.joinWith("\t",
+						StringUtils.rightPad(Util.getKey(entry = IterableUtils.get(entrySet, i)), maxLength1),
+						StringUtils.rightPad(Util.toString(df = Util.getValue(entry)), maxLength2),
+						transferable.isDataFlavorSupported(df)));// TODO
+				//
+			} // for
+				//
 		} // if
 			//
+	}
+
+	private static <T> IntStream mapToInt(final Stream<T> instance, final ToIntFunction<? super T> mapper) {
+		//
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
+				? instance.mapToInt(mapper)
+				: null;
+		//
+	}
+
+	private static OptionalInt max(final IntStream instance) {
+		return instance != null ? instance.max() : null;
+	}
+
+	private static int orElse(final OptionalInt instance, final int other) {
+		return instance != null ? instance.orElse(other) : other;
+	}
+
+	private static <T> Spliterator<T> spliterator(final Iterable<T> instance) {
+		return instance != null ? instance.spliterator() : null;
 	}
 
 	@Nullable
