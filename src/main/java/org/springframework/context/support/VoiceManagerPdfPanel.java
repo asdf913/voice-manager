@@ -997,15 +997,15 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static OptionalInt max(final IntStream instance) {
+	private static OptionalInt max(@Nullable final IntStream instance) {
 		return instance != null ? instance.max() : null;
 	}
 
-	private static int orElse(final OptionalInt instance, final int other) {
+	private static int orElse(@Nullable final OptionalInt instance, final int other) {
 		return instance != null ? instance.orElse(other) : other;
 	}
 
-	private static <T> Spliterator<T> spliterator(final Iterable<T> instance) {
+	private static <T> Spliterator<T> spliterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.spliterator() : null;
 	}
 
