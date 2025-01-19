@@ -949,7 +949,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					FailableStream::new, null);
 			//
 			final Iterable<Entry<String, DataFlavor>> entrySet = Util
-					.entrySet(fs != null ? fs.collect(Collectors.toMap(f -> Util.getName(f), f -> {
+					.entrySet(fs != null ? fs.collect(Collectors.toMap(Util::getName, f -> {
 						//
 						if (f != null && Modifier.isStatic(f.getModifiers())) {
 							//
@@ -965,16 +965,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			DataFlavor df = null;
 			//
-			final int maxLength1 = orElse(
-					max(mapToInt(
-							Util.map(testAndApply(Objects::nonNull, spliterator(entrySet),
-									x -> StreamSupport.stream(x, false), null), x -> Util.getKey(x)),
-							x -> StringUtils.length(x))),
-					0);
+			final int maxLength1 = orElse(max(mapToInt(Util.map(
+					testAndApply(Objects::nonNull, spliterator(entrySet), x -> StreamSupport.stream(x, false), null),
+					Util::getKey), StringUtils::length)), 0);
 			//
 			final int maxLength2 = orElse(max(mapToInt(Util.map(
 					testAndApply(Objects::nonNull, spliterator(entrySet), x -> StreamSupport.stream(x, false), null),
-					x -> Util.toString(Util.getValue(x))), x -> StringUtils.length(x))), 0);
+					x -> Util.toString(Util.getValue(x))), StringUtils::length)), 0);
 			//
 			for (int i = 0; i < IterableUtils.size(entrySet) && transferable != null; i++) {
 				//
