@@ -226,7 +226,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Image File")
 	private AbstractButton btnImageFile = null;
 
-	private AbstractButton btnImageFromClipboard, btnImageClear, btnImageView = null;
+	@Note("Image From Clipboard")
+	private AbstractButton btnImageFromClipboard = null;
+
+	private AbstractButton btnImageClear, btnImageView = null;
 
 	@Note("HTML")
 	private JTextComponent taHtml = null;
