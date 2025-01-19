@@ -179,6 +179,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static final String GROWX = "growx";
 
+	private static final String WRAP = "wrap";
+
 	private static final FailableBiConsumer<JTextComponent, HttpURLConnection, IOException> J_TEXT_COMPONENT_HTTP_URL_CONNECTION_FAILABLE_BI_PREDICATE = (
 			a, b) -> {
 		//
@@ -457,7 +459,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(new JComboBox<>(
 				cbmFontSize1 = new DefaultComboBoxModel<>(ArrayUtils.insert(0, ECSSUnit.values(), (ECSSUnit) null))),
-				"wrap");
+				WRAP);
 		//
 		setSelectedItem(cbmFontSize1, Util.getValue(entry));
 		//
@@ -482,7 +484,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		final int span = 4;
 		//
-		add(jsp, String.format("%1$s,%2$s,span %3$s", GROWX, "wrap", span));
+		add(jsp, String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, span));
 		//
 		// Font Size
 		//
@@ -490,7 +492,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(tfFontSize2 = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManagerPdfPanel.fontSize2")),
-				String.format("%1$s,%2$s,wmin %3$s", GROWX, "wrap", 100));
+				String.format("%1$s,%2$s,wmin %3$s", GROWX, WRAP, 100));
 		//
 		setSelectedItem(cbmFontSize1, Util.getValue(entry));
 		//
@@ -502,7 +504,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(tfText = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManagerPdfPanel.text")),
-				String.format("%1$s,%2$s,span %3$s", GROWX, "wrap", span));
+				String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, span));
 		//
 		// Voice ID
 		//
@@ -524,7 +526,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			jcbVoiceId.setRenderer(voiceIdListCellRenderer);
 			//
-			add(jcbVoiceId, String.format("%1$s,span %2$s", "wrap", span));
+			add(jcbVoiceId, String.format("%1$s,span %2$s", WRAP, span));
 			//
 			final String s = PropertyResolverUtil.getProperty(propertyResolver,
 					"org.springframework.context.support.VoiceManagerPdfPanel.voiceId");
@@ -554,7 +556,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(tfImageUrlStateCode = new JTextField(), String.format("wmin %1$s", 27));
 		//
-		add(tfImageUrlMimeType = new JTextField(), String.format("%1$s,wmin %2$s", "wrap", 65));
+		add(tfImageUrlMimeType = new JTextField(), String.format("%1$s,wmin %2$s", WRAP, 65));
 		//
 		// Image File
 		//
@@ -564,13 +566,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		setEditable(false, tfImageUrlStateCode, tfImageUrlMimeType, tfImageFile);
 		//
-		add(btnImageFile = new JButton("Select"), "wrap");
+		add(btnImageFile = new JButton("Select"), WRAP);
 		//
 		// Original Size
 		//
 		add(new JLabel("Original Size"));
 		//
-		add(cbIsOriginalSize = new JCheckBox(), "wrap");
+		add(cbIsOriginalSize = new JCheckBox(), WRAP);
 		//
 		add(new JLabel());
 		//
