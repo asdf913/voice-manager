@@ -1590,6 +1590,7 @@ public abstract class Util {
 		return instance != null && instance.exists();
 	}
 
+	@Nullable
 	static String getName(@Nullable final File instance) {
 		return instance != null ? instance.getName() : null;
 	}
