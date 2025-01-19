@@ -983,20 +983,42 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			setEnabled(isImageFlavorSupported, btnImageClear, btnImageView);
 			//
-			if (isImageFlavorSupported) {
+			try {
 				//
-				try {
+				if (isImageFlavorSupported) {
 					//
 					renderedImage = Util.cast(RenderedImage.class,
 							transferable.getTransferData(DataFlavor.imageFlavor));
 					//
-				} catch (final UnsupportedFlavorException | IOException e) {
+				} else if (isDataFlavorSupported(transferable, DataFlavor.javaFileListFlavor)) {
 					//
-					LoggerUtil.error(LOG, e.getMessage(), e);
+					final Iterable<?> iterable = Util.cast(Iterable.class,
+							transferable.getTransferData(DataFlavor.javaFileListFlavor));
 					//
-				} // try
+					final File file = Util.cast(File.class, testAndApply(x -> IterableUtils.size(x) == 1, iterable,
+							x -> IterableUtils.get(x, 0), null));
 					//
-			} // if
+					final Entry<Method, Collection<Object>> entry = getPDImageXObjectCreateFromByteArrayDetectFileTypeMethodAndAllowedFileTypes();
+					//
+					if (Util.contains(Util.getValue(entry), testAndApply(f -> Util.exists(f) && Util.isFile(f), file,
+							f -> Narcissus.invokeStaticMethod(Util.getKey(entry), Files.readAllBytes(Util.toPath(f))),
+							null))) {
+						//
+						Util.setText(tfImageFile, Util.getAbsolutePath(file));
+						//
+					} else {
+						//
+						Util.setText(tfImageFile, null);
+						//
+					} // if
+						//
+				} // if
+					//
+			} catch (final UnsupportedFlavorException | IOException | NoSuchMethodException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
 				//
 			return true;
 			//
