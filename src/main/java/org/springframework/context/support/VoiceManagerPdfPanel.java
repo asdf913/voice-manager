@@ -979,7 +979,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static boolean isDataFlavorSupported(final Transferable instance, final DataFlavor flavor) {
+	private static boolean isDataFlavorSupported(@Nullable final Transferable instance, final DataFlavor flavor) {
 		return instance != null && instance.isDataFlavorSupported(flavor);
 	}
 
