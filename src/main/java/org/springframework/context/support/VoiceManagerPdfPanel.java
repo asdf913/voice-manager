@@ -609,11 +609,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						f -> Util.isAssignableFrom(AbstractButton.class, Util.getType(f))),
 				FailableStream::new, null);
 		//
-		forEach(FailableStreamUtil.map(fs, f -> {
-			return Util.cast(AbstractButton.class, f != null ? f.get(this) : null);
-		}), x -> {
-			addActionListener(x, this);
-		});
+		forEach(FailableStreamUtil.map(fs, f -> Util.cast(AbstractButton.class, f != null ? f.get(this) : null)),
+				x -> addActionListener(x, this));
 		//
 		final Double width = getWidth(btnExecute.getPreferredSize());
 		//
