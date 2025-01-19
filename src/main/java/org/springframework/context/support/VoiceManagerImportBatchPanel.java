@@ -1425,7 +1425,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			if (workbook != null) {
 				//
-				Util.setText(tfCurrentProcessingFile, getName(file));
+				Util.setText(tfCurrentProcessingFile, Util.getName(file));
 				//
 			} // if
 				//
@@ -3096,11 +3096,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			objectMapper = new ObjectMapper();
 		}
 		return objectMapper;
-	}
-
-	@Nullable
-	private static String getName(@Nullable final File instance) {
-		return instance != null ? instance.getName() : null;
 	}
 
 	@Nullable

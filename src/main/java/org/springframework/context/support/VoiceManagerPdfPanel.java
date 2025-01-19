@@ -1517,7 +1517,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					testAndAccept((a, b) -> b != null, pdfEmbeddedFile, Util.toFile(pathAudio),
 							(a, b) -> setSize(a, Util.intValue(length(b), 0)));
 					//
-					(fileSpec = new PDComplexFileSpecification()).setFile(getName(Util.toFile(pathAudio)));
+					(fileSpec = new PDComplexFileSpecification()).setFile(Util.getName(Util.toFile(pathAudio)));
 					//
 					fileSpec.setEmbeddedFile(pdfEmbeddedFile);
 					//
@@ -1996,11 +1996,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static float getHeight(@Nullable final PDRectangle instance) {
 		return instance != null ? instance.getHeight() : 0;
-	}
-
-	@Nullable
-	private static String getName(@Nullable final File instance) {
-		return instance != null ? instance.getName() : null;
 	}
 
 	@Nullable

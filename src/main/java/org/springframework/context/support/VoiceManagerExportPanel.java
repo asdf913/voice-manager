@@ -3782,7 +3782,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				if (StringUtils.isNotEmpty(titleNew)) {
 					//
-					final String fileName = getName(file);
+					final String fileName = Util.getName(file);
 					//
 					if (StringUtils.isNotBlank(fileName) && StringUtils
 							.endsWith(titleNew = StringUtils.substringBeforeLast(fileName, fileExtension), ".")) {
@@ -3809,11 +3809,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			if (instance != null) {
 				instance.deleteOnExit();
 			}
-		}
-
-		@Nullable
-		private static String getName(@Nullable final File instance) {
-			return instance != null ? instance.getName() : null;
 		}
 
 		private static String randomAlphabetic(final int count) {
