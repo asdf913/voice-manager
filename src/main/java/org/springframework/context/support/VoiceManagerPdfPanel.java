@@ -921,7 +921,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						ObjectUtils.getIfNull(speechSpeedMap, VoiceManagerPdfPanel::getDefaultSpeechSpeedMap),
 						Util.intValue(speechVolume, 100), isSelected(cbIsOriginalSize));
 				//
-			} catch (final IOException e) {
+			} catch (final IOException | NoSuchFieldException e) {
 				//
 				LoggerUtil.error(LOG, e.getMessage(), e);
 				//
@@ -1647,7 +1647,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	private static void addTextAndVoice(@Nullable final ObjectMap objectMap, final Map<Integer, String> map,
-			final int volume, final boolean isOrginialSize) throws IOException {
+			final int volume, final boolean isOrginialSize) throws IOException, NoSuchFieldException {
 		//
 		final PDDocument document = ObjectMap.getObject(objectMap, PDDocument.class);
 		//
@@ -1857,8 +1857,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // try
 					//
-				actionPerformed(voiceManagerPdfPanel, new ActionEvent(
-						voiceManagerPdfPanel != null ? voiceManagerPdfPanel.btnImageClear : null, 0, null));
+				actionPerformed(voiceManagerPdfPanel,
+						testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, voiceManagerPdfPanel,
+								x -> Narcissus.getField(voiceManagerPdfPanel,
+										Narcissus.findField(VoiceManagerPdfPanel.class, "btnImageClear")),
+								null), x -> new ActionEvent(x, 0, null), null));
 				//
 			} else if (Boolean.logicalAnd(Util.exists(f), Util.isFile(f))) {
 				//
