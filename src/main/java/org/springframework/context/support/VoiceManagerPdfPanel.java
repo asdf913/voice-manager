@@ -1857,12 +1857,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // try
 					//
-				if (voiceManagerPdfPanel != null) {
-					//
-					voiceManagerPdfPanel.actionPerformed(new ActionEvent(voiceManagerPdfPanel.btnImageClear, 0, null));
-					//
-				} // if
-					//
+				actionPerformed(voiceManagerPdfPanel, new ActionEvent(
+						voiceManagerPdfPanel != null ? voiceManagerPdfPanel.btnImageClear : null, 0, null));
+				//
 			} else if (Boolean.logicalAnd(Util.exists(f), Util.isFile(f))) {
 				//
 				ObjectMap.setObject(om, byte[].class, Files.readAllBytes(Util.toPath(f)));
@@ -1883,6 +1880,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
+	}
+
+	private static void actionPerformed(final ActionListener instance, final ActionEvent evt) {
+		if (instance != null) {
+			instance.actionPerformed(evt);
+		}
 	}
 
 	private static int getNumberOfPages(@Nullable final PDDocument instance) {
@@ -2122,7 +2125,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		instance.afterPropertiesSet();
 		//
-		instance.actionPerformed(new ActionEvent(instance.btnExecute, 0, null));
+		actionPerformed(instance, new ActionEvent(instance.btnExecute, 0, null));
 		//
 	}
 
