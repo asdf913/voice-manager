@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -913,6 +914,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				ObjectMap.setObject(objectMap, FloatMap.class, floatMap);
 				//
 				ObjectMap.setObject(objectMap, VoiceManagerPdfPanel.class, this);
+				//
+				ObjectMap.setObject(objectMap, RenderedImage.class, renderedImage);
 				//
 				addTextAndVoice(objectMap,
 						ObjectUtils.getIfNull(speechSpeedMap, VoiceManagerPdfPanel::getDefaultSpeechSpeedMap),
@@ -1840,7 +1843,27 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			final File f = testAndApply(Objects::nonNull, Util.getText(getTfImageFile(voiceManagerPdfPanel)), File::new,
 					null);
 			//
-			if (Boolean.logicalAnd(Util.exists(f), Util.isFile(f))) {
+			final RenderedImage renderedImage = ObjectMap.getObject(objectMap, RenderedImage.class);
+			//
+			if (renderedImage != null) {
+				//
+				try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+					//
+					ImageIO.write(renderedImage, "PNG", baos);// TODO
+					//
+					ObjectMap.setObject(om, byte[].class, baos.toByteArray());
+					//
+					addImage(om, lastHeight, isOrginialSize);
+					//
+				} // try
+					//
+				if (voiceManagerPdfPanel != null) {
+					//
+					voiceManagerPdfPanel.actionPerformed(new ActionEvent(voiceManagerPdfPanel.btnImageClear, 0, null));
+					//
+				} // if
+					//
+			} else if (Boolean.logicalAnd(Util.exists(f), Util.isFile(f))) {
 				//
 				ObjectMap.setObject(om, byte[].class, Files.readAllBytes(Util.toPath(f)));
 				//
