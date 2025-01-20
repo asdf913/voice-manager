@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
 import javax.imageio.spi.IIORegistry;
 import javax.imageio.spi.ImageWriterSpi;
 import javax.imageio.spi.ServiceRegistry;
@@ -61,16 +62,18 @@ public class ImageWriterSpiFormatIterableFactoryBean implements FactoryBean<Iter
 		//
 	}
 
-	private static <K> Set<K> keySet(final Map<K, ?> instance) {
+	private static <K> Set<K> keySet(@Nullable final Map<K, ?> instance) {
 		return instance != null ? instance.keySet() : null;
 	}
 
-	private static Field getDeclaredField(final Class<?> instance, final String name) throws NoSuchFieldException {
+	private static Field getDeclaredField(@Nullable final Class<?> instance, final String name)
+			throws NoSuchFieldException {
 		return instance != null ? instance.getDeclaredField(name) : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
-			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
