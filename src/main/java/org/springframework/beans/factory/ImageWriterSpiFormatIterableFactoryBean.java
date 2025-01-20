@@ -54,6 +54,7 @@ public class ImageWriterSpiFormatIterableFactoryBean implements FactoryBean<Iter
 		//
 	}
 
+	@Nullable
 	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
@@ -62,10 +63,12 @@ public class ImageWriterSpiFormatIterableFactoryBean implements FactoryBean<Iter
 		//
 	}
 
+	@Nullable
 	private static <K> Set<K> keySet(@Nullable final Map<K, ?> instance) {
 		return instance != null ? instance.keySet() : null;
 	}
 
+	@Nullable
 	private static Field getDeclaredField(@Nullable final Class<?> instance, final String name)
 			throws NoSuchFieldException {
 		return instance != null ? instance.getDeclaredField(name) : null;
