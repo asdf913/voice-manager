@@ -57,10 +57,6 @@ class ImageWriterSpiFormatIterableFactoryBeanTest {
 								m.getParameterCount() == 0),
 						Boolean.logicalAnd(Objects.equals(name, "getObjectType"), m.getParameterCount() == 0))) {
 					//
-					System.out.println(Narcissus.invokeMethod(
-							instance = ObjectUtils.getIfNull(instance, ImageWriterSpiFormatIterableFactoryBean::new), m,
-							toArray(Collections.nCopies(m.getParameterCount(), null))));
-					//
 					Assertions.assertNotNull(Narcissus.invokeMethod(
 							instance = ObjectUtils.getIfNull(instance, ImageWriterSpiFormatIterableFactoryBean::new), m,
 							toArray(Collections.nCopies(m.getParameterCount(), null))), toString);
