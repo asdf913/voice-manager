@@ -1882,7 +1882,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static void actionPerformed(final ActionListener instance, final ActionEvent evt) {
+	private static void actionPerformed(@Nullable final ActionListener instance, final ActionEvent evt) {
 		if (instance != null) {
 			instance.actionPerformed(evt);
 		}
