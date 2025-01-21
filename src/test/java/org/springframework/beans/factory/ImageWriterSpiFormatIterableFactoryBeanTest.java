@@ -1,8 +1,9 @@
 package org.springframework.beans.factory;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.lang3.ObjectUtils;
@@ -22,6 +23,12 @@ class ImageWriterSpiFormatIterableFactoryBeanTest {
 		//
 		ImageWriterSpiFormatIterableFactoryBean instance = null;
 		//
+		List<Object> list = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
+		Object[] os = null;
+		//
 		Object invoke = null;
 		//
 		String toString, name = null;
@@ -34,11 +41,33 @@ class ImageWriterSpiFormatIterableFactoryBeanTest {
 				//
 			} // if
 				//
+			if ((list = ObjectUtils.getIfNull(list, ArrayList::new)) != null) {
+				//
+				list.clear();
+				//
+			} // if
+				//
+			for (int j = 0; j < Util.length(parameterTypes = m.getParameterTypes()); j++) {
+				//
+				if (Objects.equals(parameterTypes[j], Integer.TYPE)) {
+					//
+					Util.add(list, Integer.valueOf(0));
+					//
+				} else {
+					//
+					Util.add(list, null);
+					//
+				} // if
+					//
+			} // for
+				//
+			os = toArray(list);
+			//
 			toString = Util.toString(m);
 			//
 			if (Util.isStatic(m)) {
 				//
-				invoke = Narcissus.invokeStaticMethod(m, toArray(Collections.nCopies(m.getParameterCount(), null)));
+				invoke = Narcissus.invokeStaticMethod(m, os);
 				//
 				if (Objects.equals(Boolean.TYPE, m.getReturnType())) {
 					//
@@ -59,7 +88,7 @@ class ImageWriterSpiFormatIterableFactoryBeanTest {
 					//
 					Assertions.assertNotNull(Narcissus.invokeMethod(
 							instance = ObjectUtils.getIfNull(instance, ImageWriterSpiFormatIterableFactoryBean::new), m,
-							toArray(Collections.nCopies(m.getParameterCount(), null))), toString);
+							os), toString);
 					//
 				} // if
 					//
