@@ -608,9 +608,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		AbstractButton b = null;
 		//
-		for (int i = 0; bs != null && i < bs.length; i++) {
+		for (int i = 0; i < length(bs); i++) {
 			//
-			if ((b = bs[i]) == null) {
+			if ((b = ArrayUtils.get(bs, i)) == null) {
 				//
 				continue;
 				//
