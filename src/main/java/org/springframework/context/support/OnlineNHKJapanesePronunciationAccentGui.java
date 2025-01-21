@@ -168,6 +168,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 
 	private JLabel jlSavePitchAccentImage = null;
 
+	@Nullable
 	private List<String> imageWriterSpiFormats = null;
 
 	private List<String> imageFormatOrders = null;
@@ -421,7 +422,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		// Image Format
 		//
-		sort(imageWriterSpiFormats, createImageFormatComparator(imageFormatOrders));//TODO
+		sort(imageWriterSpiFormats, createImageFormatComparator(imageFormatOrders));// TODO
 		//
 		// Filter out unsupported image format in "Image Format" drop down list (i.e.
 		// "javax.imageio.ImageIO.write(java.awt.image.RenderedImage,java.lang.String,java.io.OutputStream)"
@@ -436,7 +437,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				//
 				try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 					//
-					if ((className = IterableUtils.get(imageWriterSpiFormats, i)) != null && !ImageIO.write(bi, className, baos)) {
+					if ((className = IterableUtils.get(imageWriterSpiFormats, i)) != null
+							&& !ImageIO.write(bi, className, baos)) {
 						//
 						remove(imageWriterSpiFormats, i);
 						//
@@ -540,9 +542,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	private static BufferedImage getPitchAccentImage(@Nullable final Pronunciation instnace) {
 		return instnace != null ? instnace.getPitchAccentImage() : null;
 	}
-
-	
-
 
 	@Nullable
 	private static Double getWidth(@Nullable final Dimension2D instance) {
