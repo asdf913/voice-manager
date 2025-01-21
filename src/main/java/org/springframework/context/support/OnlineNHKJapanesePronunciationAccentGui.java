@@ -186,7 +186,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		this.onlineNHKJapanesePronunciationsAccentFailableFunction = onlineNHKJapanesePronunciationsAccentFailableFunction;
 	}
 
-	public void setImageWriterSpiFormats(final Object object) {
+	public void setImageWriterSpiFormats(@Nullable final Object object) {
 		//
 		if (object instanceof Map) {
 			//
@@ -239,11 +239,11 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 	}
 
-	private static <E> Iterator<E> asIterator(final Enumeration<E> instance) {
+	private static <E> Iterator<E> asIterator(@Nullable final Enumeration<E> instance) {
 		return instance != null ? instance.asIterator() : null;
 	}
 
-	private static int length(final Object[] instance) {
+	private static int length(@Nullable final Object[] instance) {
 		return instance != null ? instance.length : 0;
 	}
 
@@ -251,7 +251,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null && instance.hasNext();
 	}
 
-	private static <E> E next(final Iterator<E> instance) {
+	private static <E> E next(@Nullable final Iterator<E> instance) {
 		return instance != null ? instance.next() : null;
 	}
 
