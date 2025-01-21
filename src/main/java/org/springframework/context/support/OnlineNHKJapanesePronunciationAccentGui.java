@@ -239,6 +239,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 	}
 
+	@Nullable
 	private static <E> Iterator<E> asIterator(@Nullable final Enumeration<E> instance) {
 		return instance != null ? instance.asIterator() : null;
 	}
@@ -251,6 +252,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null && instance.hasNext();
 	}
 
+	@Nullable
 	private static <E> E next(@Nullable final Iterator<E> instance) {
 		return instance != null ? instance.next() : null;
 	}
