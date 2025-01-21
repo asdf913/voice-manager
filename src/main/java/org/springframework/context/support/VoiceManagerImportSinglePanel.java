@@ -634,7 +634,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		return instance != null && instance.hasNext();
 	}
 
-	private static <E> E next(final Iterator<E> instance) {
+	private static <E> E next(@Nullable final Iterator<E> instance) {
 		return instance != null ? instance.next() : null;
 	}
 
