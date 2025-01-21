@@ -599,9 +599,10 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} else if (object instanceof Object[] os) {
 			//
-			for (int i = 0; os != null && i < os.length; i++) {
+			for (int i = 0; i < length(os); i++) {
 				//
-				Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), Util.toString(os[i]));
+				Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new),
+						Util.toString(ArrayUtils.get(os, i)));
 				//
 			} // for
 				//
@@ -623,6 +624,10 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} // if
 			//
+	}
+
+	private static int length(final Object[] instance) {
+		return instance != null ? instance.length : 0;
 	}
 
 	private static boolean hasNext(final Iterator<?> instance) {
@@ -714,10 +719,11 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		Number value = null;
 		//
-		for (int i = 0; instructions != null && i < instructions.length; i++) {
+		for (int i = 0; i < length(instructions); i++) {
 			//
-			if ((iconst = Util.cast(ICONST.class, instructions[i])) != null && i < instructions.length - 1
-					&& instructions[i + 1] instanceof IF_ICMPGE && (value = iconst.getValue()) != null) {
+			if ((iconst = Util.cast(ICONST.class, ArrayUtils.get(instructions, i))) != null
+					&& i < length(instructions) - 1 && ArrayUtils.get(instructions, i + 1) instanceof IF_ICMPGE
+					&& (value = iconst.getValue()) != null) {
 				//
 				result = Integer.valueOf(value.intValue());
 				//
@@ -1291,10 +1297,10 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		String beanDefinitionName = null;
 		//
-		for (int i = 0; beanDefinitionNames != null && i < beanDefinitionNames.length; i++) {
+		for (int i = 0; i < length(beanDefinitionNames); i++) {
 			//
 			if ((bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(instnace,
-					beanDefinitionName = beanDefinitionNames[i])) == null) {
+					beanDefinitionName = ArrayUtils.get(beanDefinitionNames, i))) == null) {
 				//
 				continue;
 				//
@@ -1633,13 +1639,15 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 			final Object[] array = toArray(vs);
 			//
-			if (array == null || array.length == 0) {
+			final int length = length(array);
+			//
+			if (length == 0) {
 				//
 				return null;
 				//
-			} else if (array.length == 1) {
+			} else if (length == 1) {
 				//
-				return Unit.with(array[0]);
+				return Unit.with(ArrayUtils.get(array, 0));
 				//
 			} // if
 				//
@@ -1649,16 +1657,16 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 				PrintWriter pw = null;
 				//
-				for (int i = 0; i < array.length; i++) {
+				for (int i = 0; i < length; i++) {
 					//
-					println(pw = ObjectUtils.getIfNull(pw, () -> writer(console)), i + " " + array[i]);
+					println(pw = ObjectUtils.getIfNull(pw, () -> writer(console)), i + " " + ArrayUtils.get(array, i));
 					//
 				} // for
 					//
 				final Integer index = valueOf(readLine(console, "Item"));
 				//
-				return index != null && index >= 0 && index.intValue() < array.length
-						? Unit.with(array[index.intValue()])
+				return index != null && index >= 0 && index.intValue() < length
+						? Unit.with(ArrayUtils.get(array, index.intValue()))
 						: null;
 				//
 			} // if
@@ -2075,7 +2083,8 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		boolean allCharacterAllowed = true;
 		//
-		for (int i = 0; cs != null && allowedChars != null && allowedChars.length > 0 && i < cs.length(); i++) {
+		for (int i = 0; cs != null && allowedChars != null && allowedChars.length > 0
+				&& i < StringUtils.length(cs); i++) {
 			//
 			if (!(allCharacterAllowed = ArrayUtils.contains(allowedChars, cs.charAt(i)))) {
 				//
@@ -2399,9 +2408,9 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		private static IValue0<Object> handleObjectMap(final String methodName, final Map<Object, Object> map,
 				@Nullable final Object[] args) {
 			//
-			if (Objects.equals(methodName, "getObject") && args != null && args.length > 0) {
+			if (Objects.equals(methodName, "getObject") && length(args) > 0) {
 				//
-				final Object key = args[0];
+				final Object key = ArrayUtils.get(args, 0);
 				//
 				if (!Util.containsKey(map, key)) {
 					//
@@ -2412,13 +2421,13 @@ public class VoiceManagerImportSinglePanel extends JPanel
 					//
 				return Unit.with(Util.get(map, key));
 				//
-			} else if (Objects.equals(methodName, "containsObject") && args != null && args.length > 0) {
+			} else if (Objects.equals(methodName, "containsObject") && length(args) > 0) {
 				//
-				return Unit.with(Boolean.valueOf(Util.containsKey(map, args[0])));
+				return Unit.with(Boolean.valueOf(Util.containsKey(map, ArrayUtils.get(args, 0))));
 				//
-			} else if (Objects.equals(methodName, "setObject") && args != null && args.length > 1) {
+			} else if (Objects.equals(methodName, "setObject") && length(args) > 1) {
 				//
-				Util.put(map, args[0], args[1]);
+				Util.put(map, ArrayUtils.get(args, 0), ArrayUtils.get(args, 1));
 				//
 				return Unit.with(null);
 				//
@@ -2568,13 +2577,12 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		if (voiceManager != null) {
 			//
-			for (int i = 0; names != null && i < names.length; i++) {
+			for (int i = 0; i < length(names); i++) {
 				//
 				try {
 					//
-					Util.setText(
-							Util.cast(JTextComponent.class, FieldUtils.readDeclaredField(voiceManager, names[i], true)),
-							value);
+					Util.setText(Util.cast(JTextComponent.class,
+							FieldUtils.readDeclaredField(voiceManager, ArrayUtils.get(names, i), true)), value);
 					//
 				} catch (final IllegalAccessException e) {
 					//
@@ -2650,9 +2658,9 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		Method m = null;
 		//
-		for (int i = 0; attributes != null && i < attributes.length; i++) {
+		for (int i = 0; i < length(attributes); i++) {
 			//
-			final String attribute = attributes[i];
+			final String attribute = ArrayUtils.get(attributes, i);
 			//
 			if ((methods = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull, ms = getIfNull(ms, () -> Util.getMethods(Util.getClass(id3v1))),
@@ -3600,9 +3608,9 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} // if
 			//
-		for (int i = 0; values != null && i < values.length; i++) {
+		for (int i = 0; i < length(values); i++) {
 			//
-			result |= Util.test(predicate, values[i]);
+			result |= Util.test(predicate, ArrayUtils.get(values, i));
 			//
 		} // for
 			//
@@ -3885,9 +3893,9 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} // if
 			//
-		for (int i = 0; values != null && i < values.length; i++) {
+		for (int i = 0; i < length(values); i++) {
 			//
-			result &= Util.test(predicate, values[i]);
+			result &= Util.test(predicate, ArrayUtils.get(values, i));
 			//
 		} // for
 			//
@@ -4022,10 +4030,12 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		AbstractButton ab = null;
 		//
-		for (int i = 0; abs != null && i < abs.length; i++) {
+		for (int i = 0; i < length(abs); i++) {
 			//
-			if ((ab = abs[i]) == null) {
+			if ((ab = ArrayUtils.get(abs, i)) == null) {
+				//
 				continue;
+				//
 			} // if
 				//
 			ab.addActionListener(actionListener);
@@ -4039,9 +4049,9 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		addChangeListener(instance, changeListener);
 		//
-		for (int i = 0; vs != null && i < vs.length; i++) {
+		for (int i = 0; i < length(vs); i++) {
 			//
-			addChangeListener(vs[i], changeListener);
+			addChangeListener(ArrayUtils.get(vs, i), changeListener);
 			//
 		} // for
 			//
@@ -4320,10 +4330,12 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		JTextComponent jtc = null;
 		//
-		for (int i = 0; jtcs != null && i < jtcs.length; i++) {
+		for (int i = 0; i < length(jtcs); i++) {
 			//
-			if ((jtc = jtcs[i]) == null) {
+			if ((jtc = ArrayUtils.get(jtcs, i)) == null) {
+				//
 				continue;
+				//
 			} // if
 				//
 			jtc.setEditable(editable);
@@ -4354,9 +4366,9 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		setEnabled(instance, b);
 		//
-		for (int i = 0; cs != null && i < cs.length; i++) {
+		for (int i = 0; i < length(cs); i++) {
 			//
-			setEnabled(cs[i], b);
+			setEnabled(ArrayUtils.get(cs, i), b);
 			//
 		} // for
 			//
@@ -4413,9 +4425,9 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		Dimension d = null;
 		//
-		for (int i = 0; cs != null && i < cs.length; i++) {
+		for (int i = 0; i < length(cs); i++) {
 			//
-			if ((c = cs[i]) == null || (d = Util.getPreferredSize(c)) == null) {
+			if ((c = ArrayUtils.get(cs, i)) == null || (d = Util.getPreferredSize(c)) == null) {
 				//
 				continue;
 				//
@@ -4540,9 +4552,9 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		accept(action, b);
 		//
-		for (int i = 0; values != null && i < values.length; i++) {
+		for (int i = 0; i < length(values); i++) {
 			//
-			accept(action, values[i]);
+			accept(action, ArrayUtils.get(values, i));
 			//
 		} // for
 			//
