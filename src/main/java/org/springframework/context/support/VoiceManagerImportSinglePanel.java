@@ -607,10 +607,9 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 		} else if (object instanceof Iterator iterator) {
 			//
-			while (iterator != null && iterator.hasNext()) {
+			while (hasNext(iterator)) {
 				//
-				Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new),
-						Util.toString(iterator.next()));
+				Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), Util.toString(next(iterator)));
 				//
 			} // while
 				//
@@ -624,6 +623,14 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} // if
 			//
+	}
+
+	private static boolean hasNext(final Iterator<?> instance) {
+		return instance != null && instance.hasNext();
+	}
+
+	private static <E> E next(final Iterator<E> instance) {
+		return instance != null ? instance.next() : null;
 	}
 
 	private static class BooleanComboBoxModelSupplier implements Supplier<ComboBoxModel<Boolean>> {
