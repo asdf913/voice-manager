@@ -626,7 +626,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 	}
 
-	private static <E> Iterator<E> asIterator(final Enumeration<E> instance) {
+	private static <E> Iterator<E> asIterator(@Nullable final Enumeration<E> instance) {
 		return instance != null ? instance.asIterator() : null;
 	}
 
