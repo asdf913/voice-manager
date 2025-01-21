@@ -422,7 +422,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		// Image Format
 		//
-		sort(imageWriterSpiFormats, createImageFormatComparator(imageFormatOrders));// TODO
+		sort(imageWriterSpiFormats, createImageFormatComparator(imageFormatOrders));
 		//
 		// Filter out unsupported image format in "Image Format" drop down list (i.e.
 		// "javax.imageio.ImageIO.write(java.awt.image.RenderedImage,java.lang.String,java.io.OutputStream)"
