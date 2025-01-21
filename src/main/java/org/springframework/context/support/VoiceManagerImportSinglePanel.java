@@ -573,7 +573,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		this.allowedRomajiCharacters = allowedRomajiCharacters;
 	}
 
-	public void setImageWriterSpiFormats(final Object object) {
+	public void setImageWriterSpiFormats(@Nullable final Object object) {
 		//
 		if (object instanceof Map) {
 			//
