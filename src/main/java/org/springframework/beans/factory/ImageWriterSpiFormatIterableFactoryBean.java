@@ -54,7 +54,7 @@ public class ImageWriterSpiFormatIterableFactoryBean implements FactoryBean<Iter
 		//
 	}
 
-	private static <E> void set(final List<E> instance, final int index, final E element) {
+	private static <E> void set(@Nullable final List<E> instance, final int index, final E element) {
 		if (instance != null) {
 			instance.set(index, element);
 		}
