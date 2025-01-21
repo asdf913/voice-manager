@@ -3915,8 +3915,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 	}
 
 	@Nullable
-	private static String getImageFormat(@Nullable final IValue0<String> iValue0,
-			final Collection<String> imageFormats) {
+	private static String getImageFormat(@Nullable final IValue0<String> iValue0, final Iterable<String> imageFormats) {
 		//
 		String imageFormat = null;
 		//
@@ -3926,7 +3925,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} else {
 			//
-			if (CollectionUtils.isNotEmpty(imageFormats)) {
+			if (!IterableUtils.isEmpty(imageFormats)) {
 				//
 				imageFormat = IterableUtils.get(imageFormats, 0);
 				//
