@@ -616,7 +616,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 		} else if (object instanceof Enumeration enumeration) {
 			//
-			setImageWriterSpiFormats(enumeration != null ? enumeration.asIterator() : null);
+			setImageWriterSpiFormats(asIterator(enumeration));
 			//
 		} else {
 			//
@@ -624,6 +624,10 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} // if
 			//
+	}
+
+	private static <E> Iterator<E> asIterator(final Enumeration<E> instance) {
+		return instance != null ? instance.asIterator() : null;
 	}
 
 	private static int length(@Nullable final Object[] instance) {
