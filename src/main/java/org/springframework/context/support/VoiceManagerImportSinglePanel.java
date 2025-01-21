@@ -56,7 +56,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HexFormat;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -490,6 +492,8 @@ public class VoiceManagerImportSinglePanel extends JPanel
 
 	private transient ApplicationContext applicationContext = null;
 
+	private Iterable<String> imageWriterSpiFormats = null;
+
 	@Override
 	public String getTitle() {
 		return "Import(Single)";
@@ -569,6 +573,59 @@ public class VoiceManagerImportSinglePanel extends JPanel
 
 	public void setAllowedRomajiCharacters(final char[] allowedRomajiCharacters) {
 		this.allowedRomajiCharacters = allowedRomajiCharacters;
+	}
+
+	public void setImageWriterSpiFormats(final Object object) {
+		//
+		if (object instanceof Map) {
+			//
+			throw new IllegalArgumentException();
+			//
+		} else if (object == null) {
+			//
+			imageWriterSpiFormats = null;
+			//
+		} // if
+			//
+		Collection<String> collection = null;
+		//
+		if (object instanceof Iterable iterable) {
+			//
+			for (final Object o : iterable) {
+				//
+				Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), Util.toString(o));
+				//
+			} // for
+				//
+			imageWriterSpiFormats = collection;
+			//
+		} else if (object instanceof Object[] os) {
+			//
+			for (int i = 0; os != null && i < os.length; i++) {
+				//
+				Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), Util.toString(os[i]));
+				//
+			} // for
+				//
+		} else if (object instanceof Iterator iterator) {
+			//
+			while (iterator != null && iterator.hasNext()) {
+				//
+				Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new),
+						Util.toString(iterator.next()));
+				//
+			} // while
+				//
+		} else if (object instanceof Enumeration enumeration) {
+			//
+			setImageWriterSpiFormats(enumeration != null ? enumeration.asIterator() : null);
+			//
+		} else {
+			//
+			setImageWriterSpiFormats(Collections.singleton(object));
+			//
+		} // if
+			//
 	}
 
 	private static class BooleanComboBoxModelSupplier implements Supplier<ComboBoxModel<Boolean>> {
@@ -2456,18 +2513,10 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		final RenderedImage pitchAccentImage = getPitchAccentImage(
 				Util.cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)));
 		//
-		try {
-			//
-			testAndAccept(x -> pitchAccentImage != null,
-					createByteArray(pitchAccentImage, getImageFormat(imageFormat, getImageFormats()), headless),
-					x -> setPitchAccentImage(voice, x));
-			//
-		} catch (final NoSuchFieldException e) {
-			//
-			throw ObjectUtils.getIfNull(toRuntimeException(e), RuntimeException::new);
-			//
-		} // try
-			//
+		testAndAccept(x -> pitchAccentImage != null,
+				createByteArray(pitchAccentImage, getImageFormat(imageFormat, imageWriterSpiFormats), headless),
+				x -> setPitchAccentImage(voice, x));
+		//
 		SqlSession sqlSession = null;
 		//
 		try {
@@ -3934,34 +3983,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		} // if
 			//
 		return imageFormat;
-		//
-	}
-
-	private static List<String> getImageFormats() throws NoSuchFieldException {
-		//
-		final Map<?, ?> imageWriterSpis = Util.cast(Map.class,
-				testAndApply(Objects::nonNull,
-						Util.get(
-								Util.cast(Map.class,
-										Narcissus.getObjectField(IIORegistry.getDefaultInstance(),
-												Util.getDeclaredField(ServiceRegistry.class, "categoryMap"))),
-								ImageWriterSpi.class),
-						x -> Narcissus.getField(x, Util.getDeclaredField(Util.getClass(x), "map")), null));
-		//
-		final List<String> classNames = testAndApply(Objects::nonNull, Util.toList(
-				Util.map(Util.stream(Util.keySet(imageWriterSpis)), x -> Util.getName(Util.cast(Class.class, x)))),
-				ArrayList::new, null);
-		//
-		final String commonPrefix = StringUtils.getCommonPrefix(toArray(classNames, new String[] {}));
-		//
-		for (int i = 0; classNames != null && i < classNames.size(); i++) {
-			//
-			classNames.set(i, StringUtils
-					.substringBefore(StringUtils.replace(IterableUtils.get(classNames, i), commonPrefix, ""), '.'));
-			//
-		} // if
-			//
-		return classNames;
 		//
 	}
 

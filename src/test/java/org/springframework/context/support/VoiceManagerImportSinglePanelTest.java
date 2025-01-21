@@ -3,11 +3,13 @@ package org.springframework.context.support;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.image.RenderedImage;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,6 +17,7 @@ import javax.swing.JFileChooser;
 import javax.swing.ListCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.Assertions;
@@ -32,6 +35,37 @@ class VoiceManagerImportSinglePanelTest {
 	void beforeEach() {
 		//
 		instance = new VoiceManagerImportSinglePanel();
+		//
+	}
+
+	@Test
+	void testSetImageWriterSpiFormats() throws NoSuchFieldException {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final Field imageWriterSpiFormats = Narcissus.findField(VoiceManagerImportSinglePanel.class,
+				"imageWriterSpiFormats");
+		//
+		final String string = "";
+		//
+		instance.setImageWriterSpiFormats(string);
+		//
+		Assertions.assertEquals(Narcissus.getField(instance, imageWriterSpiFormats), Collections.singletonList(string));
+		//
+		instance.setImageWriterSpiFormats(new String[] { Util.toString(string) });
+		//
+		Assertions.assertEquals(Narcissus.getField(instance, imageWriterSpiFormats), Collections.singletonList(string));
+		//
+		instance.setImageWriterSpiFormats(IteratorUtils.asEnumeration(Util.iterator(Collections.singleton(string))));
+		//
+		Assertions.assertEquals(Narcissus.getField(instance, imageWriterSpiFormats), Collections.singletonList(string));
+		//
+		Assertions.assertThrows(IllegalArgumentException.class,
+				() -> instance.setImageWriterSpiFormats(Collections.emptyMap()));
 		//
 	}
 

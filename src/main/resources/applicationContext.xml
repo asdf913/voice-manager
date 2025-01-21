@@ -995,6 +995,10 @@
 		<property name="languageCodeToTextObjIntFunction"
 			ref="LanguageCodeToTextObjIntFunction" />
 	</bean>
+	
+	<!---->
+	<bean id="ImageWriterSpiFormatIterable"
+		class="org.springframework.beans.factory.ImageWriterSpiFormatIterableFactoryBean" />
 
 	<!---->
 	<bean
@@ -1033,6 +1037,9 @@
 					value="${org.springframework.beans.factory.AllowedRomajiCharacterArrayFactoryBean.allowedRomajiCharacters}" />
 			</bean>
 		</property>
+		<!-- -->
+		<property name="imageWriterSpiFormats"
+			ref="ImageWriterSpiFormatIterable" />
 		<!-- -->
 	</bean>
 
