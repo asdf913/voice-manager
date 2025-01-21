@@ -35,6 +35,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +78,7 @@ import javax.swing.text.JTextComponent;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -165,6 +168,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 
 	private JLabel jlSavePitchAccentImage = null;
 
+	private List<String> imageWriterSpiFormats = null;
+
 	private List<String> imageFormatOrders = null;
 
 	private OnlineNHKJapanesePronunciationAccentGui() {
@@ -182,6 +187,75 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	public void setOnlineNHKJapanesePronunciationsAccentFailableFunction(
 			final OnlineNHKJapanesePronunciationsAccentFailableFunction onlineNHKJapanesePronunciationsAccentFailableFunction) {
 		this.onlineNHKJapanesePronunciationsAccentFailableFunction = onlineNHKJapanesePronunciationsAccentFailableFunction;
+	}
+
+	public void setImageWriterSpiFormats(final Object object) {
+		//
+		if (object instanceof Map) {
+			//
+			throw new IllegalArgumentException();
+			//
+		} else if (object == null) {
+			//
+			imageWriterSpiFormats = null;
+			//
+		} // if
+			//
+		List<String> collection = null;
+		//
+		if (object instanceof Iterable iterable) {
+			//
+			for (final Object o : iterable) {
+				//
+				Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), Util.toString(o));
+				//
+			} // for
+				//
+			imageWriterSpiFormats = collection;
+			//
+		} else if (object instanceof Object[] os) {
+			//
+			for (int i = 0; i < length(os); i++) {
+				//
+				Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new),
+						Util.toString(ArrayUtils.get(os, i)));
+				//
+			} // for
+				//
+		} else if (object instanceof Iterator iterator) {
+			//
+			while (hasNext(iterator)) {
+				//
+				Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), Util.toString(next(iterator)));
+				//
+			} // while
+				//
+		} else if (object instanceof Enumeration enumeration) {
+			//
+			setImageWriterSpiFormats(asIterator(enumeration));
+			//
+		} else {
+			//
+			setImageWriterSpiFormats(Collections.singleton(object));
+			//
+		} // if
+			//
+	}
+
+	private static <E> Iterator<E> asIterator(final Enumeration<E> instance) {
+		return instance != null ? instance.asIterator() : null;
+	}
+
+	private static int length(final Object[] instance) {
+		return instance != null ? instance.length : 0;
+	}
+
+	private static boolean hasNext(final Iterator<?> instance) {
+		return instance != null && instance.hasNext();
+	}
+
+	private static <E> E next(final Iterator<E> instance) {
+		return instance != null ? instance.next() : null;
 	}
 
 	@SuppressWarnings("java:S1612")
@@ -347,7 +421,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		// Image Format
 		//
-		final List<String> classNames = getImageFormats(imageFormatOrders);
+		sort(imageWriterSpiFormats, createImageFormatComparator(imageFormatOrders));//TODO
 		//
 		// Filter out unsupported image format in "Image Format" drop down list (i.e.
 		// "javax.imageio.ImageIO.write(java.awt.image.RenderedImage,java.lang.String,java.io.OutputStream)"
@@ -358,13 +432,13 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 			String className = null;
 			//
-			for (int i = IterableUtils.size(classNames) - 1; i >= 0; i--) {
+			for (int i = IterableUtils.size(imageWriterSpiFormats) - 1; i >= 0; i--) {
 				//
 				try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 					//
-					if ((className = IterableUtils.get(classNames, i)) != null && !ImageIO.write(bi, className, baos)) {
+					if ((className = IterableUtils.get(imageWriterSpiFormats, i)) != null && !ImageIO.write(bi, className, baos)) {
 						//
-						remove(classNames, i);
+						remove(imageWriterSpiFormats, i);
 						//
 					} // if
 						//
@@ -378,7 +452,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		testAndAccept(biPredicate, new JComboBox<>(mcbm), growx, this::add);
 		//
-		forEach(classNames, mcbm::addElement);
+		forEach(imageWriterSpiFormats, mcbm::addElement);
 		//
 		cbmImageFormat = mcbm;
 		//
@@ -467,45 +541,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instnace != null ? instnace.getPitchAccentImage() : null;
 	}
 
-	@Nullable
-	private static List<String> getImageFormats(final List<?> imageFormatOrders) throws NoSuchFieldException {
-		//
-		final Map<?, ?> imageWriterSpis = Util.cast(Map.class,
-				testAndApply(Objects::nonNull,
-						Util.get(
-								Util.cast(Map.class,
-										Narcissus.getObjectField(IIORegistry.getDefaultInstance(),
-												Util.getDeclaredField(ServiceRegistry.class, "categoryMap"))),
-								ImageWriterSpi.class),
-						x -> Narcissus.getField(x, Util.getDeclaredField(Util.getClass(x), "map")), null));
-		//
-		final List<String> classNames = testAndApply(Objects::nonNull, Util.toList(
-				Util.map(Util.stream(Util.keySet(imageWriterSpis)), x -> Util.getName(Util.cast(Class.class, x)))),
-				ArrayList::new, null);
-		//
-		final String commonPrefix = StringUtils.getCommonPrefix(toArray(classNames, new String[] {}));
-		//
-		for (int i = 0; classNames != null && i < classNames.size(); i++) {
-			//
-			classNames.set(i, StringUtils
-					.substringBefore(StringUtils.replace(IterableUtils.get(classNames, i), commonPrefix, ""), '.'));
-			//
-		} // if
-			//
-		sort(classNames, createImageFormatComparator(imageFormatOrders));
-		//
-		return classNames;
-		//
-	}
+	
 
-	@Nullable
-	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
-		//
-		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.toArray(array)
-				: null;
-		//
-	}
 
 	@Nullable
 	private static Double getWidth(@Nullable final Dimension2D instance) {

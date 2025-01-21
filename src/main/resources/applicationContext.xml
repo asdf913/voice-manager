@@ -1217,6 +1217,8 @@
 			name="onlineNHKJapanesePronunciationsAccentFailableFunction"
 			ref="OnlineNHKJapanesePronunciationsAccentFailableFunction" />
 		<property name="bufferedImageType" ref="BufferedImageType" />
+		<property name="imageWriterSpiFormats"
+			ref="ImageWriterSpiFormatIterable" />
 	</bean>
 
 	<!-- -->

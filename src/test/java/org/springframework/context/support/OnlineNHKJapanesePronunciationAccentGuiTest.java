@@ -86,7 +86,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_SAVE_PITCH_ACCENT_IMAGE, METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED,
 			METHOD_OPEN_STREAM, METHOD_ADD_ACTION_LISTENER, METHOD_GET_FIELD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT,
 			METHOD_SAVE_FILE, METHOD_IIF, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR,
-			METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION, METHOD_SET_PREFERRED_SIZE, METHOD_MAX, METHOD_TO_ARRAY,
+			METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION, METHOD_SET_PREFERRED_SIZE, METHOD_MAX,
 			METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
 
 	@BeforeAll
@@ -165,8 +165,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_MAX = clz.getDeclaredMethod("max", Stream.class, Comparator.class)).setAccessible(true);
-		//
-		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class, Object[].class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_RUN = clz.getDeclaredMethod("testAndRun", Boolean.TYPE, Runnable.class)).setAccessible(true);
 		//
@@ -1290,27 +1288,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return (Optional) obj;
 			}
 			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testToArray() throws Throwable {
-		//
-		Assertions.assertNull(toArray(null, null));
-		//
-		Collection<?> collection = Collections.emptyList();
-		//
-		Assertions.assertNull(toArray(collection, null));
-		//
-		Assertions.assertNull(toArray(collection = Reflection.newProxy(Collection.class, ih), null));
-		//
-	}
-
-	private static <T> T[] toArray(final Collection<T> instance, final T[] array) throws Throwable {
-		try {
-			return (T[]) METHOD_TO_ARRAY.invoke(null, instance, array);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
