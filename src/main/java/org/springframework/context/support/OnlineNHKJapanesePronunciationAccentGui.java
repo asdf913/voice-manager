@@ -251,7 +251,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		return instance != null ? instance.length : 0;
 	}
 
-	private static boolean hasNext(final Iterator<?> instance) {
+	private static boolean hasNext(@Nullable final Iterator<?> instance) {
 		return instance != null && instance.hasNext();
 	}
 
