@@ -492,7 +492,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 
 	private transient ApplicationContext applicationContext = null;
 
-	private Iterable<String> imageWriterSpiFormats = null;
+	private transient Iterable<String> imageWriterSpiFormats = null;
 
 	@Override
 	public String getTitle() {
