@@ -487,7 +487,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null ? instance.asIterator() : null;
 	}
 
-	private static boolean hasNext(final Iterator<?> instance) {
+	private static boolean hasNext(@Nullable final Iterator<?> instance) {
 		return instance != null && instance.hasNext();
 	}
 
@@ -745,7 +745,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) {
+	private static <T> void forEach(@Nullable final Iterable<T> instance, @Nullable final Consumer<? super T> action) {
 		if (instance != null && (action != null || Proxy.isProxyClass(Util.getClass(instance)))) {
 			instance.forEach(action);
 		}
