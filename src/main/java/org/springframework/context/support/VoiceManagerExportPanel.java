@@ -2323,7 +2323,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 	}
 
 	private void exportHtml(final ObjectMap objectMap, @Nullable final Multimap<String, Voice> multimap,
-			final Entry<?, UnaryOperator<Object>> filePair, final Map<Object, Object> parameters,
+			final Entry<?, UnaryOperator<Object>> filePair, @Nullable final Map<Object, Object> parameters,
 			final Collection<File> files) throws IOException, TemplateException {
 		//
 		final Iterable<String> keySet = MultimapUtil.keySet(multimap);
