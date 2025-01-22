@@ -430,7 +430,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	public void setImageWriterSpiFormats(final Object object) {
+	public void setImageWriterSpiFormats(@Nullable final Object object) {
 		//
 		if (object instanceof Map) {
 			//
@@ -483,7 +483,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static <E> Iterator<E> asIterator(final Enumeration<E> instance) {
+	private static <E> Iterator<E> asIterator(@Nullable final Enumeration<E> instance) {
 		return instance != null ? instance.asIterator() : null;
 	}
 
@@ -491,7 +491,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null && instance.hasNext();
 	}
 
-	private static <E> E next(final Iterator<E> instance) {
+	private static <E> E next(@Nullable final Iterator<E> instance) {
 		return instance != null ? instance.next() : null;
 	}
 
