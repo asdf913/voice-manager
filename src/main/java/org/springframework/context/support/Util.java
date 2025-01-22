@@ -1605,7 +1605,7 @@ public abstract class Util {
 		return instance != null ? instance.toFile() : null;
 	}
 
-	static void run(final Runnable instance) {
+	static void run(@Nullable final Runnable instance) {
 		if (instance != null) {
 			instance.run();
 		}
