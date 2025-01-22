@@ -1840,46 +1840,64 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			ObjectMap.setObject(om, VoiceManagerPdfPanel.class,
 					ObjectMap.getObject(objectMap, VoiceManagerPdfPanel.class));
 			//
-			final File f = testAndApply(Objects::nonNull, Util.getText(getTfImageFile(voiceManagerPdfPanel)), File::new,
-					null);
+			ObjectMap.setObject(om, File.class, testAndApply(Objects::nonNull,
+					Util.getText(getTfImageFile(voiceManagerPdfPanel)), File::new, null));
 			//
-			final RenderedImage renderedImage = ObjectMap.getObject(objectMap, RenderedImage.class);
+			ObjectMap.setObject(om, StringMap.class, ObjectMap.getObject(objectMap, StringMap.class));
 			//
-			if (renderedImage != null) {
-				//
-				try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-					//
-					ImageIO.write(renderedImage, "PNG", baos);// TODO
-					//
-					ObjectMap.setObject(om, byte[].class, baos.toByteArray());
-					//
-					addImage(om, lastHeight, isOrginialSize);
-					//
-				} // try
-					//
-				actionPerformed(voiceManagerPdfPanel,
-						testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, voiceManagerPdfPanel,
-								x -> Narcissus.getField(voiceManagerPdfPanel,
-										Narcissus.findField(VoiceManagerPdfPanel.class, "btnImageClear")),
-								null), x -> new ActionEvent(x, 0, null), null));
-				//
-			} else if (Boolean.logicalAnd(Util.exists(f), Util.isFile(f))) {
-				//
-				ObjectMap.setObject(om, byte[].class, Files.readAllBytes(Util.toPath(f)));
-				//
-				addImage(om, lastHeight, isOrginialSize);
-				//
-			} else {
-				//
-				ObjectMap.setObject(om, String.class, StringMap.getString(stringMap, "imageUrl"));
-				//
-				addImageByUrl(om, lastHeight, isOrginialSize);
-				//
-			} // if
-				//
+			addImage(ObjectMap.getObject(objectMap, RenderedImage.class), om, lastHeight, isOrginialSize);
+			//
 			IOUtils.close(cs);
 			//
 			document.save(ObjectMap.getObject(objectMap, File.class));
+			//
+		} // if
+			//
+	}
+
+	private static void addImage(final RenderedImage renderedImage, final ObjectMap om, float lastHeight,
+			final boolean isOrginialSize) throws IOException, NoSuchFieldException {
+		//
+		if (renderedImage != null) {
+			//
+			try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+				//
+				ImageIO.write(renderedImage, "PNG", baos);// TODO
+				//
+				ObjectMap.setObject(om, byte[].class, baos.toByteArray());
+				//
+				addImage(om, lastHeight, isOrginialSize);
+				//
+			} // try
+				//
+			final VoiceManagerPdfPanel voiceManagerPdfPanel = ObjectMap.getObject(om, VoiceManagerPdfPanel.class);
+			//
+			actionPerformed(voiceManagerPdfPanel,
+					testAndApply(Objects::nonNull,
+							testAndApply(Objects::nonNull, voiceManagerPdfPanel,
+									x -> Narcissus.getField(voiceManagerPdfPanel,
+											Narcissus.findField(VoiceManagerPdfPanel.class, "btnImageClear")),
+									null),
+							x -> new ActionEvent(x, 0, null), null));
+			//
+			return;
+			//
+		} // if
+			//
+		final File file = ObjectMap.getObject(om, File.class);
+		//
+		if (Boolean.logicalAnd(Util.exists(file), Util.isFile(file))) {
+			//
+			ObjectMap.setObject(om, byte[].class, Files.readAllBytes(Util.toPath(file)));
+			//
+			addImage(om, lastHeight, isOrginialSize);
+			//
+		} else {
+			//
+			ObjectMap.setObject(om, String.class,
+					StringMap.getString(ObjectMap.getObject(om, StringMap.class), "imageUrl"));
+			//
+			addImageByUrl(om, lastHeight, isOrginialSize);
 			//
 		} // if
 			//
