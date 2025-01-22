@@ -1903,7 +1903,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 						ObjectMap.setObject(objectMap, Voice.class, voice);
 						//
 						ObjectMap.setObject(objectMap, File.class, testAndApply(Objects::nonNull, voice,
-								x -> Util.toFile(Path.of(folder.getAbsolutePath(), getFilePath(x))), x -> folder));
+								x -> Util.toFile(Path.of(Util.getAbsolutePath(folder), getFilePath(x))), x -> folder));
 						//
 						importVoice(objectMap, errorMessageConsumer, throwableConsumer);
 						//

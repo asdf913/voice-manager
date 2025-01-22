@@ -3504,12 +3504,12 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 					final String k = key;
 					//
-					FileUtils.copyFile(fileSource, fileDestination = Util.toFile(Path.of(
-							Util.toString(testAndApply(Objects::nonNull,
+					FileUtils.copyFile(fileSource,
+							fileDestination = Util.toFile(Path.of(Util.toString(testAndApply(Objects::nonNull,
 									folder = getIfNull(folder,
 											() -> testAndApply(Objects::nonNull, outputFolder, File::new, null)),
-									x -> Util.toFile(Path.of(x.getAbsolutePath(), k)), x -> Util.toFile(Path.of(k)))),
-							Util.toString(fileName))));
+									x -> Util.toFile(Path.of(Util.getAbsolutePath(x), k)),
+									x -> Util.toFile(Path.of(k)))), Util.toString(fileName))));
 					//
 					TableUtil.put(voiceFileNames, getParent(fileDestination), Util.toString(fileName), voice);
 					//

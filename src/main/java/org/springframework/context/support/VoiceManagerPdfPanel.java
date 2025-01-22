@@ -944,7 +944,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			final File file = Util.toFile(Path
 					.of(StringUtils.joinWith(".", StringUtils.defaultIfBlank(Util.getText(tfText), "test"), "pdf")));
 			//
-			LoggerUtil.info(LOG, getAbsolutePath(file));
+			LoggerUtil.info(LOG, Util.getAbsolutePath(file));
 			//
 			PDDocument document = null;
 			//
@@ -1740,7 +1740,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final Path page1Path = Path.of("page1.png");
 			//
-			LoggerUtil.info(LOG, getAbsolutePath(Util.toFile(page1Path)));
+			LoggerUtil.info(LOG, Util.getAbsolutePath(Util.toFile(page1Path)));
 			//
 			BufferedImage bi = pdfRenderer.renderImage(0);
 			//
@@ -1761,7 +1761,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final Path pathAudio = Path.of("test.wav");
 			//
-			LoggerUtil.info(LOG, getAbsolutePath(Util.toFile(pathAudio)));
+			LoggerUtil.info(LOG, Util.getAbsolutePath(Util.toFile(pathAudio)));
 			//
 			int index = 0;
 			//
@@ -2405,11 +2405,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		if (instance != null) {
 			instance.sortInts();
 		}
-	}
-
-	@Nullable
-	private static String getAbsolutePath(@Nullable final File instance) {
-		return instance != null ? instance.getAbsolutePath() : null;
 	}
 
 	private static float getTextWidth(final String text, final PDFont font, final float fontSize) throws IOException {
