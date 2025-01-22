@@ -1855,7 +1855,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static void addImage(final RenderedImage renderedImage, final ObjectMap om, float lastHeight,
+	private static void addImage(@Nullable final RenderedImage renderedImage, final ObjectMap om, float lastHeight,
 			final boolean isOrginialSize) throws IOException, NoSuchFieldException {
 		//
 		if (renderedImage != null) {
