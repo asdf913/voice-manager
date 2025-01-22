@@ -2304,7 +2304,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 	}
 
 	private void exportWebSpeechSynthesisHtml(final boolean condition, final ObjectMap objectMap,
-			final Multimap<String, Voice> multimap, final Collection<File> files)
+			@Nullable final Multimap<String, Voice> multimap, final Collection<File> files)
 			throws IOException, TemplateException {
 		//
 		if (condition) {
@@ -2322,7 +2322,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 	}
 
-	private void exportHtml(final ObjectMap objectMap, final Multimap<String, Voice> multimap,
+	private void exportHtml(final ObjectMap objectMap, @Nullable final Multimap<String, Voice> multimap,
 			final Entry<?, UnaryOperator<Object>> filePair, final Map<Object, Object> parameters,
 			final Collection<File> files) throws IOException, TemplateException {
 		//
