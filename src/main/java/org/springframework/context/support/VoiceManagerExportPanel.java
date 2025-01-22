@@ -1862,18 +1862,19 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 			final BooleanMap bm = Reflection.newProxy(BooleanMap.class, ih);
 			//
-			BooleanMap.setBoolean(bm, OVER_MP3_TITLE, isSelected(cbOverMp3Title));
+			BooleanMap.setBoolean(bm, OVER_MP3_TITLE, Util.isSelected(cbOverMp3Title));
 			//
 			BooleanMap.setBoolean(bm, ORDINAL_POSITION_AS_FILE_NAME_PREFIX,
-					isSelected(cbOrdinalPositionAsFileNamePrefix));
+					Util.isSelected(cbOrdinalPositionAsFileNamePrefix));
 			//
-			BooleanMap.setBoolean(bm, "jlptAsFolder", isSelected(cbJlptAsFolder));
+			BooleanMap.setBoolean(bm, "jlptAsFolder", Util.isSelected(cbJlptAsFolder));
 			//
-			BooleanMap.setBoolean(bm, EXPORT_PRESENTATION, isSelected(cbExportPresentation));
+			BooleanMap.setBoolean(bm, EXPORT_PRESENTATION, Util.isSelected(cbExportPresentation));
 			//
-			BooleanMap.setBoolean(bm, EMBED_AUDIO_IN_PRESENTATION, isSelected(cbEmbedAudioInPresentation));
+			BooleanMap.setBoolean(bm, EMBED_AUDIO_IN_PRESENTATION, Util.isSelected(cbEmbedAudioInPresentation));
 			//
-			BooleanMap.setBoolean(bm, HIDE_AUDIO_IMAGE_IN_PRESENTATION, !isSelected(cbHideAudioImageInPresentation));
+			BooleanMap.setBoolean(bm, HIDE_AUDIO_IMAGE_IN_PRESENTATION,
+					!Util.isSelected(cbHideAudioImageInPresentation));
 			//
 			ObjectMap.setObject(objectMap, BooleanMap.class, bm);
 			//
@@ -1918,9 +1919,9 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				final BooleanMap booleanMap = Reflection.newProxy(BooleanMap.class, ih);
 				//
-				BooleanMap.setBoolean(booleanMap, "exportListSheet", isSelected(cbExportListSheet));
+				BooleanMap.setBoolean(booleanMap, "exportListSheet", Util.isSelected(cbExportListSheet));
 				//
-				BooleanMap.setBoolean(booleanMap, "exportJlptSheet", isSelected(cbExportJlptSheet));
+				BooleanMap.setBoolean(booleanMap, "exportJlptSheet", Util.isSelected(cbExportJlptSheet));
 				//
 				WorkbookUtil.write(workbook = createWorkbook(voices, booleanMap, workbookSupplier), os);
 				//
@@ -1946,7 +1947,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 			// Export HTML file
 			//
-			if (isSelected(cbExportHtml)) {
+			if (Util.isSelected(cbExportHtml)) {
 				//
 				final Version version = ObjectUtils.getIfNull(freeMarkerVersion,
 						freemarker.template.Configuration::getVersion);
@@ -2003,7 +2004,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 				} // try
 					//
-				final boolean exportWebSpeechSynthesisHtml = isSelected(cbExportWebSpeechSynthesisHtml);
+				final boolean exportWebSpeechSynthesisHtml = Util.isSelected(cbExportWebSpeechSynthesisHtml);
 				//
 				if (exportWebSpeechSynthesisHtml) {
 
@@ -2042,7 +2043,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 						//
 				} // if
 					//
-				if (isSelected(cbExportListHtml)) {
+				if (Util.isSelected(cbExportListHtml)) {
 					//
 					final Multimap<String, Voice> multimap = getVoiceMultimapByListName(voices);
 					//
@@ -2054,7 +2055,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 				} // if
 					//
-				if (isSelected(cbExportHtmlAsZip)
+				if (Util.isSelected(cbExportHtmlAsZip)
 						&& reduce(mapToLong(Util.stream(files), f -> longValue(length(f), 0)), 0, Long::sum) > 0) {
 					//
 					ObjectMap.setObject(objectMap, File.class, file = Util
@@ -2069,7 +2070,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 					// Delete HTML File(s) is "Remove HTML After ZIP" option is checked
 					//
-					testAndAccept((a, b) -> a, isSelected(cbExportHtmlRemoveAfterZip), files,
+					testAndAccept((a, b) -> a, Util.isSelected(cbExportHtmlRemoveAfterZip), files,
 							(a, b) -> forEach(b, VoiceManagerExportPanel::delete));
 					//
 				} // if
@@ -2078,7 +2079,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				// Export Microsoft Access
 				//
-			if (isSelected(cbExportMicrosoftAccess)) {
+			if (Util.isSelected(cbExportMicrosoftAccess)) {
 				//
 				final FileFormat fileFormat = Util.cast(FileFormat.class,
 						getSelectedItem(cbmMicrosoftAccessFileFormat));
@@ -4929,10 +4930,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 	private static List<String> searchVoiceListNamesByVoiceId(@Nullable final VoiceMapper instance,
 			final Integer voiceId) {
 		return instance != null ? instance.searchVoiceListNamesByVoiceId(voiceId) : null;
-	}
-
-	private static boolean isSelected(@Nullable final AbstractButton instance) {
-		return instance != null && instance.isSelected();
 	}
 
 	@Nullable

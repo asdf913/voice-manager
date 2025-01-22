@@ -2465,7 +2465,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		final Voice voice = createVoice(getObjectMapper(), this);
 		//
-		final boolean useTtsVoice = isSelected(cbUseTtsVoice);
+		final boolean useTtsVoice = Util.isSelected(cbUseTtsVoice);
 		//
 		if (Boolean.logicalOr(file == null, useTtsVoice)) {
 			//
@@ -3933,10 +3933,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		} // try
 			//
 		return instance.openStream();
-	}
-
-	private static boolean isSelected(@Nullable final AbstractButton instance) {
-		return instance != null && instance.isSelected();
 	}
 
 	private static ByteArray createByteArray(@Nullable final RenderedImage image, @Nullable final String format,

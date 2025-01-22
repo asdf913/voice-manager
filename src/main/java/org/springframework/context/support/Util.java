@@ -35,6 +35,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
+import javax.swing.AbstractButton;
 import javax.swing.JLabel;
 import javax.swing.text.JTextComponent;
 
@@ -249,6 +250,10 @@ public abstract class Util {
 			//
 		instance.setForeground(color);
 		//
+	}
+
+	static boolean isSelected(final AbstractButton instance) {
+		return instance != null && instance.isSelected();
 	}
 
 	static <E> void add(@Nullable final Collection<E> items, @Nullable final E item) {

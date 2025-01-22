@@ -3876,7 +3876,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		try {
 			//
 			FileUtils.writeByteArrayToFile(getSelectedFile(jfc),
-					createImportFileTemplateByteArray(isSelected(cbImportFileTemplateGenerateBlankRow),
+					createImportFileTemplateByteArray(Util.isSelected(cbImportFileTemplateGenerateBlankRow),
 							IValue0Util.getValue0(jlptLevels),
 							MultimapUtil.keySet(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap))));
 			//
@@ -4365,10 +4365,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	@Nullable
 	private static Annotation[] getDeclaredAnnotations(@Nullable final AnnotatedElement instance) {
 		return instance != null ? instance.getDeclaredAnnotations() : null;
-	}
-
-	private static boolean isSelected(@Nullable final AbstractButton instance) {
-		return instance != null && instance.isSelected();
 	}
 
 	@Nullable

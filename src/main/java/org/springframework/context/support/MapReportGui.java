@@ -401,9 +401,7 @@ public class MapReportGui extends JFrame
 			//
 			setContents(!GraphicsEnvironment.isHeadless() ? getSystemClipboard(Toolkit.getDefaultToolkit()) : null,
 					new StringSelection(writeValueAsString(
-							cbPrettyJson != null && cbPrettyJson.isSelected() ? writerWithDefaultPrettyPrinter(om)
-									: writer(om),
-							lists)),
+							Util.isSelected(cbPrettyJson) ? writerWithDefaultPrettyPrinter(om) : writer(om), lists)),
 					null);
 			//
 		} catch (final JsonProcessingException e) {

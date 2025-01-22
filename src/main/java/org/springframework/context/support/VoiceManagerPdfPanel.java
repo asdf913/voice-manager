@@ -1006,7 +1006,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				addTextAndVoice(objectMap,
 						ObjectUtils.getIfNull(speechSpeedMap, VoiceManagerPdfPanel::getDefaultSpeechSpeedMap),
-						Util.intValue(speechVolume, 100), isSelected(cbIsOriginalSize));
+						Util.intValue(speechVolume, 100), Util.isSelected(cbIsOriginalSize));
 				//
 			} catch (final IOException | NoSuchFieldException e) {
 				//
@@ -1380,10 +1380,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // for
 			//
-	}
-
-	private static boolean isSelected(@Nullable final AbstractButton instance) {
-		return instance != null && instance.isSelected();
 	}
 
 	@Override
