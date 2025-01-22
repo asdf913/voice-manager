@@ -483,6 +483,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
+	@Nullable
 	private static <E> Iterator<E> asIterator(@Nullable final Enumeration<E> instance) {
 		return instance != null ? instance.asIterator() : null;
 	}
@@ -491,6 +492,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null && instance.hasNext();
 	}
 
+	@Nullable
 	private static <E> E next(@Nullable final Iterator<E> instance) {
 		return instance != null ? instance.next() : null;
 	}
