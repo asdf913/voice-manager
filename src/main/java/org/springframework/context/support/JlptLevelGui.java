@@ -681,9 +681,9 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private static void run(final boolean b, @Nullable final Runnable runnable) {
 		//
-		if (b && runnable != null) {
+		if (b) {
 			//
-			runnable.run();
+			Util.run(runnable);
 			//
 		} // if
 			//

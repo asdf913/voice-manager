@@ -1316,15 +1316,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static void testAndRun(final boolean b, final Runnable ra, final Runnable rb) {
 		if (b) {
-			run(ra);
+			Util.run(ra);
 		} else {
-			run(rb);
-		}
-	}
-
-	private static void run(@Nullable final Runnable instance) {
-		if (instance != null) {
-			instance.run();
+			Util.run(rb);
 		}
 	}
 
