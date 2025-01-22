@@ -837,7 +837,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		Object ecssUnit = null;
 		//
 		final List<ECSSUnit> list = Util.toList(Util.filter(Arrays.stream(ECSSUnit.values()),
-				x -> StringUtils.equalsIgnoreCase(name(x), Util.toString(sb))));
+				x -> StringUtils.equalsIgnoreCase(Util.name(x), Util.toString(sb))));
 		//
 		final int size = IterableUtils.size(list);
 		//
@@ -910,11 +910,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		return IValue0Util.getValue0(iValue0);
 		//
-	}
-
-	@Nullable
-	private static String name(@Nullable final Enum<?> instance) {
-		return instance != null ? instance.name() : null;
 	}
 
 	@Nullable
@@ -1453,7 +1448,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				for (int j = 0; us != null && i < us.length; j++) {
 					//
-					if (StringUtils.endsWithIgnoreCase(Util.toString(sb), name = name(u = us[j]))) {
+					if (StringUtils.endsWithIgnoreCase(Util.toString(sb), name = Util.name(u = us[j]))) {
 						//
 						Util.setText(tfFontSize1, sb.substring(0, StringUtils.length(sb) - StringUtils.length(name)));
 						//

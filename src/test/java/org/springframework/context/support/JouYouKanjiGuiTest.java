@@ -74,7 +74,7 @@ class JouYouKanjiGuiTest {
 
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_IH = null;
 
-	private static Method METHOD_GET, METHOD_NAME, METHOD_GET_ECSS_VERSION_BY_MAJOR, METHOD_ADD_JOU_YOU_KAN_JI_SHEET,
+	private static Method METHOD_GET, METHOD_GET_ECSS_VERSION_BY_MAJOR, METHOD_ADD_JOU_YOU_KAN_JI_SHEET,
 			METHOD_GET_CSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY, METHOD_SET_PREFERRED_WIDTH,
 			METHOD_SET_SELECTED_ITEM, METHOD_GET_BOOLEAN_VALUES, METHOD_TO_ARRAY, METHOD_MATCHER,
 			METHOD_GET_EXPRESSION_AS_CSS_STRING, METHOD_GET_INDEXED_COLORS, METHOD_GET_STYLES_SOURCE,
@@ -88,8 +88,6 @@ class JouYouKanjiGuiTest {
 		final Class<?> clz = JouYouKanjiGui.class;
 		//
 		(METHOD_GET = clz.getDeclaredMethod("get", Field.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_NAME = clz.getDeclaredMethod("name", Enum.class)).setAccessible(true);
 		//
 		(METHOD_GET_ECSS_VERSION_BY_MAJOR = clz.getDeclaredMethod("getECSSVersionByMajor", ECSSVersion[].class,
 				Number.class)).setAccessible(true);
@@ -460,27 +458,6 @@ class JouYouKanjiGuiTest {
 
 	private static String toString(final Object instance) {
 		return instance != null ? instance.toString() : null;
-	}
-
-	@Test
-	void testName() throws Throwable {
-		//
-		Assertions.assertNull(name(null));
-		//
-	}
-
-	private static String name(final Enum<?> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_NAME.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test

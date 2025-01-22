@@ -2540,7 +2540,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		} else if (Util.isAssignableFrom(Enum.class, type) && (list = Util
 				.toList(Util.filter(testAndApply(Objects::nonNull, getEnumConstants(type), Arrays::stream, null), e -> {
 					//
-					final String name = name(Util.cast(Enum.class, e));
+					final String name = Util.name(Util.cast(Enum.class, e));
 					//
 					final String stringCellValue = CellUtil.getStringCellValue(cell);
 					//
@@ -4215,7 +4215,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		final Stream<?> stream = testAndApply(Objects::nonNull, getEnumConstants(type), Arrays::stream, null);
 		//
 		final List<String> strings = Util
-				.toList(Util.map(stream, x -> x instanceof Enum ? name((Enum<?>) x) : Util.toString(x)));
+				.toList(Util.map(stream, x -> x instanceof Enum ? Util.name((Enum<?>) x) : Util.toString(x)));
 		//
 		final DataValidationHelper dvh = ObjectMap.getObject(objectMap, DataValidationHelper.class);
 		//
@@ -4229,11 +4229,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static String name(@Nullable final Enum<?> instance) {
-		return instance != null ? instance.name() : null;
 	}
 
 	@Nullable

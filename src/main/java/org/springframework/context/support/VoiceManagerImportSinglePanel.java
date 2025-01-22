@@ -908,7 +908,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			public Component getListCellRendererComponent(final JList<?> list, final Object value, final int index,
 					final boolean isSelected, final boolean cellHasFocus) {
 				//
-				final String name = name(Util.cast(Enum.class, value));
+				final String name = Util.name(Util.cast(Enum.class, value));
 				//
 				if (Util.containsKey(yomiNameMapTemp, name)) {
 					//
@@ -932,7 +932,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				String.format("%1$s,wmin %2$s,wmax %3$s,span %4$s", GROWX, 100, 200, 2));
 		//
 		final List<Yomi> yomiList = Util.toList(Util.filter(testAndApply(Objects::nonNull, yomis, Arrays::stream, null),
-				y -> Objects.equals(name(y), PropertyResolverUtil.getProperty(propertyResolver,
+				y -> Objects.equals(Util.name(y), PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.yomi"))));
 		//
 		final int size = IterableUtils.size(yomiList);
@@ -4697,11 +4697,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static String name(@Nullable final Enum<?> instance) {
-		return instance != null ? instance.name() : null;
 	}
 
 	private static void errorOrAssertOrShowException(final boolean headless, final Throwable throwable) {

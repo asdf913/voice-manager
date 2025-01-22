@@ -1117,7 +1117,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		setSelectedItem(cbmEncryptionMode,
 				Util.orElse(
 						findFirst(Util.filter(Arrays.stream(encryptionModes),
-								x -> StringUtils.equalsIgnoreCase(name(x),
+								x -> StringUtils.equalsIgnoreCase(Util.name(x),
 										PropertyResolverUtil.getProperty(propertyResolver,
 												"org.springframework.context.support.VoiceManager.encryptionMode")))),
 						null));
@@ -1135,7 +1135,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		setSelectedItem(cbmCompressionLevel,
 				Util.orElse(
 						findFirst(Util.filter(Arrays.stream(compressionLevels),
-								x -> StringUtils.equalsIgnoreCase(name(x),
+								x -> StringUtils.equalsIgnoreCase(Util.name(x),
 										PropertyResolverUtil.getProperty(propertyResolver,
 												"org.springframework.context.support.VoiceManager.compressionLevel")))),
 						null));
@@ -5517,11 +5517,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 	@Nullable
 	private static String[] getFileExtensions(@Nullable final ContentType instance) {
 		return instance != null ? instance.getFileExtensions() : null;
-	}
-
-	@Nullable
-	private static String name(@Nullable final Enum<?> instance) {
-		return instance != null ? instance.name() : null;
 	}
 
 	@Nullable

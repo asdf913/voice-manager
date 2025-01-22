@@ -174,7 +174,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 			final List<ECSSVersion> list = Util
 					.toList(Util.filter(testAndApply(Objects::nonNull, ECSSVersion.values(), Arrays::stream, null),
-							x -> StringUtils.contains(name(x), string)));
+							x -> StringUtils.contains(Util.name(x), string)));
 			//
 			final int size = IterableUtils.size(list);
 			//
@@ -240,11 +240,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	@Nullable
 	private static Version getVersion(@Nullable final IHasVersion instance) {
 		return instance != null ? instance.getVersion() : null;
-	}
-
-	@Nullable
-	private static String name(@Nullable final Enum<?> instance) {
-		return instance != null ? instance.name() : null;
 	}
 
 	@Override
