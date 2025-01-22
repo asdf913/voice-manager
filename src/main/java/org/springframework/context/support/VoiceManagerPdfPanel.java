@@ -156,6 +156,7 @@ import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.ElementUtil;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1413,8 +1414,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private void setFontSizeAndUnit(final String html) {
 		//
-		setFontSizeAndUnit(StringUtils.length(replaceAll(
-				text(body(testAndApply(Objects::nonNull, html, Jsoup::parse, null))), "\\([^\\(\\)]+\\)", "")));// TODO
+		setFontSizeAndUnit(StringUtils
+				.length(replaceAll(ElementUtil.text(body(testAndApply(Objects::nonNull, html, Jsoup::parse, null))),
+						"\\([^\\(\\)]+\\)", "")));// TODO
 		//
 	}
 
@@ -1484,11 +1486,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Nullable
 	private static String replaceAll(@Nullable final String instance, final String regex, final String replacement) {
 		return instance != null ? instance.replaceAll(regex, replacement) : instance;
-	}
-
-	@Nullable
-	private static String text(@Nullable final Element instance) {
-		return instance != null ? instance.text() : null;
 	}
 
 	@Nullable
