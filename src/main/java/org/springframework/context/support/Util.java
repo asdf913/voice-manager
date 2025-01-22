@@ -252,7 +252,7 @@ public abstract class Util {
 		//
 	}
 
-	static boolean isSelected(final AbstractButton instance) {
+	static boolean isSelected(@Nullable final AbstractButton instance) {
 		return instance != null && instance.isSelected();
 	}
 
