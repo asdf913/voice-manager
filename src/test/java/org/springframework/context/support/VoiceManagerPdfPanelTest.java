@@ -11,10 +11,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
 
-import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
