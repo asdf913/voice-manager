@@ -44,6 +44,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,6 +87,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.MutableComboBoxModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
@@ -283,6 +286,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private transient RenderedImage renderedImage = null;
 
+	private ComboBoxModel<String> cbmImageFormat = null;
+
+	private List<String> imageWriterSpiFormats = null;
+
 	@Override
 	public String getTitle() {
 		return "PDF";
@@ -420,6 +427,71 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // if
 			//
+	}
+
+	public void setImageWriterSpiFormats(final Object object) {
+		//
+		if (object instanceof Map) {
+			//
+			throw new IllegalArgumentException();
+			//
+		} else if (object == null) {
+			//
+			imageWriterSpiFormats = null;
+			//
+		} // if
+			//
+		List<String> collection = null;
+		//
+		if (object instanceof Iterable iterable) {
+			//
+			for (final Object o : iterable) {
+				//
+				Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), Util.toString(o));
+				//
+			} // for
+				//
+			imageWriterSpiFormats = collection;
+			//
+		} else if (object instanceof Object[] os) {
+			//
+			for (int i = 0; i < length(os); i++) {
+				//
+				Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new),
+						Util.toString(ArrayUtils.get(os, i)));
+				//
+			} // for
+				//
+		} else if (object instanceof Iterator iterator) {
+			//
+			while (hasNext(iterator)) {
+				//
+				Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new), Util.toString(next(iterator)));
+				//
+			} // while
+				//
+		} else if (object instanceof Enumeration enumeration) {
+			//
+			setImageWriterSpiFormats(asIterator(enumeration));
+			//
+		} else {
+			//
+			setImageWriterSpiFormats(Collections.singleton(object));
+			//
+		} // if
+			//
+	}
+
+	private static <E> Iterator<E> asIterator(final Enumeration<E> instance) {
+		return instance != null ? instance.asIterator() : null;
+	}
+
+	private static boolean hasNext(final Iterator<?> instance) {
+		return instance != null && instance.hasNext();
+	}
+
+	private static <E> E next(final Iterator<E> instance) {
+		return instance != null ? instance.next() : null;
 	}
 
 	private class VoiceIdListCellRenderer implements ListCellRenderer<Object> {
@@ -618,6 +690,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		panel.add(btnImageView = new JButton("View"));
 		//
+		final MutableComboBoxModel<String> mcbm = new DefaultComboBoxModel<>();
+		//
+		panel.add(new JComboBox<>(mcbm));
+		//
+		forEach(imageWriterSpiFormats, mcbm::addElement);
+		//
+		cbmImageFormat = mcbm;
+		//
 		add(panel, String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		// Original Size
@@ -662,6 +742,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		actionPerformed(new ActionEvent(btnImageClear, 0, null));
 		//
+	}
+
+	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) {
+		if (instance != null && (action != null || Proxy.isProxyClass(Util.getClass(instance)))) {
+			instance.forEach(action);
+		}
 	}
 
 	private static <T> void forEach(@Nullable final FailableStream<T> instance, final FailableConsumer<T, ?> action) {
