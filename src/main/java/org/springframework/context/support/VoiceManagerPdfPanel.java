@@ -288,6 +288,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private transient ComboBoxModel<String> cbmImageFormat = null;
 
+	@Nullable
 	private List<String> imageWriterSpiFormats = null;
 
 	@Override
