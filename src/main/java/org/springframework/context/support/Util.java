@@ -1611,6 +1611,7 @@ public abstract class Util {
 		}
 	}
 
+	@Nullable
 	static String name(@Nullable final Enum<?> instance) {
 		return instance != null ? instance.name() : null;
 	}
