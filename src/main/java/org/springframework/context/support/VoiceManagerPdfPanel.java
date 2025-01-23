@@ -1914,7 +1914,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			ObjectMap.setObject(om, File.class, testAndApply(Objects::nonNull,
 					Util.getText(getTfImageFile(voiceManagerPdfPanel)), File::new, null));
 			//
-			ObjectMap.setObject(om, StringMap.class, ObjectMap.getObject(objectMap, StringMap.class));
+			ObjectMap.setObject(om, StringMap.class, stringMap);
+			//
+			StringMap.setString(stringMap, "imageFormat", Util.toString(
+					getSelectedItem(voiceManagerPdfPanel != null ? voiceManagerPdfPanel.cbmImageFormat : null)));
 			//
 			addImage(ObjectMap.getObject(objectMap, RenderedImage.class), om, lastHeight, isOrginialSize);
 			//
@@ -1933,7 +1936,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 				//
-				ImageIO.write(renderedImage, "PNG", baos);// TODO
+				ImageIO.write(renderedImage,
+						StringUtils.defaultIfBlank(
+								StringMap.getString(ObjectMap.getObject(om, StringMap.class), "imageFormat"), "PNG"),
+						baos);
 				//
 				ObjectMap.setObject(om, byte[].class, baos.toByteArray());
 				//
