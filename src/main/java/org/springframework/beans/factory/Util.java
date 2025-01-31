@@ -346,6 +346,12 @@ abstract class Util {
 		}
 	}
 
+	static <E> void set(final List<E> instance, final int index, final E element) {
+		if (instance != null) {
+			instance.set(index, element);
+		}
+	}
+
 	@Nullable
 	static <V> V get(@Nullable final AtomicReference<V> instance) {
 		return instance != null ? instance.get() : null;

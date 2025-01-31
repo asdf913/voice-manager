@@ -43,19 +43,13 @@ public class ImageWriterSpiFormatIterableFactoryBean implements FactoryBean<Iter
 		//
 		for (int i = 0; i < IterableUtils.size(classNames); i++) {
 			//
-			set(classNames, i, StringUtils
+			Util.set(classNames, i, StringUtils
 					.substringBefore(StringUtils.replace(IterableUtils.get(classNames, i), commonPrefix, ""), '.'));
 			//
 		} // if
 			//
 		return classNames;
 		//
-	}
-
-	private static <E> void set(@Nullable final List<E> instance, final int index, final E element) {
-		if (instance != null) {
-			instance.set(index, element);
-		}
 	}
 
 	@Nullable

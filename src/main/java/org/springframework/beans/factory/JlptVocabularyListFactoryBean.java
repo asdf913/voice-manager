@@ -72,9 +72,9 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 		//
 		this.urls = testAndApply(x -> x != null && x.toArray() != null, us, ArrayList::new, null);
 		//
-		for (int i = 0; urls != null && i < urls.size(); i++) {
+		for (int i = 0; i < IterableUtils.size(urls); i++) {
 			//
-			urls.set(i, StringUtils.trim(urls.get(i)));
+			Util.set(urls, i, StringUtils.trim(urls.get(i)));
 			//
 		} // for
 			//

@@ -14,6 +14,7 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -127,9 +128,9 @@ public class IpaMultimapFactoryBean implements FactoryBean<Multimap<String, Stri
 					list = testAndApply(Objects::nonNull, StringUtils.split(Util.toString(Util.getValue(en)), ","),
 							Arrays::asList, null);
 					//
-					for (int i = 0; list != null && i < list.size(); i++) {
+					for (int i = 0; i < IterableUtils.size(list); i++) {
 						//
-						list.set(i, StringUtils.trim(list.get(i)));
+						Util.set(list, i, StringUtils.trim(list.get(i)));
 						//
 					} // for
 						//
