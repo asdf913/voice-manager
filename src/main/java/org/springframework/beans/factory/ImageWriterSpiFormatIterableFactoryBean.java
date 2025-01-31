@@ -1,6 +1,5 @@
 package org.springframework.beans.factory;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collection;
