@@ -1978,6 +1978,7 @@ abstract class Util {
 		//
 	}
 
+	@Nullable
 	static <K> Set<K> keySet(@Nullable final Map<K, ?> instance) {
 		return instance != null ? instance.keySet() : null;
 	}
