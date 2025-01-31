@@ -8205,7 +8205,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		try {
 			//
-			if (instance == null || Narcissus.getField(str, String.class.getDeclaredField("value")) == null) {
+			if (instance == null || Narcissus.getField(str, Util.getDeclaredField(String.class, "value")) == null) {
 				//
 				return instance;
 				//
@@ -8228,7 +8228,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		try {
 			//
 			if (instance == null
-					|| Narcissus.getField(instance, TextStringBuilder.class.getDeclaredField("buffer")) == null) {
+					|| Narcissus.getField(instance, Util.getDeclaredField(TextStringBuilder.class, "buffer")) == null) {
 				//
 				return null;
 				//

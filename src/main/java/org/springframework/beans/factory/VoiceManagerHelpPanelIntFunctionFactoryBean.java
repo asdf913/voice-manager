@@ -245,7 +245,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 			//
 		try {
 			//
-			if (Narcissus.getObjectField(instance, getDeclaredField(Container.class, COMPONENT)) == null) {
+			if (Narcissus.getObjectField(instance, Util.getDeclaredField(Container.class, COMPONENT)) == null) {
 				//
 				return;
 				//
@@ -282,7 +282,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 			//
 		try {
 			//
-			if (Narcissus.getField(instance, URL.class.getDeclaredField(HANDLER)) == null) {
+			if (Narcissus.getField(instance, Util.getDeclaredField(URL.class, HANDLER)) == null) {
 				//
 				return null;
 				//
@@ -373,7 +373,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 			//
 		try {
 			//
-			if (Narcissus.getObjectField(instance, JComponent.class.getDeclaredField("listenerList")) == null) {
+			if (Narcissus.getObjectField(instance, Util.getDeclaredField(JComponent.class, "listenerList")) == null) {
 				//
 				return;
 				//
@@ -546,7 +546,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 			//
 		try {
 			//
-			if (Narcissus.getField(instance, getDeclaredField(Util.getClass(instance), HANDLER)) == null) {
+			if (Narcissus.getField(instance, Util.getDeclaredField(Util.getClass(instance), HANDLER)) == null) {
 				//
 				return null;
 				//
@@ -559,12 +559,6 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 		} // try
 			//
 		return instance.openStream();
-	}
-
-	@Nullable
-	private static Field getDeclaredField(@Nullable final Class<?> instance, final String name)
-			throws NoSuchFieldException {
-		return instance != null ? instance.getDeclaredField(name) : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,

@@ -31,9 +31,9 @@ public class ImageWriterSpiFormatIterableFactoryBean implements FactoryBean<Iter
 						Util.get(
 								Util.cast(Map.class,
 										Narcissus.getObjectField(IIORegistry.getDefaultInstance(),
-												getDeclaredField(ServiceRegistry.class, "categoryMap"))),
+												Util.getDeclaredField(ServiceRegistry.class, "categoryMap"))),
 								ImageWriterSpi.class),
-						x -> Narcissus.getField(x, getDeclaredField(Util.getClass(x), "map")), null));
+						x -> Narcissus.getField(x, Util.getDeclaredField(Util.getClass(x), "map")), null));
 		//
 		final List<String> classNames = testAndApply(Objects::nonNull, Util.toList(
 				Util.map(Util.stream(Util.keySet(imageWriterSpis)), x -> Util.getName(Util.cast(Class.class, x)))),
@@ -65,12 +65,6 @@ public class ImageWriterSpiFormatIterableFactoryBean implements FactoryBean<Iter
 				? instance.toArray(array)
 				: null;
 		//
-	}
-
-	@Nullable
-	private static Field getDeclaredField(@Nullable final Class<?> instance, final String name)
-			throws NoSuchFieldException {
-		return instance != null ? instance.getDeclaredField(name) : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
