@@ -346,7 +346,7 @@ abstract class Util {
 		}
 	}
 
-	static <E> void set(final List<E> instance, final int index, final E element) {
+	static <E> void set(@Nullable final List<E> instance, final int index, final E element) {
 		if (instance != null) {
 			instance.set(index, element);
 		}
