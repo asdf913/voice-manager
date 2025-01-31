@@ -36,9 +36,8 @@ public class ImageWriterSpiFormatIterableFactoryBean implements FactoryBean<Iter
 								ImageWriterSpi.class),
 						x -> Narcissus.getField(x, getDeclaredField(Util.getClass(x), "map")), null));
 		//
-		final List<String> classNames = testAndApply(Objects::nonNull,
-				Util.toList(
-						Util.map(Util.stream(keySet(imageWriterSpis)), x -> Util.getName(Util.cast(Class.class, x)))),
+		final List<String> classNames = testAndApply(Objects::nonNull, Util.toList(
+				Util.map(Util.stream(Util.keySet(imageWriterSpis)), x -> Util.getName(Util.cast(Class.class, x)))),
 				ArrayList::new, null);
 		//
 		final String commonPrefix = StringUtils.getCommonPrefix(toArray(classNames, new String[] {}));
@@ -67,11 +66,6 @@ public class ImageWriterSpiFormatIterableFactoryBean implements FactoryBean<Iter
 				? instance.toArray(array)
 				: null;
 		//
-	}
-
-	@Nullable
-	private static <K> Set<K> keySet(@Nullable final Map<K, ?> instance) {
-		return instance != null ? instance.keySet() : null;
 	}
 
 	@Nullable

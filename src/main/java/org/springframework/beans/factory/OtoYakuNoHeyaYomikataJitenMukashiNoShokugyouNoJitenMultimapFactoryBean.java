@@ -520,7 +520,7 @@ public class OtoYakuNoHeyaYomikataJitenMukashiNoShokugyouNoJitenMultimapFactoryB
 				//
 		} // if
 			//
-		return hitCountMap != null ? hitCountMap.keySet() : null;
+		return Util.keySet(hitCountMap);
 		//
 	}
 
