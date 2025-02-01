@@ -1200,6 +1200,7 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	static <E> E next(@Nullable final Iterator<E> instance) {
 		return instance != null ? instance.next() : null;
 	}
