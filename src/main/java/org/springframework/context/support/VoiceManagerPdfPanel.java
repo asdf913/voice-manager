@@ -1941,7 +1941,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static List<String> getImageWriterSpiFormats(final VoiceManagerPdfPanel instance) {
+	private static List<String> getImageWriterSpiFormats(@Nullable final VoiceManagerPdfPanel instance) {
 		return instance != null ? instance.imageWriterSpiFormats : null;
 	}
 
