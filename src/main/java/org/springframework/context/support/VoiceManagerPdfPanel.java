@@ -265,7 +265,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Image URL Mime Type")
 	private JTextComponent tfImageUrlMimeType = null;
 
-	private JTextComponent tfImageFile, tfOutputFile = null;
+	@Note("Image File")
+	private JTextComponent tfImageFile = null;
+
+	private JTextComponent tfOutputFile = null;
 
 	private transient Document taHtmlDocument = null;
 
