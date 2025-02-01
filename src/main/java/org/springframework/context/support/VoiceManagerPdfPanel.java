@@ -488,7 +488,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	public void setImageFormatOrders(final Object object) {
+	public void setImageFormatOrders(@Nullable final Object object) {
 		//
 		IValue0<List<String>> value = null;
 		//
