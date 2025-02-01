@@ -265,7 +265,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Image URL Mime Type")
 	private JTextComponent tfImageUrlMimeType = null;
 
-	private JTextComponent tfImageFile = null;
+	private JTextComponent tfImageFile, tfOutputFile = null;
 
 	private transient Document taHtmlDocument = null;
 
@@ -782,7 +782,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(new JLabel());
 		//
-		add(btnExecute = new JButton("Execute"));
+		add(btnExecute = new JButton("Execute"), WRAP);
+		//
+		add(new JLabel("Output"));
+		//
+		add(tfOutputFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, span));
+		//
+		setEditable(tfOutputFile, false);
 		//
 		final FailableStream<Field> fs = testAndApply(Objects::nonNull,
 				Util.filter(
@@ -1033,7 +1039,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		if (Objects.equals(source, btnExecute)) {
 			//
-			setText("", tfImageUrlStateCode, tfImageUrlMimeType);
+			setText("", tfImageUrlStateCode, tfImageUrlMimeType, tfOutputFile);
 			//
 			final Path pathHtml = Path.of("test.html");
 			//
@@ -1114,6 +1120,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				addTextAndVoice(objectMap,
 						ObjectUtils.getIfNull(speechSpeedMap, VoiceManagerPdfPanel::getDefaultSpeechSpeedMap),
 						Util.intValue(speechVolume, 100), Util.isSelected(cbIsOriginalSize));
+				//
+				Util.setText(tfOutputFile, Util.getAbsolutePath(file));
 				//
 			} catch (final IOException | NoSuchFieldException e) {
 				//
