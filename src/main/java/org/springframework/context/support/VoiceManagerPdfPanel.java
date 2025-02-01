@@ -1732,10 +1732,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final PDFRenderer pdfRenderer = new PDFRenderer(document);
 			//
-			final Path page1Path = Path.of("page1.png");
-			//
-			LoggerUtil.info(LOG, Util.getAbsolutePath(Util.toFile(page1Path)));
-			//
 			BufferedImage bi = pdfRenderer.renderImage(0);
 			//
 			final FloatMap floatMap = ObjectMap.getObject(objectMap, FloatMap.class);
@@ -1745,24 +1741,33 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 							(a, b) -> divide(BigDecimal.valueOf(a), BigDecimal.valueOf(b)), null),
 					FloatMap.getFloat(floatMap, "defaultSize", (float) 61.2));
 			//
+			Path page1Path = null;
+			//
 			final Iterable<String> imageWriterSpiFormats = voiceManagerPdfPanel != null
 					? voiceManagerPdfPanel.imageWriterSpiFormats
 					: null;
 			//
 			if (IterableUtils.contains(imageWriterSpiFormats, "png")) {
 				//
-				ImageIO.write(bi, "png", Util.toFile(page1Path));
+				ImageIO.write(bi, "png", Util.toFile(page1Path = Path.of("page1.png")));
 				//
 			} else if (!IterableUtils.isEmpty(imageWriterSpiFormats)) {
 				//
-				ImageIO.write(bi, IterableUtils.get(imageWriterSpiFormats, 0), Util.toFile(page1Path));
+				ImageIO.write(bi, IterableUtils.get(imageWriterSpiFormats, 0),
+						Util.toFile(page1Path = Path.of("page1." + IterableUtils.get(imageWriterSpiFormats, 0))));
 				//
 			} // if
 				//
+			LoggerUtil.info(LOG, Util.getAbsolutePath(Util.toFile(page1Path)));
+			//
 			final Integer largestY = getLargestY(bi);
 			//
-			Files.delete(page1Path);
-			//
+			if (page1Path != null && Util.exists(Util.toFile(page1Path))) {
+				//
+				Files.delete(page1Path);
+				//
+			} // if
+				//
 			final PDPageContentStream cs = new PDPageContentStream(document, pd, AppendMode.PREPEND, true);
 			//
 			final Path pathAudio = Path.of("test.wav");
