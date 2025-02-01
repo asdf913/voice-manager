@@ -1203,7 +1203,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final File file = Util.toFile(testAndApply(Objects::nonNull, Util.getText(tfOutputFile), Path::of, null));
 			//
-			if (Util.exists(file) && Util.isFile(file)) {
+			if (Boolean.logicalAnd(Util.exists(file), Util.isFile(file))) {
 				//
 				try {
 					//
