@@ -1206,7 +1206,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)),
 						Util.toFile(testAndApply(Objects::nonNull, Util.getText(tfOutputFile), Path::of, null)),
 						x -> browse(Desktop.getDesktop(), toURI(getParentFile(x))));
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				//
 				LoggerUtil.error(LOG, e.getMessage(), e);
 				//
