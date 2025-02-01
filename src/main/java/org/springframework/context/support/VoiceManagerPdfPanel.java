@@ -1760,9 +1760,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final Integer largestY = getLargestY(bi);
 			//
-			testAndAccept(x -> Util.exists(Util.toFile(x)), page1Path, x -> {
-				Files.delete(x);
-			});
+			testAndAccept(x -> Util.exists(Util.toFile(x)), page1Path, x -> Files.delete(x));
 			//
 			final PDPageContentStream cs = new PDPageContentStream(document, pd, AppendMode.PREPEND, true);
 			//
