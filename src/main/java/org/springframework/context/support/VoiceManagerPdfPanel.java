@@ -470,7 +470,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} else if (object instanceof Iterator iterator) {
 			//
-			while (hasNext(iterator)) {
+			while (Util.hasNext(iterator)) {
 				//
 				Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new),
 						Util.toString(Util.next(iterator)));
@@ -564,10 +564,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Nullable
 	private static <E> Iterator<E> asIterator(@Nullable final Enumeration<E> instance) {
 		return instance != null ? instance.asIterator() : null;
-	}
-
-	private static boolean hasNext(@Nullable final Iterator<?> instance) {
-		return instance != null && instance.hasNext();
 	}
 
 	private class VoiceIdListCellRenderer implements ListCellRenderer<Object> {

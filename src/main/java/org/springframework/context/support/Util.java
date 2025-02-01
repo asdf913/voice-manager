@@ -1204,6 +1204,10 @@ public abstract class Util {
 		return instance != null ? instance.next() : null;
 	}
 
+	static boolean hasNext(final Iterator<?> instance) {
+		return instance != null && instance.hasNext();
+	}
+
 	@Nullable
 	private static <T> IValue0<Iterator<T>> iterator(@Nullable final Class<?> clz, final Object instance,
 			final Map<String, String> map) throws NoSuchFieldException {

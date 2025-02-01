@@ -235,7 +235,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 						//
 					} // if
 						//
-					return iterator != null && iterator.hasNext();
+					return Util.hasNext(iterator);
 					//
 				} // if
 					//

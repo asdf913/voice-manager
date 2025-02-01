@@ -3193,7 +3193,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		org.apache.poi.poifs.filesystem.Entry entry = null;
 		//
-		while (entries != null && entries.hasNext()) {
+		while (Util.hasNext(entries)) {
 			//
 			if ((entry = Util.next(entries)) == null) {
 				//

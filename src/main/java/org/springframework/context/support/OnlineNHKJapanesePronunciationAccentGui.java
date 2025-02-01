@@ -221,7 +221,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				//
 		} else if (object instanceof Iterator iterator) {
 			//
-			while (hasNext(iterator)) {
+			while (Util.hasNext(iterator)) {
 				//
 				Util.add(collection = ObjectUtils.getIfNull(collection, ArrayList::new),
 						Util.toString(Util.next(iterator)));
@@ -247,10 +247,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 
 	private static int length(@Nullable final Object[] instance) {
 		return instance != null ? instance.length : 0;
-	}
-
-	private static boolean hasNext(@Nullable final Iterator<?> instance) {
-		return instance != null && instance.hasNext();
 	}
 
 	@SuppressWarnings("java:S1612")
