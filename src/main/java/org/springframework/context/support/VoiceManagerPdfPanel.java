@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
@@ -247,7 +248,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Image View")
 	private AbstractButton btnImageView = null;
 
-	private AbstractButton btnCopyOutputFilePath = null;
+	private AbstractButton btnCopyOutputFilePath, btnBrowseOutputFolder = null;
 
 	@Note("HTML")
 	private JTextComponent taHtml = null;
@@ -641,9 +642,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(tfFontSize1 = new JTextField(Util.getKey(entry)), String.format("%1$s,wmin %2$s", GROWX, 100));
 		//
+		final int span = 5;
+		//
 		add(new JComboBox<>(
 				cbmFontSize1 = new DefaultComboBoxModel<>(ArrayUtils.insert(0, ECSSUnit.values(), (ECSSUnit) null))),
-				String.format("%1$s,span %2$s", WRAP, 2));
+				String.format("%1$s,span %2$s", WRAP, span - 1));
 		//
 		setSelectedItem(cbmFontSize1, Util.getValue(entry));
 		//
@@ -666,8 +669,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
-		final int span = 5;
-		//
 		add(jsp, String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, span));
 		//
 		// Font Size
@@ -756,7 +757,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(new JLabel("Image From Clipboard"));
 		//
-		final JPanel panel = new JPanel();
+		JPanel panel = new JPanel();
 		//
 		final GridLayout gridLayout = new GridLayout();
 		//
@@ -794,11 +795,15 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(new JLabel("Output"));
 		//
-		add(tfOutputFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, span - 1));
+		add(tfOutputFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, span - 2));
 		//
 		setEditable(tfOutputFile, false);
 		//
-		add(btnCopyOutputFilePath = new JButton("Copy"), GROWX);
+		(panel = new JPanel()).add(btnCopyOutputFilePath = new JButton("Copy"));
+		//
+		panel.add(btnBrowseOutputFolder = new JButton("Browse"));
+		//
+		add(panel, String.format("span %1$s", 2));
 		//
 		final FailableStream<Field> fs = testAndApply(Objects::nonNull,
 				Util.filter(
@@ -1191,10 +1196,39 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			setContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(), Toolkit.getDefaultToolkit(),
 					x -> getSystemClipboard(x), null), new StringSelection(Util.getText(tfOutputFile)), null);
 			//
+		} else if (Objects.equals(source, btnBrowseOutputFolder)) {
+			//
+			final File file = Util
+					.toFile(testAndApply(Objects::nonNull, Util.getText(tfOutputFile), x -> Path.of(x), null));
+			//
+			if (Util.exists(file) && Util.isFile(file)) {
+				//
+				try {
+					//
+					browse(Desktop.getDesktop(), toURI(getParentFile(file)));
+					//
+				} catch (IOException e) {
+					//
+					LoggerUtil.error(LOG, e.getMessage(), e);
+					//
+				} // try
+					//
+			} // if
+				//
 		} // if
 			//
 		actionPerformedForBtnImageFromClipboard(source);
 		//
+	}
+
+	private static File getParentFile(final File instance) {
+		return instance != null ? instance.getParentFile() : null;
+	}
+
+	private static void browse(final Desktop instance, final URI uri) throws IOException {
+		if (instance != null) {
+			instance.browse(uri);
+		}
 	}
 
 	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
