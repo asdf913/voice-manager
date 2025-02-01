@@ -1760,12 +1760,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final Integer largestY = getLargestY(bi);
 			//
-			if (page1Path != null && Util.exists(Util.toFile(page1Path))) {
-				//
-				Files.delete(page1Path);
-				//
-			} // if
-				//
+			testAndAccept(x -> Util.exists(Util.toFile(x)), page1Path, x -> {
+				Files.delete(x);
+			});
+			//
 			final PDPageContentStream cs = new PDPageContentStream(document, pd, AppendMode.PREPEND, true);
 			//
 			final Path pathAudio = Path.of("test.wav");
@@ -2404,8 +2402,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null ? instance.newPage() : null;
 	}
 
-	private static <T> void testAndAccept(@Nullable final Predicate<T> predicate, final T value,
-			@Nullable final Consumer<T> consumer) {
+	private static <T, E extends Throwable> void testAndAccept(@Nullable final Predicate<T> predicate, final T value,
+			@Nullable final FailableConsumer<T, E> consumer) throws E {
 		if (predicate != null && predicate.test(value) && consumer != null) {
 			consumer.accept(value);
 		}
