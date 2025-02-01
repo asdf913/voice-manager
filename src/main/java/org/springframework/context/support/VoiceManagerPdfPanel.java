@@ -8,7 +8,9 @@ import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
@@ -242,7 +244,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Image Clear")
 	private AbstractButton btnImageClear = null;
 
-	private AbstractButton btnImageView = null;
+	private AbstractButton btnImageView, btnCopyOutputFilePath = null;
 
 	@Note("HTML")
 	private JTextComponent taHtml = null;
@@ -789,9 +791,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(new JLabel("Output"));
 		//
-		add(tfOutputFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, span));
+		add(tfOutputFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, span - 1));
 		//
 		setEditable(tfOutputFile, false);
+		//
+		add(btnCopyOutputFilePath = new JButton("Copy"), GROWX);
 		//
 		final FailableStream<Field> fs = testAndApply(Objects::nonNull,
 				Util.filter(
@@ -1179,10 +1183,21 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					testAndApply(Objects::nonNull, Util.cast(BufferedImage.class, renderedImage), ImageIcon::new, null),
 					"Image", JOptionPane.PLAIN_MESSAGE, null);
 			//
+		} else if (Objects.equals(source, btnCopyOutputFilePath)) {
+			//
+			setContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(), Toolkit.getDefaultToolkit(),
+					x -> getSystemClipboard(x), null), new StringSelection(Util.getText(tfOutputFile)), null);
+			//
 		} // if
 			//
 		actionPerformedForBtnImageFromClipboard(source);
 		//
+	}
+
+	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner) {
+		if (instance != null) {
+			instance.setContents(contents, owner);
+		}
 	}
 
 	private boolean actionPerformedForBtnImageFromClipboard(final Object source) {
