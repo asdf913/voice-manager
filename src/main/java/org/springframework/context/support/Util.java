@@ -1204,7 +1204,7 @@ public abstract class Util {
 		return instance != null ? instance.next() : null;
 	}
 
-	static boolean hasNext(final Iterator<?> instance) {
+	static boolean hasNext(@Nullable final Iterator<?> instance) {
 		return instance != null && instance.hasNext();
 	}
 
