@@ -1743,9 +1743,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			Path page1Path = null;
 			//
-			final Iterable<String> imageWriterSpiFormats = voiceManagerPdfPanel != null
-					? voiceManagerPdfPanel.imageWriterSpiFormats
-					: null;
+			final Iterable<String> imageWriterSpiFormats = getImageWriterSpiFormats(voiceManagerPdfPanel);
 			//
 			if (IterableUtils.contains(imageWriterSpiFormats, "png")) {
 				//
@@ -1943,6 +1941,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
+	}
+
+	private static List<String> getImageWriterSpiFormats(final VoiceManagerPdfPanel instance) {
+		return instance != null ? instance.imageWriterSpiFormats : null;
 	}
 
 	private static ComboBoxModel<String> getCbmImageFormat(final VoiceManagerPdfPanel instance) {
