@@ -1932,8 +1932,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			ObjectMap.setObject(om, StringMap.class, stringMap);
 			//
-			StringMap.setString(stringMap, "imageFormat", Util.toString(
-					getSelectedItem(voiceManagerPdfPanel != null ? voiceManagerPdfPanel.cbmImageFormat : null)));
+			StringMap.setString(stringMap, "imageFormat",
+					Util.toString(getSelectedItem(getCbmImageFormat(voiceManagerPdfPanel))));
 			//
 			addImage(ObjectMap.getObject(objectMap, RenderedImage.class), om, lastHeight, isOrginialSize);
 			//
@@ -1943,6 +1943,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
+	}
+
+	private static ComboBoxModel<String> getCbmImageFormat(final VoiceManagerPdfPanel instance) {
+		return instance != null ? instance.cbmImageFormat : null;
 	}
 
 	private static void addImage(@Nullable final RenderedImage renderedImage, final ObjectMap om, float lastHeight,
