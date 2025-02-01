@@ -3195,7 +3195,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		while (entries != null && entries.hasNext()) {
 			//
-			if ((entry = entries.next()) == null) {
+			if ((entry = Util.next(entries)) == null) {
 				//
 				continue;
 				//

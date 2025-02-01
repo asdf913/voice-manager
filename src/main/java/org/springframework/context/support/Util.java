@@ -1200,6 +1200,10 @@ public abstract class Util {
 		//
 	}
 
+	static <E> E next(final Iterator<E> instance) {
+		return instance != null ? instance.next() : null;
+	}
+
 	@Nullable
 	private static <T> IValue0<Iterator<T>> iterator(@Nullable final Class<?> clz, final Object instance,
 			final Map<String, String> map) throws NoSuchFieldException {
