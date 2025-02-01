@@ -1945,7 +1945,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null ? instance.imageWriterSpiFormats : null;
 	}
 
-	private static ComboBoxModel<String> getCbmImageFormat(final VoiceManagerPdfPanel instance) {
+	private static ComboBoxModel<String> getCbmImageFormat(@Nullable final VoiceManagerPdfPanel instance) {
 		return instance != null ? instance.cbmImageFormat : null;
 	}
 
