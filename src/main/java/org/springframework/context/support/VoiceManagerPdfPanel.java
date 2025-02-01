@@ -500,12 +500,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} else if (object instanceof List) {
 			//
-			value = Unit.with(Util.toList(Util.map(Util.stream(((List<?>) object)), x -> Util.toString(x))));
+			value = Unit.with(Util.toList(Util.map(Util.stream(((List<?>) object)), Util::toString)));
 			//
 		} else if (object instanceof Iterable) {
 			//
-			value = Unit.with(Util.toList(Util.map(StreamSupport.stream(((Iterable<?>) object).spliterator(), false),
-					x -> Util.toString(x))));
+			value = Unit.with(Util.toList(
+					Util.map(StreamSupport.stream(((Iterable<?>) object).spliterator(), false), Util::toString)));
 			//
 		} else if (clz != null && clz.isArray()) {
 			//
@@ -517,9 +517,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // if
 				//
-			value = Unit.with(Util
-					.toList(Util.map(IntStream.range(0, Array.getLength(object)).mapToObj(i -> Array.get(object, i)),
-							x -> Util.toString(x))));
+			value = Unit.with(Util.toList(Util.map(
+					IntStream.range(0, Array.getLength(object)).mapToObj(i -> Array.get(object, i)), Util::toString)));
 			//
 		} else if (object instanceof String string) {
 			//
