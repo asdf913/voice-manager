@@ -26,6 +26,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.invoke.TypeDescriptor.OfField;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -44,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -292,6 +294,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Nullable
 	private List<String> imageWriterSpiFormats = null;
 
+	private List<String> imageFormatOrders = null;
+
 	@Override
 	public String getTitle() {
 		return "PDF";
@@ -479,6 +483,79 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		} else {
 			//
 			setImageWriterSpiFormats(Collections.singleton(object));
+			//
+		} // if
+			//
+	}
+
+	public void setImageFormatOrders(final Object object) {
+		//
+		IValue0<List<String>> value = null;
+		//
+		final Class<?> clz = Util.getClass(object);
+		//
+		if (object == null) {
+			//
+			value = Unit.with(null);
+			//
+		} else if (object instanceof List) {
+			//
+			value = Unit.with(Util.toList(Util.map(Util.stream(((List<?>) object)), x -> Util.toString(x))));
+			//
+		} else if (object instanceof Iterable) {
+			//
+			value = Unit.with(Util.toList(Util.map(StreamSupport.stream(((Iterable<?>) object).spliterator(), false),
+					x -> Util.toString(x))));
+			//
+		} else if (clz != null && clz.isArray()) {
+			//
+			if (Objects.equals(clz.getComponentType(), Character.TYPE)) {
+				//
+				setImageFormatOrders(new String((char[]) object));
+				//
+				return;
+				//
+			} // if
+				//
+			value = Unit.with(Util
+					.toList(Util.map(IntStream.range(0, Array.getLength(object)).mapToObj(i -> Array.get(object, i)),
+							x -> Util.toString(x))));
+			//
+		} else if (object instanceof String string) {
+			//
+			try {
+				//
+				final Object obj = ObjectMapperUtil.readValue(new ObjectMapper(), string, Object.class);
+				//
+				if (obj != null) {
+					//
+					setImageFormatOrders(obj);
+					//
+					return;
+					//
+				} // if
+					//
+			} catch (final JsonProcessingException e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} // try
+				//
+			value = Unit.with(Collections.singletonList(string));
+			//
+		} else if (Boolean.logicalOr(object instanceof Number, object instanceof Boolean)) {
+			//
+			value = Unit.with(Collections.singletonList(Util.toString(object)));
+			//
+		} // if
+			//
+		if (value != null) {
+			//
+			imageFormatOrders = IValue0Util.getValue0(value);
+			//
+		} else {
+			//
+			throw new UnsupportedOperationException(Util.toString(clz));
 			//
 		} // if
 			//
@@ -698,6 +775,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		panel.add(new JComboBox<>(mcbm));
 		//
+		sort(imageWriterSpiFormats, createImageFormatComparator(imageFormatOrders));
+		//
 		forEach(imageWriterSpiFormats, mcbm::addElement);
 		//
 		cbmImageFormat = mcbm;
@@ -745,6 +824,45 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		} // if
 			//
 		actionPerformed(new ActionEvent(btnImageClear, 0, null));
+		//
+	}
+
+	private static <E> void sort(final List<E> instance, final Comparator<? super E> comparator) {
+		//
+		if (instance != null
+				&& (Proxy.isProxyClass(Util.getClass(instance)) || (instance.size() > 1 && comparator != null))) {
+			//
+			instance.sort(comparator);
+			//
+		} // if
+			//
+	}
+
+	private static Comparator<String> createImageFormatComparator(final List<?> imageFormatOrders) {
+		//
+		return (a, b) -> {
+			//
+			final int ia = imageFormatOrders != null ? imageFormatOrders.indexOf(a) : -1;
+			//
+			final int ib = imageFormatOrders != null ? imageFormatOrders.indexOf(b) : -1;
+			//
+			if (ia >= 0 && ib >= 0) {
+				//
+				return Integer.compare(ia, ib);
+				//
+			} else if (ia >= 0) {
+				//
+				return -1;
+				//
+			} else if (ib >= 0) {
+				//
+				return 1;
+				//
+			} // if
+				//
+			return ObjectUtils.compare(a, b);
+			//
+		};
 		//
 	}
 

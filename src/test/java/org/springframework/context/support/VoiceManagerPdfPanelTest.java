@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import javax.swing.ComboBoxModel;
@@ -87,7 +88,7 @@ class VoiceManagerPdfPanelTest {
 		instance.setSpeechSpeedMap("{\"1\":2}");
 		//
 		Assertions.assertEquals(Collections.singletonMap(Integer.valueOf(1), "2"),
-				Narcissus.getField(instance, VoiceManagerPdfPanel.class.getDeclaredField("speechSpeedMap")));
+				Narcissus.getField(instance, Util.getDeclaredField(VoiceManagerPdfPanel.class, "speechSpeedMap")));
 		//
 	}
 
@@ -96,11 +97,11 @@ class VoiceManagerPdfPanelTest {
 		//
 		final JTextComponent tfFontSize1 = new JTextField();
 		//
-		Narcissus.setField(instance, VoiceManagerPdfPanel.class.getDeclaredField("tfFontSize1"), tfFontSize1);
+		Narcissus.setField(instance, Util.getDeclaredField(VoiceManagerPdfPanel.class, "tfFontSize1"), tfFontSize1);
 		//
 		final ComboBoxModel<?> cbmFontSize1 = new DefaultComboBoxModel<>();
 		//
-		Narcissus.setField(instance, VoiceManagerPdfPanel.class.getDeclaredField("cbmFontSize1"), cbmFontSize1);
+		Narcissus.setField(instance, Util.getDeclaredField(VoiceManagerPdfPanel.class, "cbmFontSize1"), cbmFontSize1);
 		//
 		setFontSizeAndUnit(19);
 		//
@@ -154,6 +155,53 @@ class VoiceManagerPdfPanelTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testSetImageFormatOrders() throws NoSuchFieldException {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		instance.setImageFormatOrders(Collections.singleton(null));
+		//
+		final Field field = Util.getDeclaredField(VoiceManagerPdfPanel.class, "imageFormatOrders");
+		//
+		if (field != null) {
+			//
+			field.setAccessible(true);
+			//
+		} // if
+			//
+		final Collection<?> singletonList = Collections.singletonList(null);
+		//
+		Assertions.assertEquals(singletonList, Narcissus.getField(instance, field));
+		//
+		instance.setImageFormatOrders(singletonList);
+		//
+		Assertions.assertEquals(singletonList, Narcissus.getField(instance, field));
+		//
+		instance.setImageFormatOrders("[null]".toCharArray());
+		//
+		Assertions.assertEquals(singletonList, Narcissus.getField(instance, field));
+		//
+		instance.setImageFormatOrders(new String[] { null });
+		//
+		Assertions.assertEquals(singletonList, Narcissus.getField(instance, field));
+		//
+		Object object = Boolean.TRUE;
+		//
+		instance.setImageFormatOrders(object);
+		//
+		Assertions.assertEquals(Collections.singletonList(Util.toString(object)), Narcissus.getField(instance, field));
+		//
+		instance.setImageFormatOrders(object = Integer.valueOf(0));
+		//
+		Assertions.assertEquals(Collections.singletonList(Util.toString(object)), Narcissus.getField(instance, field));
+		//
 	}
 
 	@Test
@@ -235,7 +283,9 @@ class VoiceManagerPdfPanelTest {
 						Boolean.logicalAnd(
 								Objects.equals(name,
 										"getPDImageXObjectCreateFromByteArrayDetectFileTypeMethodAndAllowedFileTypes"),
-								m.getParameterCount() == 0))) {
+								m.getParameterCount() == 0),
+						Boolean.logicalAnd(Objects.equals(name, "createImageFormatComparator"),
+								Arrays.equals(parameterTypes, new Class<?>[] { List.class })))) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
