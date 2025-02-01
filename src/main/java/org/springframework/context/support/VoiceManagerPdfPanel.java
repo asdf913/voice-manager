@@ -1722,6 +1722,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		final PDDocument document = ObjectMap.getObject(objectMap, PDDocument.class);
 		//
+		final VoiceManagerPdfPanel voiceManagerPdfPanel = ObjectMap.getObject(objectMap, VoiceManagerPdfPanel.class);
+		//
 		if (getNumberOfPages(document) > 0) {
 			//
 			final PDPage pd = document.getPage(0);
@@ -1743,8 +1745,20 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 							(a, b) -> divide(BigDecimal.valueOf(a), BigDecimal.valueOf(b)), null),
 					FloatMap.getFloat(floatMap, "defaultSize", (float) 61.2));
 			//
-			ImageIO.write(bi, "png", Util.toFile(page1Path));
+			final Iterable<String> imageWriterSpiFormats = voiceManagerPdfPanel != null
+					? voiceManagerPdfPanel.imageWriterSpiFormats
+					: null;
 			//
+			if (IterableUtils.contains(imageWriterSpiFormats, "png")) {
+				//
+				ImageIO.write(bi, "png", Util.toFile(page1Path));
+				//
+			} else if (!IterableUtils.isEmpty(imageWriterSpiFormats)) {
+				//
+				ImageIO.write(bi, IterableUtils.get(imageWriterSpiFormats, 0), Util.toFile(page1Path));
+				//
+			} // if
+				//
 			final Integer largestY = getLargestY(bi);
 			//
 			Files.delete(page1Path);
@@ -1904,9 +1918,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			ObjectMap.setObject(om, PDRectangle.class, md);
 			//
 			ObjectMap.setObject(om, PDPageContentStream.class, cs);
-			//
-			final VoiceManagerPdfPanel voiceManagerPdfPanel = ObjectMap.getObject(objectMap,
-					VoiceManagerPdfPanel.class);
 			//
 			ObjectMap.setObject(om, VoiceManagerPdfPanel.class,
 					ObjectMap.getObject(objectMap, VoiceManagerPdfPanel.class));
