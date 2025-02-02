@@ -2119,21 +2119,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 							(a, b) -> divide(BigDecimal.valueOf(a), BigDecimal.valueOf(b)), null),
 					FloatMap.getFloat(floatMap, "defaultSize", (float) 61.2));
 			//
-			Path page1Path = null;
+			final Path page1Path = write(bi, getImageWriterSpiFormats(voiceManagerPdfPanel), "page1");
 			//
-			final Iterable<String> imageWriterSpiFormats = getImageWriterSpiFormats(voiceManagerPdfPanel);
-			//
-			if (IterableUtils.contains(imageWriterSpiFormats, "png")) {
-				//
-				ImageIO.write(bi, "png", Util.toFile(page1Path = Path.of("page1.png")));
-				//
-			} else if (!IterableUtils.isEmpty(imageWriterSpiFormats)) {
-				//
-				ImageIO.write(bi, IterableUtils.get(imageWriterSpiFormats, 0),
-						Util.toFile(page1Path = Path.of("page1." + IterableUtils.get(imageWriterSpiFormats, 0))));
-				//
-			} // if
-				//
 			LoggerUtil.info(LOG, Util.getAbsolutePath(Util.toFile(page1Path)));
 			//
 			final Integer largestY = getLargestY(bi);
@@ -2329,6 +2316,35 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
+	}
+
+	private static Path write(final BufferedImage bi, final Iterable<String> imageWriterSpiFormats,
+			final String fileNamePrefix) throws IOException {
+		//
+		if (bi == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		Path path = null;
+		//
+		if (IterableUtils.contains(imageWriterSpiFormats, "png") || IterableUtils.isEmpty(imageWriterSpiFormats)) {
+			//
+			ImageIO.write(bi, "png", Util.toFile(
+					path = Path.of(String.join(".", StringUtils.defaultIfBlank(fileNamePrefix, "page1"), "png"))));
+			//
+		} else if (!IterableUtils.isEmpty(imageWriterSpiFormats)) {
+			//
+			final String format = IterableUtils.get(imageWriterSpiFormats, 0);
+			//
+			ImageIO.write(bi, format, Util.toFile(
+					path = Path.of(String.join(".", StringUtils.defaultIfBlank(fileNamePrefix, "page1"), format))));
+			//
+		} // if
+			//
+		return path;
+		//
 	}
 
 	private static void convertAndwriteByteArrayToFile(@Nullable final ByteConverter byteConverter, final Path path) {
