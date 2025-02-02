@@ -730,7 +730,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 			} // if
 				//
-			try (final Workbook wb = get(Util.getValue(en));
+			try (final Workbook wb = FailableSupplierUtil.get(Util.getValue(en));
 					final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 				//
 				WorkbookUtil.write(wb, baos);
