@@ -998,12 +998,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	 * https://github.com/apache/commons-lang/blob/master/src/main/java/org/apache/
 	 * commons/lang3/ObjectUtils.java#L597
 	 */
-	private static <T, E extends Throwable> T getIfNull(final T object, final FailableSupplier<T, E> defaultSupplier)
-			throws E {
+	private static <T, E extends Throwable> T getIfNull(@Nullable final T object,
+			final FailableSupplier<T, E> defaultSupplier) throws E {
 		return object != null ? object : get(defaultSupplier);
 	}
 
-	private static <T, E extends Throwable> T get(final FailableSupplier<T, E> instance) throws E {
+	private static <T, E extends Throwable> T get(@Nullable final FailableSupplier<T, E> instance) throws E {
 		return instance != null ? instance.get() : null;
 	}
 
