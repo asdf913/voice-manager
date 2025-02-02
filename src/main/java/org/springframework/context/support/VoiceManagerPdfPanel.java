@@ -953,7 +953,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, final E item) {
+	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, @Nullable final E item) {
 		if (instance != null) {
 			instance.addElement(item);
 		}
@@ -1387,7 +1387,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	private static ByteConverter getByteConverter(final ConfigurableListableBeanFactory configurableListableBeanFactory,
-			final String attribute, final Object value) {
+			final String attribute, @Nullable final Object value) {
 		//
 		IValue0<ByteConverter> byteConverter = null;
 		//
