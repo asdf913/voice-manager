@@ -497,10 +497,11 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		final JComboBox<Object> jcbAudioFormat = new JComboBox(
 				cbmAudioFormatWrite = new DefaultComboBoxModel<Object>());
 		//
-		final Collection<?> formats = getByteConverterAttributeValues(configurableListableBeanFactory = ObjectUtils
-				.defaultIfNull(Util.cast(ConfigurableListableBeanFactory.class, applicationContext), Util.cast(
-						ConfigurableListableBeanFactory.class,
-						applicationContext != null ? applicationContext.getAutowireCapableBeanFactory() : null)),
+		final Collection<?> formats = getByteConverterAttributeValues(
+				configurableListableBeanFactory = ObjectUtils
+						.defaultIfNull(Util.cast(ConfigurableListableBeanFactory.class, applicationContext),
+								Util.cast(ConfigurableListableBeanFactory.class,
+										ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext))),
 				FORMAT);
 		//
 		final MutableComboBoxModel<Object> mcbmAudioFormatWrite = Util.cast(MutableComboBoxModel.class,
