@@ -219,6 +219,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static final String FORMAT = "format";
 
+	private static final String PAGE1 = "page1";
+
 	private static final FailableBiConsumer<JTextComponent, HttpURLConnection, IOException> J_TEXT_COMPONENT_HTTP_URL_CONNECTION_FAILABLE_BI_PREDICATE = (
 			a, b) -> {
 		//
@@ -2119,7 +2121,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 							(a, b) -> divide(BigDecimal.valueOf(a), BigDecimal.valueOf(b)), null),
 					FloatMap.getFloat(floatMap, "defaultSize", (float) 61.2));
 			//
-			final Path page1Path = write(bi, getImageWriterSpiFormats(voiceManagerPdfPanel), "page1");
+			final Path page1Path = write(bi, getImageWriterSpiFormats(voiceManagerPdfPanel), PAGE1);
 			//
 			LoggerUtil.info(LOG, Util.getAbsolutePath(Util.toFile(page1Path)));
 			//
@@ -2333,14 +2335,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		if (IterableUtils.contains(imageWriterSpiFormats, "png") || IterableUtils.isEmpty(imageWriterSpiFormats)) {
 			//
 			ImageIO.write(bi, "png", Util.toFile(
-					path = Path.of(String.join(".", StringUtils.defaultIfBlank(fileNamePrefix, "page1"), "png"))));
+					path = Path.of(String.join(".", StringUtils.defaultIfBlank(fileNamePrefix, PAGE1), "png"))));
 			//
 		} else if (!IterableUtils.isEmpty(imageWriterSpiFormats)) {
 			//
 			final String format = IterableUtils.get(imageWriterSpiFormats, 0);
 			//
 			ImageIO.write(bi, format, Util.toFile(
-					path = Path.of(String.join(".", StringUtils.defaultIfBlank(fileNamePrefix, "page1"), format))));
+					path = Path.of(String.join(".", StringUtils.defaultIfBlank(fileNamePrefix, PAGE1), format))));
 			//
 		} // if
 			//
