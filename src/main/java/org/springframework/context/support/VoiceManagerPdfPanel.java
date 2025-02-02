@@ -2184,24 +2184,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				writeVoiceToFile(speechApi, text, voiceId, Util.intValue(key, 0), volume, Util.toFile(pathAudio));
 				//
-				final ByteConverter byteConverter = ObjectMap.getObject(objectMap, ByteConverter.class);
+				convertAndwriteByteArrayToFile(ObjectMap.getObject(objectMap, ByteConverter.class), pathAudio);
 				//
-				if (byteConverter != null) {
-					//
-					try {
-						//
-						final File file = Util.toFile(pathAudio);
-						//
-						FileUtils.writeByteArrayToFile(file, byteConverter.convert(Files.readAllBytes(pathAudio)));
-						//
-					} catch (final IOException e) {
-						//
-						LoggerUtil.error(LOG, e.getMessage(), e);
-						//
-					} // try
-						//
-				} // if
-					//
 //				try (final InputStream is = PdfTest.class.getResourceAsStream("\\NotoSansCJKjp-Regular.otf")) {
 				//
 //					font = PDType0Font.load(document, new OTFParser().parseEmbedded(is), false);
@@ -2324,6 +2308,26 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			document.save(ObjectMap.getObject(objectMap, File.class));
 			//
+		} // if
+			//
+	}
+
+	private static void convertAndwriteByteArrayToFile(final ByteConverter byteConverter, final Path path) {
+		//
+		final File file = Util.toFile(path);
+		//
+		if (byteConverter != null && Util.exists(file) && Util.isFile(file)) {
+			//
+			try {
+				//
+				FileUtils.writeByteArrayToFile(file, byteConverter.convert(Files.readAllBytes(path)));
+				//
+			} catch (final IOException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
+				//
 		} // if
 			//
 	}
