@@ -1003,6 +1003,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return object != null ? object : get(defaultSupplier);
 	}
 
+	@Nullable
 	private static <T, E extends Throwable> T get(@Nullable final FailableSupplier<T, E> instance) throws E {
 		return instance != null ? instance.get() : null;
 	}
