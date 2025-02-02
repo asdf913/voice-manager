@@ -153,6 +153,7 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.function.FailableRunnable;
 import org.apache.commons.lang3.function.FailableSupplier;
+import org.apache.commons.lang3.function.FailableSupplierUtil;
 import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -1007,12 +1008,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 	 */
 	private static <T, E extends Throwable> T getIfNull(@Nullable final T object,
 			final FailableSupplier<T, E> defaultSupplier) throws E {
-		return object != null ? object : get(defaultSupplier);
-	}
-
-	@Nullable
-	private static <T, E extends Throwable> T get(@Nullable final FailableSupplier<T, E> instance) throws E {
-		return instance != null ? instance.get() : null;
+		return object != null ? object : FailableSupplierUtil.get(defaultSupplier);
 	}
 
 	@Override
