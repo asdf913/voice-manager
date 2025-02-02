@@ -57,6 +57,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.OptionalInt;
+import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
@@ -129,6 +130,7 @@ import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
@@ -172,10 +174,14 @@ import org.springframework.beans.factory.FactoryBeanUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactoryUtil;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationContextUtil;
 import org.springframework.context.EnvironmentAware;
+import org.springframework.context.support.VoiceManager.ByteConverter;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
@@ -210,6 +216,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	private static final String GROWX = "growx";
 
 	private static final String WRAP = "wrap";
+
+	private static final String FORMAT = "format";
 
 	private static final FailableBiConsumer<JTextComponent, HttpURLConnection, IOException> J_TEXT_COMPONENT_HTTP_URL_CONNECTION_FAILABLE_BI_PREDICATE = (
 			a, b) -> {
@@ -304,12 +312,16 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private transient ComboBoxModel<String> cbmImageFormat = null;
 
+	private ComboBoxModel<?> cbmAudioFormat = null;
+
 	@Nullable
 	private List<String> imageWriterSpiFormats = null;
 
 	private List<String> imageFormatOrders = null;
 
 	private ObjectMapper objectMapper = null;
+
+	private ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
 	@Override
 	public String getTitle() {
@@ -870,6 +882,27 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(cbIsOriginalSize = new JCheckBox(), WRAP);
 		//
+		// Audio Format
+		//
+		add(new JLabel("Audio Format"));
+		//
+		final JComboBox<Object> jcbAudioFormat = new JComboBox(cbmAudioFormat = new DefaultComboBoxModel<Object>());
+		//
+		final Collection<?> formats = getByteConverterAttributeValues(
+				configurableListableBeanFactory = ObjectUtils
+						.defaultIfNull(Util.cast(ConfigurableListableBeanFactory.class, applicationContext),
+								Util.cast(ConfigurableListableBeanFactory.class,
+										ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext))),
+				FORMAT);
+		//
+		final MutableComboBoxModel<Object> mcbmAudioFormatWrite = Util.cast(MutableComboBoxModel.class, cbmAudioFormat);
+		//
+		addElement(mcbmAudioFormatWrite, null);
+		//
+		forEach(formats, x -> addElement(mcbmAudioFormatWrite, x));
+		//
+		add(jcbAudioFormat, WRAP);
+		//
 		add(new JLabel());
 		//
 		add(btnExecute = new JButton("Execute"), WRAP);
@@ -918,6 +951,59 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		actionPerformed(new ActionEvent(btnImageClear, 0, null));
 		//
+	}
+
+	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) {
+		if (instance != null) {
+			instance.addElement(item);
+		}
+	}
+
+	private static Collection<Object> getByteConverterAttributeValues(
+			final ConfigurableListableBeanFactory configurableListableBeanFactory, final String attribute) {
+		//
+		List<Object> list = null;
+		//
+		final Map<String, ByteConverter> byteConverters = ListableBeanFactoryUtil
+				.getBeansOfType(configurableListableBeanFactory, ByteConverter.class);
+		//
+		final Set<Entry<String, ByteConverter>> entrySet = Util.entrySet(byteConverters);
+		//
+		if (entrySet != null) {
+			//
+			BeanDefinition bd = null;
+			//
+			for (final Entry<String, ByteConverter> en : entrySet) {
+				//
+				if (en == null || (bd = ConfigurableListableBeanFactoryUtil
+						.getBeanDefinition(configurableListableBeanFactory, Util.getKey(en))) == null
+						|| !bd.hasAttribute(attribute)) {
+					continue;
+				} // if
+					//
+				Util.add(list = getIfNull(list, ArrayList::new), bd.getAttribute(attribute));
+				//
+			} // for
+				//
+		} // if
+			//
+		return list;
+		//
+	}
+
+	/*
+	 * Copy from the below URL
+	 * 
+	 * https://github.com/apache/commons-lang/blob/master/src/main/java/org/apache/
+	 * commons/lang3/ObjectUtils.java#L597
+	 */
+	private static <T, E extends Throwable> T getIfNull(final T object, final FailableSupplier<T, E> defaultSupplier)
+			throws E {
+		return object != null ? object : get(defaultSupplier);
+	}
+
+	private static <T, E extends Throwable> T get(final FailableSupplier<T, E> instance) throws E {
+		return instance != null ? instance.get() : null;
 	}
 
 	private static <E> void sort(@Nullable final List<E> instance, @Nullable final Comparator<? super E> comparator) {
@@ -1213,6 +1299,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				ObjectMap.setObject(objectMap, RenderedImage.class, renderedImage);
 				//
+				ObjectMap.setObject(objectMap, ByteConverter.class,
+						getByteConverter(configurableListableBeanFactory, FORMAT, getSelectedItem(cbmAudioFormat)));
+				//
 				addTextAndVoice(objectMap,
 						ObjectUtils.getIfNull(speechSpeedMap, VoiceManagerPdfPanel::getDefaultSpeechSpeedMap),
 						Util.intValue(speechVolume, 100), Util.isSelected(cbIsOriginalSize));
@@ -1293,6 +1382,50 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		} // if
 			//
 		actionPerformedForBtnImageFromClipboard(source);
+		//
+	}
+
+	private static ByteConverter getByteConverter(final ConfigurableListableBeanFactory configurableListableBeanFactory,
+			final String attribute, final Object value) {
+		//
+		IValue0<ByteConverter> byteConverter = null;
+		//
+		final Map<String, ByteConverter> byteConverters = ListableBeanFactoryUtil
+				.getBeansOfType(configurableListableBeanFactory, ByteConverter.class);
+		//
+		final Set<Entry<String, ByteConverter>> entrySet = Util.entrySet(byteConverters);
+		//
+		if (entrySet != null) {
+			//
+			BeanDefinition bd = null;
+			//
+			for (final Entry<String, ByteConverter> en : entrySet) {
+				//
+				if (en == null
+						|| (bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(configurableListableBeanFactory,
+								Util.getKey(en))) == null
+						|| !bd.hasAttribute(attribute)
+						|| !Objects.equals(value, testAndApply(bd::hasAttribute, attribute, bd::getAttribute, null))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (byteConverter == null) {
+					//
+					byteConverter = Unit.with(Util.getValue(en));
+					//
+				} else {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		return IValue0Util.getValue0(byteConverter);
 		//
 	}
 
@@ -2050,6 +2183,24 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				writeVoiceToFile(speechApi, text, voiceId, Util.intValue(key, 0), volume, Util.toFile(pathAudio));
 				//
+				final ByteConverter byteConverter = ObjectMap.getObject(objectMap, ByteConverter.class);
+				//
+				if (byteConverter != null) {
+					//
+					try {
+						//
+						final File file = Util.toFile(pathAudio);
+						//
+						FileUtils.writeByteArrayToFile(file, byteConverter.convert(Files.readAllBytes(pathAudio)));
+						//
+					} catch (final IOException e) {
+						//
+						LoggerUtil.error(LOG, e.getMessage(), e);
+						//
+					} // try
+						//
+				} // if
+					//
 //				try (final InputStream is = PdfTest.class.getResourceAsStream("\\NotoSansCJKjp-Regular.otf")) {
 				//
 //					font = PDType0Font.load(document, new OTFParser().parseEmbedded(is), false);
