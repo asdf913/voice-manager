@@ -2829,8 +2829,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null ? instance.newPage() : null;
 	}
 
-	private static <T, E extends Throwable> void testAndAccept(@Nullable final Predicate<T> predicate, final T value,
-			@Nullable final FailableConsumer<T, E> consumer) throws E {
+	private static <T, E extends Throwable> void testAndAccept(@Nullable final Predicate<T> predicate,
+			@Nullable final T value, @Nullable final FailableConsumer<T, E> consumer) throws E {
 		if (predicate != null && predicate.test(value) && consumer != null) {
 			consumer.accept(value);
 		}
