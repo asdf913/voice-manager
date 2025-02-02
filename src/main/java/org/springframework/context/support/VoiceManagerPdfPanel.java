@@ -2323,7 +2323,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static void convertAndwriteByteArrayToFile(final ByteConverter byteConverter, final Path path) {
+	private static void convertAndwriteByteArrayToFile(@Nullable final ByteConverter byteConverter, final Path path) {
 		//
 		final File file = Util.toFile(path);
 		//
