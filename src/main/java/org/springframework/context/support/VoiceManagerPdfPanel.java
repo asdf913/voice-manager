@@ -323,6 +323,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
+	private String audioFormat = null;
+
 	@Override
 	public String getTitle() {
 		return "PDF";
@@ -663,6 +665,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
+	public void setAudioFormat(final String audioFormat) {
+		this.audioFormat = audioFormat;
+	}
+
 	@Nullable
 	private static <E> Iterator<E> asIterator(@Nullable final Enumeration<E> instance) {
 		return instance != null ? instance.asIterator() : null;
@@ -900,6 +906,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		addElement(mcbmAudioFormatWrite, null);
 		//
 		forEach(formats, x -> addElement(mcbmAudioFormatWrite, x));
+		//
+		mcbmAudioFormatWrite.setSelectedItem(audioFormat);
 		//
 		add(jcbAudioFormat, WRAP);
 		//
