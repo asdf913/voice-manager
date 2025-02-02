@@ -610,8 +610,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						} // if
 							//
 						Util.put(fontSizeAndUnitMap = ObjectUtils.getIfNull(fontSizeAndUnitMap, LinkedHashMap::new),
-								testAndApply(x -> NumberUtils.isCreatable(x), Util.toString(Util.getKey(entry)),
-										x -> NumberUtils.createInteger(x), null),
+								testAndApply(NumberUtils::isCreatable, Util.toString(Util.getKey(entry)),
+										NumberUtils::createInteger, null),
 								Util.toString(Util.getValue(entry)));
 						//
 					} // for
