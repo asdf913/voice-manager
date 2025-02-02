@@ -2166,6 +2166,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			float lastHeight = 0;
 			//
+			ContentInfoUtil ciu = null;
+			//
 			for (final Entry<Integer, String> entry : Util.entrySet(map)) {
 				//
 				if ((key = Util.getKey(entry)) == null) {
@@ -2200,7 +2202,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				try (final InputStream is = Files.newInputStream(pathAudio)) {
 					//
-					(pdfEmbeddedFile = new PDEmbeddedFile(document, is)).setSubtype(getMimeType(pathAudio));
+					(pdfEmbeddedFile = new PDEmbeddedFile(document, is))
+							.setSubtype(getMimeType(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), pathAudio));
 					//
 					testAndAccept((a, b) -> b != null, pdfEmbeddedFile, Util.toFile(pathAudio),
 							(a, b) -> setSize(a, Util.intValue(length(b), 0)));
@@ -2674,16 +2677,20 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static String getMimeType(@Nullable final Path path) throws IOException {
+	private static String getMimeType(final ContentInfoUtil instance, @Nullable final Path path) throws IOException {
 		//
 		try (final InputStream is = testAndApply(Objects::nonNull, path, Files::newInputStream, null)) {
 			//
-			final ContentInfo ci = testAndApply(Objects::nonNull, is, new ContentInfoUtil()::findMatch, null);
+			final ContentInfo ci = testAndApply(Objects::nonNull, is, x -> findMatch(instance, x), null);
 			//
 			return getMimeType(ci);
 			//
 		} // try
 			//
+	}
+
+	private static ContentInfo findMatch(final ContentInfoUtil instance, final InputStream is) throws IOException {
+		return instance != null ? instance.findMatch(is) : null;
 	}
 
 	@Nullable
