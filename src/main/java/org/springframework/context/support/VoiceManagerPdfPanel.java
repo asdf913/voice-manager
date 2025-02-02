@@ -1239,8 +1239,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			final File file = Util.toFile(Path
 					.of(StringUtils.joinWith(".", StringUtils.defaultIfBlank(Util.getText(tfText), "test"), "pdf")));
 			//
-			LoggerUtil.info(LOG, Util.getAbsolutePath(file));
-			//
 			PDDocument document = null;
 			//
 			try {
