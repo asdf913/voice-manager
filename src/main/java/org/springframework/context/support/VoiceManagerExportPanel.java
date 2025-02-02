@@ -4827,7 +4827,8 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 	private static String getFileExtension(final FailableSupplier<Workbook, RuntimeException> supplier)
 			throws IOException {
 		//
-		try (final Workbook wb = get(supplier); final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+		try (final Workbook wb = FailableSupplierUtil.get(supplier);
+				final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			//
 			WorkbookUtil.write(wb, baos);
 			//
