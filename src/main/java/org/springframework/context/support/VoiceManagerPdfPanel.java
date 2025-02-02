@@ -959,6 +959,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		}
 	}
 
+	@Nullable
 	private static Collection<Object> getByteConverterAttributeValues(
 			final ConfigurableListableBeanFactory configurableListableBeanFactory, final String attribute) {
 		//
