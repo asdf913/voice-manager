@@ -1135,6 +1135,8 @@
 			ref="ImageWriterSpiFormatIterable" />
 		<property name="imageFormatOrders"
 			value="${org.springframework.context.support.VoiceManagerPdfPanel.imageFormatOrders}" />
+		<property name="fontSizeAndUnitMap"
+			value="${org.springframework.context.support.VoiceManagerPdfPanel.fontSizeAndUnitMap}" />
 	</bean>
 
 	<!---->

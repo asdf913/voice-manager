@@ -308,6 +308,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private List<String> imageFormatOrders = null;
 
+	private ObjectMapper objectMapper = null;
+
 	@Override
 	public String getTitle() {
 		return "PDF";
@@ -389,7 +391,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	public void setSpeechSpeedMap(final String string) throws JsonProcessingException {
 		//
-		final Object object = ObjectMapperUtil.readValue(new ObjectMapper(), string, Object.class);
+		final Object object = ObjectMapperUtil.readValue(getObjectMapper(), string, Object.class);
 		//
 		if (object == null) {
 			//
@@ -407,6 +409,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		throw new IllegalArgumentException();
 		//
+	}
+
+	private ObjectMapper getObjectMapper() {
+		if (objectMapper == null) {
+			objectMapper = new ObjectMapper();
+		}
+		return objectMapper;
 	}
 
 	public void setSpeechSpeedMap(final Map map) {
@@ -537,7 +546,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			try {
 				//
-				final Object obj = ObjectMapperUtil.readValue(new ObjectMapper(), string, Object.class);
+				final Object obj = ObjectMapperUtil.readValue(getObjectMapper(), string, Object.class);
 				//
 				if (obj != null) {
 					//
@@ -571,6 +580,74 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
+	}
+
+	public void setFontSizeAndUnitMap(final String string) {
+		//
+		try {
+			//
+			final Object object = ObjectMapperUtil.readValue(getObjectMapper(), string, Object.class);
+			//
+			if (object == null) {
+				//
+				fontSizeAndUnitMap = null;
+				//
+			} else if (object instanceof Map map) {
+				//
+				final Iterable<Object> entrySet = Util.entrySet(map);
+				//
+				if (Util.iterator(entrySet) != null) {
+					//
+					Entry<?, ?> entry = null;
+					//
+					for (final Object temp : entrySet) {
+						//
+						if ((entry = Util.cast(Entry.class, temp)) == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						Util.put(fontSizeAndUnitMap = ObjectUtils.getIfNull(fontSizeAndUnitMap, LinkedHashMap::new),
+								testAndApply(x -> NumberUtils.isCreatable(x), Util.toString(Util.getKey(entry)),
+										x -> NumberUtils.createInteger(x), null),
+								Util.toString(Util.getValue(entry)));
+						//
+					} // for
+						//
+				} // if
+					//
+			} else {
+				//
+				throw new IllegalArgumentException();
+				//
+			} // if
+				//
+		} catch (final JsonProcessingException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
+			//
+	}
+
+	private Map<Integer, String> getFontSizeAndUnitMap() {
+		//
+		if (fontSizeAndUnitMap == null) {
+			//
+			putAll(fontSizeAndUnitMap = new LinkedHashMap<>(Map.of(Integer.valueOf(3), "266px", Integer.valueOf(4),
+					"200px", Integer.valueOf(5), "160px", Integer.valueOf(6), "133px", Integer.valueOf(7), "114px",
+					Integer.valueOf(8), "100px", Integer.valueOf(9), "88px", Integer.valueOf(10), "80px",
+					Integer.valueOf(11), "72px", Integer.valueOf(12), "66px")),
+					Map.of(Integer.valueOf(13), "61px", Integer.valueOf(14), "56px", Integer.valueOf(15), "53px",
+							Integer.valueOf(16), "50px", Integer.valueOf(17), "45px", Integer.valueOf(18), "43px",
+							Integer.valueOf(19), "42px", Integer.valueOf(25), "31px", Integer.valueOf(30), "26px",
+							Integer.valueOf(36), "22px"));
+
+		} // if
+			//
+		return fontSizeAndUnitMap;
+		//
 	}
 
 	@Nullable
@@ -1588,27 +1665,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private void setFontSizeAndUnit(final int length) {
 		//
-		if (fontSizeAndUnitMap == null) {
-			//
-			// TODO
-			//
-			putAll(fontSizeAndUnitMap = new LinkedHashMap<>(Map.of(Integer.valueOf(3), "266px", Integer.valueOf(4),
-					"200px", Integer.valueOf(5), "160px", Integer.valueOf(6), "133px", Integer.valueOf(7), "114px",
-					Integer.valueOf(8), "100px", Integer.valueOf(9), "88px", Integer.valueOf(10), "80px",
-					Integer.valueOf(11), "72px", Integer.valueOf(12), "66px")),
-					Map.of(Integer.valueOf(13), "61px", Integer.valueOf(14), "56px", Integer.valueOf(15), "53px",
-							Integer.valueOf(16), "50px", Integer.valueOf(17), "45px", Integer.valueOf(18), "43px",
-							Integer.valueOf(19), "42px", Integer.valueOf(25), "31px", Integer.valueOf(30), "26px",
-							Integer.valueOf(36), "22px"));
-			//
-		} // if
-			//
 		final Integer key = Integer.valueOf(length);
 		//
-		if (Util.containsKey(fontSizeAndUnitMap, key)) {
+		final Map<Integer, String> map = getFontSizeAndUnitMap();
+		//
+		if (Util.containsKey(map, key)) {
 			//
-			final StringBuilder sb = testAndApply(Objects::nonNull, MapUtils.getObject(fontSizeAndUnitMap, key),
-					StringBuilder::new, null);
+			final StringBuilder sb = testAndApply(Objects::nonNull, MapUtils.getObject(map, key), StringBuilder::new,
+					null);
 			//
 			final ECSSUnit[] us = ECSSUnit.values();
 			//

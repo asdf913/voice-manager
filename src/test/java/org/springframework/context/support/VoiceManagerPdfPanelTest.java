@@ -18,12 +18,15 @@ import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.helger.css.ECSSUnit;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -205,6 +208,38 @@ class VoiceManagerPdfPanelTest {
 	}
 
 	@Test
+	void testSetFontSizeAndUnitMap() throws NoSuchFieldException, JsonProcessingException, NoSuchMethodException,
+			IllegalAccessException, InvocationTargetException {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final ObjectMapper objectMapper = Util.cast(ObjectMapper.class,
+				MethodUtils.invokeMethod(instance, true, "getObjectMapper"));
+		//
+		Assertions.assertThrows(IllegalArgumentException.class, () -> instance
+				.setFontSizeAndUnitMap(ObjectMapperUtil.writeValueAsString(objectMapper, Integer.valueOf(1))));
+		//
+		instance.setFontSizeAndUnitMap(
+				ObjectMapperUtil.writeValueAsString(objectMapper, Collections.singletonMap("1", "1px")));
+		//
+		final Field field = Util.getDeclaredField(VoiceManagerPdfPanel.class, "fontSizeAndUnitMap");
+		//
+		if (field != null) {
+			//
+			field.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertEquals(Collections.singletonMap(Integer.valueOf(1), "1px"),
+				Narcissus.getField(instance, field));
+		//
+	}
+
+	@Test
 	void testNull() {
 		//
 		final Method[] ms = VoiceManagerPdfPanel.class.getDeclaredMethods();
@@ -222,6 +257,8 @@ class VoiceManagerPdfPanelTest {
 		String name, toString = null;
 		//
 		Object[] os = null;
+		//
+		int parameterCount = 0;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
@@ -279,11 +316,11 @@ class VoiceManagerPdfPanelTest {
 						Boolean.logicalAnd(Objects.equals(name, "getNumber"),
 								Arrays.equals(parameterTypes, new Class<?>[] { Object.class })),
 						Boolean.logicalAnd(Objects.equals(name, "getDefaultSpeechSpeedMap"),
-								m.getParameterCount() == 0),
+								(parameterCount = m.getParameterCount()) == 0),
 						Boolean.logicalAnd(
 								Objects.equals(name,
 										"getPDImageXObjectCreateFromByteArrayDetectFileTypeMethodAndAllowedFileTypes"),
-								m.getParameterCount() == 0),
+								parameterCount == 0),
 						Boolean.logicalAnd(Objects.equals(name, "createImageFormatComparator"),
 								Arrays.equals(parameterTypes, new Class<?>[] { List.class })))) {
 					//
@@ -300,8 +337,11 @@ class VoiceManagerPdfPanelTest {
 				invoke = Narcissus.invokeMethod(instance = ObjectUtils.getIfNull(instance, VoiceManagerPdfPanel::new),
 						m, os);
 				//
-				if (Objects.equals(Boolean.TYPE, m.getReturnType())
-						|| Boolean.logicalAnd(Objects.equals(name, "getTitle"), m.getParameterCount() == 0)) {
+				if (Objects.equals(Boolean.TYPE, m.getReturnType()) || or(
+						Boolean.logicalAnd(Objects.equals(name, "getTitle"),
+								(parameterCount = m.getParameterCount()) == 0),
+						Boolean.logicalAnd(Objects.equals(name, "getFontSizeAndUnitMap"), parameterCount == 0),
+						Boolean.logicalAnd(Objects.equals(name, "getObjectMapper"), parameterCount == 0))) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
