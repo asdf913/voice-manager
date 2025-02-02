@@ -2318,7 +2318,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static Path write(final BufferedImage bi, final Iterable<String> imageWriterSpiFormats,
+	private static Path write(final BufferedImage bi, @Nullable final Iterable<String> imageWriterSpiFormats,
 			final String fileNamePrefix) throws IOException {
 		//
 		if (bi == null) {
