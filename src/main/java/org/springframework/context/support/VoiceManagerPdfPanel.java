@@ -312,7 +312,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private transient ComboBoxModel<String> cbmImageFormat = null;
 
-	private ComboBoxModel<?> cbmAudioFormat = null;
+	private transient ComboBoxModel<?> cbmAudioFormat = null;
 
 	@Nullable
 	private List<String> imageWriterSpiFormats = null;
@@ -321,7 +321,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private ObjectMapper objectMapper = null;
 
-	private ConfigurableListableBeanFactory configurableListableBeanFactory = null;
+	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
 	@Override
 	public String getTitle() {
