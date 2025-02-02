@@ -2185,6 +2185,18 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				writeVoiceToFile(speechApi, text, voiceId, Util.intValue(key, 0), volume, Util.toFile(pathAudio));
 				//
+				duration = null;
+				//
+				try {
+					//
+					duration = getAudioDuration(Util.toFile(pathAudio));
+					//
+				} catch (final Exception e) {
+					//
+					LoggerUtil.error(LOG, e.getMessage(), e);
+					//
+				} // try
+					//
 				convertAndwriteByteArrayToFile(ObjectMap.getObject(objectMap, ByteConverter.class), pathAudio);
 				//
 //				try (final InputStream is = PdfTest.class.getResourceAsStream("\\NotoSansCJKjp-Regular.otf")) {
@@ -2253,7 +2265,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					// Label (Duration)
 					//
-					if ((duration = getAudioDuration(Util.toFile(pathAudio))) != null) {
+					if (duration != null) {
 						//
 						cs.beginText();
 						//
