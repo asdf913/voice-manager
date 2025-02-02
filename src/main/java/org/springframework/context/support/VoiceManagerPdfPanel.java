@@ -297,6 +297,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Nullable
 	private Map<Integer, String> speechSpeedMap = null;
 
+	@Nullable
 	private Map<Integer, String> fontSizeAndUnitMap = null;
 
 	private transient RenderedImage renderedImage = null;
