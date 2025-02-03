@@ -1391,13 +1391,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // try
 				//
-		} else if (Objects.equals(source, btnCopyTextToHtml)) {
-			//
-			Util.setText(taHtml, Util.getText(tfText));
-			//
 		} // if
 			//
-		actionPerformedForBtnImageFromClipboard(source);
+		actionPerformed2(source);
 		//
 	}
 
@@ -1463,7 +1459,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		}
 	}
 
-	private boolean actionPerformedForBtnImageFromClipboard(final Object source) {
+	private boolean actionPerformed2(final Object source) {
 		//
 		if (Objects.equals(source, btnImageFromClipboard)) {
 			//
@@ -1514,6 +1510,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			} // try
 				//
 			return true;
+			//
+		} else if (Objects.equals(source, btnCopyTextToHtml)) {
+			//
+			Util.setText(taHtml, Util.getText(tfText));
 			//
 		} // if
 			//
