@@ -262,7 +262,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Copy Output File Path")
 	private AbstractButton btnCopyOutputFilePath = null;
 
-	private AbstractButton btnBrowseOutputFolder = null;
+	private AbstractButton btnBrowseOutputFolder, btnCopyTextToHtml = null;
 
 	@Note("HTML")
 	private JTextComponent taHtml = null;
@@ -791,7 +791,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(tfText = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManagerPdfPanel.text")),
-				String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, span));
+				String.format("%1$s,span %2$s", GROWX, span - 1));
+		//
+		add(btnCopyTextToHtml = new JButton("Copy"), WRAP);
 		//
 		// Voice ID
 		//
@@ -833,7 +835,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // if
 			//
-			// Image Url
+			// Image URL
 			//
 		add(new JLabel("Image URL"));
 		//
@@ -1379,12 +1381,17 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)),
 						Util.toFile(testAndApply(Objects::nonNull, Util.getText(tfOutputFile), Path::of, null)),
 						x -> browse(Desktop.getDesktop(), toURI(getParentFile(x))));
+				//
 			} catch (final IOException e) {
 				//
 				LoggerUtil.error(LOG, e.getMessage(), e);
 				//
 			} // try
 				//
+		} else if (Objects.equals(source, btnCopyTextToHtml)) {
+			//
+			Util.setText(taHtml, Util.getText(tfText));
+			//
 		} // if
 			//
 		actionPerformedForBtnImageFromClipboard(source);
