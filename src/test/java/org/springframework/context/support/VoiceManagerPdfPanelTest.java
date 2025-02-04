@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.event.ActionEvent;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -12,12 +13,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -236,6 +241,37 @@ class VoiceManagerPdfPanelTest {
 			//
 		Assertions.assertEquals(Collections.singletonMap(Integer.valueOf(1), "1px"),
 				Narcissus.getField(instance, field));
+		//
+	}
+
+	@Test
+	void testActionPerformed() throws IllegalAccessException {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final AbstractButton btnGenerateRubyHtml = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnGenerateRubyHtml", btnGenerateRubyHtml, true);
+		//
+		final ActionEvent actionEvent = new ActionEvent(btnGenerateRubyHtml, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
+		final JTextComponent taHtml = new JTextArea();
+		//
+		Util.setText(taHtml, "それは大変ですね。すぐ交番に行かないと。");
+		//
+		FieldUtils.writeDeclaredField(instance, "taHtml", taHtml, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
+		Assertions.assertEquals(
+				"それは<ruby><rb>大変</rb><rp>(</rp><rt>たいへん</rt><rp>)</rp></ruby>ですね。すぐ<ruby><rb>交番</rb><rp>(</rp><rt>こうばん</rt><rp>)</rp></ruby>に<ruby><rb>行</rb><rp>(</rp><rt>い</rt><rp>)</rp></ruby>かないと。",
+				Util.getText(taHtml));
 		//
 	}
 

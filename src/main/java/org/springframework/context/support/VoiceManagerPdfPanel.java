@@ -165,6 +165,9 @@ import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.jsoup.nodes.NodeUtil;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.nodes.TextNodeUtil;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -187,14 +190,18 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
 
+import com.atilika.kuromoji.ipadic.Token;
+import com.atilika.kuromoji.ipadic.Tokenizer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.google.common.base.Strings;
 import com.google.common.reflect.Reflection;
 import com.helger.css.ECSSUnit;
 import com.helger.css.propertyvalue.CSSSimpleValueWithUnit;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
+import com.mariten.kanatools.KanaConverter;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.BrowserType;
@@ -265,7 +272,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Browse Output Folder")
 	private AbstractButton btnBrowseOutputFolder = null;
 
-	private AbstractButton btnCopyTextToHtml = null;
+	private AbstractButton btnCopyTextToHtml, btnGenerateRubyHtml = null;
 
 	@Note("HTML")
 	private JTextComponent taHtml = null;
@@ -774,7 +781,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
-		add(jsp, String.format("%1$s,%2$s,span %3$s", GROWX, WRAP, span));
+		add(jsp, String.format("%1$s,span %2$s", GROWX, span - 2));
+		//
+		add(btnGenerateRubyHtml = new JButton("Generate Ruby HTML"), String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		// Font Size
 		//
@@ -1390,6 +1399,120 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				LoggerUtil.error(LOG, e.getMessage(), e);
 				//
 			} // try
+				//
+		} else if (Objects.equals(source, btnGenerateRubyHtml)) {
+			//
+			final String html = Util.getText(taHtml);
+			//
+			Element element = testAndApply(x -> IterableUtils.size(x) == 1,
+					ElementUtil.children(testAndApply(Objects::nonNull, html, Jsoup::parse, null)),
+					x -> IterableUtils.get(x, 0), null);
+			//
+			final List<Element> es = ElementUtil.children(element);
+			//
+			boolean plainText = true;
+			//
+			if (StringUtils.isNotBlank(html) && IterableUtils.size(es) == 2) {
+				//
+				plainText &= ElementUtil.childrenSize(element = IterableUtils.get(es, 0)) == 0
+						&& element.attributesSize() == 0;
+				//
+				plainText &= ArrayUtils.contains(new int[] { 0, 1 },
+						NodeUtil.childNodeSize(element = IterableUtils.get(es, 1))) && element.attributesSize() == 0;
+				//
+				plainText &= StringUtils.equals(
+						TextNodeUtil.text(Util.cast(TextNode.class, testAndApply(x -> NodeUtil.childNodeSize(x) == 1,
+								element, x -> x != null ? x.childNode(0) : null, null))),
+						html);
+				//
+			} // if
+				//
+			if (plainText) {
+				//
+				final List<Token> tokens = testAndApply(Objects::nonNull, html, new Tokenizer()::tokenize, null);
+				//
+				HtmlBuilder<StringBuilder> htmlBuilder = null;
+				//
+				if (Util.iterator(tokens) != null) {
+					//
+					String surface, convertKana, commonSuffix = null;
+					//
+					String[] allFeatures = null;
+					//
+					for (final Token token : tokens) {
+						//
+						if (token == null
+								|| (htmlBuilder = ObjectUtils.getIfNull(htmlBuilder, () -> FlatHtml.inMemory())) == null
+								|| (allFeatures = token.getAllFeaturesArray()) == null || allFeatures.length < 9) {
+							//
+							continue;
+							//
+						} // if
+							//
+						try {
+							if (StringUtils.equals(surface = token.getSurface(),
+									convertKana = KanaConverter.convertKana(ArrayUtils.get(allFeatures, 7),
+											KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA))) {
+								//
+								appendUnescapedText(htmlBuilder, surface);
+								//
+							} else {
+								//
+								commonSuffix = Strings.commonSuffix(surface, convertKana);
+								//
+								completeTag(appendStartTag(completeTag(appendStartTag(htmlBuilder, "ruby")), "rb"));
+								//
+								if (StringUtils.isNotBlank(commonSuffix)) {
+									//
+									appendUnescapedText(htmlBuilder, StringUtils.substring(surface, 0,
+											StringUtils.length(surface) - StringUtils.length(commonSuffix)));
+									//
+								} else {
+									//
+									appendUnescapedText(htmlBuilder, surface);
+									//
+								} // if
+									//
+								completeTag(appendStartTag(appendEndTag(appendUnescapedText(
+										completeTag(appendStartTag(appendEndTag(htmlBuilder, "rb"), "rp")), "("), "rp"),
+										"rt"));
+								//
+								if (StringUtils.isNotBlank(commonSuffix)) {
+									//
+									appendUnescapedText(htmlBuilder, StringUtils.substring(convertKana, 0,
+											StringUtils.length(convertKana) - StringUtils.length(commonSuffix)));
+									//
+								} else {
+									//
+									appendUnescapedText(htmlBuilder, convertKana);
+									//
+								} // if
+									//
+								appendEndTag(appendEndTag(appendUnescapedText(
+										completeTag(appendStartTag(appendEndTag(htmlBuilder, "rt"), "rp")), ")"), "rp"),
+										"ruby");
+								//
+								if (StringUtils.isNotBlank(commonSuffix)) {
+									//
+									appendUnescapedText(htmlBuilder, commonSuffix);
+									//
+								} // if
+									//
+							} // if
+								//
+						} catch (final IOException e) {
+							//
+							LoggerUtil.error(LOG, e.getMessage(), e);
+							//
+						} // try
+							//
+					} // for
+						//
+				} // if
+					//
+				Util.setText(taHtml, Util.toString(output(htmlBuilder)));
+				//
+			} // if
 				//
 		} // if
 			//
