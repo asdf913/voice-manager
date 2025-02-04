@@ -1403,6 +1403,68 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // try
 				//
+		} // if
+			//
+		actionPerformed2(source);
+		//
+	}
+
+	private boolean actionPerformed2(final Object source) {
+		//
+		if (Objects.equals(source, btnImageFromClipboard)) {
+			//
+			final Transferable transferable = getContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(),
+					Toolkit.getDefaultToolkit(), x -> getSystemClipboard(x), null), null);
+			//
+			debug(System.out, transferable);
+			//
+			final boolean isImageFlavorSupported = isDataFlavorSupported(transferable, DataFlavor.imageFlavor);
+			//
+			setEnabled(isImageFlavorSupported, btnImageClear, btnImageView);
+			//
+			try {
+				//
+				if (isImageFlavorSupported) {
+					//
+					renderedImage = Util.cast(RenderedImage.class,
+							transferable.getTransferData(DataFlavor.imageFlavor));
+					//
+				} else if (isDataFlavorSupported(transferable, DataFlavor.javaFileListFlavor)) {
+					//
+					final File file = Util.cast(File.class,
+							testAndApply(x -> IterableUtils.size(x) == 1,
+									Util.cast(Iterable.class,
+											transferable.getTransferData(DataFlavor.javaFileListFlavor)),
+									x -> IterableUtils.get(x, 0), null));
+					//
+					final Entry<Method, Collection<Object>> entry = getPDImageXObjectCreateFromByteArrayDetectFileTypeMethodAndAllowedFileTypes();
+					//
+					if (Util.contains(Util.getValue(entry), testAndApply(f -> Util.exists(f) && Util.isFile(f), file,
+							f -> Narcissus.invokeStaticMethod(Util.getKey(entry), Files.readAllBytes(Util.toPath(f))),
+							null))) {
+						//
+						Util.setText(tfImageFile, Util.getAbsolutePath(file));
+						//
+					} else {
+						//
+						Util.setText(tfImageFile, null);
+						//
+					} // if
+						//
+				} // if
+					//
+			} catch (final UnsupportedFlavorException | IOException | NoSuchMethodException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
+				//
+			return true;
+			//
+		} else if (Objects.equals(source, btnCopyTextToHtml)) {
+			//
+			Util.setText(taHtml, Util.getText(tfText));
+			//
 		} else if (Objects.equals(source, btnGenerateRubyHtml)) {
 			//
 			try {
@@ -1418,7 +1480,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // if
 			//
-		actionPerformed2(source);
+		return false;
 		//
 	}
 
@@ -1602,68 +1664,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		if (instance != null) {
 			instance.setContents(contents, owner);
 		}
-	}
-
-	private boolean actionPerformed2(final Object source) {
-		//
-		if (Objects.equals(source, btnImageFromClipboard)) {
-			//
-			final Transferable transferable = getContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(),
-					Toolkit.getDefaultToolkit(), x -> getSystemClipboard(x), null), null);
-			//
-			debug(System.out, transferable);
-			//
-			final boolean isImageFlavorSupported = isDataFlavorSupported(transferable, DataFlavor.imageFlavor);
-			//
-			setEnabled(isImageFlavorSupported, btnImageClear, btnImageView);
-			//
-			try {
-				//
-				if (isImageFlavorSupported) {
-					//
-					renderedImage = Util.cast(RenderedImage.class,
-							transferable.getTransferData(DataFlavor.imageFlavor));
-					//
-				} else if (isDataFlavorSupported(transferable, DataFlavor.javaFileListFlavor)) {
-					//
-					final File file = Util.cast(File.class,
-							testAndApply(x -> IterableUtils.size(x) == 1,
-									Util.cast(Iterable.class,
-											transferable.getTransferData(DataFlavor.javaFileListFlavor)),
-									x -> IterableUtils.get(x, 0), null));
-					//
-					final Entry<Method, Collection<Object>> entry = getPDImageXObjectCreateFromByteArrayDetectFileTypeMethodAndAllowedFileTypes();
-					//
-					if (Util.contains(Util.getValue(entry), testAndApply(f -> Util.exists(f) && Util.isFile(f), file,
-							f -> Narcissus.invokeStaticMethod(Util.getKey(entry), Files.readAllBytes(Util.toPath(f))),
-							null))) {
-						//
-						Util.setText(tfImageFile, Util.getAbsolutePath(file));
-						//
-					} else {
-						//
-						Util.setText(tfImageFile, null);
-						//
-					} // if
-						//
-				} // if
-					//
-			} catch (final UnsupportedFlavorException | IOException | NoSuchMethodException e) {
-				//
-				LoggerUtil.error(LOG, e.getMessage(), e);
-				//
-			} // try
-				//
-			return true;
-			//
-		} else if (Objects.equals(source, btnCopyTextToHtml)) {
-			//
-			Util.setText(taHtml, Util.getText(tfText));
-			//
-		} // if
-			//
-		return false;
-		//
 	}
 
 	private static void debug(final PrintStream ps, final Transferable transferable) {
