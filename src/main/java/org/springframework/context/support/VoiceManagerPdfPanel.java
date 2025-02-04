@@ -1408,30 +1408,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final String html = Util.getText(taHtml);
 			//
-			Element element = testAndApply(x -> IterableUtils.size(x) == 1,
-					ElementUtil.children(testAndApply(Objects::nonNull, html, Jsoup::parse, null)),
-					x -> IterableUtils.get(x, 0), null);
-			//
-			final List<Element> es = ElementUtil.children(element);
-			//
-			boolean plainText = true;
-			//
-			if (Boolean.logicalAnd(StringUtils.isNotBlank(html), IterableUtils.size(es) == 2)) {
-				//
-				plainText &= Boolean.logicalAnd(ElementUtil.childrenSize(element = IterableUtils.get(es, 0)) == 0,
-						attributesSize(element) == 0);
-				//
-				plainText &= Boolean.logicalAnd(
-						ArrayUtils.contains(new int[] { 0, 1 },
-								NodeUtil.childNodeSize(element = IterableUtils.get(es, 1))),
-						attributesSize(element) == 0);
-				//
-				plainText &= StringUtils.equals(TextNodeUtil.text(Util.cast(TextNode.class,
-						testAndApply(x -> NodeUtil.childNodeSize(x) == 1, element, x -> childNode(x, 0), null))), html);
-				//
-			} // if
-				//
-			if (plainText) {
+			if (isPlainText(html)) {
 				//
 				final List<Token> tokens = testAndApply(Objects::nonNull, html, new Tokenizer()::tokenize, null);
 				//
@@ -1522,6 +1499,36 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		} // if
 			//
 		actionPerformed2(source);
+		//
+	}
+
+	private static boolean isPlainText(final String string) {
+		//
+		Element element = testAndApply(x -> IterableUtils.size(x) == 1,
+				ElementUtil.children(testAndApply(Objects::nonNull, string, Jsoup::parse, null)),
+				x -> IterableUtils.get(x, 0), null);
+		//
+		final List<Element> es = ElementUtil.children(element);
+		//
+		boolean plainText = true;
+		//
+		if (Boolean.logicalAnd(StringUtils.isNotBlank(string), IterableUtils.size(es) == 2)) {
+			//
+			plainText &= Boolean.logicalAnd(ElementUtil.childrenSize(element = IterableUtils.get(es, 0)) == 0,
+					attributesSize(element) == 0);
+			//
+			plainText &= Boolean.logicalAnd(
+					ArrayUtils.contains(new int[] { 0, 1 }, NodeUtil.childNodeSize(element = IterableUtils.get(es, 1))),
+					attributesSize(element) == 0);
+			//
+			plainText &= StringUtils.equals(
+					TextNodeUtil.text(Util.cast(TextNode.class,
+							testAndApply(x -> NodeUtil.childNodeSize(x) == 1, element, x -> childNode(x, 0), null))),
+					string);
+			//
+		} // if
+			//
+		return plainText;
 		//
 	}
 
