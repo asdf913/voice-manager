@@ -1484,6 +1484,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
+	@Nullable
 	private static String toHtml(final String string) throws IOException {
 		//
 		final List<Token> tokens = testAndApply(x -> Boolean.logicalAnd(Objects.nonNull(x), isPlainText(x)), string,
