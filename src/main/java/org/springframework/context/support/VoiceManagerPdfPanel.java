@@ -1477,12 +1477,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 										completeTag(appendStartTag(appendEndTag(htmlBuilder, "rt"), "rp")), ")"), "rp"),
 								"ruby");
 						//
-						if (StringUtils.isNotBlank(commonSuffix)) {
-							//
-							appendUnescapedText(htmlBuilder, commonSuffix);
-							//
-						} // if
-							//
+						testAndAccept((a, b) -> StringUtils.isNotBlank(b), htmlBuilder, commonSuffix, (a, b) -> {
+							appendUnescapedText(a, b);
+						});
 					} // if
 						//
 				} catch (final IOException e) {
@@ -2780,17 +2777,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null ? instance.floatValue() : defaultValue;
 	}
 
-	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, @Nullable final U u,
-			final BiConsumer<T, U> consumer) {
+	private static <T, U, E extends Exception> void testAndAccept(final BiPredicate<T, U> instance, final T t,
+			@Nullable final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
 		if (test(instance, t, u)) {
 			accept(consumer, t, u);
 		} // if
-	}
-
-	private static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, final T t, @Nullable final U u) {
-		if (instance != null) {
-			instance.accept(t, u);
-		}
 	}
 
 	private static void setSize(@Nullable final PDEmbeddedFile instance, final int size) {
