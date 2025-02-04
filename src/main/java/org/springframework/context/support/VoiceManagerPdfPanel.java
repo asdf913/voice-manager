@@ -272,7 +272,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Browse Output Folder")
 	private AbstractButton btnBrowseOutputFolder = null;
 
-	private AbstractButton btnCopyTextToHtml, btnGenerateRubyHtml = null;
+	@Note("Copy Text To HTML")
+	private AbstractButton btnCopyTextToHtml = null;
+
+	private AbstractButton btnGenerateRubyHtml = null;
 
 	@Note("HTML")
 	private JTextComponent taHtml = null;
