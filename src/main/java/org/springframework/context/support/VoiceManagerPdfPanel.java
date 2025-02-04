@@ -1408,7 +1408,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final String html = Util.getText(taHtml);
 			//
-			final List<Token> tokens = testAndApply(x -> Objects.nonNull(x) && isPlainText(x), html,
+			final List<Token> tokens = testAndApply(x -> Boolean.logicalAnd(Objects.nonNull(x), isPlainText(x)), html,
 					new Tokenizer()::tokenize, null);
 			//
 			if (Util.iterator(tokens) == null) {
