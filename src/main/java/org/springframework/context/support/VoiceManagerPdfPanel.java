@@ -1412,7 +1412,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			boolean plainText = true;
 			//
-			if (StringUtils.isNotBlank(html) && IterableUtils.size(es) == 2) {
+			if (Boolean.logicalAnd(StringUtils.isNotBlank(html), IterableUtils.size(es) == 2)) {
 				//
 				plainText &= ElementUtil.childrenSize(element = IterableUtils.get(es, 0)) == 0
 						&& element.attributesSize() == 0;
