@@ -273,6 +273,12 @@ class VoiceManagerPdfPanelTest {
 				"それは<ruby><rb>大変</rb><rp>(</rp><rt>たいへん</rt><rp>)</rp></ruby>ですね。すぐ<ruby><rb>交番</rb><rp>(</rp><rt>こうばん</rt><rp>)</rp></ruby>に<ruby><rb>行</rb><rp>(</rp><rt>い</rt><rp>)</rp></ruby>かないと。",
 				Util.getText(taHtml));
 		//
+		Util.setText(taHtml, "A");
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
+		Assertions.assertEquals(Util.getText(taHtml), Util.getText(taHtml));
+		//
 	}
 
 	@Test
