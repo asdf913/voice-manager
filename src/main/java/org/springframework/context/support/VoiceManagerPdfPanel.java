@@ -1442,7 +1442,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					for (final Token token : tokens) {
 						//
 						if (token == null
-								|| (htmlBuilder = ObjectUtils.getIfNull(htmlBuilder, () -> FlatHtml.inMemory())) == null
+								|| (htmlBuilder = ObjectUtils.getIfNull(htmlBuilder, FlatHtml::inMemory)) == null
 								|| (allFeatures = token.getAllFeaturesArray()) == null || allFeatures.length < 9) {
 							//
 							continue;
