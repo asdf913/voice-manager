@@ -1426,10 +1426,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 								NodeUtil.childNodeSize(element = IterableUtils.get(es, 1))),
 						attributesSize(element) == 0);
 				//
-				plainText &= StringUtils.equals(
-						TextNodeUtil.text(Util.cast(TextNode.class, testAndApply(x -> NodeUtil.childNodeSize(x) == 1,
-								element, x -> x != null ? x.childNode(0) : null, null))),
-						html);
+				plainText &= StringUtils.equals(TextNodeUtil.text(Util.cast(TextNode.class,
+						testAndApply(x -> NodeUtil.childNodeSize(x) == 1, element, x -> childNode(x, 0), null))), html);
 				//
 			} // if
 				//
@@ -1524,6 +1522,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		actionPerformed2(source);
 		//
+	}
+
+	private static Node childNode(final Node instance, final int index) {
+		return instance != null ? instance.childNode(index) : null;
 	}
 
 	private static int attributesSize(@Nullable final Node instance) {
