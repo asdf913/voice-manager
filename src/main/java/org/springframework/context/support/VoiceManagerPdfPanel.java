@@ -1567,11 +1567,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static String getSurface(final TokenBase instance) {
+	private static String getSurface(@Nullable final TokenBase instance) {
 		return instance != null ? instance.getSurface() : null;
 	}
 
-	private static String[] getAllFeaturesArray(final TokenBase instance) {
+	private static String[] getAllFeaturesArray(@Nullable final TokenBase instance) {
 		return instance != null ? instance.getAllFeaturesArray() : null;
 	}
 
