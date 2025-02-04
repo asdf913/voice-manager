@@ -1517,50 +1517,45 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				appendUnescapedText(htmlBuilder, surface);
 				//
-			} else {
-				//
-				commonSuffix = Strings.commonSuffix(surface, convertKana);
-				//
-				completeTag(appendStartTag(completeTag(appendStartTag(htmlBuilder, "ruby")), "rb"));
-				//
-				if (StringUtils.isNotBlank(commonSuffix)) {
-					//
-					appendUnescapedText(htmlBuilder, StringUtils.substring(surface, 0,
-							StringUtils.length(surface) - StringUtils.length(commonSuffix)));
-					//
-				} else {
-					//
-					appendUnescapedText(htmlBuilder, surface);
-					//
-				} // if
-					//
-				completeTag(
-						appendStartTag(
-								appendEndTag(appendUnescapedText(
-										completeTag(appendStartTag(appendEndTag(htmlBuilder, "rb"), "rp")), "("), "rp"),
-								"rt"));
-				//
-				if (StringUtils.isNotBlank(commonSuffix)) {
-					//
-					appendUnescapedText(htmlBuilder, StringUtils.substring(convertKana, 0,
-							StringUtils.length(convertKana) - StringUtils.length(commonSuffix)));
-					//
-				} else {
-					//
-					appendUnescapedText(htmlBuilder, convertKana);
-					//
-				} // if
-					//
-				appendEndTag(
-						appendEndTag(appendUnescapedText(
-								completeTag(appendStartTag(appendEndTag(htmlBuilder, "rt"), "rp")), ")"), "rp"),
-						"ruby");
-				//
-				testAndAccept((a, b) -> StringUtils.isNotBlank(b), htmlBuilder, commonSuffix,
-						VoiceManagerPdfPanel::appendUnescapedText);
+				continue;
 				//
 			} // if
 				//
+			completeTag(appendStartTag(completeTag(appendStartTag(htmlBuilder, "ruby")), "rb"));
+			//
+			if (StringUtils.isNotBlank(commonSuffix = Strings.commonSuffix(surface, convertKana))) {
+				//
+				appendUnescapedText(htmlBuilder, StringUtils.substring(surface, 0,
+						StringUtils.length(surface) - StringUtils.length(commonSuffix)));
+				//
+			} else {
+				//
+				appendUnescapedText(htmlBuilder, surface);
+				//
+			} // if
+				//
+			completeTag(appendStartTag(appendEndTag(
+					appendUnescapedText(completeTag(appendStartTag(appendEndTag(htmlBuilder, "rb"), "rp")), "("), "rp"),
+					"rt"));
+			//
+			if (StringUtils.isNotBlank(commonSuffix)) {
+				//
+				appendUnescapedText(htmlBuilder, StringUtils.substring(convertKana, 0,
+						StringUtils.length(convertKana) - StringUtils.length(commonSuffix)));
+				//
+			} else {
+				//
+				appendUnescapedText(htmlBuilder, convertKana);
+				//
+			} // if
+				//
+			appendEndTag(appendEndTag(
+					appendUnescapedText(completeTag(appendStartTag(appendEndTag(htmlBuilder, "rt"), "rp")), ")"), "rp"),
+					"ruby");
+			//
+			testAndAccept((a, b) -> StringUtils.isNotBlank(b), htmlBuilder, commonSuffix,
+					VoiceManagerPdfPanel::appendUnescapedText);
+			//
 		} // for
 			//
 		return Util.toString(output(htmlBuilder));
