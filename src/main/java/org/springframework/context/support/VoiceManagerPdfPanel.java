@@ -1406,95 +1406,102 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} else if (Objects.equals(source, btnGenerateRubyHtml)) {
 			//
-			final String html = Util.getText(taHtml);
-			//
-			final List<Token> tokens = testAndApply(x -> Boolean.logicalAnd(Objects.nonNull(x), isPlainText(x)), html,
-					new Tokenizer()::tokenize, null);
-			//
-			if (Util.iterator(tokens) == null) {
+			try {
 				//
-				return;
+				Util.setText(taHtml, toHtml(Util.getText(taHtml)));
 				//
-			} // if
 				//
-			HtmlBuilder<StringBuilder> htmlBuilder = null;
-			//
-			String surface, convertKana, commonSuffix = null;
-			//
-			String[] allFeatures = null;
-			//
-			for (final Token token : tokens) {
+			} catch (final IOException e) {
 				//
-				if (token == null || (htmlBuilder = ObjectUtils.getIfNull(htmlBuilder, FlatHtml::inMemory)) == null
-						|| length(allFeatures = token.getAllFeaturesArray()) < 9) {
-					//
-					continue;
-					//
-				} // if
-					//
-				try {
-					//
-					if (StringUtils.equals(surface = token.getSurface(), convertKana = KanaConverter
-							.convertKana(ArrayUtils.get(allFeatures, 7), KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA))) {
-						//
-						appendUnescapedText(htmlBuilder, surface);
-						//
-					} else {
-						//
-						commonSuffix = Strings.commonSuffix(surface, convertKana);
-						//
-						completeTag(appendStartTag(completeTag(appendStartTag(htmlBuilder, "ruby")), "rb"));
-						//
-						if (StringUtils.isNotBlank(commonSuffix)) {
-							//
-							appendUnescapedText(htmlBuilder, StringUtils.substring(surface, 0,
-									StringUtils.length(surface) - StringUtils.length(commonSuffix)));
-							//
-						} else {
-							//
-							appendUnescapedText(htmlBuilder, surface);
-							//
-						} // if
-							//
-						completeTag(appendStartTag(
-								appendEndTag(appendUnescapedText(
-										completeTag(appendStartTag(appendEndTag(htmlBuilder, "rb"), "rp")), "("), "rp"),
-								"rt"));
-						//
-						if (StringUtils.isNotBlank(commonSuffix)) {
-							//
-							appendUnescapedText(htmlBuilder, StringUtils.substring(convertKana, 0,
-									StringUtils.length(convertKana) - StringUtils.length(commonSuffix)));
-							//
-						} else {
-							//
-							appendUnescapedText(htmlBuilder, convertKana);
-							//
-						} // if
-							//
-						appendEndTag(
-								appendEndTag(appendUnescapedText(
-										completeTag(appendStartTag(appendEndTag(htmlBuilder, "rt"), "rp")), ")"), "rp"),
-								"ruby");
-						//
-						testAndAccept((a, b) -> StringUtils.isNotBlank(b), htmlBuilder, commonSuffix, (a, b) -> {
-							appendUnescapedText(a, b);
-						});
-					} // if
-						//
-				} catch (final IOException e) {
-					//
-					LoggerUtil.error(LOG, e.getMessage(), e);
-					//
-				} // try
-					//
-			} // for
+				LoggerUtil.error(LOG, e.getMessage(), e);
 				//
-			Util.setText(taHtml, Util.toString(output(htmlBuilder)));
-			//
+			} // try
+				//
 		} // if
 			//
 		actionPerformed2(source);
+		//
+	}
+
+	private static String toHtml(final String string) throws IOException {
+		//
+		final List<Token> tokens = testAndApply(x -> Boolean.logicalAnd(Objects.nonNull(x), isPlainText(x)), string,
+				new Tokenizer()::tokenize, null);
+		//
+		if (Util.iterator(tokens) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		HtmlBuilder<StringBuilder> htmlBuilder = null;
+		//
+		String surface, convertKana, commonSuffix = null;
+		//
+		String[] allFeatures = null;
+		//
+		for (final Token token : tokens) {
+			//
+			if (token == null || (htmlBuilder = ObjectUtils.getIfNull(htmlBuilder, FlatHtml::inMemory)) == null
+					|| length(allFeatures = token.getAllFeaturesArray()) < 9) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (StringUtils.equals(surface = token.getSurface(), convertKana = KanaConverter
+					.convertKana(ArrayUtils.get(allFeatures, 7), KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA))) {
+				//
+				appendUnescapedText(htmlBuilder, surface);
+				//
+			} else {
+				//
+				commonSuffix = Strings.commonSuffix(surface, convertKana);
+				//
+				completeTag(appendStartTag(completeTag(appendStartTag(htmlBuilder, "ruby")), "rb"));
+				//
+				if (StringUtils.isNotBlank(commonSuffix)) {
+					//
+					appendUnescapedText(htmlBuilder, StringUtils.substring(surface, 0,
+							StringUtils.length(surface) - StringUtils.length(commonSuffix)));
+					//
+				} else {
+					//
+					appendUnescapedText(htmlBuilder, surface);
+					//
+				} // if
+					//
+				completeTag(
+						appendStartTag(
+								appendEndTag(appendUnescapedText(
+										completeTag(appendStartTag(appendEndTag(htmlBuilder, "rb"), "rp")), "("), "rp"),
+								"rt"));
+				//
+				if (StringUtils.isNotBlank(commonSuffix)) {
+					//
+					appendUnescapedText(htmlBuilder, StringUtils.substring(convertKana, 0,
+							StringUtils.length(convertKana) - StringUtils.length(commonSuffix)));
+					//
+				} else {
+					//
+					appendUnescapedText(htmlBuilder, convertKana);
+					//
+				} // if
+					//
+				appendEndTag(
+						appendEndTag(appendUnescapedText(
+								completeTag(appendStartTag(appendEndTag(htmlBuilder, "rt"), "rp")), ")"), "rp"),
+						"ruby");
+				//
+				testAndAccept((a, b) -> StringUtils.isNotBlank(b), htmlBuilder, commonSuffix, (a, b) -> {
+					appendUnescapedText(a, b);
+				});
+				//
+			} // if
+				//
+		} // for
+			//
+		return Util.toString(output(htmlBuilder));
 		//
 	}
 
