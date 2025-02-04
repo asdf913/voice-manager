@@ -1411,85 +1411,87 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			final List<Token> tokens = testAndApply(x -> Objects.nonNull(x) && isPlainText(x), html,
 					new Tokenizer()::tokenize, null);
 			//
+			if (Util.iterator(tokens) == null) {
+				//
+				return;
+				//
+			} // if
+				//
 			HtmlBuilder<StringBuilder> htmlBuilder = null;
 			//
-			if (Util.iterator(tokens) != null) {
+			String surface, convertKana, commonSuffix = null;
+			//
+			String[] allFeatures = null;
+			//
+			for (final Token token : tokens) {
 				//
-				String surface, convertKana, commonSuffix = null;
-				//
-				String[] allFeatures = null;
-				//
-				for (final Token token : tokens) {
+				if (token == null || (htmlBuilder = ObjectUtils.getIfNull(htmlBuilder, FlatHtml::inMemory)) == null
+						|| length(allFeatures = token.getAllFeaturesArray()) < 9) {
 					//
-					if (token == null || (htmlBuilder = ObjectUtils.getIfNull(htmlBuilder, FlatHtml::inMemory)) == null
-							|| length(allFeatures = token.getAllFeaturesArray()) < 9) {
+					continue;
+					//
+				} // if
+					//
+				try {
+					//
+					if (StringUtils.equals(surface = token.getSurface(), convertKana = KanaConverter
+							.convertKana(ArrayUtils.get(allFeatures, 7), KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA))) {
 						//
-						continue;
+						appendUnescapedText(htmlBuilder, surface);
 						//
-					} // if
+					} else {
 						//
-					try {
+						commonSuffix = Strings.commonSuffix(surface, convertKana);
 						//
-						if (StringUtils.equals(surface = token.getSurface(), convertKana = KanaConverter
-								.convertKana(ArrayUtils.get(allFeatures, 7), KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA))) {
+						completeTag(appendStartTag(completeTag(appendStartTag(htmlBuilder, "ruby")), "rb"));
+						//
+						if (StringUtils.isNotBlank(commonSuffix)) {
 							//
-							appendUnescapedText(htmlBuilder, surface);
+							appendUnescapedText(htmlBuilder, StringUtils.substring(surface, 0,
+									StringUtils.length(surface) - StringUtils.length(commonSuffix)));
 							//
 						} else {
 							//
-							commonSuffix = Strings.commonSuffix(surface, convertKana);
+							appendUnescapedText(htmlBuilder, surface);
 							//
-							completeTag(appendStartTag(completeTag(appendStartTag(htmlBuilder, "ruby")), "rb"));
-							//
-							if (StringUtils.isNotBlank(commonSuffix)) {
-								//
-								appendUnescapedText(htmlBuilder, StringUtils.substring(surface, 0,
-										StringUtils.length(surface) - StringUtils.length(commonSuffix)));
-								//
-							} else {
-								//
-								appendUnescapedText(htmlBuilder, surface);
-								//
-							} // if
-								//
-							completeTag(appendStartTag(appendEndTag(
-									appendUnescapedText(
-											completeTag(appendStartTag(appendEndTag(htmlBuilder, "rb"), "rp")), "("),
-									"rp"), "rt"));
-							//
-							if (StringUtils.isNotBlank(commonSuffix)) {
-								//
-								appendUnescapedText(htmlBuilder, StringUtils.substring(convertKana, 0,
-										StringUtils.length(convertKana) - StringUtils.length(commonSuffix)));
-								//
-							} else {
-								//
-								appendUnescapedText(htmlBuilder, convertKana);
-								//
-							} // if
-								//
-							appendEndTag(appendEndTag(
-									appendUnescapedText(
-											completeTag(appendStartTag(appendEndTag(htmlBuilder, "rt"), "rp")), ")"),
-									"rp"), "ruby");
-							//
-							if (StringUtils.isNotBlank(commonSuffix)) {
-								//
-								appendUnescapedText(htmlBuilder, commonSuffix);
-								//
-							} // if
-								//
 						} // if
 							//
-					} catch (final IOException e) {
+						completeTag(appendStartTag(
+								appendEndTag(appendUnescapedText(
+										completeTag(appendStartTag(appendEndTag(htmlBuilder, "rb"), "rp")), "("), "rp"),
+								"rt"));
 						//
-						LoggerUtil.error(LOG, e.getMessage(), e);
+						if (StringUtils.isNotBlank(commonSuffix)) {
+							//
+							appendUnescapedText(htmlBuilder, StringUtils.substring(convertKana, 0,
+									StringUtils.length(convertKana) - StringUtils.length(commonSuffix)));
+							//
+						} else {
+							//
+							appendUnescapedText(htmlBuilder, convertKana);
+							//
+						} // if
+							//
+						appendEndTag(
+								appendEndTag(appendUnescapedText(
+										completeTag(appendStartTag(appendEndTag(htmlBuilder, "rt"), "rp")), ")"), "rp"),
+								"ruby");
 						//
-					} // try
+						if (StringUtils.isNotBlank(commonSuffix)) {
+							//
+							appendUnescapedText(htmlBuilder, commonSuffix);
+							//
+						} // if
+							//
+					} // if
 						//
-				} // for
+				} catch (final IOException e) {
 					//
-			} // if
+					LoggerUtil.error(LOG, e.getMessage(), e);
+					//
+				} // try
+					//
+			} // for
 				//
 			Util.setText(taHtml, Util.toString(output(htmlBuilder)));
 			//
