@@ -190,6 +190,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
 
+import com.atilika.kuromoji.TokenBase;
 import com.atilika.kuromoji.ipadic.Token;
 import com.atilika.kuromoji.ipadic.Tokenizer;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -1504,14 +1505,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		for (final Token token : tokens) {
 			//
-			if (token == null || (htmlBuilder = ObjectUtils.getIfNull(htmlBuilder, FlatHtml::inMemory)) == null
-					|| length(allFeatures = token.getAllFeaturesArray()) < 9) {
+			if ((htmlBuilder = ObjectUtils.getIfNull(htmlBuilder, FlatHtml::inMemory)) == null
+					|| length(allFeatures = getAllFeaturesArray(token)) < 9) {
 				//
 				continue;
 				//
 			} // if
 				//
-			if (StringUtils.equals(surface = token.getSurface(), convertKana = KanaConverter
+			if (StringUtils.equals(surface = getSurface(token), convertKana = KanaConverter
 					.convertKana(ArrayUtils.get(allFeatures, 7), KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA))) {
 				//
 				appendUnescapedText(htmlBuilder, surface);
@@ -1564,6 +1565,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		return Util.toString(output(htmlBuilder));
 		//
+	}
+
+	private static String getSurface(final TokenBase instance) {
+		return instance != null ? instance.getSurface() : null;
+	}
+
+	private static String[] getAllFeaturesArray(final TokenBase instance) {
+		return instance != null ? instance.getAllFeaturesArray() : null;
 	}
 
 	private static boolean isPlainText(final String string) {
