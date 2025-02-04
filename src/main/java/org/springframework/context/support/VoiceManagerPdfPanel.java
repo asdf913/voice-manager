@@ -1454,6 +1454,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						} // if
 							//
 						try {
+							//
 							if (StringUtils.equals(surface = token.getSurface(),
 									convertKana = KanaConverter.convertKana(ArrayUtils.get(allFeatures, 7),
 											KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA))) {
