@@ -1532,6 +1532,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
+	@Nullable
 	private static Node childNode(@Nullable final Node instance, final int index) {
 		return instance != null ? instance.childNode(index) : null;
 	}
