@@ -1492,9 +1492,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 								completeTag(appendStartTag(appendEndTag(htmlBuilder, "rt"), "rp")), ")"), "rp"),
 						"ruby");
 				//
-				testAndAccept((a, b) -> StringUtils.isNotBlank(b), htmlBuilder, commonSuffix, (a, b) -> {
-					appendUnescapedText(a, b);
-				});
+				testAndAccept((a, b) -> StringUtils.isNotBlank(b), htmlBuilder, commonSuffix,
+						VoiceManagerPdfPanel::appendUnescapedText);
 				//
 			} // if
 				//
