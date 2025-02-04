@@ -165,6 +165,7 @@ import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.jsoup.nodes.Node;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.nodes.TextNodeUtil;
@@ -1417,11 +1418,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			if (Boolean.logicalAnd(StringUtils.isNotBlank(html), IterableUtils.size(es) == 2)) {
 				//
-				plainText &= ElementUtil.childrenSize(element = IterableUtils.get(es, 0)) == 0
-						&& element.attributesSize() == 0;
+				plainText &= Boolean.logicalAnd(ElementUtil.childrenSize(element = IterableUtils.get(es, 0)) == 0,
+						attributesSize(element) == 0);
 				//
-				plainText &= ArrayUtils.contains(new int[] { 0, 1 },
-						NodeUtil.childNodeSize(element = IterableUtils.get(es, 1))) && element.attributesSize() == 0;
+				plainText &= Boolean.logicalAnd(
+						ArrayUtils.contains(new int[] { 0, 1 },
+								NodeUtil.childNodeSize(element = IterableUtils.get(es, 1))),
+						attributesSize(element) == 0);
 				//
 				plainText &= StringUtils.equals(
 						TextNodeUtil.text(Util.cast(TextNode.class, testAndApply(x -> NodeUtil.childNodeSize(x) == 1,
@@ -1521,6 +1524,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		actionPerformed2(source);
 		//
+	}
+
+	private static int attributesSize(final Node instance) {
+		return instance != null ? instance.attributesSize() : 0;
 	}
 
 	private static ByteConverter getByteConverter(final ConfigurableListableBeanFactory configurableListableBeanFactory,
