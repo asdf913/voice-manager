@@ -1521,10 +1521,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		final String surface = getSurface(token);
 		//
-		final String convertKana = KanaConverter.convertKana(ArrayUtils.get(allFeatures, 7),
-				KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA);
+		final String reading = ArrayUtils.get(allFeatures, 7);
 		//
-		if (StringUtils.equals(surface, convertKana)) {
+		final String convertKana = KanaConverter.convertKana(reading, KanaConverter.OP_ZEN_KATA_TO_ZEN_HIRA);
+		//
+		if (StringUtils.equals(surface, convertKana) || Objects.equals(surface, reading)) {
 			//
 			appendUnescapedText(htmlBuilder, surface);
 			//

@@ -279,6 +279,14 @@ class VoiceManagerPdfPanelTest {
 		//
 		Assertions.assertEquals(Util.getText(taHtml), Util.getText(taHtml));
 		//
+		Util.setText(taHtml, "テーブルに花瓶が置いてあります。");
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
+		Assertions.assertEquals(
+				"テーブルに<ruby><rb>花瓶</rb><rp>(</rp><rt>かびん</rt><rp>)</rp></ruby>が<ruby><rb>置</rb><rp>(</rp><rt>お</rt><rp>)</rp></ruby>いてあります。",
+				Util.getText(taHtml));
+		//
 	}
 
 	@Test
