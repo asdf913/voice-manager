@@ -2535,21 +2535,17 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static void convertAndwriteByteArrayToFile(@Nullable final ByteConverter byteConverter, final Path path) {
 		//
-		final File file = Util.toFile(path);
-		//
-		if (byteConverter != null && Util.exists(file) && Util.isFile(file)) {
+		try {
 			//
-			try {
-				//
-				FileUtils.writeByteArrayToFile(file, byteConverter.convert(Files.readAllBytes(path)));
-				//
-			} catch (final IOException e) {
-				//
-				LoggerUtil.error(LOG, e.getMessage(), e);
-				//
-			} // try
-				//
-		} // if
+			testAndAccept((a, b) -> Util.exists(a) && Util.isFile(a) && b != null, Util.toFile(path),
+					byteConverter != null ? byteConverter.convert(Files.readAllBytes(path)) : null,
+					(a, b) -> FileUtils.writeByteArrayToFile(a, b));
+			//
+		} catch (final IOException e) {
+			//
+			LoggerUtil.error(LOG, e.getMessage(), e);
+			//
+		} // try
 			//
 	}
 
