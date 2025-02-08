@@ -306,7 +306,9 @@ class VoiceManagerPdfPanelTest {
 			//
 			if ((m = ms[i]) == null || m.isSynthetic()
 					|| Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "main"),
-							Arrays.equals(m.getParameterTypes(), new Class<?>[] { String[].class }))) {
+							Arrays.equals(parameterTypes = m.getParameterTypes(), new Class<?>[] { String[].class }))
+					|| Boolean.logicalAnd(Objects.equals(name, "and"), Arrays.equals(parameterTypes,
+							new Class<?>[] { Boolean.TYPE, Boolean.TYPE, boolean[].class }))) {
 				//
 				continue;
 				//
