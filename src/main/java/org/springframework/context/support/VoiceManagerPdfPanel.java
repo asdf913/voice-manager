@@ -2539,7 +2539,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			testAndAccept((a, b) -> Util.exists(a) && Util.isFile(a) && b != null, Util.toFile(path),
 					byteConverter != null ? byteConverter.convert(Files.readAllBytes(path)) : null,
-					(a, b) -> FileUtils.writeByteArrayToFile(a, b));
+					FileUtils::writeByteArrayToFile);
 			//
 		} catch (final IOException e) {
 			//
