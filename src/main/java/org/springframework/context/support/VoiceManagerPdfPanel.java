@@ -1470,7 +1470,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			try {
 				//
-				testAndAccept(x -> VoiceManagerPdfPanel.isPlainText(x), Util.getText(taHtml),
+				testAndAccept(VoiceManagerPdfPanel::isPlainText, Util.getText(taHtml),
 						x -> Util.setText(taHtml, toHtml(x)));
 				//
 			} catch (final IOException e) {
