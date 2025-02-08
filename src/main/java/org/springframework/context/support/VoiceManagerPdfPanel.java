@@ -2808,7 +2808,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	private static <T, U, E extends Exception> void testAndAccept(final BiPredicate<T, U> instance, final T t,
-			final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
+			@Nullable final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
 		if (test(instance, t, u)) {
 			accept(consumer, t, u);
 		} // if
