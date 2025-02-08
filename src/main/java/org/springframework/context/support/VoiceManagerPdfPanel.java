@@ -2743,7 +2743,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	private static <T, U, E extends Exception> void accept(@Nullable final FailableBiConsumer<T, U, E> instance,
-			@Nullable final T t, final U u) throws E {
+			@Nullable final T t, @Nullable final U u) throws E {
 		if (instance != null) {
 			instance.accept(t, u);
 		}
