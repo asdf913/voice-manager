@@ -1607,12 +1607,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				testAndAccept((a, b) -> StringUtils.isNotBlank(b), htmlBuilder, commonSuffix,
 						VoiceManagerPdfPanel::appendUnescapedText);
 				//
-				if (and(i == 0, length1 == 1, !Objects.equals(commonPrefix, lcs))) {
-					//
-					appendUnescapedText(htmlBuilder, lcs);
-					//
-				} // if
-					//
+				testAndRun(and(i == 0, length1 == 1, !Objects.equals(commonPrefix, lcs)),
+						() -> appendUnescapedText(htmlBuilder, lcs), null);
+				//
 			} // for
 				//
 			return;
