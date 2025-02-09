@@ -1566,7 +1566,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						Boolean.logicalOr(Boolean.logicalAnd(i == 1, length1 == 2),
 								Objects.equals(commonPrefix = Strings.commonPrefix(surface, convertKana), lcs)),
 						() -> appendUnescapedText(htmlBuilder, lcs), null);
-
 				//
 				completeTag(appendStartTag(completeTag(appendStartTag(htmlBuilder, "ruby")), "rb"));
 				//
