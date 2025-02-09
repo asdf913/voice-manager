@@ -1628,8 +1628,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static void toHtml(final HtmlBuilder<StringBuilder> htmlBuilder, final String text, final String ruby)
-			throws IOException {
+	private static void toHtml(final HtmlBuilder<StringBuilder> htmlBuilder, @Nullable final String text,
+			final String ruby) throws IOException {
 		//
 		final String commonPrefix = text != null ? Strings.commonPrefix(text, ruby) : null;
 		//
