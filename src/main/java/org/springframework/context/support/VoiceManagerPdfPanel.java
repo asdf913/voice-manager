@@ -1554,7 +1554,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		final int length1 = length(ss1);
 		//
-		if (StringUtils.isNotBlank(lcs) && length1 == length(ss2)) {
+		if (Boolean.logicalAnd(StringUtils.isNotBlank(lcs), length1 == length(ss2))) {
 			//
 			String commonPrefix, commonSuffix, s1, s2 = null;
 			//
