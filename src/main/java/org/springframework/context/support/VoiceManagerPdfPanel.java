@@ -1643,7 +1643,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		final String commonSuffix = text != null ? Strings.commonSuffix(text, ruby) : null;
 		//
-		if (StringUtils.isNotBlank(commonSuffix)) {
+		if (StringUtils.isNotBlank(commonPrefix)) {
 			//
 			appendUnescapedText(htmlBuilder, StringUtils.substringAfter(text, commonPrefix));
 			//
