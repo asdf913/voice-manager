@@ -129,6 +129,7 @@ import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.function.FailableRunnable;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.function.FailableSupplierUtil;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -1560,13 +1561,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			for (int i = 0; i < length1; i++) {
 				//
-				if (Boolean.logicalOr(Boolean.logicalAnd(i == 1, length1 == 2),
-						Objects.equals(commonPrefix = Strings.commonPrefix(surface, convertKana), lcs))) {
-					//
-					appendUnescapedText(htmlBuilder, lcs);
-					//
-				} // if
-					//
+				testAndRun(
+						Boolean.logicalOr(Boolean.logicalAnd(i == 1, length1 == 2),
+								Objects.equals(commonPrefix = Strings.commonPrefix(surface, convertKana), lcs)),
+						() -> appendUnescapedText(htmlBuilder, lcs), null);
+
+				//
 				completeTag(appendStartTag(completeTag(appendStartTag(htmlBuilder, "ruby")), "rb"));
 				//
 				if (StringUtils.isNotBlank(commonSuffix = Strings.commonSuffix(s1 = ArrayUtils.get(ss1, i),
@@ -2032,11 +2032,18 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		}
 	}
 
-	private static void testAndRun(final boolean b, final Runnable ra, final Runnable rb) {
+	private static <E extends Throwable> void testAndRun(final boolean b, final FailableRunnable<E> ra,
+			final FailableRunnable<E> rb) throws E {
 		if (b) {
-			Util.run(ra);
+			run(ra);
 		} else {
-			Util.run(rb);
+			run(rb);
+		}
+	}
+
+	private static <E extends Throwable> void run(final FailableRunnable<E> instance) throws E {
+		if (instance != null) {
+			instance.run();
 		}
 	}
 
