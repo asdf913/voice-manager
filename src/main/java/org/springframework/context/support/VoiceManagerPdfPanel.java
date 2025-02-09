@@ -2034,7 +2034,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	private static <E extends Throwable> void testAndRun(final boolean b, final FailableRunnable<E> ra,
-			final FailableRunnable<E> rb) throws E {
+			@Nullable final FailableRunnable<E> rb) throws E {
 		if (b) {
 			FailableRunnableUtil.run(ra);
 		} else {
