@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
@@ -738,10 +739,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	}
 
+	/**
+	 *
+	 */
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		//
-		setLayout(
+		setLayout(this,
 				ObjectUtils.getIfNull(
 						getLayoutManager(ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext),
 								Util.entrySet(
@@ -881,7 +885,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		testAndAccept((a, b) -> a != null && b != null, panel,
 				getLayoutManager(ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext),
 						Util.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
-				(a, b) -> a.setLayout(b));
+				(a, b) -> setLayout(a, b));
 		//
 		panel.add(btnImageFromClipboard = new JButton("Copy"));
 		//
@@ -980,6 +984,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		actionPerformed(new ActionEvent(btnImageClear, 0, null));
 		//
+	}
+
+	private static void setLayout(final Container instance, final LayoutManager layoutManager) {
+		if (instance != null) {
+			instance.setLayout(layoutManager);
+		}
 	}
 
 	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, @Nullable final E item) {
