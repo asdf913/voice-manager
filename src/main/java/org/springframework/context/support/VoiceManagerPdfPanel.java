@@ -1548,10 +1548,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		final String lcs = longestCommonSubstring(surface, convertKana);
 		//
-		String commonPrefix = null;
-		//
-		String commonSuffix = null;
-		//
 		if (StringUtils.isNotBlank(lcs)) {
 			//
 			final String[] ss1 = StringUtils.split(surface, lcs);
@@ -1562,7 +1558,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			if (length1 == length(ss2)) {
 				//
-				String s1, s2 = null;
+				String commonPrefix, commonSuffix, s1, s2 = null;
 				//
 				for (int i = 0; i < length1; i++) {
 					//
@@ -1628,7 +1624,16 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // if
 			//
-		if (StringUtils.isNotBlank(commonPrefix = Strings.commonPrefix(surface, convertKana))) {
+		toHtml(htmlBuilder, surface, convertKana);
+		//
+	}
+
+	private static void toHtml(final HtmlBuilder<StringBuilder> htmlBuilder, final String text, final String ruby)
+			throws IOException {
+		//
+		final String commonPrefix = text != null ? Strings.commonPrefix(text, ruby) : null;
+		//
+		if (StringUtils.isNotBlank(commonPrefix)) {
 			//
 			appendUnescapedText(htmlBuilder, commonPrefix);
 			//
@@ -1636,18 +1641,20 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		completeTag(appendStartTag(completeTag(appendStartTag(htmlBuilder, "ruby")), "rb"));
 		//
-		if (StringUtils.isNotBlank(commonSuffix = Strings.commonSuffix(surface, convertKana))) {
+		final String commonSuffix = text != null ? Strings.commonSuffix(text, ruby) : null;
+		//
+		if (StringUtils.isNotBlank(commonSuffix)) {
 			//
-			appendUnescapedText(htmlBuilder, StringUtils.substringAfter(surface, commonPrefix));
+			appendUnescapedText(htmlBuilder, StringUtils.substringAfter(text, commonPrefix));
 			//
 		} else if (StringUtils.isNotBlank(commonSuffix)) {
 			//
 			appendUnescapedText(htmlBuilder,
-					StringUtils.substring(surface, 0, StringUtils.length(surface) - StringUtils.length(commonSuffix)));
+					StringUtils.substring(text, 0, StringUtils.length(text) - StringUtils.length(commonSuffix)));
 			//
 		} else {
 			//
-			appendUnescapedText(htmlBuilder, surface);
+			appendUnescapedText(htmlBuilder, text);
 			//
 		} // if
 			//
@@ -1657,16 +1664,16 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		if (StringUtils.isNotBlank(commonPrefix)) {
 			//
-			appendUnescapedText(htmlBuilder, StringUtils.substringAfter(convertKana, commonPrefix));
+			appendUnescapedText(htmlBuilder, StringUtils.substringAfter(ruby, commonPrefix));
 			//
 		} else if (StringUtils.isNotBlank(commonSuffix)) {
 			//
-			appendUnescapedText(htmlBuilder, StringUtils.substring(convertKana, 0,
-					StringUtils.length(convertKana) - StringUtils.length(commonSuffix)));
+			appendUnescapedText(htmlBuilder,
+					StringUtils.substring(ruby, 0, StringUtils.length(ruby) - StringUtils.length(commonSuffix)));
 			//
 		} else {
 			//
-			appendUnescapedText(htmlBuilder, convertKana);
+			appendUnescapedText(htmlBuilder, ruby);
 			//
 		} // if
 			//
