@@ -989,7 +989,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static void setLayout(final Container instance, final LayoutManager layoutManager) {
+	private static void setLayout(@Nullable final Container instance, final LayoutManager layoutManager) {
 		if (instance != null) {
 			instance.setLayout(layoutManager);
 		}
