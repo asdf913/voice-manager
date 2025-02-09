@@ -882,7 +882,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		JPanel panel = new JPanel();
 		//
-		testAndAccept((a, b) -> a != null && b != null, panel,
+		testAndAccept((a, b) -> b != null, panel,
 				getLayoutManager(ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext),
 						Util.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
 				(a, b) -> setLayout(a, b));
