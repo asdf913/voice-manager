@@ -35,10 +35,11 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.helger.css.ECSSUnit;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import j2html.rendering.HtmlBuilder;
 
 class VoiceManagerPdfPanelTest {
 
-	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_SELECTED_ITEM = null;
+	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_SELECTED_ITEM, METHOD_TO_HTML = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -48,6 +49,9 @@ class VoiceManagerPdfPanelTest {
 		(METHOD_SET_FONT_SIZE_AND_UNIT = clz.getDeclaredMethod("setFontSizeAndUnit", Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", ComboBoxModel.class)).setAccessible(true);
+		//
+		(METHOD_TO_HTML = clz.getDeclaredMethod("toHtml", HtmlBuilder.class, String.class, String.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -303,6 +307,22 @@ class VoiceManagerPdfPanelTest {
 				"ハサミは<ruby><rb>引</rb><rp>(</rp><rt>ひ</rt><rp>)</rp></ruby>き<ruby><rb>出</rb><rp>(</rp><rt>だ</rt><rp>)</rp></ruby>しに<ruby><rb>入</rb><rp>(</rp><rt>い</rt><rp>)</rp></ruby>れてあります。",
 				Util.getText(taHtml));
 		//
+	}
+
+	@Test
+	void testToHtml() {
+		//
+		Assertions.assertDoesNotThrow(() -> toHtml(null, "", null));
+		//
+	}
+
+	private static void toHtml(final HtmlBuilder<StringBuilder> htmlBuilder, final String text, final String ruby)
+			throws Throwable {
+		try {
+			METHOD_TO_HTML.invoke(null, htmlBuilder, text, ruby);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
