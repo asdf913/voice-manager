@@ -1548,80 +1548,74 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		final String lcs = longestCommonSubstring(surface, convertKana);
 		//
-		if (StringUtils.isNotBlank(lcs)) {
+		final String[] ss1 = StringUtils.split(surface, lcs);
+		//
+		final String[] ss2 = StringUtils.split(convertKana, lcs);
+		//
+		final int length1 = length(ss1);
+		//
+		if (StringUtils.isNotBlank(lcs) && length1 == length(ss2)) {
 			//
-			final String[] ss1 = StringUtils.split(surface, lcs);
+			String commonPrefix, commonSuffix, s1, s2 = null;
 			//
-			final String[] ss2 = StringUtils.split(convertKana, lcs);
+			for (int i = 0; i < length1; i++) {
+				//
+				if (Boolean.logicalOr(Boolean.logicalAnd(i == 1, length1 == 2),
+						Objects.equals(commonPrefix = Strings.commonPrefix(surface, convertKana), lcs))) {
+					//
+					appendUnescapedText(htmlBuilder, lcs);
+					//
+				} // if
+					//
+				completeTag(appendStartTag(completeTag(appendStartTag(htmlBuilder, "ruby")), "rb"));
+				//
+				if (StringUtils.isNotBlank(commonSuffix = Strings.commonSuffix(s1 = ArrayUtils.get(ss1, i),
+						s2 = ArrayUtils.get(ss2, i)))) {
+					//
+					appendUnescapedText(htmlBuilder,
+							StringUtils.substring(s1, 0, StringUtils.length(s1) - StringUtils.length(commonSuffix)));
+					//
+				} else {
+					//
+					appendUnescapedText(htmlBuilder, s1);
+					//
+				} // if
+					//
+				completeTag(
+						appendStartTag(
+								appendEndTag(appendUnescapedText(
+										completeTag(appendStartTag(appendEndTag(htmlBuilder, "rb"), "rp")), "("), "rp"),
+								"rt"));
+				//
+				if (StringUtils.isNotBlank(commonSuffix = Strings.commonSuffix(s1, s2))) {
+					//
+					appendUnescapedText(htmlBuilder,
+							StringUtils.substring(s2, 0, StringUtils.length(s2) - StringUtils.length(commonSuffix)));
+					//
+				} else {
+					//
+					appendUnescapedText(htmlBuilder, s2);
+					//
+				} // if
+					//
+				appendEndTag(
+						appendEndTag(appendUnescapedText(
+								completeTag(appendStartTag(appendEndTag(htmlBuilder, "rt"), "rp")), ")"), "rp"),
+						"ruby");
+				//
+				testAndAccept((a, b) -> StringUtils.isNotBlank(b), htmlBuilder, commonSuffix,
+						VoiceManagerPdfPanel::appendUnescapedText);
+				//
+				if (and(i == 0, length1 == 1, !Objects.equals(commonPrefix, lcs))) {
+					//
+					appendUnescapedText(htmlBuilder, lcs);
+					//
+				} // if
+					//
+			} // for
+				//
+			return;
 			//
-			final int length1 = length(ss1);
-			//
-			if (length1 == length(ss2)) {
-				//
-				String commonPrefix, commonSuffix, s1, s2 = null;
-				//
-				for (int i = 0; i < length1; i++) {
-					//
-					if (Boolean.logicalOr(Boolean.logicalAnd(i == 1, length1 == 2),
-							Objects.equals(commonPrefix = Strings.commonPrefix(surface, convertKana), lcs))) {
-						//
-						appendUnescapedText(htmlBuilder, lcs);
-						//
-					} // if
-						//
-					completeTag(appendStartTag(completeTag(appendStartTag(htmlBuilder, "ruby")), "rb"));
-					//
-					if (StringUtils.isNotBlank(commonSuffix = Strings.commonSuffix(s1 = ArrayUtils.get(ss1, i),
-							s2 = ArrayUtils.get(ss2, i)))) {
-						//
-						appendUnescapedText(htmlBuilder, StringUtils.substring(s1, 0,
-								StringUtils.length(s1) - StringUtils.length(commonSuffix)));
-						//
-					} else {
-						//
-						appendUnescapedText(htmlBuilder, s1);
-						//
-					} // if
-						//
-					completeTag(
-							appendStartTag(appendEndTag(
-									appendUnescapedText(
-											completeTag(appendStartTag(appendEndTag(htmlBuilder, "rb"), "rp")), "("),
-									"rp"), "rt"));
-					//
-					if (StringUtils.isNotBlank(commonSuffix = Strings.commonSuffix(s1, s2))) {
-						//
-						appendUnescapedText(htmlBuilder, StringUtils.substring(s2, 0,
-								StringUtils.length(s2) - StringUtils.length(commonSuffix)));
-						//
-					} else {
-						//
-						appendUnescapedText(htmlBuilder, s2);
-						//
-					} // if
-						//
-					appendEndTag(
-							appendEndTag(
-									appendUnescapedText(
-											completeTag(appendStartTag(appendEndTag(htmlBuilder, "rt"), "rp")), ")"),
-									"rp"),
-							"ruby");
-					//
-					testAndAccept((a, b) -> StringUtils.isNotBlank(b), htmlBuilder, commonSuffix,
-							VoiceManagerPdfPanel::appendUnescapedText);
-					//
-					if (and(i == 0, length1 == 1, !Objects.equals(commonPrefix, lcs))) {
-						//
-						appendUnescapedText(htmlBuilder, lcs);
-						//
-					} // if
-						//
-				} // for
-					//
-				return;
-				//
-			} // if
-				//
 		} // if
 			//
 		toHtml(htmlBuilder, surface, convertKana);
