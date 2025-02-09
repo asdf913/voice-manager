@@ -276,7 +276,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Copy Text To HTML")
 	private AbstractButton btnCopyTextToHtml = null;
 
-	private AbstractButton btnGenerateRubyHtml = null;
+	private AbstractButton btnGenerateRubyHtml, btnPreserveImage = null;
 
 	@Note("HTML")
 	private JTextComponent taHtml = null;
@@ -879,11 +879,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		JPanel panel = new JPanel();
 		//
-		final GridLayout gridLayout = new GridLayout();
-		//
-		gridLayout.setHgap(7);
-		//
-		panel.setLayout(gridLayout);
+		testAndAccept((a, b) -> a != null && b != null, panel,
+				getLayoutManager(ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext),
+						Util.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
+				(a, b) -> a.setLayout(b));
 		//
 		panel.add(btnImageFromClipboard = new JButton("Copy"));
 		//
@@ -901,7 +900,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		cbmImageFormat = mcbm;
 		//
-		add(panel, String.format("%1$s,span %2$s", WRAP, 2));
+		panel.add(btnPreserveImage = new JCheckBox("Prserve Image"));
+		//
+		add(panel, String.format("%1$s,span %2$s", WRAP, 3));
 		//
 		// Original Size
 		//
@@ -2580,14 +2581,19 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			final VoiceManagerPdfPanel voiceManagerPdfPanel = ObjectMap.getObject(om, VoiceManagerPdfPanel.class);
 			//
-			actionPerformed(voiceManagerPdfPanel,
-					testAndApply(Objects::nonNull,
-							testAndApply(Objects::nonNull, voiceManagerPdfPanel,
-									x -> Narcissus.getField(voiceManagerPdfPanel,
-											Narcissus.findField(VoiceManagerPdfPanel.class, "btnImageClear")),
-									null),
-							x -> new ActionEvent(x, 0, null), null));
+			final AbstractButton btnPreserveImage = voiceManagerPdfPanel != null ? voiceManagerPdfPanel.btnPreserveImage
+					: null;
 			//
+			if (btnPreserveImage == null || !btnPreserveImage.isSelected()) {
+				//
+				actionPerformed(voiceManagerPdfPanel,
+						testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, voiceManagerPdfPanel,
+								x -> Narcissus.getField(voiceManagerPdfPanel,
+										Narcissus.findField(VoiceManagerPdfPanel.class, "btnImageClear")),
+								null), x -> new ActionEvent(x, 0, null), null));
+				//
+			} // if
+				//
 			return;
 			//
 		} // if
