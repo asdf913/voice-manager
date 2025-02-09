@@ -1566,8 +1566,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				for (int i = 0; i < length1; i++) {
 					//
-					if (Boolean.logicalAnd(i == 1, length1 == 2)
-							|| Objects.equals(commonPrefix = Strings.commonPrefix(surface, convertKana), lcs)) {
+					if (Boolean.logicalOr(Boolean.logicalAnd(i == 1, length1 == 2),
+							Objects.equals(commonPrefix = Strings.commonPrefix(surface, convertKana), lcs))) {
 						//
 						appendUnescapedText(htmlBuilder, lcs);
 						//
