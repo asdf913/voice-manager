@@ -1546,9 +1546,89 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
-		final String commonPrefix = Strings.commonPrefix(surface, convertKana);
+		final String lcs = longestCommonSubstring(surface, convertKana);
 		//
-		if (StringUtils.isNotBlank(commonPrefix)) {
+		String commonPrefix = null;
+		//
+		String commonSuffix = null;
+		//
+		if (StringUtils.isNotBlank(lcs)) {
+			//
+			final String[] ss1 = StringUtils.split(surface, lcs);
+			//
+			final String[] ss2 = StringUtils.split(convertKana, lcs);
+			//
+			final int length1 = length(ss1);
+			//
+			if (length1 == length(ss2)) {
+				//
+				String s1, s2 = null;
+				//
+				for (int i = 0; i < length1; i++) {
+					//
+					if ((i == 1 && length1 == 2)
+							|| Objects.equals(commonPrefix = Strings.commonPrefix(surface, convertKana), lcs)) {
+						//
+						appendUnescapedText(htmlBuilder, lcs);
+						//
+					} // if
+						//
+					completeTag(appendStartTag(completeTag(appendStartTag(htmlBuilder, "ruby")), "rb"));
+					//
+					if (StringUtils.isNotBlank(commonSuffix = Strings.commonSuffix(s1 = ArrayUtils.get(ss1, i),
+							s2 = ArrayUtils.get(ss2, i)))) {
+						//
+						appendUnescapedText(htmlBuilder, StringUtils.substring(s1, 0,
+								StringUtils.length(s1) - StringUtils.length(commonSuffix)));
+						//
+					} else {
+						//
+						appendUnescapedText(htmlBuilder, s1);
+						//
+					} // if
+						//
+					completeTag(
+							appendStartTag(appendEndTag(
+									appendUnescapedText(
+											completeTag(appendStartTag(appendEndTag(htmlBuilder, "rb"), "rp")), "("),
+									"rp"), "rt"));
+					//
+					if (StringUtils.isNotBlank(commonSuffix = Strings.commonSuffix(s1, s2))) {
+						//
+						appendUnescapedText(htmlBuilder, StringUtils.substring(s2, 0,
+								StringUtils.length(s2) - StringUtils.length(commonSuffix)));
+						//
+					} else {
+						//
+						appendUnescapedText(htmlBuilder, s2);
+						//
+					} // if
+						//
+					appendEndTag(
+							appendEndTag(
+									appendUnescapedText(
+											completeTag(appendStartTag(appendEndTag(htmlBuilder, "rt"), "rp")), ")"),
+									"rp"),
+							"ruby");
+					//
+					testAndAccept((a, b) -> StringUtils.isNotBlank(b), htmlBuilder, commonSuffix,
+							VoiceManagerPdfPanel::appendUnescapedText);
+					//
+					if ((i == 0 && length1 == 1) && !Objects.equals(commonPrefix, lcs)) {
+						//
+						appendUnescapedText(htmlBuilder, lcs);
+						//
+					} // if
+						//
+				} // for
+					//
+				return;
+				//
+			} // if
+				//
+		} // if
+			//
+		if (StringUtils.isNotBlank(commonPrefix = Strings.commonPrefix(surface, convertKana))) {
 			//
 			appendUnescapedText(htmlBuilder, commonPrefix);
 			//
@@ -1556,9 +1636,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		completeTag(appendStartTag(completeTag(appendStartTag(htmlBuilder, "ruby")), "rb"));
 		//
-		final String commonSuffix = Strings.commonSuffix(surface, convertKana);
-		//
-		if (StringUtils.isNotBlank(commonPrefix)) {
+		if (StringUtils.isNotBlank(commonSuffix = Strings.commonSuffix(surface, convertKana))) {
 			//
 			appendUnescapedText(htmlBuilder, StringUtils.substringAfter(surface, commonPrefix));
 			//
@@ -1598,6 +1676,44 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		testAndAccept((a, b) -> StringUtils.isNotBlank(b), htmlBuilder, commonSuffix,
 				VoiceManagerPdfPanel::appendUnescapedText);
+		//
+	}
+
+	private static String longestCommonSubstring(final String a, final String b) {
+		//
+		int start = 0, max = 0;
+		//
+		for (int i = 0; i < StringUtils.length(a); i++) {
+			//
+			for (int j = 0; j < StringUtils.length(b); j++) {
+				//
+				int x = 0;
+				//
+				while (a.charAt(i + x) == b.charAt(j + x)) {
+					//
+					x++;
+					//
+					if (((i + x) >= a.length()) || ((j + x) >= b.length())) {
+						//
+						break;
+						//
+					} // if
+						//
+				} // while
+					//
+				if (x > max) {
+					//
+					max = x;
+					//
+					start = i;
+					//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+		return StringUtils.substring(a, start, start + max);
 		//
 	}
 

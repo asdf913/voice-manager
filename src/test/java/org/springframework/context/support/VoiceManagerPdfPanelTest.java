@@ -295,6 +295,14 @@ class VoiceManagerPdfPanelTest {
 				"ごみ<ruby><rb>箱</rb><rp>(</rp><rt>ばこ</rt><rp>)</rp></ruby>は<ruby><rb>台所</rb><rp>(</rp><rt>だいどころ</rt><rp>)</rp></ruby>の<ruby><rb>隅</rb><rp>(</rp><rt>すみ</rt><rp>)</rp></ruby>に<ruby><rb>置</rb><rp>(</rp><rt>お</rt><rp>)</rp></ruby>いてあります。",
 				Util.getText(taHtml));
 		//
+		Util.setText(taHtml, "ハサミは引き出しに入れてあります。");
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
+		Assertions.assertEquals(
+				"ハサミは<ruby><rb>引</rb><rp>(</rp><rt>ひ</rt><rp>)</rp></ruby>き<ruby><rb>出</rb><rp>(</rp><rt>だ</rt><rp>)</rp></ruby>しに<ruby><rb>入</rb><rp>(</rp><rt>い</rt><rp>)</rp></ruby>れてあります。",
+				Util.getText(taHtml));
+		//
 	}
 
 	@Test
