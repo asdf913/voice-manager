@@ -1622,8 +1622,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	private static void toHtml(final HtmlBuilder<StringBuilder> htmlBuilder, @Nullable final String text,
 			final String ruby) throws IOException {
 		//
-		final String commonPrefix = testAndApply((a, b) -> a != null && b != null, text, ruby,
-				(a, b) -> Strings.commonPrefix(a, b), null);
+		final String commonPrefix = testAndApply((a, b) -> a != null && b != null, text, ruby, Strings::commonPrefix,
+				null);
 		//
 		if (StringUtils.isNotBlank(commonPrefix)) {
 			//
@@ -1633,8 +1633,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		completeTag(appendStartTag(completeTag(appendStartTag(htmlBuilder, "ruby")), "rb"));
 		//
-		final String commonSuffix = testAndApply((a, b) -> a != null && b != null, text, ruby,
-				(a, b) -> Strings.commonSuffix(a, b), null);
+		final String commonSuffix = testAndApply((a, b) -> a != null && b != null, text, ruby, Strings::commonSuffix,
+				null);
 		//
 		if (StringUtils.isNotBlank(commonPrefix)) {
 			//
