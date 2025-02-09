@@ -87,6 +87,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.function.FailableRunnable;
+import org.apache.commons.lang3.function.FailableRunnableUtil;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.function.FailableSupplierUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -745,9 +746,9 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 	private static <E extends Throwable> void testAndRun(final boolean b, @Nullable final FailableRunnable<E> runnable)
 			throws E {
 		//
-		if (b && runnable != null) {
+		if (b) {
 			//
-			runnable.run();
+			FailableRunnableUtil.run(runnable);
 			//
 		} // if
 			//

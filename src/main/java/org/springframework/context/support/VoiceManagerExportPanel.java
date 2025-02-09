@@ -152,6 +152,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.function.FailableRunnable;
+import org.apache.commons.lang3.function.FailableRunnableUtil;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.function.FailableSupplierUtil;
 import org.apache.commons.lang3.math.Fraction;
@@ -5602,9 +5603,9 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 	private static <E extends Throwable> void testAndRun(final boolean b, @Nullable final FailableRunnable<E> runnable)
 			throws E {
 		//
-		if (b && runnable != null) {
+		if (b) {
 			//
-			runnable.run();
+			FailableRunnableUtil.run(runnable);
 			//
 		} // if
 			//

@@ -137,6 +137,7 @@ import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.FailableRunnable;
+import org.apache.commons.lang3.function.FailableRunnableUtil;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.function.FailableSupplierUtil;
 import org.apache.commons.lang3.function.OnlineNHKJapanesePronunciationsAccentFailableFunction;
@@ -2734,21 +2735,11 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		if (condition) {
 			//
-			run(runnableTrue);
+			FailableRunnableUtil.run(runnableTrue);
 			//
 		} else {
 			//
-			run(runnableFalse);
-			//
-		} // if
-			//
-	}
-
-	private static <E extends Throwable> void run(@Nullable final FailableRunnable<E> instance) throws E {
-		//
-		if (instance != null) {
-			//
-			instance.run();
+			FailableRunnableUtil.run(runnableFalse);
 			//
 		} // if
 			//
