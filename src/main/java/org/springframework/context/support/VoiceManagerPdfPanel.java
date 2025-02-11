@@ -1470,7 +1470,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				JOptionPane.showMessageDialog(null,
 						testAndApply(Objects::nonNull,
-								chop(testAndApply(x -> x != null && x.getNumberOfPages() > 0,
+								chop(testAndApply(x -> getNumberOfPages(x) > 0,
 										document = Loader.loadPDF(pdf(Util.toPath(file))),
 										x -> new PDFRenderer(x).renderImage(0), null)),
 								ImageIcon::new, null),
