@@ -283,7 +283,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Generate Ruby Html")
 	private AbstractButton btnGenerateRubyHtml = null;
 
-	private AbstractButton btnPreviewRubyPdf, btnPreserveImage = null;
+	@Note("Preview Ruby In PDF ")
+	private AbstractButton btnPreviewRubyPdf = null;
+
+	private AbstractButton btnPreserveImage = null;
 
 	@Note("HTML")
 	private JTextComponent taHtml = null;
