@@ -222,7 +222,6 @@ import io.github.toolfactory.narcissus.Narcissus;
 import j2html.rendering.FlatHtml;
 import j2html.rendering.HtmlBuilder;
 import j2html.rendering.TagBuilder;
-import kotlinx.css.TextAlign;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerPdfPanel extends JPanel implements Titled, InitializingBean, ActionListener,
