@@ -46,7 +46,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class ClassInfoUtilTest {
 
 	private static Method METHOD_GET_CLASS_NAME_JAVA_CLASS, METHOD_GET_CLASS, METHOD_FOR_NAME, METHOD_REMOVE_IF,
-			METHOD_TEST_AND_APPLY, METHOD_CAST, METHOD_GET_FIELDS, METHOD_LENGTH, METHOD_GET_TYPE = null;
+			METHOD_TEST_AND_APPLY, METHOD_CAST, METHOD_LENGTH, METHOD_GET_TYPE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -65,8 +65,6 @@ class ClassInfoUtilTest {
 				Function.class)).setAccessible(true);
 		//
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_GET_FIELDS = clz.getDeclaredMethod("getFields", JavaClass.class)).setAccessible(true);
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
 		//
@@ -347,27 +345,6 @@ class ClassInfoUtilTest {
 	private static <T> T cast(final Class<T> clz, final Object instance) throws Throwable {
 		try {
 			return (T) METHOD_CAST.invoke(null, clz, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetFields() throws Throwable {
-		//
-		Assertions.assertNull(getFields(cast(JavaClass.class, Narcissus.allocateInstance(JavaClass.class))));
-		//
-	}
-
-	private static Field[] getFields(final JavaClass instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_FIELDS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Field[]) {
-				return (Field[]) obj;
-			}
-			throw new Throwable(Objects.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

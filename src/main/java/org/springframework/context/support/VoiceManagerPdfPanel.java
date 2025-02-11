@@ -1042,8 +1042,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			list = Util.toList(Util.map(
 					Util.filter(
 							testAndApply(Objects::nonNull,
-									getFields(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null).parse(),
-											null)),
+									JavaClassUtil.getFields(testAndApply(Objects::nonNull, is,
+											x -> new ClassParser(x, null).parse(), null)),
 									Arrays::stream, null),
 							f -> Objects.equals(TypeUtil.getClassName(getType(f)), "kotlinx.css.TextAlign")),
 					FieldOrMethodUtil::getName));
@@ -1052,11 +1052,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		return list;
 		//
-	}
-
-	@Nullable
-	private static org.apache.bcel.classfile.Field[] getFields(@Nullable final JavaClass instance) {
-		return instance != null ? instance.getFields() : null;
 	}
 
 	@Nullable

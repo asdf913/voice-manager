@@ -12,6 +12,7 @@ import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.Field;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.generic.ArrayType;
 import org.apache.bcel.generic.BasicType;
 import org.apache.bcel.generic.Type;
@@ -87,7 +88,7 @@ public final class ClassInfoUtil {
 			//
 		} // if
 			//
-		final Field[] fs = getFields(javaClass);
+		final Field[] fs = JavaClassUtil.getFields(javaClass);
 		//
 		ContinueOrFalse cof = null;
 		//
@@ -159,10 +160,6 @@ public final class ClassInfoUtil {
 
 	private static int length(final Object[] instance) {
 		return instance != null ? instance.length : 0;
-	}
-
-	private static Field[] getFields(final JavaClass instance) {
-		return instance != null ? instance.getFields() : null;
 	}
 
 	private static String getClassName(final JavaClass instance) {

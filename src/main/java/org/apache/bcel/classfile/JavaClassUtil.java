@@ -34,4 +34,8 @@ public interface JavaClassUtil {
 		//
 	}
 
+	static Field[] getFields(final JavaClass instance) {
+		return instance != null ? instance.getFields() : null;
+	}
+
 }
