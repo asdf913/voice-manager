@@ -6,6 +6,8 @@ import java.awt.Container;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -78,7 +80,6 @@ import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.swing.AbstractButton;
-import javax.swing.BoxLayout;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -805,13 +806,21 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		JPanel panel = new JPanel();
 		//
-		setLayout(panel, new BoxLayout(panel, BoxLayout.Y_AXIS));
+		setLayout(panel, new GridBagLayout());
 		//
-		panel.add(btnGenerateRubyHtml = new JButton("Generate Ruby HTML"));
+		final GridBagConstraints gbc = new GridBagConstraints();
 		//
-		panel.add(btnPreviewRubyPdf = new JButton("Preview Ruby"));
+		gbc.weightx = 1;
 		//
-		add(panel, String.format("%1$s,span %2$s", WRAP, 2));
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		//
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		//
+		panel.add(btnGenerateRubyHtml = new JButton("Generate Ruby HTML"), gbc);
+		//
+		panel.add(btnPreviewRubyPdf = new JButton("Preview Ruby"), gbc);
+		//
+		add(panel, String.format("%1$s,%2$s,span %3$s", WRAP, GROWX, 3));
 		//
 		// Font Size
 		//
