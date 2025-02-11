@@ -1586,7 +1586,17 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		IntList ily = null;
 		//
-		final ObjIntConsumer<IntList> objIntConsumer = null;
+		final FailableConsumer<IntList, RuntimeException> failableConsumer = a -> {
+			//
+			sortInts(a);
+			//
+			for (int i = IterableUtils.size(a) - 2; i > 0; i--) {
+				//
+				a.remove(i);
+				//
+			} // for
+				//
+		};
 		//
 		for (int x = 0; x < Util.intValue(getWidth(bi), 0); x++) {
 			//
@@ -1598,35 +1608,19 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} else if (rgb != null && rgb.intValue() != bi.getRGB(x, y)) {
 					//
+					// ilx
+					//
 					testAndAccept((a, b) -> !Util.contains(a, b), ilx = ObjectUtils.getIfNull(ilx, IntList::create), x,
 							IntCollectionUtil::addInt);
 					//
-					testAndAccept(a -> IterableUtils.size(a) > 2, ilx, a -> {
-						//
-						sortInts(a);
-						//
-						for (int i = IterableUtils.size(a) - 2; i > 0; i--) {
-							//
-							a.remove(i);
-							//
-						} // for
-							//
-					});
+					testAndAccept(a -> IterableUtils.size(a) > 2, ilx, failableConsumer);
+					//
+					// ily
 					//
 					testAndAccept((a, b) -> !Util.contains(a, b), ily = ObjectUtils.getIfNull(ily, IntList::create), y,
 							IntCollectionUtil::addInt);
 					//
-					testAndAccept(a -> IterableUtils.size(a) > 2, ily, a -> {
-						//
-						sortInts(a);
-						//
-						for (int i = IterableUtils.size(a) - 2; i > 0; i--) {
-							//
-							a.remove(i);
-							//
-						} // for
-							//
-					});
+					testAndAccept(a -> IterableUtils.size(a) > 2, ily, failableConsumer);
 					//
 				} // if
 					//
