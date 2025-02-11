@@ -43,6 +43,7 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -1460,7 +1461,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						FileUtils.deleteQuietly(file);
 						//
 						FileUtils.writeStringToFile(
-								file = new File(StringUtils.join(group(matcher, 1), ArrayUtils.get(fileExtensions, 0))),
+								file = Util.toFile(Paths
+										.get(StringUtils.join(group(matcher, 1), ArrayUtils.get(fileExtensions, 0)))),
 								html, StandardCharsets.UTF_8, false);
 						//
 					} // if
