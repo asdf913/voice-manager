@@ -105,6 +105,7 @@ import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.FieldOrMethodUtil;
+import org.apache.bcel.classfile.FieldUtil;
 import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.FieldInstructionUtil;
@@ -1044,18 +1045,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 									JavaClassUtil.getFields(testAndApply(Objects::nonNull, is,
 											x -> new ClassParser(x, null).parse(), null)),
 									Arrays::stream, null),
-							f -> Objects.equals(TypeUtil.getClassName(getType(f)), "kotlinx.css.TextAlign")),
+							f -> Objects.equals(TypeUtil.getClassName(FieldUtil.getType(f)), "kotlinx.css.TextAlign")),
 					FieldOrMethodUtil::getName));
 			//
 		} // try
 			//
 		return list;
 		//
-	}
-
-	@Nullable
-	private static Type getType(@Nullable final org.apache.bcel.classfile.Field instance) {
-		return instance != null ? instance.getType() : null;
 	}
 
 	private static void setLayout(@Nullable final Container instance, final LayoutManager layoutManager) {

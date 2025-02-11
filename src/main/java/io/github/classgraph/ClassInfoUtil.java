@@ -11,6 +11,7 @@ import java.util.function.Predicate;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.Field;
+import org.apache.bcel.classfile.FieldUtil;
 import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.generic.ArrayType;
@@ -94,7 +95,7 @@ public final class ClassInfoUtil {
 		//
 		for (int i = 0; i < length(fs); i++) {
 			//
-			if ((cof = checkType(getType(ArrayUtils.get(fs, i)))) == null) {
+			if ((cof = checkType(FieldUtil.getType(ArrayUtils.get(fs, i)))) == null) {
 				//
 				throw new IllegalStateException();
 				//
@@ -152,10 +153,6 @@ public final class ClassInfoUtil {
 			//
 		return ContinueOrFalse.CONTINUE;
 		//
-	}
-
-	private static Type getType(final Field instance) {
-		return instance != null && instance.getConstantPool() != null ? instance.getType() : null;
 	}
 
 	private static int length(final Object[] instance) {
