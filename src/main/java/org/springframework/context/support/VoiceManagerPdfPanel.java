@@ -1450,9 +1450,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						file = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null), html,
 						StandardCharsets.UTF_8, false);
 				//
-				final ContentInfo ci = new ContentInfoUtil().findMatch(file);
-				//
-				final String[] fileExtensions = ci != null ? ci.getFileExtensions() : null;
+				final String[] fileExtensions = getFileExtensions(new ContentInfoUtil().findMatch(file));
 				//
 				if (length(fileExtensions) > 0) {
 					//
@@ -1495,6 +1493,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		actionPerformed2(source);
 		//
+	}
+
+	private static String[] getFileExtensions(final ContentInfo instnace) {
+		return instnace != null ? instnace.getFileExtensions() : null;
 	}
 
 	private boolean actionPerformed2(final Object source) {
@@ -1580,7 +1582,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		IntList ily = null;
 		//
-		for (int x = 0; x < getWidth(bi); x++) {
+		for (int x = 0; x < Util.intValue(getWidth(bi), 0); x++) {
 			//
 			for (int y = 0; y < bi.getHeight(); y++) {
 				//
