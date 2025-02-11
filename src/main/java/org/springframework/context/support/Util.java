@@ -1597,7 +1597,7 @@ public abstract class Util {
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
-	static double doubleValue(final Number instance, final double defaultValue) {
+	static double doubleValue(@Nullable final Number instance, final double defaultValue) {
 		return instance != null ? instance.doubleValue() : defaultValue;
 	}
 
