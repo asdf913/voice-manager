@@ -2591,14 +2591,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // if
 					//
-			} else if (proxy instanceof DocumentEvent) {
+			} else if (proxy instanceof DocumentEvent && Objects.equals(methodName, "getDocument")) {
 				//
-				if (Objects.equals(methodName, "getDocument")) {
-					//
-					return docuemnt;
-					//
-				} // if
-					//
+				return docuemnt;
+				//
 			} // if
 				//
 			IValue0<?> iValue0 = handleStringMap(methodName, getStrings(), args);
