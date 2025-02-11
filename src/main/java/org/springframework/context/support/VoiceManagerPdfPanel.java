@@ -1656,7 +1656,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	private static <T> void testAndAccept(final ObjIntPredicate<T> predicate, final T t, final int i,
-			final ObjIntConsumer<T> consumer) {
+			@Nullable final ObjIntConsumer<T> consumer) {
 		if (ObjIntPredicateUtil.test(predicate, t, i) && consumer != null) {
 			consumer.accept(t, i);
 		}
