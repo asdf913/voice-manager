@@ -870,12 +870,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 		});
 		//
-		if (m1 != null) {
-			//
-			m2.putAll(m1);
-			//
-		} // if
-			//
+		Util.putAll(m2, m1);
+		//
 		return m2;
 		//
 	}

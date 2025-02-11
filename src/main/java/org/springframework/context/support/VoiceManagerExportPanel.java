@@ -1298,8 +1298,8 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		try {
 			//
-			final FailableConsumer<Map<?, ?>, IllegalAccessException> consumer = x -> putAll((Map) fileFormatDetails,
-					x);
+			final FailableConsumer<Map<?, ?>, IllegalAccessException> consumer = x -> Util
+					.putAll((Map) fileFormatDetails, x);
 			//
 			testAndAccept(Objects::nonNull,
 					Util.cast(Map.class,
@@ -2009,7 +2009,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 						//
 						ObjectMap.setObject(objectMap, Writer.class, writer);
 						//
-						putAll(map, exportWebSpeechSynthesisHtmlTemplateProperties);
+						Util.putAll(map, exportWebSpeechSynthesisHtmlTemplateProperties);
 						//
 						exportHtml(objectMap, exportWebSpeechSynthesisHtmlTemplateFile, map);
 						//
@@ -5481,12 +5481,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 	@Nullable
 	private static JetFormat getFormat(@Nullable final FileFormatDetails instance) {
 		return instance != null ? instance.getFormat() : null;
-	}
-
-	private static <K, V> void putAll(@Nullable final Map<K, V> a, @Nullable final Map<? extends K, ? extends V> b) {
-		if (a != null && b != null) {
-			a.putAll(b);
-		}
 	}
 
 	private static <T, E extends Throwable> void testAndAccept(final FailablePredicate<T, E> predicate,
