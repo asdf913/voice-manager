@@ -1572,6 +1572,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
+	@Nullable
 	private static BufferedImage chop(@Nullable final BufferedImage bi) {
 		//
 		Integer rgb = null;
