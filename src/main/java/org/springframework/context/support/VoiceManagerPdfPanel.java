@@ -1451,7 +1451,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				final String[] fileExtensions = ci != null ? ci.getFileExtensions() : null;
 				//
-				if (fileExtensions != null && fileExtensions.length > 0) {
+				if (length(fileExtensions) > 0) {
 					//
 					final Matcher matcher = matcher(Pattern.compile("^([^.]+.)[^.]+$"), Util.getName(file));
 					//
