@@ -61,6 +61,7 @@ import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.regex.MatchResult;
@@ -162,6 +163,8 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachme
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntList;
+import org.d2ab.function.ObjIntPredicate;
+import org.d2ab.function.ObjIntPredicateUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -214,6 +217,7 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import it.unimi.dsi.fastutil.objects.Object2IntFunction;
 import j2html.rendering.FlatHtml;
 import j2html.rendering.HtmlBuilder;
 import j2html.rendering.TagBuilder;
@@ -1591,18 +1595,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} else if (rgb != null && rgb.intValue() != bi.getRGB(x, y)) {
 					//
-					if (!Util.contains(ilx = ObjectUtils.getIfNull(ilx, IntList::create), x)) {
-						//
-						IntCollectionUtil.addInt(ilx, x);
-						//
-					} // if
-						//
-					if (!Util.contains(ily = ObjectUtils.getIfNull(ily, IntList::create), y)) {
-						//
-						IntCollectionUtil.addInt(ily, y);
-						//
-					} // if
-						//
+					testAndAccept((a, b) -> !Util.contains(a, b), ilx = ObjectUtils.getIfNull(ilx, IntList::create), x,
+							(a, b) -> IntCollectionUtil.addInt(a, b));
+					//
+					testAndAccept((a, b) -> !Util.contains(a, b), ily = ObjectUtils.getIfNull(ily, IntList::create), y,
+							(a, b) -> IntCollectionUtil.addInt(a, b));
+					//
 				} // if
 					//
 			} // for
@@ -1630,6 +1628,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		return bi;
 		//
+	}
+
+	private static <T> void testAndAccept(final ObjIntPredicate<T> predicate, final T t, final int i,
+			final ObjIntConsumer<T> consumer) {
+		if (ObjIntPredicateUtil.test(predicate, t, i) && consumer != null) {
+			consumer.accept(t, i);
+		}
 	}
 
 	private static BufferedImage getSubimage(@Nullable final BufferedImage instance, final int x, final int y,
