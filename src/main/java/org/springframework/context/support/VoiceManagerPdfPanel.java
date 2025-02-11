@@ -1598,9 +1598,33 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					testAndAccept((a, b) -> !Util.contains(a, b), ilx = ObjectUtils.getIfNull(ilx, IntList::create), x,
 							(a, b) -> IntCollectionUtil.addInt(a, b));
 					//
+					if (IterableUtils.size(ilx) > 2) {
+						//
+						sortInts(ilx);
+						//
+						for (int i = IterableUtils.size(ilx) - 2; i > 0; i--) {
+							//
+							ilx.remove(i);
+							//
+						} // for
+							//
+					} // if
+						//
 					testAndAccept((a, b) -> !Util.contains(a, b), ily = ObjectUtils.getIfNull(ily, IntList::create), y,
 							(a, b) -> IntCollectionUtil.addInt(a, b));
 					//
+					if (IterableUtils.size(ily) > 2) {
+						//
+						sortInts(ily);
+						//
+						for (int i = IterableUtils.size(ily) - 2; i > 0; i--) {
+							//
+							ily.remove(i);
+							//
+						} // for
+							//
+					} // if
+						//
 				} // if
 					//
 			} // for
