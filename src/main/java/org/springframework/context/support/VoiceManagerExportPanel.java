@@ -563,7 +563,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 
 	public void setMicrosoftSpeechObjectLibraryAttributeNames(final Object value) {
 		//
-		this.microsoftSpeechObjectLibraryAttributeNames = toArray(
+		this.microsoftSpeechObjectLibraryAttributeNames = Util.toArray(
 				Util.toList(Util.map(Util.stream(getObjectList(getObjectMapper(), value)), Util::toString)),
 				new String[] {});
 		//
@@ -1075,7 +1075,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		} // if
 			//
 		final JComboBox<Class> jcbClass = new JComboBox<Class>(
-				cbmWorkbookClass = new DefaultComboBoxModel<>((Class[]) toArray(classes, new Class[] {})));
+				cbmWorkbookClass = new DefaultComboBoxModel<>((Class[]) Util.toArray(classes, new Class[] {})));
 		//
 		testAndRun(
 				Util.contains(Util.keySet(IValue0Util.getValue0(getWorkbookClassFailableSupplierMap())), workbookClass),
@@ -1310,7 +1310,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 		} // try
 			//
-		final FileFormat[] fileFormats = testAndApply(Objects::nonNull, toArray(Util
+		final FileFormat[] fileFormats = testAndApply(Objects::nonNull, Util.toArray(Util
 				.toList(Util.filter(testAndApply(Objects::nonNull, FileFormat.values(), Arrays::stream, null), x -> {
 					//
 					final FileFormatDetails ffds = Util.cast(FileFormatDetails.class, Util.get(fileFormatDetails, x));
@@ -2673,7 +2673,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					// by "domain.Voice$Visibility" and its "values" method return "false"
 					//
 				testAndAccept(Objects::nonNull,
-						fs = getIfNull(fs, () -> toArray(getVisibileVoiceFields(), new Field[] {})), a ->
+						fs = getIfNull(fs, () -> Util.toArray(getVisibileVoiceFields(), new Field[] {})), a ->
 						//
 						Arrays.sort(a, (x, y) -> Integer.compare(ArrayUtils.indexOf(fieldOrder, Util.getName(x)),
 								ArrayUtils.indexOf(fieldOrder, Util.getName(y))))
@@ -5023,7 +5023,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		String voiceId = null;
 		//
-		final String[] as = toArray(Util.toList(
+		final String[] as = Util.toArray(Util.toList(
 				Util.filter(testAndApply(Objects::nonNull, attributes, Arrays::stream, null), StringUtils::isNotEmpty)),
 				new String[] {});
 		//
@@ -5626,15 +5626,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 	private static <T> Constructor<T> getDeclaredConstructor(@Nullable final Class<T> clz,
 			final Class<?>... parameterTypes) throws NoSuchMethodException {
 		return clz != null ? clz.getDeclaredConstructor(parameterTypes) : null;
-	}
-
-	@Nullable
-	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
-		//
-		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.toArray(array)
-				: null;
-		//
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,

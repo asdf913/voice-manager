@@ -186,7 +186,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 			//
 		} // for
 			//
-		return list != null ? list.toArray(new String[] {}) : null;
+		return Util.toArray(list, new String[] {});
 		//
 	}
 

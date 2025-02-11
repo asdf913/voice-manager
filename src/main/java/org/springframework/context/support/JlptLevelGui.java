@@ -216,7 +216,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		testAndAccept(predicate, new JLabel("JLPT Level(s)"), this::add);
 		//
 		testAndAccept(biPredicate,
-				jlJlptLevel = (cbmJlptLevel = testAndApply(Objects::nonNull, toArray(jlptLevels, new String[] {}),
+				jlJlptLevel = (cbmJlptLevel = testAndApply(Objects::nonNull, Util.toArray(jlptLevels, new String[] {}),
 						DefaultComboBoxModel::new, null)) != null ? new JList<>(cbmJlptLevel) : new JList<>(),
 				wrap, this::add);
 		//
@@ -691,15 +691,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) {
 		return condition ? trueValue : falseValue;
-	}
-
-	@Nullable
-	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
-		//
-		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.toArray(array)
-				: null;
-		//
 	}
 
 	@Nullable

@@ -1012,7 +1012,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 		String voiceId = null;
 		//
-		final String[] as = toArray(Util.toList(
+		final String[] as = Util.toArray(Util.toList(
 				Util.filter(testAndApply(Objects::nonNull, attributes, Arrays::stream, null), StringUtils::isNotEmpty)),
 				new String[] {});
 		//
@@ -1342,15 +1342,6 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return predicate != null && predicate.test(t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
-	}
-
-	@Nullable
-	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
-		//
-		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.toArray(array)
-				: null;
-		//
 	}
 
 	private static <T> boolean anyMatch(@Nullable final Stream<T> instance,

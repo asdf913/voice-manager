@@ -181,7 +181,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		final JComboBox<String> jcbGaKuNenBeTsuKanJi = new JComboBox<>(
 				cbmGaKuNenBeTsuKanJi = testAndApply(Objects::nonNull,
 						ArrayUtils.insert(0,
-								toArray(MultimapUtil.keySet(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap)),
+								Util.toArray(MultimapUtil.keySet(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap)),
 										new String[] {}),
 								(String) null),
 						DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<>()));
@@ -250,15 +250,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 		} // for
 			//
-	}
-
-	@Nullable
-	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
-		//
-		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.toArray(array)
-				: null;
-		//
 	}
 
 	@Override

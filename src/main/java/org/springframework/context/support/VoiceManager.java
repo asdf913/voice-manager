@@ -520,7 +520,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	public void setTabOrders(final Object value) {
 		//
-		this.tabOrders = toArray(
+		this.tabOrders = Util.toArray(
 				Util.toList(Util.map(Util.stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))),
 				new String[] {});
 		//
@@ -572,15 +572,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	public void setFreeMarkerConfiguration(final freemarker.template.Configuration freeMarkerConfiguration) {
 		this.freeMarkerConfiguration = freeMarkerConfiguration;
-	}
-
-	@Nullable
-	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
-		//
-		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.toArray(array)
-				: null;
-		//
 	}
 
 	@Nullable

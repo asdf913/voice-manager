@@ -154,8 +154,8 @@ class VoiceManagerTest {
 	private static Method METHOD_TEST_AND_APPLY4, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE,
 			METHOD_GET_PREFERRED_WIDTH, METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ADD_ITERABLE,
 			METHOD_MATCHER, METHOD_MATCHES, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR,
-			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_TO_ARRAY_COLLECTION, METHOD_GET_TAB_INDEX_BY_TITLE,
-			METHOD_GET_LIST, METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_TO_URI_FILE,
+			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_LIST,
+			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_TO_URI_FILE,
 			METHOD_TO_URI_URL, METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP,
 			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT,
 			METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL, METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_2,
@@ -203,9 +203,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_CLEAR_DEFAULT_TABLE_MODEL = clz.getDeclaredMethod("clear", DefaultTableModel.class))
-				.setAccessible(true);
-		//
-		(METHOD_TO_ARRAY_COLLECTION = clz.getDeclaredMethod("toArray", Collection.class, Object[].class))
 				.setAccessible(true);
 		//
 		(METHOD_GET_TAB_INDEX_BY_TITLE = clz.getDeclaredMethod("getTabIndexByTitle", List.class, Object.class))
@@ -1153,8 +1150,6 @@ class VoiceManagerTest {
 	@Test
 	void testToArray() throws Throwable {
 		//
-		Assertions.assertNull(toArray((Collection<?>) null, null));
-		//
 		Assertions.assertNull(toArray((Stream<?>) null, null));
 		//
 		final Stream<?> empty = Stream.empty();
@@ -1165,18 +1160,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(toArray(stream, null));
 		//
-		Assertions.assertNull(toArray(Collections.emptyList(), null));
-		//
-		Assertions.assertNull(toArray(collection, null));
-		//
-	}
-
-	private static <T> T[] toArray(final Collection<T> instance, final T[] array) throws Throwable {
-		try {
-			return (T[]) METHOD_TO_ARRAY_COLLECTION.invoke(null, instance, array);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private static <T, A> A[] toArray(final Stream<T> instance, final IntFunction<A[]> generator) {

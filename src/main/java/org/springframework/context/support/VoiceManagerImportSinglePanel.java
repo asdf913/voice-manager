@@ -560,7 +560,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 
 	public void setMp3Tags(final Object value) {
 		//
-		mp3Tags = toArray(
+		mp3Tags = Util.toArray(
 				Util.toList(Util.map(Util.stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))),
 				new String[] {});
 		//
@@ -651,7 +651,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		@Override
 		public ComboBoxModel<Boolean> get() {
 			//
-			return booleans != null ? new DefaultComboBoxModel<>(toArray(booleans, new Boolean[] {}))
+			return booleans != null ? new DefaultComboBoxModel<>(Util.toArray(booleans, new Boolean[] {}))
 					: new DefaultComboBoxModel<>();
 			//
 		}
@@ -742,15 +742,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		return instance != null ? instance.toArray() : null;
 	}
 
-	@Nullable
-	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
-		//
-		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.toArray(array)
-				: null;
-		//
-	}
-
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		//
@@ -806,7 +797,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		final Set<String> gaKuNenBeTsuKanJiList = MultimapUtil.keySet(IValue0Util.getValue0(gaKuNenBeTsuKanJiMultimap));
 		//
 		add(new JComboBox<>(cbmGaKuNenBeTsuKanJi = testAndApply(Objects::nonNull,
-				ArrayUtils.insert(0, toArray(gaKuNenBeTsuKanJiList, new String[] {}), (String) null),
+				ArrayUtils.insert(0, Util.toArray(gaKuNenBeTsuKanJiList, new String[] {}), (String) null),
 				DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<>())), String.format(SPAN_ONLY_FORMAT, 2));
 		//
 		final String string = PropertyResolverUtil.getProperty(propertyResolver,
@@ -967,8 +958,10 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		testAndAccept(CollectionUtils::isNotEmpty, jlptLevelList, x -> add(x, 0, null));
 		//
-		add(new JComboBox<String>(cbmJlptLevel = testAndApply(Objects::nonNull, toArray(jlptLevelList, new String[] {}),
-				DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<String>())), WRAP);
+		add(new JComboBox<String>(
+				cbmJlptLevel = testAndApply(Objects::nonNull, Util.toArray(jlptLevelList, new String[] {}),
+						DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<String>())),
+				WRAP);
 		//
 		setSelectedItem(cbmJlptLevel, PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.jlptLevel"));

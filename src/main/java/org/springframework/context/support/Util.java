@@ -1635,4 +1635,12 @@ public abstract class Util {
 		return instance != null ? instance.name() : null;
 	}
 
+	static <T> T[] toArray(final Collection<T> instance, final T[] array) {
+		//
+		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
+				? instance.toArray(array)
+				: null;
+		//
+	}
+
 }

@@ -467,7 +467,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 				Util.toList(Util.filter(testAndApply(Objects::nonNull,
 						Util.getDeclaredMethods(Util.getClass(speechApiInstance)), Arrays::stream, null),
 						m -> isAnnotationPresent(m, SpeakMethod.class))),
-				x -> new JComboBox<>(cbmSpeakMethod = testAndApply(Objects::nonNull, toArray(x, new Method[] {}),
+				x -> new JComboBox<>(cbmSpeakMethod = testAndApply(Objects::nonNull, Util.toArray(x, new Method[] {}),
 						DefaultComboBoxModel::new, y -> new DefaultComboBoxModel<>())),
 				null);
 		//
@@ -1120,15 +1120,6 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		final Dimension d = Util.getPreferredSize(c);
 		//
 		return d != null ? Double.valueOf(d.getWidth()) : null;
-		//
-	}
-
-	@Nullable
-	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
-		//
-		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.toArray(array)
-				: null;
 		//
 	}
 

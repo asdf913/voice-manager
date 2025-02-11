@@ -76,11 +76,11 @@ class JouYouKanjiGuiTest {
 
 	private static Method METHOD_GET, METHOD_GET_ECSS_VERSION_BY_MAJOR, METHOD_ADD_JOU_YOU_KAN_JI_SHEET,
 			METHOD_GET_CSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY, METHOD_SET_PREFERRED_WIDTH,
-			METHOD_SET_SELECTED_ITEM, METHOD_GET_BOOLEAN_VALUES, METHOD_TO_ARRAY, METHOD_MATCHER,
-			METHOD_GET_EXPRESSION_AS_CSS_STRING, METHOD_GET_INDEXED_COLORS, METHOD_GET_STYLES_SOURCE,
-			METHOD_GET_PROPERTY, METHOD_TO_MILLIS, METHOD_SET_FILL_BACK_GROUND_COLOR, METHOD_SET_FILL_PATTERN,
-			METHOD_SPLITERATOR, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_MAP_TO_INT, METHOD_MAX,
-			METHOD_OR_ELSE, METHOD_SET_AUTO_FILTER, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = null;
+			METHOD_SET_SELECTED_ITEM, METHOD_GET_BOOLEAN_VALUES, METHOD_MATCHER, METHOD_GET_EXPRESSION_AS_CSS_STRING,
+			METHOD_GET_INDEXED_COLORS, METHOD_GET_STYLES_SOURCE, METHOD_GET_PROPERTY, METHOD_TO_MILLIS,
+			METHOD_SET_FILL_BACK_GROUND_COLOR, METHOD_SET_FILL_PATTERN, METHOD_SPLITERATOR, METHOD_TEST_AND_ACCEPT3,
+			METHOD_TEST_AND_ACCEPT4, METHOD_MAP_TO_INT, METHOD_MAX, METHOD_OR_ELSE, METHOD_SET_AUTO_FILTER,
+			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -107,8 +107,6 @@ class JouYouKanjiGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_BOOLEAN_VALUES = clz.getDeclaredMethod("getBooleanValues")).setAccessible(true);
-		//
-		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class, Object[].class)).setAccessible(true);
 		//
 		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, CharSequence.class)).setAccessible(true);
 		//
@@ -700,31 +698,6 @@ class JouYouKanjiGuiTest {
 				return (List) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testToArray() throws Throwable {
-		//
-		Assertions.assertNull(toArray(null, null));
-		//
-		Assertions.assertNull(toArray(Collections.emptyList(), null));
-		//
-		final Object[] array = new Object[] {};
-		//
-		Assertions.assertArrayEquals(array, toArray(Collections.emptyList(), array));
-		//
-	}
-
-	private static <T> T[] toArray(final Collection<T> instance, final T[] array) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_ARRAY.invoke(null, instance, array);
-			if (obj == null) {
-				return null;
-			}
-			return (T[]) obj;
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

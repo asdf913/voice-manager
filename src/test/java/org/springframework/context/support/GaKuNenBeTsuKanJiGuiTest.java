@@ -58,7 +58,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 
 	private static Method METHOD_CREATE_WORK_BOOK, METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE,
 			METHOD_GET_PARAMETER_TYPES, METHOD_AND, METHOD_IIF, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
-			METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_LENGTH, METHOD_LONG_VALUE, METHOD_SET_SELECTED_ITEM,
+			METHOD_ADD_ACTION_LISTENER, METHOD_LENGTH, METHOD_LONG_VALUE, METHOD_SET_SELECTED_ITEM,
 			METHOD_SET_PREFERRED_WIDTH, METHOD_MAX, METHOD_CREATE_DIMENSION_COMPARATOR = null;
 
 	@BeforeAll
@@ -89,8 +89,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 		//
 		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
 				AbstractButton[].class)).setAccessible(true);
-		//
-		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class, Object[].class)).setAccessible(true);
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", File.class)).setAccessible(true);
 		//
@@ -599,29 +597,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 			throws Throwable {
 		try {
 			METHOD_ADD_ACTION_LISTENER.invoke(null, actionListener, bs);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testToArray() throws Throwable {
-		//
-		Assertions.assertNull(toArray(Reflection.newProxy(Collection.class, ih), null));
-		//
-		final Collection<Object> collection = Collections.emptySet();
-		//
-		Assertions.assertNull(toArray(collection, null));
-		//
-		final Object[] array = new Object[] {};
-		//
-		Assertions.assertArrayEquals(array, toArray(collection, array));
-		//
-	}
-
-	private static <T> T[] toArray(final Collection<T> instance, final T[] array) throws Throwable {
-		try {
-			return (T[]) METHOD_TO_ARRAY.invoke(null, instance, array);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

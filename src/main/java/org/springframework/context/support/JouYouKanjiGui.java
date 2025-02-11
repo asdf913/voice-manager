@@ -276,7 +276,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		testAndAccept(predicate, new JLabel("常用漢字"), this::add);
 		//
 		final JComboBox<?> jcbJouYouKanji = new JComboBox<>(
-				cbmJouYouKanJi = new DefaultComboBoxModel<>(toArray(getBooleanValues(), new Boolean[] {})));
+				cbmJouYouKanJi = new DefaultComboBoxModel<>(Util.toArray(getBooleanValues(), new Boolean[] {})));
 		//
 		final String wrap = "wrap";
 		//
@@ -337,15 +337,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 	private static Object get(@Nullable final Field field, @Nullable final Object instance)
 			throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
-	}
-
-	@Nullable
-	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
-		//
-		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.toArray(array)
-				: null;
-		//
 	}
 
 	@Override

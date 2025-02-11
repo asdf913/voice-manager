@@ -446,7 +446,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	@SuppressWarnings("java:S1612")
 	public void setMp3Tags(final Object value) {
 		//
-		mp3Tags = toArray(
+		mp3Tags = Util.toArray(
 				Util.toList(Util.map(Util.stream(getObjectList(getObjectMapper(), value)), x -> Util.toString(x))),
 				new String[] {});
 		//
@@ -4191,7 +4191,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		if ((!(dvh instanceof XSSFDataValidationHelper) || CollectionUtils.isNotEmpty(values)) && row != null) {
 			//
 			addValidationData(ObjectMap.getObject(objectMap, Sheet.class),
-					createValidation(dvh, createExplicitListConstraint(dvh, toArray(values, new String[] {})),
+					createValidation(dvh, createExplicitListConstraint(dvh, Util.toArray(values, new String[] {})),
 							new CellRangeAddressList(row.getRowNum(), row.getRowNum(), index, index)));
 			//
 		} // if
@@ -4212,7 +4212,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		if ((!(dvh instanceof XSSFDataValidationHelper) || CollectionUtils.isNotEmpty(strings)) && row != null) {
 			//
 			addValidationData(ObjectMap.getObject(objectMap, Sheet.class),
-					createValidation(dvh, createExplicitListConstraint(dvh, toArray(strings, new String[] {})),
+					createValidation(dvh, createExplicitListConstraint(dvh, Util.toArray(strings, new String[] {})),
 							new CellRangeAddressList(row.getRowNum(), row.getRowNum(), index, index)));
 			//
 		} // if
@@ -4236,10 +4236,12 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		if ((!(dvh instanceof XSSFDataValidationHelper) || CollectionUtils.isNotEmpty(bs)) && row != null) {
 			//
-			addValidationData(ObjectMap.getObject(objectMap, Sheet.class), createValidation(dvh,
-					createExplicitListConstraint(dvh,
-							toArray(Util.toList(Util.map(Util.stream(bs), x -> Util.toString(x))), new String[] {})),
-					new CellRangeAddressList(row.getRowNum(), row.getRowNum(), index, index)));
+			addValidationData(ObjectMap.getObject(objectMap, Sheet.class),
+					createValidation(dvh,
+							createExplicitListConstraint(dvh,
+									Util.toArray(Util.toList(Util.map(Util.stream(bs), x -> Util.toString(x))),
+											new String[] {})),
+							new CellRangeAddressList(row.getRowNum(), row.getRowNum(), index, index)));
 			//
 		} // if
 			//
@@ -4262,15 +4264,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	private static DataValidationConstraint createExplicitListConstraint(@Nullable final DataValidationHelper instance,
 			@Nullable final String[] listOfValues) {
 		return instance != null ? instance.createExplicitListConstraint(listOfValues) : null;
-	}
-
-	@Nullable
-	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
-		//
-		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.toArray(array)
-				: null;
-		//
 	}
 
 	@Nullable
