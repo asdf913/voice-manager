@@ -1425,13 +1425,18 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // if
 			//
-		actionPerformed2(source);
+		final Iterable<Predicate<Object>> predicates = Arrays.asList(this::actionPerformed2, this::actionPerformed3);
 		//
-	}
-
-	@Nullable
-	private static String[] getFileExtensions(@Nullable final ContentInfo instance) {
-		return instance != null ? instance.getFileExtensions() : null;
+		for (int i = 0; i < IterableUtils.size(predicates); i++) {
+			//
+			if (Util.test(IterableUtils.get(predicates, i), source)) {
+				//
+				break;
+				//
+			} // if
+				//
+		} // for
+			//
 	}
 
 	private boolean actionPerformed2(final Object source) {
@@ -1490,6 +1495,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			Util.setText(taHtml, Util.getText(tfText));
 			//
+			return true;
+			//
 		} else if (Objects.equals(source, btnGenerateRubyHtml)) {
 			//
 			try {
@@ -1503,7 +1510,17 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // try
 				//
-		} else if (Objects.equals(source, btnPreviewRubyPdf)) {
+			return true;
+			//
+		} // if
+			//
+		return false;
+		//
+	}
+
+	private boolean actionPerformed3(final Object source) {
+		//
+		if (Objects.equals(source, btnPreviewRubyPdf)) {
 			//
 			final HtmlBuilder<StringBuilder> htmlBuilder = FlatHtml.inMemory();
 			//
@@ -1575,6 +1592,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		return false;
 		//
+	}
+
+	@Nullable
+	private static String[] getFileExtensions(@Nullable final ContentInfo instance) {
+		return instance != null ? instance.getFileExtensions() : null;
 	}
 
 	@Nullable
