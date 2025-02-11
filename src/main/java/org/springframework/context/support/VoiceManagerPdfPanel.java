@@ -1054,10 +1054,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
+	@Nullable
 	private static org.apache.bcel.classfile.Field[] getFields(@Nullable final JavaClass instance) {
 		return instance != null ? instance.getFields() : null;
 	}
 
+	@Nullable
 	private static Type getType(@Nullable final org.apache.bcel.classfile.Field instance) {
 		return instance != null ? instance.getType() : null;
 	}
