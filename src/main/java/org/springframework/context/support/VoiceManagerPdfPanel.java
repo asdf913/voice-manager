@@ -105,6 +105,7 @@ import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.FieldOrMethodUtil;
+import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.generic.ConstantPoolGen;
 import org.apache.bcel.generic.FieldInstructionUtil;
@@ -221,6 +222,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 import j2html.rendering.FlatHtml;
 import j2html.rendering.HtmlBuilder;
 import j2html.rendering.TagBuilder;
+import kotlinx.css.TextAlign;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerPdfPanel extends JPanel implements Titled, InitializingBean, ActionListener,
@@ -322,7 +324,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private transient ComboBoxModel<ECSSUnit> cbmFontSize1 = null;
 
-	private transient ComboBoxModel<String> cbmVoiceId = null;
+	private transient ComboBoxModel<String> cbmVoiceId, cbmTextAlign1 = null;
 
 	private transient ApplicationContext applicationContext = null;
 
@@ -784,6 +786,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		setSelectedItem(cbmFontSize1, Util.getValue(entry));
 		//
+		// Text Align
+		//
+		add(new JLabel("Text Align"));
+		//
+		add(new JComboBox<>(cbmTextAlign1 = new DefaultComboBoxModel<>(ArrayUtils.insert(0,
+				Util.toArray(getTextAligns(VoiceManagerPdfPanel.class), new String[] {}), (String) null))),
+				String.format("%1$s,span %2$s", WRAP, span));
+		//
 		// HTML
 		//
 		add(new JLabel("HTML"));
@@ -1019,6 +1029,32 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		insertUpdate(Reflection.newProxy(DocumentEvent.class, ih));
 		//
+	}
+
+	private static List<String> getTextAligns(final Class<?> clz) throws IOException {
+		//
+		List<String> list = null;
+		//
+		try (final InputStream is = Util.getResourceAsStream(clz, "/kotlinx/css/TextAlign.class")) {
+			//
+			list = Util.toList(Util.map(Util.filter(testAndApply(Objects::nonNull,
+					getFields(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null).parse(), null)),
+					Arrays::stream, null), f -> {
+						return Objects.equals(TypeUtil.getClassName(getType(f)), "kotlinx.css.TextAlign");
+					}), f -> FieldOrMethodUtil.getName(f)));
+			//
+		} // try
+			//
+		return list;
+		//
+	}
+
+	private static org.apache.bcel.classfile.Field[] getFields(final JavaClass instance) {
+		return instance != null ? instance.getFields() : null;
+	}
+
+	private static Type getType(final org.apache.bcel.classfile.Field instance) {
+		return instance != null ? instance.getType() : null;
 	}
 
 	private static void setLayout(@Nullable final Container instance, final LayoutManager layoutManager) {
@@ -1711,7 +1747,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	private Map<String, String> createStyleMap() {
 		//
 		return createStyleMap(
-				Map.of("text-align", "center", "display", "block", "margin-left", "auto", "margin-right", "auto"),
+				Map.of("text-align", ObjectUtils.defaultIfNull(Util.toString(getSelectedItem(cbmTextAlign1)), "center"),
+						"display", "block", "margin-left", "auto", "margin-right", "auto"),
 				testAndApply(NumberUtils::isCreatable, Util.getText(tfFontSize1), NumberUtils::createBigDecimal, null),
 				Util.cast(ECSSUnit.class, getSelectedItem(cbmFontSize1)));
 		//

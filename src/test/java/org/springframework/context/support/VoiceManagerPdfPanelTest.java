@@ -42,7 +42,8 @@ import j2html.rendering.HtmlBuilder;
 
 class VoiceManagerPdfPanelTest {
 
-	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_SELECTED_ITEM, METHOD_TO_HTML = null;
+	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_SELECTED_ITEM, METHOD_TO_HTML,
+			METHOD_GET_TEXT_ALIGNS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -55,6 +56,8 @@ class VoiceManagerPdfPanelTest {
 		//
 		(METHOD_TO_HTML = clz.getDeclaredMethod("toHtml", HtmlBuilder.class, String.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_TEXT_ALIGNS = clz.getDeclaredMethod("getTextAligns", Class.class)).setAccessible(true);
 		//
 	}
 
@@ -349,6 +352,27 @@ class VoiceManagerPdfPanelTest {
 			throws Throwable {
 		try {
 			METHOD_TO_HTML.invoke(null, htmlBuilder, text, ruby);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetTextAligns() throws Throwable {
+		//
+		System.out.println(getTextAligns(VoiceManagerPdfPanel.class));
+		//
+	}
+
+	private static List<String> getTextAligns(final Class<?> clz) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TEXT_ALIGNS.invoke(null, clz);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			} // if
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

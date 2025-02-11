@@ -342,6 +342,18 @@
 		    <artifactId>playwright</artifactId>
 		    <version>1.50.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin-wrappers/kotlin-css-jvm -->
+		<dependency>
+			<groupId>org.jetbrains.kotlin-wrappers</groupId>
+			<artifactId>kotlin-css-jvm</artifactId>
+			<version>2025.2.4</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.jetbrains.kotlin</groupId>
+					<artifactId>kotlin-stdlib</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
