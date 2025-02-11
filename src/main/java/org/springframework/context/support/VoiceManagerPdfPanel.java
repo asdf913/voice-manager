@@ -1613,7 +1613,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		final int sizeIly = IterableUtils.size(ily);
 		//
-		if (sizeIlx > 1 && sizeIly > 1) {
+		if (Boolean.logicalAnd(sizeIlx > 1, sizeIly > 1)) {
 			//
 			final int firstX = getInt(ilx, 0, 0);
 			//
