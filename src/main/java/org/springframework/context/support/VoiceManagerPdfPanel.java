@@ -1012,6 +1012,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		actionPerformed(new ActionEvent(btnImageClear, 0, null));
 		//
+		final IH ih = new IH();
+		//
+		ih.docuemnt = taHtmlDocument;
+		//
+		insertUpdate(Reflection.newProxy(DocumentEvent.class, ih));
+		//
 	}
 
 	private static void setLayout(@Nullable final Container instance, final LayoutManager layoutManager) {
@@ -2337,7 +2343,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		if (Objects.equals(getDocument(evt), taHtmlDocument)) {
 			//
-			setFontSizeAndUnit(Util.getText(taHtml));
+			final String html = Util.getText(taHtml);
+			//
+			setFontSizeAndUnit(html);
+			//
+			setEnabled(btnPreviewRubyPdf, StringUtils.isNotBlank(html));
 			//
 		} // if
 			//
@@ -2348,7 +2358,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		if (Objects.equals(getDocument(evt), taHtmlDocument)) {
 			//
-			setFontSizeAndUnit(Util.getText(taHtml));
+			final String html = Util.getText(taHtml);
+			//
+			setFontSizeAndUnit(html);
+			//
+			setEnabled(btnPreviewRubyPdf, StringUtils.isNotBlank(html));
 			//
 		} // if
 			//
@@ -2525,6 +2539,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 		private Map<Object, Object> floats = null;
 
+		private Document docuemnt = null;
+
 		private Map<Object, Object> getObjects() {
 			if (objects == null) {
 				objects = new LinkedHashMap<>();
@@ -2572,6 +2588,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					Util.put(getObjects(), args[0], args[1]);
 					//
 					return null;
+					//
+				} // if
+					//
+			} else if (proxy instanceof DocumentEvent) {
+				//
+				if (Objects.equals(methodName, "getDocument")) {
+					//
+					return docuemnt;
 					//
 				} // if
 					//
