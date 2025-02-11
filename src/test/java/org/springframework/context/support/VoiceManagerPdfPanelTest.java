@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -259,13 +260,15 @@ class VoiceManagerPdfPanelTest {
 			//
 		} // if
 			//
+			// btnGenerateRubyHtml
+			//
 		final AbstractButton btnGenerateRubyHtml = new JButton();
 		//
 		FieldUtils.writeDeclaredField(instance, "btnGenerateRubyHtml", btnGenerateRubyHtml, true);
 		//
-		final ActionEvent actionEvent = new ActionEvent(btnGenerateRubyHtml, 0, null);
+		final ActionEvent actionEventBtnGenerateRubyHtml = new ActionEvent(btnGenerateRubyHtml, 0, null);
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnGenerateRubyHtml));
 		//
 		final JTextComponent taHtml = new JTextArea();
 		//
@@ -273,7 +276,7 @@ class VoiceManagerPdfPanelTest {
 		//
 		FieldUtils.writeDeclaredField(instance, "taHtml", taHtml, true);
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnGenerateRubyHtml));
 		//
 		Assertions.assertEquals(
 				"それは<ruby><rb>大変</rb><rp>(</rp><rt>たいへん</rt><rp>)</rp></ruby>ですね。すぐ<ruby><rb>交番</rb><rp>(</rp><rt>こうばん</rt><rp>)</rp></ruby>に<ruby><rb>行</rb><rp>(</rp><rt>い</rt><rp>)</rp></ruby>かないと。",
@@ -281,13 +284,13 @@ class VoiceManagerPdfPanelTest {
 		//
 		Util.setText(taHtml, "A");
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnGenerateRubyHtml));
 		//
 		Assertions.assertEquals(Util.getText(taHtml), Util.getText(taHtml));
 		//
 		Util.setText(taHtml, "テーブルに花瓶が置いてあります。");
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnGenerateRubyHtml));
 		//
 		Assertions.assertEquals(
 				"テーブルに<ruby><rb>花瓶</rb><rp>(</rp><rt>かびん</rt><rp>)</rp></ruby>が<ruby><rb>置</rb><rp>(</rp><rt>お</rt><rp>)</rp></ruby>いてあります。",
@@ -295,7 +298,7 @@ class VoiceManagerPdfPanelTest {
 		//
 		Util.setText(taHtml, "ごみ箱は台所の隅に置いてあります。");
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnGenerateRubyHtml));
 		//
 		Assertions.assertEquals(
 				"ごみ<ruby><rb>箱</rb><rp>(</rp><rt>ばこ</rt><rp>)</rp></ruby>は<ruby><rb>台所</rb><rp>(</rp><rt>だいどころ</rt><rp>)</rp></ruby>の<ruby><rb>隅</rb><rp>(</rp><rt>すみ</rt><rp>)</rp></ruby>に<ruby><rb>置</rb><rp>(</rp><rt>お</rt><rp>)</rp></ruby>いてあります。",
@@ -303,7 +306,7 @@ class VoiceManagerPdfPanelTest {
 		//
 		Util.setText(taHtml, "ハサミは引き出しに入れてあります。");
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnGenerateRubyHtml));
 		//
 		Assertions.assertEquals(
 				"ハサミは<ruby><rb>引</rb><rp>(</rp><rt>ひ</rt><rp>)</rp></ruby>き<ruby><rb>出</rb><rp>(</rp><rt>だ</rt><rp>)</rp></ruby>しに<ruby><rb>入</rb><rp>(</rp><rt>い</rt><rp>)</rp></ruby>れてあります。",
@@ -311,12 +314,28 @@ class VoiceManagerPdfPanelTest {
 		//
 		Util.setText(taHtml, "7時の新幹線に乗る予定です。");
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnGenerateRubyHtml));
 		//
 		Assertions.assertEquals(
 				"7<ruby><rb>時</rb><rp>(</rp><rt>じ</rt><rp>)</rp></ruby>の<ruby><rb>新幹線</rb><rp>(</rp><rt>しんかんせん</rt><rp>)</rp></ruby>に<ruby><rb>乗</rb><rp>(</rp><rt>の</rt><rp>)</rp></ruby>る<ruby><rb>予定</rb><rp>(</rp><rt>よてい</rt><rp>)</rp></ruby>です。",
 				Util.getText(taHtml));
 		//
+		if (GraphicsEnvironment.isHeadless()) {
+			//
+			// btnPreviewRubyPdf
+			//
+			final AbstractButton btnPreviewRubyPdf = new JButton();
+			//
+			FieldUtils.writeDeclaredField(instance, "btnPreviewRubyPdf", btnPreviewRubyPdf, true);
+			//
+			final ActionEvent actionEventBtnPreviewRubyPdf = new ActionEvent(btnPreviewRubyPdf, 0, null);
+			//
+			Util.setText(taHtml, null);
+			//
+			Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnPreviewRubyPdf));
+			//
+		} // if
+			//
 	}
 
 	@Test
