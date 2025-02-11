@@ -443,8 +443,6 @@ class VoiceManagerTest {
 
 	private Logger logger = null;
 
-	private Collection<?> collection = null;
-
 	private ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
 	@BeforeEach
