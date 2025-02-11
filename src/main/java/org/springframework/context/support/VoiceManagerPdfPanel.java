@@ -1041,7 +1041,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					getFields(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null).parse(), null)),
 					Arrays::stream, null), f -> {
 						return Objects.equals(TypeUtil.getClassName(getType(f)), "kotlinx.css.TextAlign");
-					}), f -> FieldOrMethodUtil.getName(f)));
+					}), FieldOrMethodUtil::getName));
 			//
 		} // try
 			//
