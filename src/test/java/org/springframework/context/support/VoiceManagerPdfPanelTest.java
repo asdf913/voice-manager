@@ -57,7 +57,7 @@ class VoiceManagerPdfPanelTest {
 		(METHOD_TO_HTML = clz.getDeclaredMethod("toHtml", HtmlBuilder.class, String.class, String.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_TEXT_ALIGNS = clz.getDeclaredMethod("getTextAligns", Class.class)).setAccessible(true);
+		(METHOD_GET_TEXT_ALIGNS = clz.getDeclaredMethod("getTextAligns")).setAccessible(true);
 		//
 	}
 
@@ -360,13 +360,13 @@ class VoiceManagerPdfPanelTest {
 	@Test
 	void testGetTextAligns() throws Throwable {
 		//
-		Assertions.assertNotNull(getTextAligns(VoiceManagerPdfPanel.class));
+		Assertions.assertNotNull(getTextAligns());
 		//
 	}
 
-	private static List<String> getTextAligns(final Class<?> clz) throws Throwable {
+	private static List<String> getTextAligns() throws Throwable {
 		try {
-			final Object obj = METHOD_GET_TEXT_ALIGNS.invoke(null, clz);
+			final Object obj = METHOD_GET_TEXT_ALIGNS.invoke(null);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof List) {
@@ -464,8 +464,10 @@ class VoiceManagerPdfPanelTest {
 								parameterCount == 0),
 						Boolean.logicalAnd(Objects.equals(name, "createImageFormatComparator"),
 								Arrays.equals(parameterTypes, new Class<?>[] { List.class })),
-						Boolean.logicalAnd(Objects.equals(name, "createStyleMap"), Arrays.equals(parameterTypes,
-								new Class<?>[] { Map.class, BigDecimal.class, ECSSUnit.class })))) {
+						Boolean.logicalAnd(Objects.equals(name, "createStyleMap"),
+								Arrays.equals(parameterTypes,
+										new Class<?>[] { Map.class, BigDecimal.class, ECSSUnit.class })),
+						Boolean.logicalAnd(Objects.equals(name, "getTextAligns"), parameterCount == 0))) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//

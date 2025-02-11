@@ -40,6 +40,7 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -63,6 +64,7 @@ import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
@@ -120,6 +122,7 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.Type;
 import org.apache.bcel.generic.TypeUtil;
+import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
@@ -792,8 +795,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(new JLabel("Text Align"));
 		//
-		add(new JComboBox<>(cbmTextAlign1 = new DefaultComboBoxModel<>(ArrayUtils.insert(0,
-				Util.toArray(getTextAligns(VoiceManagerPdfPanel.class), new String[] {}), (String) null))),
+		add(new JComboBox<>(cbmTextAlign1 = new DefaultComboBoxModel<>(
+				ArrayUtils.insert(0, Util.toArray(getTextAligns(), new String[] {}), (String) null))),
 				String.format("%1$s,span %2$s", WRAP, span));
 		//
 		// HTML
@@ -1033,25 +1036,40 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static List<String> getTextAligns(final Class<?> clz) throws IOException {
+	private static List<String> getTextAligns() throws IOException, URISyntaxException {
 		//
-		List<String> list = null;
+		// start,end,left,right,center,justify,match-parent,justify-all
 		//
-		try (final InputStream is = Util.getResourceAsStream(clz, "/kotlinx/css/TextAlign.class")) {
-			//
-			list = Util.toList(Util.map(
-					Util.filter(
-							testAndApply(Objects::nonNull,
-									JavaClassUtil.getFields(testAndApply(Objects::nonNull, is,
-											x -> new ClassParser(x, null).parse(), null)),
-									Arrays::stream, null),
-							f -> Objects.equals(TypeUtil.getClassName(FieldUtil.getType(f)), "kotlinx.css.TextAlign")),
-					FieldOrMethodUtil::getName));
-			//
-		} // try
-			//
-		return list;
+		return Util
+				.toList(Util.filter(
+						Util.map(
+								flatMap(Util.map(
+										Util.filter(flatMap(
+												Util.map(
+														Util.filter(
+																Util.stream(ElementUtil.select(Jsoup.parse(
+																		new URI("https://www.w3.org/TR/css-text-4/")
+																				.toURL(), // TODO
+																		0), "th")),
+																x -> Objects.equals(ElementUtil.text(x), "Name:")
+																		&& Objects.equals("text-align",
+																				ElementUtil.text(ElementUtil
+																						.nextElementSibling(x)))),
+														x -> NodeUtil.childNodes(NodeUtil.nextSibling(parentNode(x)))),
+												x -> Util.stream(x)), x -> Objects.equals("td", NodeUtil.nodeName(x))),
+										x -> NodeUtil.childNodes(x)), x -> Util.stream(x)),
+								x -> StringUtils.trim(TextNodeUtil.text(Util.cast(TextNode.class, x)))),
+						StringUtils::isNotBlank));
 		//
+	}
+
+	private static Node parentNode(final Node instance) {
+		return instance != null ? instance.parentNode() : null;
+	}
+
+	private static <T, R> Stream<R> flatMap(final Stream<T> instance,
+			final Function<? super T, ? extends Stream<? extends R>> mapper) {
+		return instance != null ? instance.flatMap(mapper) : null;
 	}
 
 	private static void setLayout(@Nullable final Container instance, final LayoutManager layoutManager) {
