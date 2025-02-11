@@ -77,6 +77,7 @@ import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.swing.AbstractButton;
+import javax.swing.BoxLayout;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -122,6 +123,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiFunction;
@@ -281,7 +283,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Generate Ruby Html")
 	private AbstractButton btnGenerateRubyHtml = null;
 
-	private AbstractButton btnPreserveImage = null;
+	private AbstractButton btnPreviewRubyPdf, btnPreserveImage = null;
 
 	@Note("HTML")
 	private JTextComponent taHtml = null;
@@ -795,7 +797,15 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		add(jsp, String.format("%1$s,span %2$s", GROWX, span - 2));
 		//
-		add(btnGenerateRubyHtml = new JButton("Generate Ruby HTML"), String.format("%1$s,span %2$s", WRAP, 2));
+		JPanel panel = new JPanel();
+		//
+		setLayout(panel, new BoxLayout(panel, BoxLayout.Y_AXIS));
+		//
+		panel.add(btnGenerateRubyHtml = new JButton("Generate Ruby HTML"));
+		//
+		panel.add(btnPreviewRubyPdf = new JButton("Preview Ruby"));
+		//
+		add(panel, String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		// Font Size
 		//
@@ -885,9 +895,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(new JLabel("Image From Clipboard"));
 		//
-		JPanel panel = new JPanel();
-		//
-		testAndAccept((a, b) -> b != null, panel,
+		testAndAccept((a, b) -> b != null, panel = new JPanel(),
 				getLayoutManager(ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext),
 						Util.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
 				(a, b) -> setLayout(a, b));
@@ -1266,15 +1274,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final Path pathHtml = Path.of("test.html");
 			//
-			final Map<String, String> style = new LinkedHashMap<>(
-					Map.of("text-align", "center", "display", "block", "margin-left", "auto", "margin-right", "auto"));
-			//
-			testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null),
-					testAndApply(NumberUtils::isCreatable, Util.getText(tfFontSize1), NumberUtils::createBigDecimal,
-							null),
-					Util.cast(ECSSUnit.class, getSelectedItem(cbmFontSize1)),
-					(a, b) -> Util.put(style, "font-size", new CSSSimpleValueWithUnit(a, b).getFormatted()));
-			//
 			final File file = Util.toFile(Path
 					.of(StringUtils.joinWith(".", StringUtils.defaultIfBlank(Util.getText(tfText), "test"), "pdf")));
 			//
@@ -1286,17 +1285,16 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				FileUtils
 						.writeStringToFile(Util.toFile(pathHtml),
-								Util.toString(
-										output(appendEndTag(
-												appendUnescapedText(completeTag(appendAttribute(
-														appendStartTag(htmlBuilder, "div"), "style",
+								Util.toString(output(appendEndTag(
+										appendUnescapedText(
+												completeTag(appendAttribute(appendStartTag(htmlBuilder, "div"), "style",
 														Util.collect(
-																Util.map(Util.stream(Util.entrySet(style)),
+																Util.map(Util.stream(Util.entrySet(createStyleMap())),
 																		x -> StringUtils.joinWith(":", Util.getKey(x),
 																				Util.getValue(x))),
 																Collectors.joining(";")))),
-														Util.getText(taHtml)),
-												"div"))),
+												Util.getText(taHtml)),
+										"div"))),
 								StandardCharsets.UTF_8, false);
 				//
 				document = Loader.loadPDF(pdf(pathHtml));
@@ -1419,6 +1417,76 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // try
 				//
+		} else if (Objects.equals(source, btnPreviewRubyPdf)) {
+			//
+			final HtmlBuilder<StringBuilder> htmlBuilder = FlatHtml.inMemory();
+			//
+			File file = null;
+			//
+			PDDocument document = null;
+			//
+			try {
+				//
+				final String html = Util
+						.toString(output(appendEndTag(
+								appendEndTag(
+										appendUnescapedText(
+												completeTag(appendAttribute(appendStartTag(
+														completeTag(appendStartTag(htmlBuilder, "html")), "div"),
+														"style",
+														Util.collect(
+																Util.map(Util.stream(Util.entrySet(createStyleMap())),
+																		x -> StringUtils.joinWith(":", Util.getKey(x),
+																				Util.getValue(x))),
+																Collectors.joining(";")))),
+												Util.getText(taHtml)),
+										"div"),
+								"html")));
+				//
+				FileUtils.writeStringToFile(
+						file = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null), html,
+						StandardCharsets.UTF_8, false);
+				//
+				final ContentInfo ci = new ContentInfoUtil().findMatch(file);
+				//
+				final String[] fileExtensions = ci != null ? ci.getFileExtensions() : null;
+				//
+				if (fileExtensions != null && fileExtensions.length > 0) {
+					//
+					final Matcher matcher = matcher(Pattern.compile("^([^.]+.)[^.]+$"), Util.getName(file));
+					//
+					if (matches(matcher) && groupCount(matcher) > 0) {
+						//
+						FileUtils.deleteQuietly(file);
+						//
+						FileUtils.writeStringToFile(
+								file = new File(StringUtils.join(group(matcher, 1), ArrayUtils.get(fileExtensions, 0))),
+								html, StandardCharsets.UTF_8, false);
+						//
+					} // if
+						//
+				} // if
+					//
+				JOptionPane.showMessageDialog(null,
+						testAndApply(Objects::nonNull,
+								chop(testAndApply(x -> x != null && x.getNumberOfPages() > 0,
+										document = Loader.loadPDF(pdf(Util.toPath(file))),
+										x -> new PDFRenderer(x).renderImage(0), null)),
+								ImageIcon::new, null),
+						"Image", JOptionPane.PLAIN_MESSAGE, null);
+				//
+			} catch (final IOException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} finally {
+				//
+				FileUtils.deleteQuietly(file);
+				//
+				IOUtils.closeQuietly(document);
+				//
+			} // try
+				//
 		} // if
 			//
 		actionPerformed2(source);
@@ -1498,6 +1566,90 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		return false;
 		//
+	}
+
+	private static BufferedImage chop(final BufferedImage bi) {
+		//
+		Integer rgb = null;
+		//
+		IntList ilx = null;
+		//
+		IntList ily = null;
+		//
+		for (int x = 0; bi != null && x < bi.getWidth(); x++) {
+			//
+			for (int y = 0; y < bi.getHeight(); y++) {
+				//
+				if (rgb == null) {
+					//
+					rgb = Integer.valueOf(bi.getRGB(x, y));
+					//
+				} else if (rgb != null && rgb.intValue() != bi.getRGB(x, y)) {
+					//
+					if (!Util.contains(ilx = ObjectUtils.getIfNull(ilx, IntList::create), x)) {
+						//
+						IntCollectionUtil.addInt(ilx, x);
+						//
+					} // if
+						//
+					if (!Util.contains(ily = ObjectUtils.getIfNull(ily, IntList::create), y)) {
+						//
+						IntCollectionUtil.addInt(ily, y);
+						//
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+		sortInts(ilx);
+		//
+		sortInts(ily);
+		//
+		final int sizeIlx = IterableUtils.size(ilx);
+		//
+		final int sizeIly = IterableUtils.size(ily);
+		//
+		if (sizeIlx > 1 && sizeIly > 1) {
+			//
+			final int firstX = ilx.getInt(0);
+			//
+			final int firstY = ily.getInt(0);
+			//
+			return bi.getSubimage(firstX, firstY, ilx.getInt(sizeIlx - 1) - firstX + 1,
+					ily.getInt(sizeIly - 1) - firstY + 1);
+			//
+		} // if
+			//
+		return bi;
+		//
+	}
+
+	private Map<String, String> createStyleMap() {
+		//
+		return createStyleMap(
+				Map.of("text-align", "center", "display", "block", "margin-left", "auto", "margin-right", "auto"),
+				testAndApply(NumberUtils::isCreatable, Util.getText(tfFontSize1), NumberUtils::createBigDecimal, null),
+				Util.cast(ECSSUnit.class, getSelectedItem(cbmFontSize1)));
+		//
+	}
+
+	private static Map<String, String> createStyleMap(final Map<String, String> map, final BigDecimal fontSize,
+			final ECSSUnit ecssUnit) {
+		//
+		final Map<String, String> result = new LinkedHashMap<>(ObjectUtils.getIfNull(map, Collections::emptyMap));
+		//
+		testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null), fontSize, ecssUnit,
+				(a, b) -> Util.put(result, "font-size", new CSSSimpleValueWithUnit(a, b).getFormatted()));
+		//
+		return result;
+		//
+	}
+
+	private static String nextAlphabetic(final RandomStringUtils instance, final int count) {
+		return instance != null ? instance.nextAlphabetic(count) : null;
 	}
 
 	@Nullable
