@@ -1637,6 +1637,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		}
 	}
 
+	@Nullable
 	private static BufferedImage getSubimage(@Nullable final BufferedImage instance, final int x, final int y,
 			final int w, final int h) {
 		return instance != null ? instance.getSubimage(x, y, w, h) : null;
