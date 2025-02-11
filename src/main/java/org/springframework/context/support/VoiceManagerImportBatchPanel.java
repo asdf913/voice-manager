@@ -1621,16 +1621,16 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			try {
 				//
-				infoOrPrintln(LOG, getSystemPrintStreamByFieldName("out"),
-						String.format("%1$s %2$s/%3$s (%4$s) %5$s/%6$s", percentage != null
-								? StringUtils.leftPad(format(percentNumberFormat, doubleValue(percentage, 0)), 5, ' ')
+				infoOrPrintln(LOG, getSystemPrintStreamByFieldName("out"), String.format(
+						"%1$s %2$s/%3$s (%4$s) %5$s/%6$s",
+						percentage != null
+								? StringUtils.leftPad(format(percentNumberFormat, Util.doubleValue(percentage, 0)), 5,
+										' ')
 								: null,
-								StringUtils.leftPad(Util.toString(sheetCurrent),
-										StringUtils.length(Util.toString(ObjectUtils.max(sheetCurrent, sheetTotal))),
-										' '),
-								sheetTotal, currentSheetName,
-								StringUtils.leftPad(Util.toString(counter), StringUtils.length(Util.toString(count))),
-								count));
+						StringUtils.leftPad(Util.toString(sheetCurrent),
+								StringUtils.length(Util.toString(ObjectUtils.max(sheetCurrent, sheetTotal))), ' '),
+						sheetTotal, currentSheetName,
+						StringUtils.leftPad(Util.toString(counter), StringUtils.length(Util.toString(count))), count));
 				//
 			} catch (final IllegalAccessException e) {
 				//
@@ -1705,10 +1705,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			if (instance != null) {
 				instance.setValue(n);
 			}
-		}
-
-		private static double doubleValue(@Nullable final Number instance, final double defaultValue) {
-			return instance != null ? instance.doubleValue() : defaultValue;
 		}
 
 		@Nullable

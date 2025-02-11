@@ -2873,7 +2873,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 			} // if
 				//
-			cell.setCellValue(doubleValue(number, 0));
+			cell.setCellValue(Util.doubleValue(number, 0));
 			//
 		} else if (value instanceof Date) {
 			//
@@ -2905,10 +2905,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 		} // if
 			//
-	}
-
-	private static double doubleValue(@Nullable final Number instance, final double defaultValue) {
-		return instance != null ? instance.doubleValue() : defaultValue;
 	}
 
 	@Nullable

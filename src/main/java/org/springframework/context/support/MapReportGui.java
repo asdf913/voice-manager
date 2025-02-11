@@ -199,8 +199,8 @@ public class MapReportGui extends JFrame
 		//
 		if (pd != null) {
 			//
-			pd.setSize(doubleValue(getPreferredWidth(jsp), 0) - doubleValue(getPreferredWidth(label), 0)
-					- doubleValue(getPreferredWidth(btnExecute), 0) - 14, pd.getHeight());
+			pd.setSize(Util.doubleValue(getPreferredWidth(jsp), 0) - Util.doubleValue(getPreferredWidth(label), 0)
+					- Util.doubleValue(getPreferredWidth(btnExecute), 0) - 14, pd.getHeight());
 			//
 		} // if
 			//
@@ -247,10 +247,6 @@ public class MapReportGui extends JFrame
 		//
 		return pd != null ? Double.valueOf(pd.getWidth()) : null;
 		//
-	}
-
-	private static double doubleValue(@Nullable final Number instance, final double defaultValue) {
-		return instance != null ? instance.doubleValue() : defaultValue;
 	}
 
 	@Override

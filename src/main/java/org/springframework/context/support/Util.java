@@ -1597,6 +1597,10 @@ public abstract class Util {
 		return instance != null ? instance.intValue() : defaultValue;
 	}
 
+	static double doubleValue(final Number instance, final double defaultValue) {
+		return instance != null ? instance.doubleValue() : defaultValue;
+	}
+
 	@Nullable
 	static Path toPath(@Nullable final File instance) {
 		return instance != null ? instance.toPath() : null;
