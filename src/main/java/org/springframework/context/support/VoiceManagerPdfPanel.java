@@ -1597,7 +1597,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				} else if (rgb != null && rgb.intValue() != bi.getRGB(x, y)) {
 					//
 					testAndAccept((a, b) -> !Util.contains(a, b), ilx = ObjectUtils.getIfNull(ilx, IntList::create), x,
-							(a, b) -> IntCollectionUtil.addInt(a, b));
+							IntCollectionUtil::addInt);
 					//
 					if (IterableUtils.size(ilx) > 2) {
 						//
@@ -1612,7 +1612,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					} // if
 						//
 					testAndAccept((a, b) -> !Util.contains(a, b), ily = ObjectUtils.getIfNull(ily, IntList::create), y,
-							(a, b) -> IntCollectionUtil.addInt(a, b));
+							IntCollectionUtil::addInt);
 					//
 					if (IterableUtils.size(ily) > 2) {
 						//
