@@ -1409,20 +1409,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			setContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(), Toolkit.getDefaultToolkit(),
 					x -> getSystemClipboard(x), null), new StringSelection(Util.getText(tfOutputFile)), null);
 			//
-		} else if (Objects.equals(source, btnBrowseOutputFolder)) {
-			//
-			try {
-				//
-				testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)),
-						Util.toFile(testAndApply(Objects::nonNull, Util.getText(tfOutputFile), Path::of, null)),
-						x -> browse(Desktop.getDesktop(), toURI(getParentFile(x))));
-				//
-			} catch (final IOException e) {
-				//
-				LoggerUtil.error(LOG, e.getMessage(), e);
-				//
-			} // try
-				//
 		} // if
 			//
 		final Iterable<Predicate<Object>> predicates = Arrays.asList(this::actionPerformed2, this::actionPerformed3);
@@ -1503,6 +1489,22 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				testAndAccept(VoiceManagerPdfPanel::isPlainText, Util.getText(taHtml),
 						x -> Util.setText(taHtml, toHtml(x)));
+				//
+			} catch (final IOException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
+				//
+			return true;
+			//
+		} else if (Objects.equals(source, btnBrowseOutputFolder)) {
+			//
+			try {
+				//
+				testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)),
+						Util.toFile(testAndApply(Objects::nonNull, Util.getText(tfOutputFile), Path::of, null)),
+						x -> browse(Desktop.getDesktop(), toURI(getParentFile(x))));
 				//
 			} catch (final IOException e) {
 				//
