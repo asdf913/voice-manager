@@ -1580,7 +1580,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		IntList ily = null;
 		//
-		for (int x = 0; bi != null && x < bi.getWidth(); x++) {
+		for (int x = 0; x < getWidth(bi); x++) {
 			//
 			for (int y = 0; y < bi.getHeight(); y++) {
 				//
@@ -3206,7 +3206,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		for (int y = 0; bi != null && y < bi.getHeight(); y++) {
 			//
-			for (int x = 0; x < bi.getWidth(); x++) {
+			for (int x = 0; x < getWidth(bi); x++) {
 				//
 				if (color == null) {
 					//
