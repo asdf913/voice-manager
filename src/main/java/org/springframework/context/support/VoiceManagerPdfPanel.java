@@ -1566,13 +1566,15 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // if
 					//
-				JOptionPane.showMessageDialog(null,
-						testAndApply(Objects::nonNull,
-								chop(testAndApply(x -> getNumberOfPages(x) > 0,
-										document = Loader.loadPDF(pdf(Util.toPath(file))),
-										x -> new PDFRenderer(x).renderImage(0), null)),
-								ImageIcon::new, null),
-						"Image", JOptionPane.PLAIN_MESSAGE, null);
+				testAndAccept(a -> !GraphicsEnvironment.isHeadless(), document = Loader.loadPDF(pdf(Util.toPath(file))),
+						a -> {
+							//
+							JOptionPane.showMessageDialog(null, testAndApply(Objects::nonNull,
+									chop(testAndApply(x -> getNumberOfPages(x) > 0, a,
+											x -> new PDFRenderer(x).renderImage(0), null)),
+									ImageIcon::new, null), "Image", JOptionPane.PLAIN_MESSAGE, null);
+							//
+						});
 				//
 			} catch (final IOException e) {
 				//
