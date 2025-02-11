@@ -360,7 +360,7 @@ class VoiceManagerPdfPanelTest {
 	@Test
 	void testGetTextAligns() throws Throwable {
 		//
-		System.out.println(getTextAligns(VoiceManagerPdfPanel.class));
+		Assertions.assertNotNull(getTextAligns(VoiceManagerPdfPanel.class));
 		//
 	}
 
