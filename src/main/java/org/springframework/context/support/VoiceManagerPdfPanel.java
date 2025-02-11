@@ -1620,9 +1620,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final int firstX = getInt(ilx, 0, 0);
 			//
-			final int firstY = ily.getInt(0);
+			final int firstY = getInt(ily, 0, 0);
 			//
-			return bi.getSubimage(firstX, firstY, ilx.getInt(sizeIlx - 1) - firstX + 1,
+			return bi.getSubimage(firstX, firstY, getInt(ilx, sizeIlx - 1, 0) - firstX + 1,
 					ily.getInt(sizeIly - 1) - firstY + 1);
 			//
 		} // if
