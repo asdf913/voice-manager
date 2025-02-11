@@ -1656,6 +1656,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
+	@Nullable
 	private static String nextAlphabetic(@Nullable final RandomStringUtils instance, final int count) {
 		return instance != null ? instance.nextAlphabetic(count) : null;
 	}
