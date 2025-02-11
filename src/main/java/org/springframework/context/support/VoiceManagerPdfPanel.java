@@ -1423,72 +1423,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // try
 				//
-		} else if (Objects.equals(source, btnPreviewRubyPdf)) {
-			//
-			final HtmlBuilder<StringBuilder> htmlBuilder = FlatHtml.inMemory();
-			//
-			File file = null;
-			//
-			PDDocument document = null;
-			//
-			try {
-				//
-				final String html = Util
-						.toString(output(appendEndTag(
-								appendEndTag(
-										appendUnescapedText(
-												completeTag(appendAttribute(appendStartTag(
-														completeTag(appendStartTag(htmlBuilder, "html")), "div"),
-														"style",
-														Util.collect(
-																Util.map(Util.stream(Util.entrySet(createStyleMap())),
-																		x -> StringUtils.joinWith(":", Util.getKey(x),
-																				Util.getValue(x))),
-																Collectors.joining(";")))),
-												Util.getText(taHtml)),
-										"div"),
-								"html")));
-				//
-				FileUtils.writeStringToFile(
-						file = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null), html,
-						StandardCharsets.UTF_8, false);
-				//
-				final String[] fileExtensions = getFileExtensions(new ContentInfoUtil().findMatch(file));
-				//
-				final Matcher matcher = testAndApply((a, b) -> length(b) > 0, file, fileExtensions,
-						(a, b) -> matcher(Pattern.compile("^([^.]+.)[^.]+$"), Util.getName(a)), null);
-				//
-				if (matches(matcher) && groupCount(matcher) > 0) {
-					//
-					FileUtils.deleteQuietly(file);
-					//
-					FileUtils.writeStringToFile(
-							file = Util.toFile(
-									Path.of(StringUtils.join(group(matcher, 1), ArrayUtils.get(fileExtensions, 0)))),
-							html, StandardCharsets.UTF_8, false);
-					//
-				} // if
-					//
-				JOptionPane.showMessageDialog(null,
-						testAndApply(Objects::nonNull,
-								chop(testAndApply(x -> getNumberOfPages(x) > 0,
-										document = Loader.loadPDF(pdf(Util.toPath(file))),
-										x -> new PDFRenderer(x).renderImage(0), null)),
-								ImageIcon::new, null),
-						"Image", JOptionPane.PLAIN_MESSAGE, null);
-				//
-			} catch (final IOException e) {
-				//
-				LoggerUtil.error(LOG, e.getMessage(), e);
-				//
-			} finally {
-				//
-				FileUtils.deleteQuietly(file);
-				//
-				IOUtils.closeQuietly(document);
-				//
-			} // try
-				//
 		} // if
 			//
 		actionPerformed2(source);
@@ -1569,6 +1503,74 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // try
 				//
+		} else if (Objects.equals(source, btnPreviewRubyPdf)) {
+			//
+			final HtmlBuilder<StringBuilder> htmlBuilder = FlatHtml.inMemory();
+			//
+			File file = null;
+			//
+			PDDocument document = null;
+			//
+			try {
+				//
+				final String html = Util
+						.toString(output(appendEndTag(
+								appendEndTag(
+										appendUnescapedText(
+												completeTag(appendAttribute(appendStartTag(
+														completeTag(appendStartTag(htmlBuilder, "html")), "div"),
+														"style",
+														Util.collect(
+																Util.map(Util.stream(Util.entrySet(createStyleMap())),
+																		x -> StringUtils.joinWith(":", Util.getKey(x),
+																				Util.getValue(x))),
+																Collectors.joining(";")))),
+												Util.getText(taHtml)),
+										"div"),
+								"html")));
+				//
+				FileUtils.writeStringToFile(
+						file = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null), html,
+						StandardCharsets.UTF_8, false);
+				//
+				final String[] fileExtensions = getFileExtensions(new ContentInfoUtil().findMatch(file));
+				//
+				final Matcher matcher = testAndApply((a, b) -> length(b) > 0, file, fileExtensions,
+						(a, b) -> matcher(Pattern.compile("^([^.]+.)[^.]+$"), Util.getName(a)), null);
+				//
+				if (matches(matcher) && groupCount(matcher) > 0) {
+					//
+					FileUtils.deleteQuietly(file);
+					//
+					FileUtils.writeStringToFile(
+							file = Util.toFile(
+									Path.of(StringUtils.join(group(matcher, 1), ArrayUtils.get(fileExtensions, 0)))),
+							html, StandardCharsets.UTF_8, false);
+					//
+				} // if
+					//
+				JOptionPane.showMessageDialog(null,
+						testAndApply(Objects::nonNull,
+								chop(testAndApply(x -> getNumberOfPages(x) > 0,
+										document = Loader.loadPDF(pdf(Util.toPath(file))),
+										x -> new PDFRenderer(x).renderImage(0), null)),
+								ImageIcon::new, null),
+						"Image", JOptionPane.PLAIN_MESSAGE, null);
+				//
+			} catch (final IOException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} finally {
+				//
+				FileUtils.deleteQuietly(file);
+				//
+				IOUtils.closeQuietly(document);
+				//
+			} // try
+				//
+			return true;
+			//
 		} // if
 			//
 		return false;
