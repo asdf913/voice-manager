@@ -1307,7 +1307,7 @@ public abstract class Util {
 		return instance != null && instance.test(value);
 	}
 
-	static <K, V> void putAll(final Map<K, V> a, final Map<? extends K, ? extends V> b) {
+	static <K, V> void putAll(@Nullable final Map<K, V> a, @Nullable final Map<? extends K, ? extends V> b) {
 		if (a != null && (b != null || Proxy.isProxyClass(getClass(a)))) {
 			a.putAll(b);
 		}
