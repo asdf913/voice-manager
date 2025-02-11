@@ -295,8 +295,6 @@ class VoiceManagerTest {
 
 		private Map<Object, Object> beanDefinitionAttributes = null;
 
-		private Object[] toArray = null;
-
 		private Collection<?> values = null;
 
 		private Map<Object, BeanDefinition> getBeanDefinitions() {
@@ -348,15 +346,7 @@ class VoiceManagerTest {
 				//
 			} // if
 				//
-			if (proxy instanceof Collection) {
-				//
-				if (Objects.equals(methodName, "toArray")) {
-					//
-					return toArray;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Map) {
+			if (proxy instanceof Map) {
 				//
 				if (Objects.equals(methodName, "entrySet")) {
 					//
@@ -472,8 +462,6 @@ class VoiceManagerTest {
 		iterable = Reflection.newProxy(Iterable.class, ih);
 		//
 		logger = Reflection.newProxy(Logger.class, ih);
-		//
-		collection = Reflection.newProxy(Collection.class, ih);
 		//
 		configurableListableBeanFactory = Reflection.newProxy(ConfigurableListableBeanFactory.class, ih);
 		//
