@@ -1615,7 +1615,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		if (sizeIlx > 1 && sizeIly > 1) {
 			//
-			final int firstX = ilx.getInt(0);
+			final int firstX = getInt(ilx, 0, 0);
 			//
 			final int firstY = ily.getInt(0);
 			//
@@ -1626,6 +1626,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		return bi;
 		//
+	}
+
+	private static int getInt(final IntList instance, final int index, final int defaultValue) {
+		return instance != null ? instance.getInt(index) : defaultValue;
 	}
 
 	private Map<String, String> createStyleMap() {
