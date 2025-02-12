@@ -715,7 +715,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		this.cssSpecificationUrl = cssSpecificationUrl;
 	}
 
-	public void setTextAligns(final Object instance) {
+	public void setTextAligns(@Nullable final Object instance) {
 		//
 		if (instance == null) {
 			//
