@@ -359,7 +359,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
-	private String audioFormat, cssSpecificationUrl = null;
+	@Note("Audio Format")
+	private String audioFormat = null;
+
+	private String cssSpecificationUrl = null;
 
 	@Override
 	public String getTitle() {
