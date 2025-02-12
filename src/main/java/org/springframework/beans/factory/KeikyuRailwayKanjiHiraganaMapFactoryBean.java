@@ -51,6 +51,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResou
 		//
 	}
 
+	@Nullable
 	private static Map<String, String> createMap(final String url) throws Exception {
 		//
 		return createMap(ElementUtil.select(testAndApply(Objects::nonNull,
