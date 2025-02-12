@@ -1045,31 +1045,27 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return Util
 				.toList(Util.filter(
 						Util.map(
-								flatMap(Util.map(Util.filter(
-										flatMap(Util.map(
-												Util.filter(
-														Util.stream(ElementUtil.select(testAndApply(Objects::nonNull,
-																toURL(testAndApply(Objects::nonNull,
+								flatMap(Util.map(
+										Util.filter(flatMap(
+												Util.map(
+														Util.filter(Util.stream(ElementUtil.select(
+																testAndApply(Objects::nonNull, toURL(testAndApply(
+																		Objects::nonNull,
 																		StringUtils.defaultIfBlank(cssSpecificationUrl,
 																				"https://www.w3.org/TR/css-text-4/"),
-																		URI::new, null)),
-																x -> Jsoup.parse(x, 0), null), "th")),
-														x -> Objects.equals(ElementUtil.text(x), "Name:")
-																&& Objects.equals("text-align",
-																		ElementUtil.text(
-																				ElementUtil.nextElementSibling(x)))),
-												x -> NodeUtil.childNodes(NodeUtil.nextSibling(parentNode(x)))),
-												Util::stream),
-										x -> Objects.equals("td", NodeUtil.nodeName(x))), NodeUtil::childNodes),
-										Util::stream),
+																		URI::new, null)), x -> Jsoup.parse(x, 0), null),
+																"th")),
+																x -> Objects.equals(ElementUtil.text(x), "Name:")
+																		&& Objects.equals("text-align",
+																				ElementUtil.text(ElementUtil
+																						.nextElementSibling(x)))),
+														x -> NodeUtil.childNodes(
+																NodeUtil.nextSibling(NodeUtil.parentNode(x)))),
+												Util::stream), x -> Objects.equals("td", NodeUtil.nodeName(x))),
+										NodeUtil::childNodes), Util::stream),
 								x -> StringUtils.trim(TextNodeUtil.text(Util.cast(TextNode.class, x)))),
 						StringUtils::isNotBlank));
 		//
-	}
-
-	@Nullable
-	private static Node parentNode(@Nullable final Node instance) {
-		return instance != null ? instance.parentNode() : null;
 	}
 
 	@Nullable

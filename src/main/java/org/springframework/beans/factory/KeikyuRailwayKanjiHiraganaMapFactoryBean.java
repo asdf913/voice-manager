@@ -74,7 +74,7 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResou
 		//
 		for (int i = 0; es != null && i < es.size(); i++) {
 			//
-			if ((nodes = Util.toList(Util.filter(Util.stream(NodeUtil.childNodes(parentNode(e = es.get(i)))),
+			if ((nodes = Util.toList(Util.filter(Util.stream(NodeUtil.childNodes(NodeUtil.parentNode(e = es.get(i)))),
 					TextNode.class::isInstance))) == null || nodes.isEmpty()) {
 				//
 				continue;
@@ -108,11 +108,6 @@ public class KeikyuRailwayKanjiHiraganaMapFactoryBean extends StringMapFromResou
 	@Nullable
 	private static String getWholeText(@Nullable final TextNode instance) {
 		return instance != null ? instance.getWholeText() : null;
-	}
-
-	@Nullable
-	private static Node parentNode(@Nullable final Node instance) {
-		return instance != null ? instance.parentNode() : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
