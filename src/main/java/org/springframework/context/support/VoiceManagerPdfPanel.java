@@ -1040,8 +1040,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		return Util
 				.toList(Util.filter(
-						Util.map(
-								flatMap(Util.map(
+						Util.map(flatMap(
+								Util.map(
 										Util.filter(flatMap(
 												Util.map(
 														Util.filter(
@@ -1054,9 +1054,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 																				ElementUtil.text(ElementUtil
 																						.nextElementSibling(x)))),
 														x -> NodeUtil.childNodes(NodeUtil.nextSibling(parentNode(x)))),
-												x -> Util.stream(x)), x -> Objects.equals("td", NodeUtil.nodeName(x))),
-										x -> NodeUtil.childNodes(x)), x -> Util.stream(x)),
-								x -> StringUtils.trim(TextNodeUtil.text(Util.cast(TextNode.class, x)))),
+												Util::stream), x -> Objects.equals("td", NodeUtil.nodeName(x))),
+										NodeUtil::childNodes),
+								Util::stream), x -> StringUtils.trim(TextNodeUtil.text(Util.cast(TextNode.class, x)))),
 						StringUtils::isNotBlank));
 		//
 	}
