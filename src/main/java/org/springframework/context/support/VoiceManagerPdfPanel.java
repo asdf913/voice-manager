@@ -364,6 +364,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private String cssSpecificationUrl = null;
 
+	private Object textAlign = null;
+
 	private transient IValue0<List<String>> textAligns = null;
 
 	@Override
@@ -715,6 +717,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		this.cssSpecificationUrl = cssSpecificationUrl;
 	}
 
+	public void setTextAlign(final Object textAlign) {
+		this.textAlign = textAlign;
+	}
+
 	public void setTextAligns(@Nullable final Object instance) {
 		//
 		if (instance == null) {
@@ -864,6 +870,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		add(new JComboBox<>(cbmTextAlign1 = new DefaultComboBoxModel<>(
 				ArrayUtils.insert(0, Util.toArray(getTextAligns(), new String[] {}), (String) null))),
 				String.format("%1$s,span %2$s", WRAP, span));
+		//
+		setSelectedItem(cbmTextAlign1, textAlign);
 		//
 		// HTML
 		//
