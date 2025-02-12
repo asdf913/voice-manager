@@ -2,6 +2,9 @@ package org.springframework.context.support;
 
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -10,12 +13,15 @@ import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Base64.Decoder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -45,7 +51,7 @@ import j2html.rendering.HtmlBuilder;
 class VoiceManagerPdfPanelTest {
 
 	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_SELECTED_ITEM, METHOD_TO_HTML,
-			METHOD_GET_TEXT_ALIGNS = null;
+			METHOD_GET_TEXT_ALIGNS, METHOD_CHOP = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -60,6 +66,8 @@ class VoiceManagerPdfPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_TEXT_ALIGNS = clz.getDeclaredMethod("getTextAligns")).setAccessible(true);
+		//
+		(METHOD_CHOP = clz.getDeclaredMethod("chop", BufferedImage.class)).setAccessible(true);
 		//
 	}
 
@@ -444,6 +452,51 @@ class VoiceManagerPdfPanelTest {
 				return null;
 			} else if (obj instanceof List) {
 				return (List) obj;
+			} // if
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testChop() throws Throwable {
+		//
+		BufferedImage bi = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+		//
+		Assertions.assertSame(bi, chop(bi));
+		//
+		Assertions.assertSame(bi = new BufferedImage(2, 2, BufferedImage.TYPE_INT_ARGB), chop(bi));
+		//
+		final Decoder decoder = Base64.getDecoder();
+		//
+		try (final InputStream is = new ByteArrayInputStream(decoder != null ? decoder.decode(
+				"iVBORw0KGgoAAAANSUhEUgAAAAoAAAAFCAIAAADzBuo/AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAFBhaW50Lk5FVCA1LjEuM4y7MyAAAAC2ZVhJZklJKgAIAAAABQAaAQUAAQAAAEoAAAAbAQUAAQAAAFIAAAAoAQMAAQAAAAIAAAAxAQIAEAAAAFoAAABphwQAAQAAAGoAAAAAAAAAYAAAAAEAAABgAAAAAQAAAFBhaW50Lk5FVCA1LjEuMwADAACQBwAEAAAAMDIzMAGgAwABAAAAAQAAAAWgBAABAAAAlAAAAAAAAAACAAEAAgAEAAAAUjk4AAIABwAEAAAAMDEwMAAAAAAOmhdjvMuD8gAAACRJREFUGFdj/P//PwNuAJVmZGSE8OEAIs4E4eACBKTx2s3AAAC16Qv//9Y5UgAAAABJRU5ErkJggg==")
+				: null)) {
+			//
+			final BufferedImage result = chop(ImageIO.read(is));
+			//
+			Assertions.assertNotNull(result);
+			//
+			if (result != null) {
+				//
+				Assertions.assertEquals(6, result.getWidth());
+				//
+				Assertions.assertEquals(3, result.getHeight());
+				//
+			} // if
+				//
+		} // try
+			//
+	}
+
+	private static BufferedImage chop(final BufferedImage bi) throws Throwable {
+		try {
+			final Object obj = METHOD_CHOP.invoke(null, bi);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof BufferedImage) {
+				return (BufferedImage) obj;
 			} // if
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
