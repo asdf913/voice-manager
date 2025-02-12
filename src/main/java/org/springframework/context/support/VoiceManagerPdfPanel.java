@@ -364,7 +364,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private String cssSpecificationUrl = null;
 
-	private IValue0<List<String>> textAligns = null;
+	private transient IValue0<List<String>> textAligns = null;
 
 	@Override
 	public String getTitle() {
