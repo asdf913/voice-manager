@@ -1139,6 +1139,8 @@
 			value="${org.springframework.context.support.VoiceManagerPdfPanel.fontSizeAndUnitMap}" />
 		<property name="audioFormat"
 			value="${org.springframework.context.support.VoiceManagerPdfPanel.audioFormat}" />
+		<property name="cssSpecificationUrl"
+			value="${org.springframework.context.support.VoiceManagerPdfPanel.cssSpecificationUrl}" />
 	</bean>
 
 	<!---->

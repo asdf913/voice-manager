@@ -362,11 +362,19 @@ class VoiceManagerPdfPanelTest {
 		//
 		Assertions.assertNotNull(getTextAligns());
 		//
+		if (instance != null) {
+			//
+			instance.setCssSpecificationUrl(null);
+			//
+		} // if
+			//
+		Assertions.assertNotNull(getTextAligns());
+		//
 	}
 
-	private static List<String> getTextAligns() throws Throwable {
+	private List<String> getTextAligns() throws Throwable {
 		try {
-			final Object obj = METHOD_GET_TEXT_ALIGNS.invoke(null);
+			final Object obj = METHOD_GET_TEXT_ALIGNS.invoke(instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof List) {
@@ -464,10 +472,8 @@ class VoiceManagerPdfPanelTest {
 								parameterCount == 0),
 						Boolean.logicalAnd(Objects.equals(name, "createImageFormatComparator"),
 								Arrays.equals(parameterTypes, new Class<?>[] { List.class })),
-						Boolean.logicalAnd(Objects.equals(name, "createStyleMap"),
-								Arrays.equals(parameterTypes,
-										new Class<?>[] { Map.class, BigDecimal.class, ECSSUnit.class })),
-						Boolean.logicalAnd(Objects.equals(name, "getTextAligns"), parameterCount == 0))) {
+						Boolean.logicalAnd(Objects.equals(name, "createStyleMap"), Arrays.equals(parameterTypes,
+								new Class<?>[] { Map.class, BigDecimal.class, ECSSUnit.class })))) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
@@ -487,9 +493,8 @@ class VoiceManagerPdfPanelTest {
 								(parameterCount = m.getParameterCount()) == 0),
 						Boolean.logicalAnd(Objects.equals(name, "getFontSizeAndUnitMap"), parameterCount == 0),
 						Boolean.logicalAnd(Objects.equals(name, "getObjectMapper"), parameterCount == 0),
-						Boolean.logicalAnd(Objects.equals(name, "createStyleMap"), parameterCount == 0))
-
-				) {
+						Boolean.logicalAnd(Objects.equals(name, "createStyleMap"), parameterCount == 0),
+						Boolean.logicalAnd(Objects.equals(name, "getTextAligns"), parameterCount == 0))) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//

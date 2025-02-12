@@ -359,7 +359,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private transient ConfigurableListableBeanFactory configurableListableBeanFactory = null;
 
-	private String audioFormat = null;
+	private String audioFormat, cssSpecificationUrl = null;
 
 	@Override
 	public String getTitle() {
@@ -706,6 +706,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		this.audioFormat = audioFormat;
 	}
 
+	public void setCssSpecificationUrl(final String cssSpecificationUrl) {
+		this.cssSpecificationUrl = cssSpecificationUrl;
+	}
+
 	@Nullable
 	private static <E> Iterator<E> asIterator(@Nullable final Enumeration<E> instance) {
 		return instance != null ? instance.asIterator() : null;
@@ -1034,29 +1038,31 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static List<String> getTextAligns() throws IOException, URISyntaxException {
+	private List<String> getTextAligns() throws IOException, URISyntaxException {
 		//
 		// start,end,left,right,center,justify,match-parent,justify-all
 		//
 		return Util
 				.toList(Util.filter(
-						Util.map(flatMap(
-								Util.map(
-										Util.filter(flatMap(
-												Util.map(
-														Util.filter(
-																Util.stream(ElementUtil.select(Jsoup.parse(
-																		new URI("https://www.w3.org/TR/css-text-4/")
-																				.toURL(), // TODO
-																		0), "th")),
-																x -> Objects.equals(ElementUtil.text(x), "Name:")
-																		&& Objects.equals("text-align",
-																				ElementUtil.text(ElementUtil
-																						.nextElementSibling(x)))),
-														x -> NodeUtil.childNodes(NodeUtil.nextSibling(parentNode(x)))),
-												Util::stream), x -> Objects.equals("td", NodeUtil.nodeName(x))),
-										NodeUtil::childNodes),
-								Util::stream), x -> StringUtils.trim(TextNodeUtil.text(Util.cast(TextNode.class, x)))),
+						Util.map(
+								flatMap(Util.map(Util.filter(
+										flatMap(Util.map(
+												Util.filter(
+														Util.stream(ElementUtil.select(testAndApply(Objects::nonNull,
+																toURL(testAndApply(Objects::nonNull,
+																		StringUtils.defaultIfBlank(cssSpecificationUrl,
+																				"https://www.w3.org/TR/css-text-4/"),
+																		URI::new, null)),
+																x -> Jsoup.parse(x, 0), null), "th")),
+														x -> Objects.equals(ElementUtil.text(x), "Name:")
+																&& Objects.equals("text-align",
+																		ElementUtil.text(
+																				ElementUtil.nextElementSibling(x)))),
+												x -> NodeUtil.childNodes(NodeUtil.nextSibling(parentNode(x)))),
+												Util::stream),
+										x -> Objects.equals("td", NodeUtil.nodeName(x))), NodeUtil::childNodes),
+										Util::stream),
+								x -> StringUtils.trim(TextNodeUtil.text(Util.cast(TextNode.class, x)))),
 						StringUtils::isNotBlank));
 		//
 	}
