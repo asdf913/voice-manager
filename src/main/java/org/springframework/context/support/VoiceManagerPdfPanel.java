@@ -1067,10 +1067,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
+	@Nullable
 	private static Node parentNode(@Nullable final Node instance) {
 		return instance != null ? instance.parentNode() : null;
 	}
 
+	@Nullable
 	private static <T, R> Stream<R> flatMap(@Nullable final Stream<T> instance,
 			final Function<? super T, ? extends Stream<? extends R>> mapper) {
 		return instance != null ? instance.flatMap(mapper) : null;
