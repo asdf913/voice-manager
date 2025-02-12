@@ -364,6 +364,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private String cssSpecificationUrl = null;
 
+	private IValue0<List<String>> textAligns = null;
+
 	@Override
 	public String getTitle() {
 		return "PDF";
@@ -713,6 +715,65 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		this.cssSpecificationUrl = cssSpecificationUrl;
 	}
 
+	public void setTextAligns(final Object instance) {
+		//
+		if (instance == null) {
+			//
+			textAligns = Unit.with(null);
+			//
+			return;
+			//
+		} else if (instance instanceof Iterable iterable) {
+			//
+			textAligns = Unit
+					.with(Util.toList(Util.map(StreamSupport.stream(spliterator(iterable), false), Objects::toString)));
+			//
+			return;
+			//
+		} else if (instance instanceof String s1) {
+			//
+			if (StringUtils.isBlank(s1)) {
+				//
+				textAligns = Unit.with(Collections.singletonList(s1));
+				//
+				return;
+				//
+			} // if
+				//
+			try {
+				//
+				final Object result = ObjectMapperUtil.readValue(getObjectMapper(), s1, Object.class);
+				//
+				if (result instanceof String s2) {
+					//
+					textAligns = Unit.with(Collections.singletonList(s2));
+					//
+					return;
+					//
+				} // if
+					//
+				setTextAligns(result);
+				//
+				return;
+				//
+			} catch (final JsonProcessingException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
+				//
+		} else if (instance instanceof Number || instance instanceof Boolean) {
+			//
+			textAligns = Unit.with(Collections.singletonList(Util.toString(instance)));
+			//
+			return;
+			//
+		} // if
+			//
+		throw new IllegalStateException(Util.toString(Util.getClass(instance)));
+		//
+	}
+
 	@Nullable
 	private static <E> Iterator<E> asIterator(@Nullable final Enumeration<E> instance) {
 		return instance != null ? instance.asIterator() : null;
@@ -1043,8 +1104,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private List<String> getTextAligns() throws IOException, URISyntaxException {
 		//
-		// start,end,left,right,center,justify,match-parent,justify-all
-		//
+		if (textAligns != null) {
+			//
+			return IValue0Util.getValue0(textAligns);
+			//
+		} // if
+			//
 		return Util
 				.toList(Util.filter(
 						Util.map(

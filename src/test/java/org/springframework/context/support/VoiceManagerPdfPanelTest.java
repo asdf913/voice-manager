@@ -25,8 +25,10 @@ import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.javatuples.Unit;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -251,6 +253,69 @@ class VoiceManagerPdfPanelTest {
 			//
 		Assertions.assertEquals(Collections.singletonMap(Integer.valueOf(1), "1px"),
 				Narcissus.getField(instance, field));
+		//
+	}
+
+	@Test
+	void testSetTextAligns()
+			throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		//
+		if (instance == null) {
+			//
+			return;
+		} // if
+			//
+		final Field textAligns = VoiceManagerPdfPanel.class.getDeclaredField("textAligns");
+		//
+		if (textAligns != null) {
+			//
+			textAligns.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertNull(FieldUtils.readField(textAligns, instance));
+		//
+		instance.setTextAligns(null);
+		//
+		Assertions.assertEquals(Unit.with(null), FieldUtils.readField(textAligns, instance));
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> instance.setTextAligns("{}"));
+		//
+		final boolean b = true;
+		//
+		instance.setTextAligns(Boolean.toString(b));
+		//
+		Assertions.assertEquals(Unit.with(Collections.singletonList(Boolean.toString(b))),
+				FieldUtils.readField(textAligns, instance));
+		//
+		final int one = 1;
+		//
+		instance.setTextAligns(Integer.toString(one));
+		//
+		Assertions.assertEquals(Unit.with(Collections.singletonList(Integer.toString(one))),
+				FieldUtils.readField(textAligns, instance));
+		//
+		instance.setTextAligns(String.format("[%1$s]", one));
+		//
+		Assertions.assertEquals(Unit.with(Collections.singletonList(Integer.toString(one))),
+				FieldUtils.readField(textAligns, instance));
+		//
+		String string = "";
+		//
+		instance.setTextAligns(string);
+		//
+		Assertions.assertEquals(Unit.with(Collections.singletonList(string)),
+				FieldUtils.readField(textAligns, instance));
+		//
+		instance.setTextAligns(StringUtils.join("\"", string, "\""));
+		//
+		Assertions.assertEquals(Unit.with(Collections.singletonList(string)),
+				FieldUtils.readField(textAligns, instance));
+		//
+		instance.setTextAligns(string = " ");
+		//
+		Assertions.assertEquals(Unit.with(Collections.singletonList(string)),
+				FieldUtils.readField(textAligns, instance));
 		//
 	}
 
