@@ -732,7 +732,8 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 			try {
 				//
-				FileUtils.writeByteArrayToFile(file, byteConverter.convert(Files.readAllBytes(Path.of(toURI(file)))));
+				FileUtils.writeByteArrayToFile(file,
+						byteConverter.convert(Files.readAllBytes(Path.of(Util.toURI(file)))));
 				//
 			} catch (final IOException e) {
 				//
@@ -786,11 +787,6 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 		return IValue0Util.getValue0(byteConverter);
 		//
-	}
-
-	@Nullable
-	private static URI toURI(@Nullable final File instance) {
-		return instance != null ? instance.toURI() : null;
 	}
 
 	private static void writeVoiceToFile(final ObjectMap objectMap, final String text, final String voiceId,

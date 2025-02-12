@@ -3011,7 +3011,8 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 			Long length = length(selectedFile);
 			//
-			String fileDigest = formatHex(hexFormat, Util.digest(md, Files.readAllBytes(Path.of(toURI(selectedFile)))));
+			String fileDigest = formatHex(hexFormat,
+					Util.digest(md, Files.readAllBytes(Path.of(Util.toURI(selectedFile)))));
 			//
 			final String voiceFolder = ObjectMap.getObject(objectMap, String.class);
 			//
@@ -3035,7 +3036,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 				length = length(file);
 				//
-				fileDigest = formatHex(hexFormat, Util.digest(md, Files.readAllBytes(Path.of(toURI(file)))));
+				fileDigest = formatHex(hexFormat, Util.digest(md, Files.readAllBytes(Path.of(Util.toURI(file)))));
 				//
 			} else {
 				//
@@ -3363,7 +3364,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 					if (byteConverter != null) {
 						//
 						FileUtils.writeByteArrayToFile(file,
-								byteConverter.convert(Files.readAllBytes(Path.of(toURI(file)))));
+								byteConverter.convert(Files.readAllBytes(Path.of(Util.toURI(file)))));
 						//
 					} // if
 						//
@@ -3429,11 +3430,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		return IValue0Util.getValue0(byteConverter);
 		//
-	}
-
-	@Nullable
-	private static URI toURI(@Nullable final File instance) {
-		return instance != null ? instance.toURI() : null;
 	}
 
 	private static File createTempFile(@Nullable final String prefix, @Nullable final String suffix)

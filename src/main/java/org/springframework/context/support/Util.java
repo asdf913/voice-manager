@@ -11,6 +11,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+import java.net.URI;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.util.Arrays;
@@ -1617,6 +1618,10 @@ public abstract class Util {
 	@Nullable
 	static String getName(@Nullable final File instance) {
 		return instance != null ? instance.getName() : null;
+	}
+
+	static URI toURI(final File instance) {
+		return instance != null ? instance.toURI() : null;
 	}
 
 	@Nullable

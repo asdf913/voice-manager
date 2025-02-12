@@ -1730,18 +1730,13 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		} // if
 			//
 		return Pair.of(mimeType, testAndApply(Util::isFile, f,
-				x -> encodeToString(Base64.getEncoder(), Files.readAllBytes(Path.of(toURI(x)))), null));
+				x -> encodeToString(Base64.getEncoder(), Files.readAllBytes(Path.of(Util.toURI(x)))), null));
 		//
 	}
 
 	@Nullable
 	private static String encodeToString(@Nullable final Encoder instance, @Nullable final byte[] src) {
 		return instance != null && src != null ? instance.encodeToString(src) : null;
-	}
-
-	@Nullable
-	private static URI toURI(@Nullable final File instance) {
-		return instance != null ? instance.toURI() : null;
 	}
 
 	@Override

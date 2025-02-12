@@ -676,7 +676,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			//
 			final File file = testAndApply(Objects::nonNull, Util.getText(tfExportFile), File::new, null);
 			//
-			testAndAccept(Objects::nonNull, toURI(file), x -> browse(Desktop.getDesktop(), x));
+			testAndAccept(Objects::nonNull, Util.toURI(file), x -> browse(Desktop.getDesktop(), x));
 			//
 		} catch (final IOException e) {
 			//
@@ -690,11 +690,6 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		if (instance != null) {
 			instance.browse(uri);
 		}
-	}
-
-	@Nullable
-	private static URI toURI(@Nullable final File instance) {
-		return instance != null ? instance.toURI() : null;
 	}
 
 	private void actionPerformedForSystemClipboardAnnotated(final boolean nonTest, final Object source) {

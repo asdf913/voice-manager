@@ -2491,7 +2491,8 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 
 	private static void delete(final File instance) throws IOException {
 		//
-		testAndAccept(Objects::nonNull, testAndApply(Objects::nonNull, toURI(instance), Path::of, null), Files::delete);
+		testAndAccept(Objects::nonNull, testAndApply(Objects::nonNull, Util.toURI(instance), Path::of, null),
+				Files::delete);
 		//
 	}
 
@@ -4958,11 +4959,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(headless, LOG, throwable);
 		//
-	}
-
-	@Nullable
-	private static URI toURI(@Nullable final File instance) {
-		return instance != null ? instance.toURI() : null;
 	}
 
 	@Nullable

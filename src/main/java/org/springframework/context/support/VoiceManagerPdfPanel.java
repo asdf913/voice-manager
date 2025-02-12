@@ -867,8 +867,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(new JLabel("Text Align"));
 		//
-		add(new JComboBox<>(cbmTextAlign1 = new DefaultComboBoxModel<>(
-				ArrayUtils.insert(0, Util.toArray(getTextAligns(), new String[] {}), (String) null))),
+		add(new JComboBox<>(cbmTextAlign1 = new DefaultComboBoxModel<>(ObjectUtils.defaultIfNull(
+				ArrayUtils.insert(0, Util.toArray(getTextAligns(), new String[] {}), (String) null), new String[] {}))),
 				String.format("%1$s,span %2$s", WRAP, span));
 		//
 		setSelectedItem(cbmTextAlign1, textAlign);
@@ -1657,7 +1657,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)),
 						Util.toFile(testAndApply(Objects::nonNull, Util.getText(tfOutputFile), Path::of, null)),
-						x -> browse(Desktop.getDesktop(), toURI(getParentFile(x))));
+						x -> browse(Desktop.getDesktop(), Util.toURI(getParentFile(x))));
 				//
 			} catch (final IOException e) {
 				//
@@ -3510,7 +3510,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			if (page != null) {
 				//
-				testAndAccept(Objects::nonNull, Util.toString(toURL(toURI(Util.toFile(pathHtml)))), page::navigate);
+				testAndAccept(Objects::nonNull, Util.toString(toURL(Util.toURI(Util.toFile(pathHtml)))),
+						page::navigate);
 				//
 				return page.pdf();
 				//
@@ -3547,11 +3548,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Nullable
 	private static URL toURL(@Nullable final URI instance) throws MalformedURLException {
 		return instance != null ? instance.toURL() : null;
-	}
-
-	@Nullable
-	private static URI toURI(@Nullable final File instance) {
-		return instance != null ? instance.toURI() : null;
 	}
 
 	private static void sortInts(@Nullable final IntList instance) {

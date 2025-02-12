@@ -2103,7 +2103,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			final ByteConverter byteConverter = ObjectMap.getObject(objectMap, ByteConverter.class);
 			//
 			testAndAccept(Objects::nonNull,
-					byteConverter != null ? byteConverter.convert(Files.readAllBytes(Path.of(toURI(it.file)))) : null,
+					byteConverter != null ? byteConverter.convert(Files.readAllBytes(Path.of(Util.toURI(it.file))))
+							: null,
 					x -> FileUtils.writeByteArrayToFile(it.file, x));
 			//
 			deleteOnExit(it.file);
@@ -3346,7 +3347,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			Long length = length(selectedFile);
 			//
-			String fileDigest = formatHex(hexFormat, Util.digest(md, Files.readAllBytes(Path.of(toURI(selectedFile)))));
+			String fileDigest = formatHex(hexFormat,
+					Util.digest(md, Files.readAllBytes(Path.of(Util.toURI(selectedFile)))));
 			//
 			final String voiceFolder = ObjectMap.getObject(objectMap, String.class);
 			//
@@ -3370,7 +3372,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 				length = length(file);
 				//
-				fileDigest = formatHex(hexFormat, Util.digest(md, Files.readAllBytes(Path.of(toURI(file)))));
+				fileDigest = formatHex(hexFormat, Util.digest(md, Files.readAllBytes(Path.of(Util.toURI(file)))));
 				//
 			} else {
 				//
@@ -3538,11 +3540,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	@Nullable
 	private static String formatHex(@Nullable final HexFormat instance, @Nullable final byte[] bytes) {
 		return instance != null && bytes != null ? instance.formatHex(bytes) : null;
-	}
-
-	@Nullable
-	private static URI toURI(@Nullable final File instance) {
-		return instance != null ? instance.toURI() : null;
 	}
 
 	private static String randomAlphabetic(final int count) {
