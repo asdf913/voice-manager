@@ -954,7 +954,7 @@ class JlptLevelGuiTest {
 		Assertions.assertDoesNotThrow(
 				() -> browse(!GraphicsEnvironment.isHeadless() ? Desktop.getDesktop() : mock, null));
 		//
-		Assertions.assertDoesNotThrow(() -> browse(mock, Path.of(".").toFile().toURI()));
+		Assertions.assertDoesNotThrow(() -> browse(mock, Util.toURI(Path.of(".").toFile())));
 		//
 	}
 

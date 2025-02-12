@@ -155,14 +155,14 @@ class VoiceManagerTest {
 			METHOD_GET_PREFERRED_WIDTH, METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ADD_ITERABLE,
 			METHOD_MATCHER, METHOD_MATCHES, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR,
 			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_LIST,
-			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_TO_URI_FILE,
-			METHOD_TO_URI_URL, METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP,
-			METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE, METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT,
-			METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL, METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_2,
-			METHOD_GET_FIELD_BY_NAME, METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL,
-			METHOD_SET_FOCUS_CYCLE_ROOT, METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS,
-			METHOD_GET_DECLARED_CONSTRUCTOR, METHOD_NEW_INSTANCE, METHOD_GET_NUMBER, METHOD_CREATE_IMPORT_RESULT_PANEL,
-			METHOD_SET_SELECTED_INDEX, METHOD_GET_TITLED_COMPONENT_MAP = null;
+			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_TO_URI_URL,
+			METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2,
+			METHOD_SET_VISIBLE, METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL,
+			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_2, METHOD_GET_FIELD_BY_NAME,
+			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_SET_FOCUS_CYCLE_ROOT,
+			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_DECLARED_CONSTRUCTOR,
+			METHOD_NEW_INSTANCE, METHOD_GET_NUMBER, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_SET_SELECTED_INDEX,
+			METHOD_GET_TITLED_COMPONENT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -215,8 +215,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_TEST_AND_ACCEPT_BI_PREDICATE = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class,
 				Object.class, FailableBiConsumer.class)).setAccessible(true);
-		//
-		(METHOD_TO_URI_FILE = clz.getDeclaredMethod("toURI", File.class)).setAccessible(true);
 		//
 		(METHOD_TO_URI_URL = clz.getDeclaredMethod("toURI", URL.class)).setAccessible(true);
 		//
@@ -1245,28 +1243,8 @@ class VoiceManagerTest {
 		//
 		Assertions.assertNull(toURI(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));
 		//
-		final File file = Path.of("").toFile();
+		Assertions.assertNotNull(toURI(toURL(Util.toURI(Path.of("").toFile()))));
 		//
-		Assertions.assertNotNull(toURI(file));
-		//
-		final URI uri = file.toURI();
-		//
-		Assertions.assertNotNull(toURI(toURL(uri)));
-		//
-	}
-
-	private static URI toURI(final File instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_URI_FILE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof URI) {
-				return (URI) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private static URI toURI(final URL instance) throws Throwable {

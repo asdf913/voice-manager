@@ -1024,7 +1024,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	@Test
 	void testOpenStream() throws Throwable {
 		//
-		Assertions.assertNotNull(openStream(Path.of("pom.xml").toFile().toURI().toURL()));
+		Assertions.assertNotNull(openStream(Util.toURI(Path.of("pom.xml").toFile()).toURL()));
 		//
 		Assertions.assertNull(openStream(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));
 		//
