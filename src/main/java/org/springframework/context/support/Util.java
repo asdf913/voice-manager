@@ -1620,7 +1620,7 @@ public abstract class Util {
 		return instance != null ? instance.getName() : null;
 	}
 
-	static URI toURI(final File instance) {
+	static URI toURI(@Nullable final File instance) {
 		return instance != null ? instance.toURI() : null;
 	}
 
