@@ -1441,20 +1441,86 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			try {
 				//
-				HtmlBuilder<StringBuilder> htmlBuilder = FlatHtml.inMemory();
-				//
-				final StringBuilder stringBuilder = new StringBuilder(
-						StringUtils
-								.defaultString(Util.toString(output(appendEndTag(
-										appendUnescapedText(
-												completeTag(appendAttribute(appendStartTag(htmlBuilder, "div"), "style",
+				final String html = Util.toString(
+						output(appendEndTag(
+								appendUnescapedText(
+										completeTag(
+												appendAttribute(appendStartTag(FlatHtml.inMemory(), "div"), "style",
 														Util.collect(
 																Util.map(Util.stream(Util.entrySet(createStyleMap())),
 																		x -> StringUtils.joinWith(":", Util.getKey(x),
 																				Util.getValue(x))),
 																Collectors.joining(";")))),
-												Util.getText(taHtml)),
-										"div")))));
+										Util.getText(taHtml)),
+								"div")));
+				//
+				final String description = Util.getText(tfDescription);
+				//
+				Integer largestY = null;
+				//
+				if (StringUtils.isNotBlank(description)) {
+					//
+					File tempFile = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null);
+					//
+					FileUtils.writeStringToFile(tempFile, String.format("<%1$s>%2$s</%1$s>", "html", html),
+							StandardCharsets.UTF_8, false);
+					//
+					final ContentInfoUtil ciu = new ContentInfoUtil();
+					//
+					final String[] fileExtensions = getFileExtensions(ciu.findMatch(tempFile));
+					//
+					final Matcher matcher = testAndApply((a, b) -> length(b) > 0, file, fileExtensions,
+							(a, b) -> matcher(Pattern.compile("^([^.]+.)[^.]+$"), Util.getName(a)), null);
+					//
+					if (matches(matcher) && groupCount(matcher) > 0) {
+						//
+						FileUtils.deleteQuietly(tempFile);
+						//
+						FileUtils.writeStringToFile(
+								tempFile = Util.toFile(Path
+										.of(StringUtils.join(group(matcher, 1), ArrayUtils.get(fileExtensions, 0)))),
+								html, StandardCharsets.UTF_8, false);
+						//
+					} // if
+						//
+					try (final Playwright playwright = Playwright.create()) {
+						//
+						final Page page = newPage(
+								newContext(launch(playwright != null ? playwright.chromium() : null)));
+						//
+						if (page != null) {
+							//
+							testAndAccept(Objects::nonNull, Util.toString(toURL(Util.toURI(tempFile))), page::navigate);
+							//
+							final byte[] bs = page.screenshot();
+							//
+							if (Objects.equals("image/png", getMimeType(ciu.findMatch(bs)))) {
+								//
+								try (final InputStream is = new ByteArrayInputStream(bs)) {
+									//
+									largestY = getLargestY(ImageIO.read(is));
+									//
+								} // if
+									//
+							} // if
+								//
+						} // if
+							//
+					} finally {
+						//
+						FileUtils.deleteQuietly(tempFile);
+						//
+					} // try
+						//
+				} // if
+					//
+				final StringBuilder stringBuilder = new StringBuilder(html);
+				//
+				testAndAccept((a, b) -> {
+					return StringUtils.startsWith(stringBuilder, a) && b != null;
+				}, "<div style=\"", largestY, (a, b) -> {
+					stringBuilder.insert(StringUtils.length(a), String.format("height:%1$spx;", b));
+				});
 				//
 				// TODO
 				//
