@@ -318,7 +318,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Image File")
 	private JTextComponent tfImageFile = null;
 
-	private JTextComponent tfOutputFile = null;
+	private JTextComponent tfOutputFile, tfDescription = null;
 
 	private transient Document taHtmlDocument = null;
 
@@ -912,6 +912,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(panel, String.format("%1$s,%2$s,span %3$s", WRAP, GROWX, 3));
 		//
+		// Description
+		//
+		add(new JLabel("Description"));
+		//
+		add(tfDescription = new JTextField(), String.format("%1$s,%2$s,span %3$s", WRAP, GROWX, span));
+		//
 		// Font Size
 		//
 		add(new JLabel("Font Size"));
@@ -1432,11 +1438,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			try {
 				//
-				final HtmlBuilder<StringBuilder> htmlBuilder = FlatHtml.inMemory();
+				HtmlBuilder<StringBuilder> htmlBuilder = FlatHtml.inMemory();
 				//
-				FileUtils
-						.writeStringToFile(Util.toFile(pathHtml),
-								Util.toString(output(appendEndTag(
+				final StringBuilder stringBuilder = new StringBuilder(
+						StringUtils
+								.defaultString(Util.toString(output(appendEndTag(
 										appendUnescapedText(
 												completeTag(appendAttribute(appendStartTag(htmlBuilder, "div"), "style",
 														Util.collect(
@@ -1445,8 +1451,19 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 																				Util.getValue(x))),
 																Collectors.joining(";")))),
 												Util.getText(taHtml)),
-										"div"))),
-								StandardCharsets.UTF_8, false);
+										"div")))));
+				//
+				// TODO
+				//
+				// 30 character per line
+				//
+				stringBuilder.append(StringUtils.defaultString(Util.toString(output(appendEndTag(appendUnescapedText(
+						completeTag(appendAttribute(appendStartTag(htmlBuilder = FlatHtml.inMemory(), "div"), "style",
+								"font-size:40px")),
+						Util.getText(tfDescription)), "div")))));
+				//
+				FileUtils.writeStringToFile(Util.toFile(pathHtml), Util.toString(stringBuilder), StandardCharsets.UTF_8,
+						false);
 				//
 				document = Loader.loadPDF(pdf(pathHtml));
 				//
