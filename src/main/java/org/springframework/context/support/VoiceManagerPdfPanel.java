@@ -300,6 +300,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Text")
 	private JTextComponent tfText = null;
 
+	@Note("Description")
+	private JTextComponent tfDescription = null;
+
 	@Note("Font Size 1")
 	private JTextComponent tfFontSize1 = null;
 
@@ -318,7 +321,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Image File")
 	private JTextComponent tfImageFile = null;
 
-	private JTextComponent tfOutputFile, tfDescription = null;
+	private JTextComponent tfOutputFile = null;
 
 	private transient Document taHtmlDocument = null;
 
