@@ -1461,8 +1461,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				// 30 character per line
 				//
 				stringBuilder.append(StringUtils.defaultString(Util.toString(output(appendEndTag(appendUnescapedText(
-						completeTag(appendAttribute(appendStartTag(htmlBuilder = FlatHtml.inMemory(), "div"), "style",
-								"font-size:40px")),
+						completeTag(
+								appendAttribute(appendStartTag(FlatHtml.inMemory(), "div"), "style", "font-size:40px")),
 						Util.getText(tfDescription)), "div")))));
 				//
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), Util.toString(stringBuilder), StandardCharsets.UTF_8,
