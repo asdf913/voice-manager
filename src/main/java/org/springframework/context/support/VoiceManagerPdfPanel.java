@@ -67,6 +67,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -1564,9 +1565,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private boolean actionPerformed2(final Object source) {
 		//
+		final boolean test = Util.forName("org.junit.jupiter.api.Test") != null;
+		//
 		if (Objects.equals(source, btnImageFile)) {
 			//
-			final JFileChooser jfc = !GraphicsEnvironment.isHeadless() ? new JFileChooser(".") : null;
+			final JFileChooser jfc = testAndGet(!GraphicsEnvironment.isHeadless() && !test,
+					() -> new JFileChooser("."));
 			//
 			if (jfc != null && jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//
@@ -1609,7 +1613,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} else if (Objects.equals(source, btnImageView)) {
 			//
-			if (Util.forName("org.junit.jupiter.api.Test") == null) {
+			if (test) {
 				//
 				JOptionPane.showMessageDialog(null, testAndApply(Objects::nonNull,
 						Util.cast(BufferedImage.class, renderedImage), ImageIcon::new, null), "Image",
@@ -1671,6 +1675,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		return false;
 		//
+	}
+
+	private static <T> T testAndGet(final boolean b, final Supplier<T> supplier) {
+		return b && supplier != null ? supplier.get() : null;
 	}
 
 	private boolean actionPerformed3(final Object source) {
