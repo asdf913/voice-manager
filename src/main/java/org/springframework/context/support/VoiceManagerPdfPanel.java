@@ -1607,7 +1607,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static boolean find(final Matcher instance) {
+	private static boolean find(@Nullable final Matcher instance) {
 		return instance != null && instance.find();
 	}
 
