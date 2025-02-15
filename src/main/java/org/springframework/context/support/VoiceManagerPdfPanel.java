@@ -1613,14 +1613,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} else if (Objects.equals(source, btnImageView)) {
 			//
-			if (test) {
-				//
-				JOptionPane.showMessageDialog(null, testAndApply(Objects::nonNull,
-						Util.cast(BufferedImage.class, renderedImage), ImageIcon::new, null), "Image",
-						JOptionPane.PLAIN_MESSAGE, null);
-				//
-			} // if
-				//
+			testAndRun(test,
+					() -> JOptionPane.showMessageDialog(null, testAndApply(Objects::nonNull,
+							Util.cast(BufferedImage.class, renderedImage), ImageIcon::new, null), "Image",
+							JOptionPane.PLAIN_MESSAGE, null),
+					null);
+			//
 		} else if (Objects.equals(source, btnImageFromClipboard)) {
 			//
 			final Transferable transferable = getContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(),
