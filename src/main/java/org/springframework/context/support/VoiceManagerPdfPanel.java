@@ -241,6 +241,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static final String PAGE1 = "page1";
 
+	private static final String STYLE = "style";
+
 	private static final FailableBiConsumer<JTextComponent, HttpURLConnection, IOException> J_TEXT_COMPONENT_HTTP_URL_CONNECTION_FAILABLE_BI_PREDICATE = (
 			a, b) -> {
 		//
@@ -1446,7 +1448,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						output(appendEndTag(
 								appendUnescapedText(
 										completeTag(
-												appendAttribute(appendStartTag(FlatHtml.inMemory(), "div"), "style",
+												appendAttribute(appendStartTag(FlatHtml.inMemory(), "div"), STYLE,
 														Util.collect(
 																Util.map(Util.stream(Util.entrySet(createStyleMap())),
 																		x -> StringUtils.joinWith(":", Util.getKey(x),
@@ -1479,7 +1481,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				stringBuilder.append(StringUtils.defaultString(Util.toString(output(appendEndTag(appendUnescapedText(
 						completeTag(
-								appendAttribute(appendStartTag(FlatHtml.inMemory(), "div"), "style", "font-size:40px")),
+								appendAttribute(appendStartTag(FlatHtml.inMemory(), "div"), STYLE, "font-size:40px")),
 						Util.getText(tfDescription)), "div")))));
 				//
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), Util.toString(stringBuilder), StandardCharsets.UTF_8,
@@ -1718,21 +1720,20 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			try {
 				//
-				final String html = Util
-						.toString(output(appendEndTag(
-								appendEndTag(
-										appendUnescapedText(
-												completeTag(appendAttribute(appendStartTag(
-														completeTag(appendStartTag(htmlBuilder, "html")), "div"),
-														"style",
-														Util.collect(
+				final String html = Util.toString(output(appendEndTag(
+						appendEndTag(
+								appendUnescapedText(
+										completeTag(appendAttribute(
+												appendStartTag(completeTag(appendStartTag(htmlBuilder, "html")), "div"),
+												STYLE, Util
+														.collect(
 																Util.map(Util.stream(Util.entrySet(createStyleMap())),
 																		x -> StringUtils.joinWith(":", Util.getKey(x),
 																				Util.getValue(x))),
 																Collectors.joining(";")))),
-												Util.getText(taHtml)),
-										"div"),
-								"html")));
+										Util.getText(taHtml)),
+								"div"),
+						"html")));
 				//
 				FileUtils.writeStringToFile(
 						file = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null), html,
