@@ -1671,12 +1671,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			return true;
 			//
-		} else if (Objects.equals(source, btnCopyTextToHtml)) {
-			//
-			Util.setText(taHtml, Util.getText(tfText));
-			//
-			return true;
-			//
 		} // if
 			//
 		return false;
@@ -1685,7 +1679,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private boolean actionPerformed3(final Object source) {
 		//
-		if (Objects.equals(source, btnGenerateRubyHtml)) {
+		if (Objects.equals(source, btnCopyTextToHtml)) {
+			//
+			Util.setText(taHtml, Util.getText(tfText));
+			//
+			return true;
+			//
+		} else if (Objects.equals(source, btnGenerateRubyHtml)) {
 			//
 			try {
 				//
