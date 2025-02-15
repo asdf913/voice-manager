@@ -1647,9 +1647,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					final Entry<Method, Collection<Object>> entry = getPDImageXObjectCreateFromByteArrayDetectFileTypeMethodAndAllowedFileTypes();
 					//
-					if (Util.contains(Util.getValue(entry), testAndApply(f -> Util.exists(f) && Util.isFile(f), file,
-							f -> Narcissus.invokeStaticMethod(Util.getKey(entry), Files.readAllBytes(Util.toPath(f))),
-							null))) {
+					if (Util.contains(Util.getValue(entry),
+							testAndApply(
+									f -> Boolean.logicalAnd(Util.exists(f), Util.isFile(f)), file, f -> Narcissus
+											.invokeStaticMethod(Util.getKey(entry), Files.readAllBytes(Util.toPath(f))),
+									null))) {
 						//
 						Util.setText(tfImageFile, Util.getAbsolutePath(file));
 						//
