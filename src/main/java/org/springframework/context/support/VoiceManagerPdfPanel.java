@@ -350,6 +350,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Nullable
 	private Map<Integer, String> fontSizeAndUnitMap = null;
 
+	@Nullable
 	private transient RenderedImage renderedImage = null;
 
 	private transient ComboBoxModel<String> cbmImageFormat = null;
