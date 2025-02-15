@@ -121,6 +121,7 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.Type;
 import org.apache.bcel.generic.TypeUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
@@ -1441,7 +1442,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			try {
 				//
-				final String html = Util.toString(
+				String html = Util.toString(
 						output(appendEndTag(
 								appendUnescapedText(
 										completeTag(
@@ -1454,73 +1455,23 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 										Util.getText(taHtml)),
 								"div")));
 				//
-				final String description = Util.getText(tfDescription);
-				//
-				Integer largestY = null;
-				//
-				if (StringUtils.isNotBlank(description)) {
+				if (CollectionUtils.isNotEmpty(ElementUtil.getElementsByTag(Jsoup.parse(html), "ruby"))) {
 					//
-					File tempFile = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null);
+					final Matcher matcher = matcher(Pattern.compile("display:(\\w+)"), html);
 					//
-					FileUtils.writeStringToFile(tempFile, String.format("<%1$s>%2$s</%1$s>", "html", html),
-							StandardCharsets.UTF_8, false);
+					final StringBuilder sb = new StringBuilder();
 					//
-					final ContentInfoUtil ciu = new ContentInfoUtil();
-					//
-					final String[] fileExtensions = getFileExtensions(ciu.findMatch(tempFile));
-					//
-					final Matcher matcher = testAndApply((a, b) -> length(b) > 0, file, fileExtensions,
-							(a, b) -> matcher(Pattern.compile("^([^.]+.)[^.]+$"), Util.getName(a)), null);
-					//
-					if (matches(matcher) && groupCount(matcher) > 0) {
+					while (matcher != null && matcher.find()) {
 						//
-						FileUtils.deleteQuietly(tempFile);
-						//
-						FileUtils.writeStringToFile(
-								tempFile = Util.toFile(Path
-										.of(StringUtils.join(group(matcher, 1), ArrayUtils.get(fileExtensions, 0)))),
-								html, StandardCharsets.UTF_8, false);
+						matcher.appendReplacement(sb, "display:ruby-text");
 						//
 					} // if
 						//
-					try (final Playwright playwright = Playwright.create()) {
-						//
-						final Page page = newPage(
-								newContext(launch(playwright != null ? playwright.chromium() : null)));
-						//
-						if (page != null) {
-							//
-							testAndAccept(Objects::nonNull, Util.toString(toURL(Util.toURI(tempFile))), page::navigate);
-							//
-							final byte[] bs = page.screenshot();
-							//
-							if (Objects.equals("image/png", getMimeType(ciu.findMatch(bs)))) {
-								//
-								try (final InputStream is = new ByteArrayInputStream(bs)) {
-									//
-									largestY = getLargestY(ImageIO.read(is));
-									//
-								} // if
-									//
-							} // if
-								//
-						} // if
-							//
-					} finally {
-						//
-						FileUtils.deleteQuietly(tempFile);
-						//
-					} // try
-						//
+					html = Util.toString(matcher.appendTail(sb));
+					//
 				} // if
 					//
 				final StringBuilder stringBuilder = new StringBuilder(html);
-				//
-				testAndAccept((a, b) -> {
-					return StringUtils.startsWith(stringBuilder, a) && b != null;
-				}, "<div style=\"", largestY, (a, b) -> {
-					stringBuilder.insert(StringUtils.length(a), String.format("height:%1$spx;", b));
-				});
 				//
 				// TODO
 				//
