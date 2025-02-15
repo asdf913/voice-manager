@@ -1565,9 +1565,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		if (Objects.equals(source, btnImageFile)) {
 			//
-			final JFileChooser jfc = new JFileChooser(".");
+			final JFileChooser jfc = !GraphicsEnvironment.isHeadless() ? new JFileChooser(".") : null;
 			//
-			if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			if (jfc != null && jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//
 				final File file = getAbsoluteFile(jfc.getSelectedFile());
 				//
@@ -1600,8 +1600,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				return true;
 				//
-			}
-			//
+			} // if
+				//
 		} else if (Objects.equals(source, btnImageClear)) {
 			//
 			setEnabled((renderedImage = null) != null, btnImageClear, btnImageView);
