@@ -1677,7 +1677,15 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			return true;
 			//
-		} else if (Objects.equals(source, btnGenerateRubyHtml)) {
+		} // if
+			//
+		return false;
+		//
+	}
+
+	private boolean actionPerformed3(final Object source) {
+		//
+		if (Objects.equals(source, btnGenerateRubyHtml)) {
 			//
 			try {
 				//
@@ -1692,15 +1700,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			return true;
 			//
-		} // if
-			//
-		return false;
-		//
-	}
-
-	private boolean actionPerformed3(final Object source) {
-		//
-		if (Objects.equals(source, btnBrowseOutputFolder)) {
+		} else if (Objects.equals(source, btnBrowseOutputFolder)) {
 			//
 			try {
 				//
