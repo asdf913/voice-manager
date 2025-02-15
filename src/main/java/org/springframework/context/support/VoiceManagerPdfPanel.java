@@ -1461,7 +1461,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					final StringBuilder sb = new StringBuilder();
 					//
-					while (matcher != null && matcher.find()) {
+					while (find(matcher)) {
 						//
 						matcher.appendReplacement(sb, "display:ruby-text");
 						//
@@ -1605,6 +1605,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // for
 			//
+	}
+
+	private static boolean find(final Matcher instance) {
+		return instance != null && instance.find();
 	}
 
 	private boolean actionPerformed2(final Object source) {
