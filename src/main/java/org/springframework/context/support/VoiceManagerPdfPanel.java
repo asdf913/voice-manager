@@ -1677,7 +1677,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static <T> T testAndGet(final boolean b, final Supplier<T> supplier) {
+	private static <T> T testAndGet(final boolean b, @Nullable final Supplier<T> supplier) {
 		return b && supplier != null ? supplier.get() : null;
 	}
 
