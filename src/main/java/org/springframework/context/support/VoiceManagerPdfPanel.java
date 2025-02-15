@@ -1543,6 +1543,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // try
 				//
+		} else if (Objects.equals(source, btnImageClear)) {
+			//
+			setEnabled((renderedImage = null) != null, btnImageClear, btnImageView);
+			//
 		} // if
 			//
 		final Iterable<Predicate<Object>> predicates = Arrays.asList(this::actionPerformed2, this::actionPerformed3);
@@ -1607,10 +1611,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // if
 				//
-		} else if (Objects.equals(source, btnImageClear)) {
-			//
-			setEnabled((renderedImage = null) != null, btnImageClear, btnImageView);
-			//
 		} else if (Objects.equals(source, btnImageView)) {
 			//
 			testAndRun(test,
