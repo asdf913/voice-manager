@@ -1541,7 +1541,29 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // try
 				//
-		} else if (Objects.equals(source, btnImageFile)) {
+		} // if
+			//
+		final Iterable<Predicate<Object>> predicates = Arrays.asList(this::actionPerformed2, this::actionPerformed3);
+		//
+		for (int i = 0; i < IterableUtils.size(predicates); i++) {
+			//
+			if (Util.test(IterableUtils.get(predicates, i), source)) {
+				//
+				break;
+				//
+			} // if
+				//
+		} // for
+			//
+	}
+
+	private static boolean find(@Nullable final Matcher instance) {
+		return instance != null && instance.find();
+	}
+
+	private boolean actionPerformed2(final Object source) {
+		//
+		if (Objects.equals(source, btnImageFile)) {
 			//
 			final JFileChooser jfc = new JFileChooser(".");
 			//
@@ -1576,31 +1598,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 							//
 						});
 				//
-			} // if
+				return true;
 				//
-		} // if
+			}
 			//
-		final Iterable<Predicate<Object>> predicates = Arrays.asList(this::actionPerformed2, this::actionPerformed3);
-		//
-		for (int i = 0; i < IterableUtils.size(predicates); i++) {
-			//
-			if (Util.test(IterableUtils.get(predicates, i), source)) {
-				//
-				break;
-				//
-			} // if
-				//
-		} // for
-			//
-	}
-
-	private static boolean find(@Nullable final Matcher instance) {
-		return instance != null && instance.find();
-	}
-
-	private boolean actionPerformed2(final Object source) {
-		//
-		if (Objects.equals(source, btnImageClear)) {
+		} else if (Objects.equals(source, btnImageClear)) {
 			//
 			setEnabled((renderedImage = null) != null, btnImageClear, btnImageView);
 			//
