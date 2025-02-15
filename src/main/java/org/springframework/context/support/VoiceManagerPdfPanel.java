@@ -1578,10 +1578,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // if
 				//
-		} else if (Objects.equals(source, btnImageClear)) {
-			//
-			setEnabled((renderedImage = null) != null, btnImageClear, btnImageView);
-			//
 		} // if
 			//
 		final Iterable<Predicate<Object>> predicates = Arrays.asList(this::actionPerformed2, this::actionPerformed3);
@@ -1604,7 +1600,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private boolean actionPerformed2(final Object source) {
 		//
-		if (Objects.equals(source, btnImageView)) {
+		if (Objects.equals(source, btnImageClear)) {
+			//
+			setEnabled((renderedImage = null) != null, btnImageClear, btnImageView);
+			//
+		} else if (Objects.equals(source, btnImageView)) {
 			//
 			if (Util.forName("org.junit.jupiter.api.Test") == null) {
 				//
