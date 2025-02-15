@@ -1588,11 +1588,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					testAndApply(Objects::nonNull, Util.cast(BufferedImage.class, renderedImage), ImageIcon::new, null),
 					"Image", JOptionPane.PLAIN_MESSAGE, null);
 			//
-		} else if (Objects.equals(source, btnCopyOutputFilePath)) {
-			//
-			setContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(), Toolkit.getDefaultToolkit(),
-					x -> getSystemClipboard(x), null), new StringSelection(Util.getText(tfOutputFile)), null);
-			//
 		} // if
 			//
 		final Iterable<Predicate<Object>> predicates = Arrays.asList(this::actionPerformed2, this::actionPerformed3);
@@ -1615,7 +1610,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private boolean actionPerformed2(final Object source) {
 		//
-		if (Objects.equals(source, btnImageFromClipboard)) {
+		if (Objects.equals(source, btnCopyOutputFilePath)) {
+			//
+			setContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(), Toolkit.getDefaultToolkit(),
+					x -> getSystemClipboard(x), null), new StringSelection(Util.getText(tfOutputFile)), null);
+			//
+			return true;
+			//
+		} else if (Objects.equals(source, btnImageFromClipboard)) {
 			//
 			final Transferable transferable = getContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(),
 					Toolkit.getDefaultToolkit(), x -> getSystemClipboard(x), null), null);
