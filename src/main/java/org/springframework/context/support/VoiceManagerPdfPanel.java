@@ -1582,12 +1582,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			setEnabled((renderedImage = null) != null, btnImageClear, btnImageView);
 			//
-		} else if (Objects.equals(source, btnImageView)) {
-			//
-			JOptionPane.showMessageDialog(null,
-					testAndApply(Objects::nonNull, Util.cast(BufferedImage.class, renderedImage), ImageIcon::new, null),
-					"Image", JOptionPane.PLAIN_MESSAGE, null);
-			//
 		} // if
 			//
 		final Iterable<Predicate<Object>> predicates = Arrays.asList(this::actionPerformed2, this::actionPerformed3);
@@ -1610,7 +1604,17 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private boolean actionPerformed2(final Object source) {
 		//
-		if (Objects.equals(source, btnCopyOutputFilePath)) {
+		if (Objects.equals(source, btnImageView)) {
+			//
+			if (Util.forName("org.junit.jupiter.api.Test") == null) {
+				//
+				JOptionPane.showMessageDialog(null, testAndApply(Objects::nonNull,
+						Util.cast(BufferedImage.class, renderedImage), ImageIcon::new, null), "Image",
+						JOptionPane.PLAIN_MESSAGE, null);
+				//
+			} // if
+				//
+		} else if (Objects.equals(source, btnCopyOutputFilePath)) {
 			//
 			setContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(), Toolkit.getDefaultToolkit(),
 					x -> getSystemClipboard(x), null), new StringSelection(Util.getText(tfOutputFile)), null);
