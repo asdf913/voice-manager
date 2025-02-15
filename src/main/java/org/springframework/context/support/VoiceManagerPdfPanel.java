@@ -1569,7 +1569,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		if (Objects.equals(source, btnImageFile)) {
 			//
-			final JFileChooser jfc = testAndGet(!GraphicsEnvironment.isHeadless() && !test,
+			final JFileChooser jfc = testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !test),
 					() -> new JFileChooser("."));
 			//
 			if (jfc != null && jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
