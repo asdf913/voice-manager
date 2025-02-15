@@ -1547,6 +1547,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			setEnabled((renderedImage = null) != null, btnImageClear, btnImageView);
 			//
+		} else if (Objects.equals(source, btnImageView)) {
+			//
+			testAndRun(Util.forName("org.junit.jupiter.api.Test") == null,
+					() -> JOptionPane.showMessageDialog(null, testAndApply(Objects::nonNull,
+							Util.cast(BufferedImage.class, renderedImage), ImageIcon::new, null), "Image",
+							JOptionPane.PLAIN_MESSAGE, null),
+					null);
+			//
 		} // if
 			//
 		final Iterable<Predicate<Object>> predicates = Arrays.asList(this::actionPerformed2, this::actionPerformed3);
@@ -1569,12 +1577,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private boolean actionPerformed2(final Object source) {
 		//
-		final boolean test = Util.forName("org.junit.jupiter.api.Test") != null;
-		//
 		if (Objects.equals(source, btnImageFile)) {
 			//
-			final JFileChooser jfc = testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !test),
-					() -> new JFileChooser("."));
+			final JFileChooser jfc = testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(),
+					Util.forName("org.junit.jupiter.api.Test") == null), () -> new JFileChooser("."));
 			//
 			if (jfc != null && jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//
@@ -1611,14 +1617,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // if
 				//
-		} else if (Objects.equals(source, btnImageView)) {
-			//
-			testAndRun(test,
-					() -> JOptionPane.showMessageDialog(null, testAndApply(Objects::nonNull,
-							Util.cast(BufferedImage.class, renderedImage), ImageIcon::new, null), "Image",
-							JOptionPane.PLAIN_MESSAGE, null),
-					null);
-			//
 		} else if (Objects.equals(source, btnImageFromClipboard)) {
 			//
 			final Transferable transferable = getContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(),
