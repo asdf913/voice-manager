@@ -1624,7 +1624,35 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // if
 				//
-		} else if (Objects.equals(source, btnImageFromClipboard)) {
+		} else if (Objects.equals(source, btnGenerateRubyHtml)) {
+			//
+			try {
+				//
+				testAndAccept(VoiceManagerPdfPanel::isPlainText, Util.getText(taHtml),
+						x -> Util.setText(taHtml, toHtml(x)));
+				//
+			} catch (final IOException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
+				//
+			return true;
+			//
+		} // if
+			//
+		return false;
+		//
+	}
+
+	@Nullable
+	private static <T> T testAndGet(final boolean b, @Nullable final Supplier<T> supplier) {
+		return b && supplier != null ? supplier.get() : null;
+	}
+
+	private boolean actionPerformed3(final Object source) {
+		//
+		if (Objects.equals(source, btnImageFromClipboard)) {
 			//
 			final Transferable transferable = getContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(),
 					Toolkit.getDefaultToolkit(), x -> getSystemClipboard(x), null), null);
@@ -1669,34 +1697,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				} // if
 					//
 			} catch (final UnsupportedFlavorException | IOException | NoSuchMethodException e) {
-				//
-				LoggerUtil.error(LOG, e.getMessage(), e);
-				//
-			} // try
-				//
-			return true;
-			//
-		} // if
-			//
-		return false;
-		//
-	}
-
-	@Nullable
-	private static <T> T testAndGet(final boolean b, @Nullable final Supplier<T> supplier) {
-		return b && supplier != null ? supplier.get() : null;
-	}
-
-	private boolean actionPerformed3(final Object source) {
-		//
-		if (Objects.equals(source, btnGenerateRubyHtml)) {
-			//
-			try {
-				//
-				testAndAccept(VoiceManagerPdfPanel::isPlainText, Util.getText(taHtml),
-						x -> Util.setText(taHtml, toHtml(x)));
-				//
-			} catch (final IOException e) {
 				//
 				LoggerUtil.error(LOG, e.getMessage(), e);
 				//
