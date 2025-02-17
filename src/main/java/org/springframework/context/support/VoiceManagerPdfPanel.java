@@ -1543,7 +1543,50 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // try
 				//
-		} else if (Objects.equals(source, btnImageFile)) {
+		} else if (Objects.equals(source, btnImageClear)) {
+			//
+			setEnabled((renderedImage = null) != null, btnImageClear, btnImageView);
+			//
+		} else if (Objects.equals(source, btnImageView)) {
+			//
+			testAndRun(Util.forName("org.junit.jupiter.api.Test") == null,
+					() -> JOptionPane.showMessageDialog(null, testAndApply(Objects::nonNull,
+							Util.cast(BufferedImage.class, renderedImage), ImageIcon::new, null), "Image",
+							JOptionPane.PLAIN_MESSAGE, null),
+					null);
+			//
+		} else if (Objects.equals(source, btnCopyOutputFilePath)) {
+			//
+			setContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(), Toolkit.getDefaultToolkit(),
+					x -> getSystemClipboard(x), null), new StringSelection(Util.getText(tfOutputFile)), null);
+			//
+		} else if (Objects.equals(source, btnCopyTextToHtml)) {
+			//
+			Util.setText(taHtml, Util.getText(tfText));
+			//
+		} // if
+			//
+		final Iterable<Predicate<Object>> predicates = Arrays.asList(this::actionPerformed2, this::actionPerformed3);
+		//
+		for (int i = 0; i < IterableUtils.size(predicates); i++) {
+			//
+			if (Util.test(IterableUtils.get(predicates, i), source)) {
+				//
+				break;
+				//
+			} // if
+				//
+		} // for
+			//
+	}
+
+	private static boolean find(@Nullable final Matcher instance) {
+		return instance != null && instance.find();
+	}
+
+	private boolean actionPerformed2(final Object source) {
+		//
+		if (Objects.equals(source, btnImageFile)) {
 			//
 			final JFileChooser jfc = testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(),
 					Util.forName("org.junit.jupiter.api.Test") == null), () -> new JFileChooser("."));
@@ -1581,44 +1624,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // if
 				//
-		} // if
-			//
-		final Iterable<Predicate<Object>> predicates = Arrays.asList(this::actionPerformed2, this::actionPerformed3);
-		//
-		for (int i = 0; i < IterableUtils.size(predicates); i++) {
-			//
-			if (Util.test(IterableUtils.get(predicates, i), source)) {
-				//
-				break;
-				//
-			} // if
-				//
-		} // for
-			//
-	}
-
-	private static boolean find(@Nullable final Matcher instance) {
-		return instance != null && instance.find();
-	}
-
-	private boolean actionPerformed2(final Object source) {
-		//
-		if (Objects.equals(source, btnImageClear)) {
-			//
-			setEnabled((renderedImage = null) != null, btnImageClear, btnImageView);
-			//
-			return true;
-			//
-		} else if (Objects.equals(source, btnImageView)) {
-			//
-			testAndRun(Util.forName("org.junit.jupiter.api.Test") == null,
-					() -> JOptionPane.showMessageDialog(null, testAndApply(Objects::nonNull,
-							Util.cast(BufferedImage.class, renderedImage), ImageIcon::new, null), "Image",
-							JOptionPane.PLAIN_MESSAGE, null),
-					null);
-			//
-			return true;
-			//
 		} else if (Objects.equals(source, btnImageFromClipboard)) {
 			//
 			final Transferable transferable = getContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(),
@@ -1684,20 +1689,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private boolean actionPerformed3(final Object source) {
 		//
-		if (Objects.equals(source, btnCopyOutputFilePath)) {
-			//
-			setContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(), Toolkit.getDefaultToolkit(),
-					x -> getSystemClipboard(x), null), new StringSelection(Util.getText(tfOutputFile)), null);
-			//
-			return true;
-			//
-		} else if (Objects.equals(source, btnCopyTextToHtml)) {
-			//
-			Util.setText(taHtml, Util.getText(tfText));
-			//
-			return true;
-			//
-		} else if (Objects.equals(source, btnGenerateRubyHtml)) {
+		if (Objects.equals(source, btnGenerateRubyHtml)) {
 			//
 			try {
 				//
