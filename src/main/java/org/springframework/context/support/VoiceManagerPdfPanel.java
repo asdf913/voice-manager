@@ -1566,7 +1566,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
-		final Iterable<Predicate<Object>> predicates = Arrays.asList(this::actionPerformed2, this::actionPerformed3);
+		final Iterable<Predicate<Object>> predicates = Arrays.asList(this::actionPerformed2, this::actionPerformed3,
+				this::actionPerformed4);
 		//
 		for (int i = 0; i < IterableUtils.size(predicates); i++) {
 			//
@@ -1720,7 +1721,15 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			return true;
 			//
-		} else if (Objects.equals(source, btnPreviewRubyPdf)) {
+		} // if
+			//
+		return false;
+		//
+	}
+
+	private boolean actionPerformed4(final Object source) {
+		//
+		if (Objects.equals(source, btnPreviewRubyPdf)) {
 			//
 			final HtmlBuilder<StringBuilder> htmlBuilder = FlatHtml.inMemory();
 			//
