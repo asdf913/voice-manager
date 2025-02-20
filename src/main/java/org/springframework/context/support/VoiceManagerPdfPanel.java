@@ -1446,18 +1446,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			try {
 				//
-				String html = Util.toString(
-						output(appendEndTag(
-								appendUnescapedText(
-										completeTag(
-												appendAttribute(appendStartTag(FlatHtml.inMemory(), "div"), STYLE,
-														Util.collect(
-																Util.map(Util.stream(Util.entrySet(createStyleMap())),
-																		x -> StringUtils.joinWith(":", Util.getKey(x),
-																				Util.getValue(x))),
-																Collectors.joining(";")))),
-										Util.getText(taHtml)),
-								"div")));
+				String html = Util.toString(output(appendEndTag(appendUnescapedText(
+						completeTag(appendAttribute(appendStartTag(FlatHtml.inMemory(), "div"), STYLE
+						//
+								, join(createStyleMap(), ":", ";")
+						//
+						)), Util.getText(taHtml)), "div")));
 				//
 				if (CollectionUtils.isNotEmpty(ElementUtil.getElementsByTag(Jsoup.parse(html), "ruby"))) {
 					//
@@ -1481,21 +1475,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				// 30 character per line
 				//
-				stringBuilder
-						.append(StringUtils
-								.defaultString(
-										Util.toString(output(appendEndTag(appendUnescapedText(completeTag(
-												appendAttribute(appendStartTag(FlatHtml.inMemory(), "div"), STYLE,
-														//
-														Util.collect(
-																Util.map(
-																		Util.stream(Util.entrySet(Map.of("font-size",
-																				"40px", "position", "absolute"))),
-																		x -> StringUtils.joinWith(":", Util.getKey(x),
-																				Util.getValue(x))),
-																Collectors.joining(";"))
-												//
-												)), Util.getText(tfDescription)), "div")))));
+				stringBuilder.append(StringUtils.defaultString(Util.toString(output(appendEndTag(appendUnescapedText(
+						completeTag(appendAttribute(appendStartTag(FlatHtml.inMemory(), "div"), STYLE,
+								//
+								join(Map.of("font-size", "40px", "position", "absolute"), ":", ";")
+						//
+						)), Util.getText(tfDescription)), "div")))));
 				//
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), Util.toString(stringBuilder), StandardCharsets.UTF_8,
 						false);
@@ -1590,6 +1575,15 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // for
 			//
+	}
+
+	private static String join(final Map<?, ?> map, final String delimiterA, final String delimiterB) {
+		//
+		return Util.collect(
+				Util.map(Util.stream(Util.entrySet(map)),
+						x -> StringUtils.joinWith(delimiterA, Util.getKey(x), Util.getValue(x))),
+				Collectors.joining(delimiterB));
+		//
 	}
 
 	private static boolean find(@Nullable final Matcher instance) {
@@ -1750,20 +1744,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			try {
 				//
-				final String html = Util.toString(output(appendEndTag(
-						appendEndTag(
-								appendUnescapedText(
-										completeTag(appendAttribute(
-												appendStartTag(completeTag(appendStartTag(htmlBuilder, "html")), "div"),
-												STYLE, Util
-														.collect(
-																Util.map(Util.stream(Util.entrySet(createStyleMap())),
-																		x -> StringUtils.joinWith(":", Util.getKey(x),
-																				Util.getValue(x))),
-																Collectors.joining(";")))),
-										Util.getText(taHtml)),
-								"div"),
-						"html")));
+				final String html = Util.toString(output(appendEndTag(appendEndTag(appendUnescapedText(completeTag(
+						appendAttribute(appendStartTag(completeTag(appendStartTag(htmlBuilder, "html")), "div"), STYLE,
+								//
+								join(createStyleMap(), ":", ";")
+						//
+						)), Util.getText(taHtml)), "div"), "html")));
 				//
 				FileUtils.writeStringToFile(
 						file = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null), html,
