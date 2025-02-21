@@ -1603,10 +1603,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static boolean find(@Nullable final Matcher instance) {
-		return instance != null && instance.find();
-	}
-
 	private boolean actionPerformed2(final Object source) {
 		//
 		if (Objects.equals(source, btnImageFile)) {
