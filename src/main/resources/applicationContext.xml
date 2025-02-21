@@ -1145,6 +1145,14 @@
 			value="${org.springframework.context.support.VoiceManagerPdfPanel.textAlign}" />
 		<property name="textAligns"
 			value="${org.springframework.context.support.VoiceManagerPdfPanel.textAligns}" />
+		<property name="freeMarkerConfiguration">
+			<bean class="freemarker.template.Configuration">
+				<constructor-arg index="0"
+					value="#{T(freemarker.template.Configuration).getVersion()}" />
+				<property name="templateLoader"
+					value="#{new freemarker.cache.ClassTemplateLoader(T(org.springframework.context.support.VoiceManagerPdfPanel),'/')}" />
+			</bean>
+		</property>
 	</bean>
 
 	<!---->

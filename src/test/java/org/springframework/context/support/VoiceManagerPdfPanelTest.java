@@ -30,6 +30,19 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ClassParserUtil;
+import org.apache.bcel.classfile.FieldOrMethodUtil;
+import org.apache.bcel.classfile.JavaClassUtil;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.INVOKESTATIC;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.InvokeInstructionUtil;
+import org.apache.bcel.generic.LDC_W;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.MethodGenUtil;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -45,13 +58,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.helger.css.ECSSUnit;
 
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.cache.TemplateLoader;
+import freemarker.template.Configuration;
 import io.github.toolfactory.narcissus.Narcissus;
 import j2html.rendering.HtmlBuilder;
 
 class VoiceManagerPdfPanelTest {
 
 	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_SELECTED_ITEM, METHOD_TO_HTML,
-			METHOD_GET_TEXT_ALIGNS, METHOD_CHOP = null;
+			METHOD_GET_TEXT_ALIGNS, METHOD_CHOP, METHOD_GENERATE_PDF_HTML, METHOD_LENGTH = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -68,6 +84,11 @@ class VoiceManagerPdfPanelTest {
 		(METHOD_GET_TEXT_ALIGNS = clz.getDeclaredMethod("getTextAligns")).setAccessible(true);
 		//
 		(METHOD_CHOP = clz.getDeclaredMethod("chop", BufferedImage.class)).setAccessible(true);
+		//
+		(METHOD_GENERATE_PDF_HTML = clz.getDeclaredMethod("generatePdfHtml", Configuration.class, Map.class))
+				.setAccessible(true);
+		//
+		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
 		//
 	}
 
@@ -505,6 +526,89 @@ class VoiceManagerPdfPanelTest {
 	}
 
 	@Test
+	void testGeneratePdfHtml() throws Throwable {
+		//
+		Assertions.assertEquals("", generatePdfHtml(null, null));
+		//
+		final Configuration configuration = new Configuration(Configuration.getVersion());
+		//
+		Assertions.assertEquals("", generatePdfHtml(configuration, null));
+		//
+		final Class<?> clz = VoiceManagerPdfPanel.class;
+		//
+		final TemplateLoader tl = new ClassTemplateLoader(clz, "/");
+		//
+		Object ldcwGetValue = null;
+		//
+		try (final InputStream is = Util.getResourceAsStream(clz,
+				String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))) {
+			//
+			final org.apache.bcel.classfile.Method method = JavaClassUtil.getMethod(
+					ClassParserUtil.parse(new ClassParser(is, null)),
+					Util.getDeclaredMethod(clz, "generatePdfHtml", Configuration.class, Map.class));
+			//
+			final ConstantPoolGen cpg = new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(method));
+			//
+			final Instruction[] ins = InstructionListUtil
+					.getInstructions(MethodGenUtil.getInstructionList(new MethodGen(method, null, cpg)));
+			//
+			Instruction in = null;
+			//
+			for (int i = 0; i < length(ins); i++) {
+				//
+				if ((in = ArrayUtils.get(ins, i)) instanceof LDC_W ldcw) {
+					//
+					ldcwGetValue = ldcw.getValue(cpg);
+					//
+				} else if (in instanceof INVOKESTATIC invokestatic
+						&& Objects.equals(invokestatic.getClassName(cpg), "freemarker.template.ConfigurationUtil")
+						&& Objects.equals(InvokeInstructionUtil.getMethodName(invokestatic, cpg), "getTemplate")
+						&& Objects.equals(Arrays.toString(InvokeInstructionUtil.getArgumentTypes(invokestatic, cpg)),
+								"[freemarker.template.Configuration, java.lang.String]")) {
+					//
+					break;
+					//
+				} // if
+					//
+			} // for
+				//
+		} // try
+			//
+		tl.findTemplateSource(String.format("%1$s", ObjectUtils.defaultIfNull(ldcwGetValue, "pdf.html.ftl")));
+		//
+		configuration.setTemplateLoader(tl);
+		//
+		Assertions.assertTrue(StringUtils.isNotBlank(generatePdfHtml(configuration, null)));
+		//
+	}
+
+	private static int length(final Object[] instance) throws Throwable {
+		try {
+			final Object obj = METHOD_LENGTH.invoke(null, (Object) instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			} // if
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static String generatePdfHtml(final Configuration configuration, final Map<?, ?> map) throws Throwable {
+		try {
+			final Object obj = METHOD_GENERATE_PDF_HTML.invoke(null, configuration, map);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			} // if
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testNull() {
 		//
 		final Method[] ms = VoiceManagerPdfPanel.class.getDeclaredMethods();
@@ -590,8 +694,11 @@ class VoiceManagerPdfPanelTest {
 								parameterCount == 0),
 						Boolean.logicalAnd(Objects.equals(name, "createImageFormatComparator"),
 								Arrays.equals(parameterTypes, new Class<?>[] { List.class })),
-						Boolean.logicalAnd(Objects.equals(name, "createStyleMap"), Arrays.equals(parameterTypes,
-								new Class<?>[] { Map.class, BigDecimal.class, ECSSUnit.class })))) {
+						Boolean.logicalAnd(Objects.equals(name, "createStyleMap"),
+								Arrays.equals(parameterTypes,
+										new Class<?>[] { Map.class, BigDecimal.class, ECSSUnit.class })),
+						Boolean.logicalAnd(Objects.equals(name, "generatePdfHtml"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Configuration.class, Map.class })))) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//

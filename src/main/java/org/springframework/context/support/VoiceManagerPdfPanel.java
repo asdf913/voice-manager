@@ -26,6 +26,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -221,6 +223,11 @@ import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 
+import freemarker.template.Configuration;
+import freemarker.template.ConfigurationUtil;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 import j2html.rendering.FlatHtml;
 import j2html.rendering.HtmlBuilder;
@@ -375,6 +382,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	private transient Object textAlign = null;
 
 	private transient IValue0<List<String>> textAligns = null;
+
+	private Configuration freeMarkerConfiguration = null;
 
 	@Override
 	public String getTitle() {
@@ -791,6 +800,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Nullable
 	private static <E> Iterator<E> asIterator(@Nullable final Enumeration<E> instance) {
 		return instance != null ? instance.asIterator() : null;
+	}
+
+	public void setFreeMarkerConfiguration(final Configuration freeMarkerConfiguration) {
+		this.freeMarkerConfiguration = freeMarkerConfiguration;
 	}
 
 	private class VoiceIdListCellRenderer implements ListCellRenderer<Object> {
@@ -1446,44 +1459,33 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			try {
 				//
-				String html = Util.toString(output(appendEndTag(appendUnescapedText(
-						completeTag(appendAttribute(appendStartTag(FlatHtml.inMemory(), "div"), STYLE
-						//
-								, join(createStyleMap(), ":", ";")
-						//
-						)), Util.getText(taHtml)), "div")));
+				final String captionHtml = Util.getText(taHtml);
 				//
-				if (CollectionUtils.isNotEmpty(ElementUtil.getElementsByTag(Jsoup.parse(html), "ruby"))) {
-					//
-					final Matcher matcher = matcher(Pattern.compile("display:(\\w+)"), html);
-					//
-					final StringBuilder sb = new StringBuilder();
-					//
-					while (find(matcher)) {
-						//
-						matcher.appendReplacement(sb, "display:ruby-text");
-						//
-					} // if
-						//
-					html = Util.toString(matcher.appendTail(sb));
-					//
-				} // if
-					//
-				final StringBuilder stringBuilder = new StringBuilder(html);
+				final Map<Object, Object> map = new LinkedHashMap<>();
+				//
+				map.put("captionHtml", captionHtml);
+				//
+				map.put("descriptionHtml", Util.getText(tfDescription));
 				//
 				// TODO
 				//
 				// 30 character per line
 				//
-				stringBuilder.append(StringUtils.defaultString(Util.toString(output(appendEndTag(appendUnescapedText(
-						completeTag(appendAttribute(appendStartTag(FlatHtml.inMemory(), "div"), STYLE,
-								//
-								join(Map.of("font-size", "40px", "position", "absolute"), ":", ";")
-						//
-						)), Util.getText(tfDescription)), "div")))));
+				map.put("descriptionStyle", join(Map.of("font-size", "40px", "position", "absolute"), ":", ";"));
 				//
-				FileUtils.writeStringToFile(Util.toFile(pathHtml), Util.toString(stringBuilder), StandardCharsets.UTF_8,
-						false);
+				final Map<String, String> captionStyle = new LinkedHashMap<>(createStyleMap());
+				//
+				if (CollectionUtils.isNotEmpty(ElementUtil
+						.getElementsByTag(testAndApply(Objects::nonNull, captionHtml, Jsoup::parse, null), "ruby"))) {
+					//
+					captionStyle.put("display", "ruby-text");
+					//
+				} // if
+					//
+				map.put("captionStyle", join(captionStyle, ":", ";"));
+				//
+				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
+						StandardCharsets.UTF_8, false);
 				//
 				document = Loader.loadPDF(pdf(pathHtml));
 				//
@@ -1533,7 +1535,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				Util.setText(tfOutputFile, Util.getAbsolutePath(file));
 				//
-			} catch (final IOException | NoSuchFieldException e) {
+			} catch (final IOException | NoSuchFieldException | TemplateException e) {
 				//
 				LoggerUtil.error(LOG, e.getMessage(), e);
 				//
@@ -1574,6 +1576,21 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			} // if
 				//
 		} // for
+			//
+	}
+
+	private static String generatePdfHtml(final Configuration configuration, final Map<?, ?> map)
+			throws IOException, TemplateException {
+		//
+		final Template template = ConfigurationUtil.getTemplate(configuration, "pdf.html.ftl");
+		//
+		try (final Writer writer = new StringWriter()) {
+			//
+			TemplateUtil.process(template, map, writer);
+			//
+			return Util.toString(writer);
+			//
+		} // try
 			//
 	}
 
