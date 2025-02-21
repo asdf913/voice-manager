@@ -383,7 +383,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private transient IValue0<List<String>> textAligns = null;
 
-	private Configuration freeMarkerConfiguration = null;
+	private transient Configuration freeMarkerConfiguration = null;
 
 	@Override
 	public String getTitle() {
