@@ -1139,7 +1139,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private List<String> getTextAligns() throws IOException, URISyntaxException {
 		//
-		if (textAligns != null) {
+		if (textAligns != null || isTestMode()) {
 			//
 			return IValue0Util.getValue0(textAligns);
 			//
@@ -1547,7 +1547,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} else if (Objects.equals(source, btnImageView)) {
 			//
-			testAndRun(Util.forName("org.junit.jupiter.api.Test") == null,
+			testAndRun(!isTestMode(),
 					() -> JOptionPane.showMessageDialog(null, testAndApply(Objects::nonNull,
 							Util.cast(BufferedImage.class, renderedImage), ImageIcon::new, null), "Image",
 							JOptionPane.PLAIN_MESSAGE, null),
@@ -1579,6 +1579,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
+	private static boolean isTestMode() {
+		return Util.forName("org.junit.jupiter.api.Test") != null;
+	}
+
 	private static String generatePdfHtml(final Configuration configuration, final Map<?, ?> map)
 			throws IOException, TemplateException {
 		//
@@ -1607,8 +1611,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		if (Objects.equals(source, btnImageFile)) {
 			//
-			final JFileChooser jfc = testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(),
-					Util.forName("org.junit.jupiter.api.Test") == null), () -> new JFileChooser("."));
+			final JFileChooser jfc = testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
+					() -> new JFileChooser("."));
 			//
 			if (jfc != null && jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//

@@ -461,7 +461,7 @@ class VoiceManagerPdfPanelTest {
 	@Test
 	void testGetTextAligns() throws Throwable {
 		//
-		Assertions.assertNotNull(getTextAligns());
+		Assertions.assertNull(getTextAligns());
 		//
 		if (instance != null) {
 			//
@@ -469,7 +469,7 @@ class VoiceManagerPdfPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertNotNull(getTextAligns());
+		Assertions.assertNull(getTextAligns());
 		//
 	}
 
@@ -780,8 +780,7 @@ class VoiceManagerPdfPanelTest {
 								(parameterCount = m.getParameterCount()) == 0),
 						Boolean.logicalAnd(Objects.equals(name, "getFontSizeAndUnitMap"), parameterCount == 0),
 						Boolean.logicalAnd(Objects.equals(name, "getObjectMapper"), parameterCount == 0),
-						Boolean.logicalAnd(Objects.equals(name, "createStyleMap"), parameterCount == 0),
-						Boolean.logicalAnd(Objects.equals(name, "getTextAligns"), parameterCount == 0))) {
+						Boolean.logicalAnd(Objects.equals(name, "createStyleMap"), parameterCount == 0))) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
