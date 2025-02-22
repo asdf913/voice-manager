@@ -3654,6 +3654,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
+	@Nullable
 	private static List<IntIntPair> toIntIntPairList(final int a, final int b) {
 		//
 		List<IntIntPair> list = null;
