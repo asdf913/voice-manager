@@ -3739,7 +3739,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		try (final Playwright playwright = Playwright.create()) {
 			//
-			final Page page = newPage(newContext(launch(apply(function, playwright))));
+			final Page page = newPage(newContext(launch(Util.apply(function, playwright))));
 			//
 			if (page != null) {
 				//
@@ -3756,17 +3756,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static <T, R> R apply(final Function<T, R> instnace, final T t) {
-		return instnace != null ? instnace.apply(t) : null;
-	}
-
 	@Nullable
 	private static byte[] screenshot(final Path pathHtml, final Function<Playwright, BrowserType> function)
 			throws MalformedURLException {
 		//
 		try (final Playwright playwright = Playwright.create()) {
 			//
-			final Page page = newPage(newContext(launch(apply(function, playwright))));
+			final Page page = newPage(newContext(launch(Util.apply(function, playwright))));
 			//
 			if (page != null) {
 				//
