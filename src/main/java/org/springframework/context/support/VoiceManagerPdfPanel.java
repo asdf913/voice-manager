@@ -3193,7 +3193,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static void setSubtype(final PDEmbeddedFile instance, final String mimeType) {
+	private static void setSubtype(@Nullable final PDEmbeddedFile instance, final String mimeType) {
 		if (instance != null) {
 			instance.setSubtype(mimeType);
 		}
