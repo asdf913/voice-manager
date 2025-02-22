@@ -3085,7 +3085,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					return Util.exists(f) && Util.isFile(f);
 					//
-				}, pathAudio, x -> Files.newInputStream(x), null)) {
+				}, pathAudio, Files::newInputStream, null)) {
 					//
 					if ((pdfEmbeddedFile = testAndApply(Objects::nonNull, is, x -> new PDEmbeddedFile(document, is),
 							null)) != null) {
