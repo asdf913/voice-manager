@@ -3621,7 +3621,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 							//
 							intIntPair = intIntPair.right(y);
 							//
-						} else if (y < intIntPair.leftInt()) {
+						} else if (intIntPair != null && y < intIntPair.leftInt()) {
 							//
 							intIntPair = intIntPair.left(y);
 							//
