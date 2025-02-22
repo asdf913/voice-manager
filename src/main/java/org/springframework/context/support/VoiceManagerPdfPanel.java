@@ -1524,15 +1524,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 											Util.stream(Sets.cartesianProduct(
 													new LinkedHashSet<>(Arrays.asList("border-top", "border-bottom")),
 													Collections.singleton(String.format("solid %1$spx", borderWidth)))),
-											x -> {
-												//
-												return testAndApply(
-														y -> IterableUtils.size(y) == 2, x, y -> ImmutablePair
-																.of(IterableUtils.get(y, 0), IterableUtils.get(y, 1)),
-														null);
-												//
-											}),
-									Collectors.toMap(Util::getKey, Util::getValue)));
+											x ->
+											//
+											testAndApply(y -> IterableUtils.size(y) == 2, x, y -> ImmutablePair
+													.of(IterableUtils.get(y, 0), IterableUtils.get(y, 1)), null)
+									//
+									), Collectors.toMap(Util::getKey, Util::getValue)));
 					//
 					FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, m1),
 							StandardCharsets.UTF_8, false);
