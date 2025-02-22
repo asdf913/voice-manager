@@ -3231,9 +3231,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final String format = IterableUtils.get(imageWriterSpiFormats, 0);
 			//
-			ImageIO.write(bi, format, Util.toFile(
-					path = Path.of(String.join(".", StringUtils.defaultIfBlank(fileNamePrefix, PAGE1), format))));
-			//
+			if (format != null) {
+				//
+				ImageIO.write(bi, format, Util.toFile(
+						path = Path.of(String.join(".", StringUtils.defaultIfBlank(fileNamePrefix, PAGE1), format))));
+				//
+			} // if
+				//
 		} // if
 			//
 		return path;
@@ -3603,42 +3607,72 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		IntIntPair intIntPair = null;
 		//
-		for (int y = 0; bi != null && y < bi.getHeight(); y++) {
+		final List<IntIntPair> intIntPairs = bi != null ? toIntIntPairList(bi.getWidth(), bi.getHeight()) : null;
+		//
+		IntIntPair temp = null;
+		//
+		int x, y;
+		//
+		for (int i = 0; i < IterableUtils.size(intIntPairs); i++) {
 			//
-			for (int x = 0; x < getWidth(bi); x++) {
+			if ((temp = IterableUtils.get(intIntPairs, i)) == null) {
 				//
-				if (color == null) {
+				continue;
+				//
+			} // if
+				//
+			x = temp.leftInt();
+			//
+			y = temp.rightInt();
+			//
+			if (color == null) {
+				//
+				color = new Color(bi.getRGB(x, y));
+				//
+				continue;
+				//
+			} // if
+				//
+			if (!Objects.equals(color, new Color(bi.getRGB(x, y)))
+					&& (intIntPair = ObjectUtils.getIfNull(intIntPair, () -> IntIntMutablePair.of(-1, -1))) != null) {
+				//
+				if (intIntPair.leftInt() < 0 && (intIntPair = intIntPair.left(y)) != null) {
 					//
-					color = new Color(bi.getRGB(x, y));
+					intIntPair = intIntPair.right(y);
 					//
-					continue;
+				} else if (intIntPair != null && y < intIntPair.leftInt()) {
+					//
+					intIntPair = intIntPair.left(y);
+					//
+				} else if (intIntPair != null && y > intIntPair.rightInt()) {
+					//
+					intIntPair = intIntPair.right(y);
 					//
 				} // if
 					//
-				if (!Objects.equals(color, new Color(bi.getRGB(x, y))) && (intIntPair = ObjectUtils
-						.getIfNull(intIntPair, () -> IntIntMutablePair.of(-1, -1))) != null) {
-					//
-					if (intIntPair.leftInt() < 0 && (intIntPair = intIntPair.left(y)) != null) {
-						//
-						intIntPair = intIntPair.right(y);
-						//
-					} else if (intIntPair != null && y < intIntPair.leftInt()) {
-						//
-						intIntPair = intIntPair.left(y);
-						//
-					} else if (intIntPair != null && y > intIntPair.rightInt()) {
-						//
-						intIntPair = intIntPair.right(y);
-						//
-					} // if
-						//
-				} // if
-					//
-			} // for
+			} // if
 				//
 		} // for
 			//
 		return intIntPair;
+		//
+	}
+
+	private static List<IntIntPair> toIntIntPairList(final int a, final int b) {
+		//
+		List<IntIntPair> list = null;
+		//
+		for (int i = 0; i < a; i++) {
+			//
+			for (int j = 0; j < b; j++) {
+				//
+				Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), IntIntPair.of(i, j));
+				//
+			} // for
+				//
+		} // for
+			//
+		return list;
 		//
 	}
 
