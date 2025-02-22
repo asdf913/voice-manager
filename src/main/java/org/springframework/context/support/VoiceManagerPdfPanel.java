@@ -1499,7 +1499,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				// 30 character per line
 				//
-				final Map<String, String> descriptionStyle = testAndApply((a, b) -> a != null && b != null,
+				final Map<String, String> descriptionStyle = testAndApply(
+						(a, b) -> Boolean.logicalAnd(a != null, b != null),
 						Map.of("font-size", "40px", "position", "absolute"), intIntPair,
 						(a, b) -> new LinkedHashMap<>(a), (a, b) -> a);
 				//
