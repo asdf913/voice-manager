@@ -3078,11 +3078,22 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				Pattern pattern = null;
 				//
-				try (final InputStream is = Files.newInputStream(pathAudio)) {
+				try (final InputStream is = testAndApply(x -> {
 					//
-					(pdfEmbeddedFile = new PDEmbeddedFile(document, is))
-							.setSubtype(getMimeType(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), pathAudio));
+					final File f = Util.toFile(x);
 					//
+					return Util.exists(f) && Util.isFile(f);
+					//
+				}, pathAudio, x -> Files.newInputStream(x), null)) {
+					//
+					if ((pdfEmbeddedFile = testAndApply(Objects::nonNull, is, x -> new PDEmbeddedFile(document, is),
+							null)) != null) {
+						//
+						pdfEmbeddedFile.setSubtype(
+								getMimeType(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), pathAudio));
+						//
+					} // if
+						//
 					testAndAccept((a, b) -> b != null, pdfEmbeddedFile, Util.toFile(pathAudio),
 							(a, b) -> setSize(a, Util.intValue(length(b), 0)));
 					//
@@ -3160,8 +3171,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} finally {
 					//
-					Files.delete(pathAudio);
-					//
+					if (Util.exists(Util.toFile(pathAudio))) {
+						//
+						Files.delete(pathAudio);
+						//
+					} // if
+						//
 				} // try
 					//
 			} // for
