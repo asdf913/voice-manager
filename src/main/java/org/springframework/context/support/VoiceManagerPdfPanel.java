@@ -1509,9 +1509,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					Util.put(
 							descriptionStyle = new LinkedHashMap<>(
 									ObjectUtils.getIfNull(descriptionStyle, Collections::emptyMap)),
-							"position", "absolute");
-					//
-					Util.put(descriptionStyle, "top", StringUtils.joinWith("", height, "px"));
+							"top", StringUtils.joinWith("", height, "px"));
 					//
 				} // if
 					//
