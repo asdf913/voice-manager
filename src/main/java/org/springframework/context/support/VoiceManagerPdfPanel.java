@@ -1506,61 +1506,54 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
 						StandardCharsets.UTF_8, false);
 				//
-				try {
+				final Map<?, ?> m1 = Util.cast(Map.class, ObjectMapperUtil.readValue(getObjectMapper(),
+						ObjectMapperUtil.writeValueAsString(getObjectMapper(), map), Object.class));
+				//
+				Util.put((Map) Util.cast(Map.class, Util.get(m1, "captionStyle")), "visibility", "hidden");
+				//
+				final int borderWidth = 1;
+				//
+				Util.putAll((Map) Util.cast(Map.class, Util.get(m1, "descriptionStyle")),
+						Util.collect(
+								Util.map(
+										Util.stream(Sets.cartesianProduct(
+												new LinkedHashSet<>(Arrays.asList("border-top", "border-bottom")),
+												Collections.singleton(String.format("solid %1$spx", borderWidth)))),
+										x ->
+										//
+										testAndApply(y -> IterableUtils.size(y) == 2, x,
+												y -> ImmutablePair.of(IterableUtils.get(y, 0), IterableUtils.get(y, 1)),
+												null)
+								//
+								), Collectors.toMap(Util::getKey, Util::getValue)));
+				//
+				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, m1),
+						StandardCharsets.UTF_8, false);
+				//
+				try (final InputStream is = testAndApply(Objects::nonNull, screenshot(pathHtml),
+						ByteArrayInputStream::new, null)) {
 					//
-					final Map<?, ?> m1 = Util.cast(Map.class, ObjectMapperUtil.readValue(getObjectMapper(),
-							ObjectMapperUtil.writeValueAsString(getObjectMapper(), map), Object.class));
+					final BufferedImage bi = testAndApply(Objects::nonNull, is, ImageIO::read, null);
 					//
-					Util.put((Map) Util.cast(Map.class, Util.get(m1, "captionStyle")), "visibility", "hidden");
+					IntIntPair temp = getMinimumAndMaximumY(bi);
 					//
-					final int borderWidth = 1;
-					//
-					Util.putAll((Map) Util.cast(Map.class, Util.get(m1, "descriptionStyle")),
-							Util.collect(
-									Util.map(
-											Util.stream(Sets.cartesianProduct(
-													new LinkedHashSet<>(Arrays.asList("border-top", "border-bottom")),
-													Collections.singleton(String.format("solid %1$spx", borderWidth)))),
-											x ->
-											//
-											testAndApply(y -> IterableUtils.size(y) == 2, x, y -> ImmutablePair
-													.of(IterableUtils.get(y, 0), IterableUtils.get(y, 1)), null)
-									//
-									), Collectors.toMap(Util::getKey, Util::getValue)));
-					//
-					FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, m1),
-							StandardCharsets.UTF_8, false);
-					//
-					try (final InputStream is = testAndApply(Objects::nonNull, screenshot(pathHtml),
-							ByteArrayInputStream::new, null)) {
+					if (temp != null && intIntPair != null) {
 						//
-						final BufferedImage bi = testAndApply(Objects::nonNull, is, ImageIO::read, null);
+						int topOffset = temp.leftInt() - rightInt(intIntPair, 0);
 						//
-						IntIntPair temp = getMinimumAndMaximumY(bi);
-						//
-						if (temp != null && intIntPair != null) {
+						if ((temp = getMinimumAndMaximumY(
+								getSubimage(bi, 0, temp.leftInt() + borderWidth, Util.intValue(getWidth(bi), 0),
+										rightInt(temp, 0) - temp.leftInt() - borderWidth))) != null
+								&& topOffset != temp.leftInt()) {
 							//
-							int topOffset = temp.leftInt() - rightInt(intIntPair, 0);
-							//
-							if ((temp = getMinimumAndMaximumY(
-									getSubimage(bi, 0, temp.leftInt() + borderWidth, Util.intValue(getWidth(bi), 0),
-											rightInt(temp, 0) - temp.leftInt() - borderWidth))) != null
-									&& topOffset != temp.leftInt()) {
-								//
-								topOffset -= temp.leftInt();
-								//
-							} // if
-								//
-							intIntPair.right(rightInt(intIntPair, 0) - topOffset);
+							topOffset -= temp.leftInt();
 							//
 						} // if
 							//
-					} // try
+						intIntPair.right(rightInt(intIntPair, 0) - topOffset);
 						//
-				} catch (final Exception e) {
-					//
-					LoggerUtil.error(LOG, e.getMessage(), e);
-					//
+					} // if
+						//
 				} // try
 					//
 				if (intIntPair != null) {
