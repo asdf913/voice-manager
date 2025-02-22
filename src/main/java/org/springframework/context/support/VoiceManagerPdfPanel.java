@@ -3074,14 +3074,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				}, pathAudio, Files::newInputStream, null)) {
 					//
-					if ((pdfEmbeddedFile = testAndApply(Objects::nonNull, is, x -> new PDEmbeddedFile(document, is),
-							null)) != null) {
-						//
-						pdfEmbeddedFile.setSubtype(
-								getMimeType(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), pathAudio));
-						//
-					} // if
-						//
+					setSubtype(
+							pdfEmbeddedFile = testAndApply(Objects::nonNull, is, x -> new PDEmbeddedFile(document, is),
+									null),
+							getMimeType(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), pathAudio));
+					//
 					testAndAccept((a, b) -> b != null, pdfEmbeddedFile, Util.toFile(pathAudio),
 							(a, b) -> setSize(a, Util.intValue(length(b), 0)));
 					//
@@ -3194,6 +3191,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
+	}
+
+	private static void setSubtype(final PDEmbeddedFile instance, final String mimeType) {
+		if (instance != null) {
+			instance.setSubtype(mimeType);
+		}
 	}
 
 	private static int rightInt(@Nullable final IntIntPair instance, final int defaultValue) {
