@@ -1465,14 +1465,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				map.put("captionHtml", captionHtml);
 				//
-				map.put("descriptionHtml", Util.getText(tfDescription));
-				//
-				// TODO
-				//
-				// 30 character per line
-				//
-				map.put("descriptionStyle", join(Map.of("font-size", "40px", "position", "absolute"), ":", ";"));
-				//
 				final Map<String, String> captionStyle = new LinkedHashMap<>(createStyleMap());
 				//
 				if (CollectionUtils.isNotEmpty(ElementUtil
@@ -1482,7 +1474,48 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // if
 					//
-				map.put("captionStyle", join(captionStyle, ":", ";"));
+				map.put("captionStyle", captionStyle);
+				//
+				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
+						StandardCharsets.UTF_8, false);
+				//
+				Integer height = null;
+				//
+				try (final InputStream is = testAndApply(Objects::nonNull, screenshot(pathHtml),
+						ByteArrayInputStream::new, null)) {
+					//
+					height = getLargestY(testAndApply(Objects::nonNull, is, ImageIO::read, null));
+					//
+				} // try
+					//
+				map.put("descriptionHtml", Util.getText(tfDescription));
+				//
+				// TODO
+				//
+				// 30 character per line
+				//
+				Map<String, String> descriptionStyle = Map.of("font-size", "40px", "position", "absolute");
+				//
+				if (height != null) {
+					//
+					// TODO
+					//
+					// java.lang.UnsupportedOperationException
+					//
+					// java.util.ImmutableCollections.uoe(ImmutableCollections.java:142)
+					//
+					// java.util.ImmutableCollections$AbstractImmutableMap.put(ImmutableCollections.java:1079)
+					//
+					Util.put(
+							descriptionStyle = new LinkedHashMap<>(
+									ObjectUtils.getIfNull(descriptionStyle, Collections::emptyMap)),
+							"position", "absolute");
+					//
+					Util.put(descriptionStyle, "top", StringUtils.joinWith("", height, "px"));
+					//
+				} // if
+					//
+				map.put("descriptionStyle", descriptionStyle);
 				//
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
 						StandardCharsets.UTF_8, false);
@@ -3589,6 +3622,27 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						page::navigate);
 				//
 				return page.pdf();
+				//
+			} // if
+				//
+		} // try
+			//
+		return null;
+		//
+	}
+
+	private static byte[] screenshot(final Path pathHtml) throws MalformedURLException {
+		//
+		try (final Playwright playwright = Playwright.create()) {
+			//
+			final Page page = newPage(newContext(launch(playwright != null ? playwright.chromium() : null)));
+			//
+			if (page != null) {
+				//
+				testAndAccept(Objects::nonNull, Util.toString(toURL(Util.toURI(Util.toFile(pathHtml)))),
+						page::navigate);
+				//
+				return page.screenshot();
 				//
 			} // if
 				//

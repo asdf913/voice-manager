@@ -760,7 +760,9 @@ class VoiceManagerPdfPanelTest {
 								Arrays.equals(parameterTypes,
 										new Class<?>[] { Map.class, BigDecimal.class, ECSSUnit.class })),
 						Boolean.logicalAnd(Objects.equals(name, "generatePdfHtml"),
-								Arrays.equals(parameterTypes, new Class<?>[] { Configuration.class, Map.class })))) {
+								Arrays.equals(parameterTypes, new Class<?>[] { Configuration.class, Map.class })),
+						Boolean.logicalAnd(Objects.equals(name, "screenshot"),
+								Arrays.equals(parameterTypes, new Class<?>[] { Path.class })))) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
