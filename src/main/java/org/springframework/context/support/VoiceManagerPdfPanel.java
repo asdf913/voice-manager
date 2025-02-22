@@ -1535,7 +1535,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 												return null;
 												//
 											}),
-									Collectors.toMap(x -> Util.getKey(x), x -> Util.getValue(x))));
+									Collectors.toMap(Util::getKey, Util::getValue)));
 					//
 					FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, m1),
 							StandardCharsets.UTF_8, false);
