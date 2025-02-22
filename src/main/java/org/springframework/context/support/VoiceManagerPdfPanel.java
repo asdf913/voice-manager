@@ -3613,25 +3613,25 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					color = new Color(bi.getRGB(x, y));
 					//
-				} else {
+					continue;
 					//
-					if (!Objects.equals(color, new Color(bi.getRGB(x, y))) && (intIntPair = ObjectUtils
-							.getIfNull(intIntPair, () -> IntIntMutablePair.of(-1, -1))) != null) {
+				} // if
+					//
+				if (!Objects.equals(color, new Color(bi.getRGB(x, y))) && (intIntPair = ObjectUtils
+						.getIfNull(intIntPair, () -> IntIntMutablePair.of(-1, -1))) != null) {
+					//
+					if (intIntPair.leftInt() < 0 && (intIntPair = intIntPair.left(y)) != null) {
 						//
-						if (intIntPair.leftInt() < 0 && (intIntPair = intIntPair.left(y)) != null) {
-							//
-							intIntPair = intIntPair.right(y);
-							//
-						} else if (intIntPair != null && y < intIntPair.leftInt()) {
-							//
-							intIntPair = intIntPair.left(y);
-							//
-						} else if (y > intIntPair.rightInt()) {
-							//
-							intIntPair = intIntPair.right(y);
-							//
-						} // if
-							//
+						intIntPair = intIntPair.right(y);
+						//
+					} else if (intIntPair != null && y < intIntPair.leftInt()) {
+						//
+						intIntPair = intIntPair.left(y);
+						//
+					} else if (y > intIntPair.rightInt()) {
+						//
+						intIntPair = intIntPair.right(y);
+						//
 					} // if
 						//
 				} // if
