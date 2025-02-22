@@ -1472,7 +1472,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				final Map<String, String> captionStyle = new LinkedHashMap<>(createStyleMap());
 				//
-				testAndAccept(x -> CollectionUtils.isNotEmpty(x), ElementUtil
+				testAndAccept(CollectionUtils::isNotEmpty, ElementUtil
 						.getElementsByTag(testAndApply(Objects::nonNull, captionHtml, Jsoup::parse, null), "ruby"),
 						x -> Util.put(captionStyle, "display", "ruby-text"));
 				//
