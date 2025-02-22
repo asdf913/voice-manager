@@ -1543,18 +1543,18 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						//
 						if (temp != null && intIntPair != null) {
 							//
-							int topOffset = temp.leftInt() - intIntPair.rightInt();
+							int topOffset = temp.leftInt() - rightInt(intIntPair, 0);
 							//
 							if ((temp = getMinimumAndMaximumY(
 									getSubimage(bi, 0, temp.leftInt() + borderWidth, Util.intValue(getWidth(bi), 0),
-											temp.rightInt() - temp.leftInt() - borderWidth))) != null
+											rightInt(temp, 0) - temp.leftInt() - borderWidth))) != null
 									&& topOffset != temp.leftInt()) {
 								//
 								topOffset -= temp.leftInt();
 								//
 							} // if
 								//
-							intIntPair.right(intIntPair.rightInt() - topOffset);
+							intIntPair.right(rightInt(intIntPair, 0) - topOffset);
 							//
 						} // if
 							//
@@ -1568,7 +1568,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				if (intIntPair != null) {
 					//
-					Util.put(descriptionStyle, "top", StringUtils.joinWith("", intIntPair.rightInt(), "px"));
+					Util.put(descriptionStyle, "top", StringUtils.joinWith("", rightInt(intIntPair, 0), "px"));
 					//
 				} // if
 					//
@@ -2990,7 +2990,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final IntIntPair intIntPair = getMinimumAndMaximumY(bi);
 			//
-			final int largestY = intIntPair != null ? intIntPair.rightInt() : 0;
+			final int largestY = rightInt(intIntPair, 0);
 			//
 			testAndAccept(x -> Util.exists(Util.toFile(x)), page1Path, Files::delete);
 			//
@@ -3197,6 +3197,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
+	}
+
+	private static int rightInt(final IntIntPair instance, final int defaultValue) {
+		return instance != null ? instance.rightInt() : defaultValue;
 	}
 
 	@Nullable
@@ -3612,7 +3616,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			x = temp.leftInt();
 			//
-			y = temp.rightInt();
+			y = rightInt(temp, 0);
 			//
 			if (color == null) {
 				//
@@ -3647,7 +3651,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			result = result.left(y);
 			//
-		} else if (result != null && y > result.rightInt()) {
+		} else if (result != null && y > rightInt(result, 0)) {
 			//
 			result = result.right(y);
 			//
