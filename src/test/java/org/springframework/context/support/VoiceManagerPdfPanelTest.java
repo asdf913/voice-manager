@@ -17,6 +17,8 @@ import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -42,11 +44,14 @@ import org.apache.bcel.generic.InvokeInstructionUtil;
 import org.apache.bcel.generic.LDC_W;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
+import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.javatuples.Unit;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -61,6 +66,8 @@ import com.helger.css.ECSSUnit;
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
+import freemarker.template.ConfigurationUtil;
+import freemarker.template.Template;
 import io.github.toolfactory.narcissus.Narcissus;
 import j2html.rendering.HtmlBuilder;
 
@@ -574,12 +581,67 @@ class VoiceManagerPdfPanelTest {
 				//
 		} // try
 			//
-		tl.findTemplateSource(String.format("%1$s", ObjectUtils.defaultIfNull(ldcwGetValue, "pdf.html.ftl")));
+		final String templateName = String.format("%1$s", ObjectUtils.defaultIfNull(ldcwGetValue, "pdf.html.ftl"));
+		//
+		tl.findTemplateSource(templateName);
 		//
 		configuration.setTemplateLoader(tl);
 		//
-		Assertions.assertTrue(StringUtils.isNotBlank(generatePdfHtml(configuration, null)));
+		final Template template = ConfigurationUtil.getTemplate(configuration, templateName);
 		//
+		final List<String> names = Util.toList(Util.filter(Util.map(FailableStreamUtil.stream(FailableStreamUtil.map(
+				new FailableStream<>(Arrays.stream(Util.cast(Object[].class, FieldUtils
+						.readField(FieldUtils.readDeclaredField(template, "rootElement", true), "childBuffer", true)))),
+				x -> {
+					//
+					final String className = Util.getName(Util.getClass(x));
+					//
+					if (Objects.equals(className, "freemarker.core.ConditionalBlock")) {
+						//
+						return FieldUtils.readDeclaredField(FieldUtils.readDeclaredField(x, "condition", true), "exp",
+								true);
+						//
+					} // if
+						//
+					return null;
+					//
+				})), Objects::toString), x -> !Objects.equals("null", x)));
+		//
+		Map<Object, Object> map = new LinkedHashMap<>(Map.of("k1", "v1", "k2", "v2"));
+		//
+		System.out.println(generatePdfHtml(configuration, Map.of("captionStyle", map)));
+		//
+		System.out.println(generatePdfHtml(configuration, Map.of("descriptionStyle", map)));
+		//
+		final List<Object> values = Arrays.asList(null, "", Boolean.TRUE, Integer.valueOf(0),
+				Collections.singleton(null), Collections.singletonMap(null, null), new Date(0));
+		//
+		String name = null;
+		//
+		Object value = null;
+		//
+		for (int i = 0; i < IterableUtils.size(names); i++) {
+			//
+			name = IterableUtils.get(names, i);
+			//
+			for (int j = 0; j < IterableUtils.size(values); j++) {
+				//
+				System.out.println(Util.getClass(value = IterableUtils.get(values, j)));
+				//
+				if ((map = ObjectUtils.getIfNull(map, LinkedHashMap::new)) != null) {
+					//
+					map.clear();
+					//
+				} // if
+					//
+				Util.put(map, name, value);
+				//
+				System.out.println(generatePdfHtml(configuration, map));
+				//
+			} // for
+				//
+		} // if
+			//
 	}
 
 	private static int length(final Object[] instance) throws Throwable {
