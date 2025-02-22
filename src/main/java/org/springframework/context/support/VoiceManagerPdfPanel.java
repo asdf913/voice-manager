@@ -3727,6 +3727,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	private static class PlaywrightBrowserTypeFunction implements Function<Playwright, BrowserType> {
 
 		@Override
+		@Nullable
 		public BrowserType apply(@Nullable final Playwright instance) {
 			return instance != null ? instance.chromium() : null;
 		}
