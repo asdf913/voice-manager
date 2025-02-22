@@ -3165,7 +3165,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} finally {
 					//
-					testAndAccept(x -> Util.exists(Util.toFile(x)), pathAudio, x -> Files.delete(x));
+					testAndAccept(x -> Util.exists(Util.toFile(x)), pathAudio, Files::delete);
 					//
 				} // try
 					//
