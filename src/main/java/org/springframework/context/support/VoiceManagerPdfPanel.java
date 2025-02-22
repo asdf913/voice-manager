@@ -1554,14 +1554,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 							//
 							if ((temp = getMinimumAndMaximumY(
 									getSubimage(bi, 0, temp.leftInt() + borderWidth, Util.intValue(getWidth(bi), 0),
-											temp.rightInt() - temp.leftInt() - borderWidth))) != null) {
+											temp.rightInt() - temp.leftInt() - borderWidth))) != null
+									&& topOffset != temp.leftInt()) {
 								//
-								if (topOffset != temp.leftInt()) {
-									//
-									topOffset -= temp.leftInt();
-									//
-								} // if
-									//
+								topOffset -= temp.leftInt();
+								//
 							} // if
 								//
 							intIntPair.right(intIntPair.rightInt() - topOffset);
