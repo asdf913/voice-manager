@@ -3598,7 +3598,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null ? instance.getMediaBox() : null;
 	}
 
-	private static IntIntPair getMinimumAndMaximumY(final BufferedImage bi) {
+	private static IntIntPair getMinimumAndMaximumY(@Nullable final BufferedImage bi) {
 		//
 		Color color = null;
 		//
