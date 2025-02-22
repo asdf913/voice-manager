@@ -1494,22 +1494,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				// 30 character per line
 				//
-				Map<String, String> descriptionStyle = Map.of("font-size", "40px", "position", "absolute");
+				final Map<String, String> descriptionStyle = testAndApply((a, b) -> a != null && b != null,
+						Map.of("font-size", "40px", "position", "absolute"), height, (a, b) -> new LinkedHashMap<>(a),
+						(a, b) -> a);
 				//
 				if (height != null) {
 					//
-					// TODO
-					//
-					// java.lang.UnsupportedOperationException
-					//
-					// java.util.ImmutableCollections.uoe(ImmutableCollections.java:142)
-					//
-					// java.util.ImmutableCollections$AbstractImmutableMap.put(ImmutableCollections.java:1079)
-					//
-					Util.put(
-							descriptionStyle = new LinkedHashMap<>(
-									ObjectUtils.getIfNull(descriptionStyle, Collections::emptyMap)),
-							"top", StringUtils.joinWith("", height, "px"));
+					Util.put(descriptionStyle, "top", StringUtils.joinWith("", height, "px"));
 					//
 				} // if
 					//
