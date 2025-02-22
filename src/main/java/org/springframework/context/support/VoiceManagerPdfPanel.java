@@ -1526,14 +1526,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 													Collections.singleton(String.format("solid %1$spx", borderWidth)))),
 											x -> {
 												//
-												if (IterableUtils.size(x) == 2) {
-													//
-													return ImmutablePair.of(IterableUtils.get(x, 0),
-															IterableUtils.get(x, 1));
-													//
-												} // if
-													//
-												return null;
+												return testAndApply(
+														y -> IterableUtils.size(y) == 2, x, y -> ImmutablePair
+																.of(IterableUtils.get(y, 0), IterableUtils.get(y, 1)),
+														null);
 												//
 											}),
 									Collectors.toMap(Util::getKey, Util::getValue)));
