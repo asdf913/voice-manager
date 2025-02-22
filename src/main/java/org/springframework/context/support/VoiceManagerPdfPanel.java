@@ -3634,6 +3634,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
+	@Nullable
 	private static IntIntPair setRight(@Nullable final IntIntPair intIntPair, final int y) {
 		//
 		IntIntPair result = intIntPair;
