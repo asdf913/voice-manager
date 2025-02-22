@@ -3080,7 +3080,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					final File f = Util.toFile(x);
 					//
-					return Util.exists(f) && Util.isFile(f);
+					return Boolean.logicalAnd(Util.exists(f), Util.isFile(f));
 					//
 				}, pathAudio, Files::newInputStream, null)) {
 					//
