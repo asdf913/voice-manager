@@ -3623,7 +3623,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			if (color == null) {
 				//
-				color = new Color(bi.getRGB(x, y));
+				color = bi != null ? new Color(bi.getRGB(x, y)) : null;
 				//
 				continue;
 				//
