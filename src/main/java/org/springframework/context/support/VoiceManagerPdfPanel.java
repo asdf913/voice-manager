@@ -3631,6 +3631,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
+	@Nullable
 	private static byte[] screenshot(final Path pathHtml) throws MalformedURLException {
 		//
 		try (final Playwright playwright = Playwright.create()) {
