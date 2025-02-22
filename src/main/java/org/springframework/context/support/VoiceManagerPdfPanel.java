@@ -1481,9 +1481,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
 						StandardCharsets.UTF_8, false);
 				//
+				final Function<Playwright, BrowserType> function = new PlaywrightBrowserTypeFunction();
+				//
 				IntIntPair intIntPair = null;
 				//
-				try (final InputStream is = testAndApply(Objects::nonNull, screenshot(pathHtml),
+				try (final InputStream is = testAndApply(Objects::nonNull, screenshot(pathHtml, function),
 						ByteArrayInputStream::new, null)) {
 					//
 					intIntPair = getMinimumAndMaximumY(testAndApply(Objects::nonNull, is, ImageIO::read, null));
@@ -1530,7 +1532,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, m1),
 						StandardCharsets.UTF_8, false);
 				//
-				try (final InputStream is = testAndApply(Objects::nonNull, screenshot(pathHtml),
+				try (final InputStream is = testAndApply(Objects::nonNull, screenshot(pathHtml, function),
 						ByteArrayInputStream::new, null)) {
 					//
 					final BufferedImage bi = testAndApply(Objects::nonNull, is, ImageIO::read, null);
@@ -1565,7 +1567,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
 						StandardCharsets.UTF_8, false);
 				//
-				document = Loader.loadPDF(pdf(pathHtml));
+				document = Loader.loadPDF(pdf(pathHtml, function));
 				//
 				final IH ih = new IH();
 				//
@@ -1866,7 +1868,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // if
 					//
-				testAndAccept(a -> !GraphicsEnvironment.isHeadless(), document = Loader.loadPDF(pdf(Util.toPath(file))),
+				testAndAccept(a -> !GraphicsEnvironment.isHeadless(),
+						document = Loader.loadPDF(pdf(Util.toPath(file), new PlaywrightBrowserTypeFunction())),
 						a -> JOptionPane.showMessageDialog(null,
 								testAndApply(Objects::nonNull,
 										chop(testAndApply(x -> getNumberOfPages(x) > 0, a,
@@ -3721,12 +3724,22 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null ? instance.getHeight() : 0;
 	}
 
+	private static class PlaywrightBrowserTypeFunction implements Function<Playwright, BrowserType> {
+
+		@Override
+		public BrowserType apply(final Playwright instance) {
+			return instance != null ? instance.chromium() : null;
+		}
+
+	}
+
 	@Nullable
-	private static byte[] pdf(@Nullable final Path pathHtml) throws MalformedURLException {
+	private static byte[] pdf(@Nullable final Path pathHtml, final Function<Playwright, BrowserType> function)
+			throws MalformedURLException {
 		//
 		try (final Playwright playwright = Playwright.create()) {
 			//
-			final Page page = newPage(newContext(launch(playwright != null ? playwright.chromium() : null)));
+			final Page page = newPage(newContext(launch(apply(function, playwright))));
 			//
 			if (page != null) {
 				//
@@ -3743,12 +3756,17 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
+	private static <T, R> R apply(final Function<T, R> instnace, final T t) {
+		return instnace != null ? instnace.apply(t) : null;
+	}
+
 	@Nullable
-	private static byte[] screenshot(final Path pathHtml) throws MalformedURLException {
+	private static byte[] screenshot(final Path pathHtml, final Function<Playwright, BrowserType> function)
+			throws MalformedURLException {
 		//
 		try (final Playwright playwright = Playwright.create()) {
 			//
-			final Page page = newPage(newContext(launch(playwright != null ? playwright.chromium() : null)));
+			final Page page = newPage(newContext(launch(apply(function, playwright))));
 			//
 			if (page != null) {
 				//
