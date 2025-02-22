@@ -57,6 +57,7 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -147,6 +148,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.MutablePairUtil;
 import org.apache.commons.lang3.tuple.Pair;
@@ -211,6 +213,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.base.Strings;
+import com.google.common.collect.Sets;
 import com.google.common.reflect.Reflection;
 import com.helger.css.ECSSUnit;
 import com.helger.css.propertyvalue.CSSSimpleValueWithUnit;
@@ -229,6 +232,8 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateUtil;
 import io.github.toolfactory.narcissus.Narcissus;
+import it.unimi.dsi.fastutil.ints.IntIntMutablePair;
+import it.unimi.dsi.fastutil.ints.IntIntPair;
 import j2html.rendering.FlatHtml;
 import j2html.rendering.HtmlBuilder;
 import j2html.rendering.TagBuilder;
@@ -1479,12 +1484,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
 						StandardCharsets.UTF_8, false);
 				//
-				Integer height = null;
+				IntIntPair intIntPair = null;
 				//
 				try (final InputStream is = testAndApply(Objects::nonNull, screenshot(pathHtml),
 						ByteArrayInputStream::new, null)) {
 					//
-					height = getLargestY(testAndApply(Objects::nonNull, is, ImageIO::read, null));
+					intIntPair = getMinimumAndMaximumY(testAndApply(Objects::nonNull, is, ImageIO::read, null));
 					//
 				} // try
 					//
@@ -1495,17 +1500,87 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				// 30 character per line
 				//
 				final Map<String, String> descriptionStyle = testAndApply((a, b) -> a != null && b != null,
-						Map.of("font-size", "40px", "position", "absolute"), height, (a, b) -> new LinkedHashMap<>(a),
-						(a, b) -> a);
+						Map.of("font-size", "40px", "position", "absolute"), intIntPair,
+						(a, b) -> new LinkedHashMap<>(a), (a, b) -> a);
 				//
-				if (height != null) {
+				map.put("descriptionStyle", descriptionStyle);
+				//
+				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
+						StandardCharsets.UTF_8, false);
+				//
+				try {
 					//
-					Util.put(descriptionStyle, "top", StringUtils.joinWith("", height, "px"));
+					final Map<?, ?> m1 = Util.cast(Map.class, ObjectMapperUtil.readValue(getObjectMapper(),
+							ObjectMapperUtil.writeValueAsString(getObjectMapper(), map), Object.class));
+					//
+					Util.put((Map) Util.cast(Map.class, Util.get(m1, "captionStyle")), "visibility", "hidden");
+					//
+					final int borderWidth = 1;
+					//
+					Util.putAll((Map) Util.cast(Map.class, Util.get(m1, "descriptionStyle")),
+							Util.collect(
+									Util.map(
+											Util.stream(Sets.cartesianProduct(
+													new LinkedHashSet<>(Arrays.asList("border-top", "border-bottom")),
+													Collections.singleton(String.format("solid %1$spx", borderWidth)))),
+											x -> {
+												//
+												if (IterableUtils.size(x) == 2) {
+													//
+													return ImmutablePair.of(IterableUtils.get(x, 0),
+															IterableUtils.get(x, 1));
+													//
+												} // if
+													//
+												return null;
+												//
+											}),
+									Collectors.toMap(x -> Util.getKey(x), x -> Util.getValue(x))));
+					//
+					FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, m1),
+							StandardCharsets.UTF_8, false);
+					//
+					try (final InputStream is = testAndApply(Objects::nonNull, screenshot(pathHtml),
+							ByteArrayInputStream::new, null)) {
+						//
+						final BufferedImage bi = testAndApply(Objects::nonNull, is, ImageIO::read, null);
+						//
+						IntIntPair temp = getMinimumAndMaximumY(bi);
+						//
+						if (temp != null && intIntPair != null) {
+							//
+							int topOffset = temp.leftInt() - intIntPair.rightInt();
+							//
+							if ((temp = getMinimumAndMaximumY(
+									getSubimage(bi, 0, temp.leftInt() + borderWidth, Util.intValue(getWidth(bi), 0),
+											temp.rightInt() - temp.leftInt() - borderWidth))) != null) {
+								//
+								if (topOffset != temp.leftInt()) {
+									//
+									topOffset -= temp.leftInt();
+									//
+								} // if
+									//
+							} // if
+								//
+							intIntPair.right(intIntPair.rightInt() - topOffset);
+							//
+						} // if
+							//
+					} // try
+						//
+				} catch (final Exception e) {
+					//
+					LoggerUtil.error(LOG, e.getMessage(), e);
+					//
+				} // try
+					//
+				if (intIntPair != null) {
+					//
+					Util.put(descriptionStyle, "top", StringUtils.joinWith("", intIntPair.rightInt(), "px"));
 					//
 				} // if
 					//
-				map.put("descriptionStyle", descriptionStyle);
-				//
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
 						StandardCharsets.UTF_8, false);
 				//
@@ -2922,7 +2997,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			LoggerUtil.info(LOG, Util.getAbsolutePath(Util.toFile(page1Path)));
 			//
-			final Integer largestY = getLargestY(bi);
+			final IntIntPair intIntPair = getMinimumAndMaximumY(bi);
+			//
+			final int largestY = intIntPair != null ? intIntPair.rightInt() : 0;
 			//
 			testAndAccept(x -> Util.exists(Util.toFile(x)), page1Path, Files::delete);
 			//
@@ -3506,12 +3583,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null ? instance.getMediaBox() : null;
 	}
 
-	@Nullable
-	private static Integer getLargestY(@Nullable final BufferedImage bi) {
+	private static IntIntPair getMinimumAndMaximumY(final BufferedImage bi) {
 		//
 		Color color = null;
 		//
-		IntList ily = null;
+		IntIntPair intIntPair = null;
 		//
 		for (int y = 0; bi != null && y < bi.getHeight(); y++) {
 			//
@@ -3523,11 +3599,23 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} else {
 					//
-					if (!Objects.equals(color, new Color(bi.getRGB(x, y)))
-							&& !Util.contains(ily = ObjectUtils.getIfNull(ily, IntList::create), y)) {
+					if (!Objects.equals(color, new Color(bi.getRGB(x, y))) && (intIntPair = ObjectUtils
+							.getIfNull(intIntPair, () -> IntIntMutablePair.of(-1, -1))) != null) {
 						//
-						IntCollectionUtil.addInt(ily, y);
-						//
+						if (intIntPair.leftInt() < 0 && (intIntPair = intIntPair.left(y)) != null) {
+							//
+							intIntPair = intIntPair.right(y);
+							//
+						} else if (y < intIntPair.leftInt()) {
+							//
+							intIntPair = intIntPair.left(y);
+							//
+						} else if (y > intIntPair.rightInt()) {
+							//
+							intIntPair = intIntPair.right(y);
+							//
+						} // if
+							//
 					} // if
 						//
 				} // if
@@ -3536,9 +3624,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // for
 			//
-		sortInts(ily);
-		//
-		return ily != null && !ily.isEmpty() ? ily.getInt(ily.size() - 1) : null;
+		return intIntPair;
 		//
 	}
 
