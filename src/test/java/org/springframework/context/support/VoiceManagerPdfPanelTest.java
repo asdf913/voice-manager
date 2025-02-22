@@ -69,12 +69,14 @@ import freemarker.template.Configuration;
 import freemarker.template.ConfigurationUtil;
 import freemarker.template.Template;
 import io.github.toolfactory.narcissus.Narcissus;
+import it.unimi.dsi.fastutil.ints.IntIntPair;
 import j2html.rendering.HtmlBuilder;
 
 class VoiceManagerPdfPanelTest {
 
 	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_SELECTED_ITEM, METHOD_TO_HTML,
-			METHOD_GET_TEXT_ALIGNS, METHOD_CHOP, METHOD_GENERATE_PDF_HTML, METHOD_LENGTH = null;
+			METHOD_GET_TEXT_ALIGNS, METHOD_CHOP, METHOD_GENERATE_PDF_HTML, METHOD_LENGTH,
+			METHOD_GET_MINIMUM_AND_MAXIMUM_Y = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -97,14 +99,21 @@ class VoiceManagerPdfPanelTest {
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
 		//
+		(METHOD_GET_MINIMUM_AND_MAXIMUM_Y = clz.getDeclaredMethod("getMinimumAndMaximumY", BufferedImage.class))
+				.setAccessible(true);
+		//
 	}
 
 	private VoiceManagerPdfPanel instance = null;
+
+	private Decoder decoder = null;
 
 	@BeforeEach
 	private void beforeEach() {
 		//
 		instance = new VoiceManagerPdfPanel();
+		//
+		decoder = Base64.getDecoder();
 		//
 	}
 
@@ -496,11 +505,8 @@ class VoiceManagerPdfPanelTest {
 		//
 		Assertions.assertSame(bi = new BufferedImage(2, 2, BufferedImage.TYPE_INT_ARGB), chop(bi));
 		//
-		final Decoder decoder = Base64.getDecoder();
-		//
-		try (final InputStream is = new ByteArrayInputStream(decoder != null ? decoder.decode(
-				"iVBORw0KGgoAAAANSUhEUgAAAAoAAAAFCAIAAADzBuo/AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAFBhaW50Lk5FVCA1LjEuM4y7MyAAAAC2ZVhJZklJKgAIAAAABQAaAQUAAQAAAEoAAAAbAQUAAQAAAFIAAAAoAQMAAQAAAAIAAAAxAQIAEAAAAFoAAABphwQAAQAAAGoAAAAAAAAAYAAAAAEAAABgAAAAAQAAAFBhaW50Lk5FVCA1LjEuMwADAACQBwAEAAAAMDIzMAGgAwABAAAAAQAAAAWgBAABAAAAlAAAAAAAAAACAAEAAgAEAAAAUjk4AAIABwAEAAAAMDEwMAAAAAAOmhdjvMuD8gAAACRJREFUGFdj/P//PwNuAJVmZGSE8OEAIs4E4eACBKTx2s3AAAC16Qv//9Y5UgAAAABJRU5ErkJggg==")
-				: null)) {
+		try (final InputStream is = new ByteArrayInputStream(decode(decoder,
+				"iVBORw0KGgoAAAANSUhEUgAAAAoAAAAFCAIAAADzBuo/AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAFBhaW50Lk5FVCA1LjEuM4y7MyAAAAC2ZVhJZklJKgAIAAAABQAaAQUAAQAAAEoAAAAbAQUAAQAAAFIAAAAoAQMAAQAAAAIAAAAxAQIAEAAAAFoAAABphwQAAQAAAGoAAAAAAAAAYAAAAAEAAABgAAAAAQAAAFBhaW50Lk5FVCA1LjEuMwADAACQBwAEAAAAMDIzMAGgAwABAAAAAQAAAAWgBAABAAAAlAAAAAAAAAACAAEAAgAEAAAAUjk4AAIABwAEAAAAMDEwMAAAAAAOmhdjvMuD8gAAACRJREFUGFdj/P//PwNuAJVmZGSE8OEAIs4E4eACBKTx2s3AAAC16Qv//9Y5UgAAAABJRU5ErkJggg=="))) {
 			//
 			final BufferedImage result = chop(ImageIO.read(is));
 			//
@@ -516,6 +522,10 @@ class VoiceManagerPdfPanelTest {
 				//
 		} // try
 			//
+	}
+
+	private static byte[] decode(final Decoder instance, final String src) {
+		return instance != null ? instance.decode(src) : null;
 	}
 
 	private static BufferedImage chop(final BufferedImage bi) throws Throwable {
@@ -663,6 +673,32 @@ class VoiceManagerPdfPanelTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			} // if
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetMinimumAndMaximumY() throws Throwable {
+		//
+		try (final InputStream is = new ByteArrayInputStream(decode(decoder,
+				"iVBORw0KGgoAAAANSUhEUgAAAAEAAAAFCAIAAAAL5hHIAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAFBhaW50Lk5FVCA1LjEuNBLfpoMAAAC2ZVhJZklJKgAIAAAABQAaAQUAAQAAAEoAAAAbAQUAAQAAAFIAAAAoAQMAAQAAAAIAAAAxAQIAEAAAAFoAAABphwQAAQAAAGoAAAAAAAAAYAAAAAEAAABgAAAAAQAAAFBhaW50Lk5FVCA1LjEuNAADAACQBwAEAAAAMDIzMAGgAwABAAAAAQAAAAWgBAABAAAAlAAAAAAAAAACAAEAAgAEAAAAUjk4AAIABwAEAAAAMDEwMAAAAADX5rshveZftAAAABVJREFUGFdj+P//PwMIAGkmMIOBAQBT0AX96VNS9AAAAABJRU5ErkJggg=="))) {
+			//
+			Assertions.assertEquals(IntIntPair.of(1, 4), getMinimumAndMaximumY(ImageIO.read(is)));
+			//
+		} // try
+			//
+	}
+
+	private static IntIntPair getMinimumAndMaximumY(final BufferedImage bi) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_MINIMUM_AND_MAXIMUM_Y.invoke(null, bi);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IntIntPair) {
+				return (IntIntPair) obj;
 			} // if
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

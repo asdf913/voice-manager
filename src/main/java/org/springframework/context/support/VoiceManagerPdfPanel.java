@@ -3597,29 +3597,21 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		IntIntPair temp = null;
 		//
-		int x, y;
+		int y;
 		//
 		for (int i = 0; i < IterableUtils.size(intIntPairs); i++) {
 			//
-			if ((temp = IterableUtils.get(intIntPairs, i)) == null) {
+			if ((temp = IterableUtils.get(intIntPairs, i)) == null || color == null) {
+				//
+				color = color == null && temp != null
+						? bi != null ? new Color(bi.getRGB(temp.leftInt(), rightInt(temp, 0))) : null
+						: null;
 				//
 				continue;
 				//
 			} // if
 				//
-			x = temp.leftInt();
-			//
-			y = rightInt(temp, 0);
-			//
-			if (color == null) {
-				//
-				color = bi != null ? new Color(bi.getRGB(x, y)) : null;
-				//
-				continue;
-				//
-			} // if
-				//
-			if (!Objects.equals(color, new Color(bi.getRGB(x, y)))) {
+			if (!Objects.equals(color, new Color(bi.getRGB(temp.leftInt(), y = rightInt(temp, 0))))) {
 				//
 				setRight(intIntPair = ObjectUtils.getIfNull(intIntPair, () -> IntIntMutablePair.of(-1, -1)), y);
 				//
