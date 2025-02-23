@@ -109,7 +109,7 @@ class VoiceManagerPdfPanelTest {
 	private Decoder decoder = null;
 
 	@BeforeEach
-	private void beforeEach() {
+	void beforeEach() {
 		//
 		instance = new VoiceManagerPdfPanel();
 		//
