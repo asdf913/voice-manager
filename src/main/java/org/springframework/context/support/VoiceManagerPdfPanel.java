@@ -855,12 +855,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		if (playwrightBrowserTypeFunction == null) {
 			//
-			playwrightBrowserTypeFunction = playWright -> {
-				//
-				return chromium(playWright);
-				//
-			};//
-				//
+			playwrightBrowserTypeFunction = VoiceManagerPdfPanel::chromium;
+			//
 		} // if
 			//
 		return playwrightBrowserTypeFunction;
