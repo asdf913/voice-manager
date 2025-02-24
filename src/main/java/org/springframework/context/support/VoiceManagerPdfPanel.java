@@ -847,6 +847,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		};
 	}
 
+	@Nullable
 	private static BrowserType chromium(@Nullable final Playwright instance) {
 		return instance != null ? instance.chromium() : null;
 	}
