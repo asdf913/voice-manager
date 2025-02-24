@@ -3736,7 +3736,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	@Nullable
-	private static IntIntPair getMinimumAndMaximumY(final BufferedImage bi, final Color c) {
+	private static IntIntPair getMinimumAndMaximumY(@Nullable final BufferedImage bi, final Color c) {
 		//
 		Color color = c;
 		//
@@ -3793,7 +3793,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static IntIntPair right(final IntIntPair intIntPair, final int y) {
+	private static IntIntPair right(@Nullable final IntIntPair intIntPair, final int y) {
 		return intIntPair != null ? intIntPair.right(y) : intIntPair;
 	}
 
