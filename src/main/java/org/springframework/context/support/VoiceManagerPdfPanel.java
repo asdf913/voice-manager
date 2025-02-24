@@ -390,7 +390,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private transient Configuration freeMarkerConfiguration = null;
 
-	private FailableFunction<Playwright, BrowserType, ReflectiveOperationException> playwrightBrowserTypeFunction = null;
+	private transient FailableFunction<Playwright, BrowserType, ReflectiveOperationException> playwrightBrowserTypeFunction = null;
 
 	@Override
 	public String getTitle() {
