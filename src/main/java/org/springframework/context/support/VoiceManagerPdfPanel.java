@@ -1531,6 +1531,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				map.put("captionStyle", captionStyle);
 				//
+				final int borderWidth = 1;
+				//
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
 						StandardCharsets.UTF_8, false);
 				//
@@ -1543,6 +1545,30 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					intIntPair = getMinimumAndMaximumY(testAndApply(Objects::nonNull, is, ImageIO::read, null));
 					//
+				} // try
+					//
+				map.put("captionOuterStyle", Map.of("border", String.format("solid %1$spx", borderWidth)));
+				//
+				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
+						StandardCharsets.UTF_8, false);
+				//
+				map.remove("captionOuterStyle");
+				//
+				Integer top = null;
+				//
+				try (final InputStream is = testAndApply(Objects::nonNull, screenshot(pathHtml, function),
+						ByteArrayInputStream::new, null)) {
+					//
+					final IntIntPair temp = getMinimumAndMaximumY(
+							testAndApply(Objects::nonNull, is, ImageIO::read, null));
+					//
+					if (temp != null) {
+						//
+						setRight(intIntPair,
+								rightInt(intIntPair, 0) - Util.intValue(top = Integer.valueOf(temp.leftInt()), 0));
+						//
+					} // if
+						//
 				} // try
 					//
 				map.put("descriptionHtml", Util.getText(tfDescription));
@@ -1565,8 +1591,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						ObjectMapperUtil.writeValueAsString(getObjectMapper(), map), Object.class));
 				//
 				Util.put((Map) Util.cast(Map.class, Util.get(m1, "captionStyle")), "visibility", "hidden");
-				//
-				final int borderWidth = 1;
 				//
 				Util.putAll((Map) Util.cast(Map.class, Util.get(m1, "descriptionStyle")),
 						Util.collect(
@@ -1613,7 +1637,15 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				if (intIntPair != null) {
 					//
-					Util.put(descriptionStyle, "top", StringUtils.joinWith("", rightInt(intIntPair, 0), "px"));
+					Util.put(descriptionStyle, "top",
+							StringUtils.joinWith("", rightInt(intIntPair, 0) - Util.intValue(top, 0), "px"));
+					//
+				} // if
+					//
+				if (top != null) {
+					//
+					map.put("captionOuterStyle",
+							Map.of("position", "absolute", "top", Util.toString(top.intValue() * -1)));
 					//
 				} // if
 					//

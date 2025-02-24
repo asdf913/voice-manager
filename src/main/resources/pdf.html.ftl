@@ -1,40 +1,55 @@
 <html>
 	<body>
-		<#assign _captionStyle="">
-		<#if captionStyle??>
-			<#if captionStyle?is_string>
-				<#assign _captionStyle=captionStyle>
-			<#elseif captionStyle?is_hash>
-				<#list captionStyle?keys as key>
-					<#if key?? && captionStyle[key]??>
-						<#if _captionStyle?length gt 0><#assign _captionStyle=_captionStyle+";"></#if>
-						<#assign _captionStyle=_captionStyle+key+":"+captionStyle[key]>
+		<#assign _captionOuterStyle="">
+		<#if captionOuterStyle??>
+			<#if captionOuterStyle?is_string>
+				<#assign _captionOuterStyle=captionOuterStyle>
+			<#elseif captionOuterStyle?is_hash>
+				<#list captionOuterStyle?keys as key>
+					<#if key?? && captionOuterStyle[key]??>
+						<#if _captionOuterStyle?length gt 0><#assign _captionOuterStyle=_captionOuterStyle+";"></#if>
+						<#assign _captionOuterStyle=_captionOuterStyle+key+":"+captionOuterStyle[key]>
 					</#if>
 				</#list>
 			</#if>
 		</#if>
-		<div style="${_captionStyle}">
-			<#if captionHtml??>
-				<#if captionHtml?is_boolean>
-					${captionHtml?string}
-				<#elseif captionHtml?is_sequence>
-					${captionHtml?join(",")}
-				<#elseif captionHtml?is_date>
-					${captionHtml?string("yyyy-MM-dd HH:mm:ss")}
-				<#elseif captionHtml?is_hash>
-					<#assign _string="">
-					<#list captionHtml?keys as key>
-						<#if key?? && captionHtml[key]??>
-							<#if _string?length==0>{</#if>
-							<#if _string?length gt 1><#assign _string=_string+","></#if>
-							<#assign _string=_string+key+":"+captionHtml[key]>
+		<div style="${_captionOuterStyle}">
+			<#assign _captionStyle="">
+			<#if captionStyle??>
+				<#if captionStyle?is_string>
+					<#assign _captionStyle=captionStyle>
+				<#elseif captionStyle?is_hash>
+					<#list captionStyle?keys as key>
+						<#if key?? && captionStyle[key]??>
+							<#if _captionStyle?length gt 0><#assign _captionStyle=_captionStyle+";"></#if>
+							<#assign _captionStyle=_captionStyle+key+":"+captionStyle[key]>
 						</#if>
 					</#list>
-					<#if _string?length gt 0>}</#if>
-				<#else>
-					${captionHtml}
 				</#if>
 			</#if>
+			<div style="${_captionStyle}">
+				<#if captionHtml??>
+					<#if captionHtml?is_boolean>
+						${captionHtml?string}
+					<#elseif captionHtml?is_sequence>
+						${captionHtml?join(",")}
+					<#elseif captionHtml?is_date>
+						${captionHtml?string("yyyy-MM-dd HH:mm:ss")}
+					<#elseif captionHtml?is_hash>
+						<#assign _string="">
+						<#list captionHtml?keys as key>
+							<#if key?? && captionHtml[key]??>
+								<#if _string?length==0>{</#if>
+								<#if _string?length gt 1><#assign _string=_string+","></#if>
+								<#assign _string=_string+key+":"+captionHtml[key]>
+							</#if>
+						</#list>
+						<#if _string?length gt 0>}</#if>
+					<#else>
+						${captionHtml}
+					</#if>
+				</#if>
+			</div>
 		</div>
 		<#--description-->
 		<#assign _descriptionStyle="">
