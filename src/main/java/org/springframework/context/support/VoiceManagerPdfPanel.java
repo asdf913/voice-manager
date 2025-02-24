@@ -995,7 +995,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(new JLabel("Description"));
 		//
-		add(tfDescription = new JTextField(), String.format("%1$s,%2$s,span %3$s", WRAP, GROWX, span));
+		add(tfDescription = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManagerPdfPanel.description")),
+				String.format("%1$s,%2$s,span %3$s", WRAP, GROWX, span));
 		//
 		// Font Size
 		//
