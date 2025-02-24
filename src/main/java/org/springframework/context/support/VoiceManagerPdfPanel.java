@@ -1578,10 +1578,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				// 30 character per line
 				//
+				final String position = "position";
+				//
+				final String absolute = "absolute";
+				//
 				final Map<String, String> descriptionStyle = testAndApply(
 						(a, b) -> Boolean.logicalAnd(a != null, b != null),
-						Map.of("font-size", "40px", "position", "absolute"), intIntPair,
-						(a, b) -> new LinkedHashMap<>(a), (a, b) -> a);
+						Map.of("font-size", "40px", position, absolute), intIntPair, (a, b) -> new LinkedHashMap<>(a),
+						(a, b) -> a);
 				//
 				final String descriptionStyleKey = "descriptionStyle";
 				//
@@ -1638,7 +1642,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				} // if
 					//
 				testAndAccept((a, b) -> a != null, top, map, (a, b) -> Util.put(b, captionOuterStyle,
-						Map.of("position", "absolute", "top", Util.toString(Util.intValue(a, 0) * -1))));
+						Map.of(position, absolute, "top", Util.toString(Util.intValue(a, 0) * -1))));
 				//
 				final Color colorCaption = new Color(255, 0, 0);
 				//
@@ -1683,7 +1687,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				} // try
 					//
 				testAndAccept((a, b) -> a != null, top, map, (a, b) -> Util.put(b, captionOuterStyle,
-						Map.of("position", "absolute", "top", Util.toString(Util.intValue(a, 0) * -1))));
+						Map.of(position, absolute, "top", Util.toString(Util.intValue(a, 0) * -1))));
 				//
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
 						StandardCharsets.UTF_8, false);
