@@ -1563,7 +1563,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				try (final InputStream is = testAndApply(Objects::nonNull, screenshot(pathHtml, function),
 						ByteArrayInputStream::new, null)) {
 					//
-					setRight(intIntPair,
+					leftOrRight(intIntPair,
 							rightInt(intIntPair, 0) - Util.intValue(top = Integer.valueOf(leftInt(
 									getMinimumAndMaximumY(testAndApply(Objects::nonNull, is, ImageIO::read, null)), 0)),
 									0));
@@ -1586,7 +1586,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
 						StandardCharsets.UTF_8, false);
 				//
-				final Map<?, ?> m1 = Util.cast(Map.class, ObjectMapperUtil.readValue(getObjectMapper(),
+				Map<?, ?> m1 = Util.cast(Map.class, ObjectMapperUtil.readValue(getObjectMapper(),
 						ObjectMapperUtil.writeValueAsString(getObjectMapper(), map), Object.class));
 				//
 				Util.put((Map) Util.cast(Map.class, Util.get(m1, "captionStyle")), "visibility", "hidden");
@@ -1617,10 +1617,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						//
 						final IntIntPair temp = getMinimumAndMaximumY(bi);
 						//
-						intIntPair.right(rightInt(intIntPair, 0) - (leftInt(temp, 0) - rightInt(intIntPair, 0)
-								- leftInt(getMinimumAndMaximumY(getSubimage(bi, 0, leftInt(temp, 0) + borderWidth,
-										Util.intValue(getWidth(bi), 0),
-										rightInt(temp, 0) - leftInt(temp, 0) - borderWidth)), 0)));
+						right(intIntPair,
+								rightInt(intIntPair, 0) - (leftInt(temp, 0) - rightInt(intIntPair, 0)
+										- leftInt(getMinimumAndMaximumY(getSubimage(bi, 0,
+												leftInt(temp, 0) + borderWidth, Util.intValue(getWidth(bi), 0),
+												rightInt(temp, 0) - leftInt(temp, 0) - borderWidth)), 0)));
 						//
 					} // if
 						//
@@ -1639,6 +1640,41 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				});
 				//
+				final Color colorCaption = new Color(255, 0, 0);
+				//
+				Util.put(
+						(Map) Util.cast(Map.class,
+								Util.get(m1 = Util.cast(Map.class, ObjectMapperUtil.readValue(getObjectMapper(),
+										ObjectMapperUtil.writeValueAsString(getObjectMapper(), map), Object.class)),
+										"captionStyle")),
+						"color", String.format("rgb(%1$s,%2$s,%3$s)", colorCaption.getRed(), colorCaption.getGreen(),
+								colorCaption.getBlue()));
+				//
+				final Color colorDescription = new Color(0, 255, 0);
+				//
+				Util.put((Map) Util.cast(Map.class, Util.get(m1, "descriptionStyle")), "color",
+						String.format("rgb(%1$s,%2$s,%3$s)", colorDescription.getRed(), colorDescription.getGreen(),
+								colorDescription.getBlue()));
+				//
+				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, m1),
+						StandardCharsets.UTF_8, false);
+				//
+				try (final InputStream is = testAndApply(Objects::nonNull, screenshot(pathHtml, function),
+						ByteArrayInputStream::new, null)) {
+					//
+					final BufferedImage bi = testAndApply(Objects::nonNull, is, ImageIO::read, null);
+					//
+					right(intIntPair, rightInt(intIntPair, 0) - leftInt(getMinimumAndMaximumY(bi, colorDescription), 0)
+							+ rightInt(getMinimumAndMaximumY(bi, colorCaption), 0));
+					//
+				} // try
+					//
+				if (intIntPair != null) {
+					//
+					Util.put(descriptionStyle, "top", StringUtils.joinWith("", rightInt(intIntPair, 0), "px"));
+					//
+				} // if
+					//
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
 						StandardCharsets.UTF_8, false);
 				//
@@ -3693,7 +3729,41 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			if (!Objects.equals(color, new Color(bi.getRGB(leftInt(temp, 0), y = rightInt(temp, 0))))) {
 				//
-				setRight(intIntPair = ObjectUtils.getIfNull(intIntPair, () -> IntIntMutablePair.of(-1, -1)), y);
+				leftOrRight(intIntPair = ObjectUtils.getIfNull(intIntPair, () -> IntIntMutablePair.of(-1, -1)), y);
+				//
+			} // if
+				//
+		} // for
+			//
+		return intIntPair;
+		//
+	}
+
+	private static IntIntPair getMinimumAndMaximumY(final BufferedImage bi, final Color c) {
+		//
+		Color color = c;
+		//
+		IntIntPair intIntPair = null;
+		//
+		final List<IntIntPair> intIntPairs = bi != null ? toIntIntPairList(bi.getWidth(), bi.getHeight()) : null;
+		//
+		IntIntPair temp = null;
+		//
+		int y;
+		//
+		for (int i = 0; i < IterableUtils.size(intIntPairs); i++) {
+			//
+			if ((temp = IterableUtils.get(intIntPairs, i)) == null || color == null) {
+				//
+				color = color == null && bi != null ? new Color(bi.getRGB(leftInt(temp, 0), rightInt(temp, 0))) : null;
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Objects.equals(color, new Color(bi.getRGB(leftInt(temp, 0), y = rightInt(temp, 0))))) {
+				//
+				leftOrRight(intIntPair = ObjectUtils.getIfNull(intIntPair, () -> IntIntMutablePair.of(-1, -1)), y);
 				//
 			} // if
 				//
@@ -3704,26 +3774,30 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	@Nullable
-	private static IntIntPair setRight(@Nullable final IntIntPair intIntPair, final int y) {
+	private static IntIntPair leftOrRight(@Nullable final IntIntPair intIntPair, final int y) {
 		//
 		IntIntPair result = intIntPair;
 		//
-		if (result != null && leftInt(result, 0) < 0 && (result = result.left(y)) != null) {
+		if (leftInt(result, 0) < 0 && (result = result.left(y)) != null) {
 			//
-			result = result.right(y);
+			result = right(result, y);
 			//
 		} else if (y < leftInt(result, 0)) {
 			//
 			result = result.left(y);
 			//
-		} else if (result != null && y > rightInt(result, 0)) {
+		} else if (y > rightInt(result, 0)) {
 			//
-			result = result.right(y);
+			result = right(result, y);
 			//
 		} // if
 			//
 		return result;
 		//
+	}
+
+	private static IntIntPair right(final IntIntPair intIntPair, final int y) {
+		return intIntPair != null ? intIntPair.right(y) : intIntPair;
 	}
 
 	@Nullable
