@@ -1633,12 +1633,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // if
 					//
-				testAndAccept((a, b) -> a != null, top, map, (a, b) -> {
-					//
-					Util.put(b, captionOuterStyle,
-							Map.of("position", "absolute", "top", Util.toString(Util.intValue(a, 0) * -1)));
-					//
-				});
+				testAndAccept((a, b) -> a != null, top, map, (a, b) -> Util.put(b, captionOuterStyle,
+						Map.of("position", "absolute", "top", Util.toString(Util.intValue(a, 0) * -1))));
 				//
 				final Color colorCaption = new Color(255, 0, 0);
 				//
