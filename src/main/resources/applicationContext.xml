@@ -1153,6 +1153,8 @@
 					value="#{new freemarker.cache.ClassTemplateLoader(T(org.springframework.context.support.VoiceManagerPdfPanel),'/')}" />
 			</bean>
 		</property>
+		<property name="browserType"
+			value="${org.springframework.context.support.VoiceManagerPdfPanel.browserType}" />
 	</bean>
 
 	<!---->
