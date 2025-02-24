@@ -1563,16 +1563,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				try (final InputStream is = testAndApply(Objects::nonNull, screenshot(pathHtml, function),
 						ByteArrayInputStream::new, null)) {
 					//
-					final IntIntPair temp = getMinimumAndMaximumY(
-							testAndApply(Objects::nonNull, is, ImageIO::read, null));
+					setRight(intIntPair,
+							rightInt(intIntPair, 0) - Util.intValue(top = Integer.valueOf(leftInt(
+									getMinimumAndMaximumY(testAndApply(Objects::nonNull, is, ImageIO::read, null)), 0)),
+									0));
 					//
-					if (temp != null) {
-						//
-						setRight(intIntPair,
-								rightInt(intIntPair, 0) - Util.intValue(top = Integer.valueOf(temp.leftInt()), 0));
-						//
-					} // if
-						//
 				} // try
 					//
 				map.put("descriptionHtml", Util.getText(tfDescription));
@@ -1618,22 +1613,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					final BufferedImage bi = testAndApply(Objects::nonNull, is, ImageIO::read, null);
 					//
-					IntIntPair temp = getMinimumAndMaximumY(bi);
-					//
-					if (temp != null && intIntPair != null) {
+					if (intIntPair != null) {
 						//
-						int topOffset = temp.leftInt() - rightInt(intIntPair, 0);
+						final IntIntPair temp = getMinimumAndMaximumY(bi);
 						//
-						if ((temp = getMinimumAndMaximumY(
-								getSubimage(bi, 0, temp.leftInt() + borderWidth, Util.intValue(getWidth(bi), 0),
-										rightInt(temp, 0) - temp.leftInt() - borderWidth))) != null
-								&& topOffset != temp.leftInt()) {
-							//
-							topOffset -= temp.leftInt();
-							//
-						} // if
-							//
-						intIntPair.right(rightInt(intIntPair, 0) - topOffset);
+						intIntPair.right(rightInt(intIntPair, 0) - (leftInt(temp, 0) - rightInt(intIntPair, 0)
+								- leftInt(getMinimumAndMaximumY(getSubimage(bi, 0, leftInt(temp, 0) + borderWidth,
+										Util.intValue(getWidth(bi), 0),
+										rightInt(temp, 0) - leftInt(temp, 0) - borderWidth)), 0)));
 						//
 					} // if
 						//
@@ -3284,6 +3271,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		}
 	}
 
+	private static int leftInt(final IntIntPair instance, final int defaultValue) {
+		return instance != null ? instance.leftInt() : defaultValue;
+	}
+
 	private static int rightInt(@Nullable final IntIntPair instance, final int defaultValue) {
 		return instance != null ? instance.rightInt() : defaultValue;
 	}
@@ -3695,15 +3686,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			if ((temp = IterableUtils.get(intIntPairs, i)) == null || color == null) {
 				//
-				color = color == null && temp != null && bi != null
-						? new Color(bi.getRGB(temp.leftInt(), rightInt(temp, 0)))
-						: null;
+				color = color == null && bi != null ? new Color(bi.getRGB(leftInt(temp, 0), rightInt(temp, 0))) : null;
 				//
 				continue;
 				//
 			} // if
 				//
-			if (!Objects.equals(color, new Color(bi.getRGB(temp.leftInt(), y = rightInt(temp, 0))))) {
+			if (!Objects.equals(color, new Color(bi.getRGB(leftInt(temp, 0), y = rightInt(temp, 0))))) {
 				//
 				setRight(intIntPair = ObjectUtils.getIfNull(intIntPair, () -> IntIntMutablePair.of(-1, -1)), y);
 				//
@@ -3720,11 +3709,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		IntIntPair result = intIntPair;
 		//
-		if (result != null && result.leftInt() < 0 && (result = result.left(y)) != null) {
+		if (result != null && leftInt(result, 0) < 0 && (result = result.left(y)) != null) {
 			//
 			result = result.right(y);
 			//
-		} else if (result != null && y < result.leftInt()) {
+		} else if (y < leftInt(result, 0)) {
 			//
 			result = result.left(y);
 			//
