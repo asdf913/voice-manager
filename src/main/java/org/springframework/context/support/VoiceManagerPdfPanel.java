@@ -1531,7 +1531,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						.getElementsByTag(testAndApply(Objects::nonNull, captionHtml, Jsoup::parse, null), "ruby"),
 						x -> Util.put(captionStyle, "display", "ruby-text"));
 				//
-				map.put("captionStyle", captionStyle);
+				final String captionStyleKey = "captionStyle";
+				//
+				map.put(captionStyleKey, captionStyle);
 				//
 				final int borderWidth = 1;
 				//
@@ -1581,7 +1583,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						Map.of("font-size", "40px", "position", "absolute"), intIntPair,
 						(a, b) -> new LinkedHashMap<>(a), (a, b) -> a);
 				//
-				map.put("descriptionStyle", descriptionStyle);
+				final String descriptionStyleKey = "descriptionStyle";
+				//
+				map.put(descriptionStyleKey, descriptionStyle);
 				//
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
 						StandardCharsets.UTF_8, false);
@@ -1589,9 +1593,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				Map<?, ?> m1 = Util.cast(Map.class, ObjectMapperUtil.readValue(getObjectMapper(),
 						ObjectMapperUtil.writeValueAsString(getObjectMapper(), map), Object.class));
 				//
-				Util.put((Map) Util.cast(Map.class, Util.get(m1, "captionStyle")), "visibility", "hidden");
+				Util.put((Map) Util.cast(Map.class, Util.get(m1, captionStyleKey)), "visibility", "hidden");
 				//
-				Util.putAll((Map) Util.cast(Map.class, Util.get(m1, "descriptionStyle")),
+				Util.putAll((Map) Util.cast(Map.class, Util.get(m1, descriptionStyleKey)),
 						Util.collect(
 								Util.map(
 										Util.stream(Sets.cartesianProduct(
@@ -1642,13 +1646,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						(Map) Util.cast(Map.class,
 								Util.get(m1 = Util.cast(Map.class, ObjectMapperUtil.readValue(getObjectMapper(),
 										ObjectMapperUtil.writeValueAsString(getObjectMapper(), map), Object.class)),
-										"captionStyle")),
+										captionStyleKey)),
 						"color", String.format("rgb(%1$s,%2$s,%3$s)", colorCaption.getRed(), colorCaption.getGreen(),
 								colorCaption.getBlue()));
 				//
 				final Color colorDescription = new Color(0, 255, 0);
 				//
-				Util.put((Map) Util.cast(Map.class, Util.get(m1, "descriptionStyle")), "color",
+				Util.put((Map) Util.cast(Map.class, Util.get(m1, descriptionStyleKey)), "color",
 						String.format("rgb(%1$s,%2$s,%3$s)", colorDescription.getRed(), colorDescription.getGreen(),
 								colorDescription.getBlue()));
 				//
