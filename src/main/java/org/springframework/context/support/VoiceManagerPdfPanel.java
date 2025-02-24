@@ -1549,12 +1549,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // try
 					//
-				map.put("captionOuterStyle", Map.of("border", String.format("solid %1$spx", borderWidth)));
+				final String captionOuterStyle = "captionOuterStyle";
+				//
+				map.put(captionOuterStyle, Map.of("border", String.format("solid %1$spx", borderWidth)));
 				//
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
 						StandardCharsets.UTF_8, false);
 				//
-				map.remove("captionOuterStyle");
+				map.remove(captionOuterStyle);
 				//
 				Integer top = null;
 				//
@@ -1646,7 +1648,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				if (top != null) {
 					//
-					map.put("captionOuterStyle",
+					map.put(captionOuterStyle,
 							Map.of("position", "absolute", "top", Util.toString(top.intValue() * -1)));
 					//
 				} // if
