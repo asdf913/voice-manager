@@ -1664,17 +1664,27 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					final BufferedImage bi = testAndApply(Objects::nonNull, is, ImageIO::read, null);
 					//
-					right(intIntPair, rightInt(intIntPair, 0) - leftInt(getMinimumAndMaximumY(bi, colorDescription), 0)
-							+ rightInt(getMinimumAndMaximumY(bi, colorCaption), 0));
+					final IntIntPair intIntPairCaption = getMinimumAndMaximumY(bi, colorCaption);
 					//
+					if (top != null) {
+						//
+						top = Integer.valueOf(top.intValue() + leftInt(intIntPairCaption, 0));
+						//
+					} // if
+						//
+					if ((intIntPair = right(intIntPair,
+							rightInt(intIntPair, 0) - leftInt(intIntPairCaption, 0) + rightInt(intIntPairCaption, 0)
+									- leftInt(getMinimumAndMaximumY(bi, colorDescription), 0))) != null) {
+						//
+						Util.put(descriptionStyle, "top", StringUtils.joinWith("", rightInt(intIntPair, 0), "px"));
+						//
+					} // if
+						//
 				} // try
 					//
-				if (intIntPair != null) {
-					//
-					Util.put(descriptionStyle, "top", StringUtils.joinWith("", rightInt(intIntPair, 0), "px"));
-					//
-				} // if
-					//
+				testAndAccept((a, b) -> a != null, top, map, (a, b) -> Util.put(b, captionOuterStyle,
+						Map.of("position", "absolute", "top", Util.toString(Util.intValue(a, 0) * -1))));
+				//
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
 						StandardCharsets.UTF_8, false);
 				//
