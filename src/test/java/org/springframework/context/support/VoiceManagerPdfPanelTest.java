@@ -1,5 +1,7 @@
 package org.springframework.context.support;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Base64.Decoder;
+import java.util.function.Predicate;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -23,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
@@ -48,6 +52,8 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
@@ -62,6 +68,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.helger.css.ECSSUnit;
+import com.microsoft.playwright.Playwright;
 
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.TemplateLoader;
@@ -76,7 +83,7 @@ class VoiceManagerPdfPanelTest {
 
 	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_SELECTED_ITEM, METHOD_TO_HTML,
 			METHOD_GET_TEXT_ALIGNS, METHOD_CHOP, METHOD_GENERATE_PDF_HTML, METHOD_LENGTH,
-			METHOD_GET_MINIMUM_AND_MAXIMUM_Y = null;
+			METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -101,6 +108,9 @@ class VoiceManagerPdfPanelTest {
 		//
 		(METHOD_GET_MINIMUM_AND_MAXIMUM_Y = clz.getDeclaredMethod("getMinimumAndMaximumY", BufferedImage.class))
 				.setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
+				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 	}
 
@@ -707,9 +717,71 @@ class VoiceManagerPdfPanelTest {
 	}
 
 	@Test
-	void testNull() {
+	void testSetBrowserType() throws Throwable {
 		//
-		final Method[] ms = VoiceManagerPdfPanel.class.getDeclaredMethods();
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		instance.setBrowserType(null);
+		//
+		final Class<?> clz = Util.getClass(instance);
+		//
+		final List<Field> fs = Util
+				.toList(Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(clz), Arrays::stream, null),
+						f -> Objects.equals(Util.getType(f), FailableFunction.class)));
+		//
+		final int size = IterableUtils.size(fs);
+		//
+		if (size > 1) {
+			//
+			throw new IllegalArgumentException();
+			//
+		} // if
+			//
+		final Field field = size == 1 ? IterableUtils.get(fs, 0) : null;
+		//
+		Assertions.assertNull(FailableFunctionUtil
+				.apply(Util.cast(FailableFunction.class, FieldUtils.readField(field, instance, true)), null));
+		//
+		instance.setBrowserType("c");
+		//
+		try (final Playwright playwright = Playwright.create()) {
+			//
+			Assertions.assertNotNull(FailableFunctionUtil
+					.apply(Util.cast(FailableFunction.class, FieldUtils.readField(field, instance, true)), playwright));
+			//
+		} // try
+			//
+		instance.setBrowserType("");
+		//
+		try (final Playwright playwright = Playwright.create()) {
+			//
+			Assertions.assertThrows(Exception.class, () -> FailableFunctionUtil
+					.apply(Util.cast(FailableFunction.class, FieldUtils.readField(field, instance, true)), playwright));
+			//
+		} // try
+			//
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
+			throws Throwable {
+		try {
+			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testNull() throws Throwable {
+		//
+		final Class<?> clz = VoiceManagerPdfPanel.class;
+		//
+		final Method[] ms = Util.getDeclaredMethods(clz);
 		//
 		Method m = null;
 		//
@@ -813,12 +885,9 @@ class VoiceManagerPdfPanelTest {
 				invoke = Narcissus.invokeMethod(instance = ObjectUtils.getIfNull(instance, VoiceManagerPdfPanel::new),
 						m, os);
 				//
-				if (Objects.equals(Boolean.TYPE, m.getReturnType()) || or(
-						Boolean.logicalAnd(Objects.equals(name, "getTitle"),
-								(parameterCount = m.getParameterCount()) == 0),
-						Boolean.logicalAnd(Objects.equals(name, "getFontSizeAndUnitMap"), parameterCount == 0),
-						Boolean.logicalAnd(Objects.equals(name, "getObjectMapper"), parameterCount == 0),
-						Boolean.logicalAnd(Objects.equals(name, "createStyleMap"), parameterCount == 0))) {
+				if (Objects.equals(Boolean.TYPE, m.getReturnType()) || Boolean.logicalAnd(m.getParameterCount() == 0,
+						Util.contains(Arrays.asList("getTitle", "getFontSizeAndUnitMap", "getObjectMapper",
+								"createStyleMap", "getPlaywrightBrowserTypeFunction"), name))) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//

@@ -390,6 +390,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private transient Configuration freeMarkerConfiguration = null;
 
+	private FailableFunction<Playwright, BrowserType, ReflectiveOperationException> playwrightBrowserTypeFunction = null;
+
 	@Override
 	public String getTitle() {
 		return "PDF";
@@ -809,6 +811,60 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	public void setFreeMarkerConfiguration(final Configuration freeMarkerConfiguration) {
 		this.freeMarkerConfiguration = freeMarkerConfiguration;
+	}
+
+	public void setBrowserType(final String browserType) {
+		//
+		this.playwrightBrowserTypeFunction = playWright -> {
+			//
+			final List<Method> ms = Util.toList(Util.filter(
+					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Playwright.class), Arrays::stream, null),
+					m -> m != null && Objects.equals(m.getReturnType(), BrowserType.class) && m.getParameterCount() == 0
+							&& StringUtils.startsWithIgnoreCase(Util.getName(m), browserType)));
+			//
+			final int size = IterableUtils.size(ms);
+			//
+			if (size == 0) {
+				//
+				return chromium(playWright);
+				//
+			} else if (size > 1) {
+				//
+				throw new IllegalArgumentException();
+				//
+			} // if
+				//
+			final Method m = IterableUtils.get(ms, 0);
+			//
+			if (m == null) {
+				//
+				throw new IllegalArgumentException();
+				//
+			} // if
+				//
+			return Util.cast(BrowserType.class, m.invoke(playWright));
+			//
+		};
+	}
+
+	private static BrowserType chromium(final Playwright instance) {
+		return instance != null ? instance.chromium() : null;
+	}
+
+	private FailableFunction<Playwright, BrowserType, ReflectiveOperationException> getPlaywrightBrowserTypeFunction() {
+		//
+		if (playwrightBrowserTypeFunction == null) {
+			//
+			playwrightBrowserTypeFunction = playWright -> {
+				//
+				return chromium(playWright);
+				//
+			};//
+				//
+		} // if
+			//
+		return playwrightBrowserTypeFunction;
+		//
 	}
 
 	private class VoiceIdListCellRenderer implements ListCellRenderer<Object> {
@@ -1481,7 +1537,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
 						StandardCharsets.UTF_8, false);
 				//
-				final Function<Playwright, BrowserType> function = new PlaywrightBrowserTypeFunction();
+				final FailableFunction<Playwright, BrowserType, ReflectiveOperationException> function = getPlaywrightBrowserTypeFunction();
 				//
 				IntIntPair intIntPair = null;
 				//
@@ -1615,7 +1671,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				Util.setText(tfOutputFile, Util.getAbsolutePath(file));
 				//
-			} catch (final IOException | NoSuchFieldException | TemplateException e) {
+			} catch (final IOException | TemplateException | ReflectiveOperationException e) {
 				//
 				LoggerUtil.error(LOG, e.getMessage(), e);
 				//
@@ -1869,7 +1925,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				} // if
 					//
 				testAndAccept(a -> !GraphicsEnvironment.isHeadless(),
-						document = Loader.loadPDF(pdf(Util.toPath(file), new PlaywrightBrowserTypeFunction())),
+						document = Loader.loadPDF(pdf(Util.toPath(file), getPlaywrightBrowserTypeFunction())),
 						a -> JOptionPane.showMessageDialog(null,
 								testAndApply(Objects::nonNull,
 										chop(testAndApply(x -> getNumberOfPages(x) > 0, a,
@@ -1877,7 +1933,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 										ImageIcon::new, null),
 								"Image", JOptionPane.PLAIN_MESSAGE, null));
 				//
-			} catch (final IOException e) {
+			} catch (final IOException | ReflectiveOperationException e) {
 				//
 				LoggerUtil.error(LOG, e.getMessage(), e);
 				//
@@ -3724,23 +3780,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null ? instance.getHeight() : 0;
 	}
 
-	private static class PlaywrightBrowserTypeFunction implements Function<Playwright, BrowserType> {
-
-		@Override
-		@Nullable
-		public BrowserType apply(@Nullable final Playwright instance) {
-			return instance != null ? instance.chromium() : null;
-		}
-
-	}
-
 	@Nullable
-	private static byte[] pdf(@Nullable final Path pathHtml, final Function<Playwright, BrowserType> function)
-			throws MalformedURLException {
+	private static byte[] pdf(@Nullable final Path pathHtml,
+			final FailableFunction<Playwright, BrowserType, ReflectiveOperationException> function)
+			throws MalformedURLException, ReflectiveOperationException {
 		//
 		try (final Playwright playwright = Playwright.create()) {
 			//
-			final Page page = newPage(newContext(launch(Util.apply(function, playwright))));
+			final Page page = newPage(newContext(launch(FailableFunctionUtil.apply(function, playwright))));
 			//
 			if (page != null) {
 				//
@@ -3758,12 +3805,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	@Nullable
-	private static byte[] screenshot(final Path pathHtml, final Function<Playwright, BrowserType> function)
-			throws MalformedURLException {
+	private static byte[] screenshot(final Path pathHtml,
+			final FailableFunction<Playwright, BrowserType, ReflectiveOperationException> function)
+			throws MalformedURLException, ReflectiveOperationException {
 		//
 		try (final Playwright playwright = Playwright.create()) {
 			//
-			final Page page = newPage(newContext(launch(Util.apply(function, playwright))));
+			final Page page = newPage(newContext(launch(FailableFunctionUtil.apply(function, playwright))));
 			//
 			if (page != null) {
 				//
