@@ -3758,7 +3758,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // if
 				//
-			if (Objects.equals(color, new Color(bi.getRGB(leftInt(temp, 0), y = rightInt(temp, 0))))) {
+			if (bi != null && Objects.equals(color, new Color(bi.getRGB(leftInt(temp, 0), y = rightInt(temp, 0))))) {
 				//
 				leftOrRight(intIntPair = ObjectUtils.getIfNull(intIntPair, () -> IntIntMutablePair.of(-1, -1)), y);
 				//
@@ -3775,13 +3775,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		IntIntPair result = intIntPair;
 		//
-		if (leftInt(result, 0) < 0 && (result = result.left(y)) != null) {
+		if (leftInt(result, 0) < 0 && (result = left(result, y)) != null) {
 			//
 			result = right(result, y);
 			//
 		} else if (y < leftInt(result, 0)) {
 			//
-			result = result.left(y);
+			result = left(result, y);
 			//
 		} else if (y > rightInt(result, 0)) {
 			//
@@ -3791,6 +3791,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		return result;
 		//
+	}
+
+	private static IntIntPair left(final IntIntPair intIntPair, final int y) {
+		return intIntPair != null ? intIntPair.left(y) : intIntPair;
 	}
 
 	@Nullable
