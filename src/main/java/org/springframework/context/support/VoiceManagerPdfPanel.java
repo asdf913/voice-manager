@@ -1646,13 +1646,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // if
 					//
-				if (top != null) {
+				testAndAccept((a, b) -> a != null, top, map, (a, b) -> {
 					//
-					map.put(captionOuterStyle,
-							Map.of("position", "absolute", "top", Util.toString(top.intValue() * -1)));
+					Util.put(b, captionOuterStyle,
+							Map.of("position", "absolute", "top", Util.toString(Util.intValue(a, 0) * -1)));
 					//
-				} // if
-					//
+				});
+				//
 				FileUtils.writeStringToFile(Util.toFile(pathHtml), generatePdfHtml(freeMarkerConfiguration, map),
 						StandardCharsets.UTF_8, false);
 				//
