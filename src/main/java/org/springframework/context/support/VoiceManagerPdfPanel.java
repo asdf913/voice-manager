@@ -999,7 +999,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		// Font Size
 		//
-		add(new JLabel("Font Size"));
+		add(new JLabel("Font Size (Label)"));
 		//
 		add(tfFontSize2 = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManagerPdfPanel.fontSize2")),
