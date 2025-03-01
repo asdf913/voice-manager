@@ -22,7 +22,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
@@ -879,6 +881,15 @@ class VoiceManagerPdfPanelTest {
 					//
 			} else {
 				//
+				forEach(testAndApply(Objects::nonNull,
+						Util.getDeclaredFields(
+								Util.getClass(instance = ObjectUtils.getIfNull(instance, VoiceManagerPdfPanel::new))),
+						Arrays::stream, null), f -> {
+							if (f != null && !Modifier.isStatic(f.getModifiers())) {
+								Narcissus.setField(instance, f, null);
+							}
+						});
+				//
 				invoke = Narcissus.invokeMethod(instance = ObjectUtils.getIfNull(instance, VoiceManagerPdfPanel::new),
 						m, os);
 				//
@@ -898,6 +909,12 @@ class VoiceManagerPdfPanelTest {
 				//
 		} // for
 			//
+	}
+
+	private static <T> void forEach(final Stream<T> instance, final Consumer<T> action) {
+		if (instance != null && action != null) {
+			instance.forEach(action);
+		}
 	}
 
 	private static boolean or(final boolean a, final boolean b, final boolean... bs) {

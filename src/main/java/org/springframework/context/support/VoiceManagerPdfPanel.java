@@ -1964,8 +1964,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			try {
 				//
-				final String html = generatePdfHtml(freeMarkerConfiguration,
-						Map.of("captionHtml", Util.getText(taHtml), "captionStyle", createStyleMap()));
+				final Map<Object, Object> map = new LinkedHashMap<>(
+						Collections.singletonMap("captionStyle", createStyleMap()));
+				//
+				map.put("captionHtml", Util.getText(taHtml));
+				//
+				final String html = generatePdfHtml(freeMarkerConfiguration, map);
 				//
 				FileUtils.writeStringToFile(
 						file = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null), html,
