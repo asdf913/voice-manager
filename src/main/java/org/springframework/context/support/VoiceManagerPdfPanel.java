@@ -3674,7 +3674,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static String getMimeType(final ContentInfoUtil instance, @Nullable final Path path) throws IOException {
 		//
-		try (final InputStream is = testAndApply(Objects::nonNull, path, Files::newInputStream, null)) {
+		try (final InputStream is = testAndApply(p -> Util.exists(Util.toFile(p)) && Util.isFile(Util.toFile(p)), path,
+				Files::newInputStream, null)) {
 			//
 			final ContentInfo ci = testAndApply(Objects::nonNull, is, x -> findMatch(instance, x), null);
 			//
