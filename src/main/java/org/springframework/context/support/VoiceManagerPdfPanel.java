@@ -3835,7 +3835,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static Duration getAudioDuration(@Nullable final File file) throws Exception {
 		//
-		final AudioFileFormat fileFormat = testAndApply(Objects::nonNull, file, AudioSystem::getAudioFileFormat, null);
+		final AudioFileFormat fileFormat = testAndApply(f -> Util.exists(f) && Util.isFile(f), file,
+				AudioSystem::getAudioFileFormat, null);
 		//
 		return testAndApply((a, b) -> a != null && b != null, fileFormat, getFormat(fileFormat),
 				(a, b) -> Duration.parse(String.format("PT%1$sS", a.getFrameLength() / b.getFrameRate())), null);
