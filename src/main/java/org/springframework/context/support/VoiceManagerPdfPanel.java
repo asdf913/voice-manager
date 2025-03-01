@@ -1782,15 +1782,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static String join(final Map<?, ?> map, final String delimiterA, final String delimiterB) {
-		//
-		return Util.collect(
-				Util.map(Util.stream(Util.entrySet(map)),
-						x -> StringUtils.joinWith(delimiterA, Util.getKey(x), Util.getValue(x))),
-				Collectors.joining(delimiterB));
-		//
-	}
-
 	private boolean actionPerformed2(final Object source) {
 		//
 		if (Objects.equals(source, btnImageClear)) {
