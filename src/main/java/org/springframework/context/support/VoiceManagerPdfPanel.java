@@ -930,7 +930,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		Entry<String, Object> entry = getNumberAndUnit(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManagerPdfPanel.fontSize1"));
 		//
-		add(tfFontSize1 = new JTextField(Util.getKey(entry)), String.format("%1$s,wmin %2$s", GROWX, 100));
+		final int wmin = 30;
+		//
+		add(tfFontSize1 = new JTextField(Util.getKey(entry)), String.format("%1$s,wmin %2$s", GROWX, wmin));
 		//
 		final int span = 5;
 		//
@@ -1003,7 +1005,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(tfFontSize2 = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManagerPdfPanel.fontSize2")),
-				String.format("%1$s,%2$s,wmin %3$s", GROWX, WRAP, 100));
+				String.format("%1$s,%2$s,wmin %3$s", GROWX, WRAP, wmin));
 		//
 		setSelectedItem(cbmFontSize1, Util.getValue(entry));
 		//
@@ -1114,7 +1116,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(new JLabel("Original Size"));
 		//
-		add(cbIsOriginalSize = new JCheckBox(), WRAP);
+		add(cbIsOriginalSize = new JCheckBox(), String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		// Audio Format
 		//
@@ -1137,11 +1139,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		mcbmAudioFormatWrite.setSelectedItem(audioFormat);
 		//
-		add(jcbAudioFormat, WRAP);
+		add(jcbAudioFormat, String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		add(new JLabel());
 		//
-		add(btnExecute = new JButton("Execute"), WRAP);
+		add(btnExecute = new JButton("Execute"), String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		add(new JLabel("Output"));
 		//
