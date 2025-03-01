@@ -1958,20 +1958,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		if (Objects.equals(source, btnPreviewRubyPdf)) {
 			//
-			final HtmlBuilder<StringBuilder> htmlBuilder = FlatHtml.inMemory();
-			//
 			File file = null;
 			//
 			PDDocument document = null;
 			//
 			try {
 				//
-				final String html = Util.toString(output(appendEndTag(appendEndTag(appendUnescapedText(completeTag(
-						appendAttribute(appendStartTag(completeTag(appendStartTag(htmlBuilder, "html")), "div"), STYLE,
-								//
-								join(createStyleMap(), ":", ";")
-						//
-						)), Util.getText(taHtml)), "div"), "html")));
+				final String html = generatePdfHtml(freeMarkerConfiguration,
+						Map.of("captionHtml", Util.getText(taHtml), "captionStyle", createStyleMap()));
 				//
 				FileUtils.writeStringToFile(
 						file = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null), html,
@@ -2002,7 +1996,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 										ImageIcon::new, null),
 								"Image", JOptionPane.PLAIN_MESSAGE, null));
 				//
-			} catch (final IOException | ReflectiveOperationException e) {
+			} catch (final IOException | ReflectiveOperationException | TemplateException e) {
 				//
 				LoggerUtil.error(LOG, e.getMessage(), e);
 				//
