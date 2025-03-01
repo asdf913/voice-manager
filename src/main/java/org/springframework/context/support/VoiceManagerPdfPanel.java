@@ -254,8 +254,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static final String PAGE1 = "page1";
 
-	private static final String STYLE = "style";
-
 	private static final FailableBiConsumer<JTextComponent, HttpURLConnection, IOException> J_TEXT_COMPONENT_HTTP_URL_CONNECTION_FAILABLE_BI_PREDICATE = (
 			a, b) -> {
 		//
