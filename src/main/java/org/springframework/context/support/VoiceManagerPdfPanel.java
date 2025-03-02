@@ -1593,7 +1593,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				final BigDecimal fontSize3 = testAndApply(x -> matches(x),
 						matcher(patternInteger = ObjectUtils.getIfNull(patternInteger,
-								() -> Pattern.compile("^(-?[0-9]+(\\.\\d+)?)$")), Util.getText(tfFontSize3)),
+								() -> Pattern.compile("^(-?\\d+(\\.\\d+)?)$")), Util.getText(tfFontSize3)),
 						x -> new BigDecimal(group(x, 0)), null);
 				//
 				final Map<String, String> descriptionStyle = testAndApply(
