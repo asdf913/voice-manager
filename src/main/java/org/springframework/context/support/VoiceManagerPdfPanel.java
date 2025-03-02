@@ -3897,7 +3897,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	@Nullable
-	private static Matcher matcher(@Nullable final Pattern instance, final CharSequence input) {
+	private static Matcher matcher(@Nullable final Pattern instance, @Nullable final CharSequence input) {
 		return instance != null && input != null ? instance.matcher(input) : null;
 	}
 
