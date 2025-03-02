@@ -1,12 +1,15 @@
 package org.springframework.context.support;
 
 import java.lang.reflect.Executable;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import io.github.toolfactory.narcissus.Narcissus;
 
 class SpeechApiImplTest {
 
@@ -110,6 +113,20 @@ class SpeechApiImplTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testIH() {
+		//
+		final InvocationHandler ih = Util.cast(InvocationHandler.class,
+				Narcissus.allocateInstance(Util.forName("org.springframework.context.support.SpeechApiImpl$IH")));
+		//
+		if (ih != null) {
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(null, null, null));
+			//
+		} // if
+			//
 	}
 
 }

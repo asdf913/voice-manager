@@ -2,8 +2,10 @@ package org.springframework.context.support;
 
 import java.io.File;
 import java.lang.reflect.Executable;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.FileSystems;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -15,25 +17,46 @@ import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.springframework.beans.factory.InitializingBean;
 
+import com.google.common.reflect.Reflection;
+
 public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 
 	private SpeechApi instance = null;
+
+	private static class IH implements InvocationHandler {
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			throw new Throwable(Util.getName(method));
+			//
+		}
+
+	}
 
 	@Nullable
 	private SpeechApi getInstance() {
 		//
 		if (instance == null) {
 			//
-			if (Objects.equals(Boolean.TRUE, IValue0Util.getValue0(IsWindows10OrGreater()))) {
+			if (Objects.equals(Util.getName(Util.getClass(FileSystems.getDefault())), "sun.nio.fs.WindowsFileSystem")) {
 				//
-				instance = new SpeechApiSystemSpeechImpl();
-				//
+				if (Objects.equals(Boolean.TRUE, IValue0Util.getValue0(IsWindows10OrGreater()))) {
+					//
+					instance = new SpeechApiSystemSpeechImpl();
+					//
+				} else {
+					//
+					instance = new SpeechApiSpeechServerImpl();
+					//
+				} // if
+					//
 			} else {
 				//
-				instance = new SpeechApiSpeechServerImpl();
+				instance = Reflection.newProxy(SpeechApi.class, new IH());
 				//
 			} // if
-				//
+			//
 		} // if
 			//
 		return instance;
