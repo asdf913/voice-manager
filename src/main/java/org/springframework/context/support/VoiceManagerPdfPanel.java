@@ -323,6 +323,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Font Size 2")
 	private JTextComponent tfFontSize2 = null;
 
+	@Note("Font Size 3")
+	private JTextComponent tfFontSize3 = null;
+
 	@Note("Image URL")
 	private JTextComponent tfImageUrl = null;
 
@@ -389,6 +392,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	private transient Configuration freeMarkerConfiguration = null;
 
 	private transient FailableFunction<Playwright, BrowserType, ReflectiveOperationException> playwrightBrowserTypeFunction = null;
+
+	private Pattern patternInteger = null;
 
 	@Override
 	public String getTitle() {
@@ -995,9 +1000,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(new JLabel("Description"));
 		//
+		add(tfFontSize3 = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
+				"org.springframework.context.support.VoiceManagerPdfPanel.fontSize3")),
+				String.format("%1$s,wmin %2$s", GROWX, wmin));
+		//
 		add(tfDescription = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManagerPdfPanel.description")),
-				String.format("%1$s,%2$s,span %3$s", WRAP, GROWX, span));
+				String.format("%1$s,%2$s,span %3$s", WRAP, GROWX, span - 1));
 		//
 		// Font Size
 		//
@@ -1582,10 +1591,19 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				final String absolute = "absolute";
 				//
+				final BigDecimal fontSize3 = testAndApply(x -> matches(x),
+						matcher(patternInteger = ObjectUtils.getIfNull(patternInteger,
+								() -> Pattern.compile("^(-?[0-9]+(\\.\\d+)?)$")), Util.getText(tfFontSize3)),
+						x -> new BigDecimal(group(x, 0)), null);
+				//
 				final Map<String, String> descriptionStyle = testAndApply(
 						(a, b) -> Boolean.logicalAnd(a != null, b != null),
-						Map.of("font-size", "40px", position, absolute), intIntPair, (a, b) -> new LinkedHashMap<>(a),
-						(a, b) -> a);
+						Map.of("font-size",
+								String.format("%1$spx",
+										ObjectUtils.max(ObjectUtils.defaultIfNull(fontSize3, BigDecimal.ZERO),
+												new BigDecimal("40"))),
+								position, absolute),
+						intIntPair, (a, b) -> new LinkedHashMap<>(a), (a, b) -> a);
 				//
 				final String descriptionStyleKey = "descriptionStyle";
 				//
@@ -3880,7 +3898,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	@Nullable
 	private static Matcher matcher(@Nullable final Pattern instance, final CharSequence input) {
-		return instance != null ? instance.matcher(input) : null;
+		return instance != null && input != null ? instance.matcher(input) : null;
 	}
 
 	private static float getHeight(@Nullable final PDRectangle instance) {
