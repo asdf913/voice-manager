@@ -782,6 +782,21 @@ abstract class Util {
 			//
 		final Class<?> clz = getClass(instance);
 		//
+		try {
+			//
+			if (Util.isAssignableFrom(Class.forName("org.jsoup.nodes.Element"), clz)
+					&& Narcissus.getField(instance, Narcissus.findField(clz, "childNodes")) == null) {
+				//
+				return;
+				//
+			} // if
+				//
+		} catch (final NoSuchFieldException | ClassNotFoundException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
 		final String name = getName(clz);
 		//
 		FailableFunction<Object, Object, Exception> function = get(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
