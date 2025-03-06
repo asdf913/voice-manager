@@ -3237,29 +3237,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					final String value_ = value;
 					//
-					// TODO
-					//
-					// tx values
-					//
-					// 017.899
-					// 075.207
-					// 136.407
-					// 197.60701
-					// 258.807
-					// 320.007
-					// 381.207
-					// 442.40698
-					// 503.607
-					// 564.807
-					//
-					cs.newLineAtOffset((index - 1) * size + getTextWidth(
+					cs.newLineAtOffset((index - 1) * size + (size - getTextWidth(
 							//
 							value = testAndApply(x -> and(x, y -> matches(y), y -> groupCount(y) > 0),
 									matcher(pattern = ObjectUtils.getIfNull(pattern,
 											() -> Pattern.compile("^(\\d+%).+$")), value),
 									x -> group(x, 1), x -> value_)
 							//
-							, font, fontSize) / 2, lastHeight = (getHeight(md) - Util.intValue(largestY, 0) - size
+							, font, fontSize)) / 2, lastHeight = (getHeight(md) - Util.intValue(largestY, 0) - size
 					//
 									- (font.getFontDescriptor().getAscent() / 1000 * fontSize)
 									+ (font.getFontDescriptor().getDescent() / 1000 * fontSize))
@@ -3282,7 +3267,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						//
 						cs.setFont(font, fontSize);
 						//
-						cs.newLineAtOffset((index - 1) * size + getTextWidth(value, font, fontSize) / 2,
+						cs.newLineAtOffset((index - 1) * size + (size - getTextWidth(value, font, fontSize)) / 2,
 								lastHeight = lastHeight - (font.getFontDescriptor().getAscent() / 1000 * fontSize)
 										+ (font.getFontDescriptor().getDescent() / 1000 * fontSize)
 						//
