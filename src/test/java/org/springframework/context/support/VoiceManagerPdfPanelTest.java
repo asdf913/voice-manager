@@ -57,6 +57,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.javatuples.Unit;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -74,6 +75,9 @@ import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.ConfigurationUtil;
 import freemarker.template.Template;
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ClassInfoUtil;
+import io.github.classgraph.HasNameUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
 import j2html.rendering.HtmlBuilder;
@@ -82,7 +86,7 @@ class VoiceManagerPdfPanelTest {
 
 	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_SELECTED_ITEM, METHOD_TO_HTML,
 			METHOD_GET_TEXT_ALIGNS, METHOD_CHOP, METHOD_GENERATE_PDF_HTML, METHOD_LENGTH,
-			METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY = null;
+			METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY, METHOD_GET_TEXT_WIDTH = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -110,6 +114,9 @@ class VoiceManagerPdfPanelTest {
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
+		//
+		(METHOD_GET_TEXT_WIDTH = clz.getDeclaredMethod("getTextWidth", String.class, PDFont.class, Float.TYPE))
+				.setAccessible(true);
 		//
 	}
 
@@ -770,6 +777,50 @@ class VoiceManagerPdfPanelTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetTextWidth() throws Throwable {
+		//
+		final Iterable<ClassInfo> classInfos = ClassInfoUtil.getClassInfos();
+		//
+		if (classInfos == null || classInfos.iterator() == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		Class<?> clz = null;
+		//
+		for (final ClassInfo classInfo : classInfos) {
+			//
+			if (classInfo == null
+					|| !Util.isAssignableFrom(PDFont.class, clz = Util.forName(HasNameUtil.getName(classInfo)))
+					|| (clz != null && Modifier.isAbstract(clz.getModifiers()))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			System.out.println(clz);
+			//
+			Assertions.assertEquals(0, getTextWidth(" ", Util.cast(PDFont.class, Narcissus.allocateInstance(clz)), 0),
+					Util.getName(clz));
+			//
+		} // for
+			//
+	}
+
+	private static float getTextWidth(final String text, final PDFont font, final float fontSize) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TEXT_WIDTH.invoke(null, text, font, fontSize);
+			if (obj instanceof Float) {
+				return ((Float) obj).floatValue();
+			} // if
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

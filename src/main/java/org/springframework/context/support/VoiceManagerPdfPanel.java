@@ -3993,9 +3993,44 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		float width = 0;
 		for (int i = 0; i < StringUtils.length(text); i++) {
 			// Get the width of each character and add it to the total width
-			width += font.getWidth(text.charAt(i)) / 1000.0f;
+			width += getWidth(font, text.charAt(i), 0) / 1000.0f;
 		}
 		return width * fontSize;
+	}
+
+	private static float getWidth(final PDFont instance, final int code, final float defaultValue) throws IOException {
+		//
+		if (instance == null) {
+			//
+			return defaultValue;
+			//
+		} // if
+			//
+		try {
+			//
+			if ((Util.contains(Arrays.asList("org.apache.pdfbox.pdmodel.font.PDMMType1Font",
+					"org.apache.pdfbox.pdmodel.font.PDTrueTypeFont", "org.apache.pdfbox.pdmodel.font.PDType1CFont",
+					"org.apache.pdfbox.pdmodel.font.PDType1Font"), Util.getName(Util.getClass(instance)))
+					&& FieldUtils.readField(instance, "codeToWidthMap", true) == null)
+					|| (Util.contains(Arrays.asList("org.apache.pdfbox.pdmodel.font.PDType0Font"),
+							Util.getName(Util.getClass(instance)))
+							&& FieldUtils.readDeclaredField(instance, "descendantFont", true) == null)
+					|| (Util.contains(Arrays.asList("org.apache.pdfbox.pdmodel.font.PDType3Font"),
+							Util.getName(Util.getClass(instance)))
+							&& FieldUtils.readField(instance, "dict", true) == null)) {
+				//
+				return defaultValue;
+				//
+			} // if
+				//
+		} catch (final IllegalAccessException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
+		return instance.getWidth(code);
+		//
 	}
 
 }
