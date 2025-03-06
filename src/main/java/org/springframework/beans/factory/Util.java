@@ -782,21 +782,6 @@ abstract class Util {
 			//
 		final Class<?> clz = getClass(instance);
 		//
-		try {
-			//
-			if (Util.isAssignableFrom(Class.forName("org.jsoup.nodes.Element"), clz)
-					&& Narcissus.getField(instance, Narcissus.findField(clz, "childNodes")) == null) {
-				//
-				return;
-				//
-			} // if
-				//
-		} catch (final NoSuchFieldException | ClassNotFoundException e) {
-			//
-			throw new RuntimeException(e);
-			//
-		} // try
-			//
 		final String name = getName(clz);
 		//
 		FailableFunction<Object, Object, Exception> function = get(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
@@ -1661,6 +1646,8 @@ abstract class Util {
 						"it.unimi.dsi.fastutil.shorts.ShortSortedSets$SynchronizedSortedSet"),
 						Collectors.toMap(Function.identity(), x -> "sync")));
 		//
+		put(map, "org.jsoup.nodes.Element", "childNodes");
+		//
 		if (!executeForEachMethod(map, name, instance, (a, b) -> FieldUtils.readField(a, b, true) == null)) {
 			//
 			return false;
@@ -1681,6 +1668,11 @@ abstract class Util {
 				collect(Stream.of("com.helger.commons.collection.impl.CommonsHashSet",
 						"com.helger.commons.collection.impl.CommonsLinkedHashSet"),
 						Collectors.toMap(Function.identity(), x -> "map")));
+		//
+		putAll(map,
+				collect(Stream.of("org.jsoup.nodes.Document", "org.jsoup.nodes.FormElement",
+						"org.jsoup.nodes.PseudoTextElement"),
+						Collectors.toMap(Function.identity(), x -> "childNodes")));
 		//
 		if (!executeForEachMethod(map, name, instance,
 				(a, b) -> Narcissus.getField(a, Narcissus.findField(getClass(instance), b)) == null)) {
