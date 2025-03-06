@@ -3100,7 +3100,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final PDFRenderer pdfRenderer = new PDFRenderer(document);
 			//
-			BufferedImage bi = pdfRenderer.renderImage(0);
+			final BufferedImage bi = pdfRenderer.renderImage(0);
 			//
 			final FloatMap floatMap = ObjectMap.getObject(objectMap, FloatMap.class);
 			//
@@ -3236,6 +3236,21 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					cs.setFont(font, fontSize);
 					//
 					final String value_ = value;
+					//
+					// TODO
+					//
+					// tx values
+					//
+					// 017.899
+					// 075.207
+					// 136.407
+					// 197.60701
+					// 258.807
+					// 320.007
+					// 381.207
+					// 442.40698
+					// 503.607
+					// 564.807
 					//
 					cs.newLineAtOffset((index - 1) * size + getTextWidth(
 							//
