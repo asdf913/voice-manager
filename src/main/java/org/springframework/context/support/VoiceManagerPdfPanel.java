@@ -3998,7 +3998,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return width * fontSize;
 	}
 
-	private static float getWidth(final PDFont instance, final int code, final float defaultValue) throws IOException {
+	private static float getWidth(@Nullable final PDFont instance, final int code, final float defaultValue)
+			throws IOException {
 		//
 		if (instance == null) {
 			//
