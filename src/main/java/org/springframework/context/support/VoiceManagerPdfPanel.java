@@ -4009,17 +4009,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		try {
 			//
-			if ((Util.contains(Arrays.asList("org.apache.pdfbox.pdmodel.font.PDMMType1Font",
+			if (or(Util.contains(Arrays.asList("org.apache.pdfbox.pdmodel.font.PDMMType1Font",
 					"org.apache.pdfbox.pdmodel.font.PDTrueTypeFont", "org.apache.pdfbox.pdmodel.font.PDType1CFont",
 					"org.apache.pdfbox.pdmodel.font.PDType1Font"), Util.getName(Util.getClass(instance)))
-					&& FieldUtils.readField(instance, "codeToWidthMap", true) == null)
-					|| Boolean.logicalOr(
-							Objects.equals("org.apache.pdfbox.pdmodel.font.PDType0Font",
-									Util.getName(Util.getClass(instance)))
-									&& FieldUtils.readDeclaredField(instance, "descendantFont", true) == null,
-							Objects.equals("org.apache.pdfbox.pdmodel.font.PDType3Font",
-									Util.getName(Util.getClass(instance)))
-									&& FieldUtils.readField(instance, "dict", true) == null)) {
+					&& FieldUtils.readField(instance, "codeToWidthMap", true) == null,
+					Objects.equals("org.apache.pdfbox.pdmodel.font.PDType0Font", Util.getName(Util.getClass(instance)))
+							&& FieldUtils.readDeclaredField(instance, "descendantFont", true) == null,
+					Objects.equals("org.apache.pdfbox.pdmodel.font.PDType3Font", Util.getName(Util.getClass(instance)))
+							&& FieldUtils.readField(instance, "dict", true) == null)) {
 				//
 				return defaultValue;
 				//
@@ -4032,6 +4029,28 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		} // try
 			//
 		return instance.getWidth(code);
+		//
+	}
+
+	private static boolean or(final boolean a, final boolean b, final boolean... bs) {
+		//
+		if (a || b) {
+			//
+			return true;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if (bs[i]) {
+				//
+				return true;
+				//
+			} // if
+				//
+		} // for
+			//
+		return false;
 		//
 	}
 

@@ -86,7 +86,7 @@ class VoiceManagerPdfPanelTest {
 
 	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_SELECTED_ITEM, METHOD_TO_HTML,
 			METHOD_GET_TEXT_ALIGNS, METHOD_CHOP, METHOD_GENERATE_PDF_HTML, METHOD_LENGTH,
-			METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY, METHOD_GET_TEXT_WIDTH = null;
+			METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY, METHOD_GET_TEXT_WIDTH, METHOD_OR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -117,6 +117,8 @@ class VoiceManagerPdfPanelTest {
 		//
 		(METHOD_GET_TEXT_WIDTH = clz.getDeclaredMethod("getTextWidth", String.class, PDFont.class, Float.TYPE))
 				.setAccessible(true);
+		//
+		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
 	}
 
@@ -852,10 +854,12 @@ class VoiceManagerPdfPanelTest {
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ms[i]) == null || m.isSynthetic()
-					|| Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "main"),
-							Arrays.equals(parameterTypes = m.getParameterTypes(), new Class<?>[] { String[].class }))
-					|| Boolean.logicalAnd(Objects.equals(name, "and"), Arrays.equals(parameterTypes,
-							new Class<?>[] { Boolean.TYPE, Boolean.TYPE, boolean[].class }))) {
+					|| Boolean.logicalOr(
+							Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "main"),
+									Arrays.equals(parameterTypes = m.getParameterTypes(),
+											new Class<?>[] { String[].class })),
+							Boolean.logicalAnd(Util.contains(Arrays.asList("and", "or"), name), Arrays.equals(
+									parameterTypes, new Class<?>[] { Boolean.TYPE, Boolean.TYPE, boolean[].class })))) {
 				//
 				continue;
 				//
@@ -968,28 +972,25 @@ class VoiceManagerPdfPanelTest {
 		}
 	}
 
-	private static boolean or(final boolean a, final boolean b, final boolean... bs) {
+	@Test
+	void testOr() throws Throwable {
 		//
-		boolean result = a || b;
+		Assertions.assertTrue(or(true, false));
 		//
-		if (result) {
-			//
-			return result;
-			//
-		} // if
-			//
-		for (int i = 0; bs != null && i < bs.length; i++) {
-			//
-			if (result |= bs[i]) {
-				//
-				return result;
-				//
+		Assertions.assertFalse(or(false, false, null));
+		//
+	}
+
+	private static boolean or(final boolean a, final boolean b, final boolean... bs) throws Throwable {
+		try {
+			final Object obj = METHOD_OR.invoke(null, a, b, bs);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			} // if
-				//
-		} // for
-			//
-		return result;
-		//
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
