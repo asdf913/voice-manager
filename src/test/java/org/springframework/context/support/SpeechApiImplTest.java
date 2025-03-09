@@ -24,22 +24,20 @@ class SpeechApiImplTest {
 		//
 		final Class<?> clz = SpeechApiImpl.class;
 		//
-		if ((METHOD_GET_PARAMETER_COUNT = clz != null ? clz.getDeclaredMethod("getParameterCount", Executable.class)
-				: null) != null) {
+		if ((METHOD_GET_PARAMETER_COUNT = Util.getDeclaredMethod(clz, "getParameterCount", Executable.class)) != null) {
 			//
 			METHOD_GET_PARAMETER_COUNT.setAccessible(true);
 			//
 		} // if
 			//
-		if ((METHOD_INVOKE = clz != null ? clz.getDeclaredMethod("invoke", Method.class, Object.class, Object[].class)
-				: null) != null) {
+		if ((METHOD_INVOKE = Util.getDeclaredMethod(clz, "invoke", Method.class, Object.class,
+				Object[].class)) != null) {
 			//
 			METHOD_INVOKE.setAccessible(true);
 			//
 		} // if
 			//
-		if ((METHOD_AND = clz != null ? clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)
-				: null) != null) {
+		if ((METHOD_AND = Util.getDeclaredMethod(clz, "and", Boolean.TYPE, Boolean.TYPE, boolean[].class)) != null) {
 			//
 			METHOD_AND.setAccessible(true);
 			//
@@ -52,14 +50,6 @@ class SpeechApiImplTest {
 		//
 		Assertions.assertDoesNotThrow(() -> new SpeechApiImpl().afterPropertiesSet());
 		//
-	}
-
-	private static Class<?> getClass(final Object instance) {
-		return instance != null ? instance.getClass() : null;
-	}
-
-	private static String toString(final Object instance) {
-		return instance != null ? instance.toString() : null;
 	}
 
 	@Test
@@ -75,7 +65,7 @@ class SpeechApiImplTest {
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -113,7 +103,7 @@ class SpeechApiImplTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(toString(getClass(obj)));
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -124,7 +114,7 @@ class SpeechApiImplTest {
 		//
 		final Class<?> clz = Util.forName("org.springframework.context.support.SpeechApiImpl$IH");
 		//
-		final Method get = clz != null ? clz.getDeclaredMethod("get", Map.class, Object.class) : null;
+		final Method get = Util.getDeclaredMethod(clz, "get", Map.class, Object.class);
 		//
 		if (get != null) {
 			//
@@ -136,8 +126,7 @@ class SpeechApiImplTest {
 			//
 		} // if
 			//
-		final Method and = clz != null ? clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)
-				: null;
+		final Method and = Util.getDeclaredMethod(clz, "and", Boolean.TYPE, Boolean.TYPE, boolean[].class);
 		//
 		if (and != null) {
 			//
@@ -161,7 +150,7 @@ class SpeechApiImplTest {
 			Assertions.assertThrows(Throwable.class, () -> ih.invoke(speechApi, null, null));
 			//
 			Assertions.assertThrows(Throwable.class,
-					() -> ih.invoke(speechApi, SpeechApi.class.getDeclaredMethod("isInstalled"), null));
+					() -> ih.invoke(speechApi, Util.getDeclaredMethod(SpeechApi.class, "isInstalled"), null));
 			//
 		} // if
 			//
