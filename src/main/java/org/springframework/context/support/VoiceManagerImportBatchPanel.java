@@ -558,7 +558,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		add(new JLabel("Voice Id"));
 		//
-		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds = SpeechApi.getVoiceIds(speechApi),
+		if ((cbmVoiceId = testAndApply(Objects::nonNull,
+				voiceIds = testAndApply(x -> SpeechApi.isInstalled(x), speechApi, x -> SpeechApi.getVoiceIds(x), null),
 				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
 			//
 			final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer();
