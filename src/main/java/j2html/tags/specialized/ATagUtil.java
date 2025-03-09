@@ -8,11 +8,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
 
@@ -32,16 +34,23 @@ public final class ATagUtil {
 		//
 		try {
 			//
-			final Elements elements = ElementUtil.getElementsByTag(testAndApply(Objects::nonNull,
+			final Document document = testAndApply(Objects::nonNull,
 					(is = openStream(testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null))) != null
 							? IOUtils.toString(is, StandardCharsets.UTF_8)
 							: null,
-					Jsoup::parse, null), "title");
+					Jsoup::parse, null);
 			//
-			TagUtil.attr(
-					ContainerTagUtil.withText(aTag = new ATag(),
-							ElementUtil
-									.text(IterableUtils.size(elements) == 1 ? IterableUtils.get(elements, 0) : null)),
+			Elements elements = ElementUtil.getElementsByTag(document, "title");
+			//
+			if (CollectionUtils.size(elements) > 1) {
+				//
+				elements = ElementUtil.getElementsByTag(testAndApply(x -> IterableUtils.size(x) == 1,
+						ElementUtil.getElementsByTag(document, "head"), x -> IterableUtils.get(x, 0), null), "title");
+				//
+			} // if
+				//
+			TagUtil.attr(ContainerTagUtil.withText(aTag = new ATag(), ElementUtil
+					.text(testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null))),
 					"href", url);
 			//
 		} finally {
