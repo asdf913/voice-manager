@@ -369,7 +369,8 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		//
 		add(new JLabel("Voice Id"));
 		//
-		final String[] voiceIds = SpeechApi.getVoiceIds(speechApi);
+		final String[] voiceIds = testAndApply(x -> SpeechApi.isInstalled(x), speechApi, x -> SpeechApi.getVoiceIds(x),
+				null);
 		//
 		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
 				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
