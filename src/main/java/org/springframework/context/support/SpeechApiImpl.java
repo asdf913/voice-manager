@@ -81,7 +81,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 			//
 		}
 
-		private static Object get(final Map<?, ?> instance, final Object key) {
+		private static Object get(@Nullable final Map<?, ?> instance, final Object key) {
 			return instance != null ? instance.get(key) : null;
 		}
 
