@@ -33,35 +33,51 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 			//
 			final String methodName = Util.getName(method);
 			//
-			if (proxy instanceof SpeechApi) {
+			if (and(proxy instanceof SpeechApi, Objects.equals(methodName, "isInstalled"), Objects
+					.equals(Util.getName(Util.getClass(FileSystems.getDefault())), "sun.nio.fs.LinuxFileSystem"))) {
 				//
-				if (Objects.equals(methodName, "isInstalled")) {
+				final Map<?, ?> properties = System.getProperties();
+				//
+				final String key = "org.springframework.context.support.SpeechApi.isInstalled";
+				//
+				if (Util.containsKey(properties, key)) {
 					//
-					if (Objects.equals(Util.getName(Util.getClass(FileSystems.getDefault())),
-							"sun.nio.fs.LinuxFileSystem")) {
-						//
-						final Map<?, ?> properties = System.getProperties();
-						//
-						final String key = "org.springframework.context.support.SpeechApi.isInstalled";
-						//
-						if (Util.containsKey(properties, key)) {
-							//
-							return Boolean.parseBoolean(Util.toString(get(properties, key)));
-							//
-						} else {
-							//
-							LoggerUtil.info(LoggerFactory.getLogger(IH.class),
-									String.format("Please specify the \"%1$s\" system property", key));
-							//
-						} // if
-							//
-					} // if
-						//
+					return Boolean.parseBoolean(Util.toString(get(properties, key)));
+					//
+				} else {
+					//
+					LoggerUtil.info(LoggerFactory.getLogger(IH.class),
+							String.format("Please specify the \"%1$s\" system property", key));
+					//
 				} // if
 					//
 			} // if
 				//
 			throw new Throwable(methodName);
+			//
+		}
+
+		private static boolean and(final boolean a, final boolean b, final boolean... bs) {
+			//
+			boolean result = a && b;
+			//
+			if (!result) {
+				//
+				return false;
+				//
+			} // if
+				//
+			for (int i = 0; bs != null && i < bs.length; i++) {
+				//
+				if (!(result &= bs[i])) {
+					//
+					return false;
+					//
+				} // if
+					//
+			} // for
+				//
+			return result;
 			//
 		}
 

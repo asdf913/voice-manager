@@ -136,6 +136,20 @@ class SpeechApiImplTest {
 			//
 		} // if
 			//
+		final Method and = clz != null ? clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)
+				: null;
+		//
+		if (and != null) {
+			//
+			and.setAccessible(true);
+			//
+			Assertions.assertEquals(Boolean.TRUE, and.invoke(null, Boolean.TRUE, Boolean.TRUE, null));
+			//
+			Assertions.assertEquals(Boolean.FALSE,
+					and.invoke(null, Boolean.TRUE, Boolean.TRUE, new boolean[] { false }));
+			//
+		} // if
+			//
 		final InvocationHandler ih = Util.cast(InvocationHandler.class, Narcissus.allocateInstance(clz));
 		//
 		if (ih != null) {
