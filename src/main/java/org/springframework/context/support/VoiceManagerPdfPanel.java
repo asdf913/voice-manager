@@ -18,6 +18,8 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
@@ -172,6 +174,8 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachme
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntList;
+import org.d2ab.function.ObjIntFunction;
+import org.d2ab.function.ObjIntFunctionUtil;
 import org.d2ab.function.ObjIntPredicate;
 import org.d2ab.function.ObjIntPredicateUtil;
 import org.javatuples.Unit;
@@ -240,7 +244,7 @@ import j2html.rendering.TagBuilder;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerPdfPanel extends JPanel implements Titled, InitializingBean, ActionListener,
-		ApplicationContextAware, EnvironmentAware, DocumentListener {
+		ApplicationContextAware, EnvironmentAware, DocumentListener, ItemListener {
 
 	private static final long serialVersionUID = 284477348908531649L;
 
@@ -338,7 +342,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Image File")
 	private JTextComponent tfImageFile = null;
 
-	private JTextComponent tfOutputFile = null;
+	private JTextComponent tfOutputFile, tfSpeechLanguageCode, tfSpeechLanguageName = null;
 
 	private transient Document taHtmlDocument = null;
 
@@ -371,6 +375,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private transient ComboBoxModel<?> cbmAudioFormat = null;
 
+	private JComboBox<Object> jcbVoiceId = null;
+
 	@Nullable
 	private List<String> imageWriterSpiFormats = null;
 
@@ -394,6 +400,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	private transient FailableFunction<Playwright, BrowserType, ReflectiveOperationException> playwrightBrowserTypeFunction = null;
 
 	private Pattern patternInteger = null;
+
+	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
 	@Override
 	public String getTitle() {
@@ -850,6 +858,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		};
 	}
 
+	public void setLanguageCodeToTextObjIntFunction(
+			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) {
+		this.languageCodeToTextObjIntFunction = languageCodeToTextObjIntFunction;
+	}
+
 	@Nullable
 	private static BrowserType chromium(@Nullable final Playwright instance) {
 		return instance != null ? instance.chromium() : null;
@@ -1039,18 +1052,23 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
 				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
 			//
-			final JComboBox<Object> jcbVoiceId = new JComboBox<>(Util.cast(ComboBoxModel.class, cbmVoiceId));
-			//
 			final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer();
 			//
-			voiceIdListCellRenderer.listCellRenderer = getRenderer(Util.cast(JComboBox.class, jcbVoiceId));
+			voiceIdListCellRenderer.listCellRenderer = getRenderer(Util.cast(JComboBox.class,
+					jcbVoiceId = new JComboBox<>(Util.cast(ComboBoxModel.class, cbmVoiceId))));
 			//
 			voiceIdListCellRenderer.commonPrefix = String.join("",
 					StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
 			//
 			jcbVoiceId.setRenderer(voiceIdListCellRenderer);
 			//
-			add(jcbVoiceId, String.format("%1$s,span %2$s", WRAP, span));
+			jcbVoiceId.addItemListener(this);
+			//
+			add(jcbVoiceId);
+			//
+			add(tfSpeechLanguageCode = new JTextField(), String.format("width %1$s", 30));
+			//
+			add(tfSpeechLanguageName = new JTextField(), String.format("%1$s,width %2$s", WRAP, 230));
 			//
 			final String s = PropertyResolverUtil.getProperty(propertyResolver,
 					"org.springframework.context.support.VoiceManagerPdfPanel.voiceId");
@@ -1088,7 +1106,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(tfImageFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, span - 1));
 		//
-		setEditable(false, tfImageUrlStateCode, tfImageUrlMimeType, tfImageFile);
+		setEditable(false, tfImageUrlStateCode, tfImageUrlMimeType, tfImageFile, tfSpeechLanguageCode,
+				tfSpeechLanguageName);
 		//
 		add(btnImageFile = new JButton("Select"), WRAP);
 		//
@@ -2027,6 +2046,31 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		return false;
 		//
+	}
+
+	@Override
+	public void itemStateChanged(final ItemEvent evt) {
+		//
+		if (Objects.equals(Util.getSource(evt), jcbVoiceId)) {
+			//
+			try {
+				//
+				final String language = SpeechApi.getVoiceAttribute(speechApi,
+						Util.toString(getSelectedItem(cbmVoiceId)), "Language");
+				//
+				Util.setText(tfSpeechLanguageCode, language);
+				//
+				Util.setText(tfSpeechLanguageName, StringUtils.defaultIfBlank(
+						ObjIntFunctionUtil.apply(languageCodeToTextObjIntFunction, language, 16), language));
+				//
+			} catch (final Error e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} // try
+				//
+		} // if
+			//
 	}
 
 	@Nullable

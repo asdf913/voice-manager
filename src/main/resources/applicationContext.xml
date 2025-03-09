@@ -1155,6 +1155,8 @@
 		</property>
 		<property name="browserType"
 			value="${org.springframework.context.support.VoiceManagerPdfPanel.browserType}" />
+		<property name="languageCodeToTextObjIntFunction"
+			ref="LanguageCodeToTextObjIntFunction" />
 	</bean>
 
 	<!---->
