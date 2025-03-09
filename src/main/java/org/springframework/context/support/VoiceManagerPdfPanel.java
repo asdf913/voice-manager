@@ -345,7 +345,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Output File")
 	private JTextComponent tfOutputFile = null;
 
-	private JTextComponent tfSpeechLanguageCode, tfSpeechLanguageName = null;
+	@Note("Speech Language Code")
+	private JTextComponent tfSpeechLanguageCode = null;
+
+	private JTextComponent tfSpeechLanguageName = null;
 
 	private transient Document taHtmlDocument = null;
 
