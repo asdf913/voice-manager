@@ -4,10 +4,14 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.Map;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
@@ -116,14 +120,34 @@ class SpeechApiImplTest {
 	}
 
 	@Test
-	void testIH() {
+	void testIH() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		//
-		final InvocationHandler ih = Util.cast(InvocationHandler.class,
-				Narcissus.allocateInstance(Util.forName("org.springframework.context.support.SpeechApiImpl$IH")));
+		final Class<?> clz = Util.forName("org.springframework.context.support.SpeechApiImpl$IH");
+		//
+		final Method get = clz != null ? clz.getDeclaredMethod("get", Map.class, Object.class) : null;
+		//
+		if (get != null) {
+			//
+			get.setAccessible(true);
+			//
+			Assertions.assertNull(get.invoke(null, null, null));
+			//
+			Assertions.assertNull(get.invoke(null, Collections.emptyMap(), null));
+			//
+		} // if
+			//
+		final InvocationHandler ih = Util.cast(InvocationHandler.class, Narcissus.allocateInstance(clz));
 		//
 		if (ih != null) {
 			//
 			Assertions.assertThrows(Throwable.class, () -> ih.invoke(null, null, null));
+			//
+			final SpeechApi speechApi = Reflection.newProxy(SpeechApi.class, ih);
+			//
+			Assertions.assertThrows(Throwable.class, () -> ih.invoke(speechApi, null, null));
+			//
+			Assertions.assertThrows(Throwable.class,
+					() -> ih.invoke(speechApi, SpeechApi.class.getDeclaredMethod("isInstalled"), null));
 			//
 		} // if
 			//

@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.nio.file.FileSystems;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.annotation.Nullable;
@@ -15,6 +16,8 @@ import javax.annotation.Nullable;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.google.common.reflect.Reflection;
@@ -28,8 +31,42 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			throw new Throwable(Util.getName(method));
+			final String methodName = Util.getName(method);
 			//
+			if (proxy instanceof SpeechApi) {
+				//
+				if (Objects.equals(methodName, "isInstalled")) {
+					//
+					if (Objects.equals(Util.getName(Util.getClass(FileSystems.getDefault())),
+							"sun.nio.fs.LinuxFileSystem")) {
+						//
+						final Map<?, ?> properties = System.getProperties();
+						//
+						final String key = "org.springframework.context.support.SpeechApi.isInstalled";
+						//
+						if (Util.containsKey(properties, key)) {
+							//
+							return Boolean.parseBoolean(Util.toString(get(properties, key)));
+							//
+						} else {
+							//
+							LoggerUtil.info(LoggerFactory.getLogger(IH.class),
+									String.format("Please specify the \"%1$s\" system property", key));
+							//
+						} // if
+							//
+					} // if
+						//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+		private static Object get(final Map<?, ?> instance, final Object key) {
+			return instance != null ? instance.get(key) : null;
 		}
 
 	}
