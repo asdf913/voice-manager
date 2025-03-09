@@ -1153,7 +1153,9 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		addChangeListener(this, jsSpeechVolume, jsSpeechRate);
 		//
-		setEnabled((voiceIds = SpeechApi.getVoiceIds(speechApi)) != null, cbUseTtsVoice);
+		//
+		setEnabled((voiceIds = testAndApply(x -> SpeechApi.isInstalled(x), speechApi, x -> SpeechApi.getVoiceIds(x),
+				null)) != null, cbUseTtsVoice);
 		//
 		setEnabled(false, tfPronunciationPageStatusCode);
 		//
