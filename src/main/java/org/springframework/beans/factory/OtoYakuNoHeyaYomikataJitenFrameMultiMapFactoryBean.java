@@ -125,8 +125,7 @@ public class OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBean implements Facto
 				//
 		} else {
 			//
-			final Set<String> ls = testAndApply(Objects::nonNull, links != null ? links.values() : null,
-					LinkedHashSet::new, null);
+			final Set<String> ls = testAndApply(Objects::nonNull, MultimapUtil.values(links), LinkedHashSet::new, null);
 			//
 			if (ls != null) {
 				//
