@@ -664,6 +664,8 @@
 		class="org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBean">
 		<property name="links"
 			ref="OtoYakuNoHeyaYomikataJitenLinkMultiMap" />
+		<property name="resource"
+			value="classpath:OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBean.xlsx" />
 	</bean>
 
 	<!--https://hiramatu-hifuka.com/onyak/onyindx.html -->

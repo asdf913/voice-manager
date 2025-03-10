@@ -1,28 +1,40 @@
 package org.springframework.beans.factory;
 
+import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.SheetUtil;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.jsoup.nodes.Node;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.meeuw.functional.Predicates;
+import org.springframework.core.io.Resource;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapUtil;
 import com.google.common.reflect.Reflection;
 
 class OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBeanTest {
@@ -39,6 +51,45 @@ class OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBeanTest {
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
+	}
+
+	private static class IH implements InvocationHandler {
+
+		private Boolean exists, isFile, isReadable;
+
+		private byte[] contentAsByteArray = null;
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = Util.getName(method);
+			//
+			if (proxy instanceof Resource) {
+				//
+				if (Objects.equal(methodName, "exists")) {
+					//
+					return exists;
+					//
+				} else if (Objects.equal(methodName, "isFile")) {
+					//
+					return isFile;
+					//
+				} else if (Objects.equal(methodName, "isReadable")) {
+					//
+					return isReadable;
+					//
+				} else if (Objects.equal(methodName, "getContentAsByteArray")) {
+					//
+					return contentAsByteArray;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	private OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBean instance = null;
@@ -67,6 +118,93 @@ class OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBeanTest {
 			//
 		Assertions.assertEquals(ImmutableMultimap.of(), FactoryBeanUtil.getObject(instance));
 		//
+		final IH ih = new IH();
+		//
+		final Resource resource = Reflection.newProxy(Resource.class, ih);
+		//
+		if (instance != null) {
+			//
+			instance.setResource(resource);
+			//
+		} // if
+			//
+		ih.exists = Boolean.FALSE;
+		//
+		Assertions.assertEquals(ImmutableMultimap.of(), FactoryBeanUtil.getObject(instance));
+		//
+		ih.exists = Boolean.TRUE;
+		//
+		ih.isFile = Boolean.FALSE;
+		//
+		Assertions.assertEquals(ImmutableMultimap.of(), FactoryBeanUtil.getObject(instance));
+		//
+		ih.isFile = Boolean.TRUE;
+		//
+		ih.isReadable = Boolean.FALSE;
+		//
+		Assertions.assertEquals(ImmutableMultimap.of(), FactoryBeanUtil.getObject(instance));
+		//
+		ih.isReadable = Boolean.TRUE;
+		//
+		Assertions.assertNull(FactoryBeanUtil.getObject(instance));
+		//
+		try (final Workbook wb = WorkbookFactory.create(true);
+				final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			wb.write(baos);
+			//
+			ih.contentAsByteArray = baos.toByteArray();
+			//
+			Assertions.assertNull(FactoryBeanUtil.getObject(instance));
+			//
+		} // try
+			//
+		try (final Workbook wb = WorkbookFactory.create(true);
+				final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			WorkbookUtil.createSheet(wb);
+			//
+			wb.write(baos);
+			//
+			ih.contentAsByteArray = baos.toByteArray();
+			//
+			Assertions.assertNull(FactoryBeanUtil.getObject(instance));
+			//
+		} // try
+			//
+		try (final Workbook wb = WorkbookFactory.create(true);
+				final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			final Sheet sheet = WorkbookUtil.createSheet(wb);
+			//
+			IntStream.range(0, 2).forEach(i -> SheetUtil.createRow(sheet, i));
+			//
+			wb.write(baos);
+			//
+			ih.contentAsByteArray = baos.toByteArray();
+			//
+			final Iterable<Entry<String, Frame>> entries = MultimapUtil.entries(FactoryBeanUtil.getObject(instance));
+			//
+			Assertions.assertEquals(1, IterableUtils.size(entries));
+			//
+			final Entry<String, Frame> entry = IterableUtils.get(entries, 0);
+			//
+			Assertions.assertNull(Util.getKey(entry));
+			//
+			final Frame frame = Util.getValue(entry);
+			//
+			Assertions.assertNull(frame != null ? frame.getName() : null);
+			//
+			Assertions.assertNull(frame != null ? frame.getSrc() : null);
+			//
+		} // try
+			//
+		if (instance != null) {
+			//
+			instance.setResource(null);
+			//
+		} // if
+			//
 		final Map<Object, Object> systemProperties = System.getProperties();
 		//
 		if (!Util.containsKey(systemProperties,
