@@ -93,7 +93,10 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 	@Url("https://poi.apache.org/encryption.html")
 	private String poiEncryptionPageUrl = null;
 
-	private IValue0<String> mediaFormatPageHref, mediaFormatPageText = null;
+	@Url("https://www.microsoft.com/en-us/download/details.aspx?id=27225")
+	private IValue0<String> mediaFormatPageHref = null;
+
+	private IValue0<String> mediaFormatPageText = null;
 
 	private Configuration freeMarkerConfiguration = null;
 
