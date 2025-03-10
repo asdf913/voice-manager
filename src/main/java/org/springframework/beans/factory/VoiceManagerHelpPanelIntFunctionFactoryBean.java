@@ -12,7 +12,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -48,6 +47,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.ProtocolUtil;
 import org.jsoup.nodes.ElementUtil;
@@ -91,6 +93,8 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 	@Url("https://poi.apache.org/encryption.html")
 	private String poiEncryptionPageUrl = null;
 
+	private IValue0<String> mediaFormatPageHref, mediaFormatPageText = null;
+
 	private Configuration freeMarkerConfiguration = null;
 
 	@Nullable
@@ -98,6 +102,14 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 
 	public void setMediaFormatPageUrl(final String mediaFormatPageUrl) {
 		this.mediaFormatPageUrl = mediaFormatPageUrl;
+	}
+
+	public void setMediaFormatPageHref(final String mediaFormatPageHref) {
+		this.mediaFormatPageHref = Unit.with(mediaFormatPageHref);
+	}
+
+	public void setMediaFormatPageText(final String mediaFormatPageText) {
+		this.mediaFormatPageText = Unit.with(mediaFormatPageText);
 	}
 
 	public void setPoiEncryptionPageUrl(final String poiEncryptionPageUrl) {
@@ -171,7 +183,21 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 				final Map<Object, Object> map = new LinkedHashMap<>(Collections.singletonMap("statics",
 						new BeansWrapper(Configuration.getVersion()).getStaticModels()));
 				//
-				Util.put(map, "mediaFormatLink", getMediaFormatLink(mediaFormatPageUrl));
+				ATag aTag = null;
+				//
+				if (mediaFormatPageHref != null && mediaFormatPageText != null) {
+					//
+					aTag = ContainerTagUtil.withText(
+							TagUtil.attr(new ATag(), "href", IValue0Util.getValue0(mediaFormatPageHref)),
+							IValue0Util.getValue0(mediaFormatPageText));
+					//
+				} else {
+					//
+					aTag = getMediaFormatLink(mediaFormatPageUrl);
+					//
+				} // if
+					//
+				Util.put(map, "mediaFormatLink", aTag);
 				//
 				Util.put(map, "encryptionTableHtml", getEncryptionTableHtml(
 						testAndApply(StringUtils::isNotBlank, poiEncryptionPageUrl, y -> new URI(y).toURL(), null),

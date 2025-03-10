@@ -6,14 +6,56 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.function.IntFunction;
+
+import javax.swing.JScrollPane;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
 class VoiceManagerHelpPanelIntFunctionFactoryBeanTest {
+
+	private VoiceManagerHelpPanelIntFunctionFactoryBean instance = null;
+
+	@BeforeEach
+	void beforeEach() {
+		//
+		instance = new VoiceManagerHelpPanelIntFunctionFactoryBean();
+		//
+	}
+
+	@Test
+	void testGetObject() throws Exception {
+		//
+		final IntFunction<JScrollPane> intFunction = FactoryBeanUtil.getObject(instance);
+		//
+		Assertions.assertNotNull(intFunction != null ? intFunction.apply(0) : null);
+		//
+		final String href = "href";
+		//
+		if (instance != null) {
+			//
+			instance.setMediaFormatPageHref(href);
+			//
+		} // if
+			//
+		Assertions.assertNotNull(intFunction != null ? intFunction.apply(0) : null);
+		//
+		final String text = "text";
+		//
+		if (instance != null) {
+			//
+			instance.setMediaFormatPageText(text);
+			//
+		} // if
+			//
+		Assertions.assertNotNull(intFunction != null ? intFunction.apply(0) : null);
+		//
+	}
 
 	@Test
 	void testNull() {
@@ -33,8 +75,6 @@ class VoiceManagerHelpPanelIntFunctionFactoryBeanTest {
 		String name, toString;
 		//
 		Object invoke = null;
-		//
-		VoiceManagerHelpPanelIntFunctionFactoryBean instance = null;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
@@ -96,9 +136,16 @@ class VoiceManagerHelpPanelIntFunctionFactoryBeanTest {
 					//
 			} else {
 				//
-				invoke = Narcissus.invokeMethod(
-						instance = ObjectUtils.getIfNull(instance, VoiceManagerHelpPanelIntFunctionFactoryBean::new), m,
-						os);
+				if ((instance = ObjectUtils.getIfNull(instance,
+						VoiceManagerHelpPanelIntFunctionFactoryBean::new)) != null) {
+					//
+					Arrays.stream(Util.getDeclaredFields(VoiceManagerHelpPanelIntFunctionFactoryBean.class))
+							.filter(f -> f != null && !Modifier.isStatic(f.getModifiers()))
+							.forEach(f -> Narcissus.setField(instance, f, null));
+					//
+				} // if
+					//
+				invoke = Narcissus.invokeMethod(instance, m, os);
 				//
 				if (Boolean.logicalAnd(Util.contains(Arrays.asList("getObject", "getObjectType"), name),
 						m.getParameterCount() == 0)) {

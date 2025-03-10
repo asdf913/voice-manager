@@ -1166,6 +1166,10 @@
 		class="org.springframework.beans.factory.VoiceManagerHelpPanelIntFunctionFactoryBean">
 		<property name="mediaFormatPageUrl"
 			value="${org.springframework.context.support.VoiceManager.mediaFormatPageUrl}" />
+		<property name="mediaFormatPageHref"
+			value="${org.springframework.context.support.VoiceManager.mediaFormatPageHref}" />
+		<property name="mediaFormatPageText"
+			value="${org.springframework.context.support.VoiceManager.mediaFormatPageText}" />
 		<property name="poiEncryptionPageUrl"
 			value="${org.springframework.context.support.VoiceManager.poiEncryptionPageUrl}" />
 		<property name="freeMarkerConfiguration">
