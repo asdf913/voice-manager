@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
@@ -31,7 +32,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
-import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapUtil;
@@ -66,19 +66,19 @@ class OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBeanTest {
 			//
 			if (proxy instanceof Resource) {
 				//
-				if (Objects.equal(methodName, "exists")) {
+				if (Objects.equals(methodName, "exists")) {
 					//
 					return exists;
 					//
-				} else if (Objects.equal(methodName, "isFile")) {
+				} else if (Objects.equals(methodName, "isFile")) {
 					//
 					return isFile;
 					//
-				} else if (Objects.equal(methodName, "isReadable")) {
+				} else if (Objects.equals(methodName, "isReadable")) {
 					//
 					return isReadable;
 					//
-				} else if (Objects.equal(methodName, "getContentAsByteArray")) {
+				} else if (Objects.equals(methodName, "getContentAsByteArray")) {
 					//
 					return contentAsByteArray;
 					//
