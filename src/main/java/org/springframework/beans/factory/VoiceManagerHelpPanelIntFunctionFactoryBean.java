@@ -196,7 +196,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 				//
 				ATag aTag = null;
 				//
-				if (mediaFormatPageHref != null && mediaFormatPageText != null) {
+				if (Boolean.logicalAnd(mediaFormatPageHref != null, mediaFormatPageText != null)) {
 					//
 					aTag = ContainerTagUtil.withText(
 							TagUtil.attr(new ATag(), "href", IValue0Util.getValue0(mediaFormatPageHref)),
