@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -249,23 +250,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 				//
 			} // try
 				//
-			addHyperlinkListener(jep, y -> {
-				//
-				try {
-					//
-					if (Objects.equals(EventType.ACTIVATED, getEventType(y))) {
-						//
-						browse(Desktop.getDesktop(), toURI(getURL(y)));
-						//
-					} // if
-						//
-				} catch (final IOException | URISyntaxException e) {
-					//
-					TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-					//
-				} // try
-					//
-			});
+			addHyperlinkListener(jep, createHyperlinkListener());
 			//
 			final JScrollPane jsp = new JScrollPane(jep);
 			//
@@ -281,6 +266,28 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 			return jsp;
 			//
 		};
+	}
+
+	private static HyperlinkListener createHyperlinkListener() {
+		//
+		return event -> {
+			//
+			try {
+				//
+				if (Objects.equals(EventType.ACTIVATED, getEventType(event)) && !GraphicsEnvironment.isHeadless()) {
+					//
+					browse(Desktop.getDesktop(), toURI(getURL(event)));
+					//
+				} // if
+					//
+			} catch (final IOException | URISyntaxException e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} // try
+				//
+		};
+		//
 	}
 
 	@Override
@@ -319,7 +326,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 	}
 
 	private static void browse(@Nullable final Desktop instance, final URI uri) throws IOException {
-		if (instance != null) {
+		if (instance != null && uri != null) {
 			instance.browse(uri);
 		}
 	}

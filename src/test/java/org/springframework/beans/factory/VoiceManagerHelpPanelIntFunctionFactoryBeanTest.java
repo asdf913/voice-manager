@@ -1,8 +1,11 @@
 package org.springframework.beans.factory;
 
+import java.awt.Desktop;
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -10,9 +13,13 @@ import java.util.Objects;
 import java.util.function.IntFunction;
 
 import javax.swing.JScrollPane;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkEvent.EventType;
+import javax.swing.event.HyperlinkListener;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.Resource;
@@ -22,6 +29,19 @@ import com.google.common.reflect.Reflection;
 import io.github.toolfactory.narcissus.Narcissus;
 
 class VoiceManagerHelpPanelIntFunctionFactoryBeanTest {
+
+	private static Method METHOD_CREATE_HYPER_LINK_LISTENER, METHOD_BROWSE = null;
+
+	@BeforeAll
+	static void beforeAll() throws NoSuchMethodException {
+		//
+		final Class<?> clz = VoiceManagerHelpPanelIntFunctionFactoryBean.class;
+		//
+		(METHOD_CREATE_HYPER_LINK_LISTENER = clz.getDeclaredMethod("createHyperlinkListener")).setAccessible(true);
+		//
+		(METHOD_BROWSE = clz.getDeclaredMethod("browse", Desktop.class, URI.class)).setAccessible(true);
+		//
+	}
 
 	private VoiceManagerHelpPanelIntFunctionFactoryBean instance = null;
 
@@ -133,6 +153,54 @@ class VoiceManagerHelpPanelIntFunctionFactoryBeanTest {
 	}
 
 	@Test
+	void testCreateHyperlinkListener() throws Throwable {
+		//
+		final HyperlinkListener hyperlinkListener = createHyperlinkListener();
+		//
+		Assertions.assertDoesNotThrow(() -> hyperlinkUpdate(hyperlinkListener, null));
+		//
+		Assertions.assertDoesNotThrow(
+				() -> hyperlinkUpdate(hyperlinkListener, new HyperlinkEvent("", EventType.ACTIVATED, null)));
+		//
+	}
+
+	private static void hyperlinkUpdate(final HyperlinkListener instance, final HyperlinkEvent evt) {
+		if (instance != null) {
+			instance.hyperlinkUpdate(evt);
+		}
+	}
+
+	private static HyperlinkListener createHyperlinkListener() throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_HYPER_LINK_LISTENER.invoke(null);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof HyperlinkListener) {
+				return (HyperlinkListener) obj;
+			} // if
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testBrowse() {
+		//
+		Assertions.assertDoesNotThrow(
+				() -> browse(Util.cast(Desktop.class, Narcissus.allocateInstance(Desktop.class)), null));
+		//
+	}
+
+	private static void browse(final Desktop instance, final URI uri) throws Throwable {
+		try {
+			METHOD_BROWSE.invoke(null, instance, uri);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testNull() {
 		//
 		final Method[] ms = VoiceManagerHelpPanelIntFunctionFactoryBean.class.getDeclaredMethods();
@@ -150,6 +218,8 @@ class VoiceManagerHelpPanelIntFunctionFactoryBeanTest {
 		String name, toString;
 		//
 		Object invoke = null;
+		//
+		int parameterCount = 0;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
@@ -191,6 +261,8 @@ class VoiceManagerHelpPanelIntFunctionFactoryBeanTest {
 				//
 			name = Util.getName(m);
 			//
+			parameterCount = m.getParameterCount();
+			//
 			os = toArray(collection);
 			//
 			toString = Objects.toString(m);
@@ -199,7 +271,8 @@ class VoiceManagerHelpPanelIntFunctionFactoryBeanTest {
 				//
 				invoke = Narcissus.invokeStaticMethod(m, os);
 				//
-				if (Util.contains(Arrays.asList(Long.TYPE, Integer.TYPE, Boolean.TYPE), m.getReturnType())) {
+				if (Util.contains(Arrays.asList(Long.TYPE, Integer.TYPE, Boolean.TYPE), m.getReturnType())
+						|| Boolean.logicalAnd(Objects.equals(name, "createHyperlinkListener"), parameterCount == 0)) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
@@ -224,7 +297,7 @@ class VoiceManagerHelpPanelIntFunctionFactoryBeanTest {
 				invoke = Narcissus.invokeMethod(instance, m, os);
 				//
 				if (Boolean.logicalAnd(Util.contains(Arrays.asList("getObject", "getObjectType"), name),
-						m.getParameterCount() == 0)) {
+						parameterCount == 0)) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
