@@ -10,11 +10,11 @@ public interface ResourceUtil {
 		return instance != null && instance.exists();
 	}
 
-	static boolean isFile(final Resource instance) {
+	static boolean isFile(@Nullable final Resource instance) {
 		return instance != null && instance.isFile();
 	}
 
-	static boolean isReadable(final Resource instance) {
+	static boolean isReadable(@Nullable final Resource instance) {
 		return instance != null && instance.isReadable();
 	}
 
