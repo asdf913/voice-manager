@@ -325,7 +325,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 			//
 	}
 
-	private static void browse(@Nullable final Desktop instance, final URI uri) throws IOException {
+	private static void browse(@Nullable final Desktop instance, @Nullable final URI uri) throws IOException {
 		if (instance != null && uri != null) {
 			instance.browse(uri);
 		}
