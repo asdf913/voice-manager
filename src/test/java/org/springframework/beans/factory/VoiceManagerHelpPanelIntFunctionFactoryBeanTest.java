@@ -214,8 +214,9 @@ class VoiceManagerHelpPanelIntFunctionFactoryBeanTest {
 				if ((instance = ObjectUtils.getIfNull(instance,
 						VoiceManagerHelpPanelIntFunctionFactoryBean::new)) != null) {
 					//
-					Arrays.stream(Util.getDeclaredFields(VoiceManagerHelpPanelIntFunctionFactoryBean.class))
-							.filter(f -> f != null && !Modifier.isStatic(f.getModifiers()))
+					Util.filter(
+							Arrays.stream(Util.getDeclaredFields(VoiceManagerHelpPanelIntFunctionFactoryBean.class)),
+							f -> f != null && !Modifier.isStatic(f.getModifiers()))
 							.forEach(f -> Narcissus.setField(instance, f, null));
 					//
 				} // if
