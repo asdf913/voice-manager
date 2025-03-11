@@ -215,7 +215,7 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 				byte[] bs = null;
 				//
 				if (encryptionTableHtmlResource != null && ResourceUtil.exists(encryptionTableHtmlResource)
-						&& encryptionTableHtmlResource.isFile() && encryptionTableHtmlResource.isReadable()
+						&& ResourceUtil.isFile(encryptionTableHtmlResource) && encryptionTableHtmlResource.isReadable()
 						&& (bs = ResourceUtil.getContentAsByteArray(encryptionTableHtmlResource)) != null) {
 					//
 					encryptionTableHtml = IOUtils.toString(bs, Util.toString(StandardCharsets.UTF_8));

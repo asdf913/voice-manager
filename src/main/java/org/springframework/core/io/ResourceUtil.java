@@ -10,6 +10,10 @@ public interface ResourceUtil {
 		return instance != null && instance.exists();
 	}
 
+	static boolean isFile(final Resource instance) {
+		return instance != null && instance.isFile();
+	}
+
 	@Nullable
 	static byte[] getContentAsByteArray(@Nullable final Resource instance) throws IOException {
 		return instance != null ? instance.getContentAsByteArray() : null;
