@@ -59,6 +59,8 @@ import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceUtil;
 
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
@@ -100,6 +102,8 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 
 	private Configuration freeMarkerConfiguration = null;
 
+	private Resource encryptionTableHtmlResource = null;
+
 	@Nullable
 	private Duration jSoupParseTimeout = null;
 
@@ -121,6 +125,10 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 
 	public void setFreeMarkerConfiguration(final Configuration freeMarkerConfiguration) {
 		this.freeMarkerConfiguration = freeMarkerConfiguration;
+	}
+
+	public void setEncryptionTableHtmlResource(final Resource encryptionTableHtmlResource) {
+		this.encryptionTableHtmlResource = encryptionTableHtmlResource;
 	}
 
 	public void setjSoupParseTimeout(@Nullable final Object object) {
@@ -202,9 +210,25 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 					//
 				Util.put(map, "mediaFormatLink", aTag);
 				//
-				Util.put(map, "encryptionTableHtml", getEncryptionTableHtml(
-						testAndApply(StringUtils::isNotBlank, poiEncryptionPageUrl, y -> new URI(y).toURL(), null),
-						jSoupParseTimeout));
+				String encryptionTableHtml = null;
+				//
+				byte[] bs = null;
+				//
+				if (encryptionTableHtmlResource != null && ResourceUtil.exists(encryptionTableHtmlResource)
+						&& encryptionTableHtmlResource.isFile() && encryptionTableHtmlResource.isReadable()
+						&& (bs = ResourceUtil.getContentAsByteArray(encryptionTableHtmlResource)) != null) {
+					//
+					encryptionTableHtml = IOUtils.toString(bs, "utf-8");
+					//
+				} else {
+					//
+					encryptionTableHtml = getEncryptionTableHtml(
+							testAndApply(StringUtils::isNotBlank, poiEncryptionPageUrl, y -> new URI(y).toURL(), null),
+							jSoupParseTimeout);
+					//
+				} // if
+					//
+				Util.put(map, "encryptionTableHtml", encryptionTableHtml);
 				//
 				TemplateUtil.process(ConfigurationUtil.getTemplate(freeMarkerConfiguration, "help.html.ftl"), map,
 						writer);

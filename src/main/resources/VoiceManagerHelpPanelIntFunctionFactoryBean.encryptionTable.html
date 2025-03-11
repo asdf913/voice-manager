@@ -1,0 +1,60 @@
+<table class="autosize POITable">
+ <tbody>
+  <tr>
+   <th colspan="1" rowspan="1">Encryption</th>
+   <th colspan="1" rowspan="1">HSSF</th>
+   <th colspan="1" rowspan="1">HSLF</th>
+   <th colspan="1" rowspan="1">HWPF</th>
+  </tr>
+  <tr>
+   <td colspan="1" rowspan="1"><a href="https://msdn.microsoft.com/en-us/library/dd949802(v=office.12).aspx">XOR obfuscation *)</a></td>
+   <td class="feature-yes" colspan="1" rowspan="1">Yes (Writing since 3.16)</td>
+   <td class="feature-na" colspan="1" rowspan="1">N/A</td>
+   <td class="feature-no" colspan="1" rowspan="1">No</td>
+  </tr>
+  <tr>
+   <td colspan="1" rowspan="1"><a href="https://msdn.microsoft.com/en-us/library/dd909583(v=office.12).aspx">40-bit RC4 encryption</a></td>
+   <td class="feature-yes" colspan="1" rowspan="1">Yes (Writing since 3.16)</td>
+   <td class="feature-na" colspan="1" rowspan="1">N/A</td>
+   <td class="feature-yes" colspan="1" rowspan="1">Yes (since 3.17)</td>
+  </tr>
+  <tr>
+   <td colspan="1" rowspan="1"><a href="https://msdn.microsoft.com/en-us/library/dd910113(v=office.12).aspx">Office Binary Document RC4 CryptoAPI Encryption</a></td>
+   <td class="feature-yes" colspan="1" rowspan="1">Yes (Since 3.16)</td>
+   <td class="feature-yes" colspan="1" rowspan="1">Yes</td>
+   <td class="feature-yes" colspan="1" rowspan="1">Yes (since 3.17)</td>
+  </tr>
+  <tr>
+   <th colspan="1" rowspan="1"></th>
+   <th colspan="1" rowspan="1">XSSF</th>
+   <th colspan="1" rowspan="1">XSLF</th>
+   <th colspan="1" rowspan="1">XWPF</th>
+  </tr>
+  <tr>
+   <td colspan="1" rowspan="1"><a href="https://msdn.microsoft.com/en-us/library/dd907466(v=office.12).aspx">Office Binary Document RC4 Encryption **)</a></td>
+   <td class="feature-yes" colspan="1" rowspan="1">Yes</td>
+   <td class="feature-yes" colspan="1" rowspan="1">Yes</td>
+   <td class="feature-yes" colspan="1" rowspan="1">Yes</td>
+  </tr>
+  <tr>
+   <td colspan="1" rowspan="1"><a href="https://msdn.microsoft.com/en-us/library/dd906131(v=office.12).aspx">ECMA-376 Standard Encryption</a></td>
+   <td class="feature-yes" colspan="1" rowspan="1">Yes</td>
+   <td class="feature-yes" colspan="1" rowspan="1">Yes</td>
+   <td class="feature-yes" colspan="1" rowspan="1">Yes</td>
+  </tr>
+  <tr>
+   <td colspan="1" rowspan="1"><a href="https://msdn.microsoft.com/en-us/library/dd906131(v=office.12).aspx">ECMA-376 Agile Encryption</a></td>
+   <td class="feature-yes" colspan="1" rowspan="1">Yes</td>
+   <td class="feature-yes" colspan="1" rowspan="1">Yes</td>
+   <td class="feature-yes" colspan="1" rowspan="1">Yes</td>
+  </tr>
+  <tr>
+   <td colspan="1" rowspan="1"><a href="https://msdn.microsoft.com/en-us/library/ms757845(v=vs.85).aspx">ECMA-376 XML Signature</a></td>
+   <td class="feature-yes" colspan="1" rowspan="1">Yes</td>
+   <td class="feature-yes" colspan="1" rowspan="1">Yes</td>
+   <td class="feature-yes" colspan="1" rowspan="1">Yes</td>
+  </tr>
+ </tbody>
+</table>
+<p>*) the xor encryption is flawed and works only for very small files - see <a href="https://bz.apache.org/bugzilla/show_bug.cgi?id=59857">#59857</a>.</p>
+<p>**) the <a href="https://msdn.microsoft.com/en-us/library/cc313071(v=office.12).aspx">MS-OFFCRYPTO</a> documentation only mentions the RC4 (without CryptoAPI) encryption as a "in place" encryption, but apparently there's also a container based method with that key generation logic.</p>

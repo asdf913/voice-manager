@@ -1,5 +1,6 @@
 package org.springframework.beans.factory;
 
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -14,6 +15,9 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.Resource;
+
+import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
@@ -26,6 +30,45 @@ class VoiceManagerHelpPanelIntFunctionFactoryBeanTest {
 		//
 		instance = new VoiceManagerHelpPanelIntFunctionFactoryBean();
 		//
+	}
+
+	private static class IH implements InvocationHandler {
+
+		private Boolean exists, isFile, isReadable = null;
+
+		private byte[] contentAsByteArray = null;
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String name = Util.getName(method);
+			//
+			if (proxy instanceof Resource) {
+				//
+				if (Objects.equals(name, "exists")) {
+					//
+					return exists;
+					//
+				} else if (Objects.equals(name, "isFile")) {
+					//
+					return isFile;
+					//
+				} else if (Objects.equals(name, "isReadable")) {
+					//
+					return isReadable;
+					//
+				} else if (Objects.equals(name, "getContentAsByteArray")) {
+					//
+					return contentAsByteArray;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(name);
+			//
+		}
+
 	}
 
 	@Test
@@ -53,6 +96,38 @@ class VoiceManagerHelpPanelIntFunctionFactoryBeanTest {
 			//
 		} // if
 			//
+		Assertions.assertNotNull(intFunction != null ? intFunction.apply(0) : null);
+		//
+		final IH ih = new IH();
+		//
+		if (instance != null) {
+			//
+			instance.setEncryptionTableHtmlResource(Reflection.newProxy(Resource.class, ih));
+			//
+		} // if
+			//
+		ih.exists = Boolean.FALSE;
+		//
+		Assertions.assertNotNull(intFunction != null ? intFunction.apply(0) : null);
+		//
+		ih.exists = Boolean.TRUE;
+		//
+		ih.isFile = Boolean.FALSE;
+		//
+		Assertions.assertNotNull(intFunction != null ? intFunction.apply(0) : null);
+		//
+		ih.isFile = Boolean.TRUE;
+		//
+		ih.isReadable = Boolean.FALSE;
+		//
+		Assertions.assertNotNull(intFunction != null ? intFunction.apply(0) : null);
+		//
+		ih.isReadable = Boolean.TRUE;
+		//
+		Assertions.assertNotNull(intFunction != null ? intFunction.apply(0) : null);
+		//
+		ih.contentAsByteArray = new byte[] {};
+		//
 		Assertions.assertNotNull(intFunction != null ? intFunction.apply(0) : null);
 		//
 	}

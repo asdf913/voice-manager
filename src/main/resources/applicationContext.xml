@@ -1182,6 +1182,8 @@
 		</property>
 		<property name="jSoupParseTimeout"
 			value="${org.springframework.context.support.VoiceManager.jSoupParseTimeout}" />
+		<property name="encryptionTableHtmlResource"
+			value="classpath:VoiceManagerHelpPanelIntFunctionFactoryBean.encryptionTable.html" />
 	</bean>
 
 	<!-- -->
