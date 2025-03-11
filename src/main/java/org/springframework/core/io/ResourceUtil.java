@@ -14,6 +14,10 @@ public interface ResourceUtil {
 		return instance != null && instance.isFile();
 	}
 
+	static boolean isReadable(final Resource instance) {
+		return instance != null && instance.isReadable();
+	}
+
 	@Nullable
 	static byte[] getContentAsByteArray(@Nullable final Resource instance) throws IOException {
 		return instance != null ? instance.getContentAsByteArray() : null;

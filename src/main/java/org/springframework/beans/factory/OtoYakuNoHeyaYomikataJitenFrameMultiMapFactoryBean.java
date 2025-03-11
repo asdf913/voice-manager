@@ -97,8 +97,7 @@ public class OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBean implements Facto
 		//
 		Multimap<String, Frame> multimap = null;
 		//
-		if (resource != null && ResourceUtil.exists(resource) && ResourceUtil.isFile(resource)
-				&& resource.isReadable()) {
+		if (ResourceUtil.exists(resource) && ResourceUtil.isFile(resource) && ResourceUtil.isReadable(resource)) {
 			//
 			try (final InputStream is = testAndApply(Objects::nonNull, ResourceUtil.getContentAsByteArray(resource),
 					ByteArrayInputStream::new, null);
