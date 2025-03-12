@@ -985,7 +985,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		try {
 			//
-			aTag = ATagUtil.createByUrl(microsoftWindowsCompatibilitySettingsPageUrl);
+			aTag = ATagUtil.createByUrl(microsoftWindowsCompatibilitySettingsPageUrl,
+					"Make older apps or programs compatible with the latest version of Windows - Microsoft Support");
 			//
 		} catch (final Exception e) {
 			//
@@ -1015,7 +1016,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		try {
 			//
-			aTag = ATagUtil.createByUrl(microsoftSpeechPlatformRuntimeDownloadPageUrl);
+			aTag = ATagUtil.createByUrl(microsoftSpeechPlatformRuntimeDownloadPageUrl,
+					"Download Microsoft Speech Platform - Runtime (Version 11) from Official Microsoft Download Center");
 			//
 		} catch (final Exception e) {
 			//
