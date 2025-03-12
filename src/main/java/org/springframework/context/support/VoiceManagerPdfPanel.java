@@ -958,7 +958,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(tfFontSize1 = new JTextField(Util.getKey(entry)), String.format("%1$s,wmin %2$s", GROWX, wmin));
 		//
-		final int span = 5;
+		final int span = 6;
 		//
 		add(new JComboBox<>(
 				cbmFontSize1 = new DefaultComboBoxModel<>(ArrayUtils.insert(0, ECSSUnit.values(), (ECSSUnit) null))),
@@ -1071,7 +1071,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			jcbVoiceId.addItemListener(this);
 			//
-			add(jcbVoiceId);
+			add(jcbVoiceId, String.format("span %1$s", 2));
 			//
 			add(tfSpeechLanguageCode = new JTextField(), String.format("width %1$s", 30));
 			//
@@ -1145,7 +1145,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		panel.add(btnPreserveImage = new JCheckBox("Prserve Image"));
 		//
-		add(panel, String.format("%1$s,span %2$s", WRAP, 3));
+		add(panel, String.format("%1$s,span %2$s", WRAP, 4));
 		//
 		// Original Size
 		//
