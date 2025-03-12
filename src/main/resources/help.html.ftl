@@ -15,10 +15,11 @@
 					<td>学年別漢字</td>
 					<td>
 						<#assign url="https://ja.wikipedia.org/wiki/%E5%AD%A6%E5%B9%B4%E5%88%A5%E6%BC%A2%E5%AD%97%E9%85%8D%E5%BD%93%E8%A1%A8">
+						<#assign text="学年別漢字配当表 - Wikipedia">
 						<#if statics??>
-							${statics["j2html.tags.specialized.ATagUtil"].createByUrl(url)}
+							${statics["j2html.tags.specialized.ATagUtil"].createByUrl(url,text)}
 						<#else>
-							<a href="${url}">学年別漢字配当表 - Wikipedia</a>
+							<a href="${url}">${text}</a>
 						</#if>
 					</td>
 				</tr>
@@ -26,10 +27,11 @@
 					<td>常用漢字</td>
 					<td>
 						<#assign url="https://ja.wikipedia.org/wiki/%E5%B8%B8%E7%94%A8%E6%BC%A2%E5%AD%97%E4%B8%80%E8%A6%A7">
+						<#assign text="常用漢字一覧 - Wikipedia">
 						<#if statics??>
-							${statics["j2html.tags.specialized.ATagUtil"].createByUrl(url)}
+							${statics["j2html.tags.specialized.ATagUtil"].createByUrl(url,text)}
 						<#else>
-							<a href="${url}">常用漢字一覧 - Wikipedia</a>
+							<a href="${url}">${text}</a>
 						</#if>
 					</td>
 				</tr>
@@ -37,10 +39,11 @@
 					<td>IPA</td>
 					<td>
 						<#assign url="https://www.internationalphoneticassociation.org">
+						<#assign text="International Phonetic Association | ɪntəˈnæʃənəl fəˈnɛtɪk əsoʊsiˈeɪʃn">
 						<#if statics??>
-							${statics["j2html.tags.specialized.ATagUtil"].createByUrl(url)}
+							${statics["j2html.tags.specialized.ATagUtil"].createByUrl(url,text)}
 						<#else>
-							<a href="${url}">International Phonetic Association | ɪntəˈnæʃənəl fəˈnɛtɪk əsoʊsiˈeɪʃn</a>
+							<a href="${url}">${text}</a>
 						</#if>
 					</td>
 				</tr>
@@ -48,10 +51,11 @@
 					<td>JLPT</td>
 					<td>
 						<#assign url="https://www.jlpt.jp/about/levelsummary.html">
+						<#assign text="N1～N5:認定の目安 | 日本語能力試験　JLPT">
 						<#if statics??>
-							${statics["j2html.tags.specialized.ATagUtil"].createByUrl(url)}
+							${statics["j2html.tags.specialized.ATagUtil"].createByUrl(url,text)}
 						<#else>
-							<a href="${url}">N1～N5:認定の目安 | 日本語能力試験　JLPT</a>
+							<a href="${url}">${text}</a>
 						</#if>
 					</td>
 				</tr>

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -18,12 +19,42 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
 
+import com.sun.jna.Library;
+import com.sun.jna.Native;
+import com.sun.jna.ptr.IntByReference;
+
 import j2html.tags.ContainerTagUtil;
 import j2html.tags.TagUtil;
 
 public final class ATagUtil {
 
 	private ATagUtil() {
+	}
+
+	private interface WinInet extends Library {
+
+		WinInet INSTANCE = (WinInet) Native.load("Wininet", WinInet.class);
+
+		boolean InternetGetConnectedState(final IntByReference lpdwFlags, final int dwReserved);
+
+	}
+
+	public static boolean InternetGetConnectedState(final boolean defaultValue) {
+		//
+		if (Objects.equals(getName(getClass(FileSystems.getDefault())), "sun.nio.fs.WindowsFileSystem")) {
+			//
+			final WinInet winInet = WinInet.INSTANCE;
+			//
+			if (winInet != null) {
+				//
+				return winInet.InternetGetConnectedState(new IntByReference(), 0);
+				//
+			} // if
+				//
+		} // if
+			//
+		return defaultValue;
+		//
 	}
 
 	public static ATag createByUrl(final String url) throws Exception {
@@ -61,6 +92,26 @@ public final class ATagUtil {
 			//
 		return aTag;
 		//
+	}
+
+	public static ATag createByUrl(final String url, final String text) throws Exception {
+		//
+		if (!InternetGetConnectedState(true)) {
+			//
+			return TagUtil.attr(ContainerTagUtil.withText(new ATag(), text), "href", url);
+			//
+		} // if
+			//
+		return createByUrl(url);
+		//
+	}
+
+	private static String getName(final Class<?> instance) {
+		return instance != null ? instance.getName() : null;
+	}
+
+	private static Class<?> getClass(final Object instance) {
+		return instance != null ? instance.getClass() : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
