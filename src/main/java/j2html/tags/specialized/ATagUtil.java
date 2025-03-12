@@ -33,7 +33,7 @@ public final class ATagUtil {
 
 	private interface WinInet extends Library {
 
-		WinInet INSTANCE = (WinInet) Native.load("Wininet", WinInet.class);
+		WinInet INSTANCE = Native.load("Wininet", WinInet.class);
 
 		boolean InternetGetConnectedState(final IntByReference lpdwFlags, final int dwReserved);
 
