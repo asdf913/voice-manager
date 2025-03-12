@@ -94,6 +94,7 @@ import org.apache.commons.lang3.function.FailableRunnable;
 import org.apache.commons.lang3.function.FailableSupplier;
 import org.apache.commons.lang3.math.Fraction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.ss.usermodel.CellUtil;
@@ -669,18 +670,28 @@ class VoiceManagerTest {
 			//
 			final Template template = configuration.getTemplate("/help.html.ftl");
 			//
-			final Iterable<String> urls = new FailableStream<>(Util.filter(
-					Stream.of(Util.cast(Object[].class,
-							FieldUtils.readField(FieldUtils.readDeclaredField(template, "rootElement", true),
-									"childBuffer", true))),
-					x -> Objects.equals(Util.getName(Util.getClass(x)), "freemarker.core.Assignment"))).map(x -> {
-						//
-						final URI uri = new URI(Util.toString(FieldUtils
-								.readDeclaredField(FieldUtils.readDeclaredField(x, "valueExp", true), "value", true)));
-						//
-						return StringUtils.join("", uri.getScheme(), "://", uri.getHost());
-						//
-					}).collect(Collectors.toSet());
+			final Iterable<String> urls = Util.collect(FailableStreamUtil.stream(FailableStreamUtil
+					.map(new FailableStream<>(Stream.of(Util.cast(Object[].class, FieldUtils.readField(
+							FieldUtils.readDeclaredField(template, "rootElement", true), "childBuffer", true))))
+							.filter(x -> {
+								//
+								if (Objects.equals(Util.getName(Util.getClass(x)), "freemarker.core.Assignment")) {
+									//
+									return Objects.equals(FieldUtils.readDeclaredField(x, "variableName", true), "url");
+									//
+								} // if
+									//
+								return false;
+								//
+							}), x -> {
+								//
+								final URI uri = new URI(Util.toString(FieldUtils.readDeclaredField(
+										FieldUtils.readDeclaredField(x, "valueExp", true), "value", true)));
+								//
+								return StringUtils.join("", uri.getScheme(), "://", uri.getHost());
+								//
+							})),
+					Collectors.toSet());
 			//
 			if (urls != null && urls.iterator() != null) {
 				//
