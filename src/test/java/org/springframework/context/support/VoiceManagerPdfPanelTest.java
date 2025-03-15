@@ -151,14 +151,10 @@ class VoiceManagerPdfPanelTest {
 			//
 			final String methodName = Util.getName(method);
 			//
-			if (proxy instanceof Transferable) {
+			if (proxy instanceof Transferable && Objects.equals(methodName, "getTransferData")) {
 				//
-				if (Objects.equals(methodName, "getTransferData")) {
-					//
-					return transferData;
-					//
-				} // if
-					//
+				return transferData;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
