@@ -1946,14 +1946,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				if (isImageFlavorSupported) {
 					//
 					renderedImage = Util.cast(RenderedImage.class,
-							transferable.getTransferData(DataFlavor.imageFlavor));
+							getTransferData(transferable, DataFlavor.imageFlavor));
 					//
 				} else if (isDataFlavorSupported(transferable, DataFlavor.javaFileListFlavor)) {
 					//
 					final File file = Util.cast(File.class,
 							testAndApply(x -> IterableUtils.size(x) == 1,
 									Util.cast(Iterable.class,
-											transferable.getTransferData(DataFlavor.javaFileListFlavor)),
+											getTransferData(transferable, DataFlavor.javaFileListFlavor)),
 									x -> IterableUtils.get(x, 0), null));
 					//
 					final Entry<Method, Collection<Object>> entry = getPDImageXObjectCreateFromByteArrayDetectFileTypeMethodAndAllowedFileTypes();
@@ -2073,50 +2073,47 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				ContentInfoUtil ciu = null;
 				//
-				if (isDataFlavorSupported(transferable, DataFlavor.javaFileListFlavor)) {
+				final Iterable<?> iterable = Util.cast(Iterable.class,
+						testAndApply((a, b) -> VoiceManagerPdfPanel.isDataFlavorSupported(a, b), transferable,
+								DataFlavor.javaFileListFlavor, (a, b) -> VoiceManagerPdfPanel.getTransferData(a, b),
+								null));
+				//
+				if (Util.iterator(iterable) != null) {
 					//
-					final Iterable<?> iterable = Util.cast(Iterable.class,
-							transferable.getTransferData(DataFlavor.javaFileListFlavor));
+					File file = null;
 					//
-					if (Util.iterator(iterable) != null) {
+					for (final Object obj : iterable) {
 						//
-						File file = null;
-						//
-						for (final Object obj : iterable) {
+						if ((file = Util.cast(File.class, obj)) != null) {
 							//
-							if ((file = Util.cast(File.class, obj)) != null) {
+							if (file.isDirectory()) {
 								//
-								if (file.isDirectory()) {
-									//
-									if ((audioResource = toAudioResource(
-											ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
-											file.listFiles())) != null
-											|| (new JFileChooser(file)
-													.showOpenDialog(null) == JFileChooser.APPROVE_OPTION
-													&& (audioResource = toAudioResource(
-															ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
-															file)) != null)) {
-										//
-										return true;
-										//
-									} // if
-										//
-								} else if ((audioResource = toAudioResource(
-										ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), file)) != null) {
+								if ((audioResource = toAudioResource(
+										ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
+										file.listFiles())) != null
+										|| (new JFileChooser(file).showOpenDialog(null) == JFileChooser.APPROVE_OPTION
+												&& (audioResource = toAudioResource(ciu, file)) != null)) {
 									//
 									return true;
 									//
 								} // if
 									//
+							} else if ((audioResource = toAudioResource(
+									ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), file)) != null) {
+								//
+								return true;
+								//
 							} // if
 								//
-						} // for
+						} // if
 							//
-					} // if
+					} // for
 						//
-				} else if (isDataFlavorSupported(transferable, DataFlavor.stringFlavor)) {
+				} // if
 					//
-					final String string = Util.toString(transferable.getTransferData(DataFlavor.stringFlavor));
+				if (isDataFlavorSupported(transferable, DataFlavor.stringFlavor)) {
+					//
+					final String string = Util.toString(getTransferData(transferable, DataFlavor.stringFlavor));
 					//
 					// TODO
 					//
@@ -2157,9 +2154,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					if ((audioResource = toAudioResource(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
 							file)) != null
-							|| (file.isDirectory() && (audioResource = toAudioResource(
-									ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
-									file.listFiles())) != null)) {
+							|| (file.isDirectory()
+									&& (audioResource = toAudioResource(ciu, file.listFiles())) != null)) {
 						//
 						return true;
 						//
@@ -2167,7 +2163,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						//
 				} // if
 					//
-			} catch (final UnsupportedFlavorException | IOException e) {
+			} catch (final Exception e) {
 				//
 				LoggerUtil.error(LOG, e.getMessage(), e);
 				//
@@ -2177,6 +2173,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		return false;
 		//
+	}
+
+	private static Object getTransferData(final Transferable instance, final DataFlavor flavor)
+			throws UnsupportedFlavorException, IOException {
+		return instance != null ? instance.getTransferData(flavor) : null;
 	}
 
 	private static Resource toAudioResource(final ContentInfoUtil ciu, @Nullable final File[] fs) throws IOException {
