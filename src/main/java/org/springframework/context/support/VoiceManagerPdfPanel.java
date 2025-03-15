@@ -2082,10 +2082,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						//
 						File file = null;
 						//
-						Resource r = null;
-						//
-						List<Resource> rs = null;
-						//
 						for (final Object obj : iterable) {
 							//
 							if ((file = Util.cast(File.class, obj)) != null) {
