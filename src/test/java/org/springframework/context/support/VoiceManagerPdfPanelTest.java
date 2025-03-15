@@ -845,7 +845,7 @@ class VoiceManagerPdfPanelTest {
 	@Test
 	void testToAudioResource() throws Throwable {
 		//
-		Assertions.assertNull(toAudioResource(contentInfoUtil, new File[] { null, Util.toFile(Paths.get(".")) }));
+		Assertions.assertNull(toAudioResource(contentInfoUtil, new File[] { null, Util.toFile(Path.of(".")) }));
 		//
 		final File file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secure(), 3), null);
 		//

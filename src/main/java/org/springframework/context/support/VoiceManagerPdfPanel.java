@@ -2162,7 +2162,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						//
 						// TODO
 						//
-					final File file = Util.toFile(Paths.get(string));
+					final File file = Util.toFile(Path.of(string));
 					//
 					if ((audioResource = toAudioResource(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
 							file)) != null) {
