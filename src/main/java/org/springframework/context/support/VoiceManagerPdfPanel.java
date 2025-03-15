@@ -2083,27 +2083,28 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					for (final Object obj : iterable) {
 						//
-						if ((file = Util.cast(File.class, obj)) != null) {
+						if ((file = Util.cast(File.class, obj)) == null) {
 							//
-							if (file.isDirectory()) {
-								//
-								if ((audioResource = toAudioResource(
-										ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
-										file.listFiles())) != null
-										|| (new JFileChooser(file).showOpenDialog(null) == JFileChooser.APPROVE_OPTION
-												&& (audioResource = toAudioResource(ciu, file)) != null)) {
-									//
-									return true;
-									//
-								} // if
-									//
-							} else if ((audioResource = toAudioResource(
-									ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), file)) != null) {
+							continue;
+							//
+						} // if
+							//
+						if (file.isDirectory()) {
+							//
+							if ((audioResource = toAudioResource(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
+									file.listFiles())) != null
+									|| (new JFileChooser(file).showOpenDialog(null) == JFileChooser.APPROVE_OPTION
+											&& (audioResource = toAudioResource(ciu, file)) != null)) {
 								//
 								return true;
 								//
 							} // if
 								//
+						} else if ((audioResource = toAudioResource(
+								ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), file)) != null) {
+							//
+							return true;
+							//
 						} // if
 							//
 					} // for
