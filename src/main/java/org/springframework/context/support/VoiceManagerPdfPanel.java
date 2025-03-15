@@ -2111,9 +2111,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						//
 				} // if
 					//
-				final String string = Util
-						.toString(testAndApply((a, b) -> VoiceManagerPdfPanel.isDataFlavorSupported(a, b), transferable,
-								DataFlavor.stringFlavor, (a, b) -> getTransferData(a, b), null));
+				final String string = Util.toString(testAndApply(VoiceManagerPdfPanel::isDataFlavorSupported,
+						transferable, DataFlavor.stringFlavor, (a, b) -> getTransferData(a, b), null));
 				//
 				// TODO
 				//
