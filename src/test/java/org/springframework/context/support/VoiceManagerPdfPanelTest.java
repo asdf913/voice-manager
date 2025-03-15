@@ -1,12 +1,15 @@
 package org.springframework.context.support;
 
 import java.awt.GraphicsEnvironment;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -71,6 +74,7 @@ import org.springframework.core.io.Resource;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.google.common.reflect.Reflection;
 import com.helger.css.ECSSUnit;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.Playwright;
@@ -92,7 +96,7 @@ class VoiceManagerPdfPanelTest {
 	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_SELECTED_ITEM, METHOD_TO_HTML,
 			METHOD_GET_TEXT_ALIGNS, METHOD_CHOP, METHOD_GENERATE_PDF_HTML, METHOD_LENGTH,
 			METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY, METHOD_GET_TEXT_WIDTH, METHOD_OR,
-			METHOD_TO_AUDIO_RESOURCE = null;
+			METHOD_TO_AUDIO_RESOURCE, METHOD_LIST_FILES, METHOD_IS_DIRECTORY, METHOD_GET_TRANSFER_DATA = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -129,6 +133,38 @@ class VoiceManagerPdfPanelTest {
 		(METHOD_TO_AUDIO_RESOURCE = clz.getDeclaredMethod("toAudioResource", ContentInfoUtil.class, File[].class))
 				.setAccessible(true);
 		//
+		(METHOD_LIST_FILES = clz.getDeclaredMethod("listFiles", File.class)).setAccessible(true);
+		//
+		(METHOD_IS_DIRECTORY = clz.getDeclaredMethod("isDirectory", File.class)).setAccessible(true);
+		//
+		(METHOD_GET_TRANSFER_DATA = clz.getDeclaredMethod("getTransferData", Transferable.class, DataFlavor.class))
+				.setAccessible(true);
+		//
+	}
+
+	private static class IH implements InvocationHandler {
+
+		private Object transferData = null;
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = Util.getName(method);
+			//
+			if (proxy instanceof Transferable) {
+				//
+				if (Objects.equals(methodName, "getTransferData")) {
+					//
+					return transferData;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	private VoiceManagerPdfPanel instance = null;
@@ -877,6 +913,63 @@ class VoiceManagerPdfPanelTest {
 				return (Resource) obj;
 			} // if
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testListFiles() throws Throwable {
+		//
+		Assertions.assertNotNull(listFiles(Util.toFile(Path.of("."))));
+		//
+	}
+
+	private static File[] listFiles(final File instance) throws Throwable {
+		try {
+			final Object obj = METHOD_LIST_FILES.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof File[]) {
+				return (File[]) obj;
+			} // if
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsDirectory() throws Throwable {
+		//
+		Assertions.assertFalse(isDirectory(Util.toFile(Path.of("pom.xml"))));
+		//
+		Assertions.assertTrue(isDirectory(Util.toFile(Path.of("."))));
+		//
+	}
+
+	private static boolean isDirectory(final File instance) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_DIRECTORY.invoke(null, instance);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			} // if
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetTransferData() throws Throwable {
+		//
+		Assertions.assertNull(getTransferData(Reflection.newProxy(Transferable.class, new IH()), null));
+		//
+	}
+
+	private static Object getTransferData(final Transferable instance, final DataFlavor flavor) throws Throwable {
+		try {
+			return METHOD_GET_TRANSFER_DATA.invoke(null, instance, flavor);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
