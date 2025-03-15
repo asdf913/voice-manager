@@ -2094,15 +2094,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 									//
 									if ((audioResource = toAudioResource(
 											ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
-											file.listFiles())) != null) {
-										//
-										return true;
-										//
-									} else if (new JFileChooser(file)
-											.showOpenDialog(null) == JFileChooser.APPROVE_OPTION
-											&& (audioResource = toAudioResource(
-													ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
-													file)) != null) {
+											file.listFiles())) != null
+											|| (new JFileChooser(file)
+													.showOpenDialog(null) == JFileChooser.APPROVE_OPTION
+													&& (audioResource = toAudioResource(
+															ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
+															file)) != null)) {
 										//
 										return true;
 										//
@@ -2163,13 +2160,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					final File file = Util.toFile(Path.of(string));
 					//
 					if ((audioResource = toAudioResource(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
-							file)) != null) {
-						//
-						return true;
-						//
-					} else if (file.isDirectory()
-							&& (audioResource = toAudioResource(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
-									file.listFiles())) != null) {
+							file)) != null
+							|| (file.isDirectory() && (audioResource = toAudioResource(
+									ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
+									file.listFiles())) != null)) {
 						//
 						return true;
 						//
