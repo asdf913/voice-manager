@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -844,7 +845,7 @@ class VoiceManagerPdfPanelTest {
 	@Test
 	void testToAudioResource() throws Throwable {
 		//
-		Assertions.assertNull(toAudioResource(contentInfoUtil, new File[] { null, new File(".") }));
+		Assertions.assertNull(toAudioResource(contentInfoUtil, new File[] { null, Util.toFile(Paths.get(".")) }));
 		//
 		final File file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secure(), 3), null);
 		//
