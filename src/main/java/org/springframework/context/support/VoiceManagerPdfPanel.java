@@ -2074,9 +2074,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				ContentInfoUtil ciu = null;
 				//
 				final Iterable<?> iterable = Util.cast(Iterable.class,
-						testAndApply((a, b) -> VoiceManagerPdfPanel.isDataFlavorSupported(a, b), transferable,
-								DataFlavor.javaFileListFlavor, (a, b) -> VoiceManagerPdfPanel.getTransferData(a, b),
-								null));
+						testAndApply(VoiceManagerPdfPanel::isDataFlavorSupported, transferable,
+								DataFlavor.javaFileListFlavor, VoiceManagerPdfPanel::getTransferData, null));
 				//
 				if (Util.iterator(iterable) != null) {
 					//
