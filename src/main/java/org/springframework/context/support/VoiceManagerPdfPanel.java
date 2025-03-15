@@ -417,7 +417,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
-	private Resource audioResource = null;
+	private transient Resource audioResource = null;
 
 	@Override
 	public String getTitle() {
