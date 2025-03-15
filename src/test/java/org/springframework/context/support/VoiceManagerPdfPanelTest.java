@@ -500,6 +500,16 @@ class VoiceManagerPdfPanelTest {
 				"7<ruby><rb>時</rb><rp>(</rp><rt>じ</rt><rp>)</rp></ruby>の<ruby><rb>新幹線</rb><rp>(</rp><rt>しんかんせん</rt><rp>)</rp></ruby>に<ruby><rb>乗</rb><rp>(</rp><rt>の</rt><rp>)</rp></ruby>る<ruby><rb>予定</rb><rp>(</rp><rt>よてい</rt><rp>)</rp></ruby>です。",
 				Util.getText(taHtml));
 		//
+		// btnGenerateRubyHtml
+		//
+		final AbstractButton btnSetOriginalAudio = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnSetOriginalAudio", btnSetOriginalAudio, true);
+		//
+		final ActionEvent actionEventBtnSetOriginalAudio = new ActionEvent(btnSetOriginalAudio, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnSetOriginalAudio));
+		//
 		if (GraphicsEnvironment.isHeadless()) {
 			//
 			// btnPreviewRubyPdf

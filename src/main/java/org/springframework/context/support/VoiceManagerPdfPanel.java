@@ -2111,56 +2111,53 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						//
 				} // if
 					//
-				if (isDataFlavorSupported(transferable, DataFlavor.stringFlavor)) {
+				final String string = Util
+						.toString(testAndApply((a, b) -> VoiceManagerPdfPanel.isDataFlavorSupported(a, b), transferable,
+								DataFlavor.stringFlavor, (a, b) -> getTransferData(a, b), null));
+				//
+				// TODO
+				//
+				System.out.println("5 " + string);
+				//
+				final URL url = testAndApply(URLValidator::isValid, string, URL::new, null);
+				//
+				try (final InputStream is = openStream(url)) {
 					//
-					final String string = Util.toString(getTransferData(transferable, DataFlavor.stringFlavor));
+					final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
+					// .
+					if ((ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new)) != null) {
+						//
+						final String mimeType = getMimeType(testAndApply(Objects::nonNull, bs, ciu::findMatch, null));
+						//
+						if (StringUtils.startsWith(mimeType, "audio")) {
+							//
+							audioResource = new ByteArrayResource(bs);
+							//
+							return true;
+							//
+						} else {
+							//
+							// TODO
+							//
+							System.out.println("6 " + mimeType);
+							//
+						} // if
+							//
+					} // if
+						//
+				} // try
 					//
 					// TODO
 					//
-					System.out.println("5 " + string);
+				final File file = Util.toFile(Path.of(string));
+				//
+				if ((audioResource = toAudioResource(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
+						file)) != null
+						|| (audioResource = testAndApply((a, b) -> isDirectory(b), ciu, file,
+								(a, b) -> toAudioResource(a, listFiles(b)), null)) != null) {
 					//
-					final URL url = testAndApply(URLValidator::isValid, string, URL::new, null);
+					return true;
 					//
-					try (final InputStream is = openStream(url)) {
-						//
-						final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
-						// .
-						if ((ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new)) != null) {
-							//
-							final String mimeType = getMimeType(
-									testAndApply(Objects::nonNull, bs, ciu::findMatch, null));
-							//
-							if (StringUtils.startsWith(mimeType, "audio")) {
-								//
-								audioResource = new ByteArrayResource(bs);
-								//
-								return true;
-								//
-							} else {
-								//
-								// TODO
-								//
-								System.out.println("6 " + mimeType);
-								//
-							} // if
-								//
-						} // if
-							//
-					} // try
-						//
-						// TODO
-						//
-					final File file = Util.toFile(Path.of(string));
-					//
-					if ((audioResource = toAudioResource(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
-							file)) != null
-							|| (audioResource = testAndApply((a, b) -> isDirectory(b), ciu, file,
-									(a, b) -> toAudioResource(a, listFiles(b)), null)) != null) {
-						//
-						return true;
-						//
-					} // if
-						//
 				} // if
 					//
 			} catch (final Exception e) {
