@@ -2119,7 +2119,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					System.out.println("5 " + string);
 					//
-					final URL url = URLValidator.isValid(string) ? new URL(string) : null;
+					final URL url = testAndApply(x -> URLValidator.isValid(x), string, URL::new, null);
 					//
 					try (final InputStream is = openStream(url)) {
 						//
