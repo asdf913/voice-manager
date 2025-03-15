@@ -2125,24 +2125,22 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
 					// .
-					if ((ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new)) != null) {
+					final String mimeType = getMimeType(
+							testAndApply((a, b) -> b != null, ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
+									bs, (a, b) -> a != null ? a.findMatch(b) : null, null));
+					//
+					if (StringUtils.startsWith(mimeType, "audio")) {
 						//
-						final String mimeType = getMimeType(testAndApply(Objects::nonNull, bs, ciu::findMatch, null));
+						audioResource = new ByteArrayResource(bs);
 						//
-						if (StringUtils.startsWith(mimeType, "audio")) {
-							//
-							audioResource = new ByteArrayResource(bs);
-							//
-							return true;
-							//
-						} else {
-							//
-							// TODO
-							//
-							System.out.println("6 " + mimeType);
-							//
-						} // if
-							//
+						return true;
+						//
+					} else {
+						//
+						// TODO
+						//
+						System.out.println("6 " + mimeType);
+						//
 					} // if
 						//
 				} // try
