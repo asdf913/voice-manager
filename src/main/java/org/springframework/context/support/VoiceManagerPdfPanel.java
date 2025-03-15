@@ -2179,7 +2179,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static Resource toAudioResource(final ContentInfoUtil ciu, final File[] fs) throws IOException {
+	private static Resource toAudioResource(final ContentInfoUtil ciu, @Nullable final File[] fs) throws IOException {
 		//
 		Resource r = null;
 		//
@@ -2227,7 +2227,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static ContentInfo findMatch(final ContentInfoUtil instance, final File file) throws IOException {
+	private static ContentInfo findMatch(@Nullable final ContentInfoUtil instance, final File file) throws IOException {
 		return instance != null && Util.exists(file) && Util.isFile(file) ? instance.findMatch(file) : null;
 	}
 
