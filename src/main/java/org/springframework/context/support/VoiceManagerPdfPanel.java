@@ -209,6 +209,9 @@ import org.springframework.context.support.VoiceManager.ByteConverter;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
 import com.atilika.kuromoji.TokenBase;
 import com.atilika.kuromoji.ipadic.Token;
@@ -219,6 +222,7 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
 import com.google.common.reflect.Reflection;
+import com.helger.commons.url.URLValidator;
 import com.helger.css.ECSSUnit;
 import com.helger.css.propertyvalue.CSSSimpleValueWithUnit;
 import com.j256.simplemagic.ContentInfo;
@@ -310,7 +314,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Preview Ruby In PDF ")
 	private AbstractButton btnPreviewRubyPdf = null;
 
-	private AbstractButton btnPreserveImage = null;
+	private AbstractButton btnPreserveImage, btnSetOriginalAudio = null;
 
 	@Note("HTML")
 	private JTextComponent taHtml = null;
@@ -408,6 +412,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	private Pattern patternInteger = null;
 
 	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
+
+	private Resource audioResource = null;
 
 	@Override
 	public String getTitle() {
@@ -1152,6 +1158,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		add(new JLabel("Original Size"));
 		//
 		add(cbIsOriginalSize = new JCheckBox(), String.format("%1$s,span %2$s", WRAP, 2));
+		//
+		// Original Audio
+		//
+		add(new JLabel("Original Audio"));
+		//
+		add(btnSetOriginalAudio = new JButton("Set Original Audio"), String.format("%1$s,span %2$s", WRAP, 2));
 		//
 		// Audio Format
 		//
@@ -2010,7 +2022,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						file = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null), html,
 						StandardCharsets.UTF_8, false);
 				//
-				final String[] fileExtensions = getFileExtensions(new ContentInfoUtil().findMatch(file));
+				final String[] fileExtensions = getFileExtensions(findMatch(new ContentInfoUtil(), file));
 				//
 				final Matcher matcher = testAndApply((a, b) -> length(b) > 0, file, fileExtensions,
 						(a, b) -> matcher(Pattern.compile("^([^.]+.)[^.]+$"), Util.getName(a)), null);
@@ -2049,10 +2061,185 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			return true;
 			//
+		} else if (Objects.equals(source, btnSetOriginalAudio)) {
+			//
+			final Transferable transferable = getContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(),
+					Toolkit.getDefaultToolkit(), x -> getSystemClipboard(x), null), null);
+			//
+			try {
+				//
+				ContentInfoUtil ciu = null;
+				//
+				if (isDataFlavorSupported(transferable, DataFlavor.javaFileListFlavor)) {
+					//
+					final Iterable<?> iterable = Util.cast(Iterable.class,
+							transferable.getTransferData(DataFlavor.javaFileListFlavor));
+					//
+					if (Util.iterator(iterable) != null) {
+						//
+						File file = null;
+						//
+						Resource r = null;
+						//
+						List<Resource> rs = null;
+						//
+						for (final Object obj : iterable) {
+							//
+							if ((file = Util.cast(File.class, obj)) != null) {
+								//
+								if (file.isDirectory()) {
+									//
+									if ((audioResource = toAudioResource(
+											ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
+											file.listFiles())) != null) {
+										//
+										return true;
+										//
+									} else if (new JFileChooser(file)
+											.showOpenDialog(null) == JFileChooser.APPROVE_OPTION
+											&& (audioResource = toAudioResource(
+													ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
+													file)) != null) {
+										//
+										return true;
+										//
+									} // if
+										//
+								} else if (file.isFile()) {
+									//
+									if ((audioResource = toAudioResource(
+											ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), file)) != null) {
+										//
+										return true;
+										//
+									} // if
+										//
+								} // if
+									//
+							} // if
+								//
+						} // for
+							//
+					} // if
+						//
+				} else if (isDataFlavorSupported(transferable, DataFlavor.stringFlavor)) {
+					//
+					final String string = Util.toString(transferable.getTransferData(DataFlavor.stringFlavor));
+					//
+					// TODO
+					//
+					System.out.println("5 " + string);
+					//
+					final URL url = URLValidator.isValid(string) ? new URL(string) : null;
+					//
+					try (final InputStream is = openStream(url)) {
+						//
+						final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
+						// .
+						if ((ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new)) != null) {
+							//
+							final String mimeType = getMimeType(
+									testAndApply(Objects::nonNull, bs, ciu::findMatch, null));
+							//
+							if (StringUtils.startsWith(mimeType, "audio")) {
+								//
+								audioResource = new ByteArrayResource(bs);
+								//
+								return true;
+								//
+							} else {
+								//
+								// TODO
+								//
+								System.out.println("6 " + mimeType);
+								//
+							} // if
+								//
+						} // if
+							//
+					} // try
+						//
+						// TODO
+						//
+					final File file = new File(string);
+					//
+					if ((audioResource = toAudioResource(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
+							file)) != null) {
+						//
+						return true;
+						//
+					} else if (file.isDirectory()
+							&& (audioResource = toAudioResource(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
+									file.listFiles())) != null) {
+						//
+						return true;
+						//
+					} // if
+						//
+				} // if
+					//
+			} catch (final UnsupportedFlavorException | IOException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
+				//
 		} // if
 			//
 		return false;
 		//
+	}
+
+	private static Resource toAudioResource(final ContentInfoUtil ciu, final File[] fs) throws IOException {
+		//
+		Resource r = null;
+		//
+		List<Resource> rs = null;
+		//
+		if (fs != null) {
+			//
+			for (final File f : fs) {
+				//
+				if ((r = toAudioResource(ciu, f)) != null) {
+					//
+					Util.add(rs = ObjectUtils.getIfNull(rs, ArrayList::new), r);
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		if (IterableUtils.size(rs) == 1 && (r = IterableUtils.get(rs, 0)) != null) {
+			//
+			return r;
+			//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static Resource toAudioResource(final ContentInfoUtil ciu, final File file) throws IOException {
+		//
+		final ContentInfo ci = findMatch(ciu, file);
+		//
+		if (StringUtils.startsWith(getMimeType(ci), "audio")) {
+			//
+			return new FileSystemResource(file);
+			//
+		} // if
+			//
+			// TODO
+			//
+		System.out.println("0 " + Util.getAbsolutePath(file) + " " + getMimeType(ci));
+		//
+		return null;
+		//
+	}
+
+	private static ContentInfo findMatch(final ContentInfoUtil instance, final File file) throws IOException {
+		return instance != null && Util.exists(file) && Util.isFile(file) ? instance.findMatch(file) : null;
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -48,8 +49,10 @@ import org.apache.bcel.generic.LDC_W;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
@@ -63,11 +66,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.Resource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.helger.css.ECSSUnit;
+import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.Playwright;
 
 import freemarker.cache.ClassTemplateLoader;
@@ -86,7 +91,8 @@ class VoiceManagerPdfPanelTest {
 
 	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_SELECTED_ITEM, METHOD_TO_HTML,
 			METHOD_GET_TEXT_ALIGNS, METHOD_CHOP, METHOD_GENERATE_PDF_HTML, METHOD_LENGTH,
-			METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY, METHOD_GET_TEXT_WIDTH, METHOD_OR = null;
+			METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY, METHOD_GET_TEXT_WIDTH, METHOD_OR,
+			METHOD_TO_AUDIO_RESOURCE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -120,11 +126,16 @@ class VoiceManagerPdfPanelTest {
 		//
 		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
+		(METHOD_TO_AUDIO_RESOURCE = clz.getDeclaredMethod("toAudioResource", ContentInfoUtil.class, File[].class))
+				.setAccessible(true);
+		//
 	}
 
 	private VoiceManagerPdfPanel instance = null;
 
 	private Decoder decoder = null;
+
+	private ContentInfoUtil contentInfoUtil = null;
 
 	@BeforeEach
 	void beforeEach() {
@@ -132,6 +143,8 @@ class VoiceManagerPdfPanelTest {
 		instance = new VoiceManagerPdfPanel();
 		//
 		decoder = Base64.getDecoder();
+		//
+		contentInfoUtil = new ContentInfoUtil();
 		//
 	}
 
@@ -821,6 +834,47 @@ class VoiceManagerPdfPanelTest {
 			final Object obj = METHOD_GET_TEXT_WIDTH.invoke(null, text, font, fontSize);
 			if (obj instanceof Float) {
 				return ((Float) obj).floatValue();
+			} // if
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToAudioResource() throws Throwable {
+		//
+		Assertions.assertNull(toAudioResource(contentInfoUtil, new File[] { null, new File(".") }));
+		//
+		final File file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secure(), 3), null);
+		//
+		if (file != null) {
+			//
+			file.deleteOnExit();
+			//
+		} // if
+			//
+		Assertions.assertNull(toAudioResource(contentInfoUtil, new File[] { file }));
+		//
+		if (Util.exists(file)) {
+			//
+			FileUtils.deleteQuietly(file);
+			//
+		} // if
+			//
+	}
+
+	private static String nextAlphanumeric(final RandomStringUtils instance, final int count) {
+		return instance != null ? instance.nextAlphanumeric(count) : null;
+	}
+
+	private static Resource toAudioResource(final ContentInfoUtil ciu, final File[] fs) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_AUDIO_RESOURCE.invoke(null, ciu, fs);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Resource) {
+				return (Resource) obj;
 			} // if
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
