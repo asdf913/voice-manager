@@ -2175,7 +2175,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static Object getTransferData(final Transferable instance, final DataFlavor flavor)
+	private static Object getTransferData(@Nullable final Transferable instance, final DataFlavor flavor)
 			throws UnsupportedFlavorException, IOException {
 		return instance != null ? instance.getTransferData(flavor) : null;
 	}
