@@ -2172,7 +2172,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static File[] listFiles(final File instance) {
+	private static File[] listFiles(@Nullable final File instance) {
 		return instance != null ? instance.listFiles() : null;
 	}
 
