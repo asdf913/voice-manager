@@ -76,6 +76,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.reflect.Reflection;
 import com.helger.css.ECSSUnit;
+import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.Playwright;
 
@@ -96,7 +97,8 @@ class VoiceManagerPdfPanelTest {
 	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_SELECTED_ITEM, METHOD_TO_HTML,
 			METHOD_GET_TEXT_ALIGNS, METHOD_CHOP, METHOD_GENERATE_PDF_HTML, METHOD_LENGTH,
 			METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY, METHOD_GET_TEXT_WIDTH, METHOD_OR,
-			METHOD_TO_AUDIO_RESOURCE, METHOD_LIST_FILES, METHOD_IS_DIRECTORY, METHOD_GET_TRANSFER_DATA = null;
+			METHOD_TO_AUDIO_RESOURCE, METHOD_LIST_FILES, METHOD_IS_DIRECTORY, METHOD_GET_TRANSFER_DATA,
+			METHOD_FIND_MATCH = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -138,6 +140,9 @@ class VoiceManagerPdfPanelTest {
 		(METHOD_IS_DIRECTORY = clz.getDeclaredMethod("isDirectory", File.class)).setAccessible(true);
 		//
 		(METHOD_GET_TRANSFER_DATA = clz.getDeclaredMethod("getTransferData", Transferable.class, DataFlavor.class))
+				.setAccessible(true);
+		//
+		(METHOD_FIND_MATCH = clz.getDeclaredMethod("findMatch", ContentInfoUtil.class, byte[].class))
 				.setAccessible(true);
 		//
 	}
@@ -976,6 +981,29 @@ class VoiceManagerPdfPanelTest {
 	private static Object getTransferData(final Transferable instance, final DataFlavor flavor) throws Throwable {
 		try {
 			return METHOD_GET_TRANSFER_DATA.invoke(null, instance, flavor);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testFindMatch() throws Throwable {
+		//
+		Assertions.assertNull(findMatch(contentInfoUtil, null));
+		//
+		Assertions.assertNotNull(findMatch(contentInfoUtil, new byte[] {}));
+		//
+	}
+
+	private static ContentInfo findMatch(final ContentInfoUtil instance, final byte[] bs) throws Throwable {
+		try {
+			final Object obj = METHOD_FIND_MATCH.invoke(null, instance, bs);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof ContentInfo) {
+				return (ContentInfo) obj;
+			} // if
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -2126,7 +2126,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					// .
 					final String mimeType = getMimeType(
 							testAndApply((a, b) -> b != null, ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
-									bs, (a, b) -> a != null ? a.findMatch(b) : null, null));
+									bs, (a, b) -> findMatch(a, b), null));
 					//
 					if (StringUtils.startsWith(mimeType, "audio")) {
 						//
@@ -2232,6 +2232,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		return null;
 		//
+	}
+
+	private static ContentInfo findMatch(final ContentInfoUtil instance, final byte[] bs) throws IOException {
+		return instance != null && bs != null ? instance.findMatch(bs) : null;
 	}
 
 	@Nullable
