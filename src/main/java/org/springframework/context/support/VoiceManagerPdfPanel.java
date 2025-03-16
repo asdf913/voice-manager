@@ -2229,7 +2229,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	@Nullable
-	private static ContentInfo findMatch(@Nullable final ContentInfoUtil instance, final File file) throws IOException {
+	private static ContentInfo findMatch(@Nullable final ContentInfoUtil instance, @Nullable final File file)
+			throws IOException {
 		return instance != null && Util.exists(file) && Util.isFile(file) ? instance.findMatch(file) : null;
 	}
 
