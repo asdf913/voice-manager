@@ -3570,15 +3570,15 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static PDFontDescriptor getFontDescriptor(final PDFont instance) {
+	private static PDFontDescriptor getFontDescriptor(@Nullable final PDFont instance) {
 		return instance != null ? instance.getFontDescriptor() : null;
 	}
 
-	private static float getAscent(final PDFontDescriptor instance, final float defaultValue) {
+	private static float getAscent(@Nullable final PDFontDescriptor instance, final float defaultValue) {
 		return instance != null ? instance.getAscent() : defaultValue;
 	}
 
-	private static float getDescent(final PDFontDescriptor instance, final float defaultValue) {
+	private static float getDescent(@Nullable final PDFontDescriptor instance, final float defaultValue) {
 		return instance != null ? instance.getDescent() : defaultValue;
 	}
 
