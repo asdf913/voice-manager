@@ -138,7 +138,7 @@ public abstract class Util {
 		}
 	}
 
-	static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) {
+	static <T> void forEach(@Nullable final Iterable<T> instance, @Nullable final Consumer<? super T> action) {
 		if (instance != null && (action != null || Proxy.isProxyClass(Util.getClass(instance)))) {
 			instance.forEach(action);
 		}
