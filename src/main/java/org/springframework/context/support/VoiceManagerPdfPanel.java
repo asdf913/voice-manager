@@ -2220,7 +2220,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static ContentInfo findMatch(final ContentInfoUtil instance, final byte[] bs) throws IOException {
+	private static ContentInfo findMatch(final ContentInfoUtil instance, final byte[] bs) {
 		return instance != null && bs != null ? instance.findMatch(bs) : null;
 	}
 
