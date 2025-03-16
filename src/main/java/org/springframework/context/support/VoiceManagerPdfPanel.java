@@ -2066,97 +2066,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} else if (Objects.equals(source, btnSetOriginalAudio)) {
 			//
-			final Transferable transferable = getContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(),
-					Toolkit.getDefaultToolkit(), x -> getSystemClipboard(x), null), null);
-			//
 			try {
 				//
-				ContentInfoUtil ciu = null;
+				audioResource = getAudioResource(getContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(),
+						Toolkit.getDefaultToolkit(), x -> getSystemClipboard(x), null), null));
 				//
-				final Iterable<?> iterable = Util.cast(Iterable.class,
-						testAndApply(VoiceManagerPdfPanel::isDataFlavorSupported, transferable,
-								DataFlavor.javaFileListFlavor, VoiceManagerPdfPanel::getTransferData, null));
-				//
-				if (Util.iterator(iterable) != null) {
-					//
-					File file = null;
-					//
-					for (final Object obj : iterable) {
-						//
-						if ((file = Util.cast(File.class, obj)) == null) {
-							//
-							continue;
-							//
-						} // if
-							//
-						if (isDirectory(file)) {
-							//
-							if ((audioResource = toAudioResource(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
-									listFiles(file))) != null
-									|| (new JFileChooser(file).showOpenDialog(null) == JFileChooser.APPROVE_OPTION
-											&& (audioResource = toAudioResource(ciu, file)) != null)) {
-								//
-								return true;
-								//
-							} // if
-								//
-						} else if ((audioResource = toAudioResource(
-								ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), file)) != null) {
-							//
-							return true;
-							//
-						} // if
-							//
-					} // for
-						//
-				} // if
-					//
-				final String string = Util.toString(testAndApply(VoiceManagerPdfPanel::isDataFlavorSupported,
-						transferable, DataFlavor.stringFlavor, (a, b) -> getTransferData(a, b), null));
-				//
-				// TODO
-				//
-				System.out.println("5 " + string);
-				//
-				final URL url = testAndApply(URLValidator::isValid, string, URL::new, null);
-				//
-				try (final InputStream is = openStream(url)) {
-					//
-					final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
-					// .
-					final String mimeType = getMimeType(
-							testAndApply((a, b) -> b != null, ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
-									bs, (a, b) -> findMatch(a, b), null));
-					//
-					if (StringUtils.startsWith(mimeType, "audio")) {
-						//
-						audioResource = new ByteArrayResource(bs);
-						//
-						return true;
-						//
-					} else {
-						//
-						// TODO
-						//
-						System.out.println("6 " + mimeType);
-						//
-					} // if
-						//
-				} // try
-					//
-					// TODO
-					//
-				final File file = Util.toFile(Path.of(string));
-				//
-				if ((audioResource = toAudioResource(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
-						file)) != null
-						|| (audioResource = testAndApply((a, b) -> isDirectory(b), ciu, file,
-								(a, b) -> toAudioResource(a, listFiles(b)), null)) != null) {
-					//
-					return true;
-					//
-				} // if
-					//
 			} catch (final Exception e) {
 				//
 				LoggerUtil.error(LOG, e.getMessage(), e);
@@ -2166,6 +2080,78 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		} // if
 			//
 		return false;
+		//
+	}
+
+	private static Resource getAudioResource(final Transferable transferable) throws Exception {
+		//
+		Resource resource = null;
+		//
+		final Iterable<?> iterable = Util.cast(Iterable.class, testAndApply(VoiceManagerPdfPanel::isDataFlavorSupported,
+				transferable, DataFlavor.javaFileListFlavor, VoiceManagerPdfPanel::getTransferData, null));
+		//
+		File file = Util.cast(File.class,
+				testAndApply(x -> IterableUtils.size(x) == 1, iterable, x -> IterableUtils.get(x, 0), null));
+		//
+		ContentInfoUtil ciu = null;
+		//
+		JFileChooser jfc = null;
+		//
+		if (isDirectory(file)) {
+			//
+			if ((resource = toAudioResource(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
+					listFiles(file))) != null
+					|| ((jfc = new JFileChooser(file)).showOpenDialog(null) == JFileChooser.APPROVE_OPTION
+							&& (resource = toAudioResource(ciu, jfc.getSelectedFile())) != null)) {
+				//
+				return resource;
+				//
+			} // if
+				//
+		} else if ((resource = toAudioResource(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), file)) != null) {
+			//
+			return resource;
+			//
+		} // if
+			//
+		final String string = Util.toString(testAndApply(VoiceManagerPdfPanel::isDataFlavorSupported, transferable,
+				DataFlavor.stringFlavor, (a, b) -> getTransferData(a, b), null));
+		//
+		final URL url = testAndApply(URLValidator::isValid, string, URL::new, null);
+		//
+		try (final InputStream is = openStream(url)) {
+			//
+			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
+			//
+			final String mimeType = getMimeType(testAndApply((a, b) -> b != null,
+					ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), bs, (a, b) -> findMatch(a, b), null));
+			//
+			if (StringUtils.startsWith(mimeType, "audio")) {
+				//
+				return new ByteArrayResource(bs);
+				//
+			} // if
+				//
+		} // try
+			//
+		if ((resource = toAudioResource(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
+				file = Util.toFile(testAndApply(Objects::nonNull, string, Path::of, null)))) != null
+				|| (resource = testAndApply((a, b) -> isDirectory(b), ciu, file,
+						(a, b) -> toAudioResource(a, listFiles(b)), null)) != null) {
+			//
+			return resource;
+			//
+		} // if
+			//
+		if (!GraphicsEnvironment.isHeadless() && !isTestMode()
+				&& (jfc = new JFileChooser()).showOpenDialog(null) == JFileChooser.APPROVE_OPTION
+				&& (resource = toAudioResource(ciu, jfc.getSelectedFile())) != null) {
+			//
+			return resource;
+			//
+		} // if
+			//
+		return null;
 		//
 	}
 
