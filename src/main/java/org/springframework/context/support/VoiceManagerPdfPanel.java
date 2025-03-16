@@ -212,6 +212,7 @@ import org.springframework.core.env.PropertyResolverUtil;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceUtil;
 
 import com.atilika.kuromoji.TokenBase;
 import com.atilika.kuromoji.ipadic.Token;
@@ -1792,6 +1793,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				ObjectMap.setObject(objectMap, ByteConverter.class,
 						getByteConverter(configurableListableBeanFactory, FORMAT, getSelectedItem(cbmAudioFormat)));
+				//
+				ObjectMap.setObject(objectMap, Resource.class, audioResource);
 				//
 				addTextAndVoice(objectMap,
 						ObjectUtils.getIfNull(speechSpeedMap, VoiceManagerPdfPanel::getDefaultSpeechSpeedMap),
@@ -3387,6 +3390,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			ContentInfoUtil ciu = null;
 			//
+			Resource resource = ObjectMap.getObject(objectMap, Resource.class);
+			//
+			File fileAudio = null;
+			//
 			for (final Entry<Integer, String> entry : Util.entrySet(map)) {
 				//
 				if ((key = Util.getKey(entry)) == null) {
@@ -3395,13 +3402,25 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // if
 					//
-				writeVoiceToFile(speechApi, text, voiceId, Util.intValue(key, 0), volume, Util.toFile(pathAudio));
-				//
 				duration = null;
 				//
+				fileAudio = Util.toFile(pathAudio);
+				//
+				if (resource != null) {
+					//
+					FileUtils.writeByteArrayToFile(fileAudio, ResourceUtil.getContentAsByteArray(resource));
+					//
+					resource = null;
+					//
+				} else {
+					//
+					writeVoiceToFile(speechApi, text, voiceId, Util.intValue(key, 0), volume, fileAudio);
+					//
+				} // if
+					//
 				try {
 					//
-					duration = getAudioDuration(Util.toFile(pathAudio));
+					duration = getAudioDuration(fileAudio);
 					//
 				} catch (final Exception e) {
 					//
@@ -3432,10 +3451,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 									null),
 							getMimeType(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new), pathAudio));
 					//
-					testAndAccept((a, b) -> b != null, pdfEmbeddedFile, Util.toFile(pathAudio),
+					testAndAccept((a, b) -> b != null, pdfEmbeddedFile, fileAudio,
 							(a, b) -> setSize(a, Util.intValue(length(b), 0)));
 					//
-					(fileSpec = new PDComplexFileSpecification()).setFile(Util.getName(Util.toFile(pathAudio)));
+					(fileSpec = new PDComplexFileSpecification()).setFile(Util.getName(fileAudio));
 					//
 					fileSpec.setEmbeddedFile(pdfEmbeddedFile);
 					//
