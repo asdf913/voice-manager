@@ -3566,7 +3566,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static long toMillis(final Duration instance, final long defaultValue) {
+	private static long toMillis(@Nullable final Duration instance, final long defaultValue) {
 		return instance != null ? instance.toMillis() : defaultValue;
 	}
 
