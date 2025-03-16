@@ -140,6 +140,7 @@ import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableConsumer;
+import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.FailableRunnable;
@@ -179,9 +180,12 @@ import org.d2ab.function.ObjIntFunction;
 import org.d2ab.function.ObjIntFunctionUtil;
 import org.d2ab.function.ObjIntPredicate;
 import org.d2ab.function.ObjIntPredicateUtil;
+import org.javatuples.Triplet;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.javatuples.valueintf.IValue1;
+import org.javatuples.valueintf.IValue2;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
@@ -3407,22 +3411,21 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // if
 					//
+				testAndAccept(x -> IValue0Util.getValue0(x) != null,
+						Triplet.with(resource, fileAudio = Util.toFile(pathAudio), key),
+						x -> FileUtils.writeByteArrayToFile(getValue1(x),
+								ResourceUtil.getContentAsByteArray(IValue0Util.getValue0(x))),
+						x -> {
+							//
+							writeVoiceToFile(speechApi, text, voiceId, Util.intValue(getValue2(x), 0), volume,
+									getValue1(x));
+							//
+						});
+				//
+				resource = null;
+				//
 				duration = null;
 				//
-				fileAudio = Util.toFile(pathAudio);
-				//
-				if (resource != null) {
-					//
-					FileUtils.writeByteArrayToFile(fileAudio, ResourceUtil.getContentAsByteArray(resource));
-					//
-					resource = null;
-					//
-				} else {
-					//
-					writeVoiceToFile(speechApi, text, voiceId, Util.intValue(key, 0), volume, fileAudio);
-					//
-				} // if
-					//
 				try {
 					//
 					duration = getAudioDuration(fileAudio);
@@ -3568,6 +3571,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
+	}
+
+	private static <X> X getValue1(final IValue1<X> instance) {
+		return instance != null ? instance.getValue1() : null;
+	}
+
+	private static <X> X getValue2(final IValue2<X> instance) {
+		return instance != null ? instance.getValue2() : null;
 	}
 
 	@Nullable
@@ -4238,6 +4249,15 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			@Nullable final T value, @Nullable final FailableConsumer<T, E> consumer) throws E {
 		if (predicate != null && predicate.test(value) && consumer != null) {
 			consumer.accept(value);
+		}
+	}
+
+	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
+			final FailableConsumer<T, E> consumerTrue, final FailableConsumer<T, E> consumerFalse) throws E {
+		if (Util.test(predicate, value)) {
+			FailableConsumerUtil.accept(consumerTrue, value);
+		} else {
+			FailableConsumerUtil.accept(consumerFalse, value);
 		}
 	}
 
