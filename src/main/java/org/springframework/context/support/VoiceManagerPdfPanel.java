@@ -165,6 +165,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecification;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
@@ -3396,6 +3397,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			File fileAudio = null;
 			//
+			PDFontDescriptor pdFontDescriptor = null;
+			//
 			for (final Entry<Integer, String> entry : Util.entrySet(map)) {
 				//
 				if ((key = Util.getKey(entry)) == null) {
@@ -3492,8 +3495,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 							//
 							, font, fontSize)) / 2, lastHeight = (getHeight(md) - Util.intValue(largestY, 0) - size
 					//
-									- (font.getFontDescriptor().getAscent() / 1000 * fontSize)
-									+ (font.getFontDescriptor().getDescent() / 1000 * fontSize))
+									- (getAscent(pdFontDescriptor = getFontDescriptor(font), 0) / 1000 * fontSize)
+									+ (getDescent(pdFontDescriptor, 0) / 1000 * fontSize))
 					//
 					);
 					//
@@ -3564,6 +3567,18 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
+	}
+
+	private static PDFontDescriptor getFontDescriptor(final PDFont instance) {
+		return instance != null ? instance.getFontDescriptor() : null;
+	}
+
+	private static float getAscent(final PDFontDescriptor instance, final float defaultValue) {
+		return instance != null ? instance.getAscent() : defaultValue;
+	}
+
+	private static float getDescent(final PDFontDescriptor instance, final float defaultValue) {
+		return instance != null ? instance.getDescent() : defaultValue;
 	}
 
 	private static long toMillis(@Nullable final Duration instance, final long defaultValue) {
