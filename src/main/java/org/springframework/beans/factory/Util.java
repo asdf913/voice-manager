@@ -77,7 +77,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
-import org.javatuples.valueintf.IValue1;
 import org.javatuples.valueintf.IValue2;
 import org.javatuples.valueintf.IValue3;
 import org.jsoup.nodes.TextNode;
@@ -753,11 +752,6 @@ abstract class Util {
 	@Nullable
 	static <U> Stream<U> mapToObj(@Nullable final IntStream instance, @Nullable final IntFunction<? extends U> mapper) {
 		return instance != null && mapper != null ? instance.mapToObj(mapper) : null;
-	}
-
-	@Nullable
-	static <X> X getValue1(@Nullable final IValue1<X> instance) {
-		return instance != null ? instance.getValue1() : null;
 	}
 
 	@Nullable

@@ -184,7 +184,7 @@ import org.javatuples.Triplet;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
-import org.javatuples.valueintf.IValue1;
+import org.javatuples.valueintf.IValue1Util;
 import org.javatuples.valueintf.IValue2;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -3413,10 +3413,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				testAndAccept(x -> IValue0Util.getValue0(x) != null,
 						Triplet.with(resource, fileAudio = Util.toFile(pathAudio), key),
-						x -> FileUtils.writeByteArrayToFile(getValue1(x),
+						x -> FileUtils.writeByteArrayToFile(IValue1Util.getValue1(x),
 								ResourceUtil.getContentAsByteArray(IValue0Util.getValue0(x))),
 						x -> writeVoiceToFile(speechApi, text, voiceId, Util.intValue(getValue2(x), 0), volume,
-								getValue1(x)));
+								IValue1Util.getValue1(x)));
 				//
 				resource = null;
 				//
@@ -3567,11 +3567,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static <X> X getValue1(@Nullable final IValue1<X> instance) {
-		return instance != null ? instance.getValue1() : null;
 	}
 
 	@Nullable

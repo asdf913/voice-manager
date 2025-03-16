@@ -41,6 +41,7 @@ import org.javatuples.Pair;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.javatuples.valueintf.IValue1Util;
 import org.meeuw.functional.TriConsumer;
 import org.meeuw.functional.TriPredicate;
 import org.meeuw.functional.TriPredicateUtil;
@@ -408,7 +409,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 		//
 		Cell cell = null;
 		//
-		final Integer index = Util.getValue1(valueColumnNameAndIndex);
+		final Integer index = IValue1Util.getValue1(valueColumnNameAndIndex);
 		//
 		if ((cell = testAndApply((a, b) -> b != null && ObjectIntMap.containsKey(a, IValue0Util.getValue0(b)),
 				objectIntMap, valueColumnNameAndIndex, (a, b) -> RowUtil.getCell(row, a.get(IValue0Util.getValue0(b))),

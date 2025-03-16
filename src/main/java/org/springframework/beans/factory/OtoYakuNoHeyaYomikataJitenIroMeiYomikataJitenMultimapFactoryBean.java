@@ -54,6 +54,7 @@ import org.javatuples.Triplet;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.javatuples.valueintf.IValue1Util;
 import org.javatuples.valueintf.IValue4;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Node;
@@ -840,7 +841,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						Boolean.logicalAnd(
 								Objects.equals(a = IValue0Util.getValue0(quartet = IterableUtils.get(quartets, j)),
 										c = Util.getValue2(quartet)),
-								Objects.equals(b = Util.getValue1(quartet), d = Util.getValue3(quartet))),
+								Objects.equals(b = IValue1Util.getValue1(quartet), d = Util.getValue3(quartet))),
 						!StringUtils.startsWith(a, c), !StringUtils.startsWith(b, d))) {
 					//
 					continue;
@@ -1538,7 +1539,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InCJKUnifiedIdeographs}+[\\p{InCJKUnifiedIdeographs}\\p{InKatakana}]+\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHalfwidthAndFullwidthForms}]+(\\p{InHiragana}+)\\p{InKatakana}(\\p{InHiragana}+)[\\p{InKatakana}\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InHalfwidthAndFullwidthForms}]+$"),
 				testAndApply(x -> IterableUtils.size(x) > i, list, x -> IterableUtils.get(x, i), null)), i);
 		//
-		IntList intList = Util.getValue1(triplet);
+		IntList intList = IValue1Util.getValue1(triplet);
 		//
 		Multimap<String, String> multimap = IValue0Util.getValue0(triplet);
 		//
@@ -2009,7 +2010,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		final String s = IValue0Util.getValue0(quartet);
 		//
-		final String lcsk = Util.getValue1(quartet);
+		final String lcsk = IValue1Util.getValue1(quartet);
 		//
 		final String g3 = Util.getValue2(quartet);
 		//
@@ -2111,10 +2112,11 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 					//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), cs1, cs2);
 				//
-				testAndAccept(x -> StringUtils.length(Util.getValue1(x)) == 3,
+				testAndAccept(x -> StringUtils.length(IValue1Util.getValue1(x)) == 3,
 						Quintet.with(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g21, temp,
 								cp2, cs2),
-						x -> MultimapUtil.put(IValue0Util.getValue0(x), StringUtils.substring(Util.getValue1(x), 1, 2),
+						x -> MultimapUtil.put(IValue0Util.getValue0(x),
+								StringUtils.substring(IValue1Util.getValue1(x), 1, 2),
 								StringUtils.substringBetween(Util.getValue2(x), Util.getValue3(x), getValue4(x))));
 				//
 			} // for
@@ -3168,7 +3170,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Triplet.with(StringUtils.substringBefore(k1, csk), v1, csv),
 						(a, b) -> MultimapUtil.put(a, IValue0Util.getValue0(b),
-								StringUtils.substringBefore(Util.getValue1(b), Util.getValue2(b))));
+								StringUtils.substringBefore(IValue1Util.getValue1(b), Util.getValue2(b))));
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), csk, csv);
 				//
@@ -3407,7 +3409,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		final PatternMap patternMap = IValue0Util.getValue0(triplet);
 		//
-		final List<String> list = Util.getValue1(triplet);
+		final List<String> list = IValue1Util.getValue1(triplet);
 		//
 		for (int k = 0; k < IterableUtils.size(list); k++) {
 			//
@@ -3715,7 +3717,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				//
 			if (Boolean.logicalAnd(
 					StringUtils.startsWith(k2 = Util.getValue2(quartet), k1 = IValue0Util.getValue0(quartet)),
-					StringUtils.startsWith(v2 = Util.getValue3(quartet), v1 = Util.getValue1(quartet)))) {
+					StringUtils.startsWith(v2 = Util.getValue3(quartet), v1 = IValue1Util.getValue1(quartet)))) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						StringUtils.substringAfter(k2, k1), StringUtils.substringAfter(v2, v1));
@@ -3796,7 +3798,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		for (int j = 0; j < IterableUtils.size(quartets); j++) {
 			//
-			if (Objects.equals(v1 = Util.getValue1(quartet = IterableUtils.get(quartets, j)),
+			if (Objects.equals(v1 = IValue1Util.getValue1(quartet = IterableUtils.get(quartets, j)),
 					v2 = Util.getValue3(quartet))) {
 				//
 				continue;

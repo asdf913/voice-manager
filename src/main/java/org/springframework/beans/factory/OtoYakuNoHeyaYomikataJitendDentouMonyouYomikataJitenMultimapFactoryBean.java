@@ -55,6 +55,7 @@ import org.javatuples.Triplet;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.javatuples.valueintf.IValue1Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
@@ -308,7 +309,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			if (Boolean.logicalAnd(
 					Objects.equals(s1 = IValue0Util.getValue0(quartet = IterableUtils.get(quartets, i)),
 							s3 = Util.getValue2(quartet)),
-					Objects.equals(s2 = Util.getValue1(quartet), s4 = Util.getValue3(quartet)))) {
+					Objects.equals(s2 = IValue1Util.getValue1(quartet), s4 = Util.getValue3(quartet)))) {
 				//
 				continue;
 				//
@@ -452,7 +453,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						Quartet.with(Util.group(m2, 3), g24, cpk, cpv),
 						(a, b) -> MultimapUtil.put(a,
 								StringUtils.substringAfter(IValue0Util.getValue0(b), Util.getValue2(b)),
-								StringUtils.substringAfter(Util.getValue1(b), Util.getValue3(b))));
+								StringUtils.substringAfter(IValue1Util.getValue1(b), Util.getValue3(b))));
 				//
 			} // if
 				//
@@ -613,7 +614,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		//
 		Matcher m2;
 		//
-		final String g12 = Util.getValue1(quartet);
+		final String g12 = IValue1Util.getValue1(quartet);
 		//
 		final String g13 = Util.getValue2(quartet);
 		//
@@ -957,7 +958,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					Boolean.logicalAnd(
 							Objects.equals(k1 = IValue0Util.getValue0(quartet = IterableUtils.get(quartets, i)),
 									v3 = Util.getValue2(quartet)),
-							Objects.equals(v2 = Util.getValue1(quartet), v4 = Util.getValue3(quartet))),
+							Objects.equals(v2 = IValue1Util.getValue1(quartet), v4 = Util.getValue3(quartet))),
 					StringUtils.isBlank(cpk = StringUtils.getCommonPrefix(k1, v3)),
 					StringUtils.isBlank(cpv = StringUtils.getCommonPrefix(v2, v4)))) {
 				//
@@ -1076,17 +1077,17 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 							StringUtils.substringBefore(k1, csk), StringUtils.substringBefore(v1, csv));
 					//
 					testAndAccept(
-							(a, b) -> Boolean.logicalAnd(StringUtils.isNotBlank(Util.getKey(Util.getValue1(b))),
-									StringUtils.isNotBlank(Util.getValue(Util.getValue1(b)))),
+							(a, b) -> Boolean.logicalAnd(StringUtils.isNotBlank(Util.getKey(IValue1Util.getValue1(b))),
+									StringUtils.isNotBlank(Util.getValue(IValue1Util.getValue1(b)))),
 							multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 							Triplet.with(Pair.of(k1, v1),
 									Pair.of(StringUtils.getCommonPrefix(k1, k2), StringUtils.getCommonPrefix(v1, v2)),
 									Pair.of(csk, csv)),
 							(a, b) -> MultimapUtil.put(a,
 									StringUtils.substringBetween(Util.getKey(IValue0Util.getValue0(b)),
-											Util.getKey(Util.getValue1(b)), Util.getKey(Util.getValue2(b))),
+											Util.getKey(IValue1Util.getValue1(b)), Util.getKey(Util.getValue2(b))),
 									StringUtils.substringBetween(Util.getValue(IValue0Util.getValue0(b)),
-											Util.getValue(Util.getValue1(b)), Util.getValue(Util.getValue2(b)))));
+											Util.getValue(IValue1Util.getValue1(b)), Util.getValue(Util.getValue2(b)))));
 					//
 				} // if
 					//
@@ -1127,7 +1128,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		final Triplet<Multimap<String, String>, IntCollection, Entry<String, String>> triplet = toMultimapAndIntCollectionAndTriplet6A(
 				iop, lines, Triplet.with(g11, Util.group(m1, 2), g13), hiragana);
 		//
-		IntCollectionUtil.addAllInts(intCollection, Util.getValue1(triplet));
+		IntCollectionUtil.addAllInts(intCollection, IValue1Util.getValue1(triplet));
 		//
 		MultimapUtil.putAll(multimap, IValue0Util.getValue0(triplet));
 		//
@@ -1174,7 +1175,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			@Nullable final IntObjectPair<String> iop, final Iterable<String> lines,
 			final Triplet<String, String, String> triplet, final String hiragana) {
 		//
-		final String g12 = Util.getValue1(triplet);
+		final String g12 = IValue1Util.getValue1(triplet);
 		//
 		String g21, g22, csk, csv, tk = null, tv = null;
 		//
@@ -1963,12 +1964,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				a -> testAndAccept(
 						b -> b != null
-								&& MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
+								&& MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)),
 						a, b -> {
 							//
 							final String s1 = IValue0Util.getValue0(b);
 							//
-							MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+							MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 							//
 							MultimapUtil.put(multimap, s1, Util.getValue2(b));
 							//
@@ -4085,12 +4086,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				a -> testAndAccept(
 						b -> b != null
-								&& MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
+								&& MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)),
 						a, b -> {
 							//
 							final String s1 = IValue0Util.getValue0(b);
 							//
-							MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+							MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 							//
 							MultimapUtil.put(multimap, s1, Util.getValue2(b));
 							//
@@ -4985,7 +4986,7 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			if (MultimapUtil.containsEntry(multimap,
 					value0 = IValue0Util.getValue0(triplet = IterableUtils.get(triplets, i)),
-					value1 = Util.getValue1(triplet))) {
+					value1 = IValue1Util.getValue1(triplet))) {
 				//
 				MultimapUtil.remove(multimap, value0, value1);
 				//
@@ -5163,12 +5164,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			Util.forEach(Arrays.asList(Triplet.with("羽", "ば", "は")),
 					//
 					a -> testAndAccept(
-							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)), a,
 							b -> {
 								//
 								final String s1 = IValue0Util.getValue0(b);
 								//
-								MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+								MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 								//
 								MultimapUtil.put(multimap, s1, Util.getValue2(b));
 								//
@@ -5365,10 +5366,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		Util.forEach(Arrays.asList(Triplet.with("春", "ぱる", "はる"), Triplet.with("風", "ぷう", "ふう"),
 				Triplet.with("樽", "だる", "たる"), Triplet.with("絣", "がすり", "かすり")), x ->
 		//
-		testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)), multimap, x,
+		testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), IValue1Util.getValue1(b)), multimap, x,
 				(a, b) -> {
 					//
-					MultimapUtil.remove(a, IValue0Util.getValue0(b), Util.getValue1(b));
+					MultimapUtil.remove(a, IValue0Util.getValue0(b), IValue1Util.getValue1(b));
 					//
 					MultimapUtil.put(a, IValue0Util.getValue0(b), Util.getValue2(b));
 					//
@@ -5526,10 +5527,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		Util.forEach(Arrays.asList(Triplet.with("珠", "じゅ", "しゅ"), Triplet.with("稜", "せん", "りょう"),
 				Triplet.with("線", "りょう", "せん"), Triplet.with("尺", "じゃく", "しゃく"), Triplet.with("車", "ぐるま", "くるま")), x ->
 		//
-		testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)), mm, x,
+		testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), IValue1Util.getValue1(b)), mm, x,
 				(a, b) -> {
 					//
-					MultimapUtil.remove(a, IValue0Util.getValue0(b), Util.getValue1(b));
+					MultimapUtil.remove(a, IValue0Util.getValue0(b), IValue1Util.getValue1(b));
 					//
 					MultimapUtil.put(a, IValue0Util.getValue0(b), Util.getValue2(b));
 					//
@@ -5917,10 +5918,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			Util.forEach(Arrays.asList(Triplet.with("象", "じょう", "しょう"), Triplet.with("絣", "がすり", "かすり")), x ->
 			//
-			testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)),
+			testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), IValue1Util.getValue1(b)),
 					multimap, x, (a, b) -> {
 						//
-						MultimapUtil.remove(a, IValue0Util.getValue0(b), Util.getValue1(b));
+						MultimapUtil.remove(a, IValue0Util.getValue0(b), IValue1Util.getValue1(b));
 						//
 						MultimapUtil.put(a, IValue0Util.getValue0(b), Util.getValue2(b));
 						//
@@ -6040,10 +6041,10 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		Util.forEach(Arrays.asList(Triplet.with("絣", "がすり", "かすり"), Triplet.with("標", "じるし", "しるし"),
 				Triplet.with("縞", "じま", "しま")), x ->
 		//
-		testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), Util.getValue1(b)), mm, x,
+		testAndAccept((a, b) -> MultimapUtil.containsEntry(a, IValue0Util.getValue0(b), IValue1Util.getValue1(b)), mm, x,
 				(a, b) -> {
 					//
-					MultimapUtil.remove(a, IValue0Util.getValue0(b), Util.getValue1(b));
+					MultimapUtil.remove(a, IValue0Util.getValue0(b), IValue1Util.getValue1(b));
 					//
 					MultimapUtil.put(a, IValue0Util.getValue0(b), Util.getValue2(b));
 					//
@@ -6085,12 +6086,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			Util.forEach(Arrays.asList(Triplet.with("絣", "がすり", "かすり")),
 					//
 					a -> testAndAccept(
-							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)), a,
 							b -> {
 								//
 								final String s1 = IValue0Util.getValue0(b);
 								//
-								MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+								MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 								//
 								MultimapUtil.put(multimap, s1, Util.getValue2(b));
 								//
@@ -6117,12 +6118,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 						Triplet.with("杵", "ぎね", "きね"), Triplet.with("車", "ぐるま", "くるま"), Triplet.with("縞", "じま", "しま")),
 				a ->
 				//
-				testAndAccept((b, c) -> MultimapUtil.containsEntry(b, IValue0Util.getValue0(c), Util.getValue1(c)),
+				testAndAccept((b, c) -> MultimapUtil.containsEntry(b, IValue0Util.getValue0(c), IValue1Util.getValue1(c)),
 						Util.getKey(entry), a, (b, c) -> {
 							//
 							final String s1 = IValue0Util.getValue0(c);
 							//
-							MultimapUtil.remove(b, s1, Util.getValue1(c));
+							MultimapUtil.remove(b, s1, IValue1Util.getValue1(c));
 							//
 							MultimapUtil.put(b, s1, Util.getValue2(c));
 							//
@@ -6346,12 +6347,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			Util.forEach(Arrays.asList(Triplet.with("縞", "じま", "しま")),
 					//
 					a -> testAndAccept(
-							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)), a,
 							b -> {
 								//
 								final String s1 = IValue0Util.getValue0(b);
 								//
-								MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+								MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 								//
 								MultimapUtil.put(multimap, s1, Util.getValue2(b));
 								//
@@ -6598,12 +6599,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				Util.forEach(Arrays.asList(Triplet.with("浮", "うき", "う")),
 						//
 						a -> testAndAccept(
-								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
+								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)),
 								a, b -> {
 									//
 									final String s1 = IValue0Util.getValue0(b);
 									//
-									MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+									MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 									//
 									MultimapUtil.put(multimap, s1, Util.getValue2(b));
 									//
@@ -6671,12 +6672,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				Util.forEach(Arrays.asList(Triplet.with("革", "がわ", "かわ")),
 						//
 						a -> testAndAccept(
-								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
+								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)),
 								a, b -> {
 									//
 									final String s1 = IValue0Util.getValue0(b);
 									//
-									MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+									MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 									//
 									MultimapUtil.put(multimap, s1, Util.getValue2(b));
 									//
@@ -6779,12 +6780,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				Util.forEach(Arrays.asList(Triplet.with("手", "で", "て")),
 						//
 						a -> testAndAccept(
-								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
+								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)),
 								a, b -> {
 									//
 									final String s1 = IValue0Util.getValue0(b);
 									//
-									MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+									MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 									//
 									MultimapUtil.put(multimap, s1, Util.getValue2(b));
 									//
@@ -6869,12 +6870,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			Util.forEach(Arrays.asList(Triplet.with("絣", "がすり", "かすり")),
 					//
 					a -> testAndAccept(
-							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)), a,
 							b -> {
 								//
 								final String s1 = IValue0Util.getValue0(b);
 								//
-								MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+								MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 								//
 								MultimapUtil.put(multimap, s1, Util.getValue2(b));
 								//
@@ -6953,12 +6954,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				Util.forEach(Arrays.asList(Triplet.with("木", "ぎ", "き")),
 						//
 						a -> testAndAccept(
-								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
+								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)),
 								a, b -> {
 									//
 									final String s1 = IValue0Util.getValue0(b);
 									//
-									MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+									MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 									//
 									MultimapUtil.put(multimap, s1, Util.getValue2(b));
 									//
@@ -7008,11 +7009,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					Util.forEach(Arrays.asList(Triplet.with("手", "で", "て")),
 							//
 							a -> testAndAccept(b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b),
-									Util.getValue1(b)), a, b -> {
+									IValue1Util.getValue1(b)), a, b -> {
 										//
 										final String s1 = IValue0Util.getValue0(b);
 										//
-										MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+										MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 										//
 										MultimapUtil.put(multimap, s1, Util.getValue2(b));
 										//
@@ -7042,11 +7043,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 					Util.forEach(Arrays.asList(Triplet.with("縞", "じま", "しま")),
 							//
 							a -> testAndAccept(b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b),
-									Util.getValue1(b)), a, b -> {
+									IValue1Util.getValue1(b)), a, b -> {
 										//
 										final String s1 = IValue0Util.getValue0(b);
 										//
-										MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+										MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 										//
 										MultimapUtil.put(multimap, s1, Util.getValue2(b));
 										//
@@ -7142,12 +7143,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			Util.forEach(Arrays.asList(Triplet.with("絣", "がすり", "かすり")),
 					//
 					a -> testAndAccept(
-							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)), a,
 							b -> {
 								//
 								final String s1 = IValue0Util.getValue0(b);
 								//
-								MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+								MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 								//
 								MultimapUtil.put(multimap, s1, Util.getValue2(b));
 								//
@@ -7186,12 +7187,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			Util.forEach(Arrays.asList(Triplet.with("菊", "ぎく", "きく")),
 					//
 					a -> testAndAccept(
-							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)), a,
 							b -> {
 								//
 								final String s1 = IValue0Util.getValue0(b);
 								//
-								MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+								MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 								//
 								MultimapUtil.put(multimap, s1, Util.getValue2(b));
 								//
@@ -7312,12 +7313,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				Util.forEach(Arrays.asList(Triplet.with("桜", "ざくら", "さくら")),
 						//
 						a -> testAndAccept(
-								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
+								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)),
 								a, b -> {
 									//
 									final String s1 = IValue0Util.getValue0(b);
 									//
-									MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+									MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 									//
 									MultimapUtil.put(multimap, s1, Util.getValue2(b));
 									//
@@ -7340,12 +7341,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			Util.forEach(Arrays.asList(Triplet.with("翫", "かん", "がん"), Triplet.with("縞", "じま", "しま")),
 					//
 					a -> testAndAccept(
-							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)), a,
 							b -> {
 								//
 								final String s1 = IValue0Util.getValue0(b);
 								//
-								MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+								MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 								//
 								MultimapUtil.put(multimap, s1, Util.getValue2(b));
 								//
@@ -7446,12 +7447,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				Util.forEach(Arrays.asList(Triplet.with("顔", "がお", "かお")),
 						//
 						a -> testAndAccept(
-								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
+								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)),
 								a, b -> {
 									//
 									final String s1 = IValue0Util.getValue0(b);
 									//
-									MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+									MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 									//
 									MultimapUtil.put(multimap, s1, Util.getValue2(b));
 									//
@@ -7482,12 +7483,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			Util.forEach(Arrays.asList(Triplet.with("船", "ぶね", "ふね")),
 					//
 					a -> testAndAccept(
-							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)), a,
 							b -> {
 								//
 								final String s1 = IValue0Util.getValue0(b);
 								//
-								MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+								MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 								//
 								MultimapUtil.put(multimap, s1, Util.getValue2(b));
 								//
@@ -7533,12 +7534,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			Util.forEach(Arrays.asList(Triplet.with("樽", "だる", "たる")),
 					//
 					a -> testAndAccept(
-							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)), a,
 							b -> {
 								//
 								final String s1 = IValue0Util.getValue0(b);
 								//
-								MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+								MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 								//
 								MultimapUtil.put(multimap, s1, Util.getValue2(b));
 								//
@@ -7663,12 +7664,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			Util.forEach(Arrays.asList(Triplet.with("形", "がた", "かた")),
 					//
 					a -> testAndAccept(
-							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)), a,
 							b -> {
 								//
 								final String s1 = IValue0Util.getValue0(b);
 								//
-								MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+								MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 								//
 								MultimapUtil.put(multimap, s1, Util.getValue2(b));
 								//
@@ -7706,12 +7707,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			Util.forEach(Arrays.asList(Triplet.with("車", "ぐるま", "くるま")),
 					//
 					a -> testAndAccept(
-							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)), a,
 							b -> {
 								//
 								final String s1 = IValue0Util.getValue0(b);
 								//
-								MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+								MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 								//
 								MultimapUtil.put(multimap, s1, Util.getValue2(b));
 								//
@@ -7731,12 +7732,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 		Util.forEach(Arrays.asList(Triplet.with("鶴", "づる", "つる")),
 				//
 				a -> testAndAccept(
-						b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+						b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)), a,
 						b -> {
 							//
 							final String s1 = IValue0Util.getValue0(b);
 							//
-							MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+							MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 							//
 							MultimapUtil.put(multimap, s1, Util.getValue2(b));
 							//
@@ -7814,12 +7815,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			Util.forEach(Arrays.asList(Triplet.with("手", "で", "て"), Triplet.with("辺", "べ", "へ")),
 					//
 					a -> testAndAccept(
-							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)), a,
 							b -> {
 								//
 								final String s1 = IValue0Util.getValue0(b);
 								//
-								MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+								MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 								//
 								MultimapUtil.put(multimap, s1, Util.getValue2(b));
 								//
@@ -7874,12 +7875,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			Util.forEach(Arrays.asList(Triplet.with("菱", "びし", "ひし")),
 					//
 					a -> testAndAccept(
-							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)), a,
+							b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)), a,
 							b -> {
 								//
 								final String s1 = IValue0Util.getValue0(b);
 								//
-								MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+								MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 								//
 								MultimapUtil.put(multimap, s1, Util.getValue2(b));
 								//
@@ -7930,12 +7931,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				Util.forEach(Arrays.asList(Triplet.with("樽", "だる", "たる"), Triplet.with("車", "ぐるま", "くるま")),
 						//
 						a -> testAndAccept(
-								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), Util.getValue1(b)),
+								b -> MultimapUtil.containsEntry(multimap, IValue0Util.getValue0(b), IValue1Util.getValue1(b)),
 								a, b -> {
 									//
 									final String s1 = IValue0Util.getValue0(b);
 									//
-									MultimapUtil.remove(multimap, s1, Util.getValue1(b));
+									MultimapUtil.remove(multimap, s1, IValue1Util.getValue1(b));
 									//
 									MultimapUtil.put(multimap, s1, Util.getValue2(b));
 									//

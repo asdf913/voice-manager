@@ -22,6 +22,7 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.javatuples.Pair;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.javatuples.valueintf.IValue1Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
@@ -139,7 +140,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromRe
 					//
 				} // if
 					//
-				Util.put(map, key, Util.getValue1(pair));
+				Util.put(map, key, IValue1Util.getValue1(pair));
 				//
 			} // while
 				//
