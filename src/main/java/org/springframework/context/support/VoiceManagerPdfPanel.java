@@ -3507,26 +3507,22 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					// Label (Duration)
 					//
-					if (duration != null) {
-						//
-						cs.beginText();
-						//
-						cs.setFont(font, fontSize);
-						//
-						cs.newLineAtOffset(
-								(index - 1) * size + (size - getTextWidth(
-										value = String.format("%1$.2f s", duration.toMillis() / 1000d), font, fontSize))
-										/ 2,
-								lastHeight = lastHeight - (font.getFontDescriptor().getAscent() / 1000 * fontSize)
-										+ (font.getFontDescriptor().getDescent() / 1000 * fontSize)
-						//
-						);
-						cs.showText(value);
-						//
-						cs.endText();
-						//
-					} // if
-						//
+					cs.beginText();
+					//
+					cs.setFont(font, fontSize);
+					//
+					cs.newLineAtOffset(
+							(index - 1) * size + (size - getTextWidth(
+									value = String.format("%1$.2f s", toMillis(duration, 0) / 1000d), font, fontSize))
+									/ 2,
+							lastHeight = lastHeight - (font.getFontDescriptor().getAscent() / 1000 * fontSize)
+									+ (font.getFontDescriptor().getDescent() / 1000 * fontSize)
+					//
+					);
+					cs.showText(value);
+					//
+					cs.endText();
+					//
 				} catch (final Exception e) {
 					//
 					LoggerUtil.error(LOG, e.getMessage(), e);
@@ -3568,6 +3564,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
+	}
+
+	private static long toMillis(final Duration instance, final long defaultValue) {
+		return instance != null ? instance.toMillis() : defaultValue;
 	}
 
 	private static void setSubtype(@Nullable final PDEmbeddedFile instance, final String mimeType) {

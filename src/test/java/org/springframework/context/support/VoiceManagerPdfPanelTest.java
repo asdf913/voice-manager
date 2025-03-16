@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -98,7 +99,7 @@ class VoiceManagerPdfPanelTest {
 			METHOD_GET_TEXT_ALIGNS, METHOD_CHOP, METHOD_GENERATE_PDF_HTML, METHOD_LENGTH,
 			METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY, METHOD_GET_TEXT_WIDTH, METHOD_OR,
 			METHOD_TO_AUDIO_RESOURCE, METHOD_LIST_FILES, METHOD_IS_DIRECTORY, METHOD_GET_TRANSFER_DATA,
-			METHOD_FIND_MATCH = null;
+			METHOD_FIND_MATCH, METHOD_TO_MILLIS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -144,6 +145,8 @@ class VoiceManagerPdfPanelTest {
 		//
 		(METHOD_FIND_MATCH = clz.getDeclaredMethod("findMatch", ContentInfoUtil.class, byte[].class))
 				.setAccessible(true);
+		//
+		(METHOD_TO_MILLIS = clz.getDeclaredMethod("toMillis", Duration.class, Long.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -1010,6 +1013,27 @@ class VoiceManagerPdfPanelTest {
 	}
 
 	@Test
+	void testToMillis() throws Throwable {
+		//
+		final long one = 1;
+		//
+		Assertions.assertEquals(one, toMillis(Duration.ofMillis(one), 0));
+		//
+	}
+
+	private static long toMillis(final Duration instance, final long defaultValue) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MILLIS.invoke(null, instance, defaultValue);
+			if (obj instanceof Long) {
+				return ((Long) obj).longValue();
+			} // if
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testNull() throws Throwable {
 		//
 		final Class<?> clz = VoiceManagerPdfPanel.class;
@@ -1064,6 +1088,10 @@ class VoiceManagerPdfPanelTest {
 					//
 					Util.add(collection, Integer.valueOf(0));
 					//
+				} else if (Objects.equals(parameterType, Long.TYPE)) {
+					//
+					Util.add(collection, Long.valueOf(0));
+					//
 				} else if (Objects.equals(parameterType, Boolean.TYPE)) {
 					//
 					Util.add(collection, Boolean.FALSE);
@@ -1084,28 +1112,28 @@ class VoiceManagerPdfPanelTest {
 				//
 				invoke = Narcissus.invokeStaticMethod(m, os);
 				//
-				if (Util.contains(Arrays.asList(Float.TYPE, Boolean.TYPE, Integer.TYPE), m.getReturnType()) || or(
-						Boolean.logicalAnd(Objects.equals(name, "pdf"),
+				if (Util.contains(Arrays.asList(Float.TYPE, Boolean.TYPE, Integer.TYPE, Long.TYPE), m.getReturnType())
+						|| or(Boolean.logicalAnd(Objects.equals(name, "pdf"),
 								Arrays.equals(parameterTypes, new Class<?>[] { Path.class })),
-						Boolean.logicalAnd(Objects.equals(name, "getNumberAndUnit"),
-								Arrays.equals(parameterTypes, new Class<?>[] { String.class })),
-						Boolean.logicalAnd(Objects.equals(name, "getNumber"),
-								Arrays.equals(parameterTypes, new Class<?>[] { Object.class })),
-						Boolean.logicalAnd(Objects.equals(name, "getDefaultSpeechSpeedMap"),
-								(parameterCount = m.getParameterCount()) == 0),
-						Boolean.logicalAnd(
-								Objects.equals(name,
+								Boolean.logicalAnd(Objects.equals(name, "getNumberAndUnit"),
+										Arrays.equals(parameterTypes, new Class<?>[] { String.class })),
+								Boolean.logicalAnd(Objects.equals(name, "getNumber"),
+										Arrays.equals(parameterTypes, new Class<?>[] { Object.class })),
+								Boolean.logicalAnd(Objects.equals(name, "getDefaultSpeechSpeedMap"),
+										(parameterCount = m.getParameterCount()) == 0),
+								Boolean.logicalAnd(Objects.equals(name,
 										"getPDImageXObjectCreateFromByteArrayDetectFileTypeMethodAndAllowedFileTypes"),
-								parameterCount == 0),
-						Boolean.logicalAnd(Objects.equals(name, "createImageFormatComparator"),
-								Arrays.equals(parameterTypes, new Class<?>[] { List.class })),
-						Boolean.logicalAnd(Objects.equals(name, "createStyleMap"),
-								Arrays.equals(parameterTypes,
-										new Class<?>[] { Map.class, BigDecimal.class, ECSSUnit.class })),
-						Boolean.logicalAnd(Objects.equals(name, "generatePdfHtml"),
-								Arrays.equals(parameterTypes, new Class<?>[] { Configuration.class, Map.class })),
-						Boolean.logicalAnd(Objects.equals(name, "screenshot"),
-								Arrays.equals(parameterTypes, new Class<?>[] { Path.class })))) {
+										parameterCount == 0),
+								Boolean.logicalAnd(Objects.equals(name, "createImageFormatComparator"),
+										Arrays.equals(parameterTypes, new Class<?>[] { List.class })),
+								Boolean.logicalAnd(Objects.equals(name, "createStyleMap"),
+										Arrays.equals(parameterTypes,
+												new Class<?>[] { Map.class, BigDecimal.class, ECSSUnit.class })),
+								Boolean.logicalAnd(Objects.equals(name, "generatePdfHtml"),
+										Arrays.equals(parameterTypes,
+												new Class<?>[] { Configuration.class, Map.class })),
+								Boolean.logicalAnd(Objects.equals(name, "screenshot"),
+										Arrays.equals(parameterTypes, new Class<?>[] { Path.class })))) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
