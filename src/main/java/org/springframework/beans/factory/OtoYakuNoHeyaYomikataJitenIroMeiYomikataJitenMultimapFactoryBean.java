@@ -55,6 +55,7 @@ import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.javatuples.valueintf.IValue1Util;
+import org.javatuples.valueintf.IValue2Util;
 import org.javatuples.valueintf.IValue4;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Node;
@@ -840,7 +841,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 				if (Util.or(
 						Boolean.logicalAnd(
 								Objects.equals(a = IValue0Util.getValue0(quartet = IterableUtils.get(quartets, j)),
-										c = Util.getValue2(quartet)),
+										c = IValue2Util.getValue2(quartet)),
 								Objects.equals(b = IValue1Util.getValue1(quartet), d = Util.getValue3(quartet))),
 						!StringUtils.startsWith(a, c), !StringUtils.startsWith(b, d))) {
 					//
@@ -1548,7 +1549,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						x -> Pair.of(new TextStringBuilder(Util.getKey(x)), new TextStringBuilder(Util.getValue(x))))),
 				ArrayList::new, null);
 		//
-		final String g11 = Util.getValue2(triplet);
+		final String g11 = IValue2Util.getValue2(triplet);
 		//
 		final Entry<Multimap<String, String>, IntList> entry = toMultimapAndIntList11(patternMap, list, g11);
 		//
@@ -2012,7 +2013,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 		//
 		final String lcsk = IValue1Util.getValue1(quartet);
 		//
-		final String g3 = Util.getValue2(quartet);
+		final String g3 = IValue2Util.getValue2(quartet);
 		//
 		final String g4 = Util.getValue3(quartet);
 		//
@@ -2116,8 +2117,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						Quintet.with(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), g21, temp,
 								cp2, cs2),
 						x -> MultimapUtil.put(IValue0Util.getValue0(x),
-								StringUtils.substring(IValue1Util.getValue1(x), 1, 2),
-								StringUtils.substringBetween(Util.getValue2(x), Util.getValue3(x), getValue4(x))));
+								StringUtils.substring(IValue1Util.getValue1(x), 1, 2), StringUtils
+										.substringBetween(IValue2Util.getValue2(x), Util.getValue3(x), getValue4(x))));
 				//
 			} // for
 				//
@@ -3170,7 +3171,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 						multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 						Triplet.with(StringUtils.substringBefore(k1, csk), v1, csv),
 						(a, b) -> MultimapUtil.put(a, IValue0Util.getValue0(b),
-								StringUtils.substringBefore(IValue1Util.getValue1(b), Util.getValue2(b))));
+								StringUtils.substringBefore(IValue1Util.getValue1(b), IValue2Util.getValue2(b))));
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), csk, csv);
 				//
@@ -3377,7 +3378,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 	private static Entry<Multimap<String, String>, IntList> toMultimapAndIntList14(
 			final Triplet<PatternMap, List<String>, Matcher> triplet, final int i) {
 		//
-		final Matcher m1 = Util.getValue2(triplet);
+		final Matcher m1 = IValue2Util.getValue2(triplet);
 		//
 		if (!Util.matches(m1) || Util.groupCount(m1) <= 3) {
 			//
@@ -3716,7 +3717,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			} // if
 				//
 			if (Boolean.logicalAnd(
-					StringUtils.startsWith(k2 = Util.getValue2(quartet), k1 = IValue0Util.getValue0(quartet)),
+					StringUtils.startsWith(k2 = IValue2Util.getValue2(quartet), k1 = IValue0Util.getValue0(quartet)),
 					StringUtils.startsWith(v2 = Util.getValue3(quartet), v1 = IValue1Util.getValue1(quartet)))) {
 				//
 				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
@@ -3806,7 +3807,7 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 			} // if
 				//
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
-					lcsk = longestCommonSubstring(k1 = IValue0Util.getValue0(quartet), Util.getValue2(quartet)),
+					lcsk = longestCommonSubstring(k1 = IValue0Util.getValue0(quartet), IValue2Util.getValue2(quartet)),
 					lcsv = longestCommonSubstring(v1, v2));
 			//
 			if (Boolean.logicalAnd(StringUtils.endsWith(k1, lcsk), StringUtils.endsWith(v1, lcsv))) {
