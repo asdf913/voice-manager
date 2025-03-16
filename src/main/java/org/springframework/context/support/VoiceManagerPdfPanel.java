@@ -2202,7 +2202,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	@Nullable
-	private static Resource toAudioResource(final ContentInfoUtil ciu, final File file) throws IOException {
+	private static Resource toAudioResource(final ContentInfoUtil ciu, @Nullable final File file) throws IOException {
 		//
 		final ContentInfo ci = findMatch(ciu, file);
 		//
