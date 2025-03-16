@@ -3569,11 +3569,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static <X> X getValue1(final IValue1<X> instance) {
+	private static <X> X getValue1(@Nullable final IValue1<X> instance) {
 		return instance != null ? instance.getValue1() : null;
 	}
 
-	private static <X> X getValue2(final IValue2<X> instance) {
+	private static <X> X getValue2(@Nullable final IValue2<X> instance) {
 		return instance != null ? instance.getValue2() : null;
 	}
 
