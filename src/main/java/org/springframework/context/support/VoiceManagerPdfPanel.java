@@ -3570,6 +3570,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
+	@Nullable
 	private static PDFontDescriptor getFontDescriptor(@Nullable final PDFont instance) {
 		return instance != null ? instance.getFontDescriptor() : null;
 	}
