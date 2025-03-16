@@ -4243,8 +4243,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static <T, E extends Throwable> void testAndAccept(@Nullable final Predicate<T> predicate,
 			@Nullable final T value, @Nullable final FailableConsumer<T, E> consumer) throws E {
-		if (predicate != null && predicate.test(value) && consumer != null) {
-			consumer.accept(value);
+		if (Util.test(predicate, value)) {
+			FailableConsumerUtil.accept(consumer, value);
 		}
 	}
 
