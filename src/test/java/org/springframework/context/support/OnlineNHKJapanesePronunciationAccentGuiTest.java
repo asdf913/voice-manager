@@ -82,7 +82,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_WIDTH, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT,
 			METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS,
-			METHOD_FOR_EACH_ITERABLE, METHOD_MAP_INT_STREAM, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS,
+			METHOD_MAP_INT_STREAM, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS,
 			METHOD_SAVE_PITCH_ACCENT_IMAGE, METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED,
 			METHOD_OPEN_STREAM, METHOD_ADD_ACTION_LISTENER, METHOD_GET_FIELD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT,
 			METHOD_SAVE_FILE, METHOD_IIF, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR,
@@ -113,9 +113,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
 				ClipboardOwner.class)).setAccessible(true);
-		//
-		(METHOD_FOR_EACH_ITERABLE = clz.getDeclaredMethod("forEach", Iterable.class, Consumer.class))
-				.setAccessible(true);
 		//
 		(METHOD_MAP_INT_STREAM = clz.getDeclaredMethod("map", IntStream.class, IntUnaryOperator.class))
 				.setAccessible(true);
@@ -781,23 +778,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			throws Throwable {
 		try {
 			METHOD_SET_CONTENTS.invoke(null, instance, contents, owner);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testForEach() {
-		//
-		Assertions.assertDoesNotThrow(() -> forEach(null, (Consumer<?>) null));
-		//
-		Assertions.assertDoesNotThrow(() -> forEach(Collections.emptyList(), null));
-		//
-	}
-
-	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) throws Throwable {
-		try {
-			METHOD_FOR_EACH_ITERABLE.invoke(null, instance, action);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

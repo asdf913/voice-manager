@@ -68,7 +68,6 @@ import java.util.OptionalInt;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
@@ -1154,7 +1153,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		sort(imageWriterSpiFormats, createImageFormatComparator(imageFormatOrders));
 		//
-		forEach(imageWriterSpiFormats, mcbm::addElement);
+		Util.forEach(imageWriterSpiFormats, mcbm::addElement);
 		//
 		cbmImageFormat = mcbm;
 		//
@@ -1191,7 +1190,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		addElement(mcbmAudioFormatWrite, null);
 		//
-		forEach(formats, x -> addElement(mcbmAudioFormatWrite, x));
+		Util.forEach(formats, x -> addElement(mcbmAudioFormatWrite, x));
 		//
 		mcbmAudioFormatWrite.setSelectedItem(audioFormat);
 		//
@@ -1386,12 +1385,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		};
 		//
-	}
-
-	private static <T> void forEach(@Nullable final Iterable<T> instance, @Nullable final Consumer<? super T> action) {
-		if (instance != null && (action != null || Proxy.isProxyClass(Util.getClass(instance)))) {
-			instance.forEach(action);
-		}
 	}
 
 	private static <T> void forEach(@Nullable final FailableStream<T> instance, final FailableConsumer<T, ?> action) {

@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.Predicate;
@@ -134,6 +135,12 @@ public abstract class Util {
 	static void forEach(@Nullable final IntStream intStream, @Nullable final IntConsumer intConsumer) {
 		if (intStream != null && intConsumer != null) {
 			intStream.forEach(intConsumer);
+		}
+	}
+
+	static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) {
+		if (instance != null && (action != null || Proxy.isProxyClass(Util.getClass(instance)))) {
+			instance.forEach(action);
 		}
 	}
 

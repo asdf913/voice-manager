@@ -444,7 +444,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		testAndAccept(biPredicate, new JComboBox<>(mcbm), growx, this::add);
 		//
-		forEach(imageWriterSpiFormats, mcbm::addElement);
+		Util.forEach(imageWriterSpiFormats, mcbm::addElement);
 		//
 		cbmImageFormat = mcbm;
 		//
@@ -469,7 +469,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		final Double maxPreferredSizeWidth = Util.orElse(
 				max(Util.map(Util.stream(cs), x -> getWidth(Util.getPreferredSize(x))), ObjectUtils::compare), null);
 		//
-		forEach(cs, c -> {
+		Util.forEach(cs, c -> {
 			//
 			final Dimension pd = Util.getPreferredSize(c);
 			//
@@ -679,7 +679,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				final List<Pronunciation> pronounications = FailableFunctionUtil
 						.apply(onlineNHKJapanesePronunciationsAccentFailableFunction, Util.getText(tfText));
 				//
-				forEach(pronounications, x -> addElement(mcbmPronounication, x));
+				Util.forEach(pronounications, x -> addElement(mcbmPronounication, x));
 				//
 				if (!headless) {
 					//
@@ -960,12 +960,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		} // if
 			//
-	}
-
-	private static <T> void forEach(@Nullable final Iterable<T> instance, @Nullable final Consumer<? super T> action) {
-		if (instance != null && (action != null || Proxy.isProxyClass(Util.getClass(instance)))) {
-			instance.forEach(action);
-		}
 	}
 
 	/**
