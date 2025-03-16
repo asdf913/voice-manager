@@ -3518,8 +3518,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 							(index - 1) * size + (size - getTextWidth(
 									value = String.format("%1$.2f s", toMillis(duration, 0) / 1000d), font, fontSize))
 									/ 2,
-							lastHeight = lastHeight - (font.getFontDescriptor().getAscent() / 1000 * fontSize)
-									+ (font.getFontDescriptor().getDescent() / 1000 * fontSize)
+							lastHeight = lastHeight
+									- (getAscent(pdFontDescriptor = getFontDescriptor(font), 0) / 1000 * fontSize)
+									+ (getDescent(pdFontDescriptor, 0) / 1000 * fontSize)
 					//
 					);
 					cs.showText(value);
