@@ -322,7 +322,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Preserve Image")
 	private AbstractButton btnPreserveImage = null;
 
-	private AbstractButton btnSetOriginalAudio, btnClearOriginalAudio = null;
+	@Note("Set Original Audio")
+	private AbstractButton btnSetOriginalAudio = null;
+
+	private AbstractButton btnClearOriginalAudio = null;
 
 	@Note("HTML")
 	private JTextComponent taHtml = null;
