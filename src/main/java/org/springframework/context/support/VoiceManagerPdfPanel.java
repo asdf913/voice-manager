@@ -322,7 +322,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Preserve Image")
 	private AbstractButton btnPreserveImage = null;
 
-	private AbstractButton btnSetOriginalAudio = null;
+	private AbstractButton btnSetOriginalAudio, btnClearOriginalAudio = null;
 
 	@Note("HTML")
 	private JTextComponent taHtml = null;
@@ -1171,7 +1171,16 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(new JLabel("Original Audio"));
 		//
-		add(btnSetOriginalAudio = new JButton("Set Original Audio"), String.format("%1$s,span %2$s", WRAP, 2));
+		testAndAccept((a, b) -> b != null, panel = new JPanel(),
+				getLayoutManager(ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext),
+						Util.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
+				(a, b) -> setLayout(a, b));
+		//
+		panel.add(btnSetOriginalAudio = new JButton("Set"));
+		//
+		panel.add(btnClearOriginalAudio = new JButton("Clear"));
+		//
+		add(panel, String.format("%1$s,span %2$s", WRAP, 3));
 		//
 		// Audio Format
 		//
@@ -1242,7 +1251,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // if
 			//
-		actionPerformed(new ActionEvent(btnImageClear, 0, null));
+		Util.forEach(Arrays.asList(btnImageClear, btnClearOriginalAudio),
+				x -> actionPerformed(new ActionEvent(x, 0, null)));
 		//
 		final IH ih = new IH();
 		//
@@ -2069,8 +2079,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			try {
 				//
-				audioResource = getAudioResource(getContents(testAndApply(x -> !GraphicsEnvironment.isHeadless(),
-						Toolkit.getDefaultToolkit(), x -> getSystemClipboard(x), null), null));
+				setEnabled(btnClearOriginalAudio,
+						(audioResource = getAudioResource(
+								getContents(
+										testAndApply(x -> !GraphicsEnvironment.isHeadless(),
+												Toolkit.getDefaultToolkit(), x -> getSystemClipboard(x), null),
+										null))) != null);
 				//
 			} catch (final Exception e) {
 				//
@@ -2078,6 +2092,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // try
 				//
+		} else if (Objects.equals(source, btnClearOriginalAudio)) {
+			//
+			setEnabled(btnClearOriginalAudio, (audioResource = null) != null);
+			//
 		} // if
 			//
 		return false;
