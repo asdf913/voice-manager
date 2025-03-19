@@ -2185,7 +2185,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					setEnabled(btnClearOriginalAudio,
 							(audioResource = toAudioResource(new ContentInfoUtil(), file)) != null);
 					//
-					Util.setText(tfAudioFile, audioResource != null ? Util.getAbsolutePath(file) : null);
+					Util.setText(tfAudioFile, iif(audioResource != null, Util.getAbsolutePath(file), null));
 					//
 				} catch (final IOException e) {
 					//
@@ -2199,6 +2199,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		return false;
 		//
+	}
+
+	private static <T> T iif(final boolean b, final T valueTrue, final T valueFalse) {
+		return b ? valueTrue : valueFalse;
 	}
 
 	private static Resource getAudioResource(final Transferable transferable) throws Exception {

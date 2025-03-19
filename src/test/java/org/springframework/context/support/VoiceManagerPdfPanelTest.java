@@ -102,7 +102,7 @@ class VoiceManagerPdfPanelTest {
 			METHOD_GET_TEXT_ALIGNS, METHOD_CHOP, METHOD_GENERATE_PDF_HTML, METHOD_LENGTH,
 			METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY, METHOD_GET_TEXT_WIDTH, METHOD_OR,
 			METHOD_TO_AUDIO_RESOURCE, METHOD_LIST_FILES, METHOD_IS_DIRECTORY, METHOD_GET_TRANSFER_DATA,
-			METHOD_FIND_MATCH, METHOD_TO_MILLIS, METHOD_TEST_AND_ACCEPT = null;
+			METHOD_FIND_MATCH, METHOD_TO_MILLIS, METHOD_TEST_AND_ACCEPT, METHOD_IIF = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -153,6 +153,8 @@ class VoiceManagerPdfPanelTest {
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
 				FailableConsumer.class, FailableConsumer.class)).setAccessible(true);
+		//
+		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -516,9 +518,15 @@ class VoiceManagerPdfPanelTest {
 		//
 		FieldUtils.writeDeclaredField(instance, "btnSetOriginalAudio", btnSetOriginalAudio, true);
 		//
-		final ActionEvent actionEventBtnSetOriginalAudio = new ActionEvent(btnSetOriginalAudio, 0, null);
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnSetOriginalAudio, 0, null)));
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnSetOriginalAudio));
+		// btnAudioFile
+		//
+		final AbstractButton btnAudioFile = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnAudioFile", btnAudioFile, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnAudioFile, 0, null)));
 		//
 		if (GraphicsEnvironment.isHeadless()) {
 			//
@@ -1050,6 +1058,21 @@ class VoiceManagerPdfPanelTest {
 			final FailableConsumer<T, E> consumerTrue, final FailableConsumer<T, E> consumerFalse) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, value, consumerTrue, consumerFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIif() throws Throwable {
+		//
+		Assertions.assertNull(iif(true, null, null));
+		//
+	}
+
+	private static <T> T iif(final boolean b, final T valueTrue, final T valueFalse) throws Throwable {
+		try {
+			return (T) METHOD_IIF.invoke(null, b, valueTrue, valueFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
