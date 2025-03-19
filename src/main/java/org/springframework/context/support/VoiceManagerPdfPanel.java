@@ -328,7 +328,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Set Original Audio")
 	private AbstractButton btnSetOriginalAudio = null;
 
-	private AbstractButton btnClearOriginalAudio, btnAudioFile = null;
+	@Note("Clear Original Audio")
+	private AbstractButton btnClearOriginalAudio = null;
+
+	private AbstractButton btnAudioFile = null;
 
 	@Note("HTML")
 	private JTextComponent taHtml = null;
@@ -366,7 +369,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Speech Language Code")
 	private JTextComponent tfSpeechLanguageCode = null;
 
-	private JTextComponent tfSpeechLanguageName, tfAudioFile = null;
+	@Note("Speech Language Name")
+	private JTextComponent tfSpeechLanguageName = null;
+
+	private JTextComponent tfAudioFile = null;
 
 	private transient Document taHtmlDocument = null;
 
