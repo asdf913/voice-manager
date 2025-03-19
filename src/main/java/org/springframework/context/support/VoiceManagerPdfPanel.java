@@ -2127,7 +2127,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // if
 					//
-				testAndAccept(a -> !GraphicsEnvironment.isHeadless() && !isTestMode(),
+				testAndAccept(a -> Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 						document = Loader.loadPDF(pdf(Util.toPath(file), getPlaywrightBrowserTypeFunction())),
 						a -> JOptionPane.showMessageDialog(null,
 								testAndApply(Objects::nonNull,
