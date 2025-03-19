@@ -1069,6 +1069,20 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(btnCopyTextToHtml = new JButton("Copy"), WRAP);
 		//
+		// Image
+		//
+		(panel = createImagePanel(this,
+				ObjectUtils.getIfNull(
+						getLayoutManager(ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext),
+								Util.entrySet(
+										ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
+						MigLayout::new)))
+				.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), IMAGE));
+		//
+		add(panel, String.format("%1$s,span %2$s", WRAP, span + 1));
+		//
+		// Audio
+		//
 		// Voice ID
 		//
 		add(new JLabel("Voice Id"));
@@ -1115,20 +1129,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // if
 			//
-			// Image
+			// Original Audio
 			//
-		(panel = createImagePanel(this,
-				ObjectUtils.getIfNull(
-						getLayoutManager(ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext),
-								Util.entrySet(
-										ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
-						MigLayout::new)))
-				.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), IMAGE));
-		//
-		add(panel, String.format("%1$s,span %2$s", WRAP, span + 1));
-		//
-		// Original Audio
-		//
 		add(new JLabel("Original Audio"));
 		//
 		testAndAccept((a, b) -> b != null, panel = new JPanel(),
