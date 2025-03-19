@@ -268,6 +268,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static final String PAGE1 = "page1";
 
+	private static final String IMAGE = "Image";
+
 	private static final FailableBiConsumer<JTextComponent, HttpURLConnection, IOException> J_TEXT_COMPONENT_HTTP_URL_CONNECTION_FAILABLE_BI_PREDICATE = (
 			a, b) -> {
 		//
@@ -1121,7 +1123,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 								Util.entrySet(
 										ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
 						MigLayout::new)))
-				.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Image"));
+				.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), IMAGE));
 		//
 		add(panel, String.format("%1$s,span %2$s", WRAP, span + 1));
 		//
@@ -1888,7 +1890,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			testAndRun(!isTestMode(),
 					() -> JOptionPane.showMessageDialog(null, testAndApply(Objects::nonNull,
-							Util.cast(BufferedImage.class, renderedImage), ImageIcon::new, null), "Image",
+							Util.cast(BufferedImage.class, renderedImage), ImageIcon::new, null), IMAGE,
 							JOptionPane.PLAIN_MESSAGE, null),
 					null);
 			//
@@ -2085,7 +2087,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 										chop(testAndApply(x -> getNumberOfPages(x) > 0, a,
 												x -> new PDFRenderer(x).renderImage(0), null)),
 										ImageIcon::new, null),
-								"Image", JOptionPane.PLAIN_MESSAGE, null));
+								IMAGE, JOptionPane.PLAIN_MESSAGE, null));
 				//
 			} catch (final IOException | ReflectiveOperationException | TemplateException e) {
 				//
