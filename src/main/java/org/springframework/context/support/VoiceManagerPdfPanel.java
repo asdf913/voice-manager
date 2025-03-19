@@ -1120,8 +1120,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						getLayoutManager(ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext),
 								Util.entrySet(
 										ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
-						MigLayout::new),
-				span)).setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Image"));
+						MigLayout::new)))
+				.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Image"));
 		//
 		add(panel, String.format("%1$s,span %2$s", WRAP, span + 1));
 		//
@@ -1220,12 +1220,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static JPanel createImagePanel(final VoiceManagerPdfPanel instance, final LayoutManager layoutManager,
-			final int span) throws Exception {
+	private static JPanel createImagePanel(final VoiceManagerPdfPanel instance, final LayoutManager layoutManager)
+			throws Exception {
 		//
 		final JPanel panel = new JPanel(layoutManager);
 		//
 		if (instance != null) {
+			//
+			final int span = 6;
 			//
 			// URL
 			//
@@ -1255,23 +1257,15 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			panel.add(new JLabel("Clipboard"));
 			//
-			final JPanel panel2 = new JPanel();
+			panel.add(instance.btnImageFromClipboard = new JButton("Copy"));
 			//
-			testAndAccept((a, b) -> b != null, panel2,
-					getLayoutManager(ApplicationContextUtil.getAutowireCapableBeanFactory(instance.applicationContext),
-							Util.entrySet(
-									ListableBeanFactoryUtil.getBeansOfType(instance.applicationContext, Object.class))),
-					(a, b) -> setLayout(a, b));
+			panel.add(instance.btnImageClear = new JButton("Clear"));
 			//
-			panel2.add(instance.btnImageFromClipboard = new JButton("Copy"));
-			//
-			panel2.add(instance.btnImageClear = new JButton("Clear"));
-			//
-			panel2.add(instance.btnImageView = new JButton("View"));
+			panel.add(instance.btnImageView = new JButton("View"));
 			//
 			final MutableComboBoxModel<String> mcbm = new DefaultComboBoxModel<>();
 			//
-			panel2.add(new JComboBox<>(mcbm));
+			panel.add(new JComboBox<>(mcbm));
 			//
 			sort(instance.imageWriterSpiFormats, createImageFormatComparator(instance.imageFormatOrders));
 			//
@@ -1279,9 +1273,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			instance.cbmImageFormat = mcbm;
 			//
-			panel2.add(instance.btnPreserveImage = new JCheckBox("Prserve Image"));
-			//
-			panel.add(panel2, String.format("%1$s,span %2$s", WRAP, 4));
+			panel.add(instance.btnPreserveImage = new JCheckBox("Prserve Image"),
+					String.format("%1$s,span %2$s", WRAP, 2));
 			//
 			// Original Size
 			//

@@ -1157,8 +1157,8 @@ class VoiceManagerPdfPanelTest {
 								Boolean.logicalAnd(Objects.equals(name, "screenshot"),
 										Arrays.equals(parameterTypes, new Class<?>[] { Path.class })),
 								Boolean.logicalAnd(Objects.equals(name, "createImagePanel"),
-										Arrays.equals(parameterTypes, new Class<?>[] { VoiceManagerPdfPanel.class,
-												LayoutManager.class, Integer.TYPE })))) {
+										Arrays.equals(parameterTypes,
+												new Class<?>[] { VoiceManagerPdfPanel.class, LayoutManager.class })))) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
