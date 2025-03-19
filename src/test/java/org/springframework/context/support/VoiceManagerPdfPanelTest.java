@@ -98,11 +98,13 @@ import j2html.rendering.HtmlBuilder;
 
 class VoiceManagerPdfPanelTest {
 
+	private static Class<?> CLASS_SHLWAPI = null;
+
 	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_SELECTED_ITEM, METHOD_TO_HTML,
 			METHOD_GET_TEXT_ALIGNS, METHOD_CHOP, METHOD_GENERATE_PDF_HTML, METHOD_LENGTH,
 			METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY, METHOD_GET_TEXT_WIDTH, METHOD_OR,
 			METHOD_TO_AUDIO_RESOURCE, METHOD_LIST_FILES, METHOD_IS_DIRECTORY, METHOD_GET_TRANSFER_DATA,
-			METHOD_FIND_MATCH, METHOD_TO_MILLIS, METHOD_TEST_AND_ACCEPT, METHOD_IIF = null;
+			METHOD_FIND_MATCH, METHOD_TO_MILLIS, METHOD_TEST_AND_ACCEPT, METHOD_IIF, METHOD_PATH_FILE_EXISTS_W = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -156,11 +158,17 @@ class VoiceManagerPdfPanelTest {
 		//
 		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
 		//
+		(METHOD_PATH_FILE_EXISTS_W = clz.getDeclaredMethod("PathFileExistsW",
+				CLASS_SHLWAPI = Class.forName("org.springframework.context.support.VoiceManagerPdfPanel$Shlwapi"),
+				String.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
 
 		private Object transferData = null;
+
+		private Boolean PathFileExistsW = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -170,6 +178,11 @@ class VoiceManagerPdfPanelTest {
 			if (proxy instanceof Transferable && Objects.equals(methodName, "getTransferData")) {
 				//
 				return transferData;
+				//
+			} else if (Util.isAssignableFrom(CLASS_SHLWAPI, Util.getClass(proxy))
+					&& Objects.equals(methodName, "PathFileExistsW")) {
+				//
+				return PathFileExistsW;
 				//
 			} // if
 				//
@@ -185,6 +198,8 @@ class VoiceManagerPdfPanelTest {
 
 	private ContentInfoUtil contentInfoUtil = null;
 
+	private IH ih = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -193,6 +208,8 @@ class VoiceManagerPdfPanelTest {
 		decoder = Base64.getDecoder();
 		//
 		contentInfoUtil = new ContentInfoUtil();
+		//
+		ih = new IH();
 		//
 	}
 
@@ -991,7 +1008,7 @@ class VoiceManagerPdfPanelTest {
 	@Test
 	void testGetTransferData() throws Throwable {
 		//
-		Assertions.assertNull(getTransferData(Reflection.newProxy(Transferable.class, new IH()), null));
+		Assertions.assertNull(getTransferData(Reflection.newProxy(Transferable.class, ih), null));
 		//
 	}
 
@@ -1073,6 +1090,41 @@ class VoiceManagerPdfPanelTest {
 	private static <T> T iif(final boolean b, final T valueTrue, final T valueFalse) throws Throwable {
 		try {
 			return (T) METHOD_IIF.invoke(null, b, valueTrue, valueFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPathFileExistsW() throws Throwable {
+		//
+		final Object shlwapi = Reflection.newProxy(CLASS_SHLWAPI, ih);
+		//
+		if (ih != null) {
+			//
+			ih.PathFileExistsW = Boolean.FALSE;
+			//
+		} // if
+			//
+		Assertions.assertFalse(PathFileExistsW(shlwapi, null));
+		//
+		if (ih != null) {
+			//
+			ih.PathFileExistsW = Boolean.TRUE;
+			//
+		} // if
+			//
+		Assertions.assertTrue(PathFileExistsW(shlwapi, null));
+		//
+	}
+
+	private static boolean PathFileExistsW(final Object shlwapi, final String pszPath) throws Throwable {
+		try {
+			final Object obj = METHOD_PATH_FILE_EXISTS_W.invoke(null, shlwapi, pszPath);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

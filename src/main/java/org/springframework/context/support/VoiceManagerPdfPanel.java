@@ -48,6 +48,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -239,6 +240,11 @@ import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
+import com.sun.jna.Native;
+import com.sun.jna.Library;
+import com.sun.jna.WString;
+import com.sun.jna.Native;
+import com.sun.jna.ptr.IntByReference;
 
 import freemarker.template.Configuration;
 import freemarker.template.ConfigurationUtil;
@@ -2215,6 +2221,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return b ? valueTrue : valueFalse;
 	}
 
+	private static interface Shlwapi extends Library {
+
+		boolean PathFileExistsW(final WString pszPath);
+
+	}
+
 	private static Resource getAudioResource(final Transferable transferable) throws Exception {
 		//
 		Resource resource = null;
@@ -2266,8 +2278,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // try
 			//
+		final Shlwapi shlwapi = Objects.equals(Util.getName(Util.getClass(FileSystems.getDefault())),
+				"sun.nio.fs.WindowsFileSystem") ? Native.load("shlwapi", Shlwapi.class) : null;
+		//
 		if ((resource = toAudioResource(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
-				file = Util.toFile(testAndApply(Objects::nonNull, string, Path::of, null)))) != null
+				file = Util.toFile(testAndApply(x -> x != null && (shlwapi == null || PathFileExistsW(shlwapi, string)),
+						string, Path::of, null)))) != null
 				|| (resource = testAndApply((a, b) -> isDirectory(b), ciu, file,
 						(a, b) -> toAudioResource(a, listFiles(b)), null)) != null) {
 			//
@@ -2277,6 +2293,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		return null;
 		//
+	}
+
+	private static boolean PathFileExistsW(final Shlwapi instance, final String pszPath) {
+		return instance != null
+				&& instance.PathFileExistsW(testAndApply(Objects::nonNull, pszPath, WString::new, null));
 	}
 
 	@Nullable
