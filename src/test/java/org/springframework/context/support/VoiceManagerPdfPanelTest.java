@@ -1,6 +1,7 @@
 package org.springframework.context.support;
 
 import java.awt.GraphicsEnvironment;
+import java.awt.LayoutManager;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
@@ -1154,7 +1155,10 @@ class VoiceManagerPdfPanelTest {
 										Arrays.equals(parameterTypes,
 												new Class<?>[] { Configuration.class, Map.class })),
 								Boolean.logicalAnd(Objects.equals(name, "screenshot"),
-										Arrays.equals(parameterTypes, new Class<?>[] { Path.class })))) {
+										Arrays.equals(parameterTypes, new Class<?>[] { Path.class })),
+								Boolean.logicalAnd(Objects.equals(name, "createImagePanel"),
+										Arrays.equals(parameterTypes, new Class<?>[] { VoiceManagerPdfPanel.class,
+												LayoutManager.class, Integer.TYPE })))) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//

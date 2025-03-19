@@ -87,6 +87,7 @@ import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -1112,63 +1113,17 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // if
 			//
-			// Image URL
+			// Image
 			//
-		add(new JLabel("Image URL"));
+		(panel = createImagePanel(this,
+				ObjectUtils.getIfNull(
+						getLayoutManager(ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext),
+								Util.entrySet(
+										ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
+						MigLayout::new),
+				span)).setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Image"));
 		//
-		add(tfImageUrl = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManagerPdfPanel.imageUrl")),
-				String.format("%1$s,span %2$s", GROWX, span - 2));
-		//
-		add(tfImageUrlStateCode = new JTextField(), String.format("wmin %1$s", 27));
-		//
-		add(tfImageUrlMimeType = new JTextField(), String.format("%1$s,wmin %2$s", WRAP, 65));
-		//
-		// Image File
-		//
-		add(new JLabel("Image File"));
-		//
-		add(tfImageFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, span - 1));
-		//
-		setEditable(false, tfImageUrlStateCode, tfImageUrlMimeType, tfImageFile, tfSpeechLanguageCode,
-				tfSpeechLanguageName);
-		//
-		add(btnImageFile = new JButton("Select"), WRAP);
-		//
-		// Image From Clip board
-		//
-		add(new JLabel("Image From Clipboard"));
-		//
-		testAndAccept((a, b) -> b != null, panel = new JPanel(),
-				getLayoutManager(ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext),
-						Util.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
-				(a, b) -> setLayout(a, b));
-		//
-		panel.add(btnImageFromClipboard = new JButton("Copy"));
-		//
-		panel.add(btnImageClear = new JButton("Clear"));
-		//
-		panel.add(btnImageView = new JButton("View"));
-		//
-		final MutableComboBoxModel<String> mcbm = new DefaultComboBoxModel<>();
-		//
-		panel.add(new JComboBox<>(mcbm));
-		//
-		sort(imageWriterSpiFormats, createImageFormatComparator(imageFormatOrders));
-		//
-		Util.forEach(imageWriterSpiFormats, mcbm::addElement);
-		//
-		cbmImageFormat = mcbm;
-		//
-		panel.add(btnPreserveImage = new JCheckBox("Prserve Image"));
-		//
-		add(panel, String.format("%1$s,span %2$s", WRAP, 4));
-		//
-		// Original Size
-		//
-		add(new JLabel("Original Size"));
-		//
-		add(cbIsOriginalSize = new JCheckBox(), String.format("%1$s,span %2$s", WRAP, 2));
+		add(panel, String.format("%1$s,span %2$s", WRAP, span + 1));
 		//
 		// Original Audio
 		//
@@ -1262,6 +1217,81 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		ih.docuemnt = taHtmlDocument;
 		//
 		insertUpdate(Reflection.newProxy(DocumentEvent.class, ih));
+		//
+	}
+
+	private static JPanel createImagePanel(final VoiceManagerPdfPanel instance, final LayoutManager layoutManager,
+			final int span) throws Exception {
+		//
+		final JPanel panel = new JPanel(layoutManager);
+		//
+		if (instance != null) {
+			//
+			// URL
+			//
+			panel.add(new JLabel("URL"));
+			//
+			panel.add(
+					instance.tfImageUrl = new JTextField(PropertyResolverUtil.getProperty(instance.propertyResolver,
+							"org.springframework.context.support.VoiceManagerPdfPanel.imageUrl")),
+					String.format("%1$s,span %2$s", GROWX, span - 2));
+			//
+			panel.add(instance.tfImageUrlStateCode = new JTextField(), String.format("wmin %1$s", 27));
+			//
+			panel.add(instance.tfImageUrlMimeType = new JTextField(), String.format("%1$s,wmin %2$s", WRAP, 65));
+			//
+			// File
+			//
+			panel.add(new JLabel("File"));
+			//
+			panel.add(instance.tfImageFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, span - 1));
+			//
+			setEditable(false, instance.tfImageUrlStateCode, instance.tfImageUrlMimeType, instance.tfImageFile,
+					instance.tfSpeechLanguageCode, instance.tfSpeechLanguageName);
+			//
+			panel.add(instance.btnImageFile = new JButton("Select"), WRAP);
+			//
+			// Clip board
+			//
+			panel.add(new JLabel("Clipboard"));
+			//
+			final JPanel panel2 = new JPanel();
+			//
+			testAndAccept((a, b) -> b != null, panel2,
+					getLayoutManager(ApplicationContextUtil.getAutowireCapableBeanFactory(instance.applicationContext),
+							Util.entrySet(
+									ListableBeanFactoryUtil.getBeansOfType(instance.applicationContext, Object.class))),
+					(a, b) -> setLayout(a, b));
+			//
+			panel2.add(instance.btnImageFromClipboard = new JButton("Copy"));
+			//
+			panel2.add(instance.btnImageClear = new JButton("Clear"));
+			//
+			panel2.add(instance.btnImageView = new JButton("View"));
+			//
+			final MutableComboBoxModel<String> mcbm = new DefaultComboBoxModel<>();
+			//
+			panel2.add(new JComboBox<>(mcbm));
+			//
+			sort(instance.imageWriterSpiFormats, createImageFormatComparator(instance.imageFormatOrders));
+			//
+			Util.forEach(instance.imageWriterSpiFormats, mcbm::addElement);
+			//
+			instance.cbmImageFormat = mcbm;
+			//
+			panel2.add(instance.btnPreserveImage = new JCheckBox("Prserve Image"));
+			//
+			panel.add(panel2, String.format("%1$s,span %2$s", WRAP, 4));
+			//
+			// Original Size
+			//
+			panel.add(new JLabel("Original Size"));
+			//
+			panel.add(instance.cbIsOriginalSize = new JCheckBox(), String.format("%1$s,span %2$s", WRAP, 2));
+			//
+		} // if
+			//
+		return panel;
 		//
 	}
 
