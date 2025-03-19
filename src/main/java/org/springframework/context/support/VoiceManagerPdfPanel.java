@@ -2210,6 +2210,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
+	@Nullable
 	private static <T> T iif(final boolean b, final T valueTrue, @Nullable final T valueFalse) {
 		return b ? valueTrue : valueFalse;
 	}
