@@ -328,7 +328,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Set Original Audio")
 	private AbstractButton btnSetOriginalAudio = null;
 
-	private AbstractButton btnClearOriginalAudio = null;
+	private AbstractButton btnClearOriginalAudio, btnAudioFile = null;
 
 	@Note("HTML")
 	private JTextComponent taHtml = null;
@@ -366,7 +366,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Note("Speech Language Code")
 	private JTextComponent tfSpeechLanguageCode = null;
 
-	private JTextComponent tfSpeechLanguageName = null;
+	private JTextComponent tfSpeechLanguageName, tfAudioFile = null;
 
 	private transient Document taHtmlDocument = null;
 
@@ -1212,8 +1212,18 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 			} // if
 				//
-				// Original
+				// File
 				//
+			panel.add(new JLabel("File"));
+			//
+			panel.add(instance.tfAudioFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, 4));
+			//
+			setEditable(instance.tfAudioFile, false);
+			//
+			panel.add(instance.btnAudioFile = new JButton("Select"), WRAP);
+			//
+			// Original
+			//
 			panel.add(new JLabel("Original"));
 			//
 			panel.add(instance.btnSetOriginalAudio = new JButton("Set"));
@@ -2155,6 +2165,30 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			setEnabled(btnClearOriginalAudio, (audioResource = null) != null);
 			//
+		} else if (Objects.equals(source, btnAudioFile)) {
+			//
+			final JFileChooser jfc = testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
+					() -> new JFileChooser("."));
+			//
+			if (jfc != null && jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+				//
+				final File file = getAbsoluteFile(jfc.getSelectedFile());
+				//
+				try {
+					//
+					setEnabled(btnClearOriginalAudio,
+							(audioResource = toAudioResource(new ContentInfoUtil(), file)) != null);
+					//
+					Util.setText(tfAudioFile, audioResource != null ? Util.getAbsolutePath(file) : null);
+					//
+				} catch (final IOException e) {
+					//
+					LoggerUtil.error(LOG, e.getMessage(), e);
+					//
+				} // try
+					//
+			} // if
+				//
 		} // if
 			//
 		return false;
@@ -2216,14 +2250,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				file = Util.toFile(testAndApply(Objects::nonNull, string, Path::of, null)))) != null
 				|| (resource = testAndApply((a, b) -> isDirectory(b), ciu, file,
 						(a, b) -> toAudioResource(a, listFiles(b)), null)) != null) {
-			//
-			return resource;
-			//
-		} // if
-			//
-		if (!GraphicsEnvironment.isHeadless() && !isTestMode()
-				&& (jfc = new JFileChooser()).showOpenDialog(null) == JFileChooser.APPROVE_OPTION
-				&& (resource = toAudioResource(ciu, jfc.getSelectedFile())) != null) {
 			//
 			return resource;
 			//
