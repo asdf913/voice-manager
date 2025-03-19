@@ -906,11 +906,17 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private class VoiceIdListCellRenderer implements ListCellRenderer<Object> {
+	private static class VoiceIdListCellRenderer implements ListCellRenderer<Object> {
+
+		private SpeechApi speechApi = null;
 
 		private ListCellRenderer<Object> listCellRenderer = null;
 
 		private String commonPrefix = null;
+
+		private VoiceIdListCellRenderer(final SpeechApi speechApi) {
+			this.speechApi = speechApi;
+		}
 
 		@Override
 		@Nullable
@@ -1079,93 +1085,19 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						MigLayout::new)))
 				.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), IMAGE));
 		//
-		add(panel, String.format("%1$s,span %2$s", WRAP, span + 1));
+		add(panel, String.format("%1$s,%2$s,span %3$s", WRAP, GROWX, span + 1));
 		//
 		// Audio
 		//
-		// Voice ID
+		(panel = createAudioPanel(this,
+				ObjectUtils.getIfNull(
+						getLayoutManager(ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext),
+								Util.entrySet(
+										ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
+						MigLayout::new)))
+				.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Audio"));
 		//
-		add(new JLabel("Voice Id"));
-		//
-		final String[] voiceIds = testAndApply(x -> SpeechApi.isInstalled(x), speechApi, x -> SpeechApi.getVoiceIds(x),
-				null);
-		//
-		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
-				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
-			//
-			final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer();
-			//
-			voiceIdListCellRenderer.listCellRenderer = getRenderer(Util.cast(JComboBox.class,
-					jcbVoiceId = new JComboBox<>(Util.cast(ComboBoxModel.class, cbmVoiceId))));
-			//
-			voiceIdListCellRenderer.commonPrefix = String.join("",
-					StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
-			//
-			jcbVoiceId.setRenderer(voiceIdListCellRenderer);
-			//
-			jcbVoiceId.addItemListener(this);
-			//
-			add(jcbVoiceId, String.format("span %1$s", 2));
-			//
-			add(tfSpeechLanguageCode = new JTextField(), String.format("width %1$s", 30));
-			//
-			add(tfSpeechLanguageName = new JTextField(), String.format("%1$s,width %2$s", WRAP, 230));
-			//
-			final String s = PropertyResolverUtil.getProperty(propertyResolver,
-					"org.springframework.context.support.VoiceManagerPdfPanel.voiceId");
-			//
-			Object element = null;
-			//
-			for (int i = 0; i < cbmVoiceId.getSize(); i++) {
-				//
-				if (s != null && Util.contains(Arrays.asList(element = cbmVoiceId.getElementAt(i),
-						speechApi.getVoiceAttribute(Util.toString(element), "Name")), s)) {
-					//
-					setSelectedItem(cbmVoiceId, element);
-					//
-				} // if
-					//
-			} // for
-				//
-		} // if
-			//
-			// Original Audio
-			//
-		add(new JLabel("Original Audio"));
-		//
-		testAndAccept((a, b) -> b != null, panel = new JPanel(),
-				getLayoutManager(ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext),
-						Util.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
-				(a, b) -> setLayout(a, b));
-		//
-		panel.add(btnSetOriginalAudio = new JButton("Set"));
-		//
-		panel.add(btnClearOriginalAudio = new JButton("Clear"));
-		//
-		add(panel, String.format("%1$s,span %2$s", WRAP, 3));
-		//
-		// Audio Format
-		//
-		add(new JLabel("Audio Format"));
-		//
-		final JComboBox<Object> jcbAudioFormat = new JComboBox(cbmAudioFormat = new DefaultComboBoxModel<Object>());
-		//
-		final Collection<?> formats = getByteConverterAttributeValues(
-				configurableListableBeanFactory = ObjectUtils
-						.defaultIfNull(Util.cast(ConfigurableListableBeanFactory.class, applicationContext),
-								Util.cast(ConfigurableListableBeanFactory.class,
-										ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext))),
-				FORMAT);
-		//
-		final MutableComboBoxModel<Object> mcbmAudioFormatWrite = Util.cast(MutableComboBoxModel.class, cbmAudioFormat);
-		//
-		addElement(mcbmAudioFormatWrite, null);
-		//
-		Util.forEach(formats, x -> addElement(mcbmAudioFormatWrite, x));
-		//
-		mcbmAudioFormatWrite.setSelectedItem(audioFormat);
-		//
-		add(jcbAudioFormat, String.format("%1$s,span %2$s", WRAP, 2));
+		add(panel, String.format("%1$s,%2$s,span %3$s", WRAP, GROWX, span + 1));
 		//
 		add(new JLabel());
 		//
@@ -1221,6 +1153,102 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		ih.docuemnt = taHtmlDocument;
 		//
 		insertUpdate(Reflection.newProxy(DocumentEvent.class, ih));
+		//
+	}
+
+	private static JPanel createAudioPanel(final VoiceManagerPdfPanel instance, final LayoutManager layoutManager) {
+		//
+		final JPanel panel = new JPanel(layoutManager);
+		//
+		if (instance != null) {
+			//
+			// Voice ID
+			//
+			panel.add(new JLabel("Voice ID"));
+			//
+			final SpeechApi speechApi = instance.speechApi;
+			//
+			final String[] voiceIds = testAndApply(x -> SpeechApi.isInstalled(x), speechApi,
+					x -> SpeechApi.getVoiceIds(x), null);
+			//
+			if ((instance.cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
+					x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
+				//
+				final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer(speechApi);
+				//
+				voiceIdListCellRenderer.listCellRenderer = getRenderer(Util.cast(JComboBox.class,
+						instance.jcbVoiceId = new JComboBox<>(Util.cast(ComboBoxModel.class, instance.cbmVoiceId))));
+				//
+				voiceIdListCellRenderer.commonPrefix = String.join("",
+						StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
+				//
+				instance.jcbVoiceId.setRenderer(voiceIdListCellRenderer);
+				//
+				instance.jcbVoiceId.addItemListener(instance);
+				//
+				panel.add(instance.jcbVoiceId, String.format("span %1$s", 2));
+				//
+				panel.add(instance.tfSpeechLanguageCode = new JTextField(), String.format("width %1$s", 30));
+				//
+				panel.add(instance.tfSpeechLanguageName = new JTextField(),
+						String.format("%1$s,width %2$s", WRAP, 230));
+				//
+				final String s = PropertyResolverUtil.getProperty(instance.propertyResolver,
+						"org.springframework.context.support.VoiceManagerPdfPanel.voiceId");
+				//
+				Object element = null;
+				//
+				for (int i = 0; i < instance.cbmVoiceId.getSize(); i++) {
+					//
+					if (s != null && Util.contains(Arrays.asList(element = instance.cbmVoiceId.getElementAt(i),
+							SpeechApi.getVoiceAttribute(speechApi, Util.toString(element), "Name")), s)) {
+						//
+						setSelectedItem(instance.cbmVoiceId, element);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+				// Original
+				//
+			panel.add(new JLabel("Original"));
+			//
+			panel.add(instance.btnSetOriginalAudio = new JButton("Set"));
+			//
+			panel.add(instance.btnClearOriginalAudio = new JButton("Clear"), WRAP);
+			//
+			// Format
+			//
+			panel.add(new JLabel("Format"));
+			//
+			final JComboBox<Object> jcbAudioFormat = new JComboBox(
+					instance.cbmAudioFormat = new DefaultComboBoxModel<Object>());
+			//
+			final ApplicationContext applicationContext = instance.applicationContext;
+			//
+			final Collection<?> formats = getByteConverterAttributeValues(
+					instance.configurableListableBeanFactory = ObjectUtils
+							.defaultIfNull(Util.cast(ConfigurableListableBeanFactory.class, applicationContext),
+									Util.cast(ConfigurableListableBeanFactory.class,
+											ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext))),
+					FORMAT);
+			//
+			final MutableComboBoxModel<Object> mcbmAudioFormatWrite = Util.cast(MutableComboBoxModel.class,
+					instance.cbmAudioFormat);
+			//
+			addElement(mcbmAudioFormatWrite, null);
+			//
+			Util.forEach(formats, x -> addElement(mcbmAudioFormatWrite, x));
+			//
+			mcbmAudioFormatWrite.setSelectedItem(instance.audioFormat);
+			//
+			panel.add(jcbAudioFormat, String.format("%1$s,span %2$s", WRAP, 2));
+			//
+		} // if
+			//
+		return panel;
 		//
 	}
 
