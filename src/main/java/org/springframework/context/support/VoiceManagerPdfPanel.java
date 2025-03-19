@@ -1894,7 +1894,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		} // if
 			//
 		final Iterable<Predicate<Object>> predicates = Arrays.asList(this::actionPerformed2, this::actionPerformed3,
-				this::actionPerformed4);
+				this::actionPerformed4, this::actionPerformed5);
 		//
 		for (int i = 0; i < IterableUtils.size(predicates); i++) {
 			//
@@ -2171,7 +2171,15 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			setEnabled(btnClearOriginalAudio, (audioResource = null) != null);
 			//
-		} else if (Objects.equals(source, btnAudioFile)) {
+		} // if
+			//
+		return false;
+		//
+	}
+
+	private boolean actionPerformed5(final Object source) {
+		//
+		if (Objects.equals(source, btnAudioFile)) {
 			//
 			final JFileChooser jfc = testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 					() -> new JFileChooser("."));
