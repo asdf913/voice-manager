@@ -1222,8 +1222,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static JPanel createImagePanel(final VoiceManagerPdfPanel instance, final LayoutManager layoutManager)
-			throws Exception {
+	private static JPanel createImagePanel(final VoiceManagerPdfPanel instance, final LayoutManager layoutManager) {
 		//
 		final JPanel panel = new JPanel(layoutManager);
 		//
