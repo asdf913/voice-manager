@@ -433,6 +433,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
+	@Nullable
 	private transient Resource audioResource = null;
 
 	@Override
