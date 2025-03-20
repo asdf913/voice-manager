@@ -107,6 +107,7 @@ public interface ProtocolUtil {
 	}
 
 	@SuppressWarnings("java:S1612")
+	@Nullable
 	private static List<String> getAllowProtocols(final Instruction[] is, final ConstantPool cp) {
 		//
 		List<Object> list = null;

@@ -61,6 +61,7 @@ public class NodeUtil {
 		return instance != null ? instance.getName() : null;
 	}
 
+	@Nullable
 	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
 			@Nullable final Predicate<? super T> predicate) {
 		//
@@ -98,6 +99,7 @@ public class NodeUtil {
 		return instance != null && instance.hasAttr(attributeKey);
 	}
 
+	@Nullable
 	public static String attr(@Nullable final Node instance, @Nullable final String attributeKey) {
 		return instance != null && attributeKey != null ? instance.attr(attributeKey) : null;
 	}
@@ -107,6 +109,7 @@ public class NodeUtil {
 		return instance != null ? instance.nodeName() : null;
 	}
 
+	@Nullable
 	public static Node traverse(@Nullable final Node instance, @Nullable final NodeVisitor nodeVisitor) {
 		return instance != null && nodeVisitor != null ? instance.traverse(nodeVisitor) : instance;
 	}

@@ -55,6 +55,7 @@ public final class ElementUtil {
 			//
 	}
 
+	@Nullable
 	public static Elements selectXpath(@Nullable final Element instance, @Nullable final String xpath) {
 		return instance != null && xpath != null ? instance.selectXpath(xpath) : null;
 	}
