@@ -24,7 +24,7 @@ public final class ElementUtil {
 	}
 
 	@Nullable
-	public static String text(final Element instance) {
+	public static String text(@Nullable final Element instance) {
 		//
 		try {
 			//
@@ -40,7 +40,7 @@ public final class ElementUtil {
 	}
 
 	@Nullable
-	public static Elements getElementsByTag(final Element instance, final String tagName) {
+	public static Elements getElementsByTag(@Nullable final Element instance, final String tagName) {
 		//
 		try {
 			//
@@ -55,12 +55,12 @@ public final class ElementUtil {
 			//
 	}
 
-	public static Elements selectXpath(final Element instance, final String xpath) {
+	public static Elements selectXpath(@Nullable final Element instance, @Nullable final String xpath) {
 		return instance != null && xpath != null ? instance.selectXpath(xpath) : null;
 	}
 
 	@Nullable
-	public static Elements select(final Element instance, final String cssQuery) {
+	public static Elements select(@Nullable final Element instance, final String cssQuery) {
 		//
 		try {
 			//
@@ -77,7 +77,7 @@ public final class ElementUtil {
 	}
 
 	@Nullable
-	public static Elements children(final Element instance) {
+	public static Elements children(@Nullable final Element instance) {
 		//
 		try {
 			//
@@ -98,7 +98,7 @@ public final class ElementUtil {
 	}
 
 	@Nullable
-	public static String tagName(final Element instance) {
+	public static String tagName(@Nullable final Element instance) {
 		//
 		try {
 			//
@@ -113,7 +113,7 @@ public final class ElementUtil {
 	}
 
 	@Nullable
-	public static Element child(final Element instance, final int index) {
+	public static Element child(@Nullable final Element instance, final int index) {
 		//
 		try {
 			//

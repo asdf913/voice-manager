@@ -2293,7 +2293,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	private static boolean PathFileExistsW(final Shlwapi instance, final String pszPath) {
+	private static boolean PathFileExistsW(@Nullable final Shlwapi instance, final String pszPath) {
 		return instance != null
 				&& instance.PathFileExistsW(testAndApply(Objects::nonNull, pszPath, WString::new, null));
 	}

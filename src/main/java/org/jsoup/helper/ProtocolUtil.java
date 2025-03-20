@@ -51,7 +51,7 @@ public interface ProtocolUtil {
 			//
 	}
 
-	private static <T> T[] toArray(final Collection<T> instance, final T[] array) {
+	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(getClass(instance))) ? instance.toArray(array)
 				: null;
@@ -94,7 +94,7 @@ public interface ProtocolUtil {
 		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
 	}
 
-	private static <T> boolean test(final Predicate<T> instance, final T value) {
+	private static <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 
@@ -148,7 +148,8 @@ public interface ProtocolUtil {
 		return instance != null ? instance.stream() : null;
 	}
 
-	private static <T, R> Stream<R> map(final Stream<T> instance, final Function<? super T, ? extends R> mapper) {
+	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
+			@Nullable final Function<? super T, ? extends R> mapper) {
 		//
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
 				: null;
@@ -159,11 +160,11 @@ public interface ProtocolUtil {
 		return instance != null ? instance.toList() : null;
 	}
 
-	private static boolean contains(final Collection<?> items, final Object item) {
+	private static boolean contains(@Nullable final Collection<?> items, final Object item) {
 		return items != null && items.contains(item);
 	}
 
-	private static <E> void add(final Collection<E> instance, final E item) {
+	private static <E> void add(@Nullable final Collection<E> instance, final E item) {
 		if (instance != null) {
 			instance.add(item);
 		}

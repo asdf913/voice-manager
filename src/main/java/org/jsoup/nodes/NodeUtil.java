@@ -58,7 +58,8 @@ public class NodeUtil {
 		return instance != null ? instance.getName() : null;
 	}
 
-	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
+			@Nullable final Predicate<? super T> predicate) {
 		//
 		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.filter(predicate)
@@ -79,7 +80,7 @@ public class NodeUtil {
 		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
 	}
 
-	private static final <T> boolean test(final Predicate<T> instance, final T value) {
+	private static final <T> boolean test(@Nullable final Predicate<T> instance, final T value) {
 		return instance != null && instance.test(value);
 	}
 
@@ -87,11 +88,11 @@ public class NodeUtil {
 		return instance != null ? instance.apply(value) : null;
 	}
 
-	public static boolean hasAttr(final Node instance, final String attributeKey) {
+	public static boolean hasAttr(@Nullable final Node instance, final String attributeKey) {
 		return instance != null && instance.hasAttr(attributeKey);
 	}
 
-	public static String attr(final Node instance, final String attributeKey) {
+	public static String attr(@Nullable final Node instance, @Nullable final String attributeKey) {
 		return instance != null && attributeKey != null ? instance.attr(attributeKey) : null;
 	}
 
@@ -99,7 +100,7 @@ public class NodeUtil {
 		return instance != null ? instance.nodeName() : null;
 	}
 
-	public static Node traverse(final Node instance, final NodeVisitor nodeVisitor) {
+	public static Node traverse(@Nullable final Node instance, @Nullable final NodeVisitor nodeVisitor) {
 		return instance != null && nodeVisitor != null ? instance.traverse(nodeVisitor) : instance;
 	}
 
@@ -130,7 +131,7 @@ public class NodeUtil {
 	}
 
 	@Nullable
-	private static <T> T cast(final Class<T> clz, final Object instance) {
+	private static <T> T cast(@Nullable final Class<T> clz, final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
