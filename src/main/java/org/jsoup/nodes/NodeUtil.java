@@ -25,6 +25,7 @@ public class NodeUtil {
 		return instance != null ? instance.absUrl(attributeKey) : null;
 	}
 
+	@Nullable
 	public static List<Node> childNodes(final Node instance) {
 		//
 		final List<Field> fs = toList(
@@ -81,6 +82,7 @@ public class NodeUtil {
 		return instance != null ? instance.toList() : null;
 	}
 
+	@Nullable
 	private static <T, R> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final Function<T, R> functionTrue, @Nullable final Function<T, R> functionFalse) {
 		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
