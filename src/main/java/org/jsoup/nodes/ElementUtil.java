@@ -93,7 +93,7 @@ public final class ElementUtil {
 	}
 
 	@Nullable
-	public static Element nextElementSibling(final Element instance) {
+	public static Element nextElementSibling(@Nullable final Element instance) {
 		return instance != null ? instance.nextElementSibling() : null;
 	}
 
@@ -128,7 +128,7 @@ public final class ElementUtil {
 			//
 	}
 
-	public static int childrenSize(final Element instance) {
+	public static int childrenSize(@Nullable final Element instance) {
 		//
 		if (instance == null) {
 			//
@@ -158,20 +158,20 @@ public final class ElementUtil {
 		//
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
-	public static List<Element> parents(final Element instance) {
+	public static List<Element> parents(@Nullable final Element instance) {
 		return instance != null ? instance.parents() : null;
 	}
 
 	@Nullable
-	public static final Element parent(final Element instnace) {
+	public static final Element parent(@Nullable final Element instnace) {
 		return instnace != null ? instnace.parent() : null;
 	}
 
-	public static Elements nextElementSiblings(final Element instnace) {
+	public static Elements nextElementSiblings(@Nullable final Element instnace) {
 		return instnace != null ? instnace.nextElementSiblings() : null;
 	}
 

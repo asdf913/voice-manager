@@ -20,7 +20,7 @@ public class NodeUtil {
 	private NodeUtil() {
 	}
 
-	public static String absUrl(final Node instance, final String attributeKey) {
+	public static String absUrl(@Nullable final Node instance, final String attributeKey) {
 		return instance != null ? instance.absUrl(attributeKey) : null;
 	}
 
@@ -50,11 +50,11 @@ public class NodeUtil {
 		//
 	}
 
-	private static Field[] getDeclaredFields(final Class<?> instance) {
+	private static Field[] getDeclaredFields(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredFields() : null;
 	}
 
-	private static String getName(final Member instance) {
+	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
@@ -66,11 +66,11 @@ public class NodeUtil {
 		//
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
-	private static <T> List<T> toList(final Stream<T> instance) {
+	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
 
@@ -83,7 +83,7 @@ public class NodeUtil {
 		return instance != null && instance.test(value);
 	}
 
-	private static <T, R> R apply(final Function<T, R> instance, final T value) {
+	private static <T, R> R apply(@Nullable final Function<T, R> instance, final T value) {
 		return instance != null ? instance.apply(value) : null;
 	}
 
@@ -95,7 +95,7 @@ public class NodeUtil {
 		return instance != null && attributeKey != null ? instance.attr(attributeKey) : null;
 	}
 
-	public static String nodeName(final Node instance) {
+	public static String nodeName(@Nullable final Node instance) {
 		return instance != null ? instance.nodeName() : null;
 	}
 
@@ -103,7 +103,7 @@ public class NodeUtil {
 		return instance != null && nodeVisitor != null ? instance.traverse(nodeVisitor) : instance;
 	}
 
-	public static int childNodeSize(final Node instance) {
+	public static int childNodeSize(@Nullable final Node instance) {
 		//
 		final Element element = cast(Element.class, instance);
 		//
@@ -134,17 +134,17 @@ public class NodeUtil {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
-	public static Stream<Node> nodeStream(final Node instance) {
+	public static Stream<Node> nodeStream(@Nullable final Node instance) {
 		return instance != null ? instance.nodeStream() : null;
 	}
 
 	@Nullable
-	public static Node nextSibling(final Node instance) {
+	public static Node nextSibling(@Nullable final Node instance) {
 		return instance != null ? instance.nextSibling() : null;
 	}
 
 	@Nullable
-	public static Node parentNode(final Node instance) {
+	public static Node parentNode(@Nullable final Node instance) {
 		return instance != null ? instance.parentNode() : null;
 	}
 

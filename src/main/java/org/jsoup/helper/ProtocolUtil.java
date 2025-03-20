@@ -12,6 +12,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
+
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.ConstantPool;
@@ -56,11 +58,12 @@ public interface ProtocolUtil {
 		//
 	}
 
-	private static Class<?> getClass(final Object instance) {
+	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
-	private static List<String> getAllowProtocols(final Class<?> clz) throws IOException, NoSuchMethodException {
+	private static List<String> getAllowProtocols(@Nullable final Class<?> clz)
+			throws IOException, NoSuchMethodException {
 		//
 		try (final InputStream is = clz != null
 				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
@@ -81,8 +84,8 @@ public interface ProtocolUtil {
 			//
 	}
 
-	private static Method getDeclaredMethod(final Class<?> clz, final String name, final Class<?>... parameterTypes)
-			throws NoSuchMethodException {
+	private static Method getDeclaredMethod(@Nullable final Class<?> clz, final String name,
+			final Class<?>... parameterTypes) throws NoSuchMethodException {
 		return clz != null ? clz.getDeclaredMethod(name, parameterTypes) : null;
 	}
 
@@ -95,7 +98,7 @@ public interface ProtocolUtil {
 		return instance != null && instance.test(value);
 	}
 
-	private static <T, R> R apply(final Function<T, R> instance, final T value) {
+	private static <T, R> R apply(@Nullable final Function<T, R> instance, final T value) {
 		return instance != null ? instance.apply(value) : null;
 	}
 
@@ -141,7 +144,7 @@ public interface ProtocolUtil {
 		//
 	}
 
-	private static <E> Stream<E> stream(final Collection<E> instance) {
+	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}
 
@@ -152,7 +155,7 @@ public interface ProtocolUtil {
 		//
 	}
 
-	private static <T> List<T> toList(final Stream<T> instance) {
+	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
 
@@ -166,7 +169,7 @@ public interface ProtocolUtil {
 		}
 	}
 
-	private static String toString(final Object instance) {
+	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}
 
