@@ -23,6 +23,7 @@ public final class ElementUtil {
 	private ElementUtil() {
 	}
 
+	@Nullable
 	public static String text(final Element instance) {
 		//
 		try {
@@ -91,10 +92,12 @@ public final class ElementUtil {
 			//
 	}
 
+	@Nullable
 	public static Element nextElementSibling(final Element instance) {
 		return instance != null ? instance.nextElementSibling() : null;
 	}
 
+	@Nullable
 	public static String tagName(final Element instance) {
 		//
 		try {
@@ -109,6 +112,7 @@ public final class ElementUtil {
 			//
 	}
 
+	@Nullable
 	public static Element child(final Element instance, final int index) {
 		//
 		try {
@@ -162,6 +166,7 @@ public final class ElementUtil {
 		return instance != null ? instance.parents() : null;
 	}
 
+	@Nullable
 	public static final Element parent(final Element instnace) {
 		return instnace != null ? instnace.parent() : null;
 	}

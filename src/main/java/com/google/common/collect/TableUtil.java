@@ -19,10 +19,12 @@ public interface TableUtil {
 		return instance != null && instance.contains(rowKey, columnKey);
 	}
 
+	@Nullable
 	static <V> V get(@Nullable final Table<?, ?, V> instance, final Object rowKey, final Object columnKey) {
 		return instance != null ? instance.get(rowKey, columnKey) : null;
 	}
 
+	@Nullable
 	static <R, C, V> Set<Cell<R, C, V>> cellSet(@Nullable final Table<R, C, V> instance) {
 		return instance != null ? instance.cellSet() : null;
 	}

@@ -41,10 +41,12 @@ public interface MultimapUtil {
 		return instance != null ? instance.entries() : null;
 	}
 
+	@Nullable
 	static <K> Set<K> keySet(@Nullable final Multimap<K, ?> instance) {
 		return instance != null ? instance.keySet() : null;
 	}
 
+	@Nullable
 	static <V> Collection<V> values(@Nullable final Multimap<?, V> instance) {
 		return instance != null ? instance.values() : null;
 	}

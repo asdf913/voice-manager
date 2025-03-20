@@ -10,6 +10,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.select.NodeVisitor;
 
@@ -127,6 +129,7 @@ public class NodeUtil {
 		//
 	}
 
+	@Nullable
 	private static <T> T cast(final Class<T> clz, final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
@@ -135,10 +138,12 @@ public class NodeUtil {
 		return instance != null ? instance.nodeStream() : null;
 	}
 
+	@Nullable
 	public static Node nextSibling(final Node instance) {
 		return instance != null ? instance.nextSibling() : null;
 	}
 
+	@Nullable
 	public static Node parentNode(final Node instance) {
 		return instance != null ? instance.parentNode() : null;
 	}
