@@ -26,7 +26,7 @@ public class NodeUtil {
 	}
 
 	@Nullable
-	public static List<Node> childNodes(final Node instance) {
+	public static List<Node> childNodes(@Nullable final Node instance) {
 		//
 		final List<Field> fs = toList(
 				filter(testAndApply(Objects::nonNull, getDeclaredFields(getClass(instance)), Arrays::stream, null),
