@@ -243,8 +243,6 @@ import com.microsoft.playwright.Playwright;
 import com.sun.jna.Native;
 import com.sun.jna.Library;
 import com.sun.jna.WString;
-import com.sun.jna.Native;
-import com.sun.jna.ptr.IntByReference;
 
 import freemarker.template.Configuration;
 import freemarker.template.ConfigurationUtil;
