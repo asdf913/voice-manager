@@ -28,6 +28,7 @@ public interface MultimapUtil {
 		}
 	}
 
+	@Nullable
 	static <K, V> Collection<V> get(@Nullable final Multimap<K, V> instance, @Nullable final K key) {
 		return instance != null ? instance.get(key) : null;
 	}

@@ -51,6 +51,7 @@ public interface ProtocolUtil {
 			//
 	}
 
+	@Nullable
 	private static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
 		return instance != null && (array != null || Proxy.isProxyClass(getClass(instance))) ? instance.toArray(array)
@@ -58,6 +59,7 @@ public interface ProtocolUtil {
 		//
 	}
 
+	@Nullable
 	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
@@ -84,6 +86,7 @@ public interface ProtocolUtil {
 			//
 	}
 
+	@Nullable
 	private static Method getDeclaredMethod(@Nullable final Class<?> clz, final String name,
 			final Class<?>... parameterTypes) throws NoSuchMethodException {
 		return clz != null ? clz.getDeclaredMethod(name, parameterTypes) : null;
@@ -98,6 +101,7 @@ public interface ProtocolUtil {
 		return instance != null && instance.test(value);
 	}
 
+	@Nullable
 	private static <T, R> R apply(@Nullable final Function<T, R> instance, final T value) {
 		return instance != null ? instance.apply(value) : null;
 	}
@@ -144,10 +148,12 @@ public interface ProtocolUtil {
 		//
 	}
 
+	@Nullable
 	private static <E> Stream<E> stream(@Nullable final Collection<E> instance) {
 		return instance != null ? instance.stream() : null;
 	}
 
+	@Nullable
 	private static <T, R> Stream<R> map(@Nullable final Stream<T> instance,
 			@Nullable final Function<? super T, ? extends R> mapper) {
 		//
@@ -156,6 +162,7 @@ public interface ProtocolUtil {
 		//
 	}
 
+	@Nullable
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
@@ -170,6 +177,7 @@ public interface ProtocolUtil {
 		}
 	}
 
+	@Nullable
 	private static String toString(@Nullable final Object instance) {
 		return instance != null ? instance.toString() : null;
 	}

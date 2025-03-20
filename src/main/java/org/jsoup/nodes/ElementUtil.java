@@ -158,10 +158,12 @@ public final class ElementUtil {
 		//
 	}
 
+	@Nullable
 	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
+	@Nullable
 	public static List<Element> parents(@Nullable final Element instance) {
 		return instance != null ? instance.parents() : null;
 	}
@@ -171,6 +173,7 @@ public final class ElementUtil {
 		return instnace != null ? instnace.parent() : null;
 	}
 
+	@Nullable
 	public static Elements nextElementSiblings(@Nullable final Element instnace) {
 		return instnace != null ? instnace.nextElementSiblings() : null;
 	}

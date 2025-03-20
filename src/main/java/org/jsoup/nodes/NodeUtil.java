@@ -20,6 +20,7 @@ public class NodeUtil {
 	private NodeUtil() {
 	}
 
+	@Nullable
 	public static String absUrl(@Nullable final Node instance, final String attributeKey) {
 		return instance != null ? instance.absUrl(attributeKey) : null;
 	}
@@ -50,10 +51,12 @@ public class NodeUtil {
 		//
 	}
 
+	@Nullable
 	private static Field[] getDeclaredFields(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredFields() : null;
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
@@ -67,10 +70,12 @@ public class NodeUtil {
 		//
 	}
 
+	@Nullable
 	private static Class<?> getClass(@Nullable final Object instance) {
 		return instance != null ? instance.getClass() : null;
 	}
 
+	@Nullable
 	private static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.toList() : null;
 	}
@@ -84,6 +89,7 @@ public class NodeUtil {
 		return instance != null && instance.test(value);
 	}
 
+	@Nullable
 	private static <T, R> R apply(@Nullable final Function<T, R> instance, final T value) {
 		return instance != null ? instance.apply(value) : null;
 	}
@@ -96,6 +102,7 @@ public class NodeUtil {
 		return instance != null && attributeKey != null ? instance.attr(attributeKey) : null;
 	}
 
+	@Nullable
 	public static String nodeName(@Nullable final Node instance) {
 		return instance != null ? instance.nodeName() : null;
 	}
@@ -135,6 +142,7 @@ public class NodeUtil {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 
+	@Nullable
 	public static Stream<Node> nodeStream(@Nullable final Node instance) {
 		return instance != null ? instance.nodeStream() : null;
 	}
