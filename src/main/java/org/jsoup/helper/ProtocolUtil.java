@@ -103,7 +103,7 @@ public interface ProtocolUtil {
 	}
 
 	@Nullable
-	private static <T, R> R apply(@Nullable final Function<T, R> instance, final T value) {
+	private static <T, R> R apply(@Nullable final Function<T, R> instance, @Nullable final T value) {
 		return instance != null ? instance.apply(value) : null;
 	}
 
