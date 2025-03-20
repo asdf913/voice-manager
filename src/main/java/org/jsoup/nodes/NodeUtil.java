@@ -81,7 +81,7 @@ public class NodeUtil {
 	}
 
 	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,
-			final Function<T, R> functionFalse) {
+			@Nullable final Function<T, R> functionFalse) {
 		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
 	}
 
@@ -138,7 +138,7 @@ public class NodeUtil {
 	}
 
 	@Nullable
-	private static <T> T cast(@Nullable final Class<T> clz, final Object instance) {
+	private static <T> T cast(@Nullable final Class<T> clz, @Nullable final Object instance) {
 		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
 	}
 

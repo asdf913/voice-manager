@@ -93,7 +93,7 @@ public interface ProtocolUtil {
 	}
 
 	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,
-			final Function<T, R> functionFalse) {
+			@Nullable final Function<T, R> functionFalse) {
 		return test(predicate, value) ? apply(functionTrue, value) : apply(functionFalse, value);
 	}
 
