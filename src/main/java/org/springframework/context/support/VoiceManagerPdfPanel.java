@@ -4237,25 +4237,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return intIntPair != null ? intIntPair.right(y) : intIntPair;
 	}
 
-	@Nullable
-	private static List<IntIntPair> toIntIntPairList(final int a, final int b) {
-		//
-		List<IntIntPair> list = null;
-		//
-		for (int i = 0; i < a; i++) {
-			//
-			for (int j = 0; j < b; j++) {
-				//
-				Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), IntIntPair.of(i, j));
-				//
-			} // for
-				//
-		} // for
-			//
-		return list;
-		//
-	}
-
 	private static void setSubject(@Nullable final PDDocumentInformation instance, @Nullable final String keywords) {
 		if (instance != null) {
 			instance.setSubject(keywords);
