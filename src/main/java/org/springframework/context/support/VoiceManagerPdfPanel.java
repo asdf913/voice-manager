@@ -4166,7 +4166,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	@Nullable
-	private static IntIntPair getMinimumAndMaximumY(@Nullable final BufferedImage bi, final Color color) {
+	private static IntIntPair getMinimumAndMaximumY(@Nullable final BufferedImage bi, @Nullable final Color color) {
 		//
 		Color c = color;
 		//
