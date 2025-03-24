@@ -4129,31 +4129,35 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Nullable
 	private static IntIntPair getMinimumAndMaximumY(@Nullable final BufferedImage bi) {
 		//
-		Color color = null;
+		Color c = null;
 		//
-		IntIntPair intIntPair = null;
+		IntIntMutablePair intIntPair = null;
 		//
-		final List<IntIntPair> intIntPairs = bi != null ? toIntIntPairList(bi.getWidth(), bi.getHeight()) : null;
-		//
-		IntIntPair temp = null;
-		//
-		int y;
-		//
-		for (int i = 0; i < IterableUtils.size(intIntPairs); i++) {
+		for (int x = 0; bi != null && x < bi.getWidth(); x++) {
 			//
-			if ((temp = IterableUtils.get(intIntPairs, i)) == null || color == null) {
+			for (int y = 0; bi != null && y < bi.getHeight(); y++) {
 				//
-				color = color == null && bi != null ? new Color(bi.getRGB(leftInt(temp, 0), rightInt(temp, 0))) : null;
-				//
-				continue;
-				//
-			} // if
-				//
-			if (!Objects.equals(color, new Color(bi.getRGB(leftInt(temp, 0), y = rightInt(temp, 0))))) {
-				//
-				leftOrRight(intIntPair = ObjectUtils.getIfNull(intIntPair, () -> IntIntMutablePair.of(-1, -1)), y);
-				//
-			} // if
+				if (c == null) {
+					//
+					c = new Color(bi.getRGB(x, y));
+					//
+				} else if (!Objects.equals(c, new Color(bi.getRGB(x, y)))) {
+					//
+					if (intIntPair == null) {
+						//
+						intIntPair = IntIntMutablePair.of(y, y);
+						//
+					} else {
+						//
+						intIntPair.left(Math.min(intIntPair.leftInt(), y));
+						//
+						intIntPair.right(Math.max(intIntPair.rightInt(), y));
+						//
+					} // if
+						//
+				} // if
+					//
+			} // for
 				//
 		} // for
 			//
