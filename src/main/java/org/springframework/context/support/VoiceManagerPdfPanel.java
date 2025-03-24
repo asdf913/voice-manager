@@ -4135,7 +4135,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		for (int x = 0; bi != null && x < bi.getWidth(); x++) {
 			//
-			for (int y = 0; bi != null && y < bi.getHeight(); y++) {
+			for (int y = 0; y < bi.getHeight(); y++) {
 				//
 				if (c == null) {
 					//
@@ -4174,7 +4174,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		for (int x = 0; bi != null && x < bi.getWidth(); x++) {
 			//
-			for (int y = 0; bi != null && y < bi.getHeight(); y++) {
+			for (int y = 0; y < bi.getHeight(); y++) {
 				//
 				if (c == null) {
 					//
