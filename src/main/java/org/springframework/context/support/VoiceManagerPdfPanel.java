@@ -1015,7 +1015,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		// HTML
 		//
-		add(new JLabel("HTML"));
+		add(new JLabel("Ruby HTML"));
 		//
 		final String html = PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManagerPdfPanel.html");
@@ -1046,9 +1046,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		//
-		panel.add(btnGenerateRubyHtml = new JButton("Generate Ruby HTML"), gbc);
+		panel.add(btnGenerateRubyHtml = new JButton("Generate"), gbc);
 		//
-		panel.add(btnPreviewRubyPdf = new JButton("Preview Ruby"), gbc);
+		panel.add(btnPreviewRubyPdf = new JButton("Preview"), gbc);
 		//
 		add(panel, String.format("%1$s,%2$s,span %3$s", WRAP, GROWX, 3));
 		//
