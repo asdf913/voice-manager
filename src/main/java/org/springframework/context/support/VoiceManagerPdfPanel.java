@@ -1050,7 +1050,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		panel.add(btnPreviewRubyPdf = new JButton("Preview"), gbc);
 		//
-		add(panel, String.format("%1$s,%2$s,span %3$s", WRAP, GROWX, 3));
+		add(panel, String.format("%1$s,%2$s,span %3$s,wmax %4$s", WRAP, GROWX, 3, 85.5));
 		//
 		// Description
 		//
