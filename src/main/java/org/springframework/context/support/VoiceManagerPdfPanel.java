@@ -445,7 +445,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Nullable
 	private transient Resource audioResource = null;
 
-	private FailableFunction<String, String, IOException> furiganaFailableFunction = null;
+	private transient FailableFunction<String, String, IOException> furiganaFailableFunction = null;
 
 	@Override
 	public String getTitle() {
