@@ -1248,6 +1248,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null ? instance.getRawType() : null;
 	}
 
+	@Nullable
 	private static java.lang.reflect.Type[] getGenericInterfaces(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getGenericInterfaces() : null;
 	}
