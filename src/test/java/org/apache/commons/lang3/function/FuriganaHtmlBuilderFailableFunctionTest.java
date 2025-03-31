@@ -23,7 +23,7 @@ class FuriganaHtmlBuilderFailableFunctionTest {
 	private static Method METHOD_TO_STRING, METHOD_CAST, METHOD_AND = null;
 
 	@BeforeAll
-	public static void beforeClass() throws NoSuchMethodException {
+	static void beforeClass() throws NoSuchMethodException {
 		//
 		final Class<?> clz = FuriganaHtmlBuilderFailableFunction.class;
 		//
