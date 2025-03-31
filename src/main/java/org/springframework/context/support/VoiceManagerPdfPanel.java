@@ -1240,8 +1240,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static ConfigurableListableBeanFactory getBeanFactory(final ConfigurableApplicationContext instance)
-			throws IllegalStateException {
+	private static ConfigurableListableBeanFactory getBeanFactory(
+			@Nullable final ConfigurableApplicationContext instance) throws IllegalStateException {
 		return instance != null ? instance.getBeanFactory() : null;
 	}
 
