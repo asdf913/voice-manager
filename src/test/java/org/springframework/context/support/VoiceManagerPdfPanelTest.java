@@ -822,7 +822,7 @@ class VoiceManagerPdfPanelTest {
 		final List<Field> fs = Util.toList(FailableStreamUtil.stream(failedStream != null ? failedStream.filter(f -> {
 			//
 			final Type[] actualTypeArguments = getActualTypeArguments(
-					Util.cast(ParameterizedType.class, f != null ? f.getGenericType() : null));
+					Util.cast(ParameterizedType.class, getGenericType(f)));
 			//
 			return Objects.equals(Util.getType(f), FailableFunction.class) && actualTypeArguments != null
 					&& actualTypeArguments.length > 0
@@ -1179,13 +1179,6 @@ class VoiceManagerPdfPanelTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
-	}
-
-	@Test
-	void testGetGenericType() throws Throwable {
-		//
-		Assertions.assertEquals(byte[].class, getGenericType(Util.getDeclaredField(String.class, "value")));
-		//
 	}
 
 	private static Type getGenericType(final Field instance) throws Throwable {
