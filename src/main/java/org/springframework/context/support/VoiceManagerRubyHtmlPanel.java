@@ -120,7 +120,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		add(jsp, "growx");
 		//
 		final double width = iif(!GraphicsEnvironment.isHeadless(), 0,
-				() -> Toolkit.getDefaultToolkit().getScreenSize().getWidth(), () -> 0)
+				() -> getWidth(Toolkit.getDefaultToolkit().getScreenSize()), () -> 0)
 				- Math.max(maxJLabelWidth, getWidth(Util.getPreferredSize(jLabel)));
 		//
 		Dimension preferredSize = Util.getPreferredSize(tfText);
