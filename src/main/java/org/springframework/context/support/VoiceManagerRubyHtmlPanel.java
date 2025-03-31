@@ -157,7 +157,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		return instance != null ? instance.getAsDouble() : defaultValue;
 	}
 
-	private static void setPreferredSize(@Nullable final Component instance, final Dimension preferredSize) {
+	private static void setPreferredSize(@Nullable final Component instance, @Nullable final Dimension preferredSize) {
 		if (instance != null) {
 			instance.setPreferredSize(preferredSize);
 		}
