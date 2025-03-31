@@ -1141,9 +1141,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						f -> Util.isAssignableFrom(AbstractButton.class, Util.getType(f))),
 				FailableStream::new, null);
 		//
-		forEach(FailableStreamUtil.map(fieldStream,
-				f -> Util.cast(AbstractButton.class,
-						testAndApply(Objects::nonNull, f, x -> Narcissus.getField(this, x), null))),
+		FailableStreamUtil.forEach(
+				FailableStreamUtil.map(fieldStream,
+						f -> Util.cast(AbstractButton.class,
+								testAndApply(Objects::nonNull, f, x -> Narcissus.getField(this, x), null))),
 				x -> addActionListener(x, this));
 		//
 		final Double width = getWidth(btnExecute.getPreferredSize());
@@ -1179,10 +1180,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				ConfigurableApplicationContextUtil
 						.getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
 		//
-		forEach(testAndApply(Objects::nonNull,
-				testAndApply(Objects::nonNull, ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf), Arrays::stream,
-						null),
-				FailableStream::new, null), x -> setFailableFunctionFields(applicationContext, dlbf, x, this));
+		FailableStreamUtil.forEach(
+				testAndApply(Objects::nonNull,
+						testAndApply(Objects::nonNull, ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf),
+								Arrays::stream, null),
+						FailableStream::new, null),
+				x -> setFailableFunctionFields(applicationContext, dlbf, x, this));
 		//
 	}
 
@@ -1563,12 +1566,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		};
 		//
-	}
-
-	private static <T> void forEach(@Nullable final FailableStream<T> instance, final FailableConsumer<T, ?> action) {
-		if (instance != null) {
-			instance.forEach(action);
-		}
 	}
 
 	private static void addActionListener(@Nullable final AbstractButton instance, final ActionListener l) {

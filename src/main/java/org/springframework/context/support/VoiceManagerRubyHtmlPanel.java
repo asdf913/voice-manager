@@ -39,7 +39,6 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -150,10 +149,12 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				ConfigurableApplicationContextUtil
 						.getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
 		//
-		forEach(testAndApply(Objects::nonNull,
-				testAndApply(Objects::nonNull, ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf), Arrays::stream,
-						null),
-				FailableStream::new, null), x -> setFailableFunctionFields(applicationContext, dlbf, x, this));
+		FailableStreamUtil.forEach(
+				testAndApply(Objects::nonNull,
+						testAndApply(Objects::nonNull, ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf),
+								Arrays::stream, null),
+						FailableStream::new, null),
+				x -> setFailableFunctionFields(applicationContext, dlbf, x, this));
 		//
 	}
 
@@ -262,12 +263,6 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 	@Nullable
 	private static Type[] getGenericInterfaces(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getGenericInterfaces() : null;
-	}
-
-	private static <T> void forEach(final FailableStream<T> instance, @Nullable final FailableConsumer<T, ?> action) {
-		if (FailableStreamUtil.stream(instance) != null && action != null) {
-			instance.forEach(action);
-		}
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,

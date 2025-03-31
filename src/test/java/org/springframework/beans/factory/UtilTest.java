@@ -38,6 +38,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableBiPredicate;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
@@ -234,8 +235,8 @@ class UtilTest {
 	@Test
 	void testMatches() {
 		//
-		new FailableStream<>(Util.filter(Arrays.stream(Util.class.getDeclaredMethods()),
-				m -> m != null && Objects.equals("matches", Util.getName(m)))).forEach(m -> {
+		FailableStreamUtil.forEach(new FailableStream<>(Util.filter(Arrays.stream(Util.class.getDeclaredMethods()),
+				m -> m != null && Objects.equals("matches", Util.getName(m)))), m -> {
 					//
 					if (m == null) {
 						//

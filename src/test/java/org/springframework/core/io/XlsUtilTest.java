@@ -17,6 +17,7 @@ import java.util.function.Predicate;
 
 import org.apache.bcel.classfile.ConstantPool;
 import org.apache.bcel.classfile.JavaClass;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.nutch.util.DeflateUtils;
 import org.apache.poi.poifs.filesystem.DirectoryEntry;
@@ -204,10 +205,10 @@ class XlsUtilTest {
 	@Test
 	void testGetName() {
 		//
-		new FailableStream<>(Arrays.stream(XlsUtil.class.getDeclaredMethods()))
+		FailableStreamUtil.forEach(new FailableStream<>(Arrays.stream(XlsUtil.class.getDeclaredMethods()))
 				.filter(m -> m != null && Objects.equals(getName(m), "getName") && Modifier.isStatic(m.getModifiers())
-						&& m.getParameterCount() == 1)
-				.forEach(m -> {
+						&& m.getParameterCount() == 1),
+				m -> {
 					//
 					if (m == null) {
 						//

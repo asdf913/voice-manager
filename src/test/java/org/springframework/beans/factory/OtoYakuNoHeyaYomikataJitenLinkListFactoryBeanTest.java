@@ -26,6 +26,7 @@ import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellUtil;
@@ -246,13 +247,17 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 				//
 			final List<Link> links = FactoryBeanUtil.getObject(instance);
 			//
-			new FailableStream<>(ObjectUtils.getIfNull(Util.stream(links), Stream::empty)).forEach(x -> {
-				//
-				System.out.println(ObjectMapperUtil.writeValueAsString(setDefaultPropertyInclusion(
-						build(configure(JsonMapper.builder(), MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true)),
-						Include.NON_NULL), x));
-				//
-			});
+			FailableStreamUtil.forEach(new FailableStream<>(ObjectUtils.getIfNull(Util.stream(links), Stream::empty)),
+					x -> {
+						//
+						System.out
+								.println(
+										ObjectMapperUtil.writeValueAsString(setDefaultPropertyInclusion(
+												build(configure(JsonMapper.builder(),
+														MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true)),
+												Include.NON_NULL), x));
+						//
+					});
 			//
 			final Workbook wb = createWorkbook(links);
 			//
@@ -870,10 +875,10 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 		//
 		Assertions.assertThrows(Throwable.class, () -> invoke(ih, link, null, null));
 		//
-		new FailableStream<>(
+		FailableStreamUtil.forEach(new FailableStream<>(
 				Util.filter(Arrays.stream(ObjectUtils.getIfNull(getDeclaredMethods(clz), () -> new Method[] {})),
-						f -> f == null || !f.isSynthetic()))
-				.forEach(m -> {
+						f -> f == null || !f.isSynthetic())),
+				m -> {
 					//
 					if (!Objects.equals(Void.TYPE, m != null ? m.getReturnType() : null)) {
 						//
@@ -892,8 +897,8 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 		//
 		Assertions.assertThrows(Throwable.class, () -> invoke(ih, objectMap, null, null));
 		//
-		new FailableStream<>(Arrays.stream(ObjectUtils.getIfNull(getDeclaredMethods(clz), () -> new Method[] {})))
-				.forEach(m -> {
+		FailableStreamUtil.forEach(new FailableStream<>(
+				Arrays.stream(ObjectUtils.getIfNull(getDeclaredMethods(clz), () -> new Method[] {}))), m -> {
 					//
 					Assertions.assertThrows(Throwable.class, () -> invoke(ih, objectMap, m, null));
 					//
@@ -915,8 +920,8 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 		//
 		Assertions.assertThrows(Throwable.class, () -> invoke(ih, objectMap, null, null));
 		//
-		new FailableStream<>(Arrays.stream(ObjectUtils.getIfNull(getDeclaredMethods(clz), () -> new Method[] {})))
-				.forEach(m -> {
+		FailableStreamUtil.forEach(new FailableStream<>(
+				Arrays.stream(ObjectUtils.getIfNull(getDeclaredMethods(clz), () -> new Method[] {}))), m -> {
 					//
 					Assertions.assertThrows(Throwable.class, () -> invoke(ih, intMap, m, null));
 					//
@@ -942,8 +947,10 @@ class OtoYakuNoHeyaYomikataJitenLinkListFactoryBeanTest {
 		//
 		Assertions.assertThrows(Throwable.class, () -> invoke(ih, intStringMap, null, null));
 		//
-		new FailableStream<>(Arrays.stream(ObjectUtils.getIfNull(getDeclaredMethods(clz), () -> new Method[] {})))
-				.forEach(m -> Assertions.assertThrows(Throwable.class, () -> invoke(ih, intStringMap, m, null)));
+		FailableStreamUtil.forEach(
+				new FailableStream<>(
+						Arrays.stream(ObjectUtils.getIfNull(getDeclaredMethods(clz), () -> new Method[] {}))),
+				m -> Assertions.assertThrows(Throwable.class, () -> invoke(ih, intStringMap, m, null)));
 		//
 		// org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkMapFactoryBean$IH.handleIntStringMap(java.lang.String,java.lang.Object[])
 		//

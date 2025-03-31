@@ -22,6 +22,7 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.commons.text.TextStringBuilder;
 import org.apache.poi.ss.usermodel.Cell;
@@ -279,12 +280,12 @@ class OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBe
 		//
 		Assertions.assertDoesNotThrow(() -> {
 			//
-			new FailableStream<>(Util.filter(
+			FailableStreamUtil.forEach(new FailableStream<>(Util.filter(
 					Arrays.stream(OtoYakuNoHeyaYomikataJitenSansuuSuugakuYougoYomikataJitenMultimapFactoryBean.class
 							.getDeclaredMethods()),
 					m -> m != null && Objects.equals("clear", Util.getName(m)) && m.getParameterCount() == 1
-							&& Modifier.isStatic(m.getModifiers())))
-					.forEach(m -> {
+							&& Modifier.isStatic(m.getModifiers()))),
+					m -> {
 						//
 						if (m != null) {
 							//

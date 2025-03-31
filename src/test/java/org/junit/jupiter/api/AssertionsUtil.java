@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.junit.jupiter.api.function.Executable;
 
@@ -49,31 +50,33 @@ public class AssertionsUtil {
 		//
 		if (th != null) {
 			//
-			new FailableStream<>(
-					FieldUtils
-							.getAllFieldsList(th.getClass()).stream().filter(
-									f -> f != null && !Modifier.isStatic(f.getModifiers())
-											&& (Objects.equals(f.getType(), Throwable.class)
-													|| Objects.equals(f.getType(), StackTraceElement[].class))))
-					.forEach(f -> {
-						//
-						if (f != null) {
-							//
-							if (Objects.equals("java.base", f.getDeclaringClass().getModule().getName())) {
+			FailableStreamUtil
+					.forEach(
+							new FailableStream<>(
+									FieldUtils
+											.getAllFieldsList(th.getClass()).stream().filter(
+													f -> f != null && !Modifier.isStatic(f.getModifiers())
+															&& (Objects.equals(f.getType(), Throwable.class) || Objects
+																	.equals(f.getType(), StackTraceElement[].class)))),
+							f -> {
 								//
-								Narcissus.setObjectField(th, f, null);
-								//
-								return;
-								//
-							} // if
-								//
-							f.setAccessible(true);
-							//
-							f.set(th, null);
-							//
-						} // if
-							//
-					});
+								if (f != null) {
+									//
+									if (Objects.equals("java.base", f.getDeclaringClass().getModule().getName())) {
+										//
+										Narcissus.setObjectField(th, f, null);
+										//
+										return;
+										//
+									} // if
+										//
+									f.setAccessible(true);
+									//
+									f.set(th, null);
+									//
+								} // if
+									//
+							});
 			//
 			final Map<?, ?> map = objectMapper.readValue(objectMapper.writeValueAsBytes(th), Map.class);
 			//

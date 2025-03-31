@@ -22,6 +22,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -219,7 +220,7 @@ class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBeanTest {
 			final File file = Path.of("OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBean.txt")
 					.toFile();
 			//
-			new FailableStream<>(Stream.of("text", "description")).forEach(x -> {
+			FailableStreamUtil.forEach(new FailableStream<>(Stream.of("text", "description")), x -> {
 				//
 				FieldUtils.writeDeclaredField(instance, x, null, true);
 				//

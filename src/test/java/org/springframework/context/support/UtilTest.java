@@ -39,6 +39,7 @@ import org.apache.bcel.generic.ReferenceType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
@@ -254,9 +255,11 @@ class UtilTest {
 	@Test
 	void testGetName() {
 		//
-		new FailableStream<>(Util.filter(Arrays.stream(Util.class.getDeclaredMethods()),
-				m -> m != null && Objects.equals(Util.getName(m), "getName") && Modifier.isStatic(m.getModifiers())))
-				.forEach(m -> Assertions.assertNull(m != null ? m.invoke(null, (Object) null) : null));
+		FailableStreamUtil.forEach(
+				new FailableStream<>(Util.filter(Arrays.stream(Util.class.getDeclaredMethods()),
+						m -> m != null && Objects.equals(Util.getName(m), "getName")
+								&& Modifier.isStatic(m.getModifiers()))),
+				m -> Assertions.assertNull(m != null ? m.invoke(null, (Object) null) : null));
 		//
 	}
 
@@ -330,22 +333,25 @@ class UtilTest {
 	@Test
 	void testTest() throws Throwable {
 		//
-		new FailableStream<>(Arrays.stream(Util.class.getDeclaredMethods())
-				.filter(m -> m != null && Objects.equals(Util.getName(m), "test") && Modifier.isStatic(m.getModifiers())
-						&& m.getParameterCount() == 2))
-				.forEach(m -> {
-					//
-					if (m == null) {
-						//
-						return;
-						//
-					} // if
-						//
-					m.setAccessible(true);
-					//
-					Assertions.assertEquals(Boolean.FALSE, m != null ? m.invoke(null, null, null) : null);
-					//
-				});
+		FailableStreamUtil
+				.forEach(
+						new FailableStream<>(
+								Arrays.stream(Util.class.getDeclaredMethods())
+										.filter(m -> m != null && Objects.equals(Util.getName(m), "test")
+												&& Modifier.isStatic(m.getModifiers()) && m.getParameterCount() == 2)),
+						m -> {
+							//
+							if (m == null) {
+								//
+								return;
+								//
+							} // if
+								//
+							m.setAccessible(true);
+							//
+							Assertions.assertEquals(Boolean.FALSE, m != null ? m.invoke(null, null, null) : null);
+							//
+						});
 		//
 		final FailablePredicate<?, RuntimeException> failablePredicate = x -> false;
 		//
@@ -382,26 +388,27 @@ class UtilTest {
 		//
 		final Stream<?> empty = Stream.empty();
 		//
-		new FailableStream<>(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(empty)))).forEach(f -> {
-			//
-			if (f == null || Util.contains(Arrays.asList(Integer.TYPE, Boolean.TYPE), f.getType())
-					|| !Util.contains(Arrays.asList("sourceStage"), Util.getName(f))) {
-				//
-				return;
-				//
-			} // if
-				//
-			if (Modifier.isStatic(f.getModifiers())) {
-				//
-				Narcissus.setStaticField(f, null);
-				//
-			} else {
-				//
-				Narcissus.setField(empty, f, null);
-				//
-			} // if
-				//
-		});
+		FailableStreamUtil.forEach(new FailableStream<>(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(empty)))),
+				f -> {
+					//
+					if (f == null || Util.contains(Arrays.asList(Integer.TYPE, Boolean.TYPE), f.getType())
+							|| !Util.contains(Arrays.asList("sourceStage"), Util.getName(f))) {
+						//
+						return;
+						//
+					} // if
+						//
+					if (Modifier.isStatic(f.getModifiers())) {
+						//
+						Narcissus.setStaticField(f, null);
+						//
+					} else {
+						//
+						Narcissus.setField(empty, f, null);
+						//
+					} // if
+						//
+				});
 		//
 		Assertions.assertNull(Util.toList(empty));
 		//

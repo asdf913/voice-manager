@@ -2,6 +2,7 @@ package org.apache.commons.lang3.stream;
 
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 
@@ -13,6 +14,12 @@ public interface FailableStreamUtil {
 
 	static <T, R> FailableStream<R> map(final FailableStream<T> instance, final FailableFunction<T, R, ?> mapper) {
 		return instance != null && stream(instance) != null ? instance.map(mapper) : null;
+	}
+
+	static <T> void forEach(final FailableStream<T> instance, final FailableConsumer<T, ?> action) {
+		if (stream(instance) != null && action != null) {
+			instance.forEach(action);
+		}
 	}
 
 }

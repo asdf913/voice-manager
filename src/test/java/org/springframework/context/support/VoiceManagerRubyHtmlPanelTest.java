@@ -17,13 +17,10 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
-import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +35,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class VoiceManagerRubyHtmlPanelTest {
 
 	private static Method METHOD_LENGTH, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE, METHOD_GET_GENERIC_TYPE,
-			METHOD_GET_GENERIC_INTERFACES, METHOD_FOR_EACH, METHOD_TEST_AND_APPLY, METHOD_GET_LAYOUT_MANAGER = null;
+			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY, METHOD_GET_LAYOUT_MANAGER = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -55,9 +52,6 @@ class VoiceManagerRubyHtmlPanelTest {
 		(METHOD_GET_GENERIC_TYPE = clz.getDeclaredMethod("getGenericType", Field.class)).setAccessible(true);
 		//
 		(METHOD_GET_GENERIC_INTERFACES = clz.getDeclaredMethod("getGenericInterfaces", Class.class))
-				.setAccessible(true);
-		//
-		(METHOD_FOR_EACH = clz.getDeclaredMethod("forEach", FailableStream.class, FailableConsumer.class))
 				.setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
@@ -311,29 +305,6 @@ class VoiceManagerRubyHtmlPanelTest {
 				return (Type[]) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testForEach() {
-		//
-		Assertions.assertDoesNotThrow(
-				() -> forEach(Util.cast(FailableStream.class, Narcissus.allocateInstance(FailableStream.class)), null));
-		//
-		final FailableStream<?> fs = new FailableStream<>(Stream.of((Object) null));
-		//
-		Assertions.assertDoesNotThrow(() -> forEach(fs, null));
-		//
-		Assertions.assertDoesNotThrow(() -> forEach(fs, FailableConsumer.nop()));
-		//
-	}
-
-	private static <T> void forEach(final FailableStream<T> instance, final FailableConsumer<T, ?> action)
-			throws Throwable {
-		try {
-			METHOD_FOR_EACH.invoke(null, instance, action);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

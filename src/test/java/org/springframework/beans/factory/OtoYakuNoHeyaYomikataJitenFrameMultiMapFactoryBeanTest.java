@@ -14,6 +14,7 @@ import java.util.stream.IntStream;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.SheetUtil;
@@ -226,8 +227,8 @@ class OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBeanTest {
 		Assertions.assertEquals("{\"empty\":false}", ObjectMapperUtil.writeValueAsString(
 				objectMapper != null ? objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY) : null, fs));
 		//
-		new FailableStream<>(Util.stream(fs != null ? fs.values() : null))
-				.forEach(x -> ObjectMapperUtil.writeValueAsString(new ObjectMapper(), x));
+		FailableStreamUtil.forEach(new FailableStream<>(Util.stream(fs != null ? fs.values() : null)),
+				x -> ObjectMapperUtil.writeValueAsString(new ObjectMapper(), x));
 		//
 	}
 
