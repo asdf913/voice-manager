@@ -107,7 +107,8 @@ class VoiceManagerPdfPanelTest {
 			METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY, METHOD_GET_TEXT_WIDTH, METHOD_OR,
 			METHOD_TO_AUDIO_RESOURCE, METHOD_LIST_FILES, METHOD_IS_DIRECTORY, METHOD_GET_TRANSFER_DATA,
 			METHOD_FIND_MATCH, METHOD_TO_MILLIS, METHOD_TEST_AND_ACCEPT, METHOD_IIF, METHOD_PATH_FILE_EXISTS_W,
-			METHOD_GET_GENERIC_INTERFACES, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE = null;
+			METHOD_GET_GENERIC_INTERFACES, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE,
+			METHOD_GET_GENERIC_TYPE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -172,6 +173,8 @@ class VoiceManagerPdfPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_RAW_TYPE = clz.getDeclaredMethod("getRawType", ParameterizedType.class)).setAccessible(true);
+		//
+		(METHOD_GET_GENERIC_TYPE = clz.getDeclaredMethod("getGenericType", Field.class)).setAccessible(true);
 		//
 	}
 
@@ -1167,6 +1170,27 @@ class VoiceManagerPdfPanelTest {
 	private static Type getRawType(final ParameterizedType instance) throws Throwable {
 		try {
 			final Object obj = METHOD_GET_RAW_TYPE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Type) {
+				return (Type) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetGenericType() throws Throwable {
+		//
+		Assertions.assertEquals(byte[].class, getGenericType(Util.getDeclaredField(String.class, "value")));
+		//
+	}
+
+	private static Type getGenericType(final Field instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_GENERIC_TYPE.invoke(null, instance);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Type) {
