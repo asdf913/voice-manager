@@ -1179,19 +1179,24 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				ConfigurableApplicationContextUtil
 						.getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
 		//
-		final String[] beanDefinitionNames = ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf);
+		setFailableFunctionFields(applicationContext, dlbf, ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf), this);
 		//
-		String beanDefinitionName = null;
+	}
+
+	private static void setFailableFunctionFields(final ApplicationContext applicationContext,
+			final DefaultListableBeanFactory dlbf, final String[] beanDefinitionNames, final Object instance) {
 		//
 		Class<?> clz = null;
 		//
-		java.lang.reflect.Type[] genericInterfaces = null;
+		String beanDefinitionName = null;
 		//
-		ParameterizedType pt2 = null;
+		java.lang.reflect.Type[] genericInterfaces = null;
 		//
 		Field[] fs = null;
 		//
 		Field f = null;
+		//
+		ParameterizedType pt2 = null;
 		//
 		for (int i = 0; i < length(beanDefinitionNames); i++) {
 			//
@@ -1204,13 +1209,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				continue;
 				//
-			}
-			//
+			} // if
+				//
 			for (final java.lang.reflect.Type genericInterface : genericInterfaces) {
 				//
 				if (fs == null) {
 					//
-					fs = Util.getDeclaredFields(getClass());
+					fs = Util.getDeclaredFields(Util.getClass(instance));
 					//
 				} // if
 					//
@@ -1226,7 +1231,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						//
 					} // if
 						//
-					Narcissus.setField(this, f, BeanFactoryUtil.getBean(applicationContext, beanDefinitionName));
+					Narcissus.setField(instance, f, BeanFactoryUtil.getBean(applicationContext, beanDefinitionName));
 					//
 				} // for
 					//
