@@ -1183,8 +1183,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		String beanDefinitionName = null;
 		//
-		BeanDefinition bd = null;
-		//
 		Class<?> clz = null;
 		//
 		java.lang.reflect.Type[] genericInterfaces = null;
@@ -1197,44 +1195,43 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		for (int i = 0; i < length(beanDefinitionNames); i++) {
 			//
-			if ((bd = dlbf.getBeanDefinition(beanDefinitionName = ArrayUtils.get(beanDefinitionNames, i))) == null) {
+			if (!Boolean
+					.logicalAnd(
+							Util.isAssignableFrom(FailableFunction.class,
+									clz = Util.forName(BeanDefinitionUtil.getBeanClassName(dlbf.getBeanDefinition(
+											beanDefinitionName = ArrayUtils.get(beanDefinitionNames, i))))),
+							(genericInterfaces = getGenericInterfaces(clz)) != null)) {
 				//
 				continue;
 				//
-			} // if
+			}
+			//
+			for (final java.lang.reflect.Type genericInterface : genericInterfaces) {
 				//
-			if (Boolean.logicalAnd(
-					Util.isAssignableFrom(FailableFunction.class,
-							clz = Util.forName(BeanDefinitionUtil.getBeanClassName(bd))),
-					(genericInterfaces = getGenericInterfaces(clz)) != null)) {
-				//
-				for (final java.lang.reflect.Type genericInterface : genericInterfaces) {
+				if (fs == null) {
 					//
-					if (fs == null) {
+					fs = Util.getDeclaredFields(getClass());
+					//
+				} // if
+					//
+				for (int j = 0; j < length(fs) && genericInterface instanceof ParameterizedType pt1; j++) {
+					//
+					if (Boolean.logicalOr(
+							!Objects.equals(getRawType(pt1),
+									getRawType((pt2 = Util.cast(ParameterizedType.class,
+											getGenericType(f = ArrayUtils.get(fs, j)))))),
+							!Arrays.equals(getActualTypeArguments(pt1), getActualTypeArguments(pt2)))) {
 						//
-						fs = Util.getDeclaredFields(getClass());
+						continue;
 						//
 					} // if
 						//
-					for (int j = 0; j < length(fs) && genericInterface instanceof ParameterizedType pt1; j++) {
-						//
-						if (Boolean.logicalOr(
-								!Objects.equals(getRawType(pt1),
-										getRawType((pt2 = Util.cast(ParameterizedType.class,
-												getGenericType(f = ArrayUtils.get(fs, j)))))),
-								!Arrays.equals(getActualTypeArguments(pt1), getActualTypeArguments(pt2)))) {
-							//
-							continue;
-							//
-						} // if
-							//
-						Narcissus.setField(this, f, BeanFactoryUtil.getBean(applicationContext, beanDefinitionName));
-						//
-					} // for
-						//
+					Narcissus.setField(this, f, BeanFactoryUtil.getBean(applicationContext, beanDefinitionName));
+					//
 				} // for
 					//
-			} // if
+			} // for
+				//
 				//
 		} // for
 			//
