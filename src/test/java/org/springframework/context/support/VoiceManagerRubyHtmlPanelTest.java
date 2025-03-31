@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -20,8 +21,21 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ClassParserUtil;
+import org.apache.bcel.classfile.FieldOrMethodUtil;
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.JavaClassUtil;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.LDC;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.MethodGenUtil;
+import org.apache.bcel.generic.ReturnInstruction;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.Consumers;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.junit.jupiter.api.Assertions;
@@ -137,7 +151,9 @@ class VoiceManagerRubyHtmlPanelTest {
 	@Test
 	void testNull() throws Throwable {
 		//
-		final Method[] ms = VoiceManagerRubyHtmlPanel.class.getDeclaredMethods();
+		final Class<?> clz = VoiceManagerRubyHtmlPanel.class;
+		//
+		final Method[] ms = Util.getDeclaredMethods(clz);
 		//
 		Method m = null;
 		//
@@ -150,6 +166,8 @@ class VoiceManagerRubyHtmlPanelTest {
 		String toString = null;
 		//
 		Object invoke = null;
+		//
+		final Collection<?> methodReturnNonNullObjectList = getMethodReturnNonNullObjectList(clz);
 		//
 		for (int i = 0; i < length(ms); i++) {
 			//
@@ -206,7 +224,8 @@ class VoiceManagerRubyHtmlPanelTest {
 				//
 				invoke = Narcissus.invokeMethod(instance, m, os);
 				//
-				if (Objects.equals(m.getReturnType(), Double.TYPE) || Objects.equals(Util.getName(m), "getTitle")) {
+				if (Boolean.logicalOr(Objects.equals(m.getReturnType(), Double.TYPE),
+						Util.contains(methodReturnNonNullObjectList, m))) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
@@ -219,6 +238,53 @@ class VoiceManagerRubyHtmlPanelTest {
 				//
 		} // for
 			//
+	}
+
+	private static List<Method> getMethodReturnNonNullObjectList(final Class<?> clz) throws Throwable {
+		//
+		List<Method> list = null;
+		//
+		try (final InputStream is = Util.getResourceAsStream(clz,
+				String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))) {
+			//
+			final JavaClass javaClass = ClassParserUtil.parse(new ClassParser(is, null));
+			//
+			final Method[] ms = Util.getDeclaredMethods(clz);
+			//
+			Method m = null;
+			//
+			org.apache.bcel.classfile.Method method = null;
+			//
+			Instruction[] ins = null;
+			//
+			LDC ldc = null;
+			//
+			ConstantPoolGen cpg = null;
+			//
+			for (int i = 0; i < length(ms); i++) {
+				//
+				if ((method = JavaClassUtil.getMethod(javaClass, m = ArrayUtils.get(ms, i))) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (length(
+						ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(new MethodGen(method,
+								null, cpg = new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(method)))))) == 2
+						&& (ldc = Util.cast(LDC.class, ArrayUtils.get(ins, 0))) != null && ldc.getValue(cpg) != null
+						&& (Util.cast(ReturnInstruction.class, ArrayUtils.get(ins, 1))) != null) {
+					//
+					Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), m);
+					//
+				} // if
+					//
+			} // for
+				//
+		} // try
+			//
+		return list;
+		//
 	}
 
 	private static int length(final Object[] instance) throws Throwable {
