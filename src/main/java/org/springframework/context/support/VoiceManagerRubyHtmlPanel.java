@@ -10,6 +10,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Dimension2D;
 import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -73,7 +77,16 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 
 	private transient ApplicationContext applicationContext = null;
 
-	private JTextComponent tfText, taHtml = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("Text")
+	private JTextComponent tfText = null;
+
+	private JTextComponent taHtml = null;
 
 	private AbstractButton btnExecute = null;
 
