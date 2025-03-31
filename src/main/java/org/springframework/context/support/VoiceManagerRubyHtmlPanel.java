@@ -71,13 +71,13 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 
 	private static final Logger LOG = LoggerFactory.getLogger(VoiceManagerRubyHtmlPanel.class);
 
-	private ApplicationContext applicationContext = null;
+	private transient ApplicationContext applicationContext = null;
 
 	private JTextComponent tfText, taHtml = null;
 
 	private AbstractButton btnExecute = null;
 
-	private FailableFunction<String, String, IOException> furiganaFailableFunction = null;
+	private transient FailableFunction<String, String, IOException> furiganaFailableFunction = null;
 
 	@Override
 	public String getTitle() {
