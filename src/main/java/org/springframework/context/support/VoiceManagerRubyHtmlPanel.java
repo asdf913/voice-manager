@@ -1,0 +1,329 @@
+package org.springframework.context.support;
+
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.LayoutManager;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.geom.Dimension2D;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.Predicate;
+import java.util.Objects;
+
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.text.JTextComponent;
+
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.function.FailableConsumer;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
+import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.LoggerUtil;
+import org.springframework.beans.factory.BeanFactoryUtil;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.FactoryBeanUtil;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.ListableBeanFactoryUtil;
+import org.springframework.beans.factory.config.BeanDefinitionUtil;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactoryUtil;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationContextUtil;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.ConfigurableApplicationContextUtil;
+
+import io.github.toolfactory.narcissus.Narcissus;
+import net.miginfocom.swing.MigLayout;
+
+public class VoiceManagerRubyHtmlPanel extends JPanel
+		implements Titled, InitializingBean, ApplicationContextAware, ActionListener {
+
+	private static final long serialVersionUID = 8508661990476987623L;
+
+	private static final Logger LOG = LoggerFactory.getLogger(VoiceManagerRubyHtmlPanel.class);
+
+	private ApplicationContext applicationContext = null;
+
+	private JTextComponent tfText, taHtml = null;
+
+	private AbstractButton btnExecute = null;
+
+	private FailableFunction<String, String, IOException> furiganaFailableFunction = null;
+
+	@Override
+	public String getTitle() {
+		return "HTML";
+	}
+
+	@Override
+	public void setApplicationContext(final ApplicationContext applicationContext) {
+		this.applicationContext = applicationContext;
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		//
+		setLayout(this,
+				ObjectUtils.getIfNull(
+						getLayoutManager(ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext),
+								Util.entrySet(
+										ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
+						MigLayout::new));
+		//
+		JLabel jLabel = new JLabel("Text");
+		//
+		final double maxJLabelWidth = getWidth(Util.getPreferredSize(jLabel));
+		//
+		add(jLabel);
+		//
+		add(tfText = new JTextField(), "growx,wrap");
+		//
+		add(new JLabel());
+		//
+		add(btnExecute = new JButton("Execute"), "wrap");
+		//
+		btnExecute.addActionListener(this);
+		//
+		add(jLabel = new JLabel("Ruby HTML"));
+		//
+		final JScrollPane jsp = new JScrollPane(taHtml = new JTextArea());
+		//
+		add(jsp, "growx");
+		//
+		final double width = Toolkit.getDefaultToolkit().getScreenSize().getWidth()
+				- Math.max(maxJLabelWidth, getWidth(Util.getPreferredSize(jLabel)));
+		//
+		Dimension preferredSize = Util.getPreferredSize(tfText);
+		//
+		setSize(preferredSize, width, getHeight(preferredSize));
+		//
+		setPreferredSize(tfText, preferredSize);
+		//
+		setSize(preferredSize = Util.getPreferredSize(jsp), width, getHeight(preferredSize));
+		//
+		setPreferredSize(jsp, preferredSize);
+		//
+		final DefaultListableBeanFactory dlbf = Util.cast(DefaultListableBeanFactory.class,
+				ConfigurableApplicationContextUtil
+						.getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
+		//
+		forEach(testAndApply(Objects::nonNull,
+				testAndApply(Objects::nonNull, ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf), Arrays::stream,
+						null),
+				FailableStream::new, null), x -> setFailableFunctionFields(applicationContext, dlbf, x, this));
+		//
+	}
+
+	private static void setPreferredSize(final Component instance, final Dimension preferredSize) {
+		if (instance != null) {
+			instance.setPreferredSize(preferredSize);
+		}
+	}
+
+	private static void setSize(final Dimension2D instance, final double width, final double height) {
+		if (instance != null) {
+			instance.setSize(width, height);
+		}
+	}
+
+	private static double getHeight(final Dimension2D instance) {
+		return instance != null ? instance.getHeight() : 0;
+	}
+
+	private static double getWidth(final Dimension2D instance) {
+		return instance != null ? instance.getWidth() : 0;
+	}
+
+	private static void setFailableFunctionFields(final ApplicationContext applicationContext,
+			final DefaultListableBeanFactory dlbf, final String beanDefinitionName, final Object instance) {
+		//
+		final Class<?> clz = Util.forName(BeanDefinitionUtil
+				.getBeanClassName(ConfigurableListableBeanFactoryUtil.getBeanDefinition(dlbf, beanDefinitionName)));
+		//
+		final java.lang.reflect.Type[] genericInterfaces = getGenericInterfaces(clz);
+		//
+		if (!Boolean.logicalAnd(Util.isAssignableFrom(FailableFunction.class, clz), genericInterfaces != null)) {
+			//
+			return;
+			//
+		} // if
+			//
+		Field[] fs = null;
+		//
+		Field f = null;
+		//
+		ParameterizedType pt2 = null;
+		//
+		for (final java.lang.reflect.Type genericInterface : genericInterfaces) {
+			//
+			if (fs == null) {
+				//
+				fs = Util.getDeclaredFields(Util.getClass(instance));
+				//
+			} // if
+				//
+			for (int j = 0; j < length(fs) && genericInterface instanceof ParameterizedType pt1; j++) {
+				//
+				if (Boolean
+						.logicalOr(
+								!Objects.equals(getRawType(pt1),
+										getRawType((pt2 = Util.cast(ParameterizedType.class,
+												getGenericType(f = ArrayUtils.get(fs, j)))))),
+								!Arrays.equals(getActualTypeArguments(pt1), getActualTypeArguments(pt2)))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				Narcissus.setField(instance, f, BeanFactoryUtil.getBean(applicationContext, beanDefinitionName));
+				//
+			} // for
+				//
+		} // for
+			//
+	}
+
+	private static Type[] getActualTypeArguments(final ParameterizedType instance) {
+		return instance != null ? instance.getActualTypeArguments() : null;
+	}
+
+	private static Type getGenericType(final Field instance) {
+		return instance != null ? instance.getGenericType() : null;
+	}
+
+	private static Type getRawType(final ParameterizedType instance) {
+		return instance != null ? instance.getRawType() : null;
+	}
+
+	private static int length(final Object[] instance) {
+		return instance != null ? instance.length : 0;
+	}
+
+	private static Type[] getGenericInterfaces(final Class<?> instance) {
+		return instance != null ? instance.getGenericInterfaces() : null;
+	}
+
+	private static <T> void forEach(final FailableStream<T> instance, final FailableConsumer<T, ?> action) {
+		if (FailableStreamUtil.stream(instance) != null && action != null) {
+			instance.forEach(action);
+		}
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+	@Override
+	public void actionPerformed(final ActionEvent evt) {
+		//
+		if (Objects.equals(Util.getSource(evt), btnExecute)) {
+			//
+			try {
+				//
+				Util.setText(taHtml, FailableFunctionUtil.apply(furiganaFailableFunction, Util.getText(tfText)));
+				//
+			} catch (final IOException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
+				//
+		} // if
+			//
+	}
+
+	private static void setLayout(final Container instance, final LayoutManager layoutManager) {
+		if (instance != null) {
+			instance.setLayout(layoutManager);
+		}
+	}
+
+	private static LayoutManager getLayoutManager(final Object acbf, final Iterable<Entry<String, Object>> entrySet)
+			throws Exception {
+		//
+		if (Util.iterator(entrySet) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		IValue0<LayoutManager> iValue0 = null;
+		//
+		List<Field> fs = null;
+		//
+		for (final Entry<String, Object> entry : entrySet) {
+			//
+			if (!(Util.getValue(entry) instanceof LayoutManager)) {
+				//
+				continue;
+				//
+			} // if
+				//
+
+			//
+			fs = Util.toList(Util.filter(
+					Util.stream(
+							testAndApply(Objects::nonNull, Util.getClass(acbf), FieldUtils::getAllFieldsList, null)),
+					x -> Objects.equals(Util.getName(x), "singletonObjects")));
+			//
+			for (int i = 0; i < IterableUtils.size(fs); i++) {
+				//
+				if (FactoryBeanUtil
+						.getObject(
+								Util.cast(
+										FactoryBean.class, MapUtils
+												.getObject(
+														Util.cast(Map.class,
+																Narcissus.getObjectField(acbf,
+																		IterableUtils.get(fs, i))),
+														Util.getKey(entry)))) instanceof LayoutManager lm) {
+					//
+					if (iValue0 == null) {
+						//
+						iValue0 = Unit.with(lm);
+						//
+					} else {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+		return IValue0Util.getValue0(iValue0);
+		//
+	}
+
+}
