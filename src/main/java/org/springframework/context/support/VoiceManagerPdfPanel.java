@@ -1179,11 +1179,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				ConfigurableApplicationContextUtil
 						.getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
 		//
-		forEach(testAndApply(Objects::nonNull, testAndApply(Objects::nonNull,
-				ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf), Arrays::stream, null), FailableStream::new, null),
-				x -> {
-					setFailableFunctionFields(applicationContext, dlbf, x, this);
-				});
+		forEach(testAndApply(Objects::nonNull,
+				testAndApply(Objects::nonNull, ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf), Arrays::stream,
+						null),
+				FailableStream::new, null), x -> setFailableFunctionFields(applicationContext, dlbf, x, this));
 		//
 	}
 
