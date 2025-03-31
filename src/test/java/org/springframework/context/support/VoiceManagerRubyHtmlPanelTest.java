@@ -152,14 +152,11 @@ class VoiceManagerRubyHtmlPanelTest {
 			//
 			final String methodName = Util.getName(thisMethod);
 			//
-			if (self instanceof Toolkit) {
+			if (self instanceof Toolkit
+					&& Util.contains(Arrays.asList("getSystemClipboard", "getScreenSize"), methodName)) {
 				//
-				if (Util.contains(Arrays.asList("getSystemClipboard", "getScreenSize"), methodName)) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
