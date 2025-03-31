@@ -16,14 +16,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
@@ -42,8 +45,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.commons.lang3.stream.FailableStreamUtil;
-import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -149,13 +150,15 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				ConfigurableApplicationContextUtil
 						.getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
 		//
-		FailableStreamUtil.forEach(
-				testAndApply(Objects::nonNull,
-						testAndApply(Objects::nonNull, ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf),
-								Arrays::stream, null),
-						FailableStream::new, null),
-				x -> setFailableFunctionFields(applicationContext, dlbf, x, this));
+		forEach(testAndApply(Objects::nonNull, ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf), Arrays::stream,
+				null), x -> setFailableFunctionFields(applicationContext, dlbf, x, this));
 		//
+	}
+
+	private static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) {
+		if (instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || action != null)) {
+			instance.forEach(action);
+		}
 	}
 
 	@Nullable

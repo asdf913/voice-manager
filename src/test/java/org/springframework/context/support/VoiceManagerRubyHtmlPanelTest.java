@@ -16,10 +16,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.function.Consumers;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -35,7 +38,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class VoiceManagerRubyHtmlPanelTest {
 
 	private static Method METHOD_LENGTH, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE, METHOD_GET_GENERIC_TYPE,
-			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY, METHOD_GET_LAYOUT_MANAGER = null;
+			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY, METHOD_GET_LAYOUT_MANAGER, METHOD_FOR_EACH = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -60,6 +63,8 @@ class VoiceManagerRubyHtmlPanelTest {
 		(METHOD_GET_LAYOUT_MANAGER = clz.getDeclaredMethod("getLayoutManager", Object.class, Iterable.class))
 				.setAccessible(true);
 		//
+		(METHOD_FOR_EACH = clz.getDeclaredMethod("forEach", Stream.class, Consumer.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -71,6 +76,12 @@ class VoiceManagerRubyHtmlPanelTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
+			if (Objects.equals(Void.TYPE, method != null ? method.getReturnType() : null)) {
+				//
+				return null;
+				//
+			} // if
+				//
 			final String methodName = Util.getName(method);
 			//
 			if (proxy instanceof ParameterizedType) {
@@ -354,6 +365,27 @@ class VoiceManagerRubyHtmlPanelTest {
 				return (LayoutManager) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testForEach() {
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(Reflection.newProxy(Stream.class, ih), null));
+		//
+		final Stream<?> stream = Stream.ofNullable(null);
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(stream, null));
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(stream, Consumers.nop()));
+		//
+	}
+
+	private static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) throws Throwable {
+		try {
+			METHOD_FOR_EACH.invoke(null, instance, action);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
