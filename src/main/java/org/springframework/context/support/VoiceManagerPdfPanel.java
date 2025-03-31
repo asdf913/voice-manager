@@ -70,6 +70,7 @@ import java.util.OptionalInt;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
@@ -1134,17 +1135,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(panel, String.format("span %1$s", 2));
 		//
-		final FailableStream<Field> fieldStream = testAndApply(Objects::nonNull,
+		forEach(Util.map(
 				Util.filter(
 						testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManagerPdfPanel.class),
 								Arrays::stream, null),
 						f -> Util.isAssignableFrom(AbstractButton.class, Util.getType(f))),
-				FailableStream::new, null);
-		//
-		FailableStreamUtil.forEach(
-				FailableStreamUtil.map(fieldStream,
-						f -> Util.cast(AbstractButton.class,
-								testAndApply(Objects::nonNull, f, x -> Narcissus.getField(this, x), null))),
+				f -> Util.cast(AbstractButton.class,
+						testAndApply(Objects::nonNull, f, x -> Narcissus.getField(this, x), null))),
 				x -> addActionListener(x, this));
 		//
 		final Double width = getWidth(btnExecute.getPreferredSize());
@@ -1180,13 +1177,15 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				ConfigurableApplicationContextUtil
 						.getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
 		//
-		FailableStreamUtil.forEach(
-				testAndApply(Objects::nonNull,
-						testAndApply(Objects::nonNull, ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf),
-								Arrays::stream, null),
-						FailableStream::new, null),
-				x -> setFailableFunctionFields(applicationContext, dlbf, x, this));
+		forEach(testAndApply(Objects::nonNull, ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf), Arrays::stream,
+				null), x -> setFailableFunctionFields(applicationContext, dlbf, x, this));
 		//
+	}
+
+	private static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) {
+		if (instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || action != null)) {
+			instance.forEach(action);
+		}
 	}
 
 	private static void setFailableFunctionFields(final ApplicationContext applicationContext,

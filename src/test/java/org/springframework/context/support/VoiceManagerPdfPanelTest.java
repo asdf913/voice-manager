@@ -108,7 +108,7 @@ class VoiceManagerPdfPanelTest {
 			METHOD_TO_AUDIO_RESOURCE, METHOD_LIST_FILES, METHOD_IS_DIRECTORY, METHOD_GET_TRANSFER_DATA,
 			METHOD_FIND_MATCH, METHOD_TO_MILLIS, METHOD_TEST_AND_ACCEPT, METHOD_IIF, METHOD_PATH_FILE_EXISTS_W,
 			METHOD_GET_GENERIC_INTERFACES, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE,
-			METHOD_GET_GENERIC_TYPE = null;
+			METHOD_GET_GENERIC_TYPE, METHOD_FOR_EACH = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -176,6 +176,8 @@ class VoiceManagerPdfPanelTest {
 		//
 		(METHOD_GET_GENERIC_TYPE = clz.getDeclaredMethod("getGenericType", Field.class)).setAccessible(true);
 		//
+		(METHOD_FOR_EACH = clz.getDeclaredMethod("forEach", Stream.class, Consumer.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -189,6 +191,12 @@ class VoiceManagerPdfPanelTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
+			if (Objects.equals(Void.TYPE, method != null ? method.getReturnType() : null)) {
+				//
+				return null;
+				//
+			} // if
+				//
 			final String methodName = Util.getName(method);
 			//
 			if (proxy instanceof Transferable && Objects.equals(methodName, "getTransferData")) {
@@ -1343,9 +1351,20 @@ class VoiceManagerPdfPanelTest {
 			//
 	}
 
-	private static <T> void forEach(final Stream<T> instance, final Consumer<T> action) {
-		if (instance != null && action != null) {
-			instance.forEach(action);
+	@Test
+	void testForEach() {
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(Reflection.newProxy(Stream.class, ih), null));
+		//
+		Assertions.assertDoesNotThrow(() -> forEach(Stream.ofNullable(null), null));
+		//
+	}
+
+	private static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) throws Throwable {
+		try {
+			METHOD_FOR_EACH.invoke(null, instance, action);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
 		}
 	}
 
