@@ -1428,20 +1428,8 @@ class VoiceManagerPdfPanelTest {
 			//
 			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
 				//
-				if (Objects.equals(parameterType = parameterTypes[j], Float.TYPE)) {
-					//
-					Util.add(collection, Float.valueOf(0));
-					//
-				} else if (Objects.equals(parameterType, Integer.TYPE)) {
-					//
-					Util.add(collection, Integer.valueOf(0));
-					//
-				} else {
-					//
-					Util.add(collection, null);
-					//
-				} // if
-					//
+				Util.add(collection, null);
+				//
 			} // if
 				//
 			toString = Util.toString(m);
