@@ -6,6 +6,10 @@ import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Dimension2D;
@@ -88,7 +92,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 
 	private JTextComponent taHtml = null;
 
-	private AbstractButton btnExecute = null;
+	private AbstractButton btnExecute, btnCopy = null;
 
 	private transient FailableFunction<String, String, IOException> furiganaFailableFunction = null;
 
@@ -124,13 +128,17 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		add(btnExecute = new JButton("Execute"), "wrap");
 		//
-		btnExecute.addActionListener(this);
-		//
 		add(jLabel = new JLabel("Ruby HTML"));
 		//
 		final JScrollPane jsp = new JScrollPane(taHtml = new JTextArea());
 		//
-		add(jsp, "growx");
+		add(jsp, "growx,wrap");
+		//
+		add(new JLabel());
+		//
+		add(btnCopy = new JButton("Copy"));
+		//
+		addActionListener(this, btnExecute, btnCopy);
 		//
 		final double width = iif(!GraphicsEnvironment.isHeadless(), 0,
 				() -> getWidth(getScreenSize(Toolkit.getDefaultToolkit())), () -> 0)
@@ -155,6 +163,24 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 	}
 
+	private static void addActionListener(final ActionListener actionListener, final AbstractButton... bs) {
+		//
+		AbstractButton b = null;
+		//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if ((b = bs[i]) == null) {
+				//
+				continue;
+				//
+			} // skip null
+				//
+			b.addActionListener(actionListener);
+			//
+		} // for
+			//
+	}
+
 	private static <T> void forEach(@Nullable final Stream<T> instance, @Nullable final Consumer<? super T> action) {
 		if (instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || action != null)) {
 			instance.forEach(action);
@@ -163,7 +189,10 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 
 	@Nullable
 	private static Dimension getScreenSize(@Nullable final Toolkit instance) {
-		return instance != null ? instance.getScreenSize() : null;
+		return instance != null && Boolean.logicalOr(!GraphicsEnvironment.isHeadless(),
+				matches(Util.getName(Util.getClass(instance)), "^javassist.util.proxy[.\\w]+\\$\\$[.\\w]+$"))
+						? instance.getScreenSize()
+						: null;
 	}
 
 	private static double iif(final boolean condition, final double defaultValue, final DoubleSupplier supplierTrue,
@@ -278,7 +307,9 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		if (Objects.equals(Util.getSource(evt), btnExecute)) {
+		final Object source = Util.getSource(evt);
+		//
+		if (Objects.equals(source, btnExecute)) {
 			//
 			try {
 				//
@@ -290,8 +321,35 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				//
 			} // try
 				//
+		} else if (Objects.equals(source, btnCopy)) {
+			//
+			setContents(Boolean.logicalAnd(!isTestMode(), !GraphicsEnvironment.isHeadless())
+					? getSystemClipboard(Toolkit.getDefaultToolkit())
+					: null, new StringSelection(Util.getText(taHtml)), null);
+			//
 		} // if
 			//
+	}
+
+	private static boolean isTestMode() {
+		return Util.forName("org.junit.jupiter.api.Test") != null;
+	}
+
+	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner) {
+		if (instance != null) {
+			instance.setContents(contents, owner);
+		}
+	}
+
+	private static Clipboard getSystemClipboard(final Toolkit instance) {
+		return instance != null && Boolean.logicalOr(!GraphicsEnvironment.isHeadless(),
+				matches(Util.getName(Util.getClass(instance)), "^javassist.util.proxy[.\\w]+\\$\\$[.\\w]+$"))
+						? instance.getSystemClipboard()
+						: null;
+	}
+
+	private static boolean matches(final String instance, final String regex) {
+		return instance != null && regex != null && instance.matches(regex);
 	}
 
 	private static void setLayout(@Nullable final Container instance, final LayoutManager layoutManager) {

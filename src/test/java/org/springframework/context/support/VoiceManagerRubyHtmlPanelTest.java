@@ -1,7 +1,13 @@
 package org.springframework.context.support;
 
+import java.awt.Dimension;
 import java.awt.LayoutManager;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -21,6 +27,9 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
+
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
 import org.apache.bcel.classfile.FieldOrMethodUtil;
@@ -38,6 +47,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.Consumers;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,11 +58,15 @@ import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyUtil;
 
 class VoiceManagerRubyHtmlPanelTest {
 
 	private static Method METHOD_LENGTH, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE, METHOD_GET_GENERIC_TYPE,
-			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY, METHOD_GET_LAYOUT_MANAGER, METHOD_FOR_EACH = null;
+			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY, METHOD_GET_LAYOUT_MANAGER, METHOD_FOR_EACH,
+			METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD,
+			METHOD_MATCHES = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -78,6 +92,18 @@ class VoiceManagerRubyHtmlPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_FOR_EACH = clz.getDeclaredMethod("forEach", Stream.class, Consumer.class)).setAccessible(true);
+		//
+		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
+				AbstractButton[].class)).setAccessible(true);
+		//
+		(METHOD_GET_SCREEN_SIZE = clz.getDeclaredMethod("getScreenSize", Toolkit.class)).setAccessible(true);
+		//
+		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
+				ClipboardOwner.class)).setAccessible(true);
+		//
+		(METHOD_GET_SYSTEM_CLIPBOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
+		//
+		(METHOD_MATCHES = clz.getDeclaredMethod("matches", String.class, String.class)).setAccessible(true);
 		//
 	}
 
@@ -118,11 +144,43 @@ class VoiceManagerRubyHtmlPanelTest {
 
 	}
 
+	private static class MH implements MethodHandler {
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			final String methodName = Util.getName(thisMethod);
+			//
+			if (self instanceof Toolkit) {
+				//
+				if (Objects.equals(methodName, "getSystemClipboard")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(methodName, "getScreenSize")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+	}
+
 	private VoiceManagerRubyHtmlPanel instance = null;
 
 	private IH ih = null;
 
 	private ParameterizedType parameterizedType = null;
+
+	private Toolkit toolkit = null;
+
+	private MH mh = null;
 
 	@BeforeEach
 	void beforeEach() {
@@ -131,10 +189,14 @@ class VoiceManagerRubyHtmlPanelTest {
 		//
 		parameterizedType = Reflection.newProxy(ParameterizedType.class, ih = new IH());
 		//
+		toolkit = Util.cast(Toolkit.class, Narcissus.allocateInstance(Util.forName("sun.awt.HeadlessToolkit")));
+		//
+		mh = new MH();
+		//
 	}
 
 	@Test
-	void testActionPerformed() {
+	void testActionPerformed() throws IllegalAccessException {
 		//
 		if (instance == null) {
 			//
@@ -145,6 +207,12 @@ class VoiceManagerRubyHtmlPanelTest {
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(null));
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(new Object(), 0, null)));
+		//
+		final AbstractButton btnCopy = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnCopy", btnCopy, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopy, 0, null)));
 		//
 	}
 
@@ -210,7 +278,7 @@ class VoiceManagerRubyHtmlPanelTest {
 				//
 				invoke = Narcissus.invokeStaticMethod(m, os);
 				//
-				if (Util.contains(Arrays.asList(Integer.TYPE, Double.TYPE), m.getReturnType())) {
+				if (Util.contains(Arrays.asList(Integer.TYPE, Double.TYPE, Boolean.TYPE), m.getReturnType())) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
@@ -452,6 +520,105 @@ class VoiceManagerRubyHtmlPanelTest {
 	private static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) throws Throwable {
 		try {
 			METHOD_FOR_EACH.invoke(null, instance, action);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddActionListener() {
+		//
+		Assertions.assertDoesNotThrow(() -> addActionListener(null, (AbstractButton[]) null));
+		//
+	}
+
+	private static void addActionListener(final ActionListener actionListener, final AbstractButton... bs)
+			throws Throwable {
+		try {
+			METHOD_ADD_ACTION_LISTENER.invoke(null, actionListener, bs);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetScreenSize() throws Throwable {
+		//
+		Assertions.assertEquals(null, getScreenSize(toolkit));
+		//
+		Assertions.assertEquals(null, getScreenSize(ProxyUtil.createProxy(Toolkit.class, mh)));
+		//
+	}
+
+	private static Dimension getScreenSize(final Toolkit instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SCREEN_SIZE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Dimension) {
+				return (Dimension) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetContents() {
+		//
+		Assertions.assertDoesNotThrow(
+				() -> setContents(Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class)), null, null));
+		//
+	}
+
+	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner)
+			throws Throwable {
+		try {
+			METHOD_SET_CONTENTS.invoke(null, instance, contents, owner);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSystemClipboard() throws Throwable {
+		//
+		Assertions.assertEquals(null, getSystemClipboard(toolkit));
+		//
+		Assertions.assertEquals(null, getSystemClipboard(ProxyUtil.createProxy(Toolkit.class, mh)));
+		//
+	}
+
+	private static Clipboard getSystemClipboard(final Toolkit instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SYSTEM_CLIPBOARD.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Clipboard) {
+				return (Clipboard) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMatches() throws Throwable {
+		//
+		Assertions.assertFalse(matches("", null));
+		//
+	}
+
+	private static boolean matches(final String instance, final String regex) throws Throwable {
+		try {
+			final Object obj = METHOD_MATCHES.invoke(null, instance, regex);
+
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
