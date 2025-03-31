@@ -153,13 +153,13 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		return instance != null ? instance.getAsDouble() : defaultValue;
 	}
 
-	private static void setPreferredSize(final Component instance, final Dimension preferredSize) {
+	private static void setPreferredSize(@Nullable final Component instance, final Dimension preferredSize) {
 		if (instance != null) {
 			instance.setPreferredSize(preferredSize);
 		}
 	}
 
-	private static void setSize(final Dimension2D instance, final double width, final double height) {
+	private static void setSize(@Nullable final Dimension2D instance, final double width, final double height) {
 		if (instance != null) {
 			instance.setSize(width, height);
 		}
@@ -242,7 +242,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		return instance != null ? instance.getGenericInterfaces() : null;
 	}
 
-	private static <T> void forEach(final FailableStream<T> instance, final FailableConsumer<T, ?> action) {
+	private static <T> void forEach(final FailableStream<T> instance, @Nullable final FailableConsumer<T, ?> action) {
 		if (FailableStreamUtil.stream(instance) != null && action != null) {
 			instance.forEach(action);
 		}
@@ -274,7 +274,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 	}
 
-	private static void setLayout(final Container instance, final LayoutManager layoutManager) {
+	private static void setLayout(@Nullable final Container instance, final LayoutManager layoutManager) {
 		if (instance != null) {
 			instance.setLayout(layoutManager);
 		}
