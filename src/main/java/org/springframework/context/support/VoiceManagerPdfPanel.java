@@ -1201,9 +1201,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // if
 				//
-			if (Util.isAssignableFrom(FailableFunction.class,
-					clz = Util.forName(BeanDefinitionUtil.getBeanClassName(bd)))
-					&& (genericInterfaces = clz.getGenericInterfaces()) != null) {
+			if (Boolean.logicalAnd(
+					Util.isAssignableFrom(FailableFunction.class,
+							clz = Util.forName(BeanDefinitionUtil.getBeanClassName(bd))),
+					(genericInterfaces = getGenericInterfaces(clz)) != null)) {
 				//
 				for (final java.lang.reflect.Type genericInterface : genericInterfaces) {
 					//
@@ -1240,6 +1241,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // for
 			//
+	}
+
+	private static java.lang.reflect.Type[] getGenericInterfaces(final Class<?> instance) {
+		return instance != null ? instance.getGenericInterfaces() : null;
 	}
 
 	@Nullable

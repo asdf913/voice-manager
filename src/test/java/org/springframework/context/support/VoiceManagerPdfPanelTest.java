@@ -74,6 +74,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.Resource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -106,7 +109,8 @@ class VoiceManagerPdfPanelTest {
 			METHOD_GET_TEXT_ALIGNS, METHOD_CHOP, METHOD_GENERATE_PDF_HTML, METHOD_LENGTH,
 			METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY, METHOD_GET_TEXT_WIDTH, METHOD_OR,
 			METHOD_TO_AUDIO_RESOURCE, METHOD_LIST_FILES, METHOD_IS_DIRECTORY, METHOD_GET_TRANSFER_DATA,
-			METHOD_FIND_MATCH, METHOD_TO_MILLIS, METHOD_TEST_AND_ACCEPT, METHOD_IIF, METHOD_PATH_FILE_EXISTS_W = null;
+			METHOD_FIND_MATCH, METHOD_TO_MILLIS, METHOD_TEST_AND_ACCEPT, METHOD_IIF, METHOD_PATH_FILE_EXISTS_W,
+			METHOD_GET_GENERIC_INTERFACES, METHOD_GET_BEAN_FACTORY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -164,6 +168,12 @@ class VoiceManagerPdfPanelTest {
 				CLASS_SHLWAPI = Class.forName("org.springframework.context.support.VoiceManagerPdfPanel$Shlwapi"),
 				String.class)).setAccessible(true);
 		//
+		(METHOD_GET_GENERIC_INTERFACES = clz.getDeclaredMethod("getGenericInterfaces", Class.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_BEAN_FACTORY = clz.getDeclaredMethod("getBeanFactory", ConfigurableApplicationContext.class))
+				.setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -171,6 +181,8 @@ class VoiceManagerPdfPanelTest {
 		private Object transferData = null;
 
 		private Boolean PathFileExistsW = null;
+
+		private BeanFactory beanFactory = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -180,6 +192,11 @@ class VoiceManagerPdfPanelTest {
 			if (proxy instanceof Transferable && Objects.equals(methodName, "getTransferData")) {
 				//
 				return transferData;
+				//
+			} else if (proxy instanceof ConfigurableApplicationContext
+					&& Objects.equals(methodName, "getBeanFactory")) {
+				//
+				return beanFactory;
 				//
 			} else if (Util.isAssignableFrom(CLASS_SHLWAPI, Util.getClass(proxy))
 					&& Objects.equals(methodName, "PathFileExistsW")) {
@@ -1101,6 +1118,49 @@ class VoiceManagerPdfPanelTest {
 			final Object obj = METHOD_PATH_FILE_EXISTS_W.invoke(null, shlwapi, pszPath);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetGenericInterfaces() throws Throwable {
+		//
+		Assertions.assertArrayEquals(new Type[] {}, getGenericInterfaces(Object.class));
+		//
+	}
+
+	private static Type[] getGenericInterfaces(final Class<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_GENERIC_INTERFACES.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Type[]) {
+				return (Type[]) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetBeanFactory() throws Throwable {
+		//
+		Assertions.assertNull(getBeanFactory(Reflection.newProxy(ConfigurableApplicationContext.class, ih)));
+		//
+	}
+
+	private static ConfigurableListableBeanFactory getBeanFactory(final ConfigurableApplicationContext instance)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_BEAN_FACTORY.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof ConfigurableListableBeanFactory) {
+				return (ConfigurableListableBeanFactory) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
