@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.function.DoubleSupplier;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -278,6 +279,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		}
 	}
 
+	@Nullable
 	private static LayoutManager getLayoutManager(final Object acbf, final Iterable<Entry<String, Object>> entrySet)
 			throws Exception {
 		//
