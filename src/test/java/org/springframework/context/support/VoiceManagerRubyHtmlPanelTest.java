@@ -154,11 +154,7 @@ class VoiceManagerRubyHtmlPanelTest {
 			//
 			if (self instanceof Toolkit) {
 				//
-				if (Objects.equals(methodName, "getSystemClipboard")) {
-					//
-					return null;
-					//
-				} else if (Objects.equals(methodName, "getScreenSize")) {
+				if (Util.contains(Arrays.asList("getSystemClipboard", "getScreenSize"), methodName)) {
 					//
 					return null;
 					//
