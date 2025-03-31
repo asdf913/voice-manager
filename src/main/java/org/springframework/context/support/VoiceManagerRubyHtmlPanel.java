@@ -226,14 +226,17 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static Type[] getActualTypeArguments(@Nullable final ParameterizedType instance) {
 		return instance != null ? instance.getActualTypeArguments() : null;
 	}
 
+	@Nullable
 	private static Type getGenericType(@Nullable final Field instance) {
 		return instance != null ? instance.getGenericType() : null;
 	}
 
+	@Nullable
 	private static Type getRawType(@Nullable final ParameterizedType instance) {
 		return instance != null ? instance.getRawType() : null;
 	}
@@ -242,6 +245,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		return instance != null ? instance.length : 0;
 	}
 
+	@Nullable
 	private static Type[] getGenericInterfaces(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getGenericInterfaces() : null;
 	}
