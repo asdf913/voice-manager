@@ -1175,7 +1175,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		final DefaultListableBeanFactory dlbf = Util.cast(DefaultListableBeanFactory.class,
 				getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
 		//
-		final String[] beanDefinitionNames = dlbf != null ? dlbf.getBeanDefinitionNames() : null;
+		final String[] beanDefinitionNames = ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf);
 		//
 		String beanDefinitionName = null;
 		//
