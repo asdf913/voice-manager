@@ -319,8 +319,6 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				//
 			} // if
 				//
-
-			//
 			fs = Util.toList(Util.filter(
 					Util.stream(
 							testAndApply(Objects::nonNull, Util.getClass(acbf), FieldUtils::getAllFieldsList, null)),
