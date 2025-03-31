@@ -341,6 +341,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		}
 	}
 
+	@Nullable
 	private static Clipboard getSystemClipboard(final Toolkit instance) {
 		return instance != null && Boolean.logicalOr(!GraphicsEnvironment.isHeadless(),
 				matches(Util.getName(Util.getClass(instance)), "^javassist.util.proxy[.\\w]+\\$\\$[.\\w]+$"))
