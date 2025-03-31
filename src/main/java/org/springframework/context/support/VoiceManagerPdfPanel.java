@@ -39,6 +39,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
@@ -199,17 +200,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactoryUtil;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.FactoryBeanUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.BeanDefinitionUtil;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactoryUtil;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationContextUtil;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.support.VoiceManager.ByteConverter;
 import org.springframework.core.env.Environment;
@@ -439,6 +444,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	@Nullable
 	private transient Resource audioResource = null;
+
+	private FailableFunction<String, String, IOException> furiganaFailableFunction = null;
 
 	@Override
 	public String getTitle() {
@@ -1126,15 +1133,15 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(panel, String.format("span %1$s", 2));
 		//
-		final FailableStream<Field> fs = testAndApply(Objects::nonNull,
+		final FailableStream<Field> fieldStream = testAndApply(Objects::nonNull,
 				Util.filter(
 						testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManagerPdfPanel.class),
 								Arrays::stream, null),
 						f -> Util.isAssignableFrom(AbstractButton.class, Util.getType(f))),
 				FailableStream::new, null);
 		//
-		forEach(FailableStreamUtil.map(fs, f -> Util.cast(AbstractButton.class, f != null ? f.get(this) : null)),
-				x -> addActionListener(x, this));
+		forEach(FailableStreamUtil.map(fieldStream,
+				f -> Util.cast(AbstractButton.class, f != null ? f.get(this) : null)), x -> addActionListener(x, this));
 		//
 		final Double width = getWidth(btnExecute.getPreferredSize());
 		//
@@ -1165,6 +1172,77 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		insertUpdate(Reflection.newProxy(DocumentEvent.class, ih));
 		//
+		final DefaultListableBeanFactory dlbf = Util.cast(DefaultListableBeanFactory.class,
+				getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
+		//
+		final String[] beanDefinitionNames = dlbf != null ? dlbf.getBeanDefinitionNames() : null;
+		//
+		String beanDefinitionName = null;
+		//
+		BeanDefinition bd = null;
+		//
+		Class<?> clz = null;
+		//
+		java.lang.reflect.Type[] genericInterfaces = null;
+		//
+		ParameterizedType pt1, pt2 = null;
+		//
+		Field[] fs = null;
+		//
+		Field f = null;
+		//
+		for (int i = 0; i < length(beanDefinitionNames); i++) {
+			//
+			if ((bd = dlbf.getBeanDefinition(beanDefinitionName = ArrayUtils.get(beanDefinitionNames, i))) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Util.isAssignableFrom(FailableFunction.class,
+					clz = Util.forName(BeanDefinitionUtil.getBeanClassName(bd)))
+					&& (genericInterfaces = clz.getGenericInterfaces()) != null) {
+				//
+				for (final java.lang.reflect.Type genericInterface : genericInterfaces) {
+					//
+					if ((pt1 = Util.cast(ParameterizedType.class, genericInterface)) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (fs == null) {
+						//
+						fs = Util.getDeclaredFields(getClass());
+						//
+					} // if
+						//
+					for (int j = 0; j < length(fs); j++) {
+						//
+						if ((f = ArrayUtils.get(fs, j)) == null
+								|| ((pt2 = Util.cast(ParameterizedType.class, f.getGenericType())) == null)
+								|| !Objects.equals(pt1.getRawType(), pt2.getRawType())
+								|| !Arrays.equals(pt1.getActualTypeArguments(), pt2.getActualTypeArguments())) {
+							//
+							continue;
+							//
+						} // if
+							//
+						f.set(this, BeanFactoryUtil.getBean(applicationContext, beanDefinitionName));
+						//
+					} // for
+						//
+				} // for
+					//
+			} // if
+				//
+		} // for
+			//
+	}
+
+	private static ConfigurableListableBeanFactory getBeanFactory(final ConfigurableApplicationContext instance)
+			throws IllegalStateException {
+		return instance != null ? instance.getBeanFactory() : null;
 	}
 
 	private static JPanel createAudioPanel(@Nullable final VoiceManagerPdfPanel instance,
@@ -1998,7 +2076,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			try {
 				//
 				testAndAccept(VoiceManagerPdfPanel::isPlainText, Util.getText(taHtml),
-						x -> Util.setText(taHtml, toHtml(x)));
+						x -> Util.setText(taHtml, FailableFunctionUtil.apply(furiganaFailableFunction, x)));
 				//
 			} catch (final IOException e) {
 				//

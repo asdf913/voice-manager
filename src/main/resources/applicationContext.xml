@@ -1161,6 +1161,10 @@
 			ref="LanguageCodeToTextObjIntFunction" />
 	</bean>
 
+	<!-- -->
+	<bean
+		class="org.apache.commons.lang3.function.FuriganaHtmlBuilderFailableFunction" />
+
 	<!---->
 	<bean
 		class="org.springframework.beans.factory.VoiceManagerHelpPanelIntFunctionFactoryBean">
