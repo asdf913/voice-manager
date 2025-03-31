@@ -120,7 +120,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		add(jsp, "growx");
 		//
 		final double width = iif(!GraphicsEnvironment.isHeadless(), 0,
-				() -> getWidth(Toolkit.getDefaultToolkit().getScreenSize()), () -> 0)
+				() -> getWidth(getScreenSize(Toolkit.getDefaultToolkit())), () -> 0)
 				- Math.max(maxJLabelWidth, getWidth(Util.getPreferredSize(jLabel)));
 		//
 		Dimension preferredSize = Util.getPreferredSize(tfText);
@@ -142,6 +142,10 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 						null),
 				FailableStream::new, null), x -> setFailableFunctionFields(applicationContext, dlbf, x, this));
 		//
+	}
+
+	private static Dimension getScreenSize(final Toolkit instance) {
+		return instance != null ? instance.getScreenSize() : null;
 	}
 
 	private static double iif(final boolean condition, final double defaultValue, final DoubleSupplier supplierTrue,
