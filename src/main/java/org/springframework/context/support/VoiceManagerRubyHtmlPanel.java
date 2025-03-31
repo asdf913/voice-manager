@@ -144,7 +144,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 	}
 
-	private static Dimension getScreenSize(final Toolkit instance) {
+	private static Dimension getScreenSize(@Nullable final Toolkit instance) {
 		return instance != null ? instance.getScreenSize() : null;
 	}
 
