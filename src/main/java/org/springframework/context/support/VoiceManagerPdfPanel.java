@@ -1208,12 +1208,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				for (final java.lang.reflect.Type genericInterface : genericInterfaces) {
 					//
-					if ((pt1 = Util.cast(ParameterizedType.class, genericInterface)) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
 					if (fs == null) {
 						//
 						fs = Util.getDeclaredFields(getClass());
@@ -1223,9 +1217,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					for (int j = 0; j < length(fs); j++) {
 						//
 						if ((f = ArrayUtils.get(fs, j)) == null
-								|| ((pt2 = Util.cast(ParameterizedType.class, f.getGenericType())) == null)
-								|| !Objects.equals(pt1.getRawType(), pt2.getRawType())
-								|| !Arrays.equals(pt1.getActualTypeArguments(), pt2.getActualTypeArguments())) {
+								|| !Objects.equals(
+										getRawType(pt1 = Util.cast(ParameterizedType.class, genericInterface)),
+										getRawType((pt2 = Util.cast(ParameterizedType.class, f.getGenericType()))))
+								|| !Arrays.equals(getActualTypeArguments(pt1), getActualTypeArguments(pt2))) {
 							//
 							continue;
 							//
@@ -1241,6 +1236,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // for
 			//
+	}
+
+	private static java.lang.reflect.Type[] getActualTypeArguments(final ParameterizedType instance) {
+		return instance != null ? instance.getActualTypeArguments() : null;
+	}
+
+	private static java.lang.reflect.Type getRawType(final ParameterizedType instance) {
+		return instance != null ? instance.getRawType() : null;
 	}
 
 	private static java.lang.reflect.Type[] getGenericInterfaces(final Class<?> instance) {

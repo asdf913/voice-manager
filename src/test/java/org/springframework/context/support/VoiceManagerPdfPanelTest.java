@@ -110,7 +110,8 @@ class VoiceManagerPdfPanelTest {
 			METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY, METHOD_GET_TEXT_WIDTH, METHOD_OR,
 			METHOD_TO_AUDIO_RESOURCE, METHOD_LIST_FILES, METHOD_IS_DIRECTORY, METHOD_GET_TRANSFER_DATA,
 			METHOD_FIND_MATCH, METHOD_TO_MILLIS, METHOD_TEST_AND_ACCEPT, METHOD_IIF, METHOD_PATH_FILE_EXISTS_W,
-			METHOD_GET_GENERIC_INTERFACES, METHOD_GET_BEAN_FACTORY = null;
+			METHOD_GET_GENERIC_INTERFACES, METHOD_GET_BEAN_FACTORY, METHOD_GET_ACTUAL_TYPE_ARGUMENTS,
+			METHOD_GET_RAW_TYPE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -174,6 +175,11 @@ class VoiceManagerPdfPanelTest {
 		(METHOD_GET_BEAN_FACTORY = clz.getDeclaredMethod("getBeanFactory", ConfigurableApplicationContext.class))
 				.setAccessible(true);
 		//
+		(METHOD_GET_ACTUAL_TYPE_ARGUMENTS = clz.getDeclaredMethod("getActualTypeArguments", ParameterizedType.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_RAW_TYPE = clz.getDeclaredMethod("getRawType", ParameterizedType.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -183,6 +189,8 @@ class VoiceManagerPdfPanelTest {
 		private Boolean PathFileExistsW = null;
 
 		private BeanFactory beanFactory = null;
+
+		private Type rawType = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -197,6 +205,10 @@ class VoiceManagerPdfPanelTest {
 					&& Objects.equals(methodName, "getBeanFactory")) {
 				//
 				return beanFactory;
+				//
+			} else if (proxy instanceof ParameterizedType && Objects.equals(methodName, "getRawType")) {
+				//
+				return rawType;
 				//
 			} else if (Util.isAssignableFrom(CLASS_SHLWAPI, Util.getClass(proxy))
 					&& Objects.equals(methodName, "PathFileExistsW")) {
@@ -814,17 +826,20 @@ class VoiceManagerPdfPanelTest {
 		//
 		final Class<?> clz = Util.getClass(instance);
 		//
-		final List<Field> fs = Util.toList(
-				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(clz), Arrays::stream, null), f -> {
-					//
-					final Type[] actualTypeArguments = getActualTypeArguments(
-							Util.cast(ParameterizedType.class, f != null ? f.getGenericType() : null));
-					//
-					return Objects.equals(Util.getType(f), FailableFunction.class) && actualTypeArguments != null
-							&& actualTypeArguments.length > 0
-							&& Objects.equals(ArrayUtils.get(actualTypeArguments, 0), Playwright.class);
-					//
-				}));
+		final FailableStream<Field> failedStream = testAndApply(Objects::nonNull,
+				testAndApply(Objects::nonNull, Util.getDeclaredFields(clz), Arrays::stream, null), FailableStream::new,
+				null);
+		//
+		final List<Field> fs = Util.toList(FailableStreamUtil.stream(failedStream != null ? failedStream.filter(f -> {
+			//
+			final Type[] actualTypeArguments = getActualTypeArguments(
+					Util.cast(ParameterizedType.class, f != null ? f.getGenericType() : null));
+			//
+			return Objects.equals(Util.getType(f), FailableFunction.class) && actualTypeArguments != null
+					&& actualTypeArguments.length > 0
+					&& Objects.equals(ArrayUtils.get(actualTypeArguments, 0), Playwright.class);
+			//
+		}) : null));
 		//
 		final int size = IterableUtils.size(fs);
 		//
@@ -859,8 +874,18 @@ class VoiceManagerPdfPanelTest {
 			//
 	}
 
-	private static Type[] getActualTypeArguments(final ParameterizedType instance) {
-		return instance != null ? instance.getActualTypeArguments() : null;
+	private static Type[] getActualTypeArguments(final ParameterizedType instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ACTUAL_TYPE_ARGUMENTS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Type[]) {
+				return (Type[]) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
@@ -1161,6 +1186,27 @@ class VoiceManagerPdfPanelTest {
 				return null;
 			} else if (obj instanceof ConfigurableListableBeanFactory) {
 				return (ConfigurableListableBeanFactory) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetRawType() throws Throwable {
+		//
+		Assertions.assertEquals(null, getRawType(Reflection.newProxy(ParameterizedType.class, ih)));
+		//
+	}
+
+	private static Type getRawType(final ParameterizedType instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_RAW_TYPE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Type) {
+				return (Type) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
