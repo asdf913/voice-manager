@@ -163,7 +163,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 	}
 
-	private static void addActionListener(final ActionListener actionListener, final AbstractButton... bs) {
+	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... bs) {
 		//
 		AbstractButton b = null;
 		//
@@ -335,7 +335,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		return Util.forName("org.junit.jupiter.api.Test") != null;
 	}
 
-	private static void setContents(final Clipboard instance, final Transferable contents,
+	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
 			@Nullable final ClipboardOwner owner) {
 		if (instance != null) {
 			instance.setContents(contents, owner);
@@ -343,14 +343,14 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 	}
 
 	@Nullable
-	private static Clipboard getSystemClipboard(final Toolkit instance) {
+	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		return instance != null && Boolean.logicalOr(!GraphicsEnvironment.isHeadless(),
 				matches(Util.getName(Util.getClass(instance)), "^javassist.util.proxy[.\\w]+\\$\\$[.\\w]+$"))
 						? instance.getSystemClipboard()
 						: null;
 	}
 
-	private static boolean matches(final String instance, final String regex) {
+	private static boolean matches(@Nullable final String instance, @Nullable final String regex) {
 		return instance != null && regex != null && instance.matches(regex);
 	}
 
