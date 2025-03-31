@@ -70,6 +70,7 @@ import java.util.OptionalInt;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
@@ -1179,64 +1180,58 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				ConfigurableApplicationContextUtil
 						.getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
 		//
-		setFailableFunctionFields(applicationContext, dlbf, ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf), this);
+		forEach(testAndApply(Objects::nonNull, testAndApply(Objects::nonNull,
+				ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf), Arrays::stream, null), FailableStream::new, null),
+				x -> {
+					setFailableFunctionFields(applicationContext, dlbf, x, this);
+				});
 		//
 	}
 
 	private static void setFailableFunctionFields(final ApplicationContext applicationContext,
-			final DefaultListableBeanFactory dlbf, final String[] beanDefinitionNames, final Object instance) {
+			final DefaultListableBeanFactory dlbf, final String beanDefinitionName, final Object instance) {
 		//
-		Class<?> clz = null;
+		final Class<?> clz = Util
+				.forName(BeanDefinitionUtil.getBeanClassName(dlbf.getBeanDefinition(beanDefinitionName)));
 		//
-		String beanDefinitionName = null;
+		final java.lang.reflect.Type[] genericInterfaces = getGenericInterfaces(clz);
 		//
-		java.lang.reflect.Type[] genericInterfaces = null;
-		//
+		if (!Boolean.logicalAnd(Util.isAssignableFrom(FailableFunction.class, clz), genericInterfaces != null)) {
+			//
+			return;
+			//
+		} // if
+			//
 		Field[] fs = null;
 		//
 		Field f = null;
 		//
 		ParameterizedType pt2 = null;
 		//
-		for (int i = 0; i < length(beanDefinitionNames); i++) {
+		for (final java.lang.reflect.Type genericInterface : genericInterfaces) {
 			//
-			if (!Boolean
-					.logicalAnd(
-							Util.isAssignableFrom(FailableFunction.class,
-									clz = Util.forName(BeanDefinitionUtil.getBeanClassName(dlbf.getBeanDefinition(
-											beanDefinitionName = ArrayUtils.get(beanDefinitionNames, i))))),
-							(genericInterfaces = getGenericInterfaces(clz)) != null)) {
+			if (fs == null) {
 				//
-				continue;
+				fs = Util.getDeclaredFields(Util.getClass(instance));
 				//
 			} // if
 				//
-			for (final java.lang.reflect.Type genericInterface : genericInterfaces) {
+			for (int j = 0; j < length(fs) && genericInterface instanceof ParameterizedType pt1; j++) {
 				//
-				if (fs == null) {
+				if (Boolean
+						.logicalOr(
+								!Objects.equals(getRawType(pt1),
+										getRawType((pt2 = Util.cast(ParameterizedType.class,
+												getGenericType(f = ArrayUtils.get(fs, j)))))),
+								!Arrays.equals(getActualTypeArguments(pt1), getActualTypeArguments(pt2)))) {
 					//
-					fs = Util.getDeclaredFields(Util.getClass(instance));
+					continue;
 					//
 				} // if
 					//
-				for (int j = 0; j < length(fs) && genericInterface instanceof ParameterizedType pt1; j++) {
-					//
-					if (Boolean.logicalOr(
-							!Objects.equals(getRawType(pt1),
-									getRawType((pt2 = Util.cast(ParameterizedType.class,
-											getGenericType(f = ArrayUtils.get(fs, j)))))),
-							!Arrays.equals(getActualTypeArguments(pt1), getActualTypeArguments(pt2)))) {
-						//
-						continue;
-						//
-					} // if
-						//
-					Narcissus.setField(instance, f, BeanFactoryUtil.getBean(applicationContext, beanDefinitionName));
-					//
-				} // for
-					//
-			} // for
+				Narcissus.setField(instance, f, BeanFactoryUtil.getBean(applicationContext, beanDefinitionName));
 				//
+			} // for
 				//
 		} // for
 			//
