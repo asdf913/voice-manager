@@ -1228,7 +1228,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 							//
 						} // if
 							//
-						f.set(this, BeanFactoryUtil.getBean(applicationContext, beanDefinitionName));
+						Narcissus.setField(this, f, BeanFactoryUtil.getBean(applicationContext, beanDefinitionName));
 						//
 					} // for
 						//
