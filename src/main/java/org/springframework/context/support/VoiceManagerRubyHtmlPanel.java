@@ -149,7 +149,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		return condition ? getAsDouble(supplierTrue, defaultValue) : getAsDouble(supplierFalse, defaultValue);
 	}
 
-	private static double getAsDouble(final DoubleSupplier instance, final double defaultValue) {
+	private static double getAsDouble(@Nullable final DoubleSupplier instance, final double defaultValue) {
 		return instance != null ? instance.getAsDouble() : defaultValue;
 	}
 
@@ -165,11 +165,11 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		}
 	}
 
-	private static double getHeight(final Dimension2D instance) {
+	private static double getHeight(@Nullable final Dimension2D instance) {
 		return instance != null ? instance.getHeight() : 0;
 	}
 
-	private static double getWidth(final Dimension2D instance) {
+	private static double getWidth(@Nullable final Dimension2D instance) {
 		return instance != null ? instance.getWidth() : 0;
 	}
 
@@ -222,23 +222,23 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 	}
 
-	private static Type[] getActualTypeArguments(final ParameterizedType instance) {
+	private static Type[] getActualTypeArguments(@Nullable final ParameterizedType instance) {
 		return instance != null ? instance.getActualTypeArguments() : null;
 	}
 
-	private static Type getGenericType(final Field instance) {
+	private static Type getGenericType(@Nullable final Field instance) {
 		return instance != null ? instance.getGenericType() : null;
 	}
 
-	private static Type getRawType(final ParameterizedType instance) {
+	private static Type getRawType(@Nullable final ParameterizedType instance) {
 		return instance != null ? instance.getRawType() : null;
 	}
 
-	private static int length(final Object[] instance) {
+	private static int length(@Nullable final Object[] instance) {
 		return instance != null ? instance.length : 0;
 	}
 
-	private static Type[] getGenericInterfaces(final Class<?> instance) {
+	private static Type[] getGenericInterfaces(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getGenericInterfaces() : null;
 	}
 
