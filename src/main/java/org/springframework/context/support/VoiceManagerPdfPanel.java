@@ -1141,7 +1141,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				FailableStream::new, null);
 		//
 		forEach(FailableStreamUtil.map(fieldStream,
-				f -> Util.cast(AbstractButton.class, f != null ? f.get(this) : null)), x -> addActionListener(x, this));
+				f -> Util.cast(AbstractButton.class,
+						testAndApply(Objects::nonNull, f, x -> Narcissus.getField(this, x), null))),
+				x -> addActionListener(x, this));
 		//
 		final Double width = getWidth(btnExecute.getPreferredSize());
 		//
