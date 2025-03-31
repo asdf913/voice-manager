@@ -3,6 +3,7 @@ package org.springframework.context.support;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -16,8 +17,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Predicate;
 import java.util.Objects;
+import java.util.function.DoubleSupplier;
+import java.util.function.Predicate;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -116,7 +118,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		add(jsp, "growx");
 		//
-		final double width = Toolkit.getDefaultToolkit().getScreenSize().getWidth()
+		final double width = iif(!GraphicsEnvironment.isHeadless(), 0,
+				() -> Toolkit.getDefaultToolkit().getScreenSize().getWidth(), () -> 0)
 				- Math.max(maxJLabelWidth, getWidth(Util.getPreferredSize(jLabel)));
 		//
 		Dimension preferredSize = Util.getPreferredSize(tfText);
@@ -138,6 +141,15 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 						null),
 				FailableStream::new, null), x -> setFailableFunctionFields(applicationContext, dlbf, x, this));
 		//
+	}
+
+	private static double iif(final boolean condition, final double defaultValue, final DoubleSupplier supplierTrue,
+			final DoubleSupplier supplierFalse) {
+		return condition ? getAsDouble(supplierTrue, defaultValue) : getAsDouble(supplierFalse, defaultValue);
+	}
+
+	private static double getAsDouble(final DoubleSupplier instance, final double defaultValue) {
+		return instance != null ? instance.getAsDouble() : defaultValue;
 	}
 
 	private static void setPreferredSize(final Component instance, final Dimension preferredSize) {

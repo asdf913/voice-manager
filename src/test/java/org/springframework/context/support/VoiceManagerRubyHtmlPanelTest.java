@@ -165,6 +165,10 @@ class VoiceManagerRubyHtmlPanelTest {
 						//
 						list.add(Double.valueOf(0));
 						//
+					} else if (Objects.equals(parameterType, Boolean.TYPE)) {
+						//
+						list.add(Boolean.TRUE);
+						//
 					} else {
 						//
 						list.add(null);
