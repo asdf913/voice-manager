@@ -1400,8 +1400,6 @@ class VoiceManagerPdfPanelTest {
 		//
 		Class<?>[] parameterTypes = null;
 		//
-		Class<?> parameterType = null;
-		//
 		Collection<Object> collection = null;
 		//
 		Object invoke, object = null;
