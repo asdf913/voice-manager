@@ -215,6 +215,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationContextUtil;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.ConfigurableApplicationContextUtil;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.support.VoiceManager.ByteConverter;
 import org.springframework.core.env.Environment;
@@ -1175,7 +1176,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		insertUpdate(Reflection.newProxy(DocumentEvent.class, ih));
 		//
 		final DefaultListableBeanFactory dlbf = Util.cast(DefaultListableBeanFactory.class,
-				getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
+				ConfigurableApplicationContextUtil
+						.getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
 		//
 		final String[] beanDefinitionNames = ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf);
 		//
@@ -1248,12 +1250,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static java.lang.reflect.Type[] getGenericInterfaces(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getGenericInterfaces() : null;
-	}
-
-	@Nullable
-	private static ConfigurableListableBeanFactory getBeanFactory(
-			@Nullable final ConfigurableApplicationContext instance) throws IllegalStateException {
-		return instance != null ? instance.getBeanFactory() : null;
 	}
 
 	private static JPanel createAudioPanel(@Nullable final VoiceManagerPdfPanel instance,
