@@ -1244,10 +1244,12 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null ? instance.getGenericType() : null;
 	}
 
+	@Nullable
 	private static java.lang.reflect.Type[] getActualTypeArguments(@Nullable final ParameterizedType instance) {
 		return instance != null ? instance.getActualTypeArguments() : null;
 	}
 
+	@Nullable
 	private static java.lang.reflect.Type getRawType(@Nullable final ParameterizedType instance) {
 		return instance != null ? instance.getRawType() : null;
 	}
