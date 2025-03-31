@@ -1191,8 +1191,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	private static void setFailableFunctionFields(final ApplicationContext applicationContext,
 			final DefaultListableBeanFactory dlbf, final String beanDefinitionName, final Object instance) {
 		//
-		final Class<?> clz = Util.forName(
-				BeanDefinitionUtil.getBeanClassName(dlbf != null ? dlbf.getBeanDefinition(beanDefinitionName) : null));
+		final Class<?> clz = Util.forName(BeanDefinitionUtil
+				.getBeanClassName(ConfigurableListableBeanFactoryUtil.getBeanDefinition(dlbf, beanDefinitionName)));
 		//
 		final java.lang.reflect.Type[] genericInterfaces = getGenericInterfaces(clz);
 		//
