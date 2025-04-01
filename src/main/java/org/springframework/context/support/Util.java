@@ -31,6 +31,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -1661,6 +1662,27 @@ public abstract class Util {
 		if (instance != null) {
 			instance.clear();
 		}
+	}
+
+	static boolean matches(final Matcher instance) {
+		//
+		if (instance == null) {
+			//
+			return false;
+			//
+		} // if
+			//
+		if (testAndApply(Objects::nonNull, testAndApply(x -> IterableUtils.size(x) == 1,
+				toList(filter(testAndApply(Objects::nonNull, getDeclaredFields(Matcher.class), Arrays::stream, null),
+						x -> Objects.equals(getName(x), "groups"))),
+				x -> IterableUtils.get(x, 0), null), x -> Narcissus.getObjectField(instance, x), null) == null) {
+			//
+			return false;
+			//
+		} // if
+			//
+		return instance.matches();
+		//
 	}
 
 }

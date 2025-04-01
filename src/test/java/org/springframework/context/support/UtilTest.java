@@ -18,6 +18,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
@@ -797,6 +799,19 @@ class UtilTest {
 		Assertions.assertNull(Util.digest(messageDigest, null));
 		//
 		Assertions.assertNull(Util.digest(messageDigest, new byte[] {}));
+		//
+	}
+
+	@Test
+	void testMatches() {
+		//
+		Assertions.assertFalse(Util.matches(null));
+		//
+		Assertions.assertFalse(Util.matches(Util.cast(Matcher.class, Narcissus.allocateInstance(Matcher.class))));
+		//
+		final Pattern pattern = Pattern.compile("\\d+");
+		//
+		Assertions.assertTrue(Util.matches(pattern != null ? pattern.matcher("1") : null));
 		//
 	}
 

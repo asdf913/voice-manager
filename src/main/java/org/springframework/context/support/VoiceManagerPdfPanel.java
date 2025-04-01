@@ -1806,7 +1806,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				final String absolute = "absolute";
 				//
-				final BigDecimal fontSize3 = testAndApply(x -> matches(x),
+				final BigDecimal fontSize3 = testAndApply(x -> Util.matches(x),
 						matcher(patternInteger = ObjectUtils.getIfNull(patternInteger,
 								() -> Pattern.compile("^(-?\\d+(\\.\\d+)?)$")), Util.getText(tfFontSize3)),
 						x -> new BigDecimal(group(x, 0)), null);
@@ -2206,7 +2206,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				final Matcher matcher = testAndApply((a, b) -> length(b) > 0, file, fileExtensions,
 						(a, b) -> matcher(Pattern.compile("^([^.]+.)[^.]+$"), Util.getName(a)), null);
 				//
-				if (matches(matcher) && groupCount(matcher) > 0) {
+				if (Util.matches(matcher) && groupCount(matcher) > 0) {
 					//
 					FileUtils.deleteQuietly(file);
 					//
@@ -3436,7 +3436,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					cs.newLineAtOffset((index - 1) * size + (size - getTextWidth(
 							//
-							value = testAndApply(x -> and(x, y -> matches(y), y -> groupCount(y) > 0),
+							value = testAndApply(x -> and(x, y -> Util.matches(y), y -> groupCount(y) > 0),
 									matcher(pattern = ObjectUtils.getIfNull(pattern,
 											() -> Pattern.compile("^(\\d+%).+$")), value),
 									x -> group(x, 1), x -> value_)
@@ -4093,10 +4093,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static int groupCount(@Nullable final Matcher instance) {
 		return instance != null ? instance.groupCount() : 0;
-	}
-
-	private static boolean matches(@Nullable final Matcher instance) {
-		return instance != null && instance.matches();
 	}
 
 	@Nullable

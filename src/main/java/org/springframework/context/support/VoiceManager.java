@@ -1724,7 +1724,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		String mimeType = getMimeType(ci);
 		//
 		if (StringUtils.isBlank(mimeType)
-				&& or(x -> matches(matcher(x, getMessage(ci))), PATTERN_CONTENT_INFO_MESSAGE_MP3_1,
+				&& or(x -> Util.matches(matcher(x, getMessage(ci))), PATTERN_CONTENT_INFO_MESSAGE_MP3_1,
 						PATTERN_CONTENT_INFO_MESSAGE_MP3_2, PATTERN_CONTENT_INFO_MESSAGE_MP3_3)) {
 			//
 			mimeType = "audio/mpeg";
@@ -2375,32 +2375,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		} // try
 			//
 		return input != null ? instance.matcher(input) : null;
-		//
-	}
-
-	private static boolean matches(@Nullable final Matcher instance) {
-		//
-		if (instance == null) {
-			//
-			return false;
-			//
-		} // if
-			//
-		try {
-			//
-			if (Narcissus.getObjectField(instance, Util.getDeclaredField(Matcher.class, "groups")) == null) {
-				//
-				return false;
-				//
-			} // if
-				//
-		} catch (final NoSuchFieldException e) {
-			//
-			LoggerUtil.error(LOG, e.getMessage(), e);
-			//
-		} // try
-			//
-		return instance.matches();
 		//
 	}
 
