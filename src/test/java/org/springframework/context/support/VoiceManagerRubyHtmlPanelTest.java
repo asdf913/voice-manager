@@ -55,7 +55,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.PropertyValue;
 import org.springframework.beans.factory.support.DefaultSingletonBeanRegistry;
 
 import com.google.common.base.Predicates;
@@ -70,7 +69,7 @@ class VoiceManagerRubyHtmlPanelTest {
 	private static Method METHOD_LENGTH, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE, METHOD_GET_GENERIC_TYPE,
 			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_GET_LAYOUT_MANAGER,
 			METHOD_FOR_EACH, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS,
-			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_MATCHES, METHOD_IS_VALID, METHOD_GET_VALUE = null;
+			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_MATCHES, METHOD_IS_VALID = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -113,8 +112,6 @@ class VoiceManagerRubyHtmlPanelTest {
 		(METHOD_MATCHES = clz.getDeclaredMethod("matches", String.class, String.class)).setAccessible(true);
 		//
 		(METHOD_IS_VALID = clz.getDeclaredMethod("isValid", UrlValidator.class, String.class)).setAccessible(true);
-		//
-		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", PropertyValue.class)).setAccessible(true);
 		//
 	}
 
@@ -670,22 +667,6 @@ class VoiceManagerRubyHtmlPanelTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetValue() throws Throwable {
-		//
-		Assertions
-				.assertNull(getValue(Util.cast(PropertyValue.class, Narcissus.allocateInstance(PropertyValue.class))));
-		//
-	}
-
-	private static Object getValue(final PropertyValue instance) throws Throwable {
-		try {
-			return METHOD_GET_VALUE.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

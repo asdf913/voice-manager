@@ -202,6 +202,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyValue;
+import org.springframework.beans.PropertyValueUtil;
 import org.springframework.beans.factory.BeanFactoryUtil;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.FactoryBeanUtil;
@@ -1192,7 +1193,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		final java.lang.reflect.Type[] genericInterfaces = getGenericInterfaces(clz);
 		//
 		if (!Boolean.logicalAnd(Util.isAssignableFrom(FailableFunction.class, clz), genericInterfaces != null)
-				|| (getValue(testAndApply((a, b) -> a != null && a.contains(b),
+				|| (PropertyValueUtil.getValue(testAndApply((a, b) -> a != null && a.contains(b),
 						bd != null ? bd.getPropertyValues() : null, "url",
 						(a, b) -> a != null ? a.getPropertyValue(b) : null, null)) instanceof TypedStringValue tsv
 						&& isValid(UrlValidator.getInstance(), tsv.getValue()))) {
@@ -1238,11 +1239,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static boolean isValid(@Nullable final UrlValidator instance, final String value) {
 		return instance != null && instance.isValid(value);
-	}
-
-	@Nullable
-	private static Object getValue(@Nullable final PropertyValue instance) {
-		return instance != null ? instance.getValue() : null;
 	}
 
 	@Nullable
