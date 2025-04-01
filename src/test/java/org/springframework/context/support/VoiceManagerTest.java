@@ -154,7 +154,7 @@ class VoiceManagerTest {
 
 	private static Method METHOD_TEST_AND_APPLY4, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE,
 			METHOD_GET_PREFERRED_WIDTH, METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ADD_ITERABLE,
-			METHOD_MATCHER, METHOD_MATCHES, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR,
+			METHOD_MATCHER, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR,
 			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_LIST,
 			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_TO_URI_URL,
 			METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2,
@@ -192,8 +192,6 @@ class VoiceManagerTest {
 				.setAccessible(true);
 		//
 		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, CharSequence.class)).setAccessible(true);
-		//
-		(METHOD_MATCHES = clz.getDeclaredMethod("matches", Matcher.class)).setAccessible(true);
 		//
 		(METHOD_VALUE_OF1 = clz.getDeclaredMethod("valueOf", String.class)).setAccessible(true);
 		//
@@ -1030,25 +1028,6 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Matcher) {
 				return (Matcher) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMatches() throws Throwable {
-		//
-		Assertions.assertFalse(matches(Util.cast(Matcher.class, Narcissus.allocateInstance(Matcher.class))));
-		//
-	}
-
-	private static boolean matches(final Matcher instance) throws Throwable {
-		try {
-			final Object obj = METHOD_MATCHES.invoke(null, instance);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
