@@ -1664,7 +1664,7 @@ public abstract class Util {
 		}
 	}
 
-	static boolean matches(final Matcher instance) {
+	static boolean matches(@Nullable final Matcher instance) {
 		//
 		if (instance == null) {
 			//
