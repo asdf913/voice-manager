@@ -8,6 +8,7 @@ public interface PropertyValuesUtil {
 		return instance != null && instance.contains(propertyName);
 	}
 
+	@Nullable
 	static PropertyValue getPropertyValue(@Nullable final PropertyValues instance, final String propertyName) {
 		return instance != null ? instance.getPropertyValue(propertyName) : null;
 	}
