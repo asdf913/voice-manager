@@ -96,19 +96,17 @@ import io.github.classgraph.ClassInfoUtil;
 import io.github.classgraph.HasNameUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
-import j2html.rendering.HtmlBuilder;
 
 class VoiceManagerPdfPanelTest {
 
 	private static Class<?> CLASS_SHLWAPI = null;
 
-	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_SELECTED_ITEM, METHOD_TO_HTML,
-			METHOD_GET_TEXT_ALIGNS, METHOD_CHOP, METHOD_GENERATE_PDF_HTML, METHOD_LENGTH,
-			METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY, METHOD_GET_TEXT_WIDTH, METHOD_OR,
-			METHOD_TO_AUDIO_RESOURCE, METHOD_LIST_FILES, METHOD_IS_DIRECTORY, METHOD_GET_TRANSFER_DATA,
-			METHOD_FIND_MATCH, METHOD_TO_MILLIS, METHOD_TEST_AND_ACCEPT, METHOD_IIF, METHOD_PATH_FILE_EXISTS_W,
-			METHOD_GET_GENERIC_INTERFACES, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE,
-			METHOD_GET_GENERIC_TYPE, METHOD_FOR_EACH = null;
+	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_SELECTED_ITEM, METHOD_GET_TEXT_ALIGNS, METHOD_CHOP,
+			METHOD_GENERATE_PDF_HTML, METHOD_LENGTH, METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY,
+			METHOD_GET_TEXT_WIDTH, METHOD_OR, METHOD_TO_AUDIO_RESOURCE, METHOD_LIST_FILES, METHOD_IS_DIRECTORY,
+			METHOD_GET_TRANSFER_DATA, METHOD_FIND_MATCH, METHOD_TO_MILLIS, METHOD_TEST_AND_ACCEPT, METHOD_IIF,
+			METHOD_PATH_FILE_EXISTS_W, METHOD_GET_GENERIC_INTERFACES, METHOD_GET_ACTUAL_TYPE_ARGUMENTS,
+			METHOD_GET_RAW_TYPE, METHOD_GET_GENERIC_TYPE, METHOD_FOR_EACH = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -118,9 +116,6 @@ class VoiceManagerPdfPanelTest {
 		(METHOD_SET_FONT_SIZE_AND_UNIT = clz.getDeclaredMethod("setFontSizeAndUnit", Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", ComboBoxModel.class)).setAccessible(true);
-		//
-		(METHOD_TO_HTML = clz.getDeclaredMethod("toHtml", HtmlBuilder.class, String.class, String.class))
-				.setAccessible(true);
 		//
 		(METHOD_GET_TEXT_ALIGNS = clz.getDeclaredMethod("getTextAligns")).setAccessible(true);
 		//
@@ -553,22 +548,6 @@ class VoiceManagerPdfPanelTest {
 			//
 		} // if
 			//
-	}
-
-	@Test
-	void testToHtml() {
-		//
-		Assertions.assertDoesNotThrow(() -> toHtml(null, "", null));
-		//
-	}
-
-	private static void toHtml(final HtmlBuilder<StringBuilder> htmlBuilder, final String text, final String ruby)
-			throws Throwable {
-		try {
-			METHOD_TO_HTML.invoke(null, htmlBuilder, text, ruby);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test
