@@ -1,8 +1,10 @@
 package org.springframework.beans;
 
+import javax.annotation.Nullable;
+
 public interface PropertyValueUtil {
 
-	static Object getValue(final PropertyValue instance) {
+	static Object getValue(@Nullable final PropertyValue instance) {
 		return instance != null ? instance.getValue() : null;
 	}
 
