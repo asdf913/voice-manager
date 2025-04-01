@@ -86,19 +86,15 @@ class FuriganaHtmlBuilderFailableFunctionTest {
 		//
 		Object invoke = null;
 		//
-		String name, toString = null;
+		String toString = null;
 		//
 		Object[] os = null;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ms[i]) == null || m.isSynthetic()
-					|| Boolean.logicalOr(
-							Boolean.logicalAnd(Objects.equals(name = getName(m), "main"),
-									Arrays.equals(parameterTypes = m.getParameterTypes(),
-											new Class<?>[] { String[].class })),
-							Boolean.logicalAnd(contains(Arrays.asList("and", "or"), name), Arrays.equals(parameterTypes,
-									new Class<?>[] { Boolean.TYPE, Boolean.TYPE, boolean[].class })))) {
+					|| Boolean.logicalAnd(contains(Arrays.asList("and", "or"), getName(m)), Arrays.equals(
+							m.getParameterTypes(), new Class<?>[] { Boolean.TYPE, Boolean.TYPE, boolean[].class }))) {
 				//
 				continue;
 				//
