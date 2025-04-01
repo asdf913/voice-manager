@@ -52,6 +52,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.validator.routines.UrlValidator;
+import org.apache.commons.validator.routines.UrlValidatorUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -248,7 +249,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 						.getValue(testAndApply(PropertyValuesUtil::contains, BeanDefinitionUtil.getPropertyValues(bd),
 								"url", (a, b) -> PropertyValuesUtil.getPropertyValue(a, b),
 								null)) instanceof TypedStringValue tsv
-						&& isValid(UrlValidator.getInstance(), tsv.getValue()))) {
+						&& UrlValidatorUtil.isValid(UrlValidator.getInstance(), tsv.getValue()))) {
 			//
 			return;
 			//
@@ -287,10 +288,6 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				//
 		} // for
 			//
-	}
-
-	private static boolean isValid(@Nullable final UrlValidator instance, final String value) {
-		return instance != null && instance.isValid(value);
 	}
 
 	@Nullable

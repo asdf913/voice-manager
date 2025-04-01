@@ -159,6 +159,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.MutablePairUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.validator.routines.UrlValidator;
+import org.apache.commons.validator.routines.UrlValidatorUtil;
 import org.apache.fontbox.ttf.OTFParser;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -1197,7 +1198,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						.getValue(testAndApply(PropertyValuesUtil::contains, BeanDefinitionUtil.getPropertyValues(bd),
 								"url", (a, b) -> PropertyValuesUtil.getPropertyValue(a, b),
 								null)) instanceof TypedStringValue tsv
-						&& isValid(UrlValidator.getInstance(), tsv.getValue()))) {
+						&& UrlValidatorUtil.isValid(UrlValidator.getInstance(), tsv.getValue()))) {
 			//
 			return;
 			//
@@ -1236,10 +1237,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // for
 			//
-	}
-
-	private static boolean isValid(@Nullable final UrlValidator instance, final String value) {
-		return instance != null && instance.isValid(value);
 	}
 
 	@Nullable

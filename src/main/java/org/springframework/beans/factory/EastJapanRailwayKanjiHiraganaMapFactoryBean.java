@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.validator.routines.UrlValidator;
+import org.apache.commons.validator.routines.UrlValidatorUtil;
 import org.javatuples.Pair;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -126,7 +127,7 @@ public class EastJapanRailwayKanjiHiraganaMapFactoryBean extends StringMapFromRe
 			//
 			while ((line = CSVReaderUtil.readNext(csvReader)) != null) {
 				//
-				if (line.length < 6 || urlValidator == null || !urlValidator.isValid(u = line[5])
+				if (line.length < 6 || !UrlValidatorUtil.isValid(urlValidator, u = line[5])
 						|| (pair = createPair(u)) == null
 						|| (map = ObjectUtils.getIfNull(map, LinkedHashMap::new)) == null) {
 					//

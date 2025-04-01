@@ -50,7 +50,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.Consumers;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.commons.validator.routines.UrlValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,7 +68,7 @@ class VoiceManagerRubyHtmlPanelTest {
 	private static Method METHOD_LENGTH, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE, METHOD_GET_GENERIC_TYPE,
 			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_GET_LAYOUT_MANAGER,
 			METHOD_FOR_EACH, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS,
-			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_MATCHES, METHOD_IS_VALID = null;
+			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_MATCHES = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -110,8 +109,6 @@ class VoiceManagerRubyHtmlPanelTest {
 		(METHOD_GET_SYSTEM_CLIPBOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
 		//
 		(METHOD_MATCHES = clz.getDeclaredMethod("matches", String.class, String.class)).setAccessible(true);
-		//
-		(METHOD_IS_VALID = clz.getDeclaredMethod("isValid", UrlValidator.class, String.class)).setAccessible(true);
 		//
 	}
 
@@ -154,8 +151,6 @@ class VoiceManagerRubyHtmlPanelTest {
 
 	private static class MH implements MethodHandler {
 
-		private Boolean isValid = null;
-
 		@Override
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
@@ -166,10 +161,6 @@ class VoiceManagerRubyHtmlPanelTest {
 					&& Util.contains(Arrays.asList("getSystemClipboard", "getScreenSize"), methodName)) {
 				//
 				return null;
-				//
-			} else if (self instanceof UrlValidator && Objects.equals(methodName, "isValid")) {
-				//
-				return isValid;
 				//
 			} // if
 				//
@@ -635,34 +626,6 @@ class VoiceManagerRubyHtmlPanelTest {
 		try {
 			final Object obj = METHOD_MATCHES.invoke(null, instance, regex);
 
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIsValid() throws Throwable {
-		//
-		Assertions.assertFalse(
-				isValid(Util.cast(UrlValidator.class, Narcissus.allocateInstance(UrlValidator.class)), null));
-		//
-		if (mh != null) {
-			//
-			mh.isValid = Boolean.TRUE;
-			//
-		} // if
-			//
-		Assertions.assertTrue(isValid(ProxyUtil.createProxy(UrlValidator.class, mh), null));
-		//
-	}
-
-	private static boolean isValid(final UrlValidator instance, final String value) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_VALID.invoke(null, instance, value);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
