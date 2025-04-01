@@ -162,11 +162,11 @@ public class NodeUtil {
 		return instance != null ? instance.parentNode() : null;
 	}
 
-	public static Node childNode(final Node instance, final int index) {
+	public static Node childNode(@Nullable final Node instance, final int index) {
 		return instance != null ? instance.childNode(index) : null;
 	}
 
-	public static int attributesSize(final Node instance) {
+	public static int attributesSize(@Nullable final Node instance) {
 		return instance != null ? instance.attributesSize() : 0;
 	}
 
