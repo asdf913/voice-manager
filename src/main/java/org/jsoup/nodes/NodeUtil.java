@@ -166,4 +166,8 @@ public class NodeUtil {
 		return instance != null ? instance.childNode(index) : null;
 	}
 
+	public static int attributesSize(final Node instance) {
+		return instance != null ? instance.attributesSize() : 0;
+	}
+
 }

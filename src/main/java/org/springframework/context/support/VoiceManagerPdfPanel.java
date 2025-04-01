@@ -2611,10 +2611,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		if (Boolean.logicalAnd(StringUtils.isNotBlank(string), IterableUtils.size(es) == 2)) {
 			//
 			plainText &= and(ElementUtil.childrenSize(element = IterableUtils.get(es, 0)) == 0,
-					attributesSize(element) == 0,
+					NodeUtil.attributesSize(element) == 0,
 					//
 					ArrayUtils.contains(new int[] { 0, 1 }, NodeUtil.childNodeSize(element = IterableUtils.get(es, 1))),
-					attributesSize(element) == 0
+					NodeUtil.attributesSize(element) == 0
 					//
 					,
 					StringUtils.equals(TextNodeUtil
@@ -2640,10 +2640,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		return result;
 		//
-	}
-
-	private static int attributesSize(@Nullable final Node instance) {
-		return instance != null ? instance.attributesSize() : 0;
 	}
 
 	private static ByteConverter getByteConverter(final ConfigurableListableBeanFactory configurableListableBeanFactory,

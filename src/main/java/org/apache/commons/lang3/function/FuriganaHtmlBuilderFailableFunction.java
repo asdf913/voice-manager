@@ -334,10 +334,10 @@ public class FuriganaHtmlBuilderFailableFunction implements FailableFunction<Str
 		if (Boolean.logicalAnd(StringUtils.isNotBlank(string), IterableUtils.size(es) == 2)) {
 			//
 			plainText &= and(ElementUtil.childrenSize(element = IterableUtils.get(es, 0)) == 0,
-					attributesSize(element) == 0,
+					NodeUtil.attributesSize(element) == 0,
 					//
 					ArrayUtils.contains(new int[] { 0, 1 }, NodeUtil.childNodeSize(element = IterableUtils.get(es, 1))),
-					attributesSize(element) == 0
+					NodeUtil.attributesSize(element) == 0
 					//
 					,
 					StringUtils.equals(
@@ -367,10 +367,6 @@ public class FuriganaHtmlBuilderFailableFunction implements FailableFunction<Str
 			//
 		return result;
 		//
-	}
-
-	private static int attributesSize(final Node instance) {
-		return instance != null ? instance.attributesSize() : 0;
 	}
 
 	private static <T> Iterator<T> iterator(final Iterable<T> instance) {
