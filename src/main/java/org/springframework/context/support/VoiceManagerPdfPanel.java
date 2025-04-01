@@ -1236,7 +1236,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static boolean isValid(final UrlValidator instance, final String value) {
+	private static boolean isValid(@Nullable final UrlValidator instance, final String value) {
 		return instance != null && instance.isValid(value);
 	}
 
