@@ -2893,12 +2893,8 @@ class VoiceManagerTest {
 				//
 			parameterTypes = m.getParameterTypes();
 			//
-			if ((c = ObjectUtils.getIfNull(c, ArrayList::new)) != null) {
-				//
-				c.clear();
-				//
-			} // if
-				//
+			Util.clear(c = ObjectUtils.getIfNull(c, ArrayList::new));
+			//
 			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
 				//
 				if (Objects.equals(parameterType = parameterTypes[j], Boolean.TYPE)) {

@@ -98,12 +98,8 @@ class VoiceManagerImportSinglePanelTest {
 				//
 			} // if
 				//
-			if ((list = ObjectUtils.getIfNull(list, ArrayList::new)) != null) {
-				//
-				list.clear();
-				//
-			} // if
-				//
+			Util.clear(list = ObjectUtils.getIfNull(list, ArrayList::new));
+			//
 			for (int j = 0; (parameterTypes = m.getParameterTypes()) != null && j < parameterTypes.length; j++) {
 				//
 				if (Objects.equals(parameterType = parameterTypes[j], Integer.TYPE)) {

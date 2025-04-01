@@ -238,24 +238,23 @@ class VoiceManagerRubyHtmlPanelTest {
 				//
 			} // if
 				//
-			if ((list = ObjectUtils.getIfNull(list, ArrayList::new)) != null
-					&& (parameterTypes = m.getParameterTypes()) != null) {
+			if ((parameterTypes = m.getParameterTypes()) != null) {
 				//
-				list.clear();
+				Util.clear(list = ObjectUtils.getIfNull(list, ArrayList::new));
 				//
 				for (final Class<?> parameterType : parameterTypes) {
 					//
 					if (Objects.equals(parameterType, Double.TYPE)) {
 						//
-						list.add(Double.valueOf(0));
+						Util.add(list, Double.valueOf(0));
 						//
 					} else if (Objects.equals(parameterType, Boolean.TYPE)) {
 						//
-						list.add(Boolean.TRUE);
+						Util.add(list, Boolean.TRUE);
 						//
 					} else {
 						//
-						list.add(null);
+						Util.add(list, null);
 						//
 					} // if
 						//

@@ -41,7 +41,6 @@ import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.d2ab.collection.ints.IntList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -74,7 +73,7 @@ class MapReportGuiTest {
 	private static Method METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_REMOVE_ROW, METHOD_ADD_ROW,
 			METHOD_GET_PREFERRED_WIDTH, METHOD_AS_MAP, METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT,
 			METHOD_CREATE_MULTI_MAP, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER,
-			METHOD_LENGTH, METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_CLEAR, METHOD_TEST_AND_ACCEPT3,
+			METHOD_LENGTH, METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_TEST_AND_ACCEPT3,
 			METHOD_TEST_AND_ACCEPT4, METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER,
 			METHOD_WRITE_VALUE_AS_STRING = null;
 
@@ -121,8 +120,6 @@ class MapReportGuiTest {
 		//
 		(METHOD_CREATE_MULTIMAP = clz.getDeclaredMethod("createMultimap", Multimap.class, BiPredicate.class))
 				.setAccessible(true);
-		//
-		(METHOD_CLEAR = clz.getDeclaredMethod("clear", Collection.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT3 = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
 				Consumer.class)).setAccessible(true);
@@ -875,23 +872,6 @@ class MapReportGuiTest {
 				return (Multimap) obj;
 			}
 			throw new Throwable(Util.toString(obj.getClass()));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testClear() {
-		//
-		Assertions.assertDoesNotThrow(() -> clear(null));
-		//
-		Assertions.assertDoesNotThrow(() -> clear(IntList.create()));
-		//
-	}
-
-	private static void clear(final Collection<?> instance) throws Throwable {
-		try {
-			METHOD_CLEAR.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

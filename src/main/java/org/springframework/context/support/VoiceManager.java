@@ -2286,14 +2286,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private static void clear(@Nullable final DefaultTableModel instance) {
 		//
-		final Collection<?> dataVector = instance != null ? instance.getDataVector() : null;
+		Util.clear(instance != null ? instance.getDataVector() : null);
 		//
-		if (dataVector != null) {
-			//
-			dataVector.clear();
-			//
-		} // if
-			//
 	}
 
 	@Nullable

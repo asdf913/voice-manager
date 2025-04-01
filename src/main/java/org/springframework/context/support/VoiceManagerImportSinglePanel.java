@@ -1532,14 +1532,8 @@ public class VoiceManagerImportSinglePanel extends JPanel
 
 	private static void clear(@Nullable final DefaultTableModel instance) {
 		//
-		final Collection<?> dataVector = instance != null ? instance.getDataVector() : null;
+		Util.clear(instance != null ? instance.getDataVector() : null);
 		//
-		if (dataVector != null) {
-			//
-			dataVector.clear();
-			//
-		} // if
-			//
 	}
 
 	private void actionPerformedForBtnConvertToHiraganaOrKatakana() {

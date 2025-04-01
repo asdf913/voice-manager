@@ -4409,14 +4409,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 
 	private static void clear(@Nullable final DefaultTableModel instance) {
 		//
-		final Collection<?> dataVector = instance != null ? instance.getDataVector() : null;
+		Util.clear(instance != null ? instance.getDataVector() : null);
 		//
-		if (dataVector != null) {
-			//
-			dataVector.clear();
-			//
-		} // if
-			//
 	}
 
 	private static <T> void accept(final Consumer<? super T> action, final T a, final T b,

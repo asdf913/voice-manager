@@ -345,7 +345,7 @@ public class MapReportGui extends JFrame
 			//
 			Object[] os = null;
 			//
-			clear(jTableRowColumnCount = ObjectUtils.getIfNull(jTableRowColumnCount, IntList::create));
+			Util.clear(jTableRowColumnCount = ObjectUtils.getIfNull(jTableRowColumnCount, IntList::create));
 			//
 			for (final Object key : keySet) {
 				//
@@ -360,12 +360,6 @@ public class MapReportGui extends JFrame
 			//
 		setModel(jTable, dtm);
 		//
-	}
-
-	private static void clear(@Nullable final Collection<?> instance) {
-		if (instance != null) {
-			instance.clear();
-		}
 	}
 
 	private void actionPerformedForBtnCopy() {

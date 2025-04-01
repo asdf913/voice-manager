@@ -56,12 +56,8 @@ class VoiceManagerMiscellaneousPanelTest {
 				//
 			} // if
 				//
-			if ((collection = ObjectUtils.getIfNull(collection, ArrayList::new)) != null) {
-				//
-				collection.clear();
-				//
-			} // if
-				//
+			Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
+			//
 			parameterTypes = m.getParameterTypes();
 			//
 			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
