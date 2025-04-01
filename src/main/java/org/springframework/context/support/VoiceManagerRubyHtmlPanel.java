@@ -218,7 +218,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 	}
 
-	private static Matcher matcher(final Pattern instance, final CharSequence input) {
+	private static Matcher matcher(@Nullable final Pattern instance, @Nullable final CharSequence input) {
 		return instance != null && input != null ? instance.matcher(input) : null;
 	}
 
