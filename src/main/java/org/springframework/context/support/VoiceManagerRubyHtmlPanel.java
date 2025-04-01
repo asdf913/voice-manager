@@ -92,7 +92,10 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 
 	private JTextComponent taHtml = null;
 
-	private AbstractButton btnExecute, btnCopy = null;
+	@Note("Execute")
+	private AbstractButton btnExecute = null;
+
+	private AbstractButton btnCopy = null;
 
 	private transient FailableFunction<String, String, IOException> furiganaFailableFunction = null;
 
