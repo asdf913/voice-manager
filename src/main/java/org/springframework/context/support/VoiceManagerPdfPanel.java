@@ -2601,11 +2601,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null ? instance.nextAlphabetic(count) : null;
 	}
 
-	@Nullable
-	private static String getSurface(@Nullable final TokenBase instance) {
-		return instance != null ? instance.getSurface() : null;
-	}
-
 	private static boolean isPlainText(final String string) {
 		//
 		Element element = testAndApply(x -> IterableUtils.size(x) == 1,
