@@ -228,8 +228,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceUtil;
 
 import com.atilika.kuromoji.TokenBase;
-import com.atilika.kuromoji.ipadic.Token;
-import com.atilika.kuromoji.ipadic.Tokenizer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
@@ -259,7 +257,6 @@ import freemarker.template.TemplateUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 import it.unimi.dsi.fastutil.ints.IntIntMutablePair;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
-import j2html.rendering.FlatHtml;
 import j2html.rendering.HtmlBuilder;
 import j2html.rendering.TagBuilder;
 import net.miginfocom.swing.MigLayout;
