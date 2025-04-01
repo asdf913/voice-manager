@@ -59,6 +59,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.PropertyValueUtil;
+import org.springframework.beans.PropertyValuesUtil;
 import org.springframework.beans.factory.BeanFactoryUtil;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.FactoryBeanUtil;
@@ -243,7 +244,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		final java.lang.reflect.Type[] genericInterfaces = getGenericInterfaces(clz);
 		//
 		if (!Boolean.logicalAnd(Util.isAssignableFrom(FailableFunction.class, clz), genericInterfaces != null)
-				|| (PropertyValueUtil.getValue(testAndApply((a, b) -> a != null && a.contains(b),
+				|| (PropertyValueUtil.getValue(testAndApply((a, b) -> PropertyValuesUtil.contains(a, b),
 						BeanDefinitionUtil.getPropertyValues(bd), "url",
 						(a, b) -> a != null ? a.getPropertyValue(b) : null, null)) instanceof TypedStringValue tsv
 						&& isValid(UrlValidator.getInstance(), tsv.getValue()))) {

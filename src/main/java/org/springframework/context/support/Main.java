@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.PropertyValues;
+import org.springframework.beans.PropertyValuesUtil;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -200,7 +201,7 @@ public class Main {
 						!Objects.equals(Util.getName(Util.getDeclaringClass(f)),
 								BeanDefinitionUtil.getBeanClassName(bd = ConfigurableListableBeanFactoryUtil
 										.getBeanDefinition(beanFactory, beanDefinitionNames[l]))),
-						contains(pv = BeanDefinitionUtil.getPropertyValues(bd), Util.getName(f)))) {
+						PropertyValuesUtil.contains(pv = BeanDefinitionUtil.getPropertyValues(bd), Util.getName(f)))) {
 					//
 					continue;
 					//
@@ -242,10 +243,6 @@ public class Main {
 			if (instance != null) {
 				instance.add(propertyName, propertyValue);
 			}
-		}
-
-		private static boolean contains(@Nullable final PropertyValues instance, final String propertyName) {
-			return instance != null && instance.contains(propertyName);
 		}
 
 		private static boolean isProxyClass(@Nullable final Class<?> instance) {
