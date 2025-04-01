@@ -158,6 +158,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.MutablePairUtil;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.fontbox.ttf.OTFParser;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -200,6 +201,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.PropertyValue;
 import org.springframework.beans.factory.BeanFactoryUtil;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.FactoryBeanUtil;
@@ -210,6 +212,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionUtil;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactoryUtil;
+import org.springframework.beans.factory.config.TypedStringValue;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -1182,12 +1185,17 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	private static void setFailableFunctionFields(final ApplicationContext applicationContext,
 			final DefaultListableBeanFactory dlbf, final String beanDefinitionName, final Object instance) {
 		//
-		final Class<?> clz = Util.forName(BeanDefinitionUtil
-				.getBeanClassName(ConfigurableListableBeanFactoryUtil.getBeanDefinition(dlbf, beanDefinitionName)));
+		final BeanDefinition bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(dlbf, beanDefinitionName);
+		//
+		final Class<?> clz = Util.forName(BeanDefinitionUtil.getBeanClassName(bd));
 		//
 		final java.lang.reflect.Type[] genericInterfaces = getGenericInterfaces(clz);
 		//
-		if (!Boolean.logicalAnd(Util.isAssignableFrom(FailableFunction.class, clz), genericInterfaces != null)) {
+		if (!Boolean.logicalAnd(Util.isAssignableFrom(FailableFunction.class, clz), genericInterfaces != null)
+				|| (getValue(testAndApply((a, b) -> a != null && a.contains(b),
+						bd != null ? bd.getPropertyValues() : null, "url",
+						(a, b) -> a != null ? a.getPropertyValue(b) : null, null)) instanceof TypedStringValue tsv
+						&& isValid(UrlValidator.getInstance(), tsv.getValue()))) {
 			//
 			return;
 			//
@@ -1226,6 +1234,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // for
 			//
+	}
+
+	private static boolean isValid(final UrlValidator instance, final String value) {
+		return instance != null && instance.isValid(value);
+	}
+
+	private static Object getValue(final PropertyValue instance) {
+		return instance != null ? instance.getValue() : null;
 	}
 
 	@Nullable

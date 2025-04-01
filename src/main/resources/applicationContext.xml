@@ -1169,6 +1169,12 @@
 	<bean
 		class="org.apache.commons.lang3.function.FuriganaHtmlBuilderFailableFunction" />
 
+	<bean
+		class="org.apache.commons.lang3.function.FuriganaOnlineFailableFunction">
+		<property name="url"
+			value="${org.apache.commons.lang3.function.FuriganaOnlineFailableFunction.url}" />
+	</bean>
+
 	<!---->
 	<bean
 		class="org.springframework.beans.factory.VoiceManagerHelpPanelIntFunctionFactoryBean">

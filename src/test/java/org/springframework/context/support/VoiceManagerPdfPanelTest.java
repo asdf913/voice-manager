@@ -68,12 +68,14 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.javatuples.Unit;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.PropertyValue;
 import org.springframework.core.io.Resource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -96,6 +98,8 @@ import io.github.classgraph.ClassInfoUtil;
 import io.github.classgraph.HasNameUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyUtil;
 
 class VoiceManagerPdfPanelTest {
 
@@ -106,7 +110,7 @@ class VoiceManagerPdfPanelTest {
 			METHOD_GET_TEXT_WIDTH, METHOD_OR, METHOD_TO_AUDIO_RESOURCE, METHOD_LIST_FILES, METHOD_IS_DIRECTORY,
 			METHOD_GET_TRANSFER_DATA, METHOD_FIND_MATCH, METHOD_TO_MILLIS, METHOD_TEST_AND_ACCEPT, METHOD_IIF,
 			METHOD_PATH_FILE_EXISTS_W, METHOD_GET_GENERIC_INTERFACES, METHOD_GET_ACTUAL_TYPE_ARGUMENTS,
-			METHOD_GET_RAW_TYPE, METHOD_GET_GENERIC_TYPE, METHOD_FOR_EACH = null;
+			METHOD_GET_RAW_TYPE, METHOD_GET_GENERIC_TYPE, METHOD_FOR_EACH, METHOD_IS_VALID, METHOD_GET_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -173,6 +177,10 @@ class VoiceManagerPdfPanelTest {
 		//
 		(METHOD_FOR_EACH = clz.getDeclaredMethod("forEach", Stream.class, Consumer.class)).setAccessible(true);
 		//
+		(METHOD_IS_VALID = clz.getDeclaredMethod("isValid", UrlValidator.class, String.class)).setAccessible(true);
+		//
+		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", PropertyValue.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -207,6 +215,32 @@ class VoiceManagerPdfPanelTest {
 				//
 				return PathFileExistsW;
 				//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+	}
+
+	private static class MH implements MethodHandler {
+
+		private Boolean isValid = null;
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			final String methodName = Util.getName(thisMethod);
+			//
+			if (self instanceof UrlValidator) {
+				//
+				if (Objects.equals(methodName, "isValid")) {
+					//
+					return isValid;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -1177,6 +1211,48 @@ class VoiceManagerPdfPanelTest {
 				return (Type) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsValid() throws Throwable {
+		//
+		Assertions.assertFalse(
+				isValid(Util.cast(UrlValidator.class, Narcissus.allocateInstance(UrlValidator.class)), null));
+		//
+		final MH mh = new MH();
+		//
+		mh.isValid = Boolean.TRUE;
+		//
+		Assertions.assertTrue(isValid(ProxyUtil.createProxy(UrlValidator.class, mh), null));
+		//
+	}
+
+	private static boolean isValid(final UrlValidator instance, final String value) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_VALID.invoke(null, instance, value);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetValue() throws Throwable {
+		//
+		Assertions
+				.assertNull(getValue(Util.cast(PropertyValue.class, Narcissus.allocateInstance(PropertyValue.class))));
+		//
+	}
+
+	private static Object getValue(final PropertyValue instance) throws Throwable {
+		try {
+			return METHOD_GET_VALUE.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
