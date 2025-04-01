@@ -1194,7 +1194,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		if (!Boolean.logicalAnd(Util.isAssignableFrom(FailableFunction.class, clz), genericInterfaces != null)
 				|| (PropertyValueUtil.getValue(testAndApply((a, b) -> a != null && a.contains(b),
-						bd != null ? bd.getPropertyValues() : null, "url",
+						BeanDefinitionUtil.getPropertyValues(bd), "url",
 						(a, b) -> a != null ? a.getPropertyValue(b) : null, null)) instanceof TypedStringValue tsv
 						&& isValid(UrlValidator.getInstance(), tsv.getValue()))) {
 			//

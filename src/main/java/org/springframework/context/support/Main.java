@@ -200,7 +200,7 @@ public class Main {
 						!Objects.equals(Util.getName(Util.getDeclaringClass(f)),
 								BeanDefinitionUtil.getBeanClassName(bd = ConfigurableListableBeanFactoryUtil
 										.getBeanDefinition(beanFactory, beanDefinitionNames[l]))),
-						contains(pv = getPropertyValues(bd), Util.getName(f)))) {
+						contains(pv = BeanDefinitionUtil.getPropertyValues(bd), Util.getName(f)))) {
 					//
 					continue;
 					//
@@ -246,11 +246,6 @@ public class Main {
 
 		private static boolean contains(@Nullable final PropertyValues instance, final String propertyName) {
 			return instance != null && instance.contains(propertyName);
-		}
-
-		@Nullable
-		private static MutablePropertyValues getPropertyValues(@Nullable final BeanDefinition instance) {
-			return instance != null ? instance.getPropertyValues() : null;
 		}
 
 		private static boolean isProxyClass(@Nullable final Class<?> instance) {
