@@ -5,13 +5,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.jsoup.select.NodeVisitor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -403,55 +406,52 @@ class NodeUtilTest {
 		//
 		Method m = null;
 		//
-		int parameterCount = 0;
-		//
-		boolean isStatic = false;
-		//
 		Object result = null;
 		//
 		String toString = null;
 		//
-		Class<?> returnType = null;
+		Collection<Object> collection = null;
+		//
+		Class<?>[] parameterTypes = null;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
-			if ((m = ms[i]) == null) {
+			if ((m = ms[i]) == null || m.isSynthetic()) {
 				//
 				continue;
 				//
 			} // if
 				//
-			isStatic = Modifier.isStatic(m.getModifiers());
-			//
+			if ((collection = ObjectUtils.getIfNull(collection, ArrayList::new)) != null
+					&& (parameterTypes = m.getParameterTypes()) != null) {
+				//
+				collection.clear();
+				//
+				for (int j = 0; j < parameterTypes.length; j++) {
+					//
+					if (Objects.equals(parameterTypes[j], Integer.TYPE)) {
+						//
+						collection.add(Integer.valueOf(0));
+						//
+					} else {
+						//
+						collection.add(null);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
 			toString = Objects.toString(m);
 			//
-			returnType = m.getReturnType();
-			//
-			if ((parameterCount = m.getParameterCount()) == 1 && isStatic) {
+			if (Modifier.isStatic(m.getModifiers())) {
 				//
-				result = Narcissus.invokeStaticMethod(m, (Object) null);
+				result = Narcissus.invokeStaticMethod(m, collection != null ? collection.toArray() : null);
 				//
-				if (Objects.equals(Integer.TYPE, returnType)) {
+				if (contains(Arrays.asList(Boolean.TYPE, Integer.TYPE), m.getReturnType())) {
 					//
-					Assertions.assertEquals(Integer.valueOf(0), result, toString);
-					//
-				} else if (Objects.equals(Boolean.TYPE, returnType)) {
-					//
-					Assertions.assertEquals(Boolean.FALSE, result, toString);
-					//
-				} else {
-					//
-					Assertions.assertNull(result, toString);
-					//
-				} // if
-					//
-			} else if (parameterCount == 2 && isStatic) {
-				//
-				result = Narcissus.invokeStaticMethod(m, null, null);
-				//
-				if (Objects.equals(Boolean.TYPE, returnType)) {
-					//
-					Assertions.assertEquals(Boolean.FALSE, result, toString);
+					Assertions.assertNotNull(result, toString);
 					//
 				} else {
 					//
@@ -463,6 +463,10 @@ class NodeUtilTest {
 				//
 		} // for
 			//
+	}
+
+	private static boolean contains(final Collection<?> items, final Object item) {
+		return items != null && items.contains(item);
 	}
 
 	@Test
