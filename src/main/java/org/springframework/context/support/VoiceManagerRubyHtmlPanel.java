@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Predicate;
@@ -49,19 +51,23 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
+import org.springframework.beans.PropertyValue;
 import org.springframework.beans.factory.BeanFactoryUtil;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.FactoryBeanUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionUtil;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactoryUtil;
+import org.springframework.beans.factory.config.TypedStringValue;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -230,12 +236,17 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 	private static void setFailableFunctionFields(final ApplicationContext applicationContext,
 			final DefaultListableBeanFactory dlbf, final String beanDefinitionName, final Object instance) {
 		//
-		final Class<?> clz = Util.forName(BeanDefinitionUtil
-				.getBeanClassName(ConfigurableListableBeanFactoryUtil.getBeanDefinition(dlbf, beanDefinitionName)));
+		final BeanDefinition bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(dlbf, beanDefinitionName);
+		//
+		final Class<?> clz = Util.forName(BeanDefinitionUtil.getBeanClassName(bd));
 		//
 		final java.lang.reflect.Type[] genericInterfaces = getGenericInterfaces(clz);
 		//
-		if (!Boolean.logicalAnd(Util.isAssignableFrom(FailableFunction.class, clz), genericInterfaces != null)) {
+		if (!Boolean.logicalAnd(Util.isAssignableFrom(FailableFunction.class, clz), genericInterfaces != null)
+				|| (getValue(testAndApply((a, b) -> a != null && a.contains(b),
+						bd != null ? bd.getPropertyValues() : null, "url",
+						(a, b) -> a != null ? a.getPropertyValue(b) : null, null)) instanceof TypedStringValue tsv
+						&& isValid(UrlValidator.getInstance(), tsv.getValue()))) {
 			//
 			return;
 			//
@@ -274,6 +285,27 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				//
 		} // for
 			//
+	}
+
+	private static boolean isValid(final UrlValidator instance, final String value) {
+		return instance != null && instance.isValid(value);
+	}
+
+	private static Object getValue(final PropertyValue instance) {
+		return instance != null ? instance.getValue() : null;
+	}
+
+	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+			final U u, final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) {
+		return test(predicate, t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
+	}
+
+	private static <T, U, R> R apply(final BiFunction<T, U, R> instance, final T t, final U u) {
+		return instance != null ? instance.apply(t, u) : null;
+	}
+
+	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, final U u) {
+		return instance != null && instance.test(t, u);
 	}
 
 	@Nullable

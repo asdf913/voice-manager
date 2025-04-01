@@ -23,6 +23,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -48,10 +50,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.Consumers;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.PropertyValue;
 import org.springframework.beans.factory.support.DefaultSingletonBeanRegistry;
 
 import com.google.common.base.Predicates;
@@ -64,9 +68,9 @@ import javassist.util.proxy.ProxyUtil;
 class VoiceManagerRubyHtmlPanelTest {
 
 	private static Method METHOD_LENGTH, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE, METHOD_GET_GENERIC_TYPE,
-			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY, METHOD_GET_LAYOUT_MANAGER, METHOD_FOR_EACH,
-			METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD,
-			METHOD_MATCHES = null;
+			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_GET_LAYOUT_MANAGER,
+			METHOD_FOR_EACH, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS,
+			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_MATCHES, METHOD_IS_VALID, METHOD_GET_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -85,8 +89,11 @@ class VoiceManagerRubyHtmlPanelTest {
 		(METHOD_GET_GENERIC_INTERFACES = clz.getDeclaredMethod("getGenericInterfaces", Class.class))
 				.setAccessible(true);
 		//
-		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
+		(METHOD_TEST_AND_APPLY4 = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY5 = clz.getDeclaredMethod("testAndApply", BiPredicate.class, Object.class, Object.class,
+				BiFunction.class, BiFunction.class)).setAccessible(true);
 		//
 		(METHOD_GET_LAYOUT_MANAGER = clz.getDeclaredMethod("getLayoutManager", Object.class, Iterable.class))
 				.setAccessible(true);
@@ -104,6 +111,10 @@ class VoiceManagerRubyHtmlPanelTest {
 		(METHOD_GET_SYSTEM_CLIPBOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
 		//
 		(METHOD_MATCHES = clz.getDeclaredMethod("matches", String.class, String.class)).setAccessible(true);
+		//
+		(METHOD_IS_VALID = clz.getDeclaredMethod("isValid", UrlValidator.class, String.class)).setAccessible(true);
+		//
+		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", PropertyValue.class)).setAccessible(true);
 		//
 	}
 
@@ -146,6 +157,8 @@ class VoiceManagerRubyHtmlPanelTest {
 
 	private static class MH implements MethodHandler {
 
+		private Boolean isValid = null;
+
 		@Override
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
@@ -156,6 +169,10 @@ class VoiceManagerRubyHtmlPanelTest {
 					&& Util.contains(Arrays.asList("getSystemClipboard", "getScreenSize"), methodName)) {
 				//
 				return null;
+				//
+			} else if (self instanceof UrlValidator && Objects.equals(methodName, "isValid")) {
+				//
+				return isValid;
 				//
 			} // if
 				//
@@ -454,13 +471,27 @@ class VoiceManagerRubyHtmlPanelTest {
 		//
 		Assertions.assertNull(testAndApply(Predicates.alwaysTrue(), null, null, null));
 		//
+		Assertions.assertNull(testAndApply((a, b) -> true, null, null, (a, b) -> null, null));
+		//
+		Assertions.assertNull(testAndApply((a, b) -> false, null, null, null, null));
+		//
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
 			throws Throwable {
 		try {
-			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+			return (R) METHOD_TEST_AND_APPLY4.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+			final U u, final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse)
+			throws Throwable {
+		try {
+			return (R) METHOD_TEST_AND_APPLY5.invoke(null, predicate, t, u, functionTrue, functionFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -611,6 +642,50 @@ class VoiceManagerRubyHtmlPanelTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsValid() throws Throwable {
+		//
+		Assertions.assertFalse(
+				isValid(Util.cast(UrlValidator.class, Narcissus.allocateInstance(UrlValidator.class)), null));
+		//
+		if (mh != null) {
+			//
+			mh.isValid = Boolean.TRUE;
+			//
+		} // if
+			//
+		Assertions.assertTrue(isValid(ProxyUtil.createProxy(UrlValidator.class, mh), null));
+		//
+	}
+
+	private static boolean isValid(final UrlValidator instance, final String value) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_VALID.invoke(null, instance, value);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetValue() throws Throwable {
+		//
+		Assertions
+				.assertNull(getValue(Util.cast(PropertyValue.class, Narcissus.allocateInstance(PropertyValue.class))));
+		//
+	}
+
+	private static Object getValue(final PropertyValue instance) throws Throwable {
+		try {
+			return METHOD_GET_VALUE.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
