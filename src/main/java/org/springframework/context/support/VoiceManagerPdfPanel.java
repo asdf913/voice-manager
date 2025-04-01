@@ -1241,7 +1241,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	@Nullable
-	private static Object getValue(final PropertyValue instance) {
+	private static Object getValue(@Nullable final PropertyValue instance) {
 		return instance != null ? instance.getValue() : null;
 	}
 
