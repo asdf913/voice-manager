@@ -32,6 +32,8 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -86,6 +88,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 	private static final long serialVersionUID = 8508661990476987623L;
 
 	private static final Logger LOG = LoggerFactory.getLogger(VoiceManagerRubyHtmlPanel.class);
+
+	private static Pattern PATTERN_JAVASSIST_CLASS_NAME = null;
 
 	private transient ApplicationContext applicationContext = null;
 
@@ -200,10 +204,26 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 
 	@Nullable
 	private static Dimension getScreenSize(@Nullable final Toolkit instance) {
-		return instance != null && Boolean.logicalOr(!GraphicsEnvironment.isHeadless(),
-				matches(Util.getName(Util.getClass(instance)), "^javassist.util.proxy[.\\w]+\\$\\$[.\\w]+$"))
-						? instance.getScreenSize()
-						: null;
+		return instance != null && Boolean.logicalOr(!GraphicsEnvironment.isHeadless(), isJavassistProxy(instance))
+				? instance.getScreenSize()
+				: null;
+	}
+
+	private static boolean isJavassistProxy(final Object instance) {
+		//
+		return matches(matcher(
+				PATTERN_JAVASSIST_CLASS_NAME = ObjectUtils.getIfNull(PATTERN_JAVASSIST_CLASS_NAME,
+						() -> Pattern.compile("^javassist.util.proxy[.\\w]+\\$\\$[.\\w]+$")),
+				Util.getName(Util.getClass(instance))));
+		//
+	}
+
+	private static boolean matches(final Matcher instance) {
+		return instance != null && instance.matches();
+	}
+
+	private static Matcher matcher(final Pattern instance, final CharSequence input) {
+		return instance != null && input != null ? instance.matcher(input) : null;
 	}
 
 	private static double iif(final boolean condition, final double defaultValue, final DoubleSupplier supplierTrue,
@@ -375,14 +395,9 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 
 	@Nullable
 	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
-		return instance != null && Boolean.logicalOr(!GraphicsEnvironment.isHeadless(),
-				matches(Util.getName(Util.getClass(instance)), "^javassist.util.proxy[.\\w]+\\$\\$[.\\w]+$"))
-						? instance.getSystemClipboard()
-						: null;
-	}
-
-	private static boolean matches(@Nullable final String instance, @Nullable final String regex) {
-		return instance != null && regex != null && instance.matches(regex);
+		return instance != null && Boolean.logicalOr(!GraphicsEnvironment.isHeadless(), isJavassistProxy(instance))
+				? instance.getSystemClipboard()
+				: null;
 	}
 
 	private static void setLayout(@Nullable final Container instance, final LayoutManager layoutManager) {

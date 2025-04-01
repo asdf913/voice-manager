@@ -68,7 +68,7 @@ class VoiceManagerRubyHtmlPanelTest {
 	private static Method METHOD_LENGTH, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE, METHOD_GET_GENERIC_TYPE,
 			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_GET_LAYOUT_MANAGER,
 			METHOD_FOR_EACH, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS,
-			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_MATCHES = null;
+			METHOD_GET_SYSTEM_CLIPBOARD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -107,8 +107,6 @@ class VoiceManagerRubyHtmlPanelTest {
 				ClipboardOwner.class)).setAccessible(true);
 		//
 		(METHOD_GET_SYSTEM_CLIPBOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
-		//
-		(METHOD_MATCHES = clz.getDeclaredMethod("matches", String.class, String.class)).setAccessible(true);
 		//
 	}
 
@@ -608,26 +606,6 @@ class VoiceManagerRubyHtmlPanelTest {
 				return null;
 			} else if (obj instanceof Clipboard) {
 				return (Clipboard) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMatches() throws Throwable {
-		//
-		Assertions.assertFalse(matches("", null));
-		//
-	}
-
-	private static boolean matches(final String instance, final String regex) throws Throwable {
-		try {
-			final Object obj = METHOD_MATCHES.invoke(null, instance, regex);
-
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
