@@ -162,4 +162,8 @@ public class NodeUtil {
 		return instance != null ? instance.parentNode() : null;
 	}
 
+	public static Node childNode(final Node instance, final int index) {
+		return instance != null ? instance.childNode(index) : null;
+	}
+
 }

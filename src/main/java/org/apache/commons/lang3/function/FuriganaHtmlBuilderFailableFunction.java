@@ -340,8 +340,9 @@ public class FuriganaHtmlBuilderFailableFunction implements FailableFunction<Str
 					attributesSize(element) == 0
 					//
 					,
-					StringUtils.equals(TextNodeUtil.text(cast(TextNode.class,
-							testAndApply(x -> NodeUtil.childNodeSize(x) == 1, element, x -> childNode(x, 0), null))),
+					StringUtils.equals(
+							TextNodeUtil.text(cast(TextNode.class, testAndApply(x -> NodeUtil.childNodeSize(x) == 1,
+									element, x -> NodeUtil.childNode(x, 0), null))),
 							string));
 			//
 		} // if
@@ -352,10 +353,6 @@ public class FuriganaHtmlBuilderFailableFunction implements FailableFunction<Str
 
 	private static <T> T cast(final Class<T> clz, final Object value) {
 		return clz != null && clz.isInstance(value) ? clz.cast(value) : null;
-	}
-
-	private static Node childNode(final Node instance, final int index) {
-		return instance != null ? instance.childNode(index) : null;
 	}
 
 	private static boolean and(final boolean a, final boolean b, final boolean... bs) {
