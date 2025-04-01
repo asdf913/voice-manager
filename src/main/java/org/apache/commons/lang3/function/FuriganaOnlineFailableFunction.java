@@ -21,7 +21,6 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 public class FuriganaOnlineFailableFunction implements FailableFunction<String, String, IOException> {
 
-	// TODO https://kanjikana.com/api/furigana
 	private String url = null;
 
 	public void setUrl(final String url) {
