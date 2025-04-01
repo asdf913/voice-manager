@@ -51,8 +51,6 @@ import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -154,11 +152,11 @@ class VoiceManagerTest {
 
 	private static Method METHOD_TEST_AND_APPLY4, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE,
 			METHOD_GET_PREFERRED_WIDTH, METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ADD_ITERABLE,
-			METHOD_MATCHER, METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR,
-			METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_LIST,
-			METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_TO_URI_URL,
-			METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2,
-			METHOD_SET_VISIBLE, METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL,
+			METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL,
+			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_LIST, METHOD_TEST_AND_ACCEPT_PREDICATE,
+			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_TO_URI_URL, METHOD_ENCODE_TO_STRING,
+			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE,
+			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL,
 			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_2, METHOD_GET_FIELD_BY_NAME,
 			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_SET_FOCUS_CYCLE_ROOT,
 			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_DECLARED_CONSTRUCTOR,
@@ -190,8 +188,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_ADD_ITERABLE = clz.getDeclaredMethod("add", Iterable.class, Number.class, Container.class))
 				.setAccessible(true);
-		//
-		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, CharSequence.class)).setAccessible(true);
 		//
 		(METHOD_VALUE_OF1 = clz.getDeclaredMethod("valueOf", String.class)).setAccessible(true);
 		//
@@ -1007,29 +1003,6 @@ class VoiceManagerTest {
 			final Container container) throws Throwable {
 		try {
 			METHOD_ADD_ITERABLE.invoke(null, entrySet, preferredHeight, container);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMatcher() throws Throwable {
-		//
-		Assertions.assertNull(matcher(null, null));
-		//
-		Assertions.assertNull(matcher(Util.cast(Pattern.class, Narcissus.allocateInstance(Pattern.class)), ""));
-		//
-	}
-
-	private static Matcher matcher(final Pattern pattern, final CharSequence input) throws Throwable {
-		try {
-			final Object obj = METHOD_MATCHER.invoke(null, pattern, input);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Matcher) {
-				return (Matcher) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

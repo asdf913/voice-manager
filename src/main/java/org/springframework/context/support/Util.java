@@ -32,6 +32,7 @@ import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -1683,6 +1684,28 @@ public abstract class Util {
 		} // if
 			//
 		return instance.matches();
+		//
+	}
+
+	static Matcher matcher(final Pattern instance, final CharSequence input) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Stream<Field> fs = testAndApply(Objects::nonNull, getDeclaredFields(Pattern.class), Arrays::stream, null);
+		//
+		if (testAndApply(Objects::nonNull, testAndApply(x -> IterableUtils.size(x) == 1,
+				toList(filter(fs, x -> Objects.equals(getName(x), "pattern"))), x -> IterableUtils.get(x, 0), null),
+				x -> Narcissus.getObjectField(instance, x), null) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return input != null ? instance.matcher(input) : null;
 		//
 	}
 

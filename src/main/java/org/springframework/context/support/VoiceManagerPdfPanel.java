@@ -1807,7 +1807,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				final String absolute = "absolute";
 				//
 				final BigDecimal fontSize3 = testAndApply(Util::matches,
-						matcher(patternInteger = ObjectUtils.getIfNull(patternInteger,
+						Util.matcher(patternInteger = ObjectUtils.getIfNull(patternInteger,
 								() -> Pattern.compile("^(-?\\d+(\\.\\d+)?)$")), Util.getText(tfFontSize3)),
 						x -> new BigDecimal(group(x, 0)), null);
 				//
@@ -2204,7 +2204,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				final String[] fileExtensions = getFileExtensions(findMatch(new ContentInfoUtil(), file));
 				//
 				final Matcher matcher = testAndApply((a, b) -> length(b) > 0, file, fileExtensions,
-						(a, b) -> matcher(Pattern.compile("^([^.]+.)[^.]+$"), Util.getName(a)), null);
+						(a, b) -> Util.matcher(Pattern.compile("^([^.]+.)[^.]+$"), Util.getName(a)), null);
 				//
 				if (Util.matches(matcher) && groupCount(matcher) > 0) {
 					//
@@ -3437,7 +3437,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					cs.newLineAtOffset((index - 1) * size + (size - getTextWidth(
 							//
 							value = testAndApply(x -> and(x, Util::matches, y -> groupCount(y) > 0),
-									matcher(pattern = ObjectUtils.getIfNull(pattern,
+									Util.matcher(pattern = ObjectUtils.getIfNull(pattern,
 											() -> Pattern.compile("^(\\d+%).+$")), value),
 									x -> group(x, 1), x -> value_)
 							//
@@ -4093,11 +4093,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static int groupCount(@Nullable final Matcher instance) {
 		return instance != null ? instance.groupCount() : 0;
-	}
-
-	@Nullable
-	private static Matcher matcher(@Nullable final Pattern instance, @Nullable final CharSequence input) {
-		return instance != null && input != null ? instance.matcher(input) : null;
 	}
 
 	private static float getHeight(@Nullable final PDRectangle instance) {

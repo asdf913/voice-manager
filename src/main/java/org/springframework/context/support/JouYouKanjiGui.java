@@ -563,7 +563,8 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 			for (int j = 0; j < IterableUtils.size(tds); j++) {
 				//
-				if ((matcher = matcher(pattern2 = ObjectUtils.getIfNull(pattern2, () -> Pattern.compile("\\[\\d+]")),
+				if ((matcher = Util.matcher(
+						pattern2 = ObjectUtils.getIfNull(pattern2, () -> Pattern.compile("\\[\\d+]")),
 						textContent = ElementUtil.text(IterableUtils.get(tds, j)))) != null) {
 					//
 					textContent = matcher.replaceAll("");
@@ -609,11 +610,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static Matcher matcher(@Nullable final Pattern pattern, @Nullable final CharSequence input) {
-		return pattern != null && input != null ? pattern.matcher(input) : null;
 	}
 
 	@Nullable

@@ -3840,7 +3840,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 			final String message = getMessage(ci);
 			//
-			if (or(x -> Util.matches(matcher(x, message)), PATTERN_CONTENT_INFO_MESSAGE_MP3_1,
+			if (or(x -> Util.matches(Util.matcher(x, message)), PATTERN_CONTENT_INFO_MESSAGE_MP3_1,
 					PATTERN_CONTENT_INFO_MESSAGE_MP3_2, PATTERN_CONTENT_INFO_MESSAGE_MP3_3)) {
 				//
 				return "mp3";
@@ -4581,7 +4581,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 				for (int j = 0; j < attributes.getLength(); j++) {
 					//
-					if (Util.matches(matcher(pattern, getNodeName(attribute = attributes.item(j))))) {
+					if (Util.matches(Util.matcher(pattern, getNodeName(attribute = attributes.item(j))))) {
 						//
 						clear(sb = getIfNull(sb, StringBuilder::new));
 						//
@@ -4600,33 +4600,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 			} // for
 				//
-		}
-
-		@Nullable
-		private static Matcher matcher(@Nullable final Pattern instance, @Nullable final CharSequence input) {
-			//
-			if (instance == null) {
-				//
-				return null;
-				//
-			} // if
-				//
-			try {
-				//
-				if (Narcissus.getObjectField(instance, Util.getDeclaredField(Pattern.class, "pattern")) == null) {
-					//
-					return null;
-					//
-				} // if
-					//
-			} catch (final NoSuchFieldException e) {
-				//
-				LoggerUtil.error(LOG, e.getMessage(), e);
-				//
-			} // try
-				//
-			return input != null ? instance.matcher(input) : null;
-			//
 		}
 
 		private static int getLength(@Nullable final NodeList instance) {

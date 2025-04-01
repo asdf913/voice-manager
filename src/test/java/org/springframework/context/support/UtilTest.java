@@ -815,4 +815,19 @@ class UtilTest {
 		//
 	}
 
+	@Test
+	void testMatcher() {
+		//
+		Assertions.assertNull(Util.matcher(null, null));
+		//
+		Assertions.assertNull(Util.matcher(Util.cast(Pattern.class, Narcissus.allocateInstance(Pattern.class)), null));
+		//
+		final Pattern pattern = Pattern.compile("\\d+");
+		//
+		Assertions.assertNull(Util.matcher(pattern, null));
+		//
+		Assertions.assertNotNull(Util.matcher(pattern, "1"));
+		//
+	}
+
 }

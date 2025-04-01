@@ -23,8 +23,6 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -75,7 +73,7 @@ class JouYouKanjiGuiTest {
 
 	private static Method METHOD_GET, METHOD_GET_ECSS_VERSION_BY_MAJOR, METHOD_ADD_JOU_YOU_KAN_JI_SHEET,
 			METHOD_GET_CSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY, METHOD_SET_PREFERRED_WIDTH,
-			METHOD_SET_SELECTED_ITEM, METHOD_GET_BOOLEAN_VALUES, METHOD_MATCHER, METHOD_GET_EXPRESSION_AS_CSS_STRING,
+			METHOD_SET_SELECTED_ITEM, METHOD_GET_BOOLEAN_VALUES, METHOD_GET_EXPRESSION_AS_CSS_STRING,
 			METHOD_GET_INDEXED_COLORS, METHOD_GET_STYLES_SOURCE, METHOD_GET_PROPERTY, METHOD_TO_MILLIS,
 			METHOD_SET_FILL_BACK_GROUND_COLOR, METHOD_SET_FILL_PATTERN, METHOD_SPLITERATOR, METHOD_TEST_AND_ACCEPT3,
 			METHOD_TEST_AND_ACCEPT4, METHOD_MAP_TO_INT, METHOD_MAX, METHOD_OR_ELSE, METHOD_SET_AUTO_FILTER,
@@ -106,8 +104,6 @@ class JouYouKanjiGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_BOOLEAN_VALUES = clz.getDeclaredMethod("getBooleanValues")).setAccessible(true);
-		//
-		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, CharSequence.class)).setAccessible(true);
 		//
 		(METHOD_GET_EXPRESSION_AS_CSS_STRING = clz.getDeclaredMethod("getExpressionAsCSSString", CSSDeclaration.class))
 				.setAccessible(true);
@@ -695,33 +691,6 @@ class JouYouKanjiGuiTest {
 				return null;
 			} else if (obj instanceof List) {
 				return (List) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMatcher() throws Throwable {
-		//
-		Assertions.assertNull(matcher(null, null));
-		//
-		final Pattern pattern = Pattern.compile("\\d+");
-		//
-		Assertions.assertNull(matcher(pattern, null));
-		//
-		Assertions.assertNotNull(matcher(pattern, EMPTY));
-		//
-	}
-
-	private static Matcher matcher(final Pattern pattern, final CharSequence input) throws Throwable {
-		try {
-			final Object obj = METHOD_MATCHER.invoke(null, pattern, input);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Matcher) {
-				return (Matcher) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -211,16 +211,11 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 
 	private static boolean isJavassistProxy(final Object instance) {
 		//
-		return Util.matches(matcher(
+		return Util.matches(Util.matcher(
 				PATTERN_JAVASSIST_CLASS_NAME = ObjectUtils.getIfNull(PATTERN_JAVASSIST_CLASS_NAME,
 						() -> Pattern.compile("^javassist.util.proxy[.\\w]+\\$\\$[.\\w]+$")),
 				Util.getName(Util.getClass(instance))));
 		//
-	}
-
-	@Nullable
-	private static Matcher matcher(@Nullable final Pattern instance, @Nullable final CharSequence input) {
-		return instance != null && input != null ? instance.matcher(input) : null;
 	}
 
 	private static double iif(final boolean condition, final double defaultValue, final DoubleSupplier supplierTrue,
