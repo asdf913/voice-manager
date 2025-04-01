@@ -233,14 +233,10 @@ class VoiceManagerPdfPanelTest {
 			//
 			final String methodName = Util.getName(thisMethod);
 			//
-			if (self instanceof UrlValidator) {
+			if (self instanceof UrlValidator && Objects.equals(methodName, "isValid")) {
 				//
-				if (Objects.equals(methodName, "isValid")) {
-					//
-					return isValid;
-					//
-				} // if
-					//
+				return isValid;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
