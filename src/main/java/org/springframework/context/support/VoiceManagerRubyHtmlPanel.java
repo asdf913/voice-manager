@@ -246,7 +246,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		if (!Boolean.logicalAnd(Util.isAssignableFrom(FailableFunction.class, clz), genericInterfaces != null)
 				|| (PropertyValueUtil.getValue(testAndApply((a, b) -> PropertyValuesUtil.contains(a, b),
 						BeanDefinitionUtil.getPropertyValues(bd), "url",
-						(a, b) -> a != null ? a.getPropertyValue(b) : null, null)) instanceof TypedStringValue tsv
+						(a, b) -> PropertyValuesUtil.getPropertyValue(a, b), null)) instanceof TypedStringValue tsv
 						&& isValid(UrlValidator.getInstance(), tsv.getValue()))) {
 			//
 			return;
