@@ -2914,11 +2914,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		}
 	}
 
-	@Nullable
-	private static <T extends Appendable> T output(@Nullable final HtmlBuilder<T> instance) {
-		return instance != null ? instance.output() : null;
-	}
-
 	private static int length(@Nullable final Object[] instance) {
 		return instance != null ? instance.length : 0;
 	}
