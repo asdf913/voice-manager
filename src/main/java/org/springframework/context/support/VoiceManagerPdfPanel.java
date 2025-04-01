@@ -1806,7 +1806,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				final String absolute = "absolute";
 				//
-				final BigDecimal fontSize3 = testAndApply(x -> Util.matches(x),
+				final BigDecimal fontSize3 = testAndApply(Util::matches,
 						matcher(patternInteger = ObjectUtils.getIfNull(patternInteger,
 								() -> Pattern.compile("^(-?\\d+(\\.\\d+)?)$")), Util.getText(tfFontSize3)),
 						x -> new BigDecimal(group(x, 0)), null);
@@ -3436,7 +3436,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					cs.newLineAtOffset((index - 1) * size + (size - getTextWidth(
 							//
-							value = testAndApply(x -> and(x, y -> Util.matches(y), y -> groupCount(y) > 0),
+							value = testAndApply(x -> and(x, Util::matches, y -> groupCount(y) > 0),
 									matcher(pattern = ObjectUtils.getIfNull(pattern,
 											() -> Pattern.compile("^(\\d+%).+$")), value),
 									x -> group(x, 1), x -> value_)
