@@ -73,7 +73,6 @@ import java.util.function.LongBinaryOperator;
 import java.util.function.Predicate;
 import java.util.function.ToLongFunction;
 import java.util.function.UnaryOperator;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
