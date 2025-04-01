@@ -11,6 +11,7 @@ public interface BeanDefinitionUtil {
 		return instance != null ? instance.getBeanClassName() : null;
 	}
 
+	@Nullable
 	static MutablePropertyValues getPropertyValues(@Nullable final BeanDefinition instance) {
 		return instance != null ? instance.getPropertyValues() : null;
 	}
