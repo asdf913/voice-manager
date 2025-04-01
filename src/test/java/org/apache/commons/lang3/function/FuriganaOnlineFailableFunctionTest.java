@@ -74,14 +74,11 @@ class FuriganaOnlineFailableFunctionTest {
 					//
 				} // if
 					//
-			} else if (self instanceof URLConnection) {
+			} else if (self instanceof URLConnection
+					&& contains(Arrays.asList("getInputStream", "getOutputStream"), methodName)) {
 				//
-				if (contains(Arrays.asList("getInputStream", "getOutputStream"), methodName)) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
