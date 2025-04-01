@@ -2606,30 +2606,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		return instance != null ? instance.nextAlphabetic(count) : null;
 	}
 
-	@Nullable
-	private static String toHtml(final String string) throws IOException {
-		//
-		final Collection<Token> tokens = testAndApply(x -> Boolean.logicalAnd(Objects.nonNull(x), isPlainText(x)),
-				string, new Tokenizer()::tokenize, null);
-		//
-		if (Util.iterator(tokens) == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		HtmlBuilder<StringBuilder> htmlBuilder = null;
-		//
-		for (final Token token : tokens) {
-			//
-			toHtml(htmlBuilder = ObjectUtils.getIfNull(htmlBuilder, FlatHtml::inMemory), token);
-			//
-		} // for
-			//
-		return Util.toString(output(htmlBuilder));
-		//
-	}
-
 	private static void toHtml(final HtmlBuilder<StringBuilder> htmlBuilder, final TokenBase token) throws IOException {
 		//
 		final String[] allFeatures = getAllFeaturesArray(token);
