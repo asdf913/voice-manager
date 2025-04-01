@@ -25,14 +25,11 @@ class BeanDefinitionUtilTest {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
-			if (proxy instanceof BeanDefinition) {
+			if (proxy instanceof BeanDefinition
+					&& contains(Arrays.asList("getBeanClassName", "getPropertyValues"), methodName)) {
 				//
-				if (contains(Arrays.asList("getBeanClassName", "getPropertyValues"), methodName)) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
