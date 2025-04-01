@@ -1672,10 +1672,11 @@ public abstract class Util {
 			//
 		} // if
 			//
+		final Stream<Field> fs = testAndApply(Objects::nonNull, getDeclaredFields(Matcher.class), Arrays::stream, null);
+		//
 		if (testAndApply(Objects::nonNull, testAndApply(x -> IterableUtils.size(x) == 1,
-				toList(filter(testAndApply(Objects::nonNull, getDeclaredFields(Matcher.class), Arrays::stream, null),
-						x -> Objects.equals(getName(x), "groups"))),
-				x -> IterableUtils.get(x, 0), null), x -> Narcissus.getObjectField(instance, x), null) == null) {
+				toList(filter(fs, x -> Objects.equals(getName(x), "groups"))), x -> IterableUtils.get(x, 0), null),
+				x -> Narcissus.getObjectField(instance, x), null) == null) {
 			//
 			return false;
 			//
