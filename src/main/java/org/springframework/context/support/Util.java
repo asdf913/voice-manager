@@ -1687,6 +1687,7 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	static Matcher matcher(final Pattern instance, final CharSequence input) {
 		//
 		if (instance == null) {
