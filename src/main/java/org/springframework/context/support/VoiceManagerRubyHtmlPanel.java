@@ -562,10 +562,10 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 		final Class<?> clz = Util.getClass(instance);
 		//
+		final Stream<Field> stream = testAndApply(Objects::nonNull, Util.getDeclaredFields(clz), Arrays::stream, null);
+		//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1,
-				Util.toList(
-						Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(clz), Arrays::stream, null),
-								x -> Objects.equals(Util.getName(x), "dataModel"))),
+				Util.toList(Util.filter(stream, x -> Objects.equals(Util.getName(x), "dataModel"))),
 				x -> IterableUtils.get(x, 0), null);
 		//
 		if (f != null && Narcissus.getField(instance, f) == null) {
