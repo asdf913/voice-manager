@@ -12,6 +12,8 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.geom.Dimension2D;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -94,7 +96,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerRubyHtmlPanel extends JPanel
-		implements Titled, InitializingBean, ApplicationContextAware, ActionListener {
+		implements Titled, InitializingBean, ApplicationContextAware, ActionListener, ItemListener {
 
 	private static final long serialVersionUID = 8508661990476987623L;
 
@@ -124,6 +126,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 
 	private Table<String, String, Object> table = null;
 
+	private JComboBox<Object> jcbImplementation = null;
+
 	@Override
 	public String getTitle() {
 		return "HTML";
@@ -152,23 +156,22 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		final MutableComboBoxModel<Object> cbm = new DefaultComboBoxModel<>();
 		//
-		final JComboBox<Object> jcb = new JComboBox<>(cbm);
-		//
-		final ListCellRenderer<?> listCellRenderer = jcb.getRenderer();
+		final ListCellRenderer<?> listCellRenderer = (jcbImplementation = new JComboBox<>(cbm)).getRenderer();
 		//
 		final DefaultListableBeanFactory dlbf = Util.cast(DefaultListableBeanFactory.class,
 				ConfigurableApplicationContextUtil
 						.getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
 		//
-		jcb.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
+		jcbImplementation.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
 			//
 			return VoiceManagerRubyHtmlPanel.getListCellRendererComponent(((ListCellRenderer) listCellRenderer), list,
 					TableUtil.get(table, value, "label"), index, isSelected, cellHasFocus);
 			//
 		});
 		//
+		jcbImplementation.addItemListener(this);
 		//
-		add(jcb, "wrap");
+		add(jcbImplementation, "wrap");
 		//
 		maxJLabelWidth = Math.max(maxJLabelWidth, getWidth(Util.getPreferredSize(jLabel = new JLabel("Text"))));
 		//
@@ -243,6 +246,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				//
 			TableUtil.put(table = ObjectUtils.getIfNull(table, HashBasedTable::create), beanDefinitionName, "label",
 					IValue0Util.getValue0(description));
+			//
+			TableUtil.put(table, beanDefinitionName, "instance", BeanFactoryUtil.getBean(dlbf, beanDefinitionName));
 			//
 		} // for
 			//
@@ -519,6 +524,61 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 		} // if
 			//
+	}
+
+	@Override
+	public void itemStateChanged(final ItemEvent evt) {
+		//
+		if (Objects.equals(Util.getSource(evt), jcbImplementation) && evt != null
+				&& evt.getStateChange() == ItemEvent.SELECTED) {
+			//
+			final Object instance = TableUtil.get(table, getSelectedItem(jcbImplementation), "instance");
+			//
+			final Field[] fs = Util.getDeclaredFields(getClass());
+			//
+			Field f = null;
+			//
+			for (int i = 0; i < length(fs); i++) {
+				//
+				if ((f = ArrayUtils.get(fs, i)) == null
+						|| !Util.isAssignableFrom(Util.getType(f), Util.getClass(instance))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				Narcissus.setField(this, f, instance);
+				//
+			} // for
+				//
+		} // if
+			//
+	}
+
+	private static Object getSelectedItem(final JComboBox<?> instance) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Class<?> clz = Util.getClass(instance);
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1,
+				Util.toList(
+						Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(clz), Arrays::stream, null),
+								x -> Objects.equals(Util.getName(x), "dataModel"))),
+				x -> IterableUtils.get(x, 0), null);
+		//
+		if (f != null && Narcissus.getField(instance, f) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return instance.getSelectedItem();
+		//
 	}
 
 	private static boolean isTestMode() {
