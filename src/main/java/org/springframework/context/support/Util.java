@@ -1712,11 +1712,11 @@ public abstract class Util {
 		//
 	}
 
-	static Class<? extends Annotation> annotationType(final Annotation instance) {
+	static Class<? extends Annotation> annotationType(@Nullable final Annotation instance) {
 		return instance != null ? instance.annotationType() : null;
 	}
 
-	static Annotation[] getAnnotations(final AnnotatedElement instance) {
+	static Annotation[] getAnnotations(@Nullable final AnnotatedElement instance) {
 		return instance != null ? instance.getAnnotations() : null;
 	}
 
