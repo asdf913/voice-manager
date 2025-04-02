@@ -1,7 +1,5 @@
 package org.springframework.context.support;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
