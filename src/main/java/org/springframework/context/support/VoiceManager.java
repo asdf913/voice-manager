@@ -2183,12 +2183,12 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				} else if (instruction instanceof BIPUSH biPush) {
 					//
 					Util.put(IValue0Util.getValue0(result = getIfNull(result, () -> Unit.with(new LinkedHashMap<>()))),
-							key, (value = getValue(biPush)) != null ? value.intValue() : null);
+							key, (value = getValue(biPush)) != null ? Integer.valueOf(value.intValue()) : null);
 					//
 				} else if (instruction instanceof ICONST iConst) {
 					//
 					Util.put(IValue0Util.getValue0(result = getIfNull(result, () -> Unit.with(new LinkedHashMap<>()))),
-							key, (value = getValue(iConst)) != null ? value.intValue() : null);
+							key, (value = getValue(iConst)) != null ? Integer.valueOf(value.intValue()) : null);
 				} // if
 					//
 			} // for
