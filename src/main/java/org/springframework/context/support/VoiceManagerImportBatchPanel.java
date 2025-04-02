@@ -2593,7 +2593,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		if (Objects.equals(cellType, CellType.BOOLEAN)) {
 			//
-			value = Unit.with(cell != null ? cell.getBooleanCellValue() : null);
+			value = Unit.with(cell != null ? Boolean.valueOf(cell.getBooleanCellValue()) : null);
 			//
 		} else if (Objects.equals(cellType, CellType.FORMULA) && formulaEvaluator != null) {
 			//
