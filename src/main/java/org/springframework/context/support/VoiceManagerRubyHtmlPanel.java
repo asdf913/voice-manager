@@ -86,6 +86,10 @@ import org.springframework.context.ApplicationContextUtil;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.ConfigurableApplicationContextUtil;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+import com.google.common.collect.TableUtil;
+
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
@@ -117,6 +121,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 	private AbstractButton btnCopy = null;
 
 	private transient FailableFunction<String, String, IOException> furiganaFailableFunction = null;
+
+	private Table<String, String, Object> table = null;
 
 	@Override
 	public String getTitle() {
@@ -156,13 +162,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		jcb.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
 			//
-			final String beanClassName = BeanDefinitionUtil.getBeanClassName(
-					ConfigurableListableBeanFactoryUtil.getBeanDefinition(dlbf, Util.toString(value)));
-			//
 			return VoiceManagerRubyHtmlPanel.getListCellRendererComponent(((ListCellRenderer) listCellRenderer), list,
-					IValue0Util.getValue0(
-							ObjectUtils.getIfNull(getDescription(beanClassName), () -> Unit.with(beanClassName))),
-					index, isSelected, cellHasFocus);
+					TableUtil.get(table, value, "label"), index, isSelected, cellHasFocus);
 			//
 		});
 		//
@@ -214,6 +215,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		String beanClassName = null;
 		//
+		IValue0<Object> description = null;
+		//
 		for (int i = 0; i < length(beanDefinitionNames); i++) {
 			//
 			if (!Util.isAssignableFrom(FailableFunction.class,
@@ -231,6 +234,15 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			} // if
 				//
 			cbm.addElement(beanDefinitionName);
+			//
+			if ((description = getDescription(beanClassName)) == null) {
+				//
+				description = Unit.with(beanClassName);
+				//
+			} // if
+				//
+			TableUtil.put(table = ObjectUtils.getIfNull(table, HashBasedTable::create), beanDefinitionName, "label",
+					IValue0Util.getValue0(description));
 			//
 		} // for
 			//
