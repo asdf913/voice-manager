@@ -552,6 +552,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static Object getSelectedItem(@Nullable final JComboBox<?> instance) {
 		//
 		if (instance == null) {
