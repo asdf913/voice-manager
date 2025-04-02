@@ -3844,7 +3844,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			final List<Field> fs = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull, FieldUtils.getAllFields(Voice.class), Arrays::stream, null),
 					f -> anyMatch(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
-							a -> Objects.equals(annotationType(a), importFieldClass))));
+							a -> Objects.equals(Util.annotationType(a), importFieldClass))));
 			//
 			Field f = null;
 			//
@@ -4105,7 +4105,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				addValidationDataForEnum(objectMap, type, i);
 				//
 			} else if (anyMatch(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
-					a -> Objects.equals(annotationType(a), classJlpt))) {// domain.Voice.JLPT
+					a -> Objects.equals(Util.annotationType(a), classJlpt))) {// domain.Voice.JLPT
 				//
 				ObjectMap.setObject(objectMap, DataValidationHelper.class,
 						dvh = getIfNull(dvh, () -> getDataValidationHelper(sheet)));
@@ -4113,7 +4113,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				addValidationDataForValues(objectMap, jlptValues, i);
 				//
 			} else if (anyMatch(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
-					a -> Objects.equals(annotationType(a), classGaKuNenBeTsuKanJi))) {// domain.Voice.GaKuNenBeTsuKanJi
+					a -> Objects.equals(Util.annotationType(a), classGaKuNenBeTsuKanJi))) {// domain.Voice.GaKuNenBeTsuKanJi
 				//
 				ObjectMap.setObject(objectMap, DataValidationHelper.class,
 						dvh = getIfNull(dvh, () -> getDataValidationHelper(sheet)));
@@ -4263,11 +4263,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	private static <T, E extends Throwable> T getIfNull(@Nullable final T object,
 			final FailableSupplier<T, E> defaultSupplier) throws E {
 		return object != null ? object : FailableSupplierUtil.get(defaultSupplier);
-	}
-
-	@Nullable
-	private static Class<? extends Annotation> annotationType(@Nullable final Annotation instance) {
-		return instance != null ? instance.annotationType() : null;
 	}
 
 	private static <T> boolean anyMatch(@Nullable final Stream<T> instance,

@@ -73,8 +73,7 @@ class VoiceManagerRubyHtmlPanelTest {
 	private static Method METHOD_LENGTH, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE, METHOD_GET_GENERIC_TYPE,
 			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_GET_LAYOUT_MANAGER,
 			METHOD_FOR_EACH, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS,
-			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_GET_ANNOTATIONS,
-			METHOD_ANNOTATION_TYPE = null;
+			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_GET_ANNOTATIONS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -120,8 +119,6 @@ class VoiceManagerRubyHtmlPanelTest {
 		//
 		(METHOD_GET_ANNOTATIONS = clz.getDeclaredMethod("getAnnotations", AnnotatedElement.class)).setAccessible(true);
 		//
-		(METHOD_ANNOTATION_TYPE = clz.getDeclaredMethod("annotationType", Annotation.class)).setAccessible(true);
-		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -153,38 +150,15 @@ class VoiceManagerRubyHtmlPanelTest {
 					//
 				} // if
 					//
-			} else if (or(
+			} else if (Boolean.logicalOr(
 					proxy instanceof ListCellRenderer && Objects.equals(methodName, "getListCellRendererComponent"),
-					proxy instanceof AnnotatedElement && Objects.equals(methodName, "getAnnotations"),
-					proxy instanceof Annotation && Objects.equals(methodName, "annotationType"))) {
+					proxy instanceof AnnotatedElement && Objects.equals(methodName, "getAnnotations"))) {
 				//
 				return null;
 				//
 			} // if
 				//
 			throw new Throwable(methodName);
-			//
-		}
-
-		private static boolean or(final boolean a, final boolean b, final boolean... bs) {
-			//
-			if (a || b) {
-				//
-				return true;
-				//
-			} // if
-				//
-			for (int i = 0; bs != null && i < bs.length; i++) {
-				//
-				if (bs[i]) {
-					//
-					return true;
-					//
-				} // if
-					//
-			} // for
-				//
-			return false;
 			//
 		}
 
@@ -699,27 +673,6 @@ class VoiceManagerRubyHtmlPanelTest {
 				return null;
 			} else if (obj instanceof Annotation[]) {
 				return (Annotation[]) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAnnotationType() throws Throwable {
-		//
-		Assertions.assertNull(annotationType(Reflection.newProxy(Annotation.class, ih)));
-		//
-	}
-
-	private static Class<? extends Annotation> annotationType(final Annotation instance) throws Throwable {
-		try {
-			final Object obj = METHOD_ANNOTATION_TYPE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class) {
-				return (Class) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

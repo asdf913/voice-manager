@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -1708,6 +1709,10 @@ public abstract class Util {
 			//
 		return input != null ? instance.matcher(input) : null;
 		//
+	}
+
+	static Class<? extends Annotation> annotationType(final Annotation instance) {
+		return instance != null ? instance.annotationType() : null;
 	}
 
 }

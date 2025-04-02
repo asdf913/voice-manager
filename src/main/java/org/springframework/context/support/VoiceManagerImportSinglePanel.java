@@ -4630,11 +4630,11 @@ public class VoiceManagerImportSinglePanel extends JPanel
 					//
 					final List<?> objects = Util.toList(FailableStreamUtil.stream(new FailableStream<>(
 							Util.filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
-									a -> Objects.equals(annotationType(a), nameClass)))
+									a -> Objects.equals(Util.annotationType(a), nameClass)))
 							.map(a -> {
 								//
 								final List<Method> ms = Util.toList(Util.filter(testAndApply(Objects::nonNull,
-										Util.getDeclaredMethods(annotationType(a)), Arrays::stream, null),
+										Util.getDeclaredMethods(Util.annotationType(a)), Arrays::stream, null),
 										ma -> Objects.equals(Util.getName(ma), VALUE)));
 								//
 								if (CollectionUtils.isEmpty(ms)) {
@@ -4671,11 +4671,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 					//
 				}), Objects::nonNull)));
 		//
-	}
-
-	@Nullable
-	private static Class<? extends Annotation> annotationType(@Nullable final Annotation instance) {
-		return instance != null ? instance.annotationType() : null;
 	}
 
 	@Nullable

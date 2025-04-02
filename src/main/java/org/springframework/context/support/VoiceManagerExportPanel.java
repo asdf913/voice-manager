@@ -2747,7 +2747,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		final List<Annotation> annotations = Util
 				.toList(Util.filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(f), Arrays::stream, null),
-						a -> Objects.equals(annotationType(a), spreadsheetColumnClass)));
+						a -> Objects.equals(Util.annotationType(a), spreadsheetColumnClass)));
 		//
 		if (annotations != null) {
 			//
@@ -2842,18 +2842,18 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 			CellStyle cellStyle = null;
 			//
-			if ((m = Util
-					.orElse(findFirst(
-							Util.filter(
-									testAndApply(Objects::nonNull,
-											Util.getDeclaredMethods(annotationType(a = Util.orElse(
-													findFirst(Util.filter(testAndApply(Objects::nonNull,
-															getDeclaredAnnotations(field), Arrays::stream, null),
-															x -> Objects.equals(annotationType(x), dataFormatClass))),
-													null))),
-											Arrays::stream, null),
-									x -> Objects.equals(Util.getName(x), VALUE))),
-							null)) != null
+			if ((m = Util.orElse(findFirst(
+					Util.filter(
+							testAndApply(Objects::nonNull,
+									Util.getDeclaredMethods(Util.annotationType(a = Util.orElse(
+											findFirst(Util.filter(
+													testAndApply(Objects::nonNull, getDeclaredAnnotations(field),
+															Arrays::stream, null),
+													x -> Objects.equals(Util.annotationType(x), dataFormatClass))),
+											null))),
+									Arrays::stream, null),
+							x -> Objects.equals(Util.getName(x), VALUE))),
+					null)) != null
 					&& (cellStyle = WorkbookUtil
 							.createCellStyle(ObjectMap.getObject(objectMap, Workbook.class))) != null) {
 				//
@@ -2874,18 +2874,18 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 		} else if (value instanceof Date) {
 			//
-			if ((m = Util
-					.orElse(findFirst(
-							Util.filter(
-									testAndApply(Objects::nonNull,
-											Util.getDeclaredMethods(annotationType(a = Util.orElse(
-													findFirst(Util.filter(testAndApply(Objects::nonNull,
-															getDeclaredAnnotations(field), Arrays::stream, null),
-															x -> Objects.equals(annotationType(x), dateFormatClass))),
-													null))),
-											Arrays::stream, null),
-									x -> Objects.equals(Util.getName(x), VALUE))),
-							null)) != null) {
+			if ((m = Util.orElse(findFirst(
+					Util.filter(
+							testAndApply(Objects::nonNull,
+									Util.getDeclaredMethods(Util.annotationType(a = Util.orElse(
+											findFirst(Util.filter(
+													testAndApply(Objects::nonNull, getDeclaredAnnotations(field),
+															Arrays::stream, null),
+													x -> Objects.equals(Util.annotationType(x), dateFormatClass))),
+											null))),
+									Arrays::stream, null),
+							x -> Objects.equals(Util.getName(x), VALUE))),
+					null)) != null) {
 				//
 				CellUtil.setCellValue(cell,
 						new SimpleDateFormat(Util.toString(Narcissus.invokeMethod(a, m))).format(value));
@@ -2951,7 +2951,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 							//
 						} // if
 							//
-						if (Objects.equals("domain.Voice$Visibility", Util.getName(annotationType(a)))) {
+						if (Objects.equals("domain.Voice$Visibility", Util.getName(Util.annotationType(a)))) {
 							//
 							final Boolean visible = Util.cast(Boolean.class, MethodUtils.invokeMethod(a, VALUE));
 							//
@@ -2973,20 +2973,15 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 	}
 
 	@Nullable
-	private static Class<? extends Annotation> annotationType(@Nullable final Annotation instance) {
-		return instance != null ? instance.annotationType() : null;
-	}
-
-	@Nullable
 	private static String[] getFieldOrder() {
 		//
 		final Annotation a = Util.orElse(findFirst(
 				Util.filter(testAndApply(Objects::nonNull, getDeclaredAnnotations(Voice.class), Arrays::stream, null),
-						z -> Objects.equals(annotationType(z), Util.forName("domain.FieldOrder")))),
+						z -> Objects.equals(Util.annotationType(z), Util.forName("domain.FieldOrder")))),
 				null);
 		//
 		final Method method = Util
-				.orElse(findFirst(Util.filter(Arrays.stream(Util.getDeclaredMethods(annotationType(a))),
+				.orElse(findFirst(Util.filter(Arrays.stream(Util.getDeclaredMethods(Util.annotationType(a))),
 						z -> Objects.equals(Util.getName(z), VALUE))), null);
 		//
 		String[] orders = null;

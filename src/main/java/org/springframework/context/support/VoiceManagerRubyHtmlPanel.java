@@ -172,7 +172,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 			for (int i = 0; i < length(as); i++) {
 				//
-				if (Objects.equals(annotationType(a = ArrayUtils.get(as, i)),
+				if (Objects.equals(Util.annotationType(a = ArrayUtils.get(as, i)),
 						Util.forName("org.springframework.context.annotation.Description"))
 						&& Proxy.isProxyClass(Util.getClass(a))) {
 					//
@@ -280,10 +280,6 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 		} // for
 			//
-	}
-
-	private static Class<? extends Annotation> annotationType(@Nullable final Annotation instance) {
-		return instance != null ? instance.annotationType() : null;
 	}
 
 	private static Annotation[] getAnnotations(@Nullable final AnnotatedElement instance) {
