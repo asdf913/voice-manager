@@ -155,83 +155,76 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				ConfigurableApplicationContextUtil
 						.getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
 		//
-		jcb.setRenderer(new ListCellRenderer<Object>() {
-
-			@Override
-			public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
-					final int index, final boolean isSelected, final boolean cellHasFocus) {
+		jcb.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
+			//
+			final BeanDefinition bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(dlbf, Util.toString(value));
+			//
+			final String beanClassName = BeanDefinitionUtil.getBeanClassName(bd);
+			//
+			final Class<?> clz = Util.forName(beanClassName);
+			//
+			final Annotation[] as = clz != null ? clz.getAnnotations() : null;
+			//
+			Annotation a = null;
+			//
+			Field f = null;
+			//
+			IValue0<Object> description = null;
+			//
+			for (int i = 0; i < length(as); i++) {
 				//
-				final BeanDefinition bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(dlbf,
-						Util.toString(value));
-				//
-				final String beanClassName = BeanDefinitionUtil.getBeanClassName(bd);
-				//
-				final Class<?> clz = Util.forName(beanClassName);
-				//
-				final Annotation[] as = clz != null ? clz.getAnnotations() : null;
-				//
-				Annotation a = null;
-				//
-				Field f = null;
-				//
-				IValue0<Object> description = null;
-				//
-				for (int i = 0; i < length(as); i++) {
+				if ((a = ArrayUtils.get(as, i)) == null) {
 					//
-					if ((a = ArrayUtils.get(as, i)) == null) {
+					continue;
+					//
+				} // if
+					//
+				if (Objects.equals(a.annotationType(),
+						Util.forName("org.springframework.context.annotation.Description"))
+						&& Proxy.isProxyClass(Util.getClass(a))) {
+					//
+					final InvocationHandler ih = Proxy.getInvocationHandler(a);
+					//
+					final Field[] fs = Util.getDeclaredFields(Util.getClass(ih));
+					//
+					Map<?, ?> map = null;
+					//
+					for (int j = 0; j < length(fs); j++) {
 						//
-						continue;
-						//
-					} // if
-						//
-					if (Objects.equals(a.annotationType(),
-							Util.forName("org.springframework.context.annotation.Description"))
-							&& Proxy.isProxyClass(Util.getClass(a))) {
-						//
-						final InvocationHandler ih = Proxy.getInvocationHandler(a);
-						//
-						final Field[] fs = Util.getDeclaredFields(Util.getClass(ih));
-						//
-						Map<?, ?> map = null;
-						//
-						for (int j = 0; j < length(fs); j++) {
+						if ((f = ArrayUtils.get(fs, j)) == null) {
 							//
-							if ((f = ArrayUtils.get(fs, j)) == null) {
+							continue;
+							//
+						} // if
+							//
+						if ((map = Util.isAssignableFrom(Map.class, Util.getType(f))
+								? Util.cast(Map.class, Narcissus.getObjectField(ih, f))
+								: null) != null
+								&& CollectionUtils.isEqualCollection(Util.keySet(map),
+										Collections.singleton("value"))) {
+							//
+							if (description == null) {
 								//
-								continue;
+								description = Unit.with(Util.get(map, "value"));
+								//
+							} else {
+								//
+								throw new IllegalStateException();
 								//
 							} // if
 								//
-							if ((map = Util.isAssignableFrom(Map.class, Util.getType(f))
-									? Util.cast(Map.class, Narcissus.getObjectField(ih, f))
-									: null) != null
-									&& CollectionUtils.isEqualCollection(Util.keySet(map),
-											Collections.singleton("value"))) {
-								//
-								if (description == null) {
-									//
-									description = Unit.with(Util.get(map, "value"));
-									//
-								} else {
-									//
-									throw new IllegalStateException();
-									//
-								} // if
-									//
-							} // if
-								//
-						} // for
+						} // if
 							//
-					} // if
+					} // for
 						//
-				} // for
+				} // if
 					//
-				return VoiceManagerRubyHtmlPanel.getListCellRendererComponent(((ListCellRenderer) listCellRenderer),
-						list, IValue0Util.getValue0(ObjectUtils.getIfNull(description, () -> Unit.with(beanClassName))),
-						index, isSelected, cellHasFocus);
+			} // for
 				//
-			}
-
+			return VoiceManagerRubyHtmlPanel.getListCellRendererComponent(((ListCellRenderer) listCellRenderer), list,
+					IValue0Util.getValue0(ObjectUtils.getIfNull(description, () -> Unit.with(beanClassName))), index,
+					isSelected, cellHasFocus);
+			//
 		});
 		//
 		//
