@@ -176,9 +176,10 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 			for (int i = 0; i < length(as); i++) {
 				//
-				if (Objects.equals(Util.annotationType(a = ArrayUtils.get(as, i)),
-						Util.forName("org.springframework.context.annotation.Description"))
-						&& Proxy.isProxyClass(Util.getClass(a))) {
+				if (Boolean.logicalAnd(
+						Objects.equals(Util.annotationType(a = ArrayUtils.get(as, i)),
+								Util.forName("org.springframework.context.annotation.Description")),
+						Proxy.isProxyClass(Util.getClass(a)))) {
 					//
 					fs = Util.getDeclaredFields(Util.getClass(ih = Proxy.getInvocationHandler(a)));
 					//
