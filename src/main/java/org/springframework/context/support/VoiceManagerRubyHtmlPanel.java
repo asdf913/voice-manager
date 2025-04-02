@@ -124,7 +124,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 
 	private transient FailableFunction<String, String, IOException> furiganaFailableFunction = null;
 
-	private Table<String, String, Object> table = null;
+	private transient Table<String, String, Object> table = null;
 
 	private JComboBox<Object> jcbImplementation = null;
 
