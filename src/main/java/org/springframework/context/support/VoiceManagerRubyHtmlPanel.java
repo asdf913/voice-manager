@@ -21,6 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
@@ -164,8 +165,6 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 			Annotation a = null;
 			//
-			Field f = null;
-			//
 			Object ih = null;
 			//
 			IValue0<Object> description = null;
@@ -185,10 +184,10 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 					//
 					for (int j = 0; j < length(fs); j++) {
 						//
-						if (and(map = Util.isAssignableFrom(Map.class, Util.getType(f = ArrayUtils.get(fs, j)))
-								? Util.cast(Map.class, Narcissus.getObjectField(ih, f))
-								: null, Objects::nonNull,
-								x -> CollectionUtils.isEqualCollection(Util.keySet(x),
+						if (and(map = Util.cast(Map.class,
+								testAndApply((b, c) -> c != null && !Modifier.isStatic(c.getModifiers()), ih,
+										ArrayUtils.get(fs, j), (b, c) -> Narcissus.getObjectField(b, c), null)),
+								Objects::nonNull, x -> CollectionUtils.isEqualCollection(Util.keySet(x),
 										Collections.singleton("value")))) {
 							//
 							if (description == null) {
