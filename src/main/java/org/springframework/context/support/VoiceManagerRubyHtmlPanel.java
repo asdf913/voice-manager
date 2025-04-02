@@ -141,6 +141,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		JLabel jLabel = new JLabel("Implementation");
 		//
+		double maxJLabelWidth = getWidth(Util.getPreferredSize(jLabel));
+		//
 		add(jLabel);
 		//
 		final MutableComboBoxModel<Object> cbm = new DefaultComboBoxModel<>();
@@ -235,7 +237,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		add(jcb, "wrap");
 		//
-		final double maxJLabelWidth = getWidth(Util.getPreferredSize(jLabel = new JLabel("Text")));
+		maxJLabelWidth = Math.max(maxJLabelWidth, getWidth(Util.getPreferredSize(jLabel = new JLabel("Text"))));
 		//
 		add(jLabel);
 		//
