@@ -238,6 +238,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static IValue0<Object> getDescription(final String beanClassName) {
 		//
 		final Annotation[] as = Util.getAnnotations(Util.forName(beanClassName));
