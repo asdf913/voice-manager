@@ -73,7 +73,7 @@ class VoiceManagerRubyHtmlPanelTest {
 	private static Method METHOD_LENGTH, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE, METHOD_GET_GENERIC_TYPE,
 			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_GET_LAYOUT_MANAGER,
 			METHOD_FOR_EACH, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS,
-			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_GET_ANNOTATIONS = null;
+			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -117,8 +117,6 @@ class VoiceManagerRubyHtmlPanelTest {
 				ListCellRenderer.class, JList.class, Object.class, Integer.TYPE, Boolean.TYPE, Boolean.TYPE))
 				.setAccessible(true);
 		//
-		(METHOD_GET_ANNOTATIONS = clz.getDeclaredMethod("getAnnotations", AnnotatedElement.class)).setAccessible(true);
-		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -150,9 +148,8 @@ class VoiceManagerRubyHtmlPanelTest {
 					//
 				} // if
 					//
-			} else if (Boolean.logicalOr(
-					proxy instanceof ListCellRenderer && Objects.equals(methodName, "getListCellRendererComponent"),
-					proxy instanceof AnnotatedElement && Objects.equals(methodName, "getAnnotations"))) {
+			} else if (proxy instanceof ListCellRenderer
+					&& Objects.equals(methodName, "getListCellRendererComponent")) {
 				//
 				return null;
 				//
@@ -652,27 +649,6 @@ class VoiceManagerRubyHtmlPanelTest {
 				return null;
 			} else if (obj instanceof Component) {
 				return (Component) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetAnnotations() throws Throwable {
-		//
-		Assertions.assertNull(getAnnotations(Reflection.newProxy(AnnotatedElement.class, ih)));
-		//
-	}
-
-	private static Annotation[] getAnnotations(final AnnotatedElement instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_ANNOTATIONS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Annotation[]) {
-				return (Annotation[]) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

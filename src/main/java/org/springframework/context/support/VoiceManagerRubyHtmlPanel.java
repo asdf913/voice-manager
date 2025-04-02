@@ -160,7 +160,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			final String beanClassName = BeanDefinitionUtil.getBeanClassName(
 					ConfigurableListableBeanFactoryUtil.getBeanDefinition(dlbf, Util.toString(value)));
 			//
-			final Annotation[] as = getAnnotations(Util.forName(beanClassName));
+			final Annotation[] as = Util.getAnnotations(Util.forName(beanClassName));
 			//
 			Annotation a = null;
 			//
@@ -280,10 +280,6 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 		} // for
 			//
-	}
-
-	private static Annotation[] getAnnotations(@Nullable final AnnotatedElement instance) {
-		return instance != null ? instance.getAnnotations() : null;
 	}
 
 	@Nullable

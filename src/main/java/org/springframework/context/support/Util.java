@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -1713,6 +1714,10 @@ public abstract class Util {
 
 	static Class<? extends Annotation> annotationType(final Annotation instance) {
 		return instance != null ? instance.annotationType() : null;
+	}
+
+	static Annotation[] getAnnotations(final AnnotatedElement instance) {
+		return instance != null ? instance.getAnnotations() : null;
 	}
 
 }

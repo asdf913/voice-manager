@@ -122,7 +122,7 @@ public class Main {
 					//
 					try {
 						//
-						addMutablePropertyValues(getAnnotations(f = fs[j]), classUrl,
+						addMutablePropertyValues(Util.getAnnotations(f = fs[j]), classUrl,
 								bdns = ObjectUtils.getIfNull(bdns,
 										() -> ListableBeanFactoryUtil.getBeanDefinitionNames(beanFactory)),
 								beanFactory, f);
@@ -251,11 +251,6 @@ public class Main {
 		@Nullable
 		private static ModuleInfo getModuleInfo(@Nullable final ClassInfo instance) {
 			return instance != null ? instance.getModuleInfo() : null;
-		}
-
-		@Nullable
-		private static Annotation[] getAnnotations(@Nullable final AnnotatedElement instance) {
-			return instance != null ? instance.getAnnotations() : null;
 		}
 
 	}
