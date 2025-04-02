@@ -524,7 +524,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 	}
 
 	@Override
-	public void itemStateChanged(final ItemEvent evt) {
+	public void itemStateChanged(@Nullable final ItemEvent evt) {
 		//
 		if (Objects.equals(Util.getSource(evt), jcbImplementation) && evt != null
 				&& evt.getStateChange() == ItemEvent.SELECTED) {
