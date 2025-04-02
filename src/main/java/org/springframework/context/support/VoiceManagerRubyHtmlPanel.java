@@ -243,52 +243,60 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		final Annotation[] as = Util.getAnnotations(Util.forName(beanClassName));
 		//
-		Annotation a = null;
-		//
-		Object ih = null;
-		//
-		IValue0<Object> description = null;
-		//
-		Field[] fs = null;
-		//
-		Map<?, ?> map = null;
+		IValue0<Object> description = null, temp = null;
 		//
 		for (int i = 0; i < length(as); i++) {
 			//
-			if (Boolean.logicalAnd(
-					Objects.equals(Util.annotationType(a = ArrayUtils.get(as, i)),
-							Util.forName("org.springframework.context.annotation.Description")),
-					Proxy.isProxyClass(Util.getClass(a)))) {
+			if ((temp = getDescription(ArrayUtils.get(as, i))) != null) {
 				//
-				fs = Util.getDeclaredFields(Util.getClass(ih = Proxy.getInvocationHandler(a)));
-				//
-				for (int j = 0; j < length(fs); j++) {
+				if (description == null) {
 					//
-					if (and(map = Util.cast(Map.class,
-							testAndApply((b, c) -> !Util.isStatic(c), ih, ArrayUtils.get(fs, j),
-									Narcissus::getObjectField, null)),
-							Objects::nonNull,
-							x -> CollectionUtils.isEqualCollection(Util.keySet(x), Collections.singleton("value")))) {
-						//
-						if (description == null) {
-							//
-							description = Unit.with(Util.get(map, "value"));
-							//
-						} else {
-							//
-							throw new IllegalStateException();
-							//
-						} // if
-							//
-					} // if
-						//
-				} // for
+					description = temp;
+					//
+				} else {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
 					//
 			} // if
 				//
 		} // for
 			//
 		return description;
+		//
+	}
+
+	private static IValue0<Object> getDescription(final Annotation annotation) {
+		//
+		if (Boolean.logicalAnd(
+				Objects.equals(Util.annotationType(annotation),
+						Util.forName("org.springframework.context.annotation.Description")),
+				and(Util.getClass(annotation), Objects::nonNull, x -> Proxy.isProxyClass(x)))) {
+			//
+			final Object ih = Proxy.getInvocationHandler(annotation);
+			//
+			final Field[] fs = Util.getDeclaredFields(Util.getClass(ih));
+			//
+			Map<?, ?> map = null;
+			//
+			for (int j = 0; j < length(fs); j++) {
+				//
+				if (and(map = Util.cast(Map.class,
+						testAndApply((a, b) -> !Util.isStatic(b), ih, ArrayUtils.get(fs, j), Narcissus::getObjectField,
+								null)),
+						Objects::nonNull,
+						x -> CollectionUtils.isEqualCollection(Util.keySet(x), Collections.singleton("value")))) {
+					//
+					return Unit.with(Util.get(map, "value"));
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		return null;
 		//
 	}
 
