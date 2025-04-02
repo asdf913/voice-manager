@@ -19,8 +19,8 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
@@ -157,17 +157,16 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		jcb.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
 			//
-			final BeanDefinition bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(dlbf, Util.toString(value));
+			final String beanClassName = BeanDefinitionUtil.getBeanClassName(
+					ConfigurableListableBeanFactoryUtil.getBeanDefinition(dlbf, Util.toString(value)));
 			//
-			final String beanClassName = BeanDefinitionUtil.getBeanClassName(bd);
-			//
-			final Class<?> clz = Util.forName(beanClassName);
-			//
-			final Annotation[] as = clz != null ? clz.getAnnotations() : null;
+			final Annotation[] as = getAnnotations(Util.forName(beanClassName));
 			//
 			Annotation a = null;
 			//
 			Field f = null;
+			//
+			Object ih = null;
 			//
 			IValue0<Object> description = null;
 			//
@@ -183,9 +182,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 						Util.forName("org.springframework.context.annotation.Description"))
 						&& Proxy.isProxyClass(Util.getClass(a))) {
 					//
-					final InvocationHandler ih = Proxy.getInvocationHandler(a);
-					//
-					final Field[] fs = Util.getDeclaredFields(Util.getClass(ih));
+					final Field[] fs = Util.getDeclaredFields(Util.getClass(ih = Proxy.getInvocationHandler(a)));
 					//
 					Map<?, ?> map = null;
 					//
@@ -295,6 +292,10 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 		} // for
 			//
+	}
+
+	private static Annotation[] getAnnotations(final AnnotatedElement instance) {
+		return instance != null ? instance.getAnnotations() : null;
 	}
 
 	private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
