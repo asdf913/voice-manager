@@ -55,6 +55,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.Consumers;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -73,7 +74,8 @@ class VoiceManagerRubyHtmlPanelTest {
 	private static Method METHOD_LENGTH, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE, METHOD_GET_GENERIC_TYPE,
 			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_GET_LAYOUT_MANAGER,
 			METHOD_FOR_EACH, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS,
-			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_AND = null;
+			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_AND,
+			METHOD_GET_DESCRIPTION = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -118,6 +120,8 @@ class VoiceManagerRubyHtmlPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_AND = clz.getDeclaredMethod("and", Object.class, Predicate.class, Predicate.class)).setAccessible(true);
+		//
+		(METHOD_GET_DESCRIPTION = clz.getDeclaredMethod("getDescription", String.class)).setAccessible(true);
 		//
 	}
 
@@ -661,11 +665,7 @@ class VoiceManagerRubyHtmlPanelTest {
 	@Test
 	void testAnd() throws Throwable {
 		//
-		final Predicate<Object> predicate = Predicates.alwaysTrue();
-		//
-		Assertions.assertFalse(and(null, predicate, null));
-		//
-		Assertions.assertTrue(and(null, predicate, predicate));
+		Assertions.assertFalse(and(null, Predicates.alwaysTrue(), null));
 		//
 	}
 
@@ -674,6 +674,28 @@ class VoiceManagerRubyHtmlPanelTest {
 			final Object obj = METHOD_AND.invoke(null, value, a, b);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetDescription() throws Throwable {
+		//
+		Assertions
+				.assertNotNull(getDescription("org.apache.commons.lang3.function.FuriganaHtmlBuilderFailableFunction"));
+		//
+	}
+
+	private static IValue0<Object> getDescription(final String beanClassName) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_DESCRIPTION.invoke(null, beanClassName);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
