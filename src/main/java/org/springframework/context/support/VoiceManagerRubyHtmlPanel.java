@@ -185,8 +185,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 					for (int j = 0; j < length(fs); j++) {
 						//
 						if (and(map = Util.cast(Map.class,
-								testAndApply((b, c) -> c != null && !Modifier.isStatic(c.getModifiers()), ih,
-										ArrayUtils.get(fs, j), Narcissus::getObjectField, null)),
+								testAndApply((b, c) -> !Util.isStatic(c), ih, ArrayUtils.get(fs, j),
+										Narcissus::getObjectField, null)),
 								Objects::nonNull, x -> CollectionUtils.isEqualCollection(Util.keySet(x),
 										Collections.singleton("value")))) {
 							//
