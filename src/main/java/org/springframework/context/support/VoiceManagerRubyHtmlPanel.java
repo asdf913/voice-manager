@@ -267,6 +267,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static IValue0<Object> getDescription(final Annotation annotation) {
 		//
 		if (Boolean.logicalAnd(
