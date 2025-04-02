@@ -241,7 +241,7 @@ class VoiceManagerRubyHtmlPanelTest {
 	}
 
 	@Test
-	void testItemStateChanged() throws Exception {
+	void testItemStateChanged() throws NoSuchFieldException {
 		//
 		if (instance == null) {
 			//
@@ -251,7 +251,7 @@ class VoiceManagerRubyHtmlPanelTest {
 			//
 		final ItemEvent itemEvent = Util.cast(ItemEvent.class, Narcissus.allocateInstance(ItemEvent.class));
 		//
-		instance.itemStateChanged(itemEvent);
+		Assertions.assertDoesNotThrow(() -> instance.itemStateChanged(itemEvent));
 		//
 		if (itemEvent != null) {
 			//
@@ -260,7 +260,7 @@ class VoiceManagerRubyHtmlPanelTest {
 			//
 		} // if
 			//
-		instance.itemStateChanged(itemEvent);
+		Assertions.assertDoesNotThrow(() -> instance.itemStateChanged(itemEvent));
 		//
 	}
 
