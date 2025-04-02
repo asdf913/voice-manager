@@ -182,13 +182,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 					//
 					for (int j = 0; j < length(fs); j++) {
 						//
-						if ((f = ArrayUtils.get(fs, j)) == null) {
-							//
-							continue;
-							//
-						} // if
-							//
-						if ((map = Util.isAssignableFrom(Map.class, Util.getType(f))
+						if ((map = Util.isAssignableFrom(Map.class, Util.getType(f = ArrayUtils.get(fs, j)))
 								? Util.cast(Map.class, Narcissus.getObjectField(ih, f))
 								: null) != null
 								&& CollectionUtils.isEqualCollection(Util.keySet(map),
