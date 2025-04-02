@@ -37,12 +37,15 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.MutableComboBoxModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
@@ -130,9 +133,15 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 										ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
 						MigLayout::new));
 		//
-		JLabel jLabel = new JLabel("Text");
+		JLabel jLabel = new JLabel("Implementation");
 		//
-		final double maxJLabelWidth = getWidth(Util.getPreferredSize(jLabel));
+		add(jLabel);
+		//
+		final MutableComboBoxModel<Object> cbm = new DefaultComboBoxModel<>();
+		//
+		add(new JComboBox<>(cbm), "wrap");
+		//
+		final double maxJLabelWidth = getWidth(Util.getPreferredSize(jLabel = new JLabel("Text")));
 		//
 		add(jLabel);
 		//
@@ -175,6 +184,30 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		forEach(testAndApply(Objects::nonNull, ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf), Arrays::stream,
 				null), x -> setFailableFunctionFields(applicationContext, dlbf, x, this));
 		//
+		final String[] beanDefinitionNames = ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf);
+		//
+		String beanClassName = null;
+		//
+		for (int i = 0; i < length(beanDefinitionNames); i++) {
+			//
+			if (!Util.isAssignableFrom(FailableFunction.class,
+					Util.forName(beanClassName = BeanDefinitionUtil.getBeanClassName(ConfigurableListableBeanFactoryUtil
+							.getBeanDefinition(dlbf, ArrayUtils.get(beanDefinitionNames, i)))))
+					|| !Objects.equals(
+							testAndApply(x -> length(x) > 0, getActualTypeArguments(Util.cast(ParameterizedType.class,
+									testAndApply(x -> length(x) > 0, getGenericInterfaces(Util.forName(beanClassName)),
+											x -> ArrayUtils.get(x, 0), null))),
+									x -> ArrayUtils.get(x, 0), null),
+							String.class)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			cbm.addElement(beanClassName);
+			//
+		} // for
+			//
 	}
 
 	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... bs) {
