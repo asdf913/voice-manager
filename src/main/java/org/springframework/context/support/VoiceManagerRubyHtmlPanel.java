@@ -292,7 +292,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		return instance != null ? instance.annotationType() : null;
 	}
 
-	private static Annotation[] getAnnotations(final AnnotatedElement instance) {
+	private static Annotation[] getAnnotations(@Nullable final AnnotatedElement instance) {
 		return instance != null ? instance.getAnnotations() : null;
 	}
 
