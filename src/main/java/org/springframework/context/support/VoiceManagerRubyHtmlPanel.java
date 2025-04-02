@@ -14,15 +14,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Dimension2D;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -41,13 +44,16 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -139,7 +145,95 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		final MutableComboBoxModel<Object> cbm = new DefaultComboBoxModel<>();
 		//
-		add(new JComboBox<>(cbm), "wrap");
+		final JComboBox<Object> jcb = new JComboBox<>(cbm);
+		//
+		final ListCellRenderer<?> listCellRenderer = jcb.getRenderer();
+		//
+		final DefaultListableBeanFactory dlbf = Util.cast(DefaultListableBeanFactory.class,
+				ConfigurableApplicationContextUtil
+						.getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
+		//
+		jcb.setRenderer(new ListCellRenderer<Object>() {
+
+			@Override
+			public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
+					final int index, final boolean isSelected, final boolean cellHasFocus) {
+				//
+				final BeanDefinition bd = ConfigurableListableBeanFactoryUtil.getBeanDefinition(dlbf,
+						Util.toString(value));
+				//
+				final String beanClassName = BeanDefinitionUtil.getBeanClassName(bd);
+				//
+				final Class<?> clz = Util.forName(beanClassName);
+				//
+				final Annotation[] as = clz != null ? clz.getAnnotations() : null;
+				//
+				Annotation a = null;
+				//
+				Field f = null;
+				//
+				IValue0<Object> description = null;
+				//
+				for (int i = 0; i < length(as); i++) {
+					//
+					if ((a = ArrayUtils.get(as, i)) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (Objects.equals(a.annotationType(),
+							Util.forName("org.springframework.context.annotation.Description"))
+							&& Proxy.isProxyClass(Util.getClass(a))) {
+						//
+						final InvocationHandler ih = Proxy.getInvocationHandler(a);
+						//
+						final Field[] fs = Util.getDeclaredFields(Util.getClass(ih));
+						//
+						Map<?, ?> map = null;
+						//
+						for (int j = 0; j < length(fs); j++) {
+							//
+							if ((f = ArrayUtils.get(fs, j)) == null) {
+								//
+								continue;
+								//
+							} // if
+								//
+							if ((map = Util.isAssignableFrom(Map.class, Util.getType(f))
+									? Util.cast(Map.class, Narcissus.getObjectField(ih, f))
+									: null) != null
+									&& CollectionUtils.isEqualCollection(Util.keySet(map),
+											Collections.singleton("value"))) {
+								//
+								if (description == null) {
+									//
+									description = Unit.with(Util.get(map, "value"));
+									//
+								} else {
+									//
+									throw new IllegalStateException();
+									//
+								} // if
+									//
+							} // if
+								//
+						} // for
+							//
+					} // if
+						//
+				} // for
+					//
+				return VoiceManagerRubyHtmlPanel.getListCellRendererComponent(((ListCellRenderer) listCellRenderer),
+						list, IValue0Util.getValue0(ObjectUtils.getIfNull(description, () -> Unit.with(beanClassName))),
+						index, isSelected, cellHasFocus);
+				//
+			}
+
+		});
+		//
+		//
+		add(jcb, "wrap");
 		//
 		final double maxJLabelWidth = getWidth(Util.getPreferredSize(jLabel = new JLabel("Text")));
 		//
@@ -177,14 +271,12 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		setPreferredSize(jsp, preferredSize);
 		//
-		final DefaultListableBeanFactory dlbf = Util.cast(DefaultListableBeanFactory.class,
-				ConfigurableApplicationContextUtil
-						.getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
-		//
 		forEach(testAndApply(Objects::nonNull, ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf), Arrays::stream,
 				null), x -> setFailableFunctionFields(applicationContext, dlbf, x, this));
 		//
 		final String[] beanDefinitionNames = ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf);
+		//
+		String beanDefinitionName = null;
 		//
 		String beanClassName = null;
 		//
@@ -192,7 +284,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 			if (!Util.isAssignableFrom(FailableFunction.class,
 					Util.forName(beanClassName = BeanDefinitionUtil.getBeanClassName(ConfigurableListableBeanFactoryUtil
-							.getBeanDefinition(dlbf, ArrayUtils.get(beanDefinitionNames, i)))))
+							.getBeanDefinition(dlbf, beanDefinitionName = ArrayUtils.get(beanDefinitionNames, i)))))
 					|| !Objects.equals(
 							testAndApply(x -> length(x) > 0, getActualTypeArguments(Util.cast(ParameterizedType.class,
 									testAndApply(x -> length(x) > 0, getGenericInterfaces(Util.forName(beanClassName)),
@@ -204,10 +296,19 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				//
 			} // if
 				//
-			cbm.addElement(beanClassName);
+			cbm.addElement(beanDefinitionName);
 			//
 		} // for
 			//
+	}
+
+	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
+			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
+			final boolean cellHasFocus) {
+		//
+		return instance != null ? instance.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+				: null;
+		//
 	}
 
 	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... bs) {

@@ -18,6 +18,7 @@ import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.nodes.TextNodeUtil;
+import org.springframework.context.annotation.Description;
 
 import com.atilika.kuromoji.TokenBase;
 import com.atilika.kuromoji.ipadic.Token;
@@ -29,6 +30,7 @@ import j2html.rendering.FlatHtml;
 import j2html.rendering.HtmlBuilder;
 import j2html.rendering.TagBuilder;
 
+@Description("Offline")
 public class FuriganaHtmlBuilderFailableFunction implements FailableFunction<String, String, IOException> {
 
 	public String apply(final String string) throws IOException {

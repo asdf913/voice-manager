@@ -13,12 +13,14 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.springframework.context.annotation.Description;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
+@Description("Online")
 public class FuriganaOnlineFailableFunction implements FailableFunction<String, String, IOException> {
 
 	private String url = null;

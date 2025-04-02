@@ -1,5 +1,8 @@
 package org.springframework.context.support;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
@@ -31,6 +34,8 @@ import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
@@ -68,7 +73,7 @@ class VoiceManagerRubyHtmlPanelTest {
 	private static Method METHOD_LENGTH, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE, METHOD_GET_GENERIC_TYPE,
 			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_GET_LAYOUT_MANAGER,
 			METHOD_FOR_EACH, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS,
-			METHOD_GET_SYSTEM_CLIPBOARD = null;
+			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -108,6 +113,10 @@ class VoiceManagerRubyHtmlPanelTest {
 		//
 		(METHOD_GET_SYSTEM_CLIPBOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
 		//
+		(METHOD_GET_LIST_CELL_RENDERER_COMPONENT = clz.getDeclaredMethod("getListCellRendererComponent",
+				ListCellRenderer.class, JList.class, Object.class, Integer.TYPE, Boolean.TYPE, Boolean.TYPE))
+				.setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -136,6 +145,14 @@ class VoiceManagerRubyHtmlPanelTest {
 				} else if (Objects.equals(methodName, "getRawType")) {
 					//
 					return rawType;
+					//
+				} // if
+					//
+			} else if (proxy instanceof ListCellRenderer) {
+				//
+				if (Objects.equals(methodName, "getListCellRendererComponent")) {
+					//
+					return null;
 					//
 				} // if
 					//
@@ -254,6 +271,10 @@ class VoiceManagerRubyHtmlPanelTest {
 					} else if (Objects.equals(parameterType, Boolean.TYPE)) {
 						//
 						Util.add(list, Boolean.TRUE);
+						//
+					} else if (Objects.equals(parameterType, Integer.TYPE)) {
+						//
+						Util.add(list, Integer.valueOf(0));
 						//
 					} else {
 						//
@@ -606,6 +627,31 @@ class VoiceManagerRubyHtmlPanelTest {
 				return null;
 			} else if (obj instanceof Clipboard) {
 				return (Clipboard) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetListCellRendererComponent() throws Throwable {
+		//
+		Assertions.assertNull(getListCellRendererComponent(Reflection.newProxy(ListCellRenderer.class, ih), null, null,
+				0, false, false));
+		//
+	}
+
+	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
+			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
+			final boolean cellHasFocus) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_LIST_CELL_RENDERER_COMPONENT.invoke(null, instance, list, value, index,
+					isSelected, cellHasFocus);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Component) {
+				return (Component) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
