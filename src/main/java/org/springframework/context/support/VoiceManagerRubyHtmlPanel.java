@@ -158,10 +158,6 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		final ListCellRenderer<?> listCellRenderer = (jcbImplementation = new JComboBox<>(cbm)).getRenderer();
 		//
-		final DefaultListableBeanFactory dlbf = Util.cast(DefaultListableBeanFactory.class,
-				ConfigurableApplicationContextUtil
-						.getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
-		//
 		jcbImplementation.setRenderer((list, value, index, isSelected, cellHasFocus) -> VoiceManagerRubyHtmlPanel
 				.getListCellRendererComponent(((ListCellRenderer) listCellRenderer), list,
 						TableUtil.get(table, value, "label"), index, isSelected, cellHasFocus));
@@ -205,6 +201,10 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		setSize(preferredSize = Util.getPreferredSize(jsp), width, getHeight(preferredSize));
 		//
 		setPreferredSize(jsp, preferredSize);
+		//
+		final DefaultListableBeanFactory dlbf = Util.cast(DefaultListableBeanFactory.class,
+				ConfigurableApplicationContextUtil
+						.getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
 		//
 		forEach(testAndApply(Objects::nonNull, ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf), Arrays::stream,
 				null), x -> setFailableFunctionFields(applicationContext, dlbf, x, this));
