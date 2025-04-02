@@ -162,12 +162,9 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				ConfigurableApplicationContextUtil
 						.getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
 		//
-		jcbImplementation.setRenderer((list, value, index, isSelected, cellHasFocus) -> {
-			//
-			return VoiceManagerRubyHtmlPanel.getListCellRendererComponent(((ListCellRenderer) listCellRenderer), list,
-					TableUtil.get(table, value, "label"), index, isSelected, cellHasFocus);
-			//
-		});
+		jcbImplementation.setRenderer((list, value, index, isSelected, cellHasFocus) -> VoiceManagerRubyHtmlPanel
+				.getListCellRendererComponent(((ListCellRenderer) listCellRenderer), list,
+						TableUtil.get(table, value, "label"), index, isSelected, cellHasFocus));
 		//
 		jcbImplementation.addItemListener(this);
 		//
