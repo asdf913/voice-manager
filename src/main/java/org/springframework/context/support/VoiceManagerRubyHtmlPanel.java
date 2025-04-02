@@ -170,23 +170,25 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 			IValue0<Object> description = null;
 			//
+			Field[] fs = null;
+			//
+			Map<?, ?> map = null;
+			//
 			for (int i = 0; i < length(as); i++) {
 				//
 				if (Objects.equals(Util.annotationType(a = ArrayUtils.get(as, i)),
 						Util.forName("org.springframework.context.annotation.Description"))
 						&& Proxy.isProxyClass(Util.getClass(a))) {
 					//
-					final Field[] fs = Util.getDeclaredFields(Util.getClass(ih = Proxy.getInvocationHandler(a)));
-					//
-					Map<?, ?> map = null;
+					fs = Util.getDeclaredFields(Util.getClass(ih = Proxy.getInvocationHandler(a)));
 					//
 					for (int j = 0; j < length(fs); j++) {
 						//
-						if ((map = Util.isAssignableFrom(Map.class, Util.getType(f = ArrayUtils.get(fs, j)))
+						if (and(map = Util.isAssignableFrom(Map.class, Util.getType(f = ArrayUtils.get(fs, j)))
 								? Util.cast(Map.class, Narcissus.getObjectField(ih, f))
-								: null) != null
-								&& CollectionUtils.isEqualCollection(Util.keySet(map),
-										Collections.singleton("value"))) {
+								: null, Objects::nonNull,
+								x -> CollectionUtils.isEqualCollection(Util.keySet(x),
+										Collections.singleton("value")))) {
 							//
 							if (description == null) {
 								//
@@ -280,6 +282,10 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 		} // for
 			//
+	}
+
+	private static <T> boolean and(final T value, final Predicate<T> a, final Predicate<T> b) {
+		return Util.test(a, value) && Util.test(b, value);
 	}
 
 	@Nullable
