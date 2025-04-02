@@ -146,14 +146,11 @@ class VoiceManagerRubyHtmlPanelTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof ListCellRenderer) {
+			} else if (proxy instanceof ListCellRenderer
+					&& Objects.equals(methodName, "getListCellRendererComponent")) {
 				//
-				if (Objects.equals(methodName, "getListCellRendererComponent")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
