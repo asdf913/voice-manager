@@ -63,6 +63,7 @@ import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 import org.meeuw.functional.QuadriFunction;
 import org.meeuw.functional.TriConsumer;
+import org.meeuw.functional.TriConsumerUtil;
 import org.meeuw.functional.TriPredicate;
 import org.meeuw.functional.TriPredicateUtil;
 
@@ -1356,8 +1357,8 @@ public class OtoYakuNoHeyaYomikataJitenIroMeiYomikataJitenMultimapFactoryBean
 
 	private static <A, B, C> void testAndAccept(final TriPredicate<A, B, C> predicate, final A a, final B b, final C c,
 			@Nullable final TriConsumer<A, B, C> consumer) {
-		if (TriPredicateUtil.test(predicate, a, b, c) && consumer != null) {
-			consumer.accept(a, b, c);
+		if (TriPredicateUtil.test(predicate, a, b, c)) {
+			TriConsumerUtil.accept(consumer, a, b, c);
 		}
 	}
 

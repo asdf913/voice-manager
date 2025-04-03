@@ -43,6 +43,7 @@ import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.javatuples.valueintf.IValue1Util;
 import org.meeuw.functional.TriConsumer;
+import org.meeuw.functional.TriConsumerUtil;
 import org.meeuw.functional.TriPredicate;
 import org.meeuw.functional.TriPredicateUtil;
 import org.springframework.core.io.Resource;
@@ -468,8 +469,8 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 
 	private static <A, B, C> void testAndAccept(final TriPredicate<A, B, C> predicate, final A a, final B b,
 			@Nullable final C c, @Nullable final TriConsumer<A, B, C> consumer) {
-		if (TriPredicateUtil.test(predicate, a, b, c) && consumer != null) {
-			consumer.accept(a, b, c);
+		if (TriPredicateUtil.test(predicate, a, b, c)) {
+			TriConsumerUtil.accept(consumer, a, b, c);
 		}
 	}
 

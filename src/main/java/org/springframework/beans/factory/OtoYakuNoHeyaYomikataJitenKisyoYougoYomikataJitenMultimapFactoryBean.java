@@ -31,6 +31,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.meeuw.functional.TriConsumer;
+import org.meeuw.functional.TriConsumerUtil;
 import org.meeuw.functional.TriPredicate;
 import org.meeuw.functional.TriPredicateUtil;
 import org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenLinkListFactoryBean.Link;
@@ -408,8 +409,8 @@ public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBea
 
 	private static <T, U, V> void testAndAccept(final TriPredicate<T, U, V> predicate, final T t, @Nullable final U u,
 			@Nullable final V v, @Nullable final TriConsumer<T, U, V> consumer) {
-		if (TriPredicateUtil.test(predicate, t, u, v) && consumer != null) {
-			consumer.accept(t, u, v);
+		if (TriPredicateUtil.test(predicate, t, u, v)) {
+			TriConsumerUtil.accept(consumer, t, u, v);
 		}
 	}
 

@@ -75,6 +75,7 @@ import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.TriConsumer;
+import org.meeuw.functional.TriConsumerUtil;
 import org.meeuw.functional.TriPredicate;
 import org.meeuw.functional.TriPredicateUtil;
 import org.slf4j.Logger;
@@ -451,8 +452,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 
 	private static <T, U, V> void testAndAccept(final TriPredicate<T, U, V> predicate, final T t, @Nullable final U u,
 			final V v, @Nullable final TriConsumer<T, U, V> consumer) {
-		if (TriPredicateUtil.test(predicate, t, u, v) && consumer != null) {
-			consumer.accept(t, u, v);
+		if (TriPredicateUtil.test(predicate, t, u, v)) {
+			TriConsumerUtil.accept(consumer, t, u, v);
 		}
 	}
 
