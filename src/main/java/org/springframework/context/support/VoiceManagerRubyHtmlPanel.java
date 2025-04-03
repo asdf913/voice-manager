@@ -294,6 +294,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static Map<String, Object> createMapByTemplate(final Object instance) {
 		//
 		Map<String, Object> map = null;
