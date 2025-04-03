@@ -76,7 +76,7 @@ class VoiceManagerRubyHtmlPanelTest {
 			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_GET_LAYOUT_MANAGER,
 			METHOD_FOR_EACH, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS,
 			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_AND, METHOD_GET_DESCRIPTION,
-			METHOD_GET_SELECTED_ITEM = null;
+			METHOD_GET_SELECTED_ITEM, METHOD_SET_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -126,6 +126,8 @@ class VoiceManagerRubyHtmlPanelTest {
 		//
 		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", JComboBox.class)).setAccessible(true);
 		//
+		(METHOD_SET_VALUE = clz.getDeclaredMethod("setValue", Entry.class, Object.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -157,15 +159,38 @@ class VoiceManagerRubyHtmlPanelTest {
 					//
 				} // if
 					//
-			} else if (Boolean.logicalOr(
+			} else if (or(
 					proxy instanceof ListCellRenderer && Objects.equals(methodName, "getListCellRendererComponent"),
-					proxy instanceof ComboBoxModel && Objects.equals(methodName, "getSelectedItem"))) {
+					proxy instanceof ComboBoxModel && Objects.equals(methodName, "getSelectedItem"),
+					proxy instanceof Entry && Objects.equals(methodName, "setValue"))) {
 				//
 				return null;
 				//
 			} // if
 				//
 			throw new Throwable(methodName);
+			//
+		}
+
+		private static boolean or(final boolean a, final boolean b, final boolean... bs) {
+			//
+			if (a || b) {
+				//
+				return true;
+				//
+			} // if
+				//
+			for (int i = 0; bs != null && i < bs.length; i++) {
+				//
+				if (bs[i]) {
+					//
+					return true;
+					//
+				} // if
+					//
+			} // for
+				//
+			return false;
 			//
 		}
 
@@ -754,6 +779,23 @@ class VoiceManagerRubyHtmlPanelTest {
 	private static Object getSelectedItem(final JComboBox<?> instance) throws Throwable {
 		try {
 			return METHOD_GET_SELECTED_ITEM.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetValue() {
+		//
+		final Entry<?, ?> entry = Reflection.newProxy(Entry.class, ih);
+		//
+		Assertions.assertDoesNotThrow(() -> setValue(entry, null));
+		//
+	}
+
+	private static <V> void setValue(final Entry<?, V> instance, final V value) throws Throwable {
+		try {
+			METHOD_SET_VALUE.invoke(null, instance, value);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -326,19 +326,13 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 					//
 					for (final Entry<String, Object> entry : entrySet) {
 						//
-						if (entry == null) {
-							//
-							continue;
-							//
-						} // if
-							//
 						if ((size = IterableUtils.size(fs = Util.toList(Util.filter(
 								testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)),
 										Arrays::stream, null),
 								x -> Objects.equals(Util.getName(x), Util.getKey(entry)))))) == 1
 								&& (f = IterableUtils.get(fs, 0)) != null) {
 							//
-							entry.setValue(Narcissus.getField(instance, f));
+							setValue(entry, Narcissus.getField(instance, f));
 							//
 						} else if (size > 1) {
 							//
@@ -361,6 +355,12 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 		} // for
 			//
+	}
+
+	private static <V> void setValue(final Entry<?, V> instance, final V value) {
+		if (instance != null) {
+			instance.setValue(value);
+		}
 	}
 
 	@Nullable
