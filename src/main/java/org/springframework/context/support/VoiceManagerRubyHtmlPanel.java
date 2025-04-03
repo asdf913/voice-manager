@@ -24,6 +24,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
@@ -322,28 +323,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 						//
 				} // if
 					//
-				if (Util.iterator(entrySet = Util.entrySet(map)) != null) {
-					//
-					for (final Entry<String, Object> entry : entrySet) {
-						//
-						if ((size = IterableUtils.size(fs = Util.toList(Util.filter(
-								testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)),
-										Arrays::stream, null),
-								x -> Objects.equals(Util.getName(x), Util.getKey(entry)))))) == 1
-								&& (f = IterableUtils.get(fs, 0)) != null) {
-							//
-							setValue(entry, Narcissus.getField(instance, f));
-							//
-						} else if (size > 1) {
-							//
-							throw new IllegalStateException();
-							//
-						} // if
-							//
-					} // for
-						//
-				} // if
-					//
+				setFieldValues(instance, map);
+				//
 				TemplateUtil.process(template, map, writer);
 				//
 				TableUtil.put(table = ObjectUtils.getIfNull(table, HashBasedTable::create), beanDefinitionName, "label",
@@ -357,10 +338,75 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 	}
 
-	private static <V> void setValue(final Entry<?, V> instance, final V value) {
-		if (instance != null) {
-			instance.setValue(value);
-		}
+	private static <K, V> void setFieldValues(final Object instance, final Map<K, V> map) {
+		//
+		final Iterable<Entry<K, V>> entrySet = Util.entrySet(map);
+		//
+		if (Util.iterator(entrySet) != null) {
+			//
+			int size;
+			//
+			Iterable<Field> fs = null;
+			//
+			Field f = null;
+			//
+			Method setValue = null;
+			//
+			List<Method> ms = null;
+			//
+			for (final Entry<K, V> entry : entrySet) {
+				//
+				if ((size = IterableUtils
+						.size(fs = Util.toList(Util.filter(
+								testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)),
+										Arrays::stream, null),
+								x -> Objects.equals(Util.getName(x), Util.getKey(entry)))))) == 1
+						&& (f = IterableUtils.get(fs, 0)) != null) {
+					//
+					if (setValue == null) {
+						//
+						if ((size = IterableUtils.size(ms = Util.toList(Util.filter(
+								testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class), Arrays::stream,
+										null),
+								x -> Objects.equals(Util.getName(x), "setValue")
+										&& Arrays.equals(x != null ? x.getParameterTypes() : null,
+												new Class<?>[] { Object.class }))))) == 1) {
+							//
+							setValue = IterableUtils.get(ms, 0);
+							//
+						} else if (size > 1) {
+							//
+							throw new IllegalStateException();
+							//
+						} // if
+							//
+					} // if
+						//
+					if (entry != null && setValue != null) {
+						//
+						if (Util.isStatic(f)) {
+							//
+							Narcissus.invokeMethod(entry, setValue, Narcissus.getStaticField(f));
+							//
+						} else if (entry != null) {
+							//
+							Narcissus.invokeMethod(entry, setValue, Narcissus.getField(instance, f));
+							//
+						} // if
+							//
+					} // if
+						//
+				} else if (size > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+
 	}
 
 	@Nullable

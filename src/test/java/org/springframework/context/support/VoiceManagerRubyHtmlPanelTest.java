@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -76,7 +78,7 @@ class VoiceManagerRubyHtmlPanelTest {
 			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_GET_LAYOUT_MANAGER,
 			METHOD_FOR_EACH, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS,
 			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_AND, METHOD_GET_DESCRIPTION,
-			METHOD_GET_SELECTED_ITEM, METHOD_SET_VALUE = null;
+			METHOD_GET_SELECTED_ITEM, METHOD_SET_FIELD_VALUES = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -126,7 +128,8 @@ class VoiceManagerRubyHtmlPanelTest {
 		//
 		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", JComboBox.class)).setAccessible(true);
 		//
-		(METHOD_SET_VALUE = clz.getDeclaredMethod("setValue", Entry.class, Object.class)).setAccessible(true);
+		(METHOD_SET_FIELD_VALUES = clz.getDeclaredMethod("setFieldValues", Object.class, Map.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -785,17 +788,29 @@ class VoiceManagerRubyHtmlPanelTest {
 	}
 
 	@Test
-	void testSetValue() {
+	void testGetFieldValues() throws IllegalAccessException {
 		//
-		final Entry<?, ?> entry = Reflection.newProxy(Entry.class, ih);
+		Assertions.assertDoesNotThrow(() -> setFieldValues(null, Collections.singletonMap(null, null)));
 		//
-		Assertions.assertDoesNotThrow(() -> setValue(entry, null));
+		final Map<?, ?> m1 = new LinkedHashMap<>(Collections.singletonMap("LOG", null));
+		//
+		Assertions.assertDoesNotThrow(() -> setFieldValues(instance, m1));
+		//
+		Assertions.assertEquals(
+				Collections.singletonMap("LOG", FieldUtils.readStaticField(Util.getClass(instance), "LOG", true)), m1);
+		//
+		final Map<?, ?> m2 = new LinkedHashMap<>(Collections.singletonMap("applicationContext", null));
+		//
+		Assertions.assertDoesNotThrow(() -> setFieldValues(instance, m2));
+		//
+		Assertions.assertEquals(Collections.singletonMap("applicationContext",
+				FieldUtils.readField(instance, "applicationContext", true)), m2);
 		//
 	}
 
-	private static <V> void setValue(final Entry<?, V> instance, final V value) throws Throwable {
+	private static <K, V> void setFieldValues(final Object instance, final Map<K, V> map) throws Throwable {
 		try {
-			METHOD_SET_VALUE.invoke(null, instance, value);
+			METHOD_SET_FIELD_VALUES.invoke(null, instance, map);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
