@@ -66,6 +66,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.commons.validator.routines.UrlValidatorUtil;
 import org.javatuples.Unit;
@@ -381,8 +382,10 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 						//
 					if (Boolean.logicalAnd(entry != null, setValue != null)) {
 						//
-						Narcissus.invokeMethod(entry, setValue, testAndApply((a, b) -> Util.isStatic(b), instance, f,
-								(a, b) -> Narcissus.getStaticField(b), (a, b) -> Narcissus.getField(a, b)));
+						Narcissus.invokeMethod(entry, setValue,
+								testAndApply(x -> Util.isStatic(Util.getValue(x)), Pair.of(instance, f),
+										x -> Narcissus.getStaticField(Util.getValue(x)),
+										x -> Narcissus.getField(Util.getKey(x), Util.getValue(x))));
 						//
 					} // if
 						//
