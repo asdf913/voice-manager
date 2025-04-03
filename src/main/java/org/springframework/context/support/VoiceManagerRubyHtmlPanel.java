@@ -305,7 +305,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		int size = IterableUtils.size(fs);
 		//
-		Field f = size == 1 ? IterableUtils.get(fs, 0) : null;
+		Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
 		Object object = null;
 		//
