@@ -367,8 +367,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 						if ((size = IterableUtils.size(ms = Util.toList(Util.filter(
 								testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class), Arrays::stream,
 										null),
-								x -> Objects.equals(Util.getName(x), "setValue") && Arrays.equals(getParameterTypes(x),
-										new Class<?>[] { Object.class }))))) == 1) {
+								x -> Boolean.logicalAnd(Objects.equals(Util.getName(x), "setValue"), Arrays
+										.equals(getParameterTypes(x), new Class<?>[] { Object.class })))))) == 1) {
 							//
 							setValue = IterableUtils.get(ms, 0);
 							//
