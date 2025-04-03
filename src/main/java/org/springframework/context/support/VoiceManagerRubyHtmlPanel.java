@@ -336,7 +336,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 	}
 
-	private static <K, V> void setFieldValues(final Object instance, final Map<K, V> map) {
+	private static <K, V> void setFieldValues(final Object instance, @Nullable final Map<K, V> map) {
 		//
 		final Iterable<Entry<K, V>> entrySet = Util.entrySet(map);
 		//
