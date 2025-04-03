@@ -379,7 +379,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 							//
 					} // if
 						//
-					if (entry != null && setValue != null) {
+					if (Boolean.logicalAnd(entry != null, setValue != null)) {
 						//
 						Narcissus.invokeMethod(entry, setValue, testAndApply((a, b) -> Util.isStatic(b), instance, f,
 								(a, b) -> Narcissus.getStaticField(b), (a, b) -> Narcissus.getField(a, b)));
