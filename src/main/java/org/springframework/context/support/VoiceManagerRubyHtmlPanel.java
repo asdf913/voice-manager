@@ -284,45 +284,43 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 			try (final Writer writer = new StringWriter()) {
 				//
-				if ((os = Util.cast(Object[].class,
+				os = Util.cast(Object[].class,
 						FieldUtils.readField(FieldUtils.readDeclaredField(
 								template = ConfigurationUtil.getTemplate(configuration, beanDefinitionName),
-								"rootElement", true), "childBuffer", true))) != null) {
+								"rootElement", true), "childBuffer", true));
+				//
+				for (int j = 0; j < length(os); j++) {
 					//
-					for (int j = 0; j < length(os); j++) {
+					if ((size = IterableUtils
+							.size(fs = Util
+									.toList(Util.filter(
+											testAndApply(Objects::nonNull,
+													Util.getDeclaredFields(
+															Util.getClass(object = ArrayUtils.get(os, j))),
+													Arrays::stream, null),
+											x -> Objects.equals(Util.getName(x), "expression"))))) == 1
+							&& (f = IterableUtils.get(fs,
+									0)) != null
+							&& (size = IterableUtils
+									.size(fs = Util
+											.toList(Util.filter(
+													testAndApply(Objects::nonNull,
+															Util.getDeclaredFields(Util
+																	.getClass(object = Narcissus.getField(object, f))),
+															Arrays::stream, null),
+													x -> Objects.equals(Util.getName(x), "lho"))))) == 1
+							&& Objects.equals("freemarker.core.Identifier", Util.getName(
+									Util.getClass(object = Narcissus.getField(object, IterableUtils.get(fs, 0)))))) {
 						//
-						if ((size = IterableUtils
-								.size(fs = Util
-										.toList(Util.filter(
-												testAndApply(Objects::nonNull,
-														Util.getDeclaredFields(
-																Util.getClass(object = ArrayUtils.get(os, j))),
-														Arrays::stream, null),
-												x -> Objects.equals(Util.getName(x), "expression"))))) == 1
-								&& (f = IterableUtils.get(fs,
-										0)) != null
-								&& (size = IterableUtils
-										.size(fs = Util
-												.toList(Util.filter(
-														testAndApply(Objects::nonNull,
-																Util.getDeclaredFields(Util.getClass(
-																		object = Narcissus.getField(object, f))),
-																Arrays::stream, null),
-														x -> Objects.equals(Util.getName(x), "lho"))))) == 1
-								&& Objects.equals("freemarker.core.Identifier", Util.getName(Util
-										.getClass(object = Narcissus.getField(object, IterableUtils.get(fs, 0)))))) {
-							//
-							Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Util.toString(object), null);
-							//
-						} else if (size > 1) {
-							//
-							throw new IllegalStateException();
-							//
-						} // if
-							//
-					} // for
+						Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Util.toString(object), null);
 						//
-				} // if
+					} else if (size > 1) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+				} // for
 					//
 				setFieldValues(instance, map);
 				//
