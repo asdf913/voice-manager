@@ -243,8 +243,6 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		Map<String, Object> map = null;
 		//
-		Iterable<Entry<String, Object>> entrySet = null;
-		//
 		for (int i = 0; i < length(beanDefinitionNames); i++) {
 			//
 			if (!Util.isAssignableFrom(FailableFunction.class,
