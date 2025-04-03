@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -56,6 +55,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.Consumers;
+import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.javatuples.valueintf.IValue0;
@@ -70,6 +70,10 @@ import org.springframework.beans.factory.support.DefaultSingletonBeanRegistry;
 import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 
+import freemarker.cache.StringTemplateLoader;
+import freemarker.cache.StringTemplateLoaderUtil;
+import freemarker.template.Configuration;
+import freemarker.template.ConfigurationUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyUtil;
@@ -80,7 +84,8 @@ class VoiceManagerRubyHtmlPanelTest {
 			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_GET_LAYOUT_MANAGER,
 			METHOD_FOR_EACH, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS,
 			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_AND, METHOD_GET_DESCRIPTION,
-			METHOD_GET_SELECTED_ITEM, METHOD_SET_FIELD_VALUES, METHOD_TEST_AND_ACCEPT = null;
+			METHOD_GET_SELECTED_ITEM, METHOD_SET_FIELD_VALUES, METHOD_TEST_AND_ACCEPT,
+			METHOD_CREATE_MAP_BY_TEMPLATE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -103,7 +108,7 @@ class VoiceManagerRubyHtmlPanelTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY5 = clz.getDeclaredMethod("testAndApply", BiPredicate.class, Object.class, Object.class,
-				BiFunction.class, BiFunction.class)).setAccessible(true);
+				FailableBiFunction.class, FailableBiFunction.class)).setAccessible(true);
 		//
 		(METHOD_GET_LAYOUT_MANAGER = clz.getDeclaredMethod("getLayoutManager", Object.class, Iterable.class))
 				.setAccessible(true);
@@ -135,6 +140,9 @@ class VoiceManagerRubyHtmlPanelTest {
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", TriPredicate.class, Object.class, Object.class,
 				Object.class, TriConsumer.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_MAP_BY_TEMPLATE = clz.getDeclaredMethod("createMapByTemplate", Object.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -563,8 +571,8 @@ class VoiceManagerRubyHtmlPanelTest {
 	}
 
 	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
-			final U u, final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse)
-			throws Throwable {
+			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
+			final FailableBiFunction<T, U, R, E> functionFalse) throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY5.invoke(null, predicate, t, u, functionTrue, functionFalse);
 		} catch (final InvocationTargetException e) {
@@ -832,6 +840,49 @@ class VoiceManagerRubyHtmlPanelTest {
 			final TriConsumer<T, U, V> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, t, u, v, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testcCreateMapByTemplate() throws Throwable {
+		//
+		Assertions.assertEquals(null, createMapByTemplate(""));
+		//
+		final Configuration configuration = new Configuration(Configuration.getVersion());
+		//
+		final StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
+		//
+		configuration.setTemplateLoader(stringTemplateLoader);
+		//
+		final String templateName = "";
+		//
+		final String variableName = "b";
+		//
+		StringTemplateLoaderUtil.putTemplate(stringTemplateLoader, templateName,
+				String.format("a ${%1$s}", variableName));
+		//
+		final Map<?, ?> map = Collections.singletonMap(variableName, null);
+		//
+		Assertions.assertEquals(map, createMapByTemplate(ConfigurationUtil.getTemplate(configuration, templateName)));
+		//
+		StringTemplateLoaderUtil.putTemplate(stringTemplateLoader, templateName,
+				String.format("a ${%1$s!''}", variableName));
+		//
+		Assertions.assertEquals(map, createMapByTemplate(ConfigurationUtil.getTemplate(configuration, templateName)));
+		//
+	}
+
+	private static Map<String, Object> createMapByTemplate(final Object instance) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MAP_BY_TEMPLATE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Map) {
+				return (Map) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -63,6 +63,8 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.function.FailableBiFunction;
+import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -228,21 +230,13 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		IValue0<Object> description = null;
 		//
-		Object object, instance = null;
+		Object instance = null;
 		//
 		Configuration configuration = null;
 		//
 		StringTemplateLoader stringTemplateLoader = null;
 		//
 		Template template = null;
-		//
-		Object[] os = null;
-		//
-		List<Field> fs = null;
-		//
-		Field f = null;
-		//
-		int size;
 		//
 		Map<String, Object> map = null;
 		//
@@ -284,45 +278,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 			try (final Writer writer = new StringWriter()) {
 				//
-				os = Util.cast(Object[].class,
-						FieldUtils.readField(FieldUtils.readDeclaredField(
-								template = ConfigurationUtil.getTemplate(configuration, beanDefinitionName),
-								"rootElement", true), "childBuffer", true));
-				//
-				for (int j = 0; j < length(os); j++) {
-					//
-					if ((size = IterableUtils
-							.size(fs = Util
-									.toList(Util.filter(
-											testAndApply(Objects::nonNull,
-													Util.getDeclaredFields(
-															Util.getClass(object = ArrayUtils.get(os, j))),
-													Arrays::stream, null),
-											x -> Objects.equals(Util.getName(x), "expression"))))) == 1
-							&& (f = IterableUtils.get(fs,
-									0)) != null
-							&& (size = IterableUtils
-									.size(fs = Util
-											.toList(Util.filter(
-													testAndApply(Objects::nonNull,
-															Util.getDeclaredFields(Util
-																	.getClass(object = Narcissus.getField(object, f))),
-															Arrays::stream, null),
-													x -> Objects.equals(Util.getName(x), "lho"))))) == 1
-							&& Objects.equals("freemarker.core.Identifier", Util.getName(
-									Util.getClass(object = Narcissus.getField(object, IterableUtils.get(fs, 0)))))) {
-						//
-						Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Util.toString(object), null);
-						//
-					} else if (size > 1) {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-				} // for
-					//
-				setFieldValues(instance, map);
+				setFieldValues(instance, map = createMapByTemplate(
+						template = ConfigurationUtil.getTemplate(configuration, beanDefinitionName)));
 				//
 				TemplateUtil.process(template, map, writer);
 				//
@@ -335,6 +292,89 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 		} // for
 			//
+	}
+
+	private static Map<String, Object> createMapByTemplate(final Object instance) throws IllegalAccessException {
+		//
+		Map<String, Object> map = null;
+		//
+		Iterable<Field> fs = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)), Arrays::stream, null),
+				x -> Objects.equals(Util.getName(x), "rootElement")));
+		//
+		int size = IterableUtils.size(fs);
+		//
+		Field f = size == 1 ? IterableUtils.get(fs, 0) : null;
+		//
+		Object object = null;
+		//
+		Object[] os = null;
+		//
+		if (f != null) {
+			//
+			if ((size = IterableUtils.size(fs = Util.toList(Util.filter(
+					Util.stream(FieldUtils.getAllFieldsList(Util.getClass(object = Narcissus.getField(instance, f)))),
+					x -> Objects.equals(Util.getName(x), "childBuffer"))))) == 1) {
+				//
+				os = Util.cast(Object[].class, Narcissus.getField(object, IterableUtils.get(fs, 0)));
+				//
+			} else if (size > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+		} else if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		String name = null;
+		//
+		for (int j = 0; j < length(os); j++) {
+			//
+			if ((f = testAndApply(x -> IterableUtils.size(x) == 1,
+					fs = Util.toList(Util.filter(testAndApply(Objects::nonNull,
+							Util.getDeclaredFields(Util.getClass(object = ArrayUtils.get(os, j))), Arrays::stream,
+							null), x -> Objects.equals(Util.getName(x), "expression"))),
+					x -> IterableUtils.get(x, 0), null)) != null) {
+				//
+				if (Objects.equals(name = Util.getName(Util.getClass(object = Narcissus.getField(object, f))),
+						"freemarker.core.Identifier")) {
+					//
+					Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Util.toString(object), null);
+					//
+				} else if (Objects.equals(name, "freemarker.core.DefaultToExpression")) {
+					//
+					if ((f = testAndApply(x -> IterableUtils.size(x) == 1,
+							fs = Util.toList(Util.filter(testAndApply(Objects::nonNull,
+									Util.getDeclaredFields(Util.getClass(object)), Arrays::stream, null),
+									x -> Objects.equals(Util.getName(x), "lho"))),
+							x -> IterableUtils.get(x, 0), null)) != null
+							&& Objects.equals("freemarker.core.Identifier",
+									Util.getName(Util.getClass(object = Narcissus.getField(object, f))))) {
+						//
+						Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Util.toString(object), null);
+						//
+					} else if (IterableUtils.size(fs) > 1) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+				} // if
+					//
+			} else if (IterableUtils.size(fs) > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+		} // for
+			//
+		return map;
+		//
 	}
 
 	private static <K, V> void setFieldValues(final Object instance, @Nullable final Map<K, V> map) {
@@ -606,9 +646,11 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 	}
 
 	@Nullable
-	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
-			final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse) {
-		return test(predicate, t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
+	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
+			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
+		return test(predicate, t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
+				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
 
 	@Nullable
