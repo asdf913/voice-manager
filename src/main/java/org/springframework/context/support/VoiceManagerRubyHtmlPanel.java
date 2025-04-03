@@ -400,8 +400,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 	}
 
-	private static <T, U, V> void testAndAccept(final TriPredicate<T, U, V> predicate, final T t, final U u, final V v,
-			final TriConsumer<T, U, V> consumer) {
+	private static <T, U, V> void testAndAccept(final TriPredicate<T, U, V> predicate, final T t, @Nullable final U u,
+			final V v, final TriConsumer<T, U, V> consumer) {
 		if (TriPredicateUtil.test(predicate, t, u, v) && consumer != null) {
 			consumer.accept(t, u, v);
 		}
