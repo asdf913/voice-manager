@@ -73,6 +73,7 @@ import org.apache.commons.validator.routines.UrlValidatorUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.TriConsumer;
 import org.meeuw.functional.TriPredicate;
 import org.meeuw.functional.TriPredicateUtil;
@@ -307,30 +308,32 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
+		if (f == null) {
+			//
+			return map;
+			//
+		} // if
+			//
+		testAndRunThrows(size > 1, () -> {
+			throw new IllegalStateException();
+		});
+		//
 		Object object = null;
 		//
 		Object[] os = null;
 		//
-		if (f != null) {
+		if ((size = IterableUtils.size(fs = Util.toList(Util.filter(
+				Util.stream(FieldUtils.getAllFieldsList(Util.getClass(object = Narcissus.getField(instance, f)))),
+				x -> Objects.equals(Util.getName(x), "childBuffer"))))) == 1) {
 			//
-			if ((size = IterableUtils.size(fs = Util.toList(Util.filter(
-					Util.stream(FieldUtils.getAllFieldsList(Util.getClass(object = Narcissus.getField(instance, f)))),
-					x -> Objects.equals(Util.getName(x), "childBuffer"))))) == 1) {
-				//
-				os = Util.cast(Object[].class, Narcissus.getField(object, IterableUtils.get(fs, 0)));
-				//
-			} else if (size > 1) {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
-		} else if (size > 1) {
-			//
-			throw new IllegalStateException();
+			os = Util.cast(Object[].class, Narcissus.getField(object, IterableUtils.get(fs, 0)));
 			//
 		} // if
 			//
+		testAndRunThrows(size > 1, () -> {
+			throw new IllegalStateException();
+		});
+		//
 		String name = null;
 		//
 		for (int j = 0; j < length(os); j++) {
@@ -358,24 +361,31 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 						//
 						Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Util.toString(object), null);
 						//
-					} else if (IterableUtils.size(fs) > 1) {
-						//
-						throw new IllegalStateException();
-						//
 					} // if
 						//
+					testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+						throw new IllegalStateException();
+					});
+					//
 				} // if
 					//
-			} else if (IterableUtils.size(fs) > 1) {
-				//
-				throw new IllegalStateException();
-				//
 			} // if
 				//
+			testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+				throw new IllegalStateException();
+			});
+			//
 		} // for
 			//
 		return map;
 		//
+	}
+
+	private static <E extends Throwable> void testAndRunThrows(final boolean b,
+			final ThrowingRunnable<E> throwingRunnable) throws E {
+		if (b && throwingRunnable != null) {
+			throwingRunnable.runThrows();
+		}
 	}
 
 	private static <K, V> void setFieldValues(final Object instance, @Nullable final Map<K, V> map) {

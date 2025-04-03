@@ -63,6 +63,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.TriConsumer;
 import org.meeuw.functional.TriPredicate;
 import org.springframework.beans.factory.support.DefaultSingletonBeanRegistry;
@@ -84,8 +85,8 @@ class VoiceManagerRubyHtmlPanelTest {
 			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_GET_LAYOUT_MANAGER,
 			METHOD_FOR_EACH, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS,
 			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_AND, METHOD_GET_DESCRIPTION,
-			METHOD_GET_SELECTED_ITEM, METHOD_SET_FIELD_VALUES, METHOD_TEST_AND_ACCEPT,
-			METHOD_CREATE_MAP_BY_TEMPLATE = null;
+			METHOD_GET_SELECTED_ITEM, METHOD_SET_FIELD_VALUES, METHOD_TEST_AND_ACCEPT, METHOD_CREATE_MAP_BY_TEMPLATE,
+			METHOD_TEST_AND_RUN_THROWS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -142,6 +143,9 @@ class VoiceManagerRubyHtmlPanelTest {
 				Object.class, TriConsumer.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_MAP_BY_TEMPLATE = clz.getDeclaredMethod("createMapByTemplate", Object.class))
+				.setAccessible(true);
+		//
+		(METHOD_TEST_AND_RUN_THROWS = clz.getDeclaredMethod("testAndRunThrows", Boolean.TYPE, ThrowingRunnable.class))
 				.setAccessible(true);
 		//
 	}
@@ -883,6 +887,23 @@ class VoiceManagerRubyHtmlPanelTest {
 				return (Map) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndRunThrows() {
+		//
+		Assertions.assertDoesNotThrow(() -> testAndRunThrows(true, () -> {
+		}));
+		//
+	}
+
+	private static <E extends Throwable> void testAndRunThrows(final boolean b,
+			final ThrowingRunnable<E> throwingRunnable) throws Throwable {
+		try {
+			METHOD_TEST_AND_RUN_THROWS.invoke(null, b, throwingRunnable);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
