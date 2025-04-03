@@ -382,7 +382,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 	}
 
 	private static <E extends Throwable> void testAndRunThrows(final boolean b,
-			final ThrowingRunnable<E> throwingRunnable) throws E {
+			@Nullable final ThrowingRunnable<E> throwingRunnable) throws E {
 		if (b && throwingRunnable != null) {
 			throwingRunnable.runThrows();
 		}
