@@ -71,6 +71,9 @@ import org.apache.commons.validator.routines.UrlValidatorUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.meeuw.functional.TriConsumer;
+import org.meeuw.functional.TriPredicate;
+import org.meeuw.functional.TriPredicateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -382,13 +385,11 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 						//
 				} // if
 					//
-				if (Boolean.logicalAnd(entry != null, setValue != null)) {
-					//
-					Narcissus.invokeMethod(entry, setValue, new Object[] { testAndApply((a, b) -> Util.isStatic(b),
-							instance, f, (a, b) -> Narcissus.getStaticField(b), Narcissus::getField) });
-					//
-				} // if
-					//
+				testAndAccept((a, b, c) -> Boolean.logicalAnd(a != null, b != null), entry, setValue,
+						new Object[] { testAndApply((a, b) -> Util.isStatic(b), instance, f,
+								(a, b) -> Narcissus.getStaticField(b), Narcissus::getField) },
+						(a, b, c) -> Narcissus.invokeMethod(a, b, c));
+				//
 			} else if (size > 1) {
 				//
 				throw new IllegalStateException();
@@ -397,6 +398,13 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				//
 		} // for
 			//
+	}
+
+	private static <T, U, V> void testAndAccept(final TriPredicate<T, U, V> predicate, final T t, final U u, final V v,
+			final TriConsumer<T, U, V> consumer) {
+		if (TriPredicateUtil.test(predicate, t, u, v) && consumer != null) {
+			consumer.accept(t, u, v);
+		}
 	}
 
 	@Nullable

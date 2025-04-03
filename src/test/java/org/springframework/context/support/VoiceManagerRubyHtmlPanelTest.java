@@ -63,6 +63,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.meeuw.functional.TriConsumer;
+import org.meeuw.functional.TriPredicate;
 import org.springframework.beans.factory.support.DefaultSingletonBeanRegistry;
 
 import com.google.common.base.Predicates;
@@ -78,7 +80,7 @@ class VoiceManagerRubyHtmlPanelTest {
 			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_GET_LAYOUT_MANAGER,
 			METHOD_FOR_EACH, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS,
 			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_AND, METHOD_GET_DESCRIPTION,
-			METHOD_GET_SELECTED_ITEM, METHOD_SET_FIELD_VALUES = null;
+			METHOD_GET_SELECTED_ITEM, METHOD_SET_FIELD_VALUES, METHOD_TEST_AND_ACCEPT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -130,6 +132,9 @@ class VoiceManagerRubyHtmlPanelTest {
 		//
 		(METHOD_SET_FIELD_VALUES = clz.getDeclaredMethod("setFieldValues", Object.class, Map.class))
 				.setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", TriPredicate.class, Object.class, Object.class,
+				Object.class, TriConsumer.class)).setAccessible(true);
 		//
 	}
 
@@ -811,6 +816,22 @@ class VoiceManagerRubyHtmlPanelTest {
 	private static <K, V> void setFieldValues(final Object instance, final Map<K, V> map) throws Throwable {
 		try {
 			METHOD_SET_FIELD_VALUES.invoke(null, instance, map);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndAccept() {
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept((a, b, c) -> true, null, null, null, null));
+		//
+	}
+
+	private static <T, U, V> void testAndAccept(final TriPredicate<T, U, V> predicate, final T t, final U u, final V v,
+			final TriConsumer<T, U, V> consumer) throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, t, u, v, consumer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
