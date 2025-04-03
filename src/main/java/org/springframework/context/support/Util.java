@@ -339,7 +339,7 @@ public abstract class Util {
 		return a != null && b != null && a.isAssignableFrom(b);
 	}
 
-	static Class<?>[] getParameterTypes(final Executable instance) {
+	static Class<?>[] getParameterTypes(@Nullable final Executable instance) {
 		return instance != null ? instance.getParameterTypes() : null;
 	}
 
