@@ -132,7 +132,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 	@Note("Text")
 	private JTextComponent tfText = null;
 
-	private JTextComponent taHtml = null;
+	private JTextArea taHtml = null;
 
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
@@ -196,6 +196,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		add(jLabel = new JLabel("Ruby HTML"));
 		//
 		final JScrollPane jsp = new JScrollPane(taHtml = new JTextArea());
+		//
+		taHtml.setRows(2);
 		//
 		add(jsp, "growx,wrap");
 		//
