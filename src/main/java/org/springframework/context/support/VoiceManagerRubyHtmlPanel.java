@@ -16,6 +16,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.geom.Dimension2D;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -27,6 +29,7 @@ import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -92,6 +95,12 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.common.collect.TableUtil;
 
+import freemarker.cache.StringTemplateLoader;
+import freemarker.cache.StringTemplateLoaderUtil;
+import freemarker.template.Configuration;
+import freemarker.template.ConfigurationUtil;
+import freemarker.template.Template;
+import freemarker.template.TemplateUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
@@ -211,11 +220,29 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		final String[] beanDefinitionNames = ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf);
 		//
-		String beanDefinitionName = null;
-		//
-		String beanClassName = null;
+		String beanDefinitionName, beanClassName = null;
 		//
 		IValue0<Object> description = null;
+		//
+		Object object, instance = null;
+		//
+		Configuration configuration = null;
+		//
+		StringTemplateLoader stringTemplateLoader = null;
+		//
+		Template template = null;
+		//
+		Object[] os = null;
+		//
+		List<Field> fs = null;
+		//
+		Field f = null;
+		//
+		int size;
+		//
+		Map<String, Object> map = null;
+		//
+		Iterable<Entry<String, Object>> entrySet = null;
 		//
 		for (int i = 0; i < length(beanDefinitionNames); i++) {
 			//
@@ -241,10 +268,96 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				//
 			} // if
 				//
-			TableUtil.put(table = ObjectUtils.getIfNull(table, HashBasedTable::create), beanDefinitionName, "label",
-					IValue0Util.getValue0(description));
+			instance = BeanFactoryUtil.getBean(dlbf, beanDefinitionName);
 			//
-			TableUtil.put(table, beanDefinitionName, "instance", BeanFactoryUtil.getBean(dlbf, beanDefinitionName));
+			if (configuration == null) {
+				//
+				(configuration = new Configuration(Configuration.getVersion()))
+						.setTemplateLoader(stringTemplateLoader = new StringTemplateLoader());
+				//
+			} // if
+				//
+			StringTemplateLoaderUtil.putTemplate(stringTemplateLoader, beanDefinitionName,
+					Util.toString(IValue0Util.getValue0(description)));
+			//
+			try (final Writer writer = new StringWriter()) {
+				//
+				if ((os = Util.cast(Object[].class,
+						FieldUtils.readField(FieldUtils.readDeclaredField(
+								template = ConfigurationUtil.getTemplate(configuration, beanDefinitionName),
+								"rootElement", true), "childBuffer", true))) != null) {
+					//
+					for (int j = 0; j < length(os); j++) {
+						//
+						if ((size = IterableUtils
+								.size(fs = Util
+										.toList(Util.filter(
+												testAndApply(Objects::nonNull,
+														Util.getDeclaredFields(
+																Util.getClass(object = ArrayUtils.get(os, j))),
+														Arrays::stream, null),
+												x -> Objects.equals(Util.getName(x), "expression"))))) == 1
+								&& (f = IterableUtils.get(fs,
+										0)) != null
+								&& (size = IterableUtils
+										.size(fs = Util
+												.toList(Util.filter(
+														testAndApply(Objects::nonNull,
+																Util.getDeclaredFields(Util.getClass(
+																		object = Narcissus.getField(object, f))),
+																Arrays::stream, null),
+														x -> Objects.equals(Util.getName(x), "lho"))))) == 1
+								&& Objects.equals("freemarker.core.Identifier", Util.getName(Util
+										.getClass(object = Narcissus.getField(object, IterableUtils.get(fs, 0)))))) {
+							//
+							Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Util.toString(object), null);
+							//
+						} else if (size > 1) {
+							//
+							throw new IllegalStateException();
+							//
+						} // if
+							//
+					} // for
+						//
+				} // if
+					//
+				if (Util.iterator(entrySet = Util.entrySet(map)) != null) {
+					//
+					for (final Entry<String, Object> entry : entrySet) {
+						//
+						if (entry == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						if ((size = IterableUtils.size(fs = Util.toList(Util.filter(
+								testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)),
+										Arrays::stream, null),
+								x -> Objects.equals(Util.getName(x), Util.getKey(entry)))))) == 1
+								&& (f = IterableUtils.get(fs, 0)) != null) {
+							//
+							entry.setValue(Narcissus.getField(instance, f));
+							//
+						} else if (size > 1) {
+							//
+							throw new IllegalStateException();
+							//
+						} // if
+							//
+					} // for
+						//
+				} // if
+					//
+				TemplateUtil.process(template, map, writer);
+				//
+				TableUtil.put(table = ObjectUtils.getIfNull(table, HashBasedTable::create), beanDefinitionName, "label",
+						Util.toString(writer));
+				//
+			} // try
+				//
+			TableUtil.put(table, beanDefinitionName, "instance", instance);
 			//
 		} // for
 			//
