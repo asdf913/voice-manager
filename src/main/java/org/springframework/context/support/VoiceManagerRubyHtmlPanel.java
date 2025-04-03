@@ -294,7 +294,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 	}
 
-	private static Map<String, Object> createMapByTemplate(final Object instance) throws IllegalAccessException {
+	private static Map<String, Object> createMapByTemplate(final Object instance) {
 		//
 		Map<String, Object> map = null;
 		//
