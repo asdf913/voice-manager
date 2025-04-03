@@ -23,6 +23,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -366,9 +367,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 						if ((size = IterableUtils.size(ms = Util.toList(Util.filter(
 								testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class), Arrays::stream,
 										null),
-								x -> Objects.equals(Util.getName(x), "setValue")
-										&& Arrays.equals(x != null ? x.getParameterTypes() : null,
-												new Class<?>[] { Object.class }))))) == 1) {
+								x -> Objects.equals(Util.getName(x), "setValue") && Arrays.equals(getParameterTypes(x),
+										new Class<?>[] { Object.class }))))) == 1) {
 							//
 							setValue = IterableUtils.get(ms, 0);
 							//
@@ -404,7 +404,10 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				//
 		} // if
 			//
+	}
 
+	private static Class<?>[] getParameterTypes(final Executable instance) {
+		return instance != null ? instance.getParameterTypes() : null;
 	}
 
 	@Nullable
