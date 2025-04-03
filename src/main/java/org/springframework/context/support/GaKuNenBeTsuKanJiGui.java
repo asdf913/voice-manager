@@ -15,7 +15,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -385,8 +384,8 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 							Util.getDeclaredMethods(Util
 									.forName("org.springframework.beans.factory.GaKuNenBeTsuKanJiMultimapFactoryBean")),
 							Arrays::stream, null),
-					m -> and(Objects.equals(Util.getName(m), "createMultimapByUrl"),
-							Arrays.equals(new Class<?>[] { String.class, Duration.class }, getParameterTypes(m)))));
+					m -> and(Objects.equals(Util.getName(m), "createMultimapByUrl"), Arrays
+							.equals(new Class<?>[] { String.class, Duration.class }, Util.getParameterTypes(m)))));
 			//
 			final int size = IterableUtils.size(ms);
 			//
@@ -455,11 +454,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			//
 		return result;
 		//
-	}
-
-	@Nullable
-	private static Class<?>[] getParameterTypes(@Nullable final Executable instance) {
-		return instance != null ? instance.getParameterTypes() : null;
 	}
 
 	@Nullable

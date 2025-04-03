@@ -28,7 +28,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -309,7 +308,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(obj)), Arrays::stream,
 								null),
 						m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "setTitle"), Arrays.equals(
-								getParameterTypes(m), new Class<?>[] { Frame.class, PropertyResolver.class })))));
+								Util.getParameterTypes(m), new Class<?>[] { Frame.class, PropertyResolver.class })))));
 				//
 			} // for
 				//
@@ -1174,7 +1173,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		final List<Method> ms = Util
 				.toList(Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredMethods(clz), Arrays::stream, null),
 						m -> Objects.equals(Util.getName(m), "GetVersionEx")
-								&& Arrays.equals(new Class[] { clzOsVersionInfoEx }, getParameterTypes(m))));
+								&& Arrays.equals(new Class[] { clzOsVersionInfoEx }, Util.getParameterTypes(m))));
 		//
 		final Method m = IterableUtils.size(ms) == 1 ? get(ms, 0) : null;
 		//
@@ -1183,11 +1182,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		return Objects.equals(Boolean.TRUE, invoke(m, FieldUtils.readStaticField(f), osVersionInfoEx)) ? osVersionInfoEx
 				: null;
 		//
-	}
-
-	@Nullable
-	private static Class<?>[] getParameterTypes(@Nullable final Executable instance) {
-		return instance != null ? instance.getParameterTypes() : null;
 	}
 
 	private static Object getInstance(final SpeechApi speechApi) {

@@ -10,7 +10,6 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -56,10 +55,10 @@ import javassist.util.proxy.ProxyUtil;
 
 class GaKuNenBeTsuKanJiGuiTest {
 
-	private static Method METHOD_CREATE_WORK_BOOK, METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE,
-			METHOD_GET_PARAMETER_TYPES, METHOD_AND, METHOD_IIF, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
-			METHOD_ADD_ACTION_LISTENER, METHOD_LENGTH, METHOD_LONG_VALUE, METHOD_SET_SELECTED_ITEM,
-			METHOD_SET_PREFERRED_WIDTH, METHOD_MAX, METHOD_CREATE_DIMENSION_COMPARATOR = null;
+	private static Method METHOD_CREATE_WORK_BOOK, METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE, METHOD_AND,
+			METHOD_IIF, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_ADD_ACTION_LISTENER, METHOD_LENGTH,
+			METHOD_LONG_VALUE, METHOD_SET_SELECTED_ITEM, METHOD_SET_PREFERRED_WIDTH, METHOD_MAX,
+			METHOD_CREATE_DIMENSION_COMPARATOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -74,8 +73,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 		//
 		(METHOD_INVOKE = clz.getDeclaredMethod("invoke", Method.class, Object.class, Object[].class))
 				.setAccessible(true);
-		//
-		(METHOD_GET_PARAMETER_TYPES = clz.getDeclaredMethod("getParameterTypes", Executable.class)).setAccessible(true);
 		//
 		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
@@ -474,27 +471,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 	private static Object invoke(final Method method, final Object instance, final Object... args) throws Throwable {
 		try {
 			return METHOD_INVOKE.invoke(null, method, instance, args);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetParameterTypes() throws Throwable {
-		//
-		Assertions.assertNull(getParameterTypes(null));
-		//
-	}
-
-	private static Class<?>[] getParameterTypes(final Executable instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_PARAMETER_TYPES.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class<?>[]) {
-				return (Class<?>[]) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

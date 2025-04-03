@@ -18,7 +18,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -346,8 +345,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 							Util.getDeclaredMethods(
 									Util.forName("org.springframework.beans.factory.JlptLevelListFactoryBean")),
 							Arrays::stream, null),
-					m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getObjectByUrl"),
-							Arrays.equals(new Class<?>[] { String.class, Duration.class }, getParameterTypes(m)))));
+					m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "getObjectByUrl"), Arrays
+							.equals(new Class<?>[] { String.class, Duration.class }, Util.getParameterTypes(m)))));
 			//
 			final int size = IterableUtils.size(ms);
 			//
@@ -653,11 +652,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		if (predicate != null && predicate.test(t, u) && consumer != null) {
 			consumer.accept(t, u);
 		}
-	}
-
-	@Nullable
-	private static Class<?>[] getParameterTypes(@Nullable final Executable instance) {
-		return instance != null ? instance.getParameterTypes() : null;
 	}
 
 	@Nullable

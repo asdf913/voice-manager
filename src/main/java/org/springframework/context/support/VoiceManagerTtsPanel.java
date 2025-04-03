@@ -19,7 +19,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.invoke.TypeDescriptor.OfField;
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -661,7 +660,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 			final int volume = Math.min(Math.max(Util.intValue(getValue(jsSpeechVolume), 100), 0), 100);
 			//
-			if (Arrays.equals(getParameterTypes(method),
+			if (Arrays.equals(Util.getParameterTypes(method),
 					new Class<?>[] { String.class, String.class, Integer.TYPE, Integer.TYPE })) {
 				//
 				try {
@@ -873,11 +872,6 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 		throw new IllegalStateException();
 		//
-	}
-
-	@Nullable
-	private static Class<?>[] getParameterTypes(@Nullable final Executable instance) {
-		return instance != null ? instance.getParameterTypes() : null;
 	}
 
 	@Nullable

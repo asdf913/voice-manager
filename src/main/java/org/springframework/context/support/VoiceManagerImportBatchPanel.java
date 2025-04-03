@@ -23,7 +23,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.invoke.TypeDescriptor.OfField;
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -2251,20 +2250,15 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	private static File createTempFile(final String prefix, @Nullable final String suffix)
 			throws IllegalAccessException, InvocationTargetException {
 		//
-		final List<Method> ms = Util.toList(
-				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredMethods(File.class), Arrays::stream, null),
-						x -> Objects.equals(Util.getName(x), "createTempFile")
-								&& Arrays.equals(new Class<?>[] { String.class, String.class }, getParameterTypes(x))));
+		final List<Method> ms = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.getDeclaredMethods(File.class), Arrays::stream, null),
+				x -> Objects.equals(Util.getName(x), "createTempFile")
+						&& Arrays.equals(new Class<?>[] { String.class, String.class }, Util.getParameterTypes(x))));
 		//
 		return Util.cast(File.class,
 				invoke(testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null), null,
 						prefix, suffix));
 		//
-	}
-
-	@Nullable
-	private static Class<?>[] getParameterTypes(@Nullable final Executable instance) {
-		return instance != null ? instance.getParameterTypes() : null;
 	}
 
 	private static void importVoiceByOnlineNHKJapanesePronunciationsAccentFailableFunction(final ObjectMap objectMap,

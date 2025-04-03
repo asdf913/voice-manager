@@ -14,7 +14,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -93,9 +92,9 @@ class JlptLevelGuiTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_SET_PREFERRED_WIDTH, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_TEST_AND_APPLY,
-			METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_INVOKE, METHOD_IIF, METHOD_GET_PARAMETER_TYPES,
-			METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM,
-			METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE, METHOD_GET_LIST_CELL_RENDERER_COMPONENT,
+			METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_INVOKE, METHOD_IIF, METHOD_RUN,
+			METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM, METHOD_ADD_ELEMENT,
+			METHOD_TEST_AND_ACCEPT, METHOD_BROWSE, METHOD_GET_LIST_CELL_RENDERER_COMPONENT,
 			METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES, METHOD_TO_URI, METHOD_REMOVE_ELEMENT_AT,
 			METHOD_MAX = null;
 
@@ -122,8 +121,6 @@ class JlptLevelGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_GET_PARAMETER_TYPES = clz.getDeclaredMethod("getParameterTypes", Executable.class)).setAccessible(true);
 		//
 		(METHOD_RUN = clz.getDeclaredMethod("run", Boolean.TYPE, Runnable.class)).setAccessible(true);
 		//
@@ -805,27 +802,6 @@ class JlptLevelGuiTest {
 	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) throws Throwable {
 		try {
 			return (T) METHOD_IIF.invoke(null, condition, trueValue, falseValue);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetParameterTypes() throws Throwable {
-		//
-		Assertions.assertNull(getParameterTypes(null));
-		//
-	}
-
-	private static Class<?>[] getParameterTypes(final Executable instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_PARAMETER_TYPES.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Class<?>[]) {
-				return (Class<?>[]) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

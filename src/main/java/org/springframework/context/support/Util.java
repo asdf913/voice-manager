@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -336,6 +337,10 @@ public abstract class Util {
 
 	static boolean isAssignableFrom(@Nullable final Class<?> a, @Nullable final Class<?> b) {
 		return a != null && b != null && a.isAssignableFrom(b);
+	}
+
+	static Class<?>[] getParameterTypes(final Executable instance) {
+		return instance != null ? instance.getParameterTypes() : null;
 	}
 
 	@Nullable
