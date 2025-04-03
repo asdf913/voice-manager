@@ -340,61 +340,62 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		final Iterable<Entry<K, V>> entrySet = Util.entrySet(map);
 		//
-		if (Util.iterator(entrySet) != null) {
+		if (Util.iterator(entrySet) == null) {
 			//
-			int size;
+			return;
 			//
-			Iterable<Field> fs = null;
+		} // if
 			//
-			Field f = null;
+		int size;
+		//
+		Iterable<Field> fs = null;
+		//
+		Field f = null;
+		//
+		Method setValue = null;
+		//
+		List<Method> ms = null;
+		//
+		for (final Entry<K, V> entry : entrySet) {
 			//
-			Method setValue = null;
-			//
-			List<Method> ms = null;
-			//
-			for (final Entry<K, V> entry : entrySet) {
+			if ((size = IterableUtils
+					.size(fs = Util.toList(Util.filter(
+							testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)),
+									Arrays::stream, null),
+							x -> Objects.equals(Util.getName(x), Util.getKey(entry)))))) == 1
+					&& (f = IterableUtils.get(fs, 0)) != null) {
 				//
-				if ((size = IterableUtils
-						.size(fs = Util.toList(Util.filter(
-								testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)),
-										Arrays::stream, null),
-								x -> Objects.equals(Util.getName(x), Util.getKey(entry)))))) == 1
-						&& (f = IterableUtils.get(fs, 0)) != null) {
+				if (setValue == null) {
 					//
-					if (setValue == null) {
+					if ((size = IterableUtils.size(ms = Util.toList(Util.filter(
+							testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class), Arrays::stream, null),
+							x -> Boolean.logicalAnd(Objects.equals(Util.getName(x), "setValue"), Arrays
+									.equals(Util.getParameterTypes(x), new Class<?>[] { Object.class })))))) == 1) {
 						//
-						if ((size = IterableUtils.size(ms = Util.toList(Util.filter(
-								testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class), Arrays::stream,
-										null),
-								x -> Boolean.logicalAnd(Objects.equals(Util.getName(x), "setValue"), Arrays
-										.equals(Util.getParameterTypes(x), new Class<?>[] { Object.class })))))) == 1) {
-							//
-							setValue = IterableUtils.get(ms, 0);
-							//
-						} else if (size > 1) {
-							//
-							throw new IllegalStateException();
-							//
-						} // if
-							//
-					} // if
+						setValue = IterableUtils.get(ms, 0);
 						//
-					if (Boolean.logicalAnd(entry != null, setValue != null)) {
+					} else if (size > 1) {
 						//
-						Narcissus.invokeMethod(entry, setValue, new Object[] { testAndApply((a, b) -> Util.isStatic(b),
-								instance, f, (a, b) -> Narcissus.getStaticField(b), Narcissus::getField) });
+						throw new IllegalStateException();
 						//
 					} // if
 						//
-				} else if (size > 1) {
+				} // if
 					//
-					throw new IllegalStateException();
+				if (Boolean.logicalAnd(entry != null, setValue != null)) {
+					//
+					Narcissus.invokeMethod(entry, setValue, new Object[] { testAndApply((a, b) -> Util.isStatic(b),
+							instance, f, (a, b) -> Narcissus.getStaticField(b), Narcissus::getField) });
 					//
 				} // if
 					//
-			} // for
+			} else if (size > 1) {
 				//
-		} // if
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+		} // for
 			//
 	}
 
