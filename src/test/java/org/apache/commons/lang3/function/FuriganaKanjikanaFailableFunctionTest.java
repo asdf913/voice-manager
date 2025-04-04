@@ -29,7 +29,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyUtil;
 
-class FuriganaOnlineFailableFunctionTest {
+class FuriganaKanjikanaFailableFunctionTest {
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET, METHOD_TO_STRING, METHOD_CAST, METHOD_WRITE,
 			METHOD_OPEN_CONNECTION, METHOD_GET_INPUT_STREAM, METHOD_GET_OUTPUT_STREAM = null;
@@ -37,7 +37,7 @@ class FuriganaOnlineFailableFunctionTest {
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
-		final Class<?> clz = FuriganaOnlineFailableFunction.class;
+		final Class<?> clz = FuriganaKanjikanaFailableFunction.class;
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -87,7 +87,7 @@ class FuriganaOnlineFailableFunctionTest {
 
 	}
 
-	private FuriganaOnlineFailableFunction instance = null;
+	private FuriganaKanjikanaFailableFunction instance = null;
 
 	private URLConnection urlConnection = null;
 
@@ -96,7 +96,7 @@ class FuriganaOnlineFailableFunctionTest {
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
-		instance = new FuriganaOnlineFailableFunction();
+		instance = new FuriganaKanjikanaFailableFunction();
 		//
 		urlConnection = ProxyUtil.createProxy(URLConnection.class, mh = new MH(), x -> {
 			//
@@ -111,7 +111,7 @@ class FuriganaOnlineFailableFunctionTest {
 	@Test
 	void testNull() throws Throwable {
 		//
-		final Class<?> clz = FuriganaOnlineFailableFunction.class;
+		final Class<?> clz = FuriganaKanjikanaFailableFunction.class;
 		//
 		final Method[] ms = getDeclaredMethods(clz);
 		//
@@ -183,9 +183,8 @@ class FuriganaOnlineFailableFunctionTest {
 					//
 			} else {
 				//
-				Assertions.assertNull(
-						Narcissus.invokeMethod(
-								instance = ObjectUtils.getIfNull(instance, FuriganaOnlineFailableFunction::new), m, os),
+				Assertions.assertNull(Narcissus.invokeMethod(
+						instance = ObjectUtils.getIfNull(instance, FuriganaKanjikanaFailableFunction::new), m, os),
 						toString);
 				//
 			} // if

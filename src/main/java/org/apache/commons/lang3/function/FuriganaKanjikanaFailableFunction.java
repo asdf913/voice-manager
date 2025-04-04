@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 
 @Description("Online (${url!''})")
-public class FuriganaOnlineFailableFunction implements FailableFunction<String, String, IOException> {
+public class FuriganaKanjikanaFailableFunction implements FailableFunction<String, String, IOException> {
 
 	private String url = null;
 

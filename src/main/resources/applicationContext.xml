@@ -1170,9 +1170,9 @@
 		class="org.apache.commons.lang3.function.FuriganaHtmlBuilderFailableFunction" />
 
 	<bean
-		class="org.apache.commons.lang3.function.FuriganaOnlineFailableFunction">
+		class="org.apache.commons.lang3.function.FuriganaKanjikanaFailableFunction">
 		<property name="url"
-			value="${org.apache.commons.lang3.function.FuriganaOnlineFailableFunction.url}" />
+			value="${org.apache.commons.lang3.function.FuriganaKanjikanaFailableFunction.url}" />
 	</bean>
 
 	<!---->
