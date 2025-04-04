@@ -276,7 +276,7 @@ public abstract class Util {
 	}
 
 	static <E> void addAll(@Nullable final Collection<E> a, @Nullable final Collection<? extends E> b) {
-		if (a != null && (b != null || Proxy.isProxyClass(Util.getClass(a)))) {
+		if (a != null && (b != null || Proxy.isProxyClass(getClass(a)))) {
 			a.addAll(b);
 		}
 	}
