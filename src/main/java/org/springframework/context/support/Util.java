@@ -1412,15 +1412,15 @@ public abstract class Util {
 				if (Objects.equals(TypeUtil.getClassName(getReferenceType(invokeStatic, cpg)),
 						"java.util.stream.Stream")
 						&& Objects.equals(InvokeInstructionUtil.getMethodName(invokeStatic, cpg), "of")
-						&& Objects.equals(collect(
-								Util.map(Arrays.stream(InvokeInstructionUtil.getArgumentTypes(invokeStatic, cpg)),
-										Util::toString),
-								Collectors.joining(",")), "java.lang.Object[]")
+						&& Objects.equals(
+								collect(map(Arrays.stream(InvokeInstructionUtil.getArgumentTypes(invokeStatic, cpg)),
+										Util::toString), Collectors.joining(",")),
+								"java.lang.Object[]")
 						&& Objects.equals(InvokeInstructionUtil.getMethodName(invokeInterface, cpg), "iterator")
-						&& Objects.equals(Util.collect(
-								Util.map(Arrays.stream(InvokeInstructionUtil.getArgumentTypes(invokeInterface, cpg)),
-										Util::toString),
-								Collectors.joining(",")), "")) {
+						&& Objects.equals(
+								collect(map(Arrays.stream(InvokeInstructionUtil.getArgumentTypes(invokeInterface, cpg)),
+										Util::toString), Collectors.joining(",")),
+								"")) {
 					//
 					return FieldInstructionUtil.getFieldName(getField, cpg);
 					//
