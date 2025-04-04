@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.commons.validator.routines.UrlValidatorUtil;
+import org.springframework.context.annotation.Description;
 
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType;
@@ -13,6 +14,7 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.Response;
 
+@Description("Online (${url!''})")
 public class FuriganaMueckeFailableFunction implements FailableFunction<String, String, RuntimeException> {
 
 	private String url = null;
