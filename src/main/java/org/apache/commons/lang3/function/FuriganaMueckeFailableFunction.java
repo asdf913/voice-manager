@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Description;
 
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType;
+import com.microsoft.playwright.BrowserTypeUtil;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
@@ -29,7 +30,7 @@ public class FuriganaMueckeFailableFunction implements FailableFunction<String, 
 		try (final Playwright playwright = testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x),
 				url, x -> Playwright.create(), null)) {
 			//
-			final Page page = newPage(launch(chromium(playwright)));
+			final Page page = newPage(BrowserTypeUtil.launch(chromium(playwright)));
 			//
 			navigate(page, url);
 			//
@@ -58,10 +59,6 @@ public class FuriganaMueckeFailableFunction implements FailableFunction<String, 
 
 	private static Page newPage(final Browser instance) {
 		return instance != null ? instance.newPage() : null;
-	}
-
-	private static Browser launch(final BrowserType instance) {
-		return instance != null ? instance.launch() : null;
 	}
 
 	private static BrowserType chromium(final Playwright instance) {

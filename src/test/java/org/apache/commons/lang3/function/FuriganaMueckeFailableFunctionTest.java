@@ -30,8 +30,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class FuriganaMueckeFailableFunctionTest {
 
-	private static Method METHOD_NEW_PAGE, METHOD_TO_STRING, METHOD_LAUNCH, METHOD_CHROMIUM, METHOD_NAVIGATE,
-			METHOD_LOCATOR, METHOD_EVALUATE, METHOD_CLICK, METHOD_FILL, METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_NEW_PAGE, METHOD_TO_STRING, METHOD_CHROMIUM, METHOD_NAVIGATE, METHOD_LOCATOR,
+			METHOD_EVALUATE, METHOD_CLICK, METHOD_FILL, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -41,8 +41,6 @@ class FuriganaMueckeFailableFunctionTest {
 		(METHOD_NEW_PAGE = clz.getDeclaredMethod("newPage", Browser.class)).setAccessible(true);
 		//
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
-		//
-		(METHOD_LAUNCH = clz.getDeclaredMethod("launch", BrowserType.class)).setAccessible(true);
 		//
 		(METHOD_CHROMIUM = clz.getDeclaredMethod("chromium", Playwright.class)).setAccessible(true);
 		//
@@ -78,8 +76,6 @@ class FuriganaMueckeFailableFunctionTest {
 			//
 			if (or(proxy instanceof Playwright && Objects.equals(methodName, "chromium")
 					&& Arrays.equals(parameterTypes, new Class<?>[] {}),
-					proxy instanceof BrowserType && Objects.equals(methodName, "launch")
-							&& Arrays.equals(parameterTypes, new Class<?>[] {}),
 					proxy instanceof Browser && Objects.equals(methodName, "newPage")
 							&& Arrays.equals(parameterTypes, new Class<?>[] {}),
 					proxy instanceof Locator && Objects.equals(methodName, "evaluate")
@@ -264,27 +260,6 @@ class FuriganaMueckeFailableFunctionTest {
 
 	private static Class<?> getClass(final Object instance) {
 		return instance != null ? instance.getClass() : null;
-	}
-
-	@Test
-	void testLaunch() throws Throwable {
-		//
-		Assertions.assertNull(launch(Reflection.newProxy(BrowserType.class, ih)));
-		//
-	}
-
-	private static Browser launch(final BrowserType instance) throws Throwable {
-		try {
-			final Object obj = METHOD_LAUNCH.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Browser) {
-				return (Browser) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test

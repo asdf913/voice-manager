@@ -244,6 +244,7 @@ import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.BrowserType;
+import com.microsoft.playwright.BrowserTypeUtil;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 import com.sun.jna.Native;
@@ -4106,7 +4107,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		try (final Playwright playwright = Playwright.create()) {
 			//
-			final Page page = newPage(newContext(launch(FailableFunctionUtil.apply(function, playwright))));
+			final Page page = newPage(
+					newContext(BrowserTypeUtil.launch(FailableFunctionUtil.apply(function, playwright))));
 			//
 			if (page != null) {
 				//
@@ -4130,7 +4132,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		try (final Playwright playwright = Playwright.create()) {
 			//
-			final Page page = newPage(newContext(launch(FailableFunctionUtil.apply(function, playwright))));
+			final Page page = newPage(
+					newContext(BrowserTypeUtil.launch(FailableFunctionUtil.apply(function, playwright))));
 			//
 			if (page != null) {
 				//
@@ -4145,11 +4148,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		return null;
 		//
-	}
-
-	@Nullable
-	private static Browser launch(@Nullable final BrowserType instance) {
-		return instance != null ? instance.launch() : null;
 	}
 
 	@Nullable
