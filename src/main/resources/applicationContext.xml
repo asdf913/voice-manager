@@ -1175,6 +1175,12 @@
 			value="${org.apache.commons.lang3.function.FuriganaKanjikanaFailableFunction.url}" />
 	</bean>
 
+	<bean
+		class="org.apache.commons.lang3.function.FuriganaMueckeFailableFunction">
+		<property name="url"
+			value="${org.apache.commons.lang3.function.FuriganaMueckeFailableFunction.url}" />
+	</bean>
+
 	<!---->
 	<bean
 		class="org.springframework.beans.factory.VoiceManagerHelpPanelIntFunctionFactoryBean">
