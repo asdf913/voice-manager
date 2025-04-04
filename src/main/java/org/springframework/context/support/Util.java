@@ -1657,8 +1657,7 @@ public abstract class Util {
 	@Nullable
 	static <T> T[] toArray(@Nullable final Collection<T> instance, @Nullable final T[] array) {
 		//
-		return instance != null && (array != null || Proxy.isProxyClass(Util.getClass(instance)))
-				? instance.toArray(array)
+		return instance != null && (array != null || Proxy.isProxyClass(getClass(instance))) ? instance.toArray(array)
 				: null;
 		//
 	}
