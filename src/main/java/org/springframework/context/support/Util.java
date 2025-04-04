@@ -576,41 +576,41 @@ public abstract class Util {
 					"org.apache.commons.collections4.collection.AbstractCollectionDecorator",
 					"org.apache.commons.collections4.collection.SynchronizedCollection");
 			//
-			Util.put(predicates, "org.apache.commons.math3.genetics.ListPopulation",
+			put(predicates, "org.apache.commons.math3.genetics.ListPopulation",
 					x -> Narcissus.getField(instance, Narcissus.findField(x, "chromosomes")) == null);
 			//
-			Util.put(predicates, "org.apache.commons.math3.geometry.partitioning.AbstractRegion",
+			put(predicates, "org.apache.commons.math3.geometry.partitioning.AbstractRegion",
 					x -> Narcissus.getField(instance, Narcissus.findField(x, "tree")) == null);
 			//
-			Util.put(predicates, "org.apache.poi.poifs.property.DirectoryProperty",
+			put(predicates, "org.apache.poi.poifs.property.DirectoryProperty",
 					x -> Narcissus.getField(instance, Narcissus.findField(x, "_children")) == null);
 			//
-			Util.put(predicates, "org.apache.poi.xslf.usermodel.XSLFTextShape",
+			put(predicates, "org.apache.poi.xslf.usermodel.XSLFTextShape",
 					x -> Narcissus.getField(instance, Narcissus.findField(x, "_paragraphs")) == null);
 			//
-			Util.put(predicates, "org.apache.poi.xslf.usermodel.XSLFSheet", x -> Narcissus.invokeMethod(instance,
+			put(predicates, "org.apache.poi.xslf.usermodel.XSLFSheet", x -> Narcissus.invokeMethod(instance,
 					Narcissus.findMethod(x, "getXmlObject", EMPTY_CLASS_ARRAY)) == null);
 			//
-			Util.put(predicates, "org.apache.poi.xslf.usermodel.XSLFTextParagraph",
+			put(predicates, "org.apache.poi.xslf.usermodel.XSLFTextParagraph",
 					x -> Narcissus.getField(instance, Narcissus.findField(x, UNDER_SCORE_RUNS)) == null);
 			//
 			putAll(predicates, x -> Narcissus.getField(instance, Narcissus.findField(x, UNDER_SCORE_ROWS)) == null,
 					"org.apache.poi.xssf.streaming.DeferredSXSSFSheet", "org.apache.poi.xssf.streaming.SXSSFSheet",
 					"org.apache.poi.xssf.usermodel.XSSFSheet");
 			//
-			Util.put(predicates, "org.apache.poi.xssf.streaming.DeferredSXSSFSheet",
+			put(predicates, "org.apache.poi.xssf.streaming.DeferredSXSSFSheet",
 					x -> Narcissus.getField(instance, Narcissus.findField(x, UNDER_SCORE_ROWS)) == null);
 			//
-			Util.put(predicates, "org.apache.poi.xssf.streaming.SXSSFWorkbook",
+			put(predicates, "org.apache.poi.xssf.streaming.SXSSFWorkbook",
 					x -> Narcissus.getField(instance, Narcissus.findField(x, "_wb")) == null);
 			//
-			Util.put(predicates, "org.apache.poi.xssf.usermodel.XSSFShape",
+			put(predicates, "org.apache.poi.xssf.usermodel.XSSFShape",
 					x -> Narcissus.getField(instance, Narcissus.findField(x, "drawing")) == null);
 			//
-			Util.put(predicates, "org.openjdk.nashorn.internal.runtime.PropertyMap",
+			put(predicates, "org.openjdk.nashorn.internal.runtime.PropertyMap",
 					x -> Narcissus.getField(instance, Narcissus.findField(x, "properties")) == null);
 			//
-			Util.put(predicates, "com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap",
+			put(predicates, "com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap",
 					x -> Narcissus.getField(instance, Narcissus.findField(x, "_hashArea")) == null);
 			//
 			putAll(predicates,
@@ -633,13 +633,13 @@ public abstract class Util {
 					"org.apache.jena.ext.com.google.common.collect.ForwardingMultiset$StandardElementSet",
 					"org.apache.jena.ext.com.google.common.collect.ForwardingSortedMultiset$StandardElementSet");
 			//
-			Util.put(predicates, "java.util.TreeSet",
+			put(predicates, "java.util.TreeSet",
 					x -> Narcissus.getField(instance, Narcissus.findField(x, "m")) == null);
 			//
-			Util.put(predicates, "java.util.HashSet",
+			put(predicates, "java.util.HashSet",
 					x -> Narcissus.getField(instance, Narcissus.findField(x, "map")) == null);
 			//
-			Util.put(predicates, "com.opencsv.CSVReader",
+			put(predicates, "com.opencsv.CSVReader",
 					x -> Narcissus.getField(instance, Narcissus.findField(x, "peekedLines")) == null);
 			//
 			putAll(predicates, x -> Narcissus.getField(instance, Narcissus.findField(x, "map")) == null,
@@ -647,7 +647,7 @@ public abstract class Util {
 					"org.apache.commons.collections4.bag.AbstractMapBag",
 					"org.apache.commons.collections4.multiset.AbstractMapMultiSet");
 			//
-			Util.put(predicates, "org.apache.commons.collections.DefaultMapBag",
+			put(predicates, "org.apache.commons.collections.DefaultMapBag",
 					x -> Narcissus.getField(instance, Narcissus.findField(x, "_map")) == null);
 			//
 			for (final Entry<String, FailablePredicate<Class<?>, ReflectiveOperationException>> entry : predicates
@@ -668,7 +668,7 @@ public abstract class Util {
 					"org.apache.jena.ext.com.google.common.collect.HashMultiset",
 					"org.apache.jena.ext.com.google.common.collect.LinkedHashMultiset");
 			//
-			Util.put(map, "org.openjdk.nashorn.internal.runtime.SharedPropertyMap", "properties");
+			put(map, "org.openjdk.nashorn.internal.runtime.SharedPropertyMap", "properties");
 			//
 			putAll(map, "_hashArea", "com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap",
 					"com.google.common.collect.ForwardingQueue",
@@ -683,7 +683,7 @@ public abstract class Util {
 			putAll(map, "redBlackTree", "com.github.andrewoma.dexx.collection.TreeMap",
 					"com.github.andrewoma.dexx.collection.TreeSet");
 			//
-			Util.put(map, "com.github.andrewoma.dexx.collection.Vector", "pointer");
+			put(map, "com.github.andrewoma.dexx.collection.Vector", "pointer");
 			//
 			putAll(map, "list", "com.github.andrewoma.dexx.collection.internal.adapter.ListAdapater",
 					"org.apache.commons.collections.FastArrayList",
@@ -760,7 +760,7 @@ public abstract class Util {
 					"it.unimi.dsi.fastutil.shorts.ShortLists$UnmodifiableList",
 					"it.unimi.dsi.fastutil.shorts.ShortLists$UnmodifiableRandomAccessList");
 			//
-			Util.put(map, "com.github.andrewoma.dexx.collection.internal.base.MappedIterable", "from");
+			put(map, "com.github.andrewoma.dexx.collection.internal.base.MappedIterable", "from");
 			//
 			putAll(map, "countMap", "com.google.common.collect.ConcurrentHashMultiset",
 					"org.apache.jena.ext.com.google.common.collect.ConcurrentHashMultiset");
@@ -771,41 +771,41 @@ public abstract class Util {
 			putAll(map, "types", "com.google.common.reflect.TypeToken$TypeSet",
 					"org.apache.jena.ext.com.google.common.reflect.TypeToken$TypeSet");
 			//
-			Util.put(map, "com.healthmarketscience.jackcess.impl.DatabaseImpl", "_tableFinder");
+			put(map, "com.healthmarketscience.jackcess.impl.DatabaseImpl", "_tableFinder");
 			//
-			Util.put(map, "com.healthmarketscience.jackcess.impl.IndexCursorImpl", "_entryCursor");
+			put(map, "com.healthmarketscience.jackcess.impl.IndexCursorImpl", "_entryCursor");
 			//
-			Util.put(map, "com.healthmarketscience.jackcess.impl.PropertyMapImpl", "_props");
+			put(map, "com.healthmarketscience.jackcess.impl.PropertyMapImpl", "_props");
 			//
-			Util.put(map, "com.healthmarketscience.jackcess.impl.PropertyMaps", "_maps");
+			put(map, "com.healthmarketscience.jackcess.impl.PropertyMaps", "_maps");
 			//
-			Util.put(map, "com.healthmarketscience.jackcess.impl.TableImpl", "_columns");
+			put(map, "com.healthmarketscience.jackcess.impl.TableImpl", "_columns");
 			//
-			Util.put(map, "com.healthmarketscience.jackcess.impl.TableScanCursor", "_ownedPagesCursor");
+			put(map, "com.healthmarketscience.jackcess.impl.TableScanCursor", "_ownedPagesCursor");
 			//
-			Util.put(map, "com.healthmarketscience.jackcess.impl.complex.MultiValueColumnPropertyMap", "_primary");
+			put(map, "com.healthmarketscience.jackcess.impl.complex.MultiValueColumnPropertyMap", "_primary");
 			//
-			Util.put(map, "com.healthmarketscience.jackcess.util.EntryIterableBuilder", "_cursor");
+			put(map, "com.healthmarketscience.jackcess.util.EntryIterableBuilder", "_cursor");
 			//
-			Util.put(map, "com.healthmarketscience.jackcess.util.IterableBuilder", "_cursor");
+			put(map, "com.healthmarketscience.jackcess.util.IterableBuilder", "_cursor");
 			//
-			Util.put(map, "com.healthmarketscience.jackcess.util.TableIterableBuilder", "_db");
+			put(map, "com.healthmarketscience.jackcess.util.TableIterableBuilder", "_db");
 			//
-			Util.put(map, "com.helger.commons.callback.CallbackList", "m_aRWLock");
+			put(map, "com.helger.commons.callback.CallbackList", "m_aRWLock");
 			//
-			Util.put(map, "com.helger.commons.collection.impl.CommonsCopyOnWriteArraySet", "al");
+			put(map, "com.helger.commons.collection.impl.CommonsCopyOnWriteArraySet", "al");
 			//
-			Util.put(map, "com.helger.commons.collection.map.LRUSet", "m_aMap");
+			put(map, "com.helger.commons.collection.map.LRUSet", "m_aMap");
 			//
-			Util.put(map, "com.helger.commons.http.HttpHeaderMap", "m_aHeaders");
+			put(map, "com.helger.commons.http.HttpHeaderMap", "m_aHeaders");
 			//
-			Util.put(map, "com.opencsv.bean.CsvToBean", "mappingStrategy");
+			put(map, "com.opencsv.bean.CsvToBean", "mappingStrategy");
 			//
-			Util.put(map, "com.opencsv.bean.PositionToBeanField", "ranges");
+			put(map, "com.opencsv.bean.PositionToBeanField", "ranges");
 			//
-			Util.put(map, "org.apache.bcel.classfile.ConstantPool", "constantPool");
+			put(map, "org.apache.bcel.classfile.ConstantPool", "constantPool");
 			//
-			Util.put(map, "org.apache.commons.collections.CursorableLinkedList", "_head");
+			put(map, "org.apache.commons.collections.CursorableLinkedList", "_head");
 			//
 			putAll(map, "all", "org.apache.commons.collections.collection.CompositeCollection",
 					"org.apache.commons.collections.set.CompositeSet",
@@ -829,34 +829,34 @@ public abstract class Util {
 			putAll(map, "values", "org.apache.commons.csv.CSVRecord",
 					"org.d2ab.collection.doubles.SortedListDoubleSet");
 			//
-			Util.put(map, "org.apache.commons.io.IOExceptionList", "causeList");
+			put(map, "org.apache.commons.io.IOExceptionList", "causeList");
 			//
-			Util.put(map, "org.apache.commons.math3.ml.neuralnet.Network", "neuronMap");
+			put(map, "org.apache.commons.math3.ml.neuralnet.Network", "neuronMap");
 			//
-			Util.put(map, "org.apache.commons.math3.ml.neuralnet.twod.NeuronSquareMesh2D", "network");
+			put(map, "org.apache.commons.math3.ml.neuralnet.twod.NeuronSquareMesh2D", "network");
 			//
-			Util.put(map, "org.apache.jena.atlas.lib.Map2", "map1");
+			put(map, "org.apache.jena.atlas.lib.Map2", "map1");
 			//
-			Util.put(map, "org.apache.poi.ddf.EscherContainerRecord", "_childRecords");
+			put(map, "org.apache.poi.ddf.EscherContainerRecord", "_childRecords");
 			//
-			Util.put(map, "org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate", "records");
+			put(map, "org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate", "records");
 			//
-			Util.put(map, "org.apache.poi.hssf.usermodel.HSSFRow", "cells");
+			put(map, "org.apache.poi.hssf.usermodel.HSSFRow", "cells");
 			//
 			putAll(map, UNDER_SCORE_ROWS, "org.apache.poi.hssf.usermodel.HSSFSheet",
 					"org.apache.poi.xslf.usermodel.XSLFTable");
 			//
-			Util.put(map, "org.apache.poi.hssf.usermodel.HSSFWorkbook", "_sheets");
+			put(map, "org.apache.poi.hssf.usermodel.HSSFWorkbook", "_sheets");
 			//
-			Util.put(map, "org.apache.poi.openxml4j.opc.PackageRelationshipCollection", "relationshipsByID");
+			put(map, "org.apache.poi.openxml4j.opc.PackageRelationshipCollection", "relationshipsByID");
 			//
-			Util.put(map, "org.apache.poi.poifs.filesystem.DirectoryNode", "_entries");
+			put(map, "org.apache.poi.poifs.filesystem.DirectoryNode", "_entries");
 			//
-			Util.put(map, "org.apache.poi.poifs.filesystem.FilteringDirectoryNode", "directory");
+			put(map, "org.apache.poi.poifs.filesystem.FilteringDirectoryNode", "directory");
 			//
-			Util.put(map, "org.apache.poi.poifs.filesystem.POIFSDocument", "_property");
+			put(map, "org.apache.poi.poifs.filesystem.POIFSDocument", "_property");
 			//
-			Util.put(map, "org.apache.poi.poifs.filesystem.POIFSStream", "blockStore");
+			put(map, "org.apache.poi.poifs.filesystem.POIFSStream", "blockStore");
 			//
 			putAll(map, UNDER_SCORE_RUNS, "org.apache.poi.xddf.usermodel.text.XDDFTextParagraph",
 					"org.apache.poi.xssf.usermodel.XSSFTextParagraph");
@@ -864,15 +864,15 @@ public abstract class Util {
 			putAll(map, "_cells", "org.apache.poi.xslf.usermodel.XSLFTableRow",
 					"org.apache.poi.xssf.streaming.SXSSFRow", "org.apache.poi.xssf.usermodel.XSSFRow");
 			//
-			Util.put(map, "org.apache.poi.xssf.streaming.SXSSFDrawing", "_drawing");
+			put(map, "org.apache.poi.xssf.streaming.SXSSFDrawing", "_drawing");
 			//
-			Util.put(map, "org.apache.poi.xssf.usermodel.XSSFDrawing", "drawing");
+			put(map, "org.apache.poi.xssf.usermodel.XSSFDrawing", "drawing");
 			//
-			Util.put(map, "org.apache.poi.xssf.usermodel.XSSFWorkbook", "sheets");
+			put(map, "org.apache.poi.xssf.usermodel.XSSFWorkbook", "sheets");
 			//
-			Util.put(map, "org.apache.xmlbeans.XmlSimpleList", "underlying");
+			put(map, "org.apache.xmlbeans.XmlSimpleList", "underlying");
 			//
-			Util.put(map, "org.springframework.beans.MutablePropertyValues", "propertyValueList");
+			put(map, "org.springframework.beans.MutablePropertyValues", "propertyValueList");
 			//
 			putAll(map, "iterable",
 					"net.bytebuddy.agent.builder.AgentBuilder$RedefinitionStrategy$BatchAllocator$Slicing$SlicingIterable",
@@ -887,56 +887,56 @@ public abstract class Util {
 					"it.unimi.dsi.fastutil.objects.ReferenceCollections$IterableCollection",
 					"it.unimi.dsi.fastutil.shorts.ShortCollections$IterableCollection");
 			//
-			Util.put(map,
+			put(map,
 					"net.bytebuddy.agent.builder.AgentBuilder$RedefinitionStrategy$Listener$Compound$CompoundIterable",
 					"iterables");
 			//
-			Util.put(map,
+			put(map,
 					"net.bytebuddy.agent.builder.AgentBuilder$RedefinitionStrategy$ResubmissionStrategy$Enabled$Resubmitter$ConcurrentHashSet",
 					DELEGATE);
 			//
-			Util.put(map, "net.bytebuddy.build.Plugin$Engine$Source$Compound$Origin", "origins");
+			put(map, "net.bytebuddy.build.Plugin$Engine$Source$Compound$Origin", "origins");
 			//
-			Util.put(map, "net.bytebuddy.build.Plugin$Engine$Source$ForFolder", "folder");
+			put(map, "net.bytebuddy.build.Plugin$Engine$Source$ForFolder", "folder");
 			//
-			Util.put(map, "net.bytebuddy.build.Plugin$Engine$Source$InMemory", "storage");
+			put(map, "net.bytebuddy.build.Plugin$Engine$Source$InMemory", "storage");
 			//
-			Util.put(map, "net.bytebuddy.build.Plugin$Engine$Source$Origin$Filtering", DELEGATE);
+			put(map, "net.bytebuddy.build.Plugin$Engine$Source$Origin$Filtering", DELEGATE);
 			//
-			Util.put(map, "net.bytebuddy.build.Plugin$Engine$Source$Origin$ForJarFile", "file");
+			put(map, "net.bytebuddy.build.Plugin$Engine$Source$Origin$ForJarFile", "file");
 			//
-			Util.put(map, "net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$ForLoadedFieldType",
+			put(map, "net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$ForLoadedFieldType",
 					"field");
 			//
-			Util.put(map, "net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$ForLoadedReturnType",
+			put(map, "net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$ForLoadedReturnType",
 					"method");
 			//
-			Util.put(map,
+			put(map,
 					"net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$OfConstructorParameter",
 					"constructor");
 			//
-			Util.put(map, "net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$OfMethodParameter",
+			put(map, "net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$OfMethodParameter",
 					"method");
 			//
-			Util.put(map, "net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$OfRecordComponent",
+			put(map, "net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$OfRecordComponent",
 					"recordComponent");
 			//
-			Util.put(map, "net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$WithResolvedErasure",
+			put(map, "net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$WithResolvedErasure",
 					DELEGATE);
 			//
-			Util.put(map, "net.bytebuddy.description.type.TypeDescription$Generic$OfTypeVariable$ForLoadedType",
+			put(map, "net.bytebuddy.description.type.TypeDescription$Generic$OfTypeVariable$ForLoadedType",
 					"typeVariable");
 			//
-			Util.put(map, "net.bytebuddy.description.type.TypeDescription$Generic$OfTypeVariable$WithAnnotationOverlay",
+			put(map, "net.bytebuddy.description.type.TypeDescription$Generic$OfTypeVariable$WithAnnotationOverlay",
 					"typeVariable");
 			//
-			Util.put(map, "net.bytebuddy.description.type.TypeDescription$Generic$OfWildcardType$ForLoadedType",
+			put(map, "net.bytebuddy.description.type.TypeDescription$Generic$OfWildcardType$ForLoadedType",
 					"wildcardType");
 			//
-			Util.put(map, "net.bytebuddy.description.type.TypeDescription$Generic$OfWildcardType$Latent",
+			put(map, "net.bytebuddy.description.type.TypeDescription$Generic$OfWildcardType$Latent",
 					"lowerBounds");
 			//
-			Util.put(map, "net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$TokenizedGenericType",
+			put(map, "net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$TokenizedGenericType",
 					"genericTypeToken");
 			//
 			putAll(map, "l", "it.unimi.dsi.fastutil.booleans.AbstractBooleanBigList$BooleanRandomAccessSubList",
