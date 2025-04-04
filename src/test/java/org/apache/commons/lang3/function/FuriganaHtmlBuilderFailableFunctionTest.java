@@ -58,14 +58,10 @@ class FuriganaHtmlBuilderFailableFunctionTest {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
-			if (proxy instanceof Stream) {
+			if (proxy instanceof Stream && Objects.equals(methodName, "filter")) {
 				//
-				if (Objects.equals(methodName, "filter")) {
-					//
-					return proxy;
-					//
-				} // if
-					//
+				return proxy;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
