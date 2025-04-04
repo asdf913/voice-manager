@@ -1333,11 +1333,11 @@ public abstract class Util {
 
 	private static <K, V> void putAll(final Map<K, V> instance, final V v, final K k, @Nullable final K... ks) {
 		//
-		Util.put(instance, k, v);
+		put(instance, k, v);
 		//
 		for (int i = 0; ks != null && i < ks.length; i++) {
 			//
-			Util.put(instance, ks[i], v);
+			put(instance, ks[i], v);
 			//
 		} // for
 			//
