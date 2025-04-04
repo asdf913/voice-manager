@@ -15,7 +15,6 @@ import com.microsoft.playwright.Response;
 
 public class FuriganaMueckeFailableFunction implements FailableFunction<String, String, RuntimeException> {
 
-	// TODO https://stech.muecke.pw/furigana/cgi-bin
 	private String url = null;
 
 	public void setUrl(final String url) {
