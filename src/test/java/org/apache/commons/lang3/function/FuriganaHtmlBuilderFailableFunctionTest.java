@@ -1,6 +1,7 @@
 package org.apache.commons.lang3.function;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -9,6 +10,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.Assertions;
@@ -16,11 +21,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.reflect.Reflection;
+
 import io.github.toolfactory.narcissus.Narcissus;
 
 class FuriganaHtmlBuilderFailableFunctionTest {
 
-	private static Method METHOD_TO_STRING, METHOD_CAST, METHOD_AND = null;
+	private static Method METHOD_TO_STRING, METHOD_GET_CLASS, METHOD_CAST, METHOD_AND, METHOD_MATCHES, METHOD_MATCHER,
+			METHOD_FILTER = null;
 
 	@BeforeAll
 	static void beforeClass() throws NoSuchMethodException {
@@ -29,10 +37,41 @@ class FuriganaHtmlBuilderFailableFunctionTest {
 		//
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
+		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
+		//
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
+		(METHOD_MATCHES = clz.getDeclaredMethod("matches", Matcher.class)).setAccessible(true);
+		//
+		(METHOD_MATCHER = clz.getDeclaredMethod("matcher", Pattern.class, CharSequence.class)).setAccessible(true);
+		//
+		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
+		//
+	}
+
+	private static class IH implements InvocationHandler {
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = method != null ? method.getName() : null;
+			//
+			if (proxy instanceof Stream) {
+				//
+				if (Objects.equals(methodName, "filter")) {
+					//
+					return proxy;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	private FuriganaHtmlBuilderFailableFunction instance = null;
@@ -66,6 +105,10 @@ class FuriganaHtmlBuilderFailableFunctionTest {
 		Assertions.assertEquals(
 				"7<ruby><rb>時</rb><rp>(</rp><rt>じ</rt><rp>)</rp></ruby>の<ruby><rb>新幹線</rb><rp>(</rp><rt>しんかんせん</rt><rp>)</rp></ruby>に<ruby><rb>乗</rb><rp>(</rp><rt>の</rt><rp>)</rp></ruby>る<ruby><rb>予定</rb><rp>(</rp><rt>よてい</rt><rp>)</rp></ruby>です。",
 				FailableFunctionUtil.apply(instance, "7時の新幹線に乗る予定です。"));
+		//
+		final String string = "さんじゅうきゅ";
+		//
+		Assertions.assertEquals(string, FailableFunctionUtil.apply(instance, string));
 		//
 	}
 
@@ -164,7 +207,21 @@ class FuriganaHtmlBuilderFailableFunctionTest {
 			} else if (obj instanceof String) {
 				return (String) obj;
 			}
-			throw new Throwable(obj.getClass() != null ? toString(obj.getClass()) : null);
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static Class<?> getClass(final Object instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CLASS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Class) {
+				return (Class<?>) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -220,7 +277,73 @@ class FuriganaHtmlBuilderFailableFunctionTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}
-			throw new Throwable(obj != null && obj.getClass() != null ? toString(obj.getClass()) : null);
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMatches() throws Throwable {
+		//
+		Assertions.assertFalse(matches(cast(Matcher.class, Narcissus.allocateInstance(Matcher.class))));
+		//
+	}
+
+	private static boolean matches(final Matcher instance) throws Throwable {
+		try {
+			final Object obj = METHOD_MATCHES.invoke(null, instance);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMatcher() throws Throwable {
+		//
+		Assertions.assertNull(matcher(cast(Pattern.class, Narcissus.allocateInstance(Pattern.class)), null));
+		//
+	}
+
+	private static Matcher matcher(final Pattern pattern, final CharSequence input) throws Throwable {
+		try {
+			final Object obj = METHOD_MATCHER.invoke(null, pattern, input);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Matcher) {
+				return (Matcher) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testFilter() throws Throwable {
+		//
+		final Stream<?> stream = Reflection.newProxy(Stream.class, new IH());
+		//
+		Assertions.assertSame(stream, filter(stream, null));
+		//
+		Assertions.assertNull(filter(Stream.ofNullable(null), null));
+		//
+	}
+
+	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

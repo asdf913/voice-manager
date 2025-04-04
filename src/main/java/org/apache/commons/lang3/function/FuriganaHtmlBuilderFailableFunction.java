@@ -1,12 +1,19 @@
 package org.apache.commons.lang3.function;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Member;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -26,12 +33,15 @@ import com.atilika.kuromoji.ipadic.Tokenizer;
 import com.google.common.base.Strings;
 import com.mariten.kanatools.KanaConverter;
 
+import io.github.toolfactory.narcissus.Narcissus;
 import j2html.rendering.FlatHtml;
 import j2html.rendering.HtmlBuilder;
 import j2html.rendering.TagBuilder;
 
 @Description("Offline")
 public class FuriganaHtmlBuilderFailableFunction implements FailableFunction<String, String, IOException> {
+
+	private static final Pattern PATTERN_HIRAGANA = Pattern.compile("^\\p{InHiragana}+$");
 
 	public String apply(final String string) throws IOException {
 		//
@@ -163,6 +173,14 @@ public class FuriganaHtmlBuilderFailableFunction implements FailableFunction<Str
 	private static void toHtml(final HtmlBuilder<StringBuilder> htmlBuilder, final String text, final String ruby)
 			throws IOException {
 		//
+		if (matches(matcher(PATTERN_HIRAGANA, text)) && Objects.equals(ruby, "*")) {
+			//
+			appendUnescapedText(htmlBuilder, text);
+			//
+			return;
+			//
+		} // if
+			//
 		final String commonPrefix = testAndApply((a, b) -> a != null && b != null, text, ruby, Strings::commonPrefix,
 				null);
 		//
@@ -218,6 +236,84 @@ public class FuriganaHtmlBuilderFailableFunction implements FailableFunction<Str
 		testAndAccept((a, b) -> StringUtils.isNotBlank(b), htmlBuilder, commonSuffix,
 				FuriganaHtmlBuilderFailableFunction::appendUnescapedText);
 		//
+	}
+
+	private static boolean matches(final Matcher instance) {
+		//
+		if (instance == null) {
+			//
+			return false;
+			//
+		} // if
+			//
+		final List<Field> fs = toList(
+				filter(testAndApply(Objects::nonNull, Matcher.class.getDeclaredFields(), Arrays::stream, null),
+						x -> Objects.equals(getName(x), "groups")));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		if (Narcissus.getField(instance,
+				testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) == null) {
+			//
+			return false;
+			//
+		} // if
+			//
+		return instance.matches();
+		//
+	}
+
+	private static String getName(final Member instance) {
+		return instance != null ? instance.getName() : null;
+	}
+
+	private static Matcher matcher(final Pattern pattern, final CharSequence input) {
+		//
+		if (pattern == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final List<Field> fs = toList(
+				filter(testAndApply(Objects::nonNull, Pattern.class.getDeclaredFields(), Arrays::stream, null),
+						x -> Objects.equals(getName(x), "pattern")));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		if (Narcissus.getField(pattern,
+				testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return input != null ? pattern.matcher(input) : null;
+		//
+	}
+
+	private static <T> List<T> toList(final Stream<T> instance) {
+		return instance != null ? instance.toList() : null;
+	}
+
+	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+		//
+		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
+				? instance.filter(predicate)
+				: null;
+		//
+	}
+
+	private static Class<?> getClass(final Object instance) {
+		return instance != null ? instance.getClass() : null;
 	}
 
 	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
