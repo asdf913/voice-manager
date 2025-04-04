@@ -653,7 +653,7 @@ public abstract class Util {
 			for (final Entry<String, FailablePredicate<Class<?>, ReflectiveOperationException>> entry : predicates
 					.entrySet()) {
 				//
-				if (isAssignableFrom(Class.forName(Util.getKey(entry)), clz) && test(Util.getValue(entry), clz)) {
+				if (isAssignableFrom(Class.forName(getKey(entry)), clz) && test(getValue(entry), clz)) {
 					//
 					return null;
 					//
@@ -887,12 +887,10 @@ public abstract class Util {
 					"it.unimi.dsi.fastutil.objects.ReferenceCollections$IterableCollection",
 					"it.unimi.dsi.fastutil.shorts.ShortCollections$IterableCollection");
 			//
-			put(map,
-					"net.bytebuddy.agent.builder.AgentBuilder$RedefinitionStrategy$Listener$Compound$CompoundIterable",
+			put(map, "net.bytebuddy.agent.builder.AgentBuilder$RedefinitionStrategy$Listener$Compound$CompoundIterable",
 					"iterables");
 			//
-			put(map,
-					"net.bytebuddy.agent.builder.AgentBuilder$RedefinitionStrategy$ResubmissionStrategy$Enabled$Resubmitter$ConcurrentHashSet",
+			put(map, "net.bytebuddy.agent.builder.AgentBuilder$RedefinitionStrategy$ResubmissionStrategy$Enabled$Resubmitter$ConcurrentHashSet",
 					DELEGATE);
 			//
 			put(map, "net.bytebuddy.build.Plugin$Engine$Source$Compound$Origin", "origins");
@@ -911,8 +909,7 @@ public abstract class Util {
 			put(map, "net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$ForLoadedReturnType",
 					"method");
 			//
-			put(map,
-					"net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$OfConstructorParameter",
+			put(map, "net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$OfConstructorParameter",
 					"constructor");
 			//
 			put(map, "net.bytebuddy.description.type.TypeDescription$Generic$LazyProjection$OfMethodParameter",
@@ -933,8 +930,7 @@ public abstract class Util {
 			put(map, "net.bytebuddy.description.type.TypeDescription$Generic$OfWildcardType$ForLoadedType",
 					"wildcardType");
 			//
-			put(map, "net.bytebuddy.description.type.TypeDescription$Generic$OfWildcardType$Latent",
-					"lowerBounds");
+			put(map, "net.bytebuddy.description.type.TypeDescription$Generic$OfWildcardType$Latent", "lowerBounds");
 			//
 			put(map, "net.bytebuddy.pool.TypePool$Default$LazyTypeDescription$TokenizedGenericType",
 					"genericTypeToken");
