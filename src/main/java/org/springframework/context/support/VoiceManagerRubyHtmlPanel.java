@@ -306,6 +306,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		}
 	}
 
+	@Nullable
 	private static Object getValue(final Expression instance, final EvaluationContext context, final Object rootObject)
 			throws EvaluationException {
 		return instance != null ? instance.getValue(context, rootObject) : null;
