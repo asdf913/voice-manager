@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapperUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
-@Description("Online (${url!''})")
+@Description("T(java.lang.String).format('Online (%1$s)',url)")
 public class FuriganaKanjikanaFailableFunction implements FailableFunction<String, String, IOException> {
 
 	private String url = null;

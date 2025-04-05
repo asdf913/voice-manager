@@ -16,15 +16,12 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.geom.Dimension2D;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
@@ -74,10 +71,6 @@ import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.meeuw.functional.ThrowingRunnable;
-import org.meeuw.functional.TriConsumer;
-import org.meeuw.functional.TriConsumerUtil;
-import org.meeuw.functional.TriPredicate;
-import org.meeuw.functional.TriPredicateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -98,17 +91,22 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationContextUtil;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.ConfigurableApplicationContextUtil;
+import org.springframework.context.expression.MapAccessor;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.EvaluationException;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.ParseException;
+import org.springframework.expression.spel.ast.CompoundExpression;
+import org.springframework.expression.spel.ast.MethodReference;
+import org.springframework.expression.spel.ast.PropertyOrFieldReference;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.common.collect.TableUtil;
 
-import freemarker.cache.StringTemplateLoader;
-import freemarker.cache.StringTemplateLoaderUtil;
-import freemarker.template.Configuration;
-import freemarker.template.ConfigurationUtil;
-import freemarker.template.Template;
-import freemarker.template.TemplateUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
@@ -232,17 +230,17 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		String beanDefinitionName, beanClassName = null;
 		//
-		IValue0<Object> description = null;
+		IValue0<Object> iValue0description = null;
 		//
-		Object instance = null;
-		//
-		Configuration configuration = null;
-		//
-		StringTemplateLoader stringTemplateLoader = null;
-		//
-		Template template = null;
+		Object instance, ast = null;
 		//
 		Map<String, Object> map = null;
+		//
+		ExpressionParser ep = null;
+		//
+		StandardEvaluationContext sec = null;
+		//
+		Expression expression = null;
 		//
 		for (int i = 0; i < length(beanDefinitionNames); i++) {
 			//
@@ -262,125 +260,105 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				//
 			cbm.addElement(beanDefinitionName);
 			//
-			if ((description = getDescription(beanClassName)) == null) {
+			if ((iValue0description = getDescription(beanClassName)) == null) {
 				//
-				description = Unit.with(beanClassName);
-				//
-			} // if
-				//
-			instance = BeanFactoryUtil.getBean(dlbf, beanDefinitionName);
-			//
-			if (configuration == null) {
-				//
-				(configuration = new Configuration(Configuration.getVersion()))
-						.setTemplateLoader(stringTemplateLoader = new StringTemplateLoader());
+				iValue0description = Unit.with(beanClassName);
 				//
 			} // if
 				//
-			StringTemplateLoaderUtil.putTemplate(stringTemplateLoader, beanDefinitionName,
-					Util.toString(IValue0Util.getValue0(description)));
+			TableUtil.put(table = ObjectUtils.getIfNull(table, HashBasedTable::create), beanDefinitionName, "instance",
+					instance = BeanFactoryUtil.getBean(dlbf, beanDefinitionName));
 			//
-			try (final Writer writer = new StringWriter()) {
+			clear(map = ObjectUtils.getIfNull(map, LinkedHashMap::new));
+			//
+			if ((ast = getAST(expression = parseExpression(ep = ObjectUtils.getIfNull(ep, SpelExpressionParser::new),
+					Util.toString(IValue0Util.getValue0(iValue0description))))) instanceof PropertyOrFieldReference pofr
+					&& pofr.getChildCount() == 0) {
 				//
-				setFieldValues(instance, map = createMapByTemplate(
-						template = ConfigurationUtil.getTemplate(configuration, beanDefinitionName)));
+				Util.putAll(map, createMap(instance, pofr));
 				//
-				TemplateUtil.process(template, map, writer);
+			} else if (ast instanceof CompoundExpression ce && ce.getChildCount() == 2
+					&& ce.getChild(1) instanceof MethodReference mr && mr.getChildCount() > 1
+					&& mr.getChild(1) instanceof PropertyOrFieldReference pofr) {
 				//
-				TableUtil.put(table = ObjectUtils.getIfNull(table, HashBasedTable::create), beanDefinitionName, "label",
-						Util.toString(writer));
+				Util.putAll(map, createMap(instance, pofr));
 				//
-			} // try
+			} // if
 				//
-			TableUtil.put(table, beanDefinitionName, "instance", instance);
+			TableUtil.put(table, beanDefinitionName, "label",
+					getValue(expression, sec = ObjectUtils.getIfNull(sec, () -> {
+						//
+						final StandardEvaluationContext x = new StandardEvaluationContext();
+						//
+						x.addPropertyAccessor(new MapAccessor());
+						//
+						return x;
+						//
+					}), map));
 			//
 		} // for
 			//
 	}
 
-	@Nullable
-	private static Map<String, Object> createMapByTemplate(final Object instance) {
+	private static void clear(final Map<?, ?> instance) {
+		if (instance != null) {
+			instance.clear();
+		}
+	}
+
+	private static Object getValue(final Expression instance, final EvaluationContext context, final Object rootObject)
+			throws EvaluationException {
+		return instance != null ? instance.getValue(context, rootObject) : null;
+	}
+
+	private static Map<String, Object> createMap(final Object instance, final PropertyOrFieldReference pofr) {
 		//
-		Map<String, Object> map = null;
+		final String name = pofr != null ? pofr.getName() : null;
 		//
-		Iterable<Field> fs = Util.toList(Util.filter(
-				testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)), Arrays::stream, null),
-				x -> Objects.equals(Util.getName(x), "rootElement")));
+		final Iterable<Field> fs = Util
+				.toList(Util.filter(
+						Util.stream(testAndApply(Objects::nonNull, Util.getClass(instance),
+								x -> FieldUtils.getAllFieldsList(x), null)),
+						x -> Objects.equals(Util.getName(x), name)));
 		//
-		int size = IterableUtils.size(fs);
+		Field f = null;
 		//
-		Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-		//
-		if (f == null) {
+		if (IterableUtils.size(fs) == 1 && (f = IterableUtils.get(fs, 0)) != null) {
 			//
-			return map;
-			//
-		} // if
-			//
-		testAndRunThrows(size > 1, () -> {
-			throw new IllegalStateException();
-		});
-		//
-		Object object = null;
-		//
-		Object[] os = null;
-		//
-		if ((size = IterableUtils.size(fs = Util.toList(Util.filter(
-				Util.stream(FieldUtils.getAllFieldsList(Util.getClass(object = Narcissus.getField(instance, f)))),
-				x -> Objects.equals(Util.getName(x), "childBuffer"))))) == 1) {
-			//
-			os = Util.cast(Object[].class, Narcissus.getField(object, IterableUtils.get(fs, 0)));
-			//
-		} // if
-			//
-		testAndRunThrows(size > 1, () -> {
-			throw new IllegalStateException();
-		});
-		//
-		String name = null;
-		//
-		for (int j = 0; j < length(os); j++) {
-			//
-			if ((f = testAndApply(x -> IterableUtils.size(x) == 1,
-					fs = Util.toList(Util.filter(testAndApply(Objects::nonNull,
-							Util.getDeclaredFields(Util.getClass(object = ArrayUtils.get(os, j))), Arrays::stream,
-							null), x -> Objects.equals(Util.getName(x), "expression"))),
-					x -> IterableUtils.get(x, 0), null)) != null) {
+			if (Util.isStatic(f)) {
 				//
-				if (Objects.equals(name = Util.getName(Util.getClass(object = Narcissus.getField(object, f))),
-						"freemarker.core.Identifier")) {
-					//
-					Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Util.toString(object), null);
-					//
-				} else if (Objects.equals(name, "freemarker.core.DefaultToExpression")) {
-					//
-					if ((f = testAndApply(x -> IterableUtils.size(x) == 1,
-							fs = Util.toList(Util.filter(testAndApply(Objects::nonNull,
-									Util.getDeclaredFields(Util.getClass(object)), Arrays::stream, null),
-									x -> Objects.equals(Util.getName(x), "lho"))),
-							x -> IterableUtils.get(x, 0), null)) != null
-							&& Objects.equals("freemarker.core.Identifier",
-									Util.getName(Util.getClass(object = Narcissus.getField(object, f))))) {
-						//
-						Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Util.toString(object), null);
-						//
-					} // if
-						//
-					testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
-						throw new IllegalStateException();
-					});
-					//
-				} // if
-					//
+				return Collections.singletonMap(name, Narcissus.getStaticField(f));
+				//
+			} else {
+				//
+				return Collections.singletonMap(name, Narcissus.getField(instance, f));
+				//
 			} // if
 				//
-			testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
-				throw new IllegalStateException();
-			});
+		} // if
 			//
-		} // for
-			//
-		return map;
+		return Collections.singletonMap(name, name);
+		//
+	}
+
+	private static Expression parseExpression(final ExpressionParser instance, final String expressionString)
+			throws ParseException {
+		return instance != null ? instance.parseExpression(expressionString) : null;
+	}
+
+	private static Object getAST(final Object instance) {
+		//
+		final List<Field> fs = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)), Arrays::stream, null),
+				x -> Objects.equals(Util.getName(x), "ast")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			throw new IllegalStateException();
+		});
+		//
+		return testAndApply(Objects::nonNull,
+				testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
+				x -> Narcissus.getField(instance, x), null);
 		//
 	}
 
@@ -388,74 +366,6 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			@Nullable final ThrowingRunnable<E> throwingRunnable) throws E {
 		if (b && throwingRunnable != null) {
 			throwingRunnable.runThrows();
-		}
-	}
-
-	private static <K, V> void setFieldValues(final Object instance, @Nullable final Map<K, V> map) {
-		//
-		final Iterable<Entry<K, V>> entrySet = Util.entrySet(map);
-		//
-		if (Util.iterator(entrySet) == null) {
-			//
-			return;
-			//
-		} // if
-			//
-		int size;
-		//
-		Iterable<Field> fs = null;
-		//
-		Field f = null;
-		//
-		Method setValue = null;
-		//
-		List<Method> ms = null;
-		//
-		for (final Entry<K, V> entry : entrySet) {
-			//
-			if ((size = IterableUtils
-					.size(fs = Util.toList(Util.filter(
-							testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)),
-									Arrays::stream, null),
-							x -> Objects.equals(Util.getName(x), Util.getKey(entry)))))) == 1
-					&& (f = IterableUtils.get(fs, 0)) != null) {
-				//
-				if (setValue == null) {
-					//
-					if ((size = IterableUtils.size(ms = Util.toList(Util.filter(
-							testAndApply(Objects::nonNull, Util.getDeclaredMethods(Entry.class), Arrays::stream, null),
-							x -> Boolean.logicalAnd(Objects.equals(Util.getName(x), "setValue"), Arrays
-									.equals(Util.getParameterTypes(x), new Class<?>[] { Object.class })))))) == 1) {
-						//
-						setValue = IterableUtils.get(ms, 0);
-						//
-					} else if (size > 1) {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-				} // if
-					//
-				testAndAccept((a, b, c) -> Boolean.logicalAnd(a != null, b != null), entry, setValue,
-						new Object[] { testAndApply((a, b) -> Util.isStatic(b), instance, f,
-								(a, b) -> Narcissus.getStaticField(b), Narcissus::getField) },
-						Narcissus::invokeMethod);
-				//
-			} else if (size > 1) {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
-		} // for
-			//
-	}
-
-	private static <T, U, V> void testAndAccept(final TriPredicate<T, U, V> predicate, final T t, @Nullable final U u,
-			final V v, @Nullable final TriConsumer<T, U, V> consumer) {
-		if (TriPredicateUtil.test(predicate, t, u, v)) {
-			TriConsumerUtil.accept(consumer, t, u, v);
 		}
 	}
 

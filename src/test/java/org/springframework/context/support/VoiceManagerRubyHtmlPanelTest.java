@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -64,17 +63,16 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.meeuw.functional.ThrowingRunnable;
-import org.meeuw.functional.TriConsumer;
-import org.meeuw.functional.TriPredicate;
 import org.springframework.beans.factory.support.DefaultSingletonBeanRegistry;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.ast.PropertyOrFieldReference;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 
 import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 
-import freemarker.cache.StringTemplateLoader;
-import freemarker.cache.StringTemplateLoaderUtil;
-import freemarker.template.Configuration;
-import freemarker.template.ConfigurationUtil;
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyUtil;
@@ -85,8 +83,8 @@ class VoiceManagerRubyHtmlPanelTest {
 			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_GET_LAYOUT_MANAGER,
 			METHOD_FOR_EACH, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS,
 			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_AND, METHOD_GET_DESCRIPTION,
-			METHOD_GET_SELECTED_ITEM, METHOD_SET_FIELD_VALUES, METHOD_TEST_AND_ACCEPT, METHOD_CREATE_MAP_BY_TEMPLATE,
-			METHOD_TEST_AND_RUN_THROWS = null;
+			METHOD_GET_SELECTED_ITEM, METHOD_TEST_AND_RUN_THROWS, METHOD_CLEAR, METHOD_GET_VALUE, METHOD_CREATE_MAP,
+			METHOD_PARSE_EXPRESSION, METHOD_GET_AST = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -136,17 +134,21 @@ class VoiceManagerRubyHtmlPanelTest {
 		//
 		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", JComboBox.class)).setAccessible(true);
 		//
-		(METHOD_SET_FIELD_VALUES = clz.getDeclaredMethod("setFieldValues", Object.class, Map.class))
-				.setAccessible(true);
-		//
-		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", TriPredicate.class, Object.class, Object.class,
-				Object.class, TriConsumer.class)).setAccessible(true);
-		//
-		(METHOD_CREATE_MAP_BY_TEMPLATE = clz.getDeclaredMethod("createMapByTemplate", Object.class))
-				.setAccessible(true);
-		//
 		(METHOD_TEST_AND_RUN_THROWS = clz.getDeclaredMethod("testAndRunThrows", Boolean.TYPE, ThrowingRunnable.class))
 				.setAccessible(true);
+		//
+		(METHOD_CLEAR = clz.getDeclaredMethod("clear", Map.class)).setAccessible(true);
+		//
+		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Expression.class, EvaluationContext.class, Object.class))
+				.setAccessible(true);
+		//
+		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", Object.class, PropertyOrFieldReference.class))
+				.setAccessible(true);
+		//
+		(METHOD_PARSE_EXPRESSION = clz.getDeclaredMethod("parseExpression", ExpressionParser.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_AST = clz.getDeclaredMethod("getAST", Object.class)).setAccessible(true);
 		//
 	}
 
@@ -167,28 +169,65 @@ class VoiceManagerRubyHtmlPanelTest {
 				//
 			final String methodName = Util.getName(method);
 			//
+			final Class<?>[] parameterTypes = Util.getParameterTypes(method);
+			//
 			if (proxy instanceof ParameterizedType) {
 				//
-				if (Objects.equals(methodName, "getActualTypeArguments")) {
+				if (Objects.equals(methodName, "getActualTypeArguments")
+						&& Arrays.equals(parameterTypes, new Class<?>[] {})) {
 					//
 					return actualTypeArguments;
 					//
-				} else if (Objects.equals(methodName, "getRawType")) {
+				} else if (Objects.equals(methodName, "getRawType")
+						&& Arrays.equals(parameterTypes, new Class<?>[] {})) {
 					//
 					return rawType;
 					//
 				} // if
 					//
 			} else if (or(
-					proxy instanceof ListCellRenderer && Objects.equals(methodName, "getListCellRendererComponent"),
-					proxy instanceof ComboBoxModel && Objects.equals(methodName, "getSelectedItem"),
-					proxy instanceof Entry && Objects.equals(methodName, "setValue"))) {
+					and(proxy instanceof ListCellRenderer, Objects.equals(methodName, "getListCellRendererComponent"),
+							Arrays.equals(parameterTypes,
+									new Class<?>[] { JList.class, Object.class, Integer.TYPE, Boolean.TYPE,
+											Boolean.TYPE })),
+					and(proxy instanceof ComboBoxModel, Objects.equals(methodName, "getSelectedItem"),
+							Arrays.equals(parameterTypes, new Class<?>[] {})),
+					and(proxy instanceof Entry, Objects.equals(methodName, "setValue"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Object.class })),
+					and(proxy instanceof Expression, Objects.equals(methodName, "getValue"),
+							Arrays.equals(parameterTypes, new Class<?>[] { EvaluationContext.class, Object.class })),
+					and(proxy instanceof ExpressionParser, Objects.equals(methodName, "parseExpression"),
+							Arrays.equals(parameterTypes, new Class<?>[] { String.class })))) {
 				//
 				return null;
 				//
 			} // if
 				//
 			throw new Throwable(methodName);
+			//
+		}
+
+		private static boolean and(final boolean a, final boolean b, final boolean... bs) {
+			//
+			boolean result = Boolean.logicalAnd(a, b);
+			//
+			if (!result) {
+				//
+				return result;
+				//
+			} // if
+				//
+			for (int i = 0; bs != null && i < bs.length; i++) {
+				//
+				if (!(result &= bs[i])) {
+					//
+					return result;
+					//
+				} // if
+					//
+			} // for
+				//
+			return result;
 			//
 		}
 
@@ -374,7 +413,8 @@ class VoiceManagerRubyHtmlPanelTest {
 				//
 				invoke = Narcissus.invokeStaticMethod(m, os);
 				//
-				if (Util.contains(Arrays.asList(Integer.TYPE, Double.TYPE, Boolean.TYPE), m.getReturnType())) {
+				if (Util.contains(Arrays.asList(Integer.TYPE, Double.TYPE, Boolean.TYPE), m.getReturnType())
+						|| Objects.equals(Util.getName(m), "createMap")) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
@@ -805,82 +845,79 @@ class VoiceManagerRubyHtmlPanelTest {
 	}
 
 	@Test
-	void testGetFieldValues() throws IllegalAccessException {
+	void testTestAndRunThrows() {
 		//
-		Assertions.assertDoesNotThrow(() -> setFieldValues(null, Collections.singletonMap(null, null)));
-		//
-		final Map<?, ?> m1 = new LinkedHashMap<>(Collections.singletonMap("LOG", null));
-		//
-		Assertions.assertDoesNotThrow(() -> setFieldValues(instance, m1));
-		//
-		Assertions.assertEquals(
-				Collections.singletonMap("LOG", FieldUtils.readStaticField(Util.getClass(instance), "LOG", true)), m1);
-		//
-		final Map<?, ?> m2 = new LinkedHashMap<>(Collections.singletonMap("applicationContext", null));
-		//
-		Assertions.assertDoesNotThrow(() -> setFieldValues(instance, m2));
-		//
-		Assertions.assertEquals(Collections.singletonMap("applicationContext",
-				FieldUtils.readField(instance, "applicationContext", true)), m2);
+		Assertions.assertDoesNotThrow(() -> testAndRunThrows(true, () -> {
+		}));
 		//
 	}
 
-	private static <K, V> void setFieldValues(final Object instance, final Map<K, V> map) throws Throwable {
+	private static <E extends Throwable> void testAndRunThrows(final boolean b,
+			final ThrowingRunnable<E> throwingRunnable) throws Throwable {
 		try {
-			METHOD_SET_FIELD_VALUES.invoke(null, instance, map);
+			METHOD_TEST_AND_RUN_THROWS.invoke(null, b, throwingRunnable);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
 	}
 
 	@Test
-	void testTestAndAccept() {
+	void testClear() {
 		//
-		Assertions.assertDoesNotThrow(() -> testAndAccept((a, b, c) -> true, null, null, null, null));
+		Assertions.assertDoesNotThrow(() -> clear(Reflection.newProxy(Map.class, ih)));
 		//
 	}
 
-	private static <T, U, V> void testAndAccept(final TriPredicate<T, U, V> predicate, final T t, final U u, final V v,
-			final TriConsumer<T, U, V> consumer) throws Throwable {
+	private static void clear(final Map<?, ?> instance) throws Throwable {
 		try {
-			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, t, u, v, consumer);
+			METHOD_CLEAR.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
 	}
 
 	@Test
-	void testcCreateMapByTemplate() throws Throwable {
+	void testGetValue() throws Throwable {
 		//
-		Assertions.assertEquals(null, createMapByTemplate(""));
-		//
-		final Configuration configuration = new Configuration(Configuration.getVersion());
-		//
-		final StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
-		//
-		configuration.setTemplateLoader(stringTemplateLoader);
-		//
-		final String templateName = "";
-		//
-		final String variableName = "b";
-		//
-		StringTemplateLoaderUtil.putTemplate(stringTemplateLoader, templateName,
-				String.format("a ${%1$s}", variableName));
-		//
-		final Map<?, ?> map = Collections.singletonMap(variableName, null);
-		//
-		Assertions.assertEquals(map, createMapByTemplate(ConfigurationUtil.getTemplate(configuration, templateName)));
-		//
-		StringTemplateLoaderUtil.putTemplate(stringTemplateLoader, templateName,
-				String.format("a ${%1$s!''}", variableName));
-		//
-		Assertions.assertEquals(map, createMapByTemplate(ConfigurationUtil.getTemplate(configuration, templateName)));
+		Assertions.assertNull(getValue(Reflection.newProxy(Expression.class, ih), null, null));
 		//
 	}
 
-	private static Map<String, Object> createMapByTemplate(final Object instance) throws Throwable {
+	private static Object getValue(final Expression instance, final EvaluationContext context, final Object rootObject)
+			throws Throwable {
 		try {
-			final Object obj = METHOD_CREATE_MAP_BY_TEMPLATE.invoke(null, instance);
+			return METHOD_GET_VALUE.invoke(null, instance, context, rootObject);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateMap() throws Throwable {
+		//
+		final PropertyOrFieldReference pofr = Util.cast(PropertyOrFieldReference.class,
+				Narcissus.allocateInstance(PropertyOrFieldReference.class));
+		//
+		Assertions.assertEquals(Collections.singletonMap(null, null), createMap(null, pofr));
+		//
+		String name = "LOG";
+		//
+		FieldUtils.writeDeclaredField(pofr, "name", name, true);
+		//
+		Assertions.assertEquals(Collections.singletonMap(name, FieldUtils.readDeclaredField(instance, name, true)),
+				createMap(instance, pofr));
+		//
+		FieldUtils.writeDeclaredField(pofr, "name", name = "table", true);
+		//
+		Assertions.assertEquals(Collections.singletonMap(name, FieldUtils.readDeclaredField(instance, name, true)),
+				createMap(instance, pofr));
+		//
+	}
+
+	private static Map<String, Object> createMap(final Object instance, final PropertyOrFieldReference pofr)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_MAP.invoke(null, instance, pofr);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Map) {
@@ -893,17 +930,37 @@ class VoiceManagerRubyHtmlPanelTest {
 	}
 
 	@Test
-	void testTestAndRunThrows() {
+	void testParseExpression() throws Throwable {
 		//
-		Assertions.assertDoesNotThrow(() -> testAndRunThrows(true, () -> {
-		}));
+		Assertions.assertNull(parseExpression(Reflection.newProxy(ExpressionParser.class, ih), null));
 		//
 	}
 
-	private static <E extends Throwable> void testAndRunThrows(final boolean b,
-			final ThrowingRunnable<E> throwingRunnable) throws Throwable {
+	private static Expression parseExpression(final ExpressionParser instance, final String expressionString)
+			throws Throwable {
 		try {
-			METHOD_TEST_AND_RUN_THROWS.invoke(null, b, throwingRunnable);
+			final Object obj = METHOD_PARSE_EXPRESSION.invoke(null, instance, expressionString);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Expression) {
+				return (Expression) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetAST() throws Throwable {
+		//
+		Assertions.assertNull(getAST(Narcissus.allocateInstance(SpelExpressionParser.class)));
+		//
+	}
+
+	private static Object getAST(final Object instance) throws Throwable {
+		try {
+			return METHOD_GET_AST.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

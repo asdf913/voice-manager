@@ -15,7 +15,7 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.PageUtil;
 import com.microsoft.playwright.Playwright;
 
-@Description("Online (${url!''})")
+@Description("T(java.lang.String).format('Online (%1$s)',url)")
 public class FuriganaMueckeFailableFunction implements FailableFunction<String, String, RuntimeException> {
 
 	private String url = null;
