@@ -315,11 +315,10 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		final String name = pofr != null ? pofr.getName() : null;
 		//
-		final Iterable<Field> fs = Util
-				.toList(Util.filter(
-						Util.stream(testAndApply(Objects::nonNull, Util.getClass(instance),
-								x -> FieldUtils.getAllFieldsList(x), null)),
-						x -> Objects.equals(Util.getName(x), name)));
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				x -> Objects.equals(Util.getName(x), name)));
 		//
 		Field f = null;
 		//
