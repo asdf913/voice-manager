@@ -19,15 +19,11 @@ class ExpressionParserUtilTest {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
-			if (proxy instanceof ExpressionParser) {
+			if (proxy instanceof ExpressionParser && Objects.equals(methodName, "parseExpression") && Arrays
+					.equals(method != null ? method.getParameterTypes() : null, new Class<?>[] { String.class })) {
 				//
-				if (Objects.equals(methodName, "parseExpression") && Arrays
-						.equals(method != null ? method.getParameterTypes() : null, new Class<?>[] { String.class })) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
