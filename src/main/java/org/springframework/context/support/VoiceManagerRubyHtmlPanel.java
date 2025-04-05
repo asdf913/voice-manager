@@ -341,6 +341,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static Expression parseExpression(@Nullable final ExpressionParser instance, final String expressionString)
 			throws ParseException {
 		return instance != null ? instance.parseExpression(expressionString) : null;
