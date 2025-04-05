@@ -1,8 +1,10 @@
 package org.springframework.expression;
 
+import javax.annotation.Nullable;
+
 public interface ExpressionParserUtil {
 
-	static Expression parseExpression(final ExpressionParser instance, final String expressionString) {
+	static Expression parseExpression(@Nullable final ExpressionParser instance, final String expressionString) {
 		return instance != null ? instance.parseExpression(expressionString) : null;
 	}
 
