@@ -97,6 +97,7 @@ import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.ExpressionParserUtil;
+import org.springframework.expression.spel.SpelNode;
 import org.springframework.expression.spel.ast.CompoundExpression;
 import org.springframework.expression.spel.ast.MethodReference;
 import org.springframework.expression.spel.ast.PropertyOrFieldReference;
@@ -274,12 +275,12 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			if ((ast = getAST(expression = ExpressionParserUtil.parseExpression(
 					ep = ObjectUtils.getIfNull(ep, SpelExpressionParser::new),
 					Util.toString(IValue0Util.getValue0(iValue0description))))) instanceof PropertyOrFieldReference pofr
-					&& pofr.getChildCount() == 0) {
+					&& getChildCount(pofr) == 0) {
 				//
 				Util.putAll(map, createMap(instance, pofr));
 				//
-			} else if (ast instanceof CompoundExpression ce && ce.getChildCount() == 2
-					&& ce.getChild(1) instanceof MethodReference mr && mr.getChildCount() > 1
+			} else if (ast instanceof CompoundExpression ce && getChildCount(ce) == 2
+					&& ce.getChild(1) instanceof MethodReference mr && getChildCount(mr) > 1
 					&& mr.getChild(1) instanceof PropertyOrFieldReference pofr) {
 				//
 				Util.putAll(map, createMap(instance, pofr));
@@ -299,6 +300,10 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 		} // for
 			//
+	}
+
+	private static int getChildCount(final SpelNode instance) {
+		return instance != null ? instance.getChildCount() : 0;
 	}
 
 	private static void clear(@Nullable final Map<?, ?> instance) {

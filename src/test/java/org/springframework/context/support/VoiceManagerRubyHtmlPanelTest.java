@@ -66,6 +66,7 @@ import org.meeuw.functional.ThrowingRunnable;
 import org.springframework.beans.factory.support.DefaultSingletonBeanRegistry;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
+import org.springframework.expression.spel.SpelNode;
 import org.springframework.expression.spel.ast.PropertyOrFieldReference;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 
@@ -83,7 +84,7 @@ class VoiceManagerRubyHtmlPanelTest {
 			METHOD_FOR_EACH, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS,
 			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_AND, METHOD_GET_DESCRIPTION,
 			METHOD_GET_SELECTED_ITEM, METHOD_TEST_AND_RUN_THROWS, METHOD_CLEAR, METHOD_GET_VALUE, METHOD_CREATE_MAP,
-			METHOD_GET_AST = null;
+			METHOD_GET_AST, METHOD_GET_CHILD_COUNT = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -146,6 +147,8 @@ class VoiceManagerRubyHtmlPanelTest {
 		//
 		(METHOD_GET_AST = clz.getDeclaredMethod("getAST", Object.class)).setAccessible(true);
 		//
+		(METHOD_GET_CHILD_COUNT = clz.getDeclaredMethod("getChildCount", SpelNode.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -153,6 +156,8 @@ class VoiceManagerRubyHtmlPanelTest {
 		private Type[] actualTypeArguments = null;
 
 		private Type rawType = null;
+
+		private Integer childCount = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -194,6 +199,11 @@ class VoiceManagerRubyHtmlPanelTest {
 							Arrays.equals(parameterTypes, new Class<?>[] { EvaluationContext.class, Object.class })))) {
 				//
 				return null;
+				//
+			} else if (and(proxy instanceof SpelNode, Objects.equals(methodName, "getChildCount"),
+					Arrays.equals(parameterTypes, new Class<?>[] {}))) {
+				//
+				return childCount;
 				//
 			} // if
 				//
@@ -933,6 +943,33 @@ class VoiceManagerRubyHtmlPanelTest {
 	private static Object getAST(final Object instance) throws Throwable {
 		try {
 			return METHOD_GET_AST.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetChildCount() throws Throwable {
+		//
+		int childCount = 0;
+		//
+		if (ih != null) {
+			//
+			ih.childCount = Integer.valueOf(childCount);
+			//
+		} // ih
+			//
+		Assertions.assertEquals(childCount, getChildCount(Reflection.newProxy(SpelNode.class, ih)));
+		//
+	}
+
+	private static int getChildCount(final SpelNode instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CHILD_COUNT.invoke(null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
