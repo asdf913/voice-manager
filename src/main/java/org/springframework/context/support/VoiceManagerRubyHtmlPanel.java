@@ -307,12 +307,12 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 	}
 
 	@Nullable
-	private static Object getValue(final Expression instance, final EvaluationContext context, final Object rootObject)
-			throws EvaluationException {
+	private static Object getValue(@Nullable final Expression instance, final EvaluationContext context,
+			final Object rootObject) throws EvaluationException {
 		return instance != null ? instance.getValue(context, rootObject) : null;
 	}
 
-	private static Map<String, Object> createMap(final Object instance, final PropertyOrFieldReference pofr) {
+	private static Map<String, Object> createMap(final Object instance, @Nullable final PropertyOrFieldReference pofr) {
 		//
 		final String name = pofr != null ? pofr.getName() : null;
 		//
@@ -341,7 +341,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 	}
 
-	private static Expression parseExpression(final ExpressionParser instance, final String expressionString)
+	private static Expression parseExpression(@Nullable final ExpressionParser instance, final String expressionString)
 			throws ParseException {
 		return instance != null ? instance.parseExpression(expressionString) : null;
 	}
