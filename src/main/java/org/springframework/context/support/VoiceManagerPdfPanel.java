@@ -4114,7 +4114,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			testAndAccept(Objects::nonNull, Util.toString(toURL(Util.toURI(Util.toFile(pathHtml)))),
 					x -> PageUtil.navigate(page, x));
 			//
-			return page.pdf();
+			return page != null ? page.pdf() : null;
 			//
 		} // try
 			//
