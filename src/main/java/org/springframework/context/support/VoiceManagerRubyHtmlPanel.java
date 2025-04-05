@@ -300,7 +300,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 	}
 
-	private static void clear(final Map<?, ?> instance) {
+	private static void clear(@Nullable final Map<?, ?> instance) {
 		if (instance != null) {
 			instance.clear();
 		}
