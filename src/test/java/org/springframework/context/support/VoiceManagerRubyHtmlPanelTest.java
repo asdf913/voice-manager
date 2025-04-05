@@ -84,7 +84,7 @@ class VoiceManagerRubyHtmlPanelTest {
 			METHOD_FOR_EACH, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS,
 			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_AND, METHOD_GET_DESCRIPTION,
 			METHOD_GET_SELECTED_ITEM, METHOD_TEST_AND_RUN_THROWS, METHOD_CLEAR, METHOD_GET_VALUE, METHOD_CREATE_MAP,
-			METHOD_GET_AST, METHOD_GET_CHILD_COUNT = null;
+			METHOD_GET_AST, METHOD_GET_CHILD_COUNT, METHOD_GET_CHILD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -149,6 +149,8 @@ class VoiceManagerRubyHtmlPanelTest {
 		//
 		(METHOD_GET_CHILD_COUNT = clz.getDeclaredMethod("getChildCount", SpelNode.class)).setAccessible(true);
 		//
+		(METHOD_GET_CHILD = clz.getDeclaredMethod("getChild", SpelNode.class, Integer.TYPE)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -196,7 +198,9 @@ class VoiceManagerRubyHtmlPanelTest {
 					and(proxy instanceof Entry, Objects.equals(methodName, "setValue"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Object.class })),
 					and(proxy instanceof Expression, Objects.equals(methodName, "getValue"),
-							Arrays.equals(parameterTypes, new Class<?>[] { EvaluationContext.class, Object.class })))) {
+							Arrays.equals(parameterTypes, new Class<?>[] { EvaluationContext.class, Object.class })),
+					and(proxy instanceof SpelNode, Objects.equals(methodName, "getChild"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Integer.TYPE })))) {
 				//
 				return null;
 				//
@@ -286,6 +290,8 @@ class VoiceManagerRubyHtmlPanelTest {
 
 	private ParameterizedType parameterizedType = null;
 
+	private SpelNode spelNode = null;
+
 	private Toolkit toolkit = null;
 
 	private MH mh = null;
@@ -298,6 +304,8 @@ class VoiceManagerRubyHtmlPanelTest {
 		instance = new VoiceManagerRubyHtmlPanel();
 		//
 		parameterizedType = Reflection.newProxy(ParameterizedType.class, ih = new IH());
+		//
+		spelNode = Reflection.newProxy(SpelNode.class, ih);
 		//
 		toolkit = Util.cast(Toolkit.class, Narcissus.allocateInstance(Util.forName("sun.awt.HeadlessToolkit")));
 		//
@@ -959,7 +967,7 @@ class VoiceManagerRubyHtmlPanelTest {
 			//
 		} // ih
 			//
-		Assertions.assertEquals(childCount, getChildCount(Reflection.newProxy(SpelNode.class, ih)));
+		Assertions.assertEquals(childCount, getChildCount(spelNode));
 		//
 	}
 
@@ -968,6 +976,27 @@ class VoiceManagerRubyHtmlPanelTest {
 			final Object obj = METHOD_GET_CHILD_COUNT.invoke(null, instance);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetChild() throws Throwable {
+		//
+		Assertions.assertNull(getChild(spelNode, 0));
+		//
+	}
+
+	private static SpelNode getChild(final SpelNode instance, final int index) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CHILD.invoke(null, instance, index);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof SpelNode) {
+				return (SpelNode) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

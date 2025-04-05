@@ -280,8 +280,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				Util.putAll(map, createMap(instance, pofr));
 				//
 			} else if (ast instanceof CompoundExpression ce && getChildCount(ce) == 2
-					&& ce.getChild(1) instanceof MethodReference mr && getChildCount(mr) > 1
-					&& mr.getChild(1) instanceof PropertyOrFieldReference pofr) {
+					&& getChild(ce, 1) instanceof MethodReference mr && getChildCount(mr) > 1
+					&& getChild(mr, 1) instanceof PropertyOrFieldReference pofr) {
 				//
 				Util.putAll(map, createMap(instance, pofr));
 				//
@@ -300,6 +300,10 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 		} // for
 			//
+	}
+
+	private static SpelNode getChild(final SpelNode instance, final int index) {
+		return instance != null ? instance.getChild(index) : null;
 	}
 
 	private static int getChildCount(@Nullable final SpelNode instance) {
