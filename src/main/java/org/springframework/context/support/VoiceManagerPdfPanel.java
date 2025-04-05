@@ -4133,7 +4133,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			testAndAccept(Objects::nonNull, Util.toString(toURL(Util.toURI(Util.toFile(pathHtml)))),
 					x -> PageUtil.navigate(page, x));
 			//
-			return page.screenshot();
+			return page != null ? page.screenshot() : null;
 			//
 		} // try
 			//
