@@ -218,6 +218,7 @@ import org.springframework.core.env.PropertyResolverUtil;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.ExpressionParserUtil;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.w3c.dom.DOMException;
@@ -3664,19 +3665,13 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		private static Object getValue(final ExpressionParser spelExpressionParser,
 				final EvaluationContext evaluationContext, final String expression) {
 			//
-			return getValue(parseExpression(spelExpressionParser, expression), evaluationContext);
+			return getValue(ExpressionParserUtil.parseExpression(spelExpressionParser, expression), evaluationContext);
 			//
 		}
 
 		@Nullable
 		private static Object getValue(@Nullable final Expression instance, final EvaluationContext evaluationContext) {
 			return instance != null ? instance.getValue(evaluationContext) : null;
-		}
-
-		@Nullable
-		private static Expression parseExpression(@Nullable final ExpressionParser instance,
-				final String expressionString) {
-			return instance != null ? instance.parseExpression(expressionString) : null;
 		}
 
 		@Nullable

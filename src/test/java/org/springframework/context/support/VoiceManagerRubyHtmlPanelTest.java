@@ -66,7 +66,6 @@ import org.meeuw.functional.ThrowingRunnable;
 import org.springframework.beans.factory.support.DefaultSingletonBeanRegistry;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
-import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.ast.PropertyOrFieldReference;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 
@@ -84,7 +83,7 @@ class VoiceManagerRubyHtmlPanelTest {
 			METHOD_FOR_EACH, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS,
 			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_AND, METHOD_GET_DESCRIPTION,
 			METHOD_GET_SELECTED_ITEM, METHOD_TEST_AND_RUN_THROWS, METHOD_CLEAR, METHOD_GET_VALUE, METHOD_CREATE_MAP,
-			METHOD_PARSE_EXPRESSION, METHOD_GET_AST = null;
+			METHOD_GET_AST = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -145,9 +144,6 @@ class VoiceManagerRubyHtmlPanelTest {
 		(METHOD_CREATE_MAP = clz.getDeclaredMethod("createMap", Object.class, PropertyOrFieldReference.class))
 				.setAccessible(true);
 		//
-		(METHOD_PARSE_EXPRESSION = clz.getDeclaredMethod("parseExpression", ExpressionParser.class, String.class))
-				.setAccessible(true);
-		//
 		(METHOD_GET_AST = clz.getDeclaredMethod("getAST", Object.class)).setAccessible(true);
 		//
 	}
@@ -195,9 +191,7 @@ class VoiceManagerRubyHtmlPanelTest {
 					and(proxy instanceof Entry, Objects.equals(methodName, "setValue"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Object.class })),
 					and(proxy instanceof Expression, Objects.equals(methodName, "getValue"),
-							Arrays.equals(parameterTypes, new Class<?>[] { EvaluationContext.class, Object.class })),
-					and(proxy instanceof ExpressionParser, Objects.equals(methodName, "parseExpression"),
-							Arrays.equals(parameterTypes, new Class<?>[] { String.class })))) {
+							Arrays.equals(parameterTypes, new Class<?>[] { EvaluationContext.class, Object.class })))) {
 				//
 				return null;
 				//
@@ -922,28 +916,6 @@ class VoiceManagerRubyHtmlPanelTest {
 				return null;
 			} else if (obj instanceof Map) {
 				return (Map) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testParseExpression() throws Throwable {
-		//
-		Assertions.assertNull(parseExpression(Reflection.newProxy(ExpressionParser.class, ih), null));
-		//
-	}
-
-	private static Expression parseExpression(final ExpressionParser instance, final String expressionString)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_PARSE_EXPRESSION.invoke(null, instance, expressionString);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Expression) {
-				return (Expression) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

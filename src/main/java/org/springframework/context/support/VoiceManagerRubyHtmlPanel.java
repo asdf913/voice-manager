@@ -96,7 +96,7 @@ import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
-import org.springframework.expression.ParseException;
+import org.springframework.expression.ExpressionParserUtil;
 import org.springframework.expression.spel.ast.CompoundExpression;
 import org.springframework.expression.spel.ast.MethodReference;
 import org.springframework.expression.spel.ast.PropertyOrFieldReference;
@@ -271,7 +271,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 			clear(map = ObjectUtils.getIfNull(map, LinkedHashMap::new));
 			//
-			if ((ast = getAST(expression = parseExpression(ep = ObjectUtils.getIfNull(ep, SpelExpressionParser::new),
+			if ((ast = getAST(expression = ExpressionParserUtil.parseExpression(
+					ep = ObjectUtils.getIfNull(ep, SpelExpressionParser::new),
 					Util.toString(IValue0Util.getValue0(iValue0description))))) instanceof PropertyOrFieldReference pofr
 					&& pofr.getChildCount() == 0) {
 				//
@@ -339,12 +340,6 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 		return Collections.singletonMap(name, name);
 		//
-	}
-
-	@Nullable
-	private static Expression parseExpression(@Nullable final ExpressionParser instance, final String expressionString)
-			throws ParseException {
-		return instance != null ? instance.parseExpression(expressionString) : null;
 	}
 
 	private static Object getAST(@Nullable final Object instance) {
