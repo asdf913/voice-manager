@@ -347,7 +347,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		return instance != null ? instance.parseExpression(expressionString) : null;
 	}
 
-	private static Object getAST(final Object instance) {
+	private static Object getAST(@Nullable final Object instance) {
 		//
 		final List<Field> fs = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)), Arrays::stream, null),
