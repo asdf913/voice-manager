@@ -302,7 +302,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 	}
 
-	private static int getChildCount(final SpelNode instance) {
+	private static int getChildCount(@Nullable final SpelNode instance) {
 		return instance != null ? instance.getChildCount() : 0;
 	}
 
