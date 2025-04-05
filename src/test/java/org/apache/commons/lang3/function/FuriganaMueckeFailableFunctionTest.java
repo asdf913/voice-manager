@@ -24,14 +24,13 @@ import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
-import com.microsoft.playwright.Response;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
 class FuriganaMueckeFailableFunctionTest {
 
-	private static Method METHOD_NEW_PAGE, METHOD_TO_STRING, METHOD_CHROMIUM, METHOD_NAVIGATE, METHOD_LOCATOR,
-			METHOD_EVALUATE, METHOD_CLICK, METHOD_FILL, METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_NEW_PAGE, METHOD_TO_STRING, METHOD_CHROMIUM, METHOD_LOCATOR, METHOD_EVALUATE,
+			METHOD_CLICK, METHOD_FILL, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -43,8 +42,6 @@ class FuriganaMueckeFailableFunctionTest {
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
 		(METHOD_CHROMIUM = clz.getDeclaredMethod("chromium", Playwright.class)).setAccessible(true);
-		//
-		(METHOD_NAVIGATE = clz.getDeclaredMethod("navigate", Page.class, String.class)).setAccessible(true);
 		//
 		(METHOD_LOCATOR = clz.getDeclaredMethod("locator", Page.class, String.class)).setAccessible(true);
 		//
@@ -80,7 +77,7 @@ class FuriganaMueckeFailableFunctionTest {
 							&& Arrays.equals(parameterTypes, new Class<?>[] {}),
 					proxy instanceof Locator && Objects.equals(methodName, "evaluate")
 							&& Arrays.equals(parameterTypes, new Class<?>[] { String.class }),
-					proxy instanceof Page && contains(Arrays.asList("navigate", "locator"), methodName)
+					proxy instanceof Page && Objects.equals(methodName, "locator")
 							&& Arrays.equals(parameterTypes, new Class<?>[] { String.class }))) {
 				//
 				return null;
@@ -89,10 +86,6 @@ class FuriganaMueckeFailableFunctionTest {
 				//
 			throw new Throwable(methodName);
 			//
-		}
-
-		private static boolean contains(final Collection<?> instance, final Object key) {
-			return instance != null && instance.contains(key);
 		}
 
 		private static boolean or(final boolean a, final boolean b, final boolean... bs) {
@@ -276,27 +269,6 @@ class FuriganaMueckeFailableFunctionTest {
 				return null;
 			} else if (obj instanceof BrowserType) {
 				return (BrowserType) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testNavigate() throws Throwable {
-		//
-		Assertions.assertNull(navigate(page, null));
-		//
-	}
-
-	private static Response navigate(final Page instance, final String url) throws Throwable {
-		try {
-			final Object obj = METHOD_NAVIGATE.invoke(null, instance, url);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Response) {
-				return (Response) obj;
 			}
 			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

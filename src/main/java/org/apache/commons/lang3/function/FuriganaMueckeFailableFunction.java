@@ -12,8 +12,8 @@ import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.BrowserTypeUtil;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.PageUtil;
 import com.microsoft.playwright.Playwright;
-import com.microsoft.playwright.Response;
 
 @Description("Online (${url!''})")
 public class FuriganaMueckeFailableFunction implements FailableFunction<String, String, RuntimeException> {
@@ -32,7 +32,7 @@ public class FuriganaMueckeFailableFunction implements FailableFunction<String, 
 			//
 			final Page page = newPage(BrowserTypeUtil.launch(chromium(playwright)));
 			//
-			navigate(page, url);
+			PageUtil.navigate(page, url);
 			//
 			fill(locator(page, "textarea"), input);
 			//
@@ -63,10 +63,6 @@ public class FuriganaMueckeFailableFunction implements FailableFunction<String, 
 
 	private static BrowserType chromium(final Playwright instance) {
 		return instance != null ? instance.chromium() : null;
-	}
-
-	private static Response navigate(final Page instance, final String url) {
-		return instance != null ? instance.navigate(url) : null;
 	}
 
 	private static Locator locator(final Page instance, final String selector) {

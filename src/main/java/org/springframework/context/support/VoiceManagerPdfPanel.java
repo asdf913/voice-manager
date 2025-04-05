@@ -246,6 +246,7 @@ import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.BrowserTypeUtil;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.PageUtil;
 import com.microsoft.playwright.Playwright;
 import com.sun.jna.Native;
 import com.sun.jna.Library;
@@ -4110,19 +4111,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			final Page page = newPage(
 					newContext(BrowserTypeUtil.launch(FailableFunctionUtil.apply(function, playwright))));
 			//
-			if (page != null) {
-				//
-				testAndAccept(Objects::nonNull, Util.toString(toURL(Util.toURI(Util.toFile(pathHtml)))),
-						page::navigate);
-				//
-				return page.pdf();
-				//
-			} // if
-				//
+			testAndAccept(Objects::nonNull, Util.toString(toURL(Util.toURI(Util.toFile(pathHtml)))),
+					x -> PageUtil.navigate(page, x));
+			//
+			return page.pdf();
+			//
 		} // try
 			//
-		return null;
-		//
 	}
 
 	@Nullable
@@ -4135,19 +4130,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			final Page page = newPage(
 					newContext(BrowserTypeUtil.launch(FailableFunctionUtil.apply(function, playwright))));
 			//
-			if (page != null) {
-				//
-				testAndAccept(Objects::nonNull, Util.toString(toURL(Util.toURI(Util.toFile(pathHtml)))),
-						page::navigate);
-				//
-				return page.screenshot();
-				//
-			} // if
-				//
+			testAndAccept(Objects::nonNull, Util.toString(toURL(Util.toURI(Util.toFile(pathHtml)))),
+					x -> PageUtil.navigate(page, x));
+			//
+			return page.screenshot();
+			//
 		} // try
 			//
-		return null;
-		//
 	}
 
 	@Nullable
