@@ -8,51 +8,63 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.htmlunit.ScriptResult;
+import org.htmlunit.html.DomElement;
+import org.htmlunit.html.DomNodeList;
+import org.htmlunit.html.HtmlPage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
-import com.microsoft.playwright.Browser;
-import com.microsoft.playwright.BrowserType;
-import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
-import com.microsoft.playwright.Playwright;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
 class FuriganaMueckeFailableFunctionTest {
 
-	private static Method METHOD_NEW_PAGE, METHOD_TO_STRING, METHOD_CHROMIUM, METHOD_LOCATOR, METHOD_EVALUATE,
-			METHOD_CLICK, METHOD_FILL, METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_TO_STRING, METHOD_CLICK, METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_GET_ATTRIBUTE,
+			METHOD_SET_TEXT_CONTENT, METHOD_GET_JAVA_SCRIPT_RESULT, METHOD_EXECUTE_JAVA_SCRIPT, METHOD_FILTER,
+			METHOD_GET_ELEMENTS_BY_TAG_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = FuriganaMueckeFailableFunction.class;
 		//
-		(METHOD_NEW_PAGE = clz.getDeclaredMethod("newPage", Browser.class)).setAccessible(true);
-		//
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
 		//
-		(METHOD_CHROMIUM = clz.getDeclaredMethod("chromium", Playwright.class)).setAccessible(true);
+		(METHOD_CLICK = clz.getDeclaredMethod("click", DomElement.class)).setAccessible(true);
 		//
-		(METHOD_LOCATOR = clz.getDeclaredMethod("locator", Page.class, String.class)).setAccessible(true);
+		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
-		(METHOD_EVALUATE = clz.getDeclaredMethod("evaluate", Locator.class, String.class)).setAccessible(true);
+		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
+				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
-		(METHOD_CLICK = clz.getDeclaredMethod("click", Locator.class)).setAccessible(true);
+		(METHOD_GET_ATTRIBUTE = clz.getDeclaredMethod("getAttribute", Element.class, String.class)).setAccessible(true);
 		//
-		(METHOD_FILL = clz.getDeclaredMethod("fill", Locator.class, String.class)).setAccessible(true);
+		(METHOD_SET_TEXT_CONTENT = clz.getDeclaredMethod("setTextContent", Node.class, String.class))
+				.setAccessible(true);
 		//
-		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class, Function.class,
-				Function.class)).setAccessible(true);
+		(METHOD_GET_JAVA_SCRIPT_RESULT = clz.getDeclaredMethod("getJavaScriptResult", ScriptResult.class))
+				.setAccessible(true);
+		//
+		(METHOD_EXECUTE_JAVA_SCRIPT = clz.getDeclaredMethod("executeJavaScript", HtmlPage.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
+		//
+		(METHOD_GET_ELEMENTS_BY_TAG_NAME = clz.getDeclaredMethod("getElementsByTagName", HtmlPage.class, String.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -71,14 +83,11 @@ class FuriganaMueckeFailableFunctionTest {
 			//
 			final Class<?>[] parameterTypes = method != null ? method.getParameterTypes() : null;
 			//
-			if (or(proxy instanceof Playwright && Objects.equals(methodName, "chromium")
-					&& Arrays.equals(parameterTypes, new Class<?>[] {}),
-					proxy instanceof Browser && Objects.equals(methodName, "newPage")
-							&& Arrays.equals(parameterTypes, new Class<?>[] {}),
-					proxy instanceof Locator && Objects.equals(methodName, "evaluate")
+			if (Boolean.logicalOr(
+					proxy instanceof Element && Objects.equals(methodName, "getAttribute")
 							&& Arrays.equals(parameterTypes, new Class<?>[] { String.class }),
-					proxy instanceof Page && Objects.equals(methodName, "locator")
-							&& Arrays.equals(parameterTypes, new Class<?>[] { String.class }))) {
+					proxy instanceof Stream && Objects.equals(methodName, "filter")
+							&& Arrays.equals(parameterTypes, new Class<?>[] { Predicate.class }))) {
 				//
 				return null;
 				//
@@ -88,53 +97,27 @@ class FuriganaMueckeFailableFunctionTest {
 			//
 		}
 
-		private static boolean or(final boolean a, final boolean b, final boolean... bs) {
-			//
-			boolean result = a || b;
-			//
-			if (result) {
-				//
-				return result;
-				//
-			} // if
-				//
-			for (int i = 0; bs != null && i < bs.length; i++) {
-				//
-				if (result |= bs[i]) {
-					//
-					return result;
-					//
-				} // if
-					//
-			} // for
-				//
-			return result;
-			//
-		}
-
 	}
 
 	private FuriganaMueckeFailableFunction instance = null;
 
 	private IH ih = null;
 
-	private Page page = null;
-
-	private Locator locator = null;
+	private HtmlPage htmlPage = null;
 
 	@BeforeEach
-	void beforeEach() {
+	void beforeEach() throws Throwable {
 		//
 		instance = new FuriganaMueckeFailableFunction();
 		//
-		page = Reflection.newProxy(Page.class, ih = new IH());
+		ih = new IH();
 		//
-		locator = Reflection.newProxy(Locator.class, ih);
+		htmlPage = cast(HtmlPage.class, Narcissus.allocateInstance(HtmlPage.class));
 		//
 	}
 
 	@Test
-	void testApply() {
+	void testApply() throws Exception {
 		//
 		if (instance == null) {
 			//
@@ -210,27 +193,6 @@ class FuriganaMueckeFailableFunctionTest {
 	}
 
 	@Test
-	void testNewPage() throws Throwable {
-		//
-		Assertions.assertNull(newPage(Reflection.newProxy(Browser.class, ih)));
-		//
-	}
-
-	private static Page newPage(final Browser instance) throws Throwable {
-		try {
-			final Object obj = METHOD_NEW_PAGE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Page) {
-				return (Page) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testToString() throws Throwable {
 		//
 		Assertions.assertSame(StringUtils.EMPTY, toString(StringUtils.EMPTY));
@@ -256,87 +218,24 @@ class FuriganaMueckeFailableFunctionTest {
 	}
 
 	@Test
-	void testChromium() throws Throwable {
-		//
-		Assertions.assertNull(chromium(Reflection.newProxy(Playwright.class, ih)));
-		//
-	}
-
-	private static BrowserType chromium(final Playwright instance) throws Throwable {
-		try {
-			final Object obj = METHOD_CHROMIUM.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof BrowserType) {
-				return (BrowserType) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testLocator() throws Throwable {
-		//
-		Assertions.assertNull(locator(page, null));
-		//
-	}
-
-	private static Locator locator(final Page instance, final String selector) throws Throwable {
-		try {
-			final Object obj = METHOD_LOCATOR.invoke(null, instance, selector);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Locator) {
-				return (Locator) obj;
-			}
-			throw new Throwable(toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testEvaluate() throws Throwable {
-		//
-		Assertions.assertNull(evaluate(locator, null));
-		//
-	}
-
-	private static Object evaluate(final Locator instance, final String expression) throws Throwable {
-		try {
-			return METHOD_EVALUATE.invoke(null, instance, expression);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testClick() {
 		//
-		Assertions.assertDoesNotThrow(() -> click(locator));
+		Assertions
+				.assertDoesNotThrow(() -> click(cast(DomElement.class, Narcissus.allocateInstance(DomElement.class))));
 		//
 	}
 
-	private static void click(final Locator instance) throws Throwable {
+	private static <P extends Page> P click(final DomElement instance) throws Throwable {
 		try {
-			METHOD_CLICK.invoke(null, instance);
+			return (P) METHOD_CLICK.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
 	}
 
-	@Test
-	void testFill() {
-		//
-		Assertions.assertDoesNotThrow(() -> fill(locator, null));
-		//
-	}
-
-	private static void fill(final Locator instance, final String value) throws Throwable {
+	private static <T> T cast(final Class<T> clz, final Object instance) throws Throwable {
 		try {
-			METHOD_FILL.invoke(null, instance, value);
+			return (T) METHOD_CAST.invoke(null, clz, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -345,14 +244,137 @@ class FuriganaMueckeFailableFunctionTest {
 	@Test
 	void testTestAndApply() throws Throwable {
 		//
-		Assertions.assertNull(testAndApply(Predicates.alwaysTrue(), null, Function.identity(), null));
+		Assertions.assertNull(testAndApply(Predicates.alwaysTrue(), null, FailableFunction.identity(), null));
 		//
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
-			final Function<T, R> functionTrue, final Function<T, R> functionFalse) throws Throwable {
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
+			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetAttribute() throws Throwable {
+		//
+		Assertions.assertNull(getAttribute(Reflection.newProxy(Element.class, ih), null));
+		//
+	}
+
+	private static String getAttribute(final Element instance, final String name) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ATTRIBUTE.invoke(null, instance, name);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetTextContent() {
+		//
+		Assertions.assertDoesNotThrow(() -> setTextContent(Reflection.newProxy(Node.class, ih), null));
+		//
+	}
+
+	private static void setTextContent(final Node instance, final String textContent) throws Throwable {
+		try {
+			METHOD_SET_TEXT_CONTENT.invoke(null, instance, textContent);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetJavaScriptResult() throws Throwable {
+		//
+		Assertions.assertNull(
+				getJavaScriptResult(cast(ScriptResult.class, Narcissus.allocateInstance(ScriptResult.class))));
+		//
+	}
+
+	private static Object getJavaScriptResult(final ScriptResult instance) throws Throwable {
+		try {
+			return METHOD_GET_JAVA_SCRIPT_RESULT.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testExecuteJavaScript() throws Throwable {
+		//
+		Assertions.assertNull(executeJavaScript(htmlPage, null));
+		//
+	}
+
+	private static ScriptResult executeJavaScript(final HtmlPage instance, final String sourceCode) throws Throwable {
+		try {
+			final Object obj = METHOD_EXECUTE_JAVA_SCRIPT.invoke(null, instance, sourceCode);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof ScriptResult) {
+				return (ScriptResult) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testFilter() throws Throwable {
+		//
+		final Stream<?> empty = Stream.empty();
+		//
+		Assertions.assertSame(empty, filter(empty, null));
+		//
+		Assertions.assertNull(filter(Reflection.newProxy(Stream.class, ih), null));
+		//
+	}
+
+	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetElementsByTagName() throws Throwable {
+		//
+		Assertions.assertTrue(
+				CollectionUtils.isEqualCollection(getElementsByTagName(htmlPage, null), Collections.emptySet()));
+		//
+	}
+
+	private static DomNodeList<DomElement> getElementsByTagName(final HtmlPage instance, final String tagname)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ELEMENTS_BY_TAG_NAME.invoke(null, instance, tagname);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof DomNodeList) {
+				return (DomNodeList) obj;
+			}
+			throw new Throwable(toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
