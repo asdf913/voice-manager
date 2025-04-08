@@ -537,6 +537,10 @@ class UtilTest {
 						//
 						Assertions.assertThrows(IllegalStateException.class, () -> Util.iterator(it), name);
 						//
+					} else if (Util.contains(Arrays.asList("org.htmlunit.cyberneko.util.SimpleArrayList"), name)) {
+						//
+						Assertions.assertThrows(UnsupportedOperationException.class, () -> Util.iterator(it), name);
+						//
 					} else {
 						//
 						Assertions.assertDoesNotThrow(() -> Util.iterator(it), name);

@@ -647,8 +647,8 @@ public abstract class Util {
 					"org.apache.commons.collections4.bag.AbstractMapBag",
 					"org.apache.commons.collections4.multiset.AbstractMapMultiSet");
 			//
-			put(predicates, "org.apache.commons.collections.DefaultMapBag",
-					x -> Narcissus.getField(instance, Narcissus.findField(x, "_map")) == null);
+			putAll(predicates, x -> Narcissus.getField(instance, Narcissus.findField(x, "_map")) == null,
+					"org.apache.commons.collections.DefaultMapBag", "org.htmlunit.jetty.http.PathMap$PathSet");
 			//
 			for (final Entry<String, FailablePredicate<Class<?>, ReflectiveOperationException>> entry : predicates
 					.entrySet()) {
@@ -824,7 +824,7 @@ public abstract class Util {
 					"org.apache.commons.collections4.multiset.AbstractMultiSet$UniqueSet");
 			//
 			putAll(map, "map", "org.apache.commons.collections.set.MapBackedSet",
-					"org.apache.commons.collections4.set.MapBackedSet");
+					"org.apache.commons.collections4.set.MapBackedSet", "org.htmlunit.corejs.javascript.HashSlotMap");
 			//
 			putAll(map, "values", "org.apache.commons.csv.CSVRecord",
 					"org.d2ab.collection.doubles.SortedListDoubleSet");
@@ -1183,6 +1183,21 @@ public abstract class Util {
 			put(map, "com.google.gson.JsonArray", "elements");
 			//
 			put(map, "com.google.gson.internal.NonNullElementWrapperList", DELEGATE);
+			//
+			putAll(map,
+					Map.of("org.apache.http.entity.mime.Header", "fields", "org.htmlunit.jetty.util.Fields", "fields"));
+			//
+			put(map, "org.htmlunit.jetty.client.util.OutputStreamContentProvider", "deferred");
+			//
+			put(map, "org.htmlunit.jetty.http.QuotedQualityCSV", "_values");
+			//
+			put(map, "org.htmlunit.jetty.http.pathmap.PathSpecSet", "specs");
+			//
+			put(map, "org.htmlunit.jetty.util.BlockingArrayQueue", "_tailLock");
+			//
+			put(map, "org.htmlunit.jetty.util.InetAddressSet", "_patterns");
+			//
+			put(map, "org.htmlunit.jetty.websocket.common.extensions.WebSocketExtensionFactory", "availableExtensions");
 			//
 			if ((iValue0 = iterator(clz, instance, map)) != null) {
 				//
