@@ -837,6 +837,71 @@ abstract class Util {
 				//
 		} // try
 			//
+		final Map<String, String> map = new LinkedHashMap<>(Map.of("org.apache.http.entity.mime.Header", "fields",
+				"org.apache.http.impl.client.RedirectLocations", "all", "org.htmlunit.corejs.javascript.HashSlotMap",
+				"map", "org.htmlunit.corejs.javascript.IteratorLikeIterable", "next",
+				"org.htmlunit.cssparser.parser.selector.SelectorListImpl", "selectors_",
+				"org.htmlunit.jetty.client.util.ByteBufferContentProvider", "buffers",
+				"org.htmlunit.jetty.client.util.BytesContentProvider", "bytes",
+				"org.htmlunit.jetty.client.util.DeferredContentProvider", "chunks",
+				"org.htmlunit.jetty.client.util.FormContentProvider", "bytes",
+				"org.htmlunit.jetty.client.util.InputStreamContentProvider", "iterator"));
+		//
+		putAll(map, Map.of("org.htmlunit.jetty.client.util.MultiPartContentProvider", "parts",
+				"org.htmlunit.jetty.client.util.OutputStreamContentProvider", "deferred",
+				"org.htmlunit.jetty.client.util.StringContentProvider", "bytes",
+				"org.htmlunit.jetty.http.PathMap$PathSet", "_map", "org.htmlunit.jetty.http.QuotedCSV", "_values",
+				"org.htmlunit.jetty.http.QuotedQualityCSV", "_values", "org.htmlunit.jetty.http.pathmap.PathSpecSet",
+				"specs", "org.htmlunit.jetty.io.IncludeExcludeConnectionStatistics$ConnectionSet", "set",
+				"org.htmlunit.jetty.util.BlockingArrayQueue", "_tailLock", "org.htmlunit.jetty.util.ConcurrentHashSet",
+				"_keys"));
+		//
+		putAll(map,
+				Map.of("org.htmlunit.jetty.util.InetAddressSet", "_patterns",
+						"org.htmlunit.jetty.util.PathWatcher$PathMatcherSet", "map", "org.htmlunit.jetty.util.RegexSet",
+						"_unmodifiable", "org.htmlunit.jetty.websocket.common.extensions.WebSocketExtensionFactory",
+						"availableExtensions"));
+		//
+		final Iterable<Entry<String, String>> entrySet = entrySet(map);
+		//
+		if (iterator(entrySet) != null) {
+			//
+			Collection<Field> fs = null;
+			//
+			Field f = null;
+			//
+			for (final Entry<String, String> entry : entrySet) {
+				//
+				if (entry == null || !Objects.equals(name, getKey(entry))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (IterableUtils.size(fs = toList(filter(stream(FieldUtils.getAllFieldsList(clz)),
+						x -> Objects.equals(getName(x), getValue(entry))))) > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				if ((f = testAndApply(x -> IterableUtils.size(x) > 0, fs, x -> IterableUtils.get(x, 0), null)) != null
+						&& Narcissus.getField(instance, f) == null) {
+					//
+					return;
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		if (contains(Arrays.asList("org.htmlunit.cyberneko.util.SimpleArrayList"), name)) {
+			//
+			return;
+			//
+		} // if
+			//
 		if (action != null) {
 			//
 			instance.forEach(action);
