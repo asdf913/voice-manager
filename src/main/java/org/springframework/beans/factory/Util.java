@@ -842,25 +842,28 @@ abstract class Util {
 				"map", "org.htmlunit.corejs.javascript.IteratorLikeIterable", "next",
 				"org.htmlunit.cssparser.parser.selector.SelectorListImpl", "selectors_",
 				"org.htmlunit.jetty.client.util.ByteBufferContentProvider", "buffers",
-				"org.htmlunit.jetty.client.util.BytesContentProvider", "bytes",
 				"org.htmlunit.jetty.client.util.DeferredContentProvider", "chunks",
-				"org.htmlunit.jetty.client.util.FormContentProvider", "bytes",
-				"org.htmlunit.jetty.client.util.InputStreamContentProvider", "iterator"));
-		//
-		putAll(map, Map.of("org.htmlunit.jetty.client.util.MultiPartContentProvider", "parts",
-				"org.htmlunit.jetty.client.util.OutputStreamContentProvider", "deferred",
-				"org.htmlunit.jetty.client.util.StringContentProvider", "bytes",
-				"org.htmlunit.jetty.http.PathMap$PathSet", "_map", "org.htmlunit.jetty.http.QuotedCSV", "_values",
-				"org.htmlunit.jetty.http.QuotedQualityCSV", "_values", "org.htmlunit.jetty.http.pathmap.PathSpecSet",
-				"specs", "org.htmlunit.jetty.io.IncludeExcludeConnectionStatistics$ConnectionSet", "set",
-				"org.htmlunit.jetty.util.BlockingArrayQueue", "_tailLock", "org.htmlunit.jetty.util.ConcurrentHashSet",
-				"_keys"));
+				"org.htmlunit.jetty.client.util.InputStreamContentProvider", "iterator",
+				"org.htmlunit.jetty.client.util.MultiPartContentProvider", "parts",
+				"org.htmlunit.jetty.client.util.OutputStreamContentProvider", "deferred"));
 		//
 		putAll(map,
-				Map.of("org.htmlunit.jetty.util.InetAddressSet", "_patterns",
-						"org.htmlunit.jetty.util.PathWatcher$PathMatcherSet", "map", "org.htmlunit.jetty.util.RegexSet",
-						"_unmodifiable", "org.htmlunit.jetty.websocket.common.extensions.WebSocketExtensionFactory",
-						"availableExtensions"));
+				collect(Stream.of("org.htmlunit.jetty.client.util.BytesContentProvider",
+						"org.htmlunit.jetty.client.util.FormContentProvider",
+						"org.htmlunit.jetty.client.util.StringContentProvider"),
+						Collectors.toMap(Function.identity(), x -> "bytes")));
+		//
+		putAll(map,
+				Map.of("org.htmlunit.jetty.http.PathMap$PathSet", "_map", "org.htmlunit.jetty.http.QuotedCSV",
+						"_values", "org.htmlunit.jetty.http.QuotedQualityCSV", "_values",
+						"org.htmlunit.jetty.http.pathmap.PathSpecSet", "specs",
+						"org.htmlunit.jetty.io.IncludeExcludeConnectionStatistics$ConnectionSet", "set",
+						"org.htmlunit.jetty.util.BlockingArrayQueue", "_tailLock",
+						"org.htmlunit.jetty.util.ConcurrentHashSet", "_keys", "org.htmlunit.jetty.util.InetAddressSet",
+						"_patterns", "org.htmlunit.jetty.util.PathWatcher$PathMatcherSet", "map",
+						"org.htmlunit.jetty.util.RegexSet", "_unmodifiable"));
+		//
+		put(map, "org.htmlunit.jetty.websocket.common.extensions.WebSocketExtensionFactory", "availableExtensions");
 		//
 		final Iterable<Entry<String, String>> entrySet = entrySet(map);
 		//
