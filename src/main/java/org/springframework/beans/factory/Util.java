@@ -788,8 +788,7 @@ abstract class Util {
 		//
 		java.lang.reflect.Method javaLangReflectMethod = null;
 		//
-		if (noneMatch(
-				testAndApply(Objects::nonNull, clz != null ? clz.getDeclaredMethods() : null, Arrays::stream, null),
+		if (noneMatch(testAndApply(Objects::nonNull, getDeclaredMethods(clz), Arrays::stream, null),
 				m -> Objects.equals(getName(m), "forEach")
 						&& Arrays.equals(m != null ? m.getParameterTypes() : null, new Class<?>[] { Consumer.class }))
 				&& Objects.equals(clz != null ? clz.getSuperclass() : null, Object.class)) {
@@ -806,7 +805,7 @@ abstract class Util {
 						&& ArrayUtils.get(ins, 3) instanceof ALOAD
 						&& ArrayUtils.get(ins, 4) instanceof INVOKEINTERFACE ii) {
 					//
-					final java.lang.reflect.Method[] ms = clz != null ? clz.getDeclaredMethods() : null;
+					final java.lang.reflect.Method[] ms = getDeclaredMethods(clz);
 					//
 					java.lang.reflect.Method m = null;
 					//
@@ -1069,6 +1068,10 @@ abstract class Util {
 			//
 		testAndAccept((a, b) -> action != null, instance, action, Iterable::forEach);
 		//
+	}
+
+	private static java.lang.reflect.Method[] getDeclaredMethods(final Class<?> instance) {
+		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
 	private static <T> boolean noneMatch(final Stream<T> instance, final Predicate<? super T> predicate) {
