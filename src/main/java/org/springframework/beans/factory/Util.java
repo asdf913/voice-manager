@@ -1076,15 +1076,15 @@ abstract class Util {
 		//
 	}
 
-	private static <T> Class<? super T> getSuperclass(final Class<T> instance) {
+	private static <T> Class<? super T> getSuperclass(@Nullable final Class<T> instance) {
 		return instance != null ? instance.getSuperclass() : null;
 	}
 
-	private static Class<?>[] getParameterTypes(final Executable instance) {
+	private static Class<?>[] getParameterTypes(@Nullable final Executable instance) {
 		return instance != null ? instance.getParameterTypes() : null;
 	}
 
-	private static java.lang.reflect.Method[] getDeclaredMethods(final Class<?> instance) {
+	private static java.lang.reflect.Method[] getDeclaredMethods(@Nullable final Class<?> instance) {
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
