@@ -881,15 +881,18 @@ abstract class Util {
 						&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
 						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
 						&& ArrayUtils.get(ins, 2) instanceof INVOKESTATIC invokeStatic
-						&& Boolean.logicalOr(
-								Objects.equals(invokeStatic.getClassName(cpg), "java.util.stream.Stream")
-										&& Objects.equals(invokeStatic.getMethodName(cpg), "of"),
+						&& or(Objects.equals(invokeStatic.getClassName(cpg), "java.util.stream.Stream")
+								&& Objects.equals(invokeStatic.getMethodName(cpg), "of"),
 								Objects.equals(invokeStatic.getClassName(cpg), "java.util.Arrays")
-										&& Objects.equals(invokeStatic.getMethodName(cpg), "stream"))) {
+										&& Objects.equals(invokeStatic.getMethodName(cpg), "stream"),
+								Objects.equals(invokeStatic.getClassName(cpg), "java.util.Collections")
+										&& Objects.equals(invokeStatic.getMethodName(cpg), "unmodifiableList"))) {
 					//
 					// org.apache.poi.ss.util.SSCellRange
 					//
 					// org.apache.bcel.classfile.ConstantPool
+					//
+					// org.springframework.beans.MutablePropertyValues
 					//
 					return;
 					//
@@ -1220,8 +1223,7 @@ abstract class Util {
 		putAll(map,
 				Map.of("org.openjdk.nashorn.internal.runtime.ListAdapter", "obj",
 						"org.openjdk.nashorn.internal.runtime.PropertyMap", "properties",
-						"org.oxbow.swingbits.action.ActionGroup", "actions",
-						"org.springframework.beans.MutablePropertyValues", "propertyValueList"));
+						"org.oxbow.swingbits.action.ActionGroup", "actions"));
 		//
 		putAll(map, collect(Stream.of("com.fasterxml.jackson.databind.node.ArrayNode",
 				"com.fasterxml.jackson.databind.node.ObjectNode", "org.apache.poi.poifs.property.DirectoryProperty"),
