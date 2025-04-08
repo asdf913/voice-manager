@@ -941,6 +941,13 @@ abstract class Util {
 					//
 					return;
 					//
+				} else if (length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD
+						&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+						&& ArrayUtils.get(ins, 2) instanceof INVOKEVIRTUAL) {
+					//
+					return;
+					//
 				} // if
 					//
 			} // if
@@ -993,15 +1000,14 @@ abstract class Util {
 				//
 		} // try
 			//
-		final Map<String, String> map = new LinkedHashMap<>(Map.of("org.apache.http.entity.mime.Header", "fields",
-				"org.apache.http.impl.client.RedirectLocations", "all", "org.htmlunit.corejs.javascript.HashSlotMap",
-				"map", "org.htmlunit.corejs.javascript.IteratorLikeIterable", "next",
-				"org.htmlunit.cssparser.parser.selector.SelectorListImpl", "selectors_",
-				"org.htmlunit.jetty.client.util.ByteBufferContentProvider", "buffers",
-				"org.htmlunit.jetty.client.util.DeferredContentProvider", "chunks",
-				"org.htmlunit.jetty.client.util.InputStreamContentProvider", "iterator",
-				"org.htmlunit.jetty.client.util.MultiPartContentProvider", "parts",
-				"org.htmlunit.jetty.client.util.OutputStreamContentProvider", "deferred"));
+		final Map<String, String> map = new LinkedHashMap<>(
+				Map.of("org.apache.http.entity.mime.Header", "fields", "org.apache.http.impl.client.RedirectLocations",
+						"all", "org.htmlunit.corejs.javascript.IteratorLikeIterable", "next",
+						"org.htmlunit.cssparser.parser.selector.SelectorListImpl", "selectors_",
+						"org.htmlunit.jetty.client.util.ByteBufferContentProvider", "buffers",
+						"org.htmlunit.jetty.client.util.DeferredContentProvider", "chunks",
+						"org.htmlunit.jetty.client.util.InputStreamContentProvider", "iterator",
+						"org.htmlunit.jetty.client.util.MultiPartContentProvider", "parts"));
 		//
 		putAll(map,
 				collect(Stream.of("org.htmlunit.jetty.client.util.BytesContentProvider",
@@ -1146,12 +1152,10 @@ abstract class Util {
 				"org.apache.bcel.classfile.MethodParameters", "parameters",
 				"org.apache.commons.collections.CursorableLinkedList", "_head",
 				"org.apache.commons.collections4.iterators.IteratorIterable", "typeSafeIterator",
-				"org.apache.commons.io.IOExceptionList", "causeList", "org.apache.commons.math3.ml.neuralnet.Network",
-				"neuronMap"));
+				"org.apache.commons.io.IOExceptionList", "causeList"));
 		//
 		putAll(map,
-				Map.of("org.apache.commons.math3.ml.neuralnet.twod.NeuronSquareMesh2D", "network",
-						"org.apache.ibatis.cursor.defaults.DefaultCursor", "cursorIterator",
+				Map.of("org.apache.ibatis.cursor.defaults.DefaultCursor", "cursorIterator",
 						"org.apache.jena.atlas.lib.tuple.TupleN", "tuple",
 						"org.apache.jena.ext.com.google.common.collect.EnumMultiset", "enumConstants",
 						"org.apache.jena.ext.com.google.common.collect.EvictingQueue", DELEGATE,
@@ -1161,7 +1165,6 @@ abstract class Util {
 		//
 		putAll(map, Map.of("org.apache.poi.hssf.usermodel.HSSFShapeGroup", "shapes",
 				"org.apache.poi.hssf.usermodel.HSSFWorkbook", "_sheets",
-				"org.apache.poi.openxml4j.opc.PackageRelationshipCollection", "relationshipsByID",
 				"org.apache.poi.poifs.filesystem.DirectoryNode", "_entries",
 				"org.apache.poi.poifs.filesystem.FilteringDirectoryNode", "directory",
 				"org.apache.poi.poifs.filesystem.POIFSDocument", "_property",
@@ -1170,11 +1173,11 @@ abstract class Util {
 		//
 		putAll(map, Map.of("org.apache.poi.xssf.streaming.SXSSFRow", "_cells",
 				"org.apache.poi.xslf.usermodel.XSLFTableStyles", "_styles",
-				"org.apache.poi.xssf.streaming.SXSSFDrawing", "_drawing", "org.apache.poi.xssf.streaming.SXSSFWorkbook",
-				"_wb", "org.apache.poi.xssf.usermodel.XSSFSimpleShape", "_paragraphs",
-				"org.apache.poi.xssf.usermodel.XSSFWorkbook", "sheets", "org.apache.xmlbeans.XmlSimpleList",
-				"underlying", "org.d2ab.collection.ChainedCollection", "collections", "org.d2ab.collection.ChainedList",
-				"lists", "org.d2ab.collection.longs.BitLongSet", "negatives"));
+				"org.apache.poi.xssf.streaming.SXSSFWorkbook", "_wb", "org.apache.poi.xssf.usermodel.XSSFSimpleShape",
+				"_paragraphs", "org.apache.poi.xssf.usermodel.XSSFWorkbook", "sheets",
+				"org.apache.xmlbeans.XmlSimpleList", "underlying", "org.d2ab.collection.ChainedCollection",
+				"collections", "org.d2ab.collection.ChainedList", "lists", "org.d2ab.collection.longs.BitLongSet",
+				"negatives"));
 		//
 		putAll(map,
 				Map.of("org.openjdk.nashorn.internal.runtime.ListAdapter", "obj",
@@ -1277,10 +1280,7 @@ abstract class Util {
 						"org.apache.poi.xssf.usermodel.XSSFSheet"),
 						Collectors.toMap(Function.identity(), x -> "_rows")));
 		//
-		putAll(map,
-				collect(Stream.of("org.apache.poi.xddf.usermodel.text.XDDFTextParagraph",
-						"org.apache.poi.xslf.usermodel.XSLFTextParagraph"),
-						Collectors.toMap(Function.identity(), x -> "_runs")));
+		put(map, "org.apache.poi.xslf.usermodel.XSLFTextParagraph", "_runs");
 		//
 		putAll(map,
 				collect(Stream.of("org.apache.xmlbeans.impl.values.JavaListObject",
