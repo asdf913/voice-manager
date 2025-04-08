@@ -3,6 +3,7 @@ package org.springframework.beans.factory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.Character.UnicodeBlock;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
@@ -790,7 +791,7 @@ abstract class Util {
 		//
 		if (noneMatch(testAndApply(Objects::nonNull, getDeclaredMethods(clz), Arrays::stream, null),
 				m -> Objects.equals(getName(m), "forEach")
-						&& Arrays.equals(m != null ? m.getParameterTypes() : null, new Class<?>[] { Consumer.class }))
+						&& Arrays.equals(getParameterTypes(m), new Class<?>[] { Consumer.class }))
 				&& Objects.equals(clz != null ? clz.getSuperclass() : null, Object.class)) {
 			//
 			try (final InputStream is = getResourceAsStream(clz,
@@ -1068,6 +1069,10 @@ abstract class Util {
 			//
 		testAndAccept((a, b) -> action != null, instance, action, Iterable::forEach);
 		//
+	}
+
+	private static Class<?>[] getParameterTypes(final Executable instance) {
+		return instance != null ? instance.getParameterTypes() : null;
 	}
 
 	private static java.lang.reflect.Method[] getDeclaredMethods(final Class<?> instance) {
