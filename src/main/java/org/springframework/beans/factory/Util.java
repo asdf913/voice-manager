@@ -52,17 +52,25 @@ import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ALOAD;
 import org.apache.bcel.generic.ARETURN;
+import org.apache.bcel.generic.ASTORE;
 import org.apache.bcel.generic.CHECKCAST;
 import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.DUP;
 import org.apache.bcel.generic.FieldInstructionUtil;
 import org.apache.bcel.generic.GETFIELD;
+import org.apache.bcel.generic.ICONST;
+import org.apache.bcel.generic.IFEQ;
 import org.apache.bcel.generic.INVOKEINTERFACE;
+import org.apache.bcel.generic.INVOKESPECIAL;
+import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.InvokeInstructionUtil;
 import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.NEW;
 import org.apache.bcel.generic.ObjectType;
+import org.apache.bcel.generic.POP;
 import org.apache.bcel.generic.RETURN;
 import org.apache.bcel.generic.Type;
 import org.apache.commons.collections4.IterableUtils;
@@ -770,6 +778,70 @@ abstract class Util {
 			//
 		final Class<?> clz = getClass(instance);
 		//
+		JavaClass javaClass = null;
+		//
+		Method method = null;
+		//
+		ConstantPoolGen cpg = null;
+		//
+		Instruction[] ins = null;
+		//
+		java.lang.reflect.Method javaLangReflectMethod = null;
+		//
+		if (noneMatch(
+				testAndApply(Objects::nonNull, clz != null ? clz.getDeclaredMethods() : null, Arrays::stream, null),
+				m -> Objects.equals(getName(m), "forEach")
+						&& Arrays.equals(m != null ? m.getParameterTypes() : null, new Class<?>[] { Consumer.class }))
+				&& Objects.equals(clz != null ? clz.getSuperclass() : null, Object.class)) {
+			//
+			try (final InputStream is = getResourceAsStream(clz,
+					"/" + StringUtils.replace(Util.getName(Iterable.class), ".", "/") + ".class")) {
+				//
+				if (length(ins = InstructionListUtil.getInstructions(new MethodGen(
+						method = getForEachMethod(ClassParserUtil
+								.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null))),
+						null, cpg = new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(method)))
+						.getInstructionList())) > 4 && ArrayUtils.get(ins, 0) instanceof ALOAD
+						&& ArrayUtils.get(ins, 1) instanceof INVOKESTATIC && ArrayUtils.get(ins, 2) instanceof POP
+						&& ArrayUtils.get(ins, 3) instanceof ALOAD
+						&& ArrayUtils.get(ins, 4) instanceof INVOKEINTERFACE ii) {
+					//
+					final java.lang.reflect.Method[] ms = clz != null ? clz.getDeclaredMethods() : null;
+					//
+					java.lang.reflect.Method m = null;
+					//
+					for (int i = 0; i < length(ms); i++) {
+						//
+						if (!(Objects.equals(getName(m = ms[i]), InvokeInstructionUtil.getMethodName(ii, cpg))
+								&& length(ii.getArgumentTypes(cpg)) == m.getParameterCount()
+								&& Objects.equals(m.getReturnType(), Iterator.class))) {
+							//
+							continue;
+							//
+						} // if
+							//
+						if (javaLangReflectMethod == null) {
+							//
+							javaLangReflectMethod = m;
+							//
+						} else {
+							//
+							throw new IllegalStateException();
+							//
+						} // if
+							//
+					} // for
+						//
+				} // if
+					//
+			} catch (final IOException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
+				//
+		} // if
+			//
 		final String name = getName(clz);
 		//
 		FailableFunction<Object, Object, Exception> function = get(STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
@@ -783,18 +855,102 @@ abstract class Util {
 				//
 			} // if
 				//
-			final JavaClass javaClass = ClassParserUtil
-					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
+			javaClass = ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
 			//
-			final Method method = getForEachMethod(javaClass);
-			//
-			ConstantPoolGen cpg = null;
-			//
-			if (method != null && !executeForEachMethod(instance, name, STRING_FAILABLE_BI_FUNCTION_MAP,
-					InstructionListUtil.getInstructions(
-							new MethodGen(method, null, cpg = new ConstantPoolGen(method.getConstantPool()))
-									.getInstructionList()),
-					cpg)) {
+			if (javaLangReflectMethod != null) {
+				//
+				final int length = length(ins = InstructionListUtil.getInstructions(
+						new MethodGen(method = JavaClassUtil.getMethod(javaClass, javaLangReflectMethod), null,
+								cpg = new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(method)))
+								.getInstructionList()));
+				//
+				if (length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD
+						&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+						&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE) {
+					//
+					if (length(ins) == 4 && ArrayUtils.get(ins, 3) instanceof ARETURN
+							&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null) {
+						//
+						// com.helger.commons.log.InMemoryLogger
+						//
+						return;
+						//
+					} else if (length(ins) == 5 && ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE
+							&& ArrayUtils.get(ins, 4) instanceof ARETURN
+							&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null) {
+						//
+						// com.healthmarketscience.jackcess.impl.PropertyMapImpl
+						//
+						return;
+						//
+					} else if (length > 3) {
+						//
+						if (ArrayUtils.get(ins, 3) instanceof IFEQ
+								&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null) {
+							//
+							// org.apache.commons.collections4.collection.CompositeCollection
+							//
+							return;
+							//
+						} else if (ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE
+								&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null) {
+							//
+							// org.apache.jena.atlas.lib.Map2
+							//
+							return;
+							//
+						} // if
+							//
+					} // if
+						//
+				} else if (length > 7 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
+						&& ArrayUtils.get(ins, 2) instanceof ICONST && ArrayUtils.get(ins, 3) instanceof INVOKESPECIAL
+						&& ArrayUtils.get(ins, 4) instanceof ASTORE && ArrayUtils.get(ins, 5) instanceof ALOAD
+						&& ArrayUtils.get(ins, 6) instanceof ALOAD && ArrayUtils.get(ins, 7) instanceof GETFIELD gf
+						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null) {
+					//
+					// com.healthmarketscience.jackcess.impl.complex.MultiValueColumnPropertyMap
+					//
+					return;
+					//
+				} else if (length > 3 && ArrayUtils.get(ins, 0) instanceof ALOAD
+						&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf && ArrayUtils.get(ins, 2) instanceof CHECKCAST
+						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null) {
+					//
+					// com.healthmarketscience.jackcess.util.EntryIterableBuilder
+					//
+					return;
+					//
+				} else if (length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD
+						&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+						&& ArrayUtils.get(ins, 2) instanceof INVOKESTATIC invokeStatic
+						&& Objects.equals(invokeStatic.getClassName(cpg), "java.util.stream.Stream")
+						&& Objects.equals(invokeStatic.getMethodName(cpg), "of")) {
+					//
+					// org.apache.poi.ss.util.SSCellRange
+					//
+					return;
+					//
+				} else if (length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD
+						&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+						&& ArrayUtils.get(ins, 2) instanceof ALOAD) {
+					//
+					// org.d2ab.sequence.EquivalentSizeSequence
+					//
+					return;
+					//
+				} // if
+					//
+			} // if
+				//
+			if ((method = getForEachMethod(javaClass)) != null
+					&& !executeForEachMethod(instance, name, STRING_FAILABLE_BI_FUNCTION_MAP,
+							InstructionListUtil.getInstructions(
+									new MethodGen(method, null, cpg = new ConstantPoolGen(method.getConstantPool()))
+											.getInstructionList()),
+							cpg)) {
 				//
 				return;
 				//
@@ -909,6 +1065,10 @@ abstract class Util {
 		//
 	}
 
+	private static <T> boolean noneMatch(final Stream<T> instance, final Predicate<? super T> predicate) {
+		return instance == null || instance.noneMatch(predicate);
+	}
+
 	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, final T t, final U u,
 			final BiConsumer<? super T, ? super U> consumer) {
 		if (test(predicate, t, u)) {
@@ -963,10 +1123,8 @@ abstract class Util {
 		//
 		putAll(map,
 				Map.of("com.healthmarketscience.jackcess.impl.IndexCursorImpl", "_entryCursor",
-						"com.healthmarketscience.jackcess.impl.PropertyMapImpl", "_props",
 						"com.healthmarketscience.jackcess.impl.TableImpl", "_columns",
 						"com.healthmarketscience.jackcess.impl.TableScanCursor", "_ownedPagesCursor",
-						"com.healthmarketscience.jackcess.impl.complex.MultiValueColumnPropertyMap", "_primary",
 						"com.helger.commons.callback.CallbackList", "m_aRWLock",
 						"com.helger.commons.collection.iterate.ArrayIterator", "m_aArray",
 						"com.helger.commons.collection.iterate.IterableIterator", "m_aIter",
@@ -974,9 +1132,7 @@ abstract class Util {
 						"com.helger.commons.collection.map.LRUSet", "m_aMap"));
 		//
 		putAll(map,
-				Map.of("com.helger.commons.http.HttpHeaderMap", "m_aHeaders",
-						"com.helger.commons.io.file.FileSystemRecursiveIterator", "m_aFilesLeft",
-						"com.helger.commons.log.InMemoryLogger", "m_aMessages",
+				Map.of("com.helger.commons.io.file.FileSystemRecursiveIterator", "m_aFilesLeft",
 						"com.helger.commons.math.CombinationGenerator", "m_aCombinationsLeft",
 						"com.opencsv.bean.CsvToBean", "mappingStrategy", "com.opencsv.bean.PositionToBeanField",
 						"ranges", "com.sun.jna.platform.win32.Advapi32Util$EventLogIterator", "_buffer",
@@ -996,10 +1152,9 @@ abstract class Util {
 		putAll(map,
 				Map.of("org.apache.commons.math3.ml.neuralnet.twod.NeuronSquareMesh2D", "network",
 						"org.apache.ibatis.cursor.defaults.DefaultCursor", "cursorIterator",
-						"org.apache.jena.atlas.lib.Map2", "map2", "org.apache.jena.atlas.lib.tuple.TupleN", "tuple",
+						"org.apache.jena.atlas.lib.tuple.TupleN", "tuple",
 						"org.apache.jena.ext.com.google.common.collect.EnumMultiset", "enumConstants",
 						"org.apache.jena.ext.com.google.common.collect.EvictingQueue", DELEGATE,
-						"org.apache.logging.log4j.message.StructuredDataCollectionMessage", "structuredDataMessageList",
 						"org.apache.poi.ddf.EscherContainerRecord", "_childRecords",
 						"org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate", "records",
 						"org.apache.poi.hssf.usermodel.HSSFRow", "cells"));
@@ -1010,9 +1165,8 @@ abstract class Util {
 				"org.apache.poi.poifs.filesystem.DirectoryNode", "_entries",
 				"org.apache.poi.poifs.filesystem.FilteringDirectoryNode", "directory",
 				"org.apache.poi.poifs.filesystem.POIFSDocument", "_property",
-				"org.apache.poi.poifs.filesystem.POIFSStream", "blockStore", "org.apache.poi.ss.util.SSCellRange",
-				"_flattenedArray", "org.apache.poi.xslf.usermodel.XSLFNotes", "_notes",
-				"org.apache.poi.xslf.usermodel.XSLFSlideLayout", "_layout"));
+				"org.apache.poi.poifs.filesystem.POIFSStream", "blockStore", "org.apache.poi.xslf.usermodel.XSLFNotes",
+				"_notes", "org.apache.poi.xslf.usermodel.XSLFSlideLayout", "_layout"));
 		//
 		putAll(map, Map.of("org.apache.poi.xssf.streaming.SXSSFRow", "_cells",
 				"org.apache.poi.xslf.usermodel.XSLFTableStyles", "_styles",
@@ -1022,11 +1176,11 @@ abstract class Util {
 				"underlying", "org.d2ab.collection.ChainedCollection", "collections", "org.d2ab.collection.ChainedList",
 				"lists", "org.d2ab.collection.longs.BitLongSet", "negatives"));
 		//
-		putAll(map, Map.of("org.openjdk.nashorn.internal.runtime.ListAdapter", "obj",
-				"org.openjdk.nashorn.internal.runtime.PropertyMap", "properties",
-				"org.oxbow.swingbits.action.ActionGroup", "actions", "org.springframework.beans.MutablePropertyValues",
-				"propertyValueList", "org.springframework.core.env.MutablePropertySources", "propertySourceList",
-				"org.springframework.util.AutoPopulatingList", "backingList"));
+		putAll(map,
+				Map.of("org.openjdk.nashorn.internal.runtime.ListAdapter", "obj",
+						"org.openjdk.nashorn.internal.runtime.PropertyMap", "properties",
+						"org.oxbow.swingbits.action.ActionGroup", "actions",
+						"org.springframework.beans.MutablePropertyValues", "propertyValueList"));
 		//
 		putAll(map, collect(Stream.of("com.fasterxml.jackson.databind.node.ArrayNode",
 				"com.fasterxml.jackson.databind.node.ObjectNode", "org.apache.poi.poifs.property.DirectoryProperty"),
@@ -1038,7 +1192,6 @@ abstract class Util {
 						Collectors.toMap(Function.identity(), x -> "compactHashMap")));
 		//
 		putAll(map, collect(Stream.of("com.github.andrewoma.dexx.collection.internal.adapter.ListAdapater",
-				"org.apache.logging.log4j.spi.MutableThreadContextStack",
 				"org.d2ab.collection.BiMappedList$RandomAccessList", "org.d2ab.collection.BiMappedList$SequentialList",
 				"org.d2ab.collection.FilteredList", "org.d2ab.collection.MappedList$RandomAccessList",
 				"org.d2ab.collection.MappedList$SequentialList", "org.d2ab.collection.chars.CharList$SubList",
@@ -1078,19 +1231,15 @@ abstract class Util {
 						"org.apache.jena.ext.com.google.common.reflect.TypeToken$TypeSet"),
 						Collectors.toMap(Function.identity(), x -> "types")));
 		//
-		putAll(map,
-				collect(Stream.of("org.apache.commons.collections.collection.CompositeCollection",
-						"org.apache.commons.collections4.collection.CompositeCollection",
-						"org.apache.commons.collections4.set.CompositeSet"),
-						Collectors.toMap(Function.identity(), x -> "all")));
+		put(map, "org.apache.commons.collections.collection.CompositeCollection", "all");
 		//
-		putAll(map, collect(Stream.of("org.apache.commons.collections.collection.SynchronizedCollection",
-				"org.apache.commons.collections4.collection.SynchronizedCollection",
-				"org.d2ab.collection.CollectionList", "org.d2ab.collection.FilteredCollection",
-				"org.d2ab.collection.MappedCollection", "org.d2ab.collection.chars.CollectionCharList",
-				"org.d2ab.collection.doubles.CollectionDoubleList", "org.d2ab.collection.ints.CollectionIntList",
-				"org.d2ab.collection.longs.CollectionLongList", "org.d2ab.sequence.CollectionSequence"),
-				Collectors.toMap(Function.identity(), x -> "collection")));
+		putAll(map,
+				collect(Stream.of("org.apache.commons.collections4.collection.SynchronizedCollection",
+						"org.d2ab.collection.CollectionList", "org.d2ab.collection.FilteredCollection",
+						"org.d2ab.collection.MappedCollection", "org.d2ab.collection.chars.CollectionCharList",
+						"org.d2ab.collection.doubles.CollectionDoubleList",
+						"org.d2ab.collection.ints.CollectionIntList", "org.d2ab.collection.longs.CollectionLongList"),
+						Collectors.toMap(Function.identity(), x -> "collection")));
 		//
 		putAll(map,
 				collect(Stream.of("org.apache.commons.collections.list.AbstractLinkedList$LinkedSubList",
@@ -1111,11 +1260,6 @@ abstract class Util {
 						Collectors.toMap(Function.identity(), x -> "setOrder")));
 		//
 		putAll(map,
-				collect(Stream.of("org.apache.commons.collections.set.MapBackedSet",
-						"org.apache.commons.collections4.set.MapBackedSet"),
-						Collectors.toMap(Function.identity(), x -> "map")));
-		//
-		putAll(map,
 				collect(Stream.of("org.apache.commons.csv.CSVRecord", "org.d2ab.collection.chars.BitCharSet",
 						"org.d2ab.collection.doubles.RawDoubleSet", "org.d2ab.collection.doubles.SortedListDoubleSet",
 						"org.d2ab.collection.ints.BitIntSet"), Collectors.toMap(Function.identity(), x -> "values")));
@@ -1125,10 +1269,8 @@ abstract class Util {
 						"org.apache.xerces.impl.dv.util.ByteListImpl"),
 						Collectors.toMap(Function.identity(), x -> "data")));
 		//
-		putAll(map,
-				collect(Stream.of("org.apache.poi.hssf.usermodel.HSSFPatriarch",
-						"org.apache.poi.xslf.usermodel.XSLFGroupShape"),
-						Collectors.toMap(Function.identity(), x -> "_shapes")));
+		putAll(map, collect(Stream.of("org.apache.poi.xslf.usermodel.XSLFGroupShape"),
+				Collectors.toMap(Function.identity(), x -> "_shapes")));
 		//
 		putAll(map,
 				collect(Stream.of("org.apache.poi.hssf.usermodel.HSSFSheet", "org.apache.poi.xslf.usermodel.XSLFTable",
@@ -1155,8 +1297,7 @@ abstract class Util {
 				"org.d2ab.collection.ints.ChainingIntIterable", "org.d2ab.collection.longs.ChainingLongIterable"),
 				Collectors.toMap(Function.identity(), x -> "iterables")));
 		//
-		putAll(map, collect(Stream.of("org.d2ab.collection.ReverseList", "org.d2ab.sequence.EquivalentSizeSequence"),
-				Collectors.toMap(Function.identity(), x -> "original")));
+		put(map, "org.d2ab.collection.ReverseList", "original");
 		//
 		putAll(map,
 				collect(Stream.of("it.unimi.dsi.fastutil.booleans.AbstractBooleanBigList$BooleanSubList",
@@ -1410,8 +1551,6 @@ abstract class Util {
 				Collectors.toMap(Function.identity(), x -> "objects")));
 		//
 		put(map, "org.apache.pdfbox.pdmodel.PDPageTree", "root");
-		//
-		put(map, "org.apache.pdfbox.pdmodel.common.COSArrayList", "actual");
 		//
 		put(map, "org.apache.pdfbox.pdmodel.interactive.form.PDFieldTree", "acroForm");
 		//
@@ -1807,8 +1946,6 @@ abstract class Util {
 			@Nullable final String name, final Map<String, FailableFunction<Object, Object, Exception>> map)
 			throws Exception {
 		//
-		String methodName = null;
-		//
 		Method method, m = null;
 		//
 		Instruction[] instructions;
@@ -1816,8 +1953,6 @@ abstract class Util {
 		ConstantPoolGen cpg;
 		//
 		FailableFunction<Object, Object, Exception> function;
-		//
-		Entry<String, Object> entry;
 		//
 		for (int i = 0; i < length(interfaces); i++) {
 			//
@@ -1840,16 +1975,7 @@ abstract class Util {
 				//
 			} // if
 				//
-			if (!executeForEachMethod3a(instructions, cpg, entry = Pair.of(name, instance),
-					methodName = FieldOrMethodUtil.getName(m), map)) {
-				//
-				return false;
-				//
-			} else if (!executeForEachMethod3b(instructions, cpg, entry, methodName, map)) {
-				//
-				return false;
-				//
-			} else if (!executeForEachMethod3c(instructions, cpg, entry, map)) {
+			if (!executeForEachMethod3c(instructions, cpg, Pair.of(name, instance), map)) {
 				//
 				return false;
 				//
@@ -1871,60 +1997,6 @@ abstract class Util {
 			} // if
 				//
 		} // for
-			//
-		return true;
-		//
-	}
-
-	private static boolean executeForEachMethod3a(final Instruction[] instructions, final ConstantPoolGen cpg,
-			final Entry<String, Object> entry, final String methodName,
-			final Map<String, FailableFunction<Object, Object, Exception>> map) throws Exception {
-		//
-		if (length(instructions) == 4 && instructions[0] instanceof ALOAD && instructions[1] instanceof GETFIELD gf
-				&& instructions[2] instanceof INVOKEINTERFACE ii
-				&& Objects.equals(InvokeInstructionUtil.getMethodName(ii, cpg), methodName)
-				&& instructions[3] instanceof ARETURN) {
-			//
-			final FailableFunction<Object, Object, Exception> function = a -> a != null
-					? FieldUtils.readDeclaredField(a, FieldInstructionUtil.getFieldName(gf, cpg), true)
-					: null;
-			//
-			put(map, getKey(entry), function);
-			//
-			if (function.apply(getValue(entry)) == null) {
-				//
-				return false;
-				//
-			} // if
-				//
-		} // if
-			//
-		return true;
-		//
-	}
-
-	private static boolean executeForEachMethod3b(final Instruction[] instructions, final ConstantPoolGen cpg,
-			final Entry<String, Object> entry, final String methodName,
-			final Map<String, FailableFunction<Object, Object, Exception>> map) throws Exception {
-		//
-		if (length(instructions) == 5 && instructions[0] instanceof ALOAD && instructions[1] instanceof GETFIELD gf
-				&& instructions[2] instanceof INVOKEINTERFACE && instructions[3] instanceof INVOKEINTERFACE ii
-				&& Objects.equals(InvokeInstructionUtil.getMethodName(ii, cpg), methodName)
-				&& instructions[4] instanceof ARETURN) {
-			//
-			final FailableFunction<Object, Object, Exception> function = a -> a != null
-					? FieldUtils.readDeclaredField(a, FieldInstructionUtil.getFieldName(gf, cpg), true)
-					: null;
-			//
-			put(map, getKey(entry), function);
-			//
-			if (function.apply(getValue(entry)) == null) {
-				//
-				return false;
-				//
-			} // if
-				//
-		} // if
 			//
 		return true;
 		//

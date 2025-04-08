@@ -76,12 +76,6 @@ class UtilTest {
 		(METHOD_GET_RESOURCE_AS_STREAM = clz.getDeclaredMethod("getResourceAsStream", Class.class, String.class))
 				.setAccessible(true);
 		//
-		(METHOD_EXECUTE_FOR_EACH_METHOD_3A = clz.getDeclaredMethod("executeForEachMethod3a", Instruction[].class,
-				ConstantPoolGen.class, Entry.class, String.class, Map.class)).setAccessible(true);
-		//
-		(METHOD_EXECUTE_FOR_EACH_METHOD_3B = clz.getDeclaredMethod("executeForEachMethod3b", Instruction[].class,
-				ConstantPoolGen.class, Entry.class, String.class, Map.class)).setAccessible(true);
-		//
 		(METHOD_EXECUTE_FOR_EACH_METHOD_3C = clz.getDeclaredMethod("executeForEachMethod3c", Instruction[].class,
 				ConstantPoolGen.class, Entry.class, Map.class)).setAccessible(true);
 		//
