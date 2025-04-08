@@ -1035,6 +1035,7 @@ abstract class Util {
 		//
 	}
 
+	@Nullable
 	private static java.lang.reflect.Method getIteratorMethod(final Class<?> clz) throws IOException {
 		//
 		java.lang.reflect.Method javaLangReflectMethod = null;
