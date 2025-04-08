@@ -792,7 +792,7 @@ abstract class Util {
 		if (noneMatch(testAndApply(Objects::nonNull, getDeclaredMethods(clz), Arrays::stream, null),
 				m -> Objects.equals(getName(m), "forEach")
 						&& Arrays.equals(getParameterTypes(m), new Class<?>[] { Consumer.class }))
-				&& Objects.equals(clz != null ? clz.getSuperclass() : null, Object.class)) {
+				&& Objects.equals(getSuperclass(clz), Object.class)) {
 			//
 			try (final InputStream is = getResourceAsStream(clz,
 					"/" + StringUtils.replace(Util.getName(Iterable.class), ".", "/") + ".class")) {
@@ -1069,6 +1069,10 @@ abstract class Util {
 			//
 		testAndAccept((a, b) -> action != null, instance, action, Iterable::forEach);
 		//
+	}
+
+	private static <T> Class<? super T> getSuperclass(final Class<T> instance) {
+		return instance != null ? instance.getSuperclass() : null;
 	}
 
 	private static Class<?>[] getParameterTypes(final Executable instance) {
