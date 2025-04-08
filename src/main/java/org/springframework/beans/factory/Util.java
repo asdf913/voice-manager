@@ -925,10 +925,15 @@ abstract class Util {
 						&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
 						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
 						&& ArrayUtils.get(ins, 2) instanceof INVOKESTATIC invokeStatic
-						&& Objects.equals(invokeStatic.getClassName(cpg), "java.util.stream.Stream")
-						&& Objects.equals(invokeStatic.getMethodName(cpg), "of")) {
+						&& Boolean.logicalOr(
+								Objects.equals(invokeStatic.getClassName(cpg), "java.util.stream.Stream")
+										&& Objects.equals(invokeStatic.getMethodName(cpg), "of"),
+								Objects.equals(invokeStatic.getClassName(cpg), "java.util.Arrays")
+										&& Objects.equals(invokeStatic.getMethodName(cpg), "stream"))) {
 					//
 					// org.apache.poi.ss.util.SSCellRange
+					//
+					// org.apache.bcel.classfile.ConstantPool
 					//
 					return;
 					//
@@ -1157,14 +1162,15 @@ abstract class Util {
 						"freemarker.core._SortedArraySet", "array", "freemarker.core._UnmodifiableCompositeSet", "set1",
 						"org.apache.bcel.classfile.BootstrapMethods", "bootstrapMethods"));
 		//
-		putAll(map, Map.of("org.apache.bcel.classfile.ConstantPool", "constantPool",
-				"org.apache.bcel.classfile.InnerClasses", "innerClasses", "org.apache.bcel.classfile.LineNumberTable",
-				"lineNumberTable", "org.apache.bcel.classfile.LocalVariableTable", "localVariableTable",
-				"org.apache.bcel.classfile.LocalVariableTypeTable", "localVariableTypeTable",
-				"org.apache.bcel.classfile.MethodParameters", "parameters",
-				"org.apache.commons.collections.CursorableLinkedList", "_head",
-				"org.apache.commons.collections4.iterators.IteratorIterable", "typeSafeIterator",
-				"org.apache.commons.io.IOExceptionList", "causeList"));
+		putAll(map,
+				Map.of("org.apache.bcel.classfile.InnerClasses", "innerClasses",
+						"org.apache.bcel.classfile.LineNumberTable", "lineNumberTable",
+						"org.apache.bcel.classfile.LocalVariableTable", "localVariableTable",
+						"org.apache.bcel.classfile.LocalVariableTypeTable", "localVariableTypeTable",
+						"org.apache.bcel.classfile.MethodParameters", "parameters",
+						"org.apache.commons.collections.CursorableLinkedList", "_head",
+						"org.apache.commons.collections4.iterators.IteratorIterable", "typeSafeIterator",
+						"org.apache.commons.io.IOExceptionList", "causeList"));
 		//
 		putAll(map,
 				Map.of("org.apache.ibatis.cursor.defaults.DefaultCursor", "cursorIterator",
