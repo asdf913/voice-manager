@@ -872,7 +872,7 @@ abstract class Util {
 			//
 			for (final Entry<String, String> entry : entrySet) {
 				//
-				if (entry == null || !Objects.equals(name, getKey(entry))) {
+				if (!Objects.equals(name, getKey(entry))) {
 					//
 					continue;
 					//
