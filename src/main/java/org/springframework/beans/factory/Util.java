@@ -905,7 +905,7 @@ abstract class Util {
 			//
 		} // if
 			//
-		testAndAccept((a, b) -> action != null, instance, action, (a, b) -> a.forEach(b));
+		testAndAccept((a, b) -> action != null, instance, action, Iterable::forEach);
 		//
 	}
 
