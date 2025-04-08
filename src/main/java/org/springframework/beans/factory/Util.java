@@ -905,12 +905,15 @@ abstract class Util {
 			//
 		} // if
 			//
-		if (action != null) {
-			//
-			instance.forEach(action);
-			//
-		} // if
-			//
+		testAndAccept((a, b) -> action != null, instance, action, (a, b) -> a.forEach(b));
+		//
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiConsumer<? super T, ? super U> consumer) {
+		if (test(predicate, t, u)) {
+			accept(consumer, t, u);
+		}
 	}
 
 	static void forEach(@Nullable final IntStream intStream, @Nullable final IntConsumer intConsumer) {
