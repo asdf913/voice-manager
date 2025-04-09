@@ -998,6 +998,7 @@ abstract class Util {
 		//
 	}
 
+	@Nullable
 	private static String getFieldNameIfMethodReadOneFieldOnly(final Method method) {
 		//
 		final ConstantPoolGen cpg = testAndApply(Objects::nonNull, FieldOrMethodUtil.getConstantPool(method),
