@@ -812,9 +812,9 @@ abstract class Util {
 			final JavaClass javaClass = ClassParserUtil
 					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
 			//
-			if (Boolean.logicalAnd(javaLangReflectIteratorMethod != null,
-					Boolean.logicalOr(isIteratorMethodReturnNull1(javaClass, javaLangReflectIteratorMethod, instance),
-							isIteratorMethodReturnNull2(javaClass, javaLangReflectIteratorMethod, instance)))) {
+			if (javaLangReflectIteratorMethod != null && Boolean.logicalOr(
+					isIteratorMethodReturnNull1(javaClass, javaLangReflectIteratorMethod, instance),
+					isIteratorMethodReturnNull2(javaClass, javaLangReflectIteratorMethod, instance))) {
 				//
 				return;
 				//
