@@ -842,17 +842,9 @@ abstract class Util {
 						//
 					} else if (length > 3) {
 						//
-						if (ArrayUtils.get(ins, 3) instanceof IFEQ
-								&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null) {
-							//
-							// org.apache.commons.collections4.collection.CompositeCollection
-							//
-							return;
-							//
-						} else if (ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE
-								&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null) {
-							//
-							// org.apache.jena.atlas.lib.Map2
+						if (Boolean.logicalOr(ArrayUtils.get(ins, 3) instanceof IFEQ, // org.apache.commons.collections4.collection.CompositeCollection
+								ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE// org.apache.jena.atlas.lib.Map2
+						) && FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null) {
 							//
 							return;
 							//
