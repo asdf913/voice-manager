@@ -780,11 +780,11 @@ abstract class Util {
 			//
 		final Class<?> clz = getClass(instance);
 		//
-		java.lang.reflect.Method javaLangReflectMethod = null;
+		java.lang.reflect.Method javaLangReflectIteratorMethod = null;
 		//
 		try {
 			//
-			javaLangReflectMethod = getIteratorMethod(clz);
+			javaLangReflectIteratorMethod = getIteratorMethod(clz);
 			//
 		} catch (final IOException e) {
 			//
@@ -812,104 +812,11 @@ abstract class Util {
 			final JavaClass javaClass = ClassParserUtil
 					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
 			//
-			if (javaLangReflectMethod != null) {
+			if (javaLangReflectIteratorMethod != null
+					&& isIteratorMethodReturnNull(javaClass, javaLangReflectIteratorMethod, instance)) {
 				//
-				final Instruction[] ins = InstructionListUtil.getInstructions(
-						new MethodGen(method = JavaClassUtil.getMethod(javaClass, javaLangReflectMethod), null,
-								cpg = new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(method)))
-								.getInstructionList());
+				return;
 				//
-				final int length = length(ins);
-				//
-				if (length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD
-						&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
-						&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE) {
-					//
-					if (or(length(ins) == 4 && ArrayUtils.get(ins, 3) instanceof ARETURN
-							&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null// com.helger.commons.log.InMemoryLogger
-							,
-							length(ins) == 5 && ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE
-									&& ArrayUtils.get(ins, 4) instanceof ARETURN
-									&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null// com.healthmarketscience.jackcess.impl.PropertyMapImpl
-							, length > 3 && or(ArrayUtils.get(ins, 3) instanceof IFEQ, // org.apache.commons.collections4.collection.CompositeCollection
-									ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE, // org.apache.jena.atlas.lib.Map2
-									ArrayUtils.get(ins, 3) instanceof ASTORE// com.github.andrewoma.dexx.collection.internal.base.MappedIterable
-							) && FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null)) {
-						//
-						return;
-						//
-					} // if
-						//
-				} else if (length > 7 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
-						&& ArrayUtils.get(ins, 2) instanceof ICONST && ArrayUtils.get(ins, 3) instanceof INVOKESPECIAL
-						&& ArrayUtils.get(ins, 4) instanceof ASTORE && ArrayUtils.get(ins, 5) instanceof ALOAD
-						&& ArrayUtils.get(ins, 6) instanceof ALOAD && ArrayUtils.get(ins, 7) instanceof GETFIELD gf
-						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null) {
-					//
-					// com.healthmarketscience.jackcess.impl.complex.MultiValueColumnPropertyMap
-					//
-					return;
-					//
-				} else if (length > 3 && ArrayUtils.get(ins, 0) instanceof ALOAD
-						&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf && ArrayUtils.get(ins, 2) instanceof CHECKCAST
-						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null) {
-					//
-					// com.healthmarketscience.jackcess.util.EntryIterableBuilder
-					//
-					return;
-					//
-				} else if (length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD
-						&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
-						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-						&& ArrayUtils.get(ins, 2) instanceof INVOKESTATIC invokeStatic
-						&& or(Objects.equals(invokeStatic.getClassName(cpg), "java.util.stream.Stream")
-								&& Objects.equals(invokeStatic.getMethodName(cpg), "of"),
-								Objects.equals(invokeStatic.getClassName(cpg), "java.util.Arrays")
-										&& Objects.equals(invokeStatic.getMethodName(cpg), "stream"),
-								Objects.equals(invokeStatic.getClassName(cpg), "java.util.Collections")
-										&& Objects.equals(invokeStatic.getMethodName(cpg), "unmodifiableList"))) {
-					//
-					// org.apache.poi.ss.util.SSCellRange
-					//
-					// org.apache.bcel.classfile.ConstantPool
-					//
-					// org.springframework.beans.MutablePropertyValues
-					//
-					return;
-					//
-				} else if (length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD
-						&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
-						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-						&& ArrayUtils.get(ins, 2) instanceof ALOAD) {
-					//
-					// org.d2ab.sequence.EquivalentSizeSequence
-					//
-					return;
-					//
-				} else if (length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD
-						&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
-						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-						&& ArrayUtils.get(ins, 2) instanceof INVOKEVIRTUAL) {
-					//
-					return;
-					//
-				} else if (length == 4 && ArrayUtils.get(ins, 0) instanceof ALOAD
-						&& ArrayUtils.get(ins, 1) instanceof INVOKEVIRTUAL iv
-						&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE
-						&& Objects.equals(getName(clz), iv.getClassName(cpg))
-						&& ArrayUtils.get(ins, 3) instanceof ARETURN) {
-					//
-					final String fieldName = getFieldNameIfMethodReadOneFieldOnly(
-							javaClass.getMethod(Narcissus.findMethod(clz, iv.getMethodName(cpg))));
-					//
-					if (fieldName != null && FieldUtils.readDeclaredField(instance, fieldName, true) == null) {
-						//
-						return;
-						//
-					} // if
-						//
-				} // if
-					//
 			} // if
 				//
 			if ((method = getForEachMethod(javaClass)) != null
@@ -995,6 +902,114 @@ abstract class Util {
 		} // if
 			//
 		testAndAccept((a, b) -> action != null, instance, action, Iterable::forEach);
+		//
+	}
+
+	private static boolean isIteratorMethodReturnNull(final JavaClass javaClass,
+			final java.lang.reflect.Method javaLangReflectMethod, final Object instance)
+			throws IllegalAccessException, NoSuchMethodException {
+		//
+		final Method method = JavaClassUtil.getMethod(javaClass, javaLangReflectMethod);
+		//
+		final ConstantPoolGen cpg = testAndApply(Objects::nonNull, FieldOrMethodUtil.getConstantPool(method),
+				ConstantPoolGen::new, null);
+		//
+		final Instruction[] ins = InstructionListUtil.getInstructions(MethodGenUtil
+				.getInstructionList(testAndApply(Objects::nonNull, cpg, x -> new MethodGen(method, null, x), null)));
+		//
+		final int length = length(ins);
+		//
+		if (length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+				&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE) {
+			//
+			if (or(length(ins) == 4 && ArrayUtils.get(ins, 3) instanceof ARETURN
+					&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null// com.helger.commons.log.InMemoryLogger
+					,
+					length(ins) == 5 && ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE
+							&& ArrayUtils.get(ins, 4) instanceof ARETURN
+							&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null// com.healthmarketscience.jackcess.impl.PropertyMapImpl
+					, length > 3 && or(ArrayUtils.get(ins, 3) instanceof IFEQ, // org.apache.commons.collections4.collection.CompositeCollection
+							ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE, // org.apache.jena.atlas.lib.Map2
+							ArrayUtils.get(ins, 3) instanceof ASTORE// com.github.andrewoma.dexx.collection.internal.base.MappedIterable
+					) && FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null)) {
+				//
+				return true;
+				//
+			} // if
+				//
+		} else if (length > 7 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
+				&& ArrayUtils.get(ins, 2) instanceof ICONST && ArrayUtils.get(ins, 3) instanceof INVOKESPECIAL
+				&& ArrayUtils.get(ins, 4) instanceof ASTORE && ArrayUtils.get(ins, 5) instanceof ALOAD
+				&& ArrayUtils.get(ins, 6) instanceof ALOAD && ArrayUtils.get(ins, 7) instanceof GETFIELD gf
+				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null) {
+			//
+			// com.healthmarketscience.jackcess.impl.complex.MultiValueColumnPropertyMap
+			//
+			return true;
+			//
+		} else if (length > 3 && ArrayUtils.get(ins, 0) instanceof ALOAD
+				&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf && ArrayUtils.get(ins, 2) instanceof CHECKCAST
+				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null) {
+			//
+			// com.healthmarketscience.jackcess.util.EntryIterableBuilder
+			//
+			return true;
+			//
+		} else if (length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD
+				&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+				&& ArrayUtils.get(ins, 2) instanceof INVOKESTATIC invokeStatic
+				&& or(Objects.equals(invokeStatic.getClassName(cpg), "java.util.stream.Stream")
+						&& Objects.equals(invokeStatic.getMethodName(cpg), "of"),
+						Objects.equals(invokeStatic.getClassName(cpg), "java.util.Arrays")
+								&& Objects.equals(invokeStatic.getMethodName(cpg), "stream"),
+						Objects.equals(invokeStatic.getClassName(cpg), "java.util.Collections")
+								&& Objects.equals(invokeStatic.getMethodName(cpg), "unmodifiableList"))) {
+			//
+			// org.apache.poi.ss.util.SSCellRange
+			//
+			// org.apache.bcel.classfile.ConstantPool
+			//
+			// org.springframework.beans.MutablePropertyValues
+			//
+			return true;
+			//
+		} else if (length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD
+				&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+				&& ArrayUtils.get(ins, 2) instanceof ALOAD) {
+			//
+			// org.d2ab.sequence.EquivalentSizeSequence
+			//
+			return true;
+			//
+		} else if (length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD
+				&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+				&& ArrayUtils.get(ins, 2) instanceof INVOKEVIRTUAL) {
+			//
+			return true;
+			//
+		} // if
+			//
+		final Class<?> clz = getClass(instance);
+		//
+		if (length == 4 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof INVOKEVIRTUAL iv
+				&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE
+				&& Objects.equals(getName(clz), iv.getClassName(cpg)) && ArrayUtils.get(ins, 3) instanceof ARETURN) {
+			//
+			final String fieldName = getFieldNameIfMethodReadOneFieldOnly(
+					javaClass.getMethod(Narcissus.findMethod(clz, iv.getMethodName(cpg))));
+			//
+			if (fieldName != null && FieldUtils.readDeclaredField(instance, fieldName, true) == null) {
+				//
+				return true;
+				//
+			} // if
+				//
+		} // if
+			//
+		return false;
 		//
 	}
 
