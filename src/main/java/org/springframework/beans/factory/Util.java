@@ -907,8 +907,7 @@ abstract class Util {
 	}
 
 	private static boolean isIteratorMethodReturnNull1(final JavaClass javaClass,
-			final java.lang.reflect.Method javaLangReflectMethod, final Object instance)
-			throws IllegalAccessException, NoSuchMethodException {
+			final java.lang.reflect.Method javaLangReflectMethod, final Object instance) throws IllegalAccessException {
 		//
 		final Method method = JavaClassUtil.getMethod(javaClass, javaLangReflectMethod);
 		//
