@@ -1006,10 +1006,20 @@ abstract class Util {
 		final Instruction[] ins = InstructionListUtil.getInstructions(MethodGenUtil
 				.getInstructionList(testAndApply(Objects::nonNull, cpg, x -> new MethodGen(method, null, x), null)));
 		//
-		if (length(ins) == 3 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+		final int length = length(ins);
+		//
+		if (length == 3 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
 				&& ArrayUtils.get(ins, 2) instanceof ARETURN) {
 			//
 			// org.apache.commons.collections4.collection.SynchronizedCollection
+			//
+			return gf.getFieldName(cpg);
+			//
+		} else if (length == 6 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
+				&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD gf
+				&& ArrayUtils.get(ins, 4) instanceof INVOKESPECIAL && ArrayUtils.get(ins, 5) instanceof ARETURN) {
+			//
+			// org.apache.commons.io.IOExceptionList
 			//
 			return gf.getFieldName(cpg);
 			//
@@ -1232,8 +1242,7 @@ abstract class Util {
 						"org.apache.bcel.classfile.LocalVariableTypeTable", "localVariableTypeTable",
 						"org.apache.bcel.classfile.MethodParameters", "parameters",
 						"org.apache.commons.collections.CursorableLinkedList", "_head",
-						"org.apache.commons.collections4.iterators.IteratorIterable", "typeSafeIterator",
-						"org.apache.commons.io.IOExceptionList", "causeList"));
+						"org.apache.commons.collections4.iterators.IteratorIterable", "typeSafeIterator"));
 		//
 		putAll(map,
 				Map.of("org.apache.ibatis.cursor.defaults.DefaultCursor", "cursorIterator",
