@@ -801,8 +801,6 @@ abstract class Util {
 		//
 		Method method = null;
 		//
-		ConstantPoolGen cpg = null;
-		//
 		try (final InputStream is = getResourceAsStream(clz, "/" + StringUtils.replace(name, ".", "/") + ".class")) {
 			//
 			if (function != null && function.apply(instance) == null) {
