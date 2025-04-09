@@ -813,7 +813,8 @@ abstract class Util {
 					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
 			//
 			if (javaLangReflectIteratorMethod != null
-					&& isIteratorMethodReturnNull(javaClass, javaLangReflectIteratorMethod, instance)) {
+					&& (isIteratorMethodReturnNull1(javaClass, javaLangReflectIteratorMethod, instance)
+							|| isIteratorMethodReturnNull2(javaClass, javaLangReflectIteratorMethod, instance))) {
 				//
 				return;
 				//
@@ -905,7 +906,7 @@ abstract class Util {
 		//
 	}
 
-	private static boolean isIteratorMethodReturnNull(final JavaClass javaClass,
+	private static boolean isIteratorMethodReturnNull1(final JavaClass javaClass,
 			final java.lang.reflect.Method javaLangReflectMethod, final Object instance)
 			throws IllegalAccessException, NoSuchMethodException {
 		//
@@ -992,6 +993,24 @@ abstract class Util {
 			//
 		} // if
 			//
+		return false;
+		//
+	}
+
+	private static boolean isIteratorMethodReturnNull2(final JavaClass javaClass,
+			final java.lang.reflect.Method javaLangReflectMethod, final Object instance)
+			throws IllegalAccessException, NoSuchMethodException {
+		//
+		final Method method = JavaClassUtil.getMethod(javaClass, javaLangReflectMethod);
+		//
+		final ConstantPoolGen cpg = testAndApply(Objects::nonNull, FieldOrMethodUtil.getConstantPool(method),
+				ConstantPoolGen::new, null);
+		//
+		final Instruction[] ins = InstructionListUtil.getInstructions(MethodGenUtil
+				.getInstructionList(testAndApply(Objects::nonNull, cpg, x -> new MethodGen(method, null, x), null)));
+		//
+		final int length = length(ins);
+		//
 		final Class<?> clz = getClass(instance);
 		//
 		if (length == 4 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof INVOKEVIRTUAL iv
