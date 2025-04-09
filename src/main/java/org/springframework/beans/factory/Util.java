@@ -842,8 +842,9 @@ abstract class Util {
 						//
 					} else if (length > 3) {
 						//
-						if (Boolean.logicalOr(ArrayUtils.get(ins, 3) instanceof IFEQ, // org.apache.commons.collections4.collection.CompositeCollection
-								ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE// org.apache.jena.atlas.lib.Map2
+						if (or(ArrayUtils.get(ins, 3) instanceof IFEQ, // org.apache.commons.collections4.collection.CompositeCollection
+								ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE, // org.apache.jena.atlas.lib.Map2
+								ArrayUtils.get(ins, 3) instanceof ASTORE// com.github.andrewoma.dexx.collection.internal.base.MappedIterable
 						) && FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null) {
 							//
 							return;
@@ -1184,7 +1185,6 @@ abstract class Util {
 				"com.github.andrewoma.dexx.collection.ArrayList", "elements",
 				"com.github.andrewoma.dexx.collection.TreeMap", "tree", "com.github.andrewoma.dexx.collection.TreeSet",
 				"redBlackTree", "com.github.andrewoma.dexx.collection.Vector", "pointer",
-				"com.github.andrewoma.dexx.collection.internal.base.MappedIterable", "from",
 				"com.google.common.collect.EnumMultiset", "enumConstants", "com.google.common.collect.EvictingQueue",
 				DELEGATE, "com.healthmarketscience.jackcess.impl.DatabaseImpl", "_tableFinder"));
 		//
