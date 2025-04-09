@@ -1096,6 +1096,7 @@ abstract class Util {
 		//
 	}
 
+	@Nullable
 	private static Class<?> getReturnType(@Nullable final java.lang.reflect.Method instnace) {
 		return instnace != null ? instnace.getReturnType() : null;
 	}
