@@ -974,15 +974,6 @@ abstract class Util {
 			//
 			return true;
 			//
-		} else if (length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD
-				&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
-				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-				&& ArrayUtils.get(ins, 2) instanceof ALOAD) {
-			//
-			// org.d2ab.sequence.EquivalentSizeSequence
-			//
-			return true;
-			//
 		} // if
 			//
 		return false;
@@ -1004,6 +995,15 @@ abstract class Util {
 		final int length = length(ins);
 		//
 		if (length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+				&& ArrayUtils.get(ins, 2) instanceof ALOAD) {
+			//
+			// org.d2ab.sequence.EquivalentSizeSequence
+			//
+			return true;
+			//
+		} else if (length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD
+				&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
 				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
 				&& ArrayUtils.get(ins, 2) instanceof INVOKEVIRTUAL) {
 			//
