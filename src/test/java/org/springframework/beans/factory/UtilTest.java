@@ -37,6 +37,7 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableBiPredicate;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
@@ -56,7 +57,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class UtilTest {
 
 	private static Method METHOD_GET_DECLARED_FIELD, METHOD_EXECUTE_FOR_EACH_METHOD4, METHOD_EXECUTE_FOR_EACH_METHOD5,
-			METHOD_GET_RESOURCE_AS_STREAM, METHOD_EXECUTE_FOR_EACH_METHOD_3C;
+			METHOD_GET_RESOURCE_AS_STREAM, METHOD_EXECUTE_FOR_EACH_METHOD_3C, METHOD_AND = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -77,6 +78,9 @@ class UtilTest {
 		//
 		(METHOD_EXECUTE_FOR_EACH_METHOD_3C = clz.getDeclaredMethod("executeForEachMethod3c", Instruction[].class,
 				ConstantPoolGen.class, Entry.class, Map.class)).setAccessible(true);
+		//
+		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Object.class, FailablePredicate.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -417,12 +421,27 @@ class UtilTest {
 	}
 
 	@Test
-	void testAnd() {
+	void testAnd() throws Throwable {
 		//
 		Assertions.assertFalse(Util.and(true, false));
 		//
 		Assertions.assertTrue(Util.and(true, true, null));
 		//
+		Assertions.assertFalse(and(true, null, null));
+		//
+	}
+
+	private static <T, E extends Exception> boolean and(final boolean b, final T value,
+			final FailablePredicate<T, E> predicate) throws Throwable {
+		try {
+			final Object obj = METHOD_AND.invoke(null, b, value, predicate);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
@@ -478,6 +497,10 @@ class UtilTest {
 					} else if (Objects.equals(clz, Long.TYPE)) {
 						//
 						list.add(Long.valueOf(0));
+						//
+					} else if (Objects.equals(clz, Boolean.TYPE)) {
+						//
+						list.add(Boolean.FALSE);
 						//
 					} else {
 						//

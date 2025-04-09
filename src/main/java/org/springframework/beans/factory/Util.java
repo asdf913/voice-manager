@@ -81,6 +81,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableBiPredicate;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -812,9 +813,9 @@ abstract class Util {
 			final JavaClass javaClass = ClassParserUtil
 					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
 			//
-			if (javaLangReflectIteratorMethod != null && Boolean.logicalOr(
-					isIteratorMethodReturnNull1(javaClass, javaLangReflectIteratorMethod, instance),
-					isIteratorMethodReturnNull2(javaClass, javaLangReflectIteratorMethod, instance))) {
+			if (and(javaLangReflectIteratorMethod != null, javaLangReflectIteratorMethod,
+					x -> Boolean.logicalOr(isIteratorMethodReturnNull1(javaClass, x, instance),
+							isIteratorMethodReturnNull2(javaClass, x, instance)))) {
 				//
 				return;
 				//
@@ -904,6 +905,11 @@ abstract class Util {
 			//
 		testAndAccept((a, b) -> action != null, instance, action, Iterable::forEach);
 		//
+	}
+
+	private static <T, E extends Exception> boolean and(final boolean b, final T value,
+			final FailablePredicate<T, E> predicate) throws E {
+		return b && predicate != null && predicate.test(value);
 	}
 
 	private static boolean isIteratorMethodReturnNull1(final JavaClass javaClass,
