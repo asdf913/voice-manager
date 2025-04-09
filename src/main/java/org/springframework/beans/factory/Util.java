@@ -1039,6 +1039,16 @@ abstract class Util {
 			//
 			return gf.getFieldName(cpg);
 			//
+		} else if (length == 4 && ArrayUtils.get(ins, 0) instanceof ALOAD
+				&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf && ArrayUtils.get(ins, 2) instanceof INVOKESTATIC is
+				&& Objects.equals(is.getClassName(cpg), "java.util.Collections")
+				&& Objects.equals(is.getMethodName(cpg), "unmodifiableList")
+				&& ArrayUtils.get(ins, 3) instanceof ARETURN) {
+			//
+			// org.apache.poi.xslf.usermodel.XSLFTextParagraph
+			//
+			return gf.getFieldName(cpg);
+			//
 		} // if
 			//
 		return null;
@@ -1383,8 +1393,6 @@ abstract class Util {
 				collect(Stream.of("org.apache.poi.hssf.usermodel.HSSFSheet", "org.apache.poi.xslf.usermodel.XSLFTable",
 						"org.apache.poi.xssf.usermodel.XSSFSheet"),
 						Collectors.toMap(Function.identity(), x -> "_rows")));
-		//
-		put(map, "org.apache.poi.xslf.usermodel.XSLFTextParagraph", "_runs");
 		//
 		putAll(map,
 				collect(Stream.of("org.apache.xmlbeans.impl.values.JavaListObject",
