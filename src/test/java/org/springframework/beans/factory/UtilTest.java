@@ -36,6 +36,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableBiPredicate;
+import org.apache.commons.lang3.function.FailableBooleanSupplier;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -57,7 +58,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class UtilTest {
 
 	private static Method METHOD_GET_DECLARED_FIELD, METHOD_EXECUTE_FOR_EACH_METHOD4, METHOD_EXECUTE_FOR_EACH_METHOD5,
-			METHOD_GET_RESOURCE_AS_STREAM, METHOD_EXECUTE_FOR_EACH_METHOD_3C, METHOD_AND = null;
+			METHOD_GET_RESOURCE_AS_STREAM, METHOD_EXECUTE_FOR_EACH_METHOD_3C, METHOD_AND_2, METHOD_AND_3 = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -79,7 +80,9 @@ class UtilTest {
 		(METHOD_EXECUTE_FOR_EACH_METHOD_3C = clz.getDeclaredMethod("executeForEachMethod3c", Instruction[].class,
 				ConstantPoolGen.class, Entry.class, Map.class)).setAccessible(true);
 		//
-		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Object.class, FailablePredicate.class))
+		(METHOD_AND_2 = clz.getDeclaredMethod("and", Boolean.TYPE, FailableBooleanSupplier.class)).setAccessible(true);
+		//
+		(METHOD_AND_3 = clz.getDeclaredMethod("and", Boolean.TYPE, Object.class, FailablePredicate.class))
 				.setAccessible(true);
 		//
 	}
@@ -427,14 +430,29 @@ class UtilTest {
 		//
 		Assertions.assertTrue(Util.and(true, true, null));
 		//
+		Assertions.assertFalse(and(true, null));
+		//
 		Assertions.assertFalse(and(true, null, null));
 		//
+	}
+
+	private static <E extends Exception> boolean and(final boolean b, final FailableBooleanSupplier<E> supplier)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_AND_2.invoke(null, b, supplier);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static <T, E extends Exception> boolean and(final boolean b, final T value,
 			final FailablePredicate<T, E> predicate) throws Throwable {
 		try {
-			final Object obj = METHOD_AND.invoke(null, b, value, predicate);
+			final Object obj = METHOD_AND_3.invoke(null, b, value, predicate);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}

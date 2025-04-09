@@ -80,6 +80,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableBiPredicate;
+import org.apache.commons.lang3.function.FailableBooleanSupplier;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -821,21 +822,20 @@ abstract class Util {
 				//
 			} // if
 				//
-			if ((method = getForEachMethod(javaClass)) != null
-					&& !executeForEachMethod(instance, name, STRING_FAILABLE_BI_FUNCTION_MAP,
-							InstructionListUtil.getInstructions(
-									new MethodGen(method, null, cpg = new ConstantPoolGen(method.getConstantPool()))
-											.getInstructionList()),
-							cpg)) {
+			if (and((method = getForEachMethod(javaClass)) != null, method, x -> {
+				final ConstantPoolGen temp = new ConstantPoolGen(x.getConstantPool());
+				return !executeForEachMethod(instance, name, STRING_FAILABLE_BI_FUNCTION_MAP,
+						InstructionListUtil.getInstructions(new MethodGen(x, null, temp).getInstructionList()), temp);
+			})) {
 				//
 				return;
 				//
 			} // if
 				//
-			if (Objects.equals(getSuperclassName(javaClass), "java.lang.Object")
-					&& !executeForEachMethod(JavaClassUtil.getMethods(javaClass), javaClass.getInterfaces(), instance,
-							name, STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
-									.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new))) {
+			if (and(Objects.equals(getSuperclassName(javaClass), "java.lang.Object"),
+					() -> !executeForEachMethod(JavaClassUtil.getMethods(javaClass), javaClass.getInterfaces(),
+							instance, name, STRING_FAILABLE_BI_FUNCTION_MAP = ObjectUtils
+									.getIfNull(STRING_FAILABLE_BI_FUNCTION_MAP, LinkedHashMap::new)))) {
 				//
 				return;
 				//
@@ -905,6 +905,11 @@ abstract class Util {
 			//
 		testAndAccept((a, b) -> action != null, instance, action, Iterable::forEach);
 		//
+	}
+
+	private static <E extends Exception> boolean and(final boolean b, final FailableBooleanSupplier<E> supplier)
+			throws E {
+		return b && supplier != null && supplier.getAsBoolean();
 	}
 
 	private static <T, E extends Exception> boolean and(final boolean b, final T value,
