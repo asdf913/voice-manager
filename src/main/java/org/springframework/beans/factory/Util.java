@@ -997,38 +997,6 @@ abstract class Util {
 			//
 		} // if
 			//
-//		if (iterator(entrySet) != null) {
-//			//
-//			Collection<Field> fs = null;
-//			//
-//			Field f = null;
-//			//
-//			for (final Entry<String, String> entry : entrySet) {
-//				//
-//				if (!Objects.equals(name, getKey(entry))) {
-//					//
-//					continue;
-//					//
-//				} // if
-//					//
-//				if (IterableUtils.size(fs = toList(filter(stream(FieldUtils.getAllFieldsList(clz)),
-//						x -> Objects.equals(getName(x), getValue(entry))))) > 1) {
-//					//
-//					throw new IllegalStateException();
-//					//
-//				} // if
-//					//
-//				if ((f = testAndApply(x -> IterableUtils.size(x) > 0, fs, x -> IterableUtils.get(x, 0), null)) != null
-//						&& Narcissus.getField(instance, f) == null) {
-//					//
-//					return;
-//					//
-//				} // if
-//					//
-//			} // for
-//				//
-//		} // if
-		//
 		if (contains(Arrays.asList("org.htmlunit.cyberneko.util.SimpleArrayList"), name)) {
 			//
 			return;
@@ -1085,60 +1053,63 @@ abstract class Util {
 	@Nullable
 	private static java.lang.reflect.Method getIteratorMethod(final Class<?> clz) throws IOException {
 		//
-		java.lang.reflect.Method javaLangReflectMethod = null;
-		//
-		if (noneMatch(testAndApply(Objects::nonNull, getDeclaredMethods(clz), Arrays::stream, null),
+		if (anyMatch(testAndApply(Objects::nonNull, getDeclaredMethods(clz), Arrays::stream, null),
 				m -> Objects.equals(getName(m), "forEach")
 						&& Arrays.equals(getParameterTypes(m), new Class<?>[] { Consumer.class }))
 				&& Objects.equals(getSuperclass(clz), Object.class)) {
 			//
-			try (final InputStream is = getResourceAsStream(clz,
-					"/" + StringUtils.replace(Util.getName(Iterable.class), ".", "/") + ".class")) {
-				//
-				final Method method = getForEachMethod(
-						ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)));
-				//
-				final ConstantPoolGen cpg = new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(method));
-				//
-				final Instruction[] ins = InstructionListUtil
-						.getInstructions(new MethodGen(method, null, cpg).getInstructionList());
-				//
-				if (length(ins) > 4 && ArrayUtils.get(ins, 0) instanceof ALOAD
-						&& ArrayUtils.get(ins, 1) instanceof INVOKESTATIC && ArrayUtils.get(ins, 2) instanceof POP
-						&& ArrayUtils.get(ins, 3) instanceof ALOAD
-						&& ArrayUtils.get(ins, 4) instanceof INVOKEINTERFACE ii) {
-					//
-					final java.lang.reflect.Method[] ms = getDeclaredMethods(clz);
-					//
-					java.lang.reflect.Method m = null;
-					//
-					for (int i = 0; i < length(ms); i++) {
-						//
-						if (!(Objects.equals(getName(m = ms[i]), InvokeInstructionUtil.getMethodName(ii, cpg))
-								&& length(ii.getArgumentTypes(cpg)) == getParameterCount(m)
-								&& Objects.equals(m.getReturnType(), Iterator.class))) {
-							//
-							continue;
-							//
-						} // if
-							//
-						if (javaLangReflectMethod == null) {
-							//
-							javaLangReflectMethod = m;
-							//
-						} else {
-							//
-							throw new IllegalStateException();
-							//
-						} // if
-							//
-					} // for
-						//
-				} // if
-					//
-			} // try
-				//
+			return null;
+			//
 		} // if
+			//
+		java.lang.reflect.Method javaLangReflectMethod = null;
+		//
+		try (final InputStream is = getResourceAsStream(clz,
+				"/" + StringUtils.replace(Util.getName(Iterable.class), ".", "/") + ".class")) {
+			//
+			final Method method = getForEachMethod(
+					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)));
+			//
+			final ConstantPoolGen cpg = new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(method));
+			//
+			final Instruction[] ins = InstructionListUtil
+					.getInstructions(new MethodGen(method, null, cpg).getInstructionList());
+			//
+			if (length(ins) > 4 && ArrayUtils.get(ins, 0) instanceof ALOAD
+					&& ArrayUtils.get(ins, 1) instanceof INVOKESTATIC && ArrayUtils.get(ins, 2) instanceof POP
+					&& ArrayUtils.get(ins, 3) instanceof ALOAD
+					&& ArrayUtils.get(ins, 4) instanceof INVOKEINTERFACE ii) {
+				//
+				final java.lang.reflect.Method[] ms = getDeclaredMethods(clz);
+				//
+				java.lang.reflect.Method m = null;
+				//
+				for (int i = 0; i < length(ms); i++) {
+					//
+					if (!(Objects.equals(getName(m = ms[i]), InvokeInstructionUtil.getMethodName(ii, cpg))
+							&& length(ii.getArgumentTypes(cpg)) == getParameterCount(m)
+							&& Objects.equals(m.getReturnType(), Iterator.class))) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (javaLangReflectMethod == null) {
+						//
+						javaLangReflectMethod = m;
+						//
+					} else {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+		} // try
+			//
 			//
 		return javaLangReflectMethod;
 		//
@@ -1163,8 +1134,8 @@ abstract class Util {
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
-	private static <T> boolean noneMatch(@Nullable final Stream<T> instance, final Predicate<? super T> predicate) {
-		return instance == null || instance.noneMatch(predicate);
+	private static <T> boolean anyMatch(@Nullable final Stream<T> instance, final Predicate<? super T> predicate) {
+		return instance != null && instance.anyMatch(predicate);
 	}
 
 	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, final T t, final U u,
