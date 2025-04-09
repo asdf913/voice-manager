@@ -825,20 +825,16 @@ abstract class Util {
 						&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
 						&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE) {
 					//
-					if (Boolean.logicalOr(length(ins) == 4 && ArrayUtils.get(ins, 3) instanceof ARETURN
+					if (or(length(ins) == 4 && ArrayUtils.get(ins, 3) instanceof ARETURN
 							&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null// com.helger.commons.log.InMemoryLogger
 							,
 							length(ins) == 5 && ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE
 									&& ArrayUtils.get(ins, 4) instanceof ARETURN
 									&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null// com.healthmarketscience.jackcess.impl.PropertyMapImpl
-					)) {
-						//
-						return;
-						//
-					} else if (length > 3 && or(ArrayUtils.get(ins, 3) instanceof IFEQ, // org.apache.commons.collections4.collection.CompositeCollection
-							ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE, // org.apache.jena.atlas.lib.Map2
-							ArrayUtils.get(ins, 3) instanceof ASTORE// com.github.andrewoma.dexx.collection.internal.base.MappedIterable
-					) && FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null) {
+							, length > 3 && or(ArrayUtils.get(ins, 3) instanceof IFEQ, // org.apache.commons.collections4.collection.CompositeCollection
+									ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE, // org.apache.jena.atlas.lib.Map2
+									ArrayUtils.get(ins, 3) instanceof ASTORE// com.github.andrewoma.dexx.collection.internal.base.MappedIterable
+							) && FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null)) {
 						//
 						return;
 						//
