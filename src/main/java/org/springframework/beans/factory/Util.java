@@ -1097,7 +1097,7 @@ abstract class Util {
 		//
 	}
 
-	private static int getParameterCount(final Executable instance) {
+	private static int getParameterCount(@Nullable final Executable instance) {
 		return instance != null ? instance.getParameterCount() : 0;
 	}
 
