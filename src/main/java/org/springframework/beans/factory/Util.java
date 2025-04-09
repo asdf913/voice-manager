@@ -959,12 +959,12 @@ abstract class Util {
 				&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
 				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
 				&& ArrayUtils.get(ins, 2) instanceof INVOKESTATIC invokeStatic
-				&& or(Objects.equals(invokeStatic.getClassName(cpg), "java.util.stream.Stream")
-						&& Objects.equals(invokeStatic.getMethodName(cpg), "of"),
-						Objects.equals(invokeStatic.getClassName(cpg), "java.util.Arrays")
-								&& Objects.equals(invokeStatic.getMethodName(cpg), "stream"),
-						Objects.equals(invokeStatic.getClassName(cpg), "java.util.Collections")
-								&& Objects.equals(invokeStatic.getMethodName(cpg), "unmodifiableList"))) {
+				&& or(Boolean.logicalAnd(Objects.equals(invokeStatic.getClassName(cpg), "java.util.stream.Stream"),
+						Objects.equals(invokeStatic.getMethodName(cpg), "of")),
+						Boolean.logicalAnd(Objects.equals(invokeStatic.getClassName(cpg), "java.util.Arrays"),
+								Objects.equals(invokeStatic.getMethodName(cpg), "stream")),
+						Boolean.logicalAnd(Objects.equals(invokeStatic.getClassName(cpg), "java.util.Collections"),
+								Objects.equals(invokeStatic.getMethodName(cpg), "unmodifiableList")))) {
 			//
 			// org.apache.poi.ss.util.SSCellRange
 			//
