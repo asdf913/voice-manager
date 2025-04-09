@@ -1076,6 +1076,15 @@ abstract class Util {
 			//
 			return gf.getFieldName(cpg);
 			//
+		} else if (length > 6 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
+				&& ArrayUtils.get(ins, 2) instanceof INVOKESPECIAL && ArrayUtils.get(ins, 3) instanceof ASTORE
+				&& ArrayUtils.get(ins, 4) instanceof ALOAD && ArrayUtils.get(ins, 5) instanceof GETFIELD gf
+				&& ArrayUtils.get(ins, 6) instanceof INVOKEINTERFACE) {
+			//
+			// org.apache.poi.xssf.usermodel.XSSFDrawing
+			//
+			return gf.getFieldName(cpg);
+			//
 		} // if
 			//
 		return null;
@@ -1910,10 +1919,7 @@ abstract class Util {
 						"org.apache.poi.xssf.usermodel.XSSFDialogsheet"),
 						Collectors.toMap(Function.identity(), x -> "_rows")));
 		//
-		putAll(map,
-				collect(Stream.of("org.apache.poi.xssf.usermodel.XSSFDrawing",
-						"org.apache.poi.xssf.usermodel.XSSFShapeGroup"),
-						Collectors.toMap(Function.identity(), x -> "drawing")));
+		put(map, "org.apache.poi.xssf.usermodel.XSSFShapeGroup", "drawing");
 		//
 		putAll(map,
 				collect(Stream.of("org.apache.poi.xwpf.usermodel.XWPFEndnote",
