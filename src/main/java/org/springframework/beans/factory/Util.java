@@ -840,17 +840,13 @@ abstract class Util {
 						//
 						return;
 						//
-					} else if (length > 3) {
+					} else if (length > 3 && or(ArrayUtils.get(ins, 3) instanceof IFEQ, // org.apache.commons.collections4.collection.CompositeCollection
+							ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE, // org.apache.jena.atlas.lib.Map2
+							ArrayUtils.get(ins, 3) instanceof ASTORE// com.github.andrewoma.dexx.collection.internal.base.MappedIterable
+					) && FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null) {
 						//
-						if (or(ArrayUtils.get(ins, 3) instanceof IFEQ, // org.apache.commons.collections4.collection.CompositeCollection
-								ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE, // org.apache.jena.atlas.lib.Map2
-								ArrayUtils.get(ins, 3) instanceof ASTORE// com.github.andrewoma.dexx.collection.internal.base.MappedIterable
-						) && FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null) {
-							//
-							return;
-							//
-						} // if
-							//
+						return;
+						//
 					} // if
 						//
 				} else if (length > 7 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
