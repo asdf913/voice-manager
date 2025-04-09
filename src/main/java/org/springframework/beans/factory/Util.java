@@ -1008,7 +1008,7 @@ abstract class Util {
 		//
 	}
 
-	private static boolean forEachIsFieldNull(final Map<String, String> map, final Class<?> clz,
+	private static boolean forEachIsFieldNull(final Map<String, String> map, @Nullable final Class<?> clz,
 			final Object instance) {
 		//
 		final Iterable<Entry<String, String>> entrySet = entrySet(map);
