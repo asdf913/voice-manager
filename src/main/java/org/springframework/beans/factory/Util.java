@@ -991,6 +991,57 @@ abstract class Util {
 		//
 		put(map, "org.htmlunit.jetty.websocket.common.extensions.WebSocketExtensionFactory", "availableExtensions");
 		//
+		if (forEachIsFieldNull(map, clz, instance)) {
+			//
+			return;
+			//
+		} // if
+			//
+//		if (iterator(entrySet) != null) {
+//			//
+//			Collection<Field> fs = null;
+//			//
+//			Field f = null;
+//			//
+//			for (final Entry<String, String> entry : entrySet) {
+//				//
+//				if (!Objects.equals(name, getKey(entry))) {
+//					//
+//					continue;
+//					//
+//				} // if
+//					//
+//				if (IterableUtils.size(fs = toList(filter(stream(FieldUtils.getAllFieldsList(clz)),
+//						x -> Objects.equals(getName(x), getValue(entry))))) > 1) {
+//					//
+//					throw new IllegalStateException();
+//					//
+//				} // if
+//					//
+//				if ((f = testAndApply(x -> IterableUtils.size(x) > 0, fs, x -> IterableUtils.get(x, 0), null)) != null
+//						&& Narcissus.getField(instance, f) == null) {
+//					//
+//					return;
+//					//
+//				} // if
+//					//
+//			} // for
+//				//
+//		} // if
+		//
+		if (contains(Arrays.asList("org.htmlunit.cyberneko.util.SimpleArrayList"), name)) {
+			//
+			return;
+			//
+		} // if
+			//
+		testAndAccept((a, b) -> action != null, instance, action, Iterable::forEach);
+		//
+	}
+
+	private static boolean forEachIsFieldNull(final Map<String, String> map, final Class<?> clz,
+			final Object instance) {
+		//
 		final Iterable<Entry<String, String>> entrySet = entrySet(map);
 		//
 		if (iterator(entrySet) != null) {
@@ -998,6 +1049,8 @@ abstract class Util {
 			Collection<Field> fs = null;
 			//
 			Field f = null;
+			//
+			final String name = getName(clz);
 			//
 			for (final Entry<String, String> entry : entrySet) {
 				//
@@ -1017,7 +1070,7 @@ abstract class Util {
 				if ((f = testAndApply(x -> IterableUtils.size(x) > 0, fs, x -> IterableUtils.get(x, 0), null)) != null
 						&& Narcissus.getField(instance, f) == null) {
 					//
-					return;
+					return true;
 					//
 				} // if
 					//
@@ -1025,13 +1078,7 @@ abstract class Util {
 				//
 		} // if
 			//
-		if (contains(Arrays.asList("org.htmlunit.cyberneko.util.SimpleArrayList"), name)) {
-			//
-			return;
-			//
-		} // if
-			//
-		testAndAccept((a, b) -> action != null, instance, action, Iterable::forEach);
+		return false;
 		//
 	}
 
