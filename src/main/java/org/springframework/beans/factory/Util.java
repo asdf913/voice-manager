@@ -69,6 +69,7 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.InvokeInstructionUtil;
 import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.NEW;
 import org.apache.bcel.generic.ObjectType;
 import org.apache.bcel.generic.POP;
@@ -1070,10 +1071,11 @@ abstract class Util {
 			final Method method = getForEachMethod(
 					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)));
 			//
-			final ConstantPoolGen cpg = new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(method));
+			final ConstantPoolGen cpg = testAndApply(Objects::nonNull, method,
+					x -> new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(x)), null);
 			//
-			final Instruction[] ins = InstructionListUtil
-					.getInstructions(new MethodGen(method, null, cpg).getInstructionList());
+			final Instruction[] ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
+					testAndApply(Objects::nonNull, cpg, x -> new MethodGen(method, null, x), null)));
 			//
 			if (length(ins) > 4 && ArrayUtils.get(ins, 0) instanceof ALOAD
 					&& ArrayUtils.get(ins, 1) instanceof INVOKESTATIC && ArrayUtils.get(ins, 2) instanceof POP
