@@ -814,12 +814,12 @@ abstract class Util {
 			//
 			if (javaLangReflectMethod != null) {
 				//
-				Instruction[] ins = null;
-				//
-				final int length = length(ins = InstructionListUtil.getInstructions(
+				final Instruction[] ins = InstructionListUtil.getInstructions(
 						new MethodGen(method = JavaClassUtil.getMethod(javaClass, javaLangReflectMethod), null,
 								cpg = new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(method)))
-								.getInstructionList()));
+								.getInstructionList());
+				//
+				final int length = length(ins);
 				//
 				if (length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD
 						&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
@@ -897,6 +897,21 @@ abstract class Util {
 					//
 					return;
 					//
+				} else if (length == 4 && ArrayUtils.get(ins, 0) instanceof ALOAD
+						&& ArrayUtils.get(ins, 1) instanceof INVOKEVIRTUAL iv
+						&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE
+						&& Objects.equals(getName(clz), iv.getClassName(cpg))
+						&& ArrayUtils.get(ins, 3) instanceof ARETURN) {
+					//
+					final String fieldName = getFieldNameIfMethodReadOneFieldOnly(
+							javaClass.getMethod(Narcissus.findMethod(clz, iv.getMethodName(cpg))));
+					//
+					if (fieldName != null && FieldUtils.readDeclaredField(instance, fieldName, true) == null) {
+						//
+						return;
+						//
+					} // if
+						//
 				} // if
 					//
 			} // if
@@ -984,6 +999,27 @@ abstract class Util {
 		} // if
 			//
 		testAndAccept((a, b) -> action != null, instance, action, Iterable::forEach);
+		//
+	}
+
+	private static String getFieldNameIfMethodReadOneFieldOnly(final Method method) {
+		//
+		final ConstantPoolGen cpg = testAndApply(Objects::nonNull, FieldOrMethodUtil.getConstantPool(method),
+				ConstantPoolGen::new, null);
+		//
+		final Instruction[] ins = InstructionListUtil.getInstructions(MethodGenUtil
+				.getInstructionList(testAndApply(Objects::nonNull, cpg, x -> new MethodGen(method, null, x), null)));
+		//
+		if (length(ins) == 3 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+				&& ArrayUtils.get(ins, 2) instanceof ARETURN) {
+			//
+			// org.apache.commons.collections4.collection.SynchronizedCollection
+			//
+			return gf.getFieldName(cpg);
+			//
+		} // if
+			//
+		return null;
 		//
 	}
 
@@ -1285,8 +1321,7 @@ abstract class Util {
 		put(map, "org.apache.commons.collections.collection.CompositeCollection", "all");
 		//
 		putAll(map,
-				collect(Stream.of("org.apache.commons.collections4.collection.SynchronizedCollection",
-						"org.d2ab.collection.CollectionList", "org.d2ab.collection.FilteredCollection",
+				collect(Stream.of("org.d2ab.collection.CollectionList", "org.d2ab.collection.FilteredCollection",
 						"org.d2ab.collection.MappedCollection", "org.d2ab.collection.chars.CollectionCharList",
 						"org.d2ab.collection.doubles.CollectionDoubleList",
 						"org.d2ab.collection.ints.CollectionIntList", "org.d2ab.collection.longs.CollectionLongList"),
