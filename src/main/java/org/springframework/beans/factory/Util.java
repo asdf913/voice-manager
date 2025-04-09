@@ -1068,7 +1068,7 @@ abstract class Util {
 					for (int i = 0; i < length(ms); i++) {
 						//
 						if (!(Objects.equals(getName(m = ms[i]), InvokeInstructionUtil.getMethodName(ii, cpg))
-								&& length(ii.getArgumentTypes(cpg)) == m.getParameterCount()
+								&& length(ii.getArgumentTypes(cpg)) == getParameterCount(m)
 								&& Objects.equals(m.getReturnType(), Iterator.class))) {
 							//
 							continue;
@@ -1095,6 +1095,10 @@ abstract class Util {
 			//
 		return javaLangReflectMethod;
 		//
+	}
+
+	private static int getParameterCount(final Executable instance) {
+		return instance != null ? instance.getParameterCount() : 0;
 	}
 
 	@Nullable
