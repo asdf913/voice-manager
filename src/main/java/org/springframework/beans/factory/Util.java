@@ -910,7 +910,7 @@ abstract class Util {
 		return b && supplier != null && supplier.getAsBoolean();
 	}
 
-	private static <T, E extends Exception> boolean and(final boolean b, final T value,
+	private static <T, E extends Exception> boolean and(final boolean b, @Nullable final T value,
 			final FailablePredicate<T, E> predicate) throws E {
 		return b && predicate != null && predicate.test(value);
 	}
