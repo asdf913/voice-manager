@@ -981,13 +981,8 @@ abstract class Util {
 		//
 		put(map, "org.htmlunit.jetty.websocket.common.extensions.WebSocketExtensionFactory", "availableExtensions");
 		//
-		if (forEachIsFieldNull(map, clz, instance)) {
-			//
-			return;
-			//
-		} // if
-			//
-		if (contains(Arrays.asList("org.htmlunit.cyberneko.util.SimpleArrayList"), name)) {
+		if (Boolean.logicalOr(forEachIsFieldNull(map, clz, instance),
+				contains(Arrays.asList("org.htmlunit.cyberneko.util.SimpleArrayList"), name))) {
 			//
 			return;
 			//
