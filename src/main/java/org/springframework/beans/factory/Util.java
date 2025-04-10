@@ -1110,7 +1110,7 @@ abstract class Util {
 		//
 	}
 
-	private static boolean remove(final Collection<?> instance, final Object o) {
+	private static boolean remove(@Nullable final Collection<?> instance, final Object o) {
 		return instance != null && instance.remove(o);
 	}
 
