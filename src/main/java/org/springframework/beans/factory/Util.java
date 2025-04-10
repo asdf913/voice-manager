@@ -1081,12 +1081,8 @@ abstract class Util {
 								&& getParameterCount(javaLangReflectMethod) == length(getArgumentTypes(x))),
 				Collectors.toCollection(ArrayList::new));
 		//
-		if (contains(ms, method)) {
-			//
-			remove(ms, method);
-			//
-		} // if
-			//
+		testAndAccept((a, b) -> contains(a, b), ms, method, (a, b) -> remove(a, b));
+		//
 		if (IterableUtils.size(ms) > 1) {
 			//
 			throw new IllegalStateException();
