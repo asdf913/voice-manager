@@ -1064,10 +1064,10 @@ abstract class Util {
 				//
 			} // if
 				//
-		} else if (length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD
-				&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
-				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-				&& ArrayUtils.get(ins, 2) instanceof ARRAYLENGTH) {
+		} else if (and(length > 2, ins,
+				x -> ArrayUtils.get(x, 0) instanceof ALOAD && ArrayUtils.get(x, 1) instanceof GETFIELD gf
+						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+						&& ArrayUtils.get(x, 2) instanceof ARRAYLENGTH)) {
 			//
 			// org.apache.commons.collections.collection.CompositeCollection
 			//
