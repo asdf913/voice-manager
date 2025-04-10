@@ -1005,9 +1005,10 @@ abstract class Util {
 		int length = length(ins);
 		//
 		if (Boolean.logicalOr(
-				length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
-						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-						&& ArrayUtils.get(ins, 2) instanceof ALOAD,
+				and(length > 2, ins,
+						x -> ArrayUtils.get(x, 0) instanceof ALOAD && ArrayUtils.get(x, 1) instanceof GETFIELD gf
+								&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+								&& ArrayUtils.get(x, 2) instanceof ALOAD),
 				length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
 						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
 						&& ArrayUtils.get(ins, 2) instanceof INVOKEVIRTUAL)) {
