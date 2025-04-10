@@ -1095,7 +1095,7 @@ abstract class Util {
 			//
 		if ((method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null)) != null) {
 			//
-			if ((length = length(ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
+			if ((length(ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
 					testAndApply((a, b) -> b != null, method, cpg, (a, b) -> new MethodGen(a, null, b), null))))) > 4
 					&& ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
 					&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD gf
