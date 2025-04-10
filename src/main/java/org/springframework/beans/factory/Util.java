@@ -1081,7 +1081,7 @@ abstract class Util {
 								&& getParameterCount(javaLangReflectMethod) == length(getArgumentTypes(x))),
 				Collectors.toCollection(ArrayList::new));
 		//
-		testAndAccept((a, b) -> contains(a, b), ms, method, (a, b) -> remove(a, b));
+		testAndAccept(Util::contains, ms, method, Util::remove);
 		//
 		if (IterableUtils.size(ms) > 1) {
 			//
