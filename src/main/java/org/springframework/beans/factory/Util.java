@@ -1037,10 +1037,9 @@ abstract class Util {
 			//
 		if (length == 2 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof ARETURN) {
 			//
-			final List<Method> ms = toList(
-					filter(testAndApply(Objects::nonNull, javaClass.getMethods(), Arrays::stream, null),
-							m -> Objects.equals(FieldOrMethodUtil.getName(m), "hasNext") && m != null
-									&& length(m.getArgumentTypes()) == 0));
+			final List<Method> ms = toList(filter(
+					testAndApply(Objects::nonNull, javaClass.getMethods(), Arrays::stream, null),
+					m -> Objects.equals(FieldOrMethodUtil.getName(m), "hasNext") && length(getArgumentTypes(m)) == 0));
 			//
 			if (IterableUtils.size(ms) > 1) {
 				//
@@ -1069,6 +1068,10 @@ abstract class Util {
 			//
 		return false;
 		//
+	}
+
+	private static Type[] getArgumentTypes(final Method instance) {
+		return instance != null ? instance.getArgumentTypes() : null;
 	}
 
 	@Nullable
