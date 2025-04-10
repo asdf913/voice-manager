@@ -868,14 +868,13 @@ abstract class Util {
 				//
 		} // try
 			//
-		final Map<String, String> map = new LinkedHashMap<>(
-				Map.of("org.apache.http.entity.mime.Header", "fields", "org.apache.http.impl.client.RedirectLocations",
-						"all", "org.htmlunit.corejs.javascript.IteratorLikeIterable", "next",
-						"org.htmlunit.cssparser.parser.selector.SelectorListImpl", "selectors_",
-						"org.htmlunit.jetty.client.util.ByteBufferContentProvider", "buffers",
-						"org.htmlunit.jetty.client.util.DeferredContentProvider", "chunks",
-						"org.htmlunit.jetty.client.util.InputStreamContentProvider", "iterator",
-						"org.htmlunit.jetty.client.util.MultiPartContentProvider", "parts"));
+		final Map<String, String> map = new LinkedHashMap<>(Map.of("org.apache.http.impl.client.RedirectLocations",
+				"all", "org.htmlunit.corejs.javascript.IteratorLikeIterable", "next",
+				"org.htmlunit.cssparser.parser.selector.SelectorListImpl", "selectors_",
+				"org.htmlunit.jetty.client.util.ByteBufferContentProvider", "buffers",
+				"org.htmlunit.jetty.client.util.DeferredContentProvider", "chunks",
+				"org.htmlunit.jetty.client.util.InputStreamContentProvider", "iterator",
+				"org.htmlunit.jetty.client.util.MultiPartContentProvider", "parts"));
 		//
 		putAll(map,
 				collect(Stream.of("org.htmlunit.jetty.client.util.BytesContentProvider",
@@ -1344,8 +1343,6 @@ abstract class Util {
 				Map.of("org.apache.bcel.classfile.InnerClasses", "innerClasses",
 						"org.apache.bcel.classfile.LineNumberTable", "lineNumberTable",
 						"org.apache.bcel.classfile.LocalVariableTable", "localVariableTable",
-						"org.apache.bcel.classfile.LocalVariableTypeTable", "localVariableTypeTable",
-						"org.apache.bcel.classfile.MethodParameters", "parameters",
 						"org.apache.commons.collections.CursorableLinkedList", "_head",
 						"org.apache.commons.collections4.iterators.IteratorIterable", "typeSafeIterator"));
 		//
@@ -1354,7 +1351,6 @@ abstract class Util {
 						"org.apache.jena.atlas.lib.tuple.TupleN", "tuple",
 						"org.apache.jena.ext.com.google.common.collect.EnumMultiset", "enumConstants",
 						"org.apache.jena.ext.com.google.common.collect.EvictingQueue", DELEGATE,
-						"org.apache.poi.ddf.EscherContainerRecord", "_childRecords",
 						"org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate", "records",
 						"org.apache.poi.hssf.usermodel.HSSFRow", "cells"));
 		//
