@@ -1082,8 +1082,7 @@ abstract class Util {
 	}
 
 	private static boolean isIteratorMethodReturnNull3(final JavaClass javaClass,
-			final java.lang.reflect.Method javaLangReflectMethod, final Object instance)
-			throws IllegalAccessException, NoSuchMethodException {
+			final java.lang.reflect.Method javaLangReflectMethod, final Object instance) throws IllegalAccessException {
 		//
 		final Collection<Method> ms = collect(
 				filter(testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream, null),
