@@ -1090,8 +1090,7 @@ abstract class Util {
 		});
 		//
 		return (method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null)) != null
-				&& Boolean.logicalOr(
-						// org.apache.commons.collections4.set.ListOrderedSet
+				&& or(// org.apache.commons.collections4.set.ListOrderedSet
 						(length = length(ins = InstructionListUtil
 								.getInstructions(MethodGenUtil.getInstructionList(testAndApply((a, b) -> b != null,
 										method, cpg, (a, b) -> new MethodGen(a, null, b), null))))) > 4
@@ -1105,7 +1104,15 @@ abstract class Util {
 								&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof ALOAD
 								&& ArrayUtils.get(ins, 4) instanceof GETFIELD gf
 								&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-								&& ArrayUtils.get(ins, 5) instanceof INVOKEINTERFACE);
+								&& ArrayUtils.get(ins, 5) instanceof INVOKEINTERFACE,
+						// org.d2ab.collection.doubles.SortedListDoubleSet
+						length == 4 && ArrayUtils.get(ins, 0) instanceof ALOAD
+								&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+								&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+								&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE
+								&& ArrayUtils.get(ins, 3) instanceof ARETURN
+
+				);
 		//
 	}
 
@@ -1468,9 +1475,7 @@ abstract class Util {
 		//
 		putAll(map,
 				collect(Stream.of("org.d2ab.collection.CollectionList", "org.d2ab.collection.FilteredCollection",
-						"org.d2ab.collection.MappedCollection", "org.d2ab.collection.chars.CollectionCharList",
-						"org.d2ab.collection.doubles.CollectionDoubleList",
-						"org.d2ab.collection.ints.CollectionIntList", "org.d2ab.collection.longs.CollectionLongList"),
+						"org.d2ab.collection.MappedCollection", "org.d2ab.collection.ints.CollectionIntList"),
 						Collectors.toMap(Function.identity(), x -> "collection")));
 		//
 		putAll(map,
@@ -1488,10 +1493,8 @@ abstract class Util {
 		//
 		put(map, "org.apache.commons.collections.set.ListOrderedSet", "setOrder");
 		//
-		putAll(map,
-				collect(Stream.of("org.apache.commons.csv.CSVRecord", "org.d2ab.collection.chars.BitCharSet",
-						"org.d2ab.collection.doubles.SortedListDoubleSet", "org.d2ab.collection.ints.BitIntSet"),
-						Collectors.toMap(Function.identity(), x -> "values")));
+		putAll(map, collect(Stream.of("org.apache.commons.csv.CSVRecord", "org.d2ab.collection.chars.BitCharSet",
+				"org.d2ab.collection.ints.BitIntSet"), Collectors.toMap(Function.identity(), x -> "values")));
 		//
 		putAll(map,
 				collect(Stream.of("org.apache.jena.ext.xerces.impl.dv.util.ByteListImpl",
@@ -1555,8 +1558,7 @@ abstract class Util {
 						"it.unimi.dsi.fastutil.ints.IntCollections$IterableCollection",
 						"it.unimi.dsi.fastutil.longs.LongCollections$IterableCollection",
 						"it.unimi.dsi.fastutil.objects.ObjectCollections$IterableCollection",
-						"it.unimi.dsi.fastutil.objects.ReferenceCollections$IterableCollection",
-						"it.unimi.dsi.fastutil.shorts.ShortCollections$IterableCollection"),
+						"it.unimi.dsi.fastutil.objects.ReferenceCollections$IterableCollection"),
 						Collectors.toMap(Function.identity(), x -> "iterable")));
 		//
 		putAll(map, collect(Stream.of("it.unimi.dsi.fastutil.booleans.BooleanImmutableList",
