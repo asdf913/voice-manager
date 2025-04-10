@@ -1089,7 +1089,7 @@ abstract class Util {
 			throw new IllegalStateException();
 		});
 		//
-		if ((method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null)) != null
+		return (method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null)) != null
 				&& Boolean.logicalOr(
 						// org.apache.commons.collections4.set.ListOrderedSet
 						(length = length(ins = InstructionListUtil
@@ -1105,13 +1105,7 @@ abstract class Util {
 								&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof ALOAD
 								&& ArrayUtils.get(ins, 4) instanceof GETFIELD gf
 								&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-								&& ArrayUtils.get(ins, 5) instanceof INVOKEINTERFACE)) {
-			//
-			return true;
-			//
-		} // if
-			//
-		return false;
+								&& ArrayUtils.get(ins, 5) instanceof INVOKEINTERFACE);
 		//
 	}
 
