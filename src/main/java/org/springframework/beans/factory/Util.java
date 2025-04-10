@@ -53,6 +53,7 @@ import org.apache.bcel.classfile.JavaClassUtil;
 import org.apache.bcel.classfile.Method;
 import org.apache.bcel.generic.ALOAD;
 import org.apache.bcel.generic.ARETURN;
+import org.apache.bcel.generic.ARRAYLENGTH;
 import org.apache.bcel.generic.ASTORE;
 import org.apache.bcel.generic.CHECKCAST;
 import org.apache.bcel.generic.ConstantPoolGen;
@@ -993,15 +994,15 @@ abstract class Util {
 			final java.lang.reflect.Method javaLangReflectMethod, final Object instance)
 			throws IllegalAccessException, NoSuchMethodException {
 		//
-		final Method method = JavaClassUtil.getMethod(javaClass, javaLangReflectMethod);
+		Method method = JavaClassUtil.getMethod(javaClass, javaLangReflectMethod);
 		//
 		final ConstantPoolGen cpg = testAndApply(Objects::nonNull, FieldOrMethodUtil.getConstantPool(method),
 				ConstantPoolGen::new, null);
 		//
-		final Instruction[] ins = InstructionListUtil.getInstructions(MethodGenUtil
-				.getInstructionList(testAndApply(Objects::nonNull, cpg, x -> new MethodGen(method, null, x), null)));
+		Instruction[] ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
+				testAndApply((a, b) -> b != null, method, cpg, (a, b) -> new MethodGen(a, null, b), null)));
 		//
-		final int length = length(ins);
+		int length = length(ins);
 		//
 		if (Boolean.logicalOr(
 				length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
@@ -1030,6 +1031,42 @@ abstract class Util {
 				//
 				return true;
 				//
+			} // if
+				//
+		} // if
+			//
+		if (length == 2 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof ARETURN) {
+			//
+			final List<Method> ms = toList(
+					filter(testAndApply(Objects::nonNull, javaClass.getMethods(), Arrays::stream, null),
+							m -> Objects.equals(FieldOrMethodUtil.getName(m), "hasNext") && m != null
+									&& length(m.getArgumentTypes()) == 0));
+			//
+			if (IterableUtils.size(ms) > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			if ((method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0),
+					null)) != null) {
+				//
+				if ((length = length(ins = InstructionListUtil
+						.getInstructions(MethodGenUtil.getInstructionList(testAndApply((a, b) -> b != null, method, cpg,
+								(a, b) -> new MethodGen(a, null, b), null))))) > 4
+						&& ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf1
+						&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD gf2
+						&& ArrayUtils.get(ins, 4) instanceof ARRAYLENGTH
+						&& Objects.equals(toString(gf1.getFieldType(cpg)), "int")
+						&& Objects.equals(toString(gf2.getFieldType(cpg)), "java.lang.Object[]")
+						&& FieldUtils.readDeclaredField(instance, gf2.getFieldName(cpg), true) == null) {
+					//
+					// com.fasterxml.jackson.databind.util.ArrayIterator
+					//
+					return true;
+					//
+				} // if
+					//
 			} // if
 				//
 		} // if
@@ -1270,7 +1307,6 @@ abstract class Util {
 		//
 		final Map<String, String> map = new LinkedHashMap<>(Map.of(
 				"com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap", "_hashArea",
-				"com.fasterxml.jackson.databind.util.ArrayIterator", "_a",
 				"com.github.andrewoma.dexx.collection.ArrayList", "elements",
 				"com.github.andrewoma.dexx.collection.TreeMap", "tree", "com.github.andrewoma.dexx.collection.TreeSet",
 				"redBlackTree", "com.github.andrewoma.dexx.collection.Vector", "pointer",
@@ -2072,6 +2108,11 @@ abstract class Util {
 						&& Narcissus.invokeMethod(instance, Narcissus.findMethod(getClass(instance), "createRowState",
 								new Class<?>[] {})) == null));
 		//
+	}
+
+	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) {
+		return test(predicate, t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
 	}
 
 	@Nullable
