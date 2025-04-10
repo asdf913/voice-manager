@@ -1089,28 +1089,26 @@ abstract class Util {
 			throw new IllegalStateException();
 		});
 		//
-		if ((method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null)) != null) {
+		if ((method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null)) != null
+				&& Boolean.logicalOr(
+						// org.apache.commons.collections4.set.ListOrderedSet
+						(length = length(ins = InstructionListUtil
+								.getInstructions(MethodGenUtil.getInstructionList(testAndApply((a, b) -> b != null,
+										method, cpg, (a, b) -> new MethodGen(a, null, b), null))))) > 4
+								&& ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
+								&& ArrayUtils.get(ins, 2) instanceof ALOAD
+								&& ArrayUtils.get(ins, 3) instanceof GETFIELD gf
+								&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+								&& ArrayUtils.get(ins, 4) instanceof INVOKEINTERFACE,
+						// org.d2ab.collection.doubles.RawDoubleSet
+						length > 5 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
+								&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof ALOAD
+								&& ArrayUtils.get(ins, 4) instanceof GETFIELD gf
+								&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+								&& ArrayUtils.get(ins, 5) instanceof INVOKEINTERFACE)) {
 			//
-			if (Boolean.logicalOr(
-					// org.apache.commons.collections4.set.ListOrderedSet
-					(length = length(ins = InstructionListUtil
-							.getInstructions(MethodGenUtil.getInstructionList(testAndApply((a, b) -> b != null, method,
-									cpg, (a, b) -> new MethodGen(a, null, b), null))))) > 4
-							&& ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
-							&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD gf
-							&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-							&& ArrayUtils.get(ins, 4) instanceof INVOKEINTERFACE,
-					// org.d2ab.collection.doubles.RawDoubleSet
-					length > 5 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
-							&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof ALOAD
-							&& ArrayUtils.get(ins, 4) instanceof GETFIELD gf
-							&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-							&& ArrayUtils.get(ins, 5) instanceof INVOKEINTERFACE)) {
-				//
-				return true;
-				//
-			} // if
-				//
+			return true;
+			//
 		} // if
 			//
 		return false;
