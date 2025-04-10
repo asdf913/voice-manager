@@ -71,6 +71,7 @@ import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.meeuw.functional.ThrowingRunnable;
+import org.meeuw.functional.ThrowingRunnableUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -370,8 +371,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 
 	private static <E extends Throwable> void testAndRunThrows(final boolean b,
 			@Nullable final ThrowingRunnable<E> throwingRunnable) throws E {
-		if (b && throwingRunnable != null) {
-			throwingRunnable.runThrows();
+		if (b) {
+			ThrowingRunnableUtil.runThrows(throwingRunnable);
 		}
 	}
 

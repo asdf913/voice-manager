@@ -94,6 +94,7 @@ import org.javatuples.valueintf.IValue0Util;
 import org.javatuples.valueintf.IValue3;
 import org.jsoup.nodes.TextNode;
 import org.meeuw.functional.ThrowingRunnable;
+import org.meeuw.functional.ThrowingRunnableUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -1109,8 +1110,8 @@ abstract class Util {
 
 	private static <E extends Throwable> void testAndRunThrows(final boolean b,
 			@Nullable final ThrowingRunnable<E> throwingRunnable) throws E {
-		if (b && throwingRunnable != null) {
-			throwingRunnable.runThrows();
+		if (b) {
+			ThrowingRunnableUtil.runThrows(throwingRunnable);
 		}
 	}
 
