@@ -1079,6 +1079,7 @@ abstract class Util {
 		//
 	}
 
+	@Nullable
 	private static Type[] getArgumentTypes(@Nullable final Method instance) {
 		return instance != null ? instance.getArgumentTypes() : null;
 	}
