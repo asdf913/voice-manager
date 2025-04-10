@@ -1081,9 +1081,9 @@ abstract class Util {
 								&& getParameterCount(javaLangReflectMethod) == length(getArgumentTypes(x))),
 				Collectors.toCollection(ArrayList::new));
 		//
-		if (ms != null && contains(ms, method)) {
+		if (contains(ms, method)) {
 			//
-			ms.remove(method);
+			remove(ms, method);
 			//
 		} // if
 			//
@@ -1112,6 +1112,10 @@ abstract class Util {
 			//
 		return false;
 		//
+	}
+
+	private static boolean remove(final Collection<?> instance, final Object o) {
+		return instance != null && instance.remove(o);
 	}
 
 	@Nullable

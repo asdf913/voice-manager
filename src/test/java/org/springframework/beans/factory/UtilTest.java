@@ -58,7 +58,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class UtilTest {
 
 	private static Method METHOD_GET_DECLARED_FIELD, METHOD_EXECUTE_FOR_EACH_METHOD4, METHOD_EXECUTE_FOR_EACH_METHOD5,
-			METHOD_GET_RESOURCE_AS_STREAM, METHOD_EXECUTE_FOR_EACH_METHOD_3C, METHOD_AND_2, METHOD_AND_3 = null;
+			METHOD_GET_RESOURCE_AS_STREAM, METHOD_EXECUTE_FOR_EACH_METHOD_3C, METHOD_AND_2, METHOD_AND_3,
+			METHOD_REMOVE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -84,6 +85,8 @@ class UtilTest {
 		//
 		(METHOD_AND_3 = clz.getDeclaredMethod("and", Boolean.TYPE, Object.class, FailablePredicate.class))
 				.setAccessible(true);
+		//
+		(METHOD_REMOVE = clz.getDeclaredMethod("remove", Collection.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -811,6 +814,25 @@ class UtilTest {
 		Assertions.assertDoesNotThrow(() -> Util.accept((a, b) -> {
 		}, null, 0));
 		//
+	}
+
+	@Test
+	void testRemove() throws Throwable {
+		//
+		Assertions.assertFalse(remove(Collections.emptySet(), null));
+		//
+	}
+
+	private static boolean remove(final Collection<?> instance, final Object o) throws Throwable {
+		try {
+			final Object obj = METHOD_REMOVE.invoke(null, instance, o);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }
