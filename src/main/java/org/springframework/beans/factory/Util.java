@@ -1033,9 +1033,8 @@ abstract class Util {
 				//
 			} // if
 				//
-		} // if
-			//
-		if (length == 2 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof ARETURN) {
+		} else if (length == 2 && ArrayUtils.get(ins, 0) instanceof ALOAD
+				&& ArrayUtils.get(ins, 1) instanceof ARETURN) {
 			//
 			final List<Method> ms = toList(
 					filter(testAndApply(Objects::nonNull, javaClass.getMethods(), Arrays::stream, null),
@@ -1065,6 +1064,15 @@ abstract class Util {
 				//
 			} // if
 				//
+		} else if (length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD
+				&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+				&& ArrayUtils.get(ins, 2) instanceof ARRAYLENGTH) {
+			//
+			// org.apache.commons.collections.collection.CompositeCollection
+			//
+			return true;
+			//
 		} // if
 			//
 		return false;
@@ -1418,8 +1426,6 @@ abstract class Util {
 				collect(Stream.of("com.google.common.reflect.TypeToken$TypeSet",
 						"org.apache.jena.ext.com.google.common.reflect.TypeToken$TypeSet"),
 						Collectors.toMap(Function.identity(), x -> "types")));
-		//
-		put(map, "org.apache.commons.collections.collection.CompositeCollection", "all");
 		//
 		putAll(map,
 				collect(Stream.of("org.d2ab.collection.CollectionList", "org.d2ab.collection.FilteredCollection",
