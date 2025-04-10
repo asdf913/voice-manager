@@ -1026,7 +1026,7 @@ abstract class Util {
 			final String fieldName = getFieldNameIfMethodReadOneFieldOnly(
 					javaClass.getMethod(Narcissus.findMethod(clz, iv.getMethodName(cpg))));
 			//
-			if (fieldName != null && FieldUtils.readDeclaredField(instance, fieldName, true) == null) {
+			if (and(fieldName != null, () -> FieldUtils.readDeclaredField(instance, fieldName, true) == null)) {
 				//
 				return true;
 				//
