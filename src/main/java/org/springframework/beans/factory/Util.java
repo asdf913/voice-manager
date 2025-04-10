@@ -93,6 +93,7 @@ import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.javatuples.valueintf.IValue3;
 import org.jsoup.nodes.TextNode;
+import org.meeuw.functional.ThrowingRunnable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -1042,12 +1043,10 @@ abstract class Util {
 							m -> Boolean.logicalAnd(Objects.equals(FieldOrMethodUtil.getName(m), "hasNext"),
 									length(getArgumentTypes(m)) == 0)));
 			//
-			if (IterableUtils.size(ms) > 1) {
-				//
+			testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
 				throw new IllegalStateException();
-				//
-			} // if
-				//
+			});
+			//
 			if ((method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null)) != null
 					&& (length(ins = InstructionListUtil
 							.getInstructions(MethodGenUtil.getInstructionList(testAndApply((a, b) -> b != null, method,
@@ -1084,12 +1083,10 @@ abstract class Util {
 		//
 		testAndAccept(Util::contains, ms, method, Util::remove);
 		//
-		if (IterableUtils.size(ms) > 1) {
-			//
+		testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
 			throw new IllegalStateException();
-			//
-		} // if
-			//
+		});
+		//
 		if ((method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null)) != null) {
 			//
 			if ((length(ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
@@ -1109,6 +1106,13 @@ abstract class Util {
 			//
 		return false;
 		//
+	}
+
+	private static <E extends Throwable> void testAndRunThrows(final boolean b,
+			final ThrowingRunnable<E> throwingRunnable) throws E {
+		if (b && throwingRunnable != null) {
+			throwingRunnable.runThrows();
+		}
 	}
 
 	private static boolean remove(@Nullable final Collection<?> instance, final Object o) {

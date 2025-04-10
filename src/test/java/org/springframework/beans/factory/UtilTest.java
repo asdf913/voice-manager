@@ -47,6 +47,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.meeuw.functional.ThrowingRunnable;
 
 import com.google.common.reflect.Reflection;
 
@@ -58,8 +59,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 class UtilTest {
 
 	private static Method METHOD_GET_DECLARED_FIELD, METHOD_EXECUTE_FOR_EACH_METHOD4, METHOD_EXECUTE_FOR_EACH_METHOD5,
-			METHOD_GET_RESOURCE_AS_STREAM, METHOD_EXECUTE_FOR_EACH_METHOD_3C, METHOD_AND_2, METHOD_AND_3,
-			METHOD_REMOVE = null;
+			METHOD_GET_RESOURCE_AS_STREAM, METHOD_EXECUTE_FOR_EACH_METHOD_3C, METHOD_AND_2, METHOD_AND_3, METHOD_REMOVE,
+			METHOD_TEST_AND_RUN_THROWS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -87,6 +88,9 @@ class UtilTest {
 				.setAccessible(true);
 		//
 		(METHOD_REMOVE = clz.getDeclaredMethod("remove", Collection.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_RUN_THROWS = clz.getDeclaredMethod("testAndRunThrows", Boolean.TYPE, ThrowingRunnable.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -830,6 +834,25 @@ class UtilTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndRunThrows() {
+		//
+		Assertions.assertDoesNotThrow(() -> testAndRunThrows(true, () -> {
+		}));
+		//
+		Assertions.assertDoesNotThrow(() -> testAndRunThrows(true, null));
+		//
+	}
+
+	private static <E extends Throwable> void testAndRunThrows(final boolean b,
+			final ThrowingRunnable<E> throwingRunnable) throws Throwable {
+		try {
+			METHOD_TEST_AND_RUN_THROWS.invoke(null, b, throwingRunnable);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
