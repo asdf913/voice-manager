@@ -1077,8 +1077,9 @@ abstract class Util {
 			//
 		final Collection<Method> ms = collect(
 				filter(testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream, null),
-						x -> Objects.equals(FieldOrMethodUtil.getName(x), getName(javaLangReflectMethod))
-								&& getParameterCount(javaLangReflectMethod) == length(getArgumentTypes(x))),
+						x -> Boolean.logicalAnd(
+								Objects.equals(FieldOrMethodUtil.getName(x), getName(javaLangReflectMethod)),
+								getParameterCount(javaLangReflectMethod) == length(getArgumentTypes(x)))),
 				Collectors.toCollection(ArrayList::new));
 		//
 		testAndAccept(Util::contains, ms, method, Util::remove);
