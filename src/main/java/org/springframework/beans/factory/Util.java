@@ -11,6 +11,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -1074,6 +1075,41 @@ abstract class Util {
 			//
 		} // if
 			//
+		final Collection<Method> ms = collect(
+				filter(testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream, null),
+						x -> Objects.equals(FieldOrMethodUtil.getName(x), getName(javaLangReflectMethod))
+								&& getParameterCount(javaLangReflectMethod) == length(getArgumentTypes(x))),
+				Collectors.toCollection(ArrayList::new));
+		//
+		if (ms != null && contains(ms, method)) {
+			//
+			ms.remove(method);
+			//
+		} // if
+			//
+		if (IterableUtils.size(ms) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		if ((method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null)) != null) {
+			//
+			if ((length = length(ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
+					testAndApply((a, b) -> b != null, method, cpg, (a, b) -> new MethodGen(a, null, b), null))))) > 4
+					&& ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
+					&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD gf
+					&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+					&& ArrayUtils.get(ins, 4) instanceof INVOKEINTERFACE) {
+				//
+				// org.apache.commons.collections4.set.ListOrderedSet
+				//
+				return true;
+				//
+			} // if
+				//
+		} // if
+			//
 		return false;
 		//
 	}
@@ -1444,10 +1480,7 @@ abstract class Util {
 						"org.apache.commons.collections4.multiset.AbstractMultiSet$UniqueSet"),
 						Collectors.toMap(Function.identity(), x -> "parent")));
 		//
-		putAll(map,
-				collect(Stream.of("org.apache.commons.collections.set.ListOrderedSet",
-						"org.apache.commons.collections4.set.ListOrderedSet"),
-						Collectors.toMap(Function.identity(), x -> "setOrder")));
+		put(map, "org.apache.commons.collections.set.ListOrderedSet", "setOrder");
 		//
 		putAll(map,
 				collect(Stream.of("org.apache.commons.csv.CSVRecord", "org.d2ab.collection.chars.BitCharSet",
