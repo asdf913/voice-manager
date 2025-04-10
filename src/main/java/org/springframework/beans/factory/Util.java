@@ -1091,21 +1091,41 @@ abstract class Util {
 								getParameterCount(javaLangReflectMethod) == length(getArgumentTypes(x)))),
 				Collectors.toCollection(ArrayList::new));
 		//
+		Method method = JavaClassUtil.getMethod(javaClass, javaLangReflectMethod);
+		//
+		ConstantPoolGen cpg = testAndApply(Objects::nonNull,
+				FieldOrMethodUtil.getConstantPool(
+						method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null)),
+				ConstantPoolGen::new, null);
+		//
+		Instruction[] ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
+				testAndApply((a, b) -> b != null, method, cpg, (a, b) -> new MethodGen(a, null, b), null)));
+		//
+		int length = length(ins);
+		//
+		if (length == 6 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+				&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD
+				&& ArrayUtils.get(ins, 4) instanceof INVOKEVIRTUAL && ArrayUtils.get(ins, 5) instanceof ARETURN) {
+			//
+			// com.github.andrewoma.dexx.collection.DerivedKeyHashMap
+			//
+			return true;
+			//
+		} // if
+			//
 		testAndAccept(Util::contains, ms, JavaClassUtil.getMethod(javaClass, javaLangReflectMethod), Util::remove);
 		//
 		testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
 			throw new IllegalStateException();
 		});
 		//
-		final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
-		//
-		final ConstantPoolGen cpg = testAndApply(Objects::nonNull, FieldOrMethodUtil.getConstantPool(method),
-				ConstantPoolGen::new, null);
-		//
-		final Instruction[] ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
-				testAndApply((a, b) -> b != null, method, cpg, (a, b) -> new MethodGen(a, null, b), null)));
-		//
-		final int length = length(ins);
+		length = length(ins = InstructionListUtil
+				.getInstructions(MethodGenUtil.getInstructionList(testAndApply((a, b) -> b != null,
+						method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null),
+						cpg = testAndApply(Objects::nonNull, FieldOrMethodUtil.getConstantPool(method),
+								ConstantPoolGen::new, null),
+						(a, b) -> new MethodGen(a, null, b), null))));
 		//
 		return method != null && or(// org.apache.commons.collections4.set.ListOrderedSet
 				length > 4 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
@@ -1380,10 +1400,9 @@ abstract class Util {
 		final Map<String, String> map = new LinkedHashMap<>(Map.of(
 				"com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap", "_hashArea",
 				"com.github.andrewoma.dexx.collection.ArrayList", "elements",
-				"com.github.andrewoma.dexx.collection.TreeMap", "tree", "com.github.andrewoma.dexx.collection.TreeSet",
-				"redBlackTree", "com.github.andrewoma.dexx.collection.Vector", "pointer",
-				"com.google.common.collect.EnumMultiset", "enumConstants", "com.google.common.collect.EvictingQueue",
-				DELEGATE, "com.healthmarketscience.jackcess.impl.DatabaseImpl", "_tableFinder"));
+				"com.github.andrewoma.dexx.collection.Vector", "pointer", "com.google.common.collect.EnumMultiset",
+				"enumConstants", "com.google.common.collect.EvictingQueue", DELEGATE,
+				"com.healthmarketscience.jackcess.impl.DatabaseImpl", "_tableFinder"));
 		//
 		putAll(map,
 				Map.of("com.healthmarketscience.jackcess.impl.IndexCursorImpl", "_entryCursor",
@@ -1444,8 +1463,8 @@ abstract class Util {
 				Collectors.toMap(Function.identity(), x -> "_children")));
 		//
 		putAll(map,
-				collect(Stream.of("com.github.andrewoma.dexx.collection.DerivedKeyHashMap",
-						"com.github.andrewoma.dexx.collection.HashMap", "com.github.andrewoma.dexx.collection.HashSet"),
+				collect(Stream.of("com.github.andrewoma.dexx.collection.HashMap",
+						"com.github.andrewoma.dexx.collection.HashSet"),
 						Collectors.toMap(Function.identity(), x -> "compactHashMap")));
 		//
 		putAll(map, collect(Stream.of("com.github.andrewoma.dexx.collection.internal.adapter.ListAdapater",
