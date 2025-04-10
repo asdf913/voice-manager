@@ -1032,8 +1032,8 @@ abstract class Util {
 				//
 			} // if
 				//
-		} else if (length == 2 && ArrayUtils.get(ins, 0) instanceof ALOAD
-				&& ArrayUtils.get(ins, 1) instanceof ARETURN) {
+		} else if (and(length == 2, ins,
+				x -> ArrayUtils.get(x, 0) instanceof ALOAD && ArrayUtils.get(x, 1) instanceof ARETURN)) {
 			//
 			final List<Method> ms = toList(
 					filter(testAndApply(Objects::nonNull, javaClass.getMethods(), Arrays::stream, null),
