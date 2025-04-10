@@ -1091,11 +1091,9 @@ abstract class Util {
 								getParameterCount(javaLangReflectMethod) == length(getArgumentTypes(x)))),
 				Collectors.toCollection(ArrayList::new));
 		//
-		Method method = JavaClassUtil.getMethod(javaClass, javaLangReflectMethod);
+		Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
 		//
-		ConstantPoolGen cpg = testAndApply(Objects::nonNull,
-				FieldOrMethodUtil.getConstantPool(
-						method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null)),
+		ConstantPoolGen cpg = testAndApply(Objects::nonNull, FieldOrMethodUtil.getConstantPool(method),
 				ConstantPoolGen::new, null);
 		//
 		Instruction[] ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
