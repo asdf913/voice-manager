@@ -1307,7 +1307,7 @@ abstract class Util {
 		return instance != null && instance.anyMatch(predicate);
 	}
 
-	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, final T t, final U u,
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, @Nullable final T t, final U u,
 			final BiConsumer<? super T, ? super U> consumer) {
 		if (test(predicate, t, u)) {
 			accept(consumer, t, u);
