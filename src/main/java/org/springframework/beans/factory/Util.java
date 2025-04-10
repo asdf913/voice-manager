@@ -1037,9 +1037,10 @@ abstract class Util {
 			//
 		if (length == 2 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof ARETURN) {
 			//
-			final List<Method> ms = toList(filter(
-					testAndApply(Objects::nonNull, javaClass.getMethods(), Arrays::stream, null),
-					m -> Objects.equals(FieldOrMethodUtil.getName(m), "hasNext") && length(getArgumentTypes(m)) == 0));
+			final List<Method> ms = toList(
+					filter(testAndApply(Objects::nonNull, javaClass.getMethods(), Arrays::stream, null),
+							m -> Boolean.logicalAnd(Objects.equals(FieldOrMethodUtil.getName(m), "hasNext"),
+									length(getArgumentTypes(m)) == 0)));
 			//
 			if (IterableUtils.size(ms) > 1) {
 				//
