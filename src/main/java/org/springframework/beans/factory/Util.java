@@ -1089,19 +1089,31 @@ abstract class Util {
 			throw new IllegalStateException();
 		});
 		//
-		if ((method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null)) != null
-				&& (length(ins = InstructionListUtil
-						.getInstructions(MethodGenUtil.getInstructionList(testAndApply((a, b) -> b != null, method, cpg,
-								(a, b) -> new MethodGen(a, null, b), null))))) > 4
-				&& ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
-				&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD gf
-				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-				&& ArrayUtils.get(ins, 4) instanceof INVOKEINTERFACE) {
+		if ((method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null)) != null) {
 			//
-			// org.apache.commons.collections4.set.ListOrderedSet
-			//
-			return true;
-			//
+			if ((length = length(ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
+					testAndApply((a, b) -> b != null, method, cpg, (a, b) -> new MethodGen(a, null, b), null))))) > 4
+					&& ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
+					&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD gf
+					&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+					&& ArrayUtils.get(ins, 4) instanceof INVOKEINTERFACE) {
+				//
+				// org.apache.commons.collections4.set.ListOrderedSet
+				//
+				return true;
+				//
+			} else if (length > 5 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
+					&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof ALOAD
+					&& ArrayUtils.get(ins, 4) instanceof GETFIELD gf
+					&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+					&& ArrayUtils.get(ins, 5) instanceof INVOKEINTERFACE) {
+				//
+				// org.d2ab.collection.doubles.RawDoubleSet
+				//
+				return true;
+				//
+			} // if
+				//
 		} // if
 			//
 		return false;
@@ -1489,8 +1501,8 @@ abstract class Util {
 		//
 		putAll(map,
 				collect(Stream.of("org.apache.commons.csv.CSVRecord", "org.d2ab.collection.chars.BitCharSet",
-						"org.d2ab.collection.doubles.RawDoubleSet", "org.d2ab.collection.doubles.SortedListDoubleSet",
-						"org.d2ab.collection.ints.BitIntSet"), Collectors.toMap(Function.identity(), x -> "values")));
+						"org.d2ab.collection.doubles.SortedListDoubleSet", "org.d2ab.collection.ints.BitIntSet"),
+						Collectors.toMap(Function.identity(), x -> "values")));
 		//
 		putAll(map,
 				collect(Stream.of("org.apache.jena.ext.xerces.impl.dv.util.ByteListImpl",
