@@ -1048,25 +1048,21 @@ abstract class Util {
 				//
 			} // if
 				//
-			if ((method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0),
-					null)) != null) {
+			if ((method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null)) != null
+					&& (length(ins = InstructionListUtil
+							.getInstructions(MethodGenUtil.getInstructionList(testAndApply((a, b) -> b != null, method,
+									cpg, (a, b) -> new MethodGen(a, null, b), null))))) > 4
+					&& ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf1
+					&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD gf2
+					&& ArrayUtils.get(ins, 4) instanceof ARRAYLENGTH
+					&& Objects.equals(toString(gf1.getFieldType(cpg)), "int")
+					&& Objects.equals(toString(gf2.getFieldType(cpg)), "java.lang.Object[]")
+					&& FieldUtils.readDeclaredField(instance, gf2.getFieldName(cpg), true) == null) {
 				//
-				if ((length(ins = InstructionListUtil
-						.getInstructions(MethodGenUtil.getInstructionList(testAndApply((a, b) -> b != null, method, cpg,
-								(a, b) -> new MethodGen(a, null, b), null))))) > 4
-						&& ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf1
-						&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD gf2
-						&& ArrayUtils.get(ins, 4) instanceof ARRAYLENGTH
-						&& Objects.equals(toString(gf1.getFieldType(cpg)), "int")
-						&& Objects.equals(toString(gf2.getFieldType(cpg)), "java.lang.Object[]")
-						&& FieldUtils.readDeclaredField(instance, gf2.getFieldName(cpg), true) == null) {
-					//
-					// com.fasterxml.jackson.databind.util.ArrayIterator
-					//
-					return true;
-					//
-				} // if
-					//
+				// com.fasterxml.jackson.databind.util.ArrayIterator
+				//
+				return true;
+				//
 			} // if
 				//
 		} // if
