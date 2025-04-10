@@ -1091,7 +1091,7 @@ abstract class Util {
 		//
 		if ((method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null)) != null) {
 			//
-			if (Boolean.logicalAnd(
+			if (Boolean.logicalOr(
 					// org.apache.commons.collections4.set.ListOrderedSet
 					(length = length(ins = InstructionListUtil
 							.getInstructions(MethodGenUtil.getInstructionList(testAndApply((a, b) -> b != null, method,
