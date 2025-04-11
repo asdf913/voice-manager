@@ -1147,7 +1147,15 @@ abstract class Util {
 				length == 5 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
 						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
 						&& ArrayUtils.get(ins, 2) instanceof INVOKEVIRTUAL
-						&& ArrayUtils.get(ins, 3) instanceof INVOKESTATIC && ArrayUtils.get(ins, 4) instanceof ARETURN);
+						&& ArrayUtils.get(ins, 3) instanceof INVOKESTATIC && ArrayUtils.get(ins, 4) instanceof ARETURN,
+				// org.d2ab.collection.ints.BitIntSet
+				length == 8 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
+						&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof ALOAD
+						&& ArrayUtils.get(ins, 4) instanceof GETFIELD gf
+						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+						&& ArrayUtils.get(ins, 5) instanceof INVOKEVIRTUAL
+						&& ArrayUtils.get(ins, 6) instanceof INVOKESPECIAL
+						&& ArrayUtils.get(ins, 7) instanceof ARETURN);
 		//
 	}
 
@@ -1512,8 +1520,7 @@ abstract class Util {
 						"org.apache.commons.collections4.multiset.AbstractMultiSet$UniqueSet"),
 						Collectors.toMap(Function.identity(), x -> "parent")));
 		//
-		putAll(map, collect(Stream.of("org.apache.commons.csv.CSVRecord", "org.d2ab.collection.ints.BitIntSet"),
-				Collectors.toMap(Function.identity(), x -> "values")));
+		put(map, "org.apache.commons.csv.CSVRecord", "values");
 		//
 		putAll(map,
 				collect(Stream.of("org.apache.jena.ext.xerces.impl.dv.util.ByteListImpl",
