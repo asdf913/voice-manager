@@ -874,7 +874,6 @@ abstract class Util {
 			//
 		final Map<String, String> map = new LinkedHashMap<>(Map.of("org.apache.http.impl.client.RedirectLocations",
 				"all", "org.htmlunit.corejs.javascript.IteratorLikeIterable", "next",
-				"org.htmlunit.cssparser.parser.selector.SelectorListImpl", "selectors_",
 				"org.htmlunit.jetty.client.util.ByteBufferContentProvider", "buffers",
 				"org.htmlunit.jetty.client.util.DeferredContentProvider", "chunks",
 				"org.htmlunit.jetty.client.util.InputStreamContentProvider", "iterator",
@@ -887,14 +886,11 @@ abstract class Util {
 						Collectors.toMap(Function.identity(), x -> "bytes")));
 		//
 		putAll(map,
-				Map.of("org.htmlunit.jetty.http.PathMap$PathSet", "_map", "org.htmlunit.jetty.http.QuotedCSV",
-						"_values", "org.htmlunit.jetty.http.QuotedQualityCSV", "_values",
-						"org.htmlunit.jetty.http.pathmap.PathSpecSet", "specs",
-						"org.htmlunit.jetty.io.IncludeExcludeConnectionStatistics$ConnectionSet", "set",
+				Map.of("org.htmlunit.jetty.http.PathMap$PathSet", "_map", "org.htmlunit.jetty.http.QuotedQualityCSV",
+						"_values", "org.htmlunit.jetty.http.pathmap.PathSpecSet", "specs",
 						"org.htmlunit.jetty.util.BlockingArrayQueue", "_tailLock",
-						"org.htmlunit.jetty.util.ConcurrentHashSet", "_keys", "org.htmlunit.jetty.util.InetAddressSet",
-						"_patterns", "org.htmlunit.jetty.util.PathWatcher$PathMatcherSet", "map",
-						"org.htmlunit.jetty.util.RegexSet", "_unmodifiable"));
+						"org.htmlunit.jetty.util.InetAddressSet", "_patterns",
+						"org.htmlunit.jetty.util.PathWatcher$PathMatcherSet", "map"));
 		//
 		put(map, "org.htmlunit.jetty.websocket.common.extensions.WebSocketExtensionFactory", "availableExtensions");
 		//
@@ -935,12 +931,9 @@ abstract class Util {
 		if (length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
 				&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE) {
 			//
-			if (or(length(ins) == 4 && ArrayUtils.get(ins, 3) instanceof ARETURN
-					&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null// com.helger.commons.log.InMemoryLogger
-					,
-					length(ins) == 5 && ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE
-							&& ArrayUtils.get(ins, 4) instanceof ARETURN
-							&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null// com.healthmarketscience.jackcess.impl.PropertyMapImpl
+			if (Boolean.logicalOr(length(ins) == 5 && ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE
+					&& ArrayUtils.get(ins, 4) instanceof ARETURN
+					&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null// com.healthmarketscience.jackcess.impl.PropertyMapImpl
 					, length > 3 && or(ArrayUtils.get(ins, 3) instanceof IFEQ, // org.apache.commons.collections4.collection.CompositeCollection
 							ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE, // org.apache.jena.atlas.lib.Map2
 							ArrayUtils.get(ins, 3) instanceof ASTORE// com.github.andrewoma.dexx.collection.internal.base.MappedIterable
@@ -1107,6 +1100,15 @@ abstract class Util {
 				&& ArrayUtils.get(ins, 4) instanceof INVOKEVIRTUAL && ArrayUtils.get(ins, 5) instanceof ARETURN) {
 			//
 			// com.github.andrewoma.dexx.collection.DerivedKeyHashMap
+			//
+			return true;
+			//
+		} else if (length == 4 && ArrayUtils.get(ins, 0) instanceof ALOAD
+				&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+				&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE && ArrayUtils.get(ins, 3) instanceof ARETURN) {
+			//
+			// com.github.andrewoma.dexx.collection.internal.adapter.ListAdapater
 			//
 			return true;
 			//
@@ -1435,8 +1437,7 @@ abstract class Util {
 						"org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate", "records",
 						"org.apache.poi.hssf.usermodel.HSSFRow", "cells"));
 		//
-		putAll(map, Map.of("org.apache.poi.hssf.usermodel.HSSFShapeGroup", "shapes",
-				"org.apache.poi.hssf.usermodel.HSSFWorkbook", "_sheets",
+		putAll(map, Map.of("org.apache.poi.hssf.usermodel.HSSFWorkbook", "_sheets",
 				"org.apache.poi.poifs.filesystem.DirectoryNode", "_entries",
 				"org.apache.poi.poifs.filesystem.FilteringDirectoryNode", "directory",
 				"org.apache.poi.poifs.filesystem.POIFSDocument", "_property",
@@ -1444,17 +1445,13 @@ abstract class Util {
 				"_notes", "org.apache.poi.xslf.usermodel.XSLFSlideLayout", "_layout"));
 		//
 		putAll(map, Map.of("org.apache.poi.xssf.streaming.SXSSFRow", "_cells",
-				"org.apache.poi.xslf.usermodel.XSLFTableStyles", "_styles",
-				"org.apache.poi.xssf.streaming.SXSSFWorkbook", "_wb", "org.apache.poi.xssf.usermodel.XSSFSimpleShape",
-				"_paragraphs", "org.apache.poi.xssf.usermodel.XSSFWorkbook", "sheets",
-				"org.apache.xmlbeans.XmlSimpleList", "underlying", "org.d2ab.collection.ChainedCollection",
+				"org.apache.poi.xssf.streaming.SXSSFWorkbook", "_wb", "org.apache.poi.xssf.usermodel.XSSFWorkbook",
+				"sheets", "org.apache.xmlbeans.XmlSimpleList", "underlying", "org.d2ab.collection.ChainedCollection",
 				"collections", "org.d2ab.collection.ChainedList", "lists", "org.d2ab.collection.longs.BitLongSet",
 				"negatives"));
 		//
-		putAll(map,
-				Map.of("org.openjdk.nashorn.internal.runtime.ListAdapter", "obj",
-						"org.openjdk.nashorn.internal.runtime.PropertyMap", "properties",
-						"org.oxbow.swingbits.action.ActionGroup", "actions"));
+		putAll(map, Map.of("org.openjdk.nashorn.internal.runtime.ListAdapter", "obj",
+				"org.openjdk.nashorn.internal.runtime.PropertyMap", "properties"));
 		//
 		putAll(map, collect(Stream.of("com.fasterxml.jackson.databind.node.ArrayNode",
 				"com.fasterxml.jackson.databind.node.ObjectNode", "org.apache.poi.poifs.property.DirectoryProperty"),
@@ -1485,8 +1482,7 @@ abstract class Util {
 				Collectors.toMap(Function.identity(), x -> "list")));
 		//
 		putAll(map,
-				collect(Stream.of("com.github.andrewoma.dexx.collection.internal.adapter.SetAdapater",
-						"com.github.andrewoma.dexx.collection.internal.adapter.SortedSetAdapter",
+				collect(Stream.of("com.github.andrewoma.dexx.collection.internal.adapter.SortedSetAdapter",
 						"org.springframework.cglib.beans.FixedKeySet"),
 						Collectors.toMap(Function.identity(), x -> "set")));
 		//
@@ -1506,8 +1502,8 @@ abstract class Util {
 						Collectors.toMap(Function.identity(), x -> "types")));
 		//
 		putAll(map,
-				collect(Stream.of("org.d2ab.collection.CollectionList", "org.d2ab.collection.FilteredCollection",
-						"org.d2ab.collection.MappedCollection", "org.d2ab.collection.ints.CollectionIntList"),
+				collect(Stream.of("org.d2ab.collection.FilteredCollection", "org.d2ab.collection.MappedCollection",
+						"org.d2ab.collection.ints.CollectionIntList"),
 						Collectors.toMap(Function.identity(), x -> "collection")));
 		//
 		putAll(map,
@@ -1533,12 +1529,8 @@ abstract class Util {
 						"org.apache.xerces.impl.dv.util.ByteListImpl"),
 						Collectors.toMap(Function.identity(), x -> "data")));
 		//
-		putAll(map, collect(Stream.of("org.apache.poi.xslf.usermodel.XSLFGroupShape"),
-				Collectors.toMap(Function.identity(), x -> "_shapes")));
-		//
 		putAll(map,
-				collect(Stream.of("org.apache.poi.hssf.usermodel.HSSFSheet", "org.apache.poi.xslf.usermodel.XSLFTable",
-						"org.apache.poi.xssf.usermodel.XSSFSheet"),
+				collect(Stream.of("org.apache.poi.hssf.usermodel.HSSFSheet", "org.apache.poi.xssf.usermodel.XSSFSheet"),
 						Collectors.toMap(Function.identity(), x -> "_rows")));
 		//
 		putAll(map,
@@ -1805,8 +1797,7 @@ abstract class Util {
 						"it.unimi.dsi.fastutil.shorts.ShortLinkedOpenHashSet"),
 						Collectors.toMap(Function.identity(), x -> "link")));
 		//
-		putAll(map, collect(Stream.of("org.apache.pdfbox.cos.COSArray", "org.apache.pdfbox.cos.COSIncrement"),
-				Collectors.toMap(Function.identity(), x -> "objects")));
+		put(map, "org.apache.pdfbox.cos.COSIncrement", "objects");
 		//
 		put(map, "org.apache.pdfbox.pdmodel.PDPageTree", "root");
 		//
