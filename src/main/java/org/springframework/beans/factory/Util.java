@@ -1094,21 +1094,17 @@ abstract class Util {
 		//
 		int length = length(ins);
 		//
-		if (length == 6 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
-				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-				&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD
-				&& ArrayUtils.get(ins, 4) instanceof INVOKEVIRTUAL && ArrayUtils.get(ins, 5) instanceof ARETURN) {
-			//
-			// com.github.andrewoma.dexx.collection.DerivedKeyHashMap
-			//
-			return true;
-			//
-		} else if (length == 4 && ArrayUtils.get(ins, 0) instanceof ALOAD
-				&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
-				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-				&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE && ArrayUtils.get(ins, 3) instanceof ARETURN) {
-			//
-			// com.github.andrewoma.dexx.collection.internal.adapter.ListAdapater
+		if (Boolean.logicalOr(
+				// com.github.andrewoma.dexx.collection.DerivedKeyHashMap
+				length == 6 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+						&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD
+						&& ArrayUtils.get(ins, 4) instanceof INVOKEVIRTUAL && ArrayUtils.get(ins, 5) instanceof ARETURN,
+				// com.github.andrewoma.dexx.collection.internal.adapter.ListAdapater
+				length == 4 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+						&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE
+						&& ArrayUtils.get(ins, 3) instanceof ARETURN)) {
 			//
 			return true;
 			//
