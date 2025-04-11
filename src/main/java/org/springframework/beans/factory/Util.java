@@ -877,7 +877,10 @@ abstract class Util {
 				"org.htmlunit.jetty.client.util.ByteBufferContentProvider", "buffers",
 				"org.htmlunit.jetty.client.util.DeferredContentProvider", "chunks",
 				"org.htmlunit.jetty.client.util.InputStreamContentProvider", "iterator",
-				"org.htmlunit.jetty.client.util.MultiPartContentProvider", "parts"));
+				"org.htmlunit.jetty.client.util.MultiPartContentProvider", "parts",
+				"org.htmlunit.jetty.http.QuotedQualityCSV", "_values", "org.htmlunit.jetty.http.pathmap.PathSpecSet",
+				"specs", "org.htmlunit.jetty.util.BlockingArrayQueue", "_tailLock",
+				"org.htmlunit.jetty.util.InetAddressSet", "_patterns"));
 		//
 		putAll(map,
 				collect(Stream.of("org.htmlunit.jetty.client.util.BytesContentProvider",
@@ -885,12 +888,7 @@ abstract class Util {
 						"org.htmlunit.jetty.client.util.StringContentProvider"),
 						Collectors.toMap(Function.identity(), x -> "bytes")));
 		//
-		putAll(map,
-				Map.of("org.htmlunit.jetty.http.PathMap$PathSet", "_map", "org.htmlunit.jetty.http.QuotedQualityCSV",
-						"_values", "org.htmlunit.jetty.http.pathmap.PathSpecSet", "specs",
-						"org.htmlunit.jetty.util.BlockingArrayQueue", "_tailLock",
-						"org.htmlunit.jetty.util.InetAddressSet", "_patterns",
-						"org.htmlunit.jetty.util.PathWatcher$PathMatcherSet", "map"));
+		put(map, "org.htmlunit.jetty.util.PathWatcher$PathMatcherSet", "map");
 		//
 		put(map, "org.htmlunit.jetty.websocket.common.extensions.WebSocketExtensionFactory", "availableExtensions");
 		//
@@ -1094,7 +1092,7 @@ abstract class Util {
 		//
 		int length = length(ins);
 		//
-		if (Boolean.logicalOr(
+		if (or(
 				// com.github.andrewoma.dexx.collection.DerivedKeyHashMap
 				length == 6 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
 						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
@@ -1104,7 +1102,13 @@ abstract class Util {
 				length == 4 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
 						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
 						&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE
-						&& ArrayUtils.get(ins, 3) instanceof ARETURN)) {
+						&& ArrayUtils.get(ins, 3) instanceof ARETURN,
+				// com.helger.commons.collection.map.LRUSet
+				length == 5 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+						&& ArrayUtils.get(ins, 2) instanceof INVOKEVIRTUAL
+						&& ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE
+						&& ArrayUtils.get(ins, 4) instanceof ARETURN)) {
 			//
 			return true;
 			//
@@ -1398,56 +1402,49 @@ abstract class Util {
 				"com.github.andrewoma.dexx.collection.ArrayList", "elements",
 				"com.github.andrewoma.dexx.collection.Vector", "pointer", "com.google.common.collect.EnumMultiset",
 				"enumConstants", "com.google.common.collect.EvictingQueue", DELEGATE,
-				"com.healthmarketscience.jackcess.impl.DatabaseImpl", "_tableFinder"));
+				"com.healthmarketscience.jackcess.impl.DatabaseImpl", "_tableFinder",
+				"com.healthmarketscience.jackcess.impl.IndexCursorImpl", "_entryCursor",
+				"com.healthmarketscience.jackcess.impl.TableImpl", "_columns",
+				"com.healthmarketscience.jackcess.impl.TableScanCursor", "_ownedPagesCursor",
+				"com.helger.commons.callback.CallbackList", "m_aRWLock"));
 		//
-		putAll(map,
-				Map.of("com.healthmarketscience.jackcess.impl.IndexCursorImpl", "_entryCursor",
-						"com.healthmarketscience.jackcess.impl.TableImpl", "_columns",
-						"com.healthmarketscience.jackcess.impl.TableScanCursor", "_ownedPagesCursor",
-						"com.helger.commons.callback.CallbackList", "m_aRWLock",
-						"com.helger.commons.collection.iterate.ArrayIterator", "m_aArray",
-						"com.helger.commons.collection.iterate.IterableIterator", "m_aIter",
-						"com.helger.commons.collection.iterate.MapperIterator", "m_aBaseIter",
-						"com.helger.commons.collection.map.LRUSet", "m_aMap"));
+		putAll(map, Map.of("com.helger.commons.collection.iterate.ArrayIterator", "m_aArray",
+				"com.helger.commons.collection.iterate.IterableIterator", "m_aIter",
+				"com.helger.commons.collection.iterate.MapperIterator", "m_aBaseIter",
+				"com.helger.commons.io.file.FileSystemRecursiveIterator", "m_aFilesLeft",
+				"com.helger.commons.math.CombinationGenerator", "m_aCombinationsLeft", "com.opencsv.bean.CsvToBean",
+				"mappingStrategy", "com.opencsv.bean.PositionToBeanField", "ranges",
+				"com.sun.jna.platform.win32.Advapi32Util$EventLogIterator", "_buffer",
+				"freemarker.core._SortedArraySet", "array", "freemarker.core._UnmodifiableCompositeSet", "set1"));
 		//
-		putAll(map,
-				Map.of("com.helger.commons.io.file.FileSystemRecursiveIterator", "m_aFilesLeft",
-						"com.helger.commons.math.CombinationGenerator", "m_aCombinationsLeft",
-						"com.opencsv.bean.CsvToBean", "mappingStrategy", "com.opencsv.bean.PositionToBeanField",
-						"ranges", "com.sun.jna.platform.win32.Advapi32Util$EventLogIterator", "_buffer",
-						"freemarker.core._SortedArraySet", "array", "freemarker.core._UnmodifiableCompositeSet", "set1",
-						"org.apache.bcel.classfile.BootstrapMethods", "bootstrapMethods"));
+		putAll(map, Map.of("org.apache.bcel.classfile.BootstrapMethods", "bootstrapMethods",
+				"org.apache.bcel.classfile.InnerClasses", "innerClasses", "org.apache.bcel.classfile.LineNumberTable",
+				"lineNumberTable", "org.apache.bcel.classfile.LocalVariableTable", "localVariableTable",
+				"org.apache.commons.collections.CursorableLinkedList", "_head",
+				"org.apache.commons.collections4.iterators.IteratorIterable", "typeSafeIterator",
+				"org.apache.ibatis.cursor.defaults.DefaultCursor", "cursorIterator",
+				"org.apache.jena.atlas.lib.tuple.TupleN", "tuple",
+				"org.apache.jena.ext.com.google.common.collect.EnumMultiset", "enumConstants",
+				"org.apache.jena.ext.com.google.common.collect.EvictingQueue", DELEGATE));
 		//
-		putAll(map,
-				Map.of("org.apache.bcel.classfile.InnerClasses", "innerClasses",
-						"org.apache.bcel.classfile.LineNumberTable", "lineNumberTable",
-						"org.apache.bcel.classfile.LocalVariableTable", "localVariableTable",
-						"org.apache.commons.collections.CursorableLinkedList", "_head",
-						"org.apache.commons.collections4.iterators.IteratorIterable", "typeSafeIterator"));
-		//
-		putAll(map,
-				Map.of("org.apache.ibatis.cursor.defaults.DefaultCursor", "cursorIterator",
-						"org.apache.jena.atlas.lib.tuple.TupleN", "tuple",
-						"org.apache.jena.ext.com.google.common.collect.EnumMultiset", "enumConstants",
-						"org.apache.jena.ext.com.google.common.collect.EvictingQueue", DELEGATE,
-						"org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate", "records",
-						"org.apache.poi.hssf.usermodel.HSSFRow", "cells"));
-		//
-		putAll(map, Map.of("org.apache.poi.hssf.usermodel.HSSFWorkbook", "_sheets",
-				"org.apache.poi.poifs.filesystem.DirectoryNode", "_entries",
+		putAll(map, Map.of("org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate", "records",
+				"org.apache.poi.hssf.usermodel.HSSFRow", "cells", "org.apache.poi.hssf.usermodel.HSSFWorkbook",
+				"_sheets", "org.apache.poi.poifs.filesystem.DirectoryNode", "_entries",
 				"org.apache.poi.poifs.filesystem.FilteringDirectoryNode", "directory",
 				"org.apache.poi.poifs.filesystem.POIFSDocument", "_property",
 				"org.apache.poi.poifs.filesystem.POIFSStream", "blockStore", "org.apache.poi.xslf.usermodel.XSLFNotes",
-				"_notes", "org.apache.poi.xslf.usermodel.XSLFSlideLayout", "_layout"));
+				"_notes", "org.apache.poi.xslf.usermodel.XSLFSlideLayout", "_layout",
+				"org.apache.poi.xssf.streaming.SXSSFRow", "_cells"));
 		//
-		putAll(map, Map.of("org.apache.poi.xssf.streaming.SXSSFRow", "_cells",
-				"org.apache.poi.xssf.streaming.SXSSFWorkbook", "_wb", "org.apache.poi.xssf.usermodel.XSSFWorkbook",
-				"sheets", "org.apache.xmlbeans.XmlSimpleList", "underlying", "org.d2ab.collection.ChainedCollection",
-				"collections", "org.d2ab.collection.ChainedList", "lists", "org.d2ab.collection.longs.BitLongSet",
-				"negatives"));
-		//
-		putAll(map, Map.of("org.openjdk.nashorn.internal.runtime.ListAdapter", "obj",
-				"org.openjdk.nashorn.internal.runtime.PropertyMap", "properties"));
+		putAll(map,
+				Map.of("org.apache.poi.xssf.streaming.SXSSFWorkbook", "_wb",
+						"org.apache.poi.xssf.usermodel.XSSFWorkbook", "sheets", "org.apache.xmlbeans.XmlSimpleList",
+						"underlying", "org.d2ab.collection.ChainedCollection", "collections",
+						"org.d2ab.collection.ChainedList", "lists", "org.d2ab.collection.longs.BitLongSet", "negatives",
+						"org.openjdk.nashorn.internal.runtime.ListAdapter", "obj",
+						"org.openjdk.nashorn.internal.runtime.PropertyMap", "properties",
+						"org.apache.commons.collections.set.ListOrderedSet", "setOrder",
+						"org.apache.pdfbox.cos.COSIncrement", "objects"));
 		//
 		putAll(map, collect(Stream.of("com.fasterxml.jackson.databind.node.ArrayNode",
 				"com.fasterxml.jackson.databind.node.ObjectNode", "org.apache.poi.poifs.property.DirectoryProperty"),
@@ -1514,8 +1511,6 @@ abstract class Util {
 						"org.apache.commons.collections4.multiset.AbstractMultiSet$EntrySet",
 						"org.apache.commons.collections4.multiset.AbstractMultiSet$UniqueSet"),
 						Collectors.toMap(Function.identity(), x -> "parent")));
-		//
-		put(map, "org.apache.commons.collections.set.ListOrderedSet", "setOrder");
 		//
 		putAll(map, collect(Stream.of("org.apache.commons.csv.CSVRecord", "org.d2ab.collection.ints.BitIntSet"),
 				Collectors.toMap(Function.identity(), x -> "values")));
@@ -1792,8 +1787,6 @@ abstract class Util {
 						"it.unimi.dsi.fastutil.shorts.ShortLinkedOpenCustomHashSet",
 						"it.unimi.dsi.fastutil.shorts.ShortLinkedOpenHashSet"),
 						Collectors.toMap(Function.identity(), x -> "link")));
-		//
-		put(map, "org.apache.pdfbox.cos.COSIncrement", "objects");
 		//
 		put(map, "org.apache.pdfbox.pdmodel.PDPageTree", "root");
 		//
