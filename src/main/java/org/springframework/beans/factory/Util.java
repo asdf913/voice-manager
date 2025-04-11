@@ -963,14 +963,10 @@ abstract class Util {
 				&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
 				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
 				&& ArrayUtils.get(ins, 2) instanceof INVOKESTATIC invokeStatic
-				&& or(Boolean.logicalAnd(Objects.equals(invokeStatic.getClassName(cpg), "java.util.stream.Stream"),
-						Objects.equals(invokeStatic.getMethodName(cpg), "of")),
-						Boolean.logicalAnd(Objects.equals(invokeStatic.getClassName(cpg), "java.util.Arrays"),
-								Objects.equals(invokeStatic.getMethodName(cpg), "stream")),
+				&& or(Boolean.logicalAnd(Objects.equals(invokeStatic.getClassName(cpg), "java.util.Arrays"),
+						Objects.equals(invokeStatic.getMethodName(cpg), "stream")),
 						Boolean.logicalAnd(Objects.equals(invokeStatic.getClassName(cpg), "java.util.Collections"),
 								Objects.equals(invokeStatic.getMethodName(cpg), "unmodifiableList")))) {
-			//
-			// org.apache.poi.ss.util.SSCellRange
 			//
 			// org.apache.bcel.classfile.ConstantPool
 			//
@@ -1108,7 +1104,15 @@ abstract class Util {
 						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
 						&& ArrayUtils.get(ins, 2) instanceof INVOKEVIRTUAL
 						&& ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE
-						&& ArrayUtils.get(ins, 4) instanceof ARETURN)) {
+						&& ArrayUtils.get(ins, 4) instanceof ARETURN,
+				// org.apache.bcel.classfile.BootstrapMethods
+				length == 5 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+						&& ArrayUtils.get(ins, 2) instanceof INVOKESTATIC is
+						&& Objects.equals(is.getClassName(cpg), "java.util.stream.Stream")
+						&& Objects.equals(is.getMethodName(cpg), "of")
+						&& ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE ii
+						&& Objects.equals(ii.getMethodName(cpg), "iterator"))) {
 			//
 			return true;
 			//
@@ -1425,34 +1429,32 @@ abstract class Util {
 				"com.sun.jna.platform.win32.Advapi32Util$EventLogIterator", "_buffer",
 				"freemarker.core._SortedArraySet", "array", "freemarker.core._UnmodifiableCompositeSet", "set1"));
 		//
-		putAll(map, Map.of("org.apache.bcel.classfile.BootstrapMethods", "bootstrapMethods",
-				"org.apache.bcel.classfile.InnerClasses", "innerClasses", "org.apache.bcel.classfile.LineNumberTable",
-				"lineNumberTable", "org.apache.bcel.classfile.LocalVariableTable", "localVariableTable",
-				"org.apache.commons.collections.CursorableLinkedList", "_head",
-				"org.apache.commons.collections4.iterators.IteratorIterable", "typeSafeIterator",
-				"org.apache.ibatis.cursor.defaults.DefaultCursor", "cursorIterator",
-				"org.apache.jena.atlas.lib.tuple.TupleN", "tuple",
-				"org.apache.jena.ext.com.google.common.collect.EnumMultiset", "enumConstants",
-				"org.apache.jena.ext.com.google.common.collect.EvictingQueue", DELEGATE));
+		putAll(map,
+				Map.of("org.apache.commons.collections.CursorableLinkedList", "_head",
+						"org.apache.commons.collections4.iterators.IteratorIterable", "typeSafeIterator",
+						"org.apache.ibatis.cursor.defaults.DefaultCursor", "cursorIterator",
+						"org.apache.jena.atlas.lib.tuple.TupleN", "tuple",
+						"org.apache.jena.ext.com.google.common.collect.EnumMultiset", "enumConstants",
+						"org.apache.jena.ext.com.google.common.collect.EvictingQueue", DELEGATE,
+						"org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate", "records",
+						"org.apache.poi.hssf.usermodel.HSSFRow", "cells", "org.apache.poi.hssf.usermodel.HSSFWorkbook",
+						"_sheets", "org.apache.poi.poifs.filesystem.DirectoryNode", "_entries"));
 		//
-		putAll(map, Map.of("org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate", "records",
-				"org.apache.poi.hssf.usermodel.HSSFRow", "cells", "org.apache.poi.hssf.usermodel.HSSFWorkbook",
-				"_sheets", "org.apache.poi.poifs.filesystem.DirectoryNode", "_entries",
-				"org.apache.poi.poifs.filesystem.FilteringDirectoryNode", "directory",
+		putAll(map, Map.of("org.apache.poi.poifs.filesystem.FilteringDirectoryNode", "directory",
 				"org.apache.poi.poifs.filesystem.POIFSDocument", "_property",
 				"org.apache.poi.poifs.filesystem.POIFSStream", "blockStore", "org.apache.poi.xslf.usermodel.XSLFNotes",
 				"_notes", "org.apache.poi.xslf.usermodel.XSLFSlideLayout", "_layout",
-				"org.apache.poi.xssf.streaming.SXSSFRow", "_cells"));
+				"org.apache.poi.xssf.streaming.SXSSFRow", "_cells", "org.apache.poi.xssf.streaming.SXSSFWorkbook",
+				"_wb", "org.apache.poi.xssf.usermodel.XSSFWorkbook", "sheets", "org.apache.xmlbeans.XmlSimpleList",
+				"underlying", "org.d2ab.collection.ChainedCollection", "collections"));
 		//
 		putAll(map,
-				Map.of("org.apache.poi.xssf.streaming.SXSSFWorkbook", "_wb",
-						"org.apache.poi.xssf.usermodel.XSSFWorkbook", "sheets", "org.apache.xmlbeans.XmlSimpleList",
-						"underlying", "org.d2ab.collection.ChainedCollection", "collections",
-						"org.d2ab.collection.ChainedList", "lists", "org.d2ab.collection.longs.BitLongSet", "negatives",
+				Map.of("org.d2ab.collection.ChainedList", "lists", "org.d2ab.collection.longs.BitLongSet", "negatives",
 						"org.openjdk.nashorn.internal.runtime.ListAdapter", "obj",
 						"org.openjdk.nashorn.internal.runtime.PropertyMap", "properties",
 						"org.apache.commons.collections.set.ListOrderedSet", "setOrder",
-						"org.apache.pdfbox.cos.COSIncrement", "objects"));
+						"org.apache.pdfbox.cos.COSIncrement", "objects", "org.apache.commons.csv.CSVRecord", "values",
+						"org.d2ab.collection.ReverseList", "original"));
 		//
 		putAll(map, collect(Stream.of("com.fasterxml.jackson.databind.node.ArrayNode",
 				"com.fasterxml.jackson.databind.node.ObjectNode", "org.apache.poi.poifs.property.DirectoryProperty"),
@@ -1520,8 +1522,6 @@ abstract class Util {
 						"org.apache.commons.collections4.multiset.AbstractMultiSet$UniqueSet"),
 						Collectors.toMap(Function.identity(), x -> "parent")));
 		//
-		put(map, "org.apache.commons.csv.CSVRecord", "values");
-		//
 		putAll(map,
 				collect(Stream.of("org.apache.jena.ext.xerces.impl.dv.util.ByteListImpl",
 						"org.apache.xerces.impl.dv.util.ByteListImpl"),
@@ -1545,8 +1545,6 @@ abstract class Util {
 				"org.d2ab.collection.chars.ChainingCharIterable", "org.d2ab.collection.doubles.ChainingDoubleIterable",
 				"org.d2ab.collection.ints.ChainingIntIterable", "org.d2ab.collection.longs.ChainingLongIterable"),
 				Collectors.toMap(Function.identity(), x -> "iterables")));
-		//
-		put(map, "org.d2ab.collection.ReverseList", "original");
 		//
 		putAll(map,
 				collect(Stream.of("it.unimi.dsi.fastutil.booleans.AbstractBooleanBigList$BooleanSubList",
