@@ -879,17 +879,15 @@ abstract class Util {
 				"org.htmlunit.jetty.client.util.DeferredContentProvider", "chunks",
 				"org.htmlunit.jetty.client.util.InputStreamContentProvider", "iterator",
 				"org.htmlunit.jetty.client.util.MultiPartContentProvider", "parts",
-				"org.htmlunit.jetty.http.pathmap.PathSpecSet", "specs", "org.htmlunit.jetty.util.BlockingArrayQueue",
-				"_tailLock", "org.htmlunit.jetty.util.InetAddressSet", "_patterns",
-				"org.htmlunit.jetty.util.PathWatcher$PathMatcherSet", "map"));
+				"org.htmlunit.jetty.util.BlockingArrayQueue", "_tailLock", "org.htmlunit.jetty.util.InetAddressSet",
+				"_patterns", "org.htmlunit.jetty.util.PathWatcher$PathMatcherSet", "map",
+				"org.htmlunit.jetty.websocket.common.extensions.WebSocketExtensionFactory", "availableExtensions"));
 		//
 		putAll(map,
 				collect(Stream.of("org.htmlunit.jetty.client.util.BytesContentProvider",
 						"org.htmlunit.jetty.client.util.FormContentProvider",
 						"org.htmlunit.jetty.client.util.StringContentProvider"),
 						Collectors.toMap(Function.identity(), x -> "bytes")));
-		//
-		put(map, "org.htmlunit.jetty.websocket.common.extensions.WebSocketExtensionFactory", "availableExtensions");
 		//
 		if (Boolean.logicalOr(forEachIsFieldNull(map, clz, instance),
 				contains(Arrays.asList("org.htmlunit.cyberneko.util.SimpleArrayList"), name))) {
@@ -1125,7 +1123,11 @@ abstract class Util {
 						&& ArrayUtils.get(ins, 6) instanceof GETFIELD gf
 						&& FieldUtils.readField(instance, gf.getFieldName(cpg), true) == null
 						&& ArrayUtils.get(ins, 7) instanceof INVOKEINTERFACE
-						&& ArrayUtils.get(ins, 8) instanceof ARETURN)) {
+						&& ArrayUtils.get(ins, 8) instanceof ARETURN,
+				// com.google.gson.JsonArray
+				length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+						&& FieldUtils.readField(instance, gf.getFieldName(cpg), true) == null
+						&& ArrayUtils.get(ins, 2) instanceof INVOKEVIRTUAL)) {
 			//
 			return true;
 			//
@@ -1528,15 +1530,7 @@ abstract class Util {
 		//
 		putAll(map,
 				collect(Stream.of("org.apache.commons.collections.list.AbstractLinkedList$LinkedSubList",
-						"org.apache.commons.collections.map.AbstractHashedMap$EntrySet",
-						"org.apache.commons.collections.map.AbstractHashedMap$KeySet",
-						"org.apache.commons.collections.map.AbstractHashedMap$Values",
-						"org.apache.commons.collections4.list.AbstractLinkedList$LinkedSubList",
-						"org.apache.commons.collections4.map.AbstractHashedMap$EntrySet",
-						"org.apache.commons.collections4.map.AbstractHashedMap$KeySet",
-						"org.apache.commons.collections4.map.AbstractHashedMap$Values",
-						"org.apache.commons.collections4.multiset.AbstractMultiSet$EntrySet",
-						"org.apache.commons.collections4.multiset.AbstractMultiSet$UniqueSet"),
+						"org.apache.commons.collections4.list.AbstractLinkedList$LinkedSubList"),
 						Collectors.toMap(Function.identity(), x -> "parent")));
 		//
 		putAll(map,
