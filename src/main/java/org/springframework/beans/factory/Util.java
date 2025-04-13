@@ -1112,7 +1112,12 @@ abstract class Util {
 						&& Objects.equals(is.getClassName(cpg), "java.util.stream.Stream")
 						&& Objects.equals(is.getMethodName(cpg), "of")
 						&& ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE ii
-						&& Objects.equals(ii.getMethodName(cpg), "iterator"))) {
+						&& Objects.equals(ii.getMethodName(cpg), "iterator"),
+				// org.apache.commons.collections.set.ListOrderedSet
+				length > 4 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
+						&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD gf
+						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+						&& ArrayUtils.get(ins, 4) instanceof INVOKEINTERFACE)) {
 			//
 			return true;
 			//
@@ -1420,6 +1425,12 @@ abstract class Util {
 				"com.healthmarketscience.jackcess.impl.TableScanCursor", "_ownedPagesCursor",
 				"com.helger.commons.callback.CallbackList", "m_aRWLock"));
 		//
+		putAll(map,
+				Map.of("org.d2ab.collection.ints.CollectionIntList", "collection",
+						"org.apache.pdfbox.pdmodel.PDPageTree", "root",
+						"org.apache.pdfbox.pdmodel.interactive.form.PDFieldTree", "acroForm",
+						"com.google.gson.internal.NonNullElementWrapperList", DELEGATE));
+		//
 		putAll(map, Map.of("com.helger.commons.collection.iterate.ArrayIterator", "m_aArray",
 				"com.helger.commons.collection.iterate.IterableIterator", "m_aIter",
 				"com.helger.commons.collection.iterate.MapperIterator", "m_aBaseIter",
@@ -1452,7 +1463,6 @@ abstract class Util {
 				Map.of("org.d2ab.collection.ChainedList", "lists", "org.d2ab.collection.longs.BitLongSet", "negatives",
 						"org.openjdk.nashorn.internal.runtime.ListAdapter", "obj",
 						"org.openjdk.nashorn.internal.runtime.PropertyMap", "properties",
-						"org.apache.commons.collections.set.ListOrderedSet", "setOrder",
 						"org.apache.pdfbox.cos.COSIncrement", "objects", "org.apache.commons.csv.CSVRecord", "values",
 						"org.d2ab.collection.ReverseList", "original"));
 		//
@@ -1503,11 +1513,6 @@ abstract class Util {
 				collect(Stream.of("com.google.common.reflect.TypeToken$TypeSet",
 						"org.apache.jena.ext.com.google.common.reflect.TypeToken$TypeSet"),
 						Collectors.toMap(Function.identity(), x -> "types")));
-		//
-		putAll(map,
-				collect(Stream.of("org.d2ab.collection.FilteredCollection", "org.d2ab.collection.MappedCollection",
-						"org.d2ab.collection.ints.CollectionIntList"),
-						Collectors.toMap(Function.identity(), x -> "collection")));
 		//
 		putAll(map,
 				collect(Stream.of("org.apache.commons.collections.list.AbstractLinkedList$LinkedSubList",
@@ -1792,12 +1797,6 @@ abstract class Util {
 						"it.unimi.dsi.fastutil.shorts.ShortLinkedOpenCustomHashSet",
 						"it.unimi.dsi.fastutil.shorts.ShortLinkedOpenHashSet"),
 						Collectors.toMap(Function.identity(), x -> "link")));
-		//
-		put(map, "org.apache.pdfbox.pdmodel.PDPageTree", "root");
-		//
-		put(map, "org.apache.pdfbox.pdmodel.interactive.form.PDFieldTree", "acroForm");
-		//
-		put(map, "com.google.gson.internal.NonNullElementWrapperList", DELEGATE);
 		//
 		if (!executeForEachMethod(map, name, instance, (a, b) -> FieldUtils.readDeclaredField(a, b, true) == null)) {
 			//
