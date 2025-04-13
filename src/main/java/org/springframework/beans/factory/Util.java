@@ -63,6 +63,7 @@ import org.apache.bcel.generic.FieldInstructionUtil;
 import org.apache.bcel.generic.GETFIELD;
 import org.apache.bcel.generic.ICONST;
 import org.apache.bcel.generic.IFEQ;
+import org.apache.bcel.generic.IFNE;
 import org.apache.bcel.generic.INVOKEINTERFACE;
 import org.apache.bcel.generic.INVOKESPECIAL;
 import org.apache.bcel.generic.INVOKESTATIC;
@@ -878,17 +879,15 @@ abstract class Util {
 				"org.htmlunit.jetty.client.util.DeferredContentProvider", "chunks",
 				"org.htmlunit.jetty.client.util.InputStreamContentProvider", "iterator",
 				"org.htmlunit.jetty.client.util.MultiPartContentProvider", "parts",
-				"org.htmlunit.jetty.http.QuotedQualityCSV", "_values", "org.htmlunit.jetty.http.pathmap.PathSpecSet",
-				"specs", "org.htmlunit.jetty.util.BlockingArrayQueue", "_tailLock",
-				"org.htmlunit.jetty.util.InetAddressSet", "_patterns"));
+				"org.htmlunit.jetty.http.pathmap.PathSpecSet", "specs", "org.htmlunit.jetty.util.BlockingArrayQueue",
+				"_tailLock", "org.htmlunit.jetty.util.InetAddressSet", "_patterns",
+				"org.htmlunit.jetty.util.PathWatcher$PathMatcherSet", "map"));
 		//
 		putAll(map,
 				collect(Stream.of("org.htmlunit.jetty.client.util.BytesContentProvider",
 						"org.htmlunit.jetty.client.util.FormContentProvider",
 						"org.htmlunit.jetty.client.util.StringContentProvider"),
 						Collectors.toMap(Function.identity(), x -> "bytes")));
-		//
-		put(map, "org.htmlunit.jetty.util.PathWatcher$PathMatcherSet", "map");
 		//
 		put(map, "org.htmlunit.jetty.websocket.common.extensions.WebSocketExtensionFactory", "availableExtensions");
 		//
@@ -1117,7 +1116,16 @@ abstract class Util {
 				length > 4 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
 						&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD gf
 						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-						&& ArrayUtils.get(ins, 4) instanceof INVOKEINTERFACE)) {
+						&& ArrayUtils.get(ins, 4) instanceof INVOKEINTERFACE,
+				// org.htmlunit.jetty.http.QuotedQualityCSV
+				length == 9 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf1
+						&& isPrimitive(getType(FieldUtils.getField(getClass(instance), gf1.getFieldName(cpg), true)))
+						&& ArrayUtils.get(ins, 2) instanceof IFNE && ArrayUtils.get(ins, 3) instanceof ALOAD
+						&& ArrayUtils.get(ins, 4) instanceof INVOKEVIRTUAL && ArrayUtils.get(ins, 5) instanceof ALOAD
+						&& ArrayUtils.get(ins, 6) instanceof GETFIELD gf
+						&& FieldUtils.readField(instance, gf.getFieldName(cpg), true) == null
+						&& ArrayUtils.get(ins, 7) instanceof INVOKEINTERFACE
+						&& ArrayUtils.get(ins, 8) instanceof ARETURN)) {
 			//
 			return true;
 			//
@@ -1166,6 +1174,10 @@ abstract class Util {
 						&& ArrayUtils.get(ins, 6) instanceof INVOKESPECIAL
 						&& ArrayUtils.get(ins, 7) instanceof ARETURN);
 		//
+	}
+
+	private static boolean isPrimitive(final Class<?> instance) {
+		return instance != null && instance.isPrimitive();
 	}
 
 	private static <E extends Throwable> void testAndRunThrows(final boolean b,
