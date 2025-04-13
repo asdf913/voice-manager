@@ -1176,7 +1176,7 @@ abstract class Util {
 		//
 	}
 
-	private static boolean isPrimitive(final Class<?> instance) {
+	private static boolean isPrimitive(@Nullable final Class<?> instance) {
 		return instance != null && instance.isPrimitive();
 	}
 
