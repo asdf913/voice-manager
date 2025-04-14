@@ -1127,7 +1127,14 @@ abstract class Util {
 				// com.google.gson.JsonArray
 				length > 2 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
 						&& FieldUtils.readField(instance, gf.getFieldName(cpg), true) == null
-						&& ArrayUtils.get(ins, 2) instanceof INVOKEVIRTUAL)) {
+						&& ArrayUtils.get(ins, 2) instanceof INVOKEVIRTUAL,
+				// com.helger.commons.collection.iterate.IterableIterator
+				length == 3 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+						&& Objects.equals(
+								getType(FieldUtils.getDeclaredField(getClass(instance), gf.getFieldName(cpg), true)),
+								Iterator.class)
+						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+						&& ArrayUtils.get(ins, 2) instanceof ARETURN)) {
 			//
 			return true;
 			//
@@ -1439,42 +1446,42 @@ abstract class Util {
 				"com.healthmarketscience.jackcess.impl.TableScanCursor", "_ownedPagesCursor",
 				"com.helger.commons.callback.CallbackList", "m_aRWLock"));
 		//
-		putAll(map,
-				Map.of("org.d2ab.collection.ints.CollectionIntList", "collection",
-						"org.apache.pdfbox.pdmodel.PDPageTree", "root",
-						"org.apache.pdfbox.pdmodel.interactive.form.PDFieldTree", "acroForm",
-						"com.google.gson.internal.NonNullElementWrapperList", DELEGATE));
-		//
-		putAll(map, Map.of("com.helger.commons.collection.iterate.ArrayIterator", "m_aArray",
-				"com.helger.commons.collection.iterate.IterableIterator", "m_aIter",
+		putAll(map, Map.of("org.d2ab.collection.ints.CollectionIntList", "collection",
+				"org.apache.pdfbox.pdmodel.PDPageTree", "root",
+				"org.apache.pdfbox.pdmodel.interactive.form.PDFieldTree", "acroForm",
+				"com.google.gson.internal.NonNullElementWrapperList", DELEGATE,
+				"com.helger.commons.collection.iterate.ArrayIterator", "m_aArray",
 				"com.helger.commons.collection.iterate.MapperIterator", "m_aBaseIter",
 				"com.helger.commons.io.file.FileSystemRecursiveIterator", "m_aFilesLeft",
 				"com.helger.commons.math.CombinationGenerator", "m_aCombinationsLeft", "com.opencsv.bean.CsvToBean",
-				"mappingStrategy", "com.opencsv.bean.PositionToBeanField", "ranges",
-				"com.sun.jna.platform.win32.Advapi32Util$EventLogIterator", "_buffer",
-				"freemarker.core._SortedArraySet", "array", "freemarker.core._UnmodifiableCompositeSet", "set1"));
+				"mappingStrategy", "com.opencsv.bean.PositionToBeanField", "ranges"));
 		//
 		putAll(map,
-				Map.of("org.apache.commons.collections.CursorableLinkedList", "_head",
+				Map.of("com.sun.jna.platform.win32.Advapi32Util$EventLogIterator", "_buffer",
+						"freemarker.core._SortedArraySet", "array", "freemarker.core._UnmodifiableCompositeSet", "set1",
+						"org.apache.commons.collections.CursorableLinkedList", "_head",
 						"org.apache.commons.collections4.iterators.IteratorIterable", "typeSafeIterator",
 						"org.apache.ibatis.cursor.defaults.DefaultCursor", "cursorIterator",
 						"org.apache.jena.atlas.lib.tuple.TupleN", "tuple",
 						"org.apache.jena.ext.com.google.common.collect.EnumMultiset", "enumConstants",
 						"org.apache.jena.ext.com.google.common.collect.EvictingQueue", DELEGATE,
-						"org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate", "records",
-						"org.apache.poi.hssf.usermodel.HSSFRow", "cells", "org.apache.poi.hssf.usermodel.HSSFWorkbook",
-						"_sheets", "org.apache.poi.poifs.filesystem.DirectoryNode", "_entries"));
-		//
-		putAll(map, Map.of("org.apache.poi.poifs.filesystem.FilteringDirectoryNode", "directory",
-				"org.apache.poi.poifs.filesystem.POIFSDocument", "_property",
-				"org.apache.poi.poifs.filesystem.POIFSStream", "blockStore", "org.apache.poi.xslf.usermodel.XSLFNotes",
-				"_notes", "org.apache.poi.xslf.usermodel.XSLFSlideLayout", "_layout",
-				"org.apache.poi.xssf.streaming.SXSSFRow", "_cells", "org.apache.poi.xssf.streaming.SXSSFWorkbook",
-				"_wb", "org.apache.poi.xssf.usermodel.XSSFWorkbook", "sheets", "org.apache.xmlbeans.XmlSimpleList",
-				"underlying", "org.d2ab.collection.ChainedCollection", "collections"));
+						"org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate", "records"));
 		//
 		putAll(map,
-				Map.of("org.d2ab.collection.ChainedList", "lists", "org.d2ab.collection.longs.BitLongSet", "negatives",
+				Map.of("org.apache.poi.hssf.usermodel.HSSFRow", "cells", "org.apache.poi.hssf.usermodel.HSSFWorkbook",
+						"_sheets", "org.apache.poi.poifs.filesystem.DirectoryNode", "_entries",
+						"org.apache.poi.poifs.filesystem.FilteringDirectoryNode", "directory",
+						"org.apache.poi.poifs.filesystem.POIFSDocument", "_property",
+						"org.apache.poi.poifs.filesystem.POIFSStream", "blockStore",
+						"org.apache.poi.xslf.usermodel.XSLFNotes", "_notes",
+						"org.apache.poi.xslf.usermodel.XSLFSlideLayout", "_layout",
+						"org.apache.poi.xssf.streaming.SXSSFRow", "_cells",
+						"org.apache.poi.xssf.streaming.SXSSFWorkbook", "_wb"));
+		//
+		putAll(map,
+				Map.of("org.apache.poi.xssf.usermodel.XSSFWorkbook", "sheets", "org.apache.xmlbeans.XmlSimpleList",
+						"underlying", "org.d2ab.collection.ChainedCollection", "collections",
+						"org.d2ab.collection.ChainedList", "lists", "org.d2ab.collection.longs.BitLongSet", "negatives",
 						"org.openjdk.nashorn.internal.runtime.ListAdapter", "obj",
 						"org.openjdk.nashorn.internal.runtime.PropertyMap", "properties",
 						"org.apache.pdfbox.cos.COSIncrement", "objects", "org.apache.commons.csv.CSVRecord", "values",
