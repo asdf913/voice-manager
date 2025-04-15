@@ -68,6 +68,7 @@ import org.apache.bcel.generic.INVOKEINTERFACE;
 import org.apache.bcel.generic.INVOKESPECIAL;
 import org.apache.bcel.generic.INVOKESTATIC;
 import org.apache.bcel.generic.INVOKEVIRTUAL;
+import org.apache.bcel.generic.ISTORE;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.InvokeInstructionUtil;
@@ -1085,6 +1086,8 @@ abstract class Util {
 		//
 		int length = length(ins);
 		//
+		final Class<?> clz = getClass(instance);
+		//
 		if (or(
 				// com.github.andrewoma.dexx.collection.DerivedKeyHashMap
 				length == 6 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
@@ -1117,7 +1120,7 @@ abstract class Util {
 						&& ArrayUtils.get(ins, 4) instanceof INVOKEINTERFACE,
 				// org.htmlunit.jetty.http.QuotedQualityCSV
 				length == 9 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf1
-						&& isPrimitive(getType(FieldUtils.getField(getClass(instance), gf1.getFieldName(cpg), true)))
+						&& isPrimitive(getType(FieldUtils.getField(clz, gf1.getFieldName(cpg), true)))
 						&& ArrayUtils.get(ins, 2) instanceof IFNE && ArrayUtils.get(ins, 3) instanceof ALOAD
 						&& ArrayUtils.get(ins, 4) instanceof INVOKEVIRTUAL && ArrayUtils.get(ins, 5) instanceof ALOAD
 						&& ArrayUtils.get(ins, 6) instanceof GETFIELD gf
@@ -1130,14 +1133,46 @@ abstract class Util {
 						&& ArrayUtils.get(ins, 2) instanceof INVOKEVIRTUAL,
 				// com.helger.commons.collection.iterate.IterableIterator
 				length == 3 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
-						&& Objects.equals(
-								getType(FieldUtils.getDeclaredField(getClass(instance), gf.getFieldName(cpg), true)),
+						&& Objects.equals(getType(FieldUtils.getDeclaredField(clz, gf.getFieldName(cpg), true)),
 								Iterator.class)
 						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
 						&& ArrayUtils.get(ins, 2) instanceof ARETURN)) {
 			//
 			return true;
 			//
+		} // if
+			//
+		if (length == 4 && ArrayUtils.get(ins, 0) instanceof ALOAD
+				&& ArrayUtils.get(ins, 1) instanceof INVOKESPECIAL invokeSpecial
+				&& Objects.equals(invokeSpecial.getClassName(cpg), getName(clz))
+				&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE ii && ArrayUtils.get(ins, 3) instanceof ARETURN) {
+			//
+			final String methodName = invokeSpecial.getMethodName(cpg);
+			//
+			if ((length = length(ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
+					testAndApply((a, b) -> b != null, method = testAndApply(y -> IterableUtils.size(y) == 1,
+							toList(filter(testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass),
+									Arrays::stream, null),
+									x -> Objects.equals(FieldOrMethodUtil.getName(x), methodName))),
+							y -> IterableUtils.get(y, 0), null),
+							cpg = testAndApply(Objects::nonNull, FieldOrMethodUtil.getConstantPool(method),
+									ConstantPoolGen::new, null),
+							(a, b) -> new MethodGen(a, null, b), null))))) > 10
+					&& ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
+					&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD gf1
+					&& isPrimitive(getType(FieldUtils.getDeclaredField(clz, gf1.getFieldName(cpg), true)))
+					&& ArrayUtils.get(ins, 4) instanceof INVOKESPECIAL && ArrayUtils.get(ins, 5) instanceof ASTORE
+					&& ArrayUtils.get(ins, 6) instanceof ICONST && ArrayUtils.get(ins, 7) instanceof ISTORE
+					&& ArrayUtils.get(ins, 8) instanceof ALOAD && ArrayUtils.get(ins, 9) instanceof GETFIELD gf
+					&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+					&& ArrayUtils.get(ins, 10) instanceof ARRAYLENGTH) {
+				//
+				// com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap
+				//
+				return true;
+				//
+			} // if
+				//
 		} // if
 			//
 		testAndAccept(Util::contains, ms, JavaClassUtil.getMethod(javaClass, javaLangReflectMethod), Util::remove);
@@ -1435,57 +1470,53 @@ abstract class Util {
 		//
 		// org.apache.commons.lang3.reflect.FieldUtils.readDeclaredField(java.lang.Object,java.lang.String,boolean)
 		//
-		final Map<String, String> map = new LinkedHashMap<>(Map.of(
-				"com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap", "_hashArea",
-				"com.github.andrewoma.dexx.collection.ArrayList", "elements",
-				"com.github.andrewoma.dexx.collection.Vector", "pointer", "com.google.common.collect.EnumMultiset",
-				"enumConstants", "com.google.common.collect.EvictingQueue", DELEGATE,
-				"com.healthmarketscience.jackcess.impl.DatabaseImpl", "_tableFinder",
+		final Map<String, String> map = new LinkedHashMap<>(Map.of("com.github.andrewoma.dexx.collection.ArrayList",
+				"elements", "com.github.andrewoma.dexx.collection.Vector", "pointer",
+				"com.google.common.collect.EnumMultiset", "enumConstants", "com.google.common.collect.EvictingQueue",
+				DELEGATE, "com.healthmarketscience.jackcess.impl.DatabaseImpl", "_tableFinder",
 				"com.healthmarketscience.jackcess.impl.IndexCursorImpl", "_entryCursor",
 				"com.healthmarketscience.jackcess.impl.TableImpl", "_columns",
 				"com.healthmarketscience.jackcess.impl.TableScanCursor", "_ownedPagesCursor",
-				"com.helger.commons.callback.CallbackList", "m_aRWLock"));
-		//
-		putAll(map, Map.of("org.d2ab.collection.ints.CollectionIntList", "collection",
-				"org.apache.pdfbox.pdmodel.PDPageTree", "root",
-				"org.apache.pdfbox.pdmodel.interactive.form.PDFieldTree", "acroForm",
-				"com.google.gson.internal.NonNullElementWrapperList", DELEGATE,
-				"com.helger.commons.collection.iterate.ArrayIterator", "m_aArray",
-				"com.helger.commons.collection.iterate.MapperIterator", "m_aBaseIter",
-				"com.helger.commons.io.file.FileSystemRecursiveIterator", "m_aFilesLeft",
-				"com.helger.commons.math.CombinationGenerator", "m_aCombinationsLeft", "com.opencsv.bean.CsvToBean",
-				"mappingStrategy", "com.opencsv.bean.PositionToBeanField", "ranges"));
+				"com.helger.commons.callback.CallbackList", "m_aRWLock", "org.d2ab.collection.ints.CollectionIntList",
+				"collection"));
 		//
 		putAll(map,
-				Map.of("com.sun.jna.platform.win32.Advapi32Util$EventLogIterator", "_buffer",
-						"freemarker.core._SortedArraySet", "array", "freemarker.core._UnmodifiableCompositeSet", "set1",
+				Map.of("org.apache.pdfbox.pdmodel.PDPageTree", "root",
+						"org.apache.pdfbox.pdmodel.interactive.form.PDFieldTree", "acroForm",
+						"com.google.gson.internal.NonNullElementWrapperList", DELEGATE,
+						"com.helger.commons.collection.iterate.ArrayIterator", "m_aArray",
+						"com.helger.commons.collection.iterate.MapperIterator", "m_aBaseIter",
+						"com.helger.commons.io.file.FileSystemRecursiveIterator", "m_aFilesLeft",
+						"com.helger.commons.math.CombinationGenerator", "m_aCombinationsLeft",
+						"com.opencsv.bean.CsvToBean", "mappingStrategy", "com.opencsv.bean.PositionToBeanField",
+						"ranges", "com.sun.jna.platform.win32.Advapi32Util$EventLogIterator", "_buffer"));
+		//
+		putAll(map,
+				Map.of("freemarker.core._SortedArraySet", "array", "freemarker.core._UnmodifiableCompositeSet", "set1",
 						"org.apache.commons.collections.CursorableLinkedList", "_head",
 						"org.apache.commons.collections4.iterators.IteratorIterable", "typeSafeIterator",
 						"org.apache.ibatis.cursor.defaults.DefaultCursor", "cursorIterator",
 						"org.apache.jena.atlas.lib.tuple.TupleN", "tuple",
 						"org.apache.jena.ext.com.google.common.collect.EnumMultiset", "enumConstants",
 						"org.apache.jena.ext.com.google.common.collect.EvictingQueue", DELEGATE,
-						"org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate", "records"));
+						"org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate", "records",
+						"org.apache.poi.hssf.usermodel.HSSFRow", "cells"));
 		//
-		putAll(map,
-				Map.of("org.apache.poi.hssf.usermodel.HSSFRow", "cells", "org.apache.poi.hssf.usermodel.HSSFWorkbook",
-						"_sheets", "org.apache.poi.poifs.filesystem.DirectoryNode", "_entries",
-						"org.apache.poi.poifs.filesystem.FilteringDirectoryNode", "directory",
-						"org.apache.poi.poifs.filesystem.POIFSDocument", "_property",
-						"org.apache.poi.poifs.filesystem.POIFSStream", "blockStore",
-						"org.apache.poi.xslf.usermodel.XSLFNotes", "_notes",
-						"org.apache.poi.xslf.usermodel.XSLFSlideLayout", "_layout",
-						"org.apache.poi.xssf.streaming.SXSSFRow", "_cells",
-						"org.apache.poi.xssf.streaming.SXSSFWorkbook", "_wb"));
+		putAll(map, Map.of("org.apache.poi.hssf.usermodel.HSSFWorkbook", "_sheets",
+				"org.apache.poi.poifs.filesystem.DirectoryNode", "_entries",
+				"org.apache.poi.poifs.filesystem.FilteringDirectoryNode", "directory",
+				"org.apache.poi.poifs.filesystem.POIFSDocument", "_property",
+				"org.apache.poi.poifs.filesystem.POIFSStream", "blockStore", "org.apache.poi.xslf.usermodel.XSLFNotes",
+				"_notes", "org.apache.poi.xslf.usermodel.XSLFSlideLayout", "_layout",
+				"org.apache.poi.xssf.streaming.SXSSFRow", "_cells", "org.apache.poi.xssf.streaming.SXSSFWorkbook",
+				"_wb", "org.apache.poi.xssf.usermodel.XSSFWorkbook", "sheets"));
 		//
-		putAll(map,
-				Map.of("org.apache.poi.xssf.usermodel.XSSFWorkbook", "sheets", "org.apache.xmlbeans.XmlSimpleList",
-						"underlying", "org.d2ab.collection.ChainedCollection", "collections",
-						"org.d2ab.collection.ChainedList", "lists", "org.d2ab.collection.longs.BitLongSet", "negatives",
-						"org.openjdk.nashorn.internal.runtime.ListAdapter", "obj",
-						"org.openjdk.nashorn.internal.runtime.PropertyMap", "properties",
-						"org.apache.pdfbox.cos.COSIncrement", "objects", "org.apache.commons.csv.CSVRecord", "values",
-						"org.d2ab.collection.ReverseList", "original"));
+		putAll(map, Map.of("org.apache.xmlbeans.XmlSimpleList", "underlying", "org.d2ab.collection.ChainedCollection",
+				"collections", "org.d2ab.collection.ChainedList", "lists", "org.d2ab.collection.longs.BitLongSet",
+				"negatives", "org.openjdk.nashorn.internal.runtime.ListAdapter", "obj",
+				"org.openjdk.nashorn.internal.runtime.PropertyMap", "properties", "org.apache.pdfbox.cos.COSIncrement",
+				"objects", "org.apache.commons.csv.CSVRecord", "values", "org.d2ab.collection.ReverseList",
+				"original"));
 		//
 		putAll(map, collect(Stream.of("com.fasterxml.jackson.databind.node.ArrayNode",
 				"com.fasterxml.jackson.databind.node.ObjectNode", "org.apache.poi.poifs.property.DirectoryProperty"),
