@@ -1153,34 +1153,35 @@ abstract class Util {
 					filter(testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream, null),
 							x -> Objects.equals(FieldOrMethodUtil.getName(x), methodName)));
 			//
-			if ((length = length(ins = InstructionListUtil
-					.getInstructions(MethodGenUtil.getInstructionList(testAndApply((a, b) -> b != null,
-							method = testAndApply(y -> IterableUtils.size(y) == 1, collection,
-									y -> IterableUtils.get(y, 0), null),
-							cpg = testAndApply(Objects::nonNull, FieldOrMethodUtil.getConstantPool(method),
-									ConstantPoolGen::new, null),
-							(a, b) -> new MethodGen(a, null, b), null))))) > 10
-					&& ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
-					&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD gf1
-					&& isPrimitive(getType(FieldUtils.getDeclaredField(clz, gf1.getFieldName(cpg), true)))
-					&& ArrayUtils.get(ins, 4) instanceof INVOKESPECIAL && ArrayUtils.get(ins, 5) instanceof ASTORE
-					&& ArrayUtils.get(ins, 6) instanceof ICONST && ArrayUtils.get(ins, 7) instanceof ISTORE
-					&& ArrayUtils.get(ins, 8) instanceof ALOAD && ArrayUtils.get(ins, 9) instanceof GETFIELD gf
-					&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-					&& ArrayUtils.get(ins, 10) instanceof ARRAYLENGTH) {
+			if (Boolean.logicalOr(
+					// com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap
+					(length = length(ins = InstructionListUtil
+							.getInstructions(MethodGenUtil.getInstructionList(testAndApply((a, b) -> b != null,
+									method = testAndApply(y -> IterableUtils.size(y) == 1, collection,
+											y -> IterableUtils.get(y, 0), null),
+									cpg = testAndApply(Objects::nonNull, FieldOrMethodUtil.getConstantPool(method),
+											ConstantPoolGen::new, null),
+									(a, b) -> new MethodGen(a, null, b), null))))) > 10
+							&& ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
+							&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD gf1
+							&& isPrimitive(getType(FieldUtils.getDeclaredField(clz, gf1.getFieldName(cpg), true)))
+							&& ArrayUtils.get(ins, 4) instanceof INVOKESPECIAL
+							&& ArrayUtils.get(ins, 5) instanceof ASTORE && ArrayUtils.get(ins, 6) instanceof ICONST
+							&& ArrayUtils.get(ins, 7) instanceof ISTORE && ArrayUtils.get(ins, 8) instanceof ALOAD
+							&& ArrayUtils.get(ins, 9) instanceof GETFIELD gf
+							&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+							&& ArrayUtils.get(ins, 10) instanceof ARRAYLENGTH,
+					// org.apache.commons.csv.CSVRecord
+					length == 4 && ArrayUtils.get(ins, 0) instanceof ALOAD
+							&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+							&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+							&& ArrayUtils.get(ins, 2) instanceof INVOKESTATIC
+							&& ArrayUtils.get(ins, 3) instanceof ARETURN)) {
 				//
 				// com.fasterxml.jackson.databind.deser.impl.BeanPropertyMap
 				//
 				return true;
 				//
-			} else if (length == 4 && ArrayUtils.get(ins, 0) instanceof ALOAD
-					&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
-					&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-					&& ArrayUtils.get(ins, 2) instanceof INVOKESTATIC && ArrayUtils.get(ins, 3) instanceof ARETURN) {
-				//
-				// org.apache.commons.csv.CSVRecord
-				//
-				return true;
 			} // if
 				//
 		} // if
