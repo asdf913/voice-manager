@@ -1173,10 +1173,16 @@ abstract class Util {
 				//
 				return true;
 				//
-			} else {
-
-			}
-			//
+			} else if (length == 4 && ArrayUtils.get(ins, 0) instanceof ALOAD
+					&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+					&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+					&& ArrayUtils.get(ins, 2) instanceof INVOKESTATIC && ArrayUtils.get(ins, 3) instanceof ARETURN) {
+				//
+				// org.apache.commons.csv.CSVRecord
+				//
+				return true;
+			} // if
+				//
 		} // if
 			//
 		testAndAccept(Util::contains, ms, JavaClassUtil.getMethod(javaClass, javaLangReflectMethod), Util::remove);
@@ -1519,8 +1525,7 @@ abstract class Util {
 				"collections", "org.d2ab.collection.ChainedList", "lists", "org.d2ab.collection.longs.BitLongSet",
 				"negatives", "org.openjdk.nashorn.internal.runtime.ListAdapter", "obj",
 				"org.openjdk.nashorn.internal.runtime.PropertyMap", "properties", "org.apache.pdfbox.cos.COSIncrement",
-				"objects", "org.apache.commons.csv.CSVRecord", "values", "org.d2ab.collection.ReverseList",
-				"original"));
+				"objects", "org.d2ab.collection.ReverseList", "original"));
 		//
 		putAll(map, collect(Stream.of("com.fasterxml.jackson.databind.node.ArrayNode",
 				"com.fasterxml.jackson.databind.node.ObjectNode", "org.apache.poi.poifs.property.DirectoryProperty"),
