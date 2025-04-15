@@ -1149,12 +1149,14 @@ abstract class Util {
 			//
 			final String methodName = invokeSpecial.getMethodName(cpg);
 			//
-			if ((length = length(ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
-					testAndApply((a, b) -> b != null, method = testAndApply(y -> IterableUtils.size(y) == 1,
-							toList(filter(testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass),
-									Arrays::stream, null),
-									x -> Objects.equals(FieldOrMethodUtil.getName(x), methodName))),
-							y -> IterableUtils.get(y, 0), null),
+			final Collection<Method> collection = toList(
+					filter(testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream, null),
+							x -> Objects.equals(FieldOrMethodUtil.getName(x), methodName)));
+			//
+			if ((length = length(ins = InstructionListUtil
+					.getInstructions(MethodGenUtil.getInstructionList(testAndApply((a, b) -> b != null,
+							method = testAndApply(y -> IterableUtils.size(y) == 1, collection,
+									y -> IterableUtils.get(y, 0), null),
 							cpg = testAndApply(Objects::nonNull, FieldOrMethodUtil.getConstantPool(method),
 									ConstantPoolGen::new, null),
 							(a, b) -> new MethodGen(a, null, b), null))))) > 10
@@ -1171,8 +1173,10 @@ abstract class Util {
 				//
 				return true;
 				//
-			} // if
-				//
+			} else {
+
+			}
+			//
 		} // if
 			//
 		testAndAccept(Util::contains, ms, JavaClassUtil.getMethod(javaClass, javaLangReflectMethod), Util::remove);
