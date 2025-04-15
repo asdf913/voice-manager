@@ -1145,7 +1145,7 @@ abstract class Util {
 		if (length == 4 && ArrayUtils.get(ins, 0) instanceof ALOAD
 				&& ArrayUtils.get(ins, 1) instanceof INVOKESPECIAL invokeSpecial
 				&& Objects.equals(invokeSpecial.getClassName(cpg), getName(clz))
-				&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE ii && ArrayUtils.get(ins, 3) instanceof ARETURN) {
+				&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE && ArrayUtils.get(ins, 3) instanceof ARETURN) {
 			//
 			final String methodName = invokeSpecial.getMethodName(cpg);
 			//
