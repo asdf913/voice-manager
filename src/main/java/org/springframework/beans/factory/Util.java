@@ -821,7 +821,8 @@ abstract class Util {
 			if (and(javaLangReflectIteratorMethod != null, javaLangReflectIteratorMethod,
 					x -> or(isIteratorMethodReturnNull1(javaClass, x, instance),
 							isIteratorMethodReturnNull2(javaClass, x, instance),
-							isIteratorMethodReturnNull3(javaClass, x, instance)))) {
+							isIteratorMethodReturnNull3(javaClass, x, instance),
+							isIteratorMethodReturnNull4(javaClass, x, instance)))) {
 				//
 				return;
 				//
@@ -1142,6 +1143,73 @@ abstract class Util {
 			//
 		} // if
 			//
+		testAndAccept(Util::contains, ms, JavaClassUtil.getMethod(javaClass, javaLangReflectMethod), Util::remove);
+		//
+		testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
+			throw new IllegalStateException();
+		});
+		//
+		length = length(ins = InstructionListUtil
+				.getInstructions(MethodGenUtil.getInstructionList(testAndApply((a, b) -> b != null,
+						method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null),
+						cpg = testAndApply(Objects::nonNull, FieldOrMethodUtil.getConstantPool(method),
+								ConstantPoolGen::new, null),
+						(a, b) -> new MethodGen(a, null, b), null))));
+		//
+		return method != null && or(// org.apache.commons.collections4.set.ListOrderedSet
+				length > 4 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
+						&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD gf
+						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+						&& ArrayUtils.get(ins, 4) instanceof INVOKEINTERFACE,
+				// org.d2ab.collection.doubles.RawDoubleSet
+				length > 5 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
+						&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof ALOAD
+						&& ArrayUtils.get(ins, 4) instanceof GETFIELD gf
+						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+						&& ArrayUtils.get(ins, 5) instanceof INVOKEINTERFACE,
+				// org.d2ab.collection.doubles.SortedListDoubleSet
+				length == 4 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+						&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE
+						&& ArrayUtils.get(ins, 3) instanceof ARETURN,
+				// org.d2ab.collection.chars.BitCharSet
+				length == 5 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+						&& ArrayUtils.get(ins, 2) instanceof INVOKEVIRTUAL
+						&& ArrayUtils.get(ins, 3) instanceof INVOKESTATIC && ArrayUtils.get(ins, 4) instanceof ARETURN,
+				// org.d2ab.collection.ints.BitIntSet
+				length == 8 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
+						&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof ALOAD
+						&& ArrayUtils.get(ins, 4) instanceof GETFIELD gf
+						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+						&& ArrayUtils.get(ins, 5) instanceof INVOKEVIRTUAL
+						&& ArrayUtils.get(ins, 6) instanceof INVOKESPECIAL
+						&& ArrayUtils.get(ins, 7) instanceof ARETURN);
+		//
+	}
+	
+	private static boolean isIteratorMethodReturnNull4(final JavaClass javaClass,
+			final java.lang.reflect.Method javaLangReflectMethod, final Object instance) throws IllegalAccessException {
+		//
+		final Collection<Method> ms = collect(
+				filter(testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream, null),
+						x -> Boolean.logicalAnd(
+								Objects.equals(FieldOrMethodUtil.getName(x), getName(javaLangReflectMethod)),
+								getParameterCount(javaLangReflectMethod) == length(getArgumentTypes(x)))),
+				Collectors.toCollection(ArrayList::new));
+		//
+		Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
+		//
+		ConstantPoolGen cpg = testAndApply(Objects::nonNull, FieldOrMethodUtil.getConstantPool(method),
+				ConstantPoolGen::new, null);
+		//
+		Instruction[] ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
+				testAndApply((a, b) -> b != null, method, cpg, (a, b) -> new MethodGen(a, null, b), null)));
+		//
+		int length = length(ins);
+		//
+		final Class<?> clz = getClass(instance);
+		//
 		if (length == 4 && ArrayUtils.get(ins, 0) instanceof ALOAD
 				&& ArrayUtils.get(ins, 1) instanceof INVOKESPECIAL invokeSpecial
 				&& Objects.equals(invokeSpecial.getClassName(cpg), getName(clz))
@@ -1186,49 +1254,8 @@ abstract class Util {
 				//
 		} // if
 			//
-		testAndAccept(Util::contains, ms, JavaClassUtil.getMethod(javaClass, javaLangReflectMethod), Util::remove);
-		//
-		testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
-			throw new IllegalStateException();
-		});
-		//
-		length = length(ins = InstructionListUtil
-				.getInstructions(MethodGenUtil.getInstructionList(testAndApply((a, b) -> b != null,
-						method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null),
-						cpg = testAndApply(Objects::nonNull, FieldOrMethodUtil.getConstantPool(method),
-								ConstantPoolGen::new, null),
-						(a, b) -> new MethodGen(a, null, b), null))));
-		//
-		return method != null && or(// org.apache.commons.collections4.set.ListOrderedSet
-				length > 4 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
-						&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD gf
-						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-						&& ArrayUtils.get(ins, 4) instanceof INVOKEINTERFACE,
-				// org.d2ab.collection.doubles.RawDoubleSet
-				length > 5 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
-						&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof ALOAD
-						&& ArrayUtils.get(ins, 4) instanceof GETFIELD gf
-						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-						&& ArrayUtils.get(ins, 5) instanceof INVOKEINTERFACE,
-				// org.d2ab.collection.doubles.SortedListDoubleSet
-				length == 4 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
-						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-						&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE
-						&& ArrayUtils.get(ins, 3) instanceof ARETURN,
-				// org.d2ab.collection.chars.BitCharSet
-				length == 5 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
-						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-						&& ArrayUtils.get(ins, 2) instanceof INVOKEVIRTUAL
-						&& ArrayUtils.get(ins, 3) instanceof INVOKESTATIC && ArrayUtils.get(ins, 4) instanceof ARETURN,
-				// org.d2ab.collection.ints.BitIntSet
-				length == 8 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
-						&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof ALOAD
-						&& ArrayUtils.get(ins, 4) instanceof GETFIELD gf
-						&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
-						&& ArrayUtils.get(ins, 5) instanceof INVOKEVIRTUAL
-						&& ArrayUtils.get(ins, 6) instanceof INVOKESPECIAL
-						&& ArrayUtils.get(ins, 7) instanceof ARETURN);
-		//
+		return false;
+			//
 	}
 
 	private static boolean isPrimitive(@Nullable final Class<?> instance) {
