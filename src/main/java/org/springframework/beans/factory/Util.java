@@ -1187,7 +1187,7 @@ abstract class Util {
 						&& ArrayUtils.get(ins, 7) instanceof ARETURN);
 		//
 	}
-	
+
 	private static boolean isIteratorMethodReturnNull4(final JavaClass javaClass,
 			final java.lang.reflect.Method javaLangReflectMethod, final Object instance) throws IllegalAccessException {
 		//
@@ -1252,10 +1252,21 @@ abstract class Util {
 				//
 			} // if
 				//
+		} else if (length == 4 && ArrayUtils.get(ins, 0) instanceof ALOAD
+				&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+				&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE ii
+				&& Objects.equals(InvokeInstructionUtil.getMethodName(ii, cpg), "iterator")
+				&& ArrayUtils.get(ins, 3) instanceof ARETURN) {
+			//
+			// com.github.andrewoma.dexx.collection.internal.adapter.ListAdapater
+			//
+			return true;
+			//
 		} // if
 			//
 		return false;
-			//
+		//
 	}
 
 	private static boolean isPrimitive(@Nullable final Class<?> instance) {
@@ -1553,7 +1564,8 @@ abstract class Util {
 				"collections", "org.d2ab.collection.ChainedList", "lists", "org.d2ab.collection.longs.BitLongSet",
 				"negatives", "org.openjdk.nashorn.internal.runtime.ListAdapter", "obj",
 				"org.openjdk.nashorn.internal.runtime.PropertyMap", "properties", "org.apache.pdfbox.cos.COSIncrement",
-				"objects", "org.d2ab.collection.ReverseList", "original"));
+				"objects", "org.d2ab.collection.ReverseList", "original",
+				"com.github.andrewoma.dexx.collection.internal.adapter.SortedSetAdapter", "set"));
 		//
 		putAll(map, collect(Stream.of("com.fasterxml.jackson.databind.node.ArrayNode",
 				"com.fasterxml.jackson.databind.node.ObjectNode", "org.apache.poi.poifs.property.DirectoryProperty"),
@@ -1564,12 +1576,11 @@ abstract class Util {
 						"com.github.andrewoma.dexx.collection.HashSet"),
 						Collectors.toMap(Function.identity(), x -> "compactHashMap")));
 		//
-		putAll(map, collect(Stream.of("com.github.andrewoma.dexx.collection.internal.adapter.ListAdapater",
-				"org.d2ab.collection.BiMappedList$RandomAccessList", "org.d2ab.collection.BiMappedList$SequentialList",
-				"org.d2ab.collection.FilteredList", "org.d2ab.collection.MappedList$RandomAccessList",
-				"org.d2ab.collection.MappedList$SequentialList", "org.d2ab.collection.chars.CharList$SubList",
-				"org.d2ab.collection.doubles.DoubleList$SubList", "org.d2ab.collection.ints.IntList$SubList",
-				"org.d2ab.collection.longs.LongList$SubList",
+		putAll(map, collect(Stream.of("org.d2ab.collection.BiMappedList$RandomAccessList",
+				"org.d2ab.collection.BiMappedList$SequentialList", "org.d2ab.collection.FilteredList",
+				"org.d2ab.collection.MappedList$RandomAccessList", "org.d2ab.collection.MappedList$SequentialList",
+				"org.d2ab.collection.chars.CharList$SubList", "org.d2ab.collection.doubles.DoubleList$SubList",
+				"org.d2ab.collection.ints.IntList$SubList", "org.d2ab.collection.longs.LongList$SubList",
 				"it.unimi.dsi.fastutil.booleans.BooleanBigLists$ListBigList",
 				"it.unimi.dsi.fastutil.bytes.ByteBigLists$ListBigList",
 				"it.unimi.dsi.fastutil.chars.CharBigLists$ListBigList",
@@ -1582,11 +1593,6 @@ abstract class Util {
 				"it.unimi.dsi.fastutil.objects.ReferenceBigLists$SynchronizedBigList",
 				"it.unimi.dsi.fastutil.shorts.ShortBigLists$ListBigList"),
 				Collectors.toMap(Function.identity(), x -> "list")));
-		//
-		putAll(map,
-				collect(Stream.of("com.github.andrewoma.dexx.collection.internal.adapter.SortedSetAdapter",
-						"org.springframework.cglib.beans.FixedKeySet"),
-						Collectors.toMap(Function.identity(), x -> "set")));
 		//
 		putAll(map,
 				collect(Stream.of("com.google.common.collect.ConcurrentHashMultiset",
@@ -2303,21 +2309,6 @@ abstract class Util {
 				//
 				return false;
 				//
-			} else if (length(instructions) == 6 && instructions[0] instanceof ALOAD
-					&& instructions[1] instanceof GETFIELD gf && instructions[2] instanceof CHECKCAST
-					&& instructions[3] instanceof ALOAD && instructions[4] instanceof INVOKEVIRTUAL
-					&& instructions[5] instanceof ARETURN) {
-				//
-				final String fieldName = FieldInstructionUtil.getFieldName(gf, cpg);
-				//
-				put(map, name, function = a -> FieldUtils.readDeclaredField(a, fieldName, true));
-				//
-				if (function.apply(instance) == null) {
-					//
-					return false;
-					//
-				} // if
-					//
 			} // if
 				//
 		} // for
