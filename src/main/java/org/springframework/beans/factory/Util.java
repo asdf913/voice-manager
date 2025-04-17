@@ -1309,12 +1309,12 @@ abstract class Util {
 							x -> Objects.equals(FieldOrMethodUtil.getName(x), methodName)),
 					Collectors.toCollection(ArrayList::new));
 			//
-			if ((length = length(
+			if (length(
 					ins = InstructionListUtil
 							.getInstructions(MethodGenUtil.getInstructionList(testAndApply((a, b) -> b != null,
 									testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0),
 											null),
-									cpg, (a, b) -> new MethodGen(a, null, b), null))))) > 2
+									cpg, (a, b) -> new MethodGen(a, null, b), null)))) > 2
 					&& ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
 					&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
 					&& ArrayUtils.get(ins, 2) instanceof IFNULL) {
