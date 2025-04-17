@@ -84,14 +84,10 @@ class FuriganaJcinfoFailableFunctionTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Collection) {
+			} else if (proxy instanceof Collection && Objects.equals(methodName, "stream")) {
 				//
-				if (Objects.equals(methodName, "stream")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
