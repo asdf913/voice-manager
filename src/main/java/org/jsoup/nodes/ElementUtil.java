@@ -217,10 +217,12 @@ public final class ElementUtil {
 		//
 	}
 
+	@Nullable
 	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
+	@Nullable
 	private static <T, R, A> R collect(@Nullable final Stream<T> instance,
 			@Nullable final Collector<? super T, A, R> collector) {
 		return instance != null && (collector != null || Proxy.isProxyClass(getClass(instance)))
@@ -228,6 +230,7 @@ public final class ElementUtil {
 				: null;
 	}
 
+	@Nullable
 	private static <T> Stream<T> filter(@Nullable final Stream<T> instance,
 			@Nullable final Predicate<? super T> predicate) {
 		//
@@ -248,6 +251,7 @@ public final class ElementUtil {
 		return instance != null && instance.test(value);
 	}
 
+	@Nullable
 	private static Field[] getDeclaredFields(@Nullable final Class<?> instance) throws SecurityException {
 		return instance != null ? instance.getDeclaredFields() : null;
 	}
