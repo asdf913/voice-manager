@@ -195,7 +195,7 @@ public final class ElementUtil {
 		//
 		final Collection<Field> fs = collect(
 				filter(testAndApply(Objects::nonNull, getDeclaredFields(getClass(instance)), Arrays::stream, null),
-						f -> Objects.equals(getName(f), "childNodes")),
+						f -> Objects.equals(getName(f), CHILD_NODES)),
 				Collectors.toList());
 		//
 		if (IterableUtils.size(fs) > 1) {
