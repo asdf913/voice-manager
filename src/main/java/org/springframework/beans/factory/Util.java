@@ -1273,8 +1273,24 @@ abstract class Util {
 				&& Objects.equals(InvokeInstructionUtil.getMethodName(iv, cpg), ITERATOR)
 				&& ArrayUtils.get(ins, 7) instanceof INVOKESPECIAL && ArrayUtils.get(ins, 8) instanceof ARETURN) {
 			//
+			// com.github.andrewoma.dexx.collection.HashMap
+			//
 			return true;
 			//
+		} else if (length == 12 && ArrayUtils.get(ins, 0) instanceof ALOAD
+				&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+				&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof INVOKESPECIAL
+				&& ArrayUtils.get(ins, 4) instanceof INVOKEVIRTUAL iv
+				&& Objects.equals(InvokeInstructionUtil.getMethodName(iv, cpg), ITERATOR)
+				&& ArrayUtils.get(ins, 5) instanceof ASTORE && ArrayUtils.get(ins, 6) instanceof NEW
+				&& ArrayUtils.get(ins, 7) instanceof DUP && ArrayUtils.get(ins, 8) instanceof ALOAD
+				&& ArrayUtils.get(ins, 9) instanceof ALOAD && ArrayUtils.get(ins, 10) instanceof INVOKESPECIAL
+				&& ArrayUtils.get(ins, 11) instanceof ARETURN) {
+			//
+			// com.github.andrewoma.dexx.collection.HashSet
+			//
+			return true;
 		} // if
 			//
 		return false;
@@ -1577,8 +1593,7 @@ abstract class Util {
 				"negatives", "org.openjdk.nashorn.internal.runtime.ListAdapter", "obj",
 				"org.openjdk.nashorn.internal.runtime.PropertyMap", "properties", "org.apache.pdfbox.cos.COSIncrement",
 				"objects", "org.d2ab.collection.ReverseList", "original",
-				"com.github.andrewoma.dexx.collection.internal.adapter.SortedSetAdapter", "set",
-				"com.github.andrewoma.dexx.collection.HashSet", "compactHashMap"));
+				"com.github.andrewoma.dexx.collection.internal.adapter.SortedSetAdapter", "set"));
 		//
 		putAll(map, collect(Stream.of("com.fasterxml.jackson.databind.node.ArrayNode",
 				"com.fasterxml.jackson.databind.node.ObjectNode", "org.apache.poi.poifs.property.DirectoryProperty"),
