@@ -50,7 +50,7 @@ public class FuriganaJcinfoFailableFunction implements FailableFunction<String, 
 										x -> Jsoup.parse(x, 0), null),
 								"_result-ruby"),
 						x -> IterableUtils.get(x, 0), null)),
-				x -> IterableUtils.get(x, 0), null))), x -> ElementUtil.html(x)), Collectors.joining());
+				x -> IterableUtils.get(x, 0), null))), ElementUtil::html), Collectors.joining());
 		//
 	}
 
