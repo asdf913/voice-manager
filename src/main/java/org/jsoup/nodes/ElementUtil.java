@@ -192,7 +192,7 @@ public final class ElementUtil {
 	}
 
 	@Nullable
-	public static String html(final Element instance) {
+	public static String html(@Nullable final Element instance) {
 		//
 		final Collection<Field> fs = collect(
 				filter(testAndApply(Objects::nonNull, getDeclaredFields(getClass(instance)), Arrays::stream, null),
