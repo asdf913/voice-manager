@@ -2288,8 +2288,6 @@ abstract class Util {
 		//
 		ConstantPoolGen cpg;
 		//
-		FailableFunction<Object, Object, Exception> function;
-		//
 		for (int i = 0; i < length(interfaces); i++) {
 			//
 			if ((method = getForEachMethod(interfaces[i])) == null) {
