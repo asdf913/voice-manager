@@ -1,5 +1,6 @@
 package org.jsoup.nodes;
 
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -7,7 +8,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.stream.Collector;
+import java.util.stream.Stream;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.select.Elements;
@@ -16,25 +21,60 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.reflect.Reflection;
+
 import io.github.toolfactory.narcissus.Narcissus;
 
 class ElementUtilTest {
 
-	private static Method METHOD_GET_CLASS = null;
+	private static Method METHOD_GET_CLASS, METHOD_COLLECT, METHOD_FILTER = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
-		(METHOD_GET_CLASS = ElementUtil.class.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
+		final Class<?> clz = ElementUtil.class;
+		//
+		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
+		//
+		(METHOD_COLLECT = clz.getDeclaredMethod("collect", Stream.class, Collector.class)).setAccessible(true);
+		//
+		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
 	}
 
+	private static class IH implements InvocationHandler {
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = method != null ? method.getName() : null;
+			//
+			if (proxy instanceof Stream) {
+				//
+				if (ArrayUtils.contains(new Object[] { "collect", "filter" }, methodName)) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+	}
+
 	private Element element = null;
+
+	private Stream<?> stream = null;
 
 	@BeforeEach
 	void beforeEach() {
 		//
 		element = cast(Element.class, Narcissus.allocateInstance(Element.class));
+		//
+		stream = Reflection.newProxy(Stream.class, new IH());
 		//
 	}
 
@@ -172,17 +212,26 @@ class ElementUtilTest {
 	}
 
 	@Test
+	void testHtml() {
+		//
+		Assertions.assertNull(ElementUtil.html(element));
+		//
+	}
+
+	@Test
 	void testNull() {
 		//
 		final Method[] ms = ElementUtil.class.getDeclaredMethods();
 		//
 		Method m = null;
 		//
-		Object[] os = null;
-		//
 		Collection<Object> list = null;
 		//
 		Class<?>[] parameterTypes = null;
+		//
+		Object invokeStaticMethod = null;
+		//
+		String toString = null;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
@@ -212,15 +261,17 @@ class ElementUtilTest {
 					//
 			} // if
 				//
-			os = toArray(list);
+			invokeStaticMethod = Narcissus.invokeStaticMethod(m, toArray(list));
 			//
-			if (Objects.equals(Integer.TYPE, m.getReturnType())) {
+			toString = Objects.toString(m);
+			//
+			if (ArrayUtils.contains(new Object[] { Integer.TYPE, Boolean.TYPE }, m.getReturnType())) {
 				//
-				Assertions.assertEquals(0, Narcissus.invokeStaticIntMethod(m, os));
+				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
 			} else {
 				//
-				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), Objects.toString(m));
+				Assertions.assertNull(invokeStaticMethod, toString);
 				//
 			} // if
 				//
@@ -236,6 +287,50 @@ class ElementUtilTest {
 
 	private static Object[] toArray(final Collection<?> instance) {
 		return instance != null ? instance.toArray() : null;
+	}
+
+	@Test
+	void testCollect() throws Throwable {
+		//
+		Assertions.assertNull(collect(stream, null));
+		//
+		Assertions.assertNull(collect(Stream.empty(), null));
+		//
+	}
+
+	private static <T, R, A> R collect(final Stream<T> instance, final Collector<? super T, A, R> collector)
+			throws Throwable {
+		try {
+			return (R) METHOD_COLLECT.invoke(null, instance, collector);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testFilter() throws Throwable {
+		//
+		Assertions.assertNull(filter(stream, null));
+		//
+		final Stream<?> empty = Stream.empty();
+		//
+		Assertions.assertSame(empty, filter(empty, null));
+		//
+	}
+
+	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_FILTER.invoke(null, instance, predicate);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
+			}
+			throw new Throwable(Objects.toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }

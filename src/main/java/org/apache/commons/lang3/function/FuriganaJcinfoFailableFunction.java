@@ -50,7 +50,7 @@ public class FuriganaJcinfoFailableFunction implements FailableFunction<String, 
 										x -> Jsoup.parse(x, 0), null),
 								"_result-ruby"),
 						x -> IterableUtils.get(x, 0), null)),
-				x -> IterableUtils.get(x, 0), null))), x -> html(x)), Collectors.joining());
+				x -> IterableUtils.get(x, 0), null))), x -> ElementUtil.html(x)), Collectors.joining());
 		//
 	}
 
@@ -62,31 +62,6 @@ public class FuriganaJcinfoFailableFunction implements FailableFunction<String, 
 		return instance != null && (collector != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.collect(collector)
 				: null;
-	}
-
-	private static String html(final Element instance) {
-		//
-		final Collection<Field> fs = collect(
-				filter(testAndApply(Objects::nonNull, getDeclaredFields(getClass(instance)), Arrays::stream, null),
-						f -> Objects.equals(getName(f), "childNodes")),
-				Collectors.toList());
-		//
-		if (IterableUtils.size(fs) > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-		//
-		if (f != null && Narcissus.getObjectField(instance, f) == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		return instance != null ? instance.html() : null;
-		//
 	}
 
 	private static Field[] getDeclaredFields(final Class<?> instance) throws SecurityException {

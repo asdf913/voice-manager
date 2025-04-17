@@ -8,7 +8,6 @@ import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,8 +36,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class FuriganaJcinfoFailableFunctionTest {
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_ADD_PARAMTER, METHOD_GET_CLASS, METHOD_COLLECT, METHOD_HTML,
-			METHOD_FILTER, METHOD_MAP, METHOD_BUILD, METHOD_TO_URL, METHOD_GET_ELEMENTS_BY_CLASS, METHOD_STREAM = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_ADD_PARAMTER, METHOD_GET_CLASS, METHOD_COLLECT, METHOD_FILTER,
+			METHOD_MAP, METHOD_BUILD, METHOD_TO_URL, METHOD_GET_ELEMENTS_BY_CLASS, METHOD_STREAM = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -54,8 +53,6 @@ class FuriganaJcinfoFailableFunctionTest {
 		(METHOD_GET_CLASS = clz.getDeclaredMethod("getClass", Object.class)).setAccessible(true);
 		//
 		(METHOD_COLLECT = clz.getDeclaredMethod("collect", Stream.class, Collector.class)).setAccessible(true);
-		//
-		(METHOD_HTML = clz.getDeclaredMethod("html", Element.class)).setAccessible(true);
 		//
 		(METHOD_FILTER = clz.getDeclaredMethod("filter", Stream.class, Predicate.class)).setAccessible(true);
 		//
@@ -319,29 +316,6 @@ class FuriganaJcinfoFailableFunctionTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_COLLECT.invoke(null, instance, collector);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testHtml() throws Throwable {
-		//
-		Assertions.assertNull(html(element));
-		//
-		Assertions.assertEquals("", html(new Element("a")));
-		//
-	}
-
-	private static String html(final Element instance) throws Throwable {
-		try {
-			final Object obj = METHOD_HTML.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(Objects.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

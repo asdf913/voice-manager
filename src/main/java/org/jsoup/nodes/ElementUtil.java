@@ -1,11 +1,23 @@
 package org.jsoup.nodes;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Member;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
@@ -177,6 +189,63 @@ public final class ElementUtil {
 	@Nullable
 	public static Elements nextElementSiblings(@Nullable final Element instnace) {
 		return instnace != null ? instnace.nextElementSiblings() : null;
+	}
+
+	public static String html(final Element instance) {
+		//
+		final Collection<Field> fs = collect(
+				filter(testAndApply(Objects::nonNull, getDeclaredFields(getClass(instance)), Arrays::stream, null),
+						f -> Objects.equals(getName(f), "childNodes")),
+				Collectors.toList());
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f != null && Narcissus.getObjectField(instance, f) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return instance != null ? instance.html() : null;
+		//
+	}
+
+	private static String getName(final Member instance) {
+		return instance != null ? instance.getName() : null;
+	}
+
+	private static <T, R, A> R collect(final Stream<T> instance, final Collector<? super T, A, R> collector) {
+		return instance != null && (collector != null || Proxy.isProxyClass(getClass(instance)))
+				? instance.collect(collector)
+				: null;
+	}
+
+	private static <T> Stream<T> filter(final Stream<T> instance, final Predicate<? super T> predicate) {
+		//
+		return instance != null && (predicate != null || Proxy.isProxyClass(getClass(instance)))
+				? instance.filter(predicate)
+				: instance;
+		//
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+		return test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+	private static <T> boolean test(final Predicate<T> instance, final T value) {
+		return instance != null && instance.test(value);
+	}
+
+	private static Field[] getDeclaredFields(final Class<?> instance) throws SecurityException {
+		return instance != null ? instance.getDeclaredFields() : null;
 	}
 
 }

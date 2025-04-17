@@ -482,13 +482,9 @@ public class VoiceManagerHelpPanelIntFunctionFactoryBean implements FactoryBean<
 			//
 		final Elements h2s = ElementUtil.selectXpath(document, "//h2[text()=\"Supported feature matrix\"]");
 		//
-		return html(ElementUtil.nextElementSibling(IterableUtils.size(h2s) == 1 ? IterableUtils.get(h2s, 0) : null));
+		return ElementUtil
+				.html(ElementUtil.nextElementSibling(IterableUtils.size(h2s) == 1 ? IterableUtils.get(h2s, 0) : null));
 		//
-	}
-
-	@Nullable
-	private static String html(@Nullable final org.jsoup.nodes.Element instance) {
-		return instance != null ? instance.html() : null;
 	}
 
 	@Nullable
