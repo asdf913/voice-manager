@@ -191,6 +191,7 @@ public final class ElementUtil {
 		return instnace != null ? instnace.nextElementSiblings() : null;
 	}
 
+	@Nullable
 	public static String html(final Element instance) {
 		//
 		final Collection<Field> fs = collect(
