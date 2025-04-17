@@ -205,9 +205,8 @@ public final class ElementUtil {
 			//
 		} // if
 			//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-		//
-		if (f != null && Narcissus.getObjectField(instance, f) == null) {
+		if (test(f -> f != null && Narcissus.getObjectField(instance, f) == null,
+				testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null))) {
 			//
 			return null;
 			//
