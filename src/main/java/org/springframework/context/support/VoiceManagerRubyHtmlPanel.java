@@ -244,6 +244,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		Expression expression = null;
 		//
+		boolean noAnnotation = false;
+		//
 		for (int i = 0; i < length(beanDefinitionNames); i++) {
 			//
 			if (!Util.isAssignableFrom(FailableFunction.class,
@@ -262,7 +264,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				//
 			cbm.addElement(beanDefinitionName);
 			//
-			if ((iValue0description = getDescription(beanClassName)) == null) {
+			if (noAnnotation = ((iValue0description = getDescription(beanClassName)) == null)) {
 				//
 				iValue0description = Unit.with(beanClassName);
 				//
@@ -288,8 +290,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				//
 			} // if
 				//
-			TableUtil.put(table, beanDefinitionName, "label",
-					getValue(expression, sec = ObjectUtils.getIfNull(sec, () -> {
+			TableUtil.put(table, beanDefinitionName, "label", noAnnotation ? IValue0Util.getValue0(iValue0description)
+					: getValue(expression, sec = ObjectUtils.getIfNull(sec, () -> {
 						//
 						final StandardEvaluationContext x = new StandardEvaluationContext();
 						//

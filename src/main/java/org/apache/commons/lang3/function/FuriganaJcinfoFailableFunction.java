@@ -28,7 +28,6 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 public class FuriganaJcinfoFailableFunction implements FailableFunction<String, String, Exception> {
 
-	// TODO https://www.jcinfo.net/en/tools/kana?text=%E8%B4%85%E6%B2%A2
 	private String url = null;
 
 	public void setUrl(final String url) {
