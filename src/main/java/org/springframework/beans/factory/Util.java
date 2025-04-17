@@ -826,7 +826,8 @@ abstract class Util {
 					x -> or(isIteratorMethodReturnNull1(javaClass, x, instance),
 							isIteratorMethodReturnNull2(javaClass, x, instance),
 							isIteratorMethodReturnNull3(javaClass, x, instance),
-							isIteratorMethodReturnNull4(javaClass, x, instance)))) {
+							isIteratorMethodReturnNull4(javaClass, x, instance),
+							isIteratorMethodReturnNull5(javaClass, x, instance)))) {
 				//
 				return;
 				//
@@ -1294,19 +1295,44 @@ abstract class Util {
 			//
 			return true;
 			//
-		} else if (length == 7 && ArrayUtils.get(ins, 0) instanceof ALOAD
-				&& ArrayUtils.get(ins, 1) instanceof INVOKESPECIAL is && ArrayUtils.get(ins, 2) instanceof NEW
-				&& ArrayUtils.get(ins, 3) instanceof DUP && ArrayUtils.get(ins, 4) instanceof ALOAD
+		} // if
+			//
+		return false;
+		//
+	}
+
+	private static boolean isIteratorMethodReturnNull5(final JavaClass javaClass,
+			final java.lang.reflect.Method javaLangReflectMethod, final Object instance) throws IllegalAccessException {
+		//
+		Collection<Method> ms = collect(
+				filter(testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream, null),
+						x -> Boolean.logicalAnd(
+								Objects.equals(FieldOrMethodUtil.getName(x), getName(javaLangReflectMethod)),
+								getParameterCount(javaLangReflectMethod) == length(getArgumentTypes(x)))),
+				Collectors.toCollection(ArrayList::new));
+		//
+		final Method method = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
+		//
+		final ConstantPoolGen cpg = testAndApply(Objects::nonNull, FieldOrMethodUtil.getConstantPool(method),
+				ConstantPoolGen::new, null);
+		//
+		Instruction[] ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
+				testAndApply((a, b) -> b != null, method, cpg, (a, b) -> new MethodGen(a, null, b), null)));
+		//
+		int length = length(ins);
+		//
+		if (length == 7 && ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof INVOKESPECIAL is
+				&& ArrayUtils.get(ins, 2) instanceof NEW && ArrayUtils.get(ins, 3) instanceof DUP
+				&& ArrayUtils.get(ins, 4) instanceof ALOAD
 				&& Objects.equals(
 						InvokeInstructionUtil.getMethodName(cast(InvokeInstruction.class, ArrayUtils.get(ins, 5)), cpg),
 						"<init>")
 				&& ArrayUtils.get(ins, 6) instanceof ARETURN) {
 			//
-			final String methodName = InvokeInstructionUtil.getMethodName(is, cpg);
-			//
 			ms = collect(
 					filter(testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream, null),
-							x -> Objects.equals(FieldOrMethodUtil.getName(x), methodName)),
+							x -> Objects.equals(FieldOrMethodUtil.getName(x),
+									InvokeInstructionUtil.getMethodName(is, cpg))),
 					Collectors.toCollection(ArrayList::new));
 			//
 			if (length(
