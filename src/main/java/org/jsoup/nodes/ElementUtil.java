@@ -216,7 +216,7 @@ public final class ElementUtil {
 		//
 	}
 
-	private static String getName(final Member instance) {
+	private static String getName(@Nullable final Member instance) {
 		return instance != null ? instance.getName() : null;
 	}
 
@@ -245,7 +245,7 @@ public final class ElementUtil {
 		return instance != null && instance.test(value);
 	}
 
-	private static Field[] getDeclaredFields(final Class<?> instance) throws SecurityException {
+	private static Field[] getDeclaredFields(@Nullable final Class<?> instance) throws SecurityException {
 		return instance != null ? instance.getDeclaredFields() : null;
 	}
 
