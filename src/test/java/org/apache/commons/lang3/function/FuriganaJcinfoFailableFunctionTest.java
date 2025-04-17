@@ -7,6 +7,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -425,8 +427,16 @@ class FuriganaJcinfoFailableFunctionTest {
 		//
 		Assertions.assertNull(toURL(cast(URI.class, Narcissus.allocateInstance(URI.class))));
 		//
-		Assertions.assertNotNull(toURL(new File(".").toURI()));
+		Assertions.assertNotNull(toURL(toURI(toFile(Paths.get(".")))));
 		//
+	}
+
+	private static URI toURI(final File instance) {
+		return instance != null ? instance.toURI() : null;
+	}
+
+	private static File toFile(final Path instance) {
+		return instance != null ? instance.toFile() : null;
 	}
 
 	private static URL toURL(final URI instance) throws Throwable {
