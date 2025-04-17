@@ -64,6 +64,7 @@ import org.apache.bcel.generic.GETFIELD;
 import org.apache.bcel.generic.ICONST;
 import org.apache.bcel.generic.IFEQ;
 import org.apache.bcel.generic.IFNE;
+import org.apache.bcel.generic.IFNULL;
 import org.apache.bcel.generic.INVOKEINTERFACE;
 import org.apache.bcel.generic.INVOKESPECIAL;
 import org.apache.bcel.generic.INVOKESTATIC;
@@ -71,6 +72,7 @@ import org.apache.bcel.generic.INVOKEVIRTUAL;
 import org.apache.bcel.generic.ISTORE;
 import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.InvokeInstructionUtil;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
@@ -1291,6 +1293,33 @@ abstract class Util {
 			// com.github.andrewoma.dexx.collection.HashSet
 			//
 			return true;
+			//
+		} else if (length == 7 && ArrayUtils.get(ins, 0) instanceof ALOAD
+				&& ArrayUtils.get(ins, 1) instanceof INVOKESPECIAL is && ArrayUtils.get(ins, 2) instanceof NEW
+				&& ArrayUtils.get(ins, 3) instanceof DUP && ArrayUtils.get(ins, 4) instanceof ALOAD
+				&& Objects.equals(
+						InvokeInstructionUtil.getMethodName(cast(InvokeInstruction.class, ArrayUtils.get(ins, 5)), cpg),
+						"<init>")
+				&& ArrayUtils.get(ins, 6) instanceof ARETURN) {
+			//
+			final String methodName = InvokeInstructionUtil.getMethodName(is, cpg);
+			//
+			if ((length = length(ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
+					testAndApply((a, b) -> b != null, testAndApply(x -> IterableUtils.size(x) == 1, collect(
+							filter(testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream,
+									null), x -> Objects.equals(FieldOrMethodUtil.getName(x), methodName)),
+							Collectors.toCollection(ArrayList::new)), x -> IterableUtils.get(x, 0), null), cpg,
+							(a, b) -> new MethodGen(a, null, b), null))))) > 2
+					&& ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
+					&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+					&& ArrayUtils.get(ins, 2) instanceof IFNULL) {
+				//
+				// com.opencsv.bean.CsvToBean
+				//
+				return true;
+				//
+			} // if
+				//
 		} // if
 			//
 		return false;
@@ -1565,11 +1594,12 @@ abstract class Util {
 						"com.helger.commons.collection.iterate.MapperIterator", "m_aBaseIter",
 						"com.helger.commons.io.file.FileSystemRecursiveIterator", "m_aFilesLeft",
 						"com.helger.commons.math.CombinationGenerator", "m_aCombinationsLeft",
-						"com.opencsv.bean.CsvToBean", "mappingStrategy", "com.opencsv.bean.PositionToBeanField",
-						"ranges", "com.sun.jna.platform.win32.Advapi32Util$EventLogIterator", "_buffer"));
+						"com.opencsv.bean.PositionToBeanField", "ranges",
+						"com.sun.jna.platform.win32.Advapi32Util$EventLogIterator", "_buffer",
+						"freemarker.core._SortedArraySet", "array"));
 		//
 		putAll(map,
-				Map.of("freemarker.core._SortedArraySet", "array", "freemarker.core._UnmodifiableCompositeSet", "set1",
+				Map.of("freemarker.core._UnmodifiableCompositeSet", "set1",
 						"org.apache.commons.collections.CursorableLinkedList", "_head",
 						"org.apache.commons.collections4.iterators.IteratorIterable", "typeSafeIterator",
 						"org.apache.ibatis.cursor.defaults.DefaultCursor", "cursorIterator",
@@ -1577,23 +1607,25 @@ abstract class Util {
 						"org.apache.jena.ext.com.google.common.collect.EnumMultiset", "enumConstants",
 						"org.apache.jena.ext.com.google.common.collect.EvictingQueue", DELEGATE,
 						"org.apache.poi.hssf.record.aggregates.ValueRecordsAggregate", "records",
-						"org.apache.poi.hssf.usermodel.HSSFRow", "cells"));
+						"org.apache.poi.hssf.usermodel.HSSFRow", "cells", "org.apache.poi.hssf.usermodel.HSSFWorkbook",
+						"_sheets"));
 		//
-		putAll(map, Map.of("org.apache.poi.hssf.usermodel.HSSFWorkbook", "_sheets",
-				"org.apache.poi.poifs.filesystem.DirectoryNode", "_entries",
+		putAll(map, Map.of("org.apache.poi.poifs.filesystem.DirectoryNode", "_entries",
 				"org.apache.poi.poifs.filesystem.FilteringDirectoryNode", "directory",
 				"org.apache.poi.poifs.filesystem.POIFSDocument", "_property",
 				"org.apache.poi.poifs.filesystem.POIFSStream", "blockStore", "org.apache.poi.xslf.usermodel.XSLFNotes",
 				"_notes", "org.apache.poi.xslf.usermodel.XSLFSlideLayout", "_layout",
 				"org.apache.poi.xssf.streaming.SXSSFRow", "_cells", "org.apache.poi.xssf.streaming.SXSSFWorkbook",
-				"_wb", "org.apache.poi.xssf.usermodel.XSSFWorkbook", "sheets"));
+				"_wb", "org.apache.poi.xssf.usermodel.XSSFWorkbook", "sheets", "org.apache.xmlbeans.XmlSimpleList",
+				"underlying"));
 		//
-		putAll(map, Map.of("org.apache.xmlbeans.XmlSimpleList", "underlying", "org.d2ab.collection.ChainedCollection",
-				"collections", "org.d2ab.collection.ChainedList", "lists", "org.d2ab.collection.longs.BitLongSet",
-				"negatives", "org.openjdk.nashorn.internal.runtime.ListAdapter", "obj",
-				"org.openjdk.nashorn.internal.runtime.PropertyMap", "properties", "org.apache.pdfbox.cos.COSIncrement",
-				"objects", "org.d2ab.collection.ReverseList", "original",
-				"com.github.andrewoma.dexx.collection.internal.adapter.SortedSetAdapter", "set"));
+		putAll(map,
+				Map.of("org.d2ab.collection.ChainedCollection", "collections", "org.d2ab.collection.ChainedList",
+						"lists", "org.d2ab.collection.longs.BitLongSet", "negatives",
+						"org.openjdk.nashorn.internal.runtime.ListAdapter", "obj",
+						"org.openjdk.nashorn.internal.runtime.PropertyMap", "properties",
+						"org.apache.pdfbox.cos.COSIncrement", "objects", "org.d2ab.collection.ReverseList", "original",
+						"com.github.andrewoma.dexx.collection.internal.adapter.SortedSetAdapter", "set"));
 		//
 		putAll(map, collect(Stream.of("com.fasterxml.jackson.databind.node.ArrayNode",
 				"com.fasterxml.jackson.databind.node.ObjectNode", "org.apache.poi.poifs.property.DirectoryProperty"),
