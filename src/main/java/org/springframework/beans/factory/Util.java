@@ -1195,7 +1195,7 @@ abstract class Util {
 	private static boolean isIteratorMethodReturnNull4(final JavaClass javaClass,
 			final java.lang.reflect.Method javaLangReflectMethod, final Object instance) throws IllegalAccessException {
 		//
-		final Collection<Method> ms = collect(
+		Collection<Method> ms = collect(
 				filter(testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream, null),
 						x -> Boolean.logicalAnd(
 								Objects.equals(FieldOrMethodUtil.getName(x), getName(javaLangReflectMethod)),
@@ -1304,12 +1304,17 @@ abstract class Util {
 			//
 			final String methodName = InvokeInstructionUtil.getMethodName(is, cpg);
 			//
-			if ((length = length(ins = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
-					testAndApply((a, b) -> b != null, testAndApply(x -> IterableUtils.size(x) == 1, collect(
-							filter(testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream,
-									null), x -> Objects.equals(FieldOrMethodUtil.getName(x), methodName)),
-							Collectors.toCollection(ArrayList::new)), x -> IterableUtils.get(x, 0), null), cpg,
-							(a, b) -> new MethodGen(a, null, b), null))))) > 2
+			ms = collect(
+					filter(testAndApply(Objects::nonNull, JavaClassUtil.getMethods(javaClass), Arrays::stream, null),
+							x -> Objects.equals(FieldOrMethodUtil.getName(x), methodName)),
+					Collectors.toCollection(ArrayList::new));
+			//
+			if ((length = length(
+					ins = InstructionListUtil
+							.getInstructions(MethodGenUtil.getInstructionList(testAndApply((a, b) -> b != null,
+									testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0),
+											null),
+									cpg, (a, b) -> new MethodGen(a, null, b), null))))) > 2
 					&& ArrayUtils.get(ins, 0) instanceof ALOAD && ArrayUtils.get(ins, 1) instanceof GETFIELD gf
 					&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
 					&& ArrayUtils.get(ins, 2) instanceof IFNULL) {
