@@ -427,7 +427,7 @@ class FuriganaJcinfoFailableFunctionTest {
 		//
 		Assertions.assertNull(toURL(cast(URI.class, Narcissus.allocateInstance(URI.class))));
 		//
-		Assertions.assertNotNull(toURL(toURI(toFile(Paths.get(".")))));
+		Assertions.assertNotNull(toURL(toURI(toFile(Path.of(".")))));
 		//
 	}
 
