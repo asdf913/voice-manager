@@ -1263,6 +1263,16 @@ abstract class Util {
 			//
 			return true;
 			//
+		} else if (length == 9 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
+				&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD gf
+				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
+				&& ArrayUtils.get(ins, 4) instanceof ALOAD && ArrayUtils.get(ins, 5) instanceof INVOKESPECIAL
+				&& ArrayUtils.get(ins, 6) instanceof INVOKEVIRTUAL iv
+				&& Objects.equals(InvokeInstructionUtil.getMethodName(iv, cpg), "iterator")
+				&& ArrayUtils.get(ins, 7) instanceof INVOKESPECIAL && ArrayUtils.get(ins, 8) instanceof ARETURN) {
+			//
+			return true;
+			//
 		} // if
 			//
 		return false;
@@ -1565,16 +1575,12 @@ abstract class Util {
 				"negatives", "org.openjdk.nashorn.internal.runtime.ListAdapter", "obj",
 				"org.openjdk.nashorn.internal.runtime.PropertyMap", "properties", "org.apache.pdfbox.cos.COSIncrement",
 				"objects", "org.d2ab.collection.ReverseList", "original",
-				"com.github.andrewoma.dexx.collection.internal.adapter.SortedSetAdapter", "set"));
+				"com.github.andrewoma.dexx.collection.internal.adapter.SortedSetAdapter", "set",
+				"com.github.andrewoma.dexx.collection.HashSet", "compactHashMap"));
 		//
 		putAll(map, collect(Stream.of("com.fasterxml.jackson.databind.node.ArrayNode",
 				"com.fasterxml.jackson.databind.node.ObjectNode", "org.apache.poi.poifs.property.DirectoryProperty"),
 				Collectors.toMap(Function.identity(), x -> "_children")));
-		//
-		putAll(map,
-				collect(Stream.of("com.github.andrewoma.dexx.collection.HashMap",
-						"com.github.andrewoma.dexx.collection.HashSet"),
-						Collectors.toMap(Function.identity(), x -> "compactHashMap")));
 		//
 		putAll(map, collect(Stream.of("org.d2ab.collection.BiMappedList$RandomAccessList",
 				"org.d2ab.collection.BiMappedList$SequentialList", "org.d2ab.collection.FilteredList",
