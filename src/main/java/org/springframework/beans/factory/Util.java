@@ -113,6 +113,8 @@ abstract class Util {
 
 	private static final String DELEGATE = "delegate";
 
+	private static final String ITERATOR = "iterator";
+
 	private Util() {
 	}
 
@@ -879,7 +881,7 @@ abstract class Util {
 				"all", "org.htmlunit.corejs.javascript.IteratorLikeIterable", "next",
 				"org.htmlunit.jetty.client.util.ByteBufferContentProvider", "buffers",
 				"org.htmlunit.jetty.client.util.DeferredContentProvider", "chunks",
-				"org.htmlunit.jetty.client.util.InputStreamContentProvider", "iterator",
+				"org.htmlunit.jetty.client.util.InputStreamContentProvider", ITERATOR,
 				"org.htmlunit.jetty.client.util.MultiPartContentProvider", "parts",
 				"org.htmlunit.jetty.util.BlockingArrayQueue", "_tailLock", "org.htmlunit.jetty.util.InetAddressSet",
 				"_patterns", "org.htmlunit.jetty.util.PathWatcher$PathMatcherSet", "map",
@@ -1113,7 +1115,7 @@ abstract class Util {
 						&& Objects.equals(is.getClassName(cpg), "java.util.stream.Stream")
 						&& Objects.equals(is.getMethodName(cpg), "of")
 						&& ArrayUtils.get(ins, 3) instanceof INVOKEINTERFACE ii
-						&& Objects.equals(ii.getMethodName(cpg), "iterator"),
+						&& Objects.equals(ii.getMethodName(cpg), ITERATOR),
 				// org.apache.commons.collections.set.ListOrderedSet
 				length > 4 && ArrayUtils.get(ins, 0) instanceof NEW && ArrayUtils.get(ins, 1) instanceof DUP
 						&& ArrayUtils.get(ins, 2) instanceof ALOAD && ArrayUtils.get(ins, 3) instanceof GETFIELD gf
@@ -1256,7 +1258,7 @@ abstract class Util {
 				&& ArrayUtils.get(ins, 1) instanceof GETFIELD gf
 				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
 				&& ArrayUtils.get(ins, 2) instanceof INVOKEINTERFACE ii
-				&& Objects.equals(InvokeInstructionUtil.getMethodName(ii, cpg), "iterator")
+				&& Objects.equals(InvokeInstructionUtil.getMethodName(ii, cpg), ITERATOR)
 				&& ArrayUtils.get(ins, 3) instanceof ARETURN) {
 			//
 			// com.github.andrewoma.dexx.collection.internal.adapter.ListAdapater
@@ -1268,7 +1270,7 @@ abstract class Util {
 				&& FieldUtils.readDeclaredField(instance, gf.getFieldName(cpg), true) == null
 				&& ArrayUtils.get(ins, 4) instanceof ALOAD && ArrayUtils.get(ins, 5) instanceof INVOKESPECIAL
 				&& ArrayUtils.get(ins, 6) instanceof INVOKEVIRTUAL iv
-				&& Objects.equals(InvokeInstructionUtil.getMethodName(iv, cpg), "iterator")
+				&& Objects.equals(InvokeInstructionUtil.getMethodName(iv, cpg), ITERATOR)
 				&& ArrayUtils.get(ins, 7) instanceof INVOKESPECIAL && ArrayUtils.get(ins, 8) instanceof ARETURN) {
 			//
 			return true;
