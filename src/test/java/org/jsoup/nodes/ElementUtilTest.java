@@ -49,14 +49,10 @@ class ElementUtilTest {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
-			if (proxy instanceof Stream) {
+			if (proxy instanceof Stream && ArrayUtils.contains(new Object[] { "collect", "filter" }, methodName)) {
 				//
-				if (ArrayUtils.contains(new Object[] { "collect", "filter" }, methodName)) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
