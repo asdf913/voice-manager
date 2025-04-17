@@ -76,12 +76,10 @@ class FuriganaJcinfoFailableFunctionTest {
 			//
 			final String methodName = method != null ? method.getName() : null;
 			//
-			if (proxy instanceof Stream
-					&& ArrayUtils.contains(new Object[] { "collect", "filter", "map" }, methodName)) {
-				//
-				return null;
-				//
-			} else if (proxy instanceof Collection && Objects.equals(methodName, "stream")) {
+			if (Boolean.logicalOr(
+					proxy instanceof Stream
+							&& ArrayUtils.contains(new Object[] { "collect", "filter", "map" }, methodName),
+					proxy instanceof Collection && Objects.equals(methodName, "stream"))) {
 				//
 				return null;
 				//
