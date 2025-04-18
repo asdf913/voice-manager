@@ -23,9 +23,11 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
+import org.springframework.context.annotation.Description;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
+@Description("T(java.lang.String).format('Online (%1$s)',url)")
 public class FuriganaJcinfoFailableFunction implements FailableFunction<String, String, Exception> {
 
 	private String url = null;
