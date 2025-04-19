@@ -68,14 +68,10 @@ class VoiceManagerOnlineTtsPanelTest {
 			//
 			final String methodName = Util.getName(method);
 			//
-			if (proxy instanceof Document) {
+			if (proxy instanceof Document && Objects.equals(methodName, "getElementsByTagName")) {
 				//
-				if (Objects.equals(methodName, "getElementsByTagName")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -92,14 +88,10 @@ class VoiceManagerOnlineTtsPanelTest {
 			//
 			final String methodName = Util.getName(thisMethod);
 			//
-			if (self instanceof DomNode) {
+			if (self instanceof DomNode && Objects.equals(methodName, "querySelector")) {
 				//
-				if (Objects.equals(methodName, "querySelector")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
