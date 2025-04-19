@@ -866,6 +866,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 	}
 
+	@Nullable
 	private static <T> Stream<T> sorted(@Nullable final Stream<T> instance,
 			@Nullable final Comparator<? super T> comparator) {
 		//
