@@ -59,7 +59,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	private static final Logger LOG = LoggerFactory.getLogger(VoiceManagerOnlineTtsPanel.class);
 
-	private ApplicationContext applicationContext = null;
+	private transient ApplicationContext applicationContext = null;
 
 	private String url = null;// TODO https://open-jtalk.sp.nitech.ac.jp/index.php
 
