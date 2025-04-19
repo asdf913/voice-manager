@@ -862,7 +862,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						//
 					return 0;
 					//
-				}), Collectors.toMap(x -> Util.getKey(x), x -> Util.getValue(x), (a, b) -> a, LinkedHashMap::new));
+				}), Collectors.toMap(Util::getKey, Util::getValue, (a, b) -> a, LinkedHashMap::new));
 		//
 	}
 

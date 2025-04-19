@@ -268,8 +268,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			if ((ast = getAST(expression = testAndApply((a, b) -> b != null,
 					ep = ObjectUtils.getIfNull(ep, SpelExpressionParser::new),
 					Util.toString(IValue0Util.getValue0(getDescription(beanClassName))),
-					(a, b) -> ExpressionParserUtil.parseExpression(a, b),
-					null))) instanceof PropertyOrFieldReference pofr && getChildCount(pofr) == 0) {
+					ExpressionParserUtil::parseExpression, null))) instanceof PropertyOrFieldReference pofr
+					&& getChildCount(pofr) == 0) {
 				//
 				Util.putAll(map, createMap(instance, pofr));
 				//
