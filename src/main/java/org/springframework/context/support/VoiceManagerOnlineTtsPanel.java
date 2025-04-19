@@ -27,9 +27,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.htmlunit.Page;
 import org.htmlunit.WebClient;
 import org.htmlunit.html.DomElement;
+import org.htmlunit.html.DomElementUtil;
 import org.htmlunit.html.DomNode;
 import org.htmlunit.html.HtmlPage;
 import org.javatuples.Unit;
@@ -203,8 +203,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				} // for
 					//
 				nodeList = getElementsByTagName(
-						htmlPage = Util.cast(HtmlPage.class,
-								click(Util.cast(DomElement.class, querySelector(htmlPage, "input[type=\"submit\"]")))),
+						htmlPage = Util.cast(HtmlPage.class, DomElementUtil
+								.click(Util.cast(DomElement.class, querySelector(htmlPage, "input[type=\"submit\"]")))),
 						"source");
 				//
 				NamedNodeMap attributes = null;
@@ -271,37 +271,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	private static NodeList getElementsByTagName(final Document instance, final String tagname) {
 		return instance != null ? instance.getElementsByTagName(tagname) : null;
-	}
-
-	@Nullable
-	private static <P extends Page> P click(final DomElement instance) throws IOException {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		final Iterable<Field> fs = Util
-				.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(instance))),
-						f -> Objects.equals(Util.getName(f), "page_")));
-		//
-		if (IterableUtils.size(fs) > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-		//
-		if (f != null && Narcissus.getObjectField(instance, f) == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		return instance.click();
-		//
 	}
 
 }

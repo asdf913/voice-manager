@@ -10,8 +10,8 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Objects;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
@@ -19,9 +19,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
-import org.htmlunit.Page;
 import org.htmlunit.SgmlPage;
-import org.htmlunit.html.DomElement;
 import org.htmlunit.html.DomNode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -41,7 +39,7 @@ import javassist.util.proxy.ProxyUtil;
 class VoiceManagerOnlineTtsPanelTest {
 
 	private static Method METHOD_GET_LAYOUT_MANAGER, METHOD_TEST_AND_APPLY, METHOD_QUERY_SELECTOR,
-			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_CLICK, METHOD_ITEM, METHOD_GET_LENGTH = null;
+			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_ITEM, METHOD_GET_LENGTH = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -59,8 +57,6 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_GET_ELEMENTS_BY_TAG_NAME = clz.getDeclaredMethod("getElementsByTagName", Document.class, String.class))
 				.setAccessible(true);
-		//
-		(METHOD_CLICK = clz.getDeclaredMethod("click", DomElement.class)).setAccessible(true);
 		//
 		(METHOD_ITEM = clz.getDeclaredMethod("item", NodeList.class, Integer.TYPE)).setAccessible(true);
 		//
@@ -307,27 +303,6 @@ class VoiceManagerOnlineTtsPanelTest {
 				return null;
 			} else if (obj instanceof NodeList) {
 				return (NodeList) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testClick() throws Throwable {
-		//
-		Assertions.assertNull(click(Util.cast(DomElement.class, Narcissus.allocateInstance(DomElement.class))));
-		//
-	}
-
-	private static <P extends Page> P click(final DomElement instance) throws Throwable {
-		try {
-			final Object obj = METHOD_CLICK.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Page) {
-				return (P) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

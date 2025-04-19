@@ -1,6 +1,5 @@
 package org.apache.commons.lang3.function;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 import java.util.Collection;
@@ -13,10 +12,10 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.commons.validator.routines.UrlValidatorUtil;
-import org.htmlunit.Page;
 import org.htmlunit.ScriptResult;
 import org.htmlunit.WebClient;
 import org.htmlunit.html.DomElement;
+import org.htmlunit.html.DomElementUtil;
 import org.htmlunit.html.DomNodeList;
 import org.htmlunit.html.HtmlPage;
 import org.springframework.context.annotation.Description;
@@ -46,14 +45,13 @@ public class FuriganaMueckeFailableFunction implements FailableFunction<String, 
 			setTextContent(testAndApply(x -> IterableUtils.size(x) > 0, getElementsByTagName(htmlPage, "textarea"),
 					x -> IterableUtils.get(x, 0), null), input);
 			//
-			return toString(
-					getJavaScriptResult(executeJavaScript(
-							cast(HtmlPage.class,
-									click(testAndApply(x -> IterableUtils.size(x) > 0,
-											toList(filter(stream(getElementsByTagName(htmlPage, "input")),
-													x -> Objects.equals(getAttribute(x, "name"), "submit"))),
-											x -> IterableUtils.get(x, 0), null))),
-							"document.querySelector(\"body ruby\").outerHTML;")));
+			return toString(getJavaScriptResult(executeJavaScript(
+					cast(HtmlPage.class,
+							DomElementUtil.click(testAndApply(x -> IterableUtils.size(x) > 0,
+									toList(filter(stream(getElementsByTagName(htmlPage, "input")),
+											x -> Objects.equals(getAttribute(x, "name"), "submit"))),
+									x -> IterableUtils.get(x, 0), null))),
+					"document.querySelector(\"body ruby\").outerHTML;")));
 			//
 		}
 		//
@@ -103,35 +101,6 @@ public class FuriganaMueckeFailableFunction implements FailableFunction<String, 
 		} // if
 			//
 		return instance.executeJavaScript(sourceCode);
-		//
-	}
-
-	private static <P extends Page> P click(final DomElement instance) throws IOException {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		final List<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(getClass(instance))),
-				f -> Objects.equals(f != null ? f.getName() : null, "page_")));
-		//
-		if (IterableUtils.size(fs) > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		final Field f = testAndApply(x -> IterableUtils.size(x) > 0, fs, x -> IterableUtils.get(x, 0), null);
-		//
-		if (f != null && Narcissus.getField(instance, f) == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		return instance.click();
 		//
 	}
 

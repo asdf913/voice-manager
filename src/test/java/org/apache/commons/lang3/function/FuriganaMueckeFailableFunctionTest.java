@@ -26,13 +26,12 @@ import org.w3c.dom.Node;
 
 import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
-import com.microsoft.playwright.Page;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
 class FuriganaMueckeFailableFunctionTest {
 
-	private static Method METHOD_TO_STRING, METHOD_CLICK, METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_GET_ATTRIBUTE,
+	private static Method METHOD_TO_STRING, METHOD_CAST, METHOD_TEST_AND_APPLY, METHOD_GET_ATTRIBUTE,
 			METHOD_SET_TEXT_CONTENT, METHOD_GET_JAVA_SCRIPT_RESULT, METHOD_EXECUTE_JAVA_SCRIPT, METHOD_FILTER,
 			METHOD_GET_ELEMENTS_BY_TAG_NAME = null;
 
@@ -42,8 +41,6 @@ class FuriganaMueckeFailableFunctionTest {
 		final Class<?> clz = FuriganaMueckeFailableFunction.class;
 		//
 		(METHOD_TO_STRING = clz.getDeclaredMethod("toString", Object.class)).setAccessible(true);
-		//
-		(METHOD_CLICK = clz.getDeclaredMethod("click", DomElement.class)).setAccessible(true);
 		//
 		(METHOD_CAST = clz.getDeclaredMethod("cast", Class.class, Object.class)).setAccessible(true);
 		//
@@ -215,22 +212,6 @@ class FuriganaMueckeFailableFunctionTest {
 
 	private static Class<?> getClass(final Object instance) {
 		return instance != null ? instance.getClass() : null;
-	}
-
-	@Test
-	void testClick() {
-		//
-		Assertions
-				.assertDoesNotThrow(() -> click(cast(DomElement.class, Narcissus.allocateInstance(DomElement.class))));
-		//
-	}
-
-	private static <P extends Page> P click(final DomElement instance) throws Throwable {
-		try {
-			return (P) METHOD_CLICK.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private static <T> T cast(final Class<T> clz, final Object instance) throws Throwable {
