@@ -273,6 +273,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		return instance != null ? instance.getElementsByTagName(tagname) : null;
 	}
 
+	@Nullable
 	private static <P extends Page> P click(final DomElement instance) throws IOException {
 		//
 		if (instance == null) {
