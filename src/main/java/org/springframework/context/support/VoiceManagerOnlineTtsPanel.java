@@ -111,6 +111,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		}
 	}
 
+	@Nullable
 	private static LayoutManager getLayoutManager(final Object acbf, final Iterable<Entry<String, Object>> entrySet)
 			throws Exception {
 		//
