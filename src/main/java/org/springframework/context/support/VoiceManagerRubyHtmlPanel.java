@@ -232,8 +232,6 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		String beanDefinitionName, beanClassName = null;
 		//
-		IValue0<Object> iValue0description = null;
-		//
 		Object instance, ast = null;
 		//
 		Map<String, Object> map = null;
@@ -243,8 +241,6 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		StandardEvaluationContext sec = null;
 		//
 		Expression expression = null;
-		//
-		boolean noAnnotation = false;
 		//
 		for (int i = 0; i < length(beanDefinitionNames); i++) {
 			//
@@ -264,21 +260,16 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				//
 			cbm.addElement(beanDefinitionName);
 			//
-			if (noAnnotation = ((iValue0description = getDescription(beanClassName)) == null)) {
-				//
-				iValue0description = Unit.with(beanClassName);
-				//
-			} // if
-				//
 			TableUtil.put(table = ObjectUtils.getIfNull(table, HashBasedTable::create), beanDefinitionName, "instance",
 					instance = BeanFactoryUtil.getBean(dlbf, beanDefinitionName));
 			//
 			clear(map = ObjectUtils.getIfNull(map, LinkedHashMap::new));
 			//
-			if ((ast = getAST(expression = ExpressionParserUtil.parseExpression(
+			if ((ast = getAST(expression = testAndApply((a, b) -> b != null,
 					ep = ObjectUtils.getIfNull(ep, SpelExpressionParser::new),
-					Util.toString(IValue0Util.getValue0(iValue0description))))) instanceof PropertyOrFieldReference pofr
-					&& getChildCount(pofr) == 0) {
+					Util.toString(IValue0Util.getValue0(getDescription(beanClassName))),
+					(a, b) -> ExpressionParserUtil.parseExpression(a, b),
+					null))) instanceof PropertyOrFieldReference pofr && getChildCount(pofr) == 0) {
 				//
 				Util.putAll(map, createMap(instance, pofr));
 				//
@@ -290,8 +281,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				//
 			} // if
 				//
-			TableUtil.put(table, beanDefinitionName, "label", noAnnotation ? IValue0Util.getValue0(iValue0description)
-					: getValue(expression, sec = ObjectUtils.getIfNull(sec, () -> {
+			TableUtil.put(table, beanDefinitionName, "label",
+					expression != null ? getValue(expression, sec = ObjectUtils.getIfNull(sec, () -> {
 						//
 						final StandardEvaluationContext x = new StandardEvaluationContext();
 						//
@@ -299,7 +290,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 						//
 						return x;
 						//
-					}), map));
+					}), map) : beanClassName);
 			//
 		} // for
 			//
