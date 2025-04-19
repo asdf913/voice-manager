@@ -285,7 +285,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		} // if
 	}
 
-	private static <T> void accept(@Nullable final Consumer<T> instance, final T value) {
+	private static <T> void accept(@Nullable final Consumer<T> instance, @Nullable final T value) {
 		if (instance != null) {
 			instance.accept(value);
 		}
