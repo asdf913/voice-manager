@@ -301,7 +301,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 		return instance.click();
 		//
-		//
 	}
 
 }
