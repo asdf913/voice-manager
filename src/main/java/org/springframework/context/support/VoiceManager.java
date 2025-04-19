@@ -866,7 +866,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 	}
 
-	private static <T> Stream<T> sorted(final Stream<T> instance, final Comparator<? super T> comparator) {
+	private static <T> Stream<T> sorted(@Nullable final Stream<T> instance,
+			@Nullable final Comparator<? super T> comparator) {
 		//
 		return instance != null && (comparator != null || Proxy.isProxyClass(Util.getClass(instance)))
 				? instance.sorted(comparator)
