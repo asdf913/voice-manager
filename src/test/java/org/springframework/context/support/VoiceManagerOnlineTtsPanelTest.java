@@ -122,7 +122,7 @@ class VoiceManagerOnlineTtsPanelTest {
 	}
 
 	@Test
-	void testActionPerformed() throws Exception {
+	void testActionPerformed() {
 		//
 		if (instance == null) {
 			//
