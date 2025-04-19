@@ -43,6 +43,7 @@ import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,13 +51,13 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.Spliterator;
-import java.util.TreeMap;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -730,8 +731,12 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 						WRAP));
 		//
 		forEach(Util.stream(Util.entrySet(getTitledComponentMap(
-				ListableBeanFactoryUtil.getBeansOfType(applicationContext, Component.class), tabOrders))),
-				x -> jTabbedPane.addTab(Util.getKey(x), Util.getValue(x)));
+				ListableBeanFactoryUtil.getBeansOfType(applicationContext, Component.class), tabOrders))), x -> {
+					final Component component = Util.getValue(x);
+					if (!(component instanceof Window)) {
+						jTabbedPane.addTab(Util.getKey(x), component);
+					}
+				});
 		//
 		// maximum preferred height of all tab page(s)
 		//
@@ -827,41 +832,45 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			for (final Entry<String, Component> entry : entrySet) {
 				//
-				if ((titled = Util.cast(Titled.class, c = Util.getValue(entry))) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				Util.put(m1 = ObjectUtils.getIfNull(m1, LinkedHashMap::new), getTitle(titled), c);
+				c = Util.getValue(entry);
+				//
+				Util.put(m1 = ObjectUtils.getIfNull(m1, LinkedHashMap::new),
+						(titled = Util.cast(Titled.class, c)) != null ? getTitle(titled)
+								: Util.getName(Util.getClass(c)),
+						c);
 				//
 			} // for
 				//
 		} // if
 			//
-		final Map<String, Component> m2 = new TreeMap<String, Component>((a, b) -> {
-			//
-			final int ia = ArrayUtils.indexOf(orders, a);
-			//
-			final int ib = ArrayUtils.indexOf(orders, b);
-			//
-			if (ia > ib) {
-				//
-				return 1;
-				//
-			} else if (ia < ib) {
-				//
-				return -1;
-				//
-			} // if
-				//
-			return 0;
-			//
-		});
+		return Util.collect(
+				sorted(Util.filter(Util.stream(Util.entrySet(m1)), x -> Objects.nonNull(Util.getValue(x))), (a, b) -> {
+					//
+					final int ia = ArrayUtils.indexOf(orders, Util.getKey(a));
+					//
+					final int ib = ArrayUtils.indexOf(orders, Util.getKey(b));
+					//
+					if (ia > ib) {
+						//
+						return 1;
+						//
+					} else if (ia < ib) {
+						//
+						return -1;
+						//
+					} // if
+						//
+					return 0;
+					//
+				}), Collectors.toMap(x -> Util.getKey(x), x -> Util.getValue(x), (a, b) -> a, LinkedHashMap::new));
 		//
-		Util.putAll(m2, m1);
+	}
+
+	private static <T> Stream<T> sorted(final Stream<T> instance, final Comparator<? super T> comparator) {
 		//
-		return m2;
+		return instance != null && (comparator != null || Proxy.isProxyClass(Util.getClass(instance)))
+				? instance.sorted(comparator)
+				: instance;
 		//
 	}
 

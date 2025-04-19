@@ -161,7 +161,7 @@ class VoiceManagerTest {
 			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_SET_FOCUS_CYCLE_ROOT,
 			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_DECLARED_CONSTRUCTOR,
 			METHOD_NEW_INSTANCE, METHOD_GET_NUMBER, METHOD_CREATE_IMPORT_RESULT_PANEL, METHOD_SET_SELECTED_INDEX,
-			METHOD_GET_TITLED_COMPONENT_MAP = null;
+			METHOD_GET_TITLED_COMPONENT_MAP, METHOD_SORTED = null;
 
 	@BeforeAll
 	static void beforeAll() throws Throwable {
@@ -270,6 +270,8 @@ class VoiceManagerTest {
 		(METHOD_GET_TITLED_COMPONENT_MAP = clz.getDeclaredMethod("getTitledComponentMap", Map.class, String[].class))
 				.setAccessible(true);
 		//
+		(METHOD_SORTED = clz.getDeclaredMethod("sorted", Stream.class, Comparator.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -356,6 +358,10 @@ class VoiceManagerTest {
 				if (Objects.equals(methodName, "toArray")) {
 					//
 					return null;
+					//
+				} else if (Objects.equals(methodName, "sorted")) {
+					//
+					return proxy;
 					//
 				} // if
 					//
@@ -1667,13 +1673,11 @@ class VoiceManagerTest {
 	@Test
 	void testGetTitledComponentMap() throws Throwable {
 		//
-		final Map<String, Component> emptyMap = Collections.emptyMap();
-		//
-		Assertions.assertEquals(emptyMap, getTitledComponentMap(null, null));
+		Assertions.assertNull(getTitledComponentMap(null, null));
 		//
 		final Map<String, Component> map = Reflection.newProxy(Map.class, ih);
 		//
-		Assertions.assertEquals(emptyMap, getTitledComponentMap(map, null));
+		Assertions.assertNull(getTitledComponentMap(map, null));
 		//
 		if (ih != null) {
 			//
@@ -1681,6 +1685,8 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
+		final Map<String, Component> emptyMap = Collections.emptyMap();
+		//
 		Assertions.assertEquals(emptyMap, getTitledComponentMap(map, null));
 		//
 		if (ih != null) {
@@ -1729,6 +1735,32 @@ class VoiceManagerTest {
 				return null;
 			} else if (obj instanceof Map) {
 				return (Map) obj;
+			}
+			throw new Throwable(toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSorted() throws Throwable {
+		//
+		Stream<?> stream = Stream.empty();
+		//
+		Assertions.assertSame(stream, sorted(stream, null));
+		//
+		Assertions.assertSame(stream = Reflection.newProxy(Stream.class, ih), sorted(stream, null));
+		//
+	}
+
+	private static <T> Stream<T> sorted(final Stream<T> instance, final Comparator<? super T> comparator)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_SORTED.invoke(null, instance, comparator);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
@@ -2885,8 +2917,6 @@ class VoiceManagerTest {
 								name), m.getParameterCount() == 0)
 						|| Boolean.logicalAnd(Objects.equals(name, "createMicrosoftWindowsCompatibilityWarningJPanel"),
 								Arrays.equals(parameterTypes, new Class<?>[] { LayoutManager.class, String.class }))
-						|| Boolean.logicalAnd(Objects.equals(name, "getTitledComponentMap"),
-								Arrays.equals(parameterTypes, new Class<?>[] { Map.class, String[].class }))
 						|| Boolean.logicalAnd(Objects.equals(name, "getMimeTypeAndBase64EncodedString"),
 								Arrays.equals(parameterTypes, new Class<?>[] { String.class, String.class }))
 						|| Boolean.logicalAnd(Objects.equals(name, "craeteSpeechApiInstallationWarningJPanel"),
