@@ -267,6 +267,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		}
 	}
 
+	@Nullable
 	private static Node item(@Nullable final NodeList instance, final int index) {
 		return instance != null ? instance.item(index) : null;
 	}
@@ -275,10 +276,12 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		return instance != null ? instance.getLength() : 0;
 	}
 
+	@Nullable
 	private static <N extends DomNode> N querySelector(@Nullable final DomNode instance, final String selectors) {
 		return instance != null ? instance.querySelector(selectors) : null;
 	}
 
+	@Nullable
 	private static NodeList getElementsByTagName(@Nullable final Document instance, final String tagname) {
 		return instance != null ? instance.getElementsByTagName(tagname) : null;
 	}
