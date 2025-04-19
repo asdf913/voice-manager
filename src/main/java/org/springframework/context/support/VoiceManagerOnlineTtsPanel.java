@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -104,7 +105,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
-	private static void setLayout(final Container instance, final LayoutManager layoutManager) {
+	private static void setLayout(@Nullable final Container instance, final LayoutManager layoutManager) {
 		if (instance != null) {
 			instance.setLayout(layoutManager);
 		}
