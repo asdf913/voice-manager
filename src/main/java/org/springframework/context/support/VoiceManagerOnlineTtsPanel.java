@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
@@ -240,13 +241,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 						//
 				} // for
 					//
-				if (src != null) {
-					//
-					Util.setText(tfUrl, String.join("/", StringUtils.substringBeforeLast(url, "/"),
-							StringUtils.substringAfter(IValue0Util.getValue0(src), '/')));
-					//
-				} // if
-					//
+				testAndAccept(Objects::nonNull, src,
+						x -> Util.setText(tfUrl, String.join("/", StringUtils.substringBeforeLast(url, "/"),
+								StringUtils.substringAfter(IValue0Util.getValue0(x), '/'))));
+				//
 			} catch (final IOException e) {
 				//
 				LoggerUtil.error(LOG, e.getMessage(), e);
@@ -255,6 +253,18 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static <T> void testAndAccept(final Predicate<T> instance, final T value, final Consumer<T> consumer) {
+		if (Util.test(instance, value)) {
+			accept(consumer, value);
+		} // if
+	}
+
+	private static <T> void accept(final Consumer<T> instance, final T value) {
+		if (instance != null) {
+			instance.accept(value);
+		}
 	}
 
 	private static Node item(@Nullable final NodeList instance, final int index) {

@@ -12,11 +12,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.function.Consumers;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
 import org.htmlunit.SgmlPage;
@@ -39,7 +41,7 @@ import javassist.util.proxy.ProxyUtil;
 class VoiceManagerOnlineTtsPanelTest {
 
 	private static Method METHOD_GET_LAYOUT_MANAGER, METHOD_TEST_AND_APPLY, METHOD_QUERY_SELECTOR,
-			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_ITEM, METHOD_GET_LENGTH = null;
+			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_ITEM, METHOD_GET_LENGTH, METHOD_TEST_AND_ACCEPT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -61,6 +63,9 @@ class VoiceManagerOnlineTtsPanelTest {
 		(METHOD_ITEM = clz.getDeclaredMethod("item", NodeList.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_GET_LENGTH = clz.getDeclaredMethod("getLength", NodeList.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class, Consumer.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -345,6 +350,22 @@ class VoiceManagerOnlineTtsPanelTest {
 				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndAccept() {
+		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysTrue(), null, Consumers.nop()));
+		//
+	}
+
+	private static <T> void testAndAccept(final Predicate<T> instance, final T value, final Consumer<T> consumer)
+			throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT.invoke(null, instance, value, consumer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
