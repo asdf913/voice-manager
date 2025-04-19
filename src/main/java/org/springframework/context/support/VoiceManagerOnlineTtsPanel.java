@@ -190,9 +190,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				Node node = null;
 				//
-				for (int i = 0; nodeList != null && i < nodeList.getLength(); i++) {
+				for (int i = 0; i < getLength(nodeList); i++) {
 					//
-					if ((node = nodeList.item(i)) == null) {
+					if ((node = item(nodeList, i)) == null) {
 						//
 						continue;
 						//
@@ -215,9 +215,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				IValue0<String> src = null;
 				//
-				for (int i = 0; nodeList != null && i < nodeList.getLength(); i++) {
+				for (int i = 0; i < getLength(nodeList); i++) {
 					//
-					if ((node = nodeList.item(i)) == null || (attributes = node.getAttributes()) == null
+					if ((node = item(nodeList, i)) == null || (attributes = node.getAttributes()) == null
 							|| (namedItem = attributes.getNamedItem("src")) == null) {
 						//
 						continue;
@@ -255,6 +255,14 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static Node item(final NodeList instance, final int index) {
+		return instance != null ? instance.item(index) : null;
+	}
+
+	private static int getLength(final NodeList instance) {
+		return instance != null ? instance.getLength() : 0;
 	}
 
 	private static <N extends DomNode> N querySelector(final DomNode instance, final String selectors) {

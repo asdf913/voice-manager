@@ -7,6 +7,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
@@ -15,6 +16,7 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
 import org.htmlunit.Page;
@@ -26,6 +28,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.google.common.base.Predicates;
@@ -38,7 +41,7 @@ import javassist.util.proxy.ProxyUtil;
 class VoiceManagerOnlineTtsPanelTest {
 
 	private static Method METHOD_GET_LAYOUT_MANAGER, METHOD_TEST_AND_APPLY, METHOD_QUERY_SELECTOR,
-			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_CLICK = null;
+			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_CLICK, METHOD_ITEM, METHOD_GET_LENGTH = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -59,6 +62,10 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_CLICK = clz.getDeclaredMethod("click", DomElement.class)).setAccessible(true);
 		//
+		(METHOD_ITEM = clz.getDeclaredMethod("item", NodeList.class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_GET_LENGTH = clz.getDeclaredMethod("getLength", NodeList.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -72,6 +79,18 @@ class VoiceManagerOnlineTtsPanelTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof NodeList) {
+				//
+				if (Objects.equals(methodName, "item")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(methodName, "getLength")) {
+					//
+					return Integer.valueOf(0);
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -104,12 +123,14 @@ class VoiceManagerOnlineTtsPanelTest {
 
 	private IH ih = null;
 
+	private NodeList nodeList = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new VoiceManagerOnlineTtsPanel();
 		//
-		ih = new IH();
+		nodeList = Reflection.newProxy(NodeList.class, ih = new IH());
 		//
 	}
 
@@ -133,9 +154,15 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		Method m = null;
 		//
+		Collection<Object> collection = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
 		Object[] os = null;
 		//
 		String toString = null;
+		//
+		Object invokeStaticMethod = null;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
@@ -145,14 +172,42 @@ class VoiceManagerOnlineTtsPanelTest {
 				//
 			} // if
 				//
-			os = toArray(Collections.nCopies(m.getParameterCount(), null));
+			Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
+			//
+			parameterTypes = m.getParameterTypes();
+			//
+			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
+				//
+				if (Objects.equals(Integer.TYPE, parameterTypes[j])) {
+					//
+					Util.add(collection, Integer.valueOf(0));
+					//
+				} else {
+					//
+					Util.add(collection, null);
+					//
+				} // if
+					//
+			} // for
+				//
+			os = toArray(collection);
 			//
 			toString = Util.toString(m);
 			//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
-				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+				invokeStaticMethod = Narcissus.invokeStaticMethod(m, os);
 				//
+				if (Objects.equals(m.getReturnType(), Integer.TYPE)) {
+					//
+					Assertions.assertNotNull(invokeStaticMethod, toString);
+					//
+				} else {
+					//
+					Assertions.assertNull(invokeStaticMethod, toString);
+					//
+				} // if
+					//
 			} else {
 				//
 				Assertions.assertNull(Narcissus.invokeMethod(new VoiceManagerOnlineTtsPanel(), m, os), toString);
@@ -273,6 +328,46 @@ class VoiceManagerOnlineTtsPanelTest {
 				return null;
 			} else if (obj instanceof Page) {
 				return (P) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testItem() throws Throwable {
+		//
+		Assertions.assertNull(item(nodeList, 0));
+		//
+	}
+
+	private static Node item(final NodeList instance, final int index) throws Throwable {
+		try {
+			final Object obj = METHOD_ITEM.invoke(null, instance, index);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Node) {
+				return (Node) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetLength() throws Throwable {
+		//
+		Assertions.assertEquals(0, getLength(nodeList));
+		//
+	}
+
+	private static int getLength(final NodeList instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_LENGTH.invoke(null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
