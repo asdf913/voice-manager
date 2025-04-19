@@ -10,6 +10,8 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -17,17 +19,22 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.Consumers;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
 import org.htmlunit.SgmlPage;
 import org.htmlunit.html.DomNode;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -41,7 +48,8 @@ import javassist.util.proxy.ProxyUtil;
 class VoiceManagerOnlineTtsPanelTest {
 
 	private static Method METHOD_GET_LAYOUT_MANAGER, METHOD_TEST_AND_APPLY, METHOD_QUERY_SELECTOR,
-			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_ITEM, METHOD_GET_LENGTH, METHOD_TEST_AND_ACCEPT = null;
+			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_ITEM, METHOD_GET_LENGTH, METHOD_TEST_AND_ACCEPT,
+			METHOD_GET_ATTRIBUTE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -67,9 +75,20 @@ class VoiceManagerOnlineTtsPanelTest {
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class, Consumer.class))
 				.setAccessible(true);
 		//
+		(METHOD_GET_ATTRIBUTE = clz.getDeclaredMethod("getAttribute", NodeList.class, String.class, Predicate.class))
+				.setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
+
+		private Collection<Node> nodes = null;
+
+		private NamedNodeMap attributes = null;
+
+		private Map<Object, Node> namedItems = null;
+
+		private String nodeValue = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
@@ -82,13 +101,34 @@ class VoiceManagerOnlineTtsPanelTest {
 				//
 			} else if (proxy instanceof NodeList) {
 				//
-				if (Objects.equals(methodName, "item")) {
+				if (Objects.equals(methodName, "item") && args != null && args.length > 0
+						&& args[0] instanceof Integer) {
 					//
-					return null;
+					return nodes != null ? IterableUtils.get(nodes, (Integer) args[0]) : null;
 					//
 				} else if (Objects.equals(methodName, "getLength")) {
 					//
-					return Integer.valueOf(0);
+					return IterableUtils.size(nodes);
+					//
+				} // if
+					//
+			} else if (proxy instanceof Node) {
+				//
+				if (Objects.equals(methodName, "getAttributes")) {
+					//
+					return attributes;
+					//
+				} else if (Objects.equals(methodName, "getNodeValue")) {
+					//
+					return nodeValue;
+					//
+				} // if
+					//
+			} else if (proxy instanceof NamedNodeMap) {
+				//
+				if (Objects.equals(methodName, "getNamedItem") && args != null && args.length > 0) {
+					//
+					return MapUtils.getObject(namedItems, args[0]);
 					//
 				} // if
 					//
@@ -366,6 +406,54 @@ class VoiceManagerOnlineTtsPanelTest {
 			throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT.invoke(null, instance, value, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetAttribute() throws Throwable {
+		//
+		final Node node = Reflection.newProxy(Node.class, ih);
+		//
+		if (ih != null) {
+			//
+			(ih.nodes = new ArrayList<>()).add(node);
+			//
+		} // if
+			//
+		Assertions.assertNull(getAttribute(nodeList, null, null));
+		//
+		if (ih != null) {
+			//
+			ih.attributes = Reflection.newProxy(NamedNodeMap.class, ih);
+			//
+		} // if
+			//
+		Assertions.assertNull(getAttribute(nodeList, null, null));
+		//
+		if (ih != null) {
+			//
+			(ih.namedItems = new LinkedHashMap<>()).put(null, node);
+			//
+		} // if
+			//
+		Assertions.assertNull(getAttribute(nodeList, null, null));
+		//
+		Assertions.assertEquals(Unit.with(null), getAttribute(nodeList, null, Predicates.alwaysTrue()));
+		//
+	}
+
+	private static IValue0<String> getAttribute(final NodeList nodeList, final String attrbiuteName,
+			final Predicate<String> predicate) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ATTRIBUTE.invoke(null, nodeList, attrbiuteName, predicate);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

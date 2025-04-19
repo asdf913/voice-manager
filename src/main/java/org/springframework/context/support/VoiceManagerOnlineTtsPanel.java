@@ -200,7 +200,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				HtmlPage htmlPage = testAndApply(Objects::nonNull, url, webClient::getPage, null);
 				//
-				NodeList nodeList = getElementsByTagName(htmlPage, "textarea");
+				final NodeList nodeList = getElementsByTagName(htmlPage, "textarea");
 				//
 				Node node = null;
 				//
@@ -216,45 +216,13 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 					//
 				} // for
 					//
-				nodeList = getElementsByTagName(
-						htmlPage = Util.cast(HtmlPage.class, DomElementUtil
-								.click(Util.cast(DomElement.class, querySelector(htmlPage, "input[type=\"submit\"]")))),
-						"source");
-				//
-				NamedNodeMap attributes = null;
-				//
-				Node namedItem = null;
-				//
-				String nodeValue = null;
-				//
-				IValue0<String> src = null;
-				//
-				for (int i = 0; i < getLength(nodeList); i++) {
-					//
-					if ((node = item(nodeList, i)) == null || (attributes = node.getAttributes()) == null
-							|| (namedItem = attributes.getNamedItem("src")) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (StringUtils.startsWith(nodeValue = namedItem.getNodeValue(), "./temp/")) {
-						//
-						if (src == null) {
-							//
-							src = Unit.with(nodeValue);
-							//
-						} else {
-							//
-							throw new IllegalStateException();
-							//
-						} // if
-							//
-					} // if
-						//
-				} // for
-					//
-				testAndAccept(Objects::nonNull, src,
+				testAndAccept(Objects::nonNull,
+						getAttribute(
+								getElementsByTagName(htmlPage = Util.cast(HtmlPage.class,
+										DomElementUtil.click(Util.cast(DomElement.class,
+												querySelector(htmlPage, "input[type=\"submit\"]")))),
+										"source"),
+								"src", x -> StringUtils.startsWith(x, "./temp/")),
 						x -> Util.setText(tfUrl, String.join("/", StringUtils.substringBeforeLast(url, "/"),
 								StringUtils.substringAfter(IValue0Util.getValue0(x), '/'))));
 				//
@@ -266,6 +234,48 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static IValue0<String> getAttribute(final NodeList nodeList, final String attrbiuteName,
+			final Predicate<String> predicate) {
+		//
+		Node node = null;
+		//
+		NamedNodeMap attributes = null;
+		//
+		Node namedItem = null;
+		//
+		String nodeValue = null;
+		//
+		IValue0<String> result = null;
+		//
+		for (int i = 0; i < getLength(nodeList); i++) {
+			//
+			if ((node = item(nodeList, i)) == null || (attributes = node.getAttributes()) == null
+					|| (namedItem = attributes.getNamedItem(attrbiuteName)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Util.test(predicate, nodeValue = namedItem.getNodeValue())) {
+				//
+				if (result == null) {
+					//
+					result = Unit.with(nodeValue);
+					//
+				} else {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // if
+				//
+		} // for
+			//
+		return result;
+		//
 	}
 
 	private static <T> void testAndAccept(final Predicate<T> instance, @Nullable final T value,
