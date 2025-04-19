@@ -1745,11 +1745,11 @@ class VoiceManagerTest {
 	@Test
 	void testSorted() throws Throwable {
 		//
-		Stream<?> stream = Stream.empty();
+		Stream<?> s = Stream.empty();
 		//
-		Assertions.assertSame(stream, sorted(stream, null));
+		Assertions.assertSame(s, sorted(s, null));
 		//
-		Assertions.assertSame(stream = Reflection.newProxy(Stream.class, ih), sorted(stream, null));
+		Assertions.assertSame(s = Reflection.newProxy(Stream.class, ih), sorted(s, null));
 		//
 	}
 
