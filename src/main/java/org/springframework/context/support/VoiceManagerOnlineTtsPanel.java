@@ -5,6 +5,10 @@ import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +69,16 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	private String url = null;// TODO https://open-jtalk.sp.nitech.ac.jp/index.php
 
-	private JTextComponent tfText, tfUrl = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("Text")
+	private JTextComponent tfText = null;
+
+	private JTextComponent tfUrl = null;
 
 	private AbstractButton btnExecute = null;
 
