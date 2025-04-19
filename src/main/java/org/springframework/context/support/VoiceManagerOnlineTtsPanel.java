@@ -257,19 +257,19 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 	}
 
-	private static Node item(final NodeList instance, final int index) {
+	private static Node item(@Nullable final NodeList instance, final int index) {
 		return instance != null ? instance.item(index) : null;
 	}
 
-	private static int getLength(final NodeList instance) {
+	private static int getLength(@Nullable final NodeList instance) {
 		return instance != null ? instance.getLength() : 0;
 	}
 
-	private static <N extends DomNode> N querySelector(final DomNode instance, final String selectors) {
+	private static <N extends DomNode> N querySelector(@Nullable final DomNode instance, final String selectors) {
 		return instance != null ? instance.querySelector(selectors) : null;
 	}
 
-	private static NodeList getElementsByTagName(final Document instance, final String tagname) {
+	private static NodeList getElementsByTagName(@Nullable final Document instance, final String tagname) {
 		return instance != null ? instance.getElementsByTagName(tagname) : null;
 	}
 
