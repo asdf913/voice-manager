@@ -1164,6 +1164,13 @@
 	<!---->
 	<bean
 		class="org.springframework.context.support.VoiceManagerRubyHtmlPanel"/>
+		
+	<!---->
+	<bean
+		class="org.springframework.context.support.VoiceManagerOnlineTtsPanel">
+		<property name="url"
+			value="${org.springframework.context.support.VoiceManagerOnlineTtsPanel.url}" />
+	</bean>
 
 	<!-- -->
 	<bean

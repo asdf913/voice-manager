@@ -67,7 +67,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	private transient ApplicationContext applicationContext = null;
 
-	private String url = null;// TODO https://open-jtalk.sp.nitech.ac.jp/index.php
+	private String url = null;
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
