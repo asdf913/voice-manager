@@ -48,8 +48,7 @@ import javassist.util.proxy.ProxyUtil;
 class VoiceManagerOnlineTtsPanelTest {
 
 	private static Method METHOD_GET_LAYOUT_MANAGER, METHOD_TEST_AND_APPLY, METHOD_QUERY_SELECTOR,
-			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_ITEM, METHOD_GET_LENGTH, METHOD_TEST_AND_ACCEPT,
-			METHOD_GET_ATTRIBUTE = null;
+			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT, METHOD_GET_ATTRIBUTE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -67,10 +66,6 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_GET_ELEMENTS_BY_TAG_NAME = clz.getDeclaredMethod("getElementsByTagName", Document.class, String.class))
 				.setAccessible(true);
-		//
-		(METHOD_ITEM = clz.getDeclaredMethod("item", NodeList.class, Integer.TYPE)).setAccessible(true);
-		//
-		(METHOD_GET_LENGTH = clz.getDeclaredMethod("getLength", NodeList.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class, Consumer.class))
 				.setAccessible(true);
@@ -345,46 +340,6 @@ class VoiceManagerOnlineTtsPanelTest {
 				return null;
 			} else if (obj instanceof NodeList) {
 				return (NodeList) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testItem() throws Throwable {
-		//
-		Assertions.assertNull(item(nodeList, 0));
-		//
-	}
-
-	private static Node item(final NodeList instance, final int index) throws Throwable {
-		try {
-			final Object obj = METHOD_ITEM.invoke(null, instance, index);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Node) {
-				return (Node) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetLength() throws Throwable {
-		//
-		Assertions.assertEquals(0, getLength(nodeList));
-		//
-	}
-
-	private static int getLength(final NodeList instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_LENGTH.invoke(null, instance);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

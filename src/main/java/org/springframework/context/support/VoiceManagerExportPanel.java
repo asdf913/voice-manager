@@ -4110,7 +4110,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 									"/*[local-name()='document-content']/*[local-name()='body']/*[local-name()='presentation']/*[local-name()='page']",
 									x, XPathConstants.NODESET), null));
 					//
-					final Node page = testAndApply(x -> getLength(x) == 1, pages, x -> item(x, 0), null);
+					final Node page = testAndApply(x -> Util.getLength(x) == 1, pages, x -> Util.item(x, 0), null);
 					//
 					final Node parentNode = getParentNode(page);
 					//
@@ -4223,11 +4223,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		}
 
 		@Nullable
-		private static Node item(@Nullable final NodeList instance, final int index) {
-			return instance != null ? instance.item(index) : null;
-		}
-
-		@Nullable
 		private static Document parse(@Nullable final DocumentBuilder instance, final InputStream is)
 				throws SAXException, IOException {
 			return instance != null ? instance.parse(is) : null;
@@ -4321,9 +4316,9 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 			Node customShape = null;
 			//
-			for (int i = 0; i < getLength(customShapes); i++) {
+			for (int i = 0; i < Util.getLength(customShapes); i++) {
 				//
-				if ((customShape = item(customShapes, i)) == null) {
+				if ((customShape = Util.item(customShapes, i)) == null) {
 					//
 					continue;
 					//
@@ -4426,7 +4421,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 			ObjectMap om = null;
 			//
-			for (int i = 0; i < getLength(ps); i++) {
+			for (int i = 0; i < Util.getLength(ps); i++) {
 				//
 				if (map == null) {
 					//
@@ -4460,7 +4455,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 				} // if
 					//
-				ObjectMap.setObject(om, Node.class, ps.item(i));
+				ObjectMap.setObject(om, Node.class, Util.item(ps, i));
 				//
 				replaceTextContent(om, map);
 				//
@@ -4554,9 +4549,9 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 			final Pattern pattern = ObjectMap.getObject(objectMap, Pattern.class);
 			//
-			for (int i = 0; i < getLength(plugins); i++) {
+			for (int i = 0; i < Util.getLength(plugins); i++) {
 				//
-				if ((attributes = getAttributes(item(plugins, i))) == null) {
+				if ((attributes = getAttributes(Util.item(plugins, i))) == null) {
 					//
 					continue;
 					//
@@ -4583,10 +4578,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 			} // for
 				//
-		}
-
-		private static int getLength(@Nullable final NodeList instance) {
-			return instance != null ? instance.getLength() : 0;
 		}
 
 		private static void setNodeValue(@Nullable final Node instance, final String nodeValue) {

@@ -204,9 +204,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				Node node = null;
 				//
-				for (int i = 0; i < getLength(nodeList); i++) {
+				for (int i = 0; i < Util.getLength(nodeList); i++) {
 					//
-					if ((node = item(nodeList, i)) == null) {
+					if ((node = Util.item(nodeList, i)) == null) {
 						//
 						continue;
 						//
@@ -250,9 +250,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		IValue0<String> result = null;
 		//
-		for (int i = 0; i < getLength(nodeList); i++) {
+		for (int i = 0; i < Util.getLength(nodeList); i++) {
 			//
-			if ((node = item(nodeList, i)) == null || (attributes = node.getAttributes()) == null
+			if ((node = Util.item(nodeList, i)) == null || (attributes = node.getAttributes()) == null
 					|| (namedItem = attributes.getNamedItem(attrbiuteName)) == null) {
 				//
 				continue;
@@ -284,15 +284,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		if (Util.test(instance, value)) {
 			Util.accept(consumer, value);
 		} // if
-	}
-
-	@Nullable
-	private static Node item(@Nullable final NodeList instance, final int index) {
-		return instance != null ? instance.item(index) : null;
-	}
-
-	private static int getLength(@Nullable final NodeList instance) {
-		return instance != null ? instance.getLength() : 0;
 	}
 
 	@Nullable

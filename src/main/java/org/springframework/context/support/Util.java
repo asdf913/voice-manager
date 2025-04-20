@@ -80,6 +80,8 @@ import org.javatuples.valueintf.IValue0Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import javassist.util.proxy.ProxyFactory;
@@ -1742,6 +1744,14 @@ public abstract class Util {
 		if (instance != null) {
 			instance.accept(value);
 		}
+	}
+
+	static Node item(final NodeList instance, final int index) {
+		return instance != null ? instance.item(index) : null;
+	}
+
+	static int getLength(final NodeList instance) {
+		return instance != null ? instance.getLength() : 0;
 	}
 
 }

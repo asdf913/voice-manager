@@ -3210,10 +3210,10 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			boolean isXlsx = false;
 			//
-			for (int i = 0; i < getLength(childNodes); i++) {
+			for (int i = 0; i < Util.getLength(childNodes); i++) {
 				//
 				if (Objects.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml",
-						getTextContent(getNamedItem(getAttributes(item(childNodes, i)), "ContentType")))
+						getTextContent(getNamedItem(getAttributes(Util.item(childNodes, i)), "ContentType")))
 						&& (isXlsx = true)) {
 					//
 					break;
@@ -3247,15 +3247,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	@Nullable
 	private static NamedNodeMap getAttributes(@Nullable final Node instance) {
 		return instance != null ? instance.getAttributes() : null;
-	}
-
-	@Nullable
-	private static Node item(@Nullable final NodeList instance, final int index) {
-		return instance != null ? instance.item(index) : null;
-	}
-
-	private static int getLength(@Nullable final NodeList instance) {
-		return instance != null ? instance.getLength() : 0;
 	}
 
 	@Nullable
