@@ -103,7 +103,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		add(new JLabel("Input"));
 		//
-		add(tfText = new JTextField(), String.format("wrap,wmin %1$spx", 100));
+		final int width = 375;
+		//
+		add(tfText = new JTextField(), String.format("wrap,wmin %1$spx", width));
 		//
 		add(new JLabel());
 		//
@@ -113,7 +115,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		add(new JLabel("Output"));
 		//
-		add(tfUrl = new JTextField(), String.format("wrap,wmin %1$spx", 100));
+		add(tfUrl = new JTextField(), String.format("wrap,wmin %1$spx", width));
 		//
 		tfUrl.setEditable(false);
 		//
