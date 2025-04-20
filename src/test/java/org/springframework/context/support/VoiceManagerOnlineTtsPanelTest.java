@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -19,9 +20,21 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ClassParserUtil;
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.JavaClassUtil;
+import org.apache.bcel.generic.ARETURN;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.LDC;
+import org.apache.bcel.generic.MethodGen;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.Consumers;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.tuple.Pair;
@@ -181,9 +194,11 @@ class VoiceManagerOnlineTtsPanelTest {
 	}
 
 	@Test
-	void testNull() {
+	void testNull() throws Throwable {
 		//
-		final Method[] ms = VoiceManagerOnlineTtsPanel.class.getDeclaredMethods();
+		final Class<?> clz = VoiceManagerOnlineTtsPanel.class;
+		//
+		final Method[] ms = Util.getDeclaredMethods(clz);
 		//
 		Method m = null;
 		//
@@ -195,7 +210,15 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		String toString = null;
 		//
-		Object invokeStaticMethod = null;
+		Object invoke = null;
+		//
+		JavaClass javaClass = null;
+		//
+		ConstantPoolGen cpg = null;
+		//
+		Instruction[] instructions = null;
+		//
+		org.apache.bcel.classfile.Method cfMethod = null;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
@@ -229,25 +252,56 @@ class VoiceManagerOnlineTtsPanelTest {
 			//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
-				invokeStaticMethod = Narcissus.invokeStaticMethod(m, os);
+				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
 				//
-				if (Objects.equals(m.getReturnType(), Integer.TYPE)) {
+			} else {
+				//
+				invoke = Narcissus.invokeMethod(new VoiceManagerOnlineTtsPanel(), m, os);
+				//
+				if (javaClass == null) {
 					//
-					Assertions.assertNotNull(invokeStaticMethod, toString);
-					//
-				} else {
-					//
-					Assertions.assertNull(invokeStaticMethod, toString);
+					javaClass = getJavaClass(clz);
 					//
 				} // if
 					//
-			} else {
-				//
-				Assertions.assertNull(Narcissus.invokeMethod(new VoiceManagerOnlineTtsPanel(), m, os), toString);
+				if ((cfMethod = JavaClassUtil.getMethod(javaClass, m)) != null) {
+					//
+					if (cpg == null) {
+						//
+						cpg = new ConstantPoolGen(cfMethod.getConstantPool());
+						//
+					} // if
+						//
+					if ((instructions = InstructionListUtil
+							.getInstructions(new MethodGen(cfMethod, null, cpg).getInstructionList())) != null
+							&& instructions.length == 2 && ArrayUtils.get(instructions, 0) instanceof LDC ldc
+							&& ldc.getValue(cpg) != null && ArrayUtils.get(instructions, 1) instanceof ARETURN) {
+						//
+						Assertions.assertNotNull(invoke, toString);
+						//
+						continue;
+						//
+					} // if
+						//
+				} // if
+					//
+				Assertions.assertNull(invoke, toString);
 				//
 			} // if
 				//
 		} // for
+			//
+	}
+
+	private static JavaClass getJavaClass(final Class<?> clz) throws Throwable {
+		//
+		try (final InputStream is = clz != null
+				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
+				: null) {
+			//
+			return ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
+			//
+		} // try
 			//
 	}
 

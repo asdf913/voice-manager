@@ -59,7 +59,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerOnlineTtsPanel extends JPanel
-		implements InitializingBean, ApplicationContextAware, ActionListener {
+		implements InitializingBean, Titled, ApplicationContextAware, ActionListener {
 
 	private static final long serialVersionUID = 1679789881293611910L;
 
@@ -84,6 +84,11 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	public void setUrl(final String url) {
 		this.url = url;
+	}
+
+	@Override
+	public String getTitle() {
+		return "Online TTS";
 	}
 
 	@Override
