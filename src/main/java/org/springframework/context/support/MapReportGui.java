@@ -210,8 +210,8 @@ public class MapReportGui extends JFrame
 
 	private static <T> void testAndAccept(@Nullable final Predicate<T> predicate, final T value,
 			@Nullable final Consumer<T> consumer) {
-		if (Util.test(predicate, value) && consumer != null) {
-			consumer.accept(value);
+		if (Util.test(predicate, value)) {
+			Util.accept(consumer, value);
 		}
 	}
 

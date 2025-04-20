@@ -4156,7 +4156,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 				setValue(instance, i.intValue());
 				//
-				accept(consumer, instance);
+				Util.accept(consumer, instance);
 				//
 			} // if
 				//
@@ -4213,7 +4213,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 				instance.setValue(i.intValue());
 				//
-				accept(consumer, instance);
+				Util.accept(consumer, instance);
 				//
 			} // if
 				//
@@ -4455,22 +4455,16 @@ public class VoiceManagerImportSinglePanel extends JPanel
 	private static <T> void accept(final Consumer<? super T> action, final T a, final T b,
 			@Nullable final T... values) {
 		//
-		accept(action, a);
+		Util.accept(action, a);
 		//
-		accept(action, b);
+		Util.accept(action, b);
 		//
 		for (int i = 0; i < length(values); i++) {
 			//
-			accept(action, ArrayUtils.get(values, i));
+			Util.accept(action, ArrayUtils.get(values, i));
 			//
 		} // for
 			//
-	}
-
-	private static <T> void accept(@Nullable final Consumer<T> instance, final T value) {
-		if (instance != null) {
-			instance.accept(value);
-		}
 	}
 
 	@Nullable

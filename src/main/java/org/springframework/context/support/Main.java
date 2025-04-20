@@ -534,7 +534,7 @@ public class Main {
 		//
 		if (clz == null) {
 			//
-			accept(consumer, "java.lang.Class is null");
+			Util.accept(consumer, "java.lang.Class is null");
 			//
 			return null;
 			//
@@ -544,21 +544,21 @@ public class Main {
 		//
 		if (beans == null) {
 			//
-			accept(consumer, String.format(
+			Util.accept(consumer, String.format(
 					"org.springframework.beans.factory.ListableBeanFactory.getBeansOfType(%1$s) return null", clz));
 			//
 			return null;
 			//
 		} else if (beans.isEmpty()) {
 			//
-			accept(consumer, String.format(
+			Util.accept(consumer, String.format(
 					"org.springframework.beans.factory.ListableBeanFactory.getBeansOfType(%1$s) return empty", clz));
 			//
 			return null;
 			//
 		} else if (beans.size() > 1) {
 			//
-			accept(consumer, String.format(
+			Util.accept(consumer, String.format(
 					"org.springframework.beans.factory.ListableBeanFactory.getBeansOfType(%1$s).size()>1", clz));
 			//
 			return null;
@@ -567,12 +567,6 @@ public class Main {
 			//
 		return IterableUtils.first(Util.values(beans));
 		//
-	}
-
-	private static <T> void accept(@Nullable final Consumer<T> instance, final T value) {
-		if (instance != null) {
-			instance.accept(value);
-		}
 	}
 
 }

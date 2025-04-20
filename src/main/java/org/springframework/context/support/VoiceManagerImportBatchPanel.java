@@ -947,7 +947,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 				instance.setValue(i.intValue());
 				//
-				accept(consumer, instance);
+				Util.accept(consumer, instance);
 				//
 			} // if
 				//
@@ -977,7 +977,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 				setValue(instance, i.intValue());
 				//
-				accept(consumer, instance);
+				Util.accept(consumer, instance);
 				//
 			} // if
 				//
@@ -1677,7 +1677,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 						//
 					} // if
 						//
-					accept(voiceConsumer, voice);
+					Util.accept(voiceConsumer, voice);
 					//
 				} // if
 					//
@@ -1904,7 +1904,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 						//
 						importVoice(objectMap, errorMessageConsumer, throwableConsumer);
 						//
-						accept(voiceConsumer, voice);
+						Util.accept(voiceConsumer, voice);
 						//
 					} // if
 						//
@@ -4352,22 +4352,16 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	private static <T> void accept(final Consumer<? super T> action, final T a, final T b,
 			@Nullable final T... values) {
 		//
-		accept(action, a);
+		Util.accept(action, a);
 		//
-		accept(action, b);
+		Util.accept(action, b);
 		//
 		for (int i = 0; values != null && i < values.length; i++) {
 			//
-			accept(action, values[i]);
+			Util.accept(action, values[i]);
 			//
 		} // for
 			//
-	}
-
-	private static <T> void accept(@Nullable final Consumer<T> instance, final T value) {
-		if (instance != null) {
-			instance.accept(value);
-		}
 	}
 
 	@Override

@@ -188,8 +188,8 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 
 	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
 			@Nullable final Consumer<T> consumer) throws E {
-		if (Util.test(predicate, value) && consumer != null) {
-			consumer.accept(value);
+		if (Util.test(predicate, value)) {
+			Util.accept(consumer, value);
 		}
 	}
 

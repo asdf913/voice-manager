@@ -618,16 +618,12 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private static <T> void forEach(@Nullable final Iterable<T> items, @Nullable final Consumer<? super T> action) {
 		//
-		if (Util.iterator(items) != null && (action != null || Proxy.isProxyClass(Util.getClass(items)))) {
+		if (Util.iterator(items) != null) {
 			//
 			for (final T item : items) {
 				//
-				if (action != null) {
-					//
-					action.accept(item);
-					//
-				} // if
-					//
+				Util.accept(action, item);
+				//
 			} // for
 				//
 		} // if
@@ -642,8 +638,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private static <T> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
 			@Nullable final Consumer<T> consumer) {
-		if (Util.test(predicate, value) && consumer != null) {
-			consumer.accept(value);
+		if (Util.test(predicate, value)) {
+			Util.accept(consumer, value);
 		}
 	}
 

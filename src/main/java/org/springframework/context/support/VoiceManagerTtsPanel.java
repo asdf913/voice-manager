@@ -1291,7 +1291,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 				//
 				setValue(instance, i.intValue());
 				//
-				accept(consumer, instance);
+				Util.accept(consumer, instance);
 				//
 			} // if
 				//
@@ -1342,7 +1342,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 				//
 				instance.setValue(i.intValue());
 				//
-				accept(consumer, instance);
+				Util.accept(consumer, instance);
 				//
 			} // if
 				//
@@ -1369,12 +1369,6 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 
 	private static void errorOrAssertOrShowException(final boolean headless, final Throwable throwable) {
 		TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(headless, LOG, throwable);
-	}
-
-	private static <T> void accept(@Nullable final Consumer<T> instance, final T value) {
-		if (instance != null) {
-			instance.accept(value);
-		}
 	}
 
 	private static void add(@Nullable final Container instance, @Nullable final Component comp) {
