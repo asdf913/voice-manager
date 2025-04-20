@@ -1756,7 +1756,7 @@ public abstract class Util {
 		return instance != null ? instance.getLength() : 0;
 	}
 
-	static NamedNodeMap getAttributes(final Node instance) {
+	static NamedNodeMap getAttributes(@Nullable final Node instance) {
 		return instance != null ? instance.getAttributes() : null;
 	}
 
