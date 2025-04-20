@@ -124,14 +124,11 @@ class VoiceManagerOnlineTtsPanelTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof NamedNodeMap) {
+			} else if (proxy instanceof NamedNodeMap && Objects.equals(methodName, "getNamedItem") && args != null
+					&& args.length > 0) {
 				//
-				if (Objects.equals(methodName, "getNamedItem") && args != null && args.length > 0) {
-					//
-					return MapUtils.getObject(namedItems, args[0]);
-					//
-				} // if
-					//
+				return MapUtils.getObject(namedItems, args[0]);
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
