@@ -1746,6 +1746,7 @@ public abstract class Util {
 		}
 	}
 
+	@Nullable
 	static Node item(@Nullable final NodeList instance, final int index) {
 		return instance != null ? instance.item(index) : null;
 	}
