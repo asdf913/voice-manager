@@ -1738,7 +1738,7 @@ public abstract class Util {
 		return instance != null ? instance.getAnnotations() : null;
 	}
 
-	static <T> void accept(@Nullable final Consumer<T> instance, final T value) {
+	static <T> void accept(@Nullable final Consumer<T> instance, @Nullable final T value) {
 		if (instance != null) {
 			instance.accept(value);
 		}
