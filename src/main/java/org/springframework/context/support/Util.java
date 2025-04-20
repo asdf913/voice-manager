@@ -1746,11 +1746,11 @@ public abstract class Util {
 		}
 	}
 
-	static Node item(final NodeList instance, final int index) {
+	static Node item(@Nullable final NodeList instance, final int index) {
 		return instance != null ? instance.item(index) : null;
 	}
 
-	static int getLength(final NodeList instance) {
+	static int getLength(@Nullable final NodeList instance) {
 		return instance != null ? instance.getLength() : 0;
 	}
 
