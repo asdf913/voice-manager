@@ -236,7 +236,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 	}
 
-	private static IValue0<String> getAttribute(final NodeList nodeList, final String attrbiuteName,
+	private static IValue0<String> getAttribute(@Nullable final NodeList nodeList, final String attrbiuteName,
 			final Predicate<String> predicate) {
 		//
 		Node node = null;
