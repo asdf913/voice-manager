@@ -80,6 +80,7 @@ import org.javatuples.valueintf.IValue0Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -1753,6 +1754,10 @@ public abstract class Util {
 
 	static int getLength(@Nullable final NodeList instance) {
 		return instance != null ? instance.getLength() : 0;
+	}
+
+	static NamedNodeMap getAttributes(final Node instance) {
+		return instance != null ? instance.getAttributes() : null;
 	}
 
 }

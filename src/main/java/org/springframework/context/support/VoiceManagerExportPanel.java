@@ -4154,7 +4154,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 							//
 							// Set Slide Name
 							//
-						setNodeValue(getNamedItem(getAttributes(pageCloned), "draw:name"), getSlideName(voice));
+						setNodeValue(getNamedItem(Util.getAttributes(pageCloned), "draw:name"), getSlideName(voice));
 						//
 						// p
 						//
@@ -4215,11 +4215,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		@Nullable
 		private static Node getNamedItem(@Nullable final NamedNodeMap instance, final String name) {
 			return instance != null ? instance.getNamedItem(name) : null;
-		}
-
-		@Nullable
-		private static NamedNodeMap getAttributes(@Nullable final Node instance) {
-			return instance != null ? instance.getAttributes() : null;
 		}
 
 		@Nullable
@@ -4551,7 +4546,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 			for (int i = 0; i < Util.getLength(plugins); i++) {
 				//
-				if ((attributes = getAttributes(Util.item(plugins, i))) == null) {
+				if ((attributes = Util.getAttributes(Util.item(plugins, i))) == null) {
 					//
 					continue;
 					//

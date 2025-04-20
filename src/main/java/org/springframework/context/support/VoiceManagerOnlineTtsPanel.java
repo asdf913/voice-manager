@@ -247,8 +247,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	private static IValue0<String> getAttribute(@Nullable final NodeList nodeList, final String attrbiuteName,
 			final Predicate<String> predicate) {
 		//
-		Node node = null;
-		//
 		NamedNodeMap attributes = null;
 		//
 		Node namedItem = null;
@@ -259,7 +257,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		for (int i = 0; i < Util.getLength(nodeList); i++) {
 			//
-			if ((node = Util.item(nodeList, i)) == null || (attributes = node.getAttributes()) == null
+			if ((attributes = Util.getAttributes(Util.item(nodeList, i))) == null
 					|| (namedItem = attributes.getNamedItem(attrbiuteName)) == null) {
 				//
 				continue;
