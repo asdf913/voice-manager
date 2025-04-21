@@ -22,8 +22,6 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
-import javax.swing.JTextField;
-import javax.swing.text.JTextComponent;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
