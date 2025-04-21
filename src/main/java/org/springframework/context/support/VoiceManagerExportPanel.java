@@ -4154,7 +4154,8 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 							//
 							// Set Slide Name
 							//
-						setNodeValue(getNamedItem(Util.getAttributes(pageCloned), "draw:name"), getSlideName(voice));
+						setNodeValue(Util.getNamedItem(Util.getAttributes(pageCloned), "draw:name"),
+								getSlideName(voice));
 						//
 						// p
 						//
@@ -4210,11 +4211,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 			return newOdfPresentationDocument;
 			//
-		}
-
-		@Nullable
-		private static Node getNamedItem(@Nullable final NamedNodeMap instance, final String name) {
-			return instance != null ? instance.getNamedItem(name) : null;
 		}
 
 		@Nullable
