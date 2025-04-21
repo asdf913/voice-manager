@@ -10,6 +10,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -40,6 +41,9 @@ import org.htmlunit.html.HtmlPage;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.ElementUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -105,7 +109,21 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 										ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
 						MigLayout::new));
 		//
-		add(new JLabel("Input"));
+		final Iterable<Element> elements = ElementUtil.select(testAndApply(Objects::nonNull,
+				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), "textarea");
+		//
+		final int size = IterableUtils.size(elements);
+		//
+		if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		add(new JLabel(StringUtils.defaultIfBlank(
+				ElementUtil.text(previousElementSibling(ElementUtil
+						.parent(testAndApply(x -> size == 1, elements, x -> IterableUtils.get(x, 0), null)))),
+				"Text")));
 		//
 		final int width = 375;
 		//
@@ -123,6 +141,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		tfUrl.setEditable(false);
 		//
+	}
+
+	private static Element previousElementSibling(final Element instance) {
+		return instance != null ? instance.previousElementSibling() : null;
 	}
 
 	private static void setLayout(@Nullable final Container instance, final LayoutManager layoutManager) {

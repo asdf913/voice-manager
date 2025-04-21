@@ -42,6 +42,7 @@ import org.htmlunit.SgmlPage;
 import org.htmlunit.html.DomNode;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
+import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,7 +62,8 @@ import javassist.util.proxy.ProxyUtil;
 class VoiceManagerOnlineTtsPanelTest {
 
 	private static Method METHOD_GET_LAYOUT_MANAGER, METHOD_TEST_AND_APPLY, METHOD_QUERY_SELECTOR,
-			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT, METHOD_GET_ATTRIBUTE = null;
+			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT, METHOD_GET_ATTRIBUTE,
+			METHOD_PREVIOUS_ELEMENT_SIBLING = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -84,6 +86,9 @@ class VoiceManagerOnlineTtsPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_ATTRIBUTE = clz.getDeclaredMethod("getAttribute", NodeList.class, String.class, Predicate.class))
+				.setAccessible(true);
+		//
+		(METHOD_PREVIOUS_ELEMENT_SIBLING = clz.getDeclaredMethod("previousElementSibling", Element.class))
 				.setAccessible(true);
 		//
 	}
@@ -458,6 +463,28 @@ class VoiceManagerOnlineTtsPanelTest {
 				return null;
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPreviousElementSibling() throws Throwable {
+		//
+		Assertions.assertNull(
+				previousElementSibling(Util.cast(Element.class, Narcissus.allocateInstance(Element.class))));
+		//
+	}
+
+	private static Element previousElementSibling(final Element instance) throws Throwable {
+		try {
+			final Object obj = METHOD_PREVIOUS_ELEMENT_SIBLING.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Element) {
+				return (Element) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
