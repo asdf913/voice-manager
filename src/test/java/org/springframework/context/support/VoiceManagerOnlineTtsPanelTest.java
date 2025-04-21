@@ -23,7 +23,9 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
+import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JTextField;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
@@ -76,7 +78,8 @@ class VoiceManagerOnlineTtsPanelTest {
 	private static Method METHOD_GET_LAYOUT_MANAGER, METHOD_TEST_AND_APPLY, METHOD_QUERY_SELECTOR,
 			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT, METHOD_GET_ATTRIBUTE,
 			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME, METHOD_GET_ANNOTATION,
-			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS = null;
+			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
+			METHOD_SET_TEXT_CONTENT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -117,6 +120,12 @@ class VoiceManagerOnlineTtsPanelTest {
 		(METHOD_TEST_AND_RUN_THROWS = clz.getDeclaredMethod("testAndRunThrows", Boolean.TYPE, ThrowingRunnable.class))
 				.setAccessible(true);
 		//
+		(METHOD_SET_VALUES = clz.getDeclaredMethod("setValues", HtmlPage.class, Map.class, String.class, Object.class))
+				.setAccessible(true);
+		//
+		(METHOD_SET_TEXT_CONTENT = clz.getDeclaredMethod("setTextContent", Node.class, String.class))
+				.setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -132,6 +141,12 @@ class VoiceManagerOnlineTtsPanelTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
 			//
+			if (Objects.equals(method != null ? method.getReturnType() : null, Void.TYPE)) {
+				//
+				return null;
+				//
+			} // if
+				//
 			final String methodName = Util.getName(method);
 			//
 			if (proxy instanceof Document && Objects.equals(methodName, "getElementsByTagName")) {
@@ -175,6 +190,10 @@ class VoiceManagerOnlineTtsPanelTest {
 			} else if (Objects.equals(Util.getName(method.getDeclaringClass()),
 					"org.springframework.context.support.VoiceManagerOnlineTtsPanel$Name")
 					&& Objects.equals(methodName, "value")) {
+				//
+				return null;
+				//
+			} else if (proxy instanceof ComboBoxModel && Objects.equals(methodName, "getSelectedItem")) {
 				//
 				return null;
 				//
@@ -653,6 +672,39 @@ class VoiceManagerOnlineTtsPanelTest {
 			final ThrowingRunnable<E> throwingRunnable) throws Throwable {
 		try {
 			METHOD_TEST_AND_RUN_THROWS.invoke(null, b, throwingRunnable);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetValues() {
+		//
+		Assertions.assertDoesNotThrow(() -> setValues(null, null, null, new JTextField()));
+		//
+		Assertions.assertDoesNotThrow(() -> setValues(null, null, null, Reflection.newProxy(ComboBoxModel.class, ih)));
+		//
+	}
+
+	private static void setValues(final HtmlPage htmlPage, final Map<String, String> voices, final String a,
+			final Object b) throws Throwable {
+		try {
+			METHOD_SET_VALUES.invoke(null, htmlPage, voices, a, b);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetTextContent() {
+		//
+		Assertions.assertDoesNotThrow(() -> setTextContent(Reflection.newProxy(Node.class, ih), null));
+		//
+	}
+
+	private static void setTextContent(final Node instance, final String textContent) throws Throwable {
+		try {
+			METHOD_SET_TEXT_CONTENT.invoke(null, instance, textContent);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

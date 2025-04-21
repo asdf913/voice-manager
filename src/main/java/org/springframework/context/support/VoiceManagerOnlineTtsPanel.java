@@ -71,6 +71,7 @@ import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationContextUtil;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -334,53 +335,55 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		final DomElement domElement = testAndApply(x -> IterableUtils.size(x) == 1, domElements,
 				x -> IterableUtils.get(x, 0), null);
 		//
-		if (domElement != null) {
+		if (b instanceof JTextComponent jtc) {
 			//
-			if (b instanceof JTextComponent jtc) {
+			setTextContent(domElement, Util.getText(jtc));
+			//
+		} else if (b instanceof ComboBoxModel cbm) {
+			//
+			final Object selectedItem = cbm.getSelectedItem();
+			//
+			final List<String> keys = Util.toList(Util.map(Util.filter(Util.stream(Util.entrySet(voices)),
+					x -> Objects.equals(Util.getValue(x), selectedItem)), Util::getKey));
+			//
+			final int size = IterableUtils.size(keys);
+			//
+			testAndRunThrows(size > 1, () -> {
 				//
-				domElement.setTextContent(Util.getText(jtc));
+				throw new IllegalStateException();
 				//
-			} else if (b instanceof ComboBoxModel cbm) {
+			});
+			//
+			if (size == 1 && domElement instanceof HtmlSelect htmlSelect) {
 				//
-				final Object selectedItem = cbm.getSelectedItem();
+				final Iterable<HtmlOption> options = Util.toList(Util.filter(Util.stream(getOptions(htmlSelect)),
+						x -> StringUtils.equals(getValueAttribute(x), IterableUtils.get(keys, 0))));
 				//
-				final List<String> keys = Util.toList(Util.map(Util.filter(Util.stream(Util.entrySet(voices)),
-						x -> Objects.equals(Util.getValue(x), selectedItem)), Util::getKey));
-				//
-				final int size = IterableUtils.size(keys);
-				//
-				testAndRunThrows(size > 1, () -> {
+				testAndRunThrows(IterableUtils.size(options) > 1, () -> {
 					//
 					throw new IllegalStateException();
 					//
 				});
 				//
-				if (size == 1 && domElement instanceof HtmlSelect htmlSelect) {
+				final HtmlOption htmlOption = testAndApply(x -> IterableUtils.size(x) == 1, options,
+						x -> IterableUtils.get(x, 0), null);
+				//
+				if (htmlOption != null) {
 					//
-					final Iterable<HtmlOption> options = Util.toList(Util.filter(Util.stream(getOptions(htmlSelect)),
-							x -> StringUtils.equals(getValueAttribute(x), IterableUtils.get(keys, 0))));
+					htmlSelect.setSelectedIndex(htmlOption.getIndex());
 					//
-					testAndRunThrows(IterableUtils.size(options) > 1, () -> {
-						//
-						throw new IllegalStateException();
-						//
-					});
-					//
-					final HtmlOption htmlOption = testAndApply(x -> IterableUtils.size(x) == 1, options,
-							x -> IterableUtils.get(x, 0), null);
-					//
-					if (htmlOption != null) {
-						//
-						htmlSelect.setSelectedIndex(htmlOption.getIndex());
-						//
-					} // if
-						//
 				} // if
 					//
 			} // if
 				//
 		} // if
 			//
+	}
+
+	private static void setTextContent(final Node instance, final String textContent) {
+		if (instance != null) {
+			instance.setTextContent(textContent);
+		}
 	}
 
 	@Nullable
