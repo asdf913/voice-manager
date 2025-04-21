@@ -163,7 +163,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
-	private static Element previousElementSibling(final Element instance) {
+	private static Element previousElementSibling(@Nullable final Element instance) {
 		return instance != null ? instance.previousElementSibling() : null;
 	}
 
