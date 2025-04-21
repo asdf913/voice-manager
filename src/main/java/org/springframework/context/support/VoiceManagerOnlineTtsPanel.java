@@ -383,10 +383,12 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static String value(@Nullable final Name instance) {
 		return instance != null ? instance.value() : null;
 	}
 
+	@Nullable
 	private static <T extends Annotation> T getAnnotation(@Nullable final AnnotatedElement instance,
 			final Class<T> annotationClass) {
 		return instance != null ? instance.getAnnotation(annotationClass) : null;
@@ -430,6 +432,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static List<HtmlOption> getOptions(@Nullable final HtmlSelect instance) {
 		return instance != null ? instance.getOptions() : null;
 	}
