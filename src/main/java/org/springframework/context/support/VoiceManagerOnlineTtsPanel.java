@@ -99,7 +99,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	private JTextComponent tfUrl = null;
 
 	@Name("SPKR")
-	private ComboBoxModel<?> cbmVoice = null;
+	private transient ComboBoxModel<?> cbmVoice = null;
 
 	private AbstractButton btnExecute = null;
 
