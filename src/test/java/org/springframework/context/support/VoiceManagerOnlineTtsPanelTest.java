@@ -3,6 +3,8 @@ package org.springframework.context.support;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.io.InputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -46,7 +48,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.htmlunit.SgmlPage;
 import org.htmlunit.html.DomElement;
 import org.htmlunit.html.DomNode;
+import org.htmlunit.html.HtmlOption;
 import org.htmlunit.html.HtmlPage;
+import org.htmlunit.html.HtmlSelect;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.jsoup.nodes.Element;
@@ -70,7 +74,8 @@ class VoiceManagerOnlineTtsPanelTest {
 
 	private static Method METHOD_GET_LAYOUT_MANAGER, METHOD_TEST_AND_APPLY, METHOD_QUERY_SELECTOR,
 			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT, METHOD_GET_ATTRIBUTE,
-			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME = null;
+			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME, METHOD_GET_ANNOTATION,
+			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -100,6 +105,13 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_GET_ELEMENTS_BY_NAME = clz.getDeclaredMethod("getElementsByName", HtmlPage.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_ANNOTATION = clz.getDeclaredMethod("getAnnotation", AnnotatedElement.class, Class.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_VALUE_ATTRIBUTE = clz.getDeclaredMethod("getValueAttribute", HtmlOption.class)).setAccessible(true);
+		//
+		(METHOD_GET_OPTIONS = clz.getDeclaredMethod("getOptions", HtmlSelect.class)).setAccessible(true);
 		//
 	}
 
@@ -151,6 +163,16 @@ class VoiceManagerOnlineTtsPanelTest {
 					&& args.length > 0) {
 				//
 				return MapUtils.getObject(namedItems, args[0]);
+				//
+			} else if (proxy instanceof AnnotatedElement && Objects.equals(methodName, "getAnnotation")) {
+				//
+				return null;
+				//
+			} else if (Objects.equals(Util.getName(method.getDeclaringClass()),
+					"org.springframework.context.support.VoiceManagerOnlineTtsPanel$Name")
+					&& Objects.equals(methodName, "value")) {
+				//
+				return null;
 				//
 			} // if
 				//
@@ -209,8 +231,6 @@ class VoiceManagerOnlineTtsPanelTest {
 		final AbstractButton btnExecute = new JButton();
 		//
 		FieldUtils.writeDeclaredField(instance, "btnExecute", btnExecute, true);
-		//
-		FieldUtils.writeDeclaredField(instance, "fields", Collections.singletonMap(null, null), true);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnExecute, 0, null)));
 		//
@@ -275,8 +295,18 @@ class VoiceManagerOnlineTtsPanelTest {
 			//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
-				Assertions.assertNull(Narcissus.invokeStaticMethod(m, os), toString);
+				invoke = Narcissus.invokeStaticMethod(m, os);
 				//
+				if (Objects.equals(m.getReturnType(), Boolean.TYPE)) {
+					//
+					Assertions.assertNotNull(invoke, toString);
+					//
+				} else {
+					//
+					Assertions.assertNull(invoke, toString);
+					//
+				} // if
+					//
 			} else {
 				//
 				invoke = Narcissus.invokeMethod(new VoiceManagerOnlineTtsPanel(), m, os);
@@ -530,6 +560,76 @@ class VoiceManagerOnlineTtsPanelTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testGetAnnotation() throws Throwable {
+		//
+		Assertions.assertNull(getAnnotation(Reflection.newProxy(AnnotatedElement.class, ih), null));
+		//
+	}
+
+	private static <T extends Annotation> T getAnnotation(final AnnotatedElement instance,
+			final Class<T> annotationClass) throws Throwable {
+		try {
+			return (T) METHOD_GET_ANNOTATION.invoke(null, instance, annotationClass);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetValueAttribute() throws Throwable {
+		//
+		Assertions.assertNull(
+				getValueAttribute(Util.cast(HtmlOption.class, Narcissus.allocateInstance(HtmlOption.class))));
+		//
+	}
+
+	private static final String getValueAttribute(final HtmlOption instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_VALUE_ATTRIBUTE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetOptions() throws Throwable {
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.emptySet(),
+				getOptions(Util.cast(HtmlSelect.class, Narcissus.allocateInstance(HtmlSelect.class)))));
+		//
+	}
+
+	private static List<HtmlOption> getOptions(final HtmlSelect instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_OPTIONS.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testValue() throws NoSuchMethodException {
+		//
+		final Class<?> clz = Util.forName("org.springframework.context.support.VoiceManagerOnlineTtsPanel$Name");
+		//
+		Assertions.assertNull(Narcissus.invokeStaticMethod(
+				VoiceManagerOnlineTtsPanel.class.getDeclaredMethod("value", clz), Reflection.newProxy(clz, ih)));
+		//
 	}
 
 }

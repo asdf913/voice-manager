@@ -5,24 +5,30 @@ import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.net.URL;
-import java.util.LinkedHashMap;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -41,7 +47,9 @@ import org.htmlunit.WebClient;
 import org.htmlunit.html.DomElement;
 import org.htmlunit.html.DomElementUtil;
 import org.htmlunit.html.DomNode;
+import org.htmlunit.html.HtmlOption;
 import org.htmlunit.html.HtmlPage;
+import org.htmlunit.html.HtmlSelect;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -81,18 +89,21 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
-	private @interface Note {
+	private @interface Name {
 		String value();
 	}
 
-	@Note("Text")
+	@Name("SYNTEXT")
 	private JTextComponent taText = null;
 
 	private JTextComponent tfUrl = null;
 
+	@Name("SPKR")
+	private ComboBoxModel<?> cbmVoice = null;
+
 	private AbstractButton btnExecute = null;
 
-	private Map<String, JTextComponent> fields = null;
+	private Map<String, String> voices = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
@@ -118,18 +129,20 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 										ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
 						MigLayout::new));
 		//
-		final Iterable<Element> elements = ElementUtil.select(testAndApply(Objects::nonNull,
-				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null), "textarea");
+		final org.jsoup.nodes.Document document = testAndApply(Objects::nonNull,
+				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null);
 		//
-		final int size = IterableUtils.size(elements);
+		// 合成テキスト(最大200字)
 		//
-		if (size > 1) {
+		Iterable<Element> elements = ElementUtil.select(document, "textarea");
+		//
+		if (IterableUtils.size(elements) > 1) {
 			//
 			throw new IllegalStateException();
 			//
 		} // if
 			//
-		final Element element = testAndApply(x -> size == 1, elements, x -> IterableUtils.get(x, 0), null);
+		Element element = testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null);
 		//
 		add(new JLabel(StringUtils.defaultIfBlank(Util.collect(
 				Util.map(Util.stream(NodeUtil.childNodes(previousElementSibling(ElementUtil.parent(element)))), x -> {
@@ -152,7 +165,27 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		add(new JScrollPane(taText = new JTextArea()), String.format("wrap,growy,wmin %1$spx", width));
 		//
-		Util.put(fields = ObjectUtils.getIfNull(fields, LinkedHashMap::new), NodeUtil.attr(element, "name"), taText);
+		// 話者
+		//
+		if (IterableUtils.size(elements = ElementUtil.select(document, "select")) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		add(new JLabel(StringUtils.defaultIfBlank(ElementUtil
+				.text(previousElementSibling(ElementUtil.parent(element = testAndApply(x -> IterableUtils.size(x) == 1,
+						elements, x -> IterableUtils.get(x, 0), null)))),
+				"Voice")));
+		//
+		add(testAndApply(Objects::nonNull,
+				cbmVoice = testAndApply(Objects::nonNull,
+						Util.toArray(
+								Util.values(voices = Util.collect(Util.stream(ElementUtil.children(element)),
+										Collectors.toMap(x -> NodeUtil.attr(x, "value"), x -> ElementUtil.text(x)))),
+								new String[] {}),
+						DefaultComboBoxModel::new, null),
+				JComboBox::new, x -> new JComboBox<>()), "wrap");
 		//
 		add(new JLabel());
 		//
@@ -252,36 +285,80 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 			try (final WebClient webClient = new WebClient()) {
 				//
-				HtmlPage htmlPage = testAndApply(Objects::nonNull, url, webClient::getPage, null);
+				final HtmlPage htmlPage = testAndApply(Objects::nonNull, url, webClient::getPage, null);
 				//
-				if (Util.iterator(Util.entrySet(fields)) != null) {
-					//
-					List<DomElement> domElements = null;
-					//
-					DomElement domElement = null;
-					//
-					for (final Entry<String, JTextComponent> entry : Util.entrySet(fields)) {
-						//
-						if (IterableUtils.size(domElements = getElementsByName(htmlPage, Util.getKey(entry))) > 1) {
+				forEach(Util.collect(
+						Util.filter(
+								testAndApply(Objects::nonNull, VoiceManagerOnlineTtsPanel.class.getDeclaredFields(),
+										Arrays::stream, null),
+								f -> isAnnotationPresent(f, Name.class) && Narcissus.getField(this, f) != null),
+						Collectors.toMap(f -> value(getAnnotation(f, Name.class)), f -> Narcissus.getField(this, f))),
+						(a, b) -> {
 							//
-							throw new IllegalStateException();
+							final List<DomElement> domElements = getElementsByName(htmlPage, a);
 							//
-						} else if ((domElement = testAndApply(x -> IterableUtils.size(x) == 1, domElements,
-								x -> IterableUtils.get(x, 0), null)) == null) {
+							if (IterableUtils.size(domElements) > 1) {
+								//
+								throw new IllegalStateException();
+								//
+							} // if
+								//
+							final DomElement domElement = testAndApply(x -> IterableUtils.size(x) == 1, domElements,
+									x -> IterableUtils.get(x, 0), null);
 							//
-							continue;
-							//
-						} // if
-							//
-						domElement.setTextContent(Util.getText(Util.getValue(entry)));
-						//
-					} // for
-						//
-				} // if
-					//
+							if (domElement != null) {
+								//
+								if (b instanceof JTextComponent jtc) {
+									//
+									domElement.setTextContent(Util.getText(jtc));
+									//
+								} else if (b instanceof ComboBoxModel cbm) {
+									//
+									final Object selectedItem = cbm.getSelectedItem();
+									//
+									final List<String> keys = Util.toList(Util.map(
+											Util.filter(Util.stream(Util.entrySet(voices)),
+													x -> Objects.equals(Util.getValue(x), selectedItem)),
+											x -> Util.getKey(x)));
+									//
+									final int size = IterableUtils.size(keys);
+									//
+									if (size > 1) {
+										//
+										throw new IllegalStateException();
+										//
+									} else if (size == 1 && domElement instanceof HtmlSelect htmlSelect) {
+										//
+										final Iterable<HtmlOption> options = Util.toList(
+												Util.filter(Util.stream(getOptions(htmlSelect)), x -> StringUtils
+														.equals(getValueAttribute(x), IterableUtils.get(keys, 0))));
+										//
+										if (IterableUtils.size(options) > 1) {
+											//
+											throw new IllegalStateException();
+											//
+										} // if
+											//
+										final HtmlOption htmlOption = testAndApply(x -> IterableUtils.size(x) == 1,
+												options, x -> IterableUtils.get(x, 0), null);
+										//
+										if (htmlOption != null) {
+											//
+											htmlSelect.setSelectedIndex(htmlOption.getIndex());
+											//
+										} // if
+											//
+									} // if
+										//
+								} // if
+									//
+							} // if
+								//
+						});
+				//
 				testAndAccept(Objects::nonNull,
 						getAttribute(
-								getElementsByTagName(htmlPage = Util.cast(HtmlPage.class,
+								getElementsByTagName(Util.cast(HtmlPage.class,
 										DomElementUtil.click(Util.cast(DomElement.class,
 												querySelector(htmlPage, "input[type=\"submit\"]")))),
 										"source"),
@@ -297,6 +374,62 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static String value(final Name instance) {
+		return instance != null ? instance.value() : null;
+	}
+
+	private static <T extends Annotation> T getAnnotation(final AnnotatedElement instance,
+			final Class<T> annotationClass) {
+		return instance != null ? instance.getAnnotation(annotationClass) : null;
+	}
+
+	private static boolean isAnnotationPresent(final AnnotatedElement instance,
+			final Class<? extends Annotation> annotationClass) {
+		return instance != null && instance.isAnnotationPresent(annotationClass);
+	}
+
+	private static final String getValueAttribute(final HtmlOption instance) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, FieldUtils.getAllFields(Util.getClass(instance)), Arrays::stream, null),
+				f -> Objects.equals(Util.getName(f), "attributes_")));
+		//
+		final int size = IterableUtils.size(fs);
+		//
+		if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f != null && Narcissus.getField(instance, f) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return instance.getValueAttribute();
+		//
+	}
+
+	private static List<HtmlOption> getOptions(final HtmlSelect instance) {
+		return instance != null ? instance.getOptions() : null;
+	}
+
+	private static <K, V> void forEach(final Map<K, V> instance, final BiConsumer<? super K, ? super V> action) {
+		if (instance != null) {
+			instance.forEach(action);
+		}
 	}
 
 	@Nullable
