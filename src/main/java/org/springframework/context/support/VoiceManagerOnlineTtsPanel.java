@@ -297,7 +297,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 	}
 
-	private static List<DomElement> getElementsByName(final HtmlPage instance, final String name) {
+	private static List<DomElement> getElementsByName(@Nullable final HtmlPage instance, final String name) {
 		return instance != null ? instance.getElementsByName(name) : null;
 	}
 
