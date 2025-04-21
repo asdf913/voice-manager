@@ -298,9 +298,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 										Arrays::stream, null),
 								f -> isAnnotationPresent(f, Name.class) && Narcissus.getField(this, f) != null),
 						Collectors.toMap(f -> value(getAnnotation(f, Name.class)), f -> Narcissus.getField(this, f))),
-						(a, b) -> {
-							setValues(htmlPage, voices, a, b);
-						});
+						(a, b) -> setValues(htmlPage, voices, a, b));
 				//
 				testAndAccept(Objects::nonNull,
 						getAttribute(
