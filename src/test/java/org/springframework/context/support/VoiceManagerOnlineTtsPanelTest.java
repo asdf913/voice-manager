@@ -58,6 +58,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.meeuw.functional.ThrowingRunnable;
+import org.meeuw.functional.ThrowingRunnableUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -75,7 +77,7 @@ class VoiceManagerOnlineTtsPanelTest {
 	private static Method METHOD_GET_LAYOUT_MANAGER, METHOD_TEST_AND_APPLY, METHOD_QUERY_SELECTOR,
 			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT, METHOD_GET_ATTRIBUTE,
 			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME, METHOD_GET_ANNOTATION,
-			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS = null;
+			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -112,6 +114,9 @@ class VoiceManagerOnlineTtsPanelTest {
 		(METHOD_GET_VALUE_ATTRIBUTE = clz.getDeclaredMethod("getValueAttribute", HtmlOption.class)).setAccessible(true);
 		//
 		(METHOD_GET_OPTIONS = clz.getDeclaredMethod("getOptions", HtmlSelect.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_RUN_THROWS = clz.getDeclaredMethod("testAndRunThrows", Boolean.TYPE, ThrowingRunnable.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -249,6 +254,8 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		Class<?>[] parameterTypes = null;
 		//
+		Class<?> parameterType = null;
+		//
 		Object[] os = null;
 		//
 		String toString = null;
@@ -277,9 +284,13 @@ class VoiceManagerOnlineTtsPanelTest {
 			//
 			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
 				//
-				if (Objects.equals(Integer.TYPE, parameterTypes[j])) {
+				if (Objects.equals(parameterType = parameterTypes[j], Integer.TYPE)) {
 					//
 					Util.add(collection, Integer.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Boolean.TYPE)) {
+					//
+					Util.add(collection, Boolean.FALSE);
 					//
 				} else {
 					//
@@ -630,6 +641,22 @@ class VoiceManagerOnlineTtsPanelTest {
 		Assertions.assertNull(Narcissus.invokeStaticMethod(
 				VoiceManagerOnlineTtsPanel.class.getDeclaredMethod("value", clz), Reflection.newProxy(clz, ih)));
 		//
+	}
+
+	@Test
+	void testTestAndRunThrows() {
+		//
+		Assertions.assertDoesNotThrow(() -> testAndRunThrows(true, null));
+		//
+	}
+
+	private static <E extends Throwable> void testAndRunThrows(final boolean b,
+			final ThrowingRunnable<E> throwingRunnable) throws Throwable {
+		try {
+			METHOD_TEST_AND_RUN_THROWS.invoke(null, b, throwingRunnable);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }

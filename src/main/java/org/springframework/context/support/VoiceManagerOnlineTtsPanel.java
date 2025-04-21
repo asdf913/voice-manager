@@ -59,6 +59,8 @@ import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.nodes.TextNodeUtil;
+import org.meeuw.functional.ThrowingRunnable;
+import org.meeuw.functional.ThrowingRunnableUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -136,12 +138,12 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		Iterable<Element> elements = ElementUtil.select(document, "textarea");
 		//
-		if (IterableUtils.size(elements) > 1) {
+		testAndRunThrows(IterableUtils.size(elements) > 1, () -> {
 			//
 			throw new IllegalStateException();
 			//
-		} // if
-			//
+		});
+		//
 		Element element = testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null);
 		//
 		add(new JLabel(StringUtils.defaultIfBlank(Util.collect(
@@ -167,12 +169,12 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		// 話者
 		//
-		if (IterableUtils.size(elements = ElementUtil.select(document, "select")) > 1) {
+		testAndRunThrows(IterableUtils.size(elements = ElementUtil.select(document, "select")) > 1, () -> {
 			//
 			throw new IllegalStateException();
 			//
-		} // if
-			//
+		});
+		//
 		add(new JLabel(StringUtils.defaultIfBlank(ElementUtil
 				.text(previousElementSibling(ElementUtil.parent(element = testAndApply(x -> IterableUtils.size(x) == 1,
 						elements, x -> IterableUtils.get(x, 0), null)))),
@@ -195,6 +197,13 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		tfUrl.setEditable(false);
 		//
+	}
+
+	private static <E extends Throwable> void testAndRunThrows(final boolean b,
+			final ThrowingRunnable<E> throwingRunnable) throws E {
+		if (b) {
+			ThrowingRunnableUtil.runThrows(throwingRunnable);
+		}
 	}
 
 	@Nullable
@@ -293,12 +302,12 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 							//
 							final List<DomElement> domElements = getElementsByName(htmlPage, a);
 							//
-							if (IterableUtils.size(domElements) > 1) {
+							testAndRunThrows(IterableUtils.size(domElements) > 1, () -> {
 								//
 								throw new IllegalStateException();
 								//
-							} // if
-								//
+							});
+							//
 							final DomElement domElement = testAndApply(x -> IterableUtils.size(x) == 1, domElements,
 									x -> IterableUtils.get(x, 0), null);
 							//
@@ -319,22 +328,24 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 									//
 									final int size = IterableUtils.size(keys);
 									//
-									if (size > 1) {
+									testAndRunThrows(size > 1, () -> {
 										//
 										throw new IllegalStateException();
 										//
-									} else if (size == 1 && domElement instanceof HtmlSelect htmlSelect) {
+									});
+									//
+									if (size == 1 && domElement instanceof HtmlSelect htmlSelect) {
 										//
 										final Iterable<HtmlOption> options = Util.toList(
 												Util.filter(Util.stream(getOptions(htmlSelect)), x -> StringUtils
 														.equals(getValueAttribute(x), IterableUtils.get(keys, 0))));
 										//
-										if (IterableUtils.size(options) > 1) {
+										testAndRunThrows(IterableUtils.size(options) > 1, () -> {
 											//
 											throw new IllegalStateException();
 											//
-										} // if
-											//
+										});
+										//
 										final HtmlOption htmlOption = testAndApply(x -> IterableUtils.size(x) == 1,
 												options, x -> IterableUtils.get(x, 0), null);
 										//
@@ -401,12 +412,12 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		final int size = IterableUtils.size(fs);
 		//
-		if (size > 1) {
+		testAndRunThrows(size > 1, () -> {
 			//
 			throw new IllegalStateException();
 			//
-		} // if
-			//
+		});
+		//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
 		if (f != null && Narcissus.getField(instance, f) == null) {
