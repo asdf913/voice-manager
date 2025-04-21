@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -292,12 +291,13 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				final HtmlPage htmlPage = testAndApply(Objects::nonNull, url, webClient::getPage, null);
 				//
-				forEach(Util.collect(
-						Util.filter(
-								testAndApply(Objects::nonNull, VoiceManagerOnlineTtsPanel.class.getDeclaredFields(),
-										Arrays::stream, null),
-								f -> isAnnotationPresent(f, Name.class) && Narcissus.getField(this, f) != null),
-						Collectors.toMap(f -> value(getAnnotation(f, Name.class)), f -> Narcissus.getField(this, f))),
+				Util.forEach(
+						Util.collect(
+								Util.filter(testAndApply(Objects::nonNull,
+										VoiceManagerOnlineTtsPanel.class.getDeclaredFields(), Arrays::stream, null),
+										f -> isAnnotationPresent(f, Name.class) && Narcissus.getField(this, f) != null),
+								Collectors.toMap(f -> value(getAnnotation(f, Name.class)),
+										f -> Narcissus.getField(this, f))),
 						(a, b) -> setValues(htmlPage, voices, a, b));
 				//
 				testAndAccept(Objects::nonNull,
@@ -437,13 +437,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	@Nullable
 	private static List<HtmlOption> getOptions(@Nullable final HtmlSelect instance) {
 		return instance != null ? instance.getOptions() : null;
-	}
-
-	private static <K, V> void forEach(@Nullable final Map<K, V> instance,
-			final BiConsumer<? super K, ? super V> action) {
-		if (instance != null) {
-			instance.forEach(action);
-		}
 	}
 
 	@Nullable

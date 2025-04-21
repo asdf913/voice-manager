@@ -30,6 +30,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
@@ -147,6 +148,12 @@ public abstract class Util {
 	}
 
 	static <T> void forEach(@Nullable final Iterable<T> instance, @Nullable final Consumer<? super T> action) {
+		if (instance != null && (action != null || Proxy.isProxyClass(getClass(instance)))) {
+			instance.forEach(action);
+		}
+	}
+
+	static <K, V> void forEach(final Map<K, V> instance, final BiConsumer<? super K, ? super V> action) {
 		if (instance != null && (action != null || Proxy.isProxyClass(getClass(instance)))) {
 			instance.forEach(action);
 		}

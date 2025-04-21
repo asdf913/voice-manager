@@ -49,6 +49,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.meeuw.functional.Consumers;
 import org.springframework.util.ReflectionUtils;
 
 import com.google.common.reflect.Reflection;
@@ -115,6 +116,12 @@ class UtilTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
+			if (Objects.equals(method != null ? method.getReturnType() : null, Void.TYPE)) {
+				//
+				return null;
+				//
+			} // if
+				//
 			final String methodName = Util.getName(method);
 			//
 			if (proxy instanceof Stream
@@ -178,10 +185,12 @@ class UtilTest {
 
 	private MH mh = null;
 
+	private IH ih = null;
+
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
-		stream = Reflection.newProxy(Stream.class, new IH());
+		stream = Reflection.newProxy(Stream.class, ih = new IH());
 		//
 		mh = new MH();
 		//
@@ -831,6 +840,23 @@ class UtilTest {
 		Assertions.assertNull(Util.matcher(pattern, null));
 		//
 		Assertions.assertNotNull(Util.matcher(pattern, "1"));
+		//
+	}
+
+	@Test
+	void testForEach() {
+		//
+		Util.filter(Arrays.stream(Util.getDeclaredMethods(Util.class)), m -> m != null
+				&& Objects.equals(Util.getName(m), "forEach") && m.getParameterCount() == 2 && Util.isStatic(m))
+				.forEach(m -> Narcissus.invokeStaticMethod(m, null, null));
+		//
+		final Map<?, ?> emptyMap = Collections.emptyMap();
+		//
+		Assertions.assertDoesNotThrow(() -> Util.forEach(emptyMap, null));
+		//
+		Assertions.assertDoesNotThrow(() -> Util.forEach(emptyMap, Consumers.biNop()));
+		//
+		Assertions.assertDoesNotThrow(() -> Util.forEach(Reflection.newProxy(Map.class, ih), null));
 		//
 	}
 

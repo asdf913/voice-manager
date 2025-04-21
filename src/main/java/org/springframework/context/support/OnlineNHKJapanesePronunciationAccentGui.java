@@ -956,7 +956,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 			addElement(mcbmAudioFormat, null);
 			//
-			audioUrls.forEach((k, v) -> addElement(mcbmAudioFormat, k));
+			Util.forEach(audioUrls, (k, v) -> addElement(mcbmAudioFormat, k));
 			//
 		} // if
 			//
