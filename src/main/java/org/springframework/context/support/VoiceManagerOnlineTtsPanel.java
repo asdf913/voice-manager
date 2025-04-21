@@ -381,7 +381,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		return instance != null ? instance.getAnnotation(annotationClass) : null;
 	}
 
-	private static boolean isAnnotationPresent(final AnnotatedElement instance,
+	private static boolean isAnnotationPresent(@Nullable final AnnotatedElement instance,
 			final Class<? extends Annotation> annotationClass) {
 		return instance != null && instance.isAnnotationPresent(annotationClass);
 	}
@@ -423,7 +423,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		return instance != null ? instance.getOptions() : null;
 	}
 
-	private static <K, V> void forEach(final Map<K, V> instance, final BiConsumer<? super K, ? super V> action) {
+	private static <K, V> void forEach(@Nullable final Map<K, V> instance,
+			final BiConsumer<? super K, ? super V> action) {
 		if (instance != null) {
 			instance.forEach(action);
 		}
