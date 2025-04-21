@@ -25,6 +25,8 @@ import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
 
@@ -84,7 +86,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	}
 
 	@Note("Text")
-	private JTextComponent tfText = null;
+	private JTextComponent taText = null;
 
 	private JTextComponent tfUrl = null;
 
@@ -148,9 +150,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		final int width = 375;
 		//
-		add(tfText = new JTextField(), String.format("wrap,growy,wmin %1$spx", width));
+		add(new JScrollPane(taText = new JTextArea()), String.format("wrap,growy,wmin %1$spx", width));
 		//
-		Util.put(fields = ObjectUtils.getIfNull(fields, LinkedHashMap::new), NodeUtil.attr(element, "name"), tfText);
+		Util.put(fields = ObjectUtils.getIfNull(fields, LinkedHashMap::new), NodeUtil.attr(element, "name"), taText);
 		//
 		add(new JLabel());
 		//
