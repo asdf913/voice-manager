@@ -299,68 +299,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 								f -> isAnnotationPresent(f, Name.class) && Narcissus.getField(this, f) != null),
 						Collectors.toMap(f -> value(getAnnotation(f, Name.class)), f -> Narcissus.getField(this, f))),
 						(a, b) -> {
-							//
-							final List<DomElement> domElements = getElementsByName(htmlPage, a);
-							//
-							testAndRunThrows(IterableUtils.size(domElements) > 1, () -> {
-								//
-								throw new IllegalStateException();
-								//
-							});
-							//
-							final DomElement domElement = testAndApply(x -> IterableUtils.size(x) == 1, domElements,
-									x -> IterableUtils.get(x, 0), null);
-							//
-							if (domElement != null) {
-								//
-								if (b instanceof JTextComponent jtc) {
-									//
-									domElement.setTextContent(Util.getText(jtc));
-									//
-								} else if (b instanceof ComboBoxModel cbm) {
-									//
-									final Object selectedItem = cbm.getSelectedItem();
-									//
-									final List<String> keys = Util.toList(Util.map(
-											Util.filter(Util.stream(Util.entrySet(voices)),
-													x -> Objects.equals(Util.getValue(x), selectedItem)),
-											Util::getKey));
-									//
-									final int size = IterableUtils.size(keys);
-									//
-									testAndRunThrows(size > 1, () -> {
-										//
-										throw new IllegalStateException();
-										//
-									});
-									//
-									if (size == 1 && domElement instanceof HtmlSelect htmlSelect) {
-										//
-										final Iterable<HtmlOption> options = Util.toList(
-												Util.filter(Util.stream(getOptions(htmlSelect)), x -> StringUtils
-														.equals(getValueAttribute(x), IterableUtils.get(keys, 0))));
-										//
-										testAndRunThrows(IterableUtils.size(options) > 1, () -> {
-											//
-											throw new IllegalStateException();
-											//
-										});
-										//
-										final HtmlOption htmlOption = testAndApply(x -> IterableUtils.size(x) == 1,
-												options, x -> IterableUtils.get(x, 0), null);
-										//
-										if (htmlOption != null) {
-											//
-											htmlSelect.setSelectedIndex(htmlOption.getIndex());
-											//
-										} // if
-											//
-									} // if
-										//
-								} // if
-									//
-							} // if
-								//
+							setValues(htmlPage, voices, a, b);
 						});
 				//
 				testAndAccept(Objects::nonNull,
@@ -378,6 +317,69 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				LoggerUtil.error(LOG, e.getMessage(), e);
 				//
 			} // try
+				//
+		} // if
+			//
+	}
+
+	private static void setValues(final HtmlPage htmlPage, final Map<String, String> voices, final String a,
+			final Object b) {
+		//
+		final List<DomElement> domElements = getElementsByName(htmlPage, a);
+		//
+		testAndRunThrows(IterableUtils.size(domElements) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final DomElement domElement = testAndApply(x -> IterableUtils.size(x) == 1, domElements,
+				x -> IterableUtils.get(x, 0), null);
+		//
+		if (domElement != null) {
+			//
+			if (b instanceof JTextComponent jtc) {
+				//
+				domElement.setTextContent(Util.getText(jtc));
+				//
+			} else if (b instanceof ComboBoxModel cbm) {
+				//
+				final Object selectedItem = cbm.getSelectedItem();
+				//
+				final List<String> keys = Util.toList(Util.map(Util.filter(Util.stream(Util.entrySet(voices)),
+						x -> Objects.equals(Util.getValue(x), selectedItem)), Util::getKey));
+				//
+				final int size = IterableUtils.size(keys);
+				//
+				testAndRunThrows(size > 1, () -> {
+					//
+					throw new IllegalStateException();
+					//
+				});
+				//
+				if (size == 1 && domElement instanceof HtmlSelect htmlSelect) {
+					//
+					final Iterable<HtmlOption> options = Util.toList(Util.filter(Util.stream(getOptions(htmlSelect)),
+							x -> StringUtils.equals(getValueAttribute(x), IterableUtils.get(keys, 0))));
+					//
+					testAndRunThrows(IterableUtils.size(options) > 1, () -> {
+						//
+						throw new IllegalStateException();
+						//
+					});
+					//
+					final HtmlOption htmlOption = testAndApply(x -> IterableUtils.size(x) == 1, options,
+							x -> IterableUtils.get(x, 0), null);
+					//
+					if (htmlOption != null) {
+						//
+						htmlSelect.setSelectedIndex(htmlOption.getIndex());
+						//
+					} // if
+						//
+				} // if
+					//
+			} // if
 				//
 		} // if
 			//
