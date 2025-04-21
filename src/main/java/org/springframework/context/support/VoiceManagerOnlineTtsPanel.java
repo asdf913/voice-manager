@@ -178,14 +178,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 						elements, x -> IterableUtils.get(x, 0), null)))),
 				"Voice")));
 		//
-		add(testAndApply(Objects::nonNull,
-				cbmVoice = testAndApply(Objects::nonNull,
-						Util.toArray(
-								Util.values(voices = Util.collect(Util.stream(ElementUtil.children(element)),
-										Collectors.toMap(x -> NodeUtil.attr(x, "value"), x -> ElementUtil.text(x)))),
-								new String[] {}),
-						DefaultComboBoxModel::new, null),
-				JComboBox::new, x -> new JComboBox<>()), "wrap");
+		add(testAndApply(Objects::nonNull, cbmVoice = testAndApply(Objects::nonNull,
+				Util.toArray(Util.values(voices = Util.collect(Util.stream(ElementUtil.children(element)),
+						Collectors.toMap(x -> NodeUtil.attr(x, "value"), ElementUtil::text))), new String[] {}),
+				DefaultComboBoxModel::new, null), JComboBox::new, x -> new JComboBox<>()), "wrap");
 		//
 		add(new JLabel());
 		//
@@ -319,7 +315,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 									final List<String> keys = Util.toList(Util.map(
 											Util.filter(Util.stream(Util.entrySet(voices)),
 													x -> Objects.equals(Util.getValue(x), selectedItem)),
-											x -> Util.getKey(x)));
+											Util::getKey));
 									//
 									final int size = IterableUtils.size(keys);
 									//
