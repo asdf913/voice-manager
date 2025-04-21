@@ -390,6 +390,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		return instance != null && instance.isAnnotationPresent(annotationClass);
 	}
 
+	@Nullable
 	private static final String getValueAttribute(final HtmlOption instance) {
 		//
 		if (instance == null) {
