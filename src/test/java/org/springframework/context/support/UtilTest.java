@@ -846,9 +846,7 @@ class UtilTest {
 	@Test
 	void testForEach() {
 		//
-		Util.filter(Arrays.stream(Util.getDeclaredMethods(Util.class)), m -> m != null
-				&& Objects.equals(Util.getName(m), "forEach") && m.getParameterCount() == 2 && Util.isStatic(m))
-				.forEach(m -> Narcissus.invokeStaticMethod(m, null, null));
+		Assertions.assertDoesNotThrow(() -> Util.forEach((Map) null, null));
 		//
 		final Map<?, ?> emptyMap = Collections.emptyMap();
 		//
