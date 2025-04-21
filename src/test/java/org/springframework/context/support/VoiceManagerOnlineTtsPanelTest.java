@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -19,6 +20,10 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.text.JTextComponent;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
@@ -30,6 +35,7 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.MethodGen;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -37,9 +43,12 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.Consumers;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.htmlunit.SgmlPage;
+import org.htmlunit.html.DomElement;
 import org.htmlunit.html.DomNode;
+import org.htmlunit.html.HtmlPage;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.jsoup.nodes.Element;
@@ -63,7 +72,7 @@ class VoiceManagerOnlineTtsPanelTest {
 
 	private static Method METHOD_GET_LAYOUT_MANAGER, METHOD_TEST_AND_APPLY, METHOD_QUERY_SELECTOR,
 			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT, METHOD_GET_ATTRIBUTE,
-			METHOD_PREVIOUS_ELEMENT_SIBLING = null;
+			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -89,6 +98,9 @@ class VoiceManagerOnlineTtsPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_PREVIOUS_ELEMENT_SIBLING = clz.getDeclaredMethod("previousElementSibling", Element.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_ELEMENTS_BY_NAME = clz.getDeclaredMethod("getElementsByName", HtmlPage.class, String.class))
 				.setAccessible(true);
 		//
 	}
@@ -186,7 +198,7 @@ class VoiceManagerOnlineTtsPanelTest {
 	}
 
 	@Test
-	void testActionPerformed() {
+	void testActionPerformed() throws IllegalAccessException {
 		//
 		if (instance == null) {
 			//
@@ -195,6 +207,14 @@ class VoiceManagerOnlineTtsPanelTest {
 		} // if
 			//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent("", 0, null)));
+		//
+		final AbstractButton btnExecute = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnExecute", btnExecute, true);
+		//
+		FieldUtils.writeDeclaredField(instance, "fields", Collections.singletonMap(null, null), true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnExecute, 0, null)));
 		//
 	}
 
@@ -485,6 +505,28 @@ class VoiceManagerOnlineTtsPanelTest {
 				return null;
 			} else if (obj instanceof Element) {
 				return (Element) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetElementsByName() throws Throwable {
+		//
+		Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.emptySet(),
+				getElementsByName(Util.cast(HtmlPage.class, Narcissus.allocateInstance(HtmlPage.class)), null)));
+		//
+	}
+
+	private static List<DomElement> getElementsByName(final HtmlPage instance, final String name) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ELEMENTS_BY_NAME.invoke(null, instance, name);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

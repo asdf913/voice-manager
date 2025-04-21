@@ -11,6 +11,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -89,6 +90,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	private AbstractButton btnExecute = null;
 
+	private Map<String, JTextComponent> fields = null;
+
 	public void setUrl(final String url) {
 		this.url = url;
 	}
@@ -124,30 +127,30 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 		} // if
 			//
-		add(new JLabel(
-				StringUtils.defaultIfBlank(Util.collect(Util.map(
-						Util.stream(NodeUtil.childNodes(previousElementSibling(ElementUtil
-								.parent(testAndApply(x -> size == 1, elements, x -> IterableUtils.get(x, 0), null))))),
-						x -> {
-							//
-							if (x instanceof TextNode textNode) {
-								//
-								return TextNodeUtil.text(textNode);
-								//
-							} else if (x instanceof Element element
-									&& StringUtils.equalsIgnoreCase(ElementUtil.tagName(element), "br")) {
-								//
-								return "<br/>";
-								//
-							} // if
-								//
-							return Util.toString(x);
-							//
-						}), Collectors.joining("", "<html>", "</html>")), "Text")));
+		final Element element = testAndApply(x -> size == 1, elements, x -> IterableUtils.get(x, 0), null);
+		//
+		add(new JLabel(StringUtils.defaultIfBlank(Util.collect(
+				Util.map(Util.stream(NodeUtil.childNodes(previousElementSibling(ElementUtil.parent(element)))), x -> {
+					//
+					if (x instanceof TextNode textNode) {
+						//
+						return TextNodeUtil.text(textNode);
+						//
+					} else if (x instanceof Element e && StringUtils.equalsIgnoreCase(ElementUtil.tagName(e), "br")) {
+						//
+						return "<br/>";
+						//
+					} // if
+						//
+					return Util.toString(x);
+					//
+				}), Collectors.joining("", "<html>", "</html>")), "Text")));
 		//
 		final int width = 375;
 		//
 		add(tfText = new JTextField(), String.format("wrap,growy,wmin %1$spx", width));
+		//
+		Util.put(fields = ObjectUtils.getIfNull(fields, LinkedHashMap::new), NodeUtil.attr(element, "name"), tfText);
 		//
 		add(new JLabel());
 		//
@@ -248,21 +251,30 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				HtmlPage htmlPage = testAndApply(Objects::nonNull, url, webClient::getPage, null);
 				//
-				final NodeList nodeList = getElementsByTagName(htmlPage, "textarea");
-				//
-				Node node = null;
-				//
-				for (int i = 0; i < Util.getLength(nodeList); i++) {
+				if (Util.iterator(Util.entrySet(fields)) != null) {
 					//
-					if ((node = Util.item(nodeList, i)) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					node.setTextContent(Util.getText(tfText));
+					List<DomElement> domElements = null;
 					//
-				} // for
+					DomElement domElement = null;
+					//
+					for (final Entry<String, JTextComponent> entry : Util.entrySet(fields)) {
+						//
+						if (IterableUtils.size(domElements = getElementsByName(htmlPage, Util.getKey(entry))) > 1) {
+							//
+							throw new IllegalStateException();
+							//
+						} else if ((domElement = testAndApply(x -> IterableUtils.size(x) == 1, domElements,
+								x -> IterableUtils.get(x, 0), null)) == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						domElement.setTextContent(Util.getText(Util.getValue(entry)));
+						//
+					} // for
+						//
+				} // if
 					//
 				testAndAccept(Objects::nonNull,
 						getAttribute(
@@ -282,6 +294,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static List<DomElement> getElementsByName(final HtmlPage instance, final String name) {
+		return instance != null ? instance.getElementsByName(name) : null;
 	}
 
 	@Nullable
