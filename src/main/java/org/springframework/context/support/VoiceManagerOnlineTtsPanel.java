@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
@@ -44,6 +45,9 @@ import org.javatuples.valueintf.IValue0Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.ElementUtil;
+import org.jsoup.nodes.NodeUtil;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.nodes.TextNodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -120,14 +124,30 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 		} // if
 			//
-		add(new JLabel(StringUtils.defaultIfBlank(
-				ElementUtil.text(previousElementSibling(ElementUtil
-						.parent(testAndApply(x -> size == 1, elements, x -> IterableUtils.get(x, 0), null)))),
-				"Text")));
+		add(new JLabel(
+				StringUtils.defaultIfBlank(Util.collect(Util.map(
+						Util.stream(NodeUtil.childNodes(previousElementSibling(ElementUtil
+								.parent(testAndApply(x -> size == 1, elements, x -> IterableUtils.get(x, 0), null))))),
+						x -> {
+							//
+							if (x instanceof TextNode textNode) {
+								//
+								return TextNodeUtil.text(textNode);
+								//
+							} else if (x instanceof Element element
+									&& StringUtils.equalsIgnoreCase(ElementUtil.tagName(element), "br")) {
+								//
+								return "<br/>";
+								//
+							} // if
+								//
+							return Util.toString(x);
+							//
+						}), Collectors.joining("", "<html>", "</html>")), "Text")));
 		//
 		final int width = 375;
 		//
-		add(tfText = new JTextField(), String.format("wrap,wmin %1$spx", width));
+		add(tfText = new JTextField(), String.format("wrap,growy,wmin %1$spx", width));
 		//
 		add(new JLabel());
 		//
