@@ -379,7 +379,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 	}
 
-	private static void setTextContent(final Node instance, final String textContent) {
+	private static void setTextContent(@Nullable final Node instance, final String textContent) {
 		if (instance != null) {
 			instance.setTextContent(textContent);
 		}
