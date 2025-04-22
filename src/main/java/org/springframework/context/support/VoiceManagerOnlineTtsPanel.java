@@ -222,6 +222,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static Stream<Element> selectStream(@Nullable final Element instance, final String cssQuery) {
 		return instance != null && StringUtils.isNotBlank(cssQuery) ? instance.selectStream(cssQuery) : null;
 	}
