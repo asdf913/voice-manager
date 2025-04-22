@@ -113,6 +113,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	@Name("F0SHIFT")
 	private JTextComponent tfPitch = null;
 
+	@Name("DURATION")
+	private JTextComponent tfDuration = null;
+
 	private JTextComponent tfUrl = null;
 
 	@Name("SPKR")
@@ -259,6 +262,34 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		add(new JLabel(label));
 		//
 		add(tfPitch = new JTextField(StringUtils.defaultString(NodeUtil.attr(
+				element = testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null),
+				VALUE))),
+				(triple = getTriple(pattern, element)) != null ? String.format("wmin %1$spx", width)
+						: String.format("wmin %1$spx,%2$s", width, wrap));
+		//
+		if (triple != null) {
+			//
+			add(new JLabel(triple.getLeft()));
+			//
+			add(new JLabel(triple.getMiddle()));
+			//
+			add(new JLabel(triple.getRight()), wrap);
+			//
+		} // if
+			//
+			// 話速
+			//
+		testAndRunThrows(
+				IterableUtils.size(elements = getParentPreviousElementSiblingByLabel(document, label = "話速")) > 1,
+				() -> {
+					//
+					throw new IllegalStateException();
+					//
+				});
+		//
+		add(new JLabel(label));
+		//
+		add(tfDuration = new JTextField(StringUtils.defaultString(NodeUtil.attr(
 				element = testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null),
 				VALUE))),
 				(triple = getTriple(pattern, element)) != null ? String.format("wmin %1$spx", width)
