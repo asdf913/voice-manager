@@ -1739,7 +1739,7 @@ public abstract class Util {
 		//
 	}
 
-	static int groupCount(final Matcher instance) {
+	static int groupCount(@Nullable final Matcher instance) {
 		//
 		if (instance == null) {
 			//
@@ -1769,7 +1769,7 @@ public abstract class Util {
 	}
 
 	@Nullable
-	static String group(final Matcher instance, final int group) {
+	static String group(@Nullable final Matcher instance, final int group) {
 		//
 		if (instance == null) {
 			//
