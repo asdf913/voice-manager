@@ -81,7 +81,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT, METHOD_GET_ATTRIBUTE,
 			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME, METHOD_GET_ANNOTATION,
 			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
-			METHOD_SELECT_STREAM = null;
+			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -126,6 +126,9 @@ class VoiceManagerOnlineTtsPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_SELECT_STREAM = clz.getDeclaredMethod("selectStream", Element.class, String.class)).setAccessible(true);
+		//
+		(METHOD_SET_SELECTED_INDEX = clz.getDeclaredMethod("setSelectedIndex", HtmlSelect.class, HtmlOption.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -228,6 +231,8 @@ class VoiceManagerOnlineTtsPanelTest {
 
 	private Element element = null;
 
+	private HtmlOption htmlOption = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -236,6 +241,8 @@ class VoiceManagerOnlineTtsPanelTest {
 		nodeList = Reflection.newProxy(NodeList.class, ih = new IH());
 		//
 		element = Util.cast(Element.class, Narcissus.allocateInstance(Element.class));
+		//
+		htmlOption = Util.cast(HtmlOption.class, Narcissus.allocateInstance(HtmlOption.class));
 		//
 	}
 
@@ -608,8 +615,7 @@ class VoiceManagerOnlineTtsPanelTest {
 	@Test
 	void testGetValueAttribute() throws Throwable {
 		//
-		Assertions.assertNull(
-				getValueAttribute(Util.cast(HtmlOption.class, Narcissus.allocateInstance(HtmlOption.class))));
+		Assertions.assertNull(getValueAttribute(htmlOption));
 		//
 	}
 
@@ -715,6 +721,25 @@ class VoiceManagerOnlineTtsPanelTest {
 				return (Stream) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetSelectedIndex() {
+		//
+		final HtmlSelect htmlSelect = Util.cast(HtmlSelect.class, Narcissus.allocateInstance(HtmlSelect.class));
+		//
+		Assertions.assertDoesNotThrow(() -> setSelectedIndex(htmlSelect, null));
+		//
+		Assertions.assertDoesNotThrow(() -> setSelectedIndex(htmlSelect, htmlOption));
+		//
+	}
+
+	private static void setSelectedIndex(final HtmlSelect htmlSelect, final HtmlOption htmlOption) throws Throwable {
+		try {
+			METHOD_SET_SELECTED_INDEX.invoke(null, htmlSelect, htmlOption);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

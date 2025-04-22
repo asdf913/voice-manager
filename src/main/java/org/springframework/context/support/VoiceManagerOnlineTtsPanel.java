@@ -489,17 +489,47 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 					//
 				});
 				//
-				final HtmlOption htmlOption = testAndApply(x -> IterableUtils.size(x) == 1, options,
-						x -> IterableUtils.get(x, 0), null);
+				setSelectedIndex(htmlSelect,
+						testAndApply(x -> IterableUtils.size(x) == 1, options, x -> IterableUtils.get(x, 0), null));
 				//
-				if (htmlOption != null) {
-					//
-					htmlSelect.setSelectedIndex(htmlOption.getIndex());
-					//
-				} // if
-					//
 			} // if
 				//
+		} // if
+			//
+	}
+
+	private static void setSelectedIndex(final HtmlSelect htmlSelect, final HtmlOption htmlOption) {
+		//
+		if (htmlSelect == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final Iterable<Field> fs = Util
+				.toList(Util.filter(testAndApply(Objects::nonNull, FieldUtils.getAllFields(Util.getClass(htmlSelect)),
+						Arrays::stream, null), f -> Objects.equals(Util.getName(f), "attributes_")));
+		//
+		final int size = IterableUtils.size(fs);
+		//
+		testAndRunThrows(size > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f != null && Narcissus.getField(htmlSelect, f) == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		if (htmlOption != null) {
+			//
+			htmlSelect.setSelectedIndex(htmlOption.getIndex());
+			//
 		} // if
 			//
 	}
