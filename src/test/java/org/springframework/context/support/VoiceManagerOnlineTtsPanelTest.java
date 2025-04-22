@@ -761,11 +761,11 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		final String string = "1";
 		//
-		final Matcher matcher = Util.matcher(Pattern.compile("\\d+"), string);
+		final Matcher m = Util.matcher(Pattern.compile("\\d+"), string);
 		//
-		Assertions.assertTrue(Util.matches(matcher));
+		Assertions.assertTrue(Util.matches(m));
 		//
-		Assertions.assertEquals(0, groupCount(matcher));
+		Assertions.assertEquals(0, groupCount(m));
 		//
 	}
 
@@ -788,11 +788,11 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		final String string = "1";
 		//
-		final Matcher matcher = Util.matcher(Pattern.compile("\\d+"), string);
+		final Matcher m = Util.matcher(Pattern.compile("\\d+"), string);
 		//
-		Assertions.assertTrue(Util.matches(matcher));
+		Assertions.assertTrue(Util.matches(m));
 		//
-		Assertions.assertSame(string, group(matcher, 0));
+		Assertions.assertSame(string, group(m, 0));
 		//
 	}
 
