@@ -243,18 +243,20 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		add(tfQuality = new JTextField(StringUtils.defaultString(NodeUtil.attr(element, VALUE))),
 				Util.apply(function, triple));
 		//
-		if (triple != null) {
+		final Consumer<Triple<String, String, String>> consumer = x -> {
 			//
-			add(new JLabel(triple.getLeft()));
+			add(new JLabel(getLeft(x)));
 			//
-			add(new JLabel(triple.getMiddle()));
+			add(new JLabel(getMiddle(x)));
 			//
-			add(new JLabel(triple.getRight()), wrap);
+			add(new JLabel(getRight(x)), wrap);
 			//
-		} // if
-			//
-			// ピッチシフト
-			//
+		};
+		//
+		testAndAccept(Objects::nonNull, triple, consumer);
+		//
+		// ピッチシフト
+		//
 		testAndRunThrows(
 				IterableUtils.size(elements = getParentPreviousElementSiblingByLabel(document, label = "ピッチシフト")) > 1,
 				() -> {
@@ -269,18 +271,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				element = testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null),
 				VALUE))), Util.apply(function, triple = getTriple(pattern, element)));
 		//
-		if (triple != null) {
-			//
-			add(new JLabel(triple.getLeft()));
-			//
-			add(new JLabel(triple.getMiddle()));
-			//
-			add(new JLabel(triple.getRight()), wrap);
-			//
-		} // if
-			//
-			// 話速
-			//
+		testAndAccept(Objects::nonNull, triple, consumer);
+		//
+		// 話速
+		//
 		testAndRunThrows(
 				IterableUtils.size(elements = getParentPreviousElementSiblingByLabel(document, label = "話速")) > 1,
 				() -> {
@@ -295,16 +289,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				element = testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null),
 				VALUE))), Util.apply(function, triple = getTriple(pattern, element)));
 		//
-		if (triple != null) {
-			//
-			add(new JLabel(triple.getLeft()));
-			//
-			add(new JLabel(triple.getMiddle()));
-			//
-			add(new JLabel(triple.getRight()), wrap);
-			//
-		} // if
-			//
+		testAndAccept(Objects::nonNull, triple, consumer);
+		//
 		add(new JLabel());
 		//
 		add(btnExecute = new JButton("Execute"), wrap);
@@ -317,6 +303,18 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		tfUrl.setEditable(false);
 		//
+	}
+
+	private static <L> L getLeft(final Triple<L, ?, ?> instance) {
+		return instance != null ? instance.getLeft() : null;
+	}
+
+	private static <M> M getMiddle(final Triple<?, M, ?> instance) {
+		return instance != null ? instance.getMiddle() : null;
+	}
+
+	private static <R> R getRight(final Triple<?, ?, R> instance) {
+		return instance != null ? instance.getRight() : null;
 	}
 
 	@Nullable
