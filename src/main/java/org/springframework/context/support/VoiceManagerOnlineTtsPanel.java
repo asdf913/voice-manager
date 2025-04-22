@@ -510,9 +510,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				.toList(Util.filter(testAndApply(Objects::nonNull, FieldUtils.getAllFields(Util.getClass(htmlSelect)),
 						Arrays::stream, null), f -> Objects.equals(Util.getName(f), "attributes_")));
 		//
-		final int size = IterableUtils.size(fs);
-		//
-		testAndRunThrows(size > 1, () -> {
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
 			//
 			throw new IllegalStateException();
 			//
