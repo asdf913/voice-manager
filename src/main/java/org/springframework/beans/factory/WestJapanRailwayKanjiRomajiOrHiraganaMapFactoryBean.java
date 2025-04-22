@@ -32,6 +32,7 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
+import org.apache.commons.lang3.tuple.TripleUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -167,8 +168,8 @@ public class WestJapanRailwayKanjiRomajiOrHiraganaMapFactoryBean extends StringM
 					//
 				} // if
 					//
-				TableUtil.put(table = ObjectUtils.getIfNull(table, HashBasedTable::create), triple.getLeft(),
-						triple.getMiddle(), triple.getRight());
+				TableUtil.put(table = ObjectUtils.getIfNull(table, HashBasedTable::create), TripleUtil.getLeft(triple),
+						TripleUtil.getMiddle(triple), TripleUtil.getRight(triple));
 				//
 			} // for
 				//

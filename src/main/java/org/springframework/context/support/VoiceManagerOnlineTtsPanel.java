@@ -49,6 +49,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Triple;
+import org.apache.commons.lang3.tuple.TripleUtil;
 import org.htmlunit.WebClient;
 import org.htmlunit.html.DomElement;
 import org.htmlunit.html.DomElementUtil;
@@ -245,11 +246,11 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		final Consumer<Triple<String, String, String>> consumer = x -> {
 			//
-			add(new JLabel(getLeft(x)));
+			add(new JLabel(TripleUtil.getLeft(x)));
 			//
-			add(new JLabel(getMiddle(x)));
+			add(new JLabel(TripleUtil.getMiddle(x)));
 			//
-			add(new JLabel(getRight(x)), wrap);
+			add(new JLabel(TripleUtil.getRight(x)), wrap);
 			//
 		};
 		//
@@ -303,18 +304,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		tfUrl.setEditable(false);
 		//
-	}
-
-	private static <L> L getLeft(final Triple<L, ?, ?> instance) {
-		return instance != null ? instance.getLeft() : null;
-	}
-
-	private static <M> M getMiddle(final Triple<?, M, ?> instance) {
-		return instance != null ? instance.getMiddle() : null;
-	}
-
-	private static <R> R getRight(final Triple<?, ?, R> instance) {
-		return instance != null ? instance.getRight() : null;
 	}
 
 	@Nullable
