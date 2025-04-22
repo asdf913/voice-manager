@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
@@ -46,9 +47,11 @@ import org.htmlunit.WebClient;
 import org.htmlunit.html.DomElement;
 import org.htmlunit.html.DomElementUtil;
 import org.htmlunit.html.DomNode;
+import org.htmlunit.html.HtmlInput;
 import org.htmlunit.html.HtmlOption;
 import org.htmlunit.html.HtmlPage;
 import org.htmlunit.html.HtmlSelect;
+import org.htmlunit.html.HtmlTextArea;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -58,6 +61,7 @@ import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.nodes.TextNodeUtil;
+import org.jsoup.select.Selector;
 import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.ThrowingRunnableUtil;
 import org.slf4j.Logger;
@@ -96,6 +100,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	@Name("SYNTEXT")
 	private JTextComponent taText = null;
+
+	@Name("SYNALPHA")
+	private JTextComponent tfQuality = null;
 
 	private JTextComponent tfUrl = null;
 
@@ -184,6 +191,24 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 						Collectors.toMap(x -> NodeUtil.attr(x, "value"), ElementUtil::text))), new String[] {}),
 				DefaultComboBoxModel::new, null), JComboBox::new, x -> new JComboBox<>()), "wrap");
 		//
+		// 声質
+		//
+		final String label = "声質";
+		//
+		testAndRunThrows(
+				IterableUtils.size(elements = Util
+						.toList(Util.filter(selectStream(document, "input[type=\"text\"]"), x -> StringUtils
+								.equals(ElementUtil.text(previousElementSibling(ElementUtil.parent(x))), label)))) > 1,
+				() -> {
+					//
+					throw new IllegalStateException();
+					//
+				});
+		//
+		add(new JLabel(label));
+		//
+		add(tfQuality = new JTextField(), String.format("wrap,wmin %1$spx", width));
+		//
 		add(new JLabel());
 		//
 		add(btnExecute = new JButton("Execute"), "wrap");
@@ -196,6 +221,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		tfUrl.setEditable(false);
 		//
+	}
+
+	private static Stream<Element> selectStream(final Element instance, final String cssQuery) {
+		return instance != null && StringUtils.isNotBlank(cssQuery) ? instance.selectStream(cssQuery) : null;
 	}
 
 	private static <E extends Throwable> void testAndRunThrows(final boolean b,
@@ -336,8 +365,18 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		if (b instanceof JTextComponent jtc) {
 			//
-			setTextContent(domElement, Util.getText(jtc));
+			final String text = Util.getText(jtc);
 			//
+			if (domElement instanceof HtmlTextArea) {
+				//
+				setTextContent(domElement, text);
+				//
+			} else if (domElement instanceof HtmlInput htmlInput) {
+				//
+				htmlInput.setValue(text);
+				//
+			} // if
+				//
 		} else if (b instanceof ComboBoxModel cbm) {
 			//
 			final Object selectedItem = cbm.getSelectedItem();

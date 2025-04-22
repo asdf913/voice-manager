@@ -20,6 +20,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
@@ -79,7 +80,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT, METHOD_GET_ATTRIBUTE,
 			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME, METHOD_GET_ANNOTATION,
 			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
-			METHOD_SET_TEXT_CONTENT = null;
+			METHOD_SET_TEXT_CONTENT, METHOD_SELECT_STREAM = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -125,6 +126,8 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_SET_TEXT_CONTENT = clz.getDeclaredMethod("setTextContent", Node.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_SELECT_STREAM = clz.getDeclaredMethod("selectStream", Element.class, String.class)).setAccessible(true);
 		//
 	}
 
@@ -231,12 +234,16 @@ class VoiceManagerOnlineTtsPanelTest {
 
 	private NodeList nodeList = null;
 
+	private Element element = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new VoiceManagerOnlineTtsPanel();
 		//
 		nodeList = Reflection.newProxy(NodeList.class, ih = new IH());
+		//
+		element = Util.cast(Element.class, Narcissus.allocateInstance(Element.class));
 		//
 	}
 
@@ -550,8 +557,7 @@ class VoiceManagerOnlineTtsPanelTest {
 	@Test
 	void testPreviousElementSibling() throws Throwable {
 		//
-		Assertions.assertNull(
-				previousElementSibling(Util.cast(Element.class, Narcissus.allocateInstance(Element.class))));
+		Assertions.assertNull(previousElementSibling(element));
 		//
 	}
 
@@ -705,6 +711,33 @@ class VoiceManagerOnlineTtsPanelTest {
 	private static void setTextContent(final Node instance, final String textContent) throws Throwable {
 		try {
 			METHOD_SET_TEXT_CONTENT.invoke(null, instance, textContent);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSelectStream() throws Throwable {
+		//
+		Assertions.assertNull(selectStream(element, null));
+		//
+		Assertions.assertNull(selectStream(element, ""));
+		//
+		Assertions.assertNull(selectStream(element, " "));
+		//
+		Assertions.assertNotNull(selectStream(element, "a"));
+		//
+	}
+
+	private static Stream<Element> selectStream(final Element instance, final String cssQuery) throws Throwable {
+		try {
+			final Object obj = METHOD_SELECT_STREAM.invoke(null, instance, cssQuery);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Stream) {
+				return (Stream) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
