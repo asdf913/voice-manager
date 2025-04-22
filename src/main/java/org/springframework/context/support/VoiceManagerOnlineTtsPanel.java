@@ -92,7 +92,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	private static final Logger LOG = LoggerFactory.getLogger(VoiceManagerOnlineTtsPanel.class);
 
-	private static final String VALUE = VALUE;
+	private static final String VALUE = "value";
 
 	private transient ApplicationContext applicationContext = null;
 
