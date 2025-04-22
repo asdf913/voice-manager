@@ -206,7 +206,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		add(new JLabel(label));
 		//
-		add(tfQuality = new JTextField(), String.format("wrap,wmin %1$spx", width));
+		add(tfQuality = new JTextField(StringUtils.defaultString(NodeUtil.attr(
+				testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null), "value"))),
+				String.format("wrap,wmin %1$spx", width));
 		//
 		add(new JLabel());
 		//
