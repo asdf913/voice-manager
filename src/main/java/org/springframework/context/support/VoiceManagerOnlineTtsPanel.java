@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -155,8 +156,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		Element element = testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null);
 		//
-		final Function<Element, Element> parentPreviousElementSibling = x -> previousElementSibling(
-				ElementUtil.parent(x));
+		final UnaryOperator<Element> parentPreviousElementSibling = x -> previousElementSibling(ElementUtil.parent(x));
 		//
 		add(new JLabel(StringUtils.defaultIfBlank(Util.collect(
 				Util.map(Util.stream(NodeUtil.childNodes(Util.apply(parentPreviousElementSibling, element))), x -> {
