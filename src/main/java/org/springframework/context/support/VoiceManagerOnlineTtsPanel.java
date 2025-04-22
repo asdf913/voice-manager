@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
@@ -198,10 +199,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 																elements, x -> IterableUtils.get(x, 0), null))),
 								"Voice")));
 		//
-		add(testAndApply(Objects::nonNull, cbmVoice = testAndApply(Objects::nonNull,
+		add(Util.cast(Component.class, testAndApply(Objects::nonNull, cbmVoice = testAndApply(Objects::nonNull,
 				Util.toArray(Util.values(voices = Util.collect(Util.stream(ElementUtil.children(element)),
 						Collectors.toMap(x -> NodeUtil.attr(x, "value"), ElementUtil::text))), new String[] {}),
-				DefaultComboBoxModel::new, null), JComboBox::new, x -> new JComboBox<>()));
+				DefaultComboBoxModel::new, null), JComboBox::new, x -> new JComboBox<>())));
 		//
 		add(new JLabel("最小"));
 		//
@@ -352,6 +353,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	public void actionPerformed(final ActionEvent evt) {
 		//
 		if (Objects.equals(Util.getSource(evt), btnExecute)) {
+			//
+			Util.setText(tfUrl, null);
 			//
 			try (final WebClient webClient = new WebClient()) {
 				//
