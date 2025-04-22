@@ -4485,7 +4485,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				TemplateUtil.process(ConfigurationUtil.getTemplate(configuration, key), map, writer);
 				//
-				setTextContent(node, Util.toString(writer));
+				Util.setTextContent(node, Util.toString(writer));
 				//
 			} catch (final IOException | TemplateException e) {
 				//
@@ -4498,13 +4498,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		@Nullable
 		private static String getTextContent(@Nullable final Node instance) {
 			return instance != null ? instance.getTextContent() : null;
-		}
-
-		private static void setTextContent(@Nullable final Node instance, final String textContent)
-				throws DOMException {
-			if (instance != null) {
-				instance.setTextContent(textContent);
-			}
 		}
 
 		private static Map<String, Object> describe(final Object data) throws Throwable {

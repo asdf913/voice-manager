@@ -83,7 +83,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT, METHOD_GET_ATTRIBUTE,
 			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME, METHOD_GET_ANNOTATION,
 			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
-			METHOD_SET_TEXT_CONTENT, METHOD_SELECT_STREAM, METHOD_GROUP_COUNT, METHOD_GROUP = null;
+			METHOD_SELECT_STREAM, METHOD_GROUP_COUNT, METHOD_GROUP = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -127,9 +127,6 @@ class VoiceManagerOnlineTtsPanelTest {
 		(METHOD_SET_VALUES = clz.getDeclaredMethod("setValues", HtmlPage.class, Map.class, String.class, Object.class))
 				.setAccessible(true);
 		//
-		(METHOD_SET_TEXT_CONTENT = clz.getDeclaredMethod("setTextContent", Node.class, String.class))
-				.setAccessible(true);
-		//
 		(METHOD_SELECT_STREAM = clz.getDeclaredMethod("selectStream", Element.class, String.class)).setAccessible(true);
 		//
 		(METHOD_GROUP_COUNT = clz.getDeclaredMethod("groupCount", Matcher.class)).setAccessible(true);
@@ -151,12 +148,6 @@ class VoiceManagerOnlineTtsPanelTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
 			//
-			if (Objects.equals(method != null ? method.getReturnType() : null, Void.TYPE)) {
-				//
-				return null;
-				//
-			} // if
-				//
 			final String methodName = Util.getName(method);
 			//
 			if (proxy instanceof Document && Objects.equals(methodName, "getElementsByTagName")) {
@@ -707,21 +698,6 @@ class VoiceManagerOnlineTtsPanelTest {
 			final Object b) throws Throwable {
 		try {
 			METHOD_SET_VALUES.invoke(null, htmlPage, voices, a, b);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetTextContent() {
-		//
-		Assertions.assertDoesNotThrow(() -> setTextContent(Reflection.newProxy(Node.class, ih), null));
-		//
-	}
-
-	private static void setTextContent(final Node instance, final String textContent) throws Throwable {
-		try {
-			METHOD_SET_TEXT_CONTENT.invoke(null, instance, textContent);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

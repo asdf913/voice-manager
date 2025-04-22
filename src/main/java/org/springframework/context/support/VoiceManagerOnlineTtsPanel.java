@@ -513,7 +513,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 			if (domElement instanceof HtmlTextArea) {
 				//
-				setTextContent(domElement, text);
+				Util.setTextContent(domElement, text);
 				//
 			} else if (domElement instanceof HtmlInput htmlInput) {
 				//
@@ -560,12 +560,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} // if
 			//
-	}
-
-	private static void setTextContent(@Nullable final Node instance, final String textContent) {
-		if (instance != null) {
-			instance.setTextContent(textContent);
-		}
 	}
 
 	@Nullable
