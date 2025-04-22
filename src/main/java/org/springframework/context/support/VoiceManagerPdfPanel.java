@@ -76,7 +76,6 @@ import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.ToIntFunction;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -248,8 +247,8 @@ import com.microsoft.playwright.BrowserTypeUtil;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.PageUtil;
 import com.microsoft.playwright.Playwright;
-import com.sun.jna.Native;
 import com.sun.jna.Library;
+import com.sun.jna.Native;
 import com.sun.jna.WString;
 
 import freemarker.template.Configuration;

@@ -21,8 +21,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
