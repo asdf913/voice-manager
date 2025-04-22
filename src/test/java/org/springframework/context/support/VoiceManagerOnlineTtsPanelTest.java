@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -20,6 +21,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -80,7 +83,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT, METHOD_GET_ATTRIBUTE,
 			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME, METHOD_GET_ANNOTATION,
 			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
-			METHOD_SET_TEXT_CONTENT, METHOD_SELECT_STREAM = null;
+			METHOD_SET_TEXT_CONTENT, METHOD_SELECT_STREAM, METHOD_GROUP_COUNT, METHOD_GROUP = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -128,6 +131,10 @@ class VoiceManagerOnlineTtsPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_SELECT_STREAM = clz.getDeclaredMethod("selectStream", Element.class, String.class)).setAccessible(true);
+		//
+		(METHOD_GROUP_COUNT = clz.getDeclaredMethod("groupCount", Matcher.class)).setAccessible(true);
+		//
+		(METHOD_GROUP = clz.getDeclaredMethod("group", Matcher.class, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -236,6 +243,8 @@ class VoiceManagerOnlineTtsPanelTest {
 
 	private Element element = null;
 
+	private Matcher matcher = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -244,6 +253,8 @@ class VoiceManagerOnlineTtsPanelTest {
 		nodeList = Reflection.newProxy(NodeList.class, ih = new IH());
 		//
 		element = Util.cast(Element.class, Narcissus.allocateInstance(Element.class));
+		//
+		matcher = Util.cast(Matcher.class, Narcissus.allocateInstance(Matcher.class));
 		//
 	}
 
@@ -333,7 +344,7 @@ class VoiceManagerOnlineTtsPanelTest {
 				//
 				invoke = Narcissus.invokeStaticMethod(m, os);
 				//
-				if (Objects.equals(m.getReturnType(), Boolean.TYPE)) {
+				if (Util.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE), m.getReturnType())) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
@@ -736,6 +747,62 @@ class VoiceManagerOnlineTtsPanelTest {
 				return null;
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGroupCount() throws Throwable {
+		//
+		Assertions.assertEquals(0, groupCount(matcher));
+		//
+		final String string = "1";
+		//
+		final Matcher matcher = Util.matcher(Pattern.compile("\\d+"), string);
+		//
+		Assertions.assertTrue(Util.matches(matcher));
+		//
+		Assertions.assertEquals(0, groupCount(matcher));
+		//
+	}
+
+	private static int groupCount(final Matcher instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GROUP_COUNT.invoke(null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGroup() throws Throwable {
+		//
+		Assertions.assertNull(group(matcher, 0));
+		//
+		final String string = "1";
+		//
+		final Matcher matcher = Util.matcher(Pattern.compile("\\d+"), string);
+		//
+		Assertions.assertTrue(Util.matches(matcher));
+		//
+		Assertions.assertSame(string, group(matcher, 0));
+		//
+	}
+
+	private static String group(final Matcher instance, final int group) throws Throwable {
+		try {
+			final Object obj = METHOD_GROUP.invoke(null, instance, group);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -48,6 +48,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.tuple.Triple;
 import org.htmlunit.WebClient;
 import org.htmlunit.html.DomElement;
 import org.htmlunit.html.DomElementUtil;
@@ -107,6 +108,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	@Name("SYNALPHA")
 	private JTextComponent tfQuality = null;
+
+	@Name("F0SHIFT")
+	private JTextComponent tfPitch = null;
 
 	private JTextComponent tfUrl = null;
 
@@ -212,12 +216,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		// 声質
 		//
-		final String label = "声質";
+		String label = "声質";
 		//
-		testAndRunThrows(
-				IterableUtils.size(elements = Util
-						.toList(Util.filter(selectStream(document, "input[type=\"text\"]"), x -> StringUtils
-								.equals(ElementUtil.text(Util.apply(parentPreviousElementSibling, x)), label)))) > 1,
+		testAndRunThrows(IterableUtils.size(elements = getParentPreviousElementSiblingByLabel(document, label)) > 1,
 				() -> {
 					//
 					throw new IllegalStateException();
@@ -226,23 +227,49 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		add(new JLabel(label));
 		//
-		final Matcher matcher = Util.matcher(
-				Pattern.compile("^\\((-?\\d+(\\.\\d+)?)〜(\\d+(\\.\\d+)?), 標準: (\\d+(\\.\\d+)?)\\)$"),
-				Util.toString(NodeUtil.nextSibling(element = testAndApply(x -> IterableUtils.size(x) == 1, elements,
-						x -> IterableUtils.get(x, 0), null))));
+		final Pattern pattern = Pattern.compile("^\\((-?\\d+(\\.\\d+)?)〜(\\d+(\\.\\d+)?), 標準: (\\d+(\\.\\d+)?)\\)$");
 		//
-		final int groupCount = Util.matches(matcher) ? matcher.groupCount() : 0;
+		Triple<String, String, String> triple = getTriple(pattern,
+				element = testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null));
 		//
 		add(tfQuality = new JTextField(StringUtils.defaultString(NodeUtil.attr(element, "value"))),
-				groupCount > 5 ? String.format("wmin %1$spx", width) : String.format("wmin %1$spx,%2$s", width, wrap));
+				triple != null ? String.format("wmin %1$spx", width) : String.format("wmin %1$spx,%2$s", width, wrap));
 		//
-		if (Util.matches(matcher) && groupCount > 5) {
+		if (triple != null) {
 			//
-			add(new JLabel(matcher.group(1)));
+			add(new JLabel(triple.getLeft()));
 			//
-			add(new JLabel(matcher.group(5)));
+			add(new JLabel(triple.getMiddle()));
 			//
-			add(new JLabel(matcher.group(3)), wrap);
+			add(new JLabel(triple.getRight()), wrap);
+			//
+		} // if
+			//
+			// ピッチシフト
+			//
+		testAndRunThrows(
+				IterableUtils.size(elements = getParentPreviousElementSiblingByLabel(document, label = "ピッチシフト")) > 1,
+				() -> {
+					//
+					throw new IllegalStateException();
+					//
+				});
+		//
+		add(new JLabel(label));
+		//
+		add(tfPitch = new JTextField(StringUtils.defaultString(NodeUtil.attr(
+				element = testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null),
+				"value"))),
+				(triple = getTriple(pattern, element)) != null ? String.format("wmin %1$spx", width)
+						: String.format("wmin %1$spx,%2$s", width, wrap));
+		//
+		if (triple != null) {
+			//
+			add(new JLabel(triple.getLeft()));
+			//
+			add(new JLabel(triple.getMiddle()));
+			//
+			add(new JLabel(triple.getRight()), wrap);
 			//
 		} // if
 			//
@@ -257,6 +284,80 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		add(tfUrl = new JTextField(), String.format("%1$s,wmin %2$spx", wrap, width));
 		//
 		tfUrl.setEditable(false);
+		//
+	}
+
+	private static Triple<String, String, String> getTriple(final Pattern pattern, final Element element) {
+		//
+		final Matcher matcher = Util.matcher(pattern, Util.toString(NodeUtil.nextSibling(element)));
+		//
+		return Util.matches(matcher) && groupCount(matcher) > 5
+				? Triple.of(group(matcher, 1), group(matcher, 5), group(matcher, 3))
+				: null;
+	}
+
+	private static int groupCount(final Matcher instance) {
+		//
+		if (instance == null) {
+			//
+			return 0;
+			//
+		} // if
+			//
+		final List<Field> fs = Util.toList(Util.filter(FieldUtils.getAllFieldsList(Util.getClass(instance)).stream(),
+				f -> Objects.equals(Util.getName(f), "parentPattern")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f != null && Narcissus.getField(instance, f) == null) {
+			//
+			return 0;
+			//
+		} // if
+			//
+		return instance.groupCount();
+		//
+	}
+
+	private static String group(final Matcher instance, final int group) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final List<Field> fs = Util.toList(Util.filter(FieldUtils.getAllFieldsList(Util.getClass(instance)).stream(),
+				f -> Objects.equals(Util.getName(f), "parentPattern")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f != null && Narcissus.getField(instance, f) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return instance.group(group);
+		//
+	}
+
+	private static Iterable<Element> getParentPreviousElementSiblingByLabel(final Element element, final String label) {
+		//
+		return Util.toList(Util.filter(selectStream(element, "input[type=\"text\"]"),
+				x -> StringUtils.equals(ElementUtil.text(previousElementSibling(ElementUtil.parent(x))), label)));
 		//
 	}
 
