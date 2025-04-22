@@ -1768,6 +1768,7 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	static String group(final Matcher instance, final int group) {
 		//
 		if (instance == null) {
