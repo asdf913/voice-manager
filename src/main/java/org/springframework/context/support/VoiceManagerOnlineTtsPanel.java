@@ -19,7 +19,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -151,8 +154,11 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		Element element = testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null);
 		//
+		final Function<Element, Element> parentPreviousElementSibling = x -> previousElementSibling(
+				ElementUtil.parent(x));
+		//
 		add(new JLabel(StringUtils.defaultIfBlank(Util.collect(
-				Util.map(Util.stream(NodeUtil.childNodes(previousElementSibling(ElementUtil.parent(element)))), x -> {
+				Util.map(Util.stream(NodeUtil.childNodes(Util.apply(parentPreviousElementSibling, element))), x -> {
 					//
 					if (x instanceof TextNode textNode) {
 						//
@@ -170,7 +176,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		final int width = 375;
 		//
-		add(new JScrollPane(taText = new JTextArea()), String.format("wrap,growy,wmin %1$spx", width));
+		final String wrap = "wrap";
+		//
+		add(new JScrollPane(taText = new JTextArea()), String.format("%1$s,growy,wmin %2$spx", wrap, width));
 		//
 		// 話者
 		//
@@ -180,15 +188,26 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 		});
 		//
-		add(new JLabel(StringUtils.defaultIfBlank(ElementUtil
-				.text(previousElementSibling(ElementUtil.parent(element = testAndApply(x -> IterableUtils.size(x) == 1,
-						elements, x -> IterableUtils.get(x, 0), null)))),
-				"Voice")));
+		add(new JLabel(
+				StringUtils
+						.defaultIfBlank(
+								ElementUtil
+										.text(Util
+												.apply(parentPreviousElementSibling,
+														element = testAndApply(x -> IterableUtils.size(x) == 1,
+																elements, x -> IterableUtils.get(x, 0), null))),
+								"Voice")));
 		//
 		add(testAndApply(Objects::nonNull, cbmVoice = testAndApply(Objects::nonNull,
 				Util.toArray(Util.values(voices = Util.collect(Util.stream(ElementUtil.children(element)),
 						Collectors.toMap(x -> NodeUtil.attr(x, "value"), ElementUtil::text))), new String[] {}),
-				DefaultComboBoxModel::new, null), JComboBox::new, x -> new JComboBox<>()), "wrap");
+				DefaultComboBoxModel::new, null), JComboBox::new, x -> new JComboBox<>()));
+		//
+		add(new JLabel("最小"));
+		//
+		add(new JLabel("標準"));
+		//
+		add(new JLabel("最大"), wrap);
 		//
 		// 声質
 		//
@@ -197,7 +216,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		testAndRunThrows(
 				IterableUtils.size(elements = Util
 						.toList(Util.filter(selectStream(document, "input[type=\"text\"]"), x -> StringUtils
-								.equals(ElementUtil.text(previousElementSibling(ElementUtil.parent(x))), label)))) > 1,
+								.equals(ElementUtil.text(Util.apply(parentPreviousElementSibling, x)), label)))) > 1,
 				() -> {
 					//
 					throw new IllegalStateException();
@@ -206,19 +225,35 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		add(new JLabel(label));
 		//
-		add(tfQuality = new JTextField(StringUtils.defaultString(NodeUtil.attr(
-				testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null), "value"))),
-				String.format("wrap,wmin %1$spx", width));
+		final Matcher matcher = Util.matcher(
+				Pattern.compile("^\\((-?\\d+(\\.\\d+)?)〜(\\d+(\\.\\d+)?), 標準: (\\d+(\\.\\d+)?)\\)$"),
+				Util.toString(NodeUtil.nextSibling(element = testAndApply(x -> IterableUtils.size(x) == 1, elements,
+						x -> IterableUtils.get(x, 0), null))));
 		//
+		final int groupCount = Util.matches(matcher) ? matcher.groupCount() : 0;
+		//
+		add(tfQuality = new JTextField(StringUtils.defaultString(NodeUtil.attr(element, "value"))),
+				groupCount > 5 ? String.format("wmin %1$spx", width) : String.format("wmin %1$spx,%2$s", width, wrap));
+		//
+		if (Util.matches(matcher) && groupCount > 5) {
+			//
+			add(new JLabel(matcher.group(1)));
+			//
+			add(new JLabel(matcher.group(5)));
+			//
+			add(new JLabel(matcher.group(3)), wrap);
+			//
+		} // if
+			//
 		add(new JLabel());
 		//
-		add(btnExecute = new JButton("Execute"), "wrap");
+		add(btnExecute = new JButton("Execute"), wrap);
 		//
 		btnExecute.addActionListener(this);
 		//
 		add(new JLabel("Output"));
 		//
-		add(tfUrl = new JTextField(), String.format("wrap,wmin %1$spx", width));
+		add(tfUrl = new JTextField(), String.format("%1$s,wmin %2$spx", wrap, width));
 		//
 		tfUrl.setEditable(false);
 		//
