@@ -1811,7 +1811,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				final BigDecimal fontSize3 = testAndApply(Util::matches,
 						Util.matcher(patternInteger = ObjectUtils.getIfNull(patternInteger,
 								() -> Pattern.compile("^(-?\\d+(\\.\\d+)?)$")), Util.getText(tfFontSize3)),
-						x -> new BigDecimal(group(x, 0)), null);
+						x -> new BigDecimal(Util.group(x, 0)), null);
 				//
 				final Map<String, String> descriptionStyle = testAndApply(
 						(a, b) -> Boolean.logicalAnd(a != null, b != null),
@@ -2213,8 +2213,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					FileUtils.deleteQuietly(file);
 					//
 					FileUtils.writeStringToFile(
-							file = Util.toFile(
-									Path.of(StringUtils.join(group(matcher, 1), ArrayUtils.get(fileExtensions, 0)))),
+							file = Util.toFile(Path
+									.of(StringUtils.join(Util.group(matcher, 1), ArrayUtils.get(fileExtensions, 0)))),
 							html, StandardCharsets.UTF_8, false);
 					//
 				} // if
@@ -3441,7 +3441,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 							value = testAndApply(x -> and(x, Util::matches, y -> Util.groupCount(y) > 0),
 									Util.matcher(pattern = ObjectUtils.getIfNull(pattern,
 											() -> Pattern.compile("^(\\d+%).+$")), value),
-									x -> group(x, 1), x -> value_)
+									x -> Util.group(x, 1), x -> value_)
 							//
 							, font, fontSize)) / 2, lastHeight = (getHeight(md) - Util.intValue(largestY, 0) - size
 					//
@@ -3880,11 +3880,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Nullable
 	private static Long length(@Nullable final File instance) {
 		return instance != null ? Long.valueOf(instance.length()) : null;
-	}
-
-	@Nullable
-	private static String group(@Nullable final MatchResult instance, final int group) {
-		return instance != null ? instance.group(group) : null;
 	}
 
 	private static <T> boolean and(@Nullable final T value, final Predicate<T> a, final Predicate<T> b) {

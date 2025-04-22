@@ -187,12 +187,16 @@ class UtilTest {
 
 	private IH ih = null;
 
+	private Matcher matcher = null;
+
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
 		stream = Reflection.newProxy(Stream.class, ih = new IH());
 		//
 		mh = new MH();
+		//
+		matcher = Util.cast(Matcher.class, Narcissus.allocateInstance(Matcher.class));
 		//
 	}
 
@@ -820,7 +824,7 @@ class UtilTest {
 		//
 		Assertions.assertFalse(Util.matches(null));
 		//
-		Assertions.assertFalse(Util.matches(Util.cast(Matcher.class, Narcissus.allocateInstance(Matcher.class))));
+		Assertions.assertFalse(Util.matches(matcher));
 		//
 		final Pattern pattern = Pattern.compile("\\d+");
 		//
@@ -846,8 +850,7 @@ class UtilTest {
 	@Test
 	void testGroupCount() throws Throwable {
 		//
-		Assertions.assertEquals(0,
-				Util.groupCount(Util.cast(Matcher.class, Narcissus.allocateInstance(Matcher.class))));
+		Assertions.assertEquals(0, Util.groupCount(matcher));
 		//
 		final String string = "1";
 		//
@@ -856,6 +859,21 @@ class UtilTest {
 		Assertions.assertTrue(Util.matches(m));
 		//
 		Assertions.assertEquals(0, Util.groupCount(m));
+		//
+	}
+
+	@Test
+	void testGroup() throws Throwable {
+		//
+		Assertions.assertNull(Util.group(matcher, 0));
+		//
+		final String string = "1";
+		//
+		final Matcher m = Util.matcher(Pattern.compile("\\d+"), string);
+		//
+		Assertions.assertTrue(Util.matches(m));
+		//
+		Assertions.assertSame(string, Util.group(m, 0));
 		//
 	}
 

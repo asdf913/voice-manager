@@ -1768,6 +1768,35 @@ public abstract class Util {
 		//
 	}
 
+	static String group(final Matcher instance, final int group) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final List<Field> fs = Util.toList(Util.filter(FieldUtils.getAllFieldsList(Util.getClass(instance)).stream(),
+				f -> Objects.equals(Util.getName(f), "parentPattern")));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f != null && Narcissus.getField(instance, f) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return instance.group(group);
+		//
+	}
+
 	@Nullable
 	static Class<? extends Annotation> annotationType(@Nullable final Annotation instance) {
 		return instance != null ? instance.annotationType() : null;

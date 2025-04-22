@@ -83,7 +83,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT, METHOD_GET_ATTRIBUTE,
 			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME, METHOD_GET_ANNOTATION,
 			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
-			METHOD_SELECT_STREAM, METHOD_GROUP = null;
+			METHOD_SELECT_STREAM = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -128,8 +128,6 @@ class VoiceManagerOnlineTtsPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_SELECT_STREAM = clz.getDeclaredMethod("selectStream", Element.class, String.class)).setAccessible(true);
-		//
-		(METHOD_GROUP = clz.getDeclaredMethod("group", Matcher.class, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -717,35 +715,6 @@ class VoiceManagerOnlineTtsPanelTest {
 				return null;
 			} else if (obj instanceof Stream) {
 				return (Stream) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGroup() throws Throwable {
-		//
-		Assertions.assertNull(group(Util.cast(Matcher.class, Narcissus.allocateInstance(Matcher.class)), 0));
-		//
-		final String string = "1";
-		//
-		final Matcher m = Util.matcher(Pattern.compile("\\d+"), string);
-		//
-		Assertions.assertTrue(Util.matches(m));
-		//
-		Assertions.assertSame(string, group(m, 0));
-		//
-	}
-
-	private static String group(final Matcher instance, final int group) throws Throwable {
-		try {
-			final Object obj = METHOD_GROUP.invoke(null, instance, group);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
