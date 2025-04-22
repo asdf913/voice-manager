@@ -288,6 +288,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static Triple<String, String, String> getTriple(final Pattern pattern, final Element element) {
 		//
 		final Matcher matcher = Util.matcher(pattern, Util.toString(NodeUtil.nextSibling(element)));
