@@ -92,6 +92,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	private static final Logger LOG = LoggerFactory.getLogger(VoiceManagerOnlineTtsPanel.class);
 
+	private static final String VALUE = VALUE;
+
 	private transient ApplicationContext applicationContext = null;
 
 	private String url = null;
@@ -204,7 +206,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		add(Util.cast(Component.class, testAndApply(Objects::nonNull, cbmVoice = testAndApply(Objects::nonNull,
 				Util.toArray(Util.values(voices = Util.collect(Util.stream(ElementUtil.children(element)),
-						Collectors.toMap(x -> NodeUtil.attr(x, "value"), ElementUtil::text))), new String[] {}),
+						Collectors.toMap(x -> NodeUtil.attr(x, VALUE), ElementUtil::text))), new String[] {}),
 				DefaultComboBoxModel::new, null), JComboBox::new, x -> new JComboBox<>())));
 		//
 		add(new JLabel("最小"));
@@ -231,7 +233,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		Triple<String, String, String> triple = getTriple(pattern,
 				element = testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null));
 		//
-		add(tfQuality = new JTextField(StringUtils.defaultString(NodeUtil.attr(element, "value"))),
+		add(tfQuality = new JTextField(StringUtils.defaultString(NodeUtil.attr(element, VALUE))),
 				triple != null ? String.format("wmin %1$spx", width) : String.format("wmin %1$spx,%2$s", width, wrap));
 		//
 		if (triple != null) {
@@ -258,7 +260,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		add(tfPitch = new JTextField(StringUtils.defaultString(NodeUtil.attr(
 				element = testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null),
-				"value"))),
+				VALUE))),
 				(triple = getTriple(pattern, element)) != null ? String.format("wmin %1$spx", width)
 						: String.format("wmin %1$spx,%2$s", width, wrap));
 		//
