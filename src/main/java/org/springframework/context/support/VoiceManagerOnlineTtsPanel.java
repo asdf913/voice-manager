@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
@@ -236,8 +237,11 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		Triple<String, String, String> triple = getTriple(pattern,
 				element = testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null));
 		//
+		final Function<Triple<?, ?, ?>, String> function = x -> x != null ? String.format("wmin %1$spx", width)
+				: String.format("wmin %1$spx,%2$s", width, wrap);
+		//
 		add(tfQuality = new JTextField(StringUtils.defaultString(NodeUtil.attr(element, VALUE))),
-				triple != null ? String.format("wmin %1$spx", width) : String.format("wmin %1$spx,%2$s", width, wrap));
+				Util.apply(function, triple));
 		//
 		if (triple != null) {
 			//
@@ -263,9 +267,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		add(tfPitch = new JTextField(StringUtils.defaultString(NodeUtil.attr(
 				element = testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null),
-				VALUE))),
-				(triple = getTriple(pattern, element)) != null ? String.format("wmin %1$spx", width)
-						: String.format("wmin %1$spx,%2$s", width, wrap));
+				VALUE))), Util.apply(function, triple = getTriple(pattern, element)));
 		//
 		if (triple != null) {
 			//
@@ -291,9 +293,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		add(tfDuration = new JTextField(StringUtils.defaultString(NodeUtil.attr(
 				element = testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null),
-				VALUE))),
-				(triple = getTriple(pattern, element)) != null ? String.format("wmin %1$spx", width)
-						: String.format("wmin %1$spx,%2$s", width, wrap));
+				VALUE))), Util.apply(function, triple = getTriple(pattern, element)));
 		//
 		if (triple != null) {
 			//
