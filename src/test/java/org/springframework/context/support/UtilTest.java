@@ -844,6 +844,22 @@ class UtilTest {
 	}
 
 	@Test
+	void testGroupCount() throws Throwable {
+		//
+		Assertions.assertEquals(0,
+				Util.groupCount(Util.cast(Matcher.class, Narcissus.allocateInstance(Matcher.class))));
+		//
+		final String string = "1";
+		//
+		final Matcher m = Util.matcher(Pattern.compile("\\d+"), string);
+		//
+		Assertions.assertTrue(Util.matches(m));
+		//
+		Assertions.assertEquals(0, Util.groupCount(m));
+		//
+	}
+
+	@Test
 	void testForEach() {
 		//
 		Assertions.assertDoesNotThrow(() -> Util.forEach((Map) null, null));

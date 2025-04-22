@@ -2208,7 +2208,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				final Matcher matcher = testAndApply((a, b) -> length(b) > 0, file, fileExtensions,
 						(a, b) -> Util.matcher(Pattern.compile("^([^.]+.)[^.]+$"), Util.getName(a)), null);
 				//
-				if (Util.matches(matcher) && groupCount(matcher) > 0) {
+				if (Util.matches(matcher) && Util.groupCount(matcher) > 0) {
 					//
 					FileUtils.deleteQuietly(file);
 					//
@@ -3438,7 +3438,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					cs.newLineAtOffset((index - 1) * size + (size - getTextWidth(
 							//
-							value = testAndApply(x -> and(x, Util::matches, y -> groupCount(y) > 0),
+							value = testAndApply(x -> and(x, Util::matches, y -> Util.groupCount(y) > 0),
 									Util.matcher(pattern = ObjectUtils.getIfNull(pattern,
 											() -> Pattern.compile("^(\\d+%).+$")), value),
 									x -> group(x, 1), x -> value_)
@@ -4091,10 +4091,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
-	}
-
-	private static int groupCount(@Nullable final Matcher instance) {
-		return instance != null ? instance.groupCount() : 0;
 	}
 
 	private static float getHeight(@Nullable final PDRectangle instance) {

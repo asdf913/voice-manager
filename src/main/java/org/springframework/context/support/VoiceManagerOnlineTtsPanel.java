@@ -293,38 +293,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		final Matcher matcher = Util.matcher(pattern, Util.toString(NodeUtil.nextSibling(element)));
 		//
-		return Util.matches(matcher) && groupCount(matcher) > 5
+		return Util.matches(matcher) && Util.groupCount(matcher) > 5
 				? Triple.of(group(matcher, 1), group(matcher, 5), group(matcher, 3))
 				: null;
-	}
-
-	private static int groupCount(@Nullable final Matcher instance) {
-		//
-		if (instance == null) {
-			//
-			return 0;
-			//
-		} // if
-			//
-		final List<Field> fs = Util.toList(Util.filter(FieldUtils.getAllFieldsList(Util.getClass(instance)).stream(),
-				f -> Objects.equals(Util.getName(f), "parentPattern")));
-		//
-		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
-			//
-			throw new IllegalStateException();
-			//
-		});
-		//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-		//
-		if (f != null && Narcissus.getField(instance, f) == null) {
-			//
-			return 0;
-			//
-		} // if
-			//
-		return instance.groupCount();
-		//
 	}
 
 	@Nullable
