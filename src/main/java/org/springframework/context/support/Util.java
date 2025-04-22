@@ -153,7 +153,8 @@ public abstract class Util {
 		}
 	}
 
-	static <K, V> void forEach(final Map<K, V> instance, final BiConsumer<? super K, ? super V> action) {
+	static <K, V> void forEach(@Nullable final Map<K, V> instance,
+			@Nullable final BiConsumer<? super K, ? super V> action) {
 		if (instance != null && (action != null || Proxy.isProxyClass(getClass(instance)))) {
 			instance.forEach(action);
 		}
