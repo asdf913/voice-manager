@@ -498,7 +498,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 	}
 
-	private static void setSelectedIndex(final HtmlSelect htmlSelect, final HtmlOption htmlOption) {
+	private static void setSelectedIndex(@Nullable final HtmlSelect htmlSelect, final HtmlOption htmlOption) {
 		//
 		if (htmlSelect == null) {
 			//
