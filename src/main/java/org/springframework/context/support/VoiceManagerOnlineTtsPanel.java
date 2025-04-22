@@ -326,6 +326,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static String group(@Nullable final Matcher instance, final int group) {
 		//
 		if (instance == null) {
