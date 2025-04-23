@@ -225,12 +225,10 @@ class VoiceManagerOnlineTtsPanelTest {
 			//
 			final String methodName = Util.getName(thisMethod);
 			//
-			if (self instanceof DomNode
-					&& Util.contains(Arrays.asList("querySelector", "getNextElementSibling"), methodName)) {
-				//
-				return null;
-				//
-			} else if (self instanceof Toolkit && Objects.equals(methodName, "getSystemClipboard")) {
+			if (Boolean.logicalOr(
+					self instanceof DomNode
+							&& Util.contains(Arrays.asList("querySelector", "getNextElementSibling"), methodName),
+					self instanceof Toolkit && Objects.equals(methodName, "getSystemClipboard"))) {
 				//
 				return null;
 				//
