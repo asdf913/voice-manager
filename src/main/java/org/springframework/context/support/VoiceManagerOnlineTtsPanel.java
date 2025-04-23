@@ -324,7 +324,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
-	private static void addActionListener(final AbstractButton instance, final ActionListener actionListener) {
+	private static void addActionListener(@Nullable final AbstractButton instance,
+			final ActionListener actionListener) {
 		if (instance != null) {
 			instance.addActionListener(actionListener);
 		}
@@ -510,7 +511,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 	}
 
-	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner) {
+	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
+			final ClipboardOwner owner) {
 		if (instance != null) {
 			instance.setContents(contents, owner);
 		}
