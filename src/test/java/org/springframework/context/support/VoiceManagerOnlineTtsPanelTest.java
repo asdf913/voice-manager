@@ -237,7 +237,7 @@ class VoiceManagerOnlineTtsPanelTest {
 
 	private Element element = null;
 
-	private HtmlOption htmlOption = null;;
+	private HtmlOption htmlOption = null;
 
 	private DomNode domNode = null;
 
