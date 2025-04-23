@@ -308,7 +308,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
-	private static void setEditable(final JTextComponent instance, final boolean b) {
+	private static void setEditable(@Nullable final JTextComponent instance, final boolean b) {
 		if (instance != null) {
 			instance.setEditable(b);
 		}
