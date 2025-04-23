@@ -520,7 +520,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		return Util.forName("org.junit.jupiter.api.Test") != null;
 	}
 
-	private static Clipboard getSystemClipboard(final Toolkit instance) {
+	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		return instance != null ? instance.getSystemClipboard() : null;
 	}
 
