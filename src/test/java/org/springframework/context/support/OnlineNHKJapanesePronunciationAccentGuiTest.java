@@ -14,8 +14,6 @@ import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;

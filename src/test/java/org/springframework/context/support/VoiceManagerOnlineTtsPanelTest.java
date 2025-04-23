@@ -3,8 +3,6 @@ package org.springframework.context.support;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.io.InputStream;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
