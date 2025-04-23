@@ -453,13 +453,14 @@ public abstract class Util {
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
-	static boolean isAnnotationPresent(final AnnotatedElement instance,
-			final Class<? extends Annotation> annotationClass) {
+	static boolean isAnnotationPresent(@Nullable final AnnotatedElement instance,
+			@Nullable final Class<? extends Annotation> annotationClass) {
 		return instance != null && (annotationClass != null || Proxy.isProxyClass(getClass(instance)))
 				&& instance.isAnnotationPresent(annotationClass);
 	}
 
-	static <T extends Annotation> T getAnnotation(final AnnotatedElement instance, final Class<T> annotationClass) {
+	static <T extends Annotation> T getAnnotation(@Nullable final AnnotatedElement instance,
+			@Nullable final Class<T> annotationClass) {
 		return instance != null && (annotationClass != null || Proxy.isProxyClass(getClass(instance)))
 				? instance.getAnnotation(annotationClass)
 				: null;
