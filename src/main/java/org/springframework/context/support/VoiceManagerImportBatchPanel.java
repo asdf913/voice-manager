@@ -4305,18 +4305,13 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		final FailableStream<Field> fs = new FailableStream<>(Util.filter(testAndApply(Objects::nonNull,
 				Util.getDeclaredFields(VoiceManagerImportBatchPanel.class), Arrays::stream, null), f -> {
-					final Group g = isAnnotationPresent(f, Group.class) ? f.getAnnotation(Group.class) : null;
+					final Group g = Util.isAnnotationPresent(f, Group.class) ? f.getAnnotation(Group.class) : null;
 					return StringUtils.equals(g != null ? g.value() : null, group);
 				}));
 		//
 		return Util.toList(FailableStreamUtil.stream(FailableStreamUtil.map(fs,
 				f -> f != null && instance != null ? FieldUtils.readField(f, instance, true) : null)));
 		//
-	}
-
-	private static boolean isAnnotationPresent(@Nullable final AnnotatedElement instance,
-			final Class<? extends Annotation> annotationClass) {
-		return instance != null && annotationClass != null && instance.isAnnotationPresent(annotationClass);
 	}
 
 	private static boolean isTestMode() {

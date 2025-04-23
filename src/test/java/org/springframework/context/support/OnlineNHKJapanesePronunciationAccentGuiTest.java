@@ -85,9 +85,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_MAP_INT_STREAM, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS,
 			METHOD_SAVE_PITCH_ACCENT_IMAGE, METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED,
 			METHOD_OPEN_STREAM, METHOD_ADD_ACTION_LISTENER, METHOD_GET_FIELD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT,
-			METHOD_SAVE_FILE, METHOD_IIF, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR,
-			METHOD_IS_ANNOTATION_PRESENT, METHOD_GET_ANNOTATION, METHOD_SET_PREFERRED_SIZE, METHOD_MAX,
-			METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
+			METHOD_SAVE_FILE, METHOD_IIF, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_GET_ANNOTATION,
+			METHOD_SET_PREFERRED_SIZE, METHOD_MAX, METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3,
+			METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -151,9 +151,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_CREATE_IMAGE_FORMAT_COMPARATOR = clz.getDeclaredMethod("createImageFormatComparator", List.class))
 				.setAccessible(true);
-		//
-		(METHOD_IS_ANNOTATION_PRESENT = clz.getDeclaredMethod("isAnnotationPresent", AnnotatedElement.class,
-				Class.class)).setAccessible(true);
 		//
 		(METHOD_GET_ANNOTATION = clz.getDeclaredMethod("getAnnotation", AnnotatedElement.class, Class.class))
 				.setAccessible(true);
@@ -1179,28 +1176,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return null;
 			} else if (obj instanceof Comparator) {
 				return (Comparator) obj;
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIsAnnotationPresent() throws Throwable {
-		//
-		Assertions.assertFalse(isAnnotationPresent(null, null));
-		//
-		Assertions.assertFalse(isAnnotationPresent(Object.class, null));
-		//
-	}
-
-	private static boolean isAnnotationPresent(final AnnotatedElement instance,
-			final Class<? extends Annotation> annotationClass) throws Throwable {
-		try {
-			final Object obj = METHOD_IS_ANNOTATION_PRESENT.invoke(null, instance, annotationClass);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

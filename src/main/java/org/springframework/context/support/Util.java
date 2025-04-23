@@ -453,6 +453,11 @@ public abstract class Util {
 		return instance != null ? instance.getDeclaredMethods() : null;
 	}
 
+	static boolean isAnnotationPresent(final AnnotatedElement instance,
+			final Class<? extends Annotation> annotationClass) {
+		return instance != null && instance.isAnnotationPresent(annotationClass);
+	}
+
 	@Nullable
 	static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		//

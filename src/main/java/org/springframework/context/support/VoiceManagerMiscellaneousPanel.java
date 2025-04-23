@@ -640,7 +640,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		final boolean headless = GraphicsEnvironment.isHeadless();
 		//
 		if (anyMatch(Util.stream(findFieldsByValue(Util.getDeclaredFields(getClass()), this, source)),
-				f -> isAnnotationPresent(f, ExportButton.class))) {
+				f -> Util.isAnnotationPresent(f, ExportButton.class))) {
 			//
 			Util.setText(tfExportFile, null);
 			//
@@ -656,7 +656,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 		final FailableStream<Field> fs = new FailableStream<>(
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManagerMiscellaneousPanel.class),
-						Arrays::stream, null), f -> isAnnotationPresent(f, SystemClipboard.class)));
+						Arrays::stream, null), f -> Util.isAnnotationPresent(f, SystemClipboard.class)));
 		//
 		testAndRun(Util.contains(Util.toList(Util.filter(
 				FailableStreamUtil.stream(FailableStreamUtil.map(fs, f -> FieldUtils.readField(f, this, true))),
@@ -1513,18 +1513,13 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 		final FailableStream<Field> fs = new FailableStream<>(Util.filter(testAndApply(Objects::nonNull,
 				Util.getDeclaredFields(VoiceManagerMiscellaneousPanel.class), Arrays::stream, null), f -> {
-					final Group g = isAnnotationPresent(f, Group.class) ? f.getAnnotation(Group.class) : null;
+					final Group g = Util.isAnnotationPresent(f, Group.class) ? f.getAnnotation(Group.class) : null;
 					return StringUtils.equals(g != null ? g.value() : null, group);
 				}));
 		//
 		return Util.toList(FailableStreamUtil.stream(
 				FailableStreamUtil.map(fs, f -> instance != null ? FieldUtils.readField(f, instance, true) : null)));
 		//
-	}
-
-	private static boolean isAnnotationPresent(@Nullable final AnnotatedElement instance,
-			@Nullable final Class<? extends Annotation> annotationClass) {
-		return instance != null && annotationClass != null && instance.isAnnotationPresent(annotationClass);
 	}
 
 	private LayoutManager cloneLayoutManager() {

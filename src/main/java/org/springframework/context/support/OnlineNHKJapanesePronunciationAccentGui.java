@@ -460,7 +460,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		final FailableStream<Field> fs = new FailableStream<>(
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()), Arrays::stream, null),
-						x -> Objects.equals(value(testAndApply(y -> isAnnotationPresent(y, Group.class), x,
+						x -> Objects.equals(value(testAndApply(y -> Util.isAnnotationPresent(y, Group.class), x,
 								y -> getAnnotation(y, Group.class), null)), "LastComponentInRow")));
 		//
 		final Collection<Component> cs = FailableStreamUtil.map(fs, x -> Util.cast(Component.class, get(x, this)))
@@ -546,11 +546,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	@Nullable
 	private static String value(@Nullable final Group instance) {
 		return instance != null ? instance.value() : null;
-	}
-
-	private static boolean isAnnotationPresent(@Nullable final AnnotatedElement instance,
-			@Nullable final Class<? extends Annotation> annotationClass) {
-		return instance != null && annotationClass != null && instance.isAnnotationPresent(annotationClass);
 	}
 
 	@Nullable

@@ -465,7 +465,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		final JComboBox<Method> jcbSpeakMethod = testAndApply(CollectionUtils::isNotEmpty,
 				Util.toList(Util.filter(testAndApply(Objects::nonNull,
 						Util.getDeclaredMethods(Util.getClass(speechApiInstance)), Arrays::stream, null),
-						m -> isAnnotationPresent(m, SpeakMethod.class))),
+						m -> Util.isAnnotationPresent(m, SpeakMethod.class))),
 				x -> new JComboBox<>(cbmSpeakMethod = testAndApply(Objects::nonNull, Util.toArray(x, new Method[] {}),
 						DefaultComboBoxModel::new, y -> new DefaultComboBoxModel<>())),
 				null);
@@ -1095,7 +1095,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		//
 		final FailableStream<Field> fs = new FailableStream<>(Util.filter(testAndApply(Objects::nonNull,
 				Util.getDeclaredFields(VoiceManagerTtsPanel.class), Arrays::stream, null), f -> {
-					final Group g = isAnnotationPresent(f, Group.class) ? f.getAnnotation(Group.class) : null;
+					final Group g = Util.isAnnotationPresent(f, Group.class) ? f.getAnnotation(Group.class) : null;
 					return StringUtils.equals(g != null ? g.value() : null, group);
 				}));
 		//
@@ -1148,11 +1148,6 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 		instance.setRenderer(aRenderer);
 		//
-	}
-
-	private static boolean isAnnotationPresent(@Nullable final AnnotatedElement instance,
-			@Nullable final Class<? extends Annotation> annotationClass) {
-		return instance != null && annotationClass != null && instance.isAnnotationPresent(annotationClass);
 	}
 
 	private static void setPaintLabels(@Nullable final JSlider instance, final boolean b) {
