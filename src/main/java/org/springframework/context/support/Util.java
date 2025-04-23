@@ -459,6 +459,12 @@ public abstract class Util {
 				&& instance.isAnnotationPresent(annotationClass);
 	}
 
+	static <T extends Annotation> T getAnnotation(final AnnotatedElement instance, final Class<T> annotationClass) {
+		return instance != null && (annotationClass != null || Proxy.isProxyClass(getClass(instance)))
+				? instance.getAnnotation(annotationClass)
+				: null;
+	}
+
 	@Nullable
 	static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		//

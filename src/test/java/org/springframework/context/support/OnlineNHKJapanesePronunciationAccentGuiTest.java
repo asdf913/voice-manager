@@ -85,9 +85,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_MAP_INT_STREAM, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS,
 			METHOD_SAVE_PITCH_ACCENT_IMAGE, METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED,
 			METHOD_OPEN_STREAM, METHOD_ADD_ACTION_LISTENER, METHOD_GET_FIELD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT,
-			METHOD_SAVE_FILE, METHOD_IIF, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_GET_ANNOTATION,
-			METHOD_SET_PREFERRED_SIZE, METHOD_MAX, METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3,
-			METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
+			METHOD_SAVE_FILE, METHOD_IIF, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_SET_PREFERRED_SIZE,
+			METHOD_MAX, METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -150,9 +149,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		(METHOD_SORT = clz.getDeclaredMethod("sort", List.class, Comparator.class)).setAccessible(true);
 		//
 		(METHOD_CREATE_IMAGE_FORMAT_COMPARATOR = clz.getDeclaredMethod("createImageFormatComparator", List.class))
-				.setAccessible(true);
-		//
-		(METHOD_GET_ANNOTATION = clz.getDeclaredMethod("getAnnotation", AnnotatedElement.class, Class.class))
 				.setAccessible(true);
 		//
 		(METHOD_SET_PREFERRED_SIZE = clz.getDeclaredMethod("setPreferredSize", Component.class, Dimension.class))
@@ -1176,30 +1172,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return null;
 			} else if (obj instanceof Comparator) {
 				return (Comparator) obj;
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetAnnotation() throws Throwable {
-		//
-		Assertions.assertNull(getAnnotation(null, null));
-		//
-		Assertions.assertNull(getAnnotation(Object.class, null));
-		//
-	}
-
-	private static <T extends Annotation> T getAnnotation(final AnnotatedElement instance,
-			final Class<T> annotationClass) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_ANNOTATION.invoke(null, instance, annotationClass);
-			if (obj == null) {
-				return null;
-			} else if (annotationClass != null && annotationClass.isInstance(obj)) {
-				return annotationClass.cast(obj);
 			}
 			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {

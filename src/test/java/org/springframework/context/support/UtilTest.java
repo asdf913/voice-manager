@@ -3,6 +3,7 @@ package org.springframework.context.support;
 import java.awt.Component;
 import java.io.File;
 import java.io.InputStream;
+import java.lang.annotation.Annotation;
 import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
@@ -117,6 +118,8 @@ class UtilTest {
 
 		private Boolean isAnnotationPresent = null;
 
+		private Annotation annotation = null;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -133,10 +136,18 @@ class UtilTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof AnnotatedElement && Objects.equals(methodName, "isAnnotationPresent")) {
+			} else if (proxy instanceof AnnotatedElement) {
 				//
-				return isAnnotationPresent;
-				//
+				if (Objects.equals(methodName, "isAnnotationPresent")) {
+					//
+					return isAnnotationPresent;
+					//
+				} else if (Objects.equals(methodName, "getAnnotation")) {
+					//
+					return annotation;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -197,10 +208,14 @@ class UtilTest {
 
 	private Matcher matcher = null;
 
+	private AnnotatedElement annotatedElement = null;
+
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
 		stream = Reflection.newProxy(Stream.class, ih = new IH());
+		//
+		annotatedElement = Reflection.newProxy(AnnotatedElement.class, ih);
 		//
 		mh = new MH();
 		//
@@ -909,8 +924,6 @@ class UtilTest {
 		//
 		Assertions.assertFalse(Util.isAnnotationPresent(METHOD_COLLECT, Target.class));
 		//
-		final AnnotatedElement annotatedElement = Reflection.newProxy(AnnotatedElement.class, ih);
-		//
 		if (ih != null) {
 			//
 			ih.isAnnotationPresent = Boolean.FALSE;
@@ -926,6 +939,19 @@ class UtilTest {
 		} // if
 			//
 		Assertions.assertTrue(Util.isAnnotationPresent(annotatedElement, null));
+		//
+	}
+
+	@Test
+	void testGetAnnotation() {
+		//
+		Assertions.assertNull(Util.getAnnotation(null, null));
+		//
+		Assertions.assertNull(Util.getAnnotation(METHOD_COLLECT, null));
+		//
+		Assertions.assertNull(Util.getAnnotation(METHOD_COLLECT, Target.class));
+		//
+		Assertions.assertNull(Util.getAnnotation(annotatedElement, null));
 		//
 	}
 

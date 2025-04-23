@@ -424,13 +424,13 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				final HtmlPage htmlPage = testAndApply(Objects::nonNull, url, webClient::getPage, null);
 				//
-				Util.forEach(
-						Util.collect(Util.filter(
+				Util.forEach(Util.collect(
+						Util.filter(
 								testAndApply(Objects::nonNull, VoiceManagerOnlineTtsPanel.class.getDeclaredFields(),
 										Arrays::stream, null),
 								f -> Util.isAnnotationPresent(f, Name.class) && Narcissus.getField(this, f) != null),
-								Collectors.toMap(f -> value(getAnnotation(f, Name.class)),
-										f -> Narcissus.getField(this, f))),
+						Collectors.toMap(f -> value(Util.getAnnotation(f, Name.class)),
+								f -> Narcissus.getField(this, f))),
 						(a, b) -> setValues(htmlPage, voices, a, b));
 				//
 				testAndAccept(Objects::nonNull,
@@ -553,12 +553,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	@Nullable
 	private static String value(@Nullable final Name instance) {
 		return instance != null ? instance.value() : null;
-	}
-
-	@Nullable
-	private static <T extends Annotation> T getAnnotation(@Nullable final AnnotatedElement instance,
-			final Class<T> annotationClass) {
-		return instance != null ? instance.getAnnotation(annotationClass) : null;
 	}
 
 	@Nullable

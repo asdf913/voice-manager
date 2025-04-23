@@ -79,9 +79,9 @@ class VoiceManagerOnlineTtsPanelTest {
 
 	private static Method METHOD_GET_LAYOUT_MANAGER, METHOD_TEST_AND_APPLY, METHOD_QUERY_SELECTOR,
 			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT, METHOD_GET_ATTRIBUTE,
-			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME, METHOD_GET_ANNOTATION,
-			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
-			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX = null;
+			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME, METHOD_GET_VALUE_ATTRIBUTE,
+			METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES, METHOD_SELECT_STREAM,
+			METHOD_SET_SELECTED_INDEX = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -110,9 +110,6 @@ class VoiceManagerOnlineTtsPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_ELEMENTS_BY_NAME = clz.getDeclaredMethod("getElementsByName", HtmlPage.class, String.class))
-				.setAccessible(true);
-		//
-		(METHOD_GET_ANNOTATION = clz.getDeclaredMethod("getAnnotation", AnnotatedElement.class, Class.class))
 				.setAccessible(true);
 		//
 		(METHOD_GET_VALUE_ATTRIBUTE = clz.getDeclaredMethod("getValueAttribute", HtmlOption.class)).setAccessible(true);
@@ -180,10 +177,6 @@ class VoiceManagerOnlineTtsPanelTest {
 					&& args.length > 0) {
 				//
 				return MapUtils.getObject(namedItems, args[0]);
-				//
-			} else if (proxy instanceof AnnotatedElement && Objects.equals(methodName, "getAnnotation")) {
-				//
-				return null;
 				//
 			} else if (Objects.equals(Util.getName(method.getDeclaringClass()),
 					"org.springframework.context.support.VoiceManagerOnlineTtsPanel$Name")
@@ -591,22 +584,6 @@ class VoiceManagerOnlineTtsPanelTest {
 				return (List) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetAnnotation() throws Throwable {
-		//
-		Assertions.assertNull(getAnnotation(Reflection.newProxy(AnnotatedElement.class, ih), null));
-		//
-	}
-
-	private static <T extends Annotation> T getAnnotation(final AnnotatedElement instance,
-			final Class<T> annotationClass) throws Throwable {
-		try {
-			return (T) METHOD_GET_ANNOTATION.invoke(null, instance, annotationClass);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

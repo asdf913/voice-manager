@@ -461,7 +461,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		final FailableStream<Field> fs = new FailableStream<>(
 				Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredFields(getClass()), Arrays::stream, null),
 						x -> Objects.equals(value(testAndApply(y -> Util.isAnnotationPresent(y, Group.class), x,
-								y -> getAnnotation(y, Group.class), null)), "LastComponentInRow")));
+								y -> Util.getAnnotation(y, Group.class), null)), "LastComponentInRow")));
 		//
 		final Collection<Component> cs = FailableStreamUtil.map(fs, x -> Util.cast(Component.class, get(x, this)))
 				.collect(Collectors.toList());
@@ -546,12 +546,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	@Nullable
 	private static String value(@Nullable final Group instance) {
 		return instance != null ? instance.value() : null;
-	}
-
-	@Nullable
-	private static <T extends Annotation> T getAnnotation(@Nullable final AnnotatedElement instance,
-			@Nullable final Class<T> annotationClass) {
-		return instance != null && annotationClass != null ? instance.getAnnotation(annotationClass) : null;
 	}
 
 	private static Comparator<String> createImageFormatComparator(final List<?> imageFormatOrders) {
