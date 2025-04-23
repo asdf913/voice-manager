@@ -459,6 +459,7 @@ public abstract class Util {
 				&& instance.isAnnotationPresent(annotationClass);
 	}
 
+	@Nullable
 	static <T extends Annotation> T getAnnotation(@Nullable final AnnotatedElement instance,
 			@Nullable final Class<T> annotationClass) {
 		return instance != null && (annotationClass != null || Proxy.isProxyClass(getClass(instance)))
