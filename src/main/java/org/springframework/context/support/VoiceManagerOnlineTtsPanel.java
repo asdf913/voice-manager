@@ -481,11 +481,11 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 	}
 
-	private static NodeList getChildNodes(final Node instance) {
+	private static NodeList getChildNodes(@Nullable final Node instance) {
 		return instance != null ? instance.getChildNodes() : null;
 	}
 
-	private static DomElement getNextElementSibling(final DomNode instance) {
+	private static DomElement getNextElementSibling(@Nullable final DomNode instance) {
 		return instance != null ? instance.getNextElementSibling() : null;
 	}
 
