@@ -455,7 +455,8 @@ public abstract class Util {
 
 	static boolean isAnnotationPresent(final AnnotatedElement instance,
 			final Class<? extends Annotation> annotationClass) {
-		return instance != null && instance.isAnnotationPresent(annotationClass);
+		return instance != null && (annotationClass != null || Proxy.isProxyClass(getClass(instance)))
+				&& instance.isAnnotationPresent(annotationClass);
 	}
 
 	@Nullable

@@ -3,6 +3,8 @@ package org.springframework.context.support;
 import java.awt.Component;
 import java.io.File;
 import java.io.InputStream;
+import java.lang.annotation.Target;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericSignatureFormatError;
@@ -113,6 +115,8 @@ class UtilTest {
 
 	private static class IH implements InvocationHandler {
 
+		private Boolean isAnnotationPresent = null;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -128,6 +132,10 @@ class UtilTest {
 					&& Util.contains(Arrays.asList("map", "filter", "toList", "collect"), methodName)) {
 				//
 				return null;
+				//
+			} else if (proxy instanceof AnnotatedElement && Objects.equals(methodName, "isAnnotationPresent")) {
+				//
+				return isAnnotationPresent;
 				//
 			} // if
 				//
@@ -889,6 +897,35 @@ class UtilTest {
 		Assertions.assertDoesNotThrow(() -> Util.forEach(emptyMap, Consumers.biNop()));
 		//
 		Assertions.assertDoesNotThrow(() -> Util.forEach(Reflection.newProxy(Map.class, ih), null));
+		//
+	}
+
+	@Test
+	void testIsAnnotationPresent() {
+		//
+		Assertions.assertFalse(Util.isAnnotationPresent(null, null));
+		//
+		Assertions.assertFalse(Util.isAnnotationPresent(METHOD_COLLECT, null));
+		//
+		Assertions.assertFalse(Util.isAnnotationPresent(METHOD_COLLECT, Target.class));
+		//
+		final AnnotatedElement annotatedElement = Reflection.newProxy(AnnotatedElement.class, ih);
+		//
+		if (ih != null) {
+			//
+			ih.isAnnotationPresent = Boolean.FALSE;
+			//
+		} // if
+			//
+		Assertions.assertFalse(Util.isAnnotationPresent(annotatedElement, null));
+		//
+		if (ih != null) {
+			//
+			ih.isAnnotationPresent = Boolean.TRUE;
+			//
+		} // if
+			//
+		Assertions.assertTrue(Util.isAnnotationPresent(annotatedElement, null));
 		//
 	}
 
