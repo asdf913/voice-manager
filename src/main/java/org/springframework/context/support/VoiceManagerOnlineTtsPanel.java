@@ -135,7 +135,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	@Name("SPKR")
 	private transient ComboBoxModel<?> cbmVoice = null;
 
-	private AbstractButton btnExecute, btnCopy = null;
+	@Note("Execute")
+	private AbstractButton btnExecute = null;
+
+	private AbstractButton btnCopy = null;
 
 	private Map<String, String> voices = null;
 
