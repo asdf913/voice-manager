@@ -26,6 +26,7 @@ import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.text.JTextComponent;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
@@ -79,7 +80,8 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT, METHOD_GET_ATTRIBUTE,
 			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME, METHOD_GET_VALUE_ATTRIBUTE,
 			METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES, METHOD_SELECT_STREAM,
-			METHOD_SET_SELECTED_INDEX = null;
+			METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_CHILD_NODES,
+			METHOD_GET_NEXT_ELEMENT_SIBLING = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -123,6 +125,14 @@ class VoiceManagerOnlineTtsPanelTest {
 		(METHOD_SELECT_STREAM = clz.getDeclaredMethod("selectStream", Element.class, String.class)).setAccessible(true);
 		//
 		(METHOD_SET_SELECTED_INDEX = clz.getDeclaredMethod("setSelectedIndex", HtmlSelect.class, HtmlOption.class))
+				.setAccessible(true);
+		//
+		(METHOD_SET_EDITABLE = clz.getDeclaredMethod("setEditable", JTextComponent.class, Boolean.TYPE))
+				.setAccessible(true);
+		//
+		(METHOD_GET_CHILD_NODES = clz.getDeclaredMethod("getChildNodes", Node.class)).setAccessible(true);
+		//
+		(METHOD_GET_NEXT_ELEMENT_SIBLING = clz.getDeclaredMethod("getNextElementSibling", DomNode.class))
 				.setAccessible(true);
 		//
 	}
@@ -169,6 +179,10 @@ class VoiceManagerOnlineTtsPanelTest {
 					//
 					return nodeValue;
 					//
+				} else if (Objects.equals(methodName, "getChildNodes")) {
+					//
+					return null;
+					//
 				} // if
 					//
 			} else if (proxy instanceof NamedNodeMap && Objects.equals(methodName, "getNamedItem") && args != null
@@ -202,7 +216,8 @@ class VoiceManagerOnlineTtsPanelTest {
 			//
 			final String methodName = Util.getName(thisMethod);
 			//
-			if (self instanceof DomNode && Objects.equals(methodName, "querySelector")) {
+			if (self instanceof DomNode
+					&& Util.contains(Arrays.asList("querySelector", "getNextElementSibling"), methodName)) {
 				//
 				return null;
 				//
@@ -222,10 +237,12 @@ class VoiceManagerOnlineTtsPanelTest {
 
 	private Element element = null;
 
-	private HtmlOption htmlOption = null;
+	private HtmlOption htmlOption = null;;
+
+	private DomNode domNode = null;
 
 	@BeforeEach
-	void beforeEach() {
+	void beforeEach() throws Throwable {
 		//
 		instance = new VoiceManagerOnlineTtsPanel();
 		//
@@ -235,6 +252,13 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		htmlOption = Util.cast(HtmlOption.class, Narcissus.allocateInstance(HtmlOption.class));
 		//
+		domNode = ProxyUtil.createProxy(DomNode.class, new MH(), clz -> {
+			final Constructor<?> constructor = clz != null ? clz.getConstructor(SgmlPage.class) : null;
+			if (constructor != null) {
+				constructor.setAccessible(true);
+			}
+			return constructor != null ? constructor.newInstance((Object) null) : null;
+		});
 	}
 
 	@Test
@@ -434,13 +458,7 @@ class VoiceManagerOnlineTtsPanelTest {
 	@Test
 	void testQuerySelector() throws Throwable {
 		//
-		Assertions.assertNull(querySelector(ProxyUtil.createProxy(DomNode.class, new MH(), clz -> {
-			final Constructor<?> constructor = clz != null ? clz.getConstructor(SgmlPage.class) : null;
-			if (constructor != null) {
-				constructor.setAccessible(true);
-			}
-			return constructor != null ? constructor.newInstance((Object) null) : null;
-		}), null));
+		Assertions.assertNull(querySelector(domNode, null));
 		//
 	}
 
@@ -715,6 +733,63 @@ class VoiceManagerOnlineTtsPanelTest {
 	private static void setSelectedIndex(final HtmlSelect htmlSelect, final HtmlOption htmlOption) throws Throwable {
 		try {
 			METHOD_SET_SELECTED_INDEX.invoke(null, htmlSelect, htmlOption);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetEditable() {
+		//
+		Assertions.assertDoesNotThrow(() -> setEditable(new JTextField(), false));
+		//
+	}
+
+	private static void setEditable(final JTextComponent instance, final boolean b) throws Throwable {
+		try {
+			METHOD_SET_EDITABLE.invoke(null, instance, b);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetChildNodes() throws Throwable {
+		//
+		Assertions.assertNull(getChildNodes(Reflection.newProxy(Node.class, ih)));
+		//
+	}
+
+	private static NodeList getChildNodes(final Node instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_CHILD_NODES.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof NodeList) {
+				return (NodeList) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetNextElementSibling() throws Throwable {
+		//
+		Assertions.assertNull(getNextElementSibling(domNode));
+		//
+	}
+
+	private static DomElement getNextElementSibling(final DomNode instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_NEXT_ELEMENT_SIBLING.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof DomElement) {
+				return (DomElement) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

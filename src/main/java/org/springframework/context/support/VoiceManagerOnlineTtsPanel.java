@@ -116,7 +116,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	@Name("DURATION")
 	private JTextComponent tfDuration = null;
 
-	private JTextComponent tfUrl = null;
+	private JTextComponent tfUrl, tfErrorMessage = null;
 
 	@Name("SPKR")
 	private transient ComboBoxModel<?> cbmVoice = null;
@@ -300,8 +300,18 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		add(tfUrl = new JTextField(), String.format("%1$s,wmin %2$spx", wrap, width));
 		//
-		tfUrl.setEditable(false);
+		add(new JLabel("Error"));
 		//
+		add(tfErrorMessage = new JTextField(), String.format("%1$s,wmin %2$spx", wrap, width));
+		//
+		Util.forEach(Arrays.asList(tfUrl, tfErrorMessage), x -> setEditable(x, false));
+		//
+	}
+
+	private static void setEditable(final JTextComponent instance, final boolean b) {
+		if (instance != null) {
+			instance.setEditable(b);
+		}
 	}
 
 	@Nullable
@@ -416,7 +426,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		if (Objects.equals(Util.getSource(evt), btnExecute)) {
 			//
-			Util.setText(tfUrl, null);
+			Util.forEach(Arrays.asList(tfUrl, tfErrorMessage), x -> Util.setText(x, null));
 			//
 			try (final WebClient webClient = new WebClient()) {
 				//
@@ -431,16 +441,36 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 								f -> Narcissus.getField(this, f))),
 						(a, b) -> setValues(htmlPage, voices, a, b));
 				//
-				testAndAccept(Objects::nonNull,
-						getAttribute(
-								getElementsByTagName(Util.cast(HtmlPage.class,
-										DomElementUtil.click(Util.cast(DomElement.class,
-												querySelector(htmlPage, "input[type=\"submit\"]")))),
-										"source"),
-								"src", x -> StringUtils.startsWith(x, "./temp/")),
-						x -> Util.setText(tfUrl, String.join("/", StringUtils.substringBeforeLast(url, "/"),
-								StringUtils.substringAfter(IValue0Util.getValue0(x), '/'))));
+				final HtmlPage hm = Util.cast(HtmlPage.class, DomElementUtil
+						.click(Util.cast(DomElement.class, querySelector(htmlPage, "input[type=\"submit\"]"))));
 				//
+				final IValue0<String> attribute = getAttribute(getElementsByTagName(hm, "source"), "src",
+						x -> StringUtils.startsWith(x, "./temp/"));
+				//
+				if (attribute != null) {
+					//
+					Util.setText(tfUrl, String.join("/", StringUtils.substringBeforeLast(url, "/"),
+							StringUtils.substringAfter(IValue0Util.getValue0(attribute), '/')));
+					//
+				} else if (hm != null) {
+					//
+					final Iterable<DomNode> domNodes = Util.toList(Util.filter(Util.stream(hm.querySelectorAll("b")),
+							x -> Objects.equals(x != null ? x.getTextContent() : null, "合成結果")));
+					//
+					testAndRunThrows(IterableUtils.size(domNodes) > 1, () -> {
+						//
+						throw new IllegalStateException();
+						//
+					});
+					//
+					Util.setText(tfErrorMessage,
+							StringUtils.trim(Util.toString(testAndApply(x -> Util.getLength(x) == 1,
+									getChildNodes(getNextElementSibling(testAndApply(x -> IterableUtils.size(x) == 1,
+											domNodes, x -> IterableUtils.get(x, 0), null))),
+									x -> Util.item(x, 0), null))));
+					//
+				} // if
+					//
 			} catch (final IOException e) {
 				//
 				LoggerUtil.error(LOG, e.getMessage(), e);
@@ -449,6 +479,14 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static NodeList getChildNodes(final Node instance) {
+		return instance != null ? instance.getChildNodes() : null;
+	}
+
+	private static DomElement getNextElementSibling(final DomNode instance) {
+		return instance != null ? instance.getNextElementSibling() : null;
 	}
 
 	private static void setValues(final HtmlPage htmlPage, final Map<String, String> voices, final String a,
