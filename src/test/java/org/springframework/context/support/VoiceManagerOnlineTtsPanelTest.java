@@ -1,6 +1,10 @@
 package org.springframework.context.support;
 
 import java.awt.LayoutManager;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
@@ -80,8 +84,8 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT, METHOD_GET_ATTRIBUTE,
 			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME, METHOD_GET_VALUE_ATTRIBUTE,
 			METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES, METHOD_SELECT_STREAM,
-			METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_CHILD_NODES,
-			METHOD_GET_NEXT_ELEMENT_SIBLING = null;
+			METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_CHILD_NODES, METHOD_GET_NEXT_ELEMENT_SIBLING,
+			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -134,6 +138,11 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_GET_NEXT_ELEMENT_SIBLING = clz.getDeclaredMethod("getNextElementSibling", DomNode.class))
 				.setAccessible(true);
+		//
+		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
+				ClipboardOwner.class)).setAccessible(true);
+		//
+		(METHOD_GET_SYSTEM_CLIPBOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
 		//
 	}
 
@@ -221,6 +230,10 @@ class VoiceManagerOnlineTtsPanelTest {
 				//
 				return null;
 				//
+			} else if (self instanceof Toolkit && Objects.equals(methodName, "getSystemClipboard")) {
+				//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -277,6 +290,12 @@ class VoiceManagerOnlineTtsPanelTest {
 		FieldUtils.writeDeclaredField(instance, "btnExecute", btnExecute, true);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnExecute, 0, null)));
+		//
+		final AbstractButton btnCopy = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnCopy", btnCopy, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopy, 0, null)));
 		//
 	}
 
@@ -788,6 +807,44 @@ class VoiceManagerOnlineTtsPanelTest {
 				return null;
 			} else if (obj instanceof DomElement) {
 				return (DomElement) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetContents() {
+		//
+		Assertions.assertDoesNotThrow(
+				() -> setContents(Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class)), null, null));
+		//
+	}
+
+	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner)
+			throws Throwable {
+		try {
+			METHOD_SET_CONTENTS.invoke(null, instance, contents, owner);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSystemClipboard() throws Throwable {
+		//
+		Assertions.assertNull(getSystemClipboard(ProxyUtil.createProxy(Toolkit.class, new MH())));
+		//
+	}
+
+	private static Clipboard getSystemClipboard(final Toolkit instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SYSTEM_CLIPBOARD.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Clipboard) {
+				return (Clipboard) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

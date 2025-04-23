@@ -3,6 +3,11 @@ package org.springframework.context.support;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.LayoutManager;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -130,7 +135,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	@Name("SPKR")
 	private transient ComboBoxModel<?> cbmVoice = null;
 
-	private AbstractButton btnExecute = null;
+	private AbstractButton btnExecute, btnCopy = null;
 
 	private Map<String, String> voices = null;
 
@@ -303,11 +308,11 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		add(btnExecute = new JButton("Execute"), wrap);
 		//
-		btnExecute.addActionListener(this);
-		//
 		add(new JLabel("Output"));
 		//
-		add(tfUrl = new JTextField(), String.format("%1$s,wmin %2$spx", wrap, width));
+		add(tfUrl = new JTextField(), String.format("wmin %1$spx", width));
+		//
+		add(btnCopy = new JButton("Copy"), String.format("%1$s,span %2$s", wrap, 3));
 		//
 		add(new JLabel("Error"));
 		//
@@ -315,6 +320,14 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		Util.forEach(Arrays.asList(tfUrl, tfErrorMessage), x -> setEditable(x, false));
 		//
+		Util.forEach(Arrays.asList(btnExecute, btnCopy), x -> addActionListener(x, this));
+		//
+	}
+
+	private static void addActionListener(final AbstractButton instance, final ActionListener actionListener) {
+		if (instance != null) {
+			instance.addActionListener(actionListener);
+		}
 	}
 
 	private static void setEditable(@Nullable final JTextComponent instance, final boolean b) {
@@ -433,7 +446,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		if (Objects.equals(Util.getSource(evt), btnExecute)) {
+		final Object source = Util.getSource(evt);
+		//
+		if (Objects.equals(source, btnExecute)) {
 			//
 			Util.forEach(Arrays.asList(tfUrl, tfErrorMessage), x -> Util.setText(x, null));
 			//
@@ -486,8 +501,27 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 			} // try
 				//
+		} else if (Objects.equals(source, btnCopy)) {
+			//
+			testAndRunThrows(!isTestMode(), () -> setContents(getSystemClipboard(getToolkit()),
+					new StringSelection(Util.getText(tfUrl)), null));
+			//
 		} // if
 			//
+	}
+
+	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner) {
+		if (instance != null) {
+			instance.setContents(contents, owner);
+		}
+	}
+
+	private static boolean isTestMode() {
+		return Util.forName("org.junit.jupiter.api.Test") != null;
+	}
+
+	private static Clipboard getSystemClipboard(final Toolkit instance) {
+		return instance != null ? instance.getSystemClipboard() : null;
 	}
 
 	@Nullable
