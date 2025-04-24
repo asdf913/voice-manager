@@ -47,6 +47,7 @@ import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.JLabel;
+import javax.swing.ListModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.bcel.classfile.ClassParser;
@@ -1863,6 +1864,10 @@ public abstract class Util {
 		if (instance != null) {
 			instance.setSelectedItem(selectedItem);
 		}
+	}
+
+	static int getSize(final ListModel<?> instance) {
+		return instance != null ? instance.getSize() : 0;
 	}
 
 }

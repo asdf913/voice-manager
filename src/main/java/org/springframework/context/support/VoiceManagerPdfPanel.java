@@ -1302,7 +1302,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				Object element = null;
 				//
-				for (int i = 0; i < instance.cbmVoiceId.getSize(); i++) {
+				for (int i = 0; i < Util.getSize(instance.cbmVoiceId); i++) {
 					//
 					if (s != null && Util.contains(Arrays.asList(element = instance.cbmVoiceId.getElementAt(i),
 							SpeechApi.getVoiceAttribute(speechApi, Util.toString(element), "Name")), s)) {

@@ -93,7 +93,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES, METHOD_SELECT_STREAM,
 			METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_CHILD_NODES, METHOD_GET_NEXT_ELEMENT_SIBLING,
 			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_ELEMENT_AT,
-			METHOD_GET_SIZE, METHOD_GET_VOICE = null;
+			METHOD_GET_VOICE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -162,8 +162,6 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_GET_ELEMENT_AT = clz.getDeclaredMethod("getElementAt", ListModel.class, Integer.TYPE))
 				.setAccessible(true);
-		//
-		(METHOD_GET_SIZE = clz.getDeclaredMethod("getSize", ListModel.class)).setAccessible(true);
 		//
 		(METHOD_GET_VOICE = clz.getDeclaredMethod("getVoice", PropertyResolver.class, String.class, ListModel.class,
 				Map.class)).setAccessible(true);
@@ -969,25 +967,6 @@ class VoiceManagerOnlineTtsPanelTest {
 	private static <E> E getElementAt(final ListModel<E> instance, final int index) throws Throwable {
 		try {
 			return (E) METHOD_GET_ELEMENT_AT.invoke(null, instance, index);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetSize() throws Throwable {
-		//
-		Assertions.assertEquals(0, getSize(listModel));
-		//
-	}
-
-	private static int getSize(final ListModel<?> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_SIZE.invoke(null, instance);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

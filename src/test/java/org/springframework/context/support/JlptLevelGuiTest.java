@@ -22,7 +22,6 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -160,8 +159,6 @@ class JlptLevelGuiTest {
 
 	private class IH implements InvocationHandler {
 
-		private Object[] array = null;
-
 		private Document document = null;
 
 		private Iterator<?> iterator = null;
@@ -191,15 +188,7 @@ class JlptLevelGuiTest {
 					//
 			} // if
 				//
-			if (proxy instanceof Collection) {
-				//
-				if (Objects.equals(methodName, "toArray")) {
-					//
-					return array;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Stream) {
+			if (proxy instanceof Stream) {
 				//
 				if (Objects.equals(methodName, "max")) {
 					//

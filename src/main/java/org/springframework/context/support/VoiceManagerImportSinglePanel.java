@@ -1356,7 +1356,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 			// Remove all element(s) in "mcbmPronounication"
 			//
-			Util.forEach(reverseRange(0, getSize(mcbmPronunciation)), i -> removeElementAt(mcbmPronunciation, i));
+			Util.forEach(reverseRange(0, Util.getSize(mcbmPronunciation)), i -> removeElementAt(mcbmPronunciation, i));
 			//
 		} // if
 			//
@@ -1830,11 +1830,11 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		// Remove all element(s) in "mcbmPronounication"
 		//
-		Util.forEach(reverseRange(0, getSize(mcbmPronunciation)), i -> removeElementAt(mcbmPronunciation, i));
+		Util.forEach(reverseRange(0, Util.getSize(mcbmPronunciation)), i -> removeElementAt(mcbmPronunciation, i));
 		//
 		// Remove all element(s) in "mcbmPronounicationAudioFormat"
 		//
-		Util.forEach(reverseRange(0, getSize(mcbmPronounicationAudioFormat)),
+		Util.forEach(reverseRange(0, Util.getSize(mcbmPronounicationAudioFormat)),
 				i -> removeElementAt(mcbmPronounicationAudioFormat, i));
 		//
 		try {
@@ -1955,7 +1955,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			final MutableComboBoxModel<String> mcbmAudioFormat, final String preferredPronunciationAudioFormat,
 			final JTextComponent jtc) {
 		//
-		Util.forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
+		Util.forEach(reverseRange(0, Util.getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
 		//
 		Util.setSelectedItem(mcbmAudioFormat, null);
 		//
@@ -4750,7 +4750,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		final MutableComboBoxModel<JlptVocabulary> mcbmJlptVocabulary = instance.mcbmJlptVocabulary;
 		//
-		for (int i = getSize(mcbmJlptVocabulary) - 1; i >= 0; i--) {
+		for (int i = Util.getSize(mcbmJlptVocabulary) - 1; i >= 0; i--) {
 			//
 			removeElementAt(mcbmJlptVocabulary, i);
 			//
@@ -4809,7 +4809,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		IntList intList = null;
 		//
-		for (int i = 0; i < getSize(cbm); i++) {
+		for (int i = 0; i < Util.getSize(cbm); i++) {
 			//
 			if (StringUtils.equalsAnyIgnoreCase(getElementAt(cbm, i), string)) {
 				//
@@ -4887,10 +4887,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		}
 	}
 
-	private static int getSize(@Nullable final ListModel<?> instance) {
-		return instance != null ? instance.getSize() : 0;
-	}
-
 	@Nullable
 	private static javax.swing.text.Document getDocument(@Nullable final DocumentEvent instance) {
 		return instance != null ? instance.getDocument() : null;
@@ -4905,7 +4901,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 			// Remove all element(s) in "mcbmPronounication"
 			//
-			Util.forEach(reverseRange(0, getSize(mcbmPronunciation)), i -> removeElementAt(mcbmPronunciation, i));
+			Util.forEach(reverseRange(0, Util.getSize(mcbmPronunciation)), i -> removeElementAt(mcbmPronunciation, i));
 			//
 		} // if
 			//

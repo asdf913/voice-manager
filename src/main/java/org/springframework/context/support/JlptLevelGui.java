@@ -46,7 +46,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
-import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -489,7 +488,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		final MutableComboBoxModel<JlptVocabulary> cbmJlptVocabulary = instance.cbmJlptVocabulary;
 		//
-		for (int i = getSize(cbmJlptVocabulary) - 1; i >= 0; i--) {
+		for (int i = Util.getSize(cbmJlptVocabulary) - 1; i >= 0; i--) {
 			//
 			removeElementAt(cbmJlptVocabulary, i);
 			//
@@ -590,10 +589,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	@Nullable
 	private static Document getDocument(@Nullable final DocumentEvent instance) {
 		return instance != null ? instance.getDocument() : null;
-	}
-
-	private static int getSize(@Nullable final ListModel<?> instance) {
-		return instance != null ? instance.getSize() : 0;
 	}
 
 	@Nullable

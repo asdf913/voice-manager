@@ -24,7 +24,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -50,7 +49,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 
 import org.apache.commons.lang3.function.FailableFunction;
@@ -79,12 +77,12 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static final int ONE = 1;
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_WIDTH, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT,
-			METHOD_GET_SELECTED_ITEM, METHOD_GET_SIZE, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS,
-			METHOD_MAP_INT_STREAM, METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS,
-			METHOD_SAVE_PITCH_ACCENT_IMAGE, METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED,
-			METHOD_OPEN_STREAM, METHOD_ADD_ACTION_LISTENER, METHOD_GET_FIELD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT,
-			METHOD_SAVE_FILE, METHOD_IIF, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_SET_PREFERRED_SIZE,
-			METHOD_MAX, METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
+			METHOD_GET_SELECTED_ITEM, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_MAP_INT_STREAM,
+			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_SAVE_PITCH_ACCENT_IMAGE,
+			METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_OPEN_STREAM,
+			METHOD_ADD_ACTION_LISTENER, METHOD_GET_FIELD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE,
+			METHOD_IIF, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_SET_PREFERRED_SIZE, METHOD_MAX,
+			METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -103,8 +101,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", ComboBoxModel.class)).setAccessible(true);
-		//
-		(METHOD_GET_SIZE = clz.getDeclaredMethod("getSize", ListModel.class)).setAccessible(true);
 		//
 		(METHOD_GET_SYSTEM_CLIP_BOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
 		//
@@ -170,7 +166,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 		private Integer size = null;
 
-		private Object key, value, selectedItem, get = null;
+		private Object key, value, selectedItem = null;
 
 		private Set<Entry<?, ?>> entrySet = null;
 
@@ -178,11 +174,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 		private Boolean hasNext, isEmpty = null;
 
-		private Component component = null;
-
 		private Optional<?> max = null;
-
-		private Object[] toArray = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -193,17 +185,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				//
 			} // if
 				//
-			final String methodName = method != null ? method.getName() : null;
+			final String methodName = Util.getName(method);
 			//
-			if (proxy instanceof ListModel) {
-				//
-				if (Objects.equals(methodName, "getSize")) {
-					//
-					return size;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Iterable) {
+			if (proxy instanceof Iterable) {
 				//
 				if (Objects.equals(methodName, "iterator")) {
 					//
@@ -229,23 +213,11 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 					//
 			} else if (proxy instanceof Map) {
 				//
-				if (Objects.equals(methodName, "get")) {
-					//
-					return get;
-					//
-				} else if (Objects.equals(methodName, "isEmpty")) {
+				if (Objects.equals(methodName, "isEmpty")) {
 					//
 					return isEmpty;
 					//
 				} else if (Objects.equals(methodName, "size")) {
-					//
-					return size;
-					//
-				} // if
-					//
-			} else if (proxy instanceof Collection) {
-				//
-				if (Objects.equals(methodName, "size")) {
 					//
 					return size;
 					//
@@ -291,22 +263,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Collection) {
-				//
-				if (Objects.equals(methodName, "toArray")) {
-					//
-					return toArray;
-					//
-				} // if
-					//
-			} else if (proxy instanceof ListCellRenderer) {
-				//
-				if (Objects.equals(methodName, "getListCellRendererComponent")) {
-					//
-					return component;
-					//
-				} // if
-					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -323,7 +279,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
 			//
-			final String methodName = thisMethod != null ? thisMethod.getName() : null;
+			final String methodName = Util.getName(thisMethod);
 			//
 			if (self instanceof Toolkit) {
 				//
@@ -703,31 +659,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static Object getSelectedItem(final ComboBoxModel<?> instance) throws Throwable {
 		try {
 			return METHOD_GET_SELECTED_ITEM.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetSize() throws Throwable {
-		//
-		if (ih != null) {
-			//
-			ih.size = ONE;
-			//
-		} // if
-			//
-		Assertions.assertEquals(ONE, getSize(Reflection.newProxy(ListModel.class, ih)));
-		//
-	}
-
-	private static int getSize(final ListModel<?> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_SIZE.invoke(null, instance);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

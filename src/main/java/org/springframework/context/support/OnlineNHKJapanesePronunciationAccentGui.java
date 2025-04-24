@@ -66,7 +66,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
-import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.text.JTextComponent;
 
@@ -655,11 +654,12 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 			// Remove all element(s) in "mcbmPronounication"
 			//
-			Util.forEach(reverseRange(0, getSize(mcbmPronounication)), i -> removeElementAt(mcbmPronounication, i));
+			Util.forEach(reverseRange(0, Util.getSize(mcbmPronounication)),
+					i -> removeElementAt(mcbmPronounication, i));
 			//
 			// Remove all element(s) in "mcbmAudioFormat"
 			//
-			Util.forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
+			Util.forEach(reverseRange(0, Util.getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
 			//
 			try {
 				//
@@ -935,7 +935,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	private static void pronounicationChanged(@Nullable final Pronunciation pronunciation,
 			final MutableComboBoxModel<String> mcbmAudioFormat) {
 		//
-		Util.forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
+		Util.forEach(reverseRange(0, Util.getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
 		//
 		final Map<String, String> audioUrls = pronunciation != null ? pronunciation.getAudioUrls() : null;
 		//
@@ -973,10 +973,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		if (instance != null) {
 			instance.setContents(contents, owner);
 		}
-	}
-
-	private static int getSize(@Nullable final ListModel<?> instance) {
-		return instance != null ? instance.getSize() : 0;
 	}
 
 	@Nullable
