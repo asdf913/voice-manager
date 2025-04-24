@@ -406,11 +406,11 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
-	private static <E> E getElementAt(final ListModel<E> instance, final int index) {
+	private static <E> E getElementAt(@Nullable final ListModel<E> instance, final int index) {
 		return instance != null ? instance.getElementAt(index) : null;
 	}
 
-	private static int getSize(final ListModel<?> instance) {
+	private static int getSize(@Nullable final ListModel<?> instance) {
 		return instance != null ? instance.getSize() : 0;
 	}
 
