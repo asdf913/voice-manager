@@ -1860,6 +1860,10 @@ public abstract class Util {
 		}
 	}
 
+	static NodeList getChildNodes(final Node instance) {
+		return instance != null ? instance.getChildNodes() : null;
+	}
+
 	static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, @Nullable final Object selectedItem) {
 		if (instance != null) {
 			instance.setSelectedItem(selectedItem);

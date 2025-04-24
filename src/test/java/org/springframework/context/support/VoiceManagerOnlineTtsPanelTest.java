@@ -91,9 +91,8 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_QUERY_SELECTOR, METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT, METHOD_GET_ATTRIBUTE,
 			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME, METHOD_GET_VALUE_ATTRIBUTE,
 			METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES, METHOD_SELECT_STREAM,
-			METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_CHILD_NODES, METHOD_GET_NEXT_ELEMENT_SIBLING,
-			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF,
-			METHOD_GET_VOICE = null;
+			METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING, METHOD_SET_CONTENTS,
+			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -144,8 +143,6 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_SET_EDITABLE = clz.getDeclaredMethod("setEditable", JTextComponent.class, Boolean.TYPE))
 				.setAccessible(true);
-		//
-		(METHOD_GET_CHILD_NODES = clz.getDeclaredMethod("getChildNodes", Node.class)).setAccessible(true);
 		//
 		(METHOD_GET_NEXT_ELEMENT_SIBLING = clz.getDeclaredMethod("getNextElementSibling", DomNode.class))
 				.setAccessible(true);
@@ -210,10 +207,6 @@ class VoiceManagerOnlineTtsPanelTest {
 				} else if (Objects.equals(methodName, "getNodeValue")) {
 					//
 					return nodeValue;
-					//
-				} else if (Objects.equals(methodName, "getChildNodes")) {
-					//
-					return null;
 					//
 				} // if
 					//
@@ -829,27 +822,6 @@ class VoiceManagerOnlineTtsPanelTest {
 	private static void setEditable(final JTextComponent instance, final boolean b) throws Throwable {
 		try {
 			METHOD_SET_EDITABLE.invoke(null, instance, b);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetChildNodes() throws Throwable {
-		//
-		Assertions.assertNull(getChildNodes(Reflection.newProxy(Node.class, ih)));
-		//
-	}
-
-	private static NodeList getChildNodes(final Node instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_CHILD_NODES.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof NodeList) {
-				return (NodeList) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

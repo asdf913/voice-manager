@@ -3199,7 +3199,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 						testAndApply(Objects::nonNull, "[Content_Types].xml", x -> getEntry(zf, x), null),
 						x -> getInputStream(zf, x), null)) {
 			//
-			final NodeList childNodes = getChildNodes(getDocumentElement(
+			final NodeList childNodes = Util.getChildNodes(getDocumentElement(
 					is != null ? parse(newDocumentBuilder(DocumentBuilderFactory.newDefaultInstance()), is) : null));
 			//
 			boolean isXlsx = false;
@@ -3231,11 +3231,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	@Nullable
 	private static String getTextContent(@Nullable final Node instance) {
 		return instance != null ? instance.getTextContent() : null;
-	}
-
-	@Nullable
-	private static NodeList getChildNodes(@Nullable final Node instance) {
-		return instance != null ? instance.getChildNodes() : null;
 	}
 
 	@Nullable

@@ -589,8 +589,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 					//
 					Util.setText(tfErrorMessage,
 							StringUtils.trim(Util.toString(testAndApply(x -> Util.getLength(x) == 1,
-									getChildNodes(getNextElementSibling(testAndApply(x -> IterableUtils.size(x) == 1,
-											domNodes, x -> IterableUtils.get(x, 0), null))),
+									Util.getChildNodes(
+											getNextElementSibling(testAndApply(x -> IterableUtils.size(x) == 1,
+													domNodes, x -> IterableUtils.get(x, 0), null))),
 									x -> Util.item(x, 0), null))));
 					//
 				} // if
@@ -624,11 +625,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	@Nullable
 	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		return instance != null ? instance.getSystemClipboard() : null;
-	}
-
-	@Nullable
-	private static NodeList getChildNodes(@Nullable final Node instance) {
-		return instance != null ? instance.getChildNodes() : null;
 	}
 
 	@Nullable
