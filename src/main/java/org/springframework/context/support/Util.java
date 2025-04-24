@@ -1860,6 +1860,7 @@ public abstract class Util {
 		}
 	}
 
+	@Nullable
 	static NodeList getChildNodes(@Nullable final Node instance) {
 		return instance != null ? instance.getChildNodes() : null;
 	}
@@ -1874,6 +1875,7 @@ public abstract class Util {
 		return instance != null ? instance.getSize() : 0;
 	}
 
+	@Nullable
 	static <E> E getElementAt(@Nullable final ListModel<E> instance, final int index) {
 		return instance != null ? instance.getElementAt(index) : null;
 	}
