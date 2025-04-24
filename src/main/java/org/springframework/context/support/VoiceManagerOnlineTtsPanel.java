@@ -251,8 +251,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 			for (int i = 0; cbmVoice != null && i < cbmVoice.getSize(); i++) {
 				//
-				if (!StringUtils.containsIgnoreCase(Util.toString(elementAt = cbmVoice.getElementAt(i)),
-						propertyValue)) {
+				if (!StringUtils.equals(Util.toString(elementAt = cbmVoice.getElementAt(i)),
+						Util.get(voices, propertyValue))) {
 					//
 					continue;
 					//
@@ -270,10 +270,36 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 					//
 			} // for
 				//
+			if (iValue0 == null) {
+				//
+				for (int i = 0; cbmVoice != null && i < cbmVoice.getSize(); i++) {
+					//
+					if (!StringUtils.containsIgnoreCase(Util.toString(elementAt = cbmVoice.getElementAt(i)),
+							propertyValue)) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (iValue0 == null) {
+						//
+						iValue0 = Unit.with(elementAt);
+						//
+					} else {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
 			testAndAccept(Objects::nonNull, iValue0, x -> Util.setSelectedItem(cbmVoice, IValue0Util.getValue0(x)));
 			//
 		} // if
 			//
+
 		add(new JLabel("最小"));
 		//
 		add(new JLabel("標準"));
