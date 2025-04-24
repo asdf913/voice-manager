@@ -315,11 +315,11 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 		if (size == 1) {
 			//
-			setSelectedItem(cbm, IterableUtils.get(iterable, 0));
+			Util.setSelectedItem(cbm, IterableUtils.get(iterable, 0));
 			//
 		} else if (size < 1) {
 			//
-			setSelectedItem(cbm, null);
+			Util.setSelectedItem(cbm, null);
 			//
 		} else {
 			//
@@ -561,13 +561,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 			@Nullable final BiConsumer<T, U> consumer) {
 		if (Util.test(predicate, t, u) && consumer != null) {
 			consumer.accept(t, u);
-		}
-	}
-
-	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance,
-			@Nullable final Object selectedItem) {
-		if (instance != null) {
-			instance.setSelectedItem(selectedItem);
 		}
 	}
 

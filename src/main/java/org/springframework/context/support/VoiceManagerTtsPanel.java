@@ -403,7 +403,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		ObjectMap.setObject(objectMap, SpeechApi.class, speechApi);
 		//
 		testAndAccept(Objects::nonNull, getVoiceId(objectMap, languageCodeToTextObjIntFunction),
-				x -> setSelectedItem(cbmVoiceId, IValue0Util.getValue0(x)));
+				x -> Util.setSelectedItem(cbmVoiceId, IValue0Util.getValue0(x)));
 		//
 		// Speech Rate
 		//
@@ -1561,12 +1561,6 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			return StringUtils.isNotBlank(instance) ? Integer.valueOf(instance, base) : null;
 		} catch (final NumberFormatException e) {
 			return null;
-		}
-	}
-
-	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, final Object selectedItem) {
-		if (instance != null) {
-			instance.setSelectedItem(selectedItem);
 		}
 	}
 

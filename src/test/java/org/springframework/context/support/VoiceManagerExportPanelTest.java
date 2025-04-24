@@ -1,6 +1,5 @@
 package org.springframework.context.support;
 
-import java.awt.GraphicsEnvironment;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -73,10 +72,6 @@ class VoiceManagerExportPanelTest {
 					//
 					list.add(Long.valueOf(0));
 					//
-				} else if (Objects.equals(parameterType, Double.TYPE)) {
-					//
-					list.add(Double.valueOf(0));
-					//
 				} else if (Objects.equals(parameterType, Character.TYPE)) {
 					//
 					list.add(Character.valueOf(' '));
@@ -97,14 +92,6 @@ class VoiceManagerExportPanelTest {
 			//
 			toString = Objects.toString(m);
 			//
-			if (Boolean.logicalAnd(Objects.equals(name, "actionPerformedForSystemClipboardAnnotated"),
-					Arrays.equals(parameterTypes, new Class<?>[] { Boolean.TYPE, Object.class }))
-					&& GraphicsEnvironment.isHeadless()) {
-				//
-				continue;
-				//
-			} // if
-				//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
 				if (Util.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE, Long.TYPE, Double.TYPE),

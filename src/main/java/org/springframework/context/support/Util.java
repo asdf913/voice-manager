@@ -45,6 +45,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
+import javax.swing.ComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.text.JTextComponent;
 
@@ -1855,6 +1856,12 @@ public abstract class Util {
 	static void setTextContent(@Nullable final Node instance, final String textContent) {
 		if (instance != null) {
 			instance.setTextContent(textContent);
+		}
+	}
+
+	static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) {
+		if (instance != null) {
+			instance.setSelectedItem(selectedItem);
 		}
 	}
 

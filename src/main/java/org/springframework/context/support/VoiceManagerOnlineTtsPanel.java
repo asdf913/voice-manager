@@ -270,7 +270,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 					//
 			} // for
 				//
-			testAndAccept(Objects::nonNull, iValue0, x -> setSelectedItem(cbmVoice, IValue0Util.getValue0(x)));
+			testAndAccept(Objects::nonNull, iValue0, x -> Util.setSelectedItem(cbmVoice, IValue0Util.getValue0(x)));
 			//
 		} // if
 			//
@@ -374,12 +374,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	private static <T> T iif(final boolean condition, final T valueTrue, final T valueFalse) {
 		return condition ? valueTrue : valueFalse;
-	}
-
-	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, final Object selectedItem) {
-		if (instance != null) {
-			instance.setSelectedItem(selectedItem);
-		}
 	}
 
 	@Nullable

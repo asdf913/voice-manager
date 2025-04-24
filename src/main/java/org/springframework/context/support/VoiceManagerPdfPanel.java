@@ -1007,7 +1007,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				cbmFontSize1 = new DefaultComboBoxModel<>(ArrayUtils.insert(0, ECSSUnit.values(), (ECSSUnit) null))),
 				String.format("%1$s,span %2$s", WRAP, span - 1));
 		//
-		setSelectedItem(cbmFontSize1, Util.getValue(entry));
+		Util.setSelectedItem(cbmFontSize1, Util.getValue(entry));
 		//
 		// Text Align
 		//
@@ -1017,7 +1017,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				ArrayUtils.insert(0, Util.toArray(getTextAligns(), new String[] {}), (String) null), new String[] {}))),
 				String.format("%1$s,span %2$s", WRAP, span));
 		//
-		setSelectedItem(cbmTextAlign1, textAlign);
+		Util.setSelectedItem(cbmTextAlign1, textAlign);
 		//
 		// HTML
 		//
@@ -1078,7 +1078,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				"org.springframework.context.support.VoiceManagerPdfPanel.fontSize2")),
 				String.format("%1$s,%2$s,wmin %3$s", GROWX, WRAP, wmin));
 		//
-		setSelectedItem(cbmFontSize1, Util.getValue(entry));
+		Util.setSelectedItem(cbmFontSize1, Util.getValue(entry));
 		//
 		setFontSizeAndUnit(html);
 		//
@@ -1307,7 +1307,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					if (s != null && Util.contains(Arrays.asList(element = instance.cbmVoiceId.getElementAt(i),
 							SpeechApi.getVoiceAttribute(speechApi, Util.toString(element), "Name")), s)) {
 						//
-						setSelectedItem(instance.cbmVoiceId, element);
+						Util.setSelectedItem(instance.cbmVoiceId, element);
 						//
 					} // if
 						//
@@ -1356,7 +1356,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			Util.forEach(formats, x -> addElement(mcbmAudioFormatWrite, x));
 			//
-			mcbmAudioFormatWrite.setSelectedItem(instance.audioFormat);
+			Util.setSelectedItem(mcbmAudioFormatWrite, instance.audioFormat);
 			//
 			panel.add(jcbAudioFormat, String.format("%1$s,span %2$s", WRAP, 2));
 			//
@@ -3005,7 +3005,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						//
 						Util.setText(tfFontSize1, sb.substring(0, StringUtils.length(sb) - StringUtils.length(name)));
 						//
-						setSelectedItem(cbmFontSize1, u);
+						Util.setSelectedItem(cbmFontSize1, u);
 						//
 						return;
 						//
@@ -3017,12 +3017,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // if
 			//
-	}
-
-	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, @Nullable final Object anItem) {
-		if (instance != null) {
-			instance.setSelectedItem(anItem);
-		}
 	}
 
 	@Nullable

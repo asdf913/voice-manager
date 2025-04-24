@@ -1077,7 +1077,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		testAndRun(
 				Util.contains(Util.keySet(IValue0Util.getValue0(getWorkbookClassFailableSupplierMap())), workbookClass),
-				() -> setSelectedItem(cbmWorkbookClass, workbookClass));
+				() -> Util.setSelectedItem(cbmWorkbookClass, workbookClass));
 		//
 		final ListCellRenderer<?> lcr = getRenderer(jcbClass);
 		//
@@ -1107,7 +1107,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				ArrayUtils.insert(0, encryptionModes, (EncryptionMode) null))),
 				String.format("%1$s,span %2$s", WRAP, 2));
 		//
-		setSelectedItem(cbmEncryptionMode,
+		Util.setSelectedItem(cbmEncryptionMode,
 				Util.orElse(
 						findFirst(Util.filter(Arrays.stream(encryptionModes),
 								x -> StringUtils.equalsIgnoreCase(Util.name(x),
@@ -1125,7 +1125,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				ArrayUtils.insert(0, compressionLevels, (CompressionLevel) null))),
 				String.format("%1$s,span %2$s", WRAP, 2));
 		//
-		setSelectedItem(cbmCompressionLevel,
+		Util.setSelectedItem(cbmCompressionLevel,
 				Util.orElse(
 						findFirst(Util.filter(Arrays.stream(compressionLevels),
 								x -> StringUtils.equalsIgnoreCase(Util.name(x),
@@ -1340,7 +1340,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		add(jcbFileFormat, String.format("%1$s,span %2$s", WRAP, 5));
 		//
-		cbmMicrosoftAccessFileFormat.setSelectedItem(microsoftAccessFileFormat);
+		Util.setSelectedItem(cbmMicrosoftAccessFileFormat, microsoftAccessFileFormat);
 		//
 		add(new JLabel(), String.format(SPAN_ONLY_FORMAT, 4));
 		//
@@ -5440,12 +5440,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 	@Nullable
 	private static <E> ListCellRenderer<? super E> getRenderer(@Nullable final JComboBox<E> instance) {
 		return instance != null ? instance.getRenderer() : null;
-	}
-
-	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, final Object selectedItem) {
-		if (instance != null) {
-			instance.setSelectedItem(selectedItem);
-		}
 	}
 
 	private IValue0<Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> getWorkbookClassFailableSupplierMap() {

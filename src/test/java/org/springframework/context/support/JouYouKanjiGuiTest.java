@@ -26,8 +26,6 @@ import java.util.function.ToIntFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.text.JTextComponent;
@@ -73,10 +71,10 @@ class JouYouKanjiGuiTest {
 
 	private static Method METHOD_GET, METHOD_GET_ECSS_VERSION_BY_MAJOR, METHOD_ADD_JOU_YOU_KAN_JI_SHEET,
 			METHOD_GET_CSS_DECLARATION_BY_ATTRIBUTE_AND_CSS_PROPERTY, METHOD_SET_PREFERRED_WIDTH,
-			METHOD_SET_SELECTED_ITEM, METHOD_GET_BOOLEAN_VALUES, METHOD_GET_EXPRESSION_AS_CSS_STRING,
-			METHOD_GET_INDEXED_COLORS, METHOD_GET_STYLES_SOURCE, METHOD_GET_PROPERTY, METHOD_TO_MILLIS,
-			METHOD_SET_FILL_BACK_GROUND_COLOR, METHOD_SET_FILL_PATTERN, METHOD_SPLITERATOR, METHOD_TEST_AND_ACCEPT3,
-			METHOD_TEST_AND_ACCEPT4, METHOD_MAP_TO_INT, METHOD_MAX, METHOD_OR_ELSE, METHOD_SET_AUTO_FILTER,
+			METHOD_GET_BOOLEAN_VALUES, METHOD_GET_EXPRESSION_AS_CSS_STRING, METHOD_GET_INDEXED_COLORS,
+			METHOD_GET_STYLES_SOURCE, METHOD_GET_PROPERTY, METHOD_TO_MILLIS, METHOD_SET_FILL_BACK_GROUND_COLOR,
+			METHOD_SET_FILL_PATTERN, METHOD_SPLITERATOR, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
+			METHOD_MAP_TO_INT, METHOD_MAX, METHOD_OR_ELSE, METHOD_SET_AUTO_FILTER,
 			METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = null;
 
 	@BeforeAll
@@ -98,9 +96,6 @@ class JouYouKanjiGuiTest {
 				String.class)).setAccessible(true);
 		//
 		(METHOD_SET_PREFERRED_WIDTH = clz.getDeclaredMethod("setPreferredWidth", Integer.TYPE, Iterable.class))
-				.setAccessible(true);
-		//
-		(METHOD_SET_SELECTED_ITEM = clz.getDeclaredMethod("setSelectedItem", ComboBoxModel.class, Object.class))
 				.setAccessible(true);
 		//
 		(METHOD_GET_BOOLEAN_VALUES = clz.getDeclaredMethod("getBooleanValues")).setAccessible(true);
@@ -654,21 +649,6 @@ class JouYouKanjiGuiTest {
 	private static void setPreferredWidth(final int width, final Iterable<Component> cs) throws Throwable {
 		try {
 			METHOD_SET_PREFERRED_WIDTH.invoke(null, width, cs);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetSelectedItem() {
-		//
-		Assertions.assertDoesNotThrow(() -> setSelectedItem(new DefaultComboBoxModel<>(), null));
-		//
-	}
-
-	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) throws Throwable {
-		try {
-			METHOD_SET_SELECTED_ITEM.invoke(null, instance, selectedItem);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -746,11 +746,11 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			//
 			if (StringUtils.isEmpty(text) || CollectionUtils.isEmpty(list)) {
 				//
-				setSelectedItem(cbmJouYouKanJi, null);
+				Util.setSelectedItem(cbmJouYouKanJi, null);
 				//
 			} else if (jouYouKanJiList != null) {
 				//
-				setSelectedItem(cbmJouYouKanJi,
+				Util.setSelectedItem(cbmJouYouKanJi,
 						StringUtils.length(text) <= orElse(max(mapToInt(Util.stream(list), StringUtils::length)), 0)
 								? Util.contains(list, text)
 								: null);
@@ -778,13 +778,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 	private static int orElse(@Nullable final OptionalInt instance, final int other) {
 		return instance != null ? instance.orElse(other) : other;
-	}
-
-	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance,
-			@Nullable final Object selectedItem) {
-		if (instance != null) {
-			instance.setSelectedItem(selectedItem);
-		}
 	}
 
 	@Nullable

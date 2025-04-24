@@ -57,8 +57,7 @@ class GaKuNenBeTsuKanJiGuiTest {
 
 	private static Method METHOD_CREATE_WORK_BOOK, METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE, METHOD_AND,
 			METHOD_IIF, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_ADD_ACTION_LISTENER, METHOD_LENGTH,
-			METHOD_LONG_VALUE, METHOD_SET_SELECTED_ITEM, METHOD_SET_PREFERRED_WIDTH, METHOD_MAX,
-			METHOD_CREATE_DIMENSION_COMPARATOR = null;
+			METHOD_LONG_VALUE, METHOD_SET_PREFERRED_WIDTH, METHOD_MAX, METHOD_CREATE_DIMENSION_COMPARATOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -91,9 +90,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 		//
 		(METHOD_LONG_VALUE = clz.getDeclaredMethod("longValue", Number.class, Long.TYPE)).setAccessible(true);
 		//
-		(METHOD_SET_SELECTED_ITEM = clz.getDeclaredMethod("setSelectedItem", ComboBoxModel.class, Object.class))
-				.setAccessible(true);
-		//
 		(METHOD_SET_PREFERRED_WIDTH = clz.getDeclaredMethod("setPreferredWidth", Integer.TYPE, Iterable.class))
 				.setAccessible(true);
 		//
@@ -110,8 +106,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 		private Iterator<?> iterator = null;
 
 		private Integer size = null;
-
-		private Object[] array = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -141,10 +135,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 				if (Objects.equals(methodName, "size")) {
 					//
 					return size;
-					//
-				} else if (Objects.equals(methodName, "toArray")) {
-					//
-					return array;
 					//
 				} // if
 					//
@@ -615,21 +605,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 				return ((Long) obj).longValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetSelectedItem() {
-		//
-		Assertions.assertDoesNotThrow(() -> setSelectedItem(new DefaultComboBoxModel<>(), null));
-		//
-	}
-
-	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) throws Throwable {
-		try {
-			METHOD_SET_SELECTED_ITEM.invoke(null, instance, selectedItem);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

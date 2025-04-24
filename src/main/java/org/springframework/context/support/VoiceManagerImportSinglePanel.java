@@ -784,7 +784,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		add(new JComboBox<>(cbmIsKanji = get(booleanComboBoxModelSupplier)));
 		//
-		setSelectedItem(cbmIsKanji,
+		Util.setSelectedItem(cbmIsKanji,
 				testAndApply(StringUtils::isNotEmpty, PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.isKanji"), Boolean::valueOf, null));
 		//
@@ -803,7 +803,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		if (StringUtils.isNotEmpty(string)) {
 			//
-			setSelectedItem(cbmGaKuNenBeTsuKanJi, string);
+			Util.setSelectedItem(cbmGaKuNenBeTsuKanJi, string);
 			//
 		} // if
 			//
@@ -814,7 +814,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		add(new JComboBox<>(cbmJouYouKanJi = get(booleanComboBoxModelSupplier)),
 				String.format("%1$s,span %2$s", WRAP, 1));
 		//
-		setSelectedItem(cbmJouYouKanJi,
+		Util.setSelectedItem(cbmJouYouKanJi,
 				testAndApply(StringUtils::isNotEmpty, PropertyResolverUtil.getProperty(propertyResolver,
 						"org.springframework.context.support.VoiceManager.yoKoKanJi"), Boolean::valueOf, null));
 		//
@@ -922,7 +922,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		if (size == 1) {
 			//
-			setSelectedItem(cbmYomi, IterableUtils.get(yomiList, 0));
+			Util.setSelectedItem(cbmYomi, IterableUtils.get(yomiList, 0));
 			//
 		} else if (size > 1) {
 			//
@@ -961,7 +961,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 						DefaultComboBoxModel::new, x -> new DefaultComboBoxModel<String>())),
 				WRAP);
 		//
-		setSelectedItem(cbmJlptLevel, PropertyResolverUtil.getProperty(propertyResolver,
+		Util.setSelectedItem(cbmJlptLevel, PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.jlptLevel"));
 		//
 		// Romaji
@@ -1854,7 +1854,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 			if (pronunciation != null) {
 				//
-				setSelectedItem(mcbmPronunciation, IValue0Util.getValue0(pronunciation));
+				Util.setSelectedItem(mcbmPronunciation, IValue0Util.getValue0(pronunciation));
 				//
 			} // if
 				//
@@ -1957,7 +1957,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		Util.forEach(reverseRange(0, getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
 		//
-		setSelectedItem(mcbmAudioFormat, null);
+		Util.setSelectedItem(mcbmAudioFormat, null);
 		//
 		final Map<String, String> audioUrls = getAudioUrls(pronunciation);
 		//
@@ -1971,7 +1971,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		if (Util.containsKey(audioUrls, preferredPronunciationAudioFormat)) {
 			//
-			setSelectedItem(mcbmAudioFormat, preferredPronunciationAudioFormat);
+			Util.setSelectedItem(mcbmAudioFormat, preferredPronunciationAudioFormat);
 			//
 		} // if
 			//
@@ -4003,11 +4003,11 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		if (StringUtils.isEmpty(text) || CollectionUtils.isEmpty(list)) {
 			//
-			setSelectedItem(cbmJouYouKanJi, null);
+			Util.setSelectedItem(cbmJouYouKanJi, null);
 			//
 		} else if (jouYouKanJiList != null) {
 			//
-			setSelectedItem(cbmJouYouKanJi,
+			Util.setSelectedItem(cbmJouYouKanJi,
 					StringUtils.length(text) <= orElse(max(mapToInt(Util.stream(list), StringUtils::length)), 0)
 							? Util.contains(list, text)
 							: null);
@@ -4074,11 +4074,11 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		if (size == 1) {
 			//
-			setSelectedItem(comboBoxModel, IterableUtils.get(list, 0));
+			Util.setSelectedItem(comboBoxModel, IterableUtils.get(list, 0));
 			//
 		} else if (size < 1) {
 			//
-			setSelectedItem(comboBoxModel, null);
+			Util.setSelectedItem(comboBoxModel, null);
 			//
 		} else {
 			//
@@ -4756,7 +4756,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} // for
 			//
-		setSelectedItem(instance.cbmJlptLevel, null);
+		Util.setSelectedItem(instance.cbmJlptLevel, null);
 		//
 		final IValue0<List<JlptVocabulary>> jlptVocabularyList = instance.jlptVocabularyList;
 		//
@@ -4774,7 +4774,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 			if (IterableUtils.size(temp) > 1) {
 				//
-				setSelectedItem(instance.cbmJlptLevel, null);
+				Util.setSelectedItem(instance.cbmJlptLevel, null);
 				//
 				testAndAccept(x -> IterableUtils.size(x) == 1,
 						Util.toList(
@@ -4827,7 +4827,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} else if (size == 1) {
 			//
-			setSelectedItem(cbm, getElementAt(cbm, intList.get(0)));
+			Util.setSelectedItem(cbm, getElementAt(cbm, intList.get(0)));
 			//
 		} // if
 			//
@@ -4959,13 +4959,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		return list;
 		//
-	}
-
-	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance,
-			@Nullable final Object selectedItem) {
-		if (instance != null) {
-			instance.setSelectedItem(selectedItem);
-		}
 	}
 
 	@Nullable

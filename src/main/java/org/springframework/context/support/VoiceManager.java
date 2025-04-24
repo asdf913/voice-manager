@@ -374,9 +374,9 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		final String audioFormat = PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.audioFormat");
 		//
-		setSelectedItem(cbmAudioFormatWrite, audioFormat);
+		Util.setSelectedItem(cbmAudioFormatWrite, audioFormat);
 		//
-		setSelectedItem(cbmAudioFormatExecute, audioFormat);
+		Util.setSelectedItem(cbmAudioFormatExecute, audioFormat);
 		//
 	}
 
@@ -493,13 +493,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(headless, LOG, throwable);
 		//
-	}
-
-	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance,
-			@Nullable final Object selectedItem) {
-		if (instance != null) {
-			instance.setSelectedItem(selectedItem);
-		}
 	}
 
 	public void setVoiceFolder(final String voiceFolder) {
