@@ -87,6 +87,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationContextUtil;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.EnvironmentCapable;
+import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -209,8 +210,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		final String wrap = "wrap";
 		//
+		final PropertyResolver propertyResolver = getEnvironment(applicationContext);
+		//
 		add(new JScrollPane(taText = new JTextArea(Util.toString(testAndApply(PropertyResolverUtil::containsProperty,
-				getEnvironment(applicationContext), String.join(".", Util.getName(Util.getClass(this)), "SYNTEXT"),
+				propertyResolver, String.join(".", Util.getName(Util.getClass(this)), "SYNTEXT"),
 				PropertyResolverUtil::getProperty, null)))), String.format("%1$s,growy,wmin %2$spx", wrap, width));
 		//
 		// 話者
@@ -236,6 +239,43 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 						Collectors.toMap(x -> NodeUtil.attr(x, VALUE), ElementUtil::text))), new String[] {}),
 				DefaultComboBoxModel::new, null), JComboBox::new, x -> new JComboBox<>())));
 		//
+		final String propertyKey = String.join(".", Util.getName(Util.getClass(this)), "SPKR");
+		//
+		if (PropertyResolverUtil.containsProperty(propertyResolver, propertyKey)) {
+			//
+			final String propertyValue = PropertyResolverUtil.getProperty(propertyResolver, propertyKey);
+			//
+			IValue0<Object> iValue0 = null;
+			//
+			Object elementAt = null;
+			//
+			for (int i = 0; cbmVoice != null && i < cbmVoice.getSize(); i++) {
+				//
+				if (StringUtils.containsIgnoreCase(Util.toString(elementAt = cbmVoice.getElementAt(i)),
+						propertyValue)) {
+					//
+					if (iValue0 == null) {
+						//
+						iValue0 = Unit.with(elementAt);
+						//
+					} else {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+			if (cbmVoice != null && iValue0 != null) {
+				//
+				cbmVoice.setSelectedItem(IValue0Util.getValue0(iValue0));
+				//
+			} // if
+				//
+		} // if
+			//
 		add(new JLabel("最小"));
 		//
 		add(new JLabel("標準"));
