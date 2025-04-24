@@ -70,7 +70,6 @@ import org.junit.jupiter.api.Test;
 import org.meeuw.functional.Functions;
 import org.meeuw.functional.Predicates;
 import org.meeuw.functional.ThrowingRunnable;
-import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.EnvironmentCapable;
 import org.w3c.dom.Document;
