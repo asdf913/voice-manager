@@ -209,9 +209,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		final String wrap = "wrap";
 		//
-		add(new JScrollPane(taText = new JTextArea(testAndApply((a, b) -> PropertyResolverUtil.containsProperty(a, b),
-				getEnvironment(applicationContext), String.join(".", Util.getName(Util.getClass(this)), "SYNTEXT"),
-				(a, b) -> PropertyResolverUtil.getProperty(a, b), null))),
+		add(new JScrollPane(taText = new JTextArea(Util.toString(
+				testAndApply((a, b) -> PropertyResolverUtil.containsProperty(a, b), getEnvironment(applicationContext),
+						String.join(".", Util.getName(Util.getClass(this)), "SYNTEXT"),
+						(a, b) -> PropertyResolverUtil.getProperty(a, b), null)))),
 				String.format("%1$s,growy,wmin %2$spx", wrap, width));
 		//
 		// 話者
