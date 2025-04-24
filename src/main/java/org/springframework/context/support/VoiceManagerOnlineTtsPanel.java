@@ -374,7 +374,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
-	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) {
+	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, final Object selectedItem) {
 		if (instance != null) {
 			instance.setSelectedItem(selectedItem);
 		}
