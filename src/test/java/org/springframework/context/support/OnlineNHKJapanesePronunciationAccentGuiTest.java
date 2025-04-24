@@ -176,6 +176,8 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 		private Optional<?> max = null;
 
+		private Component component = null;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
@@ -260,6 +262,14 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				if (Objects.equals(methodName, "max")) {
 					//
 					return max;
+					//
+				} // if
+					//
+			} else if (proxy instanceof ListCellRenderer) {
+				//
+				if (Objects.equals(methodName, "getListCellRendererComponent")) {
+					//
+					return component;
 					//
 				} // if
 					//
