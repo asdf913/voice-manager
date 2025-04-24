@@ -1859,7 +1859,7 @@ public abstract class Util {
 		}
 	}
 
-	static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) {
+	static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, final Object selectedItem) {
 		if (instance != null) {
 			instance.setSelectedItem(selectedItem);
 		}
