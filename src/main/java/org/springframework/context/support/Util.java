@@ -1866,11 +1866,11 @@ public abstract class Util {
 		}
 	}
 
-	static int getSize(final ListModel<?> instance) {
+	static int getSize(@Nullable final ListModel<?> instance) {
 		return instance != null ? instance.getSize() : 0;
 	}
 
-	static <E> E getElementAt(final ListModel<E> instance, final int index) {
+	static <E> E getElementAt(@Nullable final ListModel<E> instance, final int index) {
 		return instance != null ? instance.getElementAt(index) : null;
 	}
 
