@@ -144,7 +144,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	@Note("URL")
 	private JTextComponent tfUrl = null;
 
-	private JTextComponent tfErrorMessage, tfElapsed = null;
+	@Note("Error Message")
+	private JTextComponent tfErrorMessage = null;
+
+	private JTextComponent tfElapsed = null;
 
 	@Name("SPKR")
 	private transient ComboBoxModel<?> cbmVoice = null;
