@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -83,6 +85,9 @@ import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationContextUtil;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.EnvironmentCapable;
+import org.springframework.core.env.PropertyResolverUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -204,7 +209,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		final String wrap = "wrap";
 		//
-		add(new JScrollPane(taText = new JTextArea()), String.format("%1$s,growy,wmin %2$spx", wrap, width));
+		add(new JScrollPane(taText = new JTextArea(testAndApply((a, b) -> PropertyResolverUtil.containsProperty(a, b),
+				getEnvironment(applicationContext), String.join(".", Util.getName(Util.getClass(this)), "SYNTEXT"),
+				(a, b) -> PropertyResolverUtil.getProperty(a, b), null))),
+				String.format("%1$s,growy,wmin %2$spx", wrap, width));
 		//
 		// 話者
 		//
@@ -327,6 +335,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
+	private static Environment getEnvironment(final EnvironmentCapable instance) {
+		return instance != null ? instance.getEnvironment() : null;
+	}
+
 	private static void addActionListener(@Nullable final AbstractButton instance,
 			final ActionListener actionListener) {
 		if (instance != null) {
@@ -445,6 +457,19 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) {
+		return test(predicate, t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
+	}
+
+	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, final U u) {
+		return instance != null && instance.test(t, u);
+	}
+
+	private static <T, U, R> R apply(final BiFunction<T, U, R> instance, final T t, final U u) {
+		return instance != null ? instance.apply(t, u) : null;
 	}
 
 	@Override

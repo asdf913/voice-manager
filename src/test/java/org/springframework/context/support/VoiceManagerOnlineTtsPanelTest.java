@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -65,13 +67,16 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.meeuw.functional.Functions;
+import org.meeuw.functional.Predicates;
 import org.meeuw.functional.ThrowingRunnable;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.EnvironmentCapable;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -80,8 +85,8 @@ import javassist.util.proxy.ProxyUtil;
 
 class VoiceManagerOnlineTtsPanelTest {
 
-	private static Method METHOD_GET_LAYOUT_MANAGER, METHOD_TEST_AND_APPLY, METHOD_QUERY_SELECTOR,
-			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT, METHOD_GET_ATTRIBUTE,
+	private static Method METHOD_GET_LAYOUT_MANAGER, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
+			METHOD_QUERY_SELECTOR, METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT, METHOD_GET_ATTRIBUTE,
 			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME, METHOD_GET_VALUE_ATTRIBUTE,
 			METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES, METHOD_SELECT_STREAM,
 			METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_CHILD_NODES, METHOD_GET_NEXT_ELEMENT_SIBLING,
@@ -95,8 +100,11 @@ class VoiceManagerOnlineTtsPanelTest {
 		(METHOD_GET_LAYOUT_MANAGER = clz.getDeclaredMethod("getLayoutManager", Object.class, Iterable.class))
 				.setAccessible(true);
 		//
-		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
+		(METHOD_TEST_AND_APPLY4 = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY5 = clz.getDeclaredMethod("testAndApply", BiPredicate.class, Object.class, Object.class,
+				BiFunction.class, BiFunction.class)).setAccessible(true);
 		//
 		(METHOD_QUERY_SELECTOR = clz.getDeclaredMethod("querySelector", DomNode.class, String.class))
 				.setAccessible(true);
@@ -460,13 +468,24 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		Assertions.assertNull(testAndApply(Predicates.alwaysTrue(), null, null, null));
 		//
+		Assertions.assertNull(testAndApply(Predicates.biAlwaysTrue(), null, null, Functions.biAlways(null), null));
+		//
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
 			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
 			throws Throwable {
 		try {
-			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+			return (R) METHOD_TEST_AND_APPLY4.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) throws Throwable {
+		try {
+			return (R) METHOD_TEST_AND_APPLY5.invoke(null, predicate, t, u, functionTrue, functionFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
@@ -848,6 +867,10 @@ class VoiceManagerOnlineTtsPanelTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	private static Environment getEnvironment(final EnvironmentCapable instance) {
+		return instance != null ? instance.getEnvironment() : null;
 	}
 
 }
