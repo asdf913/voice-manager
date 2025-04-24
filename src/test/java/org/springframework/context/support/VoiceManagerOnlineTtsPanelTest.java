@@ -92,7 +92,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME, METHOD_GET_VALUE_ATTRIBUTE,
 			METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES, METHOD_SELECT_STREAM,
 			METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_CHILD_NODES, METHOD_GET_NEXT_ELEMENT_SIBLING,
-			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_ELEMENT_AT,
+			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF,
 			METHOD_GET_VOICE = null;
 
 	@BeforeAll
@@ -159,9 +159,6 @@ class VoiceManagerOnlineTtsPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_GET_ELEMENT_AT = clz.getDeclaredMethod("getElementAt", ListModel.class, Integer.TYPE))
-				.setAccessible(true);
 		//
 		(METHOD_GET_VOICE = clz.getDeclaredMethod("getVoice", PropertyResolver.class, String.class, ListModel.class,
 				Map.class)).setAccessible(true);
@@ -308,16 +305,12 @@ class VoiceManagerOnlineTtsPanelTest {
 
 	private DomNode domNode = null;
 
-	private ListModel<?> listModel = null;
-
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
 		instance = new VoiceManagerOnlineTtsPanel();
 		//
 		nodeList = Reflection.newProxy(NodeList.class, ih = new IH());
-		//
-		listModel = Reflection.newProxy(ListModel.class, ih);
 		//
 		element = Util.cast(Element.class, Narcissus.allocateInstance(Element.class));
 		//
@@ -958,24 +951,11 @@ class VoiceManagerOnlineTtsPanelTest {
 	}
 
 	@Test
-	void testGetElementAt() throws Throwable {
-		//
-		Assertions.assertNull(getElementAt(listModel, 0));
-		//
-	}
-
-	private static <E> E getElementAt(final ListModel<E> instance, final int index) throws Throwable {
-		try {
-			return (E) METHOD_GET_ELEMENT_AT.invoke(null, instance, index);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testGetVoice() throws Throwable {
 		//
 		final PropertyResolver propertyResolver = Reflection.newProxy(PropertyResolver.class, ih);
+		//
+		final ListModel<?> listModel = Reflection.newProxy(ListModel.class, ih);
 		//
 		Assertions.assertEquals(null, getVoice(propertyResolver, null, listModel, null));
 		//

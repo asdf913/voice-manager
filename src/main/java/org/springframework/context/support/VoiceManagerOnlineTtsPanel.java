@@ -357,7 +357,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 			for (int i = 0; i < Util.getSize(listModel); i++) {
 				//
-				if (!Objects.equals(Util.toString(elementAt = getElementAt(listModel, i)),
+				if (!Objects.equals(Util.toString(elementAt = Util.getElementAt(listModel, i)),
 						Util.get(map, propertyValue))) {
 					//
 					continue;
@@ -378,7 +378,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				for (int i = 0; i < Util.getSize(listModel); i++) {
 					//
-					if (!StringUtils.containsIgnoreCase(Util.toString(elementAt = getElementAt(listModel, i)),
+					if (!StringUtils.containsIgnoreCase(Util.toString(elementAt = Util.getElementAt(listModel, i)),
 							propertyValue)) {
 						//
 						continue;
@@ -401,11 +401,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 		return iValue0;
 		//
-	}
-
-	@Nullable
-	private static <E> E getElementAt(@Nullable final ListModel<E> instance, final int index) {
-		return instance != null ? instance.getElementAt(index) : null;
 	}
 
 	private static <T> T iif(final boolean condition, final T valueTrue, final T valueFalse) {

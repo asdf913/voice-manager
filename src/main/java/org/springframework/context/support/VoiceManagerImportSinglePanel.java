@@ -96,7 +96,6 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
-import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -4811,7 +4810,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		for (int i = 0; i < Util.getSize(cbm); i++) {
 			//
-			if (StringUtils.equalsAnyIgnoreCase(getElementAt(cbm, i), string)) {
+			if (StringUtils.equalsAnyIgnoreCase(Util.getElementAt(cbm, i), string)) {
 				//
 				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i);
 				//
@@ -4827,15 +4826,10 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} else if (size == 1) {
 			//
-			Util.setSelectedItem(cbm, getElementAt(cbm, intList.get(0)));
+			Util.setSelectedItem(cbm, Util.getElementAt(cbm, intList.get(0)));
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static <E> E getElementAt(@Nullable final ListModel<E> instance, final int index) {
-		return instance != null ? instance.getElementAt(index) : null;
 	}
 
 	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,

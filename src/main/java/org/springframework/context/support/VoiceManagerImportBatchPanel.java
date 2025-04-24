@@ -90,7 +90,6 @@ import javax.swing.JSlider;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
-import javax.swing.ListModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
@@ -4360,11 +4359,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static <E> E getElementAt(@Nullable final ListModel<E> instance, final int index) {
-		return instance != null ? instance.getElementAt(index) : null;
 	}
 
 	@Nullable

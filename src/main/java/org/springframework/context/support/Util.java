@@ -1870,4 +1870,8 @@ public abstract class Util {
 		return instance != null ? instance.getSize() : 0;
 	}
 
+	static <E> E getElementAt(final ListModel<E> instance, final int index) {
+		return instance != null ? instance.getElementAt(index) : null;
+	}
+
 }
