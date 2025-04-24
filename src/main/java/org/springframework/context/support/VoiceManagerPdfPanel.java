@@ -3865,7 +3865,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static <T, U, E extends Exception> void testAndAccept(final BiPredicate<T, U> instance, final T t,
 			@Nullable final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
-		if (test(instance, t, u)) {
+		if (Util.test(instance, t, u)) {
 			accept(consumer, t, u);
 		} // if
 	}
@@ -4066,13 +4066,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, @Nullable final T t,
 			@Nullable final U u, final FailableBiFunction<T, U, R, E> functionTrue,
 			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
-		return test(predicate, t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
+		return Util.test(predicate, t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
-	}
-
-	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, @Nullable final T t,
-			@Nullable final U u) {
-		return instance != null && instance.test(t, u);
 	}
 
 	@Nullable

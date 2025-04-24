@@ -711,7 +711,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 
 	private static <T, U> void testAndAccept(@Nullable final BiPredicate<T, U> predicate, final T t, final U u,
 			@Nullable final BiConsumer<T, U> consumer) {
-		if (predicate != null && predicate.test(t, u) && consumer != null) {
+		if (Util.test(predicate, t, u) && consumer != null) {
 			consumer.accept(t, u);
 		}
 	}

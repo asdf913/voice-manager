@@ -217,7 +217,7 @@ public class MapReportGui extends JFrame
 
 	private static <T, U> void testAndAccept(@Nullable final BiPredicate<T, U> predicate, final T t, final U u,
 			@Nullable final BiConsumer<T, U> consumer) {
-		if (predicate != null && predicate.test(t, u) && consumer != null) {
+		if (Util.test(predicate, t, u) && consumer != null) {
 			consumer.accept(t, u);
 		}
 	}
@@ -430,7 +430,7 @@ public class MapReportGui extends JFrame
 			//
 			for (final Object key : keySet) {
 				//
-				if ((biPredicate != null && !biPredicate.test(mm, key))
+				if ((biPredicate != null && !Util.test(biPredicate, mm, key))
 						|| (mm2 = ObjectUtils.getIfNull(mm2, LinkedHashMultimap::create)) == null) {
 					//
 					continue;

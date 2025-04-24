@@ -1767,13 +1767,9 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, final T t,
 			@Nullable final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
-		if (test(instance, t, u)) {
+		if (Util.test(instance, t, u)) {
 			accept(consumer, t, u);
 		} // if
-	}
-
-	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, @Nullable final U u) {
-		return instance != null && instance.test(t, u);
 	}
 
 	@Nullable

@@ -1333,7 +1333,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 	private static <T, U, R, E extends Throwable> R testAndApply(@Nullable final BiPredicate<T, U> predicate, final T t,
 			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
 			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
-		return predicate != null && predicate.test(t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
+		return Util.test(predicate, t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
 
@@ -1376,7 +1376,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 
 	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
 			final BiConsumer<T, U> a, @Nullable final BiConsumer<T, U> b) {
-		if (test(instance, t, u)) {
+		if (Util.test(instance, t, u)) {
 			accept(a, t, u);
 		} else {
 			accept(b, t, u);
@@ -1548,13 +1548,9 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 
 	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, final T t,
 			final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
-		if (test(instance, t, u)) {
+		if (Util.test(instance, t, u)) {
 			accept(consumer, t, u);
 		} // if
-	}
-
-	private static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, final U u) {
-		return instance != null && instance.test(t, u);
 	}
 
 	private static <T, U, E extends Throwable> void accept(@Nullable final FailableBiConsumer<T, U, E> instance,
