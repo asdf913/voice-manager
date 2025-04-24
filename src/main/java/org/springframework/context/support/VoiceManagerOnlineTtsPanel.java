@@ -44,6 +44,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
@@ -249,9 +250,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 			Object elementAt = null;
 			//
-			for (int i = 0; cbmVoice != null && i < cbmVoice.getSize(); i++) {
+			for (int i = 0; i < getSize(cbmVoice); i++) {
 				//
-				if (!StringUtils.equals(Util.toString(elementAt = cbmVoice.getElementAt(i)),
+				if (!StringUtils.equals(Util.toString(elementAt = getElementAt(cbmVoice, i)),
 						Util.get(voices, propertyValue))) {
 					//
 					continue;
@@ -272,9 +273,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 			if (iValue0 == null) {
 				//
-				for (int i = 0; cbmVoice != null && i < cbmVoice.getSize(); i++) {
+				for (int i = 0; i < getSize(cbmVoice); i++) {
 					//
-					if (!StringUtils.containsIgnoreCase(Util.toString(elementAt = cbmVoice.getElementAt(i)),
+					if (!StringUtils.containsIgnoreCase(Util.toString(elementAt = getElementAt(cbmVoice, i)),
 							propertyValue)) {
 						//
 						continue;
@@ -396,6 +397,14 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		Util.forEach(Arrays.asList(btnExecute, btnCopy), x -> addActionListener(x, this));
 		//
+	}
+
+	private static <E> E getElementAt(final ListModel<E> instance, final int index) {
+		return instance != null ? instance.getElementAt(index) : null;
+	}
+
+	private static int getSize(final ListModel<?> instance) {
+		return instance != null ? instance.getSize() : 0;
 	}
 
 	private static <T> T iif(final boolean condition, final T valueTrue, final T valueFalse) {

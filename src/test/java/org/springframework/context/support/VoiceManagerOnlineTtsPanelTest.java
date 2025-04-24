@@ -32,6 +32,7 @@ import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.bcel.classfile.ClassParser;
@@ -90,7 +91,8 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME, METHOD_GET_VALUE_ATTRIBUTE,
 			METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES, METHOD_SELECT_STREAM,
 			METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_CHILD_NODES, METHOD_GET_NEXT_ELEMENT_SIBLING,
-			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF = null;
+			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_ELEMENT_AT,
+			METHOD_GET_SIZE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -157,6 +159,11 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
 		//
+		(METHOD_GET_ELEMENT_AT = clz.getDeclaredMethod("getElementAt", ListModel.class, Integer.TYPE))
+				.setAccessible(true);
+		//
+		(METHOD_GET_SIZE = clz.getDeclaredMethod("getSize", ListModel.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -168,6 +175,8 @@ class VoiceManagerOnlineTtsPanelTest {
 		private Map<Object, Node> namedItems = null;
 
 		private String nodeValue = null;
+
+		private Integer size = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
@@ -226,6 +235,18 @@ class VoiceManagerOnlineTtsPanelTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof ListModel) {
+				//
+				if (Objects.equals(methodName, "getElementAt")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(methodName, "getSize")) {
+					//
+					return size;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -271,12 +292,16 @@ class VoiceManagerOnlineTtsPanelTest {
 
 	private DomNode domNode = null;
 
+	private ListModel<?> listModel = null;
+
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
 		instance = new VoiceManagerOnlineTtsPanel();
 		//
 		nodeList = Reflection.newProxy(NodeList.class, ih = new IH());
+		//
+		listModel = Reflection.newProxy(ListModel.class, ih);
 		//
 		element = Util.cast(Element.class, Narcissus.allocateInstance(Element.class));
 		//
@@ -911,6 +936,48 @@ class VoiceManagerOnlineTtsPanelTest {
 	private static <T> T iif(final boolean condition, final T valueTrue, final T valueFalse) throws Throwable {
 		try {
 			return (T) METHOD_IIF.invoke(null, condition, valueTrue, valueFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetElementAt() throws Throwable {
+		//
+		Assertions.assertNull(getElementAt(listModel, 0));
+		//
+	}
+
+	private static <E> E getElementAt(final ListModel<E> instance, final int index) throws Throwable {
+		try {
+			return (E) METHOD_GET_ELEMENT_AT.invoke(null, instance, index);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSize() throws Throwable {
+		//
+		final int size = 0;
+		//
+		if (ih != null) {
+			//
+			ih.size = Integer.valueOf(size);
+			//
+		} //
+			//
+		Assertions.assertEquals(size, getSize(listModel));
+		//
+	}
+
+	private static int getSize(final ListModel<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SIZE.invoke(null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
