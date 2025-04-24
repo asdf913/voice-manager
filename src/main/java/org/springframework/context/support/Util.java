@@ -428,7 +428,7 @@ public abstract class Util {
 		return instance != null && instance.test(value);
 	}
 
-	static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, final T t, final U u) {
+	static <T, U> boolean test(@Nullable final BiPredicate<T, U> instance, @Nullable final T t, final U u) {
 		return instance != null && instance.test(t, u);
 	}
 
