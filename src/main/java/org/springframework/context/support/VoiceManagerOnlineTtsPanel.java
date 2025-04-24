@@ -553,8 +553,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		return instance != null ? instance.apply(t, u) : null;
 	}
 
-	private static <T, U, V, R> R testAndApply(final TriPredicate<T, U, V> predicate, final T t, final U u, final V v,
-			final TriFunction<T, U, V, R> functionTrue, final TriFunction<T, U, V, R> functionFalse) {
+	private static <T, U, V, R> R testAndApply(final TriPredicate<T, U, V> predicate, @Nullable final T t, final U u,
+			final V v, final TriFunction<T, U, V, R> functionTrue, final TriFunction<T, U, V, R> functionFalse) {
 		return TriPredicateUtil.test(predicate, t, u, v) ? TriFunctionUtil.apply(functionTrue, t, u, v)
 				: TriFunctionUtil.apply(functionFalse, t, u, v);
 	}
