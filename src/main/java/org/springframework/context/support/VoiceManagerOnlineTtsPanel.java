@@ -251,19 +251,21 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 			for (int i = 0; cbmVoice != null && i < cbmVoice.getSize(); i++) {
 				//
-				if (StringUtils.containsIgnoreCase(Util.toString(elementAt = cbmVoice.getElementAt(i)),
+				if (!StringUtils.containsIgnoreCase(Util.toString(elementAt = cbmVoice.getElementAt(i)),
 						propertyValue)) {
 					//
-					if (iValue0 == null) {
-						//
-						iValue0 = Unit.with(elementAt);
-						//
-					} else {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
+					continue;
+					//
+				} // if
+					//
+				if (iValue0 == null) {
+					//
+					iValue0 = Unit.with(elementAt);
+					//
+				} else {
+					//
+					throw new IllegalStateException();
+					//
 				} // if
 					//
 			} // for
