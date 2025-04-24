@@ -1860,7 +1860,7 @@ public abstract class Util {
 		}
 	}
 
-	static NodeList getChildNodes(final Node instance) {
+	static NodeList getChildNodes(@Nullable final Node instance) {
 		return instance != null ? instance.getChildNodes() : null;
 	}
 
