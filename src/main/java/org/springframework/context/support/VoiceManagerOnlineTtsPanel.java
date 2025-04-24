@@ -98,6 +98,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.google.common.base.Stopwatch;
+import com.google.common.base.StopwatchUtil;
+
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
@@ -141,7 +144,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	@Note("URL")
 	private JTextComponent tfUrl = null;
 
-	private JTextComponent tfErrorMessage = null;
+	private JTextComponent tfErrorMessage, tfElapsed = null;
 
 	@Name("SPKR")
 	private transient ComboBoxModel<?> cbmVoice = null;
@@ -340,6 +343,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		add(btnExecute = new JButton("Execute"), wrap);
 		//
+		add(new JLabel("Elpased"));
+		//
+		add(tfElapsed = new JTextField(), String.format("%1$s,wmin %2$spx", wrap, width));
+		//
 		add(new JLabel("Output"));
 		//
 		add(tfUrl = new JTextField(), String.format("wmin %1$spx", width));
@@ -350,7 +357,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		add(tfErrorMessage = new JTextField(), String.format("%1$s,wmin %2$spx", wrap, width));
 		//
-		Util.forEach(Arrays.asList(tfUrl, tfErrorMessage), x -> setEditable(x, false));
+		Util.forEach(Arrays.asList(tfElapsed, tfUrl, tfErrorMessage), x -> setEditable(x, false));
 		//
 		Util.forEach(Arrays.asList(btnExecute, btnCopy), x -> addActionListener(x, this));
 		//
@@ -569,7 +576,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		if (Objects.equals(source, btnExecute)) {
 			//
-			Util.forEach(Arrays.asList(tfUrl, tfErrorMessage), x -> Util.setText(x, null));
+			Util.forEach(Arrays.asList(tfElapsed, tfUrl, tfErrorMessage), x -> Util.setText(x, null));
+			//
+			final Stopwatch stopwatch = Stopwatch.createStarted();
 			//
 			try (final WebClient webClient = new WebClient()) {
 				//
@@ -618,6 +627,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			} catch (final IOException e) {
 				//
 				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} finally {
+				//
+				Util.setText(tfElapsed, Util.toString(StopwatchUtil.elapsed(stopwatch)));
 				//
 			} // try
 				//
