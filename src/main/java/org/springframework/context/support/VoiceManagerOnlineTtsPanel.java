@@ -306,9 +306,12 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		add(new JLabel(label));
 		//
-		add(tfPitch = new JTextField(StringUtils.defaultString(NodeUtil.attr(
+		add(tfPitch = new JTextField(StringUtils.defaultString(testAndApply(
+				(a, b, c) -> PropertyResolverUtil.containsProperty(a, b), propertyResolver,
+				String.join(".", Util.getName(Util.getClass(this)), "F0SHIFT"),
 				element = testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null),
-				VALUE))), Util.apply(function, triple = getTriple(pattern, element)));
+				(a, b, c) -> PropertyResolverUtil.getProperty(a, b), (a, b, c) -> NodeUtil.attr(c, VALUE)))),
+				Util.apply(function, triple = getTriple(pattern, element)));
 		//
 		testAndAccept(Objects::nonNull, triple, consumer);
 		//
