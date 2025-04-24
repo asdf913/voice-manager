@@ -53,6 +53,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.Consumers;
 import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.TriFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.htmlunit.SgmlPage;
@@ -71,6 +72,7 @@ import org.junit.jupiter.api.Test;
 import org.meeuw.functional.Functions;
 import org.meeuw.functional.Predicates;
 import org.meeuw.functional.ThrowingRunnable;
+import org.meeuw.functional.TriPredicate;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.EnvironmentCapable;
 import org.springframework.core.env.PropertyResolver;
@@ -88,11 +90,12 @@ import javassist.util.proxy.ProxyUtil;
 class VoiceManagerOnlineTtsPanelTest {
 
 	private static Method METHOD_GET_LAYOUT_MANAGER, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
-			METHOD_QUERY_SELECTOR, METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT, METHOD_GET_ATTRIBUTE,
-			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME, METHOD_GET_VALUE_ATTRIBUTE,
-			METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES, METHOD_SELECT_STREAM,
-			METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING, METHOD_SET_CONTENTS,
-			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE = null;
+			METHOD_TEST_AND_APPLY6, METHOD_QUERY_SELECTOR, METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT,
+			METHOD_GET_ATTRIBUTE, METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME,
+			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
+			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING,
+			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF,
+			METHOD_GET_VOICE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -107,6 +110,9 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_TEST_AND_APPLY5 = clz.getDeclaredMethod("testAndApply", BiPredicate.class, Object.class, Object.class,
 				BiFunction.class, BiFunction.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY6 = clz.getDeclaredMethod("testAndApply", TriPredicate.class, Object.class, Object.class,
+				Object.class, TriFunction.class, TriFunction.class)).setAccessible(true);
 		//
 		(METHOD_QUERY_SELECTOR = clz.getDeclaredMethod("querySelector", DomNode.class, String.class))
 				.setAccessible(true);
@@ -508,6 +514,8 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		Assertions.assertNull(testAndApply(Predicates.biAlwaysTrue(), null, null, Functions.biAlways(null), null));
 		//
+		Assertions.assertNull(testAndApply(Predicates.triAlwaysTrue(), null, null, null, null, null));
+		//
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
@@ -524,6 +532,15 @@ class VoiceManagerOnlineTtsPanelTest {
 			final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY5.invoke(null, predicate, t, u, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T, U, V, R> R testAndApply(final TriPredicate<T, U, V> predicate, final T t, final U u, final V v,
+			final TriFunction<T, U, V, R> functionTrue, final TriFunction<T, U, V, R> functionFalse) throws Throwable {
+		try {
+			return (R) METHOD_TEST_AND_APPLY6.invoke(null, predicate, t, u, v, functionTrue, functionFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

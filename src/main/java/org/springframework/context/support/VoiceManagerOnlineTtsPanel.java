@@ -53,6 +53,8 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.function.TriFunction;
+import org.apache.commons.lang3.function.TriFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.commons.lang3.tuple.TripleUtil;
@@ -76,6 +78,8 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.nodes.TextNodeUtil;
 import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.ThrowingRunnableUtil;
+import org.meeuw.functional.TriPredicate;
+import org.meeuw.functional.TriPredicateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -272,7 +276,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		final Function<Triple<?, ?, ?>, String> function = x -> iif(x != null, String.format("wmin %1$spx", width),
 				String.format("wmin %1$spx,%2$s", width, wrap));
 		//
-		add(tfQuality = new JTextField(StringUtils.defaultString(NodeUtil.attr(element, VALUE))),
+		add(tfQuality = new JTextField(
+				StringUtils.defaultString(testAndApply((a, b, c) -> PropertyResolverUtil.containsProperty(a, b),
+						propertyResolver, String.join(".", Util.getName(Util.getClass(this)), "SYNALPHA"), element,
+						(a, b, c) -> PropertyResolverUtil.getProperty(a, b), (a, b, c) -> NodeUtil.attr(c, VALUE)))),
 				Util.apply(function, triple));
 		//
 		final Consumer<Triple<String, String, String>> consumer = x -> {
@@ -541,6 +548,12 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	@Nullable
 	private static <T, U, R> R apply(@Nullable final BiFunction<T, U, R> instance, @Nullable final T t, final U u) {
 		return instance != null ? instance.apply(t, u) : null;
+	}
+
+	private static <T, U, V, R> R testAndApply(final TriPredicate<T, U, V> predicate, final T t, final U u, final V v,
+			final TriFunction<T, U, V, R> functionTrue, final TriFunction<T, U, V, R> functionFalse) {
+		return TriPredicateUtil.test(predicate, t, u, v) ? TriFunctionUtil.apply(functionTrue, t, u, v)
+				: TriFunctionUtil.apply(functionFalse, t, u, v);
 	}
 
 	@Override
