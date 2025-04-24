@@ -268,12 +268,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 					//
 			} // for
 				//
-			if (iValue0 != null) {
-				//
-				setSelectedItem(cbmVoice, IValue0Util.getValue0(iValue0));
-				//
-			} // if
-				//
+			testAndAccept(Objects::nonNull, iValue0, x -> setSelectedItem(cbmVoice, IValue0Util.getValue0(x)));
+			//
 		} // if
 			//
 		add(new JLabel("最小"));
