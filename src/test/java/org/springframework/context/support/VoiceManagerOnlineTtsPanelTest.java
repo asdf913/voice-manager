@@ -73,6 +73,7 @@ import org.meeuw.functional.Predicates;
 import org.meeuw.functional.ThrowingRunnable;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.EnvironmentCapable;
+import org.springframework.core.env.PropertyResolver;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -92,7 +93,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES, METHOD_SELECT_STREAM,
 			METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_CHILD_NODES, METHOD_GET_NEXT_ELEMENT_SIBLING,
 			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_ELEMENT_AT,
-			METHOD_GET_SIZE = null;
+			METHOD_GET_SIZE, METHOD_GET_VOICE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -164,6 +165,9 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_GET_SIZE = clz.getDeclaredMethod("getSize", ListModel.class)).setAccessible(true);
 		//
+		(METHOD_GET_VOICE = clz.getDeclaredMethod("getVoice", PropertyResolver.class, String.class, ListModel.class,
+				Map.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -176,7 +180,9 @@ class VoiceManagerOnlineTtsPanelTest {
 
 		private String nodeValue = null;
 
-		private Integer size = null;
+		private Map<Object, Object> properties = null;
+
+		private Object[] elements = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
@@ -237,13 +243,25 @@ class VoiceManagerOnlineTtsPanelTest {
 				//
 			} else if (proxy instanceof ListModel) {
 				//
-				if (Objects.equals(methodName, "getElementAt")) {
+				if (Objects.equals(methodName, "getElementAt") && args != null && args[0] instanceof Integer i) {
 					//
-					return null;
+					return ArrayUtils.get(elements, i);
 					//
 				} else if (Objects.equals(methodName, "getSize")) {
 					//
-					return size;
+					return elements != null ? elements.length : 0;
+					//
+				} // if
+					//
+			} else if (proxy instanceof PropertyResolver) {
+				//
+				if (Objects.equals(methodName, "containsProperty") && args != null && args.length > 0) {
+					//
+					return Util.containsKey(properties, args[0]);
+					//
+				} else if (Objects.equals(methodName, "getProperty") && args != null && args.length > 0) {
+					//
+					return Util.get(properties, args[0]);
 					//
 				} // if
 					//
@@ -959,15 +977,7 @@ class VoiceManagerOnlineTtsPanelTest {
 	@Test
 	void testGetSize() throws Throwable {
 		//
-		final int size = 0;
-		//
-		if (ih != null) {
-			//
-			ih.size = Integer.valueOf(size);
-			//
-		} //
-			//
-		Assertions.assertEquals(size, getSize(listModel));
+		Assertions.assertEquals(0, getSize(listModel));
 		//
 	}
 
@@ -976,6 +986,62 @@ class VoiceManagerOnlineTtsPanelTest {
 			final Object obj = METHOD_GET_SIZE.invoke(null, instance);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetVoice() throws Throwable {
+		//
+		final PropertyResolver propertyResolver = Reflection.newProxy(PropertyResolver.class, ih);
+		//
+		Assertions.assertEquals(null, getVoice(propertyResolver, null, listModel, null));
+		//
+		if (ih != null) {
+			//
+			Util.put(ih.properties = ObjectUtils.getIfNull(ih.properties, LinkedHashMap::new), null, null);
+			//
+			ih.elements = new Object[] { null };
+			//
+		} // if
+			//
+		Assertions.assertEquals(Unit.with(null), getVoice(propertyResolver, null, listModel, null));
+		//
+		final String a = "a";
+		//
+		Assertions.assertNull(getVoice(propertyResolver, null, listModel, Collections.singletonMap(null, a)));
+		//
+		if (ih != null) {
+			//
+			Util.put(ih.properties = ObjectUtils.getIfNull(ih.properties, LinkedHashMap::new), null, a);
+			//
+			ih.elements = new Object[] { a };
+			//
+		} // if
+			//
+		Assertions.assertEquals(Unit.with(a), getVoice(propertyResolver, null, listModel, null));
+		//
+		if (ih != null) {
+			//
+			ih.elements = new Object[] { a, a };
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class, () -> getVoice(propertyResolver, null, listModel, null));
+		//
+	}
+
+	private static IValue0<Object> getVoice(final PropertyResolver propertyResolver, final String propertyKey,
+			final ListModel<?> listModel, final Map<?, ?> map) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_VOICE.invoke(null, propertyResolver, propertyKey, listModel, map);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

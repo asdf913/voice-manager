@@ -240,67 +240,11 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 						Collectors.toMap(x -> NodeUtil.attr(x, VALUE), ElementUtil::text))), new String[] {}),
 				DefaultComboBoxModel::new, null), JComboBox::new, x -> new JComboBox<>())));
 		//
-		final String propertyKey = String.join(".", Util.getName(Util.getClass(this)), "SPKR");
+		testAndAccept(
+				Objects::nonNull, getVoice(propertyResolver,
+						String.join(".", Util.getName(Util.getClass(this)), "SPKR"), cbmVoice, voices),
+				x -> Util.setSelectedItem(cbmVoice, IValue0Util.getValue0(x)));
 		//
-		if (PropertyResolverUtil.containsProperty(propertyResolver, propertyKey)) {
-			//
-			final String propertyValue = PropertyResolverUtil.getProperty(propertyResolver, propertyKey);
-			//
-			IValue0<Object> iValue0 = null;
-			//
-			Object elementAt = null;
-			//
-			for (int i = 0; i < getSize(cbmVoice); i++) {
-				//
-				if (!StringUtils.equals(Util.toString(elementAt = getElementAt(cbmVoice, i)),
-						Util.get(voices, propertyValue))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (iValue0 == null) {
-					//
-					iValue0 = Unit.with(elementAt);
-					//
-				} else {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-			} // for
-				//
-			if (iValue0 == null) {
-				//
-				for (int i = 0; i < getSize(cbmVoice); i++) {
-					//
-					if (!StringUtils.containsIgnoreCase(Util.toString(elementAt = getElementAt(cbmVoice, i)),
-							propertyValue)) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (iValue0 == null) {
-						//
-						iValue0 = Unit.with(elementAt);
-						//
-					} else {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-				} // for
-					//
-			} // if
-				//
-			testAndAccept(Objects::nonNull, iValue0, x -> Util.setSelectedItem(cbmVoice, IValue0Util.getValue0(x)));
-			//
-		} // if
-			//
-
 		add(new JLabel("最小"));
 		//
 		add(new JLabel("標準"));
@@ -396,6 +340,69 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		Util.forEach(Arrays.asList(tfUrl, tfErrorMessage), x -> setEditable(x, false));
 		//
 		Util.forEach(Arrays.asList(btnExecute, btnCopy), x -> addActionListener(x, this));
+		//
+	}
+
+	private static IValue0<Object> getVoice(final PropertyResolver propertyResolver, final String propertyKey,
+			final ListModel<?> listModel, final Map<?, ?> map) {
+		//
+		IValue0<Object> iValue0 = null;
+		//
+		if (PropertyResolverUtil.containsProperty(propertyResolver, propertyKey)) {
+			//
+			final String propertyValue = PropertyResolverUtil.getProperty(propertyResolver, propertyKey);
+			//
+			Object elementAt = null;
+			//
+			for (int i = 0; i < getSize(listModel); i++) {
+				//
+				if (!Objects.equals(Util.toString(elementAt = getElementAt(listModel, i)),
+						Util.get(map, propertyValue))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (iValue0 == null) {
+					//
+					iValue0 = Unit.with(elementAt);
+					//
+				} else {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // for
+				//
+			if (iValue0 == null) {
+				//
+				for (int i = 0; i < getSize(listModel); i++) {
+					//
+					if (!StringUtils.containsIgnoreCase(Util.toString(elementAt = getElementAt(listModel, i)),
+							propertyValue)) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (iValue0 == null) {
+						//
+						iValue0 = Unit.with(elementAt);
+						//
+					} else {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+		} // if
+			//
+		return iValue0;
 		//
 	}
 
