@@ -343,6 +343,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static IValue0<Object> getVoice(@Nullable final PropertyResolver propertyResolver, final String propertyKey,
 			final ListModel<?> listModel, final Map<?, ?> map) {
 		//
@@ -406,6 +407,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static <E> E getElementAt(@Nullable final ListModel<E> instance, final int index) {
 		return instance != null ? instance.getElementAt(index) : null;
 	}
