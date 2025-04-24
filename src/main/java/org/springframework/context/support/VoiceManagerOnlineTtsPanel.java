@@ -334,7 +334,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
-	private static Environment getEnvironment(final EnvironmentCapable instance) {
+	private static Environment getEnvironment(@Nullable final EnvironmentCapable instance) {
 		return instance != null ? instance.getEnvironment() : null;
 	}
 
@@ -467,7 +467,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		return instance != null && instance.test(t, u);
 	}
 
-	private static <T, U, R> R apply(final BiFunction<T, U, R> instance, final T t, final U u) {
+	private static <T, U, R> R apply(@Nullable final BiFunction<T, U, R> instance, final T t, final U u) {
 		return instance != null ? instance.apply(t, u) : null;
 	}
 
