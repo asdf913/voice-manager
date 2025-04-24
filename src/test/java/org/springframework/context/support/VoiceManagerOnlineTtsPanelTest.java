@@ -90,7 +90,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME, METHOD_GET_VALUE_ATTRIBUTE,
 			METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES, METHOD_SELECT_STREAM,
 			METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_CHILD_NODES, METHOD_GET_NEXT_ELEMENT_SIBLING,
-			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT = null;
+			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_SET_SELECTED_ITEM = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -155,6 +155,9 @@ class VoiceManagerOnlineTtsPanelTest {
 		(METHOD_GET_ENVIRONMENT = clz.getDeclaredMethod("getEnvironment", EnvironmentCapable.class))
 				.setAccessible(true);
 		//
+		(METHOD_SET_SELECTED_ITEM = clz.getDeclaredMethod("setSelectedItem", ComboBoxModel.class, Object.class))
+				.setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -170,6 +173,12 @@ class VoiceManagerOnlineTtsPanelTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
 			//
+			if (Objects.equals(method != null ? method.getReturnType() : null, Void.TYPE)) {
+				//
+				return null;
+				//
+			} // if
+				//
 			final String methodName = Util.getName(method);
 			//
 			if (proxy instanceof Document && Objects.equals(methodName, "getElementsByTagName")) {
@@ -894,6 +903,21 @@ class VoiceManagerOnlineTtsPanelTest {
 				return (Environment) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetSelectedItem() {
+		//
+		Assertions.assertDoesNotThrow(() -> setSelectedItem(Reflection.newProxy(ComboBoxModel.class, ih), null));
+		//
+	}
+
+	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) throws Throwable {
+		try {
+			METHOD_SET_SELECTED_ITEM.invoke(null, instance, selectedItem);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

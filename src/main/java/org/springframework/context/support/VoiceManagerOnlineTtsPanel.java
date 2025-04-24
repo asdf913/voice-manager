@@ -268,9 +268,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 					//
 			} // for
 				//
-			if (cbmVoice != null && iValue0 != null) {
+			if (iValue0 != null) {
 				//
-				cbmVoice.setSelectedItem(IValue0Util.getValue0(iValue0));
+				setSelectedItem(cbmVoice, IValue0Util.getValue0(iValue0));
 				//
 			} // if
 				//
@@ -372,6 +372,12 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		Util.forEach(Arrays.asList(btnExecute, btnCopy), x -> addActionListener(x, this));
 		//
+	}
+
+	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) {
+		if (instance != null) {
+			instance.setSelectedItem(selectedItem);
+		}
 	}
 
 	@Nullable
