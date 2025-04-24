@@ -296,8 +296,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		Triple<String, String, String> triple = getTriple(pattern,
 				element = testAndApply(x -> IterableUtils.size(x) == 1, elements, x -> IterableUtils.get(x, 0), null));
 		//
-		final Function<Triple<?, ?, ?>, String> function = x -> x != null ? String.format("wmin %1$spx", width)
-				: String.format("wmin %1$spx,%2$s", width, wrap);
+		final Function<Triple<?, ?, ?>, String> function = x -> iif(x != null, String.format("wmin %1$spx", width),
+				String.format("wmin %1$spx,%2$s", width, wrap));
 		//
 		add(tfQuality = new JTextField(StringUtils.defaultString(NodeUtil.attr(element, VALUE))),
 				Util.apply(function, triple));
@@ -368,6 +368,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		Util.forEach(Arrays.asList(btnExecute, btnCopy), x -> addActionListener(x, this));
 		//
+	}
+
+	private static <T> T iif(final boolean condition, final T valueTrue, final T valueFalse) {
+		return condition ? valueTrue : valueFalse;
 	}
 
 	private static void setSelectedItem(@Nullable final ComboBoxModel<?> instance, final Object selectedItem) {

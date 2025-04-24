@@ -90,7 +90,8 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME, METHOD_GET_VALUE_ATTRIBUTE,
 			METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES, METHOD_SELECT_STREAM,
 			METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_CHILD_NODES, METHOD_GET_NEXT_ELEMENT_SIBLING,
-			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_SET_SELECTED_ITEM = null;
+			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_SET_SELECTED_ITEM,
+			METHOD_IIF = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -157,6 +158,8 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_SET_SELECTED_ITEM = clz.getDeclaredMethod("setSelectedItem", ComboBoxModel.class, Object.class))
 				.setAccessible(true);
+		//
+		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -918,6 +921,21 @@ class VoiceManagerOnlineTtsPanelTest {
 	private static void setSelectedItem(final ComboBoxModel<?> instance, final Object selectedItem) throws Throwable {
 		try {
 			METHOD_SET_SELECTED_ITEM.invoke(null, instance, selectedItem);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIif() throws Throwable {
+		//
+		Assertions.assertNull(iif(true, null, null));
+		//
+	}
+
+	private static <T> T iif(final boolean condition, final T valueTrue, final T valueFalse) throws Throwable {
+		try {
+			return (T) METHOD_IIF.invoke(null, condition, valueTrue, valueFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
