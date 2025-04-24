@@ -343,7 +343,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
-	private static IValue0<Object> getVoice(final PropertyResolver propertyResolver, final String propertyKey,
+	private static IValue0<Object> getVoice(@Nullable final PropertyResolver propertyResolver, final String propertyKey,
 			final ListModel<?> listModel, final Map<?, ?> map) {
 		//
 		IValue0<Object> iValue0 = null;
