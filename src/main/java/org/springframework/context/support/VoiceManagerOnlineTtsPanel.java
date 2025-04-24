@@ -364,16 +364,14 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 					//
 				} // if
 					//
-				if (iValue0 == null) {
-					//
-					iValue0 = Unit.with(elementAt);
-					//
-				} else {
+				testAndRunThrows(iValue0 != null, () -> {
 					//
 					throw new IllegalStateException();
 					//
-				} // if
-					//
+				});
+				//
+				iValue0 = Unit.with(elementAt);
+				//
 			} // for
 				//
 			if (iValue0 == null) {
@@ -387,16 +385,14 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 						//
 					} // if
 						//
-					if (iValue0 == null) {
-						//
-						iValue0 = Unit.with(elementAt);
-						//
-					} else {
+					testAndRunThrows(iValue0 != null, () -> {
 						//
 						throw new IllegalStateException();
 						//
-					} // if
-						//
+					});
+					//
+					iValue0 = Unit.with(elementAt);
+					//
 				} // for
 					//
 			} // if
