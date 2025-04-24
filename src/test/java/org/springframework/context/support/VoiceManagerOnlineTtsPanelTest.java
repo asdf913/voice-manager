@@ -70,6 +70,7 @@ import org.junit.jupiter.api.Test;
 import org.meeuw.functional.Functions;
 import org.meeuw.functional.Predicates;
 import org.meeuw.functional.ThrowingRunnable;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.EnvironmentCapable;
 import org.w3c.dom.Document;
@@ -90,7 +91,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME, METHOD_GET_VALUE_ATTRIBUTE,
 			METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES, METHOD_SELECT_STREAM,
 			METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_CHILD_NODES, METHOD_GET_NEXT_ELEMENT_SIBLING,
-			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD = null;
+			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -151,6 +152,9 @@ class VoiceManagerOnlineTtsPanelTest {
 				ClipboardOwner.class)).setAccessible(true);
 		//
 		(METHOD_GET_SYSTEM_CLIPBOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
+		//
+		(METHOD_GET_ENVIRONMENT = clz.getDeclaredMethod("getEnvironment", EnvironmentCapable.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -217,6 +221,10 @@ class VoiceManagerOnlineTtsPanelTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof EnvironmentCapable && Objects.equals(methodName, "getEnvironment")) {
+				//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -252,6 +260,8 @@ class VoiceManagerOnlineTtsPanelTest {
 
 	private IH ih = null;
 
+	private MH mh = null;
+
 	private NodeList nodeList = null;
 
 	private Element element = null;
@@ -271,7 +281,7 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		htmlOption = Util.cast(HtmlOption.class, Narcissus.allocateInstance(HtmlOption.class));
 		//
-		domNode = ProxyUtil.createProxy(DomNode.class, new MH(), clz -> {
+		domNode = ProxyUtil.createProxy(DomNode.class, mh = new MH(), clz -> {
 			final Constructor<?> constructor = clz != null ? clz.getConstructor(SgmlPage.class) : null;
 			if (constructor != null) {
 				constructor.setAccessible(true);
@@ -851,7 +861,7 @@ class VoiceManagerOnlineTtsPanelTest {
 	@Test
 	void testGetSystemClipboard() throws Throwable {
 		//
-		Assertions.assertNull(getSystemClipboard(ProxyUtil.createProxy(Toolkit.class, new MH())));
+		Assertions.assertNull(getSystemClipboard(ProxyUtil.createProxy(Toolkit.class, mh)));
 		//
 	}
 
@@ -869,8 +879,25 @@ class VoiceManagerOnlineTtsPanelTest {
 		}
 	}
 
-	private static Environment getEnvironment(final EnvironmentCapable instance) {
-		return instance != null ? instance.getEnvironment() : null;
+	@Test
+	void testGetEnvironment() throws Throwable {
+		//
+		Assertions.assertNull(getEnvironment(Reflection.newProxy(EnvironmentCapable.class, ih)));
+		//
+	}
+
+	private static Environment getEnvironment(final EnvironmentCapable instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ENVIRONMENT.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Environment) {
+				return (Environment) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }
