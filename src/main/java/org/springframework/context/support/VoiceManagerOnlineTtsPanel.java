@@ -633,8 +633,20 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 			} finally {
 				//
-				Util.setText(tfElapsed, Util.toString(StopwatchUtil.elapsed(stopwatch)));
+				final String string = Util.toString(StopwatchUtil.elapsed(stopwatch));
 				//
+				final Matcher matcher = Util.matcher(Pattern.compile("^PT(((\\d+)(.\\d+)?)S)$"), string);
+				//
+				if (Util.matches(matcher) && Util.groupCount(matcher) > 0) {
+					//
+					Util.setText(tfElapsed, Util.group(matcher, 1));
+					//
+				} else {
+					//
+					Util.setText(tfElapsed, string);
+					//
+				} // if
+					//
 			} // try
 				//
 		} else if (Objects.equals(source, btnCopy)) {
