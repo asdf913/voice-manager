@@ -94,8 +94,8 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_ATTRIBUTE, METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME,
 			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
 			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING,
-			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF,
-			METHOD_GET_VOICE = null;
+			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE,
+			METHOD_GET_TEXT_CONTENT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -166,6 +166,8 @@ class VoiceManagerOnlineTtsPanelTest {
 		(METHOD_GET_VOICE = clz.getDeclaredMethod("getVoice", PropertyResolver.class, String.class, ListModel.class,
 				Map.class)).setAccessible(true);
 		//
+		(METHOD_GET_TEXT_CONTENT = clz.getDeclaredMethod("getTextContent", Node.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -213,6 +215,10 @@ class VoiceManagerOnlineTtsPanelTest {
 				} else if (Objects.equals(methodName, "getNodeValue")) {
 					//
 					return nodeValue;
+					//
+				} else if (Objects.equals(methodName, "getTextContent")) {
+					//
+					return null;
 					//
 				} // if
 					//
@@ -304,12 +310,16 @@ class VoiceManagerOnlineTtsPanelTest {
 
 	private DomNode domNode = null;
 
+	private Node node = null;
+
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
 		instance = new VoiceManagerOnlineTtsPanel();
 		//
 		nodeList = Reflection.newProxy(NodeList.class, ih = new IH());
+		//
+		node = Reflection.newProxy(Node.class, ih);
 		//
 		element = Util.cast(Element.class, Narcissus.allocateInstance(Element.class));
 		//
@@ -607,8 +617,6 @@ class VoiceManagerOnlineTtsPanelTest {
 
 	@Test
 	void testGetAttribute() throws Throwable {
-		//
-		final Node node = Reflection.newProxy(Node.class, ih);
 		//
 		if (ih != null) {
 			//
@@ -990,6 +998,27 @@ class VoiceManagerOnlineTtsPanelTest {
 				return null;
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetTextContent() throws Throwable {
+		//
+		Assertions.assertNull(getTextContent(node));
+		//
+	}
+
+	private static String getTextContent(final Node instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TEXT_CONTENT.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

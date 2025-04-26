@@ -610,7 +610,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				} else if (hm != null) {
 					//
 					final Iterable<DomNode> domNodes = Util.toList(Util.filter(Util.stream(hm.querySelectorAll("b")),
-							x -> Objects.equals(x != null ? x.getTextContent() : null, "合成結果")));
+							x -> Objects.equals(getTextContent(x)  , "合成結果")));
 					//
 					testAndRunThrows(IterableUtils.size(domNodes) > 1, () -> {
 						//
@@ -656,6 +656,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 		} // if
 			//
+	}
+
+	private static String getTextContent(final Node instance) {
+		return instance != null ? instance.getTextContent() : null;
 	}
 
 	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
