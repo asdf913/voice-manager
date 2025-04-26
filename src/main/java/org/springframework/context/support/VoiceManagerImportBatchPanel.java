@@ -201,7 +201,6 @@ import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -3207,7 +3206,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			for (int i = 0; i < Util.getLength(childNodes); i++) {
 				//
 				if (Objects.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml",
-						getTextContent(Util.getNamedItem(Util.getAttributes(Util.item(childNodes, i)), "ContentType")))
+						Util.getTextContent(
+								Util.getNamedItem(Util.getAttributes(Util.item(childNodes, i)), "ContentType")))
 						&& (isXlsx = true)) {
 					//
 					break;
@@ -3226,11 +3226,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 		return null;
 		//
-	}
-
-	@Nullable
-	private static String getTextContent(@Nullable final Node instance) {
-		return instance != null ? instance.getTextContent() : null;
 	}
 
 	@Nullable

@@ -1860,6 +1860,10 @@ public abstract class Util {
 		}
 	}
 
+	static String getTextContent(final Node instance) {
+		return instance != null ? instance.getTextContent() : null;
+	}
+
 	@Nullable
 	static NodeList getChildNodes(@Nullable final Node instance) {
 		return instance != null ? instance.getChildNodes() : null;

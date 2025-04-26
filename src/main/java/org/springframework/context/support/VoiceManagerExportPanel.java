@@ -4466,7 +4466,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 			final Node node = ObjectMap.getObject(objectMap, Node.class);
 			//
-			final String textContent = getTextContent(node);
+			final String textContent = Util.getTextContent(node);
 			//
 			// template key
 			//
@@ -4493,11 +4493,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 			} // try
 				//
-		}
-
-		@Nullable
-		private static String getTextContent(@Nullable final Node instance) {
-			return instance != null ? instance.getTextContent() : null;
 		}
 
 		private static Map<String, Object> describe(final Object data) throws Throwable {
