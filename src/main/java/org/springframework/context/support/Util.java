@@ -163,7 +163,7 @@ public abstract class Util {
 		}
 	}
 
-	static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) {
+	static <T> void forEach(@Nullable final Stream<T> instance, @Nullable final Consumer<? super T> action) {
 		if (instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || action != null)) {
 			instance.forEach(action);
 		}
