@@ -47,7 +47,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -150,13 +149,12 @@ class VoiceManagerTest {
 
 	private static Class<?> CLASS_OBJECT_MAP, CLASS_IH, CLASS_EXPORT_TASK = null;
 
-	private static Method METHOD_TEST_AND_APPLY4, METHOD_FOR_EACH_STREAM, METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE,
-			METHOD_GET_PREFERRED_WIDTH, METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ADD_ITERABLE,
-			METHOD_VALUE_OF1, METHOD_AND_FAILABLE_PREDICATE, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL,
-			METHOD_GET_TAB_INDEX_BY_TITLE, METHOD_GET_LIST, METHOD_TEST_AND_ACCEPT_PREDICATE,
-			METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_TO_URI_URL, METHOD_ENCODE_TO_STRING,
-			METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2, METHOD_SET_VISIBLE,
-			METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL,
+	private static Method METHOD_TEST_AND_APPLY4, METHOD_FOR_EACH_ITERABLE, METHOD_INVOKE, METHOD_GET_PREFERRED_WIDTH,
+			METHOD_ADD_CONTAINER2, METHOD_ADD_CONTAINER3, METHOD_ADD_ITERABLE, METHOD_VALUE_OF1,
+			METHOD_AND_FAILABLE_PREDICATE, METHOD_OR, METHOD_CLEAR_DEFAULT_TABLE_MODEL, METHOD_GET_TAB_INDEX_BY_TITLE,
+			METHOD_GET_LIST, METHOD_TEST_AND_ACCEPT_PREDICATE, METHOD_TEST_AND_ACCEPT_BI_PREDICATE, METHOD_TO_URI_URL,
+			METHOD_ENCODE_TO_STRING, METHOD_GET_OS_VERSION_INFO_EX_MAP, METHOD_ERROR_OR_ASSERT_OR_SHOW_EXCEPTION2,
+			METHOD_SET_VISIBLE, METHOD_GET_MAX_PAGE_PREFERRED_HEIGHT, METHOD_TEST_AND_RUN, METHOD_GET_IF_NULL,
 			METHOD_SET_PREFERRED_WIDTH_ARRAY, METHOD_SET_PREFERRED_WIDTH_2, METHOD_GET_FIELD_BY_NAME,
 			METHOD_CREATE_MICROSOFT_WINDOWS_COMPATIBILITY_WARNING_J_PANEL, METHOD_SET_FOCUS_CYCLE_ROOT,
 			METHOD_SET_FOCUS_TRAVERSAL_POLICY, METHOD_GET_COMPONENTS, METHOD_GET_DECLARED_CONSTRUCTOR,
@@ -170,8 +168,6 @@ class VoiceManagerTest {
 		//
 		(METHOD_TEST_AND_APPLY4 = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
-		//
-		(METHOD_FOR_EACH_STREAM = clz.getDeclaredMethod("forEach", Stream.class, Consumer.class)).setAccessible(true);
 		//
 		(METHOD_FOR_EACH_ITERABLE = clz.getDeclaredMethod("forEach", Iterable.class, FailableConsumer.class))
 				.setAccessible(true);
@@ -881,15 +877,6 @@ class VoiceManagerTest {
 	@Test
 	void testForEach() {
 		//
-		Assertions.assertDoesNotThrow(() -> forEach((Stream<?>) null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> forEach(Stream.empty(), null));
-		//
-		Assertions.assertDoesNotThrow(() -> forEach(Stream.empty(), x -> {
-		}));
-		//
-		Assertions.assertDoesNotThrow(() -> forEach(stream, null));
-		//
 		final Collection<?> collection = Collections.emptySet();
 		//
 		Assertions.assertDoesNotThrow(() -> forEach(collection, null));
@@ -899,14 +886,6 @@ class VoiceManagerTest {
 		//
 		Assertions.assertDoesNotThrow(() -> forEach(iterable, null));
 		//
-	}
-
-	private static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) throws Throwable {
-		try {
-			METHOD_FOR_EACH_STREAM.invoke(null, instance, action);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private static <T, E extends Throwable> void forEach(final Iterable<T> instance,

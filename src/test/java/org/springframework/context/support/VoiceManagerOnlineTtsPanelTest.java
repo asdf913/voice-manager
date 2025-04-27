@@ -12,7 +12,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -95,8 +94,8 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_ATTRIBUTE, METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME,
 			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
 			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING,
-			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE,
-			METHOD_FOR_EACH = null;
+			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF,
+			METHOD_GET_VOICE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -167,8 +166,6 @@ class VoiceManagerOnlineTtsPanelTest {
 		(METHOD_GET_VOICE = clz.getDeclaredMethod("getVoice", PropertyResolver.class, String.class, ListModel.class,
 				Map.class)).setAccessible(true);
 		//
-		(METHOD_FOR_EACH = clz.getDeclaredMethod("forEach", Stream.class, Consumer.class)).setAccessible(true);
-		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -188,12 +185,6 @@ class VoiceManagerOnlineTtsPanelTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
 			//
-			if (Objects.equals(Void.TYPE, method != null ? method.getReturnType() : null)) {
-				//
-				return null;
-				//
-			} // if
-				//
 			final String methodName = Util.getName(method);
 			//
 			if (proxy instanceof Document && Objects.equals(methodName, "getElementsByTagName")) {
@@ -1001,25 +992,6 @@ class VoiceManagerOnlineTtsPanelTest {
 				return (IValue0) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testForEach() {
-		//
-		Assertions.assertDoesNotThrow(() -> forEach(null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> forEach(Stream.empty(), null));
-		//
-		Assertions.assertDoesNotThrow(() -> forEach(Reflection.newProxy(Stream.class, ih), null));
-		//
-	}
-
-	private static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) throws Throwable {
-		try {
-			METHOD_FOR_EACH.invoke(null, instance, action);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

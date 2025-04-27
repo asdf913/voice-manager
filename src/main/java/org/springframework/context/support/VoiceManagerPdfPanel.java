@@ -70,7 +70,6 @@ import java.util.OptionalInt;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.ObjIntConsumer;
 import java.util.function.Predicate;
@@ -159,7 +158,6 @@ import org.apache.commons.lang3.tuple.MutablePairUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.commons.validator.routines.UrlValidatorUtil;
-import org.apache.fontbox.ttf.OTFParser;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
@@ -171,7 +169,6 @@ import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecifica
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
-import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
@@ -1132,13 +1129,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(panel, String.format("span %1$s", 2));
 		//
-		forEach(Util.map(
-				Util.filter(
-						testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManagerPdfPanel.class),
-								Arrays::stream, null),
-						f -> Util.isAssignableFrom(AbstractButton.class, Util.getType(f))),
-				f -> Util.cast(AbstractButton.class,
-						testAndApply(Objects::nonNull, f, x -> Narcissus.getField(this, x), null))),
+		Util.forEach(
+				Util.map(
+						Util.filter(
+								testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManagerPdfPanel.class),
+										Arrays::stream, null),
+								f -> Util.isAssignableFrom(AbstractButton.class, Util.getType(f))),
+						f -> Util.cast(AbstractButton.class,
+								testAndApply(Objects::nonNull, f, x -> Narcissus.getField(this, x), null))),
 				x -> addActionListener(x, this));
 		//
 		final Double width = getWidth(btnExecute.getPreferredSize());
@@ -1174,15 +1172,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				ConfigurableApplicationContextUtil
 						.getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
 		//
-		forEach(testAndApply(Objects::nonNull, ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf), Arrays::stream,
-				null), x -> setFailableFunctionFields(applicationContext, dlbf, x, this));
+		final Stream<String> stream = testAndApply(Objects::nonNull,
+				ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf), Arrays::stream, null);
 		//
-	}
-
-	private static <T> void forEach(@Nullable final Stream<T> instance, @Nullable final Consumer<? super T> action) {
-		if (instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || action != null)) {
-			instance.forEach(action);
-		}
+		Util.forEach(stream, x -> setFailableFunctionFields(applicationContext, dlbf, x, this));
+		//
 	}
 
 	private static void setFailableFunctionFields(final ApplicationContext applicationContext,

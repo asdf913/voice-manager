@@ -34,7 +34,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -225,8 +224,10 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				ConfigurableApplicationContextUtil
 						.getBeanFactory(Util.cast(ConfigurableApplicationContext.class, applicationContext)));
 		//
-		forEach(testAndApply(Objects::nonNull, ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf), Arrays::stream,
-				null), x -> setFailableFunctionFields(applicationContext, dlbf, x, this));
+		final Stream<String> stream = testAndApply(Objects::nonNull,
+				ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf), Arrays::stream, null);
+		//
+		Util.forEach(stream, x -> setFailableFunctionFields(applicationContext, dlbf, x, this));
 		//
 		final String[] beanDefinitionNames = ListableBeanFactoryUtil.getBeanDefinitionNames(dlbf);
 		//
@@ -462,12 +463,6 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			//
 		} // for
 			//
-	}
-
-	private static <T> void forEach(@Nullable final Stream<T> instance, @Nullable final Consumer<? super T> action) {
-		if (instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || action != null)) {
-			instance.forEach(action);
-		}
 	}
 
 	@Nullable

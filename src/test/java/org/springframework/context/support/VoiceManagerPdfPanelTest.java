@@ -30,7 +30,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -106,7 +105,7 @@ class VoiceManagerPdfPanelTest {
 			METHOD_GET_TEXT_WIDTH, METHOD_OR, METHOD_TO_AUDIO_RESOURCE, METHOD_LIST_FILES, METHOD_IS_DIRECTORY,
 			METHOD_GET_TRANSFER_DATA, METHOD_FIND_MATCH, METHOD_TO_MILLIS, METHOD_TEST_AND_ACCEPT, METHOD_IIF,
 			METHOD_PATH_FILE_EXISTS_W, METHOD_GET_GENERIC_INTERFACES, METHOD_GET_ACTUAL_TYPE_ARGUMENTS,
-			METHOD_GET_RAW_TYPE, METHOD_GET_GENERIC_TYPE, METHOD_FOR_EACH = null;
+			METHOD_GET_RAW_TYPE, METHOD_GET_GENERIC_TYPE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -170,8 +169,6 @@ class VoiceManagerPdfPanelTest {
 		(METHOD_GET_RAW_TYPE = clz.getDeclaredMethod("getRawType", ParameterizedType.class)).setAccessible(true);
 		//
 		(METHOD_GET_GENERIC_TYPE = clz.getDeclaredMethod("getGenericType", Field.class)).setAccessible(true);
-		//
-		(METHOD_FOR_EACH = clz.getDeclaredMethod("forEach", Stream.class, Consumer.class)).setAccessible(true);
 		//
 	}
 
@@ -1296,14 +1293,16 @@ class VoiceManagerPdfPanelTest {
 					//
 			} else {
 				//
-				forEach(testAndApply(Objects::nonNull,
+				final Stream<Field> stream = testAndApply(Objects::nonNull,
 						Util.getDeclaredFields(
 								Util.getClass(instance = ObjectUtils.getIfNull(instance, VoiceManagerPdfPanel::new))),
-						Arrays::stream, null), f -> {
-							if (f != null && !Modifier.isStatic(f.getModifiers())) {
-								Narcissus.setField(instance, f, null);
-							}
-						});
+						Arrays::stream, null);
+				//
+				Util.forEach(stream, f -> {
+					if (f != null && !Modifier.isStatic(f.getModifiers())) {
+						Narcissus.setField(instance, f, null);
+					}
+				});
 				//
 				invoke = Narcissus.invokeMethod(instance = ObjectUtils.getIfNull(instance, VoiceManagerPdfPanel::new),
 						m, os);
@@ -1324,23 +1323,6 @@ class VoiceManagerPdfPanelTest {
 				//
 		} // for
 			//
-	}
-
-	@Test
-	void testForEach() {
-		//
-		Assertions.assertDoesNotThrow(() -> forEach(Reflection.newProxy(Stream.class, ih), null));
-		//
-		Assertions.assertDoesNotThrow(() -> forEach(Stream.ofNullable(null), null));
-		//
-	}
-
-	private static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) throws Throwable {
-		try {
-			METHOD_FOR_EACH.invoke(null, instance, action);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test

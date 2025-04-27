@@ -16,7 +16,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
-import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -363,19 +362,13 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		Util.forEach(Arrays.asList(tfElapsed, tfUrl, tfErrorMessage), x -> setEditable(x, false));
 		//
-		forEach(Util.filter(
+		Util.forEach(Util.filter(
 				Util.map(Util.filter(Util.stream(FieldUtils.getAllFieldsList(getClass())), f -> !Util.isStatic(f)),
 						f -> Util.cast(AbstractButton.class, Narcissus.getField(this, f))),
 				Objects::nonNull), x -> {
 					addActionListener(x, this);
 				});
 		//
-	}
-
-	private static <T> void forEach(final Stream<T> instance, final Consumer<? super T> action) {
-		if (instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || action != null)) {
-			instance.forEach(action);
-		}
 	}
 
 	@Nullable

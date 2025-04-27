@@ -52,7 +52,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -723,8 +722,10 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				() -> add(craeteSpeechApiInstallationWarningJPanel(microsoftSpeechPlatformRuntimeDownloadPageUrl),
 						WRAP));
 		//
-		forEach(Util.stream(Util.entrySet(getTitledComponentMap(
-				ListableBeanFactoryUtil.getBeansOfType(applicationContext, Component.class), tabOrders))), x -> {
+		Util.forEach(
+				Util.stream(Util.entrySet(getTitledComponentMap(
+						ListableBeanFactoryUtil.getBeansOfType(applicationContext, Component.class), tabOrders))),
+				x -> {
 					final Component component = Util.getValue(x);
 					if (!(component instanceof Window)) {
 						jTabbedPane.addTab(Util.getKey(x), component);
@@ -2293,14 +2294,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		if (instance != null) {
 			instance.accept(t, u);
 		}
-	}
-
-	private static <T> void forEach(@Nullable final Stream<T> instance, @Nullable final Consumer<? super T> action) {
-		//
-		if (instance != null && (action != null || Proxy.isProxyClass(Util.getClass(instance)))) {
-			instance.forEach(action);
-		} // if
-			//
 	}
 
 	private static <T, E extends Throwable> void forEach(@Nullable final Iterable<T> items,
