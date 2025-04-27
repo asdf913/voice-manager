@@ -1866,6 +1866,7 @@ public abstract class Util {
 		}
 	}
 
+	@Nullable
 	static String getTextContent(@Nullable final Node instance) {
 		return instance != null ? instance.getTextContent() : null;
 	}
