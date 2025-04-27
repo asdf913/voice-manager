@@ -362,12 +362,11 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		Util.forEach(Arrays.asList(tfElapsed, tfUrl, tfErrorMessage), x -> setEditable(x, false));
 		//
-		Util.forEach(Util.filter(
-				Util.map(Util.filter(Util.stream(FieldUtils.getAllFieldsList(getClass())), f -> !Util.isStatic(f)),
-						f -> Util.cast(AbstractButton.class, Narcissus.getField(this, f))),
-				Objects::nonNull), x -> {
-					addActionListener(x, this);
-				});
+		Util.forEach(
+				Util.filter(Util.map(
+						Util.filter(Util.stream(FieldUtils.getAllFieldsList(getClass())), f -> !Util.isStatic(f)),
+						f -> Util.cast(AbstractButton.class, Narcissus.getField(this, f))), Objects::nonNull),
+				x -> addActionListener(x, this));
 		//
 	}
 
