@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.net.URI;
+import java.net.URL;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.util.Arrays;
@@ -1889,6 +1890,10 @@ public abstract class Util {
 	@Nullable
 	static <E> E getElementAt(@Nullable final ListModel<E> instance, final int index) {
 		return instance != null ? instance.getElementAt(index) : null;
+	}
+
+	static String getFile(final URL instance) {
+		return instance != null ? instance.getFile() : null;
 	}
 
 }

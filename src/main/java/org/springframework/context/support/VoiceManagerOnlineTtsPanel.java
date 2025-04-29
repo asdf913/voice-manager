@@ -696,7 +696,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			final JFileChooser jfc = new JFileChooser(".");
 			//
 			setFileName(Util.cast(BasicFileChooserUI.class, jfc.getUI()),
-					StringUtils.substringAfterLast(getFile(u), '/'));
+					StringUtils.substringAfterLast(Util.getFile(u), '/'));
 			//
 			if (and(jfc, x -> Boolean.logicalAnd(!isTestMode(), !GraphicsEnvironment.isHeadless()),
 					x -> equals(showSaveDialog(x, null), JFileChooser.APPROVE_OPTION))) {
@@ -764,11 +764,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		if (instance != null) {
 			instance.setFileName(filename);
 		}
-	}
-
-	@Nullable
-	private static String getFile(@Nullable final URL instance) {
-		return instance != null ? instance.getFile() : null;
 	}
 
 	@Nullable

@@ -97,7 +97,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
 			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING,
 			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE,
-			METHOD_OPEN_STREAM, METHOD_GET_FILE, METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG = null;
+			METHOD_OPEN_STREAM, METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -169,8 +169,6 @@ class VoiceManagerOnlineTtsPanelTest {
 				Map.class)).setAccessible(true);
 		//
 		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
-		//
-		(METHOD_GET_FILE = clz.getDeclaredMethod("getFile", URL.class)).setAccessible(true);
 		//
 		(METHOD_EQUALS = clz.getDeclaredMethod("equals", Number.class, Integer.TYPE)).setAccessible(true);
 		//
@@ -315,8 +313,6 @@ class VoiceManagerOnlineTtsPanelTest {
 
 	private DomNode domNode = null;
 
-	private URL url = null;
-
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
@@ -335,8 +331,6 @@ class VoiceManagerOnlineTtsPanelTest {
 			}
 			return constructor != null ? constructor.newInstance((Object) null) : null;
 		});
-		//
-		url = Util.cast(URL.class, Narcissus.allocateInstance(URL.class));
 		//
 	}
 
@@ -1028,7 +1022,7 @@ class VoiceManagerOnlineTtsPanelTest {
 	@Test
 	void testOpenStream() throws Throwable {
 		//
-		Assertions.assertNull(openStream(url));
+		Assertions.assertNull(openStream(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));
 		//
 	}
 
@@ -1039,27 +1033,6 @@ class VoiceManagerOnlineTtsPanelTest {
 				return null;
 			} else if (obj instanceof InputStream) {
 				return (InputStream) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetFile() throws Throwable {
-		//
-		Assertions.assertNull(getFile(url));
-		//
-	}
-
-	private static String getFile(final URL instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_FILE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

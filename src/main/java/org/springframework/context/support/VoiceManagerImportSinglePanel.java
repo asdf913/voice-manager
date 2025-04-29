@@ -3766,8 +3766,8 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} // try
 			//
-		final File file = testAndApply(Objects::nonNull, StringUtils.substringAfterLast(getFile(url), '/'), File::new,
-				null);
+		final File file = testAndApply(Objects::nonNull, StringUtils.substringAfterLast(Util.getFile(url), '/'),
+				File::new, null);
 		//
 		try (final InputStream is = openStream(url)) {
 			//
@@ -3785,11 +3785,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		return file;
 		//
-	}
-
-	@Nullable
-	private static String getFile(@Nullable final URL instance) {
-		return instance != null ? instance.getFile() : null;
 	}
 
 	private static <T> boolean and(final Predicate<T> predicate, @Nullable final T a, final T b,
