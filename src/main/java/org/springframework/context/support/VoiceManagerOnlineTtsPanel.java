@@ -68,6 +68,8 @@ import org.apache.commons.lang3.function.TriFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.commons.lang3.tuple.TripleUtil;
+import org.apache.commons.validator.routines.UrlValidator;
+import org.apache.commons.validator.routines.UrlValidatorUtil;
 import org.htmlunit.WebClient;
 import org.htmlunit.html.DomElement;
 import org.htmlunit.html.DomElementUtil;
@@ -389,12 +391,42 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		Util.forEach(Arrays.asList(tfElapsed, tfUrl, tfErrorMessage), x -> setEditable(x, false));
 		//
+		Util.forEach(Arrays.asList(btnCopy, btnDownload), x -> setEnabled(x, false));
+		//
 		Util.forEach(
 				Util.filter(Util.map(
 						Util.filter(Util.stream(FieldUtils.getAllFieldsList(getClass())), f -> !Util.isStatic(f)),
 						f -> Util.cast(AbstractButton.class, Narcissus.getField(this, f))), Objects::nonNull),
 				x -> addActionListener(x, this));
 		//
+	}
+
+	private static void setEnabled(final AbstractButton instance, final boolean b) {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final Collection<Field> fs = Util
+				.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(instance))),
+						f -> Objects.equals(Util.getName(f), "model")));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f == null || Narcissus.getField(instance, f) != null) {
+			//
+			instance.setEnabled(b);
+			//
+		} // if
+			//
 	}
 
 	@Nullable
@@ -664,6 +696,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				LoggerUtil.error(LOG, e.getMessage(), e);
 				//
 			} finally {
+				//
+				Util.forEach(Arrays.asList(btnCopy, btnDownload),
+						x -> setEnabled(x, UrlValidatorUtil.isValid(UrlValidator.getInstance(), Util.getText(tfUrl))));
 				//
 				final String string = Util.toString(StopwatchUtil.elapsed(stopwatch));
 				//

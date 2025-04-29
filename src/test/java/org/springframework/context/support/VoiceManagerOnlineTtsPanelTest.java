@@ -96,7 +96,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
 			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING,
 			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE,
-			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG = null;
+			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -170,6 +170,9 @@ class VoiceManagerOnlineTtsPanelTest {
 		(METHOD_EQUALS = clz.getDeclaredMethod("equals", Number.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_SHOW_SAVE_DIALOG = clz.getDeclaredMethod("showSaveDialog", JFileChooser.class, Component.class))
+				.setAccessible(true);
+		//
+		(METHOD_SET_ENABLED = clz.getDeclaredMethod("setEnabled", AbstractButton.class, Boolean.TYPE))
 				.setAccessible(true);
 		//
 	}
@@ -1058,6 +1061,22 @@ class VoiceManagerOnlineTtsPanelTest {
 				return (Integer) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetEnabled() {
+		// =
+		Assertions.assertDoesNotThrow(
+				() -> setEnabled(Util.cast(AbstractButton.class, Narcissus.allocateInstance(JButton.class)), false));
+		//
+	}
+
+	private static void setEnabled(final AbstractButton instance, final boolean b) throws Throwable {
+		try {
+			METHOD_SET_ENABLED.invoke(null, instance, b);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
