@@ -165,7 +165,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
-	private AbstractButton btnCopy, btnDownload = null;
+	@Note("Copy")
+	private AbstractButton btnCopy = null;
+
+	private AbstractButton btnDownload = null;
 
 	private Map<String, String> voices = null;
 
