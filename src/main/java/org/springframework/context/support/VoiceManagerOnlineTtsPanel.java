@@ -783,9 +783,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(instance))),
 						f -> Objects.equals(Util.getName(f), "handler")));
 		//
-		final int size = IterableUtils.size(fs);
-		//
-		if (size > 1) {
+		if (IterableUtils.size(fs) > 1) {
 			//
 			throw new IllegalStateException();
 			//
