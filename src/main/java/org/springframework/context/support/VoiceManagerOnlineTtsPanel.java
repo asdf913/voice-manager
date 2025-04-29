@@ -698,7 +698,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			setFileName(Util.cast(BasicFileChooserUI.class, jfc.getUI()),
 					StringUtils.substringAfterLast(getFile(u), '/'));
 			//
-			if (!isTestMode() && !GraphicsEnvironment.isHeadless()
+			if (Boolean.logicalAnd(!isTestMode(), !GraphicsEnvironment.isHeadless())
 					&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//
 				try (final InputStream is = openStream(u)) {
