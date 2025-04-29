@@ -718,7 +718,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 	}
 
-	private static boolean equals(final Number a, final int b) {
+	private static boolean equals(@Nullable final Number a, final int b) {
 		return a != null && a.intValue() == b;
 	}
 
