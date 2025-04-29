@@ -729,7 +729,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		return Util.test(a, value) && Util.test(b, value);
 	}
 
-	private static void setFileName(final BasicFileChooserUI instance, final String filename) {
+	private static void setFileName(@Nullable final BasicFileChooserUI instance, final String filename) {
 		if (instance != null) {
 			instance.setFileName(filename);
 		}
