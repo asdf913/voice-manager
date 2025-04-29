@@ -27,7 +27,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -708,7 +707,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 
 	private static void saveFile(@Nullable final File file, final String url) throws Exception {
 		//
-		try (final InputStream is = openStream(testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null))) {
+		try (final InputStream is = Util
+				.openStream(testAndApply(Objects::nonNull, url, x -> new URI(x).toURL(), null))) {
 			//
 			if (file != null) {
 				//
@@ -757,7 +757,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		} // if
 			//
-		try (final InputStream is = openStream(testAndApply(Objects::nonNull, value, x -> new URI(x).toURL(), null))) {
+		try (final InputStream is = Util
+				.openStream(testAndApply(Objects::nonNull, value, x -> new URI(x).toURL(), null))) {
 			//
 			PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null));
 			//
@@ -765,26 +766,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		} // try
 			//
-	}
-
-	@Nullable
-	private static InputStream openStream(@Nullable final URL instance) throws IOException {
-		//
-		// Check if "handler" field in "java.net.URL" class is null or not
-		//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1,
-				Util.toList(Util.filter(Arrays.stream(Util.getDeclaredFields(URL.class)),
-						x -> Objects.equals(Util.getName(x), "handler"))),
-				x -> IterableUtils.get(x, 0), null);
-		//
-		if (instance != null && f != null && Narcissus.getObjectField(instance, f) == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		return instance != null ? instance.openStream() : null;
-		//
 	}
 
 	private static void saveAudio(final boolean headless, @Nullable final Pronunciation pronunciation,

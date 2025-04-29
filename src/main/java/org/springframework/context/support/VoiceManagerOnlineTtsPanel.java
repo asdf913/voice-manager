@@ -701,7 +701,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			if (and(jfc, x -> Boolean.logicalAnd(!isTestMode(), !GraphicsEnvironment.isHeadless()),
 					x -> equals(showSaveDialog(x, null), JFileChooser.APPROVE_OPTION))) {
 				//
-				try (final InputStream is = openStream(u)) {
+				try (final InputStream is = Util.openStream(u)) {
 					//
 					testAndAccept(Objects::nonNull, testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null),
 							x -> FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), x));
@@ -764,31 +764,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		if (instance != null) {
 			instance.setFileName(filename);
 		}
-	}
-
-	@Nullable
-	private static InputStream openStream(@Nullable final URL instance) throws IOException {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		final Collection<Field> fs = Util
-				.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(instance))),
-						f -> Objects.equals(Util.getName(f), "handler")));
-		//
-		if (IterableUtils.size(fs) > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-		//
-		return f != null && Narcissus.getField(instance, f) == null ? null : instance.openStream();
-		//
 	}
 
 	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,

@@ -13,7 +13,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -97,7 +96,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
 			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING,
 			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE,
-			METHOD_OPEN_STREAM, METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG = null;
+			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -167,8 +166,6 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_GET_VOICE = clz.getDeclaredMethod("getVoice", PropertyResolver.class, String.class, ListModel.class,
 				Map.class)).setAccessible(true);
-		//
-		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
 		//
 		(METHOD_EQUALS = clz.getDeclaredMethod("equals", Number.class, Integer.TYPE)).setAccessible(true);
 		//
@@ -1012,27 +1009,6 @@ class VoiceManagerOnlineTtsPanelTest {
 				return null;
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testOpenStream() throws Throwable {
-		//
-		Assertions.assertNull(openStream(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));
-		//
-	}
-
-	private static InputStream openStream(final URL instance) throws Throwable {
-		try {
-			final Object obj = METHOD_OPEN_STREAM.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof InputStream) {
-				return (InputStream) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

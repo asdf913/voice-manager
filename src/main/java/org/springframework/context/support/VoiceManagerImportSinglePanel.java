@@ -369,7 +369,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 	private JComboBox<Object> jcbVoiceId = null;
 
 	@Group(PRONUNCIATION)
-
 	private JComboBox<Pronunciation> jcbPronunciation = null;
 
 	private transient IValue0<Multimap<String, String>> gaKuNenBeTsuKanJiMultimap = null;
@@ -1815,7 +1814,8 @@ public class VoiceManagerImportSinglePanel extends JPanel
 
 	private static Object playAudio(final String value) throws Exception {
 		//
-		try (final InputStream is = openStream(testAndApply(Objects::nonNull, value, x -> new URI(x).toURL(), null))) {
+		try (final InputStream is = Util
+				.openStream(testAndApply(Objects::nonNull, value, x -> new URI(x).toURL(), null))) {
 			//
 			PlayerUtil.play(testAndApply(Objects::nonNull, is, Player::new, null));
 			//
@@ -3769,7 +3769,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		final File file = testAndApply(Objects::nonNull, StringUtils.substringAfterLast(Util.getFile(url), '/'),
 				File::new, null);
 		//
-		try (final InputStream is = openStream(url)) {
+		try (final InputStream is = Util.openStream(url)) {
 			//
 			if (and(Objects::nonNull, is, file)) {
 				//
@@ -3806,32 +3806,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		return result;
 		//
-	}
-
-	@Nullable
-	private static InputStream openStream(@Nullable final URL instance) throws IOException {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		try {
-			//
-			if (Narcissus.getField(instance, Util.getDeclaredField(Util.getClass(instance), HANDLER)) == null) {
-				//
-				return null;
-				//
-			} // if
-				//
-		} catch (final NoSuchFieldException e) {
-			//
-			LoggerUtil.error(LOG, e.getMessage(), e);
-			//
-		} // try
-			//
-		return instance.openStream();
 	}
 
 	private static ByteArray createByteArray(@Nullable final RenderedImage image, @Nullable final String format,

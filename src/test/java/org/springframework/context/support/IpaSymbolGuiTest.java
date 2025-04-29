@@ -5,11 +5,9 @@ import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
@@ -40,8 +38,8 @@ class IpaSymbolGuiTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_TEST_AND_APPLY, METHOD_OPEN_STREAM,
-			METHOD_IIF, METHOD_SET_PREFERRED_WIDTH, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4 = null;
+	private static Method METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_TEST_AND_APPLY, METHOD_IIF,
+			METHOD_SET_PREFERRED_WIDTH, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4 = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -55,8 +53,6 @@ class IpaSymbolGuiTest {
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
-		//
-		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
 		//
 		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
 		//
@@ -243,27 +239,6 @@ class IpaSymbolGuiTest {
 			throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testOpenStream() throws Throwable {
-		//
-		Assertions.assertNull(openStream(cast(URL.class, Narcissus.allocateInstance(URL.class))));
-		//
-	}
-
-	private static InputStream openStream(final URL instance) throws Throwable {
-		try {
-			final Object obj = METHOD_OPEN_STREAM.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof InputStream) {
-				return (InputStream) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

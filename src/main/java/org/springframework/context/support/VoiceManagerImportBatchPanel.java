@@ -29,7 +29,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URI;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.GeneralSecurityException;
@@ -275,8 +274,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	private static final String PASSWORD = "Password";
 
 	private static final String LANGUAGE = "Language";
-
-	private static final String HANDLER = "handler";
 
 	private static final String KEY_NOT_FOUND_MESSAGE = "Key [%1$s] Not Found";
 
@@ -2285,8 +2282,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 			} // if
 				//
-			try (final InputStream is = openStream(
-					testAndApply(StringUtils::isNotBlank, audioUrl, x -> new URI(x).toURL(), null))) {
+			try (final InputStream is = Util
+					.openStream(testAndApply(StringUtils::isNotBlank, audioUrl, x -> new URI(x).toURL(), null))) {
 				//
 				if (is != null && it != null
 						&& (it.file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH),
@@ -2302,33 +2299,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static InputStream openStream(@Nullable final URL instance) throws IOException {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		try {
-			//
-			if (Narcissus.getField(instance, Util.getDeclaredField(Util.getClass(instance), HANDLER)) == null) {
-				//
-				return null;
-				//
-			} // if
-				//
-		} catch (final NoSuchFieldException e) {
-			//
-			LoggerUtil.error(LOG, e.getMessage(), e);
-			//
-		} // try
-			//
-		return instance.openStream();
-		//
 	}
 
 	@Nullable

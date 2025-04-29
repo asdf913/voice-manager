@@ -2341,7 +2341,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		final URL url = testAndApply(URLValidator::isValid, string, URL::new, null);
 		//
-		try (final InputStream is = openStream(url)) {
+		try (final InputStream is = Util.openStream(url)) {
 			//
 			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
 			//
@@ -3825,11 +3825,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static float getWidth(@Nullable final PDRectangle instance, final float defaultValue) {
 		return instance != null ? instance.getWidth() : defaultValue;
-	}
-
-	@Nullable
-	private static InputStream openStream(@Nullable final URL instance) throws IOException {
-		return instance != null ? instance.openStream() : null;
 	}
 
 	@Nullable

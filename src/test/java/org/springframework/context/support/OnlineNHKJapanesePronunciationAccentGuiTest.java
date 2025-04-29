@@ -13,15 +13,12 @@ import java.awt.event.ActionListener;
 import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.net.URL;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -79,10 +76,10 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_WIDTH, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT,
 			METHOD_GET_SELECTED_ITEM, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_MAP_INT_STREAM,
 			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_SAVE_PITCH_ACCENT_IMAGE,
-			METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_OPEN_STREAM,
-			METHOD_ADD_ACTION_LISTENER, METHOD_GET_FIELD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE,
-			METHOD_IIF, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_SET_PREFERRED_SIZE, METHOD_MAX,
-			METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
+			METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_ADD_ACTION_LISTENER,
+			METHOD_GET_FIELD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_IIF, METHOD_SORT,
+			METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_SET_PREFERRED_SIZE, METHOD_MAX, METHOD_TEST_AND_RUN,
+			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -124,8 +121,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_PRONOUNICATION_CHANGED = clz.getDeclaredMethod("pronounicationChanged", Pronunciation.class,
 				MutableComboBoxModel.class)).setAccessible(true);
-		//
-		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
 		//
 		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
 				AbstractButton[].class)).setAccessible(true);
@@ -928,29 +923,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			final MutableComboBoxModel<String> mcbmAudioFormat) throws Throwable {
 		try {
 			METHOD_PRONOUNICATION_CHANGED.invoke(null, pronunciation, mcbmAudioFormat);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testOpenStream() throws Throwable {
-		//
-		Assertions.assertNotNull(openStream(Util.toURI(Path.of("pom.xml").toFile()).toURL()));
-		//
-		Assertions.assertNull(openStream(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));
-		//
-	}
-
-	private static InputStream openStream(final URL instance) throws Throwable {
-		try {
-			final Object obj = METHOD_OPEN_STREAM.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof InputStream) {
-				return (InputStream) obj;
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

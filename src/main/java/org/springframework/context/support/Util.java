@@ -1896,4 +1896,27 @@ public abstract class Util {
 		return instance != null ? instance.getFile() : null;
 	}
 
+	static InputStream openStream(final URL instance) throws IOException {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Collection<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(getClass(instance))),
+				f -> Objects.equals(getName(f), "handler")));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		return f != null && Narcissus.getField(instance, f) == null ? null : instance.openStream();
+		//
+	}
+
 }

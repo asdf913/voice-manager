@@ -14,7 +14,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.net.URI;
-import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -260,8 +259,8 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			//
 			String hex2 = null;
 			//
-			try (final InputStream is = openStream(
-					testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null))) {
+			try (final InputStream is = Util
+					.openStream(testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null))) {
 				//
 				length2 = (bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null)) != null
 						? Integer.valueOf(bs.length)
@@ -329,26 +328,6 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
-	}
-
-	@Nullable
-	private static InputStream openStream(@Nullable final URL instance) throws IOException {
-		//
-		// Check if "handler" field in "java.net.URL" class is null or not
-		//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1,
-				Util.toList(Util.filter(Arrays.stream(Util.getDeclaredFields(URL.class)),
-						x -> Objects.equals(Util.getName(x), "handler"))),
-				x -> IterableUtils.get(x, 0), null);
-		//
-		if (instance != null && f != null && Narcissus.getObjectField(instance, f) == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		return instance != null ? instance.openStream() : null;
-		//
 	}
 
 	private static void errorOrAssertOrShowException(final boolean headless, final Throwable throwable) {
