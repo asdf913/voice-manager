@@ -669,16 +669,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				final Matcher matcher = Util.matcher(Pattern.compile("^PT(((\\d+)(.\\d+)?)S)$"), string);
 				//
-				if (and(matcher, x -> Util.matches(x), x -> Util.groupCount(x) > 0)) {
-					//
-					Util.setText(tfElapsed, Util.group(matcher, 1));
-					//
-				} else {
-					//
-					Util.setText(tfElapsed, string);
-					//
-				} // if
-					//
+				testAndRun(and(matcher, x -> Util.matches(x), x -> Util.groupCount(x) > 0),
+						() -> Util.setText(tfElapsed, Util.group(matcher, 1)), () -> Util.setText(tfElapsed, string));
+				//
 			} // try
 				//
 		} else if (Objects.equals(source, btnCopy)) {
@@ -723,6 +716,15 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static <T> void testAndRun(final boolean condition, final Runnable runnableTrue,
+			final Runnable runnableFalse) {
+		if (condition) {
+			Util.run(runnableTrue);
+		} else {
+			Util.run(runnableFalse);
+		} // if
 	}
 
 	private static <T> boolean and(final T value, final Predicate<T> a, final Predicate<T> b) {
