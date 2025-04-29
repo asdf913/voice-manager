@@ -1,0 +1,41 @@
+jdeprscan --verbose --list --class-path "C:\Users\USER\Documents\GitHub\voice-manager\target\classes"
+
+
+under MinGW-w64 / GIT Bash
+
+jdeprscan --verbose --list --class-path "./target/classes"
+
+jdeps -v ./target/classes
+
+https://wiki.openjdk.org/display/JDK8/Java+Dependency+Analysis+Tool
+
+sun.misc.Base64Encoder
+java.util.Base64
+
+Illegal Reflective Access Exception
+
+Math.clamp
+
+
+Issue Tracking
+https://www.atlassian.com/software/jira
+
+
+   
+   
+<properties>
+	<maven.compiler.source>8</maven.compiler.source>
+	<maven.compiler.target>8</maven.compiler.target>
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+</properties>
+
+
+Prepartion of list of Deprecated API
+
+@Deprecated(since="9", forRemoval=true) void java.io.FileInputStream.finalize()
+@Deprecated(since="9", forRemoval=true) void java.io.FileOutputStream.finalize()
+@Deprecated(since="9", forRemoval=true) void java.lang.Runtime.traceInstructions(boolean)
+@Deprecated(since="9", forRemoval=true) void java.lang.Runtime.traceMethodCalls(boolean)
+@Deprecated(since="9", forRemoval=true) void java.util.zip.Deflater.finalize()
+@Deprecated(since="9", forRemoval=true) void java.util.zip.Inflater.finalize()
+@Deprecated(since="9", forRemoval=true) void java.util.zip.ZipFile.finalize()

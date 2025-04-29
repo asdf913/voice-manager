@@ -1,0 +1,11 @@
+package org.springframework.context.support;
+
+import javax.swing.JPanel;
+
+public abstract class TitledJPanel extends JPanel {
+
+	private static final long serialVersionUID = -502924302277232969L;
+
+	abstract String getTitle();
+		
+}

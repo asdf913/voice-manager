@@ -1,0 +1,4 @@
+C:\Users\USER\Documents\GitHub\voice-manager\src\main\csharp\JapanesePhoneticAnalyzer\ClassLibrary1\obj\Debug\ClassLibrary1.csproj.AssemblyReference.cache
+C:\Users\USER\Documents\GitHub\voice-manager\src\main\csharp\JapanesePhoneticAnalyzer\ClassLibrary1\obj\Debug\ClassLibrary1.csproj.CoreCompileInputs.cache
+C:\Users\USER\Documents\GitHub\voice-manager\src\main\csharp\JapanesePhoneticAnalyzer\obj\Debug\ClassLibrary1.csproj.AssemblyReference.cache
+C:\Users\USER\Documents\GitHub\voice-manager\src\main\csharp\JapanesePhoneticAnalyzer\obj\Debug\ClassLibrary1.csproj.CoreCompileInputs.cache

@@ -1,0 +1,118 @@
+package org.springframework.beans.factory;
+
+import java.lang.Character.UnicodeBlock;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import javax.annotation.Nullable;
+
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.ElementUtil;
+
+import com.google.common.collect.Multimap;
+
+/*
+ * https://hiramatu-hifuka.com/onyak/kotoba-1/kisyo.html
+ */
+public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBean
+		implements FactoryBean<Multimap<String, String>> {
+
+	private String url = null;
+
+	public void setUrl(final String url) {
+		this.url = url;
+	}
+
+	@Override
+	public Multimap<String, String> getObject() throws Exception {
+		//
+		final List<Element> es = ElementUtil.select(Jsoup.parse(new URL(url), 0), "tr");
+		//
+		Element e = null;
+		//
+		List<String> strings = null;
+		//
+		for (int i = 0; es != null && i < es.size(); i++) {
+			//
+			if ((e = es.get(i)) == null || e.childrenSize() < 3) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (IterableUtils.size(strings = getStrings(ElementUtil.text(IterableUtils.get(e.children(), 0)),
+					UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS, UnicodeBlock.HIRAGANA, UnicodeBlock.KATAKANA)) != 1) {
+				//
+				continue;
+				//
+			} // if
+				//
+			System.out.println(ElementUtil.text(IterableUtils.get(e.children(), 0)) + " " + strings + " "
+					+ getStrings(ElementUtil.text(IterableUtils.get(e.children(), 1)), UnicodeBlock.HIRAGANA));
+			//
+		} // for
+			//
+		return null;
+		//
+	}
+
+	private static List<String> getStrings(final String string, final UnicodeBlock ub, final UnicodeBlock... ubs) {
+		//
+		final char[] cs = Util.toCharArray(string);
+		//
+		StringBuilder sb = null;
+		//
+		char c = ' ';
+		//
+		List<String> list = null;
+		//
+		for (int i = 0; cs != null && i < cs.length; i++) {
+			//
+			if (!Objects.equals(UnicodeBlock.of(c = cs[i]), ub)
+					&& !ArrayUtils.contains(ubs, UnicodeBlock.of(c = cs[i]))) {
+				//
+				if (i > 0) {
+					//
+					Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), Util.toString(sb));
+					//
+				} // if
+					//
+				clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
+				//
+			} else {
+				//
+				Util.append(sb = ObjectUtils.getIfNull(sb, StringBuilder::new), c);
+				//
+			} // if
+				//
+		} // for
+			//
+		if (StringUtils.isNotEmpty(sb)) {
+			//
+			Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), Util.toString(sb));
+			//
+		} // if
+			//
+		return list;
+		//
+	}
+
+	private static void clear(final StringBuilder instance) {
+		if (instance != null) {
+			instance.delete(0, instance.length());
+		}
+	}
+
+	@Override
+	public Class<?> getObjectType() {
+		return Multimap.class;
+	}
+
+}

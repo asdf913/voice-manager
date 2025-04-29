@@ -1,0 +1,308 @@
+package org.springframework.beans.factory;
+
+import java.lang.Character.UnicodeBlock;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
+
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.ElementUtil;
+import org.jsoup.nodes.Node;
+import org.jsoup.select.NodeVisitor;
+
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapUtil;
+
+/*
+ * https://hiramatu-hifuka.com/onyak/onyak2/yuryodo.html
+ */
+public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
+		implements FactoryBean<Multimap<String, String>> {
+
+	private String url = null;
+
+	public void setUrl(final String url) {
+		this.url = url;
+	}
+
+	@Override
+	public Multimap<String, String> getObject() throws Exception {
+		//
+		final Document document = testAndApply(Objects::nonNull,
+				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
+				null);
+		//
+		Multimap<String, String> multimap = null;
+		//
+		if (document != null) {
+			//
+			final NodeVisitorImpl nodeVisitorImpl = new NodeVisitorImpl();
+			//
+			ElementUtil.select(document, "td").traverse(nodeVisitorImpl);
+			//
+			final Multimap<String, String> mm = nodeVisitorImpl.multimap;
+			//
+			if (mm != null) {
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+				//
+			} // if
+				//
+		} // if
+			//
+		return multimap;
+		//
+	}
+
+	private static class NodeVisitorImpl implements NodeVisitor {
+
+		private Multimap<String, String> multimap = null;
+
+		@Override
+		public void head(final Node node, final int depth) {
+			//
+			final Element e = Util.cast(Element.class, node);
+			//
+			final String s = ElementUtil.text(e);
+			//
+			String snext, commonPrefix;
+			//
+			Matcher m1, m2;
+			//
+			final List<UnicodeBlock> ub = getUnicodeBlocks(s);
+			//
+			String g1, g2;
+			//
+			if ((Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), ub) && (Objects.equals(
+					Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+					getUnicodeBlocks(snext = ElementUtil.text(ElementUtil.nextElementSibling(e))))
+					|| Objects.equals(Collections.singletonList(UnicodeBlock.BASIC_LATIN), getUnicodeBlocks(snext))))
+					|| (Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), ub)
+							&& (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+									getUnicodeBlocks(snext = ElementUtil.text(ElementUtil.nextElementSibling(e))))))
+					//
+					|| ((snext = ElementUtil.text(ElementUtil.nextElementSibling(e))) != null
+							&& snext.matches("^(-?\\d+){3}$"))
+			//
+			) {
+				//
+				return;// TODO
+				//
+			} // if
+				//
+			if (StringUtils.startsWith(ElementUtil.text(ElementUtil.nextElementSibling(e)), "あたみ")) {
+				System.out.println();
+				;
+			} //
+				//
+			if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), ub)
+					&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
+							getUnicodeBlocks(snext = ElementUtil.text(ElementUtil.nextElementSibling(e))))) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s, snext);
+				//
+			} else if (Objects.equals(Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), ub)
+					&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
+							getUnicodeBlocks(snext = ElementUtil.text(ElementUtil.nextElementSibling(e))))
+					&& StringUtils.isNotBlank(commonPrefix = StringUtils.getCommonPrefix(s, snext))) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						StringUtils.substring(s, StringUtils.length(commonPrefix)),
+						StringUtils.substring(snext, StringUtils.length(commonPrefix)));
+				//
+			} else if (Objects.equals(Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS, UnicodeBlock.HIRAGANA), ub)
+					&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
+							getUnicodeBlocks(snext = ElementUtil.text(ElementUtil.nextElementSibling(e))))) {
+				//
+				final Matcher m = Util.matcher(Pattern.compile("(\\p{InHiragana})+"), s);
+				//
+				String group;
+				//
+				String[] ss1, ss2;
+				//
+				while (Util.find(m)) {
+					//
+					ss1 = StringUtils.split(s, group = m.group());
+					//
+					ss2 = StringUtils.split(snext, group);
+					//
+					for (int i = 0; i < Math.min(length(ss1), length(ss2)); i++) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), ss1[i],
+								ss2[i]);
+						//
+					} // for
+						//
+				} // while
+					//
+			} else if (Util
+					.matches(m1 = Util.matcher(
+							Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+) （(\\p{InCJKUnifiedIdeographs}+)）$"), s))
+					&& Util.matches(m2 = Util.matcher(Pattern.compile("^(\\p{InHiragana}+) （(\\p{InHiragana}+)）$"),
+							snext = ElementUtil.text(ElementUtil.nextElementSibling(e))))) {
+				//
+				for (int i = 1; i <= Stream.of(m1, m2).mapToInt(Util::groupCount).min().orElse(0); i++) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(m1, i), Util.group(m2, i));
+					//
+				} // for
+					//
+			} else if (Util.matches(
+					m1 = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$"), s))
+					&& Util.groupCount(m1) > 1 && Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
+							getUnicodeBlocks(snext = ElementUtil.text(ElementUtil.nextElementSibling(e))))) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						StringUtils.substring(s, 0, StringUtils.length(s) - StringUtils.length(g2 = Util.group(m1, 2))),
+						StringUtils.substring(snext, 0, StringUtils.length(snext) - StringUtils.length(g2)));
+				//
+			} else if (Util
+					.matches(m1 = Util.matcher(Pattern.compile(
+							"^(\\p{InCJKUnifiedIdeographs}+)\\s?（((\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+))）$"),
+							s))
+					&& Util.groupCount(m1) > 2
+					&& Util.matches(m2 = Util.matcher(Pattern.compile("^(\\p{InHiragana}+)\\s?（(\\p{InHiragana}+)）$"),
+							snext = ElementUtil.text(ElementUtil.nextElementSibling(e))))) {
+				//
+				int length;
+				//
+				for (int i = 1; i <= Stream.of(m1, m2).mapToInt(Util::groupCount).min().orElse(0); i++) {
+					//
+					if (i == 1) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								Util.group(m1, i), Util.group(m2, i));
+						//
+					} else {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								StringUtils.substring(g1 = Util.group(m1, i), 0,
+										StringUtils.length(g1) - (length = StringUtils.length(Util.group(m1, i + 2)))),
+								StringUtils.substring(g2 = Util.group(m2, i), 0, StringUtils.length(g2) - length));
+						//
+					} // if
+						//
+				} // for
+					//
+			} else if (Util
+					.matches(m1 = Util.matcher(Pattern.compile(
+							"^(\\p{InCJKUnifiedIdeographs}+)-(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$"), s))
+					&& Util.groupCount(m1) > 2
+					&& Util.matches(m2 = Util.matcher(
+							Pattern.compile("^(\\p{InHiragana}+)-([\\p{InHiragana}|\\p{InKatakana}]+)"),
+							snext = ElementUtil.text(ElementUtil.nextElementSibling(e))))
+					&& Util.groupCount(m2) > 1) {
+				//
+				for (int i = 1; i <= Stream.of(m1, m2).mapToInt(Util::groupCount).min().orElse(0); i++) {
+					//
+					if (i == 1) {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								Util.group(m1, i), Util.group(m2, i));
+						//
+					} else {
+						//
+						MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								g1 = Util.group(m1, i), StringUtils.substring(g2 = Util.group(m2, i), 0,
+										StringUtils.length(g2) - StringUtils.length(Util.group(m1, i + 1))));
+						//
+					} // if
+						//
+				} // for
+					//
+			} else if (Util
+					.matches(m1 = Util.matcher(
+							Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)（\\p{InHiragana}+\\p{InKatakana}+）$"), s))
+					&& Util.groupCount(m1) > 0 && Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
+							getUnicodeBlocks(snext = ElementUtil.text(ElementUtil.nextElementSibling(e))))) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m1, 1), snext);
+				//
+			} else if (Util.matches(
+					m1 = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)(\\p{InKatakana}+)$"), s))
+					&& Util.groupCount(m1) > 1
+					&& Util.matches(m2 = Util.matcher(Pattern.compile("^[\\p{InHiragana}|\\p{InKatakana}]+$"),
+							snext = ElementUtil.text(ElementUtil.nextElementSibling(e))))) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						Util.group(m1, 1), StringUtils.substring(g2 = Util.group(m2, 0), 0,
+								StringUtils.length(g2) - StringUtils.length(Util.group(m1, 2))));
+				//
+			} else if (StringUtils.isNotBlank(s)
+					&& StringUtils.isNotBlank(snext = ElementUtil.text(ElementUtil.nextElementSibling(e)))) {
+				//
+				System.out.println(String.join(" ", s, snext));
+				//
+			} // if
+				//
+		}
+
+	}
+
+	private static int length(final Object[] instance) {
+		return instance != null ? instance.length : 0;
+	}
+
+	private static List<UnicodeBlock> getUnicodeBlocks(final String string) {
+		//
+		final char[] cs = Util.toCharArray(string);
+		//
+		if (cs != null) {
+			//
+			List<UnicodeBlock> unicodeBlocks = null;
+			//
+			for (final char c : cs) {
+				//
+				testAndAccept((a, b) -> b != null && !Util.contains(a, b),
+						unicodeBlocks = ObjectUtils.getIfNull(unicodeBlocks, ArrayList::new), UnicodeBlock.of(c),
+						Util::add);
+				//
+			} // for
+				//
+			return unicodeBlocks;
+			//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (Util.test(instance, t, u)) {
+			Util.accept(consumer, t, u);
+		} // if
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+	@Override
+	public Class<?> getObjectType() {
+		return Multimap.class;
+	}
+
+}

@@ -1,0 +1,284 @@
+package org.springframework.core.io;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.net.URI;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Properties;
+
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
+
+import io.github.classgraph.ClassInfo;
+import io.github.classgraph.ClassInfoUtil;
+import io.github.classgraph.HasName;
+import io.github.toolfactory.narcissus.Narcissus;
+
+public class UrlAnnotationResource implements Resource {
+
+	@Override
+	public InputStream getInputStream() throws IOException {
+		//
+		final Properties properties = new Properties();
+		//
+		final List<ClassInfo> classInfos = ClassInfoUtil.getClassInfos();
+		//
+		Field[] fs = null;
+		//
+		Field f1, f2;
+		//
+		Annotation[] as;
+		//
+		Annotation a;
+		//
+		List<Field> fields = null;
+		//
+		int size;
+		//
+		Class<?> clz = null;
+		//
+		Method[] ms = null;
+		//
+		Method m = null;
+		//
+		String name = null;
+		//
+		for (int i = 0; classInfos != null && i < classInfos.size(); i++) {
+			//
+			if (Arrays.asList("com.helger.commons.junit.DebugModeTestRule", "freemarker.cache.WebappTemplateLoader",
+					"freemarker.ext.jsp.TaglibFactory", "freemarker.ext.servlet.AllHttpScopesHashModel",
+					"freemarker.ext.servlet.HttpRequestHashModel"
+,"freemarker.ext.servlet.HttpRequestParametersHashModel"
+,"freemarker.ext.servlet.HttpSessionHashModel"
+,"freemarker.ext.servlet.ServletContextHashModel"
+,"io.micrometer.observation.aop.ObservedAspect$ObservedAspectContext"
+,"org.apache.commons.compress.compressors.lzma.LZMACompressorOutputStream"
+,"org.apache.commons.compress.compressors.zstandard.ZstdCompressorOutputStream"
+,"org.apache.commons.logging.impl.AvalonLogger"
+,"org.apache.commons.logging.impl.LogKitLogger"
+,"org.apache.xmlbeans.impl.config.PrePostExtensionImpl"
+,"org.apache.xmlbeans.impl.tool.XMLBean$ErrorLogger"
+		,"org.eclipse.jetty.http.HttpCookieStore$Default"
+		,"org.eclipse.jetty.http.compression.HuffmanDecoder"
+		,"org.eclipse.jetty.http.compression.NBitStringDecoder"
+		,"org.eclipse.jetty.http.content.CachingHttpContentFactory$CachedHttpContent"
+		,"org.eclipse.jetty.http.content.ResourceHttpContent"
+		,"org.eclipse.jetty.http.content.ResourceHttpContentFactory"
+		
+,"org.eclipse.jetty.http.content.ValidatingCachingHttpContentFactory$ValidatingCachedContent"
+,"org.eclipse.jetty.http.content.VirtualHttpContentFactory"
+,"org.logevents.optional.jakarta.HttpServletMDC"
+,"org.logevents.optional.jakarta.HttpServletRequestMDC"
+,"org.logevents.optional.jakarta.HttpServletResponseMDC"
+		,"org.logevents.optional.junit.ExpectedLogEventsRule"
+		,"org.logevents.optional.junit.LogEventRule"
+		,"org.logevents.optional.junit.LogEventStatusRule"
+		,"org.logevents.optional.junit5.ExpectedLogEventsExtension"
+		,"org.logevents.optional.junit5.LogEventExtension"
+		,"org.logevents.optional.junit5.LogEventStatusExtension"
+		,"org.logevents.optional.servlets.HttpServletMDC"
+	,"org.logevents.optional.servlets.HttpServletRequestMDC"	
+	,"org.logevents.optional.servlets.HttpServletResponseMDC"
+	,"org.reflections.vfs.JbossDir"
+	,"org.reflections.vfs.JbossFile"
+					).contains(name = getName(classInfos.get(i)))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			try {
+				//
+				if ((fs = FieldUtils.getAllFields(forName(name))) == null) {
+					//
+					continue;
+					//
+				} // if
+			} catch (final Throwable e) {
+				//
+				// TODO
+				//
+				System.out.println(name);
+				//
+			} // try
+				//
+			for (int j = 0; j < fs.length; j++) {
+				//
+				if ((as = getAnnotations(f1 = fs[j])) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				for (int k = 0; as != null && k < as.length; k++) {
+					//
+					if ((a = as[k]) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (Proxy.isProxyClass(clz = getClass(a))) {
+						//
+						if ((size = IterableUtils.size(
+								fields = Arrays.stream(FieldUtils.getAllFields(getClass(Proxy.getInvocationHandler(a))))
+										.filter(x -> Objects.equals(getName(x), "type")).toList())) > 1) {
+							//
+							throw new RuntimeException();
+							//
+						} // if
+							//
+						if ((f2 = size == 1 ? IterableUtils.get(fields, 0) : null) == null
+								|| !Objects.equals(
+										getName(cast(Class.class,
+												Narcissus.getField(Proxy.getInvocationHandler(a), f2))),
+										"org.springframework.beans.factory.URL")
+								|| (ms = Arrays.stream(clz != null ? clz.getDeclaredMethods() : null)
+										.filter(x -> Objects.equals(getName(x), "value")).toList()
+										.toArray(new Method[] {})) == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						if (ms.length > 1) {
+							//
+							throw new IllegalStateException();
+							//
+						} // if
+							//
+						if ((m = ms.length == 1 ? ms[0] : null) == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						try {
+							//
+							properties.put(StringUtils.joinWith(".", getName(f1.getDeclaringClass()), getName(f1)),
+									Narcissus.invokeMethod(a, m));
+							//
+						} catch (final IllegalArgumentException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} // try
+							//
+					} // if
+						//
+				} // for
+					//
+			} // for
+				//
+		} // for
+			//
+		return toInputStream(properties);
+		//
+	}
+
+	private static Class<?> getClass(final Object instance) {
+		return instance != null ? instance.getClass() : null;
+	}
+
+	private static Annotation[] getAnnotations(final AnnotatedElement instance) {
+		return instance != null ? instance.getAnnotations() : null;
+	}
+
+	private static String getName(final HasName instance) {
+		return instance != null ? instance.getName() : null;
+	}
+
+	private static String getName(final Member instance) {
+		return instance != null ? instance.getName() : null;
+	}
+
+	private static String getName(final Class<?> instance) {
+		return instance != null ? instance.getName() : null;
+	}
+
+	private static Class<?> forName(final String className) {
+		try {
+			return StringUtils.isNotBlank(className) ? Class.forName(className) : null;
+		} catch (final ClassNotFoundException e) {
+			return null;
+		}
+	}
+
+	private static <T> T cast(final Class<T> clz, final Object instance) {
+		return clz != null && clz.isInstance(instance) ? clz.cast(instance) : null;
+	}
+
+	private static InputStream toInputStream(final Properties properties) throws IOException {
+		//
+		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			if (properties != null) {
+				//
+				properties.store(baos, null);
+				//
+			} // if
+				//
+			return new ByteArrayInputStream(baos.toByteArray());
+			//
+		} // try
+			//
+	}
+
+	@Override
+	public boolean exists() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public URL getURL() throws IOException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public URI getURI() throws IOException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public File getFile() throws IOException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public long contentLength() throws IOException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public long lastModified() throws IOException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Resource createRelative(final String relativePath) throws IOException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public String getFilename() {
+		return null;
+	}
+
+	@Override
+	public String getDescription() {
+		throw new UnsupportedOperationException();
+	}
+
+}

@@ -1,0 +1,195 @@
+package org.springframework.context.support;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Executable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Objects;
+import java.util.function.Predicate;
+
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ClassParserUtil;
+import org.apache.bcel.classfile.JavaClassUtil;
+import org.apache.bcel.generic.ATHROW;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionList;
+import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.NEW;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+class SpeechApiImplTest {
+
+	private static Method METHOD_GET_PARAMETER_COUNT, METHOD_INVOKE, METHOD_AND = null;
+
+	@BeforeAll
+	static void beforeAll() throws ReflectiveOperationException {
+		//
+		final Class<?> clz = SpeechApiImpl.class;
+		//
+		if ((METHOD_GET_PARAMETER_COUNT = clz != null ? clz.getDeclaredMethod("getParameterCount", Executable.class)
+				: null) != null) {
+			//
+			METHOD_GET_PARAMETER_COUNT.setAccessible(true);
+			//
+		} // if
+			//
+		if ((METHOD_INVOKE = clz != null ? clz.getDeclaredMethod("invoke", Method.class, Object.class, Object[].class)
+				: null) != null) {
+			//
+			METHOD_INVOKE.setAccessible(true);
+			//
+		} // if
+			//
+		if ((METHOD_AND = clz != null ? clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)
+				: null) != null) {
+			//
+			METHOD_AND.setAccessible(true);
+			//
+		} // if
+			//
+	}
+
+	@Test
+	void testAfterPropertiesSet() {
+		//
+		Assertions.assertDoesNotThrow(() -> new SpeechApiImpl().afterPropertiesSet());
+		//
+	}
+
+	private static Class<?> getClass(final Object instance) {
+		return instance != null ? instance.getClass() : null;
+	}
+
+	private static String toString(final Object instance) {
+		return instance != null ? instance.toString() : null;
+	}
+
+	@Test
+	void testGetParameterCount() throws Throwable {
+		//
+		Assertions.assertEquals(0, getParameterCount(null));
+		//
+	}
+
+	private static int getParameterCount(final Executable instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PARAMETER_COUNT.invoke(null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testInvoke() throws Throwable {
+		//
+		Assertions.assertNull(invoke(null, null));
+		//
+	}
+
+	private static Object invoke(final Method method, final Object instance, final Object... args) throws Throwable {
+		try {
+			return METHOD_INVOKE.invoke(null, method, instance, args);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAnd() throws Throwable {
+		//
+		Assertions.assertFalse(and(true, false));
+		//
+		Assertions.assertTrue(and(true, true, null));
+		//
+		Assertions.assertFalse(and(true, true, false));
+		//
+	}
+
+	private static boolean and(final boolean a, final boolean b, final boolean... bs) throws Throwable {
+		try {
+			final Object obj = METHOD_AND.invoke(null, a, b, bs);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(toString(getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIH() throws IOException {
+		//
+		final Class<?> clz = Util.forName("org.springframework.context.support.SpeechApiImpl$IH");
+
+		try (final InputStream is = clz != null
+				? clz.getResourceAsStream(String.format("/%1$s.class", StringUtils.replace(clz.getName(), ".", "/")))
+				: null) {
+			//
+			final org.apache.bcel.classfile.Method[] ms = JavaClassUtil.getMethods(
+					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)));
+			//
+			org.apache.bcel.classfile.Method m = null;
+			//
+			ConstantPoolGen cpg = null;
+			//
+			InstructionList il = null;
+			//
+			Instruction[] ins = null;
+			//
+			for (int i = 0; ms != null && i < ms.length; i++) {
+				//
+				if ((m = ms[i]) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (cpg == null) {
+					//
+					cpg = new ConstantPoolGen(m.getConstantPool());
+					//
+				} // if
+					//
+				if ((ins = InstructionListUtil
+						.getInstructions(new MethodGen(m, null, cpg).getInstructionList())) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				final int length = ins != null ? ins.length : 0;
+				//
+				final NEW n = Util.cast(NEW.class, testAndApply(x -> length > 0, ins, x -> ArrayUtils.get(x, 0), null));
+				//
+				final ATHROW athrow = Util.cast(ATHROW.class,
+						testAndApply(x -> length > 0, ins, x -> ArrayUtils.get(x, length - 1), null));
+				//
+				System.out.println();
+				//
+			} // for
+				//
+		} // try
+			//
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+}

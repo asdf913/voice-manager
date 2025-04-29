@@ -1,0 +1,248 @@
+package org.springframework.beans.factory;
+
+import java.lang.Character.UnicodeBlock;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
+import javax.annotation.Nullable;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.javatuples.valueintf.IValue0;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.ElementUtil;
+import org.jsoup.nodes.Node;
+import org.jsoup.select.NodeFilter;
+import org.jsoup.select.NodeVisitor;
+
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapUtil;
+
+/*
+ * https://hiramatu-hifuka.com/onyak/onyak2/yuryodo.html
+ */
+public class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean
+		implements FactoryBean<Multimap<String, String>> {
+
+	private String url = null;
+
+	public void setUrl(final String url) {
+		this.url = url;
+	}
+
+	@Override
+	public Multimap<String, String> getObject() throws Exception {
+		//
+		final Document document = testAndApply(Objects::nonNull,
+				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
+				null);
+		//
+		Multimap<String, String> multimap = null;
+		//
+//		final List<Element> es = ElementUtil.select(document, "table[border=\"1\"] tr");
+		//
+//		Element e = null;
+		//
+//		List<Element> children = null;
+		//
+//		final int maxChildrenSize = es != null
+//				? Util.stream(es).mapToInt(x -> x != null ? x.childrenSize() : 0).max().orElse(0)
+//				: 0;
+		//
+//		final int[] rowspans = new int[maxChildrenSize];
+		//
+//		final boolean[] hasRowspans = new boolean[maxChildrenSize];
+		//
+//		int childrenSize;
+		//
+//		long offset;
+		//
+		if (document != null) {
+			//
+			final NodeVisitorImpl nodeVisitorImpl = new NodeVisitorImpl();
+			//
+			ElementUtil.select(document, "td").traverse(nodeVisitorImpl);
+			//
+			final Multimap<String, String> mm = nodeVisitorImpl.multimap;
+			//
+			if (mm != null) {
+				//
+				MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), mm);
+				//
+			} // if
+				//
+		} // if
+			//
+//		final List<Element> tds = document != null ? ElementUtil.select(document, "td").filter(new NodeFilter() {
+//
+//			@Override
+//			public FilterResult head(final Node node, int depth) {
+//				//
+//				final Element e = Util.cast(Element.class, node);
+//				//
+//				if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+//						getUnicodeBlocks(ElementUtil.text(Util.cast(Element.class, node))))) {
+//					System.out.println(node + " " + e.nextElementSibling());
+//					return FilterResult.CONTINUE;
+//				}
+//				return FilterResult.REMOVE;
+//			}
+//		}) : null;
+		//
+//		System.out.println(tds);
+		//
+//		for (int i = 0; es != null && i < es.size(); i++) {
+//			//
+//			if ((e = es.get(i)) == null || (children = e.children()) == null || (childrenSize = e.childrenSize()) < 2) {
+//				//
+//				continue;
+//				//
+//			} // if
+//				//
+//			if (childrenSize == maxChildrenSize && !children.get(1).hasAttr("rowspan")) {
+//				//
+//				System.out.println(children.get(1) + " " + children.get(2));
+//				//
+//				continue;
+//				//
+//			} // if
+//				//
+//			for (int j = 0; j < children.size(); j++) {
+//				//
+//				if (children.get(j) == null || !children.get(j).hasAttr("rowspan")) {
+//					//
+//					continue;
+//					//
+//				} // if
+//					//
+//				rowspans[j] = Math.max(intValue(valueOf(children.get(j).attr("rowspan")), 0), 0);
+//				//
+//				hasRowspans[j] = true;
+//				//
+//			} // for
+//				//
+//			offset = IntStream.range(0, 1).filter(x -> rowspans[x] > 0).count();
+//			//
+//			System.out.println("L84=" + offset + " " + ArrayUtils.toString(rowspans));
+//			//
+//			if (hasRowspans[0]) {
+//				offset -= 1;
+//			}
+//			//
+//			System.out.println("L90=" + offset);
+//			//
+//			System.out.println(children.get(1 - (int) offset) + " " + children.get(2 - (int) offset));
+//			//
+//			IntStream.range(0, rowspans.length).forEach(x -> rowspans[x] = Math.max(rowspans[x] - 1, 1));
+//			//
+//			IntStream.range(0, hasRowspans.length).forEach(x -> hasRowspans[x] = false);
+//			//
+//		} // for
+		//
+		return multimap;
+		//
+	}
+
+	private static class NodeVisitorImpl implements NodeVisitor {
+
+		private Multimap<String, String> multimap = null;
+
+		@Override
+		public void head(final Node node, final int depth) {
+			//
+			final Element e = Util.cast(Element.class, node);
+			//
+			final String s = ElementUtil.text(e);
+			//
+			String snext;
+			//
+			if (Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), getUnicodeBlocks(s))
+					&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
+							getUnicodeBlocks(snext = ElementUtil.text(ElementUtil.nextElementSibling(e))))) {
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s, snext);
+				//
+			} else if (Objects.equals(Arrays.asList(UnicodeBlock.HIRAGANA, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+					getUnicodeBlocks(s))
+					&& Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA),
+							getUnicodeBlocks(snext = ElementUtil.text(ElementUtil.nextElementSibling(e))))) {
+				//
+				System.out.println(s + " " + snext);
+				//
+			} // if
+				//
+		}
+
+	}
+
+	private static List<UnicodeBlock> getUnicodeBlocks(final String string) {
+		//
+		final char[] cs = Util.toCharArray(string);
+		//
+		if (cs != null) {
+			//
+			List<UnicodeBlock> unicodeBlocks = null;
+			//
+			for (final char c : cs) {
+				//
+				testAndAccept((a, b) -> b != null && !Util.contains(a, b),
+						unicodeBlocks = ObjectUtils.getIfNull(unicodeBlocks, ArrayList::new), UnicodeBlock.of(c),
+						Util::add);
+				//
+			} // for
+				//
+			return unicodeBlocks;
+			//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (Util.test(instance, t, u)) {
+			Util.accept(consumer, t, u);
+		} // if
+	}
+
+	private static int intValue(@Nullable final Number instance, final int defaultValue) {
+		return instance != null ? instance.intValue() : defaultValue;
+	}
+
+	private static Integer valueOf(final String instance) {
+		try {
+			return StringUtils.isNotBlank(instance) ? Integer.valueOf(instance) : null;
+		} catch (final NumberFormatException e) {
+			return null;
+		}
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+	@Override
+	public Class<?> getObjectType() {
+		return Multimap.class;
+	}
+
+}

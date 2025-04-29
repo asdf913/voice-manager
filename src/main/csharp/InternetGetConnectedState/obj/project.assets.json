@@ -1,0 +1,171 @@
+{
+  "version": 3,
+  "targets": {
+    "net8.0": {
+      "DllExport/1.8.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.1/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.1/_._": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "DllExport/1.8.0": {
+      "sha512": "SIMHUJsyl7u1sM5hv6BkovcAfV+Rl5ZAC1x/QBUL+3HGMgaDjI/crqW+iyUpo6aS0sfyYu9HtZFM+e3QryVe0A==",
+      "type": "package",
+      "path": "dllexport/1.8.0",
+      "hasTools": true,
+      "files": [
+        ".gitattributes",
+        ".nupkg.metadata",
+        ".pkg.install.txt",
+        ".release.version",
+        ".sha1",
+        ".signature.p7s",
+        ".version",
+        "3rd-party-NOTICES.txt",
+        "AUTHORS.txt",
+        "DllExport.bat",
+        "LICENSE.txt",
+        "Readme.md",
+        "build_info.txt",
+        "changelog.txt",
+        "dllexport.1.8.0.nupkg.sha512",
+        "dllexport.nuspec",
+        "hMSBuild.bat",
+        "lib/net20/_._",
+        "lib/netstandard1.1/_._",
+        "maps/DllExport.bat.map",
+        "maps/DllExport.bat.map.targets",
+        "tests.bat",
+        "tests/DiffVTests.bat",
+        "tests/DiffVswStreamTests.bat",
+        "tests/GetNuTool/_run.bat",
+        "tests/GetNuTool/a.bat",
+        "tests/GetNuTool/keysAndLogicTests.bat",
+        "tests/ManagerKeyTests.bat",
+        "tests/ManagerKeyTests.targets",
+        "tests/VswStreamTests.bat",
+        "tests/VswasTests.bat",
+        "tests/_run.bat",
+        "tests/a.bat",
+        "tests/dbgdcore.bat",
+        "tests/dbghcore.bat",
+        "tests/hMSBuild/a.bat",
+        "tests/keysAndLogicTests.bat",
+        "tools/Conari.dll",
+        "tools/Huid.dll",
+        "tools/Mono.Cecil.dll",
+        "tools/MvsSln.dll",
+        "tools/MvsSln.xml",
+        "tools/PeViewer.exe",
+        "tools/PeViewer.exe.config",
+        "tools/clrtypes/DefaultInterpolatedStringHandler/.cs",
+        "tools/coreclr/LICENSE.TXT",
+        "tools/coreclr/README.md",
+        "tools/coreclr/changelog.txt",
+        "tools/coreclr/ilasm.exe",
+        "tools/coreclr/ildasm.exe",
+        "tools/gnt.bat",
+        "tools/hMSBuild.bat",
+        "tools/init.ps1",
+        "tools/net.r_eg.DllExport.Activator.dll",
+        "tools/net.r_eg.DllExport.NSBin.dll",
+        "tools/net.r_eg.DllExport.Wizard.dll",
+        "tools/net.r_eg.DllExport.Wizard.targets",
+        "tools/net.r_eg.DllExport.dll",
+        "tools/net.r_eg.DllExport.targets",
+        "tools/netfx4sdk.cmd",
+        "tools/raw/lib/net20/DllExport.dll",
+        "tools/raw/lib/net20/DllExport.xml",
+        "tools/raw/lib/netstd/DllExport.dll",
+        "tools/raw/lib/netstd/DllExport.xml"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net8.0": [
+      "DllExport >= 1.8.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\USER\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\USER\\Documents\\GitHub\\voice-manager\\src\\main\\csharp\\InternetGetConnectedState\\ClassLibrary1.csproj",
+      "projectName": "ClassLibrary1",
+      "projectPath": "C:\\Users\\USER\\Documents\\GitHub\\voice-manager\\src\\main\\csharp\\InternetGetConnectedState\\ClassLibrary1.csproj",
+      "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\USER\\Documents\\GitHub\\voice-manager\\src\\main\\csharp\\InternetGetConnectedState\\obj\\",
+      "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      },
+      "SdkAnalysisLevel": "9.0.200"
+    },
+    "frameworks": {
+      "net8.0": {
+        "targetAlias": "net8.0",
+        "dependencies": {
+          "DllExport": {
+            "target": "Package",
+            "version": "[1.8.0, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+Update "executeForEachMethod2(java.lang.Object,java.lang.String)","forEach(java.lang.Iterable,java.util.function.Consumer)" and "isIteratorMethodReturnNull3(org.apache.bcel.classfile.JavaClass,java.lang.reflect.Method,java.lang.Object)" methods in "org.springframework.beans.factory.Util" class
+
+
+Update "executeForEachMethod2(java.lang.Object,java.lang.String)" and "isIteratorMethodReturnNull4(org.apache.bcel.classfile.JavaClass,java.lang.reflect.Method,java.lang.Object)" methods in "org.springframework.beans.factory.Util" class
+
+Add "isIteratorMethodReturnNull5(org.apache.bcel.classfile.JavaClass,java.lang.reflect.Method,java.lang.Object)" method in "org.springframework.beans.factory.Util" class
+Update "isIteratorMethodReturnNull4(org.apache.bcel.classfile.JavaClass,java.lang.reflect.Method,java.lang.Object)" method in "org.springframework.beans.factory.Util" class
+
+
+
+			//
+		try {
+			org.apache.commons.io.FileUtils.writeLines(new java.io.File("test2.txt"),
+					java.util.Collections.singleton(javaClass != null ? javaClass.getClassName() : null), true);
+		} catch (final IOException e) {
+			// TODO
+			throw new RuntimeException(e);
+		} // try
+			//
+

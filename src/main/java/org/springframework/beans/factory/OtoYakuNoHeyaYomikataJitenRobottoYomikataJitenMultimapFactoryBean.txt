@@ -1,0 +1,154 @@
+package org.springframework.beans.factory;
+
+import java.lang.Character.UnicodeBlock;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.nodes.TextNodeUtil;
+import org.jsoup.select.NodeVisitor;
+
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapUtil;
+
+/*
+ * https://hiramatu-hifuka.com/onyak/onyak2/robot01.html
+ */
+public class OtoYakuNoHeyaYomikataJitenRobottoYomikataJitenMultimapFactoryBean
+		implements FactoryBean<Multimap<String, String>> {
+
+	private String url = null;
+
+	public void setUrl(final String url) {
+		this.url = url;
+	}
+
+	@Override
+	public Multimap<String, String> getObject() throws Exception {
+		//
+		final Document document = testAndApply(Objects::nonNull,
+				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
+				null);
+		//
+		if (document != null) {
+			//
+			final NodeVisitorImpl nodeVisitorImpl = new NodeVisitorImpl();
+			//
+			document.traverse(nodeVisitorImpl);
+			//
+			return nodeVisitorImpl.multimap;
+			//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static class NodeVisitorImpl implements NodeVisitor {
+
+		private Multimap<String, String> multimap = null;
+
+		@Override
+		public void head(final Node node, final int depth) {
+			//
+			final String text = StringUtils.trim(TextNodeUtil.text(Util.cast(TextNode.class, node)));
+			//
+//			if (StringUtils.isBlank(text)) {
+//				//
+//				return;
+//				//
+//			} // if
+			//
+//		final Collection<UnicodeBlock> unicodeBlocks = getUnicodeBlocks(text);
+			//
+//		if (CollectionUtils.containsAll(unicodeBlocks,
+//				Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS, UnicodeBlock.HIRAGANA))) {
+			//
+			boolean find = false;
+			//
+			final Matcher matcher = Util
+					.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(((　)?\\p{InHiragana}+)+)）"), text);
+			//
+			int groupCount = 0;
+			//
+			while (Util.find(matcher)) {
+				//
+				find = true;
+				//
+				if ((groupCount = Util.groupCount(matcher)) > 0) {
+					//
+					System.out.println(Util.group(matcher, 1));
+					//
+				} // if
+					//
+				if (groupCount > 1) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							Util.group(matcher, 1), StringUtils.deleteWhitespace(Util.group(matcher, 2)));
+					//
+				} // if
+					//
+			} // while
+				//
+		}
+
+	}
+
+	private static List<UnicodeBlock> getUnicodeBlocks(final String string) {
+		//
+		final char[] cs = Util.toCharArray(string);
+		//
+		if (cs != null) {
+			//
+			List<UnicodeBlock> unicodeBlocks = null;
+			//
+			for (final char c : cs) {
+				//
+				testAndAccept((a, b) -> b != null && !Util.contains(a, b),
+						unicodeBlocks = ObjectUtils.getIfNull(unicodeBlocks, ArrayList::new), UnicodeBlock.of(c),
+						Util::add);
+				//
+			} // for
+				//
+			return unicodeBlocks;
+			//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (Util.test(instance, t, u) && consumer != null) {
+			consumer.accept(t, u);
+		}
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+	@Override
+	public Class<?> getObjectType() {
+		return Multimap.class;
+	}
+
+}

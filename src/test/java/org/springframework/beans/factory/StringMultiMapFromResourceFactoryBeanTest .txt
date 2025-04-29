@@ -1,0 +1,149 @@
+package org.springframework.beans.factory;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.util.Base64;
+import java.util.Base64.Decoder;
+import java.util.Objects;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.nutch.util.DeflateUtils;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamSource;
+import org.springframework.core.io.Resource;
+
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.reflect.Reflection;
+
+class StringMultiMapFromResourceFactoryBeanTest {
+
+	private static class IH implements InvocationHandler {
+
+		private Boolean exists = null;
+
+		private byte[] contentAsByteArray = null;
+
+		private InputStream inputStream = null;
+
+		private IOException ioException = null;
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = Util.getName(method);
+			//
+			if (proxy instanceof InputStreamSource) {
+				//
+				if (Objects.equals(methodName, "getInputStream")) {
+					//
+					return inputStream;
+					//
+				} // if
+					//
+			} // if
+				//
+			if (proxy instanceof Resource) {
+				//
+				if (Objects.equals(methodName, "exists")) {
+					//
+					return exists;
+					//
+				} else if (Objects.equals(methodName, "getContentAsByteArray")) {
+					//
+					if (ioException != null) {
+						//
+						throw ioException;
+						//
+					} // if
+						//
+					return contentAsByteArray;
+					//
+				} else if (Objects.equals(methodName, "getContentAsByteArray")) {
+					//
+					return contentAsByteArray;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+	}
+
+	private StringMultiMapFromResourceFactoryBean instance = null;
+
+	@BeforeEach
+	void beforeEach() {
+		//
+		instance = new StringMultiMapFromResourceFactoryBean();
+		//
+	}
+
+	@Test
+	void testGetObject() throws Exception {
+		//
+		Assertions.assertNull(getObject(instance));
+		//
+		final IH ih = new IH();
+		//
+		ih.exists = Boolean.TRUE;
+		//
+		if (instance != null) {
+			//
+			instance.setResource(Reflection.newProxy(Resource.class, ih));
+			//
+		} // if
+			//
+		Assertions.assertNull(getObject(instance));
+		//
+		ih.ioException = new IOException();
+		//
+		Assertions.assertThrows(RuntimeException.class, () -> getObject(instance));
+		//
+		final File file = new File("20240124.xlsx");
+		//
+		byte[] bs = FileUtils.readFileToByteArray(file);
+		//
+		System.out.println("bs.lengt=" + (bs != null ? bs.length : null));
+		//
+		bs = DeflateUtils.deflate(bs);
+		//
+		System.out.println("bs.lengt=" + (bs != null ? bs.length : null));
+		//
+		System.out.println(Base64.getEncoder().encodeToString(bs));
+		//
+		final Decoder decoder = Base64.getDecoder();
+		//
+		if (instance != null) {
+			//
+			instance.setResource(new ByteArrayResource(DeflateUtils.inflate(decoder != null ? decoder.decode(
+					"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")
+					: null)));
+			//
+		} // if
+			//
+		Assertions.assertEquals(ImmutableMultimap.of(), getObject(instance));
+		//
+	}
+
+	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
+		return instance != null ? instance.getObject() : null;
+	}
+
+	@Test
+	void testGetObjectType() {
+		//
+		Assertions.assertEquals(Multimap.class, instance != null ? instance.getObjectType() : null);
+		//
+	}
+
+}

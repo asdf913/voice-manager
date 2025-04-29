@@ -1,0 +1,148 @@
+package org.springframework.beans.factory;
+
+import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.d2ab.collection.ints.IntCollection;
+import org.d2ab.collection.ints.IntCollectionUtil;
+import org.d2ab.collection.ints.IntList;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.NodeUtil;
+import org.jsoup.nodes.TextNode;
+
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapUtil;
+
+public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBean
+		implements FactoryBean<Multimap<String, String>> {
+
+	@URL("https://hiramatu-hifuka.com/onyak/monyo.html")
+	private String url = null;
+
+	@Override
+	public Multimap<String, String> getObject() throws Exception {
+		//
+		final List<String> lines = Util
+				.toList(flatMap(Util.map(Util.map(
+						Util.map(
+								Util.filter(testAndApply(Objects::nonNull,
+										Util.spliterator(Util.toList(NodeUtil.nodeStream(testAndApply(Objects::nonNull,
+												testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(),
+														null),
+												x -> Jsoup.parse(x, 0), null)))),
+										x -> StreamSupport.stream(x, false), null), TextNode.class::isInstance),
+								Util::toString),
+						x -> StringUtils.split(x, "\u3000")), Arrays::asList), List::stream));
+		//
+		String g12, g21, g22, csk, csv;
+		//
+		PatternMap patternMap = null;
+		//
+		Matcher m1, m2;
+		//
+		Multimap<String, String> multimap = null;
+		//
+		final int size = IterableUtils.size(lines);
+		//
+		IntCollection intCollection = null;
+		//
+		for (int i = 0; i < size; i++) {
+			//
+			if (Util.matches(m1 = Util.matcher(PatternMap.getPattern(
+					patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
+					"^\\p{InCJKUnifiedIdeographs}+\\p{InHiragana}(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+)\\p{InHalfwidthAndFullwidthForms}\\p{InHiragana}[\\p{InCJKUnifiedIdeographs}\\p{InHiragana}\\p{InCJKSymbolsAndPunctuation}\\p{InHalfwidthAndFullwidthForms}]+$"),
+					IterableUtils.get(lines, i))) && Util.groupCount(m1) > 1) {
+				//
+				g12 = Util.group(m1, 2);
+				//
+				IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create), i);
+				//
+				for (int j = 0; j < size; j++) {
+					//
+					if (i == j) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (Util.matches(m2 = Util.matcher(PatternMap.getPattern(
+							patternMap = ObjectUtils.getIfNull(patternMap, PatternMapImpl::new),
+							String.format(
+									"^(\\p{InCJKUnifiedIdeographs}+)\\p{InHalfwidthAndFullwidthForms}(\\p{InHiragana}+%1$s)\\p{InHalfwidthAndFullwidthForms}$",
+									g12)),
+							IterableUtils.get(lines, j))) && Util.groupCount(m2) > 1) {
+						//
+						MultimapUtil.putAll(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+								ImmutableMultimap.of(g21 = Util.group(m2, 1), g22 = Util.group(m2, 2),
+										csk = getCommonSuffix(Util.group(m1, 1), g21), csv = getCommonSuffix(g12, g22),
+										StringUtils.substringBefore(g21, csk), StringUtils.substringBefore(g22, csv)));
+						//
+						IntCollectionUtil.addInt(intCollection = ObjectUtils.getIfNull(intCollection, IntList::create),
+								j);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+		} // if
+			//
+		MultimapUtil.remove(multimap, "入替", "いれかわり");
+		//
+		return multimap;
+		//
+	}
+
+	// http://www.java2s.com/example/java-utility-method/collection-element-get/getcommonsuffix-collection-string-c-85a78.html
+	private static String getCommonSuffix(final String s1, final String s2) {
+		//
+		if (s1 == null || s2 == null || s1.length() == 0 || s2.length() == 0) {
+			//
+			return "";
+			//
+		} // if
+			//
+		int i = 0;
+		//
+		while (i < s1.length() && i < s2.length() && s1.charAt(s1.length() - 1 - i) == s2.charAt(s2.length() - 1 - i)) {
+			//
+			i++;
+			//
+		} // if
+			//
+		return StringUtils.substring(s1, StringUtils.length(s1) - i);
+		//
+	}
+
+	private static <T, R> Stream<R> flatMap(final Stream<T> instance,
+			final Function<? super T, ? extends Stream<? extends R>> mapper) {
+		return instance != null && mapper != null ? instance.flatMap(mapper) : null;
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+	@Override
+	public Class<?> getObjectType() {
+		return Multimap.class;
+	}
+
+}

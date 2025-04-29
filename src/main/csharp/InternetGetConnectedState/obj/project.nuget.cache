@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "xVPjvTqU2tA=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\USER\\Documents\\GitHub\\voice-manager\\src\\main\\csharp\\InternetGetConnectedState\\ClassLibrary1.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\USER\\.nuget\\packages\\dllexport\\1.8.0\\dllexport.1.8.0.nupkg.sha512"
+  ],
+  "logs": []
+}

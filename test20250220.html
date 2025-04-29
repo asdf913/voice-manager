@@ -1,0 +1,73 @@
+<html>
+<thead>
+<script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"/></script>
+</thead>
+<thead>
+<body>
+<div style="position:absolute;top:0px;left:0px;">
+<div style="display:ruby-text;margin-right:auto;margin-left:auto;text-align:center;font-size:266px"><ruby><rb>備</rb><rp>(</rp><rt>そな</rt><rp>)</rp></ruby>える</div>
+</div>
+<div style="position:absolute;font-size:40px">prepare</div>
+<script type="text/javascript">
+	html2canvas(document.getElementsByTagName("div")[0]).then(function(canvas) {
+		//document.body.appendChild(canvas);
+		var width=canvas!=null?canvas.width:null;
+		var data=canvas!=null?canvas.getContext("2d").getImageData(0,0,width,canvas.height).data:null;
+		var firstColor=null;
+		var array=null;
+		var mod=null;
+		var tempColor=null;
+		for(var i=0;data!=null && i<data.length;i+=4){
+			if(i==0){
+				firstColor=[data[i],data[i+1],data[i+2],data[i+3]];
+			}else if(firstColor!=null&& 
+			(firstColor.length!=(tempColor=[data[i],data[i+1],data[i+2],data[i+3]]).length
+			||  !firstColor.every((value, index) => value === tempColor[index]))
+			)
+			{
+				if(array==null){
+					array=[];
+				}
+				if(array!=null && array.indexOf(mod=Math.trunc(i/width/4)+1)<0){
+					//if(mod>array[array.length-1]){array.pop();}
+					array.push(mod);
+				}
+			}
+		}//for
+		if(array.length>0){
+			document.getElementsByTagName("div")[0].style.top="-"+array[0]+"px";
+			document.getElementsByTagName("div")[2].style.top=(array[array.length-1]-array[0])+"px";
+		}
+	});
+	html2canvas(document.getElementsByTagName("div")[2]).then(function(canvas) {
+		//document.body.appendChild(canvas);
+		var width=canvas!=null?canvas.width:null;
+		var data=canvas!=null?canvas.getContext("2d").getImageData(0,0,width,canvas.height).data:null;
+		var firstColor=null;
+		var array=null;
+		var mod=null;
+		var tempColor=null;
+		for(var i=0;data!=null && i<data.length;i+=4){
+			if(i==0){
+				firstColor=[data[i],data[i+1],data[i+2],data[i+3]];
+			}else if(firstColor!=null&& 
+			(firstColor.length!=(tempColor=[data[i],data[i+1],data[i+2],data[i+3]]).length
+			||  !firstColor.every((value, index) => value === tempColor[index]))
+			)
+			{
+				if(array==null){
+					array=[];
+				}
+				if(array!=null && array.indexOf(mod=Math.trunc(i/width/4)+1)<0){
+					//if(mod>array[array.length-1]){array.pop();}
+					array.push(mod);
+				}
+			}
+		}//for
+		if(array.length>0){
+			document.getElementsByTagName("div")[2].style.top= (parseInt(document.getElementsByTagName("div")[2].style.top)-array[0]+1)+"px";
+		}
+	});
+</script>
+</body>
+</html>

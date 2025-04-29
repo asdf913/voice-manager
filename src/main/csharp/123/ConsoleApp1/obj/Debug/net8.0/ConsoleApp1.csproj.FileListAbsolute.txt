@@ -1,0 +1,1 @@
+C:\Users\USER\Documents\GitHub\voice-manager\src\main\csharp\123\ConsoleApp1\obj\Debug\net8.0\ConsoleApp1.csproj.AssemblyReference.cache

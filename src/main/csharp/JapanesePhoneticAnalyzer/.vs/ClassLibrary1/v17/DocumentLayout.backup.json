@@ -1,0 +1,54 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\USER\\Documents\\GitHub\\voice-manager\\src\\main\\csharp\\JapanesePhoneticAnalyzer\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{B17B58E0-FFF4-40CC-9F0C-39E939F9C83D}|ClassLibrary1.csproj|c:\\users\\user\\documents\\github\\voice-manager\\src\\main\\csharp\\japanesephoneticanalyzer\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B17B58E0-FFF4-40CC-9F0C-39E939F9C83D}|ClassLibrary1.csproj|solutionrelative:class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B17B58E0-FFF4-40CC-9F0C-39E939F9C83D}|ClassLibrary1.csproj|C:\\Users\\USER\\Documents\\GitHub\\voice-manager\\src\\main\\csharp\\JapanesePhoneticAnalyzer\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B17B58E0-FFF4-40CC-9F0C-39E939F9C83D}|ClassLibrary1.csproj|solutionrelative:properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AssemblyInfo.cs",
+              "DocumentMoniker": "C:\\Users\\USER\\Documents\\GitHub\\voice-manager\\src\\main\\csharp\\JapanesePhoneticAnalyzer\\Properties\\AssemblyInfo.cs",
+              "RelativeDocumentMoniker": "Properties\\AssemblyInfo.cs",
+              "ToolTip": "C:\\Users\\USER\\Documents\\GitHub\\voice-manager\\src\\main\\csharp\\JapanesePhoneticAnalyzer\\Properties\\AssemblyInfo.cs",
+              "RelativeToolTip": "Properties\\AssemblyInfo.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-07T01:41:54.365Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Class1.cs",
+              "DocumentMoniker": "C:\\Users\\USER\\Documents\\GitHub\\voice-manager\\src\\main\\csharp\\JapanesePhoneticAnalyzer\\Class1.cs",
+              "RelativeDocumentMoniker": "Class1.cs",
+              "ToolTip": "C:\\Users\\USER\\Documents\\GitHub\\voice-manager\\src\\main\\csharp\\JapanesePhoneticAnalyzer\\Class1.cs",
+              "RelativeToolTip": "Class1.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-07T01:36:49.842Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

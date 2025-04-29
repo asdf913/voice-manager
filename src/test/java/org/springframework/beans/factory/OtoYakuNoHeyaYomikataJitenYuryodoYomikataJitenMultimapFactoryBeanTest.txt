@@ -1,0 +1,167 @@
+package org.springframework.beans.factory;
+
+import java.io.File;
+import java.lang.Character.UnicodeBlock;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.jsoup.nodes.Node;
+import org.jsoup.select.NodeVisitor;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapUtil;
+
+class OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBeanTest {
+
+	private static Method METHOD_TEST_AND_APPLY = null;
+
+	@BeforeAll
+	static void beforeAll() throws NoSuchMethodException {
+		//
+		(METHOD_TEST_AND_APPLY = OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean.class
+				.getDeclaredMethod("testAndApply", Predicate.class, Object.class, FailableFunction.class,
+						FailableFunction.class))
+				.setAccessible(true);
+		//
+	}
+
+	private OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean instance = null;
+
+	@BeforeEach
+	void beforeEach() {
+		//
+		instance = new OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean();
+		//
+	}
+
+	@Test
+	void testGetObjectType() {
+		//
+		Assertions.assertEquals(Multimap.class, FactoryBeanUtil.getObjectType(instance));
+		//
+	}
+
+	@Test
+	void testGetObject() throws Exception {
+		//
+		Assertions.assertNull(getObject(instance));
+		//
+		final Map<Object, Object> properties = System.getProperties();
+		//
+		if (Util.containsKey(properties,
+				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean.url")) {
+			//
+			if (instance != null) {
+				//
+				instance.setUrl(Util.toString(Util.get(properties,
+						"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean.url")));
+				//
+			} // if
+				//
+			final File file = new File("OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean.txt");
+			//
+			FileUtils.writeLines(file, MultimapUtil.entries(getObject(instance)));
+			//
+			System.out.println(file.getAbsolutePath());
+			//
+		} // if
+			//
+	}
+
+	private static <T> T getObject(final FactoryBean<T> instance) throws Exception {
+		return instance != null ? instance.getObject() : null;
+	}
+
+	@Test
+	void testTestAndApply() throws Throwable {
+		//
+		Assertions.assertNull(testAndApply(Predicates.alwaysTrue(), null, null, null));
+		//
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
+			throws Throwable {
+		try {
+			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testNodeVisitorImpl() throws ReflectiveOperationException {
+		//
+		final Class<?> clz = Class.forName(
+				"org.springframework.beans.factory.OtoYakuNoHeyaYomikataJitenYuryodoYomikataJitenMultimapFactoryBean$NodeVisitorImpl");
+		//
+		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor() : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> head(
+				Util.cast(NodeVisitor.class, constructor != null ? constructor.newInstance() : null), null, 0));
+		//
+	}
+
+	private static void head(final NodeVisitor instance, final Node node, final int depth) {
+		if (instance != null) {
+			instance.head(node, depth);
+		}
+	}
+
+	private static int length(final Object[] instance) {
+		return instance != null ? instance.length : 0;
+	}
+
+	private static List<UnicodeBlock> getUnicodeBlocks(final String string) {
+		//
+		final char[] cs = Util.toCharArray(string);
+		//
+		if (cs != null) {
+			//
+			List<UnicodeBlock> unicodeBlocks = null;
+			//
+			for (final char c : cs) {
+				//
+				testAndAccept((a, b) -> b != null && !Util.contains(a, b),
+						unicodeBlocks = ObjectUtils.getIfNull(unicodeBlocks, ArrayList::new), UnicodeBlock.of(c),
+						Util::add);
+				//
+			} // for
+				//
+			return unicodeBlocks;
+			//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (Util.test(instance, t, u)) {
+			Util.accept(consumer, t, u);
+		} // if
+	}
+
+}

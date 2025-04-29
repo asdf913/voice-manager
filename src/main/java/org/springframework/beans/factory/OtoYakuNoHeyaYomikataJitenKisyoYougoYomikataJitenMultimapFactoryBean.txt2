@@ -1,0 +1,327 @@
+package org.springframework.beans.factory;
+
+import java.lang.Character.UnicodeBlock;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.Nullable;
+
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.ElementUtil;
+
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapUtil;
+
+/*
+ * https://hiramatu-hifuka.com/onyak/kotoba-1/kisyo.html
+ */
+public class OtoYakuNoHeyaYomikataJitenKisyoYougoYomikataJitenMultimapFactoryBean
+		implements FactoryBean<Multimap<String, String>> {
+
+	private String url = null;
+
+	public void setUrl(final String url) {
+		this.url = url;
+	}
+
+	@Override
+	public Multimap<String, String> getObject() throws Exception {
+		//
+		Multimap<String, String> multimap = null;
+		//
+		final List<Element> es = ElementUtil.select(testAndApply(Objects::nonNull,
+				testAndApply(StringUtils::isNotBlank, url, x -> new URI(x).toURL(), null), x -> Jsoup.parse(x, 0),
+				null), "tr");
+		//
+		Element e = null;
+		//
+		List<String> ss1 = null;
+		//
+		List<String> ss2 = null;
+		//
+		String string, s1, s = null;
+		//
+		List<UnicodeBlock> unicodeBlocks = null;
+		//
+		Matcher matcher = null;
+		//
+		boolean b = false;
+		//
+		int size = 0;
+		//
+//		System.out.println(UnicodeBlock.of('・'));
+		//
+		for (int i = 0; es != null && i < es.size(); i++) {
+			//
+			if ((e = es.get(i)) == null || e.childrenSize() < 3
+//					|| Objects.equals(Collections.singletonList(UnicodeBlock.BASIC_LATIN),
+//							unicodeBlocks = getUnicodeBlocks(ElementUtil.text(IterableUtils.get(e.children(), 0))))
+//					|| Objects.equals(Arrays.asList(UnicodeBlock.BASIC_LATIN, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+//							unicodeBlocks)
+//					|| (s = ElementUtil.text(IterableUtils.get(e.children(), 0))) == null || StringUtils.isBlank(s)
+			// || s.matches("\\w+")
+			) {
+				//
+//				System.err.println(s + " " + getUnicodeBlocks(s));
+				//
+				continue;
+				//
+			} // if
+				//
+			if ((s = ElementUtil.text(IterableUtils.get(e.children(), 0))) != null
+					&& s.matches("^(\\p{InCJKUnifiedIdeographs}|々|・|、|\\p{InHiragana})+$")) {
+				//
+				System.out.println(s);
+				//
+			} else {
+				//
+//				System.err.println(s + " " + getUnicodeBlocks(s));
+				//
+			} // if
+				//
+			if (true) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (
+//					IterableUtils
+//					.size(ss1 = getStrings(ElementUtil.text(IterableUtils.get(e.children(), 0)),
+//							UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS)) != 1
+//					|| 
+			IterableUtils.size(ss2 = getStrings(ElementUtil.text(IterableUtils.get(e.children(), 1)),
+					UnicodeBlock.HIRAGANA)) != 1) {
+				//
+				continue;
+				//
+			} // if
+				//
+			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+					// s1 = IterableUtils.get(ss1, 0)
+					s1 = s, IterableUtils.get(ss2, 0));
+			//
+			if (StringUtils.isNotBlank(string = ElementUtil.text(IterableUtils.get(e.children(), 2))) &&
+			//
+					(
+					// !Objects.equals("『NHK気象ハンドブック』", string)&&
+					!Util.matches(Util.matcher(Pattern.compile("^『?NHK気象ハンドブック』?$"), string))
+							&& !Objects.equals(Arrays.asList(UnicodeBlock.BASIC_LATIN),
+									unicodeBlocks = getUnicodeBlocks(string))
+							&& !Objects.equals(
+									Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS, UnicodeBlock.KATAKANA),
+									unicodeBlocks)
+							&& !Objects.equals(
+									Arrays.asList(UnicodeBlock.KATAKANA, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
+									unicodeBlocks)
+							&& !Objects.equals(
+									Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS, UnicodeBlock.BASIC_LATIN),
+									unicodeBlocks)
+							&& !Objects.equals(Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS), unicodeBlocks)
+					//
+					)) {
+				//
+				if (
+//				Objects.equals(Arrays.asList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
+				// , UnicodeBlock.BASIC_LATIN
+//				), unicodeBlocks)
+				Util.contains(unicodeBlocks, UnicodeBlock.KATAKANA) || true) {
+					//
+//					System.out.println(string + " " + getUnicodeBlocks(string));
+					//
+				} // if
+					//
+			} // if
+				//
+			matcher = Util.matcher(Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）$"),
+					string = ElementUtil.text(IterableUtils.get(e.children(), 2)));
+			//
+//			b = false;
+			//
+			size = MultimapUtil.size(multimap);
+			//
+			while (matcher != null && matcher.find() && matcher.groupCount() > 1) {
+				//
+//				b = true;
+				//
+				MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+						matcher.group(1), matcher.group(2));
+				//
+			} // while
+				//
+			if (MultimapUtil.size(multimap) != size) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Objects.equals(s1, "較差")) {
+				//
+				matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）+"), string);
+				//
+				while (matcher != null && matcher.find()) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+							matcher.group(1));
+					//
+				} // while
+					//
+			} else if (Objects.equals(s1, "風花")) {
+				//
+				matcher = Util.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"), string);
+				//
+				while (matcher != null && matcher.find()) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							matcher.group(1), matcher.group(2));
+					//
+				} // while
+					//
+				matcher = Util.matcher(Pattern.compile("（(\\p{InHiragana}+)）+"), string);
+				//
+				while (matcher != null && matcher.find()) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), s1,
+							matcher.group(1));
+					//
+				} // while
+					//
+			} else if (Util.contains(Arrays.asList("寒気湖", "時雨", "南風", "初霜", "氷点", "盆地霧"), s1)) {
+				//
+				matcher = Util.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"), string);
+				//
+				while (matcher != null && matcher.find()) {
+					//
+					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
+							matcher.group(1), matcher.group(2));
+					//
+				} // while
+					//
+			} else {
+				//
+				matcher = Util.matcher(Pattern.compile("(\\p{InCJKUnifiedIdeographs}+)（(\\p{InHiragana}+)）"), string);
+				//
+				while (matcher != null && matcher.find()) {
+					//
+//					System.out.println(s1 + " " + string + " " + matcher.groupCount() + " " + matcher.group(1) + " "
+//							+ matcher.group(2));
+					//
+				} // while
+					//
+			} // if
+				//
+		} // for
+			//
+		return multimap;
+		//
+	}
+
+	private static List<UnicodeBlock> getUnicodeBlocks(@Nullable final String string) {
+		//
+		final char[] cs = Util.toCharArray(string);
+		//
+		if (cs != null) {
+			//
+			List<UnicodeBlock> unicodeBlocks = null;
+			//
+			for (final char c : cs) {
+				//
+				testAndAccept((a, b) -> b != null && !Util.contains(a, b),
+						unicodeBlocks = ObjectUtils.getIfNull(unicodeBlocks, ArrayList::new), UnicodeBlock.of(c),
+						Util::add);
+				//
+			} // for
+				//
+			return unicodeBlocks;
+			//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (Util.test(instance, t, u) && consumer != null) {
+			consumer.accept(t, u);
+		}
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
+			throws E {
+		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+	@Nullable
+	private static List<String> getStrings(final String string, final UnicodeBlock ub, final UnicodeBlock... ubs) {
+		//
+		final char[] cs = Util.toCharArray(string);
+		//
+		StringBuilder sb = null;
+		//
+		char c = ' ';
+		//
+		List<String> list = null;
+		//
+		for (int i = 0; cs != null && i < cs.length; i++) {
+			//
+			if (!Objects.equals(UnicodeBlock.of(c = cs[i]), ub)
+					&& !ArrayUtils.contains(ubs, UnicodeBlock.of(c = cs[i]))) {
+				//
+				if (i > 0) {
+					//
+					Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), Util.toString(sb));
+					//
+				} // if
+					//
+				clear(sb = ObjectUtils.getIfNull(sb, StringBuilder::new));
+				//
+			} else {
+				//
+				Util.append(sb = ObjectUtils.getIfNull(sb, StringBuilder::new), c);
+				//
+			} // if
+				//
+		} // for
+			//
+		if (StringUtils.isNotEmpty(sb)) {
+			//
+			Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), Util.toString(sb));
+			//
+		} // if
+			//
+		return list;
+		//
+	}
+
+	private static void clear(@Nullable final StringBuilder instance) {
+		if (instance != null) {
+			instance.delete(0, instance.length());
+		}
+	}
+
+	@Override
+	public Class<?> getObjectType() {
+		return Multimap.class;
+	}
+
+}

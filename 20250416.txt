@@ -1,0 +1,14 @@
+Zipkin
+Ingress/Kong - API Gateway
+Open telemetry
+prometheus
+Visual VM
+
+1. Springboot⭕
+2. postgresSQL⭕
+3. AWS ⭕
+4.微服务间通信 ⭕
+5.Keycloak如果没用过 但是了解Oauth2也行⭕
+6.K8s
+
+https://www.toyodata.co.jp/
