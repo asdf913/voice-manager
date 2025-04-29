@@ -669,7 +669,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				final Matcher matcher = Util.matcher(Pattern.compile("^PT(((\\d+)(.\\d+)?)S)$"), string);
 				//
-				testAndRun(and(matcher, x -> Util.matches(x), x -> Util.groupCount(x) > 0),
+				testAndRun(and(matcher, Util::matches, x -> Util.groupCount(x) > 0),
 						() -> Util.setText(tfElapsed, Util.group(matcher, 1)), () -> Util.setText(tfElapsed, string));
 				//
 			} // try
