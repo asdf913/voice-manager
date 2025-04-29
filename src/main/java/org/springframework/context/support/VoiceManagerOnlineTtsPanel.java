@@ -687,11 +687,11 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 		} else if (Objects.equals(source, btnDownload)) {
 			//
-			URL url = null;
+			URL u = null;
 			//
 			try {
 				//
-				url = testAndApply(StringUtils::isNotBlank, Util.getText(tfUrl), URL::new, null);
+				u = testAndApply(StringUtils::isNotBlank, Util.getText(tfUrl), URL::new, null);
 				//
 			} catch (final MalformedURLException e) {
 				//
@@ -703,14 +703,14 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 			if (jfc.getUI() instanceof BasicFileChooserUI ui) {
 				//
-				ui.setFileName(StringUtils.substringAfterLast(getFile(url), '/'));
+				ui.setFileName(StringUtils.substringAfterLast(getFile(u), '/'));
 				//
 			} // if
 				//
 			if (!isTestMode() && !GraphicsEnvironment.isHeadless()
 					&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//
-				try (final InputStream is = openStream(url)) {
+				try (final InputStream is = openStream(u)) {
 					//
 					testAndAccept(Objects::nonNull, testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null),
 							x -> FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), x));
