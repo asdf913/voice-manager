@@ -703,7 +703,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 			if (jfc.getUI() instanceof BasicFileChooserUI ui) {
 				//
-				ui.setFileName(StringUtils.substringAfterLast(url != null ? url.getFile() : null, '/'));
+				ui.setFileName(StringUtils.substringAfterLast(getFile(url), '/'));
 				//
 			} // if
 				//
@@ -725,6 +725,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static String getFile(final URL instance) {
+		return instance != null ? instance.getFile() : null;
 	}
 
 	private static InputStream openStream(@Nullable final URL instance) throws IOException {
