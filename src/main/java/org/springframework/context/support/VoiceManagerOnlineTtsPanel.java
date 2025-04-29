@@ -731,6 +731,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		return instance != null ? instance.getFile() : null;
 	}
 
+	@Nullable
 	private static InputStream openStream(@Nullable final URL instance) throws IOException {
 		//
 		if (instance == null) {
