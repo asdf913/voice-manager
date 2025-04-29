@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.Component;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -31,6 +32,7 @@ import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.text.JTextComponent;
@@ -95,7 +97,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
 			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING,
 			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE,
-			METHOD_OPEN_STREAM, METHOD_GET_FILE = null;
+			METHOD_OPEN_STREAM, METHOD_GET_FILE, METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -169,6 +171,11 @@ class VoiceManagerOnlineTtsPanelTest {
 		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
 		//
 		(METHOD_GET_FILE = clz.getDeclaredMethod("getFile", URL.class)).setAccessible(true);
+		//
+		(METHOD_EQUALS = clz.getDeclaredMethod("equals", Number.class, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_SHOW_SAVE_DIALOG = clz.getDeclaredMethod("showSaveDialog", JFileChooser.class, Component.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -1053,6 +1060,53 @@ class VoiceManagerOnlineTtsPanelTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testEquals() throws Throwable {
+		//
+		final int one = 1;
+		//
+		final Number number = Integer.valueOf(one);
+		//
+		Assertions.assertTrue(equals(number, one));
+		//
+		Assertions.assertFalse(equals(Integer.valueOf(one + one), one));
+		//
+	}
+
+	private static boolean equals(final Number a, final int b) throws Throwable {
+		try {
+			final Object obj = METHOD_EQUALS.invoke(null, a, b);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testShowSaveDialog() throws Throwable {
+		//
+		Assertions.assertNull(
+				showSaveDialog(Util.cast(JFileChooser.class, Narcissus.allocateInstance(JFileChooser.class)), null));
+		//
+	}
+
+	private static Integer showSaveDialog(final JFileChooser instance, final Component parent) throws Throwable {
+		try {
+			final Object obj = METHOD_SHOW_SAVE_DIALOG.invoke(null, instance, parent);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Integer) {
+				return (Integer) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

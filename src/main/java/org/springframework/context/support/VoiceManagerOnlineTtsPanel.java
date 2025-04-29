@@ -698,8 +698,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			setFileName(Util.cast(BasicFileChooserUI.class, jfc.getUI()),
 					StringUtils.substringAfterLast(getFile(u), '/'));
 			//
-			if (Boolean.logicalAnd(!isTestMode(), !GraphicsEnvironment.isHeadless())
-					&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+			if (and(jfc, x -> Boolean.logicalAnd(!isTestMode(), !GraphicsEnvironment.isHeadless()),
+					x -> equals(showSaveDialog(x, null), JFileChooser.APPROVE_OPTION))) {
 				//
 				try (final InputStream is = openStream(u)) {
 					//
@@ -716,6 +716,37 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static boolean equals(final Number a, final int b) {
+		return a != null && a.intValue() == b;
+	}
+
+	private static Integer showSaveDialog(final JFileChooser instance, final Component parent) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Collection<Field> fs = Util
+				.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(instance))),
+						f -> Objects.equals(Util.getName(f), "ui")));
+		//
+		final int size = IterableUtils.size(fs);
+		//
+		if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		return f != null && Narcissus.getField(instance, f) == null ? null
+				: Integer.valueOf(instance.showSaveDialog(parent));
+		//
 	}
 
 	private static void testAndRun(final boolean condition, final Runnable runnableTrue, final Runnable runnableFalse) {
