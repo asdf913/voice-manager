@@ -339,11 +339,11 @@ class OnlineNHKJapanesePronunciationsAccentFailableFunctionImplTest {
 		if (element != null) {
 			//
 			FieldUtils.writeField(element, "childNodes",
-					Collections.singletonList(cast(Element.class, Narcissus.allocateInstance(Element.class))), true);
+					Narcissus.allocateInstance(Class.forName("org.jsoup.nodes.Element$NodeList")), true);
 			//
 		} // if
 			//
-		Assertions.assertEquals(Collections.singletonMap("", ""), getSrcMap(element));
+		Assertions.assertNull(getSrcMap(element));
 		//
 	}
 
