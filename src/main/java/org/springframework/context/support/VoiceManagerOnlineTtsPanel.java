@@ -722,6 +722,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		return a != null && a.intValue() == b;
 	}
 
+	@Nullable
 	private static Integer showSaveDialog(@Nullable final JFileChooser instance, final Component parent) {
 		//
 		if (instance == null) {
