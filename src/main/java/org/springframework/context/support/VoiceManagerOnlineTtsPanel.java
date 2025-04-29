@@ -701,12 +701,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 			final JFileChooser jfc = new JFileChooser(".");
 			//
-			if (jfc.getUI() instanceof BasicFileChooserUI ui) {
-				//
-				ui.setFileName(StringUtils.substringAfterLast(getFile(u), '/'));
-				//
-			} // if
-				//
+			setFileName(Util.cast(BasicFileChooserUI.class, jfc.getUI()),
+					StringUtils.substringAfterLast(getFile(u), '/'));
+			//
 			if (!isTestMode() && !GraphicsEnvironment.isHeadless()
 					&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//
@@ -725,6 +722,12 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static void setFileName(final BasicFileChooserUI instance, final String filename) {
+		if (instance != null) {
+			instance.setFileName(filename);
+		}
 	}
 
 	private static String getFile(final URL instance) {
