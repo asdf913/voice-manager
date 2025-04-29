@@ -2,6 +2,8 @@ package org.springframework.context.support;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.FlowLayout;
+import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -11,20 +13,22 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
@@ -39,18 +43,24 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
+import javax.swing.plaf.basic.BasicFileChooserUI;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableConsumer;
+import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.TriFunction;
@@ -155,7 +165,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
-	private AbstractButton btnCopy = null;
+	private AbstractButton btnCopy, btnDownload = null;
 
 	private Map<String, String> voices = null;
 
@@ -288,7 +298,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 						(a, b, c) -> PropertyResolverUtil.getProperty(a, b), (a, b, c) -> NodeUtil.attr(c, VALUE)))),
 				Util.apply(function, triple));
 		//
-		final Consumer<Triple<String, String, String>> consumer = x -> {
+		final FailableConsumer<Triple<String, String, String>, RuntimeException> consumer = x -> {
 			//
 			add(new JLabel(TripleUtil.getLeft(x)));
 			//
@@ -354,7 +364,21 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		add(tfUrl = new JTextField(), String.format("wmin %1$spx", width));
 		//
-		add(btnCopy = new JButton("Copy"), String.format("%1$s,span %2$s", wrap, 3));
+		final JPanel panel = new JPanel();
+		//
+		final LayoutManager layoutManager = panel.getLayout();
+		//
+		if (layoutManager instanceof FlowLayout flowLayout) {
+			//
+			flowLayout.setVgap(0);
+			//
+		} // if
+			//
+		panel.add(btnCopy = new JButton("Copy"));
+		//
+		panel.add(btnDownload = new JButton("Download"));
+		//
+		add(panel, String.format("%1$s,span %2$s", wrap, 3));
 		//
 		add(new JLabel("Error"));
 		//
@@ -658,8 +682,72 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			testAndRunThrows(!isTestMode(), () -> setContents(getSystemClipboard(getToolkit()),
 					new StringSelection(Util.getText(tfUrl)), null));
 			//
+		} else if (Objects.equals(source, btnDownload)) {
+			//
+			URL url = null;
+			//
+			try {
+				//
+				url = testAndApply(StringUtils::isNotBlank, Util.getText(tfUrl), URL::new, null);
+				//
+			} catch (final MalformedURLException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
+				//
+			final JFileChooser jfc = new JFileChooser(".");
+			//
+			if (jfc.getUI() instanceof BasicFileChooserUI ui) {
+				//
+				ui.setFileName(StringUtils.substringAfterLast(url != null ? url.getFile() : null, '/'));
+				//
+			} // if
+				//
+			if (!isTestMode() && !GraphicsEnvironment.isHeadless()
+					&& jfc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+				//
+				try (final InputStream is = openStream(url)) {
+					//
+					testAndAccept(Objects::nonNull, testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null),
+							x -> FileUtils.writeByteArrayToFile(jfc.getSelectedFile(), x));
+					//
+				} catch (final IOException e) {
+					//
+					LoggerUtil.error(LOG, e.getMessage(), e);
+					//
+				} // try
+					//
+			} // if
+				//
 		} // if
 			//
+	}
+
+	private static InputStream openStream(final URL instance) throws IOException {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Collection<Field> fs = Util
+				.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(instance))),
+						f -> Objects.equals(Util.getName(f), "handler")));
+		//
+		final int size = IterableUtils.size(fs);
+		//
+		if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		return f != null && Narcissus.getField(instance, f) == null ? null : instance.openStream();
+		//
 	}
 
 	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,
@@ -864,10 +952,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
-	private static <T> void testAndAccept(final Predicate<T> instance, @Nullable final T value,
-			final Consumer<T> consumer) {
+	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> instance, @Nullable final T value,
+			final FailableConsumer<T, E> consumer) throws E {
 		if (Util.test(instance, value)) {
-			Util.accept(consumer, value);
+			FailableConsumerUtil.accept(consumer, value);
 		} // if
 	}
 

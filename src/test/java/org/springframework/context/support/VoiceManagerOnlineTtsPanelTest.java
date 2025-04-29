@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -23,7 +24,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -51,7 +51,7 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.function.Consumers;
+import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.TriFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -94,8 +94,8 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_ATTRIBUTE, METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME,
 			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
 			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING,
-			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF,
-			METHOD_GET_VOICE = null;
+			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE,
+			METHOD_OPEN_STREAM = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -120,8 +120,8 @@ class VoiceManagerOnlineTtsPanelTest {
 		(METHOD_GET_ELEMENTS_BY_TAG_NAME = clz.getDeclaredMethod("getElementsByTagName", Document.class, String.class))
 				.setAccessible(true);
 		//
-		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class, Consumer.class))
-				.setAccessible(true);
+		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
+				FailableConsumer.class)).setAccessible(true);
 		//
 		(METHOD_GET_ATTRIBUTE = clz.getDeclaredMethod("getAttribute", NodeList.class, String.class, Predicate.class))
 				.setAccessible(true);
@@ -165,6 +165,8 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_GET_VOICE = clz.getDeclaredMethod("getVoice", PropertyResolver.class, String.class, ListModel.class,
 				Map.class)).setAccessible(true);
+		//
+		(METHOD_OPEN_STREAM = clz.getDeclaredMethod("openStream", URL.class)).setAccessible(true);
 		//
 	}
 
@@ -335,17 +337,29 @@ class VoiceManagerOnlineTtsPanelTest {
 			//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent("", 0, null)));
 		//
+		// btnExecute
+		//
 		final AbstractButton btnExecute = new JButton();
 		//
 		FieldUtils.writeDeclaredField(instance, "btnExecute", btnExecute, true);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnExecute, 0, null)));
 		//
+		// btnCopy
+		//
 		final AbstractButton btnCopy = new JButton();
 		//
 		FieldUtils.writeDeclaredField(instance, "btnCopy", btnCopy, true);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopy, 0, null)));
+		//
+		// btnDownload
+		//
+		final AbstractButton btnDownload = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnDownload", btnDownload, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnDownload, 0, null)));
 		//
 	}
 
@@ -592,12 +606,12 @@ class VoiceManagerOnlineTtsPanelTest {
 	@Test
 	void testTestAndAccept() {
 		//
-		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysTrue(), null, Consumers.nop()));
+		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysTrue(), null, FailableConsumer.nop()));
 		//
 	}
 
-	private static <T> void testAndAccept(final Predicate<T> instance, final T value, final Consumer<T> consumer)
-			throws Throwable {
+	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> instance, @Nullable final T value,
+			final FailableConsumer<T, E> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT.invoke(null, instance, value, consumer);
 		} catch (final InvocationTargetException e) {
@@ -990,6 +1004,27 @@ class VoiceManagerOnlineTtsPanelTest {
 				return null;
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testOpenStream() throws Throwable {
+		//
+		Assertions.assertNull(openStream(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));
+		//
+	}
+
+	private static InputStream openStream(final URL instnace) throws Throwable {
+		try {
+			final Object obj = METHOD_OPEN_STREAM.invoke(null, instnace);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof InputStream) {
+				return (InputStream) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
