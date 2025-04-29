@@ -735,7 +735,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		}
 	}
 
-	private static String getFile(final URL instance) {
+	private static String getFile(@Nullable final URL instance) {
 		return instance != null ? instance.getFile() : null;
 	}
 
