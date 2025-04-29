@@ -1,8 +1,10 @@
 package org.springframework.beans.factory;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +12,7 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 import org.junit.jupiter.api.Assertions;
@@ -74,7 +77,22 @@ class KyushuRailwayKanjiHiraganaMapFactoryBeanTest {
 		//
 		if (element != null) {
 			//
-			FieldUtils.writeField(element, "childNodes", Arrays.asList(childNode1, childNode2), true);
+			final Class<?> clz = Class.forName("org.jsoup.nodes.Element$NodeList");
+			//
+			final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor(Integer.TYPE) : null;
+			//
+			if (constructor != null) {
+				//
+				constructor.setAccessible(true);
+				//
+			} // if
+				//
+			final Collection<?> collection = Util.cast(Collection.class,
+					constructor != null ? constructor.newInstance(Integer.valueOf(0)) : null);
+			//
+			MethodUtils.invokeMethod(collection, true, "addAll", Arrays.asList(childNode1, childNode2));
+			//
+			FieldUtils.writeField(element, "childNodes", collection, true);
 			//
 		} // if
 			//
