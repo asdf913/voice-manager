@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.function.Predicate;
 
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.jsoup.nodes.Element;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -96,10 +98,27 @@ class SeibuRailwayKanjiRomajiMapFactoryBeanTest {
 		//
 		final Element element1 = cast(Element.class, Narcissus.allocateInstance(Element.class));
 		//
+		final Class<?> clz = Class.forName("org.jsoup.nodes.Element$NodeList");
+		//
+		final Constructor<?> constructor = clz != null ? clz.getDeclaredConstructor(Integer.TYPE) : null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		Collection<?> collection = null;
+		//
 		if (element1 != null) {
 			//
-			FieldUtils.writeField(element1, "childNodes",
-					Collections.nCopies(2, cast(Element.class, Narcissus.allocateInstance(Element.class))), true);
+			MethodUtils.invokeMethod(
+					collection = Util.cast(Collection.class,
+							constructor != null ? constructor.newInstance(Integer.valueOf(0)) : null),
+					true, "addAll",
+					Collections.nCopies(2, cast(Element.class, Narcissus.allocateInstance(Element.class))));
+			//
+			FieldUtils.writeField(element1, "childNodes", collection, true);
 			//
 		} // if
 			//
@@ -111,9 +130,9 @@ class SeibuRailwayKanjiRomajiMapFactoryBeanTest {
 		//
 		mh.text = "";
 		//
-		final Element childNode2 = ProxyUtil.createProxy(Element.class, mh, clz -> {
+		final Element childNode2 = ProxyUtil.createProxy(Element.class, mh, x -> {
 			//
-			final Constructor<?> c = clz != null ? clz.getDeclaredConstructor(String.class) : null;
+			final Constructor<?> c = x != null ? x.getDeclaredConstructor(String.class) : null;
 			//
 			if (c != null) {
 				//
@@ -129,8 +148,12 @@ class SeibuRailwayKanjiRomajiMapFactoryBeanTest {
 		//
 		if (element2 != null) {
 			//
-			FieldUtils.writeField(element2, "childNodes",
-					Arrays.asList(cast(Element.class, Narcissus.allocateInstance(Element.class)), childNode2), true);
+			MethodUtils.invokeMethod(
+					collection = Util.cast(Collection.class,
+							constructor != null ? constructor.newInstance(Integer.valueOf(0)) : null),
+					true, "addAll", Arrays.asList(Narcissus.allocateInstance(Element.class), childNode2));
+			//
+			FieldUtils.writeField(element2, "childNodes", collection, true);
 			//
 		} // if
 			//
