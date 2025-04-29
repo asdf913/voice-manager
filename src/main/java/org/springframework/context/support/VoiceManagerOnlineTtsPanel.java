@@ -618,13 +618,14 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				final HtmlPage htmlPage = testAndApply(Objects::nonNull, url, webClient::getPage, null);
 				//
-				Util.forEach(Util.collect(
-						Util.filter(
-								testAndApply(Objects::nonNull, VoiceManagerOnlineTtsPanel.class.getDeclaredFields(),
-										Arrays::stream, null),
-								f -> Util.isAnnotationPresent(f, Name.class) && Narcissus.getField(this, f) != null),
-						Collectors.toMap(f -> value(Util.getAnnotation(f, Name.class)),
-								f -> Narcissus.getField(this, f))),
+				Util.forEach(
+						Util.collect(
+								Util.filter(testAndApply(Objects::nonNull,
+										VoiceManagerOnlineTtsPanel.class.getDeclaredFields(), Arrays::stream, null),
+										f -> and(f, x -> Util.isAnnotationPresent(x, Name.class),
+												x -> Narcissus.getField(this, x) != null)),
+								Collectors.toMap(f -> value(Util.getAnnotation(f, Name.class)),
+										f -> Narcissus.getField(this, f))),
 						(a, b) -> setValues(htmlPage, voices, a, b));
 				//
 				final HtmlPage hm = Util.cast(HtmlPage.class, DomElementUtil
@@ -668,7 +669,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				final Matcher matcher = Util.matcher(Pattern.compile("^PT(((\\d+)(.\\d+)?)S)$"), string);
 				//
-				if (Util.matches(matcher) && Util.groupCount(matcher) > 0) {
+				if (and(matcher, x -> Util.matches(x), x -> Util.groupCount(x) > 0)) {
 					//
 					Util.setText(tfElapsed, Util.group(matcher, 1));
 					//
@@ -722,6 +723,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static <T> boolean and(final T value, final Predicate<T> a, final Predicate<T> b) {
+		return Util.test(a, value) && Util.test(b, value);
 	}
 
 	private static void setFileName(final BasicFileChooserUI instance, final String filename) {
