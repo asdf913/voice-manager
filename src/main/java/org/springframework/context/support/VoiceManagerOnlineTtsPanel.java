@@ -401,7 +401,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
-	private static void setEnabled(final AbstractButton instance, final boolean b) {
+	private static void setEnabled(@Nullable final AbstractButton instance, final boolean b) {
 		//
 		if (instance == null) {
 			//
