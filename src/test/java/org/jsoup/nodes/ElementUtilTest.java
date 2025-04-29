@@ -6,7 +6,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
@@ -149,13 +148,14 @@ class ElementUtilTest {
 	}
 
 	@Test
-	void testChildrenSize() throws IllegalAccessException {
+	void testChildrenSize() throws ReflectiveOperationException {
 		//
 		Assertions.assertEquals(0, ElementUtil.childrenSize(null));
 		//
 		Assertions.assertEquals(0, ElementUtil.childrenSize(element));
 		//
-		FieldUtils.writeDeclaredField(element, "childNodes", Collections.emptyList(), true);
+		FieldUtils.writeDeclaredField(element, "childNodes",
+				Narcissus.allocateInstance(Class.forName("org.jsoup.nodes.Element$NodeList")), true);
 		//
 		Assertions.assertEquals(0, ElementUtil.childrenSize(element));
 		//
