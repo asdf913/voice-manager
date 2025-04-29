@@ -718,8 +718,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 	}
 
-	private static <T> void testAndRun(final boolean condition, final Runnable runnableTrue,
-			final Runnable runnableFalse) {
+	private static void testAndRun(final boolean condition, final Runnable runnableTrue, final Runnable runnableFalse) {
 		if (condition) {
 			Util.run(runnableTrue);
 		} else {
