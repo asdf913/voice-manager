@@ -1892,11 +1892,11 @@ public abstract class Util {
 		return instance != null ? instance.getElementAt(index) : null;
 	}
 
-	static String getFile(final URL instance) {
+	static String getFile(@Nullable final URL instance) {
 		return instance != null ? instance.getFile() : null;
 	}
 
-	static InputStream openStream(final URL instance) throws IOException {
+	static InputStream openStream(@Nullable final URL instance) throws IOException {
 		//
 		if (instance == null) {
 			//
