@@ -867,7 +867,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		}
 	}
 
-	private static void open(final SourceDataLine instance, final AudioFormat format, final int bufferSize)
+	private static void open(final SourceDataLine instance, @Nullable final AudioFormat format, final int bufferSize)
 			throws LineUnavailableException {
 		if (instance != null) {
 			instance.open(format, bufferSize);
