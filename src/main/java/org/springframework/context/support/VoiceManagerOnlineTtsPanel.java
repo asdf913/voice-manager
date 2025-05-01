@@ -791,8 +791,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			try (final InputStream is = testAndApply(Objects::nonNull,
 					testAndApply(Objects::nonNull,
 							Util.openStream(testAndApply(StringUtils::isNotBlank, Util.getText(tfUrl), URL::new, null)),
-							x -> IOUtils.toByteArray(x), null),
-					x -> new ByteArrayInputStream(x), null);
+							IOUtils::toByteArray, null),
+					ByteArrayInputStream::new, null);
 					final AudioInputStream ais = is != null ? AudioSystem.getAudioInputStream(is) : null) {
 				//
 				final AudioFormat af = getFormat(ais);
