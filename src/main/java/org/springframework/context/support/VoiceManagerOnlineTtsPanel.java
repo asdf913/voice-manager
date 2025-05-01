@@ -827,12 +827,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				open(sdl, af, buf.length);
 				//
-				if (dl != null) {
-					//
-					dl.start();
-					//
-				} // if
-					//
+				start(dl);
+				//
 				int len;
 				//
 				while (ais != null && (len = ais.read(buf)) != -1) {
@@ -863,6 +859,12 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static void start(final DataLine instance) {
+		if (instance != null) {
+			instance.start();
+		}
 	}
 
 	private static void open(final SourceDataLine instance, final AudioFormat format, final int bufferSize)
