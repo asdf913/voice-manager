@@ -45,6 +45,7 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.Line;
 import javax.sound.sampled.Line.Info;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
@@ -841,12 +842,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				stop(dl);
 				//
-				if (dl != null) {
-					//
-					dl.close();
-					//
-				} // if
-					//
+				close(dl);
+				//
 			} catch (final IOException | UnsupportedAudioFileException | LineUnavailableException e) {
 				//
 				LoggerUtil.error(LOG, e.getMessage(), e);
@@ -855,6 +852,12 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static void close(final Line instance) {
+		if (instance != null) {
+			instance.close();
+		}
 	}
 
 	private static void stop(final DataLine instance) {
