@@ -825,12 +825,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				final SourceDataLine sdl = Util.cast(SourceDataLine.class, dl);
 				//
-				if (sdl != null) {
-					//
-					sdl.open(af, buf.length);
-					//
-				} // if
-					//
+				open(sdl, af, buf.length);
+				//
 				if (dl != null) {
 					//
 					dl.start();
@@ -867,6 +863,13 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static void open(final SourceDataLine instance, final AudioFormat format, final int bufferSize)
+			throws LineUnavailableException {
+		if (instance != null) {
+			instance.open(format, bufferSize);
+		}
 	}
 
 	@Nullable
