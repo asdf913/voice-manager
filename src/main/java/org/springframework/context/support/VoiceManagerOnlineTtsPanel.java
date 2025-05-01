@@ -811,10 +811,15 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 					//
 				} // if
 					//
-				final DataLine dl = Util.cast(DataLine.class,
-						and(testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
-								Objects::nonNull, x -> Narcissus.getField(info, x) != null) ? AudioSystem.getLine(info)
-										: Reflection.newProxy(SourceDataLine.class, new IH()));
+				final DataLine dl = Util
+						.cast(DataLine.class,
+								testAndApply(
+										x -> and(
+												testAndApply(y -> IterableUtils.size(y) == 1, fs,
+														y -> IterableUtils.get(y, 0), null),
+												Objects::nonNull, y -> Narcissus.getField(info, y) != null),
+										info, x -> AudioSystem.getLine(x),
+										x -> Reflection.newProxy(SourceDataLine.class, new IH())));
 				//
 				final byte[] buf = new byte[1024];
 				//
