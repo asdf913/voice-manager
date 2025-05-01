@@ -12,6 +12,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.ElementType;
@@ -38,6 +39,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -170,7 +178,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	@Note("Copy")
 	private AbstractButton btnCopy = null;
 
-	private AbstractButton btnDownload = null;
+	private AbstractButton btnDownload, btnPlayAudio = null;
 
 	private Map<String, String> voices = null;
 
@@ -369,6 +377,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		add(tfUrl = new JTextField(), String.format("wmin %1$spx", width));
 		//
+		add(btnCopy = new JButton("Copy"), String.format("%1$s,span %2$s", wrap, 2));
+		//
+		add(new JLabel());
+		//
 		final JPanel panel = new JPanel();
 		//
 		final LayoutManager layoutManager = panel.getLayout();
@@ -379,11 +391,11 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 		} // if
 			//
-		panel.add(btnCopy = new JButton("Copy"));
-		//
 		panel.add(btnDownload = new JButton("Download"));
 		//
-		add(panel, String.format("%1$s,span %2$s", wrap, 3));
+		panel.add(btnPlayAudio = new JButton("Play Audio"));
+		//
+		add(panel, wrap);
 		//
 		add(new JLabel("Error"));
 		//
@@ -391,7 +403,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		Util.forEach(Arrays.asList(tfElapsed, tfUrl, tfErrorMessage), x -> setEditable(x, false));
 		//
-		Util.forEach(Arrays.asList(btnCopy, btnDownload), x -> setEnabled(x, false));
+		Util.forEach(Arrays.asList(btnCopy, btnDownload, btnPlayAudio), x -> setEnabled(x, false));
 		//
 		Util.forEach(
 				Util.filter(Util.map(
@@ -697,7 +709,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 			} finally {
 				//
-				Util.forEach(Arrays.asList(btnCopy, btnDownload),
+				Util.forEach(Arrays.asList(btnCopy, btnDownload, btnPlayAudio),
 						x -> setEnabled(x, UrlValidatorUtil.isValid(UrlValidator.getInstance(), Util.getText(tfUrl))));
 				//
 				final String string = Util.toString(StopwatchUtil.elapsed(stopwatch));
@@ -748,6 +760,55 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				} // try
 					//
 			} // if
+				//
+		} else if (Objects.equals(source, btnPlayAudio)) {
+			//
+			try (final InputStream is = testAndApply(Objects::nonNull,
+					testAndApply(Objects::nonNull,
+							Util.openStream(testAndApply(StringUtils::isNotBlank, Util.getText(tfUrl), URL::new, null)),
+							x -> IOUtils.toByteArray(x), null),
+					x -> new ByteArrayInputStream(x), null);
+					final AudioInputStream ais = is != null ? AudioSystem.getAudioInputStream(is) : null) {
+				//
+				final AudioFormat af = ais != null ? ais.getFormat() : null;
+				//
+				final DataLine.Info info = new DataLine.Info(SourceDataLine.class, af);
+				//
+				final SourceDataLine line = Util.cast(SourceDataLine.class, AudioSystem.getLine(info));
+				//
+				final byte buf[] = new byte[1024];
+				//
+				if (line != null) {
+					//
+					if (af != null) {
+						//
+						line.open(af, buf.length);
+						//
+					} // if
+						//
+				} // if
+					//
+				line.start();
+				//
+				int len;
+				//
+				while (ais != null && (len = ais.read(buf)) != -1) {
+					//
+					line.write(buf, 0, len);
+					//
+				} // while
+					//
+				line.drain();
+				//
+				line.stop();
+				//
+				line.close();
+				//
+			} catch (final IOException | UnsupportedAudioFileException | LineUnavailableException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
 				//
 		} // if
 			//

@@ -369,6 +369,14 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnDownload, 0, null)));
 		//
+		// btnDownload
+		//
+		final AbstractButton btnPlayAudio = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnPlayAudio", btnPlayAudio, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnPlayAudio, 0, null)));
+		//
 	}
 
 	@Test
