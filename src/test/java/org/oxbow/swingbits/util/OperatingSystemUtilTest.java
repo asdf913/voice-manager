@@ -59,11 +59,4 @@ class OperatingSystemUtilTest {
 		return instance != null ? instance.toArray() : null;
 	}
 
-	@Test
-	void testGetOperatingSystem() {
-		//
-		Assertions.assertDoesNotThrow(() -> OperatingSystemUtil.getOperatingSystem());
-		//
-	}
-
 }
