@@ -864,7 +864,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 	}
 
-	private static AudioFormat getFormat(final AudioInputStream instance) {
+	private static AudioFormat getFormat(@Nullable final AudioInputStream instance) {
 		return instance != null ? instance.getFormat() : null;
 	}
 
