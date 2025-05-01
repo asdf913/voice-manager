@@ -861,14 +861,14 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		return instance != null ? instance.write(b, off, len) : 0;
 	}
 
-	private static void start(final DataLine instance) {
+	private static void start(@Nullable final DataLine instance) {
 		if (instance != null) {
 			instance.start();
 		}
 	}
 
-	private static void open(final SourceDataLine instance, @Nullable final AudioFormat format, final int bufferSize)
-			throws LineUnavailableException {
+	private static void open(@Nullable final SourceDataLine instance, @Nullable final AudioFormat format,
+			final int bufferSize) throws LineUnavailableException {
 		if (instance != null) {
 			instance.open(format, bufferSize);
 		}
