@@ -854,7 +854,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 	}
 
-	private static void close(final Line instance) {
+	private static void close(@Nullable final Line instance) {
 		if (instance != null) {
 			instance.close();
 		}
