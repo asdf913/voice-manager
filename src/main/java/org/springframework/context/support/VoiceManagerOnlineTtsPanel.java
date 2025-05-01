@@ -748,11 +748,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 			} // try
 				//
-		} else if (Objects.equals(source, btnCopy)) {
-			//
-			testAndRunThrows(!isTestMode(), () -> setContents(getSystemClipboard(getToolkit()),
-					new StringSelection(Util.getText(tfUrl)), null));
-			//
 		} else if (Objects.equals(source, btnDownload)) {
 			//
 			URL u = null;
@@ -798,7 +793,14 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	private boolean actionPerformed(final Object source) {
 		//
-		if (Objects.equals(source, btnPlayAudio)) {
+		if (Objects.equals(source, btnCopy)) {
+			//
+			testAndRunThrows(!isTestMode(), () -> setContents(getSystemClipboard(getToolkit()),
+					new StringSelection(Util.getText(tfUrl)), null));
+			//
+			return true;
+			//
+		} else if (Objects.equals(source, btnPlayAudio)) {
 			//
 			try (final InputStream is = testAndApply(Objects::nonNull,
 					testAndApply(Objects::nonNull,
