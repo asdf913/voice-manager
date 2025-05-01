@@ -348,6 +348,12 @@
 		    <artifactId>htmlunit</artifactId>
 		    <version>4.11.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.github.steos.jnafilechooser/jnafilechooser-api -->
+		<dependency>
+		    <groupId>com.github.steos.jnafilechooser</groupId>
+		    <artifactId>jnafilechooser-api</artifactId>
+		    <version>1.1.2</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -543,4 +549,10 @@
 			</build>
 		</profile>
 	</profiles>
+	<repositories>
+		<repository>
+			<id>scijava</id>
+			<url>https://maven.scijava.org/content/repositories/public/</url>
+		</repository>
+	</repositories>
 </project>
