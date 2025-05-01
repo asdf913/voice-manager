@@ -794,8 +794,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 					testAndApply(Objects::nonNull,
 							Util.openStream(testAndApply(StringUtils::isNotBlank, Util.getText(tfUrl), URL::new, null)),
 							IOUtils::toByteArray, null),
-					ByteArrayInputStream::new, null);
-					final AudioInputStream ais = is != null ? AudioSystem.getAudioInputStream(is) : null) {
+					ByteArrayInputStream::new, null); final AudioInputStream ais = getAudioInputStream(is)) {
 				//
 				final AudioFormat af = getFormat(ais);
 				//
@@ -852,6 +851,11 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static AudioInputStream getAudioInputStream(final InputStream instance)
+			throws UnsupportedAudioFileException, IOException {
+		return instance != null ? AudioSystem.getAudioInputStream(instance) : null;
 	}
 
 	private static void close(@Nullable final Line instance) {

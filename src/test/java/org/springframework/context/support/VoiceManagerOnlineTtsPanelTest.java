@@ -30,7 +30,9 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
@@ -99,7 +101,8 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
 			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING,
 			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE,
-			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_GET_FORMAT, METHOD_WRITE = null;
+			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_GET_FORMAT, METHOD_WRITE,
+			METHOD_GET_AUDIO_INPUT_STREAM = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -181,6 +184,9 @@ class VoiceManagerOnlineTtsPanelTest {
 		(METHOD_GET_FORMAT = clz.getDeclaredMethod("getFormat", AudioInputStream.class)).setAccessible(true);
 		//
 		(METHOD_WRITE = clz.getDeclaredMethod("write", SourceDataLine.class, byte[].class, Integer.TYPE, Integer.TYPE))
+				.setAccessible(true);
+		//
+		(METHOD_GET_AUDIO_INPUT_STREAM = clz.getDeclaredMethod("getAudioInputStream", InputStream.class))
 				.setAccessible(true);
 		//
 	}
@@ -296,6 +302,12 @@ class VoiceManagerOnlineTtsPanelTest {
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
 			//
+			if (Objects.equals(thisMethod != null ? thisMethod.getReturnType() : null, Void.TYPE)) {
+				//
+				return null;
+				//
+			} // if
+				//
 			final String methodName = Util.getName(thisMethod);
 			//
 			if (Boolean.logicalOr(
@@ -305,6 +317,14 @@ class VoiceManagerOnlineTtsPanelTest {
 				//
 				return null;
 				//
+			} else if (self instanceof InputStream) {
+				//
+				if (Objects.equals(methodName, "read")) {
+					//
+					return -1;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -1163,6 +1183,28 @@ class VoiceManagerOnlineTtsPanelTest {
 			final Object obj = METHOD_WRITE.invoke(null, instance, b, off, len);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetAudioInputStream() {
+		//
+		Assertions.assertThrows(UnsupportedAudioFileException.class,
+				() -> getAudioInputStream(ProxyUtil.createProxy(InputStream.class, mh)));
+		//
+	}
+
+	private static AudioInputStream getAudioInputStream(final InputStream instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_AUDIO_INPUT_STREAM.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof AudioInputStream) {
+				return (AudioInputStream) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
