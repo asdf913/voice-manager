@@ -26,9 +26,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.nio.file.FileSystem;
 import java.nio.file.Path;
-import java.nio.file.spi.FileSystemProvider;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -2923,10 +2921,6 @@ class VoiceManagerTest {
 				//
 		} // for
 			//
-	}
-
-	private static FileSystemProvider provider(final FileSystem instance) {
-		return instance != null ? instance.provider() : null;
 	}
 
 	private static boolean and(final boolean a, final boolean b, final boolean... bs) {
