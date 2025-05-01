@@ -818,7 +818,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 												testAndApply(y -> IterableUtils.size(y) == 1, fs,
 														y -> IterableUtils.get(y, 0), null),
 												Objects::nonNull, y -> Narcissus.getField(info, y) != null),
-										info, x -> AudioSystem.getLine(x),
+										info, AudioSystem::getLine,
 										x -> Reflection.newProxy(SourceDataLine.class, new IH())));
 				//
 				final byte[] buf = new byte[1024];
