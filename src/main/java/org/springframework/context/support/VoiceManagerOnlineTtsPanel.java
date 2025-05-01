@@ -866,7 +866,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		}
 	}
 
-	private static void drain(final DataLine instance) {
+	private static void drain(@Nullable final DataLine instance) {
 		if (instance != null) {
 			instance.drain();
 		}
