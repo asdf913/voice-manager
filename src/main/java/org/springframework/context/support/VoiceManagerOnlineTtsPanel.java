@@ -657,6 +657,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	private static class IH implements InvocationHandler {
 
 		@Override
+		@Nullable
 		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
 			//
 			if (Objects.equals(method != null ? method.getReturnType() : null, Void.TYPE)) {
