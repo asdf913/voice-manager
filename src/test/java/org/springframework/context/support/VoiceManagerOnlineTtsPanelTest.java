@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.SourceDataLine;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
@@ -98,7 +99,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
 			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING,
 			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE,
-			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_GET_FORMAT = null;
+			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_GET_FORMAT, METHOD_WRITE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -179,6 +180,9 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_GET_FORMAT = clz.getDeclaredMethod("getFormat", AudioInputStream.class)).setAccessible(true);
 		//
+		(METHOD_WRITE = clz.getDeclaredMethod("write", SourceDataLine.class, byte[].class, Integer.TYPE, Integer.TYPE))
+				.setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -194,6 +198,8 @@ class VoiceManagerOnlineTtsPanelTest {
 		private Map<Object, Object> properties = null;
 
 		private Object[] elements = null;
+
+		private Integer write = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
@@ -269,6 +275,14 @@ class VoiceManagerOnlineTtsPanelTest {
 				} else if (Objects.equals(methodName, "getProperty") && args != null && args.length > 0) {
 					//
 					return Util.get(properties, args[0]);
+					//
+				} // if
+					//
+			} else if (proxy instanceof SourceDataLine) {
+				//
+				if (Objects.equals(methodName, "write")) {
+					//
+					return write;
 					//
 				} // if
 					//
@@ -1125,6 +1139,34 @@ class VoiceManagerOnlineTtsPanelTest {
 				return null;
 			} else if (obj instanceof AudioFormat) {
 				return (AudioFormat) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testWrite() throws Throwable {
+		//
+		final int zero = 0;
+		//
+		if (ih != null) {
+			//
+			ih.write = Integer.valueOf(zero);
+			//
+		} // if
+			//
+		Assertions.assertEquals(zero, write(Reflection.newProxy(SourceDataLine.class, ih), null, zero, zero));
+		//
+	}
+
+	private static int write(final SourceDataLine instance, final byte[] b, final int off, final int len)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_WRITE.invoke(null, instance, b, off, len);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

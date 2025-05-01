@@ -833,12 +833,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				while (ais != null && (len = ais.read(buf)) != -1) {
 					//
-					if (sdl != null) {
-						//
-						sdl.write(buf, 0, len);
-						//
-					} // if
-						//
+					write(sdl, buf, 0, len);
+					//
 				} // while
 					//
 				if (dl != null) {
@@ -859,6 +855,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static int write(final SourceDataLine instance, final byte[] b, final int off, final int len) {
+		return instance != null ? instance.write(b, off, len) : 0;
 	}
 
 	private static void start(final DataLine instance) {
