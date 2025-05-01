@@ -816,7 +816,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 								Objects::nonNull, x -> Narcissus.getField(info, x) != null) ? AudioSystem.getLine(info)
 										: Reflection.newProxy(SourceDataLine.class, new IH()));
 				//
-				final byte buf[] = new byte[1024];
+				final byte[] buf = new byte[1024];
 				//
 				final SourceDataLine sdl = Util.cast(SourceDataLine.class, dl);
 				//
