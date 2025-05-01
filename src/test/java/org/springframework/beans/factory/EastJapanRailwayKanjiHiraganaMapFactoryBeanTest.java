@@ -8,10 +8,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.ConnectException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.nio.file.spi.FileSystemProvider;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -30,6 +27,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import org.oxbow.swingbits.util.OperatingSystem;
+import org.oxbow.swingbits.util.OperatingSystemUtil;
 
 import com.google.common.reflect.Reflection;
 
@@ -172,15 +171,9 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 		//
 		try (final InputStream is = new ByteArrayInputStream("1,2,3,4,5,http://127.0.0.1".getBytes())) {
 			//
-			final FileSystem fs = FileSystems.getDefault();
-			//
-			final FileSystemProvider fsp = fs != null ? fs.provider() : null;
-			//
-			final Class<?> clz = fsp != null ? fsp.getClass() : null;
-			//
 			final Executable executable = () -> createMap(is, urlValidator);
 			//
-			if (Objects.equals("sun.nio.fs.WindowsFileSystemProvider", clz != null ? clz.getName() : null)) {
+			if (Objects.equals(OperatingSystem.WINDOWS, OperatingSystemUtil.getOperatingSystem())) {
 				//
 				AssertionsUtil.assertThrowsAndEquals(ConnectException.class,
 						"{localizedMessage=Connection refused: connect, message=Connection refused: connect}",

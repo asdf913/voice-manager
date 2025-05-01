@@ -27,7 +27,6 @@ import java.net.URI;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.spi.FileSystemProvider;
 import java.util.ArrayList;
@@ -107,6 +106,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.odftoolkit.odfdom.pkg.OdfPackage;
+import org.oxbow.swingbits.util.OperatingSystem;
+import org.oxbow.swingbits.util.OperatingSystemUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -1251,21 +1252,12 @@ class VoiceManagerTest {
 	@Test
 	void testGetOsVersionInfoExMap() throws Throwable {
 		//
-		if (isUnderWindows()) {
+		if (Objects.equals(OperatingSystem.WINDOWS, OperatingSystemUtil.getOperatingSystem())) {
 			//
 			Assertions.assertNotNull(getOsVersionInfoExMap());
 			//
 		} // if
 			//
-	}
-
-	private static boolean isUnderWindows() throws Throwable {
-		//
-		final FileSystem fs = FileSystems.getDefault();
-		//
-		return Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
-				Util.getName(Util.getClass(fs != null ? fs.provider() : null)));
-		//
 	}
 
 	private static Map<String, Object> getOsVersionInfoExMap() throws Throwable {
@@ -2844,8 +2836,7 @@ class VoiceManagerTest {
 					|| and(!GraphicsEnvironment.isHeadless(),
 							Util.contains(Arrays.asList("init", "afterPropertiesSet"), Util.getName(m)),
 							m.getParameterCount() == 0)
-					|| and(!Objects.equals(Util.getName(Util.getClass(provider(FileSystems.getDefault()))),
-							"sun.nio.fs.WindowsFileSystemProvider"),
+					|| and(!Objects.equals(OperatingSystem.WINDOWS, OperatingSystemUtil.getOperatingSystem()),
 							Util.contains(Arrays.asList("getOsVersionInfoEx", "getOsVersionInfoExMap",
 									"IsWindows10OrGreater"), Util.getName(m)),
 							m.getParameterCount() == 0)) {

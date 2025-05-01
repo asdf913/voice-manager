@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
 import java.util.Objects;
 import java.util.function.Predicate;
 
@@ -18,6 +17,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.ElementUtil;
 import org.jsoup.select.Elements;
+import org.oxbow.swingbits.util.OperatingSystem;
+import org.oxbow.swingbits.util.OperatingSystemUtil;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;
@@ -41,7 +42,7 @@ public final class ATagUtil {
 
 	public static boolean InternetGetConnectedState(final boolean defaultValue) {
 		//
-		if (Objects.equals(getName(getClass(FileSystems.getDefault())), "sun.nio.fs.WindowsFileSystem")) {
+		if (Objects.equals(OperatingSystem.WINDOWS, OperatingSystemUtil.getOperatingSystem())) {
 			//
 			final WinInet winInet = WinInet.INSTANCE;
 			//
@@ -104,14 +105,6 @@ public final class ATagUtil {
 			//
 		return createByUrl(url);
 		//
-	}
-
-	private static String getName(final Class<?> instance) {
-		return instance != null ? instance.getName() : null;
-	}
-
-	private static Class<?> getClass(final Object instance) {
-		return instance != null ? instance.getClass() : null;
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,

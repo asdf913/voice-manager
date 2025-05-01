@@ -18,8 +18,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
@@ -75,6 +73,8 @@ import org.junit.jupiter.api.AssertionsUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.oxbow.swingbits.util.OperatingSystem;
+import org.oxbow.swingbits.util.OperatingSystemUtil;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.github.hal4j.uritemplate.URIBuilder;
@@ -615,12 +615,9 @@ class JlptLevelGuiTest {
 		//
 		if (throwableClassByGetSystemClipboard != null) {
 			//
-			final FileSystem fs = FileSystems.getDefault();
-			//
 			final org.junit.jupiter.api.function.Executable executable = () -> getSystemClipboard(toolkit);
 			//
-			if (Objects.equals("sun.nio.fs.WindowsFileSystemProvider",
-					getName(Util.getClass(fs != null ? fs.provider() : null)))) {
+			if (Objects.equals(OperatingSystem.WINDOWS, OperatingSystemUtil.getOperatingSystem())) {
 				//
 				AssertionsUtil.assertThrowsAndEquals(throwableClassByGetSystemClipboard, "{}", executable);
 				//

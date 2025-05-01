@@ -49,7 +49,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -194,6 +193,8 @@ import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.nodes.TextNodeUtil;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
+import org.oxbow.swingbits.util.OperatingSystem;
+import org.oxbow.swingbits.util.OperatingSystemUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -2356,8 +2357,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // try
 			//
-		final Shlwapi shlwapi = Objects.equals(Util.getName(Util.getClass(FileSystems.getDefault())),
-				"sun.nio.fs.WindowsFileSystem") ? Native.load("shlwapi", Shlwapi.class) : null;
+		final Shlwapi shlwapi = Objects.equals(OperatingSystem.WINDOWS, OperatingSystemUtil.getOperatingSystem())
+				? Native.load("shlwapi", Shlwapi.class)
+				: null;
 		//
 		if ((resource = toAudioResource(ciu = ObjectUtils.getIfNull(ciu, ContentInfoUtil::new),
 				file = Util.toFile(testAndApply(x -> x != null && (shlwapi == null || PathFileExistsW(shlwapi, string)),

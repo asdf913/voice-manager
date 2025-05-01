@@ -5,7 +5,6 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.file.FileSystems;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +15,8 @@ import javax.annotation.Nullable;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.oxbow.swingbits.util.OperatingSystem;
+import org.oxbow.swingbits.util.OperatingSystemUtil;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.InitializingBean;
@@ -33,8 +34,8 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 			//
 			final String methodName = Util.getName(method);
 			//
-			if (and(proxy instanceof SpeechApi, Objects.equals(methodName, "isInstalled"), Objects
-					.equals(Util.getName(Util.getClass(FileSystems.getDefault())), "sun.nio.fs.LinuxFileSystem"))) {
+			if (and(proxy instanceof SpeechApi, Objects.equals(methodName, "isInstalled"),
+					Objects.equals(OperatingSystem.LINUX, OperatingSystemUtil.getOperatingSystem()))) {
 				//
 				final Map<?, ?> properties = System.getProperties();
 				//
@@ -93,7 +94,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 		//
 		if (instance == null) {
 			//
-			if (Objects.equals(Util.getName(Util.getClass(FileSystems.getDefault())), "sun.nio.fs.WindowsFileSystem")) {
+			if (Objects.equals(OperatingSystem.WINDOWS, OperatingSystemUtil.getOperatingSystem())) {
 				//
 				if (Objects.equals(Boolean.TRUE, IValue0Util.getValue0(IsWindows10OrGreater()))) {
 					//
@@ -110,7 +111,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 				instance = Reflection.newProxy(SpeechApi.class, new IH());
 				//
 			} // if
-			//
+				//
 		} // if
 			//
 		return instance;
