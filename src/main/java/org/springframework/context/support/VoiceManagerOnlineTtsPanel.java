@@ -860,7 +860,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		}
 	}
 
-	private static void stop(final DataLine instance) {
+	private static void stop(@Nullable final DataLine instance) {
 		if (instance != null) {
 			instance.stop();
 		}
