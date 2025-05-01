@@ -805,12 +805,12 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 						.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(info))),
 								f -> Objects.equals(Util.getName(f), "lineClass")));
 				//
-				if (IterableUtils.size(fs) > 1) {
+				testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
 					//
 					throw new IllegalStateException();
 					//
-				} // if
-					//
+				});
+				//
 				final DataLine dl = Util
 						.cast(DataLine.class,
 								testAndApply(
