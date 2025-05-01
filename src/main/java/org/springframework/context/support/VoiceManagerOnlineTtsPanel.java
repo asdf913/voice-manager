@@ -794,7 +794,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 					x -> new ByteArrayInputStream(x), null);
 					final AudioInputStream ais = is != null ? AudioSystem.getAudioInputStream(is) : null) {
 				//
-				final AudioFormat af = ais != null ? ais.getFormat() : null;
+				final AudioFormat af = getFormat(ais);
 				//
 				final Info info = !isTestMode() ? new DataLine.Info(SourceDataLine.class, af)
 						: Util.cast(Info.class, Narcissus.allocateInstance(Info.class));
@@ -860,6 +860,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static AudioFormat getFormat(final AudioInputStream instance) {
+		return instance != null ? instance.getFormat() : null;
 	}
 
 	private static boolean equals(@Nullable final Number a, final int b) {

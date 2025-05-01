@@ -28,6 +28,8 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
@@ -96,7 +98,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
 			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING,
 			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE,
-			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED = null;
+			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_GET_FORMAT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -174,6 +176,8 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_SET_ENABLED = clz.getDeclaredMethod("setEnabled", AbstractButton.class, Boolean.TYPE))
 				.setAccessible(true);
+		//
+		(METHOD_GET_FORMAT = clz.getDeclaredMethod("getFormat", AudioInputStream.class)).setAccessible(true);
 		//
 	}
 
@@ -1104,6 +1108,28 @@ class VoiceManagerOnlineTtsPanelTest {
 			//
 		Assertions.assertThrows(Throwable.class, () -> invocationHandler.invoke(null, null, null));
 		//
+	}
+
+	@Test
+	void testGetFormat() throws Throwable {
+		//
+		Assertions.assertNull(
+				getFormat(Util.cast(AudioInputStream.class, Narcissus.allocateInstance(AudioInputStream.class))));
+		//
+	}
+
+	private static AudioFormat getFormat(final AudioInputStream instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_FORMAT.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof AudioFormat) {
+				return (AudioFormat) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }
