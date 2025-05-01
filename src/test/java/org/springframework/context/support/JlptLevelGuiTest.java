@@ -645,10 +645,6 @@ class JlptLevelGuiTest {
 			//
 	}
 
-	private static String getName(final Class<?> instance) {
-		return instance != null ? instance.getName() : null;
-	}
-
 	private static Class<? extends Throwable> getThrowingThrowableClass(final Class<?> clz, final Method method)
 			throws Throwable {
 		//
