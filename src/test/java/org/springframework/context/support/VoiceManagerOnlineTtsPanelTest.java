@@ -278,14 +278,10 @@ class VoiceManagerOnlineTtsPanelTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof SourceDataLine) {
+			} else if (proxy instanceof SourceDataLine && Objects.equals(methodName, "write")) {
 				//
-				if (Objects.equals(methodName, "write")) {
-					//
-					return write;
-					//
-				} // if
-					//
+				return write;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
