@@ -857,7 +857,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 	}
 
-	private static int write(final SourceDataLine instance, final byte[] b, final int off, final int len) {
+	private static int write(@Nullable final SourceDataLine instance, final byte[] b, final int off, final int len) {
 		return instance != null ? instance.write(b, off, len) : 0;
 	}
 
