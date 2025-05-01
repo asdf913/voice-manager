@@ -788,7 +788,17 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 					//
 			} // if
 				//
-		} else if (Objects.equals(source, btnPlayAudio)) {
+		} else if (actionPerformed(source)) {
+			//
+			return;
+			//
+		} // if
+			//
+	}
+
+	private boolean actionPerformed(final Object source) {
+		//
+		if (Objects.equals(source, btnPlayAudio)) {
 			//
 			try (final InputStream is = testAndApply(Objects::nonNull,
 					testAndApply(Objects::nonNull,
@@ -849,8 +859,12 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 			} // try
 				//
+			return true;
+			//
 		} // if
 			//
+		return false;
+		//
 	}
 
 	private static AudioInputStream getAudioInputStream(final InputStream instance)

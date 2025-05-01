@@ -521,8 +521,16 @@ class VoiceManagerOnlineTtsPanelTest {
 						//
 				} // if
 					//
-				Assertions.assertNull(invoke, toString);
-				//
+				if (Objects.equals(m.getReturnType(), Boolean.TYPE)) {
+					//
+					Assertions.assertNotNull(invoke, toString);
+					//
+				} else {
+					//
+					Assertions.assertNull(invoke, toString);
+					//
+				} // if
+					//
 			} // if
 				//
 		} // for
