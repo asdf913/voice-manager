@@ -20,6 +20,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
@@ -43,6 +45,7 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.Line.Info;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -120,6 +123,7 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.base.StopwatchUtil;
+import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
@@ -647,6 +651,23 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				: TriFunctionUtil.apply(functionFalse, t, u, v);
 	}
 
+	private static class IH implements InvocationHandler {
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
+			//
+			if (Objects.equals(method != null ? method.getReturnType() : null, Void.TYPE)) {
+				//
+				return null;
+				//
+			} // if
+				//
+			throw new Throwable(Util.getName(method));
+			//
+		}
+
+	}
+
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
@@ -772,38 +793,62 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				final AudioFormat af = ais != null ? ais.getFormat() : null;
 				//
-				final DataLine.Info info = new DataLine.Info(SourceDataLine.class, af);
+				final Info info = !isTestMode() ? new DataLine.Info(SourceDataLine.class, af)
+						: Util.cast(Info.class, Narcissus.allocateInstance(Info.class));
 				//
-				final SourceDataLine line = Util.cast(SourceDataLine.class, AudioSystem.getLine(info));
+				final Collection<Field> fs = Util
+						.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(info))),
+								f -> Objects.equals(Util.getName(f), "lineClass")));
+				//
+				if (IterableUtils.size(fs) > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				final DataLine dl = Util.cast(DataLine.class,
+						and(testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
+								Objects::nonNull, x -> Narcissus.getField(info, x) != null) ? AudioSystem.getLine(info)
+										: Reflection.newProxy(SourceDataLine.class, new IH()));
 				//
 				final byte buf[] = new byte[1024];
 				//
-				if (line != null) {
+				final SourceDataLine sdl = Util.cast(SourceDataLine.class, dl);
+				//
+				if (sdl != null) {
 					//
-					if (af != null) {
-						//
-						line.open(af, buf.length);
-						//
-					} // if
-						//
+					sdl.open(af, buf.length);
+					//
 				} // if
 					//
-				line.start();
-				//
+				if (dl != null) {
+					//
+					dl.start();
+					//
+				} // if
+					//
 				int len;
 				//
 				while (ais != null && (len = ais.read(buf)) != -1) {
 					//
-					line.write(buf, 0, len);
-					//
+					if (sdl != null) {
+						//
+						sdl.write(buf, 0, len);
+						//
+					} // if
+						//
 				} // while
 					//
-				line.drain();
-				//
-				line.stop();
-				//
-				line.close();
-				//
+				if (dl != null) {
+					//
+					dl.drain();
+					//
+					dl.stop();
+					//
+					dl.close();
+					//
+				} // if
+					//
 			} catch (final IOException | UnsupportedAudioFileException | LineUnavailableException e) {
 				//
 				LoggerUtil.error(LOG, e.getMessage(), e);

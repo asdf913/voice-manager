@@ -1076,7 +1076,7 @@ class VoiceManagerOnlineTtsPanelTest {
 
 	@Test
 	void testSetEnabled() {
-		// =
+		//
 		Assertions.assertDoesNotThrow(
 				() -> setEnabled(Util.cast(AbstractButton.class, Narcissus.allocateInstance(JButton.class)), false));
 		//
@@ -1088,6 +1088,22 @@ class VoiceManagerOnlineTtsPanelTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testIH() {
+		//
+		final InvocationHandler ih = Util.cast(InvocationHandler.class, Narcissus
+				.allocateInstance(Util.forName("org.springframework.context.support.VoiceManagerOnlineTtsPanel$IH")));
+		//
+		if (ih == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		Assertions.assertThrows(Throwable.class, () -> ih.invoke(null, null, null));
+		//
 	}
 
 }
