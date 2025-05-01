@@ -798,8 +798,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				final AudioFormat af = getFormat(ais);
 				//
-				final Info info = !isTestMode() ? new DataLine.Info(SourceDataLine.class, af)
-						: Util.cast(Info.class, Narcissus.allocateInstance(Info.class));
+				final Info info = testAndApply(x -> !isTestMode(), af, x -> new DataLine.Info(SourceDataLine.class, x),
+						x -> Util.cast(Info.class, Narcissus.allocateInstance(Info.class)));
 				//
 				final Collection<Field> fs = Util
 						.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(info))),
