@@ -867,7 +867,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
-	private static AudioInputStream getAudioInputStream(final InputStream instance)
+	private static AudioInputStream getAudioInputStream(@Nullable final InputStream instance)
 			throws UnsupportedAudioFileException, IOException {
 		return instance != null ? AudioSystem.getAudioInputStream(instance) : null;
 	}
