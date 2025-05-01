@@ -316,14 +316,10 @@ class VoiceManagerOnlineTtsPanelTest {
 				//
 				return null;
 				//
-			} else if (self instanceof InputStream) {
+			} else if (self instanceof InputStream && Objects.equals(methodName, "read")) {
 				//
-				if (Objects.equals(methodName, "read")) {
-					//
-					return -1;
-					//
-				} // if
-					//
+				return -1;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
