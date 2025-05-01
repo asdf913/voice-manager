@@ -837,9 +837,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 					//
 				} // while
 					//
+				drain(dl);
+				//
 				if (dl != null) {
-					//
-					dl.drain();
 					//
 					dl.stop();
 					//
@@ -855,6 +855,12 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static void drain(final DataLine instance) {
+		if (instance != null) {
+			instance.drain();
+		}
 	}
 
 	private static int write(@Nullable final SourceDataLine instance, final byte[] b, final int off, final int len) {
