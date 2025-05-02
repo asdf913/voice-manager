@@ -156,6 +156,8 @@ class SpeechApiImplTest {
 					//
 			} else {
 				//
+				System.out.println("m=" + m);// TODO
+				//
 				invoke = Narcissus.invokeMethod(instance = ObjectUtils.getIfNull(instance, SpeechApiImpl::new), m, os);
 				//
 				if (Objects.equals(returnType, Boolean.TYPE) || Boolean
