@@ -3340,7 +3340,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 						, Util.intValue(getRate(), 0)// rate
 						//
 						, Math.min(Math.max(Util.intValue(getValue(jsSpeechVolume), 100), 0), 100)// volume
-						, file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null)
+						, null, file = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null)
 				//
 				);
 				//

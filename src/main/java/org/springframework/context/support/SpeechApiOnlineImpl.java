@@ -229,9 +229,9 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 
 	@Override
 	public void writeVoiceToFile(@Nullable final String text, @Nullable final String voiceId, final int rate,
-			@Note("Not usued") final int volume, @Nullable final File file) {
+			@Note("Not usued") final int volume, final Map<String, Object> map, @Nullable final File file) {
 		//
-		final URL u = execute(url, text, getVoices(), voiceId, rate, null);// TODO
+		final URL u = execute(url, text, getVoices(), voiceId, rate, map);
 		//
 		try (final InputStream is = Util.openStream(u)) {
 			//

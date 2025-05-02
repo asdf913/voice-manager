@@ -798,7 +798,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 					, Util.intValue(rate, 0)// rate
 					//
 					, Math.min(Math.max(Util.intValue(volume, 100), 0), 100)// volume
-					, ObjectMap.getObject(objectMap, File.class));
+					, null, ObjectMap.getObject(objectMap, File.class));
 			//
 		} // if
 			//

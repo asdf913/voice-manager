@@ -86,7 +86,7 @@ class SpeechApiImplTest {
 											Map.class }))
 					|| Boolean.logicalAnd(Objects.equals(Util.getName(m), "writeVoiceToFile"),
 							Arrays.equals(Util.getParameterTypes(m),
-									new Class<?>[] { String.class, String.class, Integer.TYPE, Integer.TYPE,
+									new Class<?>[] { String.class, String.class, Integer.TYPE, Integer.TYPE, Map.class,
 											File.class }))
 					|| Boolean.logicalAnd(m.getParameterCount() == 0, Util.contains(Arrays.asList("getProviderName",
 							"getVoiceIds", "getProviderPlatform", "getProviderVersion"), Util.getName(m)))) {

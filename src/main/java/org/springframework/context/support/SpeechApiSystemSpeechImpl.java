@@ -153,7 +153,7 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 
 	@Override
 	public void writeVoiceToFile(@Nullable final String text, @Nullable final String voiceId, final int rate,
-			final int volume, @Nullable final File file) {
+			final int volume, final Map<String, Object> map, @Nullable final File file) {
 		//
 		if (Jna.INSTANCE != null) {
 			//

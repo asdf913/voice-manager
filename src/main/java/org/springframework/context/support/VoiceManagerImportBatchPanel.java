@@ -2141,7 +2141,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 					, Util.intValue(rate, 0)// rate
 					//
 					, Math.min(Math.max(Util.intValue(volume, 100), 0), 100)// volume
-					, ObjectMap.getObject(objectMap, File.class));
+					, null, ObjectMap.getObject(objectMap, File.class));
 			//
 		} // if
 			//

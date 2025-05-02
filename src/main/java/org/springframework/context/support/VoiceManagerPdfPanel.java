@@ -3357,7 +3357,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						x -> FileUtils.writeByteArrayToFile(IValue1Util.getValue1(x),
 								ResourceUtil.getContentAsByteArray(IValue0Util.getValue0(x))),
 						x -> writeVoiceToFile(speechApi, text, voiceId, Util.intValue(IValue2Util.getValue2(x), 0),
-								volume, IValue1Util.getValue1(x)));
+								volume, null, IValue1Util.getValue1(x)));
 				//
 				resource = null;
 				//
@@ -3872,9 +3872,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	}
 
 	private static void writeVoiceToFile(@Nullable final SpeechApi instance, @Nullable final String text,
-			@Nullable final String voiceId, final int rate, final int volume, @Nullable final File file) {
+			@Nullable final String voiceId, final int rate, final int volume, final Map<String, Object> map,
+			@Nullable final File file) {
 		if (instance != null) {
-			instance.writeVoiceToFile(text, voiceId, rate, volume, file);
+			instance.writeVoiceToFile(text, voiceId, rate, volume, map, file);
 		}
 	}
 

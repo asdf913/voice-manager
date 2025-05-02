@@ -94,13 +94,13 @@ class SpeechApiSystemSpeechImplTest {
 		//
 		AssertionsUtil.assertThrowsAndEquals(Error.class,
 				"{localizedMessage=Invalid memory access, message=Invalid memory access}",
-				() -> instance.writeVoiceToFile(null, null, 0, 0, null));
+				() -> instance.writeVoiceToFile(null, null, 0, 0, null, null));
 		//
 		final File file = Path.of(".").toFile();
 		//
 		AssertionsUtil.assertThrowsAndEquals(Error.class,
 				"{localizedMessage=Invalid memory access, message=Invalid memory access}",
-				() -> instance.writeVoiceToFile(null, null, 0, 0, file));
+				() -> instance.writeVoiceToFile(null, null, 0, 0, null, file));
 		//
 	}
 

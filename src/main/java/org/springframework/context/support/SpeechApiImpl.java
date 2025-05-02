@@ -211,13 +211,13 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean, App
 
 	@Override
 	public void writeVoiceToFile(@Nullable final String text, @Nullable final String voiceId, final int rate,
-			final int volume, @Nullable final File file) {
+			final int volume, final Map<String, Object> map, @Nullable final File file) {
 		//
 		final SpeechApi speechApi = getInstance();
 		//
 		if (speechApi != null) {
 			//
-			speechApi.writeVoiceToFile(text, voiceId, rate, volume, file);
+			speechApi.writeVoiceToFile(text, voiceId, rate, volume, map, file);
 			//
 		} // if
 			//
