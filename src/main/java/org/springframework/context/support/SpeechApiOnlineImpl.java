@@ -531,12 +531,12 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 						.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(SpeechApiOnlineImpl.class)),
 								f -> Objects.equals(Util.getName(f), "PATTERN")));
 				//
-				if (IterableUtils.size(fs) > 1) {
+				testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
 					//
 					throw new IllegalStateException();
 					//
-				} // if
-					//
+				});
+				//
 				final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 				//
 				if (f != null) {
