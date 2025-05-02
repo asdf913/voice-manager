@@ -303,17 +303,18 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 				//
 			} // if
 				//
-			if (Util.containsKey(map, "SYNALPHA")
-					&& getElementByName(htmlPage, "SYNALPHA") instanceof HtmlInput htmlInput) {
+			String key = "SYNALPHA";
+			//
+			if (Util.containsKey(map, key) && getElementByName(htmlPage, key) instanceof HtmlInput htmlInput) {
 				//
-				htmlInput.setValue(Util.toString(Util.get(map, "SYNALPHA")));
+				htmlInput.setValue(Util.toString(Util.get(map, key)));
 				//
 			} // if
 				//
-			if (Util.containsKey(map, "F0SHIFT")
-					&& getElementByName(htmlPage, "F0SHIFT") instanceof HtmlInput htmlInput) {
+			if (Util.containsKey(map, key = "F0SHIFT")
+					&& getElementByName(htmlPage, key) instanceof HtmlInput htmlInput) {
 				//
-				htmlInput.setValue(Util.toString(Util.get(map, "F0SHIFT")));
+				htmlInput.setValue(Util.toString(Util.get(map, key)));
 				//
 			} // if
 				//
