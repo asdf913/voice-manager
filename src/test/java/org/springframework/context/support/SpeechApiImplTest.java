@@ -94,8 +94,6 @@ class SpeechApiImplTest {
 				//
 			} // if
 				//
-			System.out.println(m);// TODO
-			//
 			Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
 			//
 			parameterTypes = m.getParameterTypes();
@@ -156,8 +154,13 @@ class SpeechApiImplTest {
 					//
 			} else {
 				//
-				System.out.println("m=" + m);// TODO
-				//
+				if (Boolean.logicalAnd(Objects.equals(Util.getName(m), "isInstalled"), m.getParameterCount() == 0)
+						&& !Objects.equals(OperatingSystem.WINDOWS, OperatingSystemUtil.getOperatingSystem())) {
+					//
+					continue;
+					//
+				} // if
+					//
 				invoke = Narcissus.invokeMethod(instance = ObjectUtils.getIfNull(instance, SpeechApiImpl::new), m, os);
 				//
 				if (Objects.equals(returnType, Boolean.TYPE) || Boolean
