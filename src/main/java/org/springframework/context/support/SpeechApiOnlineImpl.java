@@ -180,7 +180,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		}
 	}
 
-	private static int write(final SourceDataLine instance, final byte[] b, final int off, final int len) {
+	private static int write(@Nullable final SourceDataLine instance, final byte[] b, final int off, final int len) {
 		return instance != null ? instance.write(b, off, len) : 0;
 	}
 
@@ -205,11 +205,11 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		return Util.forName("org.junit.jupiter.api.Test") != null;
 	}
 
-	private static AudioFormat getFormat(final AudioInputStream instance) {
+	private static AudioFormat getFormat(@Nullable final AudioInputStream instance) {
 		return instance != null ? instance.getFormat() : null;
 	}
 
-	private static AudioInputStream getAudioInputStream(final InputStream instance)
+	private static AudioInputStream getAudioInputStream(@Nullable final InputStream instance)
 			throws UnsupportedAudioFileException, IOException {
 		return instance != null ? AudioSystem.getAudioInputStream(instance) : null;
 	}
@@ -331,11 +331,11 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		//
 	}
 
-	private static <E extends DomElement> E getElementByName(final HtmlPage instance, final String name) {
+	private static <E extends DomElement> E getElementByName(@Nullable final HtmlPage instance, final String name) {
 		return instance != null ? instance.getElementByName(name) : null;
 	}
 
-	private static final String getValueAttribute(final HtmlOption instance) {
+	private static final String getValueAttribute(@Nullable final HtmlOption instance) {
 		//
 		if (instance == null) {
 			//
@@ -365,11 +365,11 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		//
 	}
 
-	private static List<HtmlOption> getOptions(final HtmlSelect instance) {
+	private static List<HtmlOption> getOptions(@Nullable final HtmlSelect instance) {
 		return instance != null ? instance.getOptions() : null;
 	}
 
-	private static void setSelectedIndex(final HtmlSelect htmlSelect, final HtmlOption htmlOption) {
+	private static void setSelectedIndex(@Nullable final HtmlSelect htmlSelect, final HtmlOption htmlOption) {
 		//
 		if (htmlSelect == null) {
 			//
@@ -403,7 +403,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 			//
 	}
 
-	private static DomElement getNextElementSibling(final DomNode instance) {
+	private static DomElement getNextElementSibling(@Nullable final DomNode instance) {
 		return instance != null ? instance.getNextElementSibling() : null;
 	}
 
@@ -452,11 +452,11 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		//
 	}
 
-	private static NodeList getElementsByTagName(final org.w3c.dom.Document instance, final String tagname) {
+	private static NodeList getElementsByTagName(@Nullable final org.w3c.dom.Document instance, final String tagname) {
 		return instance != null ? instance.getElementsByTagName(tagname) : null;
 	}
 
-	private static <N extends DomNode> N querySelector(final DomNode instance, final String selectors) {
+	private static <N extends DomNode> N querySelector(@Nullable final DomNode instance, final String selectors) {
 		return instance != null ? instance.querySelector(selectors) : null;
 	}
 
