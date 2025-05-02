@@ -19,6 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -78,6 +79,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 	private static class IH implements InvocationHandler {
 
 		@Override
+		@Nullable
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
 			if (Objects.equals(Util.getReturnType(method), Void.TYPE)) {
@@ -412,6 +414,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		}
 	}
 
+	@Nullable
 	private static IValue0<String> getAttribute(final NodeList nodeList, final String attrbiuteName,
 			final Predicate<String> predicate) {
 		//
