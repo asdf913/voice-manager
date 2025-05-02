@@ -468,16 +468,16 @@ class SpeechApiOnlineImplTest {
 	@Test
 	void testIH() {
 		//
-		final InvocationHandler ih = Util.cast(InvocationHandler.class,
+		final InvocationHandler invocationHandler = Util.cast(InvocationHandler.class,
 				Narcissus.allocateInstance(Util.forName("org.springframework.context.support.SpeechApiOnlineImpl$IH")));
 		//
-		if (ih == null) {
+		if (invocationHandler == null) {
 			//
 			return;
 			//
 		} // if
 			//
-		Assertions.assertThrows(Throwable.class, () -> ih.invoke(null, null, null));
+		Assertions.assertThrows(Throwable.class, () -> invocationHandler.invoke(null, null, null));
 		//
 	}
 
