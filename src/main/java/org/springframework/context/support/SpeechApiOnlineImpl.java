@@ -335,6 +335,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		return instance != null ? instance.getElementByName(name) : null;
 	}
 
+	@Nullable
 	private static final String getValueAttribute(@Nullable final HtmlOption instance) {
 		//
 		if (instance == null) {
