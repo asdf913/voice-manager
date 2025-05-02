@@ -43,7 +43,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 				//
 				if (Util.containsKey(properties, key)) {
 					//
-					return Boolean.parseBoolean(Util.toString(get(properties, key)));
+					return Boolean.parseBoolean(Util.toString(Util.get(properties, key)));
 					//
 				} else {
 					//
@@ -56,35 +56,6 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 				//
 			throw new Throwable(methodName);
 			//
-		}
-
-		private static boolean and(final boolean a, final boolean b, @Nullable final boolean... bs) {
-			//
-			boolean result = a && b;
-			//
-			if (!result) {
-				//
-				return false;
-				//
-			} // if
-				//
-			for (int i = 0; bs != null && i < bs.length; i++) {
-				//
-				if (!(result &= bs[i])) {
-					//
-					return false;
-					//
-				} // if
-					//
-			} // for
-				//
-			return result;
-			//
-		}
-
-		@Nullable
-		private static Object get(@Nullable final Map<?, ?> instance, final Object key) {
-			return instance != null ? instance.get(key) : null;
 		}
 
 	}
