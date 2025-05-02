@@ -481,6 +481,7 @@ public abstract class Util {
 				: null;
 	}
 
+	@Nullable
 	static Class<?> getReturnType(@Nullable final Method instance) {
 		return instance != null ? instance.getReturnType() : null;
 	}
