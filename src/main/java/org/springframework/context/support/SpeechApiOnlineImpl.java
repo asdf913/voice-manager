@@ -4,6 +4,10 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -94,12 +98,15 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 
 	}
 
+	@Target(ElementType.PARAMETER)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
 	@Override
-	public void speak(@Nullable final String text, @Nullable final String voiceId, final int rate
-	//
-			, final int volume// TODO
-	//
-	) {
+	public void speak(@Nullable final String text, @Nullable final String voiceId, final int rate,
+			@Note("Not usued") final int volume) {
 		//
 		final URL u = execute(url, text, getVoices(), voiceId, rate);
 		//
@@ -218,10 +225,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 
 	@Override
 	public void writeVoiceToFile(@Nullable final String text, @Nullable final String voiceId, final int rate,
-			//
-			final int volume// TODO
-			//
-			, @Nullable final File file) {
+			@Note("Not usued") final int volume, @Nullable final File file) {
 		//
 		final URL u = execute(url, text, getVoices(), voiceId, rate);
 		//
