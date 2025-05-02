@@ -197,8 +197,8 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		}
 	}
 
-	private static void open(@Nullable final SourceDataLine instance, final AudioFormat format, final int bufferSize)
-			throws LineUnavailableException {
+	private static void open(@Nullable final SourceDataLine instance, @Nullable final AudioFormat format,
+			final int bufferSize) throws LineUnavailableException {
 		if (instance != null) {
 			instance.open(format, bufferSize);
 		}
