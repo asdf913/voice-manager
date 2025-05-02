@@ -247,7 +247,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 
 	@Nullable
 	private static URL execute(final String url, @Nullable final String text, final Map<String, String> voices,
-			final String voiceId, final int rate) {
+			@Nullable final String voiceId, final int rate) {
 		//
 		try (final WebClient webClient = new WebClient()) {
 			//
