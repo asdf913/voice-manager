@@ -14,7 +14,7 @@ public interface SpeechApi {
 	}
 
 	public void speak(@Nullable final String text, @Nullable final String voiceId, final int rate, final int volume,
-			final Map<String, Object> map);
+			@Nullable final Map<String, Object> map);
 
 	public void writeVoiceToFile(@Nullable final String text, @Nullable final String voiceId, final int rate,
 			final int volume, final Map<String, Object> map, @Nullable final File file);
