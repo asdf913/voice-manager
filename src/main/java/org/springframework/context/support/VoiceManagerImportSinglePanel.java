@@ -4128,7 +4128,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			final List<Method> ms = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(instance)), Arrays::stream,
 							null),
-					x -> x != null && Objects.equals(x.getReturnType(), Integer.TYPE) && x.getParameterCount() == 0
+					x -> x != null && Objects.equals(Util.getReturnType(x), Integer.TYPE) && x.getParameterCount() == 0
 							&& StringUtils.startsWithIgnoreCase(Util.getName(x), "get" + string)));
 			//
 			final int size = CollectionUtils.size(ms);

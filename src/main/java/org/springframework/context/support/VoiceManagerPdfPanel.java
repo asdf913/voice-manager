@@ -871,7 +871,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final List<Method> ms = Util.toList(Util.filter(
 					testAndApply(Objects::nonNull, Util.getDeclaredMethods(Playwright.class), Arrays::stream, null),
-					m -> m != null && Objects.equals(m.getReturnType(), BrowserType.class) && m.getParameterCount() == 0
+					m -> m != null && Objects.equals(Util.getReturnType(m), BrowserType.class)
+							&& m.getParameterCount() == 0
 							&& StringUtils.startsWithIgnoreCase(Util.getName(m), browserType)));
 			//
 			final int size = IterableUtils.size(ms);

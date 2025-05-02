@@ -662,7 +662,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		public Object invoke(final Object proxy, @Nullable final Method method, @Nullable final Object[] args)
 				throws Throwable {
 			//
-			if (Objects.equals(method != null ? method.getReturnType() : null, Void.TYPE)) {
+			if (Objects.equals(Util.getReturnType(method), Void.TYPE)) {
 				//
 				return null;
 				//

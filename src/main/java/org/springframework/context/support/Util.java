@@ -481,6 +481,10 @@ public abstract class Util {
 				: null;
 	}
 
+	static Class<?> getReturnType(final Method instance) {
+		return instance != null ? instance.getReturnType() : null;
+	}
+
 	@Nullable
 	static <T> List<T> toList(@Nullable final Stream<T> instance) {
 		//

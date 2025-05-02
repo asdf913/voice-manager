@@ -1117,11 +1117,9 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			final Object osVersionInfoEx = getOsVersionInfoEx();
 			//
-			final List<Method> ms = osVersionInfoEx != null
-					? Util.toList(Util.filter(
-							testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(osVersionInfoEx)),
-									Arrays::stream, null),
-							x -> x != null && !Objects.equals(x.getReturnType(), Void.TYPE)))
+			final List<Method> ms = osVersionInfoEx != null ? Util.toList(
+					Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(osVersionInfoEx)),
+							Arrays::stream, null), x -> !Objects.equals(Util.getReturnType(x), Void.TYPE)))
 					: null;
 			//
 			Method m = null;
