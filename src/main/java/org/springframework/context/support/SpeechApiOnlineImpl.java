@@ -205,10 +205,12 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		return Util.forName("org.junit.jupiter.api.Test") != null;
 	}
 
+	@Nullable
 	private static AudioFormat getFormat(@Nullable final AudioInputStream instance) {
 		return instance != null ? instance.getFormat() : null;
 	}
 
+	@Nullable
 	private static AudioInputStream getAudioInputStream(@Nullable final InputStream instance)
 			throws UnsupportedAudioFileException, IOException {
 		return instance != null ? AudioSystem.getAudioInputStream(instance) : null;
@@ -243,6 +245,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		} // if
 	}
 
+	@Nullable
 	private static URL execute(final String url, @Nullable final String text, final Map<String, String> voices,
 			final String voiceId, final int rate) {
 		//
@@ -331,6 +334,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		//
 	}
 
+	@Nullable
 	private static <E extends DomElement> E getElementByName(@Nullable final HtmlPage instance, final String name) {
 		return instance != null ? instance.getElementByName(name) : null;
 	}
@@ -366,6 +370,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		//
 	}
 
+	@Nullable
 	private static List<HtmlOption> getOptions(@Nullable final HtmlSelect instance) {
 		return instance != null ? instance.getOptions() : null;
 	}
@@ -404,6 +409,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 			//
 	}
 
+	@Nullable
 	private static DomElement getNextElementSibling(@Nullable final DomNode instance) {
 		return instance != null ? instance.getNextElementSibling() : null;
 	}
@@ -453,10 +459,12 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		//
 	}
 
+	@Nullable
 	private static NodeList getElementsByTagName(@Nullable final org.w3c.dom.Document instance, final String tagname) {
 		return instance != null ? instance.getElementsByTagName(tagname) : null;
 	}
 
+	@Nullable
 	private static <N extends DomNode> N querySelector(@Nullable final DomNode instance, final String selectors) {
 		return instance != null ? instance.querySelector(selectors) : null;
 	}
