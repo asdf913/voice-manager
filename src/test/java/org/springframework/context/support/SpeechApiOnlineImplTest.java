@@ -351,7 +351,7 @@ class SpeechApiOnlineImplTest {
 			//
 		final Map<Object, Object> properties = System.getProperties();
 		//
-		testAndAccept((a, b) -> Util.containsKey(a, b), properties, "url", (a, b) -> {
+		testAndAccept(Util::containsKey, properties, "url", (a, b) -> {
 			//
 			FieldUtils.writeDeclaredField(instance, "url", MapUtils.getObject(a, b), true);
 			//
