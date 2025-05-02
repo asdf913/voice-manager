@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -81,7 +82,8 @@ class SpeechApiImplTest {
 							Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { String.class, String.class }))
 					|| Boolean.logicalAnd(Objects.equals(Util.getName(m), "speak"),
 							Arrays.equals(Util.getParameterTypes(m),
-									new Class<?>[] { String.class, String.class, Integer.TYPE, Integer.TYPE }))
+									new Class<?>[] { String.class, String.class, Integer.TYPE, Integer.TYPE,
+											Map.class }))
 					|| Boolean.logicalAnd(Objects.equals(Util.getName(m), "writeVoiceToFile"),
 							Arrays.equals(Util.getParameterTypes(m),
 									new Class<?>[] { String.class, String.class, Integer.TYPE, Integer.TYPE,
