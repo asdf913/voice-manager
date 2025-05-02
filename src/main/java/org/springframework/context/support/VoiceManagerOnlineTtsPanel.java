@@ -12,7 +12,6 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.ElementType;
@@ -20,12 +19,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -41,15 +40,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.Line;
-import javax.sound.sampled.Line.Info;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -77,6 +67,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.function.TriFunction;
 import org.apache.commons.lang3.function.TriFunctionUtil;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.commons.lang3.tuple.TripleUtil;
@@ -124,7 +115,6 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.base.StopwatchUtil;
-import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
@@ -189,6 +179,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	private AbstractButton btnPlayAudio = null;
 
 	private Map<String, String> voices = null;
+
+	private SpeechApi speechApi = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
@@ -411,13 +403,27 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		Util.forEach(Arrays.asList(tfElapsed, tfUrl, tfErrorMessage), x -> setEditable(x, false));
 		//
-		Util.forEach(Arrays.asList(btnCopy, btnDownload, btnPlayAudio), x -> setEnabled(x, false));
+		Util.forEach(Arrays.asList(btnCopy, btnDownload), x -> setEnabled(x, false));
 		//
 		Util.forEach(
 				Util.filter(Util.map(
 						Util.filter(Util.stream(FieldUtils.getAllFieldsList(getClass())), f -> !Util.isStatic(f)),
 						f -> Util.cast(AbstractButton.class, Narcissus.getField(this, f))), Objects::nonNull),
 				x -> addActionListener(x, this));
+		//
+		speechApi = testAndApply(x -> IterableUtils.size(x) == 1,
+				Util.collect(
+						Util.filter(
+								Util.stream(Util.values(
+										ListableBeanFactoryUtil.getBeansOfType(applicationContext, SpeechApi.class))),
+								x -> IterableUtils.size(Util.collect(
+										Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(x))),
+												f -> UrlValidatorUtil.isValid(UrlValidator.getInstance(),
+														Util.toString(Util.isStatic(f) ? Narcissus.getStaticField(f)
+																: Narcissus.getField(x, f)))),
+										Collectors.toList())) == 1),
+						Collectors.toList()),
+				x -> IterableUtils.get(x, 0), null);
 		//
 	}
 
@@ -655,25 +661,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				: TriFunctionUtil.apply(functionFalse, t, u, v);
 	}
 
-	private static class IH implements InvocationHandler {
-
-		@Override
-		@Nullable
-		public Object invoke(final Object proxy, @Nullable final Method method, @Nullable final Object[] args)
-				throws Throwable {
-			//
-			if (Objects.equals(Util.getReturnType(method), Void.TYPE)) {
-				//
-				return null;
-				//
-			} // if
-				//
-			throw new Throwable(Util.getName(method));
-			//
-		}
-
-	}
-
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
@@ -736,7 +723,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 			} finally {
 				//
-				Util.forEach(Arrays.asList(btnCopy, btnDownload, btnPlayAudio),
+				Util.forEach(Arrays.asList(btnCopy, btnDownload),
 						x -> setEnabled(x, UrlValidatorUtil.isValid(UrlValidator.getInstance(), Util.getText(tfUrl))));
 				//
 				final String string = Util.toString(StopwatchUtil.elapsed(stopwatch));
@@ -802,64 +789,40 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 		} else if (Objects.equals(source, btnPlayAudio)) {
 			//
-			try (final InputStream is = testAndApply(Objects::nonNull,
-					testAndApply(Objects::nonNull,
-							Util.openStream(testAndApply(StringUtils::isNotBlank, Util.getText(tfUrl), URL::new, null)),
-							IOUtils::toByteArray, null),
-					ByteArrayInputStream::new, null); final AudioInputStream ais = getAudioInputStream(is)) {
+			Util.setText(tfErrorMessage, null);
+			//
+			if (speechApi != null) {
 				//
-				final AudioFormat af = getFormat(ais);
+				final List<String> keys = Util.toList(Util.map(Util.filter(Util.stream(Util.entrySet(voices)),
+						x -> Objects.equals(Util.getValue(x), cbmVoice != null ? cbmVoice.getSelectedItem() : null)),
+						Util::getKey));
 				//
-				final Info info = testAndApply(x -> !isTestMode(), af, x -> new DataLine.Info(SourceDataLine.class, x),
-						x -> Util.cast(Info.class, Narcissus.allocateInstance(Info.class)));
-				//
-				final Collection<Field> fs = Util
-						.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(info))),
-								f -> Objects.equals(Util.getName(f), "lineClass")));
-				//
-				testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+				testAndRunThrows(IterableUtils.size(keys) > 1, () -> {
 					//
 					throw new IllegalStateException();
 					//
 				});
 				//
-				final DataLine dl = Util
-						.cast(DataLine.class,
-								testAndApply(
-										x -> and(
-												testAndApply(y -> IterableUtils.size(y) == 1, fs,
-														y -> IterableUtils.get(y, 0), null),
-												Objects::nonNull, y -> Narcissus.getField(info, y) != null),
-										info, AudioSystem::getLine,
-										x -> Reflection.newProxy(SourceDataLine.class, new IH())));
-				//
-				final byte[] buf = new byte[1024];
-				//
-				final SourceDataLine sdl = Util.cast(SourceDataLine.class, dl);
-				//
-				open(sdl, af, buf.length);
-				//
-				start(dl);
-				//
-				int len;
-				//
-				while (ais != null && (len = ais.read(buf)) != -1) {
+				try {
 					//
-					write(sdl, buf, 0, len);
+					final Map<String, Object> map = new LinkedHashMap<>(
+							Collections.singletonMap("SYNALPHA", Util.getText(tfQuality)));
 					//
-				} // while
+					Util.put(map, "F0SHIFT", Util.getText(tfPitch));
 					//
-				drain(dl);
-				//
-				stop(dl);
-				//
-				close(dl);
-				//
-			} catch (final IOException | UnsupportedAudioFileException | LineUnavailableException e) {
-				//
-				LoggerUtil.error(LOG, e.getMessage(), e);
-				//
-			} // try
+					speechApi.speak(Util.getText(taText),
+							testAndApply(x -> IterableUtils.size(x) == 1, keys, x -> IterableUtils.get(x, 0), null),
+							NumberUtils.toInt(Util.getText(tfDuration), 0)// TODO
+							, 0// TODO volume
+							, map);
+					//
+				} catch (final RuntimeException e) {
+					//
+					Util.setText(tfErrorMessage, e.getMessage());
+					//
+				} // try
+					//
+			} // if
 				//
 			return true;
 			//
@@ -867,52 +830,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 		return false;
 		//
-	}
-
-	@Nullable
-	private static AudioInputStream getAudioInputStream(@Nullable final InputStream instance)
-			throws UnsupportedAudioFileException, IOException {
-		return instance != null ? AudioSystem.getAudioInputStream(instance) : null;
-	}
-
-	private static void close(@Nullable final Line instance) {
-		if (instance != null) {
-			instance.close();
-		}
-	}
-
-	private static void stop(@Nullable final DataLine instance) {
-		if (instance != null) {
-			instance.stop();
-		}
-	}
-
-	private static void drain(@Nullable final DataLine instance) {
-		if (instance != null) {
-			instance.drain();
-		}
-	}
-
-	private static int write(@Nullable final SourceDataLine instance, final byte[] b, final int off, final int len) {
-		return instance != null ? instance.write(b, off, len) : 0;
-	}
-
-	private static void start(@Nullable final DataLine instance) {
-		if (instance != null) {
-			instance.start();
-		}
-	}
-
-	private static void open(@Nullable final SourceDataLine instance, @Nullable final AudioFormat format,
-			final int bufferSize) throws LineUnavailableException {
-		if (instance != null) {
-			instance.open(format, bufferSize);
-		}
-	}
-
-	@Nullable
-	private static AudioFormat getFormat(@Nullable final AudioInputStream instance) {
-		return instance != null ? instance.getFormat() : null;
 	}
 
 	private static boolean equals(@Nullable final Number a, final int b) {

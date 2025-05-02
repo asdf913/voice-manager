@@ -28,10 +28,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
@@ -100,8 +96,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
 			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING,
 			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE,
-			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_GET_FORMAT, METHOD_WRITE,
-			METHOD_GET_AUDIO_INPUT_STREAM = null;
+			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -180,14 +175,6 @@ class VoiceManagerOnlineTtsPanelTest {
 		(METHOD_SET_ENABLED = clz.getDeclaredMethod("setEnabled", AbstractButton.class, Boolean.TYPE))
 				.setAccessible(true);
 		//
-		(METHOD_GET_FORMAT = clz.getDeclaredMethod("getFormat", AudioInputStream.class)).setAccessible(true);
-		//
-		(METHOD_WRITE = clz.getDeclaredMethod("write", SourceDataLine.class, byte[].class, Integer.TYPE, Integer.TYPE))
-				.setAccessible(true);
-		//
-		(METHOD_GET_AUDIO_INPUT_STREAM = clz.getDeclaredMethod("getAudioInputStream", InputStream.class))
-				.setAccessible(true);
-		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -204,11 +191,15 @@ class VoiceManagerOnlineTtsPanelTest {
 
 		private Object[] elements = null;
 
-		private Integer write = null;
-
 		@Override
 		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
 			//
+			if (Objects.equals(Util.getReturnType(method), Void.TYPE)) {
+				//
+				return null;
+				//
+			} // if
+				//
 			final String methodName = Util.getName(method);
 			//
 			if (proxy instanceof Document && Objects.equals(methodName, "getElementsByTagName")) {
@@ -283,10 +274,6 @@ class VoiceManagerOnlineTtsPanelTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof SourceDataLine && Objects.equals(methodName, "write")) {
-				//
-				return write;
-				//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -301,7 +288,7 @@ class VoiceManagerOnlineTtsPanelTest {
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
 			//
-			if (Objects.equals(thisMethod != null ? thisMethod.getReturnType() : null, Void.TYPE)) {
+			if (Objects.equals(Util.getReturnType(thisMethod), Void.TYPE)) {
 				//
 				return null;
 				//
@@ -315,10 +302,6 @@ class VoiceManagerOnlineTtsPanelTest {
 					self instanceof Toolkit && Objects.equals(methodName, "getSystemClipboard"))) {
 				//
 				return null;
-				//
-			} else if (self instanceof InputStream && Objects.equals(methodName, "read")) {
-				//
-				return -1;
 				//
 			} // if
 				//
@@ -398,13 +381,21 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnDownload, 0, null)));
 		//
-		// btnDownload
+		// btnPlayAudio
 		//
 		final AbstractButton btnPlayAudio = new JButton();
 		//
 		FieldUtils.writeDeclaredField(instance, "btnPlayAudio", btnPlayAudio, true);
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnPlayAudio, 0, null)));
+		final ActionEvent actionEvent = new ActionEvent(btnPlayAudio, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
+		FieldUtils.writeDeclaredField(instance, "url", null, true);
+		//
+		FieldUtils.writeDeclaredField(instance, "speechApi", Reflection.newProxy(SpeechApi.class, ih), true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
 		//
 	}
 
@@ -1122,94 +1113,6 @@ class VoiceManagerOnlineTtsPanelTest {
 	private static void setEnabled(final AbstractButton instance, final boolean b) throws Throwable {
 		try {
 			METHOD_SET_ENABLED.invoke(null, instance, b);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testIH() {
-		//
-		final InvocationHandler invocationHandler = Util.cast(InvocationHandler.class, Narcissus
-				.allocateInstance(Util.forName("org.springframework.context.support.VoiceManagerOnlineTtsPanel$IH")));
-		//
-		if (invocationHandler == null) {
-			//
-			return;
-			//
-		} // if
-			//
-		Assertions.assertThrows(Throwable.class, () -> invocationHandler.invoke(null, null, null));
-		//
-	}
-
-	@Test
-	void testGetFormat() throws Throwable {
-		//
-		Assertions.assertNull(
-				getFormat(Util.cast(AudioInputStream.class, Narcissus.allocateInstance(AudioInputStream.class))));
-		//
-	}
-
-	private static AudioFormat getFormat(final AudioInputStream instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_FORMAT.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof AudioFormat) {
-				return (AudioFormat) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testWrite() throws Throwable {
-		//
-		final int zero = 0;
-		//
-		if (ih != null) {
-			//
-			ih.write = Integer.valueOf(zero);
-			//
-		} // if
-			//
-		Assertions.assertEquals(zero, write(Reflection.newProxy(SourceDataLine.class, ih), null, zero, zero));
-		//
-	}
-
-	private static int write(final SourceDataLine instance, final byte[] b, final int off, final int len)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_WRITE.invoke(null, instance, b, off, len);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetAudioInputStream() {
-		//
-		Assertions.assertThrows(UnsupportedAudioFileException.class,
-				() -> getAudioInputStream(ProxyUtil.createProxy(InputStream.class, mh)));
-		//
-	}
-
-	private static AudioInputStream getAudioInputStream(final InputStream instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_AUDIO_INPUT_STREAM.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof AudioInputStream) {
-				return (AudioInputStream) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
