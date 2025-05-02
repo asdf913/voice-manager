@@ -526,10 +526,30 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		//
 		if (Util.containsKey(map, voiceId)) {
 			//
-			final Matcher matcher = Util.matcher(
-					PATTERN = ObjectUtils.getIfNull(PATTERN,
-							() -> Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)：(\\w+)(\\s\\((\\w+)\\))?")),
-					Util.get(map, voiceId));
+			if (PATTERN == null) {
+				//
+				final Iterable<Field> fs = Util
+						.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(SpeechApiOnlineImpl.class)),
+								f -> Objects.equals(Util.getName(f), "PATTERN")));
+				//
+				if (IterableUtils.size(fs) > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+				//
+				if (f != null) {
+					//
+					Narcissus.setStaticField(f,
+							Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)：(\\w+)(\\s\\((\\w+)\\))?"));
+					//
+				} // if
+					//
+			} // if
+				//
+			final Matcher matcher = Util.matcher(PATTERN, Util.get(map, voiceId));
 			//
 			if (Util.matches(matcher)) {
 				//
