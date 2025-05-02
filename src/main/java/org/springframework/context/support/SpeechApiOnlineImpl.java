@@ -422,7 +422,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 	}
 
 	@Nullable
-	private static IValue0<String> getAttribute(final NodeList nodeList, final String attrbiuteName,
+	private static IValue0<String> getAttribute(@Nullable final NodeList nodeList, final String attrbiuteName,
 			final Predicate<String> predicate) {
 		//
 		Node namedItem = null;
@@ -504,7 +504,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		//
 	}
 
-	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
 			final FailableFunction<T, R, E> functionTrue, @Nullable final FailableFunction<T, R, E> functionFalse)
 			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
