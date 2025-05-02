@@ -15,7 +15,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.oxbow.swingbits.util.OperatingSystem;
 import org.oxbow.swingbits.util.OperatingSystemUtil;
@@ -182,14 +181,6 @@ class SpeechApiImplTest {
 
 	private static Object[] toArray(final Collection<?> instance) {
 		return instance != null ? instance.toArray() : null;
-	}
-
-	@Test
-	@Disabled // TODO
-	void testAfterPropertiesSet() {
-		//
-		Assertions.assertDoesNotThrow(() -> new SpeechApiImpl().afterPropertiesSet());
-		//
 	}
 
 	@Test
