@@ -1866,7 +1866,7 @@ public abstract class Util {
 		return instance != null ? instance.getNamedItem(name) : null;
 	}
 
-	static void setTextContent(@Nullable final Node instance, final String textContent) {
+	static void setTextContent(@Nullable final Node instance, @Nullable final String textContent) {
 		if (instance != null) {
 			instance.setTextContent(textContent);
 		}
