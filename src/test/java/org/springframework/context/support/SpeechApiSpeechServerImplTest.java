@@ -32,9 +32,9 @@ class SpeechApiSpeechServerImplTest {
 	@EnabledIf("isInstalled")
 	void testSpeak() throws IOException {
 		//
-		AssertionsUtil.assertThrowsAndEquals(Error.class, "", () -> instance.speak(null, null, 0, 0));
+		AssertionsUtil.assertThrowsAndEquals(Error.class, "", () -> instance.speak(null, null, 0, 0, null));
 		//
-		Assertions.assertDoesNotThrow(() -> instance.speak("1", null, 0, 0));
+		Assertions.assertDoesNotThrow(() -> instance.speak("1", null, 0, 0, null));
 		//
 	}
 

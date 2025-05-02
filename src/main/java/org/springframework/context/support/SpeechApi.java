@@ -1,6 +1,7 @@
 package org.springframework.context.support;
 
 import java.io.File;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -12,7 +13,8 @@ public interface SpeechApi {
 		return instance != null && instance.isInstalled();
 	}
 
-	public void speak(@Nullable final String text, @Nullable final String voiceId, final int rate, final int volume);
+	public void speak(@Nullable final String text, @Nullable final String voiceId, final int rate, final int volume,
+			final Map<String, Object> map);
 
 	public void writeVoiceToFile(@Nullable final String text, @Nullable final String voiceId, final int rate,
 			final int volume, @Nullable final File file);

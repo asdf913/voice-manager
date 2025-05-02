@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -72,7 +73,7 @@ class SpeechApiOnlineImplTest {
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TEST_AND_ACCEPT, METHOD_WRITE, METHOD_AND, METHOD_GET_FORMAT,
 			METHOD_GET_AUDIO_INPUT_STREAM, METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_SET_SELECTED_INDEX,
 			METHOD_GET_NEXT_ELEMENT_SIBLING, METHOD_TEST_AND_RUN_THROWS, METHOD_GET_ATTRIBUTE,
-			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_QUERY_SELECTOR = null;
+			METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_QUERY_SELECTOR, METHOD_EXECUTE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -116,6 +117,9 @@ class SpeechApiOnlineImplTest {
 		//
 		(METHOD_QUERY_SELECTOR = clz.getDeclaredMethod("querySelector", DomNode.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_EXECUTE = clz.getDeclaredMethod("execute", String.class, String.class, Map.class, String.class,
+				Integer.TYPE, Map.class)).setAccessible(true);
 		//
 	}
 
@@ -757,6 +761,65 @@ class SpeechApiOnlineImplTest {
 				return null;
 			} else if (obj instanceof DomNode) {
 				return (N) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testExecute() throws Throwable {
+		//
+		final Class<?> clz = SpeechApiOnlineImpl.class;
+		//
+		Map<String, Object> map = null;
+		//
+		try (final InputStream is = Util.getResourceAsStream(clz,
+				String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))) {
+			//
+			final org.apache.bcel.classfile.Method method = JavaClassUtil.getMethod(
+					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),
+					Util.getDeclaredMethod(clz, "execute", String.class, String.class, Map.class, String.class,
+							Integer.TYPE, Map.class));
+			//
+			final ConstantPoolGen cpg = testAndApply(Objects::nonNull, FieldOrMethodUtil.getConstantPool(method),
+					x -> new ConstantPoolGen(FieldOrMethodUtil.getConstantPool(method)), null);
+			//
+			final Instruction[] instructions = InstructionListUtil.getInstructions(MethodGenUtil.getInstructionList(
+					testAndApply(Objects::nonNull, method, x -> new MethodGen(x, null, cpg), null)));
+			//
+			final int length = instructions != null ? instructions.length : 0;
+			//
+			for (int i = 0; i < length; i++) {
+				//
+				if (ArrayUtils.get(instructions, i) instanceof LDC ldc && i < length - 1
+						&& ArrayUtils.get(instructions, i + 1) instanceof INVOKESTATIC invokeStatic
+						&& Objects.equals(InvokeInstructionUtil.getClassName(invokeStatic, cpg),
+								"org.springframework.context.support.Util")
+						&& Objects.equals(InvokeInstructionUtil.getMethodName(invokeStatic, cpg), "containsKey")) {
+					//
+					Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Util.toString(ldc.getValue(cpg)),
+							null);
+					//
+				} // if
+					//
+			} // for
+				//
+		} // try
+			//
+		Assertions.assertNull(execute(null, null, null, null, 0, map));
+		//
+	}
+
+	private static URL execute(final String url, final String text, final Map<String, String> voices,
+			final String voiceId, final int rate, final Map<String, Object> map) throws Throwable {
+		try {
+			final Object obj = METHOD_EXECUTE.invoke(null, url, text, voices, voiceId, rate, map);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof URL) {
+				return (URL) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

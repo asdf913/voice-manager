@@ -681,7 +681,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 					//
 			} else if (speechApi != null) {
 				//
-				speechApi.speak(text, voiceId, rate, volume);
+				speechApi.speak(text, voiceId, rate, volume, null);
 				//
 			} // if
 				//

@@ -104,7 +104,8 @@ public class SpeechApiSystemSpeechImpl implements SpeechApi, Provider, Lookup, I
 
 	@Override
 	@SpeakMethod
-	public void speak(@Nullable final String text, @Nullable final String voiceId, final int rate, final int volume) {
+	public void speak(@Nullable final String text, @Nullable final String voiceId, final int rate, final int volume,
+			final Map<String, Object> map) {
 		//
 		if (Jna.INSTANCE != null) {
 			//

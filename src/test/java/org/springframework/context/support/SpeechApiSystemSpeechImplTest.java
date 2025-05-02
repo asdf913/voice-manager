@@ -74,9 +74,9 @@ class SpeechApiSystemSpeechImplTest {
 	@EnabledOnOs(OS.WINDOWS)
 	void testSpeak() {
 		//
-		Assertions.assertDoesNotThrow(() -> instance.speak(null, null, 0, 0));
+		Assertions.assertDoesNotThrow(() -> instance.speak(null, null, 0, 0, null));
 		//
-		Assertions.assertDoesNotThrow(() -> instance.speak("1", null, 0, 0));
+		Assertions.assertDoesNotThrow(() -> instance.speak("1", null, 0, 0, null));
 		//
 	}
 

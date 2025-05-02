@@ -110,9 +110,9 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 
 	@Override
 	public void speak(@Nullable final String text, @Nullable final String voiceId, final int rate,
-			@Note("Not usued") final int volume) {
+			@Note("Not usued") final int volume, final Map<String, Object> map) {
 		//
-		final URL u = execute(url, text, getVoices(), voiceId, rate);
+		final URL u = execute(url, text, getVoices(), voiceId, rate, map);
 		//
 		try (final InputStream is = testAndApply(Objects::nonNull,
 				testAndApply(Objects::nonNull, Util.openStream(u), IOUtils::toByteArray, null),
@@ -231,7 +231,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 	public void writeVoiceToFile(@Nullable final String text, @Nullable final String voiceId, final int rate,
 			@Note("Not usued") final int volume, @Nullable final File file) {
 		//
-		final URL u = execute(url, text, getVoices(), voiceId, rate);
+		final URL u = execute(url, text, getVoices(), voiceId, rate, null);// TODO
 		//
 		try (final InputStream is = Util.openStream(u)) {
 			//
@@ -255,7 +255,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 
 	@Nullable
 	private static URL execute(final String url, @Nullable final String text, final Map<String, String> voices,
-			@Nullable final String voiceId, final int rate) {
+			@Nullable final String voiceId, final int rate, final Map<String, Object> map) {
 		//
 		try (final WebClient webClient = new WebClient()) {
 			//
@@ -300,6 +300,20 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 			if (getElementByName(htmlPage, "DURATION") instanceof HtmlInput htmlInput) {
 				//
 				htmlInput.setValue(Integer.toString(rate));
+				//
+			} // if
+				//
+			if (Util.containsKey(map, "SYNALPHA")
+					&& getElementByName(htmlPage, "SYNALPHA") instanceof HtmlInput htmlInput) {
+				//
+				htmlInput.setValue(Util.toString(Util.get(map, "SYNALPHA")));
+				//
+			} // if
+				//
+			if (Util.containsKey(map, "F0SHIFT")
+					&& getElementByName(htmlPage, "F0SHIFT") instanceof HtmlInput htmlInput) {
+				//
+				htmlInput.setValue(Util.toString(Util.get(map, "F0SHIFT")));
 				//
 			} // if
 				//
