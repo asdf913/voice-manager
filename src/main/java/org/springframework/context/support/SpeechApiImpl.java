@@ -9,9 +9,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -20,12 +24,22 @@ import org.oxbow.swingbits.util.OperatingSystemUtil;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.ListableBeanFactoryUtil;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import com.google.common.reflect.Reflection;
 
-public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
+public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean, ApplicationContextAware {
 
 	private SpeechApi instance = null;
+
+	private ApplicationContext applicationContext = null;
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) {
+		this.applicationContext = applicationContext;
+	}
 
 	private static class IH implements InvocationHandler {
 
@@ -79,7 +93,14 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 					//
 			} else {
 				//
-				instance = Reflection.newProxy(SpeechApi.class, new IH());
+				final SpeechApi speechApi = Reflection.newProxy(SpeechApi.class, new IH());
+				//
+				instance = testAndApply(x -> IterableUtils.size(x) == 1,
+						Util.toList(Util.filter(
+								Util.stream(Util.values(
+										ListableBeanFactoryUtil.getBeansOfType(applicationContext, SpeechApi.class))),
+								x -> x != this)),
+						x -> ObjectUtils.defaultIfNull(IterableUtils.get(x, 0), speechApi), x -> speechApi);
 				//
 			} // if
 				//
@@ -87,6 +108,11 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean {
 			//
 		return instance;
 		//
+	}
+
+	private static <T, R> R testAndApply(final Predicate<T> predicate, final T value, final Function<T, R> functionTrue,
+			final Function<T, R> functionFalse) {
+		return Util.test(predicate, value) ? Util.apply(functionTrue, value) : Util.apply(functionFalse, value);
 	}
 
 	@Nullable
