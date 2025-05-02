@@ -211,7 +211,7 @@ class SpeechApiImplTest {
 	}
 
 	@Test
-	void testIH() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+	void testIH() {
 		//
 		final InvocationHandler ih = Util.cast(InvocationHandler.class,
 				Narcissus.allocateInstance(Util.forName("org.springframework.context.support.SpeechApiImpl$IH")));
