@@ -796,28 +796,24 @@ class SpeechApiOnlineImplTest {
 			//
 			for (int i = 0; i < length; i++) {
 				//
-				if (
-//						ArrayUtils.get(instructions, i + 1) instanceof INVOKESTATIC invokeStatic
-				ArrayUtils.get(instructions, i) instanceof LDC ldc &&
-
-						Boolean.logicalOr(
-								// SYNALPHA
-								i < length - 4 && ArrayUtils.get(instructions, i + 1) instanceof ASTORE
-										&& ArrayUtils.get(instructions, i + 2) instanceof ALOAD
-										&& ArrayUtils.get(instructions, i + 3) instanceof ALOAD
-										&& ArrayUtils.get(instructions, i + 4) instanceof INVOKESTATIC invokeStatic
-										&& Objects.equals(InvokeInstructionUtil.getClassName(invokeStatic, cpg),
-												"org.springframework.context.support.Util")
-										&& Objects.equals(InvokeInstructionUtil.getMethodName(invokeStatic, cpg),
-												"containsKey"),
-								// F0SHIFT
-								i < length - 3 && ArrayUtils.get(instructions, i + 1) instanceof DUP
-										&& ArrayUtils.get(instructions, i + 2) instanceof ASTORE
-										&& ArrayUtils.get(instructions, i + 3) instanceof INVOKESTATIC invokeStatic
-										&& Objects.equals(InvokeInstructionUtil.getClassName(invokeStatic, cpg),
-												"org.springframework.context.support.Util")
-										&& Objects.equals(InvokeInstructionUtil.getMethodName(invokeStatic, cpg),
-												"containsKey"))) {
+				if (ArrayUtils.get(instructions, i) instanceof LDC ldc && Boolean.logicalOr(
+						// SYNALPHA
+						i < length - 4 && ArrayUtils.get(instructions, i + 1) instanceof ASTORE
+								&& ArrayUtils.get(instructions, i + 2) instanceof ALOAD
+								&& ArrayUtils.get(instructions, i + 3) instanceof ALOAD
+								&& ArrayUtils.get(instructions, i + 4) instanceof INVOKESTATIC invokeStatic
+								&& Objects.equals(InvokeInstructionUtil.getClassName(invokeStatic, cpg),
+										"org.springframework.context.support.Util")
+								&& Objects.equals(InvokeInstructionUtil.getMethodName(invokeStatic, cpg),
+										"containsKey"),
+						// F0SHIFT
+						i < length - 3 && ArrayUtils.get(instructions, i + 1) instanceof DUP
+								&& ArrayUtils.get(instructions, i + 2) instanceof ASTORE
+								&& ArrayUtils.get(instructions, i + 3) instanceof INVOKESTATIC invokeStatic
+								&& Objects.equals(InvokeInstructionUtil.getClassName(invokeStatic, cpg),
+										"org.springframework.context.support.Util")
+								&& Objects.equals(InvokeInstructionUtil.getMethodName(invokeStatic, cpg),
+										"containsKey"))) {
 					//
 					Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Util.toString(ldc.getValue(cpg)),
 							null);
