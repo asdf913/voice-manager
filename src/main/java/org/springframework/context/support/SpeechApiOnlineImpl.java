@@ -370,7 +370,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		return instance != null ? instance.getOptions() : null;
 	}
 
-	private static void setSelectedIndex(@Nullable final HtmlSelect htmlSelect, final HtmlOption htmlOption) {
+	private static void setSelectedIndex(@Nullable final HtmlSelect htmlSelect, @Nullable final HtmlOption htmlOption) {
 		//
 		if (htmlSelect == null) {
 			//
