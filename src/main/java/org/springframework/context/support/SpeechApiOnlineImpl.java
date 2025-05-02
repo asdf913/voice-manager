@@ -95,7 +95,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 	}
 
 	@Override
-	public void speak(final String text, final String voiceId, final int rate
+	public void speak(@Nullable final String text, @Nullable final String voiceId, final int rate
 	//
 			, final int volume// TODO
 	//
@@ -215,11 +215,11 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 	}
 
 	@Override
-	public void writeVoiceToFile(final String text, final String voiceId, final int rate,
+	public void writeVoiceToFile(@Nullable final String text, @Nullable final String voiceId, final int rate,
 			//
 			final int volume// TODO
 			//
-			, final File file) {
+			, @Nullable final File file) {
 		//
 		final URL u = execute(url, text, getVoices(), voiceId, rate);
 		//
@@ -503,7 +503,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 	}
 
 	@Override
-	public String getVoiceAttribute(final String voiceId, final String attribute) {
+	public String getVoiceAttribute(@Nullable final String voiceId, final String attribute) {
 		//
 		final Map<?, String> map = getVoices();
 		//
