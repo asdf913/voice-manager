@@ -236,14 +236,14 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 			//
 	}
 
-	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> predicate, final T t,
-			final U u, @Nullable final FailableBiConsumer<T, U, E> consumer) throws E {
+	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> predicate,
+			@Nullable final T t, final U u, @Nullable final FailableBiConsumer<T, U, E> consumer) throws E {
 		if (Util.test(predicate, t, u) && consumer != null) {
 			consumer.accept(t, u);
 		} // if
 	}
 
-	private static URL execute(final String url, final String text, final Map<String, String> voices,
+	private static URL execute(final String url, @Nullable final String text, final Map<String, String> voices,
 			final String voiceId, final int rate) {
 		//
 		try (final WebClient webClient = new WebClient()) {
