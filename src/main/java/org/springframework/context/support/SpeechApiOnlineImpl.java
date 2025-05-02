@@ -162,19 +162,19 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 			//
 	}
 
-	private static void close(final Line instance) {
+	private static void close(@Nullable final Line instance) {
 		if (instance != null) {
 			instance.close();
 		}
 	}
 
-	private static void stop(final DataLine instance) {
+	private static void stop(@Nullable final DataLine instance) {
 		if (instance != null) {
 			instance.stop();
 		}
 	}
 
-	private static void drain(final DataLine instance) {
+	private static void drain(@Nullable final DataLine instance) {
 		if (instance != null) {
 			instance.drain();
 		}
@@ -184,13 +184,13 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		return instance != null ? instance.write(b, off, len) : 0;
 	}
 
-	private static void start(final DataLine instance) {
+	private static void start(@Nullable final DataLine instance) {
 		if (instance != null) {
 			instance.start();
 		}
 	}
 
-	private static void open(final SourceDataLine instance, final AudioFormat format, final int bufferSize)
+	private static void open(@Nullable final SourceDataLine instance, final AudioFormat format, final int bufferSize)
 			throws LineUnavailableException {
 		if (instance != null) {
 			instance.open(format, bufferSize);
@@ -237,7 +237,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 	}
 
 	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> predicate, final T t,
-			final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
+			final U u, @Nullable final FailableBiConsumer<T, U, E> consumer) throws E {
 		if (Util.test(predicate, t, u) && consumer != null) {
 			consumer.accept(t, u);
 		} // if
