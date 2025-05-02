@@ -75,6 +75,10 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 
 	private IValue0<Map<String, String>> voices = null;
 
+	public void setUrl(final String url) {
+		this.url = url;
+	}
+
 	@Override
 	public boolean isInstalled() {
 		return true;

@@ -957,7 +957,13 @@
 	<!---->
 	<bean id="speechApi"
 		class="org.springframework.context.support.SpeechApiImpl" />
-		
+
+	<bean
+		class="org.springframework.context.support.SpeechApiOnlineImpl">
+		<property name="url"
+			value="${org.springframework.context.support.SpeechApiOnlineImpl.url}" />
+	</bean>
+
 	<!---->
 	<bean id="LanguageCodeToTextObjIntFunction"
 		class="org.d2ab.function.LanguageCodeToTextObjIntFunction" />
