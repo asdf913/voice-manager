@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -537,15 +538,11 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 					//
 				});
 				//
-				final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+				testAndAccept(Objects::nonNull,
+						testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
+						f -> Narcissus.setStaticField(f,
+								Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)：(\\w+)(\\s\\((\\w+)\\))?")));
 				//
-				if (f != null) {
-					//
-					Narcissus.setStaticField(f,
-							Pattern.compile("^(\\p{InCJKUnifiedIdeographs}+)：(\\w+)(\\s\\((\\w+)\\))?"));
-					//
-				} // if
-					//
 			} // if
 				//
 			final Matcher matcher = Util.matcher(PATTERN, Util.get(map, voiceId));
@@ -574,6 +571,12 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 			//
 		return null;
 		//
+	}
+
+	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer) {
+		if (Util.test(predicate, value)) {
+			Util.accept(consumer, value);
+		}
 	}
 
 }
