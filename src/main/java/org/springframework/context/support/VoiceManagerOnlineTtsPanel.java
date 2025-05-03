@@ -19,6 +19,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
@@ -826,6 +827,49 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 			Util.setText(tfErrorMessage, null);
 			//
+			final String urlString = Util.getText(tfUrl);
+			//
+			URL url = null;
+			//
+			try {
+				//
+				url = testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x), urlString, URL::new,
+						null);
+				//
+			} catch (final MalformedURLException e) {
+				//
+				LoggerUtil.error(LOG, e.getMessage(), e);
+				//
+			} // try
+				//
+			if (url != null) {
+				//
+				final Iterable<Method> ms = Util.collect(
+						Util.filter(
+								testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(speechApi)),
+										Arrays::stream, null),
+								m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "speak"),
+										Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { URL.class }))),
+						Collectors.toList());
+				//
+				testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
+					//
+					throw new IllegalStateException();
+					//
+				});
+				//
+				final Method m = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
+				//
+				if (m != null && Util.isStatic(m)) {
+					//
+					Narcissus.invokeStaticMethod(m, url);
+					//
+					return true;
+					//
+				} // if
+					//
+			} // if
+				//
 			if (speechApi != null) {
 				//
 				final List<String> keys = Util.toList(Util.map(Util.filter(Util.stream(Util.entrySet(voices)),

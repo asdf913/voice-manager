@@ -126,6 +126,20 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 			//
 		} // if
 			//
+		try {
+			//
+			speak(u);
+			//
+		} catch (final IOException | UnsupportedAudioFileException | LineUnavailableException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
+	}
+
+	private static void speak(final URL u) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+		//
 		try (final InputStream is = testAndApply(Objects::nonNull,
 				testAndApply(Objects::nonNull, Util.openStream(u), IOUtils::toByteArray, null),
 				ByteArrayInputStream::new, null); final AudioInputStream ais = getAudioInputStream(is)) {
@@ -176,10 +190,6 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 			stop(dl);
 			//
 			close(dl);
-			//
-		} catch (final IOException | UnsupportedAudioFileException | LineUnavailableException e) {
-			//
-			throw new RuntimeException(e);
 			//
 		} // try
 			//
