@@ -989,7 +989,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		try {
 			//
 			return testAndApply(Objects::nonNull, testAndApply(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)),
-					file, x -> Files.readAllBytes(Util.toPath(x)), null), x -> new ByteArrayResource(x), null);
+					file, x -> Files.readAllBytes(Util.toPath(x)), null), ByteArrayResource::new, null);
 			//
 		} catch (final IOException e) {
 			//
