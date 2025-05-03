@@ -866,7 +866,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 			final File file = Util.getValue(entry);
 			//
-			if (Boolean.logicalAnd(Util.exists(file), Util.isFile(file)) && file != null && file.canRead()) {
+			if (Boolean.logicalAnd(Util.exists(file), Util.isFile(file)) && canRead(file)) {
 				//
 				final Iterable<Method> ms = Util
 						.collect(
@@ -982,6 +982,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 		return false;
 		//
+	}
+
+	private static boolean canRead(final File instance) {
+		return instance != null && instance.canRead();
 	}
 
 	private static InputStreamSource createInputStreamSource(final File file) {

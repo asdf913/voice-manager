@@ -105,7 +105,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING,
 			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE,
 			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_SHA512HEX,
-			METHOD_CREATE_INPUT_STREAM_SOURCE = null;
+			METHOD_CREATE_INPUT_STREAM_SOURCE, METHOD_CAN_READ = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -188,6 +188,8 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_CREATE_INPUT_STREAM_SOURCE = clz.getDeclaredMethod("createInputStreamSource", File.class))
 				.setAccessible(true);
+		//
+		(METHOD_CAN_READ = clz.getDeclaredMethod("canRead", File.class)).setAccessible(true);
 		//
 	}
 
@@ -1249,6 +1251,25 @@ class VoiceManagerOnlineTtsPanelTest {
 				return null;
 			} else if (obj instanceof InputStreamSource) {
 				return (InputStreamSource) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCanRead() throws Throwable {
+		//
+		Assertions.assertTrue(canRead(Util.toFile(Path.of("."))));
+		//
+	}
+
+	private static boolean canRead(final File instance) throws Throwable {
+		try {
+			final Object obj = METHOD_CAN_READ.invoke(null, instance);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
