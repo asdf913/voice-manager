@@ -1291,9 +1291,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		FileUtils.deleteQuietly(Util.getValue(entry));
 		//
-		final URL url = Util.cast(URL.class, Util.getKey(en));
+		final URL u = Util.cast(URL.class, Util.getKey(en));
 		//
-		Util.setText(tfUrl, Util.toString(url));
+		Util.setText(tfUrl, Util.toString(u));
 		//
 		final byte[] bs = Util.cast(byte[].class, Util.getValue(en));
 		//
@@ -1301,7 +1301,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		try {
 			//
-			if ((file = url != null ? Util.toFile(Path.of(StringUtils.substringAfterLast(Util.toString(url), "/")))
+			if ((file = u != null ? Util.toFile(Path.of(StringUtils.substringAfterLast(Util.toString(u), "/")))
 					: File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null)) != null) {
 				//
 				file.deleteOnExit();
@@ -1320,7 +1320,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 		} // try
 			//
-		entry = Pair.of(url, file);
+		entry = Pair.of(u, file);
 		//
 	}
 
