@@ -1008,7 +1008,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
-	private static boolean canRead(final File instance) {
+	private static boolean canRead(@Nullable final File instance) {
 		return instance != null && instance.canRead();
 	}
 
