@@ -45,6 +45,7 @@ import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.htmlunit.WebClient;
 import org.htmlunit.html.DomElement;
 import org.htmlunit.html.DomElementUtil;
@@ -62,6 +63,8 @@ import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
 import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.ThrowingRunnableUtil;
+import org.springframework.core.io.InputStreamSource;
+import org.springframework.core.io.InputStreamSourceUtil;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -77,7 +80,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 
 	private IValue0<Map<String, String>> voices = null;
 
-	private DefaultListModel<URL> listModel = null;
+	private DefaultListModel<Object> listModel = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
@@ -118,17 +121,9 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		//
 		final URL u = execute(url, text, getVoices(), voiceId, rate, map);
 		//
-		if ((listModel = ObjectUtils.getIfNull(listModel, DefaultListModel::new)) != null) {
-			//
-			listModel.removeAllElements();
-			//
-			listModel.addElement(u);
-			//
-		} // if
-			//
 		try {
 			//
-			speak(u);
+			speak(u, listModel = ObjectUtils.getIfNull(listModel, DefaultListModel::new));
 			//
 		} catch (final IOException | UnsupportedAudioFileException | LineUnavailableException e) {
 			//
@@ -138,11 +133,30 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 			//
 	}
 
-	private static void speak(final URL u) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+	private static void speak(final URL u, final DefaultListModel<Object> listModel)
+			throws IOException, UnsupportedAudioFileException, LineUnavailableException {
 		//
-		try (final InputStream is = testAndApply(Objects::nonNull,
+		final byte[] bs = testAndApply(Objects::nonNull, Util.openStream(u), IOUtils::toByteArray, null);
+		//
+		if (listModel != null) {
+			//
+			listModel.removeAllElements();
+			//
+			listModel.addElement(Pair.of(u, bs));
+			//
+		} // if
+			//
+		speak(() -> testAndApply(Objects::nonNull,
 				testAndApply(Objects::nonNull, Util.openStream(u), IOUtils::toByteArray, null),
-				ByteArrayInputStream::new, null); final AudioInputStream ais = getAudioInputStream(is)) {
+				ByteArrayInputStream::new, null));
+		//
+	}
+
+	private static void speak(final InputStreamSource iss)
+			throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+		//
+		try (final InputStream is = InputStreamSourceUtil.getInputStream(iss);
+				final AudioInputStream ais = getAudioInputStream(is)) {
 			//
 			final AudioFormat af = getFormat(ais);
 			//

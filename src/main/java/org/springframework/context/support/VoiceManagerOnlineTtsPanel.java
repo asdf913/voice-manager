@@ -12,6 +12,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.ElementType;
@@ -65,6 +66,7 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableConsumerUtil;
@@ -74,6 +76,7 @@ import org.apache.commons.lang3.function.TriFunction;
 import org.apache.commons.lang3.function.TriFunctionUtil;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.apache.commons.lang3.tuple.TripleUtil;
 import org.apache.commons.validator.routines.UrlValidator;
@@ -114,6 +117,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.EnvironmentCapable;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -193,6 +198,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	private String key = null;
 
 	private ObjectMapper objectMapper = null;
+
+	private Entry<URL, File> entry = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
@@ -854,6 +861,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 					//
 					Util.setText(tfUrl, null);
 					//
+					entry = null;
+					//
 				} // if
 					//
 			} catch (final JsonProcessingException e) {
@@ -868,6 +877,45 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 			Util.setText(tfErrorMessage, null);
 			//
+			final File file = Util.getValue(entry);
+			//
+			if (Util.exists(file) && Util.isFile(file) && file != null && file.canRead()) {
+				//
+				final Iterable<Method> ms = Util
+						.collect(
+								Util.filter(testAndApply(Objects::nonNull,
+										Util.getDeclaredMethods(Util.getClass(speechApi)), Arrays::stream, null),
+										m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "speak"),
+												Arrays.equals(Util.getParameterTypes(m),
+														new Class<?>[] { InputStreamSource.class }))),
+								Collectors.toList());
+				//
+				testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
+					//
+					throw new IllegalStateException();
+					//
+				});
+				//
+				final Method m = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
+				//
+				if (m != null && Util.isStatic(m)) {
+					//
+					try {
+						//
+						Narcissus.invokeStaticMethod(m, new ByteArrayResource(FileUtils.readFileToByteArray(file)));
+						//
+					} catch (final IOException e) {
+						//
+						throw new RuntimeException(e);
+						//
+					} // try
+						//
+					return true;
+					//
+				} // if
+					//
+			} // if
+				//
 			final String urlString = Util.getText(tfUrl);
 			//
 			URL u = null;
@@ -1230,10 +1278,50 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	@Override
 	public void intervalAdded(final ListDataEvent evt) {
 		//
-		final DefaultListModel<?> dlm = Util.cast(DefaultListModel.class, Util.getSource(evt));
+		final Entry<?, ?> en = Util.cast(Entry.class, testAndApply(x -> x != null && x.size() == 1,
+				Util.cast(DefaultListModel.class, Util.getSource(evt)), x -> get(x, 0), null));
 		//
-		Util.setText(tfUrl, Util.toString(dlm != null && dlm.size() == 1 ? dlm.get(0) : null));
+		FileUtils.deleteQuietly(Util.getValue(entry));
 		//
+		final URL url = Util.cast(URL.class, Util.getKey(en));
+		//
+		Util.setText(tfUrl, Util.toString(url));
+		//
+		final byte[] bs = Util.cast(byte[].class, Util.getValue(en));
+		//
+		File file = null;
+		//
+		try {
+			//
+			if ((file = url != null ? new File(StringUtils.substringAfterLast(Util.toString(url), "/"))
+					: File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null)) != null) {
+				//
+				file.deleteOnExit();
+				//
+				if (bs != null) {
+					//
+					FileUtils.writeByteArrayToFile(file, bs);
+					//
+				} // if
+					//
+			} // if
+				//
+		} catch (final IOException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
+		entry = Pair.of(url, file);
+		//
+	}
+
+	private static <E> E get(final DefaultListModel<E> instance, final int index) {
+		return instance != null ? instance.get(index) : null;
+	}
+
+	private static String nextAlphabetic(final RandomStringUtils instance, final int count) {
+		return instance != null ? instance.nextAlphabetic(count) : null;
 	}
 
 	@Override

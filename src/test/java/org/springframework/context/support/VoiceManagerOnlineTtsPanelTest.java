@@ -7,6 +7,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
@@ -411,6 +412,10 @@ class VoiceManagerOnlineTtsPanelTest {
 		FieldUtils.writeDeclaredField(instance, "url", null, true);
 		//
 		FieldUtils.writeDeclaredField(instance, "speechApi", Reflection.newProxy(SpeechApi.class, ih), true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
+		FieldUtils.writeDeclaredField(instance, "entry", Pair.of(null, new File(".")), true);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
 		//
