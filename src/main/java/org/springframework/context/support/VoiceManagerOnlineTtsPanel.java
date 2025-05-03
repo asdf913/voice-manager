@@ -899,39 +899,35 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 					//
 			} // if
 				//
-			if (speechApi != null) {
+			final List<String> keys = Util.toList(Util.map(Util.filter(Util.stream(Util.entrySet(voices)),
+					x -> Objects.equals(Util.getValue(x), Util.getSelectedItem(cbmVoice))), Util::getKey));
+			//
+			testAndRunThrows(IterableUtils.size(keys) > 1, () -> {
 				//
-				final List<String> keys = Util.toList(Util.map(Util.filter(Util.stream(Util.entrySet(voices)),
-						x -> Objects.equals(Util.getValue(x), Util.getSelectedItem(cbmVoice))), Util::getKey));
+				throw new IllegalStateException();
 				//
-				testAndRunThrows(IterableUtils.size(keys) > 1, () -> {
-					//
-					throw new IllegalStateException();
-					//
-				});
+			});
+			//
+			try {
 				//
-				try {
-					//
-					final Map<String, Object> map = new LinkedHashMap<>(
-							Collections.singletonMap("SYNALPHA", Util.getText(tfQuality)));
-					//
-					Util.put(map, "F0SHIFT", Util.getText(tfPitch));
-					//
-					speechApi.speak(Util.getText(taText),
-							testAndApply(x -> IterableUtils.size(x) == 1, keys, x -> IterableUtils.get(x, 0), null),
-							NumberUtils.toInt(Util.getText(tfDuration), 0)// TODO
-							, 0// TODO volume
-							, map);
-					//
-					key = keyTemp;
-					//
-				} catch (final RuntimeException e) {
-					//
-					Util.setText(tfErrorMessage, e.getMessage());
-					//
-				} // try
-					//
-			} // if
+				final Map<String, Object> map = new LinkedHashMap<>(
+						Collections.singletonMap("SYNALPHA", Util.getText(tfQuality)));
+				//
+				Util.put(map, "F0SHIFT", Util.getText(tfPitch));
+				//
+				speak(speechApi, Util.getText(taText),
+						testAndApply(x -> IterableUtils.size(x) == 1, keys, x -> IterableUtils.get(x, 0), null),
+						NumberUtils.toInt(Util.getText(tfDuration), 0)// TODO
+						, 0// TODO volume
+						, map);
+				//
+				key = keyTemp;
+				//
+			} catch (final RuntimeException e) {
+				//
+				Util.setText(tfErrorMessage, e.getMessage());
+				//
+			} // try
 				//
 			return true;
 			//
@@ -939,6 +935,13 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 		return false;
 		//
+	}
+
+	private static void speak(final SpeechApi instance, final String text, final String voiceId, final int rate,
+			final int volume, final Map<String, Object> map) {
+		if (instance != null) {
+			instance.speak(text, voiceId, rate, volume, map);
+		}
 	}
 
 	private static boolean equals(@Nullable final Number a, final int b) {
