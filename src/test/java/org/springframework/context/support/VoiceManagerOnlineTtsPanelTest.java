@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -415,7 +416,7 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
 		//
-		FieldUtils.writeDeclaredField(instance, "entry", Pair.of(null, new File(".")), true);
+		FieldUtils.writeDeclaredField(instance, "entry", Pair.of(null, Util.toFile(Paths.get("."))), true);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
 		//

@@ -23,6 +23,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -1293,7 +1294,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		try {
 			//
-			if ((file = url != null ? new File(StringUtils.substringAfterLast(Util.toString(url), "/"))
+			if ((file = url != null ? Util.toFile(Path.of(StringUtils.substringAfterLast(Util.toString(url), "/")))
 					: File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null)) != null) {
 				//
 				file.deleteOnExit();
