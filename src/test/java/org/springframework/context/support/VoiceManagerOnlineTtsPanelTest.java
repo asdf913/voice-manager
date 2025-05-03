@@ -105,7 +105,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING,
 			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE,
 			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_SHA512HEX,
-			METHOD_CREATE_INPUT_STREAM_SOURCE, METHOD_CAN_READ = null;
+			METHOD_CREATE_INPUT_STREAM_SOURCE, METHOD_CAN_READ, METHOD_AND = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -190,6 +190,8 @@ class VoiceManagerOnlineTtsPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_CAN_READ = clz.getDeclaredMethod("canRead", File.class)).setAccessible(true);
+		//
+		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
 	}
 
@@ -513,7 +515,10 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
-			if ((m = ms[i]) == null || m.isSynthetic()) {
+			if ((m = ms[i]) == null || m.isSynthetic()
+					|| Boolean.logicalAnd(Objects.equals(Util.getName(m), "and"),
+							Arrays.equals(Util.getParameterTypes(m),
+									new Class<?>[] { Boolean.TYPE, Boolean.TYPE, boolean[].class }))) {
 				//
 				continue;
 				//
@@ -1268,6 +1273,29 @@ class VoiceManagerOnlineTtsPanelTest {
 	private static boolean canRead(final File instance) throws Throwable {
 		try {
 			final Object obj = METHOD_CAN_READ.invoke(null, instance);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAnd() throws Throwable {
+		//
+		Assertions.assertTrue(and(true, true, null));
+		//
+		Assertions.assertFalse(and(true, true, false));
+		//
+		Assertions.assertTrue(and(true, true, true));
+		//
+	}
+
+	private static boolean and(final boolean a, final boolean b, final boolean... bs) throws Throwable {
+		try {
+			final Object obj = METHOD_AND.invoke(null, a, b, bs);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}

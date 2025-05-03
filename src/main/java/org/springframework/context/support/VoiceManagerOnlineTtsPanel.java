@@ -866,7 +866,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 			final File file = Util.getValue(entry);
 			//
-			if (Boolean.logicalAnd(Util.exists(file), Util.isFile(file)) && canRead(file)) {
+			if (and(Util.exists(file), Util.isFile(file), canRead(file))) {
 				//
 				final Iterable<Method> ms = Util
 						.collect(
@@ -981,6 +981,30 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		} // if
 			//
 		return false;
+		//
+	}
+
+	private static boolean and(final boolean a, final boolean b, final boolean... bs) {
+		//
+		boolean result = a && b;
+		//
+		if (!result) {
+			//
+			return false;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if (!(result &= bs[i])) {
+				//
+				return false;
+				//
+			} // if
+				//
+		} // for
+			//
+		return result;
 		//
 	}
 
