@@ -681,25 +681,26 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				//
 		} else if (Objects.equals(source, btnPlayAudio)) {
 			//
-			playAudio(Util.cast(Pronunciation.class, getSelectedItem(mcbmPronounication)));
+			playAudio(Util.cast(Pronunciation.class, Util.getSelectedItem(mcbmPronounication)));
 			//
 		} else if (Objects.equals(source, btnSaveAudio)) {
 			//
-			saveAudio(headless, Util.cast(Pronunciation.class, getSelectedItem(mcbmPronounication)),
-					getSelectedItem(mcbmAudioFormat));
+			saveAudio(headless, Util.cast(Pronunciation.class, Util.getSelectedItem(mcbmPronounication)),
+					Util.getSelectedItem(mcbmAudioFormat));
 			//
 		} else if (Objects.equals(source, btnCopyPitchAccentImage)) {
 			//
 			setPitchAccentImageToSystemClipboardContents(
-					Util.cast(Pronunciation.class, getSelectedItem(mcbmPronounication)));
+					Util.cast(Pronunciation.class, Util.getSelectedItem(mcbmPronounication)));
 			//
 		} else if (Objects.equals(source, btnSavePitchAccentImage)) {
 			//
-			savePitchAccentImage(Util.cast(Pronunciation.class, getSelectedItem(mcbmPronounication)));
+			savePitchAccentImage(Util.cast(Pronunciation.class, Util.getSelectedItem(mcbmPronounication)));
 			//
 		} else if (Objects.equals(source, jcbPronounication)) {
 			//
-			pronounicationChanged(Util.cast(Pronunciation.class, getSelectedItem(mcbmPronounication)), mcbmAudioFormat);
+			pronounicationChanged(Util.cast(Pronunciation.class, Util.getSelectedItem(mcbmPronounication)),
+					mcbmAudioFormat);
 			//
 		} // if
 			//
@@ -889,7 +890,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				try {
 					//
 					final boolean result = ImageIO.write(pitchAccentImage,
-							Util.toString(getSelectedItem(cbmImageFormat)), jfc.getSelectedFile());
+							Util.toString(Util.getSelectedItem(cbmImageFormat)), jfc.getSelectedFile());
 					//
 					Util.setText(jlSavePitchAccentImage, iif(result, "Saved", "Not Saved"));
 					//
@@ -954,11 +955,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		if (instance != null) {
 			instance.setContents(contents, owner);
 		}
-	}
-
-	@Nullable
-	private static Object getSelectedItem(@Nullable final ComboBoxModel<?> instance) {
-		return instance != null ? instance.getSelectedItem() : null;
 	}
 
 	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, @Nullable final E item) {

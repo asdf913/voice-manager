@@ -1370,7 +1370,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			try {
 				//
 				final String language = SpeechApi.getVoiceAttribute(speechApi,
-						Util.toString(getSelectedItem(cbmVoiceId)), LANGUAGE);
+						Util.toString(Util.getSelectedItem(cbmVoiceId)), LANGUAGE);
 				//
 				Util.setText(tfSpeechLanguageCode, language);
 				//
@@ -1754,7 +1754,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		if (Objects.equals(source, jcbPronunciation)) {
 			//
-			pronounicationChanged(Util.cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
+			pronounicationChanged(Util.cast(Pronunciation.class, Util.getSelectedItem(mcbmPronunciation)),
 					mcbmPronounicationAudioFormat, preferredPronunciationAudioFormat, tfPronunciationPageUrl);
 			//
 			return;
@@ -1773,8 +1773,8 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} else if (Objects.equals(source, btnPlayPronunciationAudio)) {
 			//
-			playAudio(Util.cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
-					getSelectedItem(mcbmPronounicationAudioFormat));
+			playAudio(Util.cast(Pronunciation.class, Util.getSelectedItem(mcbmPronunciation)),
+					Util.getSelectedItem(mcbmPronounicationAudioFormat));
 			//
 			return;
 			//
@@ -2433,8 +2433,8 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		// try to retrieve the "Pronunciation" Audio File
 		//
 		File file = getPronunciationAudioFileByAudioFormat(
-				Util.cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)),
-				getSelectedItem(mcbmPronounicationAudioFormat));
+				Util.cast(Pronunciation.class, Util.getSelectedItem(mcbmPronunciation)),
+				Util.getSelectedItem(mcbmPronounicationAudioFormat));
 		//
 		deleteOnExit(file);
 		//
@@ -2506,7 +2506,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			// Pronunciation PitchAccentImage
 			//
 		final RenderedImage pitchAccentImage = getPitchAccentImage(
-				Util.cast(Pronunciation.class, getSelectedItem(mcbmPronunciation)));
+				Util.cast(Pronunciation.class, Util.getSelectedItem(mcbmPronunciation)));
 		//
 		testAndAccept(x -> pitchAccentImage != null,
 				createByteArray(pitchAccentImage, getImageFormat(imageFormat, imageWriterSpiFormats), headless),
@@ -3348,7 +3348,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 						testAndApply(Objects::nonNull, file, new ContentInfoUtil()::findMatch, null))))) {
 					//
 					final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory, FORMAT,
-							getSelectedItem(cbmAudioFormatExecute));
+							Util.getSelectedItem(cbmAudioFormatExecute));
 					//
 					if (byteConverter != null) {
 						//
@@ -3638,7 +3638,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 
 	private String getVoiceIdForExecute(final boolean nonTest) {
 		//
-		String voiceId = Util.toString(getSelectedItem(cbmVoiceId));
+		String voiceId = Util.toString(Util.getSelectedItem(cbmVoiceId));
 		//
 		if (StringUtils.isBlank(voiceId)) {
 			//
@@ -3668,7 +3668,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			testAndAccept((a, b) -> Objects.equals(a, Boolean.TRUE), nonTest, jcbVoiceIdLocal,
 					(a, b) -> JOptionPane.showMessageDialog(null, b, "Voice ID", JOptionPane.PLAIN_MESSAGE));
 			//
-			voiceId = Util.toString(getSelectedItem(cbmVoiceIdLocal));
+			voiceId = Util.toString(Util.getSelectedItem(cbmVoiceIdLocal));
 			//
 		} // if
 			//
@@ -3706,21 +3706,21 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		voice.setKatakana(Util.getText(instance.tfKatakana));
 		//
-		voice.setYomi(Util.cast(Yomi.class, getSelectedItem(instance.cbmYomi)));
+		voice.setYomi(Util.cast(Yomi.class, Util.getSelectedItem(instance.cbmYomi)));
 		//
 		setListNames(voice,
 				Util.toList(Util.map(Util.stream(getObjectList(objectMapper, Util.getText(instance.tfListNames))),
 						x -> Util.toString(x))));
 		//
-		voice.setJlptLevel(Util.toString(getSelectedItem(instance.cbmJlptLevel)));
+		voice.setJlptLevel(Util.toString(Util.getSelectedItem(instance.cbmJlptLevel)));
 		//
 		voice.setIpaSymbol(Util.getText(instance.tfIpaSymbol));
 		//
-		voice.setIsKanji(Util.cast(Boolean.class, getSelectedItem(instance.cbmIsKanji)));
+		voice.setIsKanji(Util.cast(Boolean.class, Util.getSelectedItem(instance.cbmIsKanji)));
 		//
-		voice.setJouYouKanji(Util.cast(Boolean.class, getSelectedItem(instance.cbmJouYouKanJi)));
+		voice.setJouYouKanji(Util.cast(Boolean.class, Util.getSelectedItem(instance.cbmJouYouKanJi)));
 		//
-		voice.setGaKuNenBeTsuKanJi(Util.toString(getSelectedItem(instance.cbmGaKuNenBeTsuKanJi)));
+		voice.setGaKuNenBeTsuKanJi(Util.toString(Util.getSelectedItem(instance.cbmGaKuNenBeTsuKanJi)));
 		//
 		voice.setPronunciationPageUrl(Util.getText(instance.tfPronunciationPageUrl));
 		//
@@ -4699,11 +4699,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		} catch (final NumberFormatException e) {
 			return null;
 		}
-	}
-
-	@Nullable
-	private static Object getSelectedItem(@Nullable final ComboBoxModel<?> instance) {
-		return instance != null ? instance.getSelectedItem() : null;
 	}
 
 	private static void setJlptVocabularyAndLevel(@Nullable final VoiceManagerImportSinglePanel instance) {

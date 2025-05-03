@@ -614,7 +614,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			try {
 				//
 				final String language = SpeechApi.getVoiceAttribute(speechApi,
-						Util.toString(getSelectedItem(cbmVoiceId)), LANGUAGE);
+						Util.toString(Util.getSelectedItem(cbmVoiceId)), LANGUAGE);
 				//
 				Util.setText(tfSpeechLanguageCode, language);
 				//
@@ -646,13 +646,13 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 			final Stopwatch stopwatch = Stopwatch.createStarted();
 			//
-			final Method method = Util.cast(Method.class, getSelectedItem(cbmSpeakMethod));
+			final Method method = Util.cast(Method.class, Util.getSelectedItem(cbmSpeakMethod));
 			//
 			final Object instance = getInstance(speechApi);
 			//
 			final String text = Util.getText(tfTextTts);
 			//
-			final String voiceId = Util.toString(getSelectedItem(cbmVoiceId));
+			final String voiceId = Util.toString(Util.getSelectedItem(cbmVoiceId));
 			//
 			final int rate = Util.intValue(getRate(), 0);
 			//
@@ -715,7 +715,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		//
 		ObjectMap.setObject(objectMap, File.class, file);
 		//
-		writeVoiceToFile(objectMap, Util.getText(tfTextTts), Util.toString(getSelectedItem(cbmVoiceId))
+		writeVoiceToFile(objectMap, Util.getText(tfTextTts), Util.toString(Util.getSelectedItem(cbmVoiceId))
 		//
 				, Util.intValue(getRate(), 0)// rate
 				//
@@ -723,7 +723,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		);
 		//
 		final ByteConverter byteConverter = getByteConverter(configurableListableBeanFactory, FORMAT,
-				getSelectedItem(cbmAudioFormatWrite));
+				Util.getSelectedItem(cbmAudioFormatWrite));
 		//
 		if (byteConverter != null) {
 			//
@@ -1582,7 +1582,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 			if (getInstance(speechApi) instanceof SpeechApiSystemSpeechImpl) {
 				//
-				setEnabled(getSelectedItem(cbmVoiceId) != null, btnSpeak, btnWriteVoice);
+				setEnabled(Util.getSelectedItem(cbmVoiceId) != null, btnSpeak, btnWriteVoice);
 				//
 			} // if
 				//
@@ -1629,11 +1629,6 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		if (instance != null) {
 			instance.setEnabled(b);
 		}
-	}
-
-	@Nullable
-	private static Object getSelectedItem(@Nullable final ComboBoxModel<?> instance) {
-		return instance != null ? instance.getSelectedItem() : null;
 	}
 
 	@Nullable

@@ -1397,7 +1397,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		try {
 			//
 			actionPerformedForExport(Util.get(IValue0Util.getValue0(getWorkbookClassFailableSupplierMap()),
-					getSelectedItem(cbmWorkbookClass)));
+					Util.getSelectedItem(cbmWorkbookClass)));
 			//
 		} catch (final IOException | IllegalAccessException | TemplateException | InvalidFormatException
 				| GeneralSecurityException | SQLException e) {
@@ -1931,7 +1931,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				// encrypt the file if "password" is set
 				//
-			encrypt(file, Util.cast(EncryptionMode.class, getSelectedItem(cbmEncryptionMode)),
+			encrypt(file, Util.cast(EncryptionMode.class, Util.getSelectedItem(cbmEncryptionMode)),
 					Util.getText(tfExportPassword));
 			//
 			// Delete empty Spreadsheet
@@ -2057,7 +2057,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					ObjectMap.setObject(objectMap, EncryptionMethod.class, EncryptionMethod.ZIP_STANDARD);
 					//
 					ObjectMap.setObject(objectMap, CompressionLevel.class,
-							Util.cast(CompressionLevel.class, getSelectedItem(cbmCompressionLevel)));
+							Util.cast(CompressionLevel.class, Util.getSelectedItem(cbmCompressionLevel)));
 					//
 					createZipFile(objectMap, Util.getText(tfExportPassword), files);
 					//
@@ -2075,7 +2075,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			if (Util.isSelected(cbExportMicrosoftAccess)) {
 				//
 				final FileFormat fileFormat = Util.cast(FileFormat.class,
-						getSelectedItem(cbmMicrosoftAccessFileFormat));
+						Util.getSelectedItem(cbmMicrosoftAccessFileFormat));
 				//
 				ObjectMap.setObject(objectMap, File.class,
 						file = Util.toFile(Path.of(String.format("voice_%1$tY%1$tm%1$td_%1$tH%1$tM%1$tS.%2$s",
@@ -4842,11 +4842,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static Object getSelectedItem(@Nullable final ComboBoxModel<?> instance) {
-		return instance != null ? instance.getSelectedItem() : null;
 	}
 
 	@Nullable

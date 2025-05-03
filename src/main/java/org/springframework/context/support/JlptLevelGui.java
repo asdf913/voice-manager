@@ -397,7 +397,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 
 	private void actionPerformedForBtnVisitJMdictDB() {
 		//
-		final Integer jmdictSeq = getJmdictSeq(Util.cast(JlptVocabulary.class, getSelectedItem(cbmJlptVocabulary)));
+		final Integer jmdictSeq = getJmdictSeq(
+				Util.cast(JlptVocabulary.class, Util.getSelectedItem(cbmJlptVocabulary)));
 		//
 		run(Boolean.logicalAnd(jmdictSeq != null, !isTestMode()), () -> {
 			//
@@ -426,11 +427,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 	@Nullable
 	private static URI toURI(@Nullable final URIBuilder instance) {
 		return instance != null ? instance.toURI() : null;
-	}
-
-	@Nullable
-	private static Object getSelectedItem(@Nullable final ComboBoxModel<?> instance) {
-		return instance != null ? instance.getSelectedItem() : null;
 	}
 
 	private static boolean isTestMode() {

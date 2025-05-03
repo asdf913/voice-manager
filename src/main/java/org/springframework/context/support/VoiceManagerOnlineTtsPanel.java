@@ -873,7 +873,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			if (speechApi != null) {
 				//
 				final List<String> keys = Util.toList(Util.map(Util.filter(Util.stream(Util.entrySet(voices)),
-						x -> Objects.equals(Util.getValue(x), getSelectedItem(cbmVoice))), Util::getKey));
+						x -> Objects.equals(Util.getValue(x), Util.getSelectedItem(cbmVoice))), Util::getKey));
 				//
 				testAndRunThrows(IterableUtils.size(keys) > 1, () -> {
 					//
@@ -908,10 +908,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 		return false;
 		//
-	}
-
-	private static Object getSelectedItem(final ComboBoxModel<?> instance) {
-		return instance != null ? instance.getSelectedItem() : null;
 	}
 
 	private static boolean equals(@Nullable final Number a, final int b) {
@@ -1013,7 +1009,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} else if (b instanceof ComboBoxModel cbm) {
 			//
-			final Object selectedItem = getSelectedItem(cbm);
+			final Object selectedItem = Util.getSelectedItem(cbm);
 			//
 			final List<String> keys = Util.toList(Util.map(Util.filter(Util.stream(Util.entrySet(voices)),
 					x -> Objects.equals(Util.getValue(x), selectedItem)), Util::getKey));

@@ -1930,7 +1930,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				StringMap.setString(stringMap, "text", Util.getText(tfText));
 				//
-				StringMap.setString(stringMap, "voiceId", Util.toString(getSelectedItem(cbmVoiceId)));
+				StringMap.setString(stringMap, "voiceId", Util.toString(Util.getSelectedItem(cbmVoiceId)));
 				//
 				StringMap.setString(stringMap, "imageUrl", Util.getText(tfImageUrl));
 				//
@@ -1961,8 +1961,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				ObjectMap.setObject(objectMap, RenderedImage.class, renderedImage);
 				//
-				ObjectMap.setObject(objectMap, ByteConverter.class,
-						getByteConverter(configurableListableBeanFactory, FORMAT, getSelectedItem(cbmAudioFormat)));
+				ObjectMap.setObject(objectMap, ByteConverter.class, getByteConverter(configurableListableBeanFactory,
+						FORMAT, Util.getSelectedItem(cbmAudioFormat)));
 				//
 				ObjectMap.setObject(objectMap, Resource.class, audioResource);
 				//
@@ -2465,7 +2465,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			try {
 				//
 				final String language = SpeechApi.getVoiceAttribute(speechApi,
-						Util.toString(getSelectedItem(cbmVoiceId)), "Language");
+						Util.toString(Util.getSelectedItem(cbmVoiceId)), "Language");
 				//
 				Util.setText(tfSpeechLanguageCode, language);
 				//
@@ -2581,10 +2581,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	private Map<String, String> createStyleMap() {
 		//
 		return createStyleMap(
-				Map.of("text-align", ObjectUtils.defaultIfNull(Util.toString(getSelectedItem(cbmTextAlign1)), "center"),
+				Map.of("text-align",
+						ObjectUtils.defaultIfNull(Util.toString(Util.getSelectedItem(cbmTextAlign1)), "center"),
 						"display", "block", "margin-left", "auto", "margin-right", "auto"),
 				testAndApply(NumberUtils::isCreatable, Util.getText(tfFontSize1), NumberUtils::createBigDecimal, null),
-				Util.cast(ECSSUnit.class, getSelectedItem(cbmFontSize1)));
+				Util.cast(ECSSUnit.class, Util.getSelectedItem(cbmFontSize1)));
 		//
 	}
 
@@ -3057,11 +3058,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 	}
 
-	@Nullable
-	private static Object getSelectedItem(@Nullable final ComboBoxModel<?> instance) {
-		return instance != null ? instance.getSelectedItem() : null;
-	}
-
 	private static interface ObjectMap {
 
 		@Nullable
@@ -3498,7 +3494,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			ObjectMap.setObject(om, StringMap.class, stringMap);
 			//
 			StringMap.setString(stringMap, "imageFormat",
-					Util.toString(getSelectedItem(getCbmImageFormat(voiceManagerPdfPanel))));
+					Util.toString(Util.getSelectedItem(getCbmImageFormat(voiceManagerPdfPanel))));
 			//
 			addImage(ObjectMap.getObject(objectMap, RenderedImage.class), om, lastHeight, isOrginialSize);
 			//

@@ -1888,6 +1888,10 @@ public abstract class Util {
 		}
 	}
 
+	static Object getSelectedItem(final ComboBoxModel<?> instance) {
+		return instance != null ? instance.getSelectedItem() : null;
+	}
+
 	static int getSize(@Nullable final ListModel<?> instance) {
 		return instance != null ? instance.getSize() : 0;
 	}

@@ -41,7 +41,6 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
-import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JList;
@@ -74,7 +73,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static final int ONE = 1;
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_WIDTH, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT,
-			METHOD_GET_SELECTED_ITEM, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_MAP_INT_STREAM,
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_MAP_INT_STREAM,
 			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_SAVE_PITCH_ACCENT_IMAGE,
 			METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_ADD_ACTION_LISTENER,
 			METHOD_GET_FIELD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_IIF, METHOD_SORT,
@@ -96,8 +95,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_REMOVE_ELEMENT_AT = clz.getDeclaredMethod("removeElementAt", MutableComboBoxModel.class, Integer.TYPE))
 				.setAccessible(true);
-		//
-		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", ComboBoxModel.class)).setAccessible(true);
 		//
 		(METHOD_GET_SYSTEM_CLIP_BOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
 		//
@@ -161,7 +158,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 		private Integer size = null;
 
-		private Object key, value, selectedItem = null;
+		private Object key, value = null;
 
 		private Set<Entry<?, ?>> entrySet = null;
 
@@ -217,16 +214,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				} else if (Objects.equals(methodName, "size")) {
 					//
 					return size;
-					//
-				} // if
-					//
-			} // if
-				//
-			if (proxy instanceof ComboBoxModel) {
-				//
-				if (Objects.equals(methodName, "getSelectedItem")) {
-					//
-					return selectedItem;
 					//
 				} // if
 					//
@@ -649,21 +636,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static void removeElementAt(final MutableComboBoxModel<?> instance, final int index) throws Throwable {
 		try {
 			METHOD_REMOVE_ELEMENT_AT.invoke(null, instance, index);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetSelectedItem() throws Throwable {
-		//
-		Assertions.assertNull(getSelectedItem(Reflection.newProxy(ComboBoxModel.class, ih)));
-		//
-	}
-
-	private static Object getSelectedItem(final ComboBoxModel<?> instance) throws Throwable {
-		try {
-			return METHOD_GET_SELECTED_ITEM.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

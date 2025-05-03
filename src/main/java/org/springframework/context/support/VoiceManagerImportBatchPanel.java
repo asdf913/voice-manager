@@ -1519,7 +1519,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 				if (voiceId == null) {
 					//
-					voiceId = Unit.with(getIfNull(Util.toString(getSelectedItem(cbmVoiceId)),
+					voiceId = Unit.with(getIfNull(Util.toString(Util.getSelectedItem(cbmVoiceId)),
 							() -> getVoiceIdForExecute(!isTestMode())));
 					//
 				} // if
@@ -2839,7 +2839,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 
 	private String getVoiceIdForExecute(final boolean nonTest) {
 		//
-		String voiceId = Util.toString(getSelectedItem(cbmVoiceId));
+		String voiceId = Util.toString(Util.getSelectedItem(cbmVoiceId));
 		//
 		if (StringUtils.isBlank(voiceId)) {
 			//
@@ -2869,7 +2869,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			testAndAccept((a, b) -> Objects.equals(a, Boolean.TRUE), nonTest, jcbVoiceIdLocal,
 					(a, b) -> JOptionPane.showMessageDialog(null, b, "Voice ID", JOptionPane.PLAIN_MESSAGE));
 			//
-			voiceId = Util.toString(getSelectedItem(cbmVoiceIdLocal));
+			voiceId = Util.toString(Util.getSelectedItem(cbmVoiceIdLocal));
 			//
 		} // if
 			//
@@ -2921,11 +2921,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	@Nullable
 	private static <E> ListCellRenderer<? super E> getRenderer(@Nullable final JComboBox<E> instance) {
 		return instance != null ? instance.getRenderer() : null;
-	}
-
-	@Nullable
-	private static Object getSelectedItem(@Nullable final ComboBoxModel<?> instance) {
-		return instance != null ? instance.getSelectedItem() : null;
 	}
 
 	private static void addRow(@Nullable final DefaultTableModel instance, final Object[] rowData) {
@@ -4304,7 +4299,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			try {
 				//
 				final String language = SpeechApi.getVoiceAttribute(speechApi,
-						Util.toString(getSelectedItem(cbmVoiceId)), LANGUAGE);
+						Util.toString(Util.getSelectedItem(cbmVoiceId)), LANGUAGE);
 				//
 				Util.setText(tfSpeechLanguageCode, language);
 				//

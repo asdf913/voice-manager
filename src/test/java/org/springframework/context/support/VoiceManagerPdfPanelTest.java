@@ -100,12 +100,12 @@ class VoiceManagerPdfPanelTest {
 
 	private static Class<?> CLASS_SHLWAPI = null;
 
-	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_SELECTED_ITEM, METHOD_GET_TEXT_ALIGNS, METHOD_CHOP,
-			METHOD_GENERATE_PDF_HTML, METHOD_LENGTH, METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY,
-			METHOD_GET_TEXT_WIDTH, METHOD_OR, METHOD_TO_AUDIO_RESOURCE, METHOD_LIST_FILES, METHOD_IS_DIRECTORY,
-			METHOD_GET_TRANSFER_DATA, METHOD_FIND_MATCH, METHOD_TO_MILLIS, METHOD_TEST_AND_ACCEPT, METHOD_IIF,
-			METHOD_PATH_FILE_EXISTS_W, METHOD_GET_GENERIC_INTERFACES, METHOD_GET_ACTUAL_TYPE_ARGUMENTS,
-			METHOD_GET_RAW_TYPE, METHOD_GET_GENERIC_TYPE = null;
+	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_TEXT_ALIGNS, METHOD_CHOP, METHOD_GENERATE_PDF_HTML,
+			METHOD_LENGTH, METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY, METHOD_GET_TEXT_WIDTH, METHOD_OR,
+			METHOD_TO_AUDIO_RESOURCE, METHOD_LIST_FILES, METHOD_IS_DIRECTORY, METHOD_GET_TRANSFER_DATA,
+			METHOD_FIND_MATCH, METHOD_TO_MILLIS, METHOD_TEST_AND_ACCEPT, METHOD_IIF, METHOD_PATH_FILE_EXISTS_W,
+			METHOD_GET_GENERIC_INTERFACES, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE,
+			METHOD_GET_GENERIC_TYPE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -113,8 +113,6 @@ class VoiceManagerPdfPanelTest {
 		final Class<?> clz = VoiceManagerPdfPanel.class;
 		//
 		(METHOD_SET_FONT_SIZE_AND_UNIT = clz.getDeclaredMethod("setFontSizeAndUnit", Integer.TYPE)).setAccessible(true);
-		//
-		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", ComboBoxModel.class)).setAccessible(true);
 		//
 		(METHOD_GET_TEXT_ALIGNS = clz.getDeclaredMethod("getTextAligns")).setAccessible(true);
 		//
@@ -288,46 +286,38 @@ class VoiceManagerPdfPanelTest {
 		//
 		Assertions.assertEquals("42", Util.getText(tfFontSize1));
 		//
-		Assertions.assertEquals(ECSSUnit.PX, getSelectedItem(cbmFontSize1));
+		Assertions.assertEquals(ECSSUnit.PX, Util.getSelectedItem(cbmFontSize1));
 		//
 		setFontSizeAndUnit(18);
 		//
 		Assertions.assertEquals("43", Util.getText(tfFontSize1));
 		//
-		Assertions.assertEquals(ECSSUnit.PX, getSelectedItem(cbmFontSize1));
+		Assertions.assertEquals(ECSSUnit.PX, Util.getSelectedItem(cbmFontSize1));
 		//
 		setFontSizeAndUnit(16);
 		//
 		Assertions.assertEquals("50", Util.getText(tfFontSize1));
 		//
-		Assertions.assertEquals(ECSSUnit.PX, getSelectedItem(cbmFontSize1));
+		Assertions.assertEquals(ECSSUnit.PX, Util.getSelectedItem(cbmFontSize1));
 		//
 		setFontSizeAndUnit(14);
 		//
 		Assertions.assertEquals("56", Util.getText(tfFontSize1));
 		//
-		Assertions.assertEquals(ECSSUnit.PX, getSelectedItem(cbmFontSize1));
+		Assertions.assertEquals(ECSSUnit.PX, Util.getSelectedItem(cbmFontSize1));
 		//
 		setFontSizeAndUnit(12);
 		//
 		Assertions.assertEquals("66", Util.getText(tfFontSize1));
 		//
-		Assertions.assertEquals(ECSSUnit.PX, getSelectedItem(cbmFontSize1));
+		Assertions.assertEquals(ECSSUnit.PX, Util.getSelectedItem(cbmFontSize1));
 		//
 		setFontSizeAndUnit(10);
 		//
 		Assertions.assertEquals("80", Util.getText(tfFontSize1));
 		//
-		Assertions.assertEquals(ECSSUnit.PX, getSelectedItem(cbmFontSize1));
+		Assertions.assertEquals(ECSSUnit.PX, Util.getSelectedItem(cbmFontSize1));
 		//
-	}
-
-	private static Object getSelectedItem(final ComboBoxModel<?> instance) throws Throwable {
-		try {
-			return METHOD_GET_SELECTED_ITEM.invoke(null, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private void setFontSizeAndUnit(final int length) throws Throwable {
