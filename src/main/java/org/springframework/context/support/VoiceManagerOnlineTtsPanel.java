@@ -871,32 +871,28 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 			} // try
 				//
-			if (u != null) {
+			final Iterable<Method> ms = Util.collect(
+					Util.filter(
+							testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(speechApi)),
+									Arrays::stream, null),
+							m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "speak"),
+									Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { URL.class }))),
+					Collectors.toList());
+			//
+			testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
 				//
-				final Iterable<Method> ms = Util.collect(
-						Util.filter(
-								testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(speechApi)),
-										Arrays::stream, null),
-								m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "speak"),
-										Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { URL.class }))),
-						Collectors.toList());
+				throw new IllegalStateException();
 				//
-				testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
-					//
-					throw new IllegalStateException();
-					//
-				});
+			});
+			//
+			final Method m = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
+			//
+			if (Boolean.logicalAnd(Util.isStatic(m), u != null)) {
 				//
-				final Method m = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
+				Narcissus.invokeStaticMethod(m, u);
 				//
-				if (m != null && Util.isStatic(m)) {
-					//
-					Narcissus.invokeStaticMethod(m, u);
-					//
-					return true;
-					//
-				} // if
-					//
+				return true;
+				//
 			} // if
 				//
 			final List<String> keys = Util.toList(Util.map(Util.filter(Util.stream(Util.entrySet(voices)),
