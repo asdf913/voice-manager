@@ -180,7 +180,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	private Map<String, String> voices = null;
 
-	private SpeechApi speechApi = null;
+	private transient SpeechApi speechApi = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
