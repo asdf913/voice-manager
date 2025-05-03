@@ -851,32 +851,16 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 			final Stopwatch stopwatch = Stopwatch.createStarted();
 			//
-			String keyTemp = null;
+			final String keyTemp = sha512Hex(this,
+					objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new));
 			//
-			try {
+			if (!Objects.equals(keyTemp, key)) {
 				//
-				if (!Objects.equals(keyTemp = testAndApply(Objects::nonNull,
-						ObjectMapperUtil.writeValueAsString(
-								objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new),
-								new Object[] { Util.getText(taText), Util.getSelectedItem(cbmVoice),
-										Util.getText(tfQuality), Util.getText(tfPitch), Util.getText(tfDuration) }),
-						DigestUtils::sha512Hex, null), key)) {
-					//
-					Util.setText(tfUrl, null);
-					//
-					entry = null;
-					//
-				} // if
-					//
-			} catch (final JsonProcessingException e) {
+				Util.setText(tfUrl, null);
 				//
-				throw new RuntimeException(e);
+				entry = null;
 				//
-			} finally {
-				//
-				setText(tfElapsed, stopwatch);
-				//
-			} // try
+			} // if
 				//
 			Util.setText(tfErrorMessage, null);
 			//
@@ -1008,6 +992,27 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 		return false;
 		//
+	}
+
+	private static String sha512Hex(final VoiceManagerOnlineTtsPanel instance, final ObjectMapper objectMapper) {
+		//
+		try {
+			//
+			return testAndApply(Objects::nonNull,
+					ObjectMapperUtil.writeValueAsString(objectMapper,
+							instance != null
+									? new Object[] { Util.getText(instance.taText),
+											Util.getSelectedItem(instance.cbmVoice), Util.getText(instance.tfQuality),
+											Util.getText(instance.tfPitch), Util.getText(instance.tfDuration) }
+									: null),
+					DigestUtils::sha512Hex, null);
+			//
+		} catch (final JsonProcessingException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
 	}
 
 	private static void speak(@Nullable final SpeechApi instance, final String text, final String voiceId,

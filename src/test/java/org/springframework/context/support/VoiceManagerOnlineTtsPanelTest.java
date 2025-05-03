@@ -87,6 +87,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -101,7 +102,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
 			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING,
 			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE,
-			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED = null;
+			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_SHA512HEX = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -179,6 +180,8 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_SET_ENABLED = clz.getDeclaredMethod("setEnabled", AbstractButton.class, Boolean.TYPE))
 				.setAccessible(true);
+		//
+		(METHOD_SHA512HEX = clz.getDeclaredMethod("sha512Hex", clz, ObjectMapper.class)).setAccessible(true);
 		//
 	}
 
@@ -1185,6 +1188,30 @@ class VoiceManagerOnlineTtsPanelTest {
 	private static void setEnabled(final AbstractButton instance, final boolean b) throws Throwable {
 		try {
 			METHOD_SET_ENABLED.invoke(null, instance, b);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSha512Hex() throws Throwable {
+		//
+		Assertions.assertEquals(
+				"04f8ff2682604862e405bf88de102ed7710ac45c1205957625e4ee3e5f5a2241e453614acc451345b91bafc88f38804019c7492444595674e94e8cf4be53817f",
+				sha512Hex(null, new ObjectMapper()));
+		//
+	}
+
+	private static String sha512Hex(final VoiceManagerOnlineTtsPanel instance, final ObjectMapper objectMapper)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_SHA512HEX.invoke(null, instance, objectMapper);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
