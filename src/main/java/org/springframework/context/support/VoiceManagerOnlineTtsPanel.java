@@ -43,6 +43,7 @@ import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -52,6 +53,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import javax.swing.plaf.basic.BasicFileChooserUI;
 import javax.swing.text.JTextComponent;
 
@@ -120,7 +123,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerOnlineTtsPanel extends JPanel
-		implements InitializingBean, Titled, ApplicationContextAware, ActionListener {
+		implements InitializingBean, Titled, ApplicationContextAware, ActionListener, ListDataListener {
 
 	private static final long serialVersionUID = 1679789881293611910L;
 
@@ -411,19 +414,56 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 						f -> Util.cast(AbstractButton.class, Narcissus.getField(this, f))), Objects::nonNull),
 				x -> addActionListener(x, this));
 		//
-		speechApi = testAndApply(x -> IterableUtils.size(x) == 1,
-				Util.collect(
-						Util.filter(
-								Util.stream(Util.values(
-										ListableBeanFactoryUtil.getBeansOfType(applicationContext, SpeechApi.class))),
-								x -> IterableUtils.size(Util.collect(
-										Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(x))),
-												f -> UrlValidatorUtil.isValid(UrlValidator.getInstance(),
-														Util.toString(Util.isStatic(f) ? Narcissus.getStaticField(f)
-																: Narcissus.getField(x, f)))),
-										Collectors.toList())) == 1),
-						Collectors.toList()),
-				x -> IterableUtils.get(x, 0), null);
+		Util.forEach(
+				Util.filter(
+						Util.stream(testAndApply(Objects::nonNull,
+								Util.getClass(speechApi = testAndApply(x -> IterableUtils.size(x) == 1,
+										Util.collect(
+												Util.filter(
+														Util.stream(Util.values(ListableBeanFactoryUtil
+																.getBeansOfType(applicationContext, SpeechApi.class))),
+														x -> x instanceof SpeechApi
+																&& IterableUtils.size(Util.collect(
+																		Util.filter(
+																				Util.stream(testAndApply(
+																						Objects::nonNull,
+																						Util.getClass(x),
+																						y -> FieldUtils
+																								.getAllFieldsList(y),
+																						null)),
+																				f -> UrlValidatorUtil.isValid(
+																						UrlValidator.getInstance(),
+																						Util.toString(Util.isStatic(f)
+																								? Narcissus
+																										.getStaticField(
+																												f)
+																								: Narcissus.getField(x,
+																										f)))),
+																		Collectors.toList())) == 1),
+												Collectors.toList()),
+										x -> IterableUtils.get(x, 0), null)),
+								x -> FieldUtils.getAllFieldsList(x), null)),
+						f -> Objects.equals(Util.getType(f), DefaultListModel.class)),
+				f -> {
+					//
+					DefaultListModel<?> dlm = null;
+					//
+					if ((dlm = Util.cast(DefaultListModel.class,
+							testAndApply((a, b) -> a != null && b != null, speechApi, f,
+									(a, b) -> Narcissus.getField(a, b), null))) == null
+							&& speechApi != null && f != null) {
+						//
+						(dlm = new DefaultListModel<>()).addListDataListener(this);
+						//
+						Narcissus.setField(speechApi, f, dlm);
+						//
+					} else if (dlm != null) {
+						//
+						dlm.addListDataListener(this);
+						//
+					} // if
+						//
+				});
 		//
 	}
 
@@ -1097,6 +1137,23 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	@Nullable
 	private static NodeList getElementsByTagName(@Nullable final Document instance, final String tagname) {
 		return instance != null ? instance.getElementsByTagName(tagname) : null;
+	}
+
+	@Override
+	public void intervalAdded(final ListDataEvent evt) {
+		//
+		final DefaultListModel<?> dlm = Util.cast(DefaultListModel.class, Util.getSource(evt));
+		//
+		Util.setText(tfUrl, Util.toString(dlm != null && dlm.size() == 1 ? dlm.get(0) : null));
+		//
+	}
+
+	@Override
+	public void intervalRemoved(final ListDataEvent evt) {
+	}
+
+	@Override
+	public void contentsChanged(final ListDataEvent evt) {
 	}
 
 }

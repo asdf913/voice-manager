@@ -34,10 +34,12 @@ import javax.sound.sampled.Line.Info;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.DefaultListModel;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableBiConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -74,6 +76,8 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 	private String url = null;
 
 	private IValue0<Map<String, String>> voices = null;
+
+	private DefaultListModel<URL> listModel = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
@@ -114,6 +118,14 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		//
 		final URL u = execute(url, text, getVoices(), voiceId, rate, map);
 		//
+		if ((listModel = ObjectUtils.getIfNull(listModel, DefaultListModel::new)) != null) {
+			//
+			listModel.removeAllElements();
+			//
+			listModel.addElement(u);
+			//
+		} // if
+			//
 		try (final InputStream is = testAndApply(Objects::nonNull,
 				testAndApply(Objects::nonNull, Util.openStream(u), IOUtils::toByteArray, null),
 				ByteArrayInputStream::new, null); final AudioInputStream ais = getAudioInputStream(is)) {

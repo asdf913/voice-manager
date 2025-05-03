@@ -30,10 +30,12 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
+import javax.swing.event.ListDataEvent;
 import javax.swing.text.JTextComponent;
 
 import org.apache.bcel.classfile.ClassParser;
@@ -74,6 +76,8 @@ import org.meeuw.functional.Functions;
 import org.meeuw.functional.Predicates;
 import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.TriPredicate;
+import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.EnvironmentCapable;
 import org.springframework.core.env.PropertyResolver;
@@ -191,6 +195,8 @@ class VoiceManagerOnlineTtsPanelTest {
 
 		private Object[] elements = null;
 
+		private Map<String, Object> beansOfType = null;
+
 		@Override
 		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
 			//
@@ -202,6 +208,16 @@ class VoiceManagerOnlineTtsPanelTest {
 				//
 			final String methodName = Util.getName(method);
 			//
+			if (proxy instanceof ListableBeanFactory) {
+				//
+				if (Objects.equals(methodName, "getBeansOfType")) {
+					//
+					return beansOfType;
+					//
+				} // if
+					//
+			} // if
+				//
 			if (proxy instanceof Document && Objects.equals(methodName, "getElementsByTagName")) {
 				//
 				return null;
@@ -271,6 +287,14 @@ class VoiceManagerOnlineTtsPanelTest {
 				} else if (Objects.equals(methodName, "getProperty") && args != null && args.length > 0) {
 					//
 					return Util.get(properties, args[0]);
+					//
+				} // if
+					//
+			} else if (proxy instanceof ApplicationContext) {
+				//
+				if (Objects.equals(methodName, "getAutowireCapableBeanFactory")) {
+					//
+					return null;
 					//
 				} // if
 					//
@@ -396,6 +420,56 @@ class VoiceManagerOnlineTtsPanelTest {
 		FieldUtils.writeDeclaredField(instance, "speechApi", Reflection.newProxy(SpeechApi.class, ih), true);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
+	}
+
+	@Test
+	void testIntervalAdded() {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		final DefaultListModel<?> dlm = new DefaultListModel<>();
+		//
+		final ListDataEvent lde = new ListDataEvent(dlm, 0, 0, 0);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.intervalAdded(lde));
+		//
+		dlm.addElement(null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.intervalAdded(lde));
+		//
+	}
+
+	@Test
+	void testAfterPropertiesSet() {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		if (ih != null) {
+			//
+			ih.beansOfType = Collections.singletonMap(null, null);
+			//
+		} // if
+			//
+		instance.setApplicationContext(Reflection.newProxy(ApplicationContext.class, ih));
+		//
+		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
+		//
+		if (ih != null) {
+			//
+			ih.beansOfType = Collections.singletonMap(null, Reflection.newProxy(SpeechApi.class, ih));
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> instance.afterPropertiesSet());
 		//
 	}
 
