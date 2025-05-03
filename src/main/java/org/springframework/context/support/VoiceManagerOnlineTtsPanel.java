@@ -201,6 +201,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	private ObjectMapper objectMapper = null;
 
+	@Nullable
 	private transient Entry<URL, File> entry = null;
 
 	public void setUrl(final String url) {
