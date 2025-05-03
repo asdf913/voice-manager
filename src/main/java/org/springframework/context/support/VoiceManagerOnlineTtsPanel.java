@@ -866,7 +866,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 			final File file = Util.getValue(entry);
 			//
-			if (Util.exists(file) && Util.isFile(file) && file != null && file.canRead()) {
+			if (Boolean.logicalAnd(Util.exists(file), Util.isFile(file)) && file != null && file.canRead()) {
 				//
 				final Iterable<Method> ms = Util
 						.collect(
