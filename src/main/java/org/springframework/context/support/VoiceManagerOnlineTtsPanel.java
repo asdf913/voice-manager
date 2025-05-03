@@ -1330,10 +1330,12 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static <E> E get(@Nullable final DefaultListModel<E> instance, final int index) {
 		return instance != null ? instance.get(index) : null;
 	}
 
+	@Nullable
 	private static String nextAlphabetic(@Nullable final RandomStringUtils instance, final int count) {
 		return instance != null ? instance.nextAlphabetic(count) : null;
 	}
