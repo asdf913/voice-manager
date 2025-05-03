@@ -192,6 +192,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	private String key = null;
 
+	private ObjectMapper objectMapper = null;
+
 	public void setUrl(final String url) {
 		this.url = url;
 	}
@@ -836,7 +838,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			try {
 				//
 				if (!Objects.equals(keyTemp = testAndApply(Objects::nonNull,
-						ObjectMapperUtil.writeValueAsString(new ObjectMapper(),
+						ObjectMapperUtil.writeValueAsString(
+								objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new),
 								new Object[] { Util.getText(taText), Util.getSelectedItem(cbmVoice),
 										Util.getText(tfQuality), Util.getText(tfPitch), Util.getText(tfDuration) }),
 						DigestUtils::sha512Hex, null), key)) {
