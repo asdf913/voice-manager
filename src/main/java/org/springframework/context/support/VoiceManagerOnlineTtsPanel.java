@@ -887,20 +887,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				if (Util.isStatic(m)) {
 					//
-					try {
-						//
-						Narcissus.invokeStaticMethod(m, new ByteArrayResource(Files.readAllBytes(Util.toPath(file))));
-						//
-					} catch (final IOException e) {
-						//
-						throw new RuntimeException(e);
-						//
-					} finally {
-						//
-						setText(tfElapsed, stopwatch);
-						//
-					} // try
-						//
+					Narcissus.invokeStaticMethod(m, createInputStreamSource(file));
+					//
+					setText(tfElapsed, stopwatch);
+					//
 					return true;
 					//
 				} // if
@@ -992,6 +982,21 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 		return false;
 		//
+	}
+
+	private static InputStreamSource createInputStreamSource(final File file) {
+		//
+		try {
+			//
+			return testAndApply(Objects::nonNull, testAndApply(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)),
+					file, x -> Files.readAllBytes(Util.toPath(x)), null), x -> new ByteArrayResource(x), null);
+			//
+		} catch (final IOException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
 	}
 
 	private static String sha512Hex(final VoiceManagerOnlineTtsPanel instance, final ObjectMapper objectMapper) {

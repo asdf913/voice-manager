@@ -7,6 +7,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
@@ -82,6 +83,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.EnvironmentCapable;
 import org.springframework.core.env.PropertyResolver;
+import org.springframework.core.io.InputStreamSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -102,7 +104,8 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
 			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING,
 			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE,
-			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_SHA512HEX = null;
+			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_SHA512HEX,
+			METHOD_CREATE_INPUT_STREAM_SOURCE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -182,6 +185,9 @@ class VoiceManagerOnlineTtsPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_SHA512HEX = clz.getDeclaredMethod("sha512Hex", clz, ObjectMapper.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_INPUT_STREAM_SOURCE = clz.getDeclaredMethod("createInputStreamSource", File.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -1210,6 +1216,39 @@ class VoiceManagerOnlineTtsPanelTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreateInputStreamSource() throws Throwable {
+		//
+		Assertions.assertNull(createInputStreamSource(new File(".")));
+		//
+		final File file = new File("pom.xml");
+		//
+		if (Util.exists(file)) {
+			//
+			Assertions.assertNotNull(createInputStreamSource(file));
+			//
+		} else {
+			//
+			Assertions.assertNull(createInputStreamSource(file));
+			//
+		} // if
+			//
+	}
+
+	private static InputStreamSource createInputStreamSource(final File file) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_INPUT_STREAM_SOURCE.invoke(null, file);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof InputStreamSource) {
+				return (InputStreamSource) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
