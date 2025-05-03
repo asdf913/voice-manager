@@ -133,7 +133,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 			//
 	}
 
-	private static void speak(final URL u, final DefaultListModel<Object> listModel)
+	private static void speak(final URL u, @Nullable final DefaultListModel<Object> listModel)
 			throws IOException, UnsupportedAudioFileException, LineUnavailableException {
 		//
 		final byte[] bs = testAndApply(Objects::nonNull, Util.openStream(u), IOUtils::toByteArray, null);
