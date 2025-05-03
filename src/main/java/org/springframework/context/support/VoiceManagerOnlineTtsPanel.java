@@ -999,7 +999,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 	}
 
-	private static String sha512Hex(final VoiceManagerOnlineTtsPanel instance, final ObjectMapper objectMapper) {
+	private static String sha512Hex(@Nullable final VoiceManagerOnlineTtsPanel instance,
+			final ObjectMapper objectMapper) {
 		//
 		try {
 			//
