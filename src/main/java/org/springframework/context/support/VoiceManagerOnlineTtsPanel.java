@@ -829,11 +829,11 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 			final String urlString = Util.getText(tfUrl);
 			//
-			URL url = null;
+			URL u = null;
 			//
 			try {
 				//
-				url = testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x), urlString, URL::new,
+				u = testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x), urlString, URL::new,
 						null);
 				//
 			} catch (final MalformedURLException e) {
@@ -842,7 +842,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 			} // try
 				//
-			if (url != null) {
+			if (u != null) {
 				//
 				final Iterable<Method> ms = Util.collect(
 						Util.filter(
@@ -862,7 +862,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				if (m != null && Util.isStatic(m)) {
 					//
-					Narcissus.invokeStaticMethod(m, url);
+					Narcissus.invokeStaticMethod(m, u);
 					//
 					return true;
 					//
