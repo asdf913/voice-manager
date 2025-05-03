@@ -208,14 +208,10 @@ class VoiceManagerOnlineTtsPanelTest {
 				//
 			final String methodName = Util.getName(method);
 			//
-			if (proxy instanceof ListableBeanFactory) {
+			if (proxy instanceof ListableBeanFactory && Objects.equals(methodName, "getBeansOfType")) {
 				//
-				if (Objects.equals(methodName, "getBeansOfType")) {
-					//
-					return beansOfType;
-					//
-				} // if
-					//
+				return beansOfType;
+				//
 			} // if
 				//
 			if (proxy instanceof Document && Objects.equals(methodName, "getElementsByTagName")) {
@@ -290,14 +286,11 @@ class VoiceManagerOnlineTtsPanelTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof ApplicationContext) {
+			} else if (proxy instanceof ApplicationContext
+					&& Objects.equals(methodName, "getAutowireCapableBeanFactory")) {
 				//
-				if (Objects.equals(methodName, "getAutowireCapableBeanFactory")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
