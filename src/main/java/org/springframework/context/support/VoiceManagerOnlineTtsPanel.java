@@ -415,43 +415,38 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				x -> addActionListener(x, this));
 		//
 		Util.forEach(
-				Util.filter(
-						Util.stream(testAndApply(Objects::nonNull,
-								Util.getClass(speechApi = testAndApply(x -> IterableUtils.size(x) == 1,
-										Util.collect(
-												Util.filter(
-														Util.stream(Util.values(ListableBeanFactoryUtil
-																.getBeansOfType(applicationContext, SpeechApi.class))),
-														x -> x instanceof SpeechApi
-																&& IterableUtils.size(Util.collect(
-																		Util.filter(
-																				Util.stream(testAndApply(
+				Util.filter(Util
+						.stream(testAndApply(
+								Objects::nonNull, Util
+										.getClass(
+												speechApi = testAndApply(x -> IterableUtils.size(x) == 1, Util.collect(
+														Util.filter(
+																Util.stream(Util
+																		.values(ListableBeanFactoryUtil.getBeansOfType(
+																				applicationContext, SpeechApi.class))),
+																x -> x instanceof SpeechApi
+																		&& IterableUtils.size(Util.collect(
+																				Util.filter(Util.stream(testAndApply(
 																						Objects::nonNull,
 																						Util.getClass(x),
-																						y -> FieldUtils
-																								.getAllFieldsList(y),
+																						FieldUtils::getAllFieldsList,
 																						null)),
-																				f -> UrlValidatorUtil.isValid(
-																						UrlValidator.getInstance(),
-																						Util.toString(Util.isStatic(f)
-																								? Narcissus
-																										.getStaticField(
-																												f)
-																								: Narcissus.getField(x,
-																										f)))),
-																		Collectors.toList())) == 1),
-												Collectors.toList()),
-										x -> IterableUtils.get(x, 0), null)),
-								x -> FieldUtils.getAllFieldsList(x), null)),
+																						f -> UrlValidatorUtil.isValid(
+																								UrlValidator
+																										.getInstance(),
+																								Util.toString(
+																										Util.isStatic(
+																												f) ? Narcissus.getStaticField(f) : Narcissus.getField(x, f)))),
+																				Collectors.toList())) == 1),
+														Collectors.toList()), x -> IterableUtils.get(x, 0), null)),
+								FieldUtils::getAllFieldsList, null)),
 						f -> Objects.equals(Util.getType(f), DefaultListModel.class)),
 				f -> {
 					//
 					DefaultListModel<?> dlm = null;
 					//
-					if ((dlm = Util.cast(DefaultListModel.class,
-							testAndApply((a, b) -> a != null && b != null, speechApi, f,
-									(a, b) -> Narcissus.getField(a, b), null))) == null
-							&& speechApi != null && f != null) {
+					if ((dlm = Util.cast(DefaultListModel.class, testAndApply((a, b) -> a != null && b != null,
+							speechApi, f, Narcissus::getField, null))) == null && speechApi != null && f != null) {
 						//
 						(dlm = new DefaultListModel<>()).addListDataListener(this);
 						//
