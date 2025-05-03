@@ -901,7 +901,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				final Method m = testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null);
 				//
-				if (m != null && Util.isStatic(m)) {
+				if (Util.isStatic(m)) {
 					//
 					try {
 						//
