@@ -933,8 +933,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
-	private static void speak(final SpeechApi instance, final String text, final String voiceId, final int rate,
-			final int volume, final Map<String, Object> map) {
+	private static void speak(@Nullable final SpeechApi instance, final String text, final String voiceId,
+			final int rate, final int volume, final Map<String, Object> map) {
 		if (instance != null) {
 			instance.speak(text, voiceId, rate, volume, map);
 		}
