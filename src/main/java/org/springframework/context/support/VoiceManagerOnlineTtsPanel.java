@@ -1012,7 +1012,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		return instance != null && instance.canRead();
 	}
 
-	private static InputStreamSource createInputStreamSource(final File file) {
+	private static InputStreamSource createInputStreamSource(@Nullable final File file) {
 		//
 		try {
 			//
