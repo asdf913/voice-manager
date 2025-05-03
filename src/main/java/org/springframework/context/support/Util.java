@@ -1888,6 +1888,7 @@ public abstract class Util {
 		}
 	}
 
+	@Nullable
 	static Object getSelectedItem(@Nullable final ComboBoxModel<?> instance) {
 		return instance != null ? instance.getSelectedItem() : null;
 	}
