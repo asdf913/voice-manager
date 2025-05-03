@@ -1325,11 +1325,11 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
-	private static <E> E get(final DefaultListModel<E> instance, final int index) {
+	private static <E> E get(@Nullable final DefaultListModel<E> instance, final int index) {
 		return instance != null ? instance.get(index) : null;
 	}
 
-	private static String nextAlphabetic(final RandomStringUtils instance, final int count) {
+	private static String nextAlphabetic(@Nullable final RandomStringUtils instance, final int count) {
 		return instance != null ? instance.nextAlphabetic(count) : null;
 	}
 
