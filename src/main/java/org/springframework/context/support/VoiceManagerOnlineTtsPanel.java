@@ -59,6 +59,7 @@ import javax.swing.event.ListDataListener;
 import javax.swing.plaf.basic.BasicFileChooserUI;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
@@ -117,6 +118,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.StopwatchUtil;
 
@@ -185,6 +189,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	private Map<String, String> voices = null;
 
 	private transient SpeechApi speechApi = null;
+
+	private String key = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
@@ -825,6 +831,26 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 		} else if (Objects.equals(source, btnPlayAudio)) {
 			//
+			String keyTemp = null;
+			//
+			try {
+				//
+				if (!Objects.equals(keyTemp = testAndApply(Objects::nonNull,
+						ObjectMapperUtil.writeValueAsString(new ObjectMapper(),
+								new Object[] { Util.getText(taText), Util.getSelectedItem(cbmVoice),
+										Util.getText(tfQuality), Util.getText(tfPitch), Util.getText(tfDuration) }),
+						DigestUtils::sha512Hex, null), key)) {
+					//
+					Util.setText(tfUrl, null);
+					//
+				} // if
+					//
+			} catch (final JsonProcessingException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
 			Util.setText(tfErrorMessage, null);
 			//
 			final String urlString = Util.getText(tfUrl);
@@ -838,7 +864,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 			} catch (final MalformedURLException e) {
 				//
-				LoggerUtil.error(LOG, e.getMessage(), e);
+				throw new RuntimeException(e);
 				//
 			} // try
 				//
@@ -893,6 +919,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 							NumberUtils.toInt(Util.getText(tfDuration), 0)// TODO
 							, 0// TODO volume
 							, map);
+					//
+					key = keyTemp;
 					//
 				} catch (final RuntimeException e) {
 					//
