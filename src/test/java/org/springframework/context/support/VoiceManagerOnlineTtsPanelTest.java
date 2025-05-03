@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1226,9 +1227,9 @@ class VoiceManagerOnlineTtsPanelTest {
 	@Test
 	void testCreateInputStreamSource() throws Throwable {
 		//
-		Assertions.assertNull(createInputStreamSource(new File(".")));
+		Assertions.assertNull(createInputStreamSource(Util.toFile(Paths.get("."))));
 		//
-		final File file = new File("pom.xml");
+		final File file = Util.toFile(Paths.get("pom.xml"));
 		//
 		if (Util.exists(file)) {
 			//
