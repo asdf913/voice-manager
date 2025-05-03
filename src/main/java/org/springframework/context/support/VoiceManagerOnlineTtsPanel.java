@@ -23,6 +23,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
@@ -903,11 +904,15 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 					//
 					try {
 						//
-						Narcissus.invokeStaticMethod(m, new ByteArrayResource(FileUtils.readFileToByteArray(file)));
+						Narcissus.invokeStaticMethod(m, new ByteArrayResource(Files.readAllBytes(Util.toPath(file))));
 						//
 					} catch (final IOException e) {
 						//
 						throw new RuntimeException(e);
+						//
+					} finally {
+						//
+						setText(tfElapsed, stopwatch);
 						//
 					} // try
 						//
@@ -955,6 +960,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			if (Boolean.logicalAnd(Util.isStatic(m), u != null)) {
 				//
 				Narcissus.invokeStaticMethod(m, u);
+				//
+				setText(tfElapsed, stopwatch);
 				//
 				return true;
 				//
