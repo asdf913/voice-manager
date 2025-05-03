@@ -770,12 +770,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				Util.forEach(Arrays.asList(btnCopy, btnDownload),
 						x -> setEnabled(x, UrlValidatorUtil.isValid(UrlValidator.getInstance(), Util.getText(tfUrl))));
 				//
-				final String string = Util.toString(StopwatchUtil.elapsed(stopwatch));
-				//
-				final Matcher matcher = Util.matcher(Pattern.compile("^PT(((\\d+)(.\\d+)?)S)$"), string);
-				//
-				testAndRun(and(matcher, Util::matches, x -> Util.groupCount(x) > 0),
-						() -> Util.setText(tfElapsed, Util.group(matcher, 1)), () -> Util.setText(tfElapsed, string));
+				setText(tfElapsed, stopwatch);
 				//
 			} // try
 				//
@@ -822,6 +817,17 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 	}
 
+	private static void setText(final JTextComponent jtc, final Stopwatch stopwatch) {
+		//
+		final String string = Util.toString(StopwatchUtil.elapsed(stopwatch));
+		//
+		final Matcher matcher = Util.matcher(Pattern.compile("^PT(((\\d+)(.\\d+)?)S)$"), string);
+		//
+		testAndRun(and(matcher, Util::matches, x -> Util.groupCount(x) > 0),
+				() -> Util.setText(jtc, Util.group(matcher, 1)), () -> Util.setText(jtc, string));
+		//
+	}
+
 	private boolean actionPerformed(final Object source) {
 		//
 		if (Objects.equals(source, btnCopy)) {
@@ -832,6 +838,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			return true;
 			//
 		} else if (Objects.equals(source, btnPlayAudio)) {
+			//
+			final Stopwatch stopwatch = Stopwatch.createStarted();
 			//
 			String keyTemp = null;
 			//
@@ -852,6 +860,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 				throw new RuntimeException(e);
 				//
+			} finally {
+				//
+				setText(tfElapsed, stopwatch);
+				//
 			} // try
 				//
 			Util.setText(tfErrorMessage, null);
@@ -868,6 +880,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			} catch (final MalformedURLException e) {
 				//
 				throw new RuntimeException(e);
+				//
+			} finally {
+				//
+				setText(tfElapsed, stopwatch);
 				//
 			} // try
 				//
@@ -922,6 +938,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			} catch (final RuntimeException e) {
 				//
 				Util.setText(tfErrorMessage, e.getMessage());
+				//
+			} finally {
+				//
+				setText(tfElapsed, stopwatch);
 				//
 			} // try
 				//
