@@ -326,15 +326,8 @@ public class FuriganaHtmlBuilderFailableFunction implements FailableFunction<Str
 	private static <T, U, E extends Exception> void testAndAccept(final BiPredicate<T, U> instance, final T t,
 			final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
 		if (test(instance, t, u)) {
-			accept(consumer, t, u);
+			FailableBiConsumerUtil.accept(consumer, t, u);
 		} // if
-	}
-
-	private static <T, U, E extends Exception> void accept(final FailableBiConsumer<T, U, E> instance, final T t,
-			final U u) throws E {
-		if (instance != null) {
-			instance.accept(t, u);
-		}
 	}
 
 	private static <T, U> boolean test(final BiPredicate<T, U> instance, final T t, final U u) {

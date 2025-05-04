@@ -77,6 +77,7 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableBiConsumer;
+import org.apache.commons.lang3.function.FailableBiConsumerUtil;
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableConsumer;
@@ -1549,15 +1550,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, final T t,
 			final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
 		if (Util.test(instance, t, u)) {
-			accept(consumer, t, u);
+			FailableBiConsumerUtil.accept(consumer, t, u);
 		} // if
-	}
-
-	private static <T, U, E extends Throwable> void accept(@Nullable final FailableBiConsumer<T, U, E> instance,
-			final T t, final U u) throws E {
-		if (instance != null) {
-			instance.accept(t, u);
-		}
 	}
 
 	@Nullable

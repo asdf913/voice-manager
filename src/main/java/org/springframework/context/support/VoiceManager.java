@@ -107,6 +107,7 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableBiConsumer;
+import org.apache.commons.lang3.function.FailableBiConsumerUtil;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -1760,7 +1761,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, final T t,
 			@Nullable final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
 		if (Util.test(instance, t, u)) {
-			accept(consumer, t, u);
+			FailableBiConsumerUtil.accept(consumer, t, u);
 		} // if
 	}
 
@@ -2285,13 +2286,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	@Nullable
 	private static <T> Spliterator<T> spliterator(@Nullable final Iterable<T> instance) {
 		return instance != null ? instance.spliterator() : null;
-	}
-
-	private static <T, U, E extends Throwable> void accept(@Nullable final FailableBiConsumer<T, U, E> instance,
-			final T t, @Nullable final U u) throws E {
-		if (instance != null) {
-			instance.accept(t, u);
-		}
 	}
 
 	private static <T, E extends Throwable> void forEach(@Nullable final Iterable<T> items,

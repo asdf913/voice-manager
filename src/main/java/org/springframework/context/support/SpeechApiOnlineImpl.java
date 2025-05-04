@@ -42,6 +42,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableBiConsumer;
+import org.apache.commons.lang3.function.FailableBiConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -282,8 +283,8 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 
 	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> predicate,
 			@Nullable final T t, final U u, @Nullable final FailableBiConsumer<T, U, E> consumer) throws E {
-		if (Util.test(predicate, t, u) && consumer != null) {
-			consumer.accept(t, u);
+		if (Util.test(predicate, t, u)) {
+			FailableBiConsumerUtil.accept(consumer, t, u);
 		} // if
 	}
 

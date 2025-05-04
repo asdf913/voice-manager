@@ -71,6 +71,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableBiConsumer;
+import org.apache.commons.lang3.function.FailableBiConsumerUtil;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -1373,8 +1374,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, final T t,
 			final U u, final FailableBiConsumer<T, U, E> consumer) throws E {
-		if (Util.test(instance, t, u) && consumer != null) {
-			consumer.accept(t, u);
+		if (Util.test(instance, t, u)) {
+			FailableBiConsumerUtil.accept(consumer, t, u);
 		} // if
 	}
 
