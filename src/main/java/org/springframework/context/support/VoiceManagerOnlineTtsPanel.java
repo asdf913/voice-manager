@@ -204,7 +204,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	@Nullable
 	private transient Entry<URL, File> entry = null;
 
-	private Iterable<DefaultListModel<?>> dlms = null;
+	private transient Iterable<DefaultListModel<?>> dlms = null;
 
 	public void setUrl(final String url) {
 		this.url = url;
