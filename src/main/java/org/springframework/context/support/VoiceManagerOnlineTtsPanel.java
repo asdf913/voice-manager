@@ -1360,7 +1360,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			} // if
 				//
 			testAndAccept((a, b) -> Boolean.logicalAnd(a != null, b != null), file, bs,
-					(a, b) -> FileUtils.writeByteArrayToFile(a, b));
+					FileUtils::writeByteArrayToFile);
 			//
 		} catch (final IOException e) {
 			//
