@@ -1336,7 +1336,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	public void intervalAdded(final ListDataEvent evt) {
 		//
 		final Entry<?, ?> en = Util.cast(Entry.class, testAndApply(x -> x != null && x.size() == 1,
-				Util.cast(DefaultListModel.class, Util.getSource(evt)), x -> get(x, 0), null));
+				Util.cast(DefaultListModel.class, Util.getSource(evt)), x -> getElementAt(x, 0), null));
 		//
 		FileUtils.deleteQuietly(Util.getValue(entry));
 		//
@@ -1374,8 +1374,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	}
 
 	@Nullable
-	private static <E> E get(@Nullable final DefaultListModel<E> instance, final int index) {
-		return instance != null ? instance.get(index) : null;
+	private static <E> E getElementAt(@Nullable final ListModel<E> instance, final int index) {
+		return instance != null ? instance.getElementAt(index) : null;
 	}
 
 	@Nullable
