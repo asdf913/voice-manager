@@ -146,9 +146,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 			//
 		} // if
 			//
-		speak(() -> testAndApply(Objects::nonNull,
-				testAndApply(Objects::nonNull, Util.openStream(u), IOUtils::toByteArray, null),
-				ByteArrayInputStream::new, null));
+		speak(() -> testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null));
 		//
 	}
 
