@@ -204,6 +204,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	@Nullable
 	private transient Entry<URL, File> entry = null;
 
+	private Iterable<DefaultListModel<?>> dlms = null;
+
 	public void setUrl(final String url) {
 		this.url = url;
 	}
@@ -434,7 +436,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				x -> addActionListener(x, this));
 		//
 		Util.forEach(
-				Util.filter(Util
+				dlms = Util.toList(Util.map(Util.filter(Util
 						.stream(testAndApply(
 								Objects::nonNull, Util
 										.getClass(
@@ -459,26 +461,31 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 																				Collectors.toList())) == 1),
 														Collectors.toList()), x -> IterableUtils.get(x, 0), null)),
 								FieldUtils::getAllFieldsList, null)),
-						f -> Objects.equals(Util.getType(f), DefaultListModel.class)),
-				f -> {
-					//
-					DefaultListModel<?> dlm = null;
-					//
-					if ((dlm = Util.cast(DefaultListModel.class, testAndApply((a, b) -> a != null && b != null,
-							speechApi, f, Narcissus::getField, null))) == null && speechApi != null && f != null) {
-						//
-						(dlm = new DefaultListModel<>()).addListDataListener(this);
-						//
-						Narcissus.setField(speechApi, f, dlm);
-						//
-					} else if (dlm != null) {
-						//
-						dlm.addListDataListener(this);
-						//
-					} // if
-						//
-				});
+						f -> Objects.equals(Util.getType(f), DefaultListModel.class)), f -> {
+							//
+							DefaultListModel<?> dlm = null;
+							//
+							if ((dlm = Util
+									.cast(DefaultListModel.class,
+											testAndApply((a, b) -> a != null && b != null, speechApi, f,
+													Narcissus::getField, null))) == null
+									&& speechApi != null && f != null) {
+								//
+								Narcissus.setField(speechApi, f, dlm = new DefaultListModel<>());
+								//
+							} // if
+								//
+							return dlm;
+							//
+						})),
+				x -> addListDataListener(x, this));
 		//
+	}
+
+	private static void addListDataListener(final ListModel<?> instance, final ListDataListener listener) {
+		if (instance != null) {
+			instance.addListDataListener(listener);
+		}
 	}
 
 	private static void setEnabled(@Nullable final AbstractButton instance, final boolean b) {
@@ -935,7 +942,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 			if (Boolean.logicalAnd(Util.isStatic(m), u != null)) {
 				//
-				Narcissus.invokeStaticMethod(m, u, null);
+				Narcissus.invokeStaticMethod(m, u,
+						testAndApply(x -> IterableUtils.size(x) == 1, dlms, x -> IterableUtils.get(x, 0), null));
 				//
 				setText(tfElapsed, stopwatch);
 				//

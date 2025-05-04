@@ -38,6 +38,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import javax.swing.text.JTextComponent;
 
 import org.apache.bcel.classfile.ClassParser;
@@ -105,7 +106,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING,
 			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE,
 			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_SHA512HEX,
-			METHOD_CREATE_INPUT_STREAM_SOURCE, METHOD_CAN_READ, METHOD_AND = null;
+			METHOD_CREATE_INPUT_STREAM_SOURCE, METHOD_CAN_READ, METHOD_AND, METHOD_ADD_LIST_DATA_LISTENER = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -192,6 +193,9 @@ class VoiceManagerOnlineTtsPanelTest {
 		(METHOD_CAN_READ = clz.getDeclaredMethod("canRead", File.class)).setAccessible(true);
 		//
 		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
+		//
+		(METHOD_ADD_LIST_DATA_LISTENER = clz.getDeclaredMethod("addListDataListener", ListModel.class,
+				ListDataListener.class)).setAccessible(true);
 		//
 	}
 
@@ -1300,6 +1304,22 @@ class VoiceManagerOnlineTtsPanelTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddListDataListener() {
+		//
+		Assertions.assertDoesNotThrow(() -> addListDataListener(Reflection.newProxy(ListModel.class, ih), null));
+		//
+	}
+
+	private static void addListDataListener(final ListModel<?> instance, final ListDataListener listener)
+			throws Throwable {
+		try {
+			METHOD_ADD_LIST_DATA_LISTENER.invoke(null, instance, listener);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
