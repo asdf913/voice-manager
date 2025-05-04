@@ -921,7 +921,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 							testAndApply(Objects::nonNull, Util.getDeclaredMethods(Util.getClass(speechApi)),
 									Arrays::stream, null),
 							m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "speak"),
-									Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { URL.class }))),
+									Arrays.equals(Util.getParameterTypes(m),
+											new Class<?>[] { URL.class, DefaultListModel.class }))),
 					Collectors.toList());
 			//
 			testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
@@ -934,7 +935,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 			if (Boolean.logicalAnd(Util.isStatic(m), u != null)) {
 				//
-				Narcissus.invokeStaticMethod(m, u);
+				Narcissus.invokeStaticMethod(m, u, null);
 				//
 				setText(tfElapsed, stopwatch);
 				//
