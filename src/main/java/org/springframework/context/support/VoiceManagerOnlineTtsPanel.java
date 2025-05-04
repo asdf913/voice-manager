@@ -482,7 +482,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
-	private static void addListDataListener(final ListModel<?> instance, final ListDataListener listener) {
+	private static void addListDataListener(@Nullable final ListModel<?> instance, final ListDataListener listener) {
 		if (instance != null) {
 			instance.addListDataListener(listener);
 		}
