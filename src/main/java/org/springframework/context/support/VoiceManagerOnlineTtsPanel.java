@@ -965,10 +965,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			try {
 				//
 				final Map<String, Object> map = Util
-						.filter(Util.map(Util.filter(Stream.of(tfQuality, tfPitch), Objects::nonNull), x -> {
-							return getStringObjectEntry(getAnnotatedElementObjectEntry(this, x));
-						}), Objects::nonNull).collect(LinkedHashMap::new,
-								(k, v) -> Util.put(k, Util.getKey(v), Util.getValue(v)), Util::putAll);
+						.filter(Util.map(Util.filter(Stream.of(tfQuality, tfPitch), Objects::nonNull),
+								x -> getStringObjectEntry(getAnnotatedElementObjectEntry(this, x))), Objects::nonNull)
+						.collect(LinkedHashMap::new, (k, v) -> Util.put(k, Util.getKey(v), Util.getValue(v)),
+								Util::putAll);
 				//
 				speak(speechApi, Util.getText(taText),
 						testAndApply(x -> IterableUtils.size(x) == 1, keys, x -> IterableUtils.get(x, 0), null),
