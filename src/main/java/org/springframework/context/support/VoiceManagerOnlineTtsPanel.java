@@ -796,8 +796,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 			final Stopwatch stopwatch = Stopwatch.createStarted();
 			//
-			Util.setText(tfErrorMessage, null);
-			//
 			URL u = null;
 			//
 			final String keyTemp = sha512Hex(this,
@@ -808,6 +806,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				Util.setText(tfUrl, null);
 				//
 			});
+			//
+			Util.setText(tfErrorMessage, null);
 			//
 			try {
 				//
