@@ -803,12 +803,12 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			final String keyTemp = sha512Hex(this,
 					objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new));
 			//
-			if (!Objects.equals(keyTemp, key)) {
+			testAndRunThrows(!Objects.equals(keyTemp, key), () -> {
 				//
 				Util.setText(tfUrl, null);
 				//
-			} // if
-				//
+			});
+			//
 			try {
 				//
 				if ((u = testAndApply(StringUtils::isNotBlank, Util.getText(tfUrl), URL::new, null)) == null) {
