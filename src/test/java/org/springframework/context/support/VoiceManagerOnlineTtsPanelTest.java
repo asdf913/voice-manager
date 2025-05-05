@@ -9,7 +9,9 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -107,7 +109,8 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING,
 			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE,
 			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_SHA512HEX,
-			METHOD_CREATE_INPUT_STREAM_SOURCE, METHOD_CAN_READ, METHOD_AND, METHOD_ADD_LIST_DATA_LISTENER = null;
+			METHOD_CREATE_INPUT_STREAM_SOURCE, METHOD_CAN_READ, METHOD_AND, METHOD_ADD_LIST_DATA_LISTENER,
+			METHOD_GET_ANNOTATED_ELEMENT_OBJECT_ENTRY = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -200,6 +203,9 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_ADD_LIST_DATA_LISTENER = clz.getDeclaredMethod("addListDataListener", ListModel.class,
 				ListDataListener.class)).setAccessible(true);
+		//
+		(METHOD_GET_ANNOTATED_ELEMENT_OBJECT_ENTRY = clz.getDeclaredMethod("getAnnotatedElementObjectEntry",
+				Object.class, Object.class)).setAccessible(true);
 		//
 	}
 
@@ -1339,6 +1345,38 @@ class VoiceManagerOnlineTtsPanelTest {
 			throws Throwable {
 		try {
 			METHOD_ADD_LIST_DATA_LISTENER.invoke(null, instance, listener);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetAnnotatedElementObjectEntry() throws Throwable {
+		//
+		final VoiceManagerOnlineTtsPanel instance = new VoiceManagerOnlineTtsPanel();
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> getAnnotatedElementObjectEntry(instance, null));
+		//
+		final Entry<Field, Object> entry = Util
+				.orElse(Util.map(
+						Util.stream(testAndApply(Objects::nonNull, Util.getClass(instance),
+								x -> FieldUtils.getAllFieldsList(x), null)),
+						f -> Util.isStatic(f) ? Pair.of(f, Narcissus.getStaticField(f)) : null).findFirst(), null);
+		//
+		Assertions.assertEquals(entry, getAnnotatedElementObjectEntry(instance, Util.getValue(entry)));
+		//
+	}
+
+	private static Entry<AnnotatedElement, Object> getAnnotatedElementObjectEntry(final Object instance,
+			final Object value) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ANNOTATED_ELEMENT_OBJECT_ENTRY.invoke(null, instance, value);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Entry) {
+				return (Entry) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -19,6 +19,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -27,7 +28,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -964,10 +964,29 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			//
 			try {
 				//
-				final Map<String, Object> map = new LinkedHashMap<>(
-						Collections.singletonMap("SYNALPHA", Util.getText(tfQuality)));
-				//
-				Util.put(map, "F0SHIFT", Util.getText(tfPitch));
+				final Map<String, Object> map = Util
+						.filter(Util.map(Util.map(Util.filter(Stream.of(tfQuality, tfPitch), Objects::nonNull),
+								x -> getAnnotatedElementObjectEntry(this, x)), x -> {
+									//
+									final AnnotatedElement ae = Util.getKey(x);
+									//
+									if (Util.isAnnotationPresent(ae, Name.class)) {
+										//
+										final Object v = Util.getValue(x);
+										//
+										return Pair.of(value(Util.getAnnotation(ae, Name.class)),
+												v instanceof JTextComponent jtc ? Util.getText(jtc) : v);
+										//
+									} // if
+										//
+									return null;
+									//
+								}), Objects::nonNull)
+						.collect(LinkedHashMap::new, (k, v) -> {
+							Util.put(k, Util.getKey(v), Util.getValue(v));
+						}, (k, v) -> {
+							Util.putAll(k, v);
+						});
 				//
 				speak(speechApi, Util.getText(taText),
 						testAndApply(x -> IterableUtils.size(x) == 1, keys, x -> IterableUtils.get(x, 0), null),
@@ -992,6 +1011,25 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		} // if
 			//
 		return false;
+		//
+	}
+
+	private static Entry<AnnotatedElement, Object> getAnnotatedElementObjectEntry(final Object instance,
+			final Object value) {
+		//
+		final List<Field> fs = Util.toList(Util.filter(
+				Util.stream(testAndApply(Objects::nonNull, Util.getClass(instance), x -> FieldUtils.getAllFieldsList(x),
+						null)),
+				f -> Objects.equals(Util.isStatic(f) ? Narcissus.getStaticField(f) : Narcissus.getField(instance, f),
+						value)));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		return IterableUtils.size(fs) == 1 ? Pair.of(IterableUtils.get(fs, 0), value) : null;
 		//
 	}
 
