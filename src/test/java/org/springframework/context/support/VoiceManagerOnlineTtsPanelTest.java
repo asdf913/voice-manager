@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -35,7 +34,6 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -55,9 +53,7 @@ import org.apache.bcel.generic.Instruction;
 import org.apache.bcel.generic.InstructionListUtil;
 import org.apache.bcel.generic.LDC;
 import org.apache.bcel.generic.MethodGen;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -70,12 +66,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.MutableTriple;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.TripleUtil;
-import org.htmlunit.SgmlPage;
-import org.htmlunit.html.DomElement;
 import org.htmlunit.html.DomNode;
-import org.htmlunit.html.HtmlOption;
-import org.htmlunit.html.HtmlPage;
-import org.htmlunit.html.HtmlSelect;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.jsoup.nodes.Element;
@@ -93,10 +84,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.EnvironmentCapable;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.io.InputStreamSource;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.reflect.Reflection;
@@ -108,14 +95,12 @@ import javassist.util.proxy.ProxyUtil;
 class VoiceManagerOnlineTtsPanelTest {
 
 	private static Method METHOD_GET_LAYOUT_MANAGER, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
-			METHOD_TEST_AND_APPLY6, METHOD_QUERY_SELECTOR, METHOD_GET_ELEMENTS_BY_TAG_NAME, METHOD_TEST_AND_ACCEPT3,
-			METHOD_TEST_AND_ACCEPT4, METHOD_GET_ATTRIBUTE, METHOD_PREVIOUS_ELEMENT_SIBLING, METHOD_GET_ELEMENTS_BY_NAME,
-			METHOD_GET_VALUE_ATTRIBUTE, METHOD_GET_OPTIONS, METHOD_TEST_AND_RUN_THROWS, METHOD_SET_VALUES,
-			METHOD_SELECT_STREAM, METHOD_SET_SELECTED_INDEX, METHOD_SET_EDITABLE, METHOD_GET_NEXT_ELEMENT_SIBLING,
-			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE,
-			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_SHA512HEX,
-			METHOD_CREATE_INPUT_STREAM_SOURCE, METHOD_CAN_READ, METHOD_AND, METHOD_ADD_LIST_DATA_LISTENER,
-			METHOD_GET_ANNOTATED_ELEMENT_OBJECT_ENTRY, METHOD_GET_STRING_OBJECT_ENTRY = null;
+			METHOD_TEST_AND_APPLY6, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_PREVIOUS_ELEMENT_SIBLING,
+			METHOD_TEST_AND_RUN_THROWS, METHOD_SELECT_STREAM, METHOD_SET_EDITABLE, METHOD_SET_CONTENTS,
+			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE, METHOD_EQUALS,
+			METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_SHA512HEX, METHOD_CREATE_INPUT_STREAM_SOURCE,
+			METHOD_CAN_READ, METHOD_AND, METHOD_ADD_LIST_DATA_LISTENER, METHOD_GET_ANNOTATED_ELEMENT_OBJECT_ENTRY,
+			METHOD_GET_STRING_OBJECT_ENTRY = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -134,46 +119,21 @@ class VoiceManagerOnlineTtsPanelTest {
 		(METHOD_TEST_AND_APPLY6 = clz.getDeclaredMethod("testAndApply", TriPredicate.class, Object.class, Object.class,
 				Object.class, TriFunction.class, TriFunction.class)).setAccessible(true);
 		//
-		(METHOD_QUERY_SELECTOR = clz.getDeclaredMethod("querySelector", DomNode.class, String.class))
-				.setAccessible(true);
-		//
-		(METHOD_GET_ELEMENTS_BY_TAG_NAME = clz.getDeclaredMethod("getElementsByTagName", Document.class, String.class))
-				.setAccessible(true);
-		//
 		(METHOD_TEST_AND_ACCEPT3 = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
 				FailableConsumer.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT4 = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
 				FailableBiConsumer.class)).setAccessible(true);
 		//
-		(METHOD_GET_ATTRIBUTE = clz.getDeclaredMethod("getAttribute", NodeList.class, String.class, Predicate.class))
-				.setAccessible(true);
-		//
 		(METHOD_PREVIOUS_ELEMENT_SIBLING = clz.getDeclaredMethod("previousElementSibling", Element.class))
 				.setAccessible(true);
-		//
-		(METHOD_GET_ELEMENTS_BY_NAME = clz.getDeclaredMethod("getElementsByName", HtmlPage.class, String.class))
-				.setAccessible(true);
-		//
-		(METHOD_GET_VALUE_ATTRIBUTE = clz.getDeclaredMethod("getValueAttribute", HtmlOption.class)).setAccessible(true);
-		//
-		(METHOD_GET_OPTIONS = clz.getDeclaredMethod("getOptions", HtmlSelect.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_RUN_THROWS = clz.getDeclaredMethod("testAndRunThrows", Boolean.TYPE, ThrowingRunnable.class))
 				.setAccessible(true);
 		//
-		(METHOD_SET_VALUES = clz.getDeclaredMethod("setValues", HtmlPage.class, Map.class, String.class, Object.class))
-				.setAccessible(true);
-		//
 		(METHOD_SELECT_STREAM = clz.getDeclaredMethod("selectStream", Element.class, String.class)).setAccessible(true);
 		//
-		(METHOD_SET_SELECTED_INDEX = clz.getDeclaredMethod("setSelectedIndex", HtmlSelect.class, HtmlOption.class))
-				.setAccessible(true);
-		//
 		(METHOD_SET_EDITABLE = clz.getDeclaredMethod("setEditable", JTextComponent.class, Boolean.TYPE))
-				.setAccessible(true);
-		//
-		(METHOD_GET_NEXT_ELEMENT_SIBLING = clz.getDeclaredMethod("getNextElementSibling", DomNode.class))
 				.setAccessible(true);
 		//
 		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
@@ -219,14 +179,6 @@ class VoiceManagerOnlineTtsPanelTest {
 
 	private static class IH implements InvocationHandler {
 
-		private Collection<Node> nodes = null;
-
-		private NamedNodeMap attributes = null;
-
-		private Map<Object, Node> namedItems = null;
-
-		private String nodeValue = null;
-
 		private Map<Object, Object> properties = null;
 
 		private Object[] elements = null;
@@ -250,47 +202,9 @@ class VoiceManagerOnlineTtsPanelTest {
 				//
 			} // if
 				//
-			if (proxy instanceof Document && Objects.equals(methodName, "getElementsByTagName")) {
-				//
-				return null;
-				//
-			} else if (proxy instanceof NodeList) {
-				//
-				if (Objects.equals(methodName, "item") && args != null && args.length > 0
-						&& args[0] instanceof Integer) {
-					//
-					return nodes != null ? IterableUtils.get(nodes, (Integer) args[0]) : null;
-					//
-				} else if (Objects.equals(methodName, "getLength")) {
-					//
-					return IterableUtils.size(nodes);
-					//
-				} // if
-					//
-			} else if (proxy instanceof Node) {
-				//
-				if (Objects.equals(methodName, "getAttributes")) {
-					//
-					return attributes;
-					//
-				} else if (Objects.equals(methodName, "getNodeValue")) {
-					//
-					return nodeValue;
-					//
-				} // if
-					//
-			} else if (proxy instanceof NamedNodeMap && Objects.equals(methodName, "getNamedItem") && args != null
-					&& args.length > 0) {
-				//
-				return MapUtils.getObject(namedItems, args[0]);
-				//
-			} else if (Objects.equals(Util.getName(method.getDeclaringClass()),
+			if (Objects.equals(Util.getName(method.getDeclaringClass()),
 					"org.springframework.context.support.VoiceManagerOnlineTtsPanel$Name")
 					&& Objects.equals(methodName, "value")) {
-				//
-				return null;
-				//
-			} else if (proxy instanceof ComboBoxModel && Objects.equals(methodName, "getSelectedItem")) {
 				//
 				return null;
 				//
@@ -341,12 +255,6 @@ class VoiceManagerOnlineTtsPanelTest {
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
 			//
-			if (Objects.equals(Util.getReturnType(thisMethod), Void.TYPE)) {
-				//
-				return null;
-				//
-			} // if
-				//
 			final String methodName = Util.getName(thisMethod);
 			//
 			if (Boolean.logicalOr(
@@ -370,32 +278,18 @@ class VoiceManagerOnlineTtsPanelTest {
 
 	private MH mh = null;
 
-	private NodeList nodeList = null;
-
 	private Element element = null;
-
-	private HtmlOption htmlOption = null;
-
-	private DomNode domNode = null;
 
 	@BeforeEach
 	void beforeEach() throws Throwable {
 		//
 		instance = new VoiceManagerOnlineTtsPanel();
 		//
-		nodeList = Reflection.newProxy(NodeList.class, ih = new IH());
+		ih = new IH();
 		//
 		element = Util.cast(Element.class, Narcissus.allocateInstance(Element.class));
 		//
-		htmlOption = Util.cast(HtmlOption.class, Narcissus.allocateInstance(HtmlOption.class));
-		//
-		domNode = ProxyUtil.createProxy(DomNode.class, mh = new MH(), clz -> {
-			final Constructor<?> constructor = clz != null ? clz.getConstructor(SgmlPage.class) : null;
-			if (constructor != null) {
-				constructor.setAccessible(true);
-			}
-			return constructor != null ? constructor.newInstance((Object) null) : null;
-		});
+		mh = new MH();
 		//
 	}
 
@@ -413,8 +307,6 @@ class VoiceManagerOnlineTtsPanelTest {
 		// btnExecute
 		//
 		final AbstractButton btnExecute = new JButton();
-		//
-		FieldUtils.writeDeclaredField(instance, "btnExecute", btnExecute, true);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnExecute, 0, null)));
 		//
@@ -715,49 +607,6 @@ class VoiceManagerOnlineTtsPanelTest {
 	}
 
 	@Test
-	void testQuerySelector() throws Throwable {
-		//
-		Assertions.assertNull(querySelector(domNode, null));
-		//
-	}
-
-	private static <N extends DomNode> N querySelector(final DomNode instance, final String selectors)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_QUERY_SELECTOR.invoke(null, instance, selectors);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof DomNode) {
-				return (N) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetElementsByTagName() throws Throwable {
-		//
-		Assertions.assertNull(getElementsByTagName(Reflection.newProxy(Document.class, ih), null));
-		//
-	}
-
-	private static NodeList getElementsByTagName(final Document instance, final String tagname) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_ELEMENTS_BY_TAG_NAME.invoke(null, instance, tagname);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof NodeList) {
-				return (NodeList) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testTestAndAccept() {
 		//
 		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysTrue(), null, FailableConsumer.nop()));
@@ -789,54 +638,6 @@ class VoiceManagerOnlineTtsPanelTest {
 	}
 
 	@Test
-	void testGetAttribute() throws Throwable {
-		//
-		final Node node = Reflection.newProxy(Node.class, ih);
-		//
-		if (ih != null) {
-			//
-			(ih.nodes = new ArrayList<>()).add(node);
-			//
-		} // if
-			//
-		Assertions.assertNull(getAttribute(nodeList, null, null));
-		//
-		if (ih != null) {
-			//
-			ih.attributes = Reflection.newProxy(NamedNodeMap.class, ih);
-			//
-		} // if
-			//
-		Assertions.assertNull(getAttribute(nodeList, null, null));
-		//
-		if (ih != null) {
-			//
-			(ih.namedItems = new LinkedHashMap<>()).put(null, node);
-			//
-		} // if
-			//
-		Assertions.assertNull(getAttribute(nodeList, null, null));
-		//
-		Assertions.assertEquals(Unit.with(null), getAttribute(nodeList, null, Predicates.alwaysTrue()));
-		//
-	}
-
-	private static IValue0<String> getAttribute(final NodeList nodeList, final String attrbiuteName,
-			final Predicate<String> predicate) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_ATTRIBUTE.invoke(null, nodeList, attrbiuteName, predicate);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof IValue0) {
-				return (IValue0) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testPreviousElementSibling() throws Throwable {
 		//
 		Assertions.assertNull(previousElementSibling(element));
@@ -850,71 +651,6 @@ class VoiceManagerOnlineTtsPanelTest {
 				return null;
 			} else if (obj instanceof Element) {
 				return (Element) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetElementsByName() throws Throwable {
-		//
-		Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.emptySet(),
-				getElementsByName(Util.cast(HtmlPage.class, Narcissus.allocateInstance(HtmlPage.class)), null)));
-		//
-	}
-
-	private static List<DomElement> getElementsByName(final HtmlPage instance, final String name) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_ELEMENTS_BY_NAME.invoke(null, instance, name);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof List) {
-				return (List) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetValueAttribute() throws Throwable {
-		//
-		Assertions.assertNull(getValueAttribute(htmlOption));
-		//
-	}
-
-	private static final String getValueAttribute(final HtmlOption instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_VALUE_ATTRIBUTE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof String) {
-				return (String) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetOptions() throws Throwable {
-		//
-		Assertions.assertTrue(CollectionUtils.isEqualCollection(Collections.emptySet(),
-				getOptions(Util.cast(HtmlSelect.class, Narcissus.allocateInstance(HtmlSelect.class)))));
-		//
-	}
-
-	private static List<HtmlOption> getOptions(final HtmlSelect instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_OPTIONS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof List) {
-				return (List) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
@@ -949,24 +685,6 @@ class VoiceManagerOnlineTtsPanelTest {
 	}
 
 	@Test
-	void testSetValues() {
-		//
-		Assertions.assertDoesNotThrow(() -> setValues(null, null, null, new JTextField()));
-		//
-		Assertions.assertDoesNotThrow(() -> setValues(null, null, null, Reflection.newProxy(ComboBoxModel.class, ih)));
-		//
-	}
-
-	private static void setValues(final HtmlPage htmlPage, final Map<String, String> voices, final String a,
-			final Object b) throws Throwable {
-		try {
-			METHOD_SET_VALUES.invoke(null, htmlPage, voices, a, b);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testSelectStream() throws Throwable {
 		//
 		Assertions.assertNull(selectStream(element, null));
@@ -994,25 +712,6 @@ class VoiceManagerOnlineTtsPanelTest {
 	}
 
 	@Test
-	void testSetSelectedIndex() {
-		//
-		final HtmlSelect htmlSelect = Util.cast(HtmlSelect.class, Narcissus.allocateInstance(HtmlSelect.class));
-		//
-		Assertions.assertDoesNotThrow(() -> setSelectedIndex(htmlSelect, null));
-		//
-		Assertions.assertDoesNotThrow(() -> setSelectedIndex(htmlSelect, htmlOption));
-		//
-	}
-
-	private static void setSelectedIndex(final HtmlSelect htmlSelect, final HtmlOption htmlOption) throws Throwable {
-		try {
-			METHOD_SET_SELECTED_INDEX.invoke(null, htmlSelect, htmlOption);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
 	void testSetEditable() {
 		//
 		Assertions.assertDoesNotThrow(() -> setEditable(new JTextField(), false));
@@ -1022,27 +721,6 @@ class VoiceManagerOnlineTtsPanelTest {
 	private static void setEditable(final JTextComponent instance, final boolean b) throws Throwable {
 		try {
 			METHOD_SET_EDITABLE.invoke(null, instance, b);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetNextElementSibling() throws Throwable {
-		//
-		Assertions.assertNull(getNextElementSibling(domNode));
-		//
-	}
-
-	private static DomElement getNextElementSibling(final DomNode instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_NEXT_ELEMENT_SIBLING.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof DomElement) {
-				return (DomElement) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
