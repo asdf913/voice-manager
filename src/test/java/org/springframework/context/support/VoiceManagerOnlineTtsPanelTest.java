@@ -1357,11 +1357,9 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		Assertions.assertThrows(IllegalStateException.class, () -> getAnnotatedElementObjectEntry(vmotp, null));
 		//
-		final Entry<Field, Object> entry = Util
-				.orElse(Util.map(
-						Util.stream(testAndApply(Objects::nonNull, Util.getClass(vmotp),
-								x -> FieldUtils.getAllFieldsList(x), null)),
-						f -> Util.isStatic(f) ? Pair.of(f, Narcissus.getStaticField(f)) : null).findFirst(), null);
+		final Entry<Field, Object> entry = Util.orElse(Util.map(
+				Util.stream(testAndApply(Objects::nonNull, Util.getClass(vmotp), FieldUtils::getAllFieldsList, null)),
+				f -> Util.isStatic(f) ? Pair.of(f, Narcissus.getStaticField(f)) : null).findFirst(), null);
 		//
 		Assertions.assertEquals(entry, getAnnotatedElementObjectEntry(vmotp, Util.getValue(entry)));
 		//

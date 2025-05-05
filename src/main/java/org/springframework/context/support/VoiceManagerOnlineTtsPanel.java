@@ -984,9 +984,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 								}), Objects::nonNull)
 						.collect(LinkedHashMap::new, (k, v) -> {
 							Util.put(k, Util.getKey(v), Util.getValue(v));
-						}, (k, v) -> {
-							Util.putAll(k, v);
-						});
+						}, Util::putAll);
 				//
 				speak(speechApi, Util.getText(taText),
 						testAndApply(x -> IterableUtils.size(x) == 1, keys, x -> IterableUtils.get(x, 0), null),
@@ -1019,8 +1017,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			final Object value) {
 		//
 		final List<Field> fs = Util.toList(Util.filter(
-				Util.stream(testAndApply(Objects::nonNull, Util.getClass(instance), x -> FieldUtils.getAllFieldsList(x),
-						null)),
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
 				f -> Objects.equals(Util.isStatic(f) ? Narcissus.getStaticField(f) : Narcissus.getField(instance, f),
 						value)));
 		//
