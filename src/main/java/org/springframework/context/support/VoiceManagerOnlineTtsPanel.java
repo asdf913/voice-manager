@@ -1014,6 +1014,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static Entry<AnnotatedElement, Object> getAnnotatedElementObjectEntry(final Object instance,
 			final Object value) {
 		//
