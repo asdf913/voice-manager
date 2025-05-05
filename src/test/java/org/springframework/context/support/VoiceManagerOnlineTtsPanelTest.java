@@ -1391,13 +1391,12 @@ class VoiceManagerOnlineTtsPanelTest {
 	@Test
 	void testGetStringObjectEntry() throws Throwable {
 		//
-		final VoiceManagerOnlineTtsPanel instance = new VoiceManagerOnlineTtsPanel();
+		final VoiceManagerOnlineTtsPanel vmotp = new VoiceManagerOnlineTtsPanel();
 		//
 		Assertions.assertNull(getStringObjectEntry(null));
 		//
 		final Collection<MutableTriple<Field, String, Object>> entries = Util.toList(Util.filter(Util.map(
-				Util.stream(
-						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				Util.stream(testAndApply(Objects::nonNull, Util.getClass(vmotp), FieldUtils::getAllFieldsList, null)),
 				f -> {
 					//
 					final Annotation[] as = f != null ? f.getDeclaredAnnotations() : null;
@@ -1422,13 +1421,13 @@ class VoiceManagerOnlineTtsPanelTest {
 								"org.springframework.context.support.VoiceManagerOnlineTtsPanel$Name")
 								&& Proxy.isProxyClass(Util.getClass(a))) {
 							//
-							final Object ih = Proxy.getInvocationHandler(a);
+							final Object invocationHandler = Proxy.getInvocationHandler(a);
 							//
 							if (IterableUtils
 									.size(values = Util.values(Util.cast(Map.class,
 											IterableUtils.size(maps = Util.toList(Util.map(
 													Util.filter(
-															Util.stream((clz = Util.getClass(ih)) != null
+															Util.stream((clz = Util.getClass(invocationHandler)) != null
 																	? FieldUtils.getAllFieldsList(clz)
 																	: null),
 															x -> Util.getType(x) != null
@@ -1437,13 +1436,12 @@ class VoiceManagerOnlineTtsPanelTest {
 														//
 														return Util.cast(Map.class,
 																Util.isStatic(x) ? Narcissus.getStaticField(x)
-																		: Narcissus.getField(ih, x));
+																		: Narcissus.getField(invocationHandler, x));
 														//
 													}))) == 1 ? IterableUtils.get(maps, 0) : null))) == 1) {
 								//
 								return MutableTriple.of(f, Util.toString(IterableUtils.get(values, 0)),
-										Util.isStatic(f) ? Narcissus.getStaticField(f)
-												: Narcissus.getField(instance, f));
+										Util.isStatic(f) ? Narcissus.getStaticField(f) : Narcissus.getField(vmotp, f));
 								//
 							} // if
 								//
