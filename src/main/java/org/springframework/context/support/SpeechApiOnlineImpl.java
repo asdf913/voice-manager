@@ -120,7 +120,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 	public void speak(@Nullable final String text, @Nullable final String voiceId, final int rate,
 			@Note("Not usued") final int volume, final Map<String, Object> map) {
 		//
-		final URL u = execute(url, text, getVoices(), voiceId, rate, map);
+		final URL u = execute(text, voiceId, rate, map);
 		//
 		try {
 			//
@@ -266,7 +266,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 	public void writeVoiceToFile(@Nullable final String text, @Nullable final String voiceId, final int rate,
 			@Note("Not usued") final int volume, final Map<String, Object> map, @Nullable final File file) {
 		//
-		final URL u = execute(url, text, getVoices(), voiceId, rate, map);
+		final URL u = execute(text, voiceId, rate, map);
 		//
 		try (final InputStream is = Util.openStream(u)) {
 			//
@@ -286,6 +286,12 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		if (Util.test(predicate, t, u)) {
 			FailableBiConsumerUtil.accept(consumer, t, u);
 		} // if
+	}
+
+	private URL execute(final String text, final String voiceId, final int rate, final Map<String, Object> map) {
+		//
+		return execute(url, text, getVoices(), voiceId, rate, map);
+		//
 	}
 
 	@Nullable

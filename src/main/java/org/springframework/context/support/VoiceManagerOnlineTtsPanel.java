@@ -429,7 +429,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		Util.forEach(Arrays.asList(tfElapsed, tfUrl, tfErrorMessage), x -> setEditable(x, false));
 		//
-		Util.forEach(Arrays.asList(btnCopy, btnDownload), x -> setEnabled(x, false));
+		setEnabled(btnCopy, false);
 		//
 		Util.forEach(
 				Util.filter(Util.map(
@@ -786,8 +786,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 			} finally {
 				//
-				Util.forEach(Arrays.asList(btnCopy, btnDownload),
-						x -> setEnabled(x, UrlValidatorUtil.isValid(UrlValidator.getInstance(), Util.getText(tfUrl))));
+				setEnabled(btnCopy, UrlValidatorUtil.isValid(UrlValidator.getInstance(), Util.getText(tfUrl)));
 				//
 				setText(tfElapsed, stopwatch);
 				//
@@ -795,15 +794,83 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				//
 		} else if (Objects.equals(source, btnDownload)) {
 			//
+			final Stopwatch stopwatch = Stopwatch.createStarted();
+			//
+			Util.setText(tfErrorMessage, null);
+			//
 			URL u = null;
 			//
+			final String keyTemp = sha512Hex(this,
+					objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new));
+			//
+			if (!Objects.equals(keyTemp, key)) {
+				//
+				Util.setText(tfUrl, null);
+				//
+			} // if
+				//
 			try {
 				//
-				u = testAndApply(StringUtils::isNotBlank, Util.getText(tfUrl), URL::new, null);
+				if ((u = testAndApply(StringUtils::isNotBlank, Util.getText(tfUrl), URL::new, null)) == null) {
+					//
+					final List<String> keys = Util.toList(Util.map(
+							Util.filter(Util.stream(Util.entrySet(voices)),
+									x -> Objects.equals(Util.getValue(x), Util.getSelectedItem(cbmVoice))),
+							Util::getKey));
+					//
+					testAndRunThrows(IterableUtils.size(keys) > 1, () -> {
+						//
+						throw new IllegalStateException();
+						//
+					});
+					//
+					final Iterable<Method> ms = Util
+							.collect(
+									Util.filter(testAndApply(Objects::nonNull,
+											Util.getDeclaredMethods(Util.getClass(speechApi)), Arrays::stream, null),
+											m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "execute"),
+													Arrays.equals(Util.getParameterTypes(m), new Class<?>[] {
+															String.class, String.class, Integer.TYPE, Map.class }))),
+									Collectors.toList());
+					//
+					testAndRunThrows(IterableUtils.size(ms) > 1, () -> {
+						//
+						throw new IllegalStateException();
+						//
+					});
+					//
+					final Map<String, Object> map = Util.filter(
+							Util.map(Util.filter(Stream.of(tfQuality, tfPitch), Objects::nonNull),
+									x -> getStringObjectEntry(getAnnotatedElementObjectEntry(this, x))),
+							Objects::nonNull).collect(LinkedHashMap::new,
+									(k, v) -> Util.put(k, Util.getKey(v), Util.getValue(v)), Util::putAll);
+					//
+					Util.setText(tfUrl, Util.toString(u = Util.cast(URL.class, testAndApply(Objects::nonNull,
+							testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null),
+							x -> Narcissus.invokeMethod(
+									speechApi, x, Util.getText(taText), testAndApply(y -> IterableUtils.size(y) == 1,
+											keys, y -> IterableUtils.get(y, 0), null),
+									NumberUtils.toInt(Util.getText(tfDuration), 0)// TODO
+									, map),
+							null))));
+					//
+					key = keyTemp;
+					//
+				} // if
+					//
+			} catch (final RuntimeException | MalformedURLException e) {
 				//
-			} catch (final MalformedURLException e) {
+				Util.setText(tfUrl, null);
 				//
-				LoggerUtil.error(LOG, e.getMessage(), e);
+				Util.setText(tfErrorMessage, e.getMessage());
+				//
+				return;
+				//
+			} finally {
+				//
+				setText(tfElapsed, stopwatch);
+				//
+				setEnabled(btnCopy, UrlValidatorUtil.isValid(UrlValidator.getInstance(), Util.getText(tfUrl)));
 				//
 			} // try
 				//
@@ -828,6 +895,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 					//
 			} // if
 				//
+			setText(tfElapsed, stopwatch);
+			//
 		} else if (actionPerformed(source)) {
 			//
 			return;
@@ -1391,7 +1460,9 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		try {
 			//
-			if ((file = u != null ? Util.toFile(Path.of(StringUtils.substringAfterLast(Util.toString(u), "/")))
+			if ((file = u != null
+					? Util.toFile(
+							Path.of(String.join(".", "temp", StringUtils.substringAfterLast(Util.toString(u), "."))))
 					: File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null)) != null) {
 				//
 				file.deleteOnExit();
