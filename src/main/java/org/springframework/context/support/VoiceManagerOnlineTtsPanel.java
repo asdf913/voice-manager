@@ -719,11 +719,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			final String keyTemp = sha512Hex(this,
 					objectMapper = ObjectUtils.getIfNull(objectMapper, ObjectMapper::new));
 			//
-			testAndRunThrows(!Objects.equals(keyTemp, key), () -> {
-				//
-				Util.setText(tfUrl, null);
-				//
-			});
+			testAndRunThrows(!Objects.equals(keyTemp, key), () -> Util.setText(tfUrl, null));
 			//
 			Util.setText(tfErrorMessage, null);
 			//
