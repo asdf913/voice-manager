@@ -1456,7 +1456,7 @@ class VoiceManagerOnlineTtsPanelTest {
 					//
 				}), Objects::nonNull));
 		//
-		MutableTriple<Field, String, Object> triple = Util.orElse(Util.filter(Util.stream(entries), x -> {
+		final MutableTriple<Field, String, Object> triple = Util.orElse(Util.filter(Util.stream(entries), x -> {
 			return JTextComponent.class.isAssignableFrom(Util.getType(TripleUtil.getLeft(x)));
 		}).findFirst(), null);
 		//
