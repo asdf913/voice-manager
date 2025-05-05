@@ -965,25 +965,10 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			try {
 				//
 				final Map<String, Object> map = Util
-						.filter(Util.map(Util.map(Util.filter(Stream.of(tfQuality, tfPitch), Objects::nonNull),
-								x -> getAnnotatedElementObjectEntry(this, x)), x -> {
-									//
-									final AnnotatedElement ae = Util.getKey(x);
-									//
-									if (Util.isAnnotationPresent(ae, Name.class)) {
-										//
-										final Object v = Util.getValue(x);
-										//
-										return Pair.of(value(Util.getAnnotation(ae, Name.class)),
-												v instanceof JTextComponent jtc ? Util.getText(jtc) : v);
-										//
-									} // if
-										//
-									return null;
-									//
-								}), Objects::nonNull)
-						.collect(LinkedHashMap::new, (k, v) -> Util.put(k, Util.getKey(v), Util.getValue(v)),
-								Util::putAll);
+						.filter(Util.map(Util.filter(Stream.of(tfQuality, tfPitch), Objects::nonNull), x -> {
+							return getStringObjectEntry(getAnnotatedElementObjectEntry(this, x));
+						}), Objects::nonNull).collect(LinkedHashMap::new,
+								(k, v) -> Util.put(k, Util.getKey(v), Util.getValue(v)), Util::putAll);
 				//
 				speak(speechApi, Util.getText(taText),
 						testAndApply(x -> IterableUtils.size(x) == 1, keys, x -> IterableUtils.get(x, 0), null),
@@ -1008,6 +993,23 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		} // if
 			//
 		return false;
+		//
+	}
+
+	private static Entry<String, Object> getStringObjectEntry(final Entry<AnnotatedElement, Object> entry) {
+		//
+		final AnnotatedElement ae = Util.getKey(entry);
+		//
+		if (Util.isAnnotationPresent(ae, Name.class)) {
+			//
+			final Object v = Util.getValue(entry);
+			//
+			return Pair.of(value(Util.getAnnotation(ae, Name.class)),
+					v instanceof JTextComponent jtc ? Util.getText(jtc) : v);
+			//
+		} // if
+			//
+		return null;
 		//
 	}
 

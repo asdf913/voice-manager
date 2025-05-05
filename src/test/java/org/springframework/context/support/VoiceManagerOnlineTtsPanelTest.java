@@ -9,6 +9,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.InputStream;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -16,6 +17,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,7 +66,11 @@ import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.TriFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.MutableTriple;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
+import org.apache.commons.lang3.tuple.TripleUtil;
 import org.htmlunit.SgmlPage;
 import org.htmlunit.html.DomElement;
 import org.htmlunit.html.DomNode;
@@ -110,7 +116,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE,
 			METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_SHA512HEX,
 			METHOD_CREATE_INPUT_STREAM_SOURCE, METHOD_CAN_READ, METHOD_AND, METHOD_ADD_LIST_DATA_LISTENER,
-			METHOD_GET_ANNOTATED_ELEMENT_OBJECT_ENTRY = null;
+			METHOD_GET_ANNOTATED_ELEMENT_OBJECT_ENTRY, METHOD_GET_STRING_OBJECT_ENTRY = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -206,6 +212,9 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		(METHOD_GET_ANNOTATED_ELEMENT_OBJECT_ENTRY = clz.getDeclaredMethod("getAnnotatedElementObjectEntry",
 				Object.class, Object.class)).setAccessible(true);
+		//
+		(METHOD_GET_STRING_OBJECT_ENTRY = clz.getDeclaredMethod("getStringObjectEntry", Entry.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -1369,6 +1378,109 @@ class VoiceManagerOnlineTtsPanelTest {
 			final Object value) throws Throwable {
 		try {
 			final Object obj = METHOD_GET_ANNOTATED_ELEMENT_OBJECT_ENTRY.invoke(null, instance, value);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Entry) {
+				return (Entry) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetStringObjectEntry() throws Throwable {
+		//
+		final VoiceManagerOnlineTtsPanel instance = new VoiceManagerOnlineTtsPanel();
+		//
+		Assertions.assertNull(getStringObjectEntry(null));
+		//
+		final Collection<MutableTriple<Field, String, Object>> entries = Util.toList(Util.filter(Util.map(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				f -> {
+					//
+					final Annotation[] as = f != null ? f.getDeclaredAnnotations() : null;
+					//
+					Annotation a = null;
+					//
+					Class<?> clz = null;
+					//
+					List<Map<?, ?>> maps = null;
+					//
+					Collection<?> values = null;
+					//
+					for (int i = 0; as != null && i < as.length; i++) {
+						//
+						if ((a = as[i]) == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						if (Objects.equals(Util.getName(a.annotationType()),
+								"org.springframework.context.support.VoiceManagerOnlineTtsPanel$Name")
+								&& Proxy.isProxyClass(Util.getClass(a))) {
+							//
+							final Object ih = Proxy.getInvocationHandler(a);
+							//
+							if (IterableUtils
+									.size(values = Util.values(Util.cast(Map.class,
+											IterableUtils.size(maps = Util.toList(Util.map(
+													Util.filter(
+															Util.stream((clz = Util.getClass(ih)) != null
+																	? FieldUtils.getAllFieldsList(clz)
+																	: null),
+															x -> Util.getType(x) != null
+																	&& Util.getType(x).isAssignableFrom(Map.class)),
+													x -> {
+														//
+														return Util.cast(Map.class,
+																Util.isStatic(x) ? Narcissus.getStaticField(x)
+																		: Narcissus.getField(ih, x));
+														//
+													}))) == 1 ? IterableUtils.get(maps, 0) : null))) == 1) {
+								//
+								return MutableTriple.of(f, Util.toString(IterableUtils.get(values, 0)),
+										Util.isStatic(f) ? Narcissus.getStaticField(f)
+												: Narcissus.getField(instance, f));
+								//
+							} // if
+								//
+						} // if
+							//
+					} // for
+						//
+					return null;
+					//
+				}), Objects::nonNull));
+		//
+		MutableTriple<Field, String, Object> triple = Util.orElse(Util.filter(Util.stream(entries), x -> {
+			return JTextComponent.class.isAssignableFrom(Util.getType(TripleUtil.getLeft(x)));
+		}).findFirst(), null);
+		//
+		final MutablePair<AnnotatedElement, Object> entry = MutablePair.of(TripleUtil.getLeft(triple),
+				TripleUtil.getRight(triple));
+		//
+		final String string = TripleUtil.getMiddle(triple);
+		//
+		Assertions.assertEquals(Pair.of(string, null), getStringObjectEntry(entry));
+		//
+		if (entry != null) {
+			//
+			entry.setValue(new JTextField(string));
+			//
+		} // if
+			//
+		Assertions.assertEquals(Pair.of(string, string), getStringObjectEntry(entry));
+		//
+	}
+
+	private static Entry<String, Object> getStringObjectEntry(final Entry<AnnotatedElement, Object> entry)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_STRING_OBJECT_ENTRY.invoke(null, entry);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Entry) {
