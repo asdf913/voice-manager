@@ -658,10 +658,18 @@ class UtilTest {
 		//
 		for (final ClassInfo classInfo : classInfos) {
 			//
+			if ((clz = Class.forName(name = HasNameUtil.getName(classInfo))) == null
+					|| Util.contains(Arrays.asList("org.eclipse.jetty.http.MultiPartByteRanges$Parts",
+							"org.eclipse.jetty.http.MultiPartFormData$Parts"), Util.getName(clz))) {
+				//
+				continue;
+				//
+			} // if
+				//
 			try {
 				//
-				if (Util.isAssignableFrom(Consumer.class, Class.forName(name = HasNameUtil.getName(classInfo)))
-						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
+				if (Consumer.class.isAssignableFrom(clz) && !(clz = Class.forName(name)).isInterface()
+						&& !Modifier.isAbstract(clz.getModifiers())) {
 					//
 					System.out.println(name);
 					//

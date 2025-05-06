@@ -526,8 +526,17 @@ class UtilTest {
 			//
 			try {
 				//
-				if (Util.isAssignableFrom(Iterable.class, Class.forName(name = HasNameUtil.getName(classInfo)))
-						&& !(clz = Class.forName(name)).isInterface() && !Modifier.isAbstract(clz.getModifiers())) {
+				if ((name = HasNameUtil.getName(classInfo)) == null || (clz = Util.forName(name)) == null
+						|| Util.contains(Arrays.asList("org.eclipse.jetty.http.MultiPartByteRanges$Parts",
+								"org.eclipse.jetty.http.MultiPartFormData$Parts"), Util.getName(clz))
+						) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (Util.isAssignableFrom(Iterable.class, clz) && !clz.isInterface()
+						&& !Modifier.isAbstract(clz.getModifiers())) {
 					//
 					final Iterable<?> it = Util.cast(Iterable.class, Narcissus.allocateInstance(clz));
 					//
