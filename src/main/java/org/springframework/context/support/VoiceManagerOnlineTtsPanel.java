@@ -108,8 +108,7 @@ import org.springframework.beans.factory.ListableBeanFactoryUtil;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationContextUtil;
-import org.springframework.core.env.Environment;
-import org.springframework.core.env.EnvironmentCapable;
+import org.springframework.core.env.EnvironmentCapableUtil;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
 import org.springframework.core.io.ByteArrayResource;
@@ -306,7 +305,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		final String wrap = "wrap";
 		//
-		final PropertyResolver propertyResolver = getEnvironment(applicationContext);
+		final PropertyResolver propertyResolver = EnvironmentCapableUtil.getEnvironment(applicationContext);
 		//
 		add(new JScrollPane(taText = new JTextArea(Util.toString(testAndApply(PropertyResolverUtil::containsProperty,
 				propertyResolver, String.join(".", Util.getName(Util.getClass(this)), "SYNTEXT"),
@@ -567,11 +566,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	private static <T> T iif(final boolean condition, final T valueTrue, final T valueFalse) {
 		return condition ? valueTrue : valueFalse;
-	}
-
-	@Nullable
-	private static Environment getEnvironment(@Nullable final EnvironmentCapable instance) {
-		return instance != null ? instance.getEnvironment() : null;
 	}
 
 	private static void addActionListener(@Nullable final AbstractButton instance,

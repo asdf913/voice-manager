@@ -80,7 +80,6 @@ import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.TriPredicate;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.env.Environment;
 import org.springframework.core.env.EnvironmentCapable;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.io.InputStreamSource;
@@ -97,9 +96,9 @@ class VoiceManagerOnlineTtsPanelTest {
 	private static Method METHOD_GET_LAYOUT_MANAGER, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
 			METHOD_TEST_AND_APPLY6, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_PREVIOUS_ELEMENT_SIBLING,
 			METHOD_TEST_AND_RUN_THROWS, METHOD_SELECT_STREAM, METHOD_SET_EDITABLE, METHOD_SET_CONTENTS,
-			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_ENVIRONMENT, METHOD_IIF, METHOD_GET_VOICE, METHOD_EQUALS,
-			METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_SHA512HEX, METHOD_CREATE_INPUT_STREAM_SOURCE,
-			METHOD_CAN_READ, METHOD_AND, METHOD_ADD_LIST_DATA_LISTENER, METHOD_GET_ANNOTATED_ELEMENT_OBJECT_ENTRY,
+			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_IIF, METHOD_GET_VOICE, METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG,
+			METHOD_SET_ENABLED, METHOD_SHA512HEX, METHOD_CREATE_INPUT_STREAM_SOURCE, METHOD_CAN_READ, METHOD_AND,
+			METHOD_ADD_LIST_DATA_LISTENER, METHOD_GET_ANNOTATED_ELEMENT_OBJECT_ENTRY,
 			METHOD_GET_STRING_OBJECT_ENTRY = null;
 
 	@BeforeAll
@@ -140,9 +139,6 @@ class VoiceManagerOnlineTtsPanelTest {
 				ClipboardOwner.class)).setAccessible(true);
 		//
 		(METHOD_GET_SYSTEM_CLIPBOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
-		//
-		(METHOD_GET_ENVIRONMENT = clz.getDeclaredMethod("getEnvironment", EnvironmentCapable.class))
-				.setAccessible(true);
 		//
 		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
 		//
@@ -755,27 +751,6 @@ class VoiceManagerOnlineTtsPanelTest {
 				return null;
 			} else if (obj instanceof Clipboard) {
 				return (Clipboard) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetEnvironment() throws Throwable {
-		//
-		Assertions.assertNull(getEnvironment(Reflection.newProxy(EnvironmentCapable.class, ih)));
-		//
-	}
-
-	private static Environment getEnvironment(final EnvironmentCapable instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_ENVIRONMENT.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Environment) {
-				return (Environment) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

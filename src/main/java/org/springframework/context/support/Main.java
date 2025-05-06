@@ -57,6 +57,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactoryUtil;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.ConfigurableApplicationContextUtil;
+import org.springframework.core.env.EnvironmentCapableUtil;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
 
@@ -261,7 +262,7 @@ public class Main {
 			//
 			final ConfigurableListableBeanFactory clbf = ConfigurableApplicationContextUtil.getBeanFactory(beanFactory);
 			//
-			Class<?> clz = getClass(clbf, beanFactory.getEnvironment(),
+			Class<?> clz = getClass(clbf, EnvironmentCapableUtil.getEnvironment(beanFactory),
 					"org.springframework.context.support.Main.class");
 			//
 			if (clz == null) {
