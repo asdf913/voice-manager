@@ -135,8 +135,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	private transient ApplicationContext applicationContext = null;
 
-	private String url = null;
-
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Name {
@@ -193,10 +191,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	private transient Iterable<DefaultListModel<?>> dlms = null;
 
-	public void setUrl(final String url) {
-		this.url = url;
-	}
-
 	@Override
 	public String getTitle() {
 		return "Online TTS";
@@ -217,8 +211,65 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 										ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
 						MigLayout::new));
 		//
+		Util.forEach(
+				dlms = Util.toList(Util.map(Util.filter(Util
+						.stream(testAndApply(
+								Objects::nonNull, Util
+										.getClass(
+												speechApi = testAndApply(x -> IterableUtils.size(x) == 1, Util.collect(
+														Util.filter(
+																Util.stream(Util
+																		.values(ListableBeanFactoryUtil.getBeansOfType(
+																				applicationContext, SpeechApi.class))),
+																x -> x instanceof SpeechApi
+																		&& IterableUtils.size(Util.collect(
+																				Util.filter(Util.stream(testAndApply(
+																						Objects::nonNull,
+																						Util.getClass(x),
+																						FieldUtils::getAllFieldsList,
+																						null)),
+																						f -> UrlValidatorUtil.isValid(
+																								UrlValidator
+																										.getInstance(),
+																								Util.toString(
+																										Util.isStatic(
+																												f) ? Narcissus.getStaticField(f) : Narcissus.getField(x, f)))),
+																				Collectors.toList())) == 1),
+														Collectors.toList()), x -> IterableUtils.get(x, 0), null)),
+								FieldUtils::getAllFieldsList, null)),
+						f -> Objects.equals(Util.getType(f), DefaultListModel.class)), f -> {
+							//
+							DefaultListModel<?> dlm = null;
+							//
+							if ((dlm = Util
+									.cast(DefaultListModel.class,
+											testAndApply((a, b) -> a != null && b != null, speechApi, f,
+													Narcissus::getField, null))) == null
+									&& speechApi != null && f != null) {
+								//
+								Narcissus.setField(speechApi, f, dlm = new DefaultListModel<>());
+								//
+							} // if
+								//
+							return dlm;
+							//
+						})),
+				x -> addListDataListener(x, this));
+		//
 		final org.jsoup.nodes.Document document = testAndApply(Objects::nonNull,
-				testAndApply(Objects::nonNull, url, URL::new, null), x -> Jsoup.parse(x, 0), null);
+				testAndApply(Objects::nonNull,
+						testAndApply(x -> IterableUtils.size(x) == 1, Util.toList(Util.filter(
+								Util.map(
+										Util.filter(
+												Util.stream(testAndApply(Objects::nonNull, Util.getClass(speechApi),
+														x -> FieldUtils.getAllFieldsList(x), null)),
+												f -> Util.isAssignableFrom(String.class, Util.getType(f))),
+										f -> Util.toString(Util.isStatic(f) ? Narcissus.getStaticField(f)
+												: Narcissus.getField(speechApi, f))),
+								x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x))),
+								x -> IterableUtils.get(x, 0), null),
+						URL::new, null),
+				x -> Jsoup.parse(x, 0), null);
 		//
 		// 合成テキスト(最大200字)
 		//
@@ -417,51 +468,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 						Util.filter(Util.stream(FieldUtils.getAllFieldsList(getClass())), f -> !Util.isStatic(f)),
 						f -> Util.cast(AbstractButton.class, Narcissus.getField(this, f))), Objects::nonNull),
 				x -> addActionListener(x, this));
-		//
-		Util.forEach(
-				dlms = Util.toList(Util.map(Util.filter(Util
-						.stream(testAndApply(
-								Objects::nonNull, Util
-										.getClass(
-												speechApi = testAndApply(x -> IterableUtils.size(x) == 1, Util.collect(
-														Util.filter(
-																Util.stream(Util
-																		.values(ListableBeanFactoryUtil.getBeansOfType(
-																				applicationContext, SpeechApi.class))),
-																x -> x instanceof SpeechApi
-																		&& IterableUtils.size(Util.collect(
-																				Util.filter(Util.stream(testAndApply(
-																						Objects::nonNull,
-																						Util.getClass(x),
-																						FieldUtils::getAllFieldsList,
-																						null)),
-																						f -> UrlValidatorUtil.isValid(
-																								UrlValidator
-																										.getInstance(),
-																								Util.toString(
-																										Util.isStatic(
-																												f) ? Narcissus.getStaticField(f) : Narcissus.getField(x, f)))),
-																				Collectors.toList())) == 1),
-														Collectors.toList()), x -> IterableUtils.get(x, 0), null)),
-								FieldUtils::getAllFieldsList, null)),
-						f -> Objects.equals(Util.getType(f), DefaultListModel.class)), f -> {
-							//
-							DefaultListModel<?> dlm = null;
-							//
-							if ((dlm = Util
-									.cast(DefaultListModel.class,
-											testAndApply((a, b) -> a != null && b != null, speechApi, f,
-													Narcissus::getField, null))) == null
-									&& speechApi != null && f != null) {
-								//
-								Narcissus.setField(speechApi, f, dlm = new DefaultListModel<>());
-								//
-							} // if
-								//
-							return dlm;
-							//
-						})),
-				x -> addListDataListener(x, this));
 		//
 	}
 

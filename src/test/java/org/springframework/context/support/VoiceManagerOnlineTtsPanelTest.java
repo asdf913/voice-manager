@@ -336,8 +336,6 @@ class VoiceManagerOnlineTtsPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
 		//
-		FieldUtils.writeDeclaredField(instance, "url", null, true);
-		//
 		FieldUtils.writeDeclaredField(instance, "speechApi", Reflection.newProxy(SpeechApi.class, ih), true);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
