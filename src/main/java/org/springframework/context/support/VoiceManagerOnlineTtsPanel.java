@@ -256,18 +256,19 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 						})),
 				x -> addListDataListener(x, this));
 		//
+		final Collection<String> urls = Util.toList(Util.filter(
+				Util.map(
+						Util.filter(
+								Util.stream(testAndApply(Objects::nonNull, Util.getClass(speechApi),
+										x -> FieldUtils.getAllFieldsList(x), null)),
+								f -> Util.isAssignableFrom(String.class, Util.getType(f))),
+						f -> Util.toString(
+								Util.isStatic(f) ? Narcissus.getStaticField(f) : Narcissus.getField(speechApi, f))),
+				x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x)));
+		//
 		final org.jsoup.nodes.Document document = testAndApply(Objects::nonNull,
 				testAndApply(Objects::nonNull,
-						testAndApply(x -> IterableUtils.size(x) == 1, Util.toList(Util.filter(
-								Util.map(
-										Util.filter(
-												Util.stream(testAndApply(Objects::nonNull, Util.getClass(speechApi),
-														x -> FieldUtils.getAllFieldsList(x), null)),
-												f -> Util.isAssignableFrom(String.class, Util.getType(f))),
-										f -> Util.toString(Util.isStatic(f) ? Narcissus.getStaticField(f)
-												: Narcissus.getField(speechApi, f))),
-								x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x))),
-								x -> IterableUtils.get(x, 0), null),
+						testAndApply(x -> IterableUtils.size(x) == 1, urls, x -> IterableUtils.get(x, 0), null),
 						URL::new, null),
 				x -> Jsoup.parse(x, 0), null);
 		//
