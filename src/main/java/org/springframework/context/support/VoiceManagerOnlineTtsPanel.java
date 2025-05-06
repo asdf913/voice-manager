@@ -1219,10 +1219,12 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	@Override
 	public void intervalRemoved(final ListDataEvent evt) {
+		//
 	}
 
 	@Override
 	public void contentsChanged(final ListDataEvent evt) {
+		//
 	}
 
 }
