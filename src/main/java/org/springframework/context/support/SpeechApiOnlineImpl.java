@@ -288,7 +288,7 @@ public class SpeechApiOnlineImpl implements SpeechApi {
 		} // if
 	}
 
-	private URL execute(final String text, @Nullable final String voiceId, final int rate,
+	private URL execute(@Nullable final String text, @Nullable final String voiceId, final int rate,
 			final Map<String, Object> map) {
 		//
 		return execute(url, text, getVoices(), voiceId, rate, map);
