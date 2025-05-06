@@ -258,9 +258,8 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		final Collection<String> urls = Util.toList(Util.filter(
 				Util.map(
-						Util.filter(
-								Util.stream(testAndApply(Objects::nonNull, Util.getClass(speechApi),
-										x -> FieldUtils.getAllFieldsList(x), null)),
+						Util.filter(Util.stream(testAndApply(Objects::nonNull, Util.getClass(speechApi),
+								FieldUtils::getAllFieldsList, null)),
 								f -> Util.isAssignableFrom(String.class, Util.getType(f))),
 						f -> Util.toString(
 								Util.isStatic(f) ? Narcissus.getStaticField(f) : Narcissus.getField(speechApi, f))),
