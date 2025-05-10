@@ -68,11 +68,14 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.commons.lang3.stream.FailableStreamUtil;
 import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
 import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.io.Resource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -105,7 +108,7 @@ class VoiceManagerPdfPanelTest {
 			METHOD_TO_AUDIO_RESOURCE, METHOD_LIST_FILES, METHOD_IS_DIRECTORY, METHOD_GET_TRANSFER_DATA,
 			METHOD_FIND_MATCH, METHOD_TO_MILLIS, METHOD_TEST_AND_ACCEPT, METHOD_IIF, METHOD_PATH_FILE_EXISTS_W,
 			METHOD_GET_GENERIC_INTERFACES, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE,
-			METHOD_GET_GENERIC_TYPE = null;
+			METHOD_GET_GENERIC_TYPE, METHOD_GET_FONT_NAME_3, METHOD_GET_FONT_NAME_2 = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -168,6 +171,12 @@ class VoiceManagerPdfPanelTest {
 		//
 		(METHOD_GET_GENERIC_TYPE = clz.getDeclaredMethod("getGenericType", Field.class)).setAccessible(true);
 		//
+		(METHOD_GET_FONT_NAME_3 = clz.getDeclaredMethod("getFontName", String.class, PropertyResolver.class, Map.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_FONT_NAME_2 = clz.getDeclaredMethod("getFontName", FontName[].class, String.class))
+				.setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -177,6 +186,8 @@ class VoiceManagerPdfPanelTest {
 		private Boolean PathFileExistsW = null;
 
 		private Type rawType = null;
+
+		private Map<?, ?> properties = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -197,6 +208,19 @@ class VoiceManagerPdfPanelTest {
 				//
 				return rawType;
 				//
+			} else if (proxy instanceof PropertyResolver) {
+				//
+				if (Objects.equals(methodName, "containsProperty") && args != null && args.length > 0) {
+					//
+					return Util.containsKey(properties = ObjectUtils.getIfNull(properties, LinkedHashMap::new),
+							args[0]);
+					//
+				} else if (Objects.equals(methodName, "getProperty") && args != null && args.length > 0) {
+					//
+					return Util.get(properties = ObjectUtils.getIfNull(properties, LinkedHashMap::new), args[0]);
+					//
+				} // if
+					//
 			} else if (Util.isAssignableFrom(CLASS_SHLWAPI, Util.getClass(proxy))
 					&& Objects.equals(methodName, "PathFileExistsW")) {
 				//
@@ -1330,6 +1354,68 @@ class VoiceManagerPdfPanelTest {
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			} // if
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetFontName() throws Throwable {
+		//
+		Assertions.assertNull(getFontName(new FontName[] { null }, null));
+		//
+		final FontName fontName = FontName.TIMES_ROMAN;
+		//
+		Assertions.assertThrows(IllegalStateException.class,
+				() -> getFontName(new FontName[] { fontName, fontName }, Util.name(fontName)));
+		//
+		final String key = "org.springframework.context.support.VoiceManagerPdfPanel.fontName";
+		//
+		Assertions.assertSame(fontName, getFontName(key, null, Collections.singletonMap(key, Util.name(fontName))));
+		//
+		Assertions.assertSame(fontName,
+				getFontName(key, null, Collections.singletonMap(key, fontName != null ? fontName.getName() : null)));
+		//
+		Assertions.assertSame(fontName, getFontName(key, null, Collections.singletonMap(key,
+				fontName != null ? StringUtils.substring(fontName.getName(), 0, 7) : null)));
+		//
+		Assertions.assertThrows(IllegalStateException.class, () -> getFontName(key, null, Collections.singletonMap(key,
+				fontName != null ? StringUtils.substring(fontName.getName(), 0, 6) : null)));
+		//
+		if (ih != null && (ih.properties = ObjectUtils.getIfNull(ih.properties, LinkedHashMap::new)) != null) {
+			//
+			MethodUtils.invokeMethod(ih.properties, "put", key, Util.name(fontName));
+			//
+		} // if
+			//
+		Assertions.assertSame(fontName, getFontName(key, Reflection.newProxy(PropertyResolver.class, ih), null));
+		//
+	}
+
+	private static FontName getFontName(final String key, final PropertyResolver propertyResolver, final Map<?, ?> map)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_FONT_NAME_3.invoke(null, key, propertyResolver, map);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof FontName) {
+				return (FontName) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static IValue0<FontName> getFontName(final FontName[] fontNames, final String prefix) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_FONT_NAME_2.invoke(null, fontNames, prefix);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IValue0) {
+				return (IValue0) obj;
+			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();

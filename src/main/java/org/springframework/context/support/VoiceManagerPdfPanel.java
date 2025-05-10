@@ -1950,7 +1950,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				ObjectMap.setObject(objectMap, SpeechApi.class, speechApi);
 				//
-				ObjectMap.setObject(objectMap, PDFont.class, new PDType1Font(FontName.HELVETICA));
+				ObjectMap.setObject(objectMap, PDFont.class,
+						new PDType1Font(ObjectUtils.defaultIfNull(
+								getFontName("org.springframework.context.support.VoiceManagerPdfPanel.fontName",
+										propertyResolver, System.getProperties()),
+								FontName.HELVETICA)));
 				//
 				ObjectMap.setObject(objectMap, File.class, file);
 				//
@@ -1994,6 +1998,89 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // for
 			//
+	}
+
+	private static FontName getFontName(final String key, final PropertyResolver propertyResolver,
+			final Map<?, ?> map) {
+		//
+		final FontName[] fontNames = FontName.values();
+		//
+		IValue0<FontName> iValue0 = getFontName(fontNames, testAndApply(PropertyResolverUtil::containsProperty,
+				propertyResolver, key, PropertyResolverUtil::getProperty, null));
+		//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
+		if ((iValue0 = getFontName(fontNames,
+				Util.toString(testAndApply(Util::containsKey, map, key, Util::get, null)))) != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static IValue0<FontName> getFontName(final FontName[] fontNames, final String prefix) {
+		//
+		FontName fontName = null;
+		//
+		IValue0<FontName> iValue0 = null;
+		//
+		for (int i = 0; fontNames != null && i < fontNames.length; i++) {
+			//
+			if ((fontName = ArrayUtils.get(fontNames, i)) == null
+					|| (!StringUtils.equalsIgnoreCase(fontName.getName(), prefix)
+							&& !StringUtils.equalsIgnoreCase(Util.name(fontName), prefix))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (iValue0 == null) {
+				//
+				iValue0 = Unit.with(fontName);
+				//
+			} else {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+		} // for
+			//
+		if (iValue0 == null) {
+			//
+			for (int i = 0; fontNames != null && i < fontNames.length; i++) {
+				//
+				if ((fontName = ArrayUtils.get(fontNames, i)) == null
+						|| (!StringUtils.startsWithIgnoreCase(fontName.getName(), prefix)
+								&& !StringUtils.startsWithIgnoreCase(Util.name(fontName), prefix))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (iValue0 == null) {
+					//
+					iValue0 = Unit.with(fontName);
+					//
+				} else {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		return iValue0;
+		//
 	}
 
 	private static boolean isTestMode() {
