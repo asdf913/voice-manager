@@ -2002,6 +2002,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
+	@Nullable
 	private static FontName getFontName(final String key, final PropertyResolver propertyResolver,
 			final Map<?, ?> map) {
 		//
