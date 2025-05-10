@@ -2032,7 +2032,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		IValue0<FontName> iValue0 = null;
 		//
-		for (int i = 0; fontNames != null && i < fontNames.length; i++) {
+		final int length = fontNames != null ? fontNames.length : 0;
+		//
+		for (int i = 0; i < length; i++) {
 			//
 			if ((fontName = ArrayUtils.get(fontNames, i)) == null
 					|| (!StringUtils.equalsIgnoreCase(fontName.getName(), prefix)
@@ -2056,7 +2058,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		if (iValue0 == null) {
 			//
-			for (int i = 0; fontNames != null && i < fontNames.length; i++) {
+			for (int i = 0; i < length; i++) {
 				//
 				if ((fontName = ArrayUtils.get(fontNames, i)) == null
 						|| (!StringUtils.startsWithIgnoreCase(fontName.getName(), prefix)
