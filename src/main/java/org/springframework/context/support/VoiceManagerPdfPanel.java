@@ -193,6 +193,8 @@ import org.jsoup.nodes.ElementUtil;
 import org.jsoup.nodes.NodeUtil;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.nodes.TextNodeUtil;
+import org.meeuw.functional.ThrowingRunnable;
+import org.meeuw.functional.ThrowingRunnableUtil;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.oxbow.swingbits.util.OperatingSystem;
 import org.oxbow.swingbits.util.OperatingSystemUtil;
@@ -2044,16 +2046,14 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // if
 				//
-			if (iValue0 == null) {
-				//
-				iValue0 = Unit.with(fontName);
-				//
-			} else {
+			testAndRunThrows(iValue0 != null, () -> {
 				//
 				throw new IllegalStateException();
 				//
-			} // if
-				//
+			});
+			//
+			iValue0 = Unit.with(fontName);
+			//
 		} // for
 			//
 		if (iValue0 == null) {
@@ -2068,22 +2068,27 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 				} // if
 					//
-				if (iValue0 == null) {
-					//
-					iValue0 = Unit.with(fontName);
-					//
-				} else {
+				testAndRunThrows(iValue0 != null, () -> {
 					//
 					throw new IllegalStateException();
 					//
-				} // if
-					//
+				});
+				//
+				iValue0 = Unit.with(fontName);
+				//
 			} // for
 				//
 		} // if
 			//
 		return iValue0;
 		//
+	}
+
+	private static <E extends Throwable> void testAndRunThrows(final boolean b,
+			final ThrowingRunnable<E> throwingRunnable) throws E {
+		if (b) {
+			ThrowingRunnableUtil.runThrows(throwingRunnable);
+		}
 	}
 
 	private static boolean isTestMode() {
