@@ -1933,7 +1933,17 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				StringMap.setString(stringMap, "text", Util.getText(tfText));
 				//
-				StringMap.setString(stringMap, "voiceId", Util.toString(Util.getSelectedItem(cbmVoiceId)));
+				final Object voiceId = Util.getSelectedItem(cbmVoiceId);
+				//
+				if (voiceId == null) {
+					//
+					JOptionPane.showMessageDialog(null, "Please select a voice");
+					//
+					return;
+					//
+				} // if
+					//
+				StringMap.setString(stringMap, "voiceId", Util.toString(voiceId));
 				//
 				StringMap.setString(stringMap, "imageUrl", Util.getText(tfImageUrl));
 				//
