@@ -1122,6 +1122,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(btnExecute = new JButton("Execute"), String.format("%1$s,span %2$s", WRAP, 2));
 		//
+		setEnabled(btnExecute, Util.getSelectedItem(cbmVoiceId) != null);
+		//
 		add(new JLabel("Output"));
 		//
 		add(tfOutputFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, span - 2));
@@ -2567,10 +2569,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		if (Objects.equals(Util.getSource(evt), jcbVoiceId)) {
 			//
+			final Object voiceId = Util.getSelectedItem(cbmVoiceId);
+			//
+			setEnabled(btnExecute, voiceId != null);
+			//
 			try {
 				//
-				final String language = SpeechApi.getVoiceAttribute(speechApi,
-						Util.toString(Util.getSelectedItem(cbmVoiceId)), "Language");
+				final String language = SpeechApi.getVoiceAttribute(speechApi, Util.toString(voiceId), "Language");
 				//
 				Util.setText(tfSpeechLanguageCode, language);
 				//
