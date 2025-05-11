@@ -1937,7 +1937,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				if (voiceId == null) {
 					//
-					JOptionPane.showMessageDialog(null, "Please select a voice");
+					testAndRunThrows(!GraphicsEnvironment.isHeadless(),
+							() -> JOptionPane.showMessageDialog(null, "Please select a voice"));
 					//
 					return;
 					//
