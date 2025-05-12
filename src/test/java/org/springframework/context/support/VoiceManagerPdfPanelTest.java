@@ -104,7 +104,7 @@ class VoiceManagerPdfPanelTest {
 	private static Class<?> CLASS_SHLWAPI = null;
 
 	private static Method METHOD_SET_FONT_SIZE_AND_UNIT, METHOD_GET_TEXT_ALIGNS, METHOD_CHOP, METHOD_GENERATE_PDF_HTML,
-			METHOD_LENGTH, METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY, METHOD_GET_TEXT_WIDTH, METHOD_OR,
+			METHOD_LENGTH, METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY, METHOD_GET_TEXT_WIDTH,
 			METHOD_TO_AUDIO_RESOURCE, METHOD_LIST_FILES, METHOD_IS_DIRECTORY, METHOD_GET_TRANSFER_DATA,
 			METHOD_FIND_MATCH, METHOD_TO_MILLIS, METHOD_TEST_AND_ACCEPT, METHOD_IIF, METHOD_PATH_FILE_EXISTS_W,
 			METHOD_GET_GENERIC_INTERFACES, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE,
@@ -134,8 +134,6 @@ class VoiceManagerPdfPanelTest {
 		//
 		(METHOD_GET_TEXT_WIDTH = clz.getDeclaredMethod("getTextWidth", String.class, PDFont.class, Float.TYPE))
 				.setAccessible(true);
-		//
-		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
 		(METHOD_TO_AUDIO_RESOURCE = clz.getDeclaredMethod("toAudioResource", ContentInfoUtil.class, File[].class))
 				.setAccessible(true);
@@ -1339,25 +1337,26 @@ class VoiceManagerPdfPanelTest {
 			//
 	}
 
-	@Test
-	void testOr() throws Throwable {
-		//
-		Assertions.assertTrue(or(true, false));
-		//
-		Assertions.assertFalse(or(false, false, null));
-		//
-	}
-
 	private static boolean or(final boolean a, final boolean b, final boolean... bs) throws Throwable {
-		try {
-			final Object obj = METHOD_OR.invoke(null, a, b, bs);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
+		//
+		if (a || b) {
+			//
+			return true;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if (bs[i]) {
+				//
+				return true;
+				//
 			} // if
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
+				//
+		} // for
+			//
+		return false;
+		//
 	}
 
 	@Test

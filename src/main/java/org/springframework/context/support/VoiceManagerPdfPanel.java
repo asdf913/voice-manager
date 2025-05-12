@@ -4267,50 +4267,67 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
-		try {
+		final Class<?> clz = Util.getClass(instance);
+		//
+		final String name = Util.getName(clz);
+		//
+		List<Field> fs = null;
+		//
+		Field f = null;
+		//
+		if (Util.contains(Arrays.asList("org.apache.pdfbox.pdmodel.font.PDMMType1Font",
+				"org.apache.pdfbox.pdmodel.font.PDTrueTypeFont", "org.apache.pdfbox.pdmodel.font.PDType1CFont",
+				"org.apache.pdfbox.pdmodel.font.PDType1Font"), name)) {
 			//
-			if (or(Util.contains(Arrays.asList("org.apache.pdfbox.pdmodel.font.PDMMType1Font",
-					"org.apache.pdfbox.pdmodel.font.PDTrueTypeFont", "org.apache.pdfbox.pdmodel.font.PDType1CFont",
-					"org.apache.pdfbox.pdmodel.font.PDType1Font"), Util.getName(Util.getClass(instance)))
-					&& FieldUtils.readField(instance, "codeToWidthMap", true) == null,
-					Objects.equals("org.apache.pdfbox.pdmodel.font.PDType0Font", Util.getName(Util.getClass(instance)))
-							&& FieldUtils.readDeclaredField(instance, "descendantFont", true) == null,
-					Objects.equals("org.apache.pdfbox.pdmodel.font.PDType3Font", Util.getName(Util.getClass(instance)))
-							&& FieldUtils.readField(instance, "dict", true) == null)) {
+			if (IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
+					x -> Objects.equals(Util.getName(x), "codeToWidthMap")))) > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			if ((f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) != null
+					&& Narcissus.getField(instance, f) == null) {
 				//
 				return defaultValue;
 				//
 			} // if
 				//
-		} catch (final IllegalAccessException e) {
+		} else if (Objects.equals("org.apache.pdfbox.pdmodel.font.PDType0Font", name)) {
 			//
-			throw new RuntimeException(e);
-			//
-		} // try
-			//
-		return instance.getWidth(code);
-		//
-	}
-
-	private static boolean or(final boolean a, final boolean b, @Nullable final boolean... bs) {
-		//
-		if (a || b) {
-			//
-			return true;
-			//
-		} // if
-			//
-		for (int i = 0; bs != null && i < bs.length; i++) {
-			//
-			if (bs[i]) {
+			if (IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
+					x -> Objects.equals(Util.getName(x), "descendantFont")))) > 1) {
 				//
-				return true;
+				throw new IllegalStateException();
 				//
 			} // if
 				//
-		} // for
+			if ((f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) != null
+					&& Narcissus.getField(instance, f) == null) {
+				//
+				return defaultValue;
+				//
+			} // if
+				//
+		} else if (Objects.equals("org.apache.pdfbox.pdmodel.font.PDType3Font", name)) {
 			//
-		return false;
+			if (IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
+					x -> Objects.equals(Util.getName(x), "dict")))) > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			if ((f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) != null
+					&& Narcissus.getField(instance, f) == null) {
+				//
+				return defaultValue;
+				//
+			} // if
+				//
+		} // if
+			//
+		return instance.getWidth(code);
 		//
 	}
 
