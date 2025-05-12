@@ -4279,13 +4279,15 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				"org.apache.pdfbox.pdmodel.font.PDTrueTypeFont", "org.apache.pdfbox.pdmodel.font.PDType1CFont",
 				"org.apache.pdfbox.pdmodel.font.PDType1Font"), name)) {
 			//
-			if (IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
-					x -> Objects.equals(Util.getName(x), "codeToWidthMap")))) > 1) {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
+			testAndRunThrows(
+					IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
+							x -> Objects.equals(Util.getName(x), "codeToWidthMap")))) > 1,
+					() -> {
+						//
+						throw new IllegalStateException();
+						//
+					});
+			//
 			if ((f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) != null
 					&& Narcissus.getField(instance, f) == null) {
 				//
@@ -4295,13 +4297,15 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} else if (Objects.equals("org.apache.pdfbox.pdmodel.font.PDType0Font", name)) {
 			//
-			if (IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
-					x -> Objects.equals(Util.getName(x), "descendantFont")))) > 1) {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
+			testAndRunThrows(
+					IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
+							x -> Objects.equals(Util.getName(x), "descendantFont")))) > 1,
+					() -> {
+						//
+						throw new IllegalStateException();
+						//
+					});
+			//
 			if ((f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) != null
 					&& Narcissus.getField(instance, f) == null) {
 				//
@@ -4311,13 +4315,15 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} else if (Objects.equals("org.apache.pdfbox.pdmodel.font.PDType3Font", name)) {
 			//
-			if (IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
-					x -> Objects.equals(Util.getName(x), "dict")))) > 1) {
-				//
-				throw new IllegalStateException();
-				//
-			} // if
-				//
+			testAndRunThrows(
+					IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
+							x -> Objects.equals(Util.getName(x), "dict")))) > 1,
+					() -> {
+						//
+						throw new IllegalStateException();
+						//
+					});
+			//
 			if ((f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) != null
 					&& Narcissus.getField(instance, f) == null) {
 				//
