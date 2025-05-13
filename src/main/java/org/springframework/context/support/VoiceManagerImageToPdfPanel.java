@@ -297,7 +297,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 					//
 					final float imageWidth = getWidth(pdImageXObject);
 					//
-					final float imageHeight = pdImageXObject != null ? pdImageXObject.getHeight() : 0;
+					final float imageHeight = getHeight(pdImageXObject);
 					//
 					final float ratioMin = Math.min(pageWidth / (imageWidth),
 							((getHeight(pdRectangle)) / (imageHeight)));
@@ -337,6 +337,10 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 
 	private static int getWidth(final PDImage instance) {
 		return instance != null ? instance.getWidth() : 0;
+	}
+
+	private static int getHeight(final PDImage instance) {
+		return instance != null ? instance.getHeight() : 0;
 	}
 
 	private static void deleteOnExit(@Nullable final File instance) {

@@ -22,19 +22,22 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class VoiceManagerImageToPdfPanelTest {
 
-	private static Method METHOD_GET_WIDTH = null;
+	private static Method METHOD_GET_WIDTH, METHOD_GET_HEIGHT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
 		//
-		(METHOD_GET_WIDTH = VoiceManagerImageToPdfPanel.class.getDeclaredMethod("getWidth", PDImage.class))
-				.setAccessible(true);
+		final Class<?> clz = VoiceManagerImageToPdfPanel.class;
+		//
+		(METHOD_GET_WIDTH = clz.getDeclaredMethod("getWidth", PDImage.class)).setAccessible(true);
+		//
+		(METHOD_GET_HEIGHT = clz.getDeclaredMethod("getHeight", PDImage.class)).setAccessible(true);
 		//
 	}
 
 	private static class IH implements InvocationHandler {
 
-		private Integer width = null;
+		private Integer width, height = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -46,6 +49,10 @@ class VoiceManagerImageToPdfPanelTest {
 				if (Objects.equals(methodName, "getWidth")) {
 					//
 					return width;
+					//
+				} else if (Objects.equals(methodName, "getHeight")) {
+					//
+					return height;
 					//
 				} // if
 					//
@@ -59,10 +66,16 @@ class VoiceManagerImageToPdfPanelTest {
 
 	private VoiceManagerImageToPdfPanel instance = null;
 
+	private PDImage pdImage = null;
+
+	private IH ih = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		instance = new VoiceManagerImageToPdfPanel();
+		//
+		pdImage = Reflection.newProxy(PDImage.class, ih = new IH());
 		//
 	}
 
@@ -166,12 +179,14 @@ class VoiceManagerImageToPdfPanelTest {
 	@Test
 	void testGetWidth() throws Throwable {
 		//
-		final IH ih = new IH();
-		//
 		final int zero = 0;
 		//
-		ih.width = zero;
-		//
+		if (ih != null) {
+			//
+			ih.width = zero;
+			//
+		} // if
+			//
 		Assertions.assertEquals(zero, getWidth(Reflection.newProxy(PDImage.class, ih)));
 		//
 	}
@@ -179,6 +194,33 @@ class VoiceManagerImageToPdfPanelTest {
 	private static int getWidth(final PDImage instance) throws Throwable {
 		try {
 			final Object obj = METHOD_GET_WIDTH.invoke(null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.getName(Util.getClass(instance)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetHeight() throws Throwable {
+		//
+		final int zero = 0;
+		//
+		if (ih != null) {
+			//
+			ih.height = zero;
+			//
+		} // if
+			//
+		Assertions.assertEquals(zero, getHeight(pdImage));
+		//
+	}
+
+	private static int getHeight(final PDImage instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_HEIGHT.invoke(null, instance);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
 			}
