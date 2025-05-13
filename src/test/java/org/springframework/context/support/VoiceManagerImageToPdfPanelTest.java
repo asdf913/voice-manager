@@ -1,5 +1,7 @@
 package org.springframework.context.support;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -7,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+
+import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -22,7 +26,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class VoiceManagerImageToPdfPanelTest {
 
-	private static Method METHOD_GET_WIDTH, METHOD_GET_HEIGHT = null;
+	private static Method METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_IS_PD_IMAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -32,6 +36,8 @@ class VoiceManagerImageToPdfPanelTest {
 		(METHOD_GET_WIDTH = clz.getDeclaredMethod("getWidth", PDImage.class)).setAccessible(true);
 		//
 		(METHOD_GET_HEIGHT = clz.getDeclaredMethod("getHeight", PDImage.class)).setAccessible(true);
+		//
+		(METHOD_IS_PD_IMAGE = clz.getDeclaredMethod("isPDImage", byte[].class)).setAccessible(true);
 		//
 	}
 
@@ -107,7 +113,7 @@ class VoiceManagerImageToPdfPanelTest {
 		//
 		Object invokeStaticMethod = null;
 		//
-		String toString = null;
+		String name, toString = null;
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
@@ -148,9 +154,11 @@ class VoiceManagerImageToPdfPanelTest {
 				toString = Objects.toString(m);
 				//
 				if (Util.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE, Float.TYPE), Util.getReturnType(m))
-						|| Boolean.logicalAnd(Objects.equals(Util.getName(m),
+						|| Boolean.logicalAnd(Objects.equals(name = Util.getName(m),
 								"getPDImageXObjectCreateFromFileByContentDetectFileTypeMethodAndAllowedFileTypes"),
-								Arrays.equals(Util.getParameterTypes(m), new Class<?>[] {}))) {
+								Arrays.equals(parameterTypes, new Class<?>[] {}))
+						|| Boolean.logicalAnd(Objects.equals(name, "isPDImage"),
+								Arrays.equals(parameterTypes, new Class<?>[] { byte[].class }))) {
 					//
 					Assertions.assertNotNull(invokeStaticMethod, toString);
 					//
@@ -225,6 +233,43 @@ class VoiceManagerImageToPdfPanelTest {
 				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.getName(Util.getClass(instance)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsPDImage() throws Throwable {
+		//
+		final BufferedImage bi = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+		//
+		Assertions.assertEquals(Boolean.FALSE, isPDImage(new byte[] {}));
+		//
+		Assertions.assertEquals(Boolean.FALSE, isPDImage(new byte[] { 0 }));
+		//
+		byte[] bs = null;
+		//
+		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			ImageIO.write(bi, "png", baos);
+			//
+			bs = baos.toByteArray();
+			//
+		} // try
+			//
+		Assertions.assertEquals(Boolean.TRUE, isPDImage(bs));
+		//
+	}
+
+	private static Boolean isPDImage(final byte[] bs) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_PD_IMAGE.invoke(null, bs);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Boolean) {
+				return (Boolean) obj;
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

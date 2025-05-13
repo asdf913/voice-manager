@@ -4,6 +4,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -271,26 +272,12 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 						&& jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION
 						&& Util.exists(file = jfc.getSelectedFile()) && Util.isFile(file)) {// TODO
 					//
-					final Entry<Method, Collection<Object>> entry = getPDImageXObjectCreateFromFileByContentDetectFileTypeMethodAndAllowedFileTypes();
-					//
-					final Method method = Util.getKey(entry);
-					//
-					if (Arrays.equals(Util.getParameterTypes(method), new Class<?>[] { BufferedInputStream.class })) {
+					if (Objects.equals(Boolean.FALSE, isPDImage(FileUtils.readFileToByteArray(file)))) {
 						//
-						try (final InputStream is = Files.newInputStream(Util.toPath(file));
-								final BufferedInputStream bis = new BufferedInputStream(is)) {
-							//
-							if (Boolean.logicalAnd(Util.isStatic(method),
-									!Util.contains(Util.getValue(entry), Narcissus.invokeStaticMethod(method, bis)))) {
-								//
-								JOptionPane.showMessageDialog(null, "Please select an image file");
-								//
-								return;
-								//
-							} // if
-								//
-						} // try
-							//
+						JOptionPane.showMessageDialog(null, "Please select an image file");
+						//
+						return;
+						//
 					} // if
 						//
 					final PDImageXObject pdImageXObject = PDImageXObject.createFromFileByContent(file, pdDocument);
@@ -333,6 +320,36 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 				//
 		} // if
 			//
+	}
+
+	private static Boolean isPDImage(final byte[] bs) throws NoSuchMethodException, IOException {
+		//
+		if (bs == null || bs.length == 0) {
+			//
+			return Boolean.FALSE;
+			//
+		} // if
+			//
+		final Entry<Method, Collection<Object>> entry = getPDImageXObjectCreateFromFileByContentDetectFileTypeMethodAndAllowedFileTypes();
+		//
+		final Method method = Util.getKey(entry);
+		//
+		if (Arrays.equals(Util.getParameterTypes(method), new Class<?>[] { BufferedInputStream.class })) {
+			//
+			try (final InputStream is = new ByteArrayInputStream(bs);
+					final BufferedInputStream bis = new BufferedInputStream(is)) {
+				//
+				return Util.isStatic(method)
+						? Boolean
+								.valueOf(Util.contains(Util.getValue(entry), Narcissus.invokeStaticMethod(method, bis)))
+						: null;
+				//
+			} // try
+				//
+		} // if
+			//
+		return null;
+		//
 	}
 
 	private static int getWidth(@Nullable final PDImage instance) {
