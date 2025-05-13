@@ -334,6 +334,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 		}
 	}
 
+	@Nullable
 	private static String getMessage(@Nullable final Throwable instance) {
 		return instance != null ? instance.getMessage() : null;
 	}
