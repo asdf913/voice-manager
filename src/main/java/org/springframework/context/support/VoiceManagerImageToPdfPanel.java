@@ -320,7 +320,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 
 	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
 			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
-			final FailableBiFunction<T, U, R, E> functionFalse) throws E {
+			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
 		return Util.test(predicate, t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
