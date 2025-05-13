@@ -327,6 +327,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 		return instance != null ? instance.getMessage() : null;
 	}
 
+	@Nullable
 	private static List<PDAnnotation> getAnnotations(final PDPage instance, final Consumer<IOException> consumer) {
 		//
 		try {
