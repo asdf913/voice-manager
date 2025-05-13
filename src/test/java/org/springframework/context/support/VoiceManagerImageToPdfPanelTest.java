@@ -1,5 +1,7 @@
 package org.springframework.context.support;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,13 +10,52 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
 class VoiceManagerImageToPdfPanelTest {
+
+	private static Method METHOD_GET_WIDTH = null;
+
+	@BeforeAll
+	static void beforeAll() throws NoSuchMethodException {
+		//
+		(METHOD_GET_WIDTH = VoiceManagerImageToPdfPanel.class.getDeclaredMethod("getWidth", PDImage.class))
+				.setAccessible(true);
+		//
+	}
+
+	private static class IH implements InvocationHandler {
+
+		private Integer width = null;
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = Util.getName(method);
+			//
+			if (proxy instanceof PDImage) {
+				//
+				if (Objects.equals(methodName, "getWidth")) {
+					//
+					return width;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+	}
 
 	private VoiceManagerImageToPdfPanel instance = null;
 
@@ -120,6 +161,31 @@ class VoiceManagerImageToPdfPanelTest {
 
 	private static Object[] toArray(final Collection<?> instance) {
 		return instance != null ? instance.toArray() : null;
+	}
+
+	@Test
+	void testGetWidth() throws Throwable {
+		//
+		final IH ih = new IH();
+		//
+		final int zero = 0;
+		//
+		ih.width = zero;
+		//
+		Assertions.assertEquals(zero, getWidth(Reflection.newProxy(PDImage.class, ih)));
+		//
+	}
+
+	private static int getWidth(final PDImage instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_WIDTH.invoke(null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.getName(Util.getClass(instance)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }

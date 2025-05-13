@@ -71,6 +71,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
 import org.meeuw.functional.ThrowingRunnable;
@@ -294,7 +295,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 						//
 					final PDImageXObject pdImageXObject = PDImageXObject.createFromFileByContent(file, pdDocument);
 					//
-					final float imageWidth = pdImageXObject != null ? pdImageXObject.getWidth() : 0;
+					final float imageWidth = getWidth(pdImageXObject);
 					//
 					final float imageHeight = pdImageXObject != null ? pdImageXObject.getHeight() : 0;
 					//
@@ -332,6 +333,10 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 				//
 		} // if
 			//
+	}
+
+	private static int getWidth(final PDImage instance) {
+		return instance != null ? instance.getWidth() : 0;
 	}
 
 	private static void deleteOnExit(@Nullable final File instance) {
