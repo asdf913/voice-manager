@@ -130,20 +130,16 @@ class VoiceManagerImageToPdfPanelTest {
 				//
 				return null;
 				//
-			} else if (self instanceof PDDocument) {
+			} else if (self instanceof PDDocument && Objects.equals(methodName, "save")) {
 				//
-				if (Objects.equals(methodName, "save")) {
+				if (ioException != null) {
 					//
-					if (ioException != null) {
-						//
-						throw ioException;
-						//
-					} // if
-						//
-					return null;
+					throw ioException;
 					//
 				} // if
 					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
