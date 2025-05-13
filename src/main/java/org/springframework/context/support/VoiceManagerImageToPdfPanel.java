@@ -266,7 +266,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 	}
 
 	private static void addImage(final PDDocument pdDocument, final PDRectangle pdRectangle,
-			final PDPageContentStream cs, final float pageWidth, final float size)
+			@Nullable final PDPageContentStream cs, final float pageWidth, final float size)
 			throws IOException, NoSuchMethodException {
 		//
 		final JFileChooser jfc = new JFileChooser(Util.toFile(Path.of(".")));
