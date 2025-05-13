@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -188,11 +189,10 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 				//
 				final String text = Util.getText(tfText);
 				//
-				if ((speechApi = ObjectUtils.getIfNull(speechApi, SpeechApiImpl::new)) != null// TODO
-						&& text != null// TODO
-				) {
+				if (text != null) {// TODO
 					//
-					speechApi.writeVoiceToFile(text, "TTS_MS_JA-JP_HARUKA_11.0"// TODO
+					writeVoiceToFile(speechApi = ObjectUtils.getIfNull(speechApi, SpeechApiImpl::new), text,
+							"TTS_MS_JA-JP_HARUKA_11.0"// TODO
 							, i * -1// TODO
 							, 100, null, tempFile);
 					//
@@ -314,6 +314,13 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 				//
 		} // if
 			//
+	}
+
+	private static void writeVoiceToFile(final SpeechApi instance, final String text, final String voiceId,
+			final int rate, final int volume, final Map<String, Object> map, final File file) {
+		if (instance != null) {
+			instance.writeVoiceToFile(text, voiceId, rate, volume, map, file);
+		}
 	}
 
 	private static String getMessage(final Throwable instance) {

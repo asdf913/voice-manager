@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -35,7 +37,7 @@ import javassist.util.proxy.ProxyUtil;
 class VoiceManagerImageToPdfPanelTest {
 
 	private static Method METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_IS_PD_IMAGE, METHOD_GET_ANNOTATIONS,
-			METHOD_GET_MESSAGE = null;
+			METHOD_GET_MESSAGE, METHOD_WRITE_VOICE_TO_FILE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -53,6 +55,9 @@ class VoiceManagerImageToPdfPanelTest {
 		//
 		(METHOD_GET_MESSAGE = clz.getDeclaredMethod("getMessage", Throwable.class)).setAccessible(true);
 		//
+		(METHOD_WRITE_VOICE_TO_FILE = clz.getDeclaredMethod("writeVoiceToFile", SpeechApi.class, String.class,
+				String.class, Integer.TYPE, Integer.TYPE, Map.class, File.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -62,6 +67,12 @@ class VoiceManagerImageToPdfPanelTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
+			if (Objects.equals(Util.getReturnType(method), Void.TYPE)) {
+				//
+				return null;
+				//
+			} // if
+				//
 			final String methodName = Util.getName(method);
 			//
 			if (proxy instanceof PDImage) {
@@ -377,6 +388,23 @@ class VoiceManagerImageToPdfPanelTest {
 				return (String) obj;
 			}
 			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testWriteVoiceToFile() {
+		//
+		Assertions.assertDoesNotThrow(
+				() -> writeVoiceToFile(Reflection.newProxy(SpeechApi.class, ih), null, null, 0, 0, null, null));
+		//
+	}
+
+	private static void writeVoiceToFile(final SpeechApi instance, final String text, final String voiceId,
+			final int rate, final int volume, final Map<String, Object> map, final File file) throws Throwable {
+		try {
+			METHOD_WRITE_VOICE_TO_FILE.invoke(null, instance, text, voiceId, rate, volume, map, file);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
