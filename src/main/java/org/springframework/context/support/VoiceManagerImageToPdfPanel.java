@@ -324,12 +324,12 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 				//
 			try {
 				//
-				if (!isTestMode) {
+				testAndRunThrows(!isTestMode, () -> {
 					//
 					pdDocument.save(Util.toFile(Path.of("temp.pdf")));// TODO
 					//
-				} // if
-					//
+				});
+				//
 			} catch (IOException e) {
 				//
 				LoggerUtil.error(LOG, e.getMessage(), e);
