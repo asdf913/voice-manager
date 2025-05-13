@@ -337,7 +337,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static void deleteOnExit(final File instance) {
+	private static void deleteOnExit(@Nullable final File instance) {
 		if (instance != null) {
 			instance.deleteOnExit();
 		}
