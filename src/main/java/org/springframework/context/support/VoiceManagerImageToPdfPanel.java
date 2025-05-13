@@ -305,8 +305,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 		//
 		try (final InputStream is = testAndApply(Objects::nonNull, path, Files::newInputStream, null)) {
 			//
-			return testAndApply((a, b) -> a != null && b != null, pdDocument, is, (a, b) -> new PDEmbeddedFile(a, b),
-					null);
+			return testAndApply((a, b) -> a != null && b != null, pdDocument, is, PDEmbeddedFile::new, null);
 			//
 		} catch (final IOException e) {
 			//
