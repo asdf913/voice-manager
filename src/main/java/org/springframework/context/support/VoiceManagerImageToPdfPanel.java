@@ -158,7 +158,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			//
 			final PDRectangle mediaBox = pdPage.getMediaBox();
 			//
-			float pageWidth = mediaBox != null ? mediaBox.getWidth() : 0;
+			float pageWidth = getWidth(mediaBox);
 			//
 			float pageHeight = mediaBox != null ? mediaBox.getHeight() : 0;
 			//
@@ -304,7 +304,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 					//
 					final float imageHeight = pdImageXObject != null ? pdImageXObject.getHeight() : 0;
 					//
-					final float ratioMin = Math.min((pdRectangle != null ? pdRectangle.getWidth() : 0f) / (imageWidth),
+					final float ratioMin = Math.min(pageWidth / (imageWidth),
 							((pdRectangle != null ? pdRectangle.getHeight() : 0f) / (imageHeight)));
 					//
 					cs.drawImage(pdImageXObject, 0, ((imageHeight) - (pageHeight = (imageHeight) * ratioMin)) / 2,
@@ -338,6 +338,10 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 				//
 		} // if
 			//
+	}
+
+	private static float getWidth(final PDRectangle instance) {
+		return instance != null ? instance.getWidth() : 0;
 	}
 
 	@Nullable
