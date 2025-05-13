@@ -306,7 +306,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 				//
 				);
 				//
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				//
 				LoggerUtil.error(LOG, getMessage(e), e);
 				//
