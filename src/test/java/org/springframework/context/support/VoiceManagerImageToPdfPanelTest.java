@@ -119,14 +119,10 @@ class VoiceManagerImageToPdfPanelTest {
 					//
 				} // if
 					//
-			} else if (self instanceof Throwable) {
+			} else if (self instanceof Throwable && Objects.equals(methodName, "getMessage")) {
 				//
-				if (Objects.equals(methodName, "getMessage")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
