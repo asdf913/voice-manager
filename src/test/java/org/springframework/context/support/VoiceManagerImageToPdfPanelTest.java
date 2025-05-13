@@ -30,7 +30,6 @@ import org.junit.jupiter.api.Test;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
-import j2html.tags.Tag;
 import javassist.util.proxy.MethodHandler;
 import javassist.util.proxy.ProxyUtil;
 
