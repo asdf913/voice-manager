@@ -305,7 +305,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static void save(final PDDocument instance, final File file, final Consumer<IOException> consumer) {
+	private static void save(@Nullable final PDDocument instance, final File file,
+			final Consumer<IOException> consumer) {
 		//
 		try {
 			//
