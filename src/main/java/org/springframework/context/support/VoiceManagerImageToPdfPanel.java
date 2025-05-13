@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -58,6 +59,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableBiFunction;
+import org.apache.commons.lang3.function.FailableBiFunctionUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -198,16 +201,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 					//
 				} // if
 					//
-				try (final InputStream is = Files.newInputStream(Util.toPath(tempFile))) {
-					//
-					pdEmbeddedFile = new PDEmbeddedFile(pdDocument, is);
-					//
-				} catch (final IOException e) {
-					//
-					LoggerUtil.error(LOG, getMessage(e), e);
-					//
-				} // try
-					//
+				createPDEmbeddedFile(pdDocument, Util.toPath(tempFile), e -> LoggerUtil.error(LOG, getMessage(e), e));
+				//
 				pdComplexFileSpecification.setEmbeddedFile(pdEmbeddedFile);
 				//
 				(pdAnnotationFileAttachment = new PDAnnotationFileAttachment()).setFile(pdComplexFileSpecification);
@@ -303,6 +298,31 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static PDEmbeddedFile createPDEmbeddedFile(final PDDocument pdDocument, final Path path,
+			final Consumer<IOException> consumer) {
+		//
+		try (final InputStream is = testAndApply(Objects::nonNull, path, Files::newInputStream, null)) {
+			//
+			return testAndApply((a, b) -> a != null && b != null, pdDocument, is, (a, b) -> new PDEmbeddedFile(a, b),
+					null);
+			//
+		} catch (final IOException e) {
+			//
+			Util.accept(consumer, e);
+			//
+		} // try
+			//
+		return null;
+		//
+	}
+
+	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
+			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
+			final FailableBiFunction<T, U, R, E> functionFalse) throws E {
+		return Util.test(predicate, t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
+				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
 
 	private static void save(@Nullable final PDDocument instance, final File file,

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,6 +22,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.junit.jupiter.api.Assertions;
@@ -37,7 +39,7 @@ import javassist.util.proxy.ProxyUtil;
 class VoiceManagerImageToPdfPanelTest {
 
 	private static Method METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_IS_PD_IMAGE, METHOD_GET_ANNOTATIONS,
-			METHOD_GET_MESSAGE, METHOD_WRITE_VOICE_TO_FILE, METHOD_SAVE = null;
+			METHOD_GET_MESSAGE, METHOD_WRITE_VOICE_TO_FILE, METHOD_SAVE, METHOD_CREATE_PD_EMBEDDED_FILE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -59,6 +61,9 @@ class VoiceManagerImageToPdfPanelTest {
 				String.class, Integer.TYPE, Integer.TYPE, Map.class, File.class)).setAccessible(true);
 		//
 		(METHOD_SAVE = clz.getDeclaredMethod("save", PDDocument.class, File.class, Consumer.class)).setAccessible(true);
+		//
+		(METHOD_CREATE_PD_EMBEDDED_FILE = clz.getDeclaredMethod("createPDEmbeddedFile", PDDocument.class, Path.class,
+				Consumer.class)).setAccessible(true);
 		//
 	}
 
@@ -156,7 +161,7 @@ class VoiceManagerImageToPdfPanelTest {
 	private MH mh = null;
 
 	@BeforeEach
-	void beforeEach() {
+	void beforeEach() throws Throwable {
 		//
 		instance = new VoiceManagerImageToPdfPanel();
 		//
@@ -425,7 +430,7 @@ class VoiceManagerImageToPdfPanelTest {
 	@Test
 	void testSave() throws Throwable {
 		//
-		final PDDocument pdDocument = ProxyUtil.createProxy(PDDocument.class, mh);
+		final PDDocument pdDocument = ProxyUtil.createProxy(PDDocument.class, mh = new MH());
 		//
 		Assertions.assertDoesNotThrow(() -> save(pdDocument, null, null));
 		//
@@ -443,6 +448,28 @@ class VoiceManagerImageToPdfPanelTest {
 			throws Throwable {
 		try {
 			METHOD_SAVE.invoke(null, instance, file, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testCreatePDEmbeddedFile() throws Throwable {
+		//
+		Assertions.assertEquals(null, createPDEmbeddedFile(new PDDocument(), null, null));
+		//
+	}
+
+	private static PDEmbeddedFile createPDEmbeddedFile(final PDDocument pdDocument, final Path path,
+			final Consumer<IOException> consumer) throws Throwable {
+		try {
+			final Object obj = METHOD_CREATE_PD_EMBEDDED_FILE.invoke(null, pdDocument, path, consumer);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof PDEmbeddedFile) {
+				return (PDEmbeddedFile) obj;
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
