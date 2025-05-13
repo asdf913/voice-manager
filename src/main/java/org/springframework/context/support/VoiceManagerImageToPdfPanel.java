@@ -5,11 +5,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -196,7 +196,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 					//
 				} // if
 					//
-				try (final InputStream is = new FileInputStream(tempFile)) {
+				try (final InputStream is = Files.newInputStream(Util.toPath(tempFile))) {
 					//
 					pdEmbeddedFile = new PDEmbeddedFile(pdDocument, is);
 					//
@@ -281,7 +281,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 					//
 					if (Arrays.equals(Util.getParameterTypes(method), new Class<?>[] { BufferedInputStream.class })) {
 						//
-						try (final InputStream is = new FileInputStream(file);
+						try (final InputStream is = Files.newInputStream(Util.toPath(file));
 								final BufferedInputStream bis = new BufferedInputStream(is)) {
 							//
 							if (Util.isStatic(method) && !Util.contains(Util.getValue(entry),
