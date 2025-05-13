@@ -272,7 +272,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 						&& jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION
 						&& Util.exists(file = jfc.getSelectedFile()) && Util.isFile(file)) {// TODO
 					//
-					if (Objects.equals(Boolean.FALSE, isPDImage(FileUtils.readFileToByteArray(file)))) {
+					if (Objects.equals(Boolean.FALSE, isPDImage(Files.readAllBytes(Util.toPath(file))))) {
 						//
 						JOptionPane.showMessageDialog(null, "Please select an image file");
 						//
