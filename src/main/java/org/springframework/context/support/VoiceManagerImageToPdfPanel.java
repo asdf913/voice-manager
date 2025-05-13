@@ -292,7 +292,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			final float imageHeight = getHeight(pdImageXObject);
 			//
 			final float ratioMin = Math.min(imageWidth == 0 ? 0 : pageWidth / imageWidth,
-					getHeight(pdRectangle) / imageHeight);
+					imageHeight == 0 ? 0 : getHeight(pdRectangle) / imageHeight);
 			//
 			final float pageHeight = imageHeight * ratioMin;
 			//
