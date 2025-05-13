@@ -26,7 +26,7 @@ class VoiceManagerImageToPdfPanelTest {
 	}
 
 	@Test
-	void testActionPerformed() throws Exception {
+	void testActionPerformed() {
 		//
 		if (instance == null) {
 			//
@@ -34,7 +34,7 @@ class VoiceManagerImageToPdfPanelTest {
 			//
 		} // if
 			//
-		instance.actionPerformed(null);
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(null));
 		//
 	}
 
