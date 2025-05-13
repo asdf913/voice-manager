@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
@@ -225,12 +226,9 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 					//
 				} // try
 					//
-				if (Boolean.logicalAnd(Util.exists(tempFile), Util.isFile(tempFile))) {
-					//
-					FileUtils.deleteQuietly(tempFile);
-					//
-				} // if
-					//
+				testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), tempFile,
+						x -> FileUtils.deleteQuietly(x));
+				//
 			} // for
 				//
 			final boolean isTestMode = isTestMode();
@@ -338,6 +336,12 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 				//
 		} // if
 			//
+	}
+
+	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer) {
+		if (Util.test(predicate, value)) {
+			Util.accept(consumer, value);
+		}
 	}
 
 	private static float getWidth(@Nullable final PDRectangle instance) {
