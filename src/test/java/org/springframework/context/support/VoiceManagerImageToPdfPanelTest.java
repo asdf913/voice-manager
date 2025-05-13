@@ -2,19 +2,24 @@ package org.springframework.context.support;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,10 +28,14 @@ import org.junit.jupiter.api.Test;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import j2html.tags.Tag;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyUtil;
 
 class VoiceManagerImageToPdfPanelTest {
 
-	private static Method METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_IS_PD_IMAGE = null;
+	private static Method METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_IS_PD_IMAGE, METHOD_GET_ANNOTATIONS,
+			METHOD_GET_MESSAGE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -38,6 +47,11 @@ class VoiceManagerImageToPdfPanelTest {
 		(METHOD_GET_HEIGHT = clz.getDeclaredMethod("getHeight", PDImage.class)).setAccessible(true);
 		//
 		(METHOD_IS_PD_IMAGE = clz.getDeclaredMethod("isPDImage", byte[].class)).setAccessible(true);
+		//
+		(METHOD_GET_ANNOTATIONS = clz.getDeclaredMethod("getAnnotations", PDPage.class, Consumer.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_MESSAGE = clz.getDeclaredMethod("getMessage", Throwable.class)).setAccessible(true);
 		//
 	}
 
@@ -70,11 +84,53 @@ class VoiceManagerImageToPdfPanelTest {
 
 	}
 
+	private static class MH implements MethodHandler {
+
+		private IOException ioException = null;
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			final String methodName = Util.getName(thisMethod);
+			//
+			if (self instanceof PDPage) {
+				//
+				if (Objects.equals(methodName, "getAnnotations")) {
+					//
+					if (ioException != null) {
+						//
+						throw ioException;
+						//
+					} // if
+						//
+					return null;
+					//
+				} // if
+					//
+			} else if (self instanceof Throwable) {
+				//
+				if (Objects.equals(methodName, "getMessage")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+	}
+
 	private VoiceManagerImageToPdfPanel instance = null;
 
 	private PDImage pdImage = null;
 
 	private IH ih = null;
+
+	private MH mh = null;
 
 	@BeforeEach
 	void beforeEach() {
@@ -82,6 +138,8 @@ class VoiceManagerImageToPdfPanelTest {
 		instance = new VoiceManagerImageToPdfPanel();
 		//
 		pdImage = Reflection.newProxy(PDImage.class, ih = new IH());
+		//
+		mh = new MH();
 		//
 	}
 
@@ -268,6 +326,55 @@ class VoiceManagerImageToPdfPanelTest {
 				return null;
 			} else if (obj instanceof Boolean) {
 				return (Boolean) obj;
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetAnnotations() throws Throwable {
+		//
+		if (mh != null) {
+			//
+			mh.ioException = new IOException();
+			//
+		} // if
+			//
+		Assertions.assertNull(getAnnotations(ProxyUtil.createProxy(PDPage.class, mh), null));
+		//
+	}
+
+	private static List<PDAnnotation> getAnnotations(final PDPage instance, final Consumer<IOException> consumer)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ANNOTATIONS.invoke(null, instance, consumer);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetMsssage() throws Throwable {
+		//
+		Assertions.assertNull(getMessage(ProxyUtil.createProxy(Throwable.class, mh)));
+		//
+	}
+
+	private static String getMessage(final Throwable instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_MESSAGE.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(Util.getName(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

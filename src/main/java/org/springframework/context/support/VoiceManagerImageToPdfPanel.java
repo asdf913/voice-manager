@@ -74,6 +74,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
 import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.ThrowingRunnableUtil;
@@ -177,7 +178,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 				//
 			} catch (final IOException e) {
 				//
-				LoggerUtil.error(LOG, e.getMessage(), e);
+				LoggerUtil.error(LOG, getMessage(e), e);
 				//
 			} // if
 				//
@@ -203,7 +204,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 					//
 				} catch (final IOException e) {
 					//
-					LoggerUtil.error(LOG, e.getMessage(), e);
+					LoggerUtil.error(LOG, getMessage(e), e);
 					//
 				} // try
 					//
@@ -215,16 +216,9 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 				//
 				pdAnnotationFileAttachment.setContents("test " + i);// TODO
 				//
-				try {
-					//
-					Util.add(pdPage.getAnnotations(), pdAnnotationFileAttachment);
-					//
-				} catch (final IOException e) {
-					//
-					LoggerUtil.error(LOG, e.getMessage(), e);
-					//
-				} // try
-					//
+				Util.add(getAnnotations(pdPage, e -> LoggerUtil.error(LOG, getMessage(e), e)),
+						pdAnnotationFileAttachment);
+				//
 			} // for
 				//
 			testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), tempFile, FileUtils::deleteQuietly);
@@ -300,7 +294,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 					//
 			} catch (final IOException | NoSuchMethodException e) {
 				//
-				LoggerUtil.error(LOG, e.getMessage(), e);
+				LoggerUtil.error(LOG, getMessage(e), e);
 				//
 			} // try
 				//
@@ -314,12 +308,32 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 				//
 			} catch (IOException e) {
 				//
-				LoggerUtil.error(LOG, e.getMessage(), e);
+				LoggerUtil.error(LOG, getMessage(e), e);
 				//
 			} // try
 				//
 		} // if
 			//
+	}
+
+	private static String getMessage(final Throwable instance) {
+		return instance != null ? instance.getMessage() : null;
+	}
+
+	private static List<PDAnnotation> getAnnotations(final PDPage instance, final Consumer<IOException> consumer) {
+		//
+		try {
+			//
+			return instance != null ? instance.getAnnotations() : null;
+			//
+		} catch (final IOException e) {
+			//
+			Util.accept(consumer, e);
+			//
+		} // try
+			//
+		return null;
+		//
 	}
 
 	@Nullable
