@@ -285,8 +285,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 						try (final InputStream is = Files.newInputStream(Util.toPath(file));
 								final BufferedInputStream bis = new BufferedInputStream(is)) {
 							//
-							if (Util.isStatic(method) && !Util.contains(Util.getValue(entry),
-									Narcissus.invokeStaticMethod(method, bis))) {
+							if (Boolean.logicalAnd(Util.isStatic(method),
+									!Util.contains(Util.getValue(entry), Narcissus.invokeStaticMethod(method, bis)))) {
 								//
 								JOptionPane.showMessageDialog(null, "Please select an image file");
 								//
