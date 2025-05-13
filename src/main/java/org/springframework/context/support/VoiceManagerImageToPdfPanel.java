@@ -322,6 +322,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			//
 	}
 
+	@Nullable
 	private static Boolean isPDImage(final byte[] bs) throws NoSuchMethodException, IOException {
 		//
 		if (bs == null || bs.length == 0) {
