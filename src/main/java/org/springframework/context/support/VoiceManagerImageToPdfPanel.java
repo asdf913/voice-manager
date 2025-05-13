@@ -169,13 +169,12 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			//
 			try {
 				//
-				if ((tempFile = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3),
-						null)) != null) {
-					//
-					tempFile.deleteOnExit();
-					//
-				} // if
-					//
+				testAndAccept(Objects::nonNull,
+						tempFile = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null),
+						x -> {
+							deleteOnExit(x);
+						});
+				//
 			} catch (final IOException e) {
 				//
 				LoggerUtil.error(LOG, e.getMessage(), e);
@@ -336,6 +335,12 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 				//
 		} // if
 			//
+	}
+
+	private static void deleteOnExit(final File instance) {
+		if (instance != null) {
+			instance.deleteOnExit();
+		}
 	}
 
 	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer) {
