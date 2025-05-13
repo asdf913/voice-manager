@@ -300,6 +300,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			//
 	}
 
+	@Nullable
 	private static PDEmbeddedFile createPDEmbeddedFile(final PDDocument pdDocument, final Path path,
 			final Consumer<IOException> consumer) {
 		//
