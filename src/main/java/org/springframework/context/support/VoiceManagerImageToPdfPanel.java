@@ -317,7 +317,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 	}
 
 	private static void writeVoiceToFile(final SpeechApi instance, final String text, final String voiceId,
-			final int rate, final int volume, final Map<String, Object> map, final File file) {
+			final int rate, final int volume, @Nullable final Map<String, Object> map, final File file) {
 		if (instance != null) {
 			instance.writeVoiceToFile(text, voiceId, rate, volume, map, file);
 		}
