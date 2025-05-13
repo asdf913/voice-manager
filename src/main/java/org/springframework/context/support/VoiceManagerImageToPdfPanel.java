@@ -340,6 +340,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			//
 	}
 
+	@Nullable
 	private static String nextAlphabetic(@Nullable final RandomStringUtils instance, final int count) {
 		return instance != null ? instance.nextAlphabetic(count) : null;
 	}
@@ -452,6 +453,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 		return instance != null ? instance.getDescent() : defaultValue;
 	}
 
+	@Nullable
 	private static PDFontDescriptor getFontDescriptor(@Nullable final PDFont instance) {
 		return instance != null ? instance.getFontDescriptor() : null;
 	}
