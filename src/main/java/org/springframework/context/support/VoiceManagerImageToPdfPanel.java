@@ -272,7 +272,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 				//
 				File file = null;
 				//
-				if (!GraphicsEnvironment.isHeadless() && !isTestMode
+				if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode)
 						&& jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION
 						&& Util.exists(file = jfc.getSelectedFile()) && Util.isFile(file)) {// TODO
 					//
