@@ -160,7 +160,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			//
 			float pageWidth = getWidth(mediaBox);
 			//
-			float pageHeight = mediaBox != null ? mediaBox.getHeight() : 0;
+			float pageHeight = getHeight(mediaBox);
 			//
 			final float size = pageWidth / 10;
 			//
@@ -255,7 +255,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 							//
 							value = Integer.toString(100 - i * 10) + "%"
 							//
-							, font, fontSize)) / 2, (pdPage.getMediaBox().getHeight() - size
+							, font, fontSize)) / 2, (getHeight(pdPage.getMediaBox()) - size
 					//
 									- (getAscent(pdFontDescriptor = getFontDescriptor(font), 0) / 1000 * fontSize)
 									+ (getDescent(pdFontDescriptor, 0) / 1000 * fontSize))
@@ -305,7 +305,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 					final float imageHeight = pdImageXObject != null ? pdImageXObject.getHeight() : 0;
 					//
 					final float ratioMin = Math.min(pageWidth / (imageWidth),
-							((pdRectangle != null ? pdRectangle.getHeight() : 0f) / (imageHeight)));
+							((getHeight(pdRectangle)) / (imageHeight)));
 					//
 					cs.drawImage(pdImageXObject, 0, ((imageHeight) - (pageHeight = (imageHeight) * ratioMin)) / 2,
 							(imageWidth) * ratioMin, pageHeight - size -
@@ -342,6 +342,10 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 
 	private static float getWidth(final PDRectangle instance) {
 		return instance != null ? instance.getWidth() : 0;
+	}
+
+	private static float getHeight(final PDRectangle instance) {
+		return instance != null ? instance.getHeight() : 0;
 	}
 
 	@Nullable
