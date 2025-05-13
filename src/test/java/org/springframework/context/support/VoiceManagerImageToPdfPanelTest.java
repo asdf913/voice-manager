@@ -19,6 +19,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
@@ -36,7 +37,7 @@ import javassist.util.proxy.ProxyUtil;
 class VoiceManagerImageToPdfPanelTest {
 
 	private static Method METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_IS_PD_IMAGE, METHOD_GET_ANNOTATIONS,
-			METHOD_GET_MESSAGE, METHOD_WRITE_VOICE_TO_FILE = null;
+			METHOD_GET_MESSAGE, METHOD_WRITE_VOICE_TO_FILE, METHOD_SAVE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -56,6 +57,8 @@ class VoiceManagerImageToPdfPanelTest {
 		//
 		(METHOD_WRITE_VOICE_TO_FILE = clz.getDeclaredMethod("writeVoiceToFile", SpeechApi.class, String.class,
 				String.class, Integer.TYPE, Integer.TYPE, Map.class, File.class)).setAccessible(true);
+		//
+		(METHOD_SAVE = clz.getDeclaredMethod("save", PDDocument.class, File.class, Consumer.class)).setAccessible(true);
 		//
 	}
 
@@ -122,6 +125,20 @@ class VoiceManagerImageToPdfPanelTest {
 				//
 				return null;
 				//
+			} else if (self instanceof PDDocument) {
+				//
+				if (Objects.equals(methodName, "save")) {
+					//
+					if (ioException != null) {
+						//
+						throw ioException;
+						//
+					} // if
+						//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -400,6 +417,32 @@ class VoiceManagerImageToPdfPanelTest {
 			final int rate, final int volume, final Map<String, Object> map, final File file) throws Throwable {
 		try {
 			METHOD_WRITE_VOICE_TO_FILE.invoke(null, instance, text, voiceId, rate, volume, map, file);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSave() throws Throwable {
+		//
+		final PDDocument pdDocument = ProxyUtil.createProxy(PDDocument.class, mh);
+		//
+		Assertions.assertDoesNotThrow(() -> save(pdDocument, null, null));
+		//
+		if (mh != null) {
+			//
+			mh.ioException = new IOException();
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> save(pdDocument, null, null));
+		//
+	}
+
+	private static void save(final PDDocument instance, final File file, final Consumer<IOException> consumer)
+			throws Throwable {
+		try {
+			METHOD_SAVE.invoke(null, instance, file, consumer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
