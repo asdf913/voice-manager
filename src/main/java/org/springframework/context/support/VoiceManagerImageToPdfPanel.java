@@ -335,11 +335,11 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static int getWidth(final PDImage instance) {
+	private static int getWidth(@Nullable final PDImage instance) {
 		return instance != null ? instance.getWidth() : 0;
 	}
 
-	private static int getHeight(final PDImage instance) {
+	private static int getHeight(@Nullable final PDImage instance) {
 		return instance != null ? instance.getHeight() : 0;
 	}
 
