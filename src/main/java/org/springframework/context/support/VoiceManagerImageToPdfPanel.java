@@ -87,7 +87,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 
 	private static final Logger LOG = LoggerFactory.getLogger(VoiceManagerImageToPdfPanel.class);
 
-	private SpeechApi speechApi = null;
+	private transient SpeechApi speechApi = null;
 
 	private JTextComponent tfText = null;
 
