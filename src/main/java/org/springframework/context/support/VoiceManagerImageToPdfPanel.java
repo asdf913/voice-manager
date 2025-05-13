@@ -226,11 +226,11 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 					//
 				} // try
 					//
-				testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), tempFile,
-						x -> FileUtils.deleteQuietly(x));
-				//
 			} // for
 				//
+			testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), tempFile,
+					x -> FileUtils.deleteQuietly(x));
+			//
 			final boolean isTestMode = isTestMode();
 			//
 			try (final PDPageContentStream cs = new PDPageContentStream(pdDocument, pdPage)) {
