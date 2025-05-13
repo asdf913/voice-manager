@@ -171,9 +171,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 				//
 				testAndAccept(Objects::nonNull,
 						tempFile = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null),
-						x -> {
-							deleteOnExit(x);
-						});
+						VoiceManagerImageToPdfPanel::deleteOnExit);
 				//
 			} catch (final IOException e) {
 				//
@@ -227,8 +225,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 					//
 			} // for
 				//
-			testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), tempFile,
-					x -> FileUtils.deleteQuietly(x));
+			testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), tempFile, FileUtils::deleteQuietly);
 			//
 			final boolean isTestMode = isTestMode();
 			//
