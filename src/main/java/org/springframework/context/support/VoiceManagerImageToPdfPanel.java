@@ -340,7 +340,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static String nextAlphabetic(final RandomStringUtils instance, final int count) {
+	private static String nextAlphabetic(@Nullable final RandomStringUtils instance, final int count) {
 		return instance != null ? instance.nextAlphabetic(count) : null;
 	}
 
@@ -434,7 +434,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static int length(final Object[] instance) {
+	private static int length(@Nullable final Object[] instance) {
 		return instance != null ? instance.length : 0;
 	}
 
@@ -444,15 +444,15 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 		}
 	}
 
-	private static float getAscent(final PDFontDescriptor instance, final float defaultValue) {
+	private static float getAscent(@Nullable final PDFontDescriptor instance, final float defaultValue) {
 		return instance != null ? instance.getAscent() : defaultValue;
 	}
 
-	private static float getDescent(final PDFontDescriptor instance, final float defaultValue) {
+	private static float getDescent(@Nullable final PDFontDescriptor instance, final float defaultValue) {
 		return instance != null ? instance.getDescent() : defaultValue;
 	}
 
-	private static PDFontDescriptor getFontDescriptor(final PDFont instance) {
+	private static PDFontDescriptor getFontDescriptor(@Nullable final PDFont instance) {
 		return instance != null ? instance.getFontDescriptor() : null;
 	}
 
@@ -465,7 +465,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 		return width * fontSize;
 	}
 
-	private static float getWidth(final PDFont instance, final int code, final float defaultValue) throws IOException {
+	private static float getWidth(@Nullable final PDFont instance, final int code, final float defaultValue)
+			throws IOException {
 		//
 		if (instance == null) {
 			//
