@@ -250,40 +250,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 					//
 				} // for
 					//
-				final JFileChooser jfc = new JFileChooser(Util.toFile(Path.of(".")));
+				addImage(pdDocument, pdRectangle, cs, pageWidth, size);
 				//
-				File file = null;
-				//
-				if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode)
-						&& jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION
-						&& Util.exists(file = jfc.getSelectedFile()) && Util.isFile(file)) {// TODO
-					//
-					if (Objects.equals(Boolean.FALSE, isPDImage(Files.readAllBytes(Util.toPath(file))))) {
-						//
-						JOptionPane.showMessageDialog(null, "Please select an image file");
-						//
-						return;
-						//
-					} // if
-						//
-					final PDImageXObject pdImageXObject = PDImageXObject.createFromFileByContent(file, pdDocument);
-					//
-					final float imageWidth = getWidth(pdImageXObject);
-					//
-					final float imageHeight = getHeight(pdImageXObject);
-					//
-					final float ratioMin = Math.min(pageWidth / (imageWidth),
-							((getHeight(pdRectangle)) / (imageHeight)));
-					//
-					cs.drawImage(pdImageXObject, 0, ((imageHeight) - (pageHeight = (imageHeight) * ratioMin)) / 2,
-							(imageWidth) * ratioMin, pageHeight - size -
-							//
-									10// TODO
-										//
-					);
-					//
-				} // if
-					//
 			} catch (final IOException | NoSuchMethodException e) {
 				//
 				LoggerUtil.error(LOG, getMessage(e), e);
@@ -293,6 +261,51 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			testAndRunThrows(!isTestMode, () -> save(pdDocument, Util.toFile(Path.of("temp.pdf"))// TODO
 					, e -> LoggerUtil.error(LOG, getMessage(e), e)));
 			//
+		} // if
+			//
+	}
+
+	private static void addImage(final PDDocument pdDocument, final PDRectangle pdRectangle,
+			final PDPageContentStream cs, final float pageWidth, final float size)
+			throws IOException, NoSuchMethodException {
+		//
+		final JFileChooser jfc = new JFileChooser(Util.toFile(Path.of(".")));
+		//
+		File file = null;
+		//
+		if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
+				&& jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION && Util.exists(file = jfc.getSelectedFile())
+				&& Util.isFile(file)) {// TODO
+			//
+			if (Objects.equals(Boolean.FALSE, isPDImage(Files.readAllBytes(Util.toPath(file))))) {
+				//
+				JOptionPane.showMessageDialog(null, "Please select an image file");
+				//
+				return;
+				//
+			} // if
+				//
+			final PDImageXObject pdImageXObject = PDImageXObject.createFromFileByContent(file, pdDocument);
+			//
+			final float imageWidth = getWidth(pdImageXObject);
+			//
+			final float imageHeight = getHeight(pdImageXObject);
+			//
+			final float ratioMin = Math.min(pageWidth / imageWidth, ((getHeight(pdRectangle)) / imageHeight));
+			//
+			final float pageHeight = imageHeight * ratioMin;
+			//
+			if (cs != null) {
+				//
+				cs.drawImage(pdImageXObject, 0, (imageHeight - pageHeight) / 2, imageWidth * ratioMin,
+						pageHeight - size -
+						//
+								10// TODO
+									//
+				);
+				//
+			} // if
+				//
 		} // if
 			//
 	}
