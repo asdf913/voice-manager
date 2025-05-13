@@ -443,7 +443,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 		return instance != null ? instance.length : 0;
 	}
 
-	private static <V> void setValue(@Nullable final Entry<?, V> instance, final V value) {
+	private static <V> void setValue(final Entry<?, V> instance, @Nullable final V value) {
 		if (instance != null) {
 			instance.setValue(value);
 		}
