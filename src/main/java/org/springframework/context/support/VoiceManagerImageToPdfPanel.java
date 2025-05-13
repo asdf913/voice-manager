@@ -158,8 +158,6 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			//
 			pdDocument.addPage(pdPage);
 			//
-			PDEmbeddedFile pdEmbeddedFile = null;
-			//
 			PDComplexFileSpecification pdComplexFileSpecification = null;
 			//
 			PDAnnotationFileAttachment pdAnnotationFileAttachment = null;
@@ -201,9 +199,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 					//
 				} // if
 					//
-				createPDEmbeddedFile(pdDocument, Util.toPath(tempFile), e -> LoggerUtil.error(LOG, getMessage(e), e));
-				//
-				pdComplexFileSpecification.setEmbeddedFile(pdEmbeddedFile);
+				pdComplexFileSpecification.setEmbeddedFile(createPDEmbeddedFile(pdDocument, Util.toPath(tempFile),
+						e -> LoggerUtil.error(LOG, getMessage(e), e)));
 				//
 				(pdAnnotationFileAttachment = new PDAnnotationFileAttachment()).setFile(pdComplexFileSpecification);
 				//
