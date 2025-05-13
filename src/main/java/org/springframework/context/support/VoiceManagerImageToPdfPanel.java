@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -266,7 +267,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 					//
 				} // for
 					//
-				final JFileChooser jfc = new JFileChooser(new File("."));
+				final JFileChooser jfc = new JFileChooser(Util.toFile(Paths.get(".")));
 				//
 				File file = null;
 				//
@@ -324,7 +325,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 				//
 				if (!isTestMode) {
 					//
-					pdDocument.save(new File("temp.pdf"));// TODO
+					pdDocument.save(Util.toFile(Paths.get("temp.pdf")));// TODO
 					//
 				} // if
 					//
