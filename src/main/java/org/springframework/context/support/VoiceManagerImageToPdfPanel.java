@@ -225,7 +225,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 					//
 				} // try
 					//
-				if (Util.exists(tempFile) && Util.isFile(tempFile)) {
+				if (Boolean.logicalAnd(Util.exists(tempFile), Util.isFile(tempFile))) {
 					//
 					FileUtils.deleteQuietly(tempFile);
 					//
