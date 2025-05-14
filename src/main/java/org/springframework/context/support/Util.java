@@ -14,6 +14,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
@@ -344,6 +345,10 @@ public abstract class Util {
 	@Nullable
 	static Class<?> getType(@Nullable final Field instance) {
 		return instance != null ? instance.getType() : null;
+	}
+
+	static Type getGenericType(final Field instance) {
+		return instance != null ? instance.getGenericType() : null;
 	}
 
 	@Nullable

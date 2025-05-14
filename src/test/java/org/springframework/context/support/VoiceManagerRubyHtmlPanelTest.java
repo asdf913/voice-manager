@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -76,7 +75,7 @@ import javassist.util.proxy.ProxyUtil;
 
 class VoiceManagerRubyHtmlPanelTest {
 
-	private static Method METHOD_LENGTH, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE, METHOD_GET_GENERIC_TYPE,
+	private static Method METHOD_LENGTH, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE,
 			METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_GET_LAYOUT_MANAGER,
 			METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD,
 			METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_AND, METHOD_GET_DESCRIPTION, METHOD_GET_SELECTED_ITEM,
@@ -94,8 +93,6 @@ class VoiceManagerRubyHtmlPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_RAW_TYPE = clz.getDeclaredMethod("getRawType", ParameterizedType.class)).setAccessible(true);
-		//
-		(METHOD_GET_GENERIC_TYPE = clz.getDeclaredMethod("getGenericType", Field.class)).setAccessible(true);
 		//
 		(METHOD_GET_GENERIC_INTERFACES = clz.getDeclaredMethod("getGenericInterfaces", Class.class))
 				.setAccessible(true);
@@ -524,27 +521,6 @@ class VoiceManagerRubyHtmlPanelTest {
 				return null;
 			} else if (obj instanceof Type[]) {
 				return (Type[]) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetGenericType() throws Throwable {
-		//
-		Assertions.assertNull(getGenericType(Util.cast(Field.class, Narcissus.allocateInstance(Field.class))));
-		//
-	}
-
-	private static Type getGenericType(final Field instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_GENERIC_TYPE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Type) {
-				return (Type) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

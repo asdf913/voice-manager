@@ -1221,12 +1221,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			for (int j = 0; j < length(fs) && genericInterface instanceof ParameterizedType pt1; j++) {
 				//
-				if (Boolean
-						.logicalOr(
-								!Objects.equals(getRawType(pt1),
-										getRawType((pt2 = Util.cast(ParameterizedType.class,
-												getGenericType(f = ArrayUtils.get(fs, j)))))),
-								!Arrays.equals(getActualTypeArguments(pt1), getActualTypeArguments(pt2)))) {
+				if (Boolean.logicalOr(
+						!Objects.equals(getRawType(pt1),
+								getRawType((pt2 = Util.cast(ParameterizedType.class,
+										Util.getGenericType(f = ArrayUtils.get(fs, j)))))),
+						!Arrays.equals(getActualTypeArguments(pt1), getActualTypeArguments(pt2)))) {
 					//
 					continue;
 					//
@@ -1238,11 +1237,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // for
 			//
-	}
-
-	@Nullable
-	private static java.lang.reflect.Type getGenericType(@Nullable final Field instance) {
-		return instance != null ? instance.getGenericType() : null;
 	}
 
 	@Nullable
