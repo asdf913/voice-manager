@@ -547,8 +547,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 			for (int j = 0; j < length(fs) && genericInterface instanceof ParameterizedType pt1; j++) {
 				//
 				if (Boolean.logicalOr(
-						!Objects.equals(getRawType(pt1),
-								getRawType((pt2 = Util.cast(ParameterizedType.class,
+						!Objects.equals(Util.getRawType(pt1),
+								Util.getRawType((pt2 = Util.cast(ParameterizedType.class,
 										Util.getGenericType(f = ArrayUtils.get(fs, j)))))),
 						!Arrays.equals(Util.getActualTypeArguments(pt1), Util.getActualTypeArguments(pt2)))) {
 					//
@@ -575,11 +575,6 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 	@Nullable
 	private static <T, U, R> R apply(@Nullable final BiFunction<T, U, R> instance, final T t, final U u) {
 		return instance != null ? instance.apply(t, u) : null;
-	}
-
-	@Nullable
-	private static Type getRawType(@Nullable final ParameterizedType instance) {
-		return instance != null ? instance.getRawType() : null;
 	}
 
 	private static int length(@Nullable final Object[] instance) {

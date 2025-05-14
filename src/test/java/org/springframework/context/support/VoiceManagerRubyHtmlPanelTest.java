@@ -75,11 +75,11 @@ import javassist.util.proxy.ProxyUtil;
 
 class VoiceManagerRubyHtmlPanelTest {
 
-	private static Method METHOD_LENGTH, METHOD_GET_RAW_TYPE, METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4,
-			METHOD_TEST_AND_APPLY5, METHOD_GET_LAYOUT_MANAGER, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE,
-			METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_AND,
-			METHOD_GET_DESCRIPTION, METHOD_GET_SELECTED_ITEM, METHOD_TEST_AND_RUN_THROWS, METHOD_CLEAR,
-			METHOD_GET_VALUE, METHOD_CREATE_MAP, METHOD_GET_AST, METHOD_GET_CHILD_COUNT, METHOD_GET_CHILD = null;
+	private static Method METHOD_LENGTH, METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
+			METHOD_GET_LAYOUT_MANAGER, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS,
+			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_AND, METHOD_GET_DESCRIPTION,
+			METHOD_GET_SELECTED_ITEM, METHOD_TEST_AND_RUN_THROWS, METHOD_CLEAR, METHOD_GET_VALUE, METHOD_CREATE_MAP,
+			METHOD_GET_AST, METHOD_GET_CHILD_COUNT, METHOD_GET_CHILD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -87,8 +87,6 @@ class VoiceManagerRubyHtmlPanelTest {
 		final Class<?> clz = VoiceManagerRubyHtmlPanel.class;
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
-		//
-		(METHOD_GET_RAW_TYPE = clz.getDeclaredMethod("getRawType", ParameterizedType.class)).setAccessible(true);
 		//
 		(METHOD_GET_GENERIC_INTERFACES = clz.getDeclaredMethod("getGenericInterfaces", Class.class))
 				.setAccessible(true);
@@ -276,8 +274,6 @@ class VoiceManagerRubyHtmlPanelTest {
 
 	private IH ih = null;
 
-	private ParameterizedType parameterizedType = null;
-
 	private SpelNode spelNode = null;
 
 	private Toolkit toolkit = null;
@@ -291,9 +287,7 @@ class VoiceManagerRubyHtmlPanelTest {
 		//
 		instance = new VoiceManagerRubyHtmlPanel();
 		//
-		parameterizedType = Reflection.newProxy(ParameterizedType.class, ih = new IH());
-		//
-		spelNode = Reflection.newProxy(SpelNode.class, ih);
+		spelNode = Reflection.newProxy(SpelNode.class, ih = new IH());
 		//
 		toolkit = Util.cast(Toolkit.class, Narcissus.allocateInstance(Util.forName("sun.awt.HeadlessToolkit")));
 		//
@@ -496,27 +490,6 @@ class VoiceManagerRubyHtmlPanelTest {
 			final Object obj = METHOD_LENGTH.invoke(null, (Object) instance);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetRawType() throws Throwable {
-		//
-		Assertions.assertNull(getRawType(parameterizedType));
-		//
-	}
-
-	private static Type getRawType(final ParameterizedType instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_RAW_TYPE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Type) {
-				return (Type) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
