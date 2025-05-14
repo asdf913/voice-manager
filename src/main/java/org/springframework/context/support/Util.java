@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.net.URI;
@@ -349,6 +350,10 @@ public abstract class Util {
 
 	static Type getGenericType(final Field instance) {
 		return instance != null ? instance.getGenericType() : null;
+	}
+
+	static Type[] getActualTypeArguments(final ParameterizedType instance) {
+		return instance != null ? instance.getActualTypeArguments() : null;
 	}
 
 	@Nullable

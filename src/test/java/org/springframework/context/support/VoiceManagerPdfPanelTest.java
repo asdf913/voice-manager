@@ -107,8 +107,7 @@ class VoiceManagerPdfPanelTest {
 			METHOD_LENGTH, METHOD_GET_MINIMUM_AND_MAXIMUM_Y, METHOD_TEST_AND_APPLY, METHOD_GET_TEXT_WIDTH,
 			METHOD_TO_AUDIO_RESOURCE, METHOD_LIST_FILES, METHOD_IS_DIRECTORY, METHOD_GET_TRANSFER_DATA,
 			METHOD_FIND_MATCH, METHOD_TO_MILLIS, METHOD_TEST_AND_ACCEPT, METHOD_IIF, METHOD_PATH_FILE_EXISTS_W,
-			METHOD_GET_GENERIC_INTERFACES, METHOD_GET_ACTUAL_TYPE_ARGUMENTS, METHOD_GET_RAW_TYPE,
-			METHOD_GET_FONT_NAME_3, METHOD_GET_FONT_NAME_2 = null;
+			METHOD_GET_GENERIC_INTERFACES, METHOD_GET_RAW_TYPE, METHOD_GET_FONT_NAME_3, METHOD_GET_FONT_NAME_2 = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -160,9 +159,6 @@ class VoiceManagerPdfPanelTest {
 				String.class)).setAccessible(true);
 		//
 		(METHOD_GET_GENERIC_INTERFACES = clz.getDeclaredMethod("getGenericInterfaces", Class.class))
-				.setAccessible(true);
-		//
-		(METHOD_GET_ACTUAL_TYPE_ARGUMENTS = clz.getDeclaredMethod("getActualTypeArguments", ParameterizedType.class))
 				.setAccessible(true);
 		//
 		(METHOD_GET_RAW_TYPE = clz.getDeclaredMethod("getRawType", ParameterizedType.class)).setAccessible(true);
@@ -815,8 +811,8 @@ class VoiceManagerPdfPanelTest {
 		//
 		final List<Field> fs = Util.toList(FailableStreamUtil.stream(failedStream != null ? failedStream.filter(f -> {
 			//
-			final Type[] actualTypeArguments = getActualTypeArguments(
-					Util.cast(ParameterizedType.class, Util.getGenericType(f)));
+			final Type[] actualTypeArguments = Util
+					.getActualTypeArguments(Util.cast(ParameterizedType.class, Util.getGenericType(f)));
 			//
 			return Objects.equals(Util.getType(f), FailableFunction.class) && actualTypeArguments != null
 					&& actualTypeArguments.length > 0
@@ -855,20 +851,6 @@ class VoiceManagerPdfPanelTest {
 			//
 		} // try
 			//
-	}
-
-	private static Type[] getActualTypeArguments(final ParameterizedType instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_ACTUAL_TYPE_ARGUMENTS.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Type[]) {
-				return (Type[]) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,

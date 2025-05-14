@@ -249,7 +249,8 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 					Util.forName(beanClassName = BeanDefinitionUtil.getBeanClassName(ConfigurableListableBeanFactoryUtil
 							.getBeanDefinition(dlbf, beanDefinitionName = ArrayUtils.get(beanDefinitionNames, i)))))
 					|| !Objects.equals(
-							testAndApply(x -> length(x) > 0, getActualTypeArguments(Util.cast(ParameterizedType.class,
+							testAndApply(x -> length(x) > 0, Util.getActualTypeArguments(Util.cast(
+									ParameterizedType.class,
 									testAndApply(x -> length(x) > 0, getGenericInterfaces(Util.forName(beanClassName)),
 											x -> ArrayUtils.get(x, 0), null))),
 									x -> ArrayUtils.get(x, 0), null),
@@ -549,7 +550,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 						!Objects.equals(getRawType(pt1),
 								getRawType((pt2 = Util.cast(ParameterizedType.class,
 										Util.getGenericType(f = ArrayUtils.get(fs, j)))))),
-						!Arrays.equals(getActualTypeArguments(pt1), getActualTypeArguments(pt2)))) {
+						!Arrays.equals(Util.getActualTypeArguments(pt1), Util.getActualTypeArguments(pt2)))) {
 					//
 					continue;
 					//
@@ -574,11 +575,6 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 	@Nullable
 	private static <T, U, R> R apply(@Nullable final BiFunction<T, U, R> instance, final T t, final U u) {
 		return instance != null ? instance.apply(t, u) : null;
-	}
-
-	@Nullable
-	private static Type[] getActualTypeArguments(@Nullable final ParameterizedType instance) {
-		return instance != null ? instance.getActualTypeArguments() : null;
 	}
 
 	@Nullable
