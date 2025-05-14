@@ -1721,7 +1721,7 @@ public abstract class Util {
 		//
 	}
 
-	static Object[] toArray(final Collection<?> instance) {
+	static Object[] toArray(@Nullable final Collection<?> instance) {
 		return instance != null ? instance.toArray() : null;
 	}
 
