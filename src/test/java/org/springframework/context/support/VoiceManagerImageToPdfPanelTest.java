@@ -231,7 +231,7 @@ class VoiceManagerImageToPdfPanelTest {
 				//
 			if (Util.isStatic(m)) {
 				//
-				invokeStaticMethod = Narcissus.invokeStaticMethod(m, toArray(collection));
+				invokeStaticMethod = Narcissus.invokeStaticMethod(m, Util.toArray(collection));
 				//
 				toString = Objects.toString(m);
 				//
@@ -254,16 +254,12 @@ class VoiceManagerImageToPdfPanelTest {
 				//
 				Assertions.assertNull(Narcissus.invokeMethod(
 						instance = ObjectUtils.getIfNull(instance, VoiceManagerImageToPdfPanel::new), m,
-						toArray(collection)), toString);
+						Util.toArray(collection)), toString);
 				//
 			} // if
 				//
 		} // for
 			//
-	}
-
-	private static Object[] toArray(final Collection<?> instance) {
-		return instance != null ? instance.toArray() : null;
 	}
 
 	@Test

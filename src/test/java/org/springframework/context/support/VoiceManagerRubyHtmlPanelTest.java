@@ -412,7 +412,7 @@ class VoiceManagerRubyHtmlPanelTest {
 					//
 			} // if
 				//
-			os = toArray(list);
+			os = Util.toArray(list);
 			//
 			toString = Objects.toString(m);
 			//
@@ -508,10 +508,6 @@ class VoiceManagerRubyHtmlPanelTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
-	}
-
-	private static Object[] toArray(final Collection<?> instance) {
-		return instance != null ? instance.toArray() : null;
 	}
 
 	@Test

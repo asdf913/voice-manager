@@ -2869,7 +2869,7 @@ class VoiceManagerTest {
 					//
 			} // if
 				//
-			os = toArray(c);
+			os = Util.toArray(c);
 			//
 			name = Util.getName(m);
 			//
@@ -2945,10 +2945,6 @@ class VoiceManagerTest {
 			//
 		return result;
 		//
-	}
-
-	private static Object[] toArray(final Collection<?> instance) {
-		return instance != null ? instance.toArray() : null;
 	}
 
 }

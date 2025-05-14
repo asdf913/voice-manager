@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -88,7 +87,7 @@ class VoiceManagerExportPanelTest {
 			//
 			parameterCount = m.getParameterCount();
 			//
-			os = toArray(list);
+			os = Util.toArray(list);
 			//
 			toString = Objects.toString(m);
 			//
@@ -139,10 +138,6 @@ class VoiceManagerExportPanelTest {
 				//
 		} // for
 			//
-	}
-
-	private static Object[] toArray(final Collection<?> instance) {
-		return instance != null ? instance.toArray() : null;
 	}
 
 }

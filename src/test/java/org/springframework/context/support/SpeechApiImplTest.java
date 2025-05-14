@@ -117,7 +117,7 @@ class SpeechApiImplTest {
 					//
 			} // if
 				//
-			os = toArray(collection);
+			os = Util.toArray(collection);
 			//
 			toString = Objects.toString(m);
 			//
@@ -179,10 +179,6 @@ class SpeechApiImplTest {
 				//
 		} // for
 			//
-	}
-
-	private static Object[] toArray(final Collection<?> instance) {
-		return instance != null ? instance.toArray() : null;
 	}
 
 	@Test

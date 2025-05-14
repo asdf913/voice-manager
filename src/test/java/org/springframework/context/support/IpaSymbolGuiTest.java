@@ -8,8 +8,6 @@ import java.awt.event.ActionListener;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
@@ -38,8 +36,8 @@ class IpaSymbolGuiTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_ADD_ACTION_LISTENER, METHOD_TO_ARRAY, METHOD_TEST_AND_APPLY, METHOD_IIF,
-			METHOD_SET_PREFERRED_WIDTH, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4 = null;
+	private static Method METHOD_ADD_ACTION_LISTENER, METHOD_TEST_AND_APPLY, METHOD_IIF, METHOD_SET_PREFERRED_WIDTH,
+			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4 = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -48,8 +46,6 @@ class IpaSymbolGuiTest {
 		//
 		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
 				AbstractButton[].class)).setAccessible(true);
-		//
-		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray", Collection.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -197,29 +193,6 @@ class IpaSymbolGuiTest {
 			throws Throwable {
 		try {
 			METHOD_ADD_ACTION_LISTENER.invoke(null, actionListener, bs);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testToArray() throws Throwable {
-		//
-		Assertions.assertNull(toArray(null));
-		//
-		Assertions.assertArrayEquals(new Object[] {}, toArray(Collections.emptyList()));
-		//
-	}
-
-	private static Object[] toArray(final Collection<?> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_TO_ARRAY.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Object[]) {
-				return (Object[]) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

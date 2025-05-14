@@ -1258,7 +1258,7 @@ class VoiceManagerPdfPanelTest {
 					//
 			} // if
 				//
-			os = toArray(collection);
+			os = Util.toArray(collection);
 			//
 			toString = Util.toString(m);
 			//
@@ -1460,7 +1460,7 @@ class VoiceManagerPdfPanelTest {
 				//
 			toString = Util.toString(m);
 			//
-			os = toArray(collection);
+			os = Util.toArray(collection);
 			//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
@@ -1505,10 +1505,6 @@ class VoiceManagerPdfPanelTest {
 				//
 		} // for
 			//
-	}
-
-	private static Object[] toArray(final Collection<?> instance) {
-		return instance != null ? instance.toArray() : null;
 	}
 
 }

@@ -454,7 +454,7 @@ class VoiceManagerOnlineTtsPanelTest {
 					//
 			} // for
 				//
-			os = toArray(collection);
+			os = Util.toArray(collection);
 			//
 			toString = Util.toString(m);
 			//
@@ -529,10 +529,6 @@ class VoiceManagerOnlineTtsPanelTest {
 			//
 		} // try
 			//
-	}
-
-	private static Object[] toArray(final Collection<?> instance) {
-		return instance != null ? instance.toArray() : null;
 	}
 
 	@Test

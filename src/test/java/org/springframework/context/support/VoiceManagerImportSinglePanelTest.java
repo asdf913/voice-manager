@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -145,7 +144,7 @@ class VoiceManagerImportSinglePanelTest {
 				//
 			toString = Objects.toString(m);
 			//
-			os = toArray(list);
+			os = Util.toArray(list);
 			//
 			if (Modifier.isStatic(m.getModifiers())) {
 				//
@@ -224,10 +223,6 @@ class VoiceManagerImportSinglePanelTest {
 				//
 		} // for
 			//
-	}
-
-	private static Object[] toArray(final Collection<?> instance) {
-		return instance != null ? instance.toArray() : null;
 	}
 
 }

@@ -88,7 +88,7 @@ class VoiceManagerMiscellaneousPanelTest {
 				//
 			name = Util.getName(m);
 			//
-			os = toArray(collection);
+			os = Util.toArray(collection);
 			//
 			toString = Objects.toString(m);
 			//
@@ -158,10 +158,6 @@ class VoiceManagerMiscellaneousPanelTest {
 			//
 		return false;
 		//
-	}
-
-	private static Object[] toArray(final Collection<?> instance) {
-		return instance != null ? instance.toArray() : null;
 	}
 
 }

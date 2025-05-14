@@ -93,7 +93,7 @@ class VoiceManagerImportBatchPanelTest {
 			//
 			toString = Objects.toString(m);
 			//
-			os = toArray(list);
+			os = Util.toArray(list);
 			//
 			if (Boolean.logicalAnd(Objects.equals(name, "getPassword"),
 					Arrays.equals(parameterTypes, new Class<?>[] { Console.class }))
@@ -169,10 +169,6 @@ class VoiceManagerImportBatchPanelTest {
 				//
 		} // for
 			//
-	}
-
-	private static Object[] toArray(final Collection<?> instance) {
-		return instance != null ? instance.toArray() : null;
 	}
 
 }

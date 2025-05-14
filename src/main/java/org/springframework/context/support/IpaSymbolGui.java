@@ -307,7 +307,8 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			//
 		} else if (Boolean.logicalAnd(!headless, !isTestMode())) {
 			//
-			final JList<Object> list = testAndApply(Objects::nonNull, toArray(values), JList::new, x -> new JList<>());
+			final JList<Object> list = testAndApply(Objects::nonNull, Util.toArray(values), JList::new,
+					x -> new JList<>());
 			//
 			JOptionPane.showMessageDialog(null, list, "IPA", JOptionPane.PLAIN_MESSAGE);
 			//
@@ -315,11 +316,6 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static Object[] toArray(@Nullable final Collection<?> instance) {
-		return instance != null ? instance.toArray() : null;
 	}
 
 	@Nullable

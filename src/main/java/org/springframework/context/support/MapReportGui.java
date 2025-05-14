@@ -337,7 +337,7 @@ public class MapReportGui extends JFrame
 										x -> IterableUtils.size(Util.getValue(x)))), 0))
 						.mapToObj(x -> String.format("Value %1$s", x + 1))));
 		//
-		dtm = new DefaultTableModel(columns.toArray(), 0);
+		dtm = new DefaultTableModel(Util.toArray(columns), 0);
 		//
 		final Set<?> keySet = MultimapUtil.keySet(mm);
 		//
@@ -349,8 +349,8 @@ public class MapReportGui extends JFrame
 			//
 			for (final Object key : keySet) {
 				//
-				addRow(dtm,
-						os = ArrayUtils.addAll(new Object[] { key }, MultimapUtil.get((Multimap) mm, key).toArray()));
+				addRow(dtm, os = ArrayUtils.addAll(new Object[] { key },
+						Util.toArray(MultimapUtil.get((Multimap) mm, key))));
 				//
 				IntCollectionUtil.addInt(jTableRowColumnCount, length(os));
 				//

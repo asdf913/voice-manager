@@ -1623,7 +1623,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		return vs -> {
 			//
-			final Object[] array = toArray(vs);
+			final Object[] array = Util.toArray(vs);
 			//
 			final int length = length(array);
 			//
@@ -1736,7 +1736,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} else if (!headless && !isTestMode()) {
 			//
-			final JList<Object> list = new JList<>(toArray(values));
+			final JList<Object> list = new JList<>(Util.toArray(values));
 			//
 			JOptionPane.showMessageDialog(null, list, "IPA", JOptionPane.PLAIN_MESSAGE);
 			//
@@ -1744,11 +1744,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static Object[] toArray(@Nullable final Collection<?> instance) {
-		return instance != null ? instance.toArray() : null;
 	}
 
 	private void actionPerformedForPronunciation(final Object source) {
@@ -2048,7 +2043,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 			} // if
 				//
-			final JList<?> list = new JList<>(toArray(objects));
+			final JList<?> list = new JList<>(Util.toArray(objects));
 			//
 			if (!GraphicsEnvironment.isHeadless() && JOptionPane.showConfirmDialog(null, list,
 					ROMAJI_WITH_FIRST_CAPTICALIZED_LETTER, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
