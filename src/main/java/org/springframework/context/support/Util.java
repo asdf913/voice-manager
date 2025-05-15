@@ -348,15 +348,15 @@ public abstract class Util {
 		return instance != null ? instance.getType() : null;
 	}
 
-	static Type getGenericType(final Field instance) {
+	static Type getGenericType(@Nullable final Field instance) {
 		return instance != null ? instance.getGenericType() : null;
 	}
 
-	static Type[] getActualTypeArguments(final ParameterizedType instance) {
+	static Type[] getActualTypeArguments(@Nullable final ParameterizedType instance) {
 		return instance != null ? instance.getActualTypeArguments() : null;
 	}
 
-	static Type getRawType(final ParameterizedType instance) {
+	static Type getRawType(@Nullable final ParameterizedType instance) {
 		return instance != null ? instance.getRawType() : null;
 	}
 
