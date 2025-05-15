@@ -396,7 +396,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 	}
 
 	@Nullable
-	private static IntIntPair getMinimumAndMaximumY(final BufferedImage bi) {
+	private static IntIntPair getMinimumAndMaximumY(@Nullable final BufferedImage bi) {
 		//
 		Color c = null;
 		//
@@ -434,8 +434,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 		//
 	}
 
-	private static void addText(final PDPageContentStream cs, final PDFont font, final float fontSize,
-			final PDPage pdPage, final float size) throws IOException {
+	private static void addText(@Nullable final PDPageContentStream cs, @Nullable final PDFont font,
+			final float fontSize, final PDPage pdPage, final float size) throws IOException {
 		//
 		PDFontDescriptor pdFontDescriptor = null;
 		//
