@@ -33,6 +33,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.meeuw.functional.Consumers;
 import org.meeuw.functional.Predicates;
+import org.oxbow.swingbits.util.OperatingSystem;
+import org.oxbow.swingbits.util.OperatingSystemUtil;
 
 import com.google.common.reflect.Reflection;
 
@@ -205,6 +207,13 @@ class VoiceManagerImageToPdfPanelTest {
 		//
 		String name, toString = null;
 		//
+		if (!Objects.equals(OperatingSystem.WINDOWS, OperatingSystemUtil.getOperatingSystem())) {
+			//
+			Util.put(System.getProperties(), "org.springframework.context.support.SpeechApi.isInstalled",
+					Boolean.toString(false));
+			//
+		} // if
+			//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ms[i]) == null || m.isSynthetic()) {
@@ -238,8 +247,6 @@ class VoiceManagerImageToPdfPanelTest {
 			} // for
 				//
 			if (Util.isStatic(m)) {
-				//
-				System.out.println(Objects.toString(m));// TODO
 				//
 				invokeStaticMethod = Narcissus.invokeStaticMethod(m, Util.toArray(collection));
 				//
