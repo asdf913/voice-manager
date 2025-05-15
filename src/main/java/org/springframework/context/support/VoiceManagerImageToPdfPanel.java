@@ -313,15 +313,27 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 				//
 			} // if
 				//
+			final String text = Util.getText(tfText);
+			//
+			final Object voiceId = Util.getSelectedItem(cbmVoiceId);
+			//
+			if (voiceId == null) {
+				//
+				testAndRunThrows(!GraphicsEnvironment.isHeadless(), () -> {
+					//
+					JOptionPane.showMessageDialog(null, "Please select a voice");
+					//
+				});
+				//
+				return;
+				//
+			} // if
+				//
 			for (int i = 0; i < 10; i++) {
 				//
 				(pdComplexFileSpecification = new PDComplexFileSpecification()).setFile(i + ".wav");
 				//
-				final String text = Util.getText(tfText);
-				//
-				final Object voiceId = Util.getSelectedItem(cbmVoiceId);
-				//
-				if (text != null && voiceId != null) {// TODO
+				if (text != null) {// TODO
 					//
 					writeVoiceToFile(speechApi = ObjectUtils.getIfNull(speechApi, SpeechApiImpl::new), text,
 							Util.toString(voiceId)
