@@ -225,7 +225,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			//
 			add(jcbVoiceId, WRAP);
 			//
-			testAndAccept((a, b) -> Util.containsKey(a, b), System.getProperties(),
+			testAndAccept(Util::containsKey, System.getProperties(),
 					"org.springframework.context.support.VoiceManagerImageToPdfPanel.voiceId", (a, b) -> {// TODO
 						//
 						final String s = Util.toString(Util.get(a, b));
