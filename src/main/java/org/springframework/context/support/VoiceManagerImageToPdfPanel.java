@@ -1,9 +1,11 @@
 package org.springframework.context.support;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -87,6 +89,7 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.ThrowingRunnableUtil;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
@@ -96,6 +99,8 @@ import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.InitializingBean;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import it.unimi.dsi.fastutil.ints.IntIntMutablePair;
+import it.unimi.dsi.fastutil.ints.IntIntPair;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingBean, ActionListener {
@@ -351,34 +356,9 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 				//
 				final float fontSize = 14;// TODO
 				//
-				String value = null;
+				addText(cs, font, fontSize, pdPage, size);
 				//
-				PDFontDescriptor pdFontDescriptor = null;
-				//
-				for (int i = 0; i < 10; i++) {
-					//
-					cs.beginText();
-					//
-					cs.setFont(font, fontSize);
-					//
-					cs.newLineAtOffset(i * size + (size - getTextWidth(
-							//
-							value = Integer.toString(100 - i * 10) + "%"
-							//
-							, font, fontSize)) / 2, (getHeight(pdPage.getMediaBox()) - size
-					//
-									- (getAscent(pdFontDescriptor = getFontDescriptor(font), 0) / 1000 * fontSize)
-									+ (getDescent(pdFontDescriptor, 0) / 1000 * fontSize))
-					//
-					);
-					//
-					cs.showText(value);
-					//
-					cs.endText();
-					//
-				} // for
-					//
-				addImage(pdDocument, pdRectangle, cs, pageWidth, size);
+				addImage(pdDocument, pdRectangle, cs, pageWidth, size, getHeightOfText(font, fontSize, size));
 				//
 			} catch (final IOException | NoSuchMethodException e) {
 				//
@@ -393,8 +373,114 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			//
 	}
 
+	private static int getHeightOfText(final PDFont font, final float fontSize, final float size) throws IOException {
+		//
+		final PDDocument pdDocument = new PDDocument();
+		//
+		final PDRectangle pdRectangle = PDRectangle.A4;
+		//
+		final PDPage pdPage = new PDPage(pdRectangle);
+		//
+		pdDocument.addPage(pdPage);
+		//
+		try (final PDPageContentStream cs = new PDPageContentStream(pdDocument, pdPage)) {
+			//
+			addText(cs, font, fontSize, pdPage, size);
+			//
+		} // try
+			//
+		final IntIntPair intIntPair = getMinimumAndMaximumY(new PDFRenderer(pdDocument).renderImage(0));
+		//
+		return intIntPair != null ? intIntPair.rightInt() - intIntPair.leftInt() + 1 : 0;
+		//
+	}
+
+	private static IntIntPair getMinimumAndMaximumY(final BufferedImage bi) {
+		//
+		Color c = null;
+		//
+		IntIntMutablePair intIntPair = null;
+		//
+		for (int x = 0; bi != null && x < bi.getWidth(); x++) {
+			//
+			for (int y = 0; y < bi.getHeight(); y++) {
+				//
+				if (c == null) {
+					//
+					c = new Color(bi.getRGB(x, y));
+					//
+				} else if (!Objects.equals(c, new Color(bi.getRGB(x, y)))) {
+					//
+					if (intIntPair == null) {
+						//
+						intIntPair = IntIntMutablePair.of(y, y);
+						//
+					} else {
+						//
+						intIntPair.left(Math.min(intIntPair.leftInt(), y));
+						//
+						intIntPair.right(Math.max(intIntPair.rightInt(), y));
+						//
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+		return intIntPair;
+		//
+	}
+
+	private static void addText(final PDPageContentStream cs, final PDFont font, final float fontSize,
+			final PDPage pdPage, final float size) throws IOException {
+		//
+		PDFontDescriptor pdFontDescriptor = null;
+		//
+		String value = null;
+		//
+		boolean setFont = false;
+		//
+		for (int i = 0; cs != null && i < 10; i++) {
+			//
+			cs.beginText();
+			//
+			setFont = false;
+			//
+			if (font != null) {
+				//
+				cs.setFont(font, fontSize);
+				//
+				setFont = true;
+				//
+			} // if
+				//
+			cs.newLineAtOffset(i * size + (size - getTextWidth(
+					//
+					value = Integer.toString(100 - i * 10) + "%"
+					//
+					, font, fontSize)) / 2, (getHeight(pdPage.getMediaBox()) - size
+			//
+							- (getAscent(pdFontDescriptor = getFontDescriptor(font), 0) / 1000 * fontSize)
+							+ (getDescent(pdFontDescriptor, 0) / 1000 * fontSize))
+			//
+			);
+			//
+			if (setFont) {
+				//
+				cs.showText(value);
+				//
+			} // if
+				//
+			cs.endText();
+			//
+		} // for
+			//
+	}
+
 	private static void addImage(final PDDocument pdDocument, final PDRectangle pdRectangle,
-			@Nullable final PDPageContentStream cs, final float pageWidth, final float size)
+			@Nullable final PDPageContentStream cs, final float pageWidth, final float size, final int textHeight)
 			throws IOException, NoSuchMethodException {
 		//
 		final JFileChooser jfc = new JFileChooser(Util.toFile(Path.of(".")));
@@ -427,11 +513,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			if (cs != null) {
 				//
 				cs.drawImage(pdImageXObject, 0, (imageHeight - pageHeight) / 2, imageWidth * ratioMin,
-						pageHeight - size -
-						//
-								10// TODO
-									//
-				);
+						pageHeight - size - textHeight);
 				//
 			} // if
 				//
