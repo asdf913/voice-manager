@@ -358,7 +358,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 				//
 				addText(cs, font, fontSize, pdPage, size);
 				//
-				addImage(pdDocument, pdRectangle, cs, pageWidth, size, getHeightOfText(font, fontSize, size));
+				addImage(pdDocument, pdRectangle, cs, pageWidth, size, getTextHeight(font, fontSize, size));
 				//
 			} catch (final IOException | NoSuchMethodException e) {
 				//
@@ -373,7 +373,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static int getHeightOfText(final PDFont font, final float fontSize, final float size) throws IOException {
+	private static int getTextHeight(final PDFont font, final float fontSize, final float size) throws IOException {
 		//
 		final PDDocument pdDocument = new PDDocument();
 		//
@@ -395,6 +395,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 		//
 	}
 
+	@Nullable
 	private static IntIntPair getMinimumAndMaximumY(final BufferedImage bi) {
 		//
 		Color c = null;
