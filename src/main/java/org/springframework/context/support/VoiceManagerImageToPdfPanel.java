@@ -441,19 +441,15 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 		//
 		String value = null;
 		//
-		boolean setFont = false;
+		Field f = null;
 		//
 		for (int i = 0; cs != null && i < 10; i++) {
 			//
 			cs.beginText();
 			//
-			setFont = false;
-			//
 			if (font != null) {
 				//
 				cs.setFont(font, fontSize);
-				//
-				setFont = true;
 				//
 			} // if
 				//
@@ -468,7 +464,23 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			//
 			);
 			//
-			if (setFont) {
+			if (f == null) {
+				//
+				final Collection<Field> fs = Util
+						.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(cs))),
+								x -> Objects.equals(Util.getName(x), "fontStack")));
+				//
+				testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+					//
+					throw new IllegalStateException();
+					//
+				});
+				//
+				f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+				//
+			} // if
+				//
+			if (f == null || !IterableUtils.isEmpty(Util.cast(Iterable.class, Narcissus.getField(cs, f)))) {
 				//
 				cs.showText(value);
 				//
