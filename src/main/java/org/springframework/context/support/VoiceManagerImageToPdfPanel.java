@@ -264,7 +264,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 		} // if
 	}
 
-	private static <E> ListCellRenderer<? super E> getRenderer(final JComboBox<E> instance) {
+	private static <E> ListCellRenderer<? super E> getRenderer(@Nullable final JComboBox<E> instance) {
 		return instance != null ? instance.getRenderer() : null;
 	}
 
