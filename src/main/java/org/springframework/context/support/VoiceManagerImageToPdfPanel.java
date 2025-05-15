@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.Component;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,19 +20,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.WindowConstants;
 import javax.swing.text.JTextComponent;
 
@@ -82,6 +89,7 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
 import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.ThrowingRunnableUtil;
+import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -96,11 +104,17 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 
 	private static final Logger LOG = LoggerFactory.getLogger(VoiceManagerImageToPdfPanel.class);
 
+	private static final String WRAP = "wrap";
+
 	private transient SpeechApi speechApi = null;
 
 	private JTextComponent tfText = null;
 
 	private AbstractButton btnExecute = null;
+
+	private ComboBoxModel<String> cbmVoiceId = null;
+
+	private JComboBox<Object> jcbVoiceId = null;
 
 	public static void main(final String[] args) throws Exception {
 		//
@@ -128,6 +142,60 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 		return Util.forName("org.junit.jupiter.api.Test") != null;
 	}
 
+	private static class VoiceIdListCellRenderer implements ListCellRenderer<Object> {
+
+		private SpeechApi speechApi = null;
+
+		private ListCellRenderer<Object> listCellRenderer = null;
+
+		private String commonPrefix = null;
+
+		private VoiceIdListCellRenderer(final SpeechApi speechApi) {
+			this.speechApi = speechApi;
+		}
+
+		@Override
+		@Nullable
+		public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
+				final int index, final boolean isSelected, final boolean cellHasFocus) {
+			//
+			final String s = Util.toString(value);
+			//
+			try {
+				//
+				final String name = SpeechApi.getVoiceAttribute(speechApi, s, "Name");
+				//
+				if (StringUtils.isNotBlank(name)) {
+					//
+					return getListCellRendererComponent(listCellRenderer, list, name, index, isSelected, cellHasFocus);
+					//
+				} // if
+					//
+			} catch (final Error e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} // try
+				//
+			return getListCellRendererComponent(listCellRenderer, list,
+					StringUtils.startsWith(s, commonPrefix) ? StringUtils.substringAfter(s, commonPrefix) : value,
+					index, isSelected, cellHasFocus);
+			//
+		}
+
+		@Nullable
+		private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
+				final JList<? extends E> list, final E value, final int index, final boolean isSelected,
+				final boolean cellHasFocus) {
+			//
+			return instance != null
+					? instance.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+					: null;
+			//
+		}
+
+	}
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		//
@@ -135,14 +203,69 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 		//
 		add(new JLabel("Text"));
 		//
-		add(tfText = new JTextField(), "growx,wrap");
+		add(tfText = new JTextField(), String.format("growx,%1$s", WRAP));
 		//
+		add(new JLabel("Voice"));
+		//
+		final String[] voiceIds = testAndApply(x -> SpeechApi.isInstalled(x),
+				speechApi = ObjectUtils.getIfNull(speechApi, SpeechApiImpl::new), x -> SpeechApi.getVoiceIds(x), null);
+		//
+		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
+				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
+			//
+			final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer(speechApi);
+			//
+			voiceIdListCellRenderer.listCellRenderer = getRenderer(Util.cast(JComboBox.class,
+					jcbVoiceId = new JComboBox<>(Util.cast(ComboBoxModel.class, cbmVoiceId))));
+			//
+			voiceIdListCellRenderer.commonPrefix = String.join("",
+					StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
+			//
+			jcbVoiceId.setRenderer(voiceIdListCellRenderer);
+			//
+			add(jcbVoiceId, WRAP);
+			//
+			testAndAccept((a, b) -> Util.containsKey(a, b), System.getProperties(),
+					"org.springframework.context.support.VoiceManagerImageToPdfPanel.voiceId", (a, b) -> {// TODO
+						//
+						final String s = Util.toString(Util.get(a, b));
+						//
+						Object element = null;
+						//
+						for (int i = 0; i < Util.getSize(cbmVoiceId); i++) {
+							//
+							if (s != null && Util.contains(
+									Arrays.asList(element = Util.getElementAt(cbmVoiceId, i),
+											SpeechApi.getVoiceAttribute(speechApi, Util.toString(element), "Name")),
+									s)) {
+								//
+								Util.setSelectedItem(cbmVoiceId, element);
+								//
+							} // if
+								//
+						} // for
+							//
+					});
+			//
+		} // if
+			//
 		add(new JLabel());
 		//
 		add(btnExecute = new JButton("Execute"));
 		//
 		btnExecute.addActionListener(this);
 		//
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (Util.test(instance, t, u) && consumer != null) {
+			consumer.accept(t, u);
+		} // if
+	}
+
+	private static <E> ListCellRenderer<? super E> getRenderer(final JComboBox<E> instance) {
+		return instance != null ? instance.getRenderer() : null;
 	}
 
 	@Override
@@ -190,11 +313,15 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 				//
 				final String text = Util.getText(tfText);
 				//
-				if (text != null) {// TODO
+				final Object voiceId = Util.getSelectedItem(cbmVoiceId);
+				//
+				if (text != null && voiceId != null) {// TODO
 					//
 					writeVoiceToFile(speechApi = ObjectUtils.getIfNull(speechApi, SpeechApiImpl::new), text,
-							"TTS_MS_JA-JP_HARUKA_11.0"// TODO
+							Util.toString(voiceId)
+							//
 							, i * -1// TODO
+							//
 							, 100, null, tempFile);
 					//
 				} // if
