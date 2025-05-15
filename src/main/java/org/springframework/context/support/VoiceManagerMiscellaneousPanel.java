@@ -1378,16 +1378,10 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
 			final BiConsumer<T, U> a, @Nullable final BiConsumer<T, U> b) {
 		if (Util.test(instance, t, u)) {
-			accept(a, t, u);
+			Util.accept(a, t, u);
 		} else {
-			accept(b, t, u);
+			Util.accept(b, t, u);
 		} // if
-	}
-
-	private static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, final T t, final U u) {
-		if (instance != null) {
-			instance.accept(t, u);
-		}
 	}
 
 	private static void setEnabled(final boolean b, final Component instance, @Nullable final Component... cs) {

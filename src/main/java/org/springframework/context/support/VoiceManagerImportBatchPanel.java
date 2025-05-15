@@ -3244,7 +3244,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			if (checkFileExtension != null) {
 				//
-				accept(errorMessageConsumer, voice, checkFileExtension);
+				Util.accept(errorMessageConsumer, voice, checkFileExtension);
 				//
 				return;
 				//
@@ -3352,7 +3352,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 		} catch (final IOException e) {
 			//
-			accept(throwableConsumer, voice, e);
+			Util.accept(throwableConsumer, voice, e);
 			//
 		} // try
 			//
@@ -3564,12 +3564,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		return instance != null ? instance.getText() : null;
 	}
 
-	private static <T, U> void accept(@Nullable final BiConsumer<T, U> instance, final T t, final U u) {
-		if (instance != null) {
-			instance.accept(t, u);
-		}
-	}
-
 	@Nullable
 	private static String checkFileExtension(@Nullable final String fileExtension) {
 		//
@@ -3654,26 +3648,26 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		if (file == null) {
 			//
-			accept(errorMessageConsumer, voice, NO_FILE_SELECTED);
+			Util.accept(errorMessageConsumer, voice, NO_FILE_SELECTED);
 			//
 			return false;
 			//
 		} else if (!Util.exists(file)) {
 			//
-			accept(errorMessageConsumer, voice,
+			Util.accept(errorMessageConsumer, voice,
 					String.format("File \"%1$s\" does not exist", Util.getAbsolutePath(file)));
 			//
 			return false;
 			//
 		} else if (!Util.isFile(file)) {
 			//
-			accept(errorMessageConsumer, voice, "Not A Regular File Selected");
+			Util.accept(errorMessageConsumer, voice, "Not A Regular File Selected");
 			//
 			return false;
 			//
 		} else if (longValue(length(file), 0) == 0) {
 			//
-			accept(errorMessageConsumer, voice, "Empty File Selected");
+			Util.accept(errorMessageConsumer, voice, "Empty File Selected");
 			//
 			return false;
 			//

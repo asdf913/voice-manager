@@ -259,8 +259,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 
 	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
 			final BiConsumer<T, U> consumer) {
-		if (Util.test(instance, t, u) && consumer != null) {
-			consumer.accept(t, u);
+		if (Util.test(instance, t, u)) {
+			Util.accept(consumer, t, u);
 		} // if
 	}
 
