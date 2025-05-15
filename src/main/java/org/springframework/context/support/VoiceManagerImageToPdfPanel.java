@@ -785,7 +785,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 		return instance != null ? instance.getFontDescriptor() : null;
 	}
 
-	private static float getTextWidth(final String text, final PDFont font, final float fontSize) throws IOException {
+	private static float getTextWidth(final String text, @Nullable final PDFont font, final float fontSize)
+			throws IOException {
 		float width = 0;
 		for (int i = 0; i < StringUtils.length(text); i++) {
 			// Get the width of each character and add it to the total width
