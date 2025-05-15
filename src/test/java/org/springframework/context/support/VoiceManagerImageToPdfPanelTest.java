@@ -239,6 +239,8 @@ class VoiceManagerImageToPdfPanelTest {
 				//
 			if (Util.isStatic(m)) {
 				//
+				System.out.println(Objects.toString(m));// TODO
+				//
 				invokeStaticMethod = Narcissus.invokeStaticMethod(m, Util.toArray(collection));
 				//
 				toString = Objects.toString(m);
