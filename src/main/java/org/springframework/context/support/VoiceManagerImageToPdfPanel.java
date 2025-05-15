@@ -112,7 +112,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 
 	private AbstractButton btnExecute = null;
 
-	private ComboBoxModel<String> cbmVoiceId = null;
+	private transient ComboBoxModel<String> cbmVoiceId = null;
 
 	private JComboBox<Object> jcbVoiceId = null;
 
