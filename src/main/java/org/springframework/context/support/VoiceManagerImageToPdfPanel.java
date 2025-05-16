@@ -589,7 +589,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 	}
 
 	private static void writeVoiceToFile(@Nullable final SpeechApi instance, final String text, final String voiceId,
-			final int rate, final int volume, @Nullable final Map<String, Object> map, final File file) {
+			final int rate, final int volume, @Nullable final Map<String, Object> map, @Nullable final File file) {
 		if (instance != null) {
 			instance.writeVoiceToFile(text, voiceId, rate, volume, map, file);
 		}
@@ -663,7 +663,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 		}
 	}
 
-	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer) {
+	private static <T> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
+			final Consumer<T> consumer) {
 		if (Util.test(predicate, value)) {
 			Util.accept(consumer, value);
 		}
