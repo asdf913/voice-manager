@@ -320,11 +320,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			//
 			if (voiceId == null) {
 				//
-				testAndRunThrows(!GraphicsEnvironment.isHeadless(), () -> {
-					//
-					JOptionPane.showMessageDialog(null, "Please select a voice");
-					//
-				});
+				testAndRunThrows(!GraphicsEnvironment.isHeadless(),
+						() -> JOptionPane.showMessageDialog(null, "Please select a voice"));
 				//
 				return;
 				//
