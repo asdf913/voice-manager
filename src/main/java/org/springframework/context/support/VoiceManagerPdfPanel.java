@@ -169,6 +169,7 @@ import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecifica
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
+import org.apache.pdfbox.pdmodel.font.PDFontUtil;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
@@ -3525,7 +3526,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 							//
 							, font, fontSize)) / 2, lastHeight = (getHeight(md) - Util.intValue(largestY, 0) - size
 					//
-									- (getAscent(pdFontDescriptor = getFontDescriptor(font), 0) / 1000 * fontSize)
+									- (getAscent(pdFontDescriptor = PDFontUtil.getFontDescriptor(font), 0) / 1000
+											* fontSize)
 									+ (getDescent(pdFontDescriptor, 0) / 1000 * fontSize))
 					//
 					);
@@ -3549,7 +3551,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 									value = String.format("%1$.2f s", toMillis(duration, 0) / 1000d), font, fontSize))
 									/ 2,
 							lastHeight = lastHeight
-									- (getAscent(pdFontDescriptor = getFontDescriptor(font), 0) / 1000 * fontSize)
+									- (getAscent(pdFontDescriptor = PDFontUtil.getFontDescriptor(font), 0) / 1000
+											* fontSize)
 									+ (getDescent(pdFontDescriptor, 0) / 1000 * fontSize)
 					//
 					);
@@ -3598,11 +3601,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static PDFontDescriptor getFontDescriptor(@Nullable final PDFont instance) {
-		return instance != null ? instance.getFontDescriptor() : null;
 	}
 
 	private static float getAscent(@Nullable final PDFontDescriptor instance, final float defaultValue) {
