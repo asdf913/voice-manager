@@ -280,105 +280,111 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 		//
 		if (Objects.equals(Util.getSource(evt), btnExecute)) {
 			//
-			final PDDocument pdDocument = new PDDocument();
-			//
-			final PDRectangle pdRectangle = PDRectangle.A4;
-			//
-			final PDPage pdPage = new PDPage(pdRectangle);
-			//
-			pdDocument.addPage(pdPage);
-			//
-			PDComplexFileSpecification pdComplexFileSpecification = null;
-			//
-			PDAnnotationFileAttachment pdAnnotationFileAttachment = null;
-			//
-			final PDRectangle mediaBox = pdPage.getMediaBox();
-			//
-			float pageWidth = getWidth(mediaBox);
-			//
-			float pageHeight = getHeight(mediaBox);
-			//
-			final float size = pageWidth / 10;
-			//
-			File tempFile = null;
-			//
-			try {
+			try (final PDDocument pdDocument = new PDDocument()) {
 				//
-				testAndAccept(Objects::nonNull,
-						tempFile = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null),
-						VoiceManagerImageToPdfPanel::deleteOnExit);
+				final PDRectangle pdRectangle = PDRectangle.A4;
 				//
-			} catch (final IOException e) {
+				final PDPage pdPage = new PDPage(pdRectangle);
 				//
-				LoggerUtil.error(LOG, getMessage(e), e);
+				pdDocument.addPage(pdPage);
 				//
-			} // if
+				PDComplexFileSpecification pdComplexFileSpecification = null;
 				//
-			final String text = Util.getText(tfText);
-			//
-			final Object voiceId = Util.getSelectedItem(cbmVoiceId);
-			//
-			if (voiceId == null) {
+				PDAnnotationFileAttachment pdAnnotationFileAttachment = null;
 				//
-				testAndRunThrows(!GraphicsEnvironment.isHeadless(),
-						() -> JOptionPane.showMessageDialog(null, "Please select a voice"));
+				final PDRectangle mediaBox = pdPage.getMediaBox();
 				//
-				return;
+				float pageWidth = getWidth(mediaBox);
 				//
-			} // if
+				float pageHeight = getHeight(mediaBox);
 				//
-			for (int i = 0; i < 10; i++) {
+				final float size = pageWidth / 10;
 				//
-				(pdComplexFileSpecification = new PDComplexFileSpecification()).setFile(i + ".wav");
+				File tempFile = null;
 				//
-				if (text != null) {// TODO
+				try {
 					//
-					writeVoiceToFile(speechApi = ObjectUtils.getIfNull(speechApi, SpeechApiImpl::new), text,
-							Util.toString(voiceId)
-							//
-							, i * -1// TODO
-							//
-							, 100, null, tempFile);
+					testAndAccept(Objects::nonNull,
+							tempFile = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null),
+							VoiceManagerImageToPdfPanel::deleteOnExit);
+					//
+				} catch (final IOException e) {
+					//
+					LoggerUtil.error(LOG, getMessage(e), e);
 					//
 				} // if
 					//
-				pdComplexFileSpecification.setEmbeddedFile(createPDEmbeddedFile(pdDocument, Util.toPath(tempFile),
-						e -> LoggerUtil.error(LOG, getMessage(e), e)));
+				final String text = Util.getText(tfText);
 				//
-				(pdAnnotationFileAttachment = new PDAnnotationFileAttachment()).setFile(pdComplexFileSpecification);
+				final Object voiceId = Util.getSelectedItem(cbmVoiceId);
 				//
-				pdAnnotationFileAttachment.setRectangle(new PDRectangle(i * size, pageHeight - size, size, size));
+				if (voiceId == null) {
+					//
+					testAndRunThrows(!GraphicsEnvironment.isHeadless(),
+							() -> JOptionPane.showMessageDialog(null, "Please select a voice"));
+					//
+					return;
+					//
+				} // if
+					//
+				for (int i = 0; i < 10; i++) {
+					//
+					(pdComplexFileSpecification = new PDComplexFileSpecification()).setFile(i + ".wav");
+					//
+					if (text != null) {// TODO
+						//
+						writeVoiceToFile(speechApi = ObjectUtils.getIfNull(speechApi, SpeechApiImpl::new), text,
+								Util.toString(voiceId)
+								//
+								, i * -1// TODO
+								//
+								, 100, null, tempFile);
+						//
+					} // if
+						//
+					pdComplexFileSpecification.setEmbeddedFile(createPDEmbeddedFile(pdDocument, Util.toPath(tempFile),
+							e -> LoggerUtil.error(LOG, getMessage(e), e)));
+					//
+					(pdAnnotationFileAttachment = new PDAnnotationFileAttachment()).setFile(pdComplexFileSpecification);
+					//
+					pdAnnotationFileAttachment.setRectangle(new PDRectangle(i * size, pageHeight - size, size, size));
+					//
+					pdAnnotationFileAttachment.setContents("test " + i);// TODO
+					//
+					Util.add(getAnnotations(pdPage, e -> LoggerUtil.error(LOG, getMessage(e), e)),
+							pdAnnotationFileAttachment);
+					//
+				} // for
+					//
+				testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), tempFile,
+						FileUtils::deleteQuietly);
 				//
-				pdAnnotationFileAttachment.setContents("test " + i);// TODO
+				final boolean isTestMode = isTestMode();
 				//
-				Util.add(getAnnotations(pdPage, e -> LoggerUtil.error(LOG, getMessage(e), e)),
-						pdAnnotationFileAttachment);
+				try (final PDPageContentStream cs = new PDPageContentStream(pdDocument, pdPage)) {
+					//
+					final PDFont font = new PDType1Font(FontName.HELVETICA);// TODO
+					//
+					final float fontSize = 14;// TODO
+					//
+					addText(cs, font, fontSize, pdPage, size);
+					//
+					addImage(pdDocument, pdRectangle, cs, pageWidth, size, getTextHeight(font, fontSize, size));
+					//
+				} catch (final IOException | NoSuchMethodException e) {
+					//
+					LoggerUtil.error(LOG, getMessage(e), e);
+					//
+				} // try
+					//
+				testAndRunThrows(!isTestMode, () -> save(pdDocument, Util.toFile(Path.of("temp.pdf"))// TODO
+						, e -> LoggerUtil.error(LOG, getMessage(e), e)));
 				//
-			} // for
+			} catch (final IOException ioe) {
 				//
-			testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), tempFile, FileUtils::deleteQuietly);
-			//
-			final boolean isTestMode = isTestMode();
-			//
-			try (final PDPageContentStream cs = new PDPageContentStream(pdDocument, pdPage)) {
-				//
-				final PDFont font = new PDType1Font(FontName.HELVETICA);// TODO
-				//
-				final float fontSize = 14;// TODO
-				//
-				addText(cs, font, fontSize, pdPage, size);
-				//
-				addImage(pdDocument, pdRectangle, cs, pageWidth, size, getTextHeight(font, fontSize, size));
-				//
-			} catch (final IOException | NoSuchMethodException e) {
-				//
-				LoggerUtil.error(LOG, getMessage(e), e);
+				LoggerUtil.error(LOG, ioe.getMessage(), ioe);
 				//
 			} // try
-				//
-			testAndRunThrows(!isTestMode, () -> save(pdDocument, Util.toFile(Path.of("temp.pdf"))// TODO
-					, e -> LoggerUtil.error(LOG, getMessage(e), e)));
-			//
 		} // if
 			//
 	}
