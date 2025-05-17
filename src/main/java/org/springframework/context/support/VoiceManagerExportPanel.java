@@ -984,15 +984,13 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 				if (sb != null) {
 					//
-					return VoiceManagerExportPanel.getListCellRendererComponent(this, list, sb, index, isSelected,
-							cellHasFocus);
+					return Util.getListCellRendererComponent(this, list, sb, index, isSelected, cellHasFocus);
 					//
 				} // if
 					//
 			} // if
 				//
-			return VoiceManagerExportPanel.getListCellRendererComponent(listCellRenderer, list, value, index,
-					isSelected, cellHasFocus);
+			return Util.getListCellRendererComponent(listCellRenderer, list, value, index, isSelected, cellHasFocus);
 			//
 		}
 
@@ -1089,8 +1087,8 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			public Component getListCellRendererComponent(final JList<? extends Class> list, final Class value,
 					final int index, final boolean isSelected, final boolean cellHasFocus) {
 				//
-				return VoiceManagerExportPanel.getListCellRendererComponent((ListCellRenderer) lcr, list,
-						Util.getName(value), index, isSelected, cellHasFocus);
+				return Util.getListCellRendererComponent((ListCellRenderer) lcr, list, Util.getName(value), index,
+						isSelected, cellHasFocus);
 				//
 			}
 
@@ -5376,16 +5374,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 	@Nullable
 	private static <T> Optional<T> findFirst(@Nullable final Stream<T> instance) {
 		return instance != null ? instance.findFirst() : null;
-	}
-
-	@Nullable
-	private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
-			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
-			final boolean cellHasFocus) {
-		//
-		return instance != null ? instance.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-				: null;
-		//
 	}
 
 	private static <E> void setRenderer(@Nullable final JComboBox<E> instance,

@@ -43,8 +43,6 @@ import java.util.stream.Stream;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
 import javax.swing.MutableComboBoxModel;
 
 import org.apache.commons.lang3.function.FailableFunction;
@@ -76,9 +74,9 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_MAP_INT_STREAM,
 			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_SAVE_PITCH_ACCENT_IMAGE,
 			METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_ADD_ACTION_LISTENER,
-			METHOD_GET_FIELD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_SAVE_FILE, METHOD_IIF, METHOD_SORT,
-			METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_SET_PREFERRED_SIZE, METHOD_MAX, METHOD_TEST_AND_RUN,
-			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
+			METHOD_GET_FIELD, METHOD_SAVE_FILE, METHOD_IIF, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR,
+			METHOD_SET_PREFERRED_SIZE, METHOD_MAX, METHOD_TEST_AND_RUN, METHOD_TEST_AND_ACCEPT3,
+			METHOD_TEST_AND_ACCEPT4, METHOD_REMOVE = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -124,10 +122,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_GET_FIELD = clz.getDeclaredMethod("get", Field.class, Object.class)).setAccessible(true);
 		//
-		(METHOD_GET_LIST_CELL_RENDERER_COMPONENT = clz.getDeclaredMethod("getListCellRendererComponent",
-				ListCellRenderer.class, JList.class, Object.class, Integer.TYPE, Boolean.TYPE, Boolean.TYPE))
-				.setAccessible(true);
-		//
 		(METHOD_SAVE_FILE = clz.getDeclaredMethod("saveFile", File.class, String.class)).setAccessible(true);
 		//
 		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
@@ -167,8 +161,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		private Boolean hasNext, isEmpty = null;
 
 		private Optional<?> max = null;
-
-		private Component component = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -244,14 +236,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				if (Objects.equals(methodName, "max")) {
 					//
 					return max;
-					//
-				} // if
-					//
-			} else if (proxy instanceof ListCellRenderer) {
-				//
-				if (Objects.equals(methodName, "getListCellRendererComponent")) {
-					//
-					return component;
 					//
 				} // if
 					//
@@ -934,37 +918,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static Object get(final Field field, final Object instance) throws Throwable {
 		try {
 			return METHOD_GET_FIELD.invoke(null, field, instance);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetListCellRendererComponent() throws Throwable {
-		//
-		Assertions.assertNull(getListCellRendererComponent(null, null, null, 0, false, false));
-		//
-		if (GraphicsEnvironment.isHeadless()) {
-			//
-			Assertions.assertNull(getListCellRendererComponent(Reflection.newProxy(ListCellRenderer.class, ih), null,
-					null, 0, false, false));
-			//
-		} // if
-			//
-	}
-
-	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
-			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
-			final boolean cellHasFocus) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_LIST_CELL_RENDERER_COMPONENT.invoke(null, instance, list, value, index,
-					isSelected, cellHasFocus);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Component) {
-				return (Component) obj;
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

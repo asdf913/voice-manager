@@ -1,6 +1,5 @@
 package org.springframework.context.support;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
@@ -32,8 +31,6 @@ import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
 
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.ClassParserUtil;
@@ -77,9 +74,9 @@ class VoiceManagerRubyHtmlPanelTest {
 
 	private static Method METHOD_LENGTH, METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
 			METHOD_GET_LAYOUT_MANAGER, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS,
-			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_GET_LIST_CELL_RENDERER_COMPONENT, METHOD_AND, METHOD_GET_DESCRIPTION,
-			METHOD_GET_SELECTED_ITEM, METHOD_TEST_AND_RUN_THROWS, METHOD_CLEAR, METHOD_GET_VALUE, METHOD_CREATE_MAP,
-			METHOD_GET_AST, METHOD_GET_CHILD_COUNT, METHOD_GET_CHILD = null;
+			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_AND, METHOD_GET_DESCRIPTION, METHOD_GET_SELECTED_ITEM,
+			METHOD_TEST_AND_RUN_THROWS, METHOD_CLEAR, METHOD_GET_VALUE, METHOD_CREATE_MAP, METHOD_GET_AST,
+			METHOD_GET_CHILD_COUNT, METHOD_GET_CHILD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -109,10 +106,6 @@ class VoiceManagerRubyHtmlPanelTest {
 				ClipboardOwner.class)).setAccessible(true);
 		//
 		(METHOD_GET_SYSTEM_CLIPBOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
-		//
-		(METHOD_GET_LIST_CELL_RENDERER_COMPONENT = clz.getDeclaredMethod("getListCellRendererComponent",
-				ListCellRenderer.class, JList.class, Object.class, Integer.TYPE, Boolean.TYPE, Boolean.TYPE))
-				.setAccessible(true);
 		//
 		(METHOD_AND = clz.getDeclaredMethod("and", Object.class, Predicate.class, Predicate.class)).setAccessible(true);
 		//
@@ -175,10 +168,6 @@ class VoiceManagerRubyHtmlPanelTest {
 				} // if
 					//
 			} else if (or(
-					and(proxy instanceof ListCellRenderer, Objects.equals(methodName, "getListCellRendererComponent"),
-							Arrays.equals(parameterTypes,
-									new Class<?>[] { JList.class, Object.class, Integer.TYPE, Boolean.TYPE,
-											Boolean.TYPE })),
 					and(proxy instanceof ComboBoxModel, Objects.equals(methodName, "getSelectedItem"),
 							Arrays.equals(parameterTypes, new Class<?>[] {})),
 					and(proxy instanceof Entry, Objects.equals(methodName, "setValue"),
@@ -640,8 +629,6 @@ class VoiceManagerRubyHtmlPanelTest {
 	@Test
 	void testGetSystemClipboard() throws Throwable {
 		//
-		Assertions.assertEquals(null, getSystemClipboard(toolkit));
-		//
 		Assertions.assertEquals(null, getSystemClipboard(ProxyUtil.createProxy(Toolkit.class, mh)));
 		//
 	}
@@ -653,31 +640,6 @@ class VoiceManagerRubyHtmlPanelTest {
 				return null;
 			} else if (obj instanceof Clipboard) {
 				return (Clipboard) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetListCellRendererComponent() throws Throwable {
-		//
-		Assertions.assertNull(getListCellRendererComponent(Reflection.newProxy(ListCellRenderer.class, ih), null, null,
-				0, false, false));
-		//
-	}
-
-	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
-			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
-			final boolean cellHasFocus) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_LIST_CELL_RENDERER_COMPONENT.invoke(null, instance, list, value, index,
-					isSelected, cellHasFocus);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Component) {
-				return (Component) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

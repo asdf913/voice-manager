@@ -840,7 +840,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			public Component getListCellRendererComponent(final JList<? extends JlptVocabulary> list,
 					final JlptVocabulary value, final int index, final boolean isSelected, final boolean cellHasFocus) {
 				//
-				return VoiceManagerImportSinglePanel.getListCellRendererComponent(((ListCellRenderer) render), list,
+				return Util.getListCellRendererComponent(((ListCellRenderer) render), list,
 						testAndApply(Objects::nonNull, value, x -> StringUtils.trim(
 								String.join(" ", StringUtils.defaultString(getKanji(x)), getKana(x), getLevel(x))),
 								null),
@@ -894,13 +894,13 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 				if (Util.containsKey(yomiNameMapTemp, name)) {
 					//
-					return VoiceManagerImportSinglePanel.getListCellRendererComponent(listCellRenderer, list,
-							Util.get(yomiNameMapTemp, name), index, isSelected, cellHasFocus);
+					return Util.getListCellRendererComponent(listCellRenderer, list, Util.get(yomiNameMapTemp, name),
+							index, isSelected, cellHasFocus);
 					//
 				} // if
 					//
-				return VoiceManagerImportSinglePanel.getListCellRendererComponent(listCellRenderer, list, value, index,
-						isSelected, cellHasFocus);
+				return Util.getListCellRendererComponent(listCellRenderer, list, value, index, isSelected,
+						cellHasFocus);
 				//
 			}
 		});
@@ -3613,8 +3613,8 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 				if (StringUtils.isNotBlank(name)) {
 					//
-					return VoiceManagerImportSinglePanel.getListCellRendererComponent(listCellRenderer, list, name,
-							index, isSelected, cellHasFocus);
+					return Util.getListCellRendererComponent(listCellRenderer, list, name, index, isSelected,
+							cellHasFocus);
 					//
 				} // if
 					//
@@ -3624,7 +3624,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 			} // try
 				//
-			return VoiceManagerImportSinglePanel.getListCellRendererComponent(listCellRenderer, list,
+			return Util.getListCellRendererComponent(listCellRenderer, list,
 					StringUtils.startsWith(s, commonPrefix) ? StringUtils.substringAfter(s, commonPrefix) : value,
 					index, isSelected, cellHasFocus);
 			//
@@ -4510,13 +4510,13 @@ public class VoiceManagerImportSinglePanel extends JPanel
 					//
 				if (pitchAccentImage != null && raster != null) {
 					//
-					return VoiceManagerImportSinglePanel.getListCellRendererComponent(((ListCellRenderer) lcr), list,
+					return Util.getListCellRendererComponent(((ListCellRenderer) lcr), list,
 							new ImageIcon(pitchAccentImage), index, isSelected, cellHasFocus);
 					//
 				} // if
 					//
-				return VoiceManagerImportSinglePanel.getListCellRendererComponent(((ListCellRenderer) lcr), list,
-						new ImageIcon(), index, isSelected, cellHasFocus);
+				return Util.getListCellRendererComponent(((ListCellRenderer) lcr), list, new ImageIcon(), index,
+						isSelected, cellHasFocus);
 				//
 			}
 
@@ -4630,16 +4630,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		} // if
 			//
 		return map;
-		//
-	}
-
-	@Nullable
-	private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
-			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
-			final boolean cellHasFocus) {
-		//
-		return instance != null ? instance.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-				: null;
 		//
 	}
 

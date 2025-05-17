@@ -45,7 +45,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -174,7 +173,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		final ListCellRenderer<?> listCellRenderer = Util.getRenderer(jcbImplementation = new JComboBox<>(cbm));
 		//
-		jcbImplementation.setRenderer((list, value, index, isSelected, cellHasFocus) -> VoiceManagerRubyHtmlPanel
+		jcbImplementation.setRenderer((list, value, index, isSelected, cellHasFocus) -> Util
 				.getListCellRendererComponent(((ListCellRenderer) listCellRenderer), list,
 						TableUtil.get(table, value, "label"), index, isSelected, cellHasFocus));
 		//
@@ -436,16 +435,6 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 
 	private static <T> boolean and(final T value, final Predicate<T> a, final Predicate<T> b) {
 		return Util.test(a, value) && Util.test(b, value);
-	}
-
-	@Nullable
-	private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
-			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
-			final boolean cellHasFocus) {
-		//
-		return instance != null ? instance.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-				: null;
-		//
 	}
 
 	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... bs) {

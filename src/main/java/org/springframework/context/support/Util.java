@@ -51,6 +51,7 @@ import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.text.JTextComponent;
@@ -1964,6 +1965,14 @@ public abstract class Util {
 	@Nullable
 	static <E> ListCellRenderer<? super E> getRenderer(@Nullable final JComboBox<E> instance) {
 		return instance != null ? instance.getRenderer() : null;
+	}
+
+	static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance, final JList<? extends E> list,
+			final E value, final int index, final boolean isSelected, final boolean cellHasFocus) {
+		//
+		return instance != null ? instance.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
+				: null;
+		//
 	}
 
 }

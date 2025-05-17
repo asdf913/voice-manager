@@ -377,14 +377,13 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				//
 				if (pitchAccentImage != null) {
 					//
-					return OnlineNHKJapanesePronunciationAccentGui.getListCellRendererComponent(
-							((ListCellRenderer) render), list, new ImageIcon(pitchAccentImage), index, isSelected,
-							cellHasFocus);
+					return Util.getListCellRendererComponent(((ListCellRenderer) render), list,
+							new ImageIcon(pitchAccentImage), index, isSelected, cellHasFocus);
 					//
 				} // if
 					//
-				return OnlineNHKJapanesePronunciationAccentGui.getListCellRendererComponent(((ListCellRenderer) render),
-						list, new ImageIcon(), index, isSelected, cellHasFocus);
+				return Util.getListCellRendererComponent(((ListCellRenderer) render), list, new ImageIcon(), index,
+						isSelected, cellHasFocus);
 				//
 			}
 
@@ -599,16 +598,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			//
 		} // for
 			//
-	}
-
-	@Nullable
-	private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
-			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
-			final boolean cellHasFocus) {
-		//
-		return instance != null ? instance.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-				: null;
-		//
 	}
 
 	private static class IH implements InvocationHandler {

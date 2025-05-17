@@ -196,7 +196,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			public Component getListCellRendererComponent(final JList<? extends JlptVocabulary> list,
 					final JlptVocabulary value, final int index, final boolean isSelected, final boolean cellHasFocus) {
 				//
-				return JlptLevelGui.getListCellRendererComponent(((ListCellRenderer) render), list,
+				return Util.getListCellRendererComponent(((ListCellRenderer) render), list,
 						testAndApply(Objects::nonNull, value, x -> StringUtils.trim(
 								String.join(" ", StringUtils.defaultString(getKanji(x)), getKana(x), getLevel(x))),
 								null),
@@ -254,16 +254,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || comparator != null)
 				? instance.max(comparator)
-				: null;
-		//
-	}
-
-	@Nullable
-	private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
-			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
-			final boolean cellHasFocus) {
-		//
-		return instance != null ? instance.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
 				: null;
 		//
 	}

@@ -953,7 +953,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				if (StringUtils.isNotBlank(name)) {
 					//
-					return getListCellRendererComponent(listCellRenderer, list, name, index, isSelected, cellHasFocus);
+					return Util.getListCellRendererComponent(listCellRenderer, list, name, index, isSelected,
+							cellHasFocus);
 					//
 				} // if
 					//
@@ -963,20 +964,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // try
 				//
-			return getListCellRendererComponent(listCellRenderer, list,
+			return Util.getListCellRendererComponent(listCellRenderer, list,
 					StringUtils.startsWith(s, commonPrefix) ? StringUtils.substringAfter(s, commonPrefix) : value,
 					index, isSelected, cellHasFocus);
-			//
-		}
-
-		@Nullable
-		private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
-				final JList<? extends E> list, final E value, final int index, final boolean isSelected,
-				final boolean cellHasFocus) {
-			//
-			return instance != null
-					? instance.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
-					: null;
 			//
 		}
 

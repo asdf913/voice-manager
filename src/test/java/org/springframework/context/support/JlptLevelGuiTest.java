@@ -39,7 +39,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -93,9 +92,8 @@ class JlptLevelGuiTest {
 	private static Method METHOD_SET_PREFERRED_WIDTH, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_TEST_AND_APPLY,
 			METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_INVOKE, METHOD_IIF, METHOD_RUN,
 			METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM, METHOD_ADD_ELEMENT,
-			METHOD_TEST_AND_ACCEPT, METHOD_BROWSE, METHOD_GET_LIST_CELL_RENDERER_COMPONENT,
-			METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES, METHOD_TO_URI, METHOD_REMOVE_ELEMENT_AT,
-			METHOD_MAX = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_BROWSE, METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES,
+			METHOD_TO_URI, METHOD_REMOVE_ELEMENT_AT, METHOD_MAX = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -138,10 +136,6 @@ class JlptLevelGuiTest {
 		//
 		(METHOD_BROWSE = clz.getDeclaredMethod("browse", Desktop.class, URI.class)).setAccessible(true);
 		//
-		(METHOD_GET_LIST_CELL_RENDERER_COMPONENT = clz.getDeclaredMethod("getListCellRendererComponent",
-				ListCellRenderer.class, JList.class, Object.class, Integer.TYPE, Boolean.TYPE, Boolean.TYPE))
-				.setAccessible(true);
-		//
 		(METHOD_ADD_DOCUMENT_LISTENER = clz.getDeclaredMethod("addDocumentListener", Document.class,
 				DocumentListener.class)).setAccessible(true);
 		//
@@ -162,8 +156,6 @@ class JlptLevelGuiTest {
 		private Document document = null;
 
 		private Iterator<?> iterator = null;
-
-		private Component listCellRendererComponent = null;
 
 		private Optional<?> max = null;
 
@@ -201,14 +193,6 @@ class JlptLevelGuiTest {
 				if (Objects.equals(methodName, "getDocument")) {
 					//
 					return document;
-					//
-				} // if
-					//
-			} else if (proxy instanceof ListCellRenderer) {
-				//
-				if (Objects.equals(methodName, "getListCellRendererComponent")) {
-					//
-					return listCellRendererComponent;
 					//
 				} // if
 					//
@@ -919,34 +903,6 @@ class JlptLevelGuiTest {
 	private static void browse(final Desktop instance, final URI uri) throws Throwable {
 		try {
 			METHOD_BROWSE.invoke(null, instance, uri);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetListCellRendererComponent() throws Throwable {
-		//
-		Assertions.assertNull(getListCellRendererComponent(null, null, null, 0, false, false));
-		//
-		final ListCellRenderer<?> listCellRenderer = Reflection.newProxy(ListCellRenderer.class, ih);
-		//
-		Assertions.assertNull(getListCellRendererComponent(listCellRenderer, null, null, 0, false, false));
-		//
-	}
-
-	private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
-			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
-			final boolean cellHasFocus) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_LIST_CELL_RENDERER_COMPONENT.invoke(null, instance, list, value, index,
-					isSelected, cellHasFocus);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof Component) {
-				return (Component) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
