@@ -2,7 +2,9 @@ package org.springframework.context.support;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.GraphicsEnvironment;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -61,6 +63,7 @@ import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.Type;
 import org.apache.bcel.generic.TypeUtil;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -90,13 +93,23 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.ThrowingRunnableUtil;
 import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.FactoryBeanUtil;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.ListableBeanFactoryUtil;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationContextUtil;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
@@ -108,7 +121,7 @@ import it.unimi.dsi.fastutil.ints.IntIntPair;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerImageToPdfPanel extends JPanel
-		implements InitializingBean, ActionListener, Titled, EnvironmentAware {
+		implements InitializingBean, ActionListener, Titled, EnvironmentAware, ApplicationContextAware {
 
 	private static final long serialVersionUID = 7360299976827392995L;
 
@@ -127,6 +140,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	private JComboBox<Object> jcbVoiceId = null;
 
 	private transient PropertyResolver propertyResolver = null;
+
+	private ApplicationContext applicationContext = null;
 
 	private static boolean isTestMode() {
 		return Util.forName("org.junit.jupiter.api.Test") != null;
@@ -192,6 +207,11 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	}
 
 	@Override
+	public void setApplicationContext(final ApplicationContext applicationContext) {
+		this.applicationContext = applicationContext;
+	}
+
+	@Override
 	public void setEnvironment(final Environment environment) {
 		propertyResolver = environment;
 	}
@@ -199,7 +219,12 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		//
-		setLayout(new MigLayout());
+		setLayout(this,
+				ObjectUtils.getIfNull(
+						getLayoutManager(ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext),
+								Util.entrySet(
+										ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
+						MigLayout::new));
 		//
 		add(new JLabel("Text"));
 		//
@@ -254,6 +279,68 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		add(btnExecute = new JButton("Execute"));
 		//
 		btnExecute.addActionListener(this);
+		//
+	}
+
+	private static void setLayout(final Container instance, final LayoutManager layoutManager) {
+		if (instance != null) {
+			instance.setLayout(layoutManager);
+		}
+	}
+
+	private static LayoutManager getLayoutManager(final AutowireCapableBeanFactory acbf,
+			final Iterable<Entry<String, Object>> entrySet) throws Exception {
+		//
+		if (Util.iterator(entrySet) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		IValue0<LayoutManager> iValue0 = null;
+		//
+		List<Field> fs = null;
+		//
+		for (final Entry<String, Object> entry : entrySet) {
+			//
+			if (!(Util.getValue(entry) instanceof LayoutManager)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(acbf))),
+					x -> Objects.equals(Util.getName(x), "singletonObjects")));
+			//
+			for (int i = 0; i < IterableUtils.size(fs); i++) {
+				//
+				if (FactoryBeanUtil
+						.getObject(
+								Util.cast(
+										FactoryBean.class, MapUtils
+												.getObject(
+														Util.cast(Map.class,
+																Narcissus.getObjectField(acbf,
+																		IterableUtils.get(fs, i))),
+														Util.getKey(entry)))) instanceof LayoutManager lm) {
+					//
+					if (iValue0 == null) {
+						//
+						iValue0 = Unit.with(lm);
+						//
+					} else {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+		return IValue0Util.getValue0(iValue0);
 		//
 	}
 
