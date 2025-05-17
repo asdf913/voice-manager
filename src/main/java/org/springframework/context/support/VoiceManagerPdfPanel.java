@@ -449,6 +449,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private transient FailableFunction<String, String, IOException> furiganaFailableFunction = null;
 
+	private ComboBoxModel<FontName> cbmFontName = null;
+
 	@Override
 	public String getTitle() {
 		return "PDF";
@@ -996,7 +998,45 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		// Font Size
 		//
-		add(new JLabel("Font Size"));
+		add(new JLabel("Font"));
+		//
+		final FontName[] fontNames = FontName.values();
+		//
+		add(new JComboBox<>(cbmFontName = new DefaultComboBoxModel<>(
+				testAndApply(Objects::nonNull, fontNames, x -> ArrayUtils.insert(0, x, (FontName) null), null))));
+		//
+		Integer index = null;
+		//
+		final FontName fontName = getFontName("org.springframework.context.support.VoiceManagerPdfPanel.fontName",
+				propertyResolver, System.getProperties());
+		//
+		for (int i = 0; i < Util.getSize(cbmFontName); i++) {
+			//
+			if (!Objects.equals(Util.getElementAt(cbmFontName, i), fontName)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (index != null) {
+				//
+				throw new IllegalStateException();
+				//
+			} else {
+				//
+				index = Integer.valueOf(i);
+				//
+			} // if
+				//
+		} // for
+			//
+		if (index != null) {
+			//
+			Util.setSelectedItem(cbmFontName, Util.getElementAt(cbmFontName, index.intValue()));
+			//
+		} // if
+			//
+		add(new JLabel("Size"));
 		//
 		Entry<String, Object> entry = getNumberAndUnit(PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManagerPdfPanel.fontSize1"));
@@ -1948,11 +1988,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				ObjectMap.setObject(objectMap, SpeechApi.class, speechApi);
 				//
-				ObjectMap.setObject(objectMap, PDFont.class,
-						new PDType1Font(ObjectUtils.defaultIfNull(
-								getFontName("org.springframework.context.support.VoiceManagerPdfPanel.fontName",
-										propertyResolver, System.getProperties()),
-								FontName.HELVETICA)));
+				ObjectMap.setObject(objectMap, PDFont.class, new PDType1Font(ObjectUtils.defaultIfNull(
+						Util.cast(FontName.class, Util.getSelectedItem(cbmFontName)), FontName.HELVETICA)));
 				//
 				ObjectMap.setObject(objectMap, File.class, file);
 				//
