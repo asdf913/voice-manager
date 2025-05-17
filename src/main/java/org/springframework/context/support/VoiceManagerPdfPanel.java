@@ -1002,8 +1002,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		final FontName[] fontNames = FontName.values();
 		//
-		add(new JComboBox<>(cbmFontName = new DefaultComboBoxModel<>(
-				testAndApply(Objects::nonNull, fontNames, x -> ArrayUtils.insert(0, x, (FontName) null), null))));
+		cbmFontName = new DefaultComboBoxModel<>(
+				testAndApply(Objects::nonNull, fontNames, x -> ArrayUtils.insert(0, x, (FontName) null), null));
+		//
+		add(new JComboBox<>(cbmFontName));
 		//
 		Integer index = null;
 		//
