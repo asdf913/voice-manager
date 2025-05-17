@@ -34,14 +34,12 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
-import javax.swing.WindowConstants;
 import javax.swing.text.JTextComponent;
 
 import org.apache.bcel.classfile.ClassParser;
@@ -104,7 +102,7 @@ import it.unimi.dsi.fastutil.ints.IntIntMutablePair;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
 import net.miginfocom.swing.MigLayout;
 
-public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingBean, ActionListener {
+public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingBean, ActionListener, Titled {
 
 	private static final long serialVersionUID = 7360299976827392995L;
 
@@ -121,28 +119,6 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 	private transient ComboBoxModel<String> cbmVoiceId = null;
 
 	private JComboBox<Object> jcbVoiceId = null;
-
-	public static void main(final String[] args) throws Exception {
-		//
-		final JFrame jFrame = !GraphicsEnvironment.isHeadless() && !isTestMode() ? new JFrame() : null;
-		//
-		final VoiceManagerImageToPdfPanel instance = new VoiceManagerImageToPdfPanel();
-		//
-		instance.afterPropertiesSet();
-		//
-		if (jFrame != null) {
-			//
-			jFrame.add(instance);
-			//
-			jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-			//
-			jFrame.pack();
-			//
-			jFrame.setVisible(true);
-			//
-		} // if
-			//
-	}
 
 	private static boolean isTestMode() {
 		return Util.forName("org.junit.jupiter.api.Test") != null;
@@ -200,6 +176,11 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			//
 		}
 
+	}
+
+	@Override
+	public String getTitle() {
+		return "Image To PDF";
 	}
 
 	@Override

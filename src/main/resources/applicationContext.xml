@@ -1167,6 +1167,9 @@
 			ref="LanguageCodeToTextObjIntFunction" />
 	</bean>
 
+	<bean
+		class="org.springframework.context.support.VoiceManagerImageToPdfPanel" />
+
 	<!---->
 	<bean
 		class="org.springframework.context.support.VoiceManagerRubyHtmlPanel"/>

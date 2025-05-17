@@ -203,7 +203,7 @@ class VoiceManagerImageToPdfPanelTest {
 		//
 		Method m = null;
 		//
-		Object invokeStaticMethod = null;
+		Object invoke = null;
 		//
 		String name, toString = null;
 		//
@@ -246,33 +246,46 @@ class VoiceManagerImageToPdfPanelTest {
 					//
 			} // for
 				//
+			name = Util.getName(m);
+			//
 			if (Util.isStatic(m)) {
 				//
-				invokeStaticMethod = Narcissus.invokeStaticMethod(m, Util.toArray(collection));
+				invoke = Narcissus.invokeStaticMethod(m, Util.toArray(collection));
 				//
 				toString = Objects.toString(m);
 				//
 				if (Util.contains(Arrays.asList(Boolean.TYPE, Integer.TYPE, Float.TYPE), Util.getReturnType(m))
-						|| Boolean.logicalAnd(Objects.equals(name = Util.getName(m),
+						|| Boolean.logicalAnd(Objects.equals(name,
 								"getPDImageXObjectCreateFromFileByContentDetectFileTypeMethodAndAllowedFileTypes"),
 								Arrays.equals(parameterTypes, new Class<?>[] {}))
 						|| Boolean.logicalAnd(Objects.equals(name, "isPDImage"),
 								Arrays.equals(parameterTypes, new Class<?>[] { byte[].class }))) {
 					//
-					Assertions.assertNotNull(invokeStaticMethod, toString);
+					Assertions.assertNotNull(invoke, toString);
 					//
 				} else {
 					//
-					Assertions.assertNull(invokeStaticMethod, toString);
+					Assertions.assertNull(invoke, toString);
 					//
 				} // if
 					//
 			} else {
 				//
-				Assertions.assertNull(Narcissus.invokeMethod(
+				invoke = Narcissus.invokeMethod(
 						instance = ObjectUtils.getIfNull(instance, VoiceManagerImageToPdfPanel::new), m,
-						Util.toArray(collection)), toString);
+						Util.toArray(collection));
 				//
+				if (Boolean.logicalAnd(Objects.equals(name, "getTitle"),
+						Arrays.equals(parameterTypes, new Class<?>[] {}))) {
+					//
+					Assertions.assertNotNull(invoke, toString);
+					//
+				} else {
+					//
+					Assertions.assertNull(invoke, toString);
+					//
+				} // if
+					//
 			} // if
 				//
 		} // for
