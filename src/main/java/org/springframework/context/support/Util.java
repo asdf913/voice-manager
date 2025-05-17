@@ -1967,8 +1967,9 @@ public abstract class Util {
 		return instance != null ? instance.getRenderer() : null;
 	}
 
-	static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance, final JList<? extends E> list,
-			final E value, final int index, final boolean isSelected, final boolean cellHasFocus) {
+	static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
+			final JList<? extends E> list, final E value, final int index, final boolean isSelected,
+			final boolean cellHasFocus) {
 		//
 		return instance != null ? instance.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
 				: null;
