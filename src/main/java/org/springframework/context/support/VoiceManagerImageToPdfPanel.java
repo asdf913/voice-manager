@@ -689,7 +689,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		try {
 			//
-			return instance != null ? instance.getAnnotations() : null;
+			return PDPageUtil.getAnnotations(instance);
 			//
 		} catch (final IOException e) {
 			//

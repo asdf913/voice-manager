@@ -163,8 +163,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.PDPageUtil;
 import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
+import org.apache.pdfbox.pdmodel.PDPageUtil;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecification;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
@@ -174,7 +174,6 @@ import org.apache.pdfbox.pdmodel.font.PDFontUtil;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.d2ab.collection.ints.IntCollectionUtil;
@@ -3536,7 +3535,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					//
 					attachment.setContents(value = Util.getValue(entry));
 					//
-					Util.add(getAnnotations(pd), attachment);
+					Util.add(PDPageUtil.getAnnotations(pd), attachment);
 					//
 					// Label (Speed)
 					//
@@ -4027,11 +4026,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Nullable
 	private static String getMimeType(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getMimeType() : null;
-	}
-
-	@Nullable
-	private static List<PDAnnotation> getAnnotations(@Nullable final PDPage instance) throws IOException {
-		return instance != null ? instance.getAnnotations() : null;
 	}
 
 	@Nullable
