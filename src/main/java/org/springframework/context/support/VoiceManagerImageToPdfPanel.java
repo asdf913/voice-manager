@@ -141,7 +141,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 	private transient PropertyResolver propertyResolver = null;
 
-	private ApplicationContext applicationContext = null;
+	private transient ApplicationContext applicationContext = null;
 
 	private static boolean isTestMode() {
 		return Util.forName("org.junit.jupiter.api.Test") != null;
