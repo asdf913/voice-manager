@@ -76,6 +76,7 @@ import org.apache.commons.lang3.tuple.MutablePairUtil;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageUtil;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecification;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
@@ -285,7 +286,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				//
 				PDAnnotationFileAttachment pdAnnotationFileAttachment = null;
 				//
-				final PDRectangle mediaBox = pdPage.getMediaBox();
+				final PDRectangle mediaBox = PDPageUtil.getMediaBox(pdPage);
 				//
 				float pageWidth = getWidth(mediaBox);
 				//
@@ -466,7 +467,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 					//
 					value = Integer.toString(100 - i * 10) + "%"
 					//
-					, font, fontSize)) / 2, (getHeight(pdPage.getMediaBox()) - size
+					, font, fontSize)) / 2, (getHeight(PDPageUtil.getMediaBox(pdPage)) - size
 			//
 							- (getAscent(pdFontDescriptor = PDFontUtil.getFontDescriptor(font), 0) / 1000 * fontSize)
 							+ (getDescent(pdFontDescriptor, 0) / 1000 * fontSize))

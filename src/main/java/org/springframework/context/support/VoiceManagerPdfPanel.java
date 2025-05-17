@@ -163,6 +163,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageUtil;
 import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecification;
@@ -3363,7 +3364,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final PDPage pd = document.getPage(0);
 			//
-			final PDRectangle md = getMediaBox(pd);
+			final PDRectangle md = PDPageUtil.getMediaBox(pd);
 			//
 			final PDFRenderer pdfRenderer = new PDFRenderer(document);
 			//
@@ -3999,11 +4000,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Nullable
 	private static List<PDAnnotation> getAnnotations(@Nullable final PDPage instance) throws IOException {
 		return instance != null ? instance.getAnnotations() : null;
-	}
-
-	@Nullable
-	private static PDRectangle getMediaBox(@Nullable final PDPage instance) {
-		return instance != null ? instance.getMediaBox() : null;
 	}
 
 	@Nullable
