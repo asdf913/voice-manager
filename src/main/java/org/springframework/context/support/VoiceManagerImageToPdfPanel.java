@@ -96,13 +96,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.PropertyResolver;
+import org.springframework.core.env.PropertyResolverUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import it.unimi.dsi.fastutil.ints.IntIntMutablePair;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
 import net.miginfocom.swing.MigLayout;
 
-public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingBean, ActionListener, Titled {
+public class VoiceManagerImageToPdfPanel extends JPanel
+		implements InitializingBean, ActionListener, Titled, EnvironmentAware {
 
 	private static final long serialVersionUID = 7360299976827392995L;
 
@@ -119,6 +124,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 	private transient ComboBoxModel<String> cbmVoiceId = null;
 
 	private JComboBox<Object> jcbVoiceId = null;
+
+	private PropertyResolver propertyResolver = null;
 
 	private static boolean isTestMode() {
 		return Util.forName("org.junit.jupiter.api.Test") != null;
@@ -184,6 +191,11 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 	}
 
 	@Override
+	public void setEnvironment(final Environment environment) {
+		propertyResolver = environment;
+	}
+
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		//
 		setLayout(new MigLayout());
@@ -212,10 +224,10 @@ public class VoiceManagerImageToPdfPanel extends JPanel implements InitializingB
 			//
 			add(jcbVoiceId, WRAP);
 			//
-			testAndAccept(Util::containsKey, System.getProperties(),
-					"org.springframework.context.support.VoiceManagerImageToPdfPanel.voiceId", (a, b) -> {// TODO
+			testAndAccept(PropertyResolverUtil::containsProperty, propertyResolver,
+					"org.springframework.context.support.VoiceManagerImageToPdfPanel.voiceId", (a, b) -> {
 						//
-						final String s = Util.toString(Util.get(a, b));
+						final String s = PropertyResolverUtil.getProperty(a, b);
 						//
 						Object element = null;
 						//
