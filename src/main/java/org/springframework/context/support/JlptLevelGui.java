@@ -187,7 +187,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		jcbJlptVocabulary.addItemListener(this);
 		//
-		final ListCellRenderer<?> render = jcbJlptVocabulary.getRenderer();
+		final ListCellRenderer<?> render = Util.getRenderer(jcbJlptVocabulary);
 		//
 		jcbJlptVocabulary.setRenderer(new ListCellRenderer<JlptVocabulary>() {
 

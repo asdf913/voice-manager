@@ -172,7 +172,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		final MutableComboBoxModel<Object> cbm = new DefaultComboBoxModel<>();
 		//
-		final ListCellRenderer<?> listCellRenderer = (jcbImplementation = new JComboBox<>(cbm)).getRenderer();
+		final ListCellRenderer<?> listCellRenderer = Util.getRenderer(jcbImplementation = new JComboBox<>(cbm));
 		//
 		jcbImplementation.setRenderer((list, value, index, isSelected, cellHasFocus) -> VoiceManagerRubyHtmlPanel
 				.getListCellRendererComponent(((ListCellRenderer) listCellRenderer), list,

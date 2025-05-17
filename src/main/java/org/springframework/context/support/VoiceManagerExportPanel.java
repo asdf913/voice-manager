@@ -1080,7 +1080,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				Util.contains(Util.keySet(IValue0Util.getValue0(getWorkbookClassFailableSupplierMap())), workbookClass),
 				() -> Util.setSelectedItem(cbmWorkbookClass, workbookClass));
 		//
-		final ListCellRenderer<?> lcr = getRenderer(jcbClass);
+		final ListCellRenderer<?> lcr = Util.getRenderer(jcbClass);
 		//
 		setRenderer(jcbClass, new ListCellRenderer<>() {
 
@@ -1327,7 +1327,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		final MicrosoftAccessFileFormatListCellRenderer mafflcr = new MicrosoftAccessFileFormatListCellRenderer();
 		//
-		mafflcr.listCellRenderer = Util.cast(ListCellRenderer.class, getRenderer(jcbFileFormat));
+		mafflcr.listCellRenderer = Util.cast(ListCellRenderer.class, Util.getRenderer(jcbFileFormat));
 		//
 		final Stream<FileFormat> ffs = testAndApply(Objects::nonNull, fileFormats, Arrays::stream, null);
 		//
@@ -5413,11 +5413,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 			//
 		instance.setRenderer(aRenderer);
 		//
-	}
-
-	@Nullable
-	private static <E> ListCellRenderer<? super E> getRenderer(@Nullable final JComboBox<E> instance) {
-		return instance != null ? instance.getRenderer() : null;
 	}
 
 	private IValue0<Map<Class<? extends Workbook>, FailableSupplier<Workbook, RuntimeException>>> getWorkbookClassFailableSupplierMap() {

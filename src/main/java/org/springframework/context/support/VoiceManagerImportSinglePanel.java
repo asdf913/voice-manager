@@ -831,7 +831,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		add(jcbJlptVocabulary, String.format(SPAN_ONLY_FORMAT, 3));
 		//
-		final ListCellRenderer<?> render = getRenderer(jcbJlptVocabulary);
+		final ListCellRenderer<?> render = Util.getRenderer(jcbJlptVocabulary);
 		//
 		setRenderer(jcbJlptVocabulary, new ListCellRenderer<JlptVocabulary>() {
 
@@ -867,7 +867,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		final JComboBox<Object> jcbYomi = new JComboBox(
 				cbmYomi = new DefaultComboBoxModel<>(ArrayUtils.insert(0, yomis, (Yomi) null)));
 		//
-		final ListCellRenderer<Object> listCellRenderer = Util.cast(ListCellRenderer.class, getRenderer(jcbYomi));
+		final ListCellRenderer<Object> listCellRenderer = Util.cast(ListCellRenderer.class, Util.getRenderer(jcbYomi));
 		//
 		Map<String, String> yomiNameMap = null;
 		//
@@ -1003,7 +1003,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		(jcbPronunciation = new JComboBox<>(mcbmPronunciation = new DefaultComboBoxModel<>())).addActionListener(this);
 		//
-		setRenderer(jcbPronunciation, createPronunciationListCellRenderer(getRenderer(jcbPronunciation)));
+		setRenderer(jcbPronunciation, createPronunciationListCellRenderer(Util.getRenderer(jcbPronunciation)));
 		//
 		// Set height
 		//
@@ -3647,8 +3647,8 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 				final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer();
 				//
-				voiceIdListCellRenderer.listCellRenderer = getRenderer(
-						Util.cast(JComboBox.class, jcbVoiceIdLocal = new JComboBox<>(cbmVoiceIdLocal)));
+				voiceIdListCellRenderer.listCellRenderer = Util
+						.getRenderer(Util.cast(JComboBox.class, jcbVoiceIdLocal = new JComboBox<>(cbmVoiceIdLocal)));
 				//
 				jcbVoiceIdLocal.addItemListener(this);
 				//
@@ -4668,11 +4668,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		instance.setRenderer(aRenderer);
 		//
-	}
-
-	@Nullable
-	private static <E> ListCellRenderer<? super E> getRenderer(@Nullable final JComboBox<E> instance) {
-		return instance != null ? instance.getRenderer() : null;
 	}
 
 	@Nullable

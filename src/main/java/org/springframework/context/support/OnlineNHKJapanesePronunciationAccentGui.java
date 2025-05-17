@@ -364,7 +364,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		(jcbPronounication = new JComboBox<>(mcbmPronounication = new DefaultComboBoxModel<>()))
 				.addActionListener(this);
 		//
-		final ListCellRenderer<?> render = jcbPronounication.getRenderer();
+		final ListCellRenderer<?> render = Util.getRenderer(jcbPronounication);
 		//
 		jcbPronounication.setRenderer(new ListCellRenderer<>() {
 

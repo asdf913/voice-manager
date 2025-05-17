@@ -374,8 +374,8 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 			final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer();
 			//
-			voiceIdListCellRenderer.listCellRenderer = getRenderer(
-					Util.cast(JComboBox.class, jcbVoiceId = new JComboBox(cbmVoiceId)));
+			voiceIdListCellRenderer.listCellRenderer = Util
+					.getRenderer(Util.cast(JComboBox.class, jcbVoiceId = new JComboBox(cbmVoiceId)));
 			//
 			jcbVoiceId.addItemListener(this);
 			//
@@ -468,7 +468,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 						DefaultComboBoxModel::new, y -> new DefaultComboBoxModel<>())),
 				null);
 		//
-		final ListCellRenderer<?> listCellRenderer = getRenderer(jcbSpeakMethod);
+		final ListCellRenderer<?> listCellRenderer = Util.getRenderer(jcbSpeakMethod);
 		//
 		setRenderer(jcbSpeakMethod, new ListCellRenderer<Object>() {
 
@@ -1562,11 +1562,6 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		} catch (final NumberFormatException e) {
 			return null;
 		}
-	}
-
-	@Nullable
-	private static <E> ListCellRenderer<? super E> getRenderer(@Nullable final JComboBox<E> instance) {
-		return instance != null ? instance.getRenderer() : null;
 	}
 
 	private class VoiceIdListCellRenderer implements ListCellRenderer<Object> {

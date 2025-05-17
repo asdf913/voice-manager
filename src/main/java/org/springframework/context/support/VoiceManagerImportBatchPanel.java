@@ -557,8 +557,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer();
 			//
-			voiceIdListCellRenderer.listCellRenderer = getRenderer(
-					Util.cast(JComboBox.class, jcbVoiceId = new JComboBox(cbmVoiceId)));
+			voiceIdListCellRenderer.listCellRenderer = Util
+					.getRenderer(Util.cast(JComboBox.class, jcbVoiceId = new JComboBox(cbmVoiceId)));
 			//
 			jcbVoiceId.addItemListener(this);
 			//
@@ -2853,8 +2853,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 				final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer();
 				//
-				voiceIdListCellRenderer.listCellRenderer = getRenderer(
-						Util.cast(JComboBox.class, jcbVoiceIdLocal = new JComboBox<>(cbmVoiceIdLocal)));
+				voiceIdListCellRenderer.listCellRenderer = Util
+						.getRenderer(Util.cast(JComboBox.class, jcbVoiceIdLocal = new JComboBox<>(cbmVoiceIdLocal)));
 				//
 				jcbVoiceIdLocal.addItemListener(this);
 				//
@@ -2910,11 +2910,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 		instance.setRenderer(aRenderer);
 		//
-	}
-
-	@Nullable
-	private static <E> ListCellRenderer<? super E> getRenderer(@Nullable final JComboBox<E> instance) {
-		return instance != null ? instance.getRenderer() : null;
 	}
 
 	private static void addRow(@Nullable final DefaultTableModel instance, final Object[] rowData) {

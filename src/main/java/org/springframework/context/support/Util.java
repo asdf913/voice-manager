@@ -49,7 +49,9 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.text.JTextComponent;
 
@@ -1957,6 +1959,10 @@ public abstract class Util {
 		//
 		return f != null && Narcissus.getField(instance, f) == null ? null : instance.openStream();
 		//
+	}
+
+	static <E> ListCellRenderer<? super E> getRenderer(final JComboBox<E> instance) {
+		return instance != null ? instance.getRenderer() : null;
 	}
 
 }

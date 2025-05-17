@@ -240,7 +240,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 			final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer(speechApi);
 			//
-			voiceIdListCellRenderer.listCellRenderer = getRenderer(Util.cast(JComboBox.class,
+			voiceIdListCellRenderer.listCellRenderer = Util.getRenderer(Util.cast(JComboBox.class,
 					jcbVoiceId = new JComboBox<>(Util.cast(ComboBoxModel.class, cbmVoiceId))));
 			//
 			voiceIdListCellRenderer.commonPrefix = String.join("",
@@ -350,11 +350,6 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		if (Util.test(instance, t, u)) {
 			Util.accept(consumer, t, u);
 		} // if
-	}
-
-	@Nullable
-	private static <E> ListCellRenderer<? super E> getRenderer(@Nullable final JComboBox<E> instance) {
-		return instance != null ? instance.getRenderer() : null;
 	}
 
 	@Override

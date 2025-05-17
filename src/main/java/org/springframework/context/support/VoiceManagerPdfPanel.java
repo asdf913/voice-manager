@@ -1307,7 +1307,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer(speechApi);
 				//
-				voiceIdListCellRenderer.listCellRenderer = getRenderer(Util.cast(JComboBox.class,
+				voiceIdListCellRenderer.listCellRenderer = Util.getRenderer(Util.cast(JComboBox.class,
 						instance.jcbVoiceId = new JComboBox<>(Util.cast(ComboBoxModel.class, instance.cbmVoiceId))));
 				//
 				voiceIdListCellRenderer.commonPrefix = String.join("",
@@ -1746,11 +1746,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		return IValue0Util.getValue0(iValue0);
 		//
-	}
-
-	@Nullable
-	private static <E> ListCellRenderer<? super E> getRenderer(@Nullable final JComboBox<E> instance) {
-		return instance != null ? instance.getRenderer() : null;
 	}
 
 	@Override
