@@ -1961,7 +1961,7 @@ public abstract class Util {
 		//
 	}
 
-	static <E> ListCellRenderer<? super E> getRenderer(final JComboBox<E> instance) {
+	static <E> ListCellRenderer<? super E> getRenderer(@Nullable final JComboBox<E> instance) {
 		return instance != null ? instance.getRenderer() : null;
 	}
 
