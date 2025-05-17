@@ -231,14 +231,10 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Stream) {
+			} else if (proxy instanceof Stream && Objects.equals(methodName, "max")) {
 				//
-				if (Objects.equals(methodName, "max")) {
-					//
-					return max;
-					//
-				} // if
-					//
+				return max;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
