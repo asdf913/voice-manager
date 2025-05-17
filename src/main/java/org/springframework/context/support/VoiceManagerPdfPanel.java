@@ -449,7 +449,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private transient FailableFunction<String, String, IOException> furiganaFailableFunction = null;
 
-	private ComboBoxModel<FontName> cbmFontName = null;
+	private transient ComboBoxModel<FontName> cbmFontName = null;
 
 	@Override
 	public String getTitle() {
