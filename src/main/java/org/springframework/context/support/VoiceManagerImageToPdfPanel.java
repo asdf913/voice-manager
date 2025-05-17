@@ -126,7 +126,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 	private JComboBox<Object> jcbVoiceId = null;
 
-	private PropertyResolver propertyResolver = null;
+	private transient PropertyResolver propertyResolver = null;
 
 	private static boolean isTestMode() {
 		return Util.forName("org.junit.jupiter.api.Test") != null;
