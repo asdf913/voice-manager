@@ -288,6 +288,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		}
 	}
 
+	@Nullable
 	private static LayoutManager getLayoutManager(final AutowireCapableBeanFactory acbf,
 			final Iterable<Entry<String, Object>> entrySet) throws Exception {
 		//
