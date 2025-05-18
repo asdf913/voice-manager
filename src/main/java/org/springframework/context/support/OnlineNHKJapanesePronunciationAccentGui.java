@@ -447,7 +447,8 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		testAndAccept(predicate, jlSavePitchAccentImage = new JLabel(), this::add);
 		//
-		addActionListener(this, btnPlayAudio, btnSaveAudio, btnCopyPitchAccentImage, btnSavePitchAccentImage);
+		Util.forEach(Stream.of(btnPlayAudio, btnSaveAudio, btnCopyPitchAccentImage, btnSavePitchAccentImage),
+				x -> Util.addActionListener(x, this));
 		//
 		// Get the max "width" of "java.awt.Component.getPreferredSize()" of
 		// "java.awt.Component" from field(s) annotated by
@@ -579,24 +580,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			instance.sort(comparator);
 			//
 		} // if
-			//
-	}
-
-	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... bs) {
-		//
-		AbstractButton b = null;
-		//
-		for (int i = 0; i < length(bs); i++) {
-			//
-			if ((b = ArrayUtils.get(bs, i)) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			Util.addActionListener(b, actionListener);
-			//
-		} // for
 			//
 	}
 
