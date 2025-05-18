@@ -661,11 +661,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		} else if (Objects.equals(source, btnImageUrl)) {
 			//
 			testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.exists(x)), getFile(Util.toFile(Path.of("."))),
-					x -> {
-						//
-						Util.setText(tfImageUrl, Util.getAbsolutePath(getAbsoluteFile(x)));
-						//
-					});
+					x -> Util.setText(tfImageUrl, Util.getAbsolutePath(getAbsoluteFile(x))));
 			//
 		} // if
 			//
