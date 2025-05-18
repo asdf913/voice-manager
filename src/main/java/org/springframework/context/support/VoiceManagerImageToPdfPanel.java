@@ -667,7 +667,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 	}
 
-	private static File getAbsoluteFile(final File instance) {
+	private static File getAbsoluteFile(@Nullable final File instance) {
 		return instance != null ? instance.getAbsoluteFile() : null;
 	}
 
