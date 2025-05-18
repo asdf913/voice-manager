@@ -22,6 +22,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
@@ -271,9 +272,14 @@ class VoiceManagerImageToPdfPanelTest {
 					//
 			} else {
 				//
-				invoke = Narcissus.invokeMethod(
-						instance = ObjectUtils.getIfNull(instance, VoiceManagerImageToPdfPanel::new), m,
-						Util.toArray(collection));
+				Util.forEach(Util.filter(
+						Arrays.stream(Util.getDeclaredFields(Util.getClass(
+								instance = ObjectUtils.getIfNull(instance, VoiceManagerImageToPdfPanel::new)))),
+						x -> !Util.isStatic(x)), x -> {
+							Narcissus.setField(instance, x, null);
+						});
+				//
+				invoke = Narcissus.invokeMethod(instance, m, Util.toArray(collection));
 				//
 				if (Boolean.logicalAnd(Objects.equals(name, "getTitle"),
 						Arrays.equals(parameterTypes, new Class<?>[] {}))) {
