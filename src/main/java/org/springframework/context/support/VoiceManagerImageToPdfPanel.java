@@ -666,6 +666,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private static File getFile(final File file) {
 		//
 		final JFileChooser jfc = new JFileChooser(file);
