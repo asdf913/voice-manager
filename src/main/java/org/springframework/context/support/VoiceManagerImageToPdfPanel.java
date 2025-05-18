@@ -246,7 +246,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		add(new JLabel("Text"));
 		//
-		add(tfText = new JTextField(), String.format("growx,%1$s", WRAP));
+		add(tfText = new JTextField(), String.format("growx,span %1$s,%2$s", 3, WRAP));
 		//
 		add(new JLabel("Voice"));
 		//
