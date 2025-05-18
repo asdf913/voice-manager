@@ -1580,7 +1580,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		add(panel, tfFileDigest = new JTextField(), String.format("%1$s,span %2$s", GROWX, 3));
 		//
-		setEditable(false, tfFolder, tfFile, tfFileLength, tfFileDigest);
+		Util.forEach(Stream.of(tfFolder, tfFile, tfFileLength, tfFileDigest), x -> Util.setEditable(x, false));
 		//
 		return panel;
 		//
@@ -1651,16 +1651,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			@Nullable final FailableFunction<T, R, E> functionFalse) throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
-	}
-
-	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
-		//
-		for (int i = 0; jtcs != null && i < jtcs.length; i++) {
-			//
-			Util.setEditable(jtcs[i], editable);
-			//
-		} // for
-			//
 	}
 
 	@Override
