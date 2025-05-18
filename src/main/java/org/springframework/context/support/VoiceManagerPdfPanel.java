@@ -2132,7 +2132,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		if (Objects.equals(source, btnImageClear)) {
 			//
-			setEnabled((renderedImage = null) != null, btnImageClear, btnImageView);
+			Stream.of(btnImageClear, btnImageView).forEach(x -> {
+				Util.setEnabled(x, (renderedImage = null) != null);
+			});
 			//
 		} else if (Objects.equals(source, btnImageView)) {
 			//
@@ -2226,7 +2228,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final boolean isImageFlavorSupported = isDataFlavorSupported(transferable, DataFlavor.imageFlavor);
 			//
-			setEnabled(isImageFlavorSupported, btnImageClear, btnImageView);
+			Stream.of(btnImageClear, btnImageView).forEach(x -> {
+				Util.setEnabled(x, isImageFlavorSupported);
+			});
 			//
 			try {
 				//
@@ -2869,20 +2873,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		if (instance != null) {
 			instance.println(string);
 		}
-	}
-
-	private static void setEnabled(final boolean enabled, final Component a, final Component b, final Component... cs) {
-		//
-		Util.setEnabled(a, enabled);
-		//
-		Util.setEnabled(b, enabled);
-		//
-		for (int i = 0; i < length(cs); i++) {
-			//
-			Util.setEnabled(ArrayUtils.get(cs, i), enabled);
-			//
-		} // for
-			//
 	}
 
 	private static boolean isDataFlavorSupported(@Nullable final Transferable instance, final DataFlavor flavor) {
