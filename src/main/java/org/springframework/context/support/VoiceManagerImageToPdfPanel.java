@@ -166,7 +166,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
-	private ComboBoxModel<FontName> cbmFontName = null;
+	private transient ComboBoxModel<FontName> cbmFontName = null;
 
 	private static boolean isTestMode() {
 		return Util.forName("org.junit.jupiter.api.Test") != null;
