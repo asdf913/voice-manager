@@ -1386,20 +1386,14 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 
 	private static void setEnabled(final boolean b, final Component instance, @Nullable final Component... cs) {
 		//
-		setEnabled(instance, b);
+		Util.setEnabled(instance, b);
 		//
 		for (int i = 0; cs != null && i < cs.length; i++) {
 			//
-			setEnabled(cs[i], b);
+			Util.setEnabled(cs[i], b);
 			//
 		} // for
 			//
-	}
-
-	private static void setEnabled(@Nullable final Component instance, final boolean b) {
-		if (instance != null) {
-			instance.setEnabled(b);
-		}
 	}
 
 	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {

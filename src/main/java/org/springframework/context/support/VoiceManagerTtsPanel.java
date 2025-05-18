@@ -966,9 +966,11 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 			if (jsSpeechRate != null) {
 				//
-				setEnabled(btnSpeechRateSlower, Util.intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMinimum());
+				Util.setEnabled(btnSpeechRateSlower,
+						Util.intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMinimum());
 				//
-				setEnabled(btnSpeechRateFaster, Util.intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMaximum());
+				Util.setEnabled(btnSpeechRateFaster,
+						Util.intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMaximum());
 				//
 			} // if
 				//
@@ -1600,20 +1602,14 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 
 	private static void setEnabled(final boolean b, final Component instance, @Nullable final Component... cs) {
 		//
-		setEnabled(instance, b);
+		Util.setEnabled(instance, b);
 		//
 		for (int i = 0; cs != null && i < cs.length; i++) {
 			//
-			setEnabled(cs[i], b);
+			Util.setEnabled(cs[i], b);
 			//
 		} // for
 			//
-	}
-
-	private static void setEnabled(@Nullable final Component instance, final boolean b) {
-		if (instance != null) {
-			instance.setEnabled(b);
-		}
 	}
 
 	@Nullable

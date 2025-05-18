@@ -735,7 +735,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		final boolean b = folder != null && Util.exists(folder) && folder.isDirectory();
 		//
-		setEnabled(btnExecute, b);
+		Util.setEnabled(btnExecute, b);
 		//
 		if (!b) {
 			//
@@ -1081,12 +1081,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		}
 	}
 
-	private static void setEnabled(@Nullable final Component instance, final boolean b) {
-		if (instance != null) {
-			instance.setEnabled(b);
-		}
-	}
-
 	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
 		//
 		JTextComponent jtc = null;
@@ -1242,9 +1236,11 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			if (jsSpeechRate != null) {
 				//
-				setEnabled(btnSpeechRateSlower, Util.intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMinimum());
+				Util.setEnabled(btnSpeechRateSlower,
+						Util.intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMinimum());
 				//
-				setEnabled(btnSpeechRateFaster, Util.intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMaximum());
+				Util.setEnabled(btnSpeechRateFaster,
+						Util.intValue(getValue(jsSpeechRate), 0) != jsSpeechRate.getMaximum());
 				//
 			} // if
 				//

@@ -4229,20 +4229,14 @@ public class VoiceManagerImportSinglePanel extends JPanel
 
 	private static void setEnabled(final boolean b, final Component instance, @Nullable final Component... cs) {
 		//
-		setEnabled(instance, b);
+		Util.setEnabled(instance, b);
 		//
 		for (int i = 0; i < length(cs); i++) {
 			//
-			setEnabled(ArrayUtils.get(cs, i), b);
+			Util.setEnabled(ArrayUtils.get(cs, i), b);
 			//
 		} // for
 			//
-	}
-
-	private static void setEnabled(@Nullable final Component instance, final boolean b) {
-		if (instance != null) {
-			instance.setEnabled(b);
-		}
 	}
 
 	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, final T t,

@@ -1153,7 +1153,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(btnExecute = new JButton("Execute"), String.format("%1$s,span %2$s", WRAP, 2));
 		//
-		setEnabled(btnExecute, Util.getSelectedItem(cbmVoiceId) != null);
+		Util.setEnabled(btnExecute, Util.getSelectedItem(cbmVoiceId) != null);
 		//
 		add(new JLabel("Output"));
 		//
@@ -2355,7 +2355,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			try {
 				//
-				setEnabled(btnClearOriginalAudio,
+				Util.setEnabled(btnClearOriginalAudio,
 						(audioResource = getAudioResource(
 								getContents(
 										testAndApply(x -> !GraphicsEnvironment.isHeadless(),
@@ -2370,7 +2370,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} else if (Objects.equals(source, btnClearOriginalAudio)) {
 			//
-			setEnabled(btnClearOriginalAudio, (audioResource = null) != null);
+			Util.setEnabled(btnClearOriginalAudio, (audioResource = null) != null);
 			//
 		} // if
 			//
@@ -2391,7 +2391,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 				try {
 					//
-					setEnabled(btnClearOriginalAudio,
+					Util.setEnabled(btnClearOriginalAudio,
 							(audioResource = toAudioResource(new ContentInfoUtil(), file)) != null);
 					//
 					Util.setText(tfAudioFile, iif(audioResource != null, Util.getAbsolutePath(file), null));
@@ -2578,7 +2578,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final Object voiceId = Util.getSelectedItem(cbmVoiceId);
 			//
-			setEnabled(btnExecute, voiceId != null);
+			Util.setEnabled(btnExecute, voiceId != null);
 			//
 			try {
 				//
@@ -2873,22 +2873,16 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static void setEnabled(final boolean enabled, final Component a, final Component b, final Component... cs) {
 		//
-		setEnabled(a, enabled);
+		Util.setEnabled(a, enabled);
 		//
-		setEnabled(b, enabled);
+		Util.setEnabled(b, enabled);
 		//
 		for (int i = 0; i < length(cs); i++) {
 			//
-			setEnabled(ArrayUtils.get(cs, i), enabled);
+			Util.setEnabled(ArrayUtils.get(cs, i), enabled);
 			//
 		} // for
 			//
-	}
-
-	private static void setEnabled(@Nullable final Component instance, final boolean b) {
-		if (instance != null) {
-			instance.setEnabled(b);
-		}
 	}
 
 	private static boolean isDataFlavorSupported(@Nullable final Transferable instance, final DataFlavor flavor) {
@@ -3066,7 +3060,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			setFontSizeAndUnit(html);
 			//
-			setEnabled(btnPreviewRubyPdf, StringUtils.isNotBlank(html));
+			Util.setEnabled(btnPreviewRubyPdf, StringUtils.isNotBlank(html));
 			//
 		} // if
 			//
@@ -3081,7 +3075,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			setFontSizeAndUnit(html);
 			//
-			setEnabled(btnPreviewRubyPdf, StringUtils.isNotBlank(html));
+			Util.setEnabled(btnPreviewRubyPdf, StringUtils.isNotBlank(html));
 			//
 		} // if
 			//

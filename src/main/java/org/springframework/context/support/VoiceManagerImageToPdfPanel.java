@@ -490,7 +490,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 			final Object voiceId = Util.getSelectedItem(cbmVoiceId);
 			//
-			setEnabled(btnExecute, voiceId != null);
+			Util.setEnabled(btnExecute, voiceId != null);
 			//
 			try {
 				//
@@ -509,12 +509,6 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				//
 		} // if
 			//
-	}
-
-	private static void setEnabled(final Component instance, final boolean b) {
-		if (instance != null) {
-			instance.setEnabled(b);
-		}
 	}
 
 	private static int getTextHeight(final PDFont font, final float fontSize, final float size) throws IOException {

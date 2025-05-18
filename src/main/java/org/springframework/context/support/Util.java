@@ -291,6 +291,12 @@ public abstract class Util {
 		//
 	}
 
+	static void setEnabled(final Component instance, final boolean b) {
+		if (instance != null) {
+			instance.setEnabled(b);
+		}
+	}
+
 	static boolean isSelected(@Nullable final AbstractButton instance) {
 		return instance != null && instance.isSelected();
 	}
