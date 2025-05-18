@@ -662,7 +662,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 			final File file = getFile(Util.toFile(Path.of(".")));
 			//
-			if (Util.exists(file) && Util.exists(file)) {
+			if (Boolean.logicalAnd(Util.exists(file), Util.exists(file))) {
 				//
 				Util.setText(tfImageUrl, Util.getAbsolutePath(file.getAbsoluteFile()));
 				//
