@@ -1151,10 +1151,10 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		addChangeListener(this, jsSpeechVolume, jsSpeechRate);
 		//
 		//
-		setEnabled((voiceIds = testAndApply(x -> SpeechApi.isInstalled(x), speechApi, x -> SpeechApi.getVoiceIds(x),
-				null)) != null, cbUseTtsVoice);
+		Util.setEnabled(cbUseTtsVoice, (voiceIds = testAndApply(x -> SpeechApi.isInstalled(x), speechApi,
+				x -> SpeechApi.getVoiceIds(x), null)) != null);
 		//
-		setEnabled(false, tfPronunciationPageStatusCode);
+		Util.setEnabled(tfPronunciationPageStatusCode, false);
 		//
 	}
 
@@ -4225,18 +4225,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		if (instance != null) {
 			instance.setMajorTickSpacing(n);
 		}
-	}
-
-	private static void setEnabled(final boolean b, final Component instance, @Nullable final Component... cs) {
-		//
-		Util.setEnabled(instance, b);
-		//
-		for (int i = 0; i < length(cs); i++) {
-			//
-			Util.setEnabled(ArrayUtils.get(cs, i), b);
-			//
-		} // for
-			//
 	}
 
 	private static <T, U, E extends Throwable> void testAndAccept(final BiPredicate<T, U> instance, final T t,
