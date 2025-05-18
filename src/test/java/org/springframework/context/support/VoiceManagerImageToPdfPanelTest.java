@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -21,12 +22,15 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 
 import javax.imageio.ImageIO;
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
 import javax.swing.ListModel;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -228,7 +232,7 @@ class VoiceManagerImageToPdfPanelTest {
 	}
 
 	@Test
-	void testActionPerformed() {
+	void testActionPerformed() throws IllegalAccessException {
 		//
 		if (instance == null) {
 			//
@@ -237,6 +241,12 @@ class VoiceManagerImageToPdfPanelTest {
 		} // if
 			//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(null));
+		//
+		final AbstractButton btnImageUrl = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnImageUrl", btnImageUrl, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnImageUrl, 0, null)));
 		//
 	}
 
