@@ -293,7 +293,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 	}
 
-	private static void setEditable(final JTextComponent instance, final boolean flag) {
+	private static void setEditable(@Nullable final JTextComponent instance, final boolean flag) {
 		if (instance != null) {
 			instance.setEditable(flag);
 		}
