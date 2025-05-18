@@ -377,6 +377,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static IValue0<FontName> getFontName(final FontName[] fontNames, final String prefix) {
 		//
 		FontName fontName = null;
