@@ -2964,16 +2964,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // try
 			//
-		setValue(entry = ObjectUtils.getIfNull(entry, MutablePair::new), allowedFileType);
+		Util.setValue(entry = ObjectUtils.getIfNull(entry, MutablePair::new), allowedFileType);
 		//
 		return entry;
 		//
-	}
-
-	private static <V> void setValue(@Nullable final Entry<?, V> instance, @Nullable final V value) {
-		if (instance != null) {
-			instance.setValue(value);
-		}
 	}
 
 	private static <E extends Throwable> void testAndRun(final boolean b, final FailableRunnable<E> ra,

@@ -1033,7 +1033,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				//
 		} // try
 			//
-		setValue(entry = ObjectUtils.getIfNull(entry, MutablePair::new), allowedFileType);
+		Util.setValue(entry = ObjectUtils.getIfNull(entry, MutablePair::new), allowedFileType);
 		//
 		return entry;
 		//
@@ -1048,12 +1048,6 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 	private static int length(@Nullable final Object[] instance) {
 		return instance != null ? instance.length : 0;
-	}
-
-	private static <V> void setValue(@Nullable final Entry<?, V> instance, @Nullable final V value) {
-		if (instance != null) {
-			instance.setValue(value);
-		}
 	}
 
 	private static float getAscent(@Nullable final PDFontDescriptor instance, final float defaultValue) {

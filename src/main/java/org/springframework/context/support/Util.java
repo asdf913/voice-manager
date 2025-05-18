@@ -329,6 +329,12 @@ public abstract class Util {
 		return instance != null ? instance.getValue() : null;
 	}
 
+	static <V> void setValue(final Entry<?, V> instance, final V value) {
+		if (instance != null) {
+			instance.setValue(value);
+		}
+	}
+
 	@Nullable
 	static Object getSource(@Nullable final EventObject instance) {
 		return instance != null ? instance.getSource() : null;
