@@ -243,7 +243,7 @@ public class MapReportGui extends JFrame
 	@Nullable
 	private static Double getPreferredWidth(@Nullable final Component instance) {
 		//
-		final Dimension2D pd = instance != null ? instance.getPreferredSize() : null;
+		final Dimension2D pd = Util.getPreferredSize(instance);
 		//
 		return pd != null ? Double.valueOf(pd.getWidth()) : null;
 		//
