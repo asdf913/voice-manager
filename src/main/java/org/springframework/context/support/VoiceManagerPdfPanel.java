@@ -1159,7 +1159,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		add(tfOutputFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, span - 2));
 		//
-		setEditable(tfOutputFile, false);
+		Util.setEditable(tfOutputFile, false);
 		//
 		(panel = new JPanel()).add(btnCopyOutputFilePath = new JButton("Copy"));
 		//
@@ -1337,7 +1337,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			panel.add(instance.tfAudioFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, 4));
 			//
-			setEditable(instance.tfAudioFile, false);
+			Util.setEditable(instance.tfAudioFile, false);
 			//
 			panel.add(instance.btnAudioFile = new JButton("Select"), WRAP);
 			//
@@ -1594,22 +1594,16 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	private static void setEditable(final boolean flag, final JTextComponent a, final JTextComponent b,
 			@Nullable final JTextComponent... bs) {
 		//
-		setEditable(a, flag);
+		Util.setEditable(a, flag);
 		//
-		setEditable(b, flag);
+		Util.setEditable(b, flag);
 		//
 		for (int i = 0; bs != null && i < bs.length; i++) {
 			//
-			setEditable(bs[i], flag);
+			Util.setEditable(bs[i], flag);
 			//
 		} //
 			//
-	}
-
-	private static void setEditable(@Nullable final JTextComponent instance, final boolean flag) {
-		if (instance != null) {
-			instance.setEditable(flag);
-		}
 	}
 
 	private static void addDocumentListener(@Nullable final Document instance, final DocumentListener listener) {

@@ -5291,17 +5291,9 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 
 	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
 		//
-		JTextComponent jtc = null;
-		//
 		for (int i = 0; jtcs != null && i < jtcs.length; i++) {
 			//
-			if ((jtc = jtcs[i]) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			jtc.setEditable(editable);
+			Util.setEditable(jtcs[i], editable);
 			//
 		} // for
 			//

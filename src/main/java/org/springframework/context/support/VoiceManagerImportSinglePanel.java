@@ -4193,17 +4193,9 @@ public class VoiceManagerImportSinglePanel extends JPanel
 
 	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
 		//
-		JTextComponent jtc = null;
-		//
-		for (int i = 0; i < length(jtcs); i++) {
+		for (int i = 0; jtcs != null && i < jtcs.length; i++) {
 			//
-			if ((jtc = ArrayUtils.get(jtcs, i)) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			jtc.setEditable(editable);
+			Util.setEditable(jtcs[i], editable);
 			//
 		} // for
 			//

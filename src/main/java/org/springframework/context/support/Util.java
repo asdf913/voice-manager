@@ -233,6 +233,12 @@ public abstract class Util {
 		//
 	}
 
+	static void setEditable(final JTextComponent instance, final boolean flag) {
+		if (instance != null) {
+			instance.setEditable(flag);
+		}
+	}
+
 	static void setText(@Nullable final JLabel instance, @Nullable final String text) {
 		//
 		if (instance == null) {

@@ -95,11 +95,10 @@ class VoiceManagerOnlineTtsPanelTest {
 
 	private static Method METHOD_GET_LAYOUT_MANAGER, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
 			METHOD_TEST_AND_APPLY6, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_PREVIOUS_ELEMENT_SIBLING,
-			METHOD_TEST_AND_RUN_THROWS, METHOD_SELECT_STREAM, METHOD_SET_EDITABLE, METHOD_SET_CONTENTS,
-			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_IIF, METHOD_GET_VOICE, METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG,
-			METHOD_SET_ENABLED, METHOD_SHA512HEX, METHOD_CREATE_INPUT_STREAM_SOURCE, METHOD_CAN_READ, METHOD_AND,
-			METHOD_ADD_LIST_DATA_LISTENER, METHOD_GET_ANNOTATED_ELEMENT_OBJECT_ENTRY,
-			METHOD_GET_STRING_OBJECT_ENTRY = null;
+			METHOD_TEST_AND_RUN_THROWS, METHOD_SELECT_STREAM, METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD,
+			METHOD_IIF, METHOD_GET_VOICE, METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_SHA512HEX,
+			METHOD_CREATE_INPUT_STREAM_SOURCE, METHOD_CAN_READ, METHOD_AND, METHOD_ADD_LIST_DATA_LISTENER,
+			METHOD_GET_ANNOTATED_ELEMENT_OBJECT_ENTRY, METHOD_GET_STRING_OBJECT_ENTRY = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -131,9 +130,6 @@ class VoiceManagerOnlineTtsPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_SELECT_STREAM = clz.getDeclaredMethod("selectStream", Element.class, String.class)).setAccessible(true);
-		//
-		(METHOD_SET_EDITABLE = clz.getDeclaredMethod("setEditable", JTextComponent.class, Boolean.TYPE))
-				.setAccessible(true);
 		//
 		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
 				ClipboardOwner.class)).setAccessible(true);
@@ -696,21 +692,6 @@ class VoiceManagerOnlineTtsPanelTest {
 				return (Stream) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSetEditable() {
-		//
-		Assertions.assertDoesNotThrow(() -> setEditable(new JTextField(), false));
-		//
-	}
-
-	private static void setEditable(final JTextComponent instance, final boolean b) throws Throwable {
-		try {
-			METHOD_SET_EDITABLE.invoke(null, instance, b);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

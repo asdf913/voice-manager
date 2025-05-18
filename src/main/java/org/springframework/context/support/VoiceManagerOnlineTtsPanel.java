@@ -458,7 +458,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 		//
 		add(tfErrorMessage = new JTextField(), String.format("%1$s,wmin %2$spx", wrap, width));
 		//
-		Util.forEach(Arrays.asList(tfElapsed, tfUrl, tfErrorMessage), x -> setEditable(x, false));
+		Util.forEach(Arrays.asList(tfElapsed, tfUrl, tfErrorMessage), x -> Util.setEditable(x, false));
 		//
 		setEnabled(btnCopy, false);
 		//
@@ -572,12 +572,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 			final ActionListener actionListener) {
 		if (instance != null) {
 			instance.addActionListener(actionListener);
-		}
-	}
-
-	private static void setEditable(@Nullable final JTextComponent instance, final boolean b) {
-		if (instance != null) {
-			instance.setEditable(b);
 		}
 	}
 

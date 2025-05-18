@@ -348,7 +348,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		btnExecute.addActionListener(this);
 		//
-		Util.forEach(Stream.of(tfSpeechLanguageCode, tfSpeechLanguageName), x -> setEditable(x, false));
+		Util.forEach(Stream.of(tfSpeechLanguageCode, tfSpeechLanguageName), x -> Util.setEditable(x, false));
 		//
 	}
 
@@ -431,12 +431,6 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 		return iValue0;
 		//
-	}
-
-	private static void setEditable(@Nullable final JTextComponent instance, final boolean flag) {
-		if (instance != null) {
-			instance.setEditable(flag);
-		}
 	}
 
 	private static void setLayout(@Nullable final Container instance, final LayoutManager layoutManager) {
