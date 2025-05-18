@@ -676,7 +676,7 @@ class VoiceManagerImageToPdfPanelTest {
 	@Test
 	void testGetAbsoluteFile() throws Throwable {
 		//
-		Assertions.assertNotNull(getAbsoluteFile(Util.toFile(Paths.get("."))));
+		Assertions.assertNotNull(getAbsoluteFile(Util.toFile(Path.of("."))));
 		//
 	}
 
