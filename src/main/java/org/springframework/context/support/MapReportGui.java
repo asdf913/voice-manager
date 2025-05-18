@@ -193,7 +193,7 @@ public class MapReportGui extends JFrame
 		//
 		testAndAccept(biPredicate, btnCopy = new JButton("Copy"), "growx", this::add);
 		//
-		addActionListener(this, btnExecute, btnCopy);
+		Util.forEach(Stream.of(btnExecute, btnCopy), x -> Util.addActionListener(x, this));
 		//
 		final Dimension pd = tfAttributeJson.getPreferredSize();
 		//
@@ -220,24 +220,6 @@ public class MapReportGui extends JFrame
 		if (Util.test(predicate, t, u)) {
 			Util.accept(consumer, t, u);
 		}
-	}
-
-	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
-		//
-		AbstractButton ab = null;
-		//
-		for (int i = 0; abs != null && i < length(abs); i++) {
-			//
-			if ((ab = abs[i]) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			Util.addActionListener(ab, actionListener);
-			//
-		} // for
-			//
 	}
 
 	@Nullable

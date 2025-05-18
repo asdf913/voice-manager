@@ -72,10 +72,9 @@ class MapReportGuiTest {
 
 	private static Method METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_REMOVE_ROW, METHOD_ADD_ROW,
 			METHOD_GET_PREFERRED_WIDTH, METHOD_AS_MAP, METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT,
-			METHOD_CREATE_MULTI_MAP, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER,
-			METHOD_LENGTH, METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_TEST_AND_ACCEPT3,
-			METHOD_TEST_AND_ACCEPT4, METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER,
-			METHOD_WRITE_VALUE_AS_STRING = null;
+			METHOD_CREATE_MULTI_MAP, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_LENGTH,
+			METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
+			METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER, METHOD_WRITE_VALUE_AS_STRING = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -109,9 +108,6 @@ class MapReportGuiTest {
 		//
 		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
 				ClipboardOwner.class)).setAccessible(true);
-		//
-		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
-				AbstractButton[].class)).setAccessible(true);
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
 		//
@@ -787,24 +783,6 @@ class MapReportGuiTest {
 			throws Throwable {
 		try {
 			METHOD_SET_CONTENTS.invoke(null, instance, contents, owner);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAddActionListener() throws Throwable {
-		//
-		Assertions.assertDoesNotThrow(() -> addActionListener(null, (AbstractButton[]) null));
-		//
-		Assertions.assertDoesNotThrow(() -> addActionListener(null, null, new JButton()));
-		//
-	}
-
-	private static void addActionListener(final ActionListener actionListener, final AbstractButton... abs)
-			throws Throwable {
-		try {
-			METHOD_ADD_ACTION_LISTENER.invoke(null, actionListener, abs);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
