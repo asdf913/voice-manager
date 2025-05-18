@@ -166,6 +166,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
+	private ComboBoxModel<FontName> cbmFontName = null;
+
 	private static boolean isTestMode() {
 		return Util.forName("org.junit.jupiter.api.Test") != null;
 	}
@@ -244,9 +246,20 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 										ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
 						MigLayout::new));
 		//
+		// Font
+		//
+		add(new JLabel("Font"));
+		//
+		final FontName[] fontNames = FontName.values();
+		//
+		add(new JComboBox<>(cbmFontName = new DefaultComboBoxModel<>(ArrayUtils.insert(0, fontNames, (FontName) null))),
+				String.format("span %1$s,%2$s", 2, WRAP));
+		//
+		cbmFontName.setSelectedItem(FontName.HELVETICA);// TODO
+		//
 		add(new JLabel("Text"));
 		//
-		add(tfText = new JTextField(), String.format("growx,span %1$s,%2$s", 3, WRAP));
+		add(tfText = new JTextField(), String.format("growx,span %1$s,%2$s", 4, WRAP));
 		//
 		add(new JLabel("Voice"));
 		//
@@ -296,7 +309,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 		add(tfSpeechLanguageCode = new JTextField(), String.format("width %1$s", 30));
 		//
-		add(tfSpeechLanguageName = new JTextField(), String.format("%1$s,width %2$s", WRAP, 230));
+		add(tfSpeechLanguageName = new JTextField(), String.format("%1$s,width %2$s,span %3$s", WRAP, 230, 2));
 		//
 		//
 		add(new JLabel());
@@ -473,7 +486,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				//
 				try (final PDPageContentStream cs = new PDPageContentStream(pdDocument, pdPage)) {
 					//
-					final PDFont font = new PDType1Font(FontName.HELVETICA);// TODO
+					final PDFont font = new PDType1Font(ObjectUtils.defaultIfNull(
+							Util.cast(FontName.class, Util.getSelectedItem(cbmFontName)), FontName.HELVETICA));
 					//
 					final float fontSize = 14;// TODO
 					//
