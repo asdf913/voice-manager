@@ -1410,8 +1410,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			panel.add(instance.tfImageFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, span - 1));
 			//
-			setEditable(false, instance.tfImageUrlStateCode, instance.tfImageUrlMimeType, instance.tfImageFile,
-					instance.tfSpeechLanguageCode, instance.tfSpeechLanguageName);
+			Util.forEach(
+					Stream.of(instance.tfImageUrlStateCode, instance.tfImageUrlMimeType, instance.tfImageFile,
+							instance.tfSpeechLanguageCode, instance.tfSpeechLanguageName),
+					x -> Util.setEditable(x, false));
 			//
 			panel.add(instance.btnImageFile = new JButton("Select"), WRAP);
 			//
@@ -1589,21 +1591,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		if (instance != null) {
 			instance.addActionListener(l);
 		}
-	}
-
-	private static void setEditable(final boolean flag, final JTextComponent a, final JTextComponent b,
-			@Nullable final JTextComponent... bs) {
-		//
-		Util.setEditable(a, flag);
-		//
-		Util.setEditable(b, flag);
-		//
-		for (int i = 0; bs != null && i < bs.length; i++) {
-			//
-			Util.setEditable(bs[i], flag);
-			//
-		} //
-			//
 	}
 
 	private static void addDocumentListener(@Nullable final Document instance, final DocumentListener listener) {
