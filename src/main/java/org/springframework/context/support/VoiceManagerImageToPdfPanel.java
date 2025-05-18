@@ -346,19 +346,13 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		add(btnExecute = new JButton("Execute"));
 		//
-		Util.forEach(Stream.of(btnExecute, btnImageUrl), x -> addActionListener(x, this));
+		Util.forEach(Stream.of(btnExecute, btnImageUrl), x -> Util.addActionListener(x, this));
 		//
 		Util.setEnabled(btnExecute, Util.getSelectedItem(cbmVoiceId) != null);
 		//
 		Util.forEach(Stream.of(tfSpeechLanguageCode, tfSpeechLanguageName, tfImageUrl),
 				x -> Util.setEditable(x, false));
 		//
-	}
-
-	private static void addActionListener(final AbstractButton instance, final ActionListener actionListener) {
-		if (instance != null) {
-			instance.addActionListener(actionListener);
-		}
 	}
 
 	@Nullable

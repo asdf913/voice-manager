@@ -466,7 +466,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 				Util.filter(Util.map(
 						Util.filter(Util.stream(FieldUtils.getAllFieldsList(getClass())), f -> !Util.isStatic(f)),
 						f -> Util.cast(AbstractButton.class, Narcissus.getField(this, f))), Objects::nonNull),
-				x -> addActionListener(x, this));
+				x -> Util.addActionListener(x, this));
 		//
 	}
 
@@ -566,13 +566,6 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 
 	private static <T> T iif(final boolean condition, final T valueTrue, final T valueFalse) {
 		return condition ? valueTrue : valueFalse;
-	}
-
-	private static void addActionListener(@Nullable final AbstractButton instance,
-			final ActionListener actionListener) {
-		if (instance != null) {
-			instance.addActionListener(actionListener);
-		}
 	}
 
 	@Nullable

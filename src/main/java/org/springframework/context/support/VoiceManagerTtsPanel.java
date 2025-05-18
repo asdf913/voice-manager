@@ -1019,7 +1019,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 				continue;
 			} // if
 				//
-			ab.addActionListener(actionListener);
+			Util.addActionListener(ab, actionListener);
 			//
 		} // for
 			//

@@ -286,7 +286,7 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 		testAndAccept(biPredicate, btnExportJouYouKanJi = new JButton("Export 常用漢字"),
 				String.format("%1$s,span %2$s", wrap, 3), this::add);
 		//
-		btnExportJouYouKanJi.addActionListener(this);
+		Util.addActionListener(btnExportJouYouKanJi, this);
 		//
 		testAndAccept(predicate, new JLabel("File"), this::add);
 		//

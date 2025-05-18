@@ -211,7 +211,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 				//
 			} // if
 				//
-			ab.addActionListener(actionListener);
+			Util.addActionListener(ab, actionListener);
 			//
 		} // for
 			//

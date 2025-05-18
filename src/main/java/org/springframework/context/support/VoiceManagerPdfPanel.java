@@ -1175,7 +1175,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 								f -> Util.isAssignableFrom(AbstractButton.class, Util.getType(f))),
 						f -> Util.cast(AbstractButton.class,
 								testAndApply(Objects::nonNull, f, x -> Narcissus.getField(this, x), null))),
-				x -> addActionListener(x, this));
+				x -> Util.addActionListener(x, this));
 		//
 		final Double width = getWidth(Util.getPreferredSize(btnExecute));
 		//
@@ -1585,12 +1585,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		};
 		//
-	}
-
-	private static void addActionListener(@Nullable final AbstractButton instance, final ActionListener l) {
-		if (instance != null) {
-			instance.addActionListener(l);
-		}
 	}
 
 	private static void addDocumentListener(@Nullable final Document instance, final DocumentListener listener) {

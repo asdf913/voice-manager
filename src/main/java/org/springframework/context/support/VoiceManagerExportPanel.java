@@ -5299,7 +5299,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				continue;
 			} // if
 				//
-			ab.addActionListener(actionListener);
+			Util.addActionListener(ab, actionListener);
 			//
 		} // for
 			//

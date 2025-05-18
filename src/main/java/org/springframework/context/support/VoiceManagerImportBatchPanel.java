@@ -1092,7 +1092,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				continue;
 			} // if
 				//
-			ab.addActionListener(actionListener);
+			Util.addActionListener(ab, actionListener);
 			//
 		} // for
 			//

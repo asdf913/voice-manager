@@ -3,6 +3,7 @@ package org.springframework.context.support;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -1993,6 +1994,12 @@ public abstract class Util {
 		return instance != null ? instance.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
 				: null;
 		//
+	}
+
+	static void addActionListener(final AbstractButton instance, final ActionListener actionListener) {
+		if (instance != null) {
+			instance.addActionListener(actionListener);
+		}
 	}
 
 }

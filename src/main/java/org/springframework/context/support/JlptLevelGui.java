@@ -276,7 +276,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				//
 			} // if
 				//
-			b.addActionListener(actionListener);
+			Util.addActionListener(b, actionListener);
 			//
 		} // for
 			//

@@ -1394,7 +1394,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 				continue;
 			} // if
 				//
-			ab.addActionListener(actionListener);
+			Util.addActionListener(ab, actionListener);
 			//
 		} // for
 			//

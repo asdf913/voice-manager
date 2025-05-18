@@ -234,7 +234,7 @@ public class MapReportGui extends JFrame
 				//
 			} // if
 				//
-			ab.addActionListener(actionListener);
+			Util.addActionListener(ab, actionListener);
 			//
 		} // for
 			//

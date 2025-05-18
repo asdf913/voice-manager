@@ -449,7 +449,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				//
 			} // skip null
 				//
-			b.addActionListener(actionListener);
+			Util.addActionListener(b, actionListener);
 			//
 		} // for
 			//

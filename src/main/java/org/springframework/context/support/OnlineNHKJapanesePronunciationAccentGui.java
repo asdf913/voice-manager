@@ -357,7 +357,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		testAndAccept(biPredicate, btnExecute = new JButton("Execute"), String.format("%1$s,span %2$s", wrap, 2),
 				this::add);
 		//
-		btnExecute.addActionListener(this);
+		Util.addActionListener(btnExecute, this);
 		//
 		testAndAccept(predicate, new JLabel(""), this::add);
 		//
@@ -594,7 +594,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				//
 			} // if
 				//
-			b.addActionListener(actionListener);
+			Util.addActionListener(b, actionListener);
 			//
 		} // for
 			//

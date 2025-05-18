@@ -3909,7 +3909,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 			} // if
 				//
-			ab.addActionListener(actionListener);
+			Util.addActionListener(ab, actionListener);
 			//
 		} // for
 			//

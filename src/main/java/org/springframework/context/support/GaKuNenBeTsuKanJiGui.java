@@ -245,7 +245,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				continue;
 			} // if
 				//
-			ab.addActionListener(actionListener);
+			Util.addActionListener(ab, actionListener);
 			//
 		} // for
 			//
