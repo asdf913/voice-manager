@@ -616,8 +616,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 		Util.forEach(Stream.of(tfDllPath, tfExportFile), x -> Util.setEditable(x, false));
 		//
-		addActionListener(this, btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy, btnExportBrowse,
-				btnDllPathCopy);
+		Util.forEach(Stream.of(btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy, btnExportBrowse,
+				btnDllPathCopy), x -> Util.addActionListener(x, this));
 		//
 		Util.setEnabled(btnExportMicrosoftSpeechObjectLibraryInformation,
 				SpeechApi.isInstalled(speechApi) && (voiceIds = SpeechApi.getVoiceIds(speechApi)) != null);
@@ -1382,22 +1382,6 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		} else {
 			Util.accept(b, t, u);
 		} // if
-	}
-
-	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
-		//
-		AbstractButton ab = null;
-		//
-		for (int i = 0; abs != null && i < abs.length; i++) {
-			//
-			if ((ab = abs[i]) == null) {
-				continue;
-			} // if
-				//
-			Util.addActionListener(ab, actionListener);
-			//
-		} // for
-			//
 	}
 
 	private static void setPreferredWidth(final int width, final Iterable<Component> cs) {
