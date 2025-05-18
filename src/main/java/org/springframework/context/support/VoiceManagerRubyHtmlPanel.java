@@ -203,7 +203,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 		//
 		add(btnCopy = new JButton("Copy"));
 		//
-		addActionListener(this, btnExecute, btnCopy);
+		Util.forEach(Stream.of(btnExecute, btnCopy), x -> Util.addActionListener(x, this));
 		//
 		final double width = iif(!GraphicsEnvironment.isHeadless(), 0,
 				() -> getWidth(getScreenSize(Toolkit.getDefaultToolkit())), () -> 0)
@@ -435,24 +435,6 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 
 	private static <T> boolean and(final T value, final Predicate<T> a, final Predicate<T> b) {
 		return Util.test(a, value) && Util.test(b, value);
-	}
-
-	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... bs) {
-		//
-		AbstractButton b = null;
-		//
-		for (int i = 0; bs != null && i < bs.length; i++) {
-			//
-			if ((b = bs[i]) == null) {
-				//
-				continue;
-				//
-			} // skip null
-				//
-			Util.addActionListener(b, actionListener);
-			//
-		} // for
-			//
 	}
 
 	@Nullable
