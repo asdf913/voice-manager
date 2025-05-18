@@ -55,8 +55,8 @@ import javassist.util.proxy.ProxyUtil;
 class GaKuNenBeTsuKanJiGuiTest {
 
 	private static Method METHOD_CREATE_WORK_BOOK, METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE, METHOD_AND,
-			METHOD_IIF, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_ADD_ACTION_LISTENER, METHOD_LENGTH,
-			METHOD_LONG_VALUE, METHOD_SET_PREFERRED_WIDTH, METHOD_MAX, METHOD_CREATE_DIMENSION_COMPARATOR = null;
+			METHOD_IIF, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_LENGTH, METHOD_LONG_VALUE,
+			METHOD_SET_PREFERRED_WIDTH, METHOD_MAX, METHOD_CREATE_DIMENSION_COMPARATOR = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -81,9 +81,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 		//
 		(METHOD_TEST_AND_ACCEPT4 = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
 				BiConsumer.class)).setAccessible(true);
-		//
-		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
-				AbstractButton[].class)).setAccessible(true);
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", File.class)).setAccessible(true);
 		//
@@ -544,24 +541,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 			final BiConsumer<T, U> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT4.invoke(null, predicate, t, u, consumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAddActionListener() {
-		//
-		Assertions.assertDoesNotThrow(() -> addActionListener(null, (AbstractButton[]) null));
-		//
-		Assertions.assertDoesNotThrow(() -> addActionListener(null, (AbstractButton) null));
-		//
-	}
-
-	private static void addActionListener(final ActionListener actionListener, final AbstractButton... bs)
-			throws Throwable {
-		try {
-			METHOD_ADD_ACTION_LISTENER.invoke(null, actionListener, bs);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

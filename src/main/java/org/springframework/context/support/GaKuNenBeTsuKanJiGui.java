@@ -206,7 +206,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 		//
 		testAndAccept(predicate, jlCompare = new JLabel(), this::add);
 		//
-		addActionListener(this, btnExport, btnCompare);
+		Util.forEach(Stream.of(btnExport, btnCompare), x -> Util.addActionListener(x, this));
 		//
 		final Collection<Component> cs = Arrays.asList(tfText, jcbGaKuNenBeTsuKanJi, btnExport);
 		//
@@ -233,22 +233,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				? instance.max(comparator)
 				: null;
 		//
-	}
-
-	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
-		//
-		AbstractButton ab = null;
-		//
-		for (int i = 0; abs != null && i < abs.length; i++) {
-			//
-			if ((ab = abs[i]) == null) {
-				continue;
-			} // if
-				//
-			Util.addActionListener(ab, actionListener);
-			//
-		} // for
-			//
 	}
 
 	@Override
