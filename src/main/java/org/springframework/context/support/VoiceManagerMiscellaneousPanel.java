@@ -614,7 +614,7 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		//
 		add(panelFile, String.format(SPAN_ONLY_FORMAT, 2));
 		//
-		setEditable(false, tfDllPath, tfExportFile);
+		Util.forEach(Stream.of(tfDllPath, tfExportFile), x -> Util.setEditable(x, false));
 		//
 		addActionListener(this, btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy, btnExportBrowse,
 				btnDllPathCopy);
@@ -1395,16 +1395,6 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 			} // if
 				//
 			ab.addActionListener(actionListener);
-			//
-		} // for
-			//
-	}
-
-	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
-		//
-		for (int i = 0; jtcs != null && i < jtcs.length; i++) {
-			//
-			Util.setEditable(jtcs[i], editable);
 			//
 		} // for
 			//
