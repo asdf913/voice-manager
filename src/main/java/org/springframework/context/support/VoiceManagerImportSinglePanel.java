@@ -4089,7 +4089,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		add(container, tfSpeechRate, String.format("align %1$s %1$s,width %2$s", "50%", 20));
 		//
-		setEditable(false, tfSpeechRate);
+		Util.setEditable(tfSpeechRate, false);
 		//
 		setValue(jsSpeechRate,
 				PropertyResolverUtil.getProperty(instance != null ? instance.propertyResolver : null,
@@ -4189,16 +4189,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 	private static Object invoke(@Nullable final Method method, @Nullable final Object instance, Object... args)
 			throws IllegalAccessException, InvocationTargetException {
 		return method != null ? method.invoke(instance, args) : null;
-	}
-
-	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
-		//
-		for (int i = 0; jtcs != null && i < jtcs.length; i++) {
-			//
-			Util.setEditable(jtcs[i], editable);
-			//
-		} // for
-			//
 	}
 
 	private static void setPaintLabels(@Nullable final JSlider instance, final boolean b) {
