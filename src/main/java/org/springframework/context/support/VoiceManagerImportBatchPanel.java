@@ -614,7 +614,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			add(jPanel, tfSpeechRate = new JTextField(), String.format("wmin %1$s", 25));
 			//
-			setEditable(false, tfSpeechRate);
+			Util.setEditable(tfSpeechRate, false);
 			//
 			if (RangeUtil.hasLowerBound(range) && RangeUtil.hasUpperBound(range)
 					&& RangeUtil.lowerEndpoint(range) != null && RangeUtil.upperEndpoint(range) != null) {
@@ -729,7 +729,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 		addActionListener(this, btnImport, btnImportWithinFolder, btnImportFileTemplate);
 		//
-		setEditable(false, tfCurrentProcessingFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice);
+		Util.forEach(Stream.of(tfCurrentProcessingFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice),
+				x -> Util.setEditable(x, false));
 		//
 		final File folder = testAndApply(StringUtils::isNotBlank, this.voiceFolder, File::new, null);
 		//
@@ -1079,16 +1080,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		if (instance != null) {
 			instance.setToolTipText(toolTipText);
 		}
-	}
-
-	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
-		//
-		for (int i = 0; jtcs != null && i < jtcs.length; i++) {
-			//
-			Util.setEditable(jtcs[i], editable);
-			//
-		} // for
-			//
 	}
 
 	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
