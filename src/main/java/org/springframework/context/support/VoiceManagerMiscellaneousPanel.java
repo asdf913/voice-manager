@@ -619,8 +619,8 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		addActionListener(this, btnExportMicrosoftSpeechObjectLibraryInformation, btnExportCopy, btnExportBrowse,
 				btnDllPathCopy);
 		//
-		setEnabled(SpeechApi.isInstalled(speechApi) && (voiceIds = SpeechApi.getVoiceIds(speechApi)) != null,
-				btnExportMicrosoftSpeechObjectLibraryInformation);
+		Util.setEnabled(btnExportMicrosoftSpeechObjectLibraryInformation,
+				SpeechApi.isInstalled(speechApi) && (voiceIds = SpeechApi.getVoiceIds(speechApi)) != null);
 		//
 		if (panelDllPath != null) {
 			//
@@ -1382,18 +1382,6 @@ public class VoiceManagerMiscellaneousPanel extends JPanel
 		} else {
 			Util.accept(b, t, u);
 		} // if
-	}
-
-	private static void setEnabled(final boolean b, final Component instance, @Nullable final Component... cs) {
-		//
-		Util.setEnabled(instance, b);
-		//
-		for (int i = 0; cs != null && i < cs.length; i++) {
-			//
-			Util.setEnabled(cs[i], b);
-			//
-		} // for
-			//
 	}
 
 	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
