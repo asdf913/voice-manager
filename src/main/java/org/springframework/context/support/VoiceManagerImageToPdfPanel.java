@@ -331,6 +331,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static Integer getIndex(final ListModel<?> instance, final Object object) {
 		//
 		Integer index = null;
