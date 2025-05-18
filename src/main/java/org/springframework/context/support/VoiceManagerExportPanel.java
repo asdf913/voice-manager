@@ -1357,7 +1357,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		progressBarExport.setStringPainted(true);
 		//
-		addActionListener(this, btnExport);
+		Util.addActionListener(btnExport, this);
 		//
 		Util.forEach(Stream.of(tfPhraseCounter, tfPhraseTotal), x -> Util.setEditable(x, false));
 		//
@@ -5287,22 +5287,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		} else {
 			Util.accept(b, t, u);
 		} // if
-	}
-
-	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
-		//
-		AbstractButton ab = null;
-		//
-		for (int i = 0; abs != null && i < abs.length; i++) {
-			//
-			if ((ab = abs[i]) == null) {
-				continue;
-			} // if
-				//
-			Util.addActionListener(ab, actionListener);
-			//
-		} // for
-			//
 	}
 
 	@Nullable
