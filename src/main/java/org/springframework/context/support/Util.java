@@ -291,7 +291,7 @@ public abstract class Util {
 		//
 	}
 
-	static void setEnabled(final Component instance, final boolean b) {
+	static void setEnabled(@Nullable final Component instance, final boolean b) {
 		if (instance != null) {
 			instance.setEnabled(b);
 		}
