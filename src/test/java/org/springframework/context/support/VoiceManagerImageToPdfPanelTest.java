@@ -21,7 +21,9 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 
 import javax.imageio.ImageIO;
+import javax.swing.ListModel;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -53,7 +55,7 @@ class VoiceManagerImageToPdfPanelTest {
 
 	private static Method METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_IS_PD_IMAGE, METHOD_GET_ANNOTATIONS,
 			METHOD_GET_MESSAGE, METHOD_WRITE_VOICE_TO_FILE, METHOD_SAVE, METHOD_CREATE_PD_EMBEDDED_FILE,
-			METHOD_TEST_AND_ACCEPT, METHOD_GET_FONT_NAME_3, METHOD_GET_FONT_NAME_2 = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_GET_FONT_NAME_3, METHOD_GET_FONT_NAME_2, METHOD_GET_INDEX = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -88,6 +90,8 @@ class VoiceManagerImageToPdfPanelTest {
 		(METHOD_GET_FONT_NAME_2 = clz.getDeclaredMethod("getFontName", FontName[].class, String.class))
 				.setAccessible(true);
 		//
+		(METHOD_GET_INDEX = clz.getDeclaredMethod("getIndex", ListModel.class, Object.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -95,6 +99,8 @@ class VoiceManagerImageToPdfPanelTest {
 		private Integer width, height = null;
 
 		private Map<?, ?> properties = null;
+
+		private List<?> list = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -129,6 +135,19 @@ class VoiceManagerImageToPdfPanelTest {
 				} else if (Objects.equals(methodName, "getProperty") && args != null && args.length > 0) {
 					//
 					return Util.get(properties = ObjectUtils.getIfNull(properties, LinkedHashMap::new), args[0]);
+					//
+				} // if
+					//
+			} else if (proxy instanceof ListModel) {
+				//
+				if (Objects.equals(methodName, "getSize")) {
+					//
+					return IterableUtils.size(list = ObjectUtils.getIfNull(list, ArrayList::new));
+					//
+				} else if (Objects.equals(methodName, "getElementAt") && args != null && args.length > 0
+						&& args[0] instanceof Integer i && i != null) {
+					//
+					return IterableUtils.get(list = ObjectUtils.getIfNull(list, ArrayList::new), i.intValue());
 					//
 				} // if
 					//
@@ -605,6 +624,34 @@ class VoiceManagerImageToPdfPanelTest {
 				return null;
 			} else if (obj instanceof IValue0) {
 				return (IValue0) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetIndex() {
+		//
+		if (ih != null && (ih.list = ObjectUtils.getIfNull(ih.list, ArrayList::new)) != null) {
+			//
+			Util.addAll(ih.list, Collections.nCopies(2, null));
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class,
+				() -> getIndex(Reflection.newProxy(ListModel.class, ih), null));
+		//
+	}
+
+	private static Integer getIndex(final ListModel<?> instance, final Object object) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_INDEX.invoke(null, instance, object);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Integer) {
+				return (Integer) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

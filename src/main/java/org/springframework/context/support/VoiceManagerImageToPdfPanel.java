@@ -49,6 +49,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.bcel.classfile.ClassParser;
@@ -255,32 +256,10 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		add(new JComboBox<>(cbmFontName = new DefaultComboBoxModel<>(ArrayUtils.insert(0, fontNames, (FontName) null))),
 				String.format("span %1$s,%2$s", 2, WRAP));
 		//
-		Integer index = null;
+		final Integer index = getIndex(cbmFontName,
+				getFontName("org.springframework.context.support.VoiceManagerImageToPdfPanel.fontName",
+						propertyResolver, System.getProperties()));
 		//
-		final FontName fontName = getFontName(
-				"org.springframework.context.support.VoiceManagerImageToPdfPanel.fontName", propertyResolver,
-				System.getProperties());
-		//
-		for (int i = 0; i < Util.getSize(cbmFontName); i++) {
-			//
-			if (!Objects.equals(Util.getElementAt(cbmFontName, i), fontName)) {
-				//
-				continue;
-				//
-			} // if
-				//
-			if (index != null) {
-				//
-				throw new IllegalStateException();
-				//
-			} else {
-				//
-				index = Integer.valueOf(i);
-				//
-			} // if
-				//
-		} // for
-			//
 		if (index != null) {
 			//
 			Util.setSelectedItem(cbmFontName, Util.getElementAt(cbmFontName, index.intValue()));
@@ -349,6 +328,34 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		btnExecute.addActionListener(this);
 		//
 		Util.forEach(Stream.of(tfSpeechLanguageCode, tfSpeechLanguageName), x -> Util.setEditable(x, false));
+		//
+	}
+
+	private static Integer getIndex(final ListModel<?> instance, final Object object) {
+		//
+		Integer index = null;
+		//
+		for (int i = 0; i < Util.getSize(instance); i++) {
+			//
+			if (!Objects.equals(Util.getElementAt(instance, i), object)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (index != null) {
+				//
+				throw new IllegalStateException();
+				//
+			} else {
+				//
+				index = Integer.valueOf(i);
+				//
+			} // if
+				//
+		} // for
+			//
+		return index;
 		//
 	}
 
