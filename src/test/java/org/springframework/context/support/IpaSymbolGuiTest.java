@@ -36,16 +36,13 @@ class IpaSymbolGuiTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_ADD_ACTION_LISTENER, METHOD_TEST_AND_APPLY, METHOD_IIF, METHOD_SET_PREFERRED_WIDTH,
-			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4 = null;
+	private static Method METHOD_TEST_AND_APPLY, METHOD_IIF, METHOD_SET_PREFERRED_WIDTH, METHOD_TEST_AND_ACCEPT3,
+			METHOD_TEST_AND_ACCEPT4 = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
 		final Class<?> clz = IpaSymbolGui.class;
-		//
-		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
-				AbstractButton[].class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -171,30 +168,6 @@ class IpaSymbolGuiTest {
 	private static void actionPerformed(final ActionListener instance, final ActionEvent e) {
 		if (instance != null) {
 			instance.actionPerformed(e);
-		}
-	}
-
-	@Test
-	void testAddActionListener() {
-		//
-		Assertions.assertDoesNotThrow(() -> addActionListener(null, (AbstractButton[]) null));
-		//
-		Assertions.assertDoesNotThrow(() -> addActionListener(null, (AbstractButton) null));
-		//
-		if (GraphicsEnvironment.isHeadless()) {
-			//
-			Assertions.assertDoesNotThrow(() -> addActionListener(null, new JButton()));
-			//
-		} // if
-			//
-	}
-
-	private static void addActionListener(final ActionListener actionListener, final AbstractButton... bs)
-			throws Throwable {
-		try {
-			METHOD_ADD_ACTION_LISTENER.invoke(null, actionListener, bs);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
 		}
 	}
 

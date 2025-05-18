@@ -25,6 +25,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
@@ -181,7 +182,7 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 			//
 		} // if
 			//
-		addActionListener(this, btnGetIpaSymbol, btnCheckIpaSymbolJson);
+		Util.forEach(Stream.of(btnGetIpaSymbol, btnCheckIpaSymbolJson), x -> Util.addActionListener(x, this));
 		//
 	}
 
@@ -197,24 +198,6 @@ public class IpaSymbolGui extends JFrame implements EnvironmentAware, Initializi
 		if (Util.test(predicate, t, u)) {
 			Util.accept(consumer, t, u);
 		}
-	}
-
-	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
-		//
-		AbstractButton ab = null;
-		//
-		for (int i = 0; abs != null && i < abs.length; i++) {
-			//
-			if ((ab = abs[i]) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			Util.addActionListener(ab, actionListener);
-			//
-		} // for
-			//
 	}
 
 	@Override
