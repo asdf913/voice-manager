@@ -1359,7 +1359,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		//
 		addActionListener(this, btnExport);
 		//
-		setEditable(false, tfPhraseCounter, tfPhraseTotal);
+		Util.forEach(Stream.of(tfPhraseCounter, tfPhraseTotal), x -> Util.setEditable(x, false));
 		//
 	}
 
@@ -5287,16 +5287,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		} else {
 			Util.accept(b, t, u);
 		} // if
-	}
-
-	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
-		//
-		for (int i = 0; jtcs != null && i < jtcs.length; i++) {
-			//
-			Util.setEditable(jtcs[i], editable);
-			//
-		} // for
-			//
 	}
 
 	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
