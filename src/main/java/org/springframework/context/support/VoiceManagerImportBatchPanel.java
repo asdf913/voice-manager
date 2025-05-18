@@ -727,7 +727,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 		} // if
 			//
-		addActionListener(this, btnImport, btnImportWithinFolder, btnImportFileTemplate);
+		Util.forEach(Stream.of(btnImport, btnImportWithinFolder, btnImportFileTemplate),
+				x -> Util.addActionListener(x, this));
 		//
 		Util.forEach(Stream.of(tfCurrentProcessingFile, tfCurrentProcessingSheetName, tfCurrentProcessingVoice),
 				x -> Util.setEditable(x, false));
@@ -1080,22 +1081,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		if (instance != null) {
 			instance.setToolTipText(toolTipText);
 		}
-	}
-
-	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
-		//
-		AbstractButton ab = null;
-		//
-		for (int i = 0; abs != null && i < abs.length; i++) {
-			//
-			if ((ab = abs[i]) == null) {
-				continue;
-			} // if
-				//
-			Util.addActionListener(ab, actionListener);
-			//
-		} // for
-			//
 	}
 
 	@Override
