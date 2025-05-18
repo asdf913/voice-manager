@@ -148,7 +148,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 	private transient ApplicationContext applicationContext = null;
 
-	private ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
+	private transient ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
 	private static boolean isTestMode() {
 		return Util.forName("org.junit.jupiter.api.Test") != null;
