@@ -15,6 +15,10 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
@@ -136,7 +140,19 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 	private transient SpeechApi speechApi = null;
 
-	private JTextComponent tfText, tfSpeechLanguageCode, tfSpeechLanguageName = null;
+	private JTextComponent tfText = null;
+
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("Speech Language Code")
+	private JTextComponent tfSpeechLanguageCode = null;
+
+	@Note("Speech Language Name")
+	private JTextComponent tfSpeechLanguageName = null;
 
 	private AbstractButton btnExecute = null;
 
