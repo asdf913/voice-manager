@@ -7,7 +7,6 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
@@ -73,10 +72,9 @@ import javassist.util.proxy.ProxyUtil;
 class VoiceManagerRubyHtmlPanelTest {
 
 	private static Method METHOD_LENGTH, METHOD_GET_GENERIC_INTERFACES, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
-			METHOD_GET_LAYOUT_MANAGER, METHOD_ADD_ACTION_LISTENER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS,
-			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_AND, METHOD_GET_DESCRIPTION, METHOD_GET_SELECTED_ITEM,
-			METHOD_TEST_AND_RUN_THROWS, METHOD_CLEAR, METHOD_GET_VALUE, METHOD_CREATE_MAP, METHOD_GET_AST,
-			METHOD_GET_CHILD_COUNT, METHOD_GET_CHILD = null;
+			METHOD_GET_LAYOUT_MANAGER, METHOD_GET_SCREEN_SIZE, METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD,
+			METHOD_AND, METHOD_GET_DESCRIPTION, METHOD_GET_SELECTED_ITEM, METHOD_TEST_AND_RUN_THROWS, METHOD_CLEAR,
+			METHOD_GET_VALUE, METHOD_CREATE_MAP, METHOD_GET_AST, METHOD_GET_CHILD_COUNT, METHOD_GET_CHILD = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -96,9 +94,6 @@ class VoiceManagerRubyHtmlPanelTest {
 		//
 		(METHOD_GET_LAYOUT_MANAGER = clz.getDeclaredMethod("getLayoutManager", Object.class, Iterable.class))
 				.setAccessible(true);
-		//
-		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
-				AbstractButton[].class)).setAccessible(true);
 		//
 		(METHOD_GET_SCREEN_SIZE = clz.getDeclaredMethod("getScreenSize", Toolkit.class)).setAccessible(true);
 		//
@@ -565,22 +560,6 @@ class VoiceManagerRubyHtmlPanelTest {
 				return (LayoutManager) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAddActionListener() {
-		//
-		Assertions.assertDoesNotThrow(() -> addActionListener(null, (AbstractButton[]) null));
-		//
-	}
-
-	private static void addActionListener(final ActionListener actionListener, final AbstractButton... bs)
-			throws Throwable {
-		try {
-			METHOD_ADD_ACTION_LISTENER.invoke(null, actionListener, bs);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
