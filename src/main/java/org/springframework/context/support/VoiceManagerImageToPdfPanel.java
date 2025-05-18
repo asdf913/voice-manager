@@ -144,13 +144,16 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 	private transient SpeechApi speechApi = null;
 
-	private JTextComponent tfText, tfImageUrl = null;
-
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
 		String value();
 	}
+
+	@Note("Text")
+	private JTextComponent tfText = null;
+
+	private JTextComponent tfImageUrl = null;
 
 	@Note("Speech Language Code")
 	private JTextComponent tfSpeechLanguageCode = null;
@@ -158,7 +161,10 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	@Note("Speech Language Name")
 	private JTextComponent tfSpeechLanguageName = null;
 
-	private AbstractButton btnExecute, btnImageUrl = null;
+	@Note("Execute")
+	private AbstractButton btnExecute = null;
+
+	private AbstractButton btnImageUrl = null;
 
 	private transient ComboBoxModel<String> cbmVoiceId = null;
 
