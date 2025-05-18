@@ -522,7 +522,8 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		Util.forEach(Stream.of(tfSpeechLanguageCode, tfSpeechLanguageName, tfProviderName, tfProviderVersion,
 				tfProviderPlatform, tfSpeechVolume, tfElapsed), x -> Util.setEditable(x, false));
 		//
-		addActionListener(this, btnSpeak, btnWriteVoice, btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster);
+		Util.forEach(Stream.of(btnSpeak, btnWriteVoice, btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster),
+				x -> Util.addActionListener(x, this));
 		//
 		Util.forEach(Stream.of(btnSpeak, btnWriteVoice),
 				x -> Util.setEnabled(x, Boolean.logicalAnd(isInstalled, voiceIds != null)));
@@ -1007,22 +1008,6 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		if (instance != null) {
 			instance.addChangeListener(changeListener);
 		}
-	}
-
-	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... abs) {
-		//
-		AbstractButton ab = null;
-		//
-		for (int i = 0; abs != null && i < abs.length; i++) {
-			//
-			if ((ab = abs[i]) == null) {
-				continue;
-			} // if
-				//
-			Util.addActionListener(ab, actionListener);
-			//
-		} // for
-			//
 	}
 
 	private static void setPreferredWidth(final int width, final Iterable<Component> cs) {
