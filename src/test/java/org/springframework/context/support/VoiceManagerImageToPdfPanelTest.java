@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -675,7 +676,7 @@ class VoiceManagerImageToPdfPanelTest {
 	@Test
 	void testGetAbsoluteFile() throws Throwable {
 		//
-		Assertions.assertNotNull(getAbsoluteFile(new File(".")));
+		Assertions.assertNotNull(getAbsoluteFile(Util.toFile(Paths.get("."))));
 		//
 	}
 
