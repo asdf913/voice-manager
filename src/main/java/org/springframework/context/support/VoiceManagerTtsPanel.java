@@ -524,9 +524,8 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		//
 		addActionListener(this, btnSpeak, btnWriteVoice, btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster);
 		//
-		Util.forEach(Stream.of(btnSpeak, btnWriteVoice), x -> {
-			Util.setEnabled(x, Boolean.logicalAnd(isInstalled, voiceIds != null));
-		});
+		Util.forEach(Stream.of(btnSpeak, btnWriteVoice),
+				x -> Util.setEnabled(x, Boolean.logicalAnd(isInstalled, voiceIds != null)));
 		//
 		addChangeListener(this, jsSpeechVolume, jsSpeechRate);
 		//
@@ -1571,9 +1570,8 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 			if (getInstance(speechApi) instanceof SpeechApiSystemSpeechImpl) {
 				//
-				Util.forEach(Stream.of(btnSpeak, btnWriteVoice), x -> {
-					Util.setEnabled(x, Util.getSelectedItem(cbmVoiceId) != null);
-				});
+				Util.forEach(Stream.of(btnSpeak, btnWriteVoice),
+						x -> Util.setEnabled(x, Util.getSelectedItem(cbmVoiceId) != null));
 				//
 			} // if
 				//

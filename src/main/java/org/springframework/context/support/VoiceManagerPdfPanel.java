@@ -2132,9 +2132,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		if (Objects.equals(source, btnImageClear)) {
 			//
-			Util.forEach(Stream.of(btnImageClear, btnImageView), x -> {
-				Util.setEnabled(x, (renderedImage = null) != null);
-			});
+			Util.forEach(Stream.of(btnImageClear, btnImageView),
+					x -> Util.setEnabled(x, (renderedImage = null) != null));
 			//
 		} else if (Objects.equals(source, btnImageView)) {
 			//
@@ -2228,9 +2227,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final boolean isImageFlavorSupported = isDataFlavorSupported(transferable, DataFlavor.imageFlavor);
 			//
-			Util.forEach(Stream.of(btnImageClear, btnImageView), x -> {
-				Util.setEnabled(x, isImageFlavorSupported);
-			});
+			Util.forEach(Stream.of(btnImageClear, btnImageView), x -> Util.setEnabled(x, isImageFlavorSupported));
 			//
 			try {
 				//
