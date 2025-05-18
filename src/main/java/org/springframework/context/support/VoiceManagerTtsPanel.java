@@ -519,8 +519,8 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		//
 		add(tfElapsed = new JTextField(), String.format("%1$s,span %2$s", GROWX, 2));
 		//
-		setEditable(false, tfSpeechLanguageCode, tfSpeechLanguageName, tfProviderName, tfProviderVersion,
-				tfProviderPlatform, tfSpeechVolume, tfElapsed);
+		Util.forEach(Stream.of(tfSpeechLanguageCode, tfSpeechLanguageName, tfProviderName, tfProviderVersion,
+				tfProviderPlatform, tfSpeechVolume, tfElapsed), x -> Util.setEditable(x, false));
 		//
 		addActionListener(this, btnSpeak, btnWriteVoice, btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster);
 		//
@@ -1067,16 +1067,6 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 	}
 
-	private static void setEditable(final boolean editable, @Nullable final JTextComponent... jtcs) {
-		//
-		for (int i = 0; jtcs != null && i < jtcs.length; i++) {
-			//
-			Util.setEditable(jtcs[i], editable);
-			//
-		} // for
-			//
-	}
-
 	private static <T> List<T> getObjectsByGroupAnnotation(final Object instance, final String group,
 			final Class<T> clz) {
 		//
@@ -1220,7 +1210,7 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		//
 		add(instance, tfSpeechRate, String.format("%1$s,width %2$s", WRAP, 24));
 		//
-		setEditable(false, tfSpeechRate);
+		Util.setEditable(tfSpeechRate, false);
 		//
 		setValue(jsSpeechRate,
 				PropertyResolverUtil.getProperty(instance != null ? instance.propertyResolver : null,
