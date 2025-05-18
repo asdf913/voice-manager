@@ -1063,7 +1063,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		addDocumentListener(taHtmlDocument = taHtml.getDocument(), this);
 		//
-		final Dimension preferredSize = jsp.getPreferredSize();
+		final Dimension preferredSize = Util.getPreferredSize(jsp);
 		//
 		if (preferredSize != null) {
 			//
@@ -1177,11 +1177,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 								testAndApply(Objects::nonNull, f, x -> Narcissus.getField(this, x), null))),
 				x -> addActionListener(x, this));
 		//
-		final Double width = getWidth(btnExecute.getPreferredSize());
+		final Double width = getWidth(Util.getPreferredSize(btnExecute));
 		//
 		if (width != null) {
 			//
-			Double height = getHeight(getPreferredSize(tfFontSize1));
+			Double height = getHeight(Util.getPreferredSize(tfFontSize1));
 			//
 			if (height != null) {
 				//
@@ -1189,7 +1189,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 			} // if
 				//
-			if ((height = getHeight(getPreferredSize(tfFontSize2))) != null) {
+			if ((height = getHeight(Util.getPreferredSize(tfFontSize2))) != null) {
 				//
 				setMaximumSize(tfFontSize2, new Dimension(width.intValue(), height.intValue()));
 				//
@@ -1616,11 +1616,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		if (instance != null) {
 			instance.addDocumentListener(listener);
 		}
-	}
-
-	@Nullable
-	private static Dimension getPreferredSize(@Nullable final Component instance) {
-		return instance != null ? instance.getPreferredSize() : null;
 	}
 
 	private static void setMaximumSize(@Nullable final Component instance, final Dimension maximumSize) {
