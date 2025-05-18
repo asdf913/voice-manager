@@ -1168,7 +1168,10 @@
 	</bean>
 
 	<bean
-		class="org.springframework.context.support.VoiceManagerImageToPdfPanel" />
+		class="org.springframework.context.support.VoiceManagerImageToPdfPanel">
+		<property name="languageCodeToTextObjIntFunction"
+			ref="LanguageCodeToTextObjIntFunction" />
+	</bean>
 
 	<!---->
 	<bean

@@ -7,6 +7,8 @@ import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -28,6 +30,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
@@ -93,6 +96,8 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.d2ab.function.ObjIntFunction;
+import org.d2ab.function.ObjIntFunctionUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -121,7 +126,7 @@ import it.unimi.dsi.fastutil.ints.IntIntPair;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerImageToPdfPanel extends JPanel
-		implements InitializingBean, ActionListener, Titled, EnvironmentAware, ApplicationContextAware {
+		implements InitializingBean, ActionListener, Titled, EnvironmentAware, ApplicationContextAware, ItemListener {
 
 	private static final long serialVersionUID = 7360299976827392995L;
 
@@ -131,7 +136,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 	private transient SpeechApi speechApi = null;
 
-	private JTextComponent tfText = null;
+	private JTextComponent tfText, tfSpeechLanguageCode, tfSpeechLanguageName = null;
 
 	private AbstractButton btnExecute = null;
 
@@ -142,6 +147,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	private transient PropertyResolver propertyResolver = null;
 
 	private transient ApplicationContext applicationContext = null;
+
+	private ObjIntFunction<String, String> languageCodeToTextObjIntFunction = null;
 
 	private static boolean isTestMode() {
 		return Util.forName("org.junit.jupiter.api.Test") != null;
@@ -206,6 +213,11 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		propertyResolver = environment;
 	}
 
+	public void setLanguageCodeToTextObjIntFunction(
+			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) {
+		this.languageCodeToTextObjIntFunction = languageCodeToTextObjIntFunction;
+	}
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		//
@@ -238,7 +250,9 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 			jcbVoiceId.setRenderer(voiceIdListCellRenderer);
 			//
-			add(jcbVoiceId, WRAP);
+			jcbVoiceId.addItemListener(this);
+			//
+			add(jcbVoiceId);
 			//
 			testAndAccept(PropertyResolverUtil::containsProperty, propertyResolver,
 					"org.springframework.context.support.VoiceManagerImageToPdfPanel.voiceId", (a, b) -> {
@@ -264,12 +278,25 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 		} // if
 			//
+		add(tfSpeechLanguageCode = new JTextField(), String.format("width %1$s", 30));
+		//
+		add(tfSpeechLanguageName = new JTextField(), String.format("%1$s,width %2$s", WRAP, 230));
+		//
+		//
 		add(new JLabel());
 		//
 		add(btnExecute = new JButton("Execute"));
 		//
 		btnExecute.addActionListener(this);
 		//
+		Util.forEach(Stream.of(tfSpeechLanguageCode, tfSpeechLanguageName), x -> setEditable(x, false));
+		//
+	}
+
+	private static void setEditable(final JTextComponent instance, final boolean flag) {
+		if (instance != null) {
+			instance.setEditable(flag);
+		}
 	}
 
 	private static void setLayout(@Nullable final Container instance, final LayoutManager layoutManager) {
@@ -454,6 +481,40 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			} // try
 		} // if
 			//
+	}
+
+	@Override
+	public void itemStateChanged(final ItemEvent evt) {
+		//
+		if (Objects.equals(Util.getSource(evt), jcbVoiceId)) {
+			//
+			final Object voiceId = Util.getSelectedItem(cbmVoiceId);
+			//
+			setEnabled(btnExecute, voiceId != null);
+			//
+			try {
+				//
+				final String language = SpeechApi.getVoiceAttribute(speechApi, Util.toString(voiceId), "Language");
+				//
+				Util.setText(tfSpeechLanguageCode, language);
+				//
+				Util.setText(tfSpeechLanguageName, StringUtils.defaultIfBlank(
+						ObjIntFunctionUtil.apply(languageCodeToTextObjIntFunction, language, 16), language));
+				//
+			} catch (final Error e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} // try
+				//
+		} // if
+			//
+	}
+
+	private static void setEnabled(final Component instance, final boolean b) {
+		if (instance != null) {
+			instance.setEnabled(b);
+		}
 	}
 
 	private static int getTextHeight(final PDFont font, final float fontSize, final float size) throws IOException {
