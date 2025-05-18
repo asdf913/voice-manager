@@ -90,10 +90,10 @@ class JlptLevelGuiTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_SET_PREFERRED_WIDTH, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_TEST_AND_APPLY,
-			METHOD_SET_CONTENTS, METHOD_ADD_ACTION_LISTENER, METHOD_INVOKE, METHOD_IIF, METHOD_RUN,
-			METHOD_SET_JLPT_VOCABULARY_AND_LEVEL, METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM, METHOD_ADD_ELEMENT,
-			METHOD_TEST_AND_ACCEPT, METHOD_BROWSE, METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES,
-			METHOD_TO_URI, METHOD_REMOVE_ELEMENT_AT, METHOD_MAX = null;
+			METHOD_SET_CONTENTS, METHOD_INVOKE, METHOD_IIF, METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL,
+			METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM, METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE,
+			METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES, METHOD_TO_URI, METHOD_REMOVE_ELEMENT_AT,
+			METHOD_MAX = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -107,9 +107,6 @@ class JlptLevelGuiTest {
 		//
 		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
 				ClipboardOwner.class)).setAccessible(true);
-		//
-		(METHOD_ADD_ACTION_LISTENER = clz.getDeclaredMethod("addActionListener", ActionListener.class,
-				AbstractButton[].class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
@@ -716,24 +713,6 @@ class JlptLevelGuiTest {
 			throws Throwable {
 		try {
 			METHOD_SET_CONTENTS.invoke(null, instance, contents, owner);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAddActionListener() {
-		//
-		Assertions.assertDoesNotThrow(() -> addActionListener(null, (AbstractButton[]) null));
-		//
-		Assertions.assertDoesNotThrow(() -> addActionListener(null, (AbstractButton) null));
-		//
-	}
-
-	private static void addActionListener(final ActionListener actionListener, final AbstractButton... bs)
-			throws Throwable {
-		try {
-			METHOD_ADD_ACTION_LISTENER.invoke(null, actionListener, bs);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

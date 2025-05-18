@@ -233,7 +233,8 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		testAndAccept(predicate, jlCompare = new JLabel(), this::add);
 		//
-		addActionListener(this, btnExportJson, btnCopy, btnCompare, btnVisitJMdictDB);
+		Util.forEach(Stream.of(btnExportJson, btnCopy, btnCompare, btnVisitJMdictDB),
+				x -> Util.addActionListener(x, this));
 		//
 		final List<Component> cs = Arrays.asList(jlJlptLevel, btnExportJson, tfJson, btnCompare, tfText);
 		//
@@ -262,24 +263,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		if (instance != null) {
 			instance.addDocumentListener(listener);
 		}
-	}
-
-	private static void addActionListener(final ActionListener actionListener, @Nullable final AbstractButton... bs) {
-		//
-		AbstractButton b = null;
-		//
-		for (int i = 0; bs != null && i < bs.length; i++) {
-			//
-			if ((b = bs[i]) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			Util.addActionListener(b, actionListener);
-			//
-		} // for
-			//
 	}
 
 	private static void setPreferredWidth(final int width, @Nullable final Iterable<Component> cs) {
