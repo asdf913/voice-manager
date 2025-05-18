@@ -255,8 +255,38 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		add(new JComboBox<>(cbmFontName = new DefaultComboBoxModel<>(ArrayUtils.insert(0, fontNames, (FontName) null))),
 				String.format("span %1$s,%2$s", 2, WRAP));
 		//
-		cbmFontName.setSelectedItem(FontName.HELVETICA);// TODO
+		Integer index = null;
 		//
+		final FontName fontName = getFontName(
+				"org.springframework.context.support.VoiceManagerImageToPdfPanel.fontName", propertyResolver,
+				System.getProperties());
+		//
+		for (int i = 0; i < Util.getSize(cbmFontName); i++) {
+			//
+			if (!Objects.equals(Util.getElementAt(cbmFontName, i), fontName)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (index != null) {
+				//
+				throw new IllegalStateException();
+				//
+			} else {
+				//
+				index = Integer.valueOf(i);
+				//
+			} // if
+				//
+		} // for
+			//
+		if (index != null) {
+			//
+			Util.setSelectedItem(cbmFontName, Util.getElementAt(cbmFontName, index.intValue()));
+			//
+		} // if
+			//
 		add(new JLabel("Text"));
 		//
 		add(tfText = new JTextField(), String.format("growx,span %1$s,%2$s", 4, WRAP));
@@ -319,6 +349,87 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		btnExecute.addActionListener(this);
 		//
 		Util.forEach(Stream.of(tfSpeechLanguageCode, tfSpeechLanguageName), x -> setEditable(x, false));
+		//
+	}
+
+	private static FontName getFontName(final String key, final PropertyResolver propertyResolver,
+			final Map<?, ?> map) {
+		//
+		final FontName[] fontNames = FontName.values();
+		//
+		IValue0<FontName> iValue0 = getFontName(fontNames, testAndApply(PropertyResolverUtil::containsProperty,
+				propertyResolver, key, PropertyResolverUtil::getProperty, null));
+		//
+		if (iValue0 != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
+		if ((iValue0 = getFontName(fontNames,
+				Util.toString(testAndApply(Util::containsKey, map, key, Util::get, null)))) != null) {
+			//
+			return IValue0Util.getValue0(iValue0);
+			//
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static IValue0<FontName> getFontName(final FontName[] fontNames, final String prefix) {
+		//
+		FontName fontName = null;
+		//
+		IValue0<FontName> iValue0 = null;
+		//
+		final int length = fontNames != null ? fontNames.length : 0;
+		//
+		for (int i = 0; i < length; i++) {
+			//
+			if ((fontName = ArrayUtils.get(fontNames, i)) == null
+					|| (!StringUtils.equalsIgnoreCase(fontName.getName(), prefix)
+							&& !StringUtils.equalsIgnoreCase(Util.name(fontName), prefix))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			testAndRunThrows(iValue0 != null, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			iValue0 = Unit.with(fontName);
+			//
+		} // for
+			//
+		if (iValue0 == null) {
+			//
+			for (int i = 0; i < length; i++) {
+				//
+				if ((fontName = ArrayUtils.get(fontNames, i)) == null
+						|| (!StringUtils.startsWithIgnoreCase(fontName.getName(), prefix)
+								&& !StringUtils.startsWithIgnoreCase(Util.name(fontName), prefix))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				testAndRunThrows(iValue0 != null, () -> {
+					//
+					throw new IllegalStateException();
+					//
+				});
+				//
+				iValue0 = Unit.with(fontName);
+				//
+			} // for
+				//
+		} // if
+			//
+		return iValue0;
 		//
 	}
 
