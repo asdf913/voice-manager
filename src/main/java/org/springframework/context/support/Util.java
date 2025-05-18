@@ -329,7 +329,7 @@ public abstract class Util {
 		return instance != null ? instance.getValue() : null;
 	}
 
-	static <V> void setValue(@Nullable final Entry<?, V> instance, final V value) {
+	static <V> void setValue(@Nullable final Entry<?, V> instance, @Nullable final V value) {
 		if (instance != null) {
 			instance.setValue(value);
 		}
