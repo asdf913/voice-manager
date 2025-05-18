@@ -1996,7 +1996,7 @@ public abstract class Util {
 		//
 	}
 
-	static void addActionListener(final AbstractButton instance, final ActionListener actionListener) {
+	static void addActionListener(@Nullable final AbstractButton instance, final ActionListener actionListener) {
 		if (instance != null) {
 			instance.addActionListener(actionListener);
 		}
