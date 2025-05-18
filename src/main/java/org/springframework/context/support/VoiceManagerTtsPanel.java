@@ -524,7 +524,9 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		//
 		addActionListener(this, btnSpeak, btnWriteVoice, btnSpeechRateSlower, btnSpeechRateNormal, btnSpeechRateFaster);
 		//
-		setEnabled(Boolean.logicalAnd(isInstalled, voiceIds != null), btnSpeak, btnWriteVoice);
+		Util.forEach(Stream.of(btnSpeak, btnWriteVoice), x -> {
+			Util.setEnabled(x, Boolean.logicalAnd(isInstalled, voiceIds != null));
+		});
 		//
 		addChangeListener(this, jsSpeechVolume, jsSpeechRate);
 		//
@@ -1569,7 +1571,9 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 			if (getInstance(speechApi) instanceof SpeechApiSystemSpeechImpl) {
 				//
-				setEnabled(Util.getSelectedItem(cbmVoiceId) != null, btnSpeak, btnWriteVoice);
+				Util.forEach(Stream.of(btnSpeak, btnWriteVoice), x -> {
+					Util.setEnabled(x, Util.getSelectedItem(cbmVoiceId) != null);
+				});
 				//
 			} // if
 				//
@@ -1598,18 +1602,6 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 		}
 
-	}
-
-	private static void setEnabled(final boolean b, final Component instance, @Nullable final Component... cs) {
-		//
-		Util.setEnabled(instance, b);
-		//
-		for (int i = 0; cs != null && i < cs.length; i++) {
-			//
-			Util.setEnabled(cs[i], b);
-			//
-		} // for
-			//
 	}
 
 	@Nullable
