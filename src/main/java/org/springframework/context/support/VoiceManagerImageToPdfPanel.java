@@ -168,7 +168,10 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	@Note("Image URL")
 	private JTextComponent tfImageUrl = null;
 
-	private JTextComponent tfImageFile, tfImageUrlStateCode = null;
+	@Note("Image URL State Code")
+	private JTextComponent tfImageUrlStateCode = null;
+
+	private JTextComponent tfImageFile = null;
 
 	@Note("Speech Language Code")
 	private JTextComponent tfSpeechLanguageCode = null;
