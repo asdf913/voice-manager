@@ -44,7 +44,6 @@ import java.lang.reflect.Proxy;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
@@ -1876,7 +1875,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			try {
 				//
 				final Integer responseCode = getResponseCode(
-						Util.cast(HttpURLConnection.class, openConnection(new URI(urlString).toURL())));
+						Util.cast(HttpURLConnection.class, Util.openConnection(new URI(urlString).toURL())));
 				//
 				Util.setText(tfPronunciationPageStatusCode, Integer.toString(responseCode));
 				//
@@ -1912,38 +1911,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 	@Nullable
 	private static Integer getResponseCode(@Nullable final HttpURLConnection instance) throws IOException {
 		return instance != null ? Integer.valueOf(instance.getResponseCode()) : null;
-	}
-
-	@Nullable
-	private static URLConnection openConnection(@Nullable final URL instance) throws IOException {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		final List<Field> fs = Util.toList(Util.filter(Arrays.stream(Util.getDeclaredFields(URL.class)),
-				f -> Objects.equals(Util.getName(f), HANDLER)));
-		//
-		final int size = IterableUtils.size(fs);
-		//
-		if (size > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		final Field f = size == 1 ? IterableUtils.get(fs, 0) : null;
-		//
-		if (f != null && Narcissus.getField(instance, f) == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		return instance.openConnection();
-		//
 	}
 
 	private static void pronounicationChanged(@Nullable final Pronunciation pronunciation,

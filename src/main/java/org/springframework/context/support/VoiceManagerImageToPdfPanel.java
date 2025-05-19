@@ -938,7 +938,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		final PDPageContentStream cs = ObjectMap.getObject(objectMap, PDPageContentStream.class);
 		//
-		final URLConnection urlConnection = openConnection(ObjectMap.getObject(objectMap, URL.class));
+		final URLConnection urlConnection = Util.openConnection(ObjectMap.getObject(objectMap, URL.class));
 		//
 		final VoiceManagerImageToPdfPanel voiceManagerImageToPdfPanel = ObjectMap.getObject(objectMap,
 				VoiceManagerImageToPdfPanel.class);
@@ -999,35 +999,6 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 	private static InputStream getInputStream(final URLConnection instance) throws IOException {
 		return instance != null ? instance.getInputStream() : null;
-	}
-
-	private static URLConnection openConnection(final URL instance) throws IOException {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		final List<Field> fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(URL.class)),
-				f -> Objects.equals(Util.getName(f), "handler")));
-		//
-		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
-			//
-			throw new IllegalStateException();
-			//
-		});
-		//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-		//
-		if (f != null && Narcissus.getField(instance, f) == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		return instance.openConnection();
-		//
 	}
 
 	private static void addPDImageXObject(final PDImageXObject pdImageXObject, final PDRectangle pdRectangle,

@@ -3755,7 +3755,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				//
 		} // if
 			//
-		final URLConnection urlConnection = openConnection(url);
+		final URLConnection urlConnection = Util.openConnection(url);
 		//
 		final HttpURLConnection httpURLConnection = Util.cast(HttpURLConnection.class, urlConnection);
 		//
@@ -3848,11 +3848,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	@Nullable
 	private static InputStream getInputStream(@Nullable final URLConnection instance) throws IOException {
 		return instance != null ? instance.getInputStream() : null;
-	}
-
-	@Nullable
-	private static URLConnection openConnection(@Nullable final URL instance) throws IOException {
-		return instance != null ? instance.openConnection() : null;
 	}
 
 	private static void drawImage(@Nullable final PDPageContentStream instance, final PDImageXObject image,

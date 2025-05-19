@@ -19,6 +19,7 @@ import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.util.Arrays;
@@ -1978,6 +1979,35 @@ public abstract class Util {
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
 		return f != null && Narcissus.getField(instance, f) == null ? null : instance.openStream();
+		//
+	}
+
+	static URLConnection openConnection(final URL instance) throws IOException {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final List<Field> fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(URL.class)),
+				f -> Objects.equals(Util.getName(f), "handler")));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f != null && Narcissus.getField(instance, f) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return instance.openConnection();
 		//
 	}
 
