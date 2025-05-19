@@ -955,8 +955,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		Util.setText(tfImageUrlStateCode, null);
 		//
 		Iterable<Field> fs = Util.toList(Util.filter(
-				Util.stream(
-						testAndApply(Objects::nonNull, Util.getClass(cs), x -> FieldUtils.getAllFieldsList(x), null)),
+				Util.stream(testAndApply(Objects::nonNull, Util.getClass(cs), FieldUtils::getAllFieldsList, null)),
 				x -> Objects.equals(Util.getName(x), "resources")));
 		//
 		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
@@ -967,14 +966,11 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		final Object object = testAndApply((a, b) -> a != null, cs,
 				testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
-				(a, b) -> Narcissus.getField(a, b), null);
+				Narcissus::getField, null);
 		//
-		testAndRunThrows(
-				IterableUtils.size(fs = Util.toList(Util.filter(
-						Util.stream(testAndApply(Objects::nonNull, Util.getClass(object),
-								x -> FieldUtils.getAllFieldsList(x), null)),
-						x -> Objects.equals(Util.getName(x), "resources")))) > 1,
-				() -> {
+		testAndRunThrows(IterableUtils.size(fs = Util.toList(Util.filter(
+				Util.stream(testAndApply(Objects::nonNull, Util.getClass(object), FieldUtils::getAllFieldsList, null)),
+				x -> Objects.equals(Util.getName(x), "resources")))) > 1, () -> {
 					//
 					throw new IllegalStateException();
 					//
@@ -983,7 +979,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
 		final COSDictionary cosDictionary = Util.cast(COSDictionary.class,
-				testAndApply((a, b) -> a != null, object, f, (a, b) -> Narcissus.getField(a, b), null));
+				testAndApply((a, b) -> a != null, object, f, Narcissus::getField, null));
 		//
 		final int cosDictionarySize = cosDictionary != null ? cosDictionary.size() : 0;
 		//
