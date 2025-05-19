@@ -153,7 +153,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	@Note("Text")
 	private JTextComponent tfText = null;
 
-	private JTextComponent tfImageUrl = null;
+	private JTextComponent tfImageFile = null;
 
 	@Note("Speech Language Code")
 	private JTextComponent tfSpeechLanguageCode = null;
@@ -342,7 +342,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		panel.add(new JLabel("URL"));
 		//
-		panel.add(tfImageUrl = new JTextField(), String.format("wmin %1$s,wmax %1$s", 356));
+		panel.add(tfImageFile = new JTextField(), String.format("wmin %1$s,wmax %1$s", 356));
 		//
 		panel.add(btnImageUrl = new JButton("Select"));
 		//
@@ -356,7 +356,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		Util.setEnabled(btnExecute, Util.getSelectedItem(cbmVoiceId) != null);
 		//
-		Util.forEach(Stream.of(tfSpeechLanguageCode, tfSpeechLanguageName, tfImageUrl),
+		Util.forEach(Stream.of(tfSpeechLanguageCode, tfSpeechLanguageName, tfImageFile),
 				x -> Util.setEditable(x, false));
 		//
 	}
@@ -641,7 +641,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 					addText(cs, font, fontSize, pdPage, size);
 					//
 					addImage(pdDocument, pdRectangle, cs, pageWidth, size, getTextHeight(font, fontSize, size),
-							Util.getText(tfImageUrl));
+							Util.getText(tfImageFile));
 					//
 				} catch (final IOException | NoSuchMethodException e) {
 					//
@@ -661,7 +661,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		} else if (Objects.equals(source, btnImageUrl)) {
 			//
 			testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.exists(x)), getFile(Util.toFile(Path.of("."))),
-					x -> Util.setText(tfImageUrl, Util.getAbsolutePath(getAbsoluteFile(x))));
+					x -> Util.setText(tfImageFile, Util.getAbsolutePath(getAbsoluteFile(x))));
 			//
 		} // if
 			//
