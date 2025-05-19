@@ -20,6 +20,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.file.Files;
@@ -27,6 +28,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -131,6 +133,8 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
+
+import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import it.unimi.dsi.fastutil.ints.IntIntMutablePair;
@@ -558,6 +562,45 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		} // if
 	}
 
+	private static class IH implements InvocationHandler {
+
+		private Map<Object, Object> map = null;
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String name = Util.getName(method);
+			//
+			if (proxy instanceof ObjectMap) {
+				//
+				if (Objects.equals(name, "getObject") && args != null && args.length > 0) {
+					//
+					final Object arg = args[0];
+					//
+					if (!Util.containsKey(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), arg)) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					return Util.get(map, arg);
+					//
+				} else if (Objects.equals(name, "setObject") && args != null && args.length > 1) {
+					//
+					Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), args[0], args[1]);
+					//
+					return null;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(name);
+			//
+		}
+
+	}
+
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
@@ -655,10 +698,24 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 					//
 					addText(cs, font, fontSize, pdPage, size);
 					//
-					addImage(pdDocument, pdRectangle, cs, pageWidth, size, getTextHeight(font, fontSize, size),
-							Util.getText(tfImageFile),
-							testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x),
-									Util.getText(tfImageUrl), URL::new, null));
+					final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
+					//
+					if (objectMap != null) {
+						//
+						objectMap.setObject(PDDocument.class, pdDocument);
+						//
+						objectMap.setObject(PDRectangle.class, pdRectangle);
+						//
+						objectMap.setObject(PDPageContentStream.class, cs);
+						//
+						objectMap.setObject(URL.class,
+								testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x),
+										Util.getText(tfImageUrl), URL::new, null));
+						//
+					} // if
+						//
+					addImage(objectMap, pageWidth, size, getTextHeight(font, fontSize, size),
+							Util.getText(tfImageFile));
 					//
 				} catch (final IOException | NoSuchMethodException e) {
 					//
@@ -852,11 +909,28 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 	}
 
-	private static void addImage(final PDDocument pdDocument, final PDRectangle pdRectangle,
-			@Nullable final PDPageContentStream cs, final float pageWidth, final float size, final int textHeight,
-			final String fileAbsolutePath, final URL url) throws IOException, NoSuchMethodException {
+	private static interface ObjectMap {
+
+		<T> T getObject(final Class<?> key);
+
+		<T> void setObject(final Class<T> key, final T value);
+
+		static <T> T getObject(final ObjectMap instance, final Class<?> key) {
+			return instance != null ? instance.getObject(key) : null;
+		}
+
+	}
+
+	private static void addImage(final ObjectMap objectMap, final float pageWidth, final float size,
+			final int textHeight, final String fileAbsolutePath) throws IOException, NoSuchMethodException {
 		//
-		try (final InputStream is = Util.openStream(url)) {
+		final PDDocument pdDocument = ObjectMap.getObject(objectMap, PDDocument.class);
+		//
+		final PDRectangle pdRectangle = ObjectMap.getObject(objectMap, PDRectangle.class);
+		//
+		final PDPageContentStream cs = ObjectMap.getObject(objectMap, PDPageContentStream.class);
+		//
+		try (final InputStream is = Util.openStream(ObjectMap.getObject(objectMap, URL.class))) {
 			//
 			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
 			//
