@@ -567,6 +567,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		private Map<Object, Object> map = null;
 
 		@Override
+		@Nullable
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
 			final String name = Util.getName(method);
