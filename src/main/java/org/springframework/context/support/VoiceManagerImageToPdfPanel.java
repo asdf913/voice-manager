@@ -701,20 +701,16 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 					//
 					final ObjectMap objectMap = Reflection.newProxy(ObjectMap.class, new IH());
 					//
-					if (objectMap != null) {
-						//
-						objectMap.setObject(PDDocument.class, pdDocument);
-						//
-						objectMap.setObject(PDRectangle.class, pdRectangle);
-						//
-						objectMap.setObject(PDPageContentStream.class, cs);
-						//
-						objectMap.setObject(URL.class,
-								testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x),
-										Util.getText(tfImageUrl), URL::new, null));
-						//
-					} // if
-						//
+					ObjectMap.setObject(objectMap, PDDocument.class, pdDocument);
+					//
+					ObjectMap.setObject(objectMap, PDRectangle.class, pdRectangle);
+					//
+					ObjectMap.setObject(objectMap, PDPageContentStream.class, cs);
+					//
+					ObjectMap.setObject(objectMap, URL.class,
+							testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x),
+									Util.getText(tfImageUrl), URL::new, null));
+					//
 					addImage(objectMap, pageWidth, size, getTextHeight(font, fontSize, size),
 							Util.getText(tfImageFile));
 					//
@@ -914,6 +910,12 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 		static <T> T getObject(@Nullable final ObjectMap instance, final Class<?> key) {
 			return instance != null ? instance.getObject(key) : null;
+		}
+
+		static <T> void setObject(final ObjectMap instance, final Class<T> key, final T value) {
+			if (instance != null) {
+				instance.setObject(key, value);
+			}
 		}
 
 	}
