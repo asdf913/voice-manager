@@ -658,7 +658,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 					addImage(pdDocument, pdRectangle, cs, pageWidth, size, getTextHeight(font, fontSize, size),
 							Util.getText(tfImageFile),
 							testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x),
-									Util.getText(tfImageUrl), x -> new URL(x), null));
+									Util.getText(tfImageUrl), URL::new, null));
 					//
 				} catch (final IOException | NoSuchMethodException e) {
 					//
@@ -858,7 +858,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		try (final InputStream is = Util.openStream(url)) {
 			//
-			final byte[] bs = testAndApply(Objects::nonNull, is, x -> IOUtils.toByteArray(x), null);
+			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
 			//
 			if (Objects.equals(Boolean.TRUE, isPDImage(bs))) {
 				//
