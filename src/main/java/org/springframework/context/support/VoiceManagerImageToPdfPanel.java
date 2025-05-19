@@ -82,6 +82,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableBiFunction;
 import org.apache.commons.lang3.function.FailableBiFunctionUtil;
+import org.apache.commons.lang3.function.FailableConsumer;
+import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -802,12 +804,12 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 			cs.beginText();
 			//
-			if (font != null) {
+			testAndAccept(Objects::nonNull, font, x -> {
 				//
-				cs.setFont(font, fontSize);
+				cs.setFont(x, fontSize);
 				//
-			} // if
-				//
+			});
+			//
 			cs.newLineAtOffset(i * size + (size - getTextWidth(
 					//
 					value = Integer.toString(100 - i * 10) + "%"
@@ -1032,10 +1034,10 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		}
 	}
 
-	private static <T> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
-			final Consumer<T> consumer) {
+	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
+			final FailableConsumer<T, E> consumer) throws E {
 		if (Util.test(predicate, value)) {
-			Util.accept(consumer, value);
+			FailableConsumerUtil.accept(consumer, value);
 		}
 	}
 
