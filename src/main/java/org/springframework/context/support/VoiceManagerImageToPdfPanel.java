@@ -568,7 +568,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 		@Override
 		@Nullable
-		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+		public Object invoke(final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
 			//
 			final String name = Util.getName(method);
 			//
