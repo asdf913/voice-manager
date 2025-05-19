@@ -860,7 +860,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 			final byte[] bs = testAndApply(Objects::nonNull, is, x -> IOUtils.toByteArray(x), null);
 			//
-			if (isPDImage(bs)) {
+			if (Objects.equals(Boolean.TRUE, isPDImage(bs))) {
 				//
 				addPDImageXObject(PDImageXObject.createFromByteArray(pdDocument, bs, null), pdRectangle, cs, pageWidth,
 						size, textHeight);
