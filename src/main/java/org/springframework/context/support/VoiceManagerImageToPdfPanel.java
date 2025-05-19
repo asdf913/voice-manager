@@ -21,6 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -74,6 +75,7 @@ import org.apache.bcel.generic.TypeUtil;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -85,6 +87,8 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.MutablePairUtil;
+import org.apache.commons.validator.routines.UrlValidator;
+import org.apache.commons.validator.routines.UrlValidatorUtil;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -153,7 +157,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	@Note("Text")
 	private JTextComponent tfText = null;
 
-	private JTextComponent tfImageFile = null;
+	private JTextComponent tfImageUrl, tfImageFile = null;
 
 	@Note("Speech Language Code")
 	private JTextComponent tfSpeechLanguageCode = null;
@@ -342,7 +346,13 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		panel.add(new JLabel("URL"));
 		//
-		panel.add(tfImageFile = new JTextField(), String.format("wmin %1$s,wmax %1$s", 356));
+		final int width = 356;
+		//
+		panel.add(tfImageUrl = new JTextField(), String.format("wmin %1$s,wmax %1$s,%2$s", width, WRAP));
+		//
+		panel.add(new JLabel("File"));
+		//
+		panel.add(tfImageFile = new JTextField(), String.format("wmin %1$s,wmax %1$s", width));
 		//
 		panel.add(btnImageFile = new JButton("Select"));
 		//
@@ -641,7 +651,9 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 					addText(cs, font, fontSize, pdPage, size);
 					//
 					addImage(pdDocument, pdRectangle, cs, pageWidth, size, getTextHeight(font, fontSize, size),
-							Util.getText(tfImageFile));
+							Util.getText(tfImageFile),
+							testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x),
+									Util.getText(tfImageUrl), x -> new URL(x), null));
 					//
 				} catch (final IOException | NoSuchMethodException e) {
 					//
@@ -837,8 +849,23 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 	private static void addImage(final PDDocument pdDocument, final PDRectangle pdRectangle,
 			@Nullable final PDPageContentStream cs, final float pageWidth, final float size, final int textHeight,
-			final String fileAbsolutePath) throws IOException, NoSuchMethodException {
+			final String fileAbsolutePath, final URL url) throws IOException, NoSuchMethodException {
 		//
+		try (final InputStream is = Util.openStream(url)) {
+			//
+			final byte[] bs = testAndApply(Objects::nonNull, is, x -> IOUtils.toByteArray(x), null);
+			//
+			if (isPDImage(bs)) {
+				//
+				addPDImageXObject(PDImageXObject.createFromByteArray(pdDocument, bs, null), pdRectangle, cs, pageWidth,
+						size, textHeight);
+				//
+				return;
+				//
+			} // if
+				//
+		} // try
+			//
 		File file = testAndApply(Objects::nonNull, fileAbsolutePath, File::new, null);
 		//
 		if (file == null || !Util.exists(file) || !Util.isFile(file)) {
@@ -857,24 +884,31 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				//
 			} // if
 				//
-			final PDImageXObject pdImageXObject = PDImageXObject.createFromFileByContent(file, pdDocument);
+			addPDImageXObject(PDImageXObject.createFromFileByContent(file, pdDocument), pdRectangle, cs, pageWidth,
+					size, textHeight);
 			//
-			final float imageWidth = getWidth(pdImageXObject);
+		} // if
 			//
-			final float imageHeight = getHeight(pdImageXObject);
+	}
+
+	private static void addPDImageXObject(final PDImageXObject pdImageXObject, final PDRectangle pdRectangle,
+			final PDPageContentStream cs, final float pageWidth, final float size, final float textHeight)
+			throws IOException {
+		//
+		final float imageWidth = getWidth(pdImageXObject);
+		//
+		final float imageHeight = getHeight(pdImageXObject);
+		//
+		final float ratioMin = Math.min(imageWidth == 0 ? 0 : pageWidth / imageWidth,
+				imageHeight == 0 ? 0 : getHeight(pdRectangle) / imageHeight);
+		//
+		final float pageHeight = imageHeight * ratioMin;
+		//
+		if (cs != null) {
 			//
-			final float ratioMin = Math.min(imageWidth == 0 ? 0 : pageWidth / imageWidth,
-					imageHeight == 0 ? 0 : getHeight(pdRectangle) / imageHeight);
+			cs.drawImage(pdImageXObject, 0, (imageHeight - pageHeight) / 2, imageWidth * ratioMin,
+					pageHeight - size - textHeight);
 			//
-			final float pageHeight = imageHeight * ratioMin;
-			//
-			if (cs != null) {
-				//
-				cs.drawImage(pdImageXObject, 0, (imageHeight - pageHeight) / 2, imageWidth * ratioMin,
-						pageHeight - size - textHeight);
-				//
-			} // if
-				//
 		} // if
 			//
 	}
