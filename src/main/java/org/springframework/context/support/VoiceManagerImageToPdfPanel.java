@@ -711,8 +711,10 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 							testAndApply(x -> UrlValidatorUtil.isValid(UrlValidator.getInstance(), x),
 									Util.getText(tfImageUrl), URL::new, null));
 					//
-					addImage(objectMap, pageWidth, size, getTextHeight(font, fontSize, size),
-							Util.getText(tfImageFile));
+					ObjectMap.setObject(objectMap, File.class,
+							testAndApply(Objects::nonNull, Util.getText(tfImageFile), File::new, null));
+					//
+					addImage(objectMap, pageWidth, size, getTextHeight(font, fontSize, size));
 					//
 				} catch (final IOException | NoSuchMethodException e) {
 					//
@@ -922,7 +924,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	}
 
 	private static void addImage(final ObjectMap objectMap, final float pageWidth, final float size,
-			final int textHeight, final String fileAbsolutePath) throws IOException, NoSuchMethodException {
+			final int textHeight) throws IOException, NoSuchMethodException {
 		//
 		final PDDocument pdDocument = ObjectMap.getObject(objectMap, PDDocument.class);
 		//
@@ -945,7 +947,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				//
 		} // try
 			//
-		File file = testAndApply(Objects::nonNull, fileAbsolutePath, File::new, null);
+		File file = ObjectMap.getObject(objectMap, File.class);
 		//
 		if (file == null || !Util.exists(file) || !Util.isFile(file)) {
 			//

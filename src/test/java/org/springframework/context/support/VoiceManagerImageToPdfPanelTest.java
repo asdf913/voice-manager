@@ -108,7 +108,7 @@ class VoiceManagerImageToPdfPanelTest {
 		(METHOD_ADD_IMAGE = clz.getDeclaredMethod("addImage",
 				CLASS_OBJECT_MAP = Util
 						.forName("org.springframework.context.support.VoiceManagerImageToPdfPanel$ObjectMap"),
-				Float.TYPE, Float.TYPE, Integer.TYPE, String.class)).setAccessible(true);
+				Float.TYPE, Float.TYPE, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -722,24 +722,25 @@ class VoiceManagerImageToPdfPanelTest {
 			//
 		final Method m = IterableUtils.size(ms) == 1 ? IterableUtils.get(ms, 0) : null;
 		//
-		Util.forEach(Stream.of(PDDocument.class, PDRectangle.class, PDPageContentStream.class, URL.class), clz -> {
-			//
-			if (!Util.isStatic(m)) {
-				//
-				Narcissus.invokeMethod(objectMap, m, clz, null);
-				//
-			} // if
-				//
-		});
+		Util.forEach(Stream.of(PDDocument.class, PDRectangle.class, PDPageContentStream.class, URL.class, File.class),
+				clz -> {
+					//
+					if (!Util.isStatic(m)) {
+						//
+						Narcissus.invokeMethod(objectMap, m, clz, null);
+						//
+					} // if
+						//
+				});
 		//
-		Assertions.assertDoesNotThrow(() -> addImage(objectMap, 0, 0, 0, null));
+		Assertions.assertDoesNotThrow(() -> addImage(objectMap, 0, 0, 0));
 		//
 	}
 
-	private static void addImage(final Object objectMap, final float pageWidth, final float size, final int textHeight,
-			final String fileAbsolutePath) throws Throwable {
+	private static void addImage(final Object objectMap, final float pageWidth, final float size, final int textHeight)
+			throws Throwable {
 		try {
-			METHOD_ADD_IMAGE.invoke(null, objectMap, pageWidth, size, textHeight, fileAbsolutePath);
+			METHOD_ADD_IMAGE.invoke(null, objectMap, pageWidth, size, textHeight);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
