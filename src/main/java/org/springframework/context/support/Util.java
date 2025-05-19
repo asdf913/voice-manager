@@ -1982,10 +1982,12 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	static InputStream getInputStream(@Nullable final URLConnection instance) throws IOException {
 		return instance != null ? instance.getInputStream() : null;
 	}
 
+	@Nullable
 	static URLConnection openConnection(@Nullable final URL instance) throws IOException {
 		//
 		if (instance == null) {
