@@ -953,7 +953,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		Util.setText(tfImageUrlStateCode, null);
 		//
-		try (final InputStream is = getInputStream(urlConnection)) {
+		try (final InputStream is = Util.getInputStream(urlConnection)) {
 			//
 			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
 			//
@@ -999,10 +999,6 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 		} // if
 			//
-	}
-
-	private static InputStream getInputStream(final URLConnection instance) throws IOException {
-		return instance != null ? instance.getInputStream() : null;
 	}
 
 	private static void addPDImageXObject(final PDImageXObject pdImageXObject, final PDRectangle pdRectangle,
