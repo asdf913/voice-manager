@@ -915,6 +915,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 	private static interface ObjectMap {
 
+		@Nullable
 		<T> T getObject(final Class<?> key);
 
 		<T> void setObject(final Class<T> key, final T value);
