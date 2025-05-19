@@ -864,11 +864,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 			cs.beginText();
 			//
-			testAndAccept(Objects::nonNull, font, x -> {
-				//
-				cs.setFont(x, fontSize);
-				//
-			});
+			testAndAccept(Objects::nonNull, font, x -> cs.setFont(x, fontSize));
 			//
 			cs.newLineAtOffset(i * size + (size - getTextWidth(
 					//
