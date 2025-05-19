@@ -95,6 +95,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.MutablePairUtil;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.commons.validator.routines.UrlValidatorUtil;
+import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -953,6 +954,39 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		Util.setText(tfImageUrlStateCode, null);
 		//
+		Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(cs), x -> FieldUtils.getAllFieldsList(x), null)),
+				x -> Objects.equals(Util.getName(x), "resources")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Object object = testAndApply((a, b) -> a != null, cs,
+				testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null),
+				(a, b) -> Narcissus.getField(a, b), null);
+		//
+		testAndRunThrows(
+				IterableUtils.size(fs = Util.toList(Util.filter(
+						Util.stream(testAndApply(Objects::nonNull, Util.getClass(object),
+								x -> FieldUtils.getAllFieldsList(x), null)),
+						x -> Objects.equals(Util.getName(x), "resources")))) > 1,
+				() -> {
+					//
+					throw new IllegalStateException();
+					//
+				});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		final COSDictionary cosDictionary = Util.cast(COSDictionary.class,
+				testAndApply((a, b) -> a != null, object, f, (a, b) -> Narcissus.getField(a, b), null));
+		//
+		final int cosDictionarySize = cosDictionary != null ? cosDictionary.size() : 0;
+		//
 		try (final InputStream is = Util.getInputStream(urlConnection)) {
 			//
 			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
@@ -961,8 +995,6 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				//
 				addPDImageXObject(PDImageXObject.createFromByteArray(pdDocument, bs, null), pdRectangle, cs, pageWidth,
 						size, textHeight);
-				//
-				return;
 				//
 			} // if
 				//
@@ -975,6 +1007,12 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			} // if
 				//
 		} // try
+			//
+		if (cosDictionary != null && cosDictionary.size() != cosDictionarySize) {
+			//
+			return;
+			//
+		} // if
 			//
 		File file = ObjectMap.getObject(objectMap, File.class);
 		//
