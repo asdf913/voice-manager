@@ -22,7 +22,9 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -166,7 +168,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	@Note("Image URL")
 	private JTextComponent tfImageUrl = null;
 
-	private JTextComponent tfImageFile = null;
+	private JTextComponent tfImageFile, tfImageUrlStateCode = null;
 
 	@Note("Speech Language Code")
 	private JTextComponent tfSpeechLanguageCode = null;
@@ -357,11 +359,13 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		final int width = 356;
 		//
-		panel.add(tfImageUrl = new JTextField(), String.format("wmin %1$s,wmax %1$s,%2$s", width, WRAP));
+		panel.add(tfImageUrl = new JTextField(), String.format("wmin %1$s,wmax %1$s", width - 34));
+		//
+		panel.add(tfImageUrlStateCode = new JTextField(), String.format("wmin %1$s,%2$s", 27, WRAP));
 		//
 		panel.add(new JLabel("File"));
 		//
-		panel.add(tfImageFile = new JTextField(), String.format("wmin %1$s,wmax %1$s", width));
+		panel.add(tfImageFile = new JTextField(), String.format("wmin %1$s,wmax %1$s,span %2$s", width, 2));
 		//
 		panel.add(btnImageFile = new JButton("Select"));
 		//
@@ -375,7 +379,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		Util.setEnabled(btnExecute, Util.getSelectedItem(cbmVoiceId) != null);
 		//
-		Util.forEach(Stream.of(tfSpeechLanguageCode, tfSpeechLanguageName, tfImageFile),
+		Util.forEach(Stream.of(tfSpeechLanguageCode, tfSpeechLanguageName, tfImageFile, tfImageUrlStateCode),
 				x -> Util.setEditable(x, false));
 		//
 	}
@@ -714,6 +718,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 					ObjectMap.setObject(objectMap, File.class,
 							testAndApply(Objects::nonNull, Util.getText(tfImageFile), File::new, null));
 					//
+					ObjectMap.setObject(objectMap, VoiceManagerImageToPdfPanel.class, this);
+					//
 					addImage(objectMap, pageWidth, size, getTextHeight(font, fontSize, size));
 					//
 				} catch (final IOException | NoSuchMethodException e) {
@@ -932,7 +938,18 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		final PDPageContentStream cs = ObjectMap.getObject(objectMap, PDPageContentStream.class);
 		//
-		try (final InputStream is = Util.openStream(ObjectMap.getObject(objectMap, URL.class))) {
+		final URLConnection urlConnection = openConnection(ObjectMap.getObject(objectMap, URL.class));
+		//
+		final VoiceManagerImageToPdfPanel voiceManagerImageToPdfPanel = ObjectMap.getObject(objectMap,
+				VoiceManagerImageToPdfPanel.class);
+		//
+		final JTextComponent tfImageUrlStateCode = voiceManagerImageToPdfPanel != null
+				? voiceManagerImageToPdfPanel.tfImageUrlStateCode
+				: null;
+		//
+		Util.setText(tfImageUrlStateCode, null);
+		//
+		try (final InputStream is = getInputStream(urlConnection)) {
 			//
 			final byte[] bs = testAndApply(Objects::nonNull, is, IOUtils::toByteArray, null);
 			//
@@ -942,6 +959,14 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 						size, textHeight);
 				//
 				return;
+				//
+			} // if
+				//
+		} finally {
+			//
+			if (urlConnection instanceof HttpURLConnection httpURLConnection) {
+				//
+				Util.setText(tfImageUrlStateCode, Integer.toString(httpURLConnection.getResponseCode()));
 				//
 			} // if
 				//
@@ -970,6 +995,39 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 		} // if
 			//
+	}
+
+	private static InputStream getInputStream(final URLConnection instance) throws IOException {
+		return instance != null ? instance.getInputStream() : null;
+	}
+
+	private static URLConnection openConnection(final URL instance) throws IOException {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final List<Field> fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(URL.class)),
+				f -> Objects.equals(Util.getName(f), "handler")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f != null && Narcissus.getField(instance, f) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return instance.openConnection();
+		//
 	}
 
 	private static void addPDImageXObject(final PDImageXObject pdImageXObject, final PDRectangle pdRectangle,

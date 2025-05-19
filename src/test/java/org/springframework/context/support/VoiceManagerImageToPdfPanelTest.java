@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,7 +65,7 @@ class VoiceManagerImageToPdfPanelTest {
 	private static Method METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_IS_PD_IMAGE, METHOD_GET_ANNOTATIONS,
 			METHOD_GET_MESSAGE, METHOD_WRITE_VOICE_TO_FILE, METHOD_SAVE, METHOD_CREATE_PD_EMBEDDED_FILE,
 			METHOD_TEST_AND_ACCEPT, METHOD_GET_FONT_NAME_3, METHOD_GET_FONT_NAME_2, METHOD_GET_INDEX,
-			METHOD_GET_ABSOLUTE_FILE, METHOD_ADD_IMAGE = null;
+			METHOD_GET_ABSOLUTE_FILE, METHOD_ADD_IMAGE, METHOD_OPEN_CONNECTION = null;
 
 	private static Class<?> CLASS_OBJECT_MAP = null;
 
@@ -109,6 +110,8 @@ class VoiceManagerImageToPdfPanelTest {
 				CLASS_OBJECT_MAP = Util
 						.forName("org.springframework.context.support.VoiceManagerImageToPdfPanel$ObjectMap"),
 				Float.TYPE, Float.TYPE, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_OPEN_CONNECTION = clz.getDeclaredMethod("openConnection", URL.class)).setAccessible(true);
 		//
 	}
 
@@ -722,8 +725,8 @@ class VoiceManagerImageToPdfPanelTest {
 			//
 		final Method m = IterableUtils.size(ms) == 1 ? IterableUtils.get(ms, 0) : null;
 		//
-		Util.forEach(Stream.of(PDDocument.class, PDRectangle.class, PDPageContentStream.class, URL.class, File.class),
-				clz -> {
+		Util.forEach(Stream.of(PDDocument.class, PDRectangle.class, PDPageContentStream.class, URL.class, File.class,
+				VoiceManagerImageToPdfPanel.class), clz -> {
 					//
 					if (!Util.isStatic(m)) {
 						//
@@ -741,6 +744,27 @@ class VoiceManagerImageToPdfPanelTest {
 			throws Throwable {
 		try {
 			METHOD_ADD_IMAGE.invoke(null, objectMap, pageWidth, size, textHeight);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testOpenConnection() throws Throwable {
+		//
+		Assertions.assertNull(openConnection(Util.cast(URL.class, Narcissus.allocateInstance(URL.class))));
+		//
+	}
+
+	private static URLConnection openConnection(final URL instance) throws Throwable {
+		try {
+			final Object obj = METHOD_OPEN_CONNECTION.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof URLConnection) {
+				return (URLConnection) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
