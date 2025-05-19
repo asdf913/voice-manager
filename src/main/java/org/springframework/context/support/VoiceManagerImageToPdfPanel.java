@@ -164,7 +164,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
-	private AbstractButton btnImageUrl = null;
+	private AbstractButton btnImageFile = null;
 
 	private transient ComboBoxModel<String> cbmVoiceId = null;
 
@@ -344,7 +344,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		panel.add(tfImageFile = new JTextField(), String.format("wmin %1$s,wmax %1$s", 356));
 		//
-		panel.add(btnImageUrl = new JButton("Select"));
+		panel.add(btnImageFile = new JButton("Select"));
 		//
 		add(panel, String.format("%1$s,%2$s,span %3$s", WRAP, GROWX, 4));
 		//
@@ -352,7 +352,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		add(btnExecute = new JButton("Execute"));
 		//
-		Util.forEach(Stream.of(btnExecute, btnImageUrl), x -> Util.addActionListener(x, this));
+		Util.forEach(Stream.of(btnExecute, btnImageFile), x -> Util.addActionListener(x, this));
 		//
 		Util.setEnabled(btnExecute, Util.getSelectedItem(cbmVoiceId) != null);
 		//
@@ -658,7 +658,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				//
 			} // try
 				//
-		} else if (Objects.equals(source, btnImageUrl)) {
+		} else if (Objects.equals(source, btnImageFile)) {
 			//
 			testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.exists(x)), getFile(Util.toFile(Path.of("."))),
 					x -> Util.setText(tfImageFile, Util.getAbsolutePath(getAbsoluteFile(x))));
