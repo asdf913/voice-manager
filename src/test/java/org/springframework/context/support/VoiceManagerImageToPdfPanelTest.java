@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +21,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
@@ -34,6 +36,8 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
@@ -60,7 +64,9 @@ class VoiceManagerImageToPdfPanelTest {
 	private static Method METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_IS_PD_IMAGE, METHOD_GET_ANNOTATIONS,
 			METHOD_GET_MESSAGE, METHOD_WRITE_VOICE_TO_FILE, METHOD_SAVE, METHOD_CREATE_PD_EMBEDDED_FILE,
 			METHOD_TEST_AND_ACCEPT, METHOD_GET_FONT_NAME_3, METHOD_GET_FONT_NAME_2, METHOD_GET_INDEX,
-			METHOD_GET_ABSOLUTE_FILE = null;
+			METHOD_GET_ABSOLUTE_FILE, METHOD_ADD_IMAGE = null;
+
+	private static Class<?> CLASS_OBJECT_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -98,6 +104,11 @@ class VoiceManagerImageToPdfPanelTest {
 		(METHOD_GET_INDEX = clz.getDeclaredMethod("getIndex", ListModel.class, Object.class)).setAccessible(true);
 		//
 		(METHOD_GET_ABSOLUTE_FILE = clz.getDeclaredMethod("getAbsoluteFile", File.class)).setAccessible(true);
+		//
+		(METHOD_ADD_IMAGE = clz.getDeclaredMethod("addImage",
+				CLASS_OBJECT_MAP = Util
+						.forName("org.springframework.context.support.VoiceManagerImageToPdfPanel$ObjectMap"),
+				Float.TYPE, Float.TYPE, Integer.TYPE, String.class)).setAccessible(true);
 		//
 	}
 
@@ -688,6 +699,47 @@ class VoiceManagerImageToPdfPanelTest {
 				return (File) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAddImage() {
+		//
+		final Object objectMap = Reflection.newProxy(CLASS_OBJECT_MAP, Util.cast(InvocationHandler.class, Narcissus
+				.allocateInstance(Util.forName("org.springframework.context.support.VoiceManagerImageToPdfPanel$IH"))));
+		//
+		final Iterable<Method> ms = Util.toList(Util.filter(Arrays.stream(Util.getMethods(CLASS_OBJECT_MAP)),
+				m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "setObject"),
+						Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { Class.class, Object.class }))));
+		//
+		if (IterableUtils.size(ms) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Method m = IterableUtils.size(ms) == 1 ? IterableUtils.get(ms, 0) : null;
+		//
+		Util.forEach(Stream.of(PDDocument.class, PDRectangle.class, PDPageContentStream.class, URL.class), clz -> {
+			//
+			if (!Util.isStatic(m)) {
+				//
+				Narcissus.invokeMethod(objectMap, m, clz, null);
+				//
+			} // if
+				//
+		});
+		//
+		Assertions.assertDoesNotThrow(() -> addImage(objectMap, 0, 0, 0, null));
+		//
+	}
+
+	private static void addImage(final Object objectMap, final float pageWidth, final float size, final int textHeight,
+			final String fileAbsolutePath) throws Throwable {
+		try {
+			METHOD_ADD_IMAGE.invoke(null, objectMap, pageWidth, size, textHeight, fileAbsolutePath);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
