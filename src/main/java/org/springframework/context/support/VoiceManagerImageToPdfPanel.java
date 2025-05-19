@@ -981,7 +981,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		final COSDictionary cosDictionary = Util.cast(COSDictionary.class,
 				testAndApply((a, b) -> a != null, object, f, Narcissus::getField, null));
 		//
-		final int cosDictionarySize = cosDictionary != null ? cosDictionary.size() : 0;
+		final int cosDictionarySize = size(cosDictionary);
 		//
 		try (final InputStream is = Util.getInputStream(urlConnection)) {
 			//
@@ -1004,7 +1004,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				//
 		} // try
 			//
-		if (cosDictionary != null && cosDictionary.size() != cosDictionarySize) {
+		if (size(cosDictionary) != cosDictionarySize) {
 			//
 			return;
 			//
@@ -1033,6 +1033,38 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 		} // if
 			//
+	}
+
+	private static int size(final COSDictionary instance) {
+		//
+		if (instance == null) {
+			//
+			return 0;
+			//
+		} // if
+			//
+		final Iterable<Field> fs = Util
+				.toList(Util.filter(
+						Util.stream(testAndApply(Objects::nonNull, Util.getClass(instance),
+								x -> FieldUtils.getAllFieldsList(x), null)),
+						x -> Objects.equals(Util.getName(x), "items")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f != null && Narcissus.getField(instance, f) == null) {
+			//
+			return 0;
+			//
+		} // if
+			//
+		return instance.size();
+		//
 	}
 
 	private static void addPDImageXObject(final PDImageXObject pdImageXObject, final PDRectangle pdRectangle,

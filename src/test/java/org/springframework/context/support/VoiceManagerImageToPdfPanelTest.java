@@ -34,6 +34,7 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -64,7 +65,7 @@ class VoiceManagerImageToPdfPanelTest {
 	private static Method METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_IS_PD_IMAGE, METHOD_GET_ANNOTATIONS,
 			METHOD_GET_MESSAGE, METHOD_WRITE_VOICE_TO_FILE, METHOD_SAVE, METHOD_CREATE_PD_EMBEDDED_FILE,
 			METHOD_TEST_AND_ACCEPT, METHOD_GET_FONT_NAME_3, METHOD_GET_FONT_NAME_2, METHOD_GET_INDEX,
-			METHOD_GET_ABSOLUTE_FILE, METHOD_ADD_IMAGE = null;
+			METHOD_GET_ABSOLUTE_FILE, METHOD_ADD_IMAGE, METHOD_SIZE = null;
 
 	private static Class<?> CLASS_OBJECT_MAP = null;
 
@@ -109,6 +110,8 @@ class VoiceManagerImageToPdfPanelTest {
 				CLASS_OBJECT_MAP = Util
 						.forName("org.springframework.context.support.VoiceManagerImageToPdfPanel$ObjectMap"),
 				Float.TYPE, Float.TYPE, Integer.TYPE)).setAccessible(true);
+		//
+		(METHOD_SIZE = clz.getDeclaredMethod("size", COSDictionary.class)).setAccessible(true);
 		//
 	}
 
@@ -746,4 +749,23 @@ class VoiceManagerImageToPdfPanelTest {
 		}
 	}
 
+	@Test
+	void testSize() throws Throwable {
+		//
+		Assertions.assertEquals(0,
+				size(Util.cast(COSDictionary.class, Narcissus.allocateInstance(COSDictionary.class))));
+		//
+	}
+
+	private static int size(final COSDictionary instance) throws Throwable {
+		try {
+			final Object obj = METHOD_SIZE.invoke(null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
 }
