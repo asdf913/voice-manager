@@ -897,7 +897,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	}
 
 	private static void addPDImageXObject(final PDImageXObject pdImageXObject, final PDRectangle pdRectangle,
-			final PDPageContentStream cs, final float pageWidth, final float size, final float textHeight)
+			@Nullable final PDPageContentStream cs, final float pageWidth, final float size, final float textHeight)
 			throws IOException {
 		//
 		final float imageWidth = getWidth(pdImageXObject);
