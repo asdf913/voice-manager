@@ -238,8 +238,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 
 	private static final String COMPONENT = "component";
 
-	private static final String HANDLER = "handler";
-
 	private static final String KEY_NOT_FOUND_MESSAGE = "Key [%1$s] Not Found";
 
 	private static final String SHA_512 = "SHA-512";
