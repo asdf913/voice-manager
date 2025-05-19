@@ -915,7 +915,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			return instance != null ? instance.getObject(key) : null;
 		}
 
-		static <T> void setObject(final ObjectMap instance, final Class<T> key, final T value) {
+		static <T> void setObject(@Nullable final ObjectMap instance, final Class<T> key, final T value) {
 			if (instance != null) {
 				instance.setObject(key, value);
 			}
