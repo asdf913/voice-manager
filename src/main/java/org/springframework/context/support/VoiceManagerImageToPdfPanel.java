@@ -1035,7 +1035,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 	}
 
-	private static int size(final COSDictionary instance) {
+	private static int size(@Nullable final COSDictionary instance) {
 		//
 		if (instance == null) {
 			//
