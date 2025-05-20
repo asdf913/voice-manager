@@ -284,7 +284,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		add(new JLabel("Font"));
 		//
 		add(tfFontSize = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
-				"org.springframework.context.support.VoiceManagerImageToPdfPanel.tfFontSize")),
+				"org.springframework.context.support.VoiceManagerImageToPdfPanel.fontSize")),
 				String.format("wmin %1$s", 30));
 		//
 		final FontName[] fontNames = FontName.values();
