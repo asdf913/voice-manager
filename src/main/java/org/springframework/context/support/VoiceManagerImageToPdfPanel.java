@@ -90,6 +90,7 @@ import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.MutablePairUtil;
@@ -172,7 +173,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	@Note("Image URL State Code")
 	private JTextComponent tfImageUrlStateCode = null;
 
-	private JTextComponent tfImageFile = null;
+	private JTextComponent tfImageFile, tfFontSize = null;
 
 	@Note("Speech Language Code")
 	private JTextComponent tfSpeechLanguageCode = null;
@@ -279,10 +280,12 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		add(new JLabel("Font"));
 		//
+		add(tfFontSize = new JTextField(), String.format("wmin %1$s", 30));// TODO
+		//
 		final FontName[] fontNames = FontName.values();
 		//
 		add(new JComboBox<>(cbmFontName = new DefaultComboBoxModel<>(ArrayUtils.insert(0, fontNames, (FontName) null))),
-				String.format("span %1$s,%2$s", 2, WRAP));
+				String.format("span %1$s,%2$s", 3, WRAP));
 		//
 		final Integer index = getIndex(cbmFontName,
 				getFontName("org.springframework.context.support.VoiceManagerImageToPdfPanel.fontName",
@@ -318,7 +321,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 			jcbVoiceId.addItemListener(this);
 			//
-			add(jcbVoiceId);
+			add(jcbVoiceId, String.format("span %1$s", 2));
 			//
 			testAndAccept(PropertyResolverUtil::containsProperty, propertyResolver,
 					"org.springframework.context.support.VoiceManagerImageToPdfPanel.voiceId", (a, b) -> {
@@ -373,11 +376,11 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		panel.add(btnImageFile = new JButton("Select"));
 		//
-		add(panel, String.format("%1$s,%2$s,span %3$s", WRAP, GROWX, 4));
+		add(panel, String.format("%1$s,%2$s,span %3$s", WRAP, GROWX, 5));
 		//
 		add(new JLabel());
 		//
-		add(btnExecute = new JButton("Execute"));
+		add(btnExecute = new JButton("Execute"), String.format("span %1$s", 2));
 		//
 		Util.forEach(Stream.of(btnExecute, btnImageFile), x -> Util.addActionListener(x, this));
 		//
@@ -703,7 +706,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 					final PDFont font = new PDType1Font(ObjectUtils.defaultIfNull(
 							Util.cast(FontName.class, Util.getSelectedItem(cbmFontName)), FontName.HELVETICA));
 					//
-					final float fontSize = 14;// TODO
+					final float fontSize = NumberUtils.toFloat(Util.getText(tfFontSize), 14);
 					//
 					addText(cs, font, fontSize, pdPage, size);
 					//
