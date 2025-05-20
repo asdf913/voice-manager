@@ -1043,11 +1043,10 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 		} // if
 			//
-		final Iterable<Field> fs = Util
-				.toList(Util.filter(
-						Util.stream(testAndApply(Objects::nonNull, Util.getClass(instance),
-								x -> FieldUtils.getAllFieldsList(x), null)),
-						x -> Objects.equals(Util.getName(x), "items")));
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				x -> Objects.equals(Util.getName(x), "items")));
 		//
 		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
 			//
