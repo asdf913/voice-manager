@@ -64,8 +64,8 @@ class VoiceManagerImageToPdfPanelTest {
 
 	private static Method METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_IS_PD_IMAGE, METHOD_GET_ANNOTATIONS,
 			METHOD_GET_MESSAGE, METHOD_WRITE_VOICE_TO_FILE, METHOD_SAVE, METHOD_CREATE_PD_EMBEDDED_FILE,
-			METHOD_TEST_AND_ACCEPT, METHOD_GET_FONT_NAME_3, METHOD_GET_FONT_NAME_2, METHOD_GET_INDEX,
-			METHOD_GET_ABSOLUTE_FILE, METHOD_ADD_IMAGE, METHOD_SIZE = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_GET_FONT_NAME_3, METHOD_GET_FONT_NAME_2, METHOD_GET_INDEX, METHOD_ADD_IMAGE,
+			METHOD_SIZE = null;
 
 	private static Class<?> CLASS_OBJECT_MAP = null;
 
@@ -103,8 +103,6 @@ class VoiceManagerImageToPdfPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_INDEX = clz.getDeclaredMethod("getIndex", ListModel.class, Object.class)).setAccessible(true);
-		//
-		(METHOD_GET_ABSOLUTE_FILE = clz.getDeclaredMethod("getAbsoluteFile", File.class)).setAccessible(true);
 		//
 		(METHOD_ADD_IMAGE = clz.getDeclaredMethod("addImage",
 				CLASS_OBJECT_MAP = Util
@@ -679,27 +677,6 @@ class VoiceManagerImageToPdfPanelTest {
 				return null;
 			} else if (obj instanceof Integer) {
 				return (Integer) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetAbsoluteFile() throws Throwable {
-		//
-		Assertions.assertNotNull(getAbsoluteFile(Util.toFile(Path.of("."))));
-		//
-	}
-
-	private static File getAbsoluteFile(final File instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_ABSOLUTE_FILE.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof File) {
-				return (File) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

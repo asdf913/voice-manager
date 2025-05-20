@@ -2129,7 +2129,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			if (jfc != null && jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//
-				final File file = getAbsoluteFile(jfc.getSelectedFile());
+				final File file = Util.getAbsoluteFile(jfc.getSelectedFile());
 				//
 				Collection<Object> allowedFileType = null;
 				//
@@ -2358,7 +2358,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			if (jfc != null && jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//
-				final File file = getAbsoluteFile(jfc.getSelectedFile());
+				final File file = Util.getAbsoluteFile(jfc.getSelectedFile());
 				//
 				try {
 					//
@@ -2975,11 +2975,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private static int length(@Nullable final Object[] instance) {
 		return instance != null ? instance.length : 0;
-	}
-
-	@Nullable
-	private static File getAbsoluteFile(@Nullable final File instance) {
-		return instance != null ? instance.getAbsoluteFile() : null;
 	}
 
 	private static void setText(final String string, final JTextComponent a, final JTextComponent b,

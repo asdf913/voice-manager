@@ -752,15 +752,10 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		} else if (Objects.equals(source, btnImageFile)) {
 			//
 			testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.exists(x)), getFile(Util.toFile(Path.of("."))),
-					x -> Util.setText(tfImageFile, Util.getAbsolutePath(getAbsoluteFile(x))));
+					x -> Util.setText(tfImageFile, Util.getAbsolutePath(Util.getAbsoluteFile(x))));
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static File getAbsoluteFile(@Nullable final File instance) {
-		return instance != null ? instance.getAbsoluteFile() : null;
 	}
 
 	@Nullable

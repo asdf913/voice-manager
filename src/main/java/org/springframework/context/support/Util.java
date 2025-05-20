@@ -450,6 +450,10 @@ public abstract class Util {
 		//
 	}
 
+	static File getAbsoluteFile(final File instance) {
+		return instance != null ? instance.getAbsoluteFile() : null;
+	}
+
 	static boolean contains(@Nullable final Collection<?> items, @Nullable final Object item) {
 		return items != null && items.contains(item);
 	}
