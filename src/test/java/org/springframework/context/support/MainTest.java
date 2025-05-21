@@ -2,7 +2,6 @@ package org.springframework.context.support;
 
 import java.awt.Component;
 import java.awt.GraphicsEnvironment;
-import java.awt.HeadlessException;
 import java.awt.Window;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -42,12 +41,13 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.oxbow.swingbits.util.OperatingSystem;
+import org.oxbow.swingbits.util.OperatingSystemUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -213,18 +213,17 @@ class MainTest {
 			//
 		} // if
 			//
-		Assertions.assertThrows(HeadlessException.class, () -> {
+		if (Objects.equals(OperatingSystem.LINUX, OperatingSystemUtil.getOperatingSystem())) {
 			//
-			try {
-				//
-				Main.main(null);
-				//
-			} catch (final Exception e) {
-				//
-				throw ExceptionUtils.getRootCause(e);
-				//
-			} // try
-				//
+			Util.put(System.getProperties(), "org.springframework.context.support.SpeechApi.isInstalled",
+					Boolean.toString(false));
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> {
+			//
+			Main.main(null);
+			//
 		});
 		//
 	}

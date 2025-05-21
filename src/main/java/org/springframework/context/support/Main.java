@@ -39,6 +39,7 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.NEW;
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
@@ -48,6 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.MutablePropertyValues;
+import org.springframework.beans.PropertyValue;
 import org.springframework.beans.PropertyValuesUtil;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.ListableBeanFactoryUtil;
@@ -55,6 +57,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionUtil;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactoryUtil;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.ConfigurableApplicationContextUtil;
 import org.springframework.core.env.EnvironmentCapableUtil;
@@ -100,8 +103,26 @@ public class Main {
 			//
 			Field f;
 			//
-			String[] bdns = null;
+			final String[] beanDefinitionNames = ListableBeanFactoryUtil.getBeanDefinitionNames(beanFactory);
 			//
+			BeanDefinition bd = null;
+			//
+			for (int i = 0; beanDefinitionNames != null && i < beanDefinitionNames.length; i++) {
+				//
+				if (GraphicsEnvironment.isHeadless()
+						&& Util.isAssignableFrom(Window.class,
+								Util.forName(BeanDefinitionUtil.getBeanClassName(
+										bd = beanFactory.getBeanDefinition(ArrayUtils.get(beanDefinitionNames, i)))))
+						&& bd instanceof AbstractBeanDefinition abd) {
+					//
+					Util.clear(getPropertyValueList(getPropertyValues(bd)));
+					//
+					abd.setBeanClass(Object.class);
+					//
+				} // if
+					//
+			} // for
+				//
 			for (int i = 0; i < IterableUtils.size(classInfos); i++) {
 				//
 				try {
@@ -122,9 +143,7 @@ public class Main {
 					//
 					try {
 						//
-						addMutablePropertyValues(Util.getAnnotations(f = fs[j]), classUrl,
-								bdns = ObjectUtils.getIfNull(bdns,
-										() -> ListableBeanFactoryUtil.getBeanDefinitionNames(beanFactory)),
+						addMutablePropertyValues(Util.getAnnotations(f = fs[j]), classUrl, beanDefinitionNames,
 								beanFactory, f);
 						//
 					} catch (final NoSuchMethodException e) {
@@ -137,6 +156,14 @@ public class Main {
 					//
 			} // for
 				//
+		}
+
+		private static MutablePropertyValues getPropertyValues(final BeanDefinition instance) {
+			return instance != null ? instance.getPropertyValues() : null;
+		}
+
+		private static List<PropertyValue> getPropertyValueList(final MutablePropertyValues instance) {
+			return instance != null ? instance.getPropertyValueList() : null;
 		}
 
 		private static void addMutablePropertyValues(@Nullable final Annotation[] as, final Class<?> clz,
