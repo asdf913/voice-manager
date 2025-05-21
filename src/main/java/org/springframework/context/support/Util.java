@@ -450,6 +450,7 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	static File getAbsoluteFile(@Nullable final File instance) {
 		return instance != null ? instance.getAbsoluteFile() : null;
 	}
