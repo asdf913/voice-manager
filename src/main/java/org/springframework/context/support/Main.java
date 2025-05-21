@@ -95,14 +95,6 @@ public class Main {
 		@Override
 		protected void postProcessBeanFactory(final ConfigurableListableBeanFactory beanFactory) {
 			//
-			final Class<?> classUrl = Util.forName("org.springframework.beans.factory.URL");
-			//
-			final List<ClassInfo> classInfos = getClassInfoList(classUrl);
-			//
-			Field[] fs = null;
-			//
-			Field f;
-			//
 			final String[] beanDefinitionNames = ListableBeanFactoryUtil.getBeanDefinitionNames(beanFactory);
 			//
 			BeanDefinition bd = null;
@@ -123,6 +115,14 @@ public class Main {
 					//
 			} // for
 				//
+			final Class<?> classUrl = Util.forName("org.springframework.beans.factory.URL");
+			//
+			final List<ClassInfo> classInfos = getClassInfoList(classUrl);
+			//
+			Field[] fs = null;
+			//
+			Field f;
+			//
 			for (int i = 0; i < IterableUtils.size(classInfos); i++) {
 				//
 				try {
