@@ -42,6 +42,7 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -121,8 +122,6 @@ public class Main {
 			//
 			Field[] fs = null;
 			//
-			Field f;
-			//
 			for (int i = 0; i < IterableUtils.size(classInfos); i++) {
 				//
 				try {
@@ -143,8 +142,8 @@ public class Main {
 					//
 					try {
 						//
-						addMutablePropertyValues(Util.getAnnotations(f = fs[j]), classUrl, beanDefinitionNames,
-								beanFactory, f);
+						FailableConsumerUtil.accept(x -> addMutablePropertyValues(Util.getAnnotations(x), classUrl,
+								beanDefinitionNames, beanFactory, x), fs[j]);
 						//
 					} catch (final NoSuchMethodException e) {
 						//
