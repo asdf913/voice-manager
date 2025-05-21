@@ -157,10 +157,12 @@ public class Main {
 				//
 		}
 
+		@Nullable
 		private static MutablePropertyValues getPropertyValues(@Nullable final BeanDefinition instance) {
 			return instance != null ? instance.getPropertyValues() : null;
 		}
 
+		@Nullable
 		private static List<PropertyValue> getPropertyValueList(@Nullable final MutablePropertyValues instance) {
 			return instance != null ? instance.getPropertyValueList() : null;
 		}
