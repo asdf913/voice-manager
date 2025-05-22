@@ -176,7 +176,10 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	@Note("Image File")
 	private JTextComponent tfImageFile = null;
 
-	private JTextComponent tfFontSize, tfOutputFile = null;
+	@Note("Font Size")
+	private JTextComponent tfFontSize = null;
+
+	private JTextComponent tfOutputFile = null;
 
 	@Note("Speech Language Code")
 	private JTextComponent tfSpeechLanguageCode = null;
