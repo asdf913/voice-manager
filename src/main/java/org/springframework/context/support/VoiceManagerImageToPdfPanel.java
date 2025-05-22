@@ -176,7 +176,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	@Note("Image File")
 	private JTextComponent tfImageFile = null;
 
-	private JTextComponent tfFontSize = null;
+	private JTextComponent tfFontSize, tfOutputFile = null;
 
 	@Note("Speech Language Code")
 	private JTextComponent tfSpeechLanguageCode = null;
@@ -385,13 +385,18 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		add(new JLabel());
 		//
-		add(btnExecute = new JButton("Execute"), String.format("span %1$s", 2));
+		add(btnExecute = new JButton("Execute"), String.format("span %1$s,%2$s", 2, WRAP));
+		//
+		add(new JLabel("Output"));
+		//
+		add(tfOutputFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, 4));
 		//
 		Util.forEach(Stream.of(btnExecute, btnImageFile), x -> Util.addActionListener(x, this));
 		//
 		Util.setEnabled(btnExecute, Util.getSelectedItem(cbmVoiceId) != null);
 		//
-		Util.forEach(Stream.of(tfSpeechLanguageCode, tfSpeechLanguageName, tfImageFile, tfImageUrlStateCode),
+		Util.forEach(
+				Stream.of(tfSpeechLanguageCode, tfSpeechLanguageName, tfImageFile, tfImageUrlStateCode, tfOutputFile),
 				x -> Util.setEditable(x, false));
 		//
 	}
@@ -627,6 +632,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 			try (final PDDocument pdDocument = new PDDocument()) {
 				//
+				Util.setText(tfOutputFile, null);
+				//
 				final PDRectangle pdRectangle = PDRectangle.A4;
 				//
 				final PDPage pdPage = new PDPage(pdRectangle);
@@ -740,8 +747,13 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 					//
 				} // try
 					//
-				testAndRunThrows(!isTestMode, () -> save(pdDocument, Util.toFile(Path.of("temp.pdf"))// TODO
-						, e -> LoggerUtil.error(LOG, getMessage(e), e)));
+				final File file = Util.toFile(
+						Path.of(StringUtils.join(StringUtils.defaultIfBlank(Util.getText(tfText), "temp"), ".pdf")));
+				//
+				testAndRunThrows(!isTestMode,
+						() -> save(pdDocument, file, e -> LoggerUtil.error(LOG, getMessage(e), e)));
+				//
+				Util.setText(tfOutputFile, Util.getAbsolutePath(file));
 				//
 			} catch (final IOException ioe) {
 				//
