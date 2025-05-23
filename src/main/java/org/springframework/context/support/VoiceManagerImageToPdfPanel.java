@@ -700,7 +700,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				//
 				if (voiceId == null) {
 					//
-					testAndRunThrows(!GraphicsEnvironment.isHeadless() && !isTestMode(),
+					testAndRunThrows(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 							() -> JOptionPane.showMessageDialog(null, "Please select a voice"));
 					//
 					return;
