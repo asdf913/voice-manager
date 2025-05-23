@@ -1,5 +1,8 @@
 package org.springframework.context.support;
 
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -65,7 +68,7 @@ class VoiceManagerImageToPdfPanelTest {
 	private static Method METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_IS_PD_IMAGE, METHOD_GET_ANNOTATIONS,
 			METHOD_GET_MESSAGE, METHOD_WRITE_VOICE_TO_FILE, METHOD_SAVE, METHOD_CREATE_PD_EMBEDDED_FILE,
 			METHOD_TEST_AND_ACCEPT, METHOD_GET_FONT_NAME_3, METHOD_GET_FONT_NAME_2, METHOD_GET_INDEX, METHOD_ADD_IMAGE,
-			METHOD_SIZE = null;
+			METHOD_SIZE, METHOD_SET_CONTENTS = null;
 
 	private static Class<?> CLASS_OBJECT_MAP = null;
 
@@ -110,6 +113,9 @@ class VoiceManagerImageToPdfPanelTest {
 				Float.TYPE, Float.TYPE, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_SIZE = clz.getDeclaredMethod("size", COSDictionary.class)).setAccessible(true);
+		//
+		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
+				ClipboardOwner.class)).setAccessible(true);
 		//
 	}
 
@@ -751,4 +757,22 @@ class VoiceManagerImageToPdfPanelTest {
 			throw e.getTargetException();
 		}
 	}
+
+	@Test
+	void testSetContents() {
+		//
+		Assertions.assertDoesNotThrow(
+				() -> setContents(Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class)), null, null));
+		//
+	}
+
+	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner)
+			throws Throwable {
+		try {
+			METHOD_SET_CONTENTS.invoke(null, instance, contents, owner);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 }

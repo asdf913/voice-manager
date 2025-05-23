@@ -7,7 +7,9 @@ import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -796,18 +798,21 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 			final Toolkit toolkit = Toolkit.getDefaultToolkit();
 			//
-			final Clipboard clipboard = toolkit != null && !GraphicsEnvironment.isHeadless()
-					? toolkit.getSystemClipboard()
-					: null;
-			//
-			if (clipboard != null && !isTestMode()) {
+			if (!isTestMode()) {
 				//
-				clipboard.setContents(new StringSelection(Util.getText(tfOutputFile)), null);
+				setContents(toolkit != null && !GraphicsEnvironment.isHeadless() ? toolkit.getSystemClipboard() : null,
+						new StringSelection(Util.getText(tfOutputFile)), null);
 				//
 			} // if
 				//
 		} // if
 			//
+	}
+
+	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner) {
+		if (instance != null) {
+			instance.setContents(contents, owner);
+		}
 	}
 
 	@Nullable
