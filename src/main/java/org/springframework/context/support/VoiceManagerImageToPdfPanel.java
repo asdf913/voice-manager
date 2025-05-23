@@ -811,7 +811,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 	}
 
-	private static <T, R> R testAndGet(final boolean condition, final Supplier<R> supplierTrue,
+	private static <R> R testAndGet(final boolean condition, final Supplier<R> supplierTrue,
 			final Supplier<R> supplierFalse) {
 		return condition ? get(supplierTrue) : get(supplierFalse);
 	}
