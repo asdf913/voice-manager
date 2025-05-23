@@ -797,12 +797,12 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 		} else if (Objects.equals(source, btnCopyOutputFilePath)) {
 			//
-			testAndRunThrows(!isTestMode(), () -> {
-				//
-				setContents(!GraphicsEnvironment.isHeadless() ? getSystemClipboard(Toolkit.getDefaultToolkit()) : null,
-						new StringSelection(Util.getText(tfOutputFile)), null);
-				//
-			});
+			testAndRunThrows(!isTestMode(), () ->
+			//
+			setContents(!GraphicsEnvironment.isHeadless() ? getSystemClipboard(Toolkit.getDefaultToolkit()) : null,
+					new StringSelection(Util.getText(tfOutputFile)), null)
+			//
+			);
 			//
 		} // if
 			//
