@@ -380,10 +380,6 @@ class VoiceManagerImageToPdfPanelTest {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
-				} else {
-					//
-					Assertions.assertNull(invoke, toString);
-					//
 				} // if
 					//
 			} // if

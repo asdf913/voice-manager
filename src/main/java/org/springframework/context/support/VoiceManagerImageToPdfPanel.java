@@ -796,7 +796,17 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.exists(x)), getFile(Util.toFile(Path.of("."))),
 					x -> Util.setText(tfImageFile, Util.getAbsolutePath(Util.getAbsoluteFile(x))));
 			//
-		} else if (Objects.equals(source, btnCopyOutputFilePath)) {
+		} else if (actionPerformed(source)) {
+			//
+			return;
+			//
+		} // if
+			//
+	}
+
+	private boolean actionPerformed(final Object source) {
+		//
+		if (Objects.equals(source, btnCopyOutputFilePath)) {
 			//
 			testAndRunThrows(!isTestMode(), () ->
 			//
@@ -806,8 +816,12 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 			);
 			//
+			return true;
+			//
 		} // if
 			//
+		return false;
+		//
 	}
 
 	private static <R> R testAndGet(final boolean condition, final Supplier<R> supplierTrue,
