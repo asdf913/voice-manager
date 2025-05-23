@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import javax.imageio.ImageIO;
@@ -69,7 +70,7 @@ class VoiceManagerImageToPdfPanelTest {
 	private static Method METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_IS_PD_IMAGE, METHOD_GET_ANNOTATIONS,
 			METHOD_GET_MESSAGE, METHOD_WRITE_VOICE_TO_FILE, METHOD_SAVE, METHOD_CREATE_PD_EMBEDDED_FILE,
 			METHOD_TEST_AND_ACCEPT, METHOD_GET_FONT_NAME_3, METHOD_GET_FONT_NAME_2, METHOD_GET_INDEX, METHOD_ADD_IMAGE,
-			METHOD_SIZE, METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD = null;
+			METHOD_SIZE, METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_TEST_AND_GET = null;
 
 	private static Class<?> CLASS_OBJECT_MAP = null;
 
@@ -119,6 +120,9 @@ class VoiceManagerImageToPdfPanelTest {
 				ClipboardOwner.class)).setAccessible(true);
 		//
 		(METHOD_GET_SYSTEM_CLIPBOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_GET = clz.getDeclaredMethod("testAndGet", Boolean.TYPE, Supplier.class, Supplier.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -798,6 +802,22 @@ class VoiceManagerImageToPdfPanelTest {
 				return (Clipboard) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndGet() throws Throwable {
+		//
+		Assertions.assertNull(testAndGet(false, null, () -> null));
+		//
+	}
+
+	private static <R> R testAndGet(final boolean condition, final Supplier<R> supplierTrue,
+			final Supplier<R> supplierFalse) throws Throwable {
+		try {
+			return (R) METHOD_TEST_AND_GET.invoke(null, condition, supplierTrue, supplierFalse);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

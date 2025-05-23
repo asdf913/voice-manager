@@ -44,7 +44,9 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -799,13 +801,23 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 			testAndRunThrows(!isTestMode(), () ->
 			//
-			setContents(!GraphicsEnvironment.isHeadless() ? getSystemClipboard(Toolkit.getDefaultToolkit()) : null,
+			setContents(testAndGet(!GraphicsEnvironment.isHeadless(),
+					() -> getSystemClipboard(Toolkit.getDefaultToolkit()), null),
 					new StringSelection(Util.getText(tfOutputFile)), null)
 			//
 			);
 			//
 		} // if
 			//
+	}
+
+	private static <T, R> R testAndGet(final boolean condition, final Supplier<R> supplierTrue,
+			final Supplier<R> supplierFalse) {
+		return condition ? get(supplierTrue) : get(supplierFalse);
+	}
+
+	private static <T> T get(final Supplier<T> instance) {
+		return instance != null ? instance.get() : null;
 	}
 
 	@Nullable
