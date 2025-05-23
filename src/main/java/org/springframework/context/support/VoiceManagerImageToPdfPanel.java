@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.GraphicsEnvironment;
+import java.awt.HeadlessException;
 import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -796,17 +797,19 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 		} else if (Objects.equals(source, btnCopyOutputFilePath)) {
 			//
-			final Toolkit toolkit = Toolkit.getDefaultToolkit();
-			//
 			if (!isTestMode()) {
 				//
-				setContents(toolkit != null && !GraphicsEnvironment.isHeadless() ? toolkit.getSystemClipboard() : null,
+				setContents(!GraphicsEnvironment.isHeadless() ? getSystemClipboard(Toolkit.getDefaultToolkit()) : null,
 						new StringSelection(Util.getText(tfOutputFile)), null);
 				//
 			} // if
 				//
 		} // if
 			//
+	}
+
+	private static Clipboard getSystemClipboard(final Toolkit instance) throws HeadlessException {
+		return instance != null ? instance.getSystemClipboard() : null;
 	}
 
 	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,

@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.Transferable;
@@ -68,7 +69,7 @@ class VoiceManagerImageToPdfPanelTest {
 	private static Method METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_IS_PD_IMAGE, METHOD_GET_ANNOTATIONS,
 			METHOD_GET_MESSAGE, METHOD_WRITE_VOICE_TO_FILE, METHOD_SAVE, METHOD_CREATE_PD_EMBEDDED_FILE,
 			METHOD_TEST_AND_ACCEPT, METHOD_GET_FONT_NAME_3, METHOD_GET_FONT_NAME_2, METHOD_GET_INDEX, METHOD_ADD_IMAGE,
-			METHOD_SIZE, METHOD_SET_CONTENTS = null;
+			METHOD_SIZE, METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD = null;
 
 	private static Class<?> CLASS_OBJECT_MAP = null;
 
@@ -116,6 +117,8 @@ class VoiceManagerImageToPdfPanelTest {
 		//
 		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
 				ClipboardOwner.class)).setAccessible(true);
+		//
+		(METHOD_GET_SYSTEM_CLIPBOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
 		//
 	}
 
@@ -222,6 +225,14 @@ class VoiceManagerImageToPdfPanelTest {
 					//
 				return null;
 				//
+			} else if (self instanceof Toolkit) {
+				//
+				if (Objects.equals(methodName, "getSystemClipboard")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -770,6 +781,27 @@ class VoiceManagerImageToPdfPanelTest {
 			throws Throwable {
 		try {
 			METHOD_SET_CONTENTS.invoke(null, instance, contents, owner);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSystemClipboard() throws Throwable {
+		//
+		Assertions.assertNull(getSystemClipboard(ProxyUtil.createProxy(Toolkit.class, mh)));
+		//
+	}
+
+	private static Clipboard getSystemClipboard(final Toolkit instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SYSTEM_CLIPBOARD.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Clipboard) {
+				return (Clipboard) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
