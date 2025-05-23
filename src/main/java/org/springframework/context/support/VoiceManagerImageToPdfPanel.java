@@ -193,7 +193,10 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
-	private AbstractButton btnImageFile, btnCopyOutputFilePath = null;
+	@Note("Image File")
+	private AbstractButton btnImageFile = null;
+
+	private AbstractButton btnCopyOutputFilePath = null;
 
 	private transient ComboBoxModel<String> cbmVoiceId = null;
 
