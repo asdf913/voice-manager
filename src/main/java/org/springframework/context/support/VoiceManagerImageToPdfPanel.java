@@ -5,6 +5,9 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -190,7 +193,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
-	private AbstractButton btnImageFile = null;
+	private AbstractButton btnImageFile, btnCopyOutputFilePath = null;
 
 	private transient ComboBoxModel<String> cbmVoiceId = null;
 
@@ -359,7 +362,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		add(tfSpeechLanguageName = new JTextField(), String.format("%1$s,width %2$s,span %3$s", WRAP, 230, 2));
 		//
-		final JPanel panel = new JPanel();
+		JPanel panel = new JPanel();
 		//
 		setLayout(panel,
 				ObjectUtils.getIfNull(
@@ -392,9 +395,26 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		add(new JLabel("Output"));
 		//
-		add(tfOutputFile = new JTextField(), String.format("%1$s,span %2$s", GROWX, 4));
+		setLayout(panel = new JPanel(),
+				ObjectUtils.getIfNull(
+						getLayoutManager(ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext),
+								Util.entrySet(
+										ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
+						MigLayout::new));
 		//
-		Util.forEach(Stream.of(btnExecute, btnImageFile), x -> Util.addActionListener(x, this));
+		if (panel.getLayout() instanceof MigLayout migLayout) {
+			//
+			migLayout.setLayoutConstraints("insets 0 0 0 0");
+			//
+		} // if
+			//
+		panel.add(tfOutputFile = new JTextField(), String.format("wmin %1$s", 378));
+		//
+		panel.add(btnCopyOutputFilePath = new JButton("Copy"));
+		//
+		add(panel, String.format("%1$s,span %2$s", GROWX, 4));
+		//
+		Util.forEach(Stream.of(btnExecute, btnImageFile, btnCopyOutputFilePath), x -> Util.addActionListener(x, this));
 		//
 		Util.setEnabled(btnExecute, Util.getSelectedItem(cbmVoiceId) != null);
 		//
@@ -675,7 +695,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				//
 				if (voiceId == null) {
 					//
-					testAndRunThrows(!GraphicsEnvironment.isHeadless(),
+					testAndRunThrows(!GraphicsEnvironment.isHeadless() && !isTestMode(),
 							() -> JOptionPane.showMessageDialog(null, "Please select a voice"));
 					//
 					return;
@@ -769,6 +789,20 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.exists(x)), getFile(Util.toFile(Path.of("."))),
 					x -> Util.setText(tfImageFile, Util.getAbsolutePath(Util.getAbsoluteFile(x))));
 			//
+		} else if (Objects.equals(source, btnCopyOutputFilePath)) {
+			//
+			final Toolkit toolkit = Toolkit.getDefaultToolkit();
+			//
+			final Clipboard clipboard = toolkit != null && !GraphicsEnvironment.isHeadless()
+					? toolkit.getSystemClipboard()
+					: null;
+			//
+			if (clipboard != null && !isTestMode()) {
+				//
+				clipboard.setContents(new StringSelection(Util.getText(tfOutputFile)), null);
+				//
+			} // if
+				//
 		} // if
 			//
 	}

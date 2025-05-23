@@ -260,6 +260,12 @@ class VoiceManagerImageToPdfPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnImageFile, 0, null)));
 		//
+		final AbstractButton btnCopyOutputFilePath = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnCopyOutputFilePath", btnCopyOutputFilePath, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyOutputFilePath, 0, null)));
+		//
 	}
 
 	@Test
