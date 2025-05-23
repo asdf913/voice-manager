@@ -808,7 +808,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 	}
 
-	private static Clipboard getSystemClipboard(final Toolkit instance) throws HeadlessException {
+	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) throws HeadlessException {
 		return instance != null ? instance.getSystemClipboard() : null;
 	}
 
