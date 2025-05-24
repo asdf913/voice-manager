@@ -2044,6 +2044,7 @@ public abstract class Util {
 		}
 	}
 
+	@Nullable
 	static <T> T get(@Nullable final Supplier<T> instance) {
 		return instance != null ? instance.get() : null;
 	}
