@@ -822,12 +822,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 	private static <R> R testAndGet(final boolean condition, final Supplier<R> supplierTrue,
 			final Supplier<R> supplierFalse) {
-		return condition ? get(supplierTrue) : get(supplierFalse);
-	}
-
-	@Nullable
-	private static <T> T get(@Nullable final Supplier<T> instance) {
-		return instance != null ? instance.get() : null;
+		return condition ? Util.get(supplierTrue) : Util.get(supplierFalse);
 	}
 
 	@Nullable

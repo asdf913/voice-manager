@@ -921,8 +921,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		//
 		if (component != null) {
 			//
-			final Double maxPreferredWidth = ObjectUtils.max(getPreferredWidth(component),
-					supplier != null ? supplier.get() : null);
+			final Double maxPreferredWidth = ObjectUtils.max(getPreferredWidth(component), Util.get(supplier));
 			//
 			if (maxPreferredWidth != null) {
 				//

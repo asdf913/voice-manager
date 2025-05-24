@@ -2183,7 +2183,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	@Nullable
 	private static <T> T testAndGet(final boolean b, @Nullable final Supplier<T> supplier) {
-		return b && supplier != null ? supplier.get() : null;
+		return b && supplier != null ? Util.get(supplier) : null;
 	}
 
 	private boolean actionPerformed3(final Object source) {

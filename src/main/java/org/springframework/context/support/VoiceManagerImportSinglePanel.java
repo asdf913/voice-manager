@@ -778,7 +778,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		final Supplier<ComboBoxModel<Boolean>> booleanComboBoxModelSupplier = new BooleanComboBoxModelSupplier(
 				booleans);
 		//
-		add(new JComboBox<>(cbmIsKanji = get(booleanComboBoxModelSupplier)));
+		add(new JComboBox<>(cbmIsKanji = Util.get(booleanComboBoxModelSupplier)));
 		//
 		Util.setSelectedItem(cbmIsKanji,
 				testAndApply(StringUtils::isNotEmpty, PropertyResolverUtil.getProperty(propertyResolver,
@@ -807,7 +807,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		add(new JLabel("常用漢字"));
 		//
-		add(new JComboBox<>(cbmJouYouKanJi = get(booleanComboBoxModelSupplier)),
+		add(new JComboBox<>(cbmJouYouKanJi = Util.get(booleanComboBoxModelSupplier)),
 				String.format("%1$s,span %2$s", WRAP, 1));
 		//
 		Util.setSelectedItem(cbmJouYouKanJi,
@@ -4810,11 +4810,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		return list;
 		//
-	}
-
-	@Nullable
-	private static <T> T get(@Nullable final Supplier<T> instance) {
-		return instance != null ? instance.get() : null;
 	}
 
 	private static <E> void add(@Nullable final List<E> instance, final int index, @Nullable final E element) {

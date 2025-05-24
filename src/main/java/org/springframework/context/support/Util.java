@@ -41,6 +41,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
@@ -2041,6 +2042,10 @@ public abstract class Util {
 		if (instance != null) {
 			instance.addActionListener(actionListener);
 		}
+	}
+
+	static <T> T get(final Supplier<T> instance) {
+		return instance != null ? instance.get() : null;
 	}
 
 }
