@@ -531,8 +531,8 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			//
 			throw new IllegalStateException();
 			//
-		}); // if
-			//
+		});
+		//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
 		if (f != null && Narcissus.getField(instance, f) == null) {
