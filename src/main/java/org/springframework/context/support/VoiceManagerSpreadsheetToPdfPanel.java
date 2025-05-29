@@ -212,7 +212,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		for (int i = 0; i < IterableUtils.size(list); i++) {
 			//
 			if (IterableUtils.get(list, i) instanceof Picture picture
-					&& (pictureData = picture != null ? picture.getPictureData() : null) != null) {
+					&& (pictureData = getPictureData(picture)) != null) {
 				//
 				try (final PDPageContentStream cs = new PDPageContentStream(pdDocument, pdPage)) {
 					//
@@ -299,6 +299,68 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			//
 		} // if
 			//
+	}
+
+	private static PictureData getPictureData(final Picture instance) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Map<String, String> map = new LinkedHashMap<>(Map.of("org.apache.poi.xssf.streaming.SXSSFPicture",
+				"_picture", "org.apache.poi.xssf.usermodel.XSSFPicture", "ctPicture"));
+		//
+		Util.putAll(map,
+				Util.collect(
+						Stream.of("org.apache.poi.hssf.usermodel.HSSFPicture",
+								"org.apache.poi.hssf.usermodel.HSSFObjectData"),
+						Collectors.toMap(Function.identity(), x -> "_optRecord")));
+		//
+		final Iterable<Entry<String, String>> entrySet = Util.entrySet(map);
+		//
+		if (Util.iterator(Util.entrySet(map)) != null) {
+			//
+			final Class<?> clz = Util.getClass(instance);
+			//
+			final String name = Util.getName(Util.getClass(instance));
+			//
+			List<Field> fs = null;
+			//
+			Field f = null;
+			//
+			for (final Entry<String, String> entry : entrySet) {
+				//
+				if (!Objects.equals(name, Util.getKey(entry))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				testAndRunThrows(
+						IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
+								x -> Objects.equals(Util.getName(x), Util.getValue(entry))))) > 1,
+						() -> {
+							//
+							throw new IllegalStateException();
+							//
+						});
+				//
+				if ((f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) != null
+						&& Narcissus.getField(instance, f) == null) {
+					//
+					return null;
+					//
+				} // if
+					//
+					//
+			} // for
+				//
+		} // if
+			//
+		return instance.getPictureData();
+		//
 	}
 
 	private static <E extends Throwable> void testAndRunThrows(final boolean b,

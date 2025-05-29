@@ -15,13 +15,19 @@ import java.util.Objects;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.poi.hssf.usermodel.HSSFObjectData;
+import org.apache.poi.hssf.usermodel.HSSFPicture;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Picture;
+import org.apache.poi.ss.usermodel.PictureData;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.DeferredSXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFPicture;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFChartSheet;
 import org.apache.poi.xssf.usermodel.XSSFDialogsheet;
+import org.apache.poi.xssf.usermodel.XSSFPicture;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.d2ab.function.ObjIntFunction;
 import org.junit.jupiter.api.Assertions;
@@ -36,7 +42,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_HEIGHT, METHOD_GET_DRAWING_PATRIARCH,
-			METHOD_GET_VOICE = null;
+			METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -54,6 +60,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_GET_VOICE = clz.getDeclaredMethod("getVoice", SpeechApi.class, ObjIntFunction.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_PICTURE_DATA = clz.getDeclaredMethod("getPictureData", Picture.class)).setAccessible(true);
 		//
 	}
 
@@ -81,6 +89,14 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				} else if (Objects.equals(name, "getVoiceAttribute")) {
 					//
 					return voiceAttribute;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Picture) {
+				//
+				if (Objects.equals(name, "getPictureData")) {
+					//
+					return null;
 					//
 				} // if
 					//
@@ -349,6 +365,43 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetPictureData() throws Throwable {
+		//
+		Assertions.assertNull(getPictureData(Reflection.newProxy(Picture.class, new IH())));
+		//
+		final Class<?>[] classes = new Class<?>[] { HSSFPicture.class, HSSFObjectData.class, SXSSFPicture.class,
+				XSSFPicture.class };
+		//
+		Class<?> clz = null;
+		//
+		for (int i = 0; classes != null && i < classes.length; i++) {
+			//
+			System.out.println(clz = ArrayUtils.get(classes, i));// TODO
+			//
+			Assertions.assertNull(
+					getPictureData(
+							Util.cast(Picture.class, Narcissus.allocateInstance(clz = ArrayUtils.get(classes, i)))),
+					Util.getName(clz));
+			//
+		} // for
+			//
+	}
+
+	private static PictureData getPictureData(final Picture instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_PICTURE_DATA.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof PictureData) {
+				return (PictureData) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
