@@ -68,14 +68,10 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			//
 			final String name = Util.getName(method);
 			//
-			if (proxy instanceof Sheet) {
+			if (proxy instanceof Sheet && Objects.equals(name, "getDrawingPatriarch")) {
 				//
-				if (Objects.equals(name, "getDrawingPatriarch")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} else if (proxy instanceof SpeechApi) {
 				//
 				if (Objects.equals(name, "getVoiceIds")) {
