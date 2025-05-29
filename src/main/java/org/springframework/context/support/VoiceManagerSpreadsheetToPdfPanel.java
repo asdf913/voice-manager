@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -343,7 +344,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			//
 		if (!isTestMode()) {
 			//
-			System.out.println(Util.getAbsolutePath(file = new File("test.pdf")));// TODO
+			System.out.println(Util.getAbsolutePath(file = Util.toFile(Paths.get("test.pdf"))));// TODO
 			//
 			pdDocument.save(file);
 			//
