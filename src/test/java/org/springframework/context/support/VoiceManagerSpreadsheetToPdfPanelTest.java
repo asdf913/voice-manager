@@ -110,6 +110,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		Class<?>[] parameterTypes = null;
 		//
+		Class<?> parameterType = null;
+		//
 		Collection<Object> collection = null;
 		//
 		String toString = null;
@@ -130,9 +132,13 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			//
 			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
 				//
-				if (Objects.equals(ArrayUtils.get(parameterTypes, j), Float.TYPE)) {
+				if (Objects.equals(parameterType = ArrayUtils.get(parameterTypes, j), Float.TYPE)) {
 					//
 					Util.add(collection, Float.valueOf(0));
+					//
+				} else if (Objects.equals(parameterType, Boolean.TYPE)) {
+					//
+					Util.add(collection, Boolean.FALSE);
 					//
 				} else {
 					//
