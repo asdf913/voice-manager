@@ -3,6 +3,10 @@ package org.springframework.context.support;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -59,9 +63,21 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 
 	private static class Data {
 
-		private String text, voice, contents = null;
+		@Target(ElementType.FIELD)
+		@Retention(RetentionPolicy.RUNTIME)
+		private @interface Note {
+			String value();
+		}
 
-		private Float width, height, x, y = null;
+		@Note("Text")
+		private String text = null;
+
+		private String voice, contents = null;
+
+		@Note("Width")
+		private Float width = null;
+
+		private Float height, x, y = null;
 
 	}
 
