@@ -334,7 +334,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		//
 	}
 
-	private static Double getNumericCellValue(final Cell instance) {
+	private static Double getNumericCellValue(@Nullable final Cell instance) {
 		return instance != null ? Double.valueOf(instance.getNumericCellValue()) : null;
 	}
 
