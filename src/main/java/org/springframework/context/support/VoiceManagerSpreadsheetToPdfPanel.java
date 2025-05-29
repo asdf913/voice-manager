@@ -386,7 +386,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 	}
 
 	@Nullable
-	private static Drawing<?> getDrawingPatriarch(final Sheet instance) {
+	private static Drawing<?> getDrawingPatriarch(@Nullable final Sheet instance) {
 		//
 		if (instance == null) {
 			//
@@ -448,7 +448,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		//
 	}
 
-	private static float getHeight(final PDRectangle instance) {
+	private static float getHeight(@Nullable final PDRectangle instance) {
 		//
 		final List<Field> fs = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)), Arrays::stream, null),
