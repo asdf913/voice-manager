@@ -435,7 +435,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		//
 	}
 
-	private static void setField(final Object instance, final Field field, final Object value) {
+	private static void setField(@Nullable final Object instance, @Nullable final Field field, final Object value) {
 		//
 		if (instance == null || field == null) {
 			//
@@ -456,7 +456,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 	}
 
 	@Nullable
-	private static Map<Integer, String> toMap(final Row row) {
+	private static Map<Integer, String> toMap(@Nullable final Row row) {
 		//
 		Map<Integer, String> map = null;
 		//
