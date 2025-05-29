@@ -13,11 +13,16 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 
@@ -94,7 +99,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			//
 			final Sheet sheet = wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null;
 			//
-			drawingPatriarch = sheet != null ? sheet.getDrawingPatriarch() : null;
+			drawingPatriarch = getDrawingPatriarch(sheet);
 			//
 			final Iterable<Row> rows = testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList,
 					null);
@@ -369,6 +374,67 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			//
 		} // if
 			//
+	}
+
+	private static Drawing<?> getDrawingPatriarch(final Sheet instance) {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Map<String, String> map = new LinkedHashMap<>(
+				Collections.singletonMap("org.apache.poi.hssf.usermodel.HSSFSheet", "_book"));
+		//
+		Util.putAll(map,
+				Util.collect(
+						Stream.of("org.apache.poi.xssf.streaming.SXSSFSheet",
+								"org.apache.poi.xssf.streaming.DeferredSXSSFSheet"),
+						Collectors.toMap(Function.identity(), x -> "_sh")));
+		//
+		Util.putAll(map,
+				Util.collect(Stream.of("org.apache.poi.xssf.usermodel.XSSFDialogsheet",
+						"org.apache.poi.xssf.usermodel.XSSFSheet", "org.apache.poi.xssf.usermodel.XSSFChartSheet"),
+						Collectors.toMap(Function.identity(), x -> "worksheet")));
+		//
+		final Iterable<Entry<String, String>> entrySet = Util.entrySet(map);
+		//
+		if (Util.iterator(Util.entrySet(map)) != null) {
+			//
+			final Class<?> clz = Util.getClass(instance);
+			//
+			final String name = Util.getName(Util.getClass(instance));
+			//
+			List<Field> fs = null;
+			//
+			Field f = null;
+			//
+			for (final Entry<String, String> entry : entrySet) {
+				//
+				if (Objects.equals(name, Util.getKey(entry))) {
+					//
+					if (IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
+							x -> Objects.equals(Util.getName(x), Util.getValue(entry))))) > 1) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					if ((f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0),
+							null)) != null && Narcissus.getField(instance, f) == null) {
+						//
+						return null;
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+		} // if
+			//
+		return instance.getDrawingPatriarch();
+		//
 	}
 
 	private static float getHeight(final PDRectangle instance) {

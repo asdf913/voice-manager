@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -14,15 +15,26 @@ import java.util.Objects;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.streaming.DeferredSXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFChartSheet;
+import org.apache.poi.xssf.usermodel.XSSFDialogsheet;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
 class VoiceManagerSpreadsheetToPdfPanelTest {
 
-	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_HEIGHT = null;
+	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_HEIGHT,
+			METHOD_GET_DRAWING_PATRIARCH = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -36,6 +48,31 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_GET_HEIGHT = clz.getDeclaredMethod("getHeight", PDRectangle.class)).setAccessible(true);
 		//
+		(METHOD_GET_DRAWING_PATRIARCH = clz.getDeclaredMethod("getDrawingPatriarch", Sheet.class)).setAccessible(true);
+		//
+	}
+
+	private static class IH implements InvocationHandler {
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String name = Util.getName(method);
+			//
+			if (proxy instanceof Sheet) {
+				//
+				if (Objects.equals(name, "getDrawingPatriarch")) {
+					//
+					return null;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(name);
+			//
+		}
+
 	}
 
 	@Test
@@ -169,6 +206,41 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			final Object obj = METHOD_GET_HEIGHT.invoke(null, instance);
 			if (obj instanceof Float) {
 				return ((Float) obj).floatValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetDrawingPatriarch() throws Throwable {
+		//
+		Assertions.assertNull(getDrawingPatriarch(Reflection.newProxy(Sheet.class, new IH())));
+		//
+		final Class<?>[] classes = new Class<?>[] { HSSFSheet.class, SXSSFSheet.class, DeferredSXSSFSheet.class,
+				XSSFDialogsheet.class, XSSFSheet.class, XSSFChartSheet.class, XSSFDialogsheet.class };
+		//
+		Class<?> clz = null;
+		//
+		for (int i = 0; classes != null && i < classes.length; i++) {
+			//
+			Assertions.assertNull(
+					getDrawingPatriarch(
+							Util.cast(Sheet.class, Narcissus.allocateInstance(clz = ArrayUtils.get(classes, i)))),
+					Util.getName(clz));
+			//
+		} // for
+			//
+	}
+
+	private static Drawing<?> getDrawingPatriarch(final Sheet instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_DRAWING_PATRIARCH.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Drawing) {
+				return (Drawing) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
