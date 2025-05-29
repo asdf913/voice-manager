@@ -90,7 +90,10 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		@Note("Height")
 		private Float height = null;
 
-		private Float x, y = null;
+		@Note("x")
+		private Float x = null;
+
+		private Float y = null;
 
 	}
 
