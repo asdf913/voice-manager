@@ -422,23 +422,26 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			//
 			for (final Entry<String, String> entry : entrySet) {
 				//
-				if (Objects.equals(name, Util.getKey(entry))) {
+				if (!Objects.equals(name, Util.getKey(entry))) {
 					//
-					if (IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
-							x -> Objects.equals(Util.getName(x), Util.getValue(entry))))) > 1) {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-					if ((f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0),
-							null)) != null && Narcissus.getField(instance, f) == null) {
-						//
-						return null;
-						//
-					} // if
-						//
+					continue;
+					//
 				} // if
+					//
+				if (IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
+						x -> Objects.equals(Util.getName(x), Util.getValue(entry))))) > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				if ((f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) != null
+						&& Narcissus.getField(instance, f) == null) {
+					//
+					return null;
+					//
+				} // if
+					//
 					//
 			} // for
 				//
