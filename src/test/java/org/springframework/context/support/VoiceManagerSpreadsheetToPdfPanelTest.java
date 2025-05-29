@@ -404,8 +404,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		for (int i = 0; classes != null && i < classes.length; i++) {
 			//
-			System.out.println(clz = ArrayUtils.get(classes, i));// TODO
-			//
 			Assertions.assertNull(
 					getPictureData(
 							Util.cast(Picture.class, Narcissus.allocateInstance(clz = ArrayUtils.get(classes, i)))),
