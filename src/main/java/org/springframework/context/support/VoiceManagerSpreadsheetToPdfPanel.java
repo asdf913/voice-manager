@@ -394,6 +394,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		return instance != null ? instance.floatValue() : defaultValue;
 	}
 
+	@Nullable
 	private static Field getFieldByName(final Collection<Field> collection, final String name) {
 		//
 		final List<Field> fs = Util
