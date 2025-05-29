@@ -1,0 +1,385 @@
+package org.springframework.context.support;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Predicate;
+
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.collections4.IteratorUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableFunction;
+import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.PDPageUtil;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecification;
+import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.CellUtil;
+import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.Picture;
+import org.apache.poi.ss.usermodel.PictureData;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.d2ab.function.LanguageCodeToTextObjIntFunction;
+import org.d2ab.function.ObjIntFunction;
+import org.d2ab.function.ObjIntFunctionUtil;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
+
+import io.github.toolfactory.narcissus.Narcissus;
+
+public class VoiceManagerSpreadsheetToPdfPanel {
+
+	private static class Data {
+
+		private String text, voice, contents = null;
+
+		private Float width, height, x, y = null;
+
+	}
+
+	public static void main(final String[] args) throws EncryptedDocumentException, IOException {
+		//
+		Drawing<?> drawingPatriarch = null;
+		//
+		List<Data> dataList = null;
+		//
+		File file = testAndApply(Objects::nonNull,
+				testAndApply(x -> x != null && x.length == 1, args, x -> ArrayUtils.get(x, 0), null), File::new, null);
+		//
+		try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
+			//
+			final Sheet sheet = wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null;
+			//
+			drawingPatriarch = sheet != null ? sheet.getDrawingPatriarch() : null;
+			//
+			final Iterable<Row> rows = testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList,
+					null);
+			//
+			Map<Integer, String> map = null;
+			//
+			Row row = null;
+			//
+			Cell cell = null;
+			//
+			Data data = null;
+			//
+			Field f = null;
+			//
+			Object cellValue = null;
+			//
+			for (int i = 0; i < IterableUtils.size(rows); i++) {
+				//
+				if ((row = IterableUtils.get(rows, i)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (map == null) {
+					//
+					map = new LinkedHashMap<>();
+					//
+					for (int j = 0; j < row.getLastCellNum(); j++) {
+						//
+						map.put(Integer.valueOf(j), CellUtil.getStringCellValue(row.getCell(j)));
+						//
+					} // for
+						//
+				} else {
+					//
+					Util.add(dataList = ObjectUtils.getIfNull(dataList, ArrayList::new), data = new Data());
+					//
+					for (int j = 0; j < row.getLastCellNum(); j++) {
+						//
+						if ((f = getFieldByName(FieldUtils.getAllFieldsList(Data.class),
+								map.get(Integer.valueOf(j)))) == null || (cell = row.getCell(j)) == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						cellValue = Objects.equals(cell.getCellType(), CellType.NUMERIC) ? cell.getNumericCellValue()
+								: cell.getStringCellValue();
+						//
+						if (Objects.equals(Util.getType(f), Float.class)) {
+							//
+							Narcissus.setField(data, f,
+									cellValue instanceof Number number ? floatValue(number, 0) : cellValue);
+							//
+						} else {
+							//
+							Narcissus.setField(data, f, cellValue);
+							//
+						} // if
+							//
+					} // for
+						//
+				} // if
+					//
+			} // for
+				//
+		} // try
+			//
+		final List<?> list = testAndApply(Objects::nonNull, Util.iterator(drawingPatriarch), IteratorUtils::toList,
+				null);
+		//
+		if (IterableUtils.size(list) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final PDDocument pdDocument = new PDDocument();
+		//
+		final PDRectangle pdRectangle = PDRectangle.A4;// TODO
+		//
+		final PDPage pdPage = new PDPage(pdRectangle);
+		//
+		pdDocument.addPage(pdPage);
+		//
+		PictureData pictureData = null;
+		//
+		final PDRectangle mediaBox = PDPageUtil.getMediaBox(pdPage);
+		//
+		float pageWidth = mediaBox != null ? mediaBox.getWidth() : 0;
+		//
+		Data data = null;
+		//
+		float imageWidth, imageHeight, pageHeight, ratioMin = 0;
+		//
+		PDImageXObject pdImageXObject = null;
+		//
+		for (int i = 0; i < IterableUtils.size(list); i++) {
+			//
+			if (IterableUtils.get(list, i) instanceof Picture picture
+					&& (pictureData = picture != null ? picture.getPictureData() : null) != null) {
+				//
+				try (final PDPageContentStream cs = new PDPageContentStream(pdDocument, pdPage)) {
+					//
+					imageWidth = (pdImageXObject = PDImageXObject.createFromByteArray(pdDocument, pictureData.getData(),
+							null)) != null ? pdImageXObject.getWidth() : 0;
+					//
+					imageHeight = pdImageXObject != null ? pdImageXObject.getHeight() : 0;
+					//
+					pageHeight = imageHeight * (ratioMin = Math.min(imageWidth == 0 ? 0 : pageWidth / imageWidth,
+							imageHeight == 0 ? 0 : (pdRectangle != null ? pdRectangle.getHeight() : 0) / imageHeight));
+					//
+					cs.drawImage(pdImageXObject, 0, (imageHeight - pageHeight) / 2, imageWidth * ratioMin, pageHeight);
+					//
+				} // try
+					//
+			} // if
+				//
+		} // for
+			//
+		PDComplexFileSpecification pdComplexFileSpecification = null;
+		//
+		PDAnnotationFileAttachment pdAnnotationFileAttachment = null;
+		//
+		final SpeechApi speechApi = new SpeechApiImpl();
+		//
+		String[] voiceIds = null;
+		//
+		File tempFile = null;
+		//
+		final int size = 10;
+		//
+		String voice, voiceAttribute = null;
+		//
+		IValue0<String> voiceIvalue0 = null;
+		//
+		ObjIntFunction<String, String> objIntFunction = null;
+		//
+		for (int i = 0; i < IterableUtils.size(dataList); i++) {
+			//
+			if ((data = IterableUtils.get(dataList, i)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			(pdComplexFileSpecification = new PDComplexFileSpecification()).setFile(i + ".wav");
+			//
+			if ((tempFile = File.createTempFile(RandomStringUtils.secureStrong().nextAlphabetic(3), null)) != null) {
+				//
+				tempFile.deleteOnExit();
+				//
+			} // if
+				//
+			voiceIvalue0 = null;
+			//
+			voice = data.voice;
+			//
+			voiceIds = ObjectUtils.getIfNull(voiceIds, speechApi::getVoiceIds);
+			//
+			for (int j = 0; voiceIds != null && j < voiceIds.length; j++) {
+				//
+				if (!StringUtils.equalsIgnoreCase(ArrayUtils.get(voiceIds, j), voice)) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (voiceIvalue0 == null) {
+					//
+					voiceIvalue0 = Unit.with(ArrayUtils.get(voiceIds, j));
+					//
+				} else {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+			} // for
+				//
+			if (voiceIvalue0 == null) {
+				//
+				for (int j = 0; voiceIds != null && j < voiceIds.length; j++) {
+					//
+					if (!StringUtils.containsIgnoreCase(ArrayUtils.get(voiceIds, j), voice)) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (voiceIvalue0 == null) {
+						//
+						voiceIvalue0 = Unit.with(ArrayUtils.get(voiceIds, j));
+						//
+					} else {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+			if (voiceIvalue0 == null) {
+				//
+				for (int j = 0; voiceIds != null && j < voiceIds.length; j++) {
+					//
+					if (!(StringUtils
+							.equalsIgnoreCase(
+									voiceAttribute = SpeechApi.getVoiceAttribute(speechApi, ArrayUtils.get(voiceIds, j),
+											"Language"),
+									voice)
+							|| Objects.equals(
+									ObjIntFunctionUtil.apply(objIntFunction = ObjectUtils.getIfNull(objIntFunction,
+											LanguageCodeToTextObjIntFunction::new), voiceAttribute, 16),
+									voice))) {
+						//
+						continue;
+						//
+					} // if
+						//
+					if (voiceIvalue0 == null) {
+						//
+						voiceIvalue0 = Unit.with(ArrayUtils.get(voiceIds, j));
+						//
+					} else {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+			speechApi.writeVoiceToFile(data.text, IValue0Util.getValue0(voiceIvalue0)
+			//
+					, i * -1// TODO
+					//
+					, 100, null, tempFile);
+			//
+			try (final InputStream is = Files.newInputStream(Util.toPath(tempFile))) {
+				//
+				pdComplexFileSpecification.setEmbeddedFile(new PDEmbeddedFile(pdDocument, is));
+				//
+			} // try
+				//
+			(pdAnnotationFileAttachment = new PDAnnotationFileAttachment()).setFile(pdComplexFileSpecification);
+			//
+			pdAnnotationFileAttachment.setRectangle(new PDRectangle(floatValue(data.x, 0) * ratioMin,
+					mediaBox.getHeight() - (floatValue(data.y, size) + floatValue(data.height, size)) * ratioMin
+					//
+					, floatValue(data.width, size) * ratioMin
+					//
+					, floatValue(data.height, size) * ratioMin)
+			//
+			);
+			//
+			pdAnnotationFileAttachment.setContents(data.contents);
+			//
+			Util.add(pdPage.getAnnotations(), pdAnnotationFileAttachment);
+			//
+		} // for
+			//
+		if (!isTestMode()) {
+			//
+			System.out.println(Util.getAbsolutePath(file = new File("test.pdf")));// TODO
+			//
+			pdDocument.save(file);
+			//
+		} // if
+			//
+	}
+
+	private static boolean isTestMode() {
+		return Util.forName("org.junit.jupiter.api.Test") != null;
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse) throws E {
+		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
+				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+	private static float floatValue(final Number instance, final float defaultValue) {
+		return instance != null ? instance.floatValue() : defaultValue;
+	}
+
+	private static Field getFieldByName(final Collection<Field> collection, final String name) {
+		//
+		final List<Field> fs = Util
+				.toList(Util.filter(Util.stream(collection), x -> Objects.equals(Util.getName(x), name)));
+		//
+		final int size = IterableUtils.size(fs);
+		//
+		if (size > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		return size == 1 ? IterableUtils.get(fs, 0) : null;
+		//
+	}
+
+}
