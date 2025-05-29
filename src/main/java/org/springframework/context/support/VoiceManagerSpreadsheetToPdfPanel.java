@@ -301,6 +301,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			//
 	}
 
+	@Nullable
 	private static PictureData getPictureData(final Picture instance) {
 		//
 		if (instance == null) {
