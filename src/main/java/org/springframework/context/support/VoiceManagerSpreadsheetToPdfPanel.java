@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -187,7 +188,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 					imageHeight = pdImageXObject != null ? pdImageXObject.getHeight() : 0;
 					//
 					pageHeight = imageHeight * (ratioMin = Math.min(imageWidth == 0 ? 0 : pageWidth / imageWidth,
-							imageHeight == 0 ? 0 : (pdRectangle != null ? pdRectangle.getHeight() : 0) / imageHeight));
+							imageHeight == 0 ? 0 : getHeight(pdRectangle) / imageHeight));
 					//
 					cs.drawImage(pdImageXObject, 0, (imageHeight - pageHeight) / 2, imageWidth * ratioMin, pageHeight);
 					//
@@ -328,7 +329,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			(pdAnnotationFileAttachment = new PDAnnotationFileAttachment()).setFile(pdComplexFileSpecification);
 			//
 			pdAnnotationFileAttachment.setRectangle(new PDRectangle(floatValue(data.x, 0) * ratioMin,
-					mediaBox.getHeight() - (floatValue(data.y, size) + floatValue(data.height, size)) * ratioMin
+					getHeight(mediaBox) - (floatValue(data.y, size) + floatValue(data.height, size)) * ratioMin
 					//
 					, floatValue(data.width, size) * ratioMin
 					//
@@ -350,6 +351,30 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			//
 		} // if
 			//
+	}
+
+	private static float getHeight(final PDRectangle instance) {
+		//
+		final List<Field> fs = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)), Arrays::stream, null),
+				x -> Objects.equals(Util.getName(x), "rectArray")));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f != null && Narcissus.getField(instance, f) == null) {
+			//
+			return 0;
+			//
+		} // if
+			//
+		return instance != null ? instance.getHeight() : 0;
+		//
 	}
 
 	private static boolean isTestMode() {

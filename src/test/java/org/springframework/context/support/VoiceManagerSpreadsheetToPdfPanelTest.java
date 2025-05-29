@@ -13,6 +13,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class VoiceManagerSpreadsheetToPdfPanelTest {
 
-	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME = null;
+	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_HEIGHT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -32,6 +33,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_GET_FIELD_BY_NAME = clz.getDeclaredMethod("getFieldByName", Collection.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_HEIGHT = clz.getDeclaredMethod("getHeight", PDRectangle.class)).setAccessible(true);
 		//
 	}
 
@@ -146,6 +149,26 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				return null;
 			} else if (obj instanceof Field) {
 				return (Field) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetHeight() throws Throwable {
+		//
+		Assertions.assertEquals(0f,
+				getHeight(Util.cast(PDRectangle.class, Narcissus.allocateInstance(PDRectangle.class))));
+		//
+	}
+
+	private static float getHeight(final PDRectangle instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_HEIGHT.invoke(null, instance);
+			if (obj instanceof Float) {
+				return ((Float) obj).floatValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
