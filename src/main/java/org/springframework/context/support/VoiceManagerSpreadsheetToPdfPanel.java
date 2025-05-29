@@ -233,15 +233,9 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		//
 		final SpeechApi speechApi = new SpeechApiImpl();
 		//
-		String[] voiceIds = null;
-		//
 		File tempFile = null;
 		//
 		final int size = 10;
-		//
-		String voice, voiceAttribute = null;
-		//
-		IValue0<String> voiceIvalue0 = null;
 		//
 		ObjIntFunction<String, String> objIntFunction = null;
 		//
@@ -261,89 +255,9 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 				//
 			} // if
 				//
-			voiceIvalue0 = null;
-			//
-			voice = data.voice;
-			//
-			voiceIds = ObjectUtils.getIfNull(voiceIds, speechApi::getVoiceIds);
-			//
-			for (int j = 0; voiceIds != null && j < voiceIds.length; j++) {
-				//
-				if (!StringUtils.equalsIgnoreCase(ArrayUtils.get(voiceIds, j), voice)) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (voiceIvalue0 == null) {
-					//
-					voiceIvalue0 = Unit.with(ArrayUtils.get(voiceIds, j));
-					//
-				} else {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-			} // for
-				//
-			if (voiceIvalue0 == null) {
-				//
-				for (int j = 0; voiceIds != null && j < voiceIds.length; j++) {
-					//
-					if (!StringUtils.containsIgnoreCase(ArrayUtils.get(voiceIds, j), voice)) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (voiceIvalue0 == null) {
-						//
-						voiceIvalue0 = Unit.with(ArrayUtils.get(voiceIds, j));
-						//
-					} else {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-				} // for
-					//
-			} // if
-				//
-			if (voiceIvalue0 == null) {
-				//
-				for (int j = 0; voiceIds != null && j < voiceIds.length; j++) {
-					//
-					if (!(StringUtils
-							.equalsIgnoreCase(
-									voiceAttribute = SpeechApi.getVoiceAttribute(speechApi, ArrayUtils.get(voiceIds, j),
-											"Language"),
-									voice)
-							|| Objects.equals(
-									ObjIntFunctionUtil.apply(objIntFunction = ObjectUtils.getIfNull(objIntFunction,
-											LanguageCodeToTextObjIntFunction::new), voiceAttribute, 16),
-									voice))) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (voiceIvalue0 == null) {
-						//
-						voiceIvalue0 = Unit.with(ArrayUtils.get(voiceIds, j));
-						//
-					} else {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-				} // for
-					//
-			} // if
-				//
-			speechApi.writeVoiceToFile(data.text, IValue0Util.getValue0(voiceIvalue0)
+			speechApi.writeVoiceToFile(data.text, getVoice(speechApi,
+					objIntFunction = ObjectUtils.getIfNull(objIntFunction, LanguageCodeToTextObjIntFunction::new),
+					data.voice)
 			//
 					, i * -1// TODO
 					//
@@ -380,6 +294,95 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			//
 		} // if
 			//
+	}
+
+	private static String getVoice(final SpeechApi speechApi, final ObjIntFunction<String, String> objIntFunction,
+			final String voice) {
+		//
+		IValue0<String> ivalue0 = null;
+		//
+		final String[] voiceIds = SpeechApi.getVoiceIds(speechApi);
+		//
+		final int length = voiceIds != null ? voiceIds.length : 0;
+		//
+		for (int j = 0; j < length; j++) {
+			//
+			if (!StringUtils.equalsIgnoreCase(ArrayUtils.get(voiceIds, j), voice)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (ivalue0 == null) {
+				//
+				ivalue0 = Unit.with(ArrayUtils.get(voiceIds, j));
+				//
+			} else {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+		} // for
+			//
+		if (ivalue0 != null) {
+			//
+			return IValue0Util.getValue0(ivalue0);
+			//
+		} // if
+			//
+		for (int j = 0; j < length; j++) {
+			//
+			if (!StringUtils.containsIgnoreCase(ArrayUtils.get(voiceIds, j), voice)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (ivalue0 == null) {
+				//
+				ivalue0 = Unit.with(ArrayUtils.get(voiceIds, j));
+				//
+			} else {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+		} // for
+			//
+		if (ivalue0 != null) {
+			//
+			return IValue0Util.getValue0(ivalue0);
+			//
+		} // if
+			//
+		String voiceAttribute = null;
+		//
+		for (int j = 0; j < length; j++) {
+			//
+			if (!(StringUtils.equalsIgnoreCase(
+					voiceAttribute = SpeechApi.getVoiceAttribute(speechApi, ArrayUtils.get(voiceIds, j), "Language"),
+					voice) || Objects.equals(ObjIntFunctionUtil.apply(objIntFunction, voiceAttribute, 16), voice))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (ivalue0 == null) {
+				//
+				ivalue0 = Unit.with(ArrayUtils.get(voiceIds, j));
+				//
+			} else {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+		} // for
+			//
+		return IValue0Util.getValue0(ivalue0);
+		//
 	}
 
 	private static Drawing<?> getDrawingPatriarch(final Sheet instance) {

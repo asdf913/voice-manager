@@ -23,8 +23,10 @@ import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFChartSheet;
 import org.apache.poi.xssf.usermodel.XSSFDialogsheet;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.d2ab.function.ObjIntFunction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.google.common.reflect.Reflection;
@@ -33,8 +35,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class VoiceManagerSpreadsheetToPdfPanelTest {
 
-	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_HEIGHT,
-			METHOD_GET_DRAWING_PATRIARCH = null;
+	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_HEIGHT, METHOD_GET_DRAWING_PATRIARCH,
+			METHOD_GET_VOICE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -50,9 +52,16 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_GET_DRAWING_PATRIARCH = clz.getDeclaredMethod("getDrawingPatriarch", Sheet.class)).setAccessible(true);
 		//
+		(METHOD_GET_VOICE = clz.getDeclaredMethod("getVoice", SpeechApi.class, ObjIntFunction.class, String.class))
+				.setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
+
+		private String[] voiceIds = null;
+
+		private String voiceAttribute = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -67,12 +76,33 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 					//
 				} // if
 					//
+			} else if (proxy instanceof SpeechApi) {
+				//
+				if (Objects.equals(name, "getVoiceIds")) {
+					//
+					return voiceIds;
+					//
+				} else if (Objects.equals(name, "getVoiceAttribute")) {
+					//
+					return voiceAttribute;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
 			//
 		}
 
+	}
+
+	private IH ih = null;
+
+	@BeforeEach
+	void beforeEach() {
+		//
+		ih = new IH();
+		//
 	}
 
 	@Test
@@ -241,6 +271,82 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				return null;
 			} else if (obj instanceof Drawing) {
 				return (Drawing) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetVoice() throws Throwable {
+		//
+		final SpeechApi speechApi = Reflection.newProxy(SpeechApi.class, ih);
+		//
+		if (ih != null) {
+			//
+			ih.voiceIds = new String[] { null };
+			//
+		} // if
+			//
+		Assertions.assertNull(getVoice(speechApi, null, null));
+		//
+		if (ih != null) {
+			//
+			ih.voiceIds = new String[] { null, null };
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class, () -> getVoice(speechApi, null, null));
+		//
+		final String abc = "abc";
+		//
+		if (ih != null) {
+			//
+			ih.voiceIds = new String[] { abc };
+			//
+		} // if
+			//
+		final String b = "b";
+		//
+		Assertions.assertSame(abc, getVoice(speechApi, null, b));
+		//
+		if (ih != null) {
+			//
+			ih.voiceIds = new String[] { abc, abc };
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class, () -> getVoice(speechApi, null, b));
+		//
+		final String empty = "";
+		//
+		if (ih != null) {
+			//
+			ih.voiceIds = new String[] { empty };
+			//
+		} // if
+			//
+		Assertions.assertSame(empty, getVoice(speechApi, null, null));
+		//
+		if (ih != null) {
+			//
+			ih.voiceIds = new String[] { empty, empty };
+			//
+		} // if
+			//
+		Assertions.assertThrows(IllegalStateException.class, () -> getVoice(speechApi, null, null));
+		//
+	}
+
+	private static String getVoice(final SpeechApi speechApi, final ObjIntFunction<String, String> objIntFunction,
+			final String voice) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_VOICE.invoke(null, speechApi, objIntFunction, voice);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
