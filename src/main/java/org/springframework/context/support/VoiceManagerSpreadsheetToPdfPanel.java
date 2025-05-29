@@ -238,6 +238,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			//
 	}
 
+	@Nullable
 	private static Iterable<Data> getDataIterable(final Iterable<Row> rows) {
 		//
 		Row row = null;
