@@ -58,10 +58,12 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private static final int ZERO = 0;
 
+	private static Class<?> CLASS_BI_FLOAT_FLOAT_FUNCTION_CLASS = null;
+
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH_PD_RECTANGLE,
 			METHOD_GET_WIDTH_PD_IMAGE, METHOD_GET_HEIGHT_PD_RECTANGLE, METHOD_GET_HEIGHT_PD_IMAGE,
 			METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE,
-			METHOD_TEST_AND_ACCEPT, METHOD_DELETE_ON_EXIT, METHOD_SET_FIELD = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_DELETE_ON_EXIT, METHOD_SET_FIELD, METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -98,6 +100,11 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		(METHOD_SET_FIELD = clz.getDeclaredMethod("setField", Object.class, Field.class, Object.class))
 				.setAccessible(true);
 		//
+		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Boolean.TYPE, Float.TYPE, Float.TYPE,
+				CLASS_BI_FLOAT_FLOAT_FUNCTION_CLASS = Util.forName(
+						"org.springframework.context.support.VoiceManagerSpreadsheetToPdfPanel$BiFloatFloatFunction"),
+				CLASS_BI_FLOAT_FLOAT_FUNCTION_CLASS, Float.TYPE)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -113,6 +120,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		private Double numericCellValue = null;
 
 		private Integer width, height = null;
+
+		private Float apply = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -177,6 +186,14 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				} else if (Objects.equals(name, "getHeight")) {
 					//
 					return height;
+					//
+				} // if
+					//
+			} else if (Util.isAssignableFrom(CLASS_BI_FLOAT_FLOAT_FUNCTION_CLASS, Util.getClass(proxy))) {
+				//
+				if (Objects.equals(name, "apply")) {
+					//
+					return apply;
 					//
 				} // if
 					//
@@ -673,6 +690,36 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static void setField(final Object instance, final Field field, final Object value) throws Throwable {
 		try {
 			METHOD_SET_FIELD.invoke(null, instance, field, value);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testTestAndApply() throws Throwable {
+		//
+		Assertions.assertEquals(0f, testAndApply(true, ZERO, ZERO, null, null, ZERO));
+		//
+		if (ih != null) {
+			//
+			ih.apply = Float.valueOf(ZERO);
+			//
+		} // if
+			//
+		Assertions.assertEquals(ZERO, testAndApply(true, ZERO, ZERO,
+				Reflection.newProxy(CLASS_BI_FLOAT_FLOAT_FUNCTION_CLASS, ih), null, ZERO));
+		//
+	}
+
+	private static float testAndApply(final boolean condition, final float a, final float b, final Object functionTrue,
+			final Object functionFalse, final float defaultValue) throws Throwable {
+		try {
+			final Object obj = METHOD_TEST_AND_APPLY.invoke(null, condition, a, b, functionTrue, functionFalse,
+					defaultValue);
+			if (obj instanceof Float) {
+				return ((Float) obj).floatValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
