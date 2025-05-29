@@ -377,8 +377,6 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		//
 		Cell cell = null;
 		//
-		Object cellValue = null;
-		//
 		for (int i = 0; i < IterableUtils.size(rows); i++) {
 			//
 			if ((row = IterableUtils.get(rows, i)) == null) {
@@ -404,20 +402,9 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 						//
 					} // if
 						//
-					cellValue = testAndApply(x -> Objects.equals(CellUtil.getCellType(x), CellType.NUMERIC), cell,
-							VoiceManagerSpreadsheetToPdfPanel::getNumericCellValue, CellUtil::getStringCellValue);
+					setField(data, f, testAndApply(x -> Objects.equals(CellUtil.getCellType(x), CellType.NUMERIC), cell,
+							VoiceManagerSpreadsheetToPdfPanel::getNumericCellValue, CellUtil::getStringCellValue));
 					//
-					if (Objects.equals(Util.getType(f), Float.class)) {
-						//
-						Narcissus.setField(data, f,
-								cellValue instanceof Number number ? floatValue(number, 0) : cellValue);
-						//
-					} else {
-						//
-						Narcissus.setField(data, f, cellValue);
-						//
-					} // if
-						//
 				} // for
 					//
 			} // if
@@ -426,6 +413,26 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			//
 		return dataList;
 		//
+	}
+
+	private static void setField(final Object instance, final Field field, final Object value) {
+		//
+		if (instance == null || field == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		if (Objects.equals(Util.getType(field), Float.class)) {
+			//
+			Narcissus.setField(instance, field, value instanceof Number number ? floatValue(number, 0) : value);
+			//
+		} else {
+			//
+			Narcissus.setField(instance, field, value);
+			//
+		} // if
+			//
 	}
 
 	private static Map<Integer, String> toMap(final Row row) {
