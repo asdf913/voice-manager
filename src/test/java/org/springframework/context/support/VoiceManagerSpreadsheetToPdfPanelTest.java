@@ -56,6 +56,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class VoiceManagerSpreadsheetToPdfPanelTest {
 
+	private static final int ZERO = 0;
+
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH_PD_RECTANGLE,
 			METHOD_GET_WIDTH_PD_IMAGE, METHOD_GET_HEIGHT_PD_RECTANGLE, METHOD_GET_HEIGHT_PD_IMAGE,
 			METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE,
@@ -140,8 +142,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 					//
 					return Short.valueOf((short) IterableUtils.size(cells));
 					//
-				} else if (Objects.equals(name, "getCell") && args != null && args.length > 0
-						&& args[0] instanceof Integer i && i != null) {
+				} else if (Objects.equals(name, "getCell") && args != null && args.length > ZERO
+						&& args[ZERO] instanceof Integer i && i != null) {
 					//
 					return IterableUtils.get(cells, i);
 					//
@@ -215,7 +217,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		Object invokeStaticMethod = null;
 		//
-		for (int i = 0; ms != null && i < ms.length; i++) {
+		for (int i = ZERO; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ms[i]) == null || !Modifier.isStatic(m.getModifiers()) || m.isSynthetic()) {
 				//
@@ -227,11 +229,11 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			//
 			parameterTypes = m.getParameterTypes();
 			//
-			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
+			for (int j = ZERO; parameterTypes != null && j < parameterTypes.length; j++) {
 				//
 				if (Objects.equals(parameterType = ArrayUtils.get(parameterTypes, j), Float.TYPE)) {
 					//
-					Util.add(collection, Float.valueOf(0));
+					Util.add(collection, Float.valueOf(ZERO));
 					//
 				} else if (Objects.equals(parameterType, Boolean.TYPE)) {
 					//
@@ -327,23 +329,21 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		Assertions.assertEquals(0f, getWidth(Util.cast(PDRectangle.class, pdRectangle)));
 		//
-		final int zero = 0;
-		//
 		if (ih != null) {
 			//
-			ih.width = Integer.valueOf(zero);
+			ih.width = Integer.valueOf(ZERO);
 			//
 		} // if
 			//
-		Assertions.assertEquals(zero, getWidth(pdImage));
+		Assertions.assertEquals(ZERO, getWidth(pdImage));
 		//
 		final Class<?>[] classes = new Class<?>[] { PDImageXObject.class, PDInlineImage.class };
 		//
 		Class<?> clz = null;
 		//
-		for (int i = 0; classes != null && i < classes.length; i++) {
+		for (int i = ZERO; classes != null && i < classes.length; i++) {
 			//
-			Assertions.assertNotNull(
+			Assertions.assertEquals(ZERO,
 					getWidth(Util.cast(PDImage.class, Narcissus.allocateInstance(clz = ArrayUtils.get(classes, i)))),
 					Util.getName(clz));
 			//
@@ -380,23 +380,21 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		Assertions.assertEquals(0f, getHeight(Util.cast(PDRectangle.class, pdRectangle)));
 		//
-		final int zero = 0;
-		//
 		if (ih != null) {
 			//
-			ih.height = Integer.valueOf(zero);
+			ih.height = Integer.valueOf(ZERO);
 			//
 		} // if
 			//
-		Assertions.assertEquals(zero, getHeight(pdImage));
+		Assertions.assertEquals(ZERO, getHeight(pdImage));
 		//
 		final Class<?>[] classes = new Class<?>[] { PDImageXObject.class, PDInlineImage.class };
 		//
 		Class<?> clz = null;
 		//
-		for (int i = 0; classes != null && i < classes.length; i++) {
+		for (int i = ZERO; classes != null && i < classes.length; i++) {
 			//
-			Assertions.assertNotNull(
+			Assertions.assertEquals(ZERO,
 					getHeight(Util.cast(PDImage.class, Narcissus.allocateInstance(clz = ArrayUtils.get(classes, i)))),
 					Util.getName(clz));
 			//
@@ -438,7 +436,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		Class<?> clz = null;
 		//
-		for (int i = 0; classes != null && i < classes.length; i++) {
+		for (int i = ZERO; classes != null && i < classes.length; i++) {
 			//
 			Assertions.assertNull(
 					getDrawingPatriarch(
@@ -549,7 +547,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		Class<?> clz = null;
 		//
-		for (int i = 0; classes != null && i < classes.length; i++) {
+		for (int i = ZERO; classes != null && i < classes.length; i++) {
 			//
 			Assertions.assertNull(
 					getPictureData(
