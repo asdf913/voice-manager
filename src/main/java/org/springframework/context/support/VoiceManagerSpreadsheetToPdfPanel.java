@@ -341,7 +341,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		//
 	}
 
-	private static void deleteOnExit(final File instance) {
+	private static void deleteOnExit(@Nullable final File instance) {
 		//
 		if (instance == null
 				|| Boolean.logicalAnd(Util.contains(Arrays.asList(OperatingSystem.WINDOWS, OperatingSystem.LINUX),
