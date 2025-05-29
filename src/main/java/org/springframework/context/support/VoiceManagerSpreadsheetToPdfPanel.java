@@ -101,7 +101,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		//
 		Drawing<?> drawingPatriarch = null;
 		//
-		List<Data> dataList = null;
+		Iterable<Data> dataList = null;
 		//
 		File file = testAndApply(Objects::nonNull,
 				testAndApply(x -> x != null && x.length == 1, args, x -> ArrayUtils.get(x, 0), null), File::new, null);
@@ -112,72 +112,9 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			//
 			drawingPatriarch = getDrawingPatriarch(sheet);
 			//
-			final Iterable<Row> rows = testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList,
-					null);
+			dataList = getDataIterable(
+					testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null));
 			//
-			Map<Integer, String> map = null;
-			//
-			Row row = null;
-			//
-			Cell cell = null;
-			//
-			Data data = null;
-			//
-			Field f = null;
-			//
-			Object cellValue = null;
-			//
-			for (int i = 0; i < IterableUtils.size(rows); i++) {
-				//
-				if ((row = IterableUtils.get(rows, i)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				if (map == null) {
-					//
-					map = new LinkedHashMap<>();
-					//
-					for (int j = 0; j < row.getLastCellNum(); j++) {
-						//
-						map.put(Integer.valueOf(j), CellUtil.getStringCellValue(row.getCell(j)));
-						//
-					} // for
-						//
-				} else {
-					//
-					Util.add(dataList = ObjectUtils.getIfNull(dataList, ArrayList::new), data = new Data());
-					//
-					for (int j = 0; j < row.getLastCellNum(); j++) {
-						//
-						if ((f = getFieldByName(FieldUtils.getAllFieldsList(Data.class),
-								map.get(Integer.valueOf(j)))) == null || (cell = row.getCell(j)) == null) {
-							//
-							continue;
-							//
-						} // if
-							//
-						cellValue = Objects.equals(cell.getCellType(), CellType.NUMERIC) ? cell.getNumericCellValue()
-								: cell.getStringCellValue();
-						//
-						if (Objects.equals(Util.getType(f), Float.class)) {
-							//
-							Narcissus.setField(data, f,
-									cellValue instanceof Number number ? floatValue(number, 0) : cellValue);
-							//
-						} else {
-							//
-							Narcissus.setField(data, f, cellValue);
-							//
-						} // if
-							//
-					} // for
-						//
-				} // if
-					//
-			} // for
-				//
 		} // try
 			//
 		final List<?> list = testAndApply(Objects::nonNull, Util.iterator(drawingPatriarch), IteratorUtils::toList,
@@ -299,6 +236,77 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			//
 		} // if
 			//
+	}
+
+	private static Iterable<Data> getDataIterable(final Iterable<Row> rows) {
+		//
+		Row row = null;
+		//
+		Map<Integer, String> map = null;
+		//
+		Collection<Data> dataList = null;
+		//
+		Field f = null;
+		//
+		Data data = null;
+		//
+		Cell cell = null;
+		//
+		Object cellValue = null;
+		//
+		for (int i = 0; i < IterableUtils.size(rows); i++) {
+			//
+			if ((row = IterableUtils.get(rows, i)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (map == null) {
+				//
+				map = new LinkedHashMap<>();
+				//
+				for (int j = 0; j < row.getLastCellNum(); j++) {
+					//
+					map.put(Integer.valueOf(j), CellUtil.getStringCellValue(row.getCell(j)));
+					//
+				} // for
+					//
+			} else {
+				//
+				Util.add(dataList = ObjectUtils.getIfNull(dataList, ArrayList::new), data = new Data());
+				//
+				for (int j = 0; j < row.getLastCellNum(); j++) {
+					//
+					if ((f = getFieldByName(FieldUtils.getAllFieldsList(Data.class),
+							map.get(Integer.valueOf(j)))) == null || (cell = row.getCell(j)) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					cellValue = Objects.equals(cell.getCellType(), CellType.NUMERIC) ? cell.getNumericCellValue()
+							: cell.getStringCellValue();
+					//
+					if (Objects.equals(Util.getType(f), Float.class)) {
+						//
+						Narcissus.setField(data, f,
+								cellValue instanceof Number number ? floatValue(number, 0) : cellValue);
+						//
+					} else {
+						//
+						Narcissus.setField(data, f, cellValue);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+		} // for
+			//
+		return dataList;
+		//
 	}
 
 	@Nullable

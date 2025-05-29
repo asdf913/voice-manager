@@ -10,17 +10,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.poi.hssf.usermodel.HSSFObjectData;
 import org.apache.poi.hssf.usermodel.HSSFPicture;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Picture;
 import org.apache.poi.ss.usermodel.PictureData;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.streaming.DeferredSXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFPicture;
@@ -35,6 +40,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -42,7 +50,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH, METHOD_GET_HEIGHT,
-			METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA = null;
+			METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -65,13 +73,21 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_GET_PICTURE_DATA = clz.getDeclaredMethod("getPictureData", Picture.class)).setAccessible(true);
 		//
+		(METHOD_GET_DATA_ITERABLE = clz.getDeclaredMethod("getDataIterable", Iterable.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
 
 		private String[] voiceIds = null;
 
-		private String voiceAttribute = null;
+		private String voiceAttribute, stringCellValue = null;
+
+		private List<Cell> cells = null;
+
+		private CellType cellType = null;
+
+		private Double numericCellValue = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -98,6 +114,35 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				//
 				return null;
 				//
+			} else if (proxy instanceof Row) {
+				//
+				if (Objects.equals(name, "getLastCellNum")) {
+					//
+					return Short.valueOf((short) IterableUtils.size(cells));
+					//
+				} else if (Objects.equals(name, "getCell") && args != null && args.length > 0
+						&& args[0] instanceof Integer i && i != null) {
+					//
+					return IterableUtils.get(cells, i);
+					//
+				} // if
+					//
+			} else if (proxy instanceof Cell) {
+				//
+				if (Objects.equals(name, "getStringCellValue")) {
+					//
+					return stringCellValue;
+					//
+				} else if (Objects.equals(name, "getNumericCellValue")) {
+					//
+					return numericCellValue;
+					//
+				} else if (Objects.equals(name, "getCellType")) {
+					//
+					return cellType;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -420,6 +465,62 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				return null;
 			} else if (obj instanceof PictureData) {
 				return (PictureData) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetDataIterable() throws Throwable {
+		//
+		Assertions.assertNull(getDataIterable(Collections.singleton(null)));
+		//
+		if (ih != null) {
+			//
+			Util.add(ih.cells = ObjectUtils.getIfNull(ih.cells, ArrayList::new), Reflection.newProxy(Cell.class, ih));
+			//
+		} // if
+			//
+		final Row row = Reflection.newProxy(Row.class, ih);
+		//
+		final ObjectMapper objectMapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+		//
+		Assertions.assertEquals("[{}]",
+				ObjectMapperUtil.writeValueAsString(objectMapper, getDataIterable(Collections.nCopies(2, row))));
+		//
+		if (ih != null) {
+			//
+			ih.stringCellValue = "text";
+			//
+		} // if
+			//
+		Assertions.assertEquals("[{}]",
+				ObjectMapperUtil.writeValueAsString(objectMapper, getDataIterable(Collections.nCopies(2, row))));
+		//
+		if (ih != null) {
+			//
+			ih.stringCellValue = "x";
+			//
+			ih.cellType = CellType.NUMERIC;
+			//
+			ih.numericCellValue = Double.valueOf(0.1);
+			//
+		} // if
+			//
+		Assertions.assertEquals("[{}]",
+				ObjectMapperUtil.writeValueAsString(objectMapper, getDataIterable(Collections.nCopies(2, row))));
+		//
+	}
+
+	private static Iterable<?> getDataIterable(final Iterable<Row> rows) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_DATA_ITERABLE.invoke(null, rows);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Iterable) {
+				return (Iterable) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
