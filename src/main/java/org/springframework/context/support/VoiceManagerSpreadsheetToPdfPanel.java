@@ -32,6 +32,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableConsumer;
+import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -63,6 +65,8 @@ import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.ThrowingRunnableUtil;
+import org.oxbow.swingbits.util.OperatingSystem;
+import org.oxbow.swingbits.util.OperatingSystemUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
@@ -191,12 +195,10 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 				//
 			(pdComplexFileSpecification = new PDComplexFileSpecification()).setFile(i + ".wav");
 			//
-			if ((tempFile = File.createTempFile(RandomStringUtils.secureStrong().nextAlphabetic(3), null)) != null) {
-				//
-				tempFile.deleteOnExit();
-				//
-			} // if
-				//
+			testAndAccept(Objects::nonNull,
+					tempFile = File.createTempFile(RandomStringUtils.secureStrong().nextAlphabetic(3), null),
+					x -> deleteOnExit(x));
+			//
 			speechApi.writeVoiceToFile(data.text, getVoice(speechApi,
 					objIntFunction = ObjectUtils.getIfNull(objIntFunction, LanguageCodeToTextObjIntFunction::new),
 					data.voice)
@@ -228,14 +230,35 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			//
 		} // for
 			//
-		if (!isTestMode()) {
+		testAndAccept(x -> !isTestMode(), file = Util.toFile(Path.of("test.pdf")), x -> {// TODO
 			//
-			System.out.println(Util.getAbsolutePath(file = Util.toFile(Path.of("test.pdf"))));// TODO
+			System.out.println(Util.getAbsolutePath(x));
 			//
-			pdDocument.save(file);
+			pdDocument.save(x);
+			//
+		});
+		//
+	}
+
+	private static void deleteOnExit(final File instance) {
+		//
+		if (instance == null
+				|| Boolean.logicalAnd(Util.contains(Arrays.asList(OperatingSystem.WINDOWS, OperatingSystem.LINUX),
+						OperatingSystemUtil.getOperatingSystem()), instance.getPath() == null)) {
+			//
+			return;
 			//
 		} // if
 			//
+		instance.deleteOnExit();
+		//
+	}
+
+	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
+			final FailableConsumer<T, E> consumer) throws E {
+		if (Util.test(predicate, value)) {
+			FailableConsumerUtil.accept(consumer, value);
+		}
 	}
 
 	@Nullable
