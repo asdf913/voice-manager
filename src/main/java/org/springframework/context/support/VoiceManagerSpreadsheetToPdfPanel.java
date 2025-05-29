@@ -310,7 +310,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 	}
 
 	@Nullable
-	private static PictureData getPictureData(final Picture instance) {
+	private static PictureData getPictureData(@Nullable final Picture instance) {
 		//
 		if (instance == null) {
 			//
@@ -530,7 +530,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		//
 	}
 
-	private static float getWidth(final PDRectangle instance) {
+	private static float getWidth(@Nullable final PDRectangle instance) {
 		//
 		final List<Field> fs = Util.toList(Util.filter(
 				testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)), Arrays::stream, null),
