@@ -286,8 +286,8 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 						//
 					} // if
 						//
-					cellValue = Objects.equals(cell.getCellType(), CellType.NUMERIC) ? cell.getNumericCellValue()
-							: cell.getStringCellValue();
+					cellValue = testAndApply(x -> Objects.equals(CellUtil.getCellType(x), CellType.NUMERIC), cell,
+							x -> getNumericCellValue(x), x -> CellUtil.getStringCellValue(x));
 					//
 					if (Objects.equals(Util.getType(f), Float.class)) {
 						//
@@ -308,6 +308,10 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			//
 		return dataList;
 		//
+	}
+
+	private static Double getNumericCellValue(final Cell instance) {
+		return instance != null ? Double.valueOf(instance.getNumericCellValue()) : null;
 	}
 
 	@Nullable
