@@ -389,14 +389,8 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 				//
 			if (map == null) {
 				//
-				map = new LinkedHashMap<>();
+				map = toMap(row);
 				//
-				for (int j = 0; j < row.getLastCellNum(); j++) {
-					//
-					map.put(Integer.valueOf(j), CellUtil.getStringCellValue(row.getCell(j)));
-					//
-				} // for
-					//
 			} else {
 				//
 				Util.add(dataList = ObjectUtils.getIfNull(dataList, ArrayList::new), data = new Data());
@@ -431,6 +425,21 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		} // for
 			//
 		return dataList;
+		//
+	}
+
+	private static Map<Integer, String> toMap(final Row row) {
+		//
+		Map<Integer, String> map = null;
+		//
+		for (int j = 0; row != null && j < row.getLastCellNum(); j++) {
+			//
+			Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Integer.valueOf(j),
+					CellUtil.getStringCellValue(row.getCell(j)));
+			//
+		} // for
+			//
+		return map;
 		//
 	}
 
