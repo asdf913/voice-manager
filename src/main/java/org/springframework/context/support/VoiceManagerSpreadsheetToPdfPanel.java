@@ -201,7 +201,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		//
 		final PDRectangle mediaBox = PDPageUtil.getMediaBox(pdPage);
 		//
-		float pageWidth = mediaBox != null ? mediaBox.getWidth() : 0;
+		float pageWidth = getWidth(mediaBox);
 		//
 		Data data = null;
 		//
@@ -518,6 +518,30 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		} // if
 			//
 		return instance.getDrawingPatriarch();
+		//
+	}
+
+	private static float getWidth(final PDRectangle instance) {
+		//
+		final List<Field> fs = Util.toList(Util.filter(
+				testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)), Arrays::stream, null),
+				x -> Objects.equals(Util.getName(x), "rectArray")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		}); // if
+			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f != null && Narcissus.getField(instance, f) == null) {
+			//
+			return 0;
+			//
+		} // if
+			//
+		return instance != null ? instance.getWidth() : 0;
 		//
 	}
 

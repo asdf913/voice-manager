@@ -41,8 +41,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class VoiceManagerSpreadsheetToPdfPanelTest {
 
-	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_HEIGHT, METHOD_GET_DRAWING_PATRIARCH,
-			METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA = null;
+	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH, METHOD_GET_HEIGHT,
+			METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -53,6 +53,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_GET_FIELD_BY_NAME = clz.getDeclaredMethod("getFieldByName", Collection.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_WIDTH = clz.getDeclaredMethod("getWidth", PDRectangle.class)).setAccessible(true);
 		//
 		(METHOD_GET_HEIGHT = clz.getDeclaredMethod("getHeight", PDRectangle.class)).setAccessible(true);
 		//
@@ -110,10 +112,14 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private IH ih = null;
 
+	private PDRectangle pdRectangle = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		ih = new IH();
+		//
+		pdRectangle = Util.cast(PDRectangle.class, Narcissus.allocateInstance(PDRectangle.class));
 		//
 	}
 
@@ -242,10 +248,28 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	}
 
 	@Test
+	void testGetWidth() throws Throwable {
+		//
+		Assertions.assertEquals(0f, getWidth(Util.cast(PDRectangle.class, pdRectangle)));
+		//
+	}
+
+	private static float getWidth(final PDRectangle instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_WIDTH.invoke(null, instance);
+			if (obj instanceof Float) {
+				return ((Float) obj).floatValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
 	void testGetHeight() throws Throwable {
 		//
-		Assertions.assertEquals(0f,
-				getHeight(Util.cast(PDRectangle.class, Narcissus.allocateInstance(PDRectangle.class))));
+		Assertions.assertEquals(0f, getHeight(Util.cast(PDRectangle.class, pdRectangle)));
 		//
 	}
 
