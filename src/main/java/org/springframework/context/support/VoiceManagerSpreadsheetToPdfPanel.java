@@ -361,8 +361,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 					} // if
 						//
 					cellValue = testAndApply(x -> Objects.equals(CellUtil.getCellType(x), CellType.NUMERIC), cell,
-							VoiceManagerSpreadsheetToPdfPanel::getNumericCellValue,
-							x -> CellUtil.getStringCellValue(x));
+							VoiceManagerSpreadsheetToPdfPanel::getNumericCellValue, CellUtil::getStringCellValue);
 					//
 					if (Objects.equals(Util.getType(f), Float.class)) {
 						//
