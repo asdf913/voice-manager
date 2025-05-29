@@ -435,6 +435,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			//
 	}
 
+	@Nullable
 	private static Map<Integer, String> toMap(final Row row) {
 		//
 		Map<Integer, String> map = null;
