@@ -61,6 +61,8 @@ import org.d2ab.function.ObjIntFunctionUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.meeuw.functional.ThrowingRunnable;
+import org.meeuw.functional.ThrowingRunnableUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
@@ -178,12 +180,12 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		final List<?> list = testAndApply(Objects::nonNull, Util.iterator(drawingPatriarch), IteratorUtils::toList,
 				null);
 		//
-		if (IterableUtils.size(list) > 1) {
+		testAndRunThrows(IterableUtils.size(list) > 1, () -> {
 			//
 			throw new IllegalStateException();
 			//
-		} // if
-			//
+		});
+		//
 		final PDDocument pdDocument = new PDDocument();
 		//
 		final PDRectangle pdRectangle = PDRectangle.A4;// TODO
@@ -296,6 +298,13 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			//
 	}
 
+	private static <E extends Throwable> void testAndRunThrows(final boolean b,
+			final ThrowingRunnable<E> throwingRunnable) throws E {
+		if (b) {
+			ThrowingRunnableUtil.runThrows(throwingRunnable);
+		}
+	}
+
 	private static String getVoice(final SpeechApi speechApi, final ObjIntFunction<String, String> objIntFunction,
 			final String voice) {
 		//
@@ -313,16 +322,14 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 				//
 			} // if
 				//
-			if (ivalue0 == null) {
-				//
-				ivalue0 = Unit.with(ArrayUtils.get(voiceIds, j));
-				//
-			} else {
+			testAndRunThrows(ivalue0 != null, () -> {
 				//
 				throw new IllegalStateException();
 				//
-			} // if
-				//
+			});
+			//
+			ivalue0 = Unit.with(ArrayUtils.get(voiceIds, j));
+			//
 		} // for
 			//
 		if (ivalue0 != null) {
@@ -339,16 +346,14 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 				//
 			} // if
 				//
-			if (ivalue0 == null) {
-				//
-				ivalue0 = Unit.with(ArrayUtils.get(voiceIds, j));
-				//
-			} else {
+			testAndRunThrows(ivalue0 != null, () -> {
 				//
 				throw new IllegalStateException();
 				//
-			} // if
-				//
+			});
+			//
+			ivalue0 = Unit.with(ArrayUtils.get(voiceIds, j));
+			//
 		} // for
 			//
 		if (ivalue0 != null) {
@@ -369,16 +374,14 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 				//
 			} // if
 				//
-			if (ivalue0 == null) {
-				//
-				ivalue0 = Unit.with(ArrayUtils.get(voiceIds, j));
-				//
-			} else {
+			testAndRunThrows(ivalue0 != null, () -> {
 				//
 				throw new IllegalStateException();
 				//
-			} // if
-				//
+			});
+			//
+			ivalue0 = Unit.with(ArrayUtils.get(voiceIds, j));
+			//
 		} // for
 			//
 		return IValue0Util.getValue0(ivalue0);
@@ -428,13 +431,15 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 					//
 				} // if
 					//
-				if (IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
-						x -> Objects.equals(Util.getName(x), Util.getValue(entry))))) > 1) {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
+				testAndRunThrows(
+						IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
+								x -> Objects.equals(Util.getName(x), Util.getValue(entry))))) > 1,
+						() -> {
+							//
+							throw new IllegalStateException();
+							//
+						});
+				//
 				if ((f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) != null
 						&& Narcissus.getField(instance, f) == null) {
 					//
@@ -457,11 +462,11 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 				testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)), Arrays::stream, null),
 				x -> Objects.equals(Util.getName(x), "rectArray")));
 		//
-		if (IterableUtils.size(fs) > 1) {
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
 			//
 			throw new IllegalStateException();
 			//
-		} // if
+		}); // if
 			//
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
@@ -496,15 +501,13 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		final List<Field> fs = Util
 				.toList(Util.filter(Util.stream(collection), x -> Objects.equals(Util.getName(x), name)));
 		//
-		final int size = IterableUtils.size(fs);
-		//
-		if (size > 1) {
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
 			//
 			throw new IllegalStateException();
 			//
-		} // if
+		});// if
 			//
-		return size == 1 ? IterableUtils.get(fs, 0) : null;
+		return testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
 	}
 
