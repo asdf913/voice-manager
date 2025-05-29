@@ -20,6 +20,9 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.pdfbox.pdmodel.graphics.image.PDInlineImage;
 import org.apache.poi.hssf.usermodel.HSSFObjectData;
 import org.apache.poi.hssf.usermodel.HSSFPicture;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -53,9 +56,9 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class VoiceManagerSpreadsheetToPdfPanelTest {
 
-	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH, METHOD_GET_HEIGHT,
-			METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE,
-			METHOD_TEST_AND_ACCEPT, METHOD_DELETE_ON_EXIT = null;
+	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH_PD_RECTANGLE,
+			METHOD_GET_WIDTH_PD_IMAGE, METHOD_GET_HEIGHT, METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE,
+			METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE, METHOD_TEST_AND_ACCEPT, METHOD_DELETE_ON_EXIT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -67,7 +70,9 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		(METHOD_GET_FIELD_BY_NAME = clz.getDeclaredMethod("getFieldByName", Collection.class, String.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_WIDTH = clz.getDeclaredMethod("getWidth", PDRectangle.class)).setAccessible(true);
+		(METHOD_GET_WIDTH_PD_RECTANGLE = clz.getDeclaredMethod("getWidth", PDRectangle.class)).setAccessible(true);
+		//
+		(METHOD_GET_WIDTH_PD_IMAGE = clz.getDeclaredMethod("getWidth", PDImage.class)).setAccessible(true);
 		//
 		(METHOD_GET_HEIGHT = clz.getDeclaredMethod("getHeight", PDRectangle.class)).setAccessible(true);
 		//
@@ -98,6 +103,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		private CellType cellType = null;
 
 		private Double numericCellValue = null;
+
+		private Integer width = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -150,6 +157,14 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				} else if (Objects.equals(name, "getCellType")) {
 					//
 					return cellType;
+					//
+				} // if
+					//
+			} else if (proxy instanceof PDImage) {
+				//
+				if (Objects.equals(name, "getWidth")) {
+					//
+					return width;
 					//
 				} // if
 					//
@@ -225,7 +240,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			//
 			invokeStaticMethod = Narcissus.invokeStaticMethod(m, Util.toArray(collection));
 			//
-			if (Util.contains(Arrays.asList(Float.TYPE, Boolean.TYPE), m.getReturnType())) {
+			if (Util.contains(Arrays.asList(Float.TYPE, Boolean.TYPE, Integer.TYPE), m.getReturnType())) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 				//
@@ -303,13 +318,47 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		Assertions.assertEquals(0f, getWidth(Util.cast(PDRectangle.class, pdRectangle)));
 		//
+		final int zero = 0;
+		//
+		if (ih != null) {
+			//
+			ih.width = Integer.valueOf(zero);
+			//
+		} // if
+			//
+		Assertions.assertEquals(zero, getWidth(Reflection.newProxy(PDImage.class, ih)));
+		//
+		final Class<?>[] classes = new Class<?>[] { PDImageXObject.class, PDInlineImage.class };
+		//
+		Class<?> clz = null;
+		//
+		for (int i = 0; classes != null && i < classes.length; i++) {
+			//
+			Assertions.assertNotNull(
+					getWidth(Util.cast(PDImage.class, Narcissus.allocateInstance(clz = ArrayUtils.get(classes, i)))),
+					Util.getName(clz));
+			//
+		} // for
+			//
 	}
 
 	private static float getWidth(final PDRectangle instance) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_WIDTH.invoke(null, instance);
+			final Object obj = METHOD_GET_WIDTH_PD_RECTANGLE.invoke(null, instance);
 			if (obj instanceof Float) {
 				return ((Float) obj).floatValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static int getWidth(final PDImage instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_WIDTH_PD_IMAGE.invoke(null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
