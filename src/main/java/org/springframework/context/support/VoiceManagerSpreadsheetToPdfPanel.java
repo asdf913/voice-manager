@@ -161,7 +161,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 					imageWidth = getWidth(pdImageXObject = PDImageXObject.createFromByteArray(pdDocument,
 							pictureData.getData(), null));
 					//
-					imageHeight =  getHeight(pdImageXObject) ;
+					imageHeight = getHeight(pdImageXObject);
 					//
 					pageHeight = imageHeight * (ratioMin = Math.min(imageWidth == 0 ? 0 : pageWidth / imageWidth,
 							imageHeight == 0 ? 0 : getHeight(pdRectangle) / imageHeight));
@@ -241,7 +241,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		//
 	}
 
-	private static int getHeight(final PDImage instance) {
+	private static int getHeight(@Nullable final PDImage instance) {
 		//
 		final Map<String, String> map = Map.of("org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject", "stream",
 				"org.apache.pdfbox.pdmodel.graphics.image.PDInlineImage", "parameters");
@@ -291,7 +291,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		//
 	}
 
-	private static int getWidth(final PDImage instance) {
+	private static int getWidth(@Nullable final PDImage instance) {
 		//
 		final Map<String, String> map = Map.of("org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject", "stream",
 				"org.apache.pdfbox.pdmodel.graphics.image.PDInlineImage", "parameters");
