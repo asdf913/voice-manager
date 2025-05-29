@@ -94,14 +94,10 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Picture) {
+			} else if (proxy instanceof Picture && Objects.equals(name, "getPictureData")) {
 				//
-				if (Objects.equals(name, "getPictureData")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
