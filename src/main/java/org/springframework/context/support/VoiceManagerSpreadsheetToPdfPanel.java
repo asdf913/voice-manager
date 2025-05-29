@@ -385,6 +385,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		//
 	}
 
+	@Nullable
 	private static Drawing<?> getDrawingPatriarch(final Sheet instance) {
 		//
 		if (instance == null) {
@@ -434,6 +435,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 							null)) != null && Narcissus.getField(instance, f) == null) {
 						//
 						return null;
+						//
 					} // if
 						//
 				} // if
