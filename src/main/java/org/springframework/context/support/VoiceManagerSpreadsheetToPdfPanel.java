@@ -390,7 +390,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 				: FailableFunctionUtil.apply(functionFalse, value);
 	}
 
-	private static float floatValue(final Number instance, final float defaultValue) {
+	private static float floatValue(@Nullable final Number instance, final float defaultValue) {
 		return instance != null ? instance.floatValue() : defaultValue;
 	}
 
