@@ -77,12 +77,18 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		@Note("Text")
 		private String text = null;
 
-		private String voice, contents = null;
+		@Note("Voice")
+		private String voice = null;
+
+		private String contents = null;
 
 		@Note("Width")
 		private Float width = null;
 
-		private Float height, x, y = null;
+		@Note("Height")
+		private Float height = null;
+
+		private Float x, y = null;
 
 	}
 
