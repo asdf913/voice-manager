@@ -320,15 +320,13 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		add(jcbPDRectangle, String.format("%1$s,span %2$s", WRAP, 2));
 		//
-		if (cbmPDRectangle instanceof MutableComboBoxModel mcbm) {
-			//
-			Util.forEach(
-					Util.filter(Util.stream(FieldUtils.getAllFieldsList(PDRectangle.class)),
-							x -> Util.isAssignableFrom(PDRectangle.class, Util.getType(x)) && Util.isStatic(x)),
-					x -> addElement(mcbm, Pair.of(Util.getName(x), Narcissus.getStaticField(x))));
-			//
-		} // if
-			//
+		final MutableComboBoxModel mcbm = Util.cast(MutableComboBoxModel.class, cbmPDRectangle);
+		//
+		Util.forEach(
+				Util.filter(Util.stream(FieldUtils.getAllFieldsList(PDRectangle.class)),
+						x -> Util.isAssignableFrom(PDRectangle.class, Util.getType(x)) && Util.isStatic(x)),
+				x -> addElement(mcbm, Pair.of(Util.getName(x), Narcissus.getStaticField(x))));
+		//
 		Integer index = null;
 		//
 		final String size = "A4";// TODO
