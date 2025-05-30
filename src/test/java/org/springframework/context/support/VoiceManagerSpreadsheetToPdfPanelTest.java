@@ -206,17 +206,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			//
 			final String methodName = Util.getName(thisMethod);
 			//
-			if (self instanceof PDDocument && Objects.equals(methodName, "save")) {
-				//
-				if (ioException != null) {
-					//
-					throw ioException;
-					//
-				} // if
-					//
-				return null;
-				//
-			} else if (self instanceof PDPage && Objects.equals(methodName, "getAnnotations")) {
+			if (Boolean.logicalOr(Boolean.logicalAnd(self instanceof PDDocument, Objects.equals(methodName, "save")),
+					Boolean.logicalAnd(self instanceof PDPage, Objects.equals(methodName, "getAnnotations")))) {
 				//
 				if (ioException != null) {
 					//
