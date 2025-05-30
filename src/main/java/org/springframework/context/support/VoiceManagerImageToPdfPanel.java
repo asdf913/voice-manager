@@ -734,7 +734,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				Util.setText(tfOutputFile, null);
 				//
 				final PDRectangle pdRectangle = ObjectUtils.defaultIfNull(Util.cast(PDRectangle.class,
-						testAndApply(x -> x instanceof Entry, Util.getSelectedItem(cbmPDRectangle), x -> {
+						testAndApply(Entry.class::isInstance, Util.getSelectedItem(cbmPDRectangle), x -> {
 							//
 							final Collection<Method> ms = Util.toList(Util.filter(
 									testAndApply(Objects::nonNull, Util.getMethods(Util.getClass(x)), Arrays::stream,
