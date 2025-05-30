@@ -1745,7 +1745,7 @@ public abstract class Util {
 		return instance != null ? instance.toURI() : null;
 	}
 
-	static void deleteOnExit(final File instance) {
+	static void deleteOnExit(@Nullable final File instance) {
 		//
 		if (instance == null
 				|| Boolean.logicalAnd(contains(Arrays.asList(OperatingSystem.WINDOWS, OperatingSystem.LINUX),
