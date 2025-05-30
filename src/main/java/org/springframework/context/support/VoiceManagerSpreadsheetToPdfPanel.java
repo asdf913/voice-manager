@@ -144,62 +144,27 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 				//
 			} // try
 				//
-			final List<?> list = testAndApply(Objects::nonNull, Util.iterator(drawingPatriarch), IteratorUtils::toList,
-					null);
-			//
-			testAndRunThrows(IterableUtils.size(list) > 1, () -> {
-				//
-				throw new IllegalStateException();
-				//
-			});
-			//
 			final PDDocument pdDocument = new PDDocument();
 			//
-			final PDRectangle pdRectangle = PDRectangle.A4;// TODO
-			//
-			final PDPage pdPage = new PDPage(pdRectangle);
+			final PDPage pdPage = new PDPage(PDRectangle.A4);// TODO
 			//
 			pdDocument.addPage(pdPage);
 			//
-			PictureData pictureData = null;
-			//
 			final PDRectangle mediaBox = PDPageUtil.getMediaBox(pdPage);
-			//
-			float pageWidth = getWidth(mediaBox);
 			//
 			Data data = null;
 			//
-			float imageWidth, imageHeight, pageHeight, ratioMin = 0;
+			float ratioMin = 0;
 			//
-			PDImageXObject pdImageXObject = null;
-			//
-			for (int i = 0; i < IterableUtils.size(list); i++) {
+			try {
 				//
-				if (IterableUtils.get(list, i) instanceof Picture picture
-						&& (pictureData = getPictureData(picture)) != null) {
-					//
-					try (final PDPageContentStream cs = new PDPageContentStream(pdDocument, pdPage)) {
-						//
-						imageWidth = getWidth(pdImageXObject = PDImageXObject.createFromByteArray(pdDocument,
-								pictureData.getData(), null));
-						//
-						imageHeight = getHeight(pdImageXObject);
-						//
-						pageHeight = imageHeight * (ratioMin = Math.min(imageWidth == 0 ? 0 : pageWidth / imageWidth,
-								imageHeight == 0 ? 0 : getHeight(pdRectangle) / imageHeight));
-						//
-						cs.drawImage(pdImageXObject, 0, (imageHeight - pageHeight) / 2, imageWidth * ratioMin,
-								pageHeight);
-						//
-					} catch (final IOException e) {
-						//
-						throw new RuntimeException(e);
-						//
-					} // try
-						//
-				} // if
-					//
-			} // for
+				ratioMin = drawImage(drawingPatriarch, pdDocument, pdPage);
+				//
+			} catch (final IOException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
 				//
 			PDComplexFileSpecification pdComplexFileSpecification = null;
 			//
@@ -288,6 +253,48 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 		} // if
 			//
+	}
+
+	private static float drawImage(final Drawing<?> drawing, final PDDocument pdDocument, final PDPage pdPage)
+			throws IOException {
+		//
+		final List<?> list = testAndApply(Objects::nonNull, Util.iterator(drawing), IteratorUtils::toList, null);
+		//
+		PictureData pictureData = null;
+		//
+		final PDRectangle mediaBox = PDPageUtil.getMediaBox(pdPage);
+		//
+		float pageWidth = getWidth(mediaBox);
+		//
+		float imageWidth, imageHeight, pageHeight, ratioMin = 0;
+		//
+		PDImageXObject pdImageXObject = null;
+		//
+		for (int i = 0; i < IterableUtils.size(list); i++) {
+			//
+			if (IterableUtils.get(list, i) instanceof Picture picture
+					&& (pictureData = getPictureData(picture)) != null) {
+				//
+				try (final PDPageContentStream cs = new PDPageContentStream(pdDocument, pdPage)) {
+					//
+					imageWidth = getWidth(pdImageXObject = PDImageXObject.createFromByteArray(pdDocument,
+							pictureData.getData(), null));
+					//
+					imageHeight = getHeight(pdImageXObject);
+					//
+					pageHeight = imageHeight * (ratioMin = Math.min(imageWidth == 0 ? 0 : pageWidth / imageWidth,
+							imageHeight == 0 ? 0 : getHeight(mediaBox) / imageHeight));
+					//
+					cs.drawImage(pdImageXObject, 0, (imageHeight - pageHeight) / 2, imageWidth * ratioMin, pageHeight);
+					//
+				} // try
+					//
+			} // if
+				//
+		} // for
+			//
+		return ratioMin;
+		//
 	}
 
 	private static List<PDAnnotation> getAnnotations(final PDPage instance, final Consumer<IOException> consumer) {
