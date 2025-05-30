@@ -117,17 +117,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 			Iterable<Data> dataList = null;
 			//
-			final JFileChooser jfc = new JFileChooser();
+			File file = getSelectedFile();
 			//
-			File file = null;
-			//
-			if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
-					&& jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-				//
-				file = jfc.getSelectedFile();
-				//
-			} // if
-				//
 			try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
 				//
 				final Sheet sheet = testAndApply(x -> WorkbookUtil.getNumberOfSheets(wb) == 1, wb,
@@ -253,6 +244,21 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 		} // if
 			//
+	}
+
+	private static File getSelectedFile() {
+		//
+		final JFileChooser jfc = new JFileChooser();
+		//
+		if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
+				&& jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			//
+			return jfc.getSelectedFile();
+			//
+		} // if
+			//
+		return null;
+		//
 	}
 
 	private static float drawImage(@Nullable final Drawing<?> drawing, final PDDocument pdDocument, final PDPage pdPage)
