@@ -259,14 +259,10 @@ class WorkbookUtilTest {
 								//
 							} // if
 								//
-							if (Narcissus.getField(ih, f) == null) {
+							if (Narcissus.getField(ih, f) == null && Objects.equals(f.getType(), Integer.class)) {
 								//
-								if (Objects.equals(f.getType(), Integer.class)) {
-									//
-									Narcissus.setField(ih, f, Integer.valueOf(0));
-									//
-								} // if
-									//
+								Narcissus.setField(ih, f, Integer.valueOf(0));
+								//
 							} // if
 								//
 						} // for
