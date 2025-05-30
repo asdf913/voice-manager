@@ -494,7 +494,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 	}
 
-	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) {
+	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, final E item) {
 		if (instance != null) {
 			instance.addElement(item);
 		}
