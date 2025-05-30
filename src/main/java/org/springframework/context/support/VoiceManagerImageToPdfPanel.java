@@ -63,6 +63,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
+import javax.swing.MutableComboBoxModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.bcel.classfile.ClassParser;
@@ -101,6 +102,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.apache.commons.lang3.tuple.MutablePairUtil;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.commons.validator.routines.UrlValidatorUtil;
 import org.apache.pdfbox.cos.COSDictionary;
@@ -214,6 +216,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 	private transient ComboBoxModel<FontName> cbmFontName = null;
 
+	private ComboBoxModel<Entry<Field, PDRectangle>> cbmPDRectangle = null;
+
 	private static boolean isTestMode() {
 		return Util.forName("org.junit.jupiter.api.Test") != null;
 	}
@@ -292,8 +296,69 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 										ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
 						MigLayout::new));
 		//
-		// Font
+		// Paper Size
 		//
+		add(new JLabel("Size"));
+		//
+		final JComboBox<Entry<Field, PDRectangle>> jcbPDRectangle = new JComboBox<>(
+				cbmPDRectangle = new DefaultComboBoxModel<>());
+		//
+		final ListCellRenderer<?> lcr = jcbPDRectangle.getRenderer();
+		//
+		jcbPDRectangle.setRenderer(new ListCellRenderer() {
+
+			@Override
+			public Component getListCellRendererComponent(final JList list, final Object value, final int index,
+					final boolean isSelected, final boolean cellHasFocus) {
+				//
+				return Util.getListCellRendererComponent((ListCellRenderer) lcr, list,
+						Util.getKey(Util.cast(Entry.class, value)), index, isSelected, cellHasFocus);
+				//
+			}
+
+		});
+		//
+		add(jcbPDRectangle, String.format("%1$s,span %2$s", WRAP, 2));
+		//
+		if (cbmPDRectangle instanceof MutableComboBoxModel mcbm) {
+			//
+			Util.forEach(
+					Util.filter(Util.stream(FieldUtils.getAllFieldsList(PDRectangle.class)),
+							x -> Util.isAssignableFrom(PDRectangle.class, Util.getType(x)) && Util.isStatic(x)),
+					x -> addElement(mcbm, Pair.of(Util.getName(x), Narcissus.getStaticField(x))));
+			//
+		} // if
+			//
+		Integer index = null;
+		//
+		final String size = "A4";// TODO
+		//
+		for (int i = 0; i < cbmPDRectangle.getSize(); i++) {
+			//
+			if (!Objects.equals(size, Util.getKey(cbmPDRectangle.getElementAt(i)))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (index != null) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			index = Integer.valueOf(i);
+			//
+		} // for
+			//
+		if (index != null) {
+			//
+			jcbPDRectangle.setSelectedIndex(index.intValue());
+			//
+		} // if
+			//
+			// Font
+			//
 		add(new JLabel("Font"));
 		//
 		add(tfFontSize = new JTextField(PropertyResolverUtil.getProperty(propertyResolver,
@@ -305,11 +370,9 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		add(new JComboBox<>(cbmFontName = new DefaultComboBoxModel<>(ArrayUtils.insert(0, fontNames, (FontName) null))),
 				String.format("span %1$s,%2$s", 3, WRAP));
 		//
-		final Integer index = getIndex(cbmFontName,
+		if ((index = getIndex(cbmFontName,
 				getFontName("org.springframework.context.support.VoiceManagerImageToPdfPanel.fontName",
-						propertyResolver, System.getProperties()));
-		//
-		if (index != null) {
+						propertyResolver, System.getProperties()))) != null) {
 			//
 			Util.setSelectedItem(cbmFontName, Util.getElementAt(cbmFontName, index.intValue()));
 			//
@@ -429,6 +492,12 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				Stream.of(tfSpeechLanguageCode, tfSpeechLanguageName, tfImageFile, tfImageUrlStateCode, tfOutputFile),
 				x -> Util.setEditable(x, false));
 		//
+	}
+
+	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) {
+		if (instance != null) {
+			instance.addElement(item);
+		}
 	}
 
 	@Nullable
@@ -664,7 +733,19 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				//
 				Util.setText(tfOutputFile, null);
 				//
-				final PDRectangle pdRectangle = PDRectangle.A4;
+				final PDRectangle pdRectangle = ObjectUtils.defaultIfNull(Util.cast(PDRectangle.class,
+						testAndApply(x -> x instanceof Entry, Util.getSelectedItem(cbmPDRectangle), x -> {
+							//
+							return testAndApply(Objects::nonNull,
+									testAndApply(y -> IterableUtils.size(y) == 1, Util.toList(Util.filter(
+											testAndApply(Objects::nonNull, Util.getMethods(Util.getClass(x)),
+													Arrays::stream, null),
+											y -> Boolean.logicalAnd(Objects.equals(Util.getName(y), "getValue"),
+													Arrays.equals(Util.getParameterTypes(y), new Class<?>[] {})))),
+											y -> IterableUtils.get(y, 0), null),
+									y -> Narcissus.invokeMethod(x, y), null);
+							//
+						}, null)), PDRectangle.A4);
 				//
 				final PDPage pdPage = new PDPage(pdRectangle);
 				//
@@ -885,7 +966,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		final PDDocument pdDocument = new PDDocument();
 		//
-		final PDRectangle pdRectangle = PDRectangle.A4;
+		final PDRectangle pdRectangle = PDRectangle.A4;// TODO
 		//
 		final PDPage pdPage = new PDPage(pdRectangle);
 		//
