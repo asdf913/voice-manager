@@ -232,8 +232,6 @@ class WorkbookUtilTest {
 		//
 		Workbook workbook = null;
 		//
-		IH ih = null;
-		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ms[i]) == null || !Modifier.isStatic(m.getModifiers()) || m.isSynthetic()
