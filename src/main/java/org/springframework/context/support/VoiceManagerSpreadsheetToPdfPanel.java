@@ -179,18 +179,13 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 					//
 				(pdComplexFileSpecification = new PDComplexFileSpecification()).setFile(i + ".wav");
 				//
-				try {
-					//
-					testAndAccept(Objects::nonNull,
-							tempFile = File.createTempFile(RandomStringUtils.secureStrong().nextAlphabetic(3), null),
-							Util::deleteOnExit);
-					//
-				} catch (final IOException e) {
-					//
-					throw new RuntimeException(e);
-					//
-				} // try
-					//
+				testAndAccept(Objects::nonNull,
+						tempFile = createTempFile(RandomStringUtils.secureStrong().nextAlphabetic(3), null, e -> {
+							//
+							throw new RuntimeException(e);
+							//
+						}), Util::deleteOnExit);
+				//
 				speechApi.writeVoiceToFile(data.text, getVoice(speechApi,
 						objIntFunction = ObjectUtils.getIfNull(objIntFunction, LanguageCodeToTextObjIntFunction::new),
 						data.voice)
@@ -244,6 +239,22 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 		} // if
 			//
+	}
+
+	private static File createTempFile(final String prefix, final String suffix, final Consumer<IOException> consumer) {
+		//
+		try {
+			//
+			return testAndApply(Objects::nonNull, prefix, x -> File.createTempFile(x, suffix), null);
+			//
+		} catch (final IOException e) {
+			//
+			Util.accept(consumer, e);
+			//
+		} // try
+			//
+		return null;
+		//
 	}
 
 	@Nullable
