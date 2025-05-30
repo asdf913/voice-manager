@@ -189,14 +189,11 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 					//
 				} // if
 					//
-			} else if (Util.isAssignableFrom(CLASS_BI_FLOAT_FLOAT_FUNCTION_CLASS, Util.getClass(proxy))) {
+			} else if (Util.isAssignableFrom(CLASS_BI_FLOAT_FLOAT_FUNCTION_CLASS, Util.getClass(proxy))
+					&& Objects.equals(name, "apply")) {
 				//
-				if (Objects.equals(name, "apply")) {
-					//
-					return apply;
-					//
-				} // if
-					//
+				return apply;
+				//
 			} // if
 				//
 			throw new Throwable(name);
