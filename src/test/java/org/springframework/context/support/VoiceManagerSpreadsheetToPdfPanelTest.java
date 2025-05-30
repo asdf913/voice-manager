@@ -20,10 +20,12 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.graphics.image.PDInlineImage;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.poi.hssf.usermodel.HSSFObjectData;
 import org.apache.poi.hssf.usermodel.HSSFPicture;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -64,7 +66,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH_PD_RECTANGLE,
 			METHOD_GET_WIDTH_PD_IMAGE, METHOD_GET_HEIGHT_PD_RECTANGLE, METHOD_GET_HEIGHT_PD_IMAGE,
 			METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE,
-			METHOD_TEST_AND_ACCEPT, METHOD_SET_FIELD, METHOD_SAVE = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_SET_FIELD, METHOD_SAVE, METHOD_GET_ANNOTATIONS = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -100,6 +102,9 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_SAVE = clz.getDeclaredMethod("save", PDDocument.class, File.class, Consumer.class)).setAccessible(true);
+		//
+		(METHOD_GET_ANNOTATIONS = clz.getDeclaredMethod("getAnnotations", PDPage.class, Consumer.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -211,6 +216,20 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 					//
 				return null;
 				//
+			} else if (self instanceof PDPage) {
+				//
+				if (Objects.equals(methodName, "getAnnotations")) {
+					//
+					if (ioException != null) {
+						//
+						throw ioException;
+						//
+					} // if
+						//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -225,12 +244,16 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private PDRectangle pdRectangle = null;
 
+	private MH mh = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		pdImage = Reflection.newProxy(PDImage.class, ih = new IH());
 		//
 		pdRectangle = Util.cast(PDRectangle.class, Narcissus.allocateInstance(PDRectangle.class));
+		//
+		mh = new MH();
 		//
 	}
 
@@ -698,14 +721,16 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	@Test
 	void testSave() throws Throwable {
 		//
-		final MH mh = new MH();
-		//
 		final PDDocument pdDocument = ProxyUtil.createProxy(PDDocument.class, mh);
 		//
 		Assertions.assertDoesNotThrow(() -> save(pdDocument, null, null));
 		//
-		mh.ioException = new IOException();
-		//
+		if (mh != null) {
+			//
+			mh.ioException = new IOException();
+			//
+		} // if
+			//
 		Assertions.assertDoesNotThrow(() -> save(pdDocument, null, null));
 		//
 	}
@@ -714,6 +739,34 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			throws Throwable {
 		try {
 			METHOD_SAVE.invoke(null, instance, file, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetAnnotations() throws Throwable {
+		//
+		if (mh != null) {
+			//
+			mh.ioException = new IOException();
+			//
+		} // if
+			//
+		Assertions.assertNull(getAnnotations(ProxyUtil.createProxy(PDPage.class, mh), null));
+		//
+	}
+
+	private static List<PDAnnotation> getAnnotations(final PDPage instance, final Consumer<IOException> consumer)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_ANNOTATIONS.invoke(null, instance, consumer);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof List) {
+				return (List) obj;
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

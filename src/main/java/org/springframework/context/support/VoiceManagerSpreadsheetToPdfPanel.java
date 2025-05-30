@@ -56,6 +56,7 @@ import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecifica
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -265,16 +266,12 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 				//
 				pdAnnotationFileAttachment.setContents(data.contents);
 				//
-				try {
-					//
-					Util.add(pdPage.getAnnotations(), pdAnnotationFileAttachment);
-					//
-				} catch (final IOException e) {
+				Util.add(getAnnotations(pdPage, e -> {
 					//
 					throw new RuntimeException(e);
 					//
-				} // try
-					//
+				}), pdAnnotationFileAttachment);
+				//
 			} // for
 				//
 			testAndAccept(x -> !isTestMode(), file = Util.toFile(Path.of("test.pdf")), x -> {// TODO
@@ -291,6 +288,22 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 		} // if
 			//
+	}
+
+	private static List<PDAnnotation> getAnnotations(final PDPage instance, final Consumer<IOException> consumer) {
+		//
+		try {
+			//
+			return PDPageUtil.getAnnotations(instance);
+			//
+		} catch (final IOException e) {
+			//
+			Util.accept(consumer, e);
+			//
+		} // try
+			//
+		return null;
+		//
 	}
 
 	private static void save(final PDDocument instance, final File file, final Consumer<IOException> consumer) {
