@@ -855,7 +855,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 					//
 					ObjectMap.setObject(objectMap, VoiceManagerImageToPdfPanel.class, this);
 					//
-					addImage(objectMap, pageWidth, size, getTextHeight(font, fontSize, size));
+					addImage(objectMap, pageWidth, size, getTextHeight(font, fontSize, size, pdRectangle));
 					//
 				} catch (final IOException | NoSuchMethodException e) {
 					//
@@ -967,13 +967,12 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 	}
 
-	private static int getTextHeight(final PDFont font, final float fontSize, final float size) throws IOException {
+	private static int getTextHeight(final PDFont font, final float fontSize, final float size,
+			final PDRectangle pdRectangle) throws IOException {
 		//
 		final PDDocument pdDocument = new PDDocument();
 		//
-		final PDRectangle pdRectangle = PDRectangle.A4;// TODO
-		//
-		final PDPage pdPage = new PDPage(pdRectangle);
+		final PDPage pdPage = testAndApply(Objects::nonNull, pdRectangle, PDPage::new, x -> new PDPage());
 		//
 		pdDocument.addPage(pdPage);
 		//
