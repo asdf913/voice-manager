@@ -470,12 +470,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 										ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
 						MigLayout::new));
 		//
-		if (panel.getLayout() instanceof MigLayout migLayout) {
-			//
-			migLayout.setLayoutConstraints("insets 0 0 0 0");
-			//
-		} // if
-			//
+		setLayoutConstraints(Util.cast(MigLayout.class, panel.getLayout()), "insets 0 0 0 0");
+		//
 		panel.add(tfOutputFile = new JTextField(), String.format("wmin %1$s", 378));
 		//
 		panel.add(btnCopyOutputFilePath = new JButton("Copy"));
@@ -490,6 +486,12 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				Stream.of(tfSpeechLanguageCode, tfSpeechLanguageName, tfImageFile, tfImageUrlStateCode, tfOutputFile),
 				x -> Util.setEditable(x, false));
 		//
+	}
+
+	private static void setLayoutConstraints(final MigLayout instance, final Object constr) {
+		if (instance != null) {
+			instance.setLayoutConstraints(constr);
+		}
 	}
 
 	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, final E item) {
