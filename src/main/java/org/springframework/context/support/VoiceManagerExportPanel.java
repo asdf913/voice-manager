@@ -3733,7 +3733,7 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				final File tempFile = createTempFile(randomAlphabetic(TEMP_FILE_MINIMUM_PREFIX_LENGTH), null);
 				//
-				deleteOnExit(tempFile);
+				Util.deleteOnExit(tempFile);
 				//
 				FileUtils.copyFile(file, tempFile);
 				//
@@ -3769,12 +3769,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 			} // if
 				//
-		}
-
-		private static void deleteOnExit(@Nullable final File instance) {
-			if (instance != null) {
-				instance.deleteOnExit();
-			}
 		}
 
 		private static String randomAlphabetic(final int count) {

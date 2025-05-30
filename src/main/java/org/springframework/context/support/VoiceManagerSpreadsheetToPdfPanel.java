@@ -67,8 +67,6 @@ import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.ThrowingRunnableUtil;
-import org.oxbow.swingbits.util.OperatingSystem;
-import org.oxbow.swingbits.util.OperatingSystemUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
@@ -200,7 +198,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			//
 			testAndAccept(Objects::nonNull,
 					tempFile = File.createTempFile(RandomStringUtils.secureStrong().nextAlphabetic(3), null),
-					x -> deleteOnExit(x));
+					x -> Util.deleteOnExit(x));
 			//
 			speechApi.writeVoiceToFile(data.text, getVoice(speechApi,
 					objIntFunction = ObjectUtils.getIfNull(objIntFunction, LanguageCodeToTextObjIntFunction::new),
@@ -340,20 +338,6 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		} // if
 			//
 		return instance != null ? instance.getWidth() : 0;
-		//
-	}
-
-	private static void deleteOnExit(@Nullable final File instance) {
-		//
-		if (instance == null
-				|| Boolean.logicalAnd(Util.contains(Arrays.asList(OperatingSystem.WINDOWS, OperatingSystem.LINUX),
-						OperatingSystemUtil.getOperatingSystem()), instance.getPath() == null)) {
-			//
-			return;
-			//
-		} // if
-			//
-		instance.deleteOnExit();
 		//
 	}
 

@@ -912,12 +912,8 @@ class VoiceManagerPdfPanelTest {
 		//
 		final File file = File.createTempFile(nextAlphanumeric(RandomStringUtils.secure(), 3), null);
 		//
-		if (file != null) {
-			//
-			file.deleteOnExit();
-			//
-		} // if
-			//
+		Util.deleteOnExit(file);
+		//
 		Assertions.assertNull(toAudioResource(contentInfoUtil, new File[] { file }));
 		//
 		if (Util.exists(file)) {

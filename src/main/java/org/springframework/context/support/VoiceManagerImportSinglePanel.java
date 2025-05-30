@@ -2397,7 +2397,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				Util.cast(Pronunciation.class, Util.getSelectedItem(mcbmPronunciation)),
 				Util.getSelectedItem(mcbmPronounicationAudioFormat));
 		//
-		deleteOnExit(file);
+		Util.deleteOnExit(file);
 		//
 		final Voice voice = createVoice(getObjectMapper(), this);
 		//
@@ -2407,7 +2407,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 			try {
 				//
-				deleteOnExit(file = generateTtsAudioFile(headless, nonTest, voice));
+				Util.deleteOnExit(file = generateTtsAudioFile(headless, nonTest, voice));
 				//
 			} catch (final IllegalAccessException e) {
 				//
@@ -3635,12 +3635,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		return voiceId;
 		//
-	}
-
-	private static void deleteOnExit(@Nullable final File instance) {
-		if (instance != null) {
-			instance.deleteOnExit();
-		}
 	}
 
 	@Nullable

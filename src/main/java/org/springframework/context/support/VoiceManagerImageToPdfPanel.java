@@ -688,7 +688,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 					//
 					testAndAccept(Objects::nonNull,
 							tempFile = File.createTempFile(nextAlphabetic(RandomStringUtils.secureStrong(), 3), null),
-							VoiceManagerImageToPdfPanel::deleteOnExit);
+							Util::deleteOnExit);
 					//
 				} catch (final IOException e) {
 					//
@@ -1281,12 +1281,6 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 	private static int getHeight(@Nullable final PDImage instance) {
 		return instance != null ? instance.getHeight() : 0;
-	}
-
-	private static void deleteOnExit(@Nullable final File instance) {
-		if (instance != null) {
-			instance.deleteOnExit();
-		}
 	}
 
 	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,

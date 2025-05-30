@@ -90,6 +90,8 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.oxbow.swingbits.util.OperatingSystem;
+import org.oxbow.swingbits.util.OperatingSystemUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -1741,6 +1743,20 @@ public abstract class Util {
 	@Nullable
 	static URI toURI(@Nullable final File instance) {
 		return instance != null ? instance.toURI() : null;
+	}
+
+	static void deleteOnExit(final File instance) {
+		//
+		if (instance == null
+				|| Boolean.logicalAnd(contains(Arrays.asList(OperatingSystem.WINDOWS, OperatingSystem.LINUX),
+						OperatingSystemUtil.getOperatingSystem()), instance.getPath() == null)) {
+			//
+			return;
+			//
+		} // if
+			//
+		instance.deleteOnExit();
+		//
 	}
 
 	@Nullable

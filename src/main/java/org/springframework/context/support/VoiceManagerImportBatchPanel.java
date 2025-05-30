@@ -2068,7 +2068,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 							: null,
 					x -> FileUtils.writeByteArrayToFile(it.file, x));
 			//
-			deleteOnExit(it.file);
+			Util.deleteOnExit(it.file);
 			//
 		} // if
 			//
@@ -2201,12 +2201,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		}
 	}
 
-	private static void deleteOnExit(@Nullable final File instance) {
-		if (instance != null) {
-			instance.deleteOnExit();
-		}
-	}
-
 	@Nullable
 	private static File createTempFile(final String prefix, @Nullable final String suffix)
 			throws IllegalAccessException, InvocationTargetException {
@@ -2258,7 +2252,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 					//
 					FileUtils.copyInputStreamToFile(is, it.file);
 					//
-					deleteOnExit(it.file);
+					Util.deleteOnExit(it.file);
 					//
 				} // if
 					//
