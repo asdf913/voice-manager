@@ -246,6 +246,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 	}
 
+	@Nullable
 	private static File getSelectedFile() {
 		//
 		final JFileChooser jfc = new JFileChooser();
