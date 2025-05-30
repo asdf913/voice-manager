@@ -241,6 +241,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 	}
 
+	@Nullable
 	private static File createTempFile(final String prefix, @Nullable final String suffix,
 			final Consumer<IOException> consumer) {
 		//
