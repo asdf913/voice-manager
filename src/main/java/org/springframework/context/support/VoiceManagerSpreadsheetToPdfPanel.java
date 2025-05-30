@@ -243,7 +243,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		//
 	}
 
-	private static int getNumberOfSheets(final Workbook instance) {
+	private static int getNumberOfSheets(@Nullable final Workbook instance) {
 		//
 		final Map<String, String> map = new LinkedHashMap<>(Map.of("org.apache.poi.hssf.usermodel.HSSFWorkbook",
 				"_sheets", "org.apache.poi.xssf.usermodel.XSSFWorkbook", "sheets"));
