@@ -736,12 +736,14 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				final PDRectangle pdRectangle = ObjectUtils.defaultIfNull(Util.cast(PDRectangle.class,
 						testAndApply(x -> x instanceof Entry, Util.getSelectedItem(cbmPDRectangle), x -> {
 							//
-							return testAndApply(Objects::nonNull,
-									testAndApply(y -> IterableUtils.size(y) == 1, Util.toList(Util.filter(
-											testAndApply(Objects::nonNull, Util.getMethods(Util.getClass(x)),
-													Arrays::stream, null),
-											y -> Boolean.logicalAnd(Objects.equals(Util.getName(y), "getValue"),
-													Arrays.equals(Util.getParameterTypes(y), new Class<?>[] {})))),
+							final Collection<Method> ms = Util.toList(Util.filter(
+									testAndApply(Objects::nonNull, Util.getMethods(Util.getClass(x)), Arrays::stream,
+											null),
+									y -> Boolean.logicalAnd(Objects.equals(Util.getName(y), "getValue"),
+											Arrays.equals(Util.getParameterTypes(y), new Class<?>[] {}))));
+							//
+							return testAndApply(
+									Objects::nonNull, testAndApply(y -> IterableUtils.size(y) == 1, ms,
 											y -> IterableUtils.get(y, 0), null),
 									y -> Narcissus.invokeMethod(x, y), null);
 							//
