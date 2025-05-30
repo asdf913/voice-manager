@@ -216,20 +216,16 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 					//
 				return null;
 				//
-			} else if (self instanceof PDPage) {
+			} else if (self instanceof PDPage && Objects.equals(methodName, "getAnnotations")) {
 				//
-				if (Objects.equals(methodName, "getAnnotations")) {
+				if (ioException != null) {
 					//
-					if (ioException != null) {
-						//
-						throw ioException;
-						//
-					} // if
-						//
-					return null;
+					throw ioException;
 					//
 				} // if
 					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
