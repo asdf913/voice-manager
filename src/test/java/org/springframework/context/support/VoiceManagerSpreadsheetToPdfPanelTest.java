@@ -1,5 +1,7 @@
 package org.springframework.context.support;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -10,12 +12,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
@@ -50,6 +54,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyUtil;
 
 class VoiceManagerSpreadsheetToPdfPanelTest {
 
@@ -58,7 +64,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH_PD_RECTANGLE,
 			METHOD_GET_WIDTH_PD_IMAGE, METHOD_GET_HEIGHT_PD_RECTANGLE, METHOD_GET_HEIGHT_PD_IMAGE,
 			METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE,
-			METHOD_TEST_AND_ACCEPT, METHOD_SET_FIELD = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_SET_FIELD, METHOD_SAVE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -92,6 +98,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_SET_FIELD = clz.getDeclaredMethod("setField", Object.class, Field.class, Object.class))
 				.setAccessible(true);
+		//
+		(METHOD_SAVE = clz.getDeclaredMethod("save", PDDocument.class, File.class, Consumer.class)).setAccessible(true);
 		//
 	}
 
@@ -178,6 +186,34 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			} // if
 				//
 			throw new Throwable(name);
+			//
+		}
+
+	}
+
+	private static class MH implements MethodHandler {
+
+		private IOException ioException = null;
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			final String methodName = Util.getName(thisMethod);
+			//
+			if (self instanceof PDDocument && Objects.equals(methodName, "save")) {
+				//
+				if (ioException != null) {
+					//
+					throw ioException;
+					//
+				} // if
+					//
+				return null;
+				//
+			} // if
+				//
+			throw new Throwable(methodName);
 			//
 		}
 
@@ -654,6 +690,30 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static void setField(final Object instance, final Field field, final Object value) throws Throwable {
 		try {
 			METHOD_SET_FIELD.invoke(null, instance, field, value);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSave() throws Throwable {
+		//
+		final MH mh = new MH();
+		//
+		final PDDocument pdDocument = ProxyUtil.createProxy(PDDocument.class, mh);
+		//
+		Assertions.assertDoesNotThrow(() -> save(pdDocument, null, null));
+		//
+		mh.ioException = new IOException();
+		//
+		Assertions.assertDoesNotThrow(() -> save(pdDocument, null, null));
+		//
+	}
+
+	private static void save(final PDDocument instance, final File file, final Consumer<IOException> consumer)
+			throws Throwable {
+		try {
+			METHOD_SAVE.invoke(null, instance, file, consumer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

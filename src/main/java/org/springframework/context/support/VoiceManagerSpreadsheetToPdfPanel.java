@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -276,24 +277,37 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 					//
 			} // for
 				//
-			try {
+			testAndAccept(x -> !isTestMode(), file = Util.toFile(Path.of("test.pdf")), x -> {// TODO
 				//
-				testAndAccept(x -> !isTestMode(), file = Util.toFile(Path.of("test.pdf")), x -> {// TODO
+				System.out.println(Util.getAbsolutePath(x));
+				//
+				save(pdDocument, x, e -> {
 					//
-					System.out.println(Util.getAbsolutePath(x));
-					//
-					pdDocument.save(x);
+					throw new RuntimeException(e);
 					//
 				});
 				//
-			} catch (final IOException e) {
-				//
-				throw new RuntimeException(e);
-				//
-			} // try
-				//
-				//
+			});
+			//
 		} // if
+			//
+	}
+
+	private static void save(final PDDocument instance, final File file, final Consumer<IOException> consumer) {
+		//
+		try {
+			//
+			if (instance != null) {
+				//
+				instance.save(file);
+				//
+			} // if
+				//
+		} catch (final IOException e) {
+			//
+			Util.accept(consumer, e);
+			//
+		} // try
 			//
 	}
 
