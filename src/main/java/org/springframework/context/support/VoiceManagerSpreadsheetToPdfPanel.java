@@ -255,7 +255,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 	}
 
-	private static float drawImage(final Drawing<?> drawing, final PDDocument pdDocument, final PDPage pdPage)
+	private static float drawImage(@Nullable final Drawing<?> drawing, final PDDocument pdDocument, final PDPage pdPage)
 			throws IOException {
 		//
 		final List<?> list = testAndApply(Objects::nonNull, Util.iterator(drawing), IteratorUtils::toList, null);
