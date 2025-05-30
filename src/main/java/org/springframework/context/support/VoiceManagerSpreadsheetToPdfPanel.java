@@ -297,6 +297,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 	}
 
+	@Nullable
 	private static List<PDAnnotation> getAnnotations(final PDPage instance, final Consumer<IOException> consumer) {
 		//
 		try {
