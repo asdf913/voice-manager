@@ -121,7 +121,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 			File file = null;
 			//
-			if (!GraphicsEnvironment.isHeadless() && !isTestMode()
+			if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
 					&& jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 				//
 				file = jfc.getSelectedFile();
