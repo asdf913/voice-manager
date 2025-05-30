@@ -163,10 +163,8 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 					//
 					imageHeight = getHeight(pdImageXObject);
 					//
-					pageHeight = imageHeight * (ratioMin = Math.min(
-							testAndApply(imageWidth == 0, pageWidth, imageWidth, (a, b) -> 0, (a, b) -> a / b, 0),
-							testAndApply(imageHeight == 0, getHeight(pdRectangle), imageHeight, (a, b) -> 0,
-									(a, b) -> a / b, 0)));
+					pageHeight = imageHeight * (ratioMin = Math.min(imageWidth == 0 ? 0 : pageWidth / imageWidth,
+							imageHeight == 0 ? 0 : getHeight(pdRectangle) / imageHeight));
 					//
 					cs.drawImage(pdImageXObject, 0, (imageHeight - pageHeight) / 2, imageWidth * ratioMin, pageHeight);
 					//
@@ -241,24 +239,6 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			//
 		});
 		//
-	}
-
-	private static interface BiFloatFloatFunction {
-
-		float apply(final float a, final float b);
-
-		private static float apply(@Nullable final BiFloatFloatFunction instance, final float a, final float b,
-				final float defautlValue) {
-			return instance != null ? instance.apply(a, b) : defautlValue;
-		}
-
-	}
-
-	private static float testAndApply(final boolean condition, final float a, final float b,
-			final BiFloatFloatFunction functionTrue, final BiFloatFloatFunction functionFalse,
-			final float defaultValue) {
-		return condition ? BiFloatFloatFunction.apply(functionTrue, a, b, defaultValue)
-				: BiFloatFloatFunction.apply(functionFalse, a, b, defaultValue);
 	}
 
 	private static int getHeight(@Nullable final PDImage instance) {
