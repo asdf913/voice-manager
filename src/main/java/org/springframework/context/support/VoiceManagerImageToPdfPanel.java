@@ -324,7 +324,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		Util.forEach(
 				Util.filter(Util.stream(FieldUtils.getAllFieldsList(PDRectangle.class)),
-						x -> Util.isAssignableFrom(PDRectangle.class, Util.getType(x)) && Util.isStatic(x)),
+						x -> Boolean.logicalAnd(Util.isAssignableFrom(PDRectangle.class, Util.getType(x)),
+								Util.isStatic(x))),
 				x -> addElement(mcbm, Pair.of(Util.getName(x), Narcissus.getStaticField(x))));
 		//
 		Integer index = null;
