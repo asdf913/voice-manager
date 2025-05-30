@@ -485,7 +485,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	}
 
 	private static void setSelectedIndex(@Nullable final JComboBox<?> instance, final Number index) {
-		if (instance != null) {
+		if (instance != null && index != null) {
 			instance.setSelectedIndex(index.intValue());
 		}
 	}
