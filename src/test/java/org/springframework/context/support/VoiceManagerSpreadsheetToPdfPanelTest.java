@@ -1,6 +1,5 @@
 package org.springframework.context.support;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -61,7 +60,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH_PD_RECTANGLE,
 			METHOD_GET_WIDTH_PD_IMAGE, METHOD_GET_HEIGHT_PD_RECTANGLE, METHOD_GET_HEIGHT_PD_IMAGE,
 			METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE,
-			METHOD_TEST_AND_ACCEPT, METHOD_DELETE_ON_EXIT, METHOD_SET_FIELD = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_SET_FIELD = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -92,8 +91,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
 				FailableConsumer.class)).setAccessible(true);
-		//
-		(METHOD_DELETE_ON_EXIT = clz.getDeclaredMethod("deleteOnExit", File.class)).setAccessible(true);
 		//
 		(METHOD_SET_FIELD = clz.getDeclaredMethod("setField", Object.class, Field.class, Object.class))
 				.setAccessible(true);
@@ -642,22 +639,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			final FailableConsumer<T, E> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, value, consumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testDeleteOnExit() {
-		//
-		Assertions
-				.assertDoesNotThrow(() -> deleteOnExit(Util.cast(File.class, Narcissus.allocateInstance(File.class))));
-		//
-	}
-
-	private static void deleteOnExit(final File instance) throws Throwable {
-		try {
-			METHOD_DELETE_ON_EXIT.invoke(null, instance);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
