@@ -1,5 +1,8 @@
 package org.springframework.context.support;
 
+import java.awt.GraphicsEnvironment;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +28,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.IteratorUtils;
@@ -47,7 +56,6 @@ import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
-import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellUtil;
@@ -67,10 +75,227 @@ import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.ThrowingRunnableUtil;
+import org.springframework.beans.factory.InitializingBean;
 
 import io.github.toolfactory.narcissus.Narcissus;
 
-public class VoiceManagerSpreadsheetToPdfPanel {
+public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements InitializingBean, ActionListener {
+
+	private static final long serialVersionUID = -7995853525217556061L;
+
+	private AbstractButton btnExecute = null;
+
+	private VoiceManagerSpreadsheetToPdfPanel() {
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		//
+		final List<Field> fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
+				f -> Objects.equals(Util.getName(f), "component")));
+		//
+		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
+		//
+		if (f == null || Narcissus.getField(this, f) != null) {
+			//
+			add(btnExecute = new JButton("Execute"));
+			//
+		} // if
+			//
+		Util.addActionListener(btnExecute, this);
+		//
+	}
+
+	@Override
+	public void actionPerformed(final ActionEvent evt) {
+		//
+		if (Objects.equals(Util.getSource(evt), btnExecute)) {
+			//
+			Drawing<?> drawingPatriarch = null;
+			//
+			Iterable<Data> dataList = null;
+			//
+			final JFileChooser jfc = new JFileChooser();
+			//
+			File file = null;
+			//
+			if (!GraphicsEnvironment.isHeadless() && !isTestMode()
+					&& jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+				//
+				file = jfc.getSelectedFile();
+				//
+			} // if
+				//
+			try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
+				//
+				final Sheet sheet = testAndApply(x -> WorkbookUtil.getNumberOfSheets(wb) == 1, wb,
+						x -> WorkbookUtil.getSheetAt(x, 0), null);
+				//
+				drawingPatriarch = getDrawingPatriarch(sheet);
+				//
+				dataList = getDataIterable(
+						testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null));
+				//
+			} catch (final IOException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+			final List<?> list = testAndApply(Objects::nonNull, Util.iterator(drawingPatriarch), IteratorUtils::toList,
+					null);
+			//
+			testAndRunThrows(IterableUtils.size(list) > 1, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			final PDDocument pdDocument = new PDDocument();
+			//
+			final PDRectangle pdRectangle = PDRectangle.A4;// TODO
+			//
+			final PDPage pdPage = new PDPage(pdRectangle);
+			//
+			pdDocument.addPage(pdPage);
+			//
+			PictureData pictureData = null;
+			//
+			final PDRectangle mediaBox = PDPageUtil.getMediaBox(pdPage);
+			//
+			float pageWidth = getWidth(mediaBox);
+			//
+			Data data = null;
+			//
+			float imageWidth, imageHeight, pageHeight, ratioMin = 0;
+			//
+			PDImageXObject pdImageXObject = null;
+			//
+			for (int i = 0; i < IterableUtils.size(list); i++) {
+				//
+				if (IterableUtils.get(list, i) instanceof Picture picture
+						&& (pictureData = getPictureData(picture)) != null) {
+					//
+					try (final PDPageContentStream cs = new PDPageContentStream(pdDocument, pdPage)) {
+						//
+						imageWidth = getWidth(pdImageXObject = PDImageXObject.createFromByteArray(pdDocument,
+								pictureData.getData(), null));
+						//
+						imageHeight = getHeight(pdImageXObject);
+						//
+						pageHeight = imageHeight * (ratioMin = Math.min(imageWidth == 0 ? 0 : pageWidth / imageWidth,
+								imageHeight == 0 ? 0 : getHeight(pdRectangle) / imageHeight));
+						//
+						cs.drawImage(pdImageXObject, 0, (imageHeight - pageHeight) / 2, imageWidth * ratioMin,
+								pageHeight);
+						//
+					} catch (final IOException e) {
+						//
+						throw new RuntimeException(e);
+						//
+					} // try
+						//
+				} // if
+					//
+			} // for
+				//
+			PDComplexFileSpecification pdComplexFileSpecification = null;
+			//
+			PDAnnotationFileAttachment pdAnnotationFileAttachment = null;
+			//
+			final SpeechApi speechApi = new SpeechApiImpl();
+			//
+			File tempFile = null;
+			//
+			final int size = 10;// TODO
+			//
+			ObjIntFunction<String, String> objIntFunction = null;
+			//
+			for (int i = 0; i < IterableUtils.size(dataList); i++) {
+				//
+				if ((data = IterableUtils.get(dataList, i)) == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				(pdComplexFileSpecification = new PDComplexFileSpecification()).setFile(i + ".wav");
+				//
+				try {
+					//
+					testAndAccept(Objects::nonNull,
+							tempFile = File.createTempFile(RandomStringUtils.secureStrong().nextAlphabetic(3), null),
+							Util::deleteOnExit);
+					//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
+				speechApi.writeVoiceToFile(data.text, getVoice(speechApi,
+						objIntFunction = ObjectUtils.getIfNull(objIntFunction, LanguageCodeToTextObjIntFunction::new),
+						data.voice)
+				//
+						, i * -1// TODO
+						//
+						, 100, null, tempFile);
+				//
+				try (final InputStream is = Files.newInputStream(Util.toPath(tempFile))) {
+					//
+					pdComplexFileSpecification.setEmbeddedFile(new PDEmbeddedFile(pdDocument, is));
+					//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
+				(pdAnnotationFileAttachment = new PDAnnotationFileAttachment()).setFile(pdComplexFileSpecification);
+				//
+				pdAnnotationFileAttachment.setRectangle(new PDRectangle(floatValue(data.x, 0) * ratioMin,
+						getHeight(mediaBox) - (floatValue(data.y, size) + floatValue(data.height, size)) * ratioMin
+						//
+						, floatValue(data.width, size) * ratioMin
+						//
+						, floatValue(data.height, size) * ratioMin)
+				//
+				);
+				//
+				pdAnnotationFileAttachment.setContents(data.contents);
+				//
+				try {
+					//
+					Util.add(pdPage.getAnnotations(), pdAnnotationFileAttachment);
+					//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
+			} // for
+				//
+			try {
+				//
+				testAndAccept(x -> !isTestMode(), file = Util.toFile(Path.of("test.pdf")), x -> {// TODO
+					//
+					System.out.println(Util.getAbsolutePath(x));
+					//
+					pdDocument.save(x);
+					//
+				});
+				//
+			} catch (final IOException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+				//
+		} // if
+			//
+	}
 
 	private static class Data {
 
@@ -101,144 +326,26 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 
 	}
 
-	public static void main(final String[] args) throws EncryptedDocumentException, IOException {
+	public static void main(final String[] args) throws Exception {
 		//
-		Drawing<?> drawingPatriarch = null;
+		final VoiceManagerSpreadsheetToPdfPanel instance = new VoiceManagerSpreadsheetToPdfPanel();
 		//
-		Iterable<Data> dataList = null;
+		instance.afterPropertiesSet();
 		//
-		File file = testAndApply(Objects::nonNull,
-				testAndApply(x -> x != null && x.length == 1, args, x -> ArrayUtils.get(x, 0), null), File::new, null);
+		final JFrame jFrame = !GraphicsEnvironment.isHeadless() ? new JFrame() : null;
 		//
-		try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
+		if (jFrame != null) {
 			//
-			final Sheet sheet = testAndApply(x -> WorkbookUtil.getNumberOfSheets(wb) == 1, wb,
-					x -> WorkbookUtil.getSheetAt(x, 0), null);
+			jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 			//
-			drawingPatriarch = getDrawingPatriarch(sheet);
+			jFrame.add(instance);
 			//
-			dataList = getDataIterable(
-					testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null));
+			jFrame.pack();
 			//
-		} // try
+			jFrame.setVisible(true);
 			//
-		final List<?> list = testAndApply(Objects::nonNull, Util.iterator(drawingPatriarch), IteratorUtils::toList,
-				null);
-		//
-		testAndRunThrows(IterableUtils.size(list) > 1, () -> {
+		} // if
 			//
-			throw new IllegalStateException();
-			//
-		});
-		//
-		final PDDocument pdDocument = new PDDocument();
-		//
-		final PDRectangle pdRectangle = PDRectangle.A4;// TODO
-		//
-		final PDPage pdPage = new PDPage(pdRectangle);
-		//
-		pdDocument.addPage(pdPage);
-		//
-		PictureData pictureData = null;
-		//
-		final PDRectangle mediaBox = PDPageUtil.getMediaBox(pdPage);
-		//
-		float pageWidth = getWidth(mediaBox);
-		//
-		Data data = null;
-		//
-		float imageWidth, imageHeight, pageHeight, ratioMin = 0;
-		//
-		PDImageXObject pdImageXObject = null;
-		//
-		for (int i = 0; i < IterableUtils.size(list); i++) {
-			//
-			if (IterableUtils.get(list, i) instanceof Picture picture
-					&& (pictureData = getPictureData(picture)) != null) {
-				//
-				try (final PDPageContentStream cs = new PDPageContentStream(pdDocument, pdPage)) {
-					//
-					imageWidth = getWidth(pdImageXObject = PDImageXObject.createFromByteArray(pdDocument,
-							pictureData.getData(), null));
-					//
-					imageHeight = getHeight(pdImageXObject);
-					//
-					pageHeight = imageHeight * (ratioMin = Math.min(imageWidth == 0 ? 0 : pageWidth / imageWidth,
-							imageHeight == 0 ? 0 : getHeight(pdRectangle) / imageHeight));
-					//
-					cs.drawImage(pdImageXObject, 0, (imageHeight - pageHeight) / 2, imageWidth * ratioMin, pageHeight);
-					//
-				} // try
-					//
-			} // if
-				//
-		} // for
-			//
-		PDComplexFileSpecification pdComplexFileSpecification = null;
-		//
-		PDAnnotationFileAttachment pdAnnotationFileAttachment = null;
-		//
-		final SpeechApi speechApi = new SpeechApiImpl();
-		//
-		File tempFile = null;
-		//
-		final int size = 10;// TODO
-		//
-		ObjIntFunction<String, String> objIntFunction = null;
-		//
-		for (int i = 0; i < IterableUtils.size(dataList); i++) {
-			//
-			if ((data = IterableUtils.get(dataList, i)) == null) {
-				//
-				continue;
-				//
-			} // if
-				//
-			(pdComplexFileSpecification = new PDComplexFileSpecification()).setFile(i + ".wav");
-			//
-			testAndAccept(Objects::nonNull,
-					tempFile = File.createTempFile(RandomStringUtils.secureStrong().nextAlphabetic(3), null),
-					Util::deleteOnExit);
-			//
-			speechApi.writeVoiceToFile(data.text, getVoice(speechApi,
-					objIntFunction = ObjectUtils.getIfNull(objIntFunction, LanguageCodeToTextObjIntFunction::new),
-					data.voice)
-			//
-					, i * -1// TODO
-					//
-					, 100, null, tempFile);
-			//
-			try (final InputStream is = Files.newInputStream(Util.toPath(tempFile))) {
-				//
-				pdComplexFileSpecification.setEmbeddedFile(new PDEmbeddedFile(pdDocument, is));
-				//
-			} // try
-				//
-			(pdAnnotationFileAttachment = new PDAnnotationFileAttachment()).setFile(pdComplexFileSpecification);
-			//
-			pdAnnotationFileAttachment.setRectangle(new PDRectangle(floatValue(data.x, 0) * ratioMin,
-					getHeight(mediaBox) - (floatValue(data.y, size) + floatValue(data.height, size)) * ratioMin
-					//
-					, floatValue(data.width, size) * ratioMin
-					//
-					, floatValue(data.height, size) * ratioMin)
-			//
-			);
-			//
-			pdAnnotationFileAttachment.setContents(data.contents);
-			//
-			Util.add(pdPage.getAnnotations(), pdAnnotationFileAttachment);
-			//
-		} // for
-			//
-		testAndAccept(x -> !isTestMode(), file = Util.toFile(Path.of("test.pdf")), x -> {// TODO
-			//
-			System.out.println(Util.getAbsolutePath(x));
-			//
-			pdDocument.save(x);
-			//
-		});
-		//
 	}
 
 	private static int getHeight(@Nullable final PDImage instance) {

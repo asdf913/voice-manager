@@ -1,11 +1,9 @@
 package org.springframework.context.support;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -215,11 +213,15 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		String toString = null;
 		//
-		Object invokeStaticMethod = null;
+		Object[] os = null;
+		//
+		Object invoke = null;
+		//
+		VoiceManagerSpreadsheetToPdfPanel instance = null;
 		//
 		for (int i = ZERO; ms != null && i < ms.length; i++) {
 			//
-			if ((m = ms[i]) == null || !Modifier.isStatic(m.getModifiers()) || m.isSynthetic()) {
+			if ((m = ms[i]) == null || m.isSynthetic()) {
 				//
 				continue;
 				//
@@ -247,32 +249,30 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 					//
 			} // if
 				//
+			os = Util.toArray(collection);
+			//
 			toString = Util.toString(m);
 			//
-			invokeStaticMethod = Narcissus.invokeStaticMethod(m, Util.toArray(collection));
+			invoke = Util.isStatic(m) ? Narcissus.invokeStaticMethod(m, os)
+					: Narcissus
+							.invokeMethod(
+									instance = ObjectUtils.getIfNull(instance,
+											() -> Util.cast(VoiceManagerSpreadsheetToPdfPanel.class, Narcissus
+													.allocateInstance(VoiceManagerSpreadsheetToPdfPanel.class))),
+									m, os);
 			//
 			if (Util.contains(Arrays.asList(Float.TYPE, Boolean.TYPE, Integer.TYPE), m.getReturnType())) {
 				//
-				Assertions.assertNotNull(invokeStaticMethod, toString);
+				Assertions.assertNotNull(invoke, toString);
 				//
 			} else {
 				//
-				Assertions.assertNull(invokeStaticMethod, toString);
+				Assertions.assertNull(invoke, toString);
 				//
 			} // if
 				//
 		} // for
 			//
-	}
-
-	@Test
-	void testMain() {
-		//
-		Assertions.assertDoesNotThrow(() -> VoiceManagerSpreadsheetToPdfPanel.main(new String[] { "." }));
-		//
-		Assertions.assertThrows(IOException.class,
-				() -> VoiceManagerSpreadsheetToPdfPanel.main(new String[] { "pom.xml" }));
-		//
 	}
 
 	@Test
