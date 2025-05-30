@@ -213,7 +213,7 @@ public class GaKuNenBeTsuKanJiMultimapFactoryBean implements FactoryBean<Multima
 		//
 		Unit<Multimap<String, String>> mm = null;
 		//
-		final Sheet sheet = wb != null && wb.getNumberOfSheets() > 0 ? WorkbookUtil.getSheetAt(wb, 0) : null;
+		final Sheet sheet = WorkbookUtil.getNumberOfSheets(wb) > 0 ? WorkbookUtil.getSheetAt(wb, 0) : null;
 		//
 		if (Util.iterator(sheet) != null) {
 			//

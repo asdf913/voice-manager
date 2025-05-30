@@ -232,7 +232,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 						//
 				} else {
 					//
-					final int numberOfSheets = wb.getNumberOfSheets();
+					final int numberOfSheets = WorkbookUtil.getNumberOfSheets(wb);
 					//
 					if (numberOfSheets == 0) {
 						//

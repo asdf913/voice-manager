@@ -99,7 +99,7 @@ public class JlptVocabularyListFactoryBean implements FactoryBean<List<JlptVocab
 						final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
 					//
 					final IValue0<List<JlptVocabulary>> list = getJlptVocabularies(
-							wb != null && wb.getNumberOfSheets() == 1 ? WorkbookUtil.getSheetAt(wb, 0) : null,
+							WorkbookUtil.getNumberOfSheets(wb) == 1 ? WorkbookUtil.getSheetAt(wb, 0) : null,
 							CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb)));
 					//
 					if (list != null) {

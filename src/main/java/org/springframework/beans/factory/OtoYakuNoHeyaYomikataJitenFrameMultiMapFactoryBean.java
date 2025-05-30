@@ -103,7 +103,7 @@ public class OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBean implements Facto
 					ByteArrayInputStream::new, null);
 					final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
 				//
-				final Sheet sheet = wb != null && wb.getNumberOfSheets() > 0 ? WorkbookUtil.getSheetAt(wb, 0) : null;
+				final Sheet sheet = WorkbookUtil.getNumberOfSheets(wb) > 0 ? WorkbookUtil.getSheetAt(wb, 0) : null;
 				//
 				Row row = null;
 				//

@@ -23,6 +23,7 @@ import org.apache.poi.ss.usermodel.RowUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
@@ -142,7 +143,7 @@ public class JapaneseNameMultimapFactoryBean implements FactoryBean<Multimap<Str
 	@Nullable
 	private static IValue0<Multimap<String, String>> createMultimap(@Nullable final Workbook wb) {
 		//
-		final Sheet sheet = wb != null && wb.getNumberOfSheets() == 1 ? wb.getSheetAt(0) : null;
+		final Sheet sheet = WorkbookUtil.getNumberOfSheets(wb) == 1 ? WorkbookUtil.getSheetAt(wb, 0) : null;
 		//
 		final AtomicBoolean first = new AtomicBoolean(true);
 		//

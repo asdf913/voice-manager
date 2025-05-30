@@ -233,7 +233,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 						//
 				} else {
 					//
-					final int numberOfSheets = wb.getNumberOfSheets();
+					final int numberOfSheets = WorkbookUtil.getNumberOfSheets(wb);
 					//
 					if (numberOfSheets == 0) {
 						//

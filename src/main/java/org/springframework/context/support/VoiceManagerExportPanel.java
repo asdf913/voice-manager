@@ -1919,10 +1919,9 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 				if (!(fileToBeDeleted = longValue(length(file = Util.toFile(path)), 0) == 0)) {
 					//
-					fileToBeDeleted = Util.intValue(
-							getPhysicalNumberOfRows(testAndApply(x -> Util.intValue(getNumberOfSheets(x), 0) == 1,
-									workbook, x -> WorkbookUtil.getSheetAt(x, 0), null)),
-							0) == 0;
+					fileToBeDeleted = Util
+							.intValue(getPhysicalNumberOfRows(testAndApply(x -> WorkbookUtil.getNumberOfSheets(x) == 1,
+									workbook, x -> WorkbookUtil.getSheetAt(x, 0), null)), 0) == 0;
 					//
 				} // if
 					//
@@ -2546,11 +2545,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 				//
 		} // try
 			//
-	}
-
-	@Nullable
-	private static Integer getNumberOfSheets(@Nullable final Workbook instance) {
-		return instance != null ? Integer.valueOf(instance.getNumberOfSheets()) : null;
 	}
 
 	private static Workbook createWorkbook(@Nullable final List<Voice> voices, final BooleanMap booleanMap,

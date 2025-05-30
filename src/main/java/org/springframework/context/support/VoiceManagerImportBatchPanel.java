@@ -1452,7 +1452,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			StringMap stringMap = null;
 			//
-			for (int i = 0; i < Util.intValue(getNumberOfSheets(workbook), 0); i++) {
+			for (int i = 0; i < WorkbookUtil.getNumberOfSheets(workbook); i++) {
 				//
 				if (Util.contains(sheetExclued, getSheetName(sheet = WorkbookUtil.getSheetAt(workbook, i)))) {
 					//
@@ -1770,7 +1770,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			final Workbook workbook = sheet.getWorkbook();
 			//
-			final Integer numberOfSheets = getNumberOfSheets(workbook);
+			final Integer numberOfSheets = WorkbookUtil.getNumberOfSheets(workbook);
 			//
 			final int maxSheetNameLength = orElse(max(mapToInt(Util.map(
 					testAndApply(Objects::nonNull, spliterator(workbook), x -> StreamSupport.stream(x, false), null),
@@ -2630,7 +2630,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 		if (workbook != null) {
 			//
-			final int numberOfSheets = getNumberOfSheets(workbook);
+			final int numberOfSheets = WorkbookUtil.getNumberOfSheets(workbook);
 			//
 			for (int i = 0; i < numberOfSheets; i++) {
 				//
@@ -2887,11 +2887,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	@Nullable
 	private static String getSheetName(@Nullable final Sheet instance) {
 		return instance != null ? instance.getSheetName() : null;
-	}
-
-	@Nullable
-	private static Integer getNumberOfSheets(@Nullable final Workbook instance) {
-		return instance != null ? Integer.valueOf(instance.getNumberOfSheets()) : null;
 	}
 
 	@Nullable

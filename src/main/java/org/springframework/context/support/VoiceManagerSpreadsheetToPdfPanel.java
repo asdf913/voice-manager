@@ -114,8 +114,8 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 		//
 		try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
 			//
-			final Sheet sheet = testAndApply(x -> getNumberOfSheets(wb) == 1, wb, x -> WorkbookUtil.getSheetAt(x, 0),
-					null);
+			final Sheet sheet = testAndApply(x -> WorkbookUtil.getNumberOfSheets(wb) == 1, wb,
+					x -> WorkbookUtil.getSheetAt(x, 0), null);
 			//
 			drawingPatriarch = getDrawingPatriarch(sheet);
 			//
@@ -240,62 +240,6 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			pdDocument.save(x);
 			//
 		});
-		//
-	}
-
-	private static int getNumberOfSheets(@Nullable final Workbook instance) {
-		//
-		final Map<String, String> map = new LinkedHashMap<>(Map.of("org.apache.poi.hssf.usermodel.HSSFWorkbook",
-				"_sheets", "org.apache.poi.xssf.usermodel.XSSFWorkbook", "sheets"));
-		//
-		Util.putAll(map,
-				Util.collect(
-						Stream.of("org.apache.poi.xssf.streaming.SXSSFWorkbook",
-								"org.apache.poi.xssf.streaming.DeferredSXSSFSheet",
-								"org.apache.poi.poifs.crypt.temp.SXSSFWorkbookWithCustomZipEntrySource"),
-						Collectors.toMap(Function.identity(), x -> "_wb")));
-		//
-		final Iterable<Entry<String, String>> entrySet = Util.entrySet(map);
-		//
-		if (Util.iterator(entrySet) != null) {
-			//
-			final Class<?> clz = Util.getClass(instance);
-			//
-			final String name = Util.getName(Util.getClass(instance));
-			//
-			List<Field> fs = null;
-			//
-			Field f = null;
-			//
-			for (final Entry<String, String> entry : entrySet) {
-				//
-				if (!Objects.equals(name, Util.getKey(entry))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				testAndRunThrows(
-						IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
-								x -> Objects.equals(Util.getName(x), Util.getValue(entry))))) > 1,
-						() -> {
-							//
-							throw new IllegalStateException();
-							//
-						});
-				//
-				if ((f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) != null
-						&& Narcissus.getField(instance, f) == null) {
-					//
-					return 0;
-					//
-				} // if
-					//
-			} // for
-				//
-		} // if
-			//
-		return instance != null ? instance.getNumberOfSheets() : 0;
 		//
 	}
 

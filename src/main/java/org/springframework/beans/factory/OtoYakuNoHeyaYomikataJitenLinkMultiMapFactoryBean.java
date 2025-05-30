@@ -37,6 +37,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.WorkbookUtil;
 import org.apache.poi.ss.util.CellUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -226,7 +227,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 			try (final InputStream is = new ByteArrayInputStream(bs);
 					final Workbook wb = testAndApply(Objects::nonNull, is, WorkbookFactory::create, null)) {
 				//
-				final int numberOfSheets = wb.getNumberOfSheets();
+				final int numberOfSheets = WorkbookUtil.getNumberOfSheets(wb);
 				//
 				if (numberOfSheets == 0) {
 					//
