@@ -26,6 +26,8 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDInlineImage;
 import org.apache.poi.hssf.usermodel.HSSFObjectData;
 import org.apache.poi.hssf.usermodel.HSSFPicture;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.crypt.temp.SXSSFWorkbookWithCustomZipEntrySource;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Drawing;
@@ -33,13 +35,16 @@ import org.apache.poi.ss.usermodel.Picture;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.DeferredSXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFPicture;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFChartSheet;
 import org.apache.poi.xssf.usermodel.XSSFDialogsheet;
 import org.apache.poi.xssf.usermodel.XSSFPicture;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.d2ab.function.ObjIntFunction;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -61,7 +66,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH_PD_RECTANGLE,
 			METHOD_GET_WIDTH_PD_IMAGE, METHOD_GET_HEIGHT_PD_RECTANGLE, METHOD_GET_HEIGHT_PD_IMAGE,
 			METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE,
-			METHOD_TEST_AND_ACCEPT, METHOD_DELETE_ON_EXIT, METHOD_SET_FIELD = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_DELETE_ON_EXIT, METHOD_SET_FIELD, METHOD_GET_NUMBER_OF_SHEETS = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -98,6 +103,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		(METHOD_SET_FIELD = clz.getDeclaredMethod("setField", Object.class, Field.class, Object.class))
 				.setAccessible(true);
 		//
+		(METHOD_GET_NUMBER_OF_SHEETS = clz.getDeclaredMethod("getNumberOfSheets", Workbook.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -112,7 +119,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 		private Double numericCellValue = null;
 
-		private Integer width, height = null;
+		private Integer width, height, numberOfSheets = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -177,6 +184,14 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				} else if (Objects.equals(name, "getHeight")) {
 					//
 					return height;
+					//
+				} // if
+					//
+			} else if (proxy instanceof Workbook) {
+				//
+				if (Objects.equals(name, "getNumberOfSheets")) {
+					//
+					return numberOfSheets;
 					//
 				} // if
 					//
@@ -432,7 +447,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	@Test
 	void testGetDrawingPatriarch() throws Throwable {
 		//
-		Assertions.assertNull(getDrawingPatriarch(Reflection.newProxy(Sheet.class, new IH())));
+		Assertions.assertNull(getDrawingPatriarch(Reflection.newProxy(Sheet.class, ih)));
 		//
 		final Class<?>[] classes = new Class<?>[] { HSSFSheet.class, SXSSFSheet.class, DeferredSXSSFSheet.class,
 				XSSFDialogsheet.class, XSSFSheet.class, XSSFChartSheet.class, XSSFDialogsheet.class };
@@ -543,7 +558,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	@Test
 	void testGetPictureData() throws Throwable {
 		//
-		Assertions.assertNull(getPictureData(Reflection.newProxy(Picture.class, new IH())));
+		Assertions.assertNull(getPictureData(Reflection.newProxy(Picture.class, ih)));
 		//
 		final Class<?>[] classes = new Class<?>[] { HSSFPicture.class, HSSFObjectData.class, SXSSFPicture.class,
 				XSSFPicture.class };
@@ -673,6 +688,45 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static void setField(final Object instance, final Field field, final Object value) throws Throwable {
 		try {
 			METHOD_SET_FIELD.invoke(null, instance, field, value);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetNumberOfSheets() throws Throwable {
+		//
+		if (ih != null) {
+			//
+			ih.numberOfSheets = Integer.valueOf(ZERO);
+			//
+		} // if
+			//
+		Assertions.assertEquals(ZERO, getNumberOfSheets(Reflection.newProxy(Workbook.class, ih)));
+		//
+		final Class<?>[] classes = new Class<?>[] { HSSFWorkbook.class, SXSSFWorkbook.class, DeferredSXSSFSheet.class,
+				SXSSFWorkbookWithCustomZipEntrySource.class, XSSFWorkbook.class };
+		//
+		Class<?> clz = null;
+		//
+		for (int i = ZERO; classes != null && i < classes.length; i++) {
+			//
+			Assertions.assertEquals(ZERO,
+					getNumberOfSheets(
+							Util.cast(Workbook.class, Narcissus.allocateInstance(clz = ArrayUtils.get(classes, i)))),
+					Util.getName(clz));
+			//
+		} // for
+			//
+	}
+
+	private static int getNumberOfSheets(final Workbook instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_NUMBER_OF_SHEETS.invoke(null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
