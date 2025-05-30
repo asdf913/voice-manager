@@ -198,7 +198,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 			//
 			testAndAccept(Objects::nonNull,
 					tempFile = File.createTempFile(RandomStringUtils.secureStrong().nextAlphabetic(3), null),
-					x -> Util.deleteOnExit(x));
+					Util::deleteOnExit);
 			//
 			speechApi.writeVoiceToFile(data.text, getVoice(speechApi,
 					objIntFunction = ObjectUtils.getIfNull(objIntFunction, LanguageCodeToTextObjIntFunction::new),
