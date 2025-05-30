@@ -484,13 +484,13 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 	}
 
-	private static void setSelectedIndex(final JComboBox<?> instance, final Number index) {
+	private static void setSelectedIndex(@Nullable final JComboBox<?> instance, final Number index) {
 		if (instance != null) {
 			instance.setSelectedIndex(index.intValue());
 		}
 	}
 
-	private static void setLayoutConstraints(final MigLayout instance, final Object constr) {
+	private static void setLayoutConstraints(@Nullable final MigLayout instance, final Object constr) {
 		if (instance != null) {
 			instance.setLayoutConstraints(constr);
 		}
