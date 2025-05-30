@@ -245,7 +245,7 @@ public class StringMultiMapFromResourceFactoryBean implements FactoryBean<Multim
 						//
 					} // if
 						//
-					sheet = wb.getSheetAt(0);
+					sheet = WorkbookUtil.getSheetAt(wb, 0);
 					//
 				} // if
 					//

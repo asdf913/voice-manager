@@ -244,7 +244,7 @@ public class StringMapFromResourceFactoryBean implements MapFromResourceFactoryB
 						//
 					} // if
 						//
-					sheet = wb.getSheetAt(0);
+					sheet = WorkbookUtil.getSheetAt(wb, 0);
 					//
 				} // if
 					//

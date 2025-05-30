@@ -235,7 +235,7 @@ public class OtoYakuNoHeyaYomikataJitenLinkMultiMapFactoryBean implements Factor
 					//
 				} // if
 					//
-				return wb.getSheetAt(0);
+				return WorkbookUtil.getSheetAt(wb, 0);
 				//
 			} // try
 				//
