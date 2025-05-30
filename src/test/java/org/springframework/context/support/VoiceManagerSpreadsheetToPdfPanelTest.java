@@ -187,14 +187,10 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Workbook) {
+			} else if (proxy instanceof Workbook && Objects.equals(name, "getNumberOfSheets")) {
 				//
-				if (Objects.equals(name, "getNumberOfSheets")) {
-					//
-					return numberOfSheets;
-					//
-				} // if
-					//
+				return numberOfSheets;
+				//
 			} // if
 				//
 			throw new Throwable(name);
