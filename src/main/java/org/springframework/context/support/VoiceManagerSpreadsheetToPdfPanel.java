@@ -247,7 +247,7 @@ public class VoiceManagerSpreadsheetToPdfPanel {
 
 		float apply(final float a, final float b);
 
-		private static float apply(final BiFloatFloatFunction instance, final float a, final float b,
+		private static float apply(@Nullable final BiFloatFloatFunction instance, final float a, final float b,
 				final float defautlValue) {
 			return instance != null ? instance.apply(a, b) : defautlValue;
 		}
