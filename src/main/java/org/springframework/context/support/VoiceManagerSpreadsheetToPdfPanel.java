@@ -108,7 +108,16 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 
 	private transient ComboBoxModel<Entry<String, Object>> cbmPDRectangle = null;
 
-	private AbstractButton btnExecute, btnPreview = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("Execute")
+	private AbstractButton btnExecute = null;
+
+	private AbstractButton btnPreview = null;
 
 	private DefaultTableModel tableModel = null;
 
@@ -551,12 +560,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 	}
 
 	private static class Data {
-
-		@Target(ElementType.FIELD)
-		@Retention(RetentionPolicy.RUNTIME)
-		private @interface Note {
-			String value();
-		}
 
 		@Note("Text")
 		private String text = null;
