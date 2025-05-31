@@ -216,7 +216,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 	private transient ComboBoxModel<FontName> cbmFontName = null;
 
-	private transient ComboBoxModel<Entry<Field, PDRectangle>> cbmPDRectangle = null;
+	private transient ComboBoxModel<Entry<String, Object>> cbmPDRectangle = null;
 
 	private static boolean isTestMode() {
 		return Util.forName("org.junit.jupiter.api.Test") != null;
@@ -300,7 +300,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		//
 		add(new JLabel("Size"));
 		//
-		final JComboBox<Entry<Field, PDRectangle>> jcbPDRectangle = new JComboBox<>(
+		final JComboBox<Entry<String, Object>> jcbPDRectangle = new JComboBox<>(
 				cbmPDRectangle = new DefaultComboBoxModel<>());
 		//
 		final ListCellRenderer<?> lcr = jcbPDRectangle.getRenderer();
