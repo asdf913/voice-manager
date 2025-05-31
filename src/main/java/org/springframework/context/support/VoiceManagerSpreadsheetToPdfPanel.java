@@ -738,7 +738,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 			final Class<?> clz = Util.getClass(instance);
 			//
-			final String name = Util.getName(Util.getClass(instance));
+			final String name = Util.getName(clz);
 			//
 			List<Field> fs = null;
 			//
@@ -767,7 +767,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 					return null;
 					//
 				} // if
-					//
 					//
 			} // for
 				//
