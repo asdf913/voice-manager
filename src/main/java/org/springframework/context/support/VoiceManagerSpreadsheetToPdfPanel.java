@@ -187,13 +187,13 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 	}
 
-	private static void setSelectedIndex(final JComboBox<?> instance, final Number index) {
+	private static void setSelectedIndex(@Nullable final JComboBox<?> instance, @Nullable final Number index) {
 		if (instance != null && index != null) {
 			instance.setSelectedIndex(index.intValue());
 		}
 	}
 
-	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) {
+	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, final E item) {
 		if (instance != null) {
 			instance.addElement(item);
 		}
