@@ -98,7 +98,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 
 	private static final long serialVersionUID = -7995853525217556061L;
 
-	private ComboBoxModel<Entry<String, Object>> cbmPDRectangle = null;
+	private transient ComboBoxModel<Entry<String, Object>> cbmPDRectangle = null;
 
 	private AbstractButton btnExecute = null;
 
