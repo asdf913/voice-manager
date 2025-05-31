@@ -972,22 +972,24 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	private static int getTextHeight(final PDFont font, final float fontSize, final float size,
 			final PDRectangle pdRectangle) throws IOException {
 		//
-		final PDDocument pdDocument = new PDDocument();
-		//
-		final PDPage pdPage = testAndApply(Objects::nonNull, pdRectangle, PDPage::new, x -> new PDPage());
-		//
-		pdDocument.addPage(pdPage);
-		//
-		try (final PDPageContentStream cs = new PDPageContentStream(pdDocument, pdPage)) {
+		try (final PDDocument pdDocument = new PDDocument()) {
 			//
-			addText(cs, font, fontSize, pdPage, size);
+			final PDPage pdPage = testAndApply(Objects::nonNull, pdRectangle, PDPage::new, x -> new PDPage());
+			//
+			pdDocument.addPage(pdPage);
+			//
+			try (final PDPageContentStream cs = new PDPageContentStream(pdDocument, pdPage)) {
+				//
+				addText(cs, font, fontSize, pdPage, size);
+				//
+			} // try
+				//
+			final IntIntPair intIntPair = getMinimumAndMaximumY(new PDFRenderer(pdDocument).renderImage(0));
+			//
+			return intIntPair != null ? intIntPair.rightInt() - intIntPair.leftInt() + 1 : 0;
 			//
 		} // try
 			//
-		final IntIntPair intIntPair = getMinimumAndMaximumY(new PDFRenderer(pdDocument).renderImage(0));
-		//
-		return intIntPair != null ? intIntPair.rightInt() - intIntPair.leftInt() + 1 : 0;
-		//
 	}
 
 	@Nullable
