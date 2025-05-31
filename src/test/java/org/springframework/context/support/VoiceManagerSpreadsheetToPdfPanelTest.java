@@ -17,6 +17,8 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import javax.swing.JComboBox;
+
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -68,7 +70,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH_PD_RECTANGLE,
 			METHOD_GET_WIDTH_PD_IMAGE, METHOD_GET_HEIGHT_PD_RECTANGLE, METHOD_GET_HEIGHT_PD_IMAGE,
 			METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE,
-			METHOD_TEST_AND_ACCEPT, METHOD_SET_FIELD, METHOD_SAVE, METHOD_GET_ANNOTATIONS, METHOD_TO_BIG_DECIMAL = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_SET_FIELD, METHOD_SAVE, METHOD_GET_ANNOTATIONS, METHOD_TO_BIG_DECIMAL,
+			METHOD_SET_SELECTED_INDEX = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -109,6 +112,9 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_TO_BIG_DECIMAL = clz.getDeclaredMethod("toBigDecimal", Float.TYPE)).setAccessible(true);
+		//
+		(METHOD_SET_SELECTED_INDEX = clz.getDeclaredMethod("setSelectedIndex", JComboBox.class, Number.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -809,6 +815,22 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				return (BigDecimal) obj;
 			}
 			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetSelectedIndex() {
+		//
+		Assertions.assertDoesNotThrow(
+				() -> setSelectedIndex(Util.cast(JComboBox.class, Narcissus.allocateInstance(JComboBox.class)), null));
+		//
+	}
+
+	private static void setSelectedIndex(final JComboBox<?> instance, final Number index) throws Throwable {
+		try {
+			METHOD_SET_SELECTED_INDEX.invoke(null, instance, index);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
