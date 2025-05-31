@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
@@ -15,6 +16,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -29,7 +31,10 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -43,9 +48,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.WindowConstants;
+import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.IteratorUtils;
@@ -100,7 +108,9 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 
 	private transient ComboBoxModel<Entry<String, Object>> cbmPDRectangle = null;
 
-	private AbstractButton btnExecute = null;
+	private AbstractButton btnExecute, btnPreview = null;
+
+	private DefaultTableModel tableModel = null;
 
 	private VoiceManagerSpreadsheetToPdfPanel() {
 	}
@@ -143,7 +153,9 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 
 			});
 			//
-			add(jcbPDRectangle, "wrap");
+			final String wrap = "wrap";
+			//
+			add(jcbPDRectangle, wrap);
 			//
 			final MutableComboBoxModel mcbm = Util.cast(MutableComboBoxModel.class, cbmPDRectangle);
 			//
@@ -179,12 +191,29 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 			add(new JLabel());
 			//
+			final JScrollPane jsp = new JScrollPane(new JTable(tableModel = new DefaultTableModel(
+					new Object[] { "text", "voice", "contents", "width", "height", "x", "y" }, 0)));
+			//
+			add(jsp, String.format("%1$s,span %2$s", wrap, 2));// TODO
+			//
+			jsp.setPreferredSize(new Dimension((int) getWidth(jsp.getPreferredSize()), 39));
+			//
+			// buttons
+			//
+			add(new JLabel());
+			//
+			add(btnPreview = new JButton("Preview"));
+			//
 			add(btnExecute = new JButton("Execute"));
 			//
 		} // if
 			//
-		Util.addActionListener(btnExecute, this);
+		Util.forEach(Arrays.asList(btnPreview, btnExecute), x -> Util.addActionListener(x, this));
 		//
+	}
+
+	private static double getWidth(final Dimension instance) {
+		return instance != null ? instance.getWidth() : 0;
 	}
 
 	private static void setSelectedIndex(@Nullable final JComboBox<?> instance, @Nullable final Number index) {
@@ -208,7 +237,9 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		if (Objects.equals(Util.getSource(evt), btnExecute)) {
+		final Object source = Util.getSource(evt);
+		//
+		if (Objects.equals(source, btnExecute)) {// TODO
 			//
 			Drawing<?> drawingPatriarch = null;
 			//
@@ -346,8 +377,65 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 				//
 			});
 			//
+		} else if (Objects.equals(source, btnPreview)) {
+			//
+			File file = getSelectedFile();
+			//
+			Iterable<Data> dataIterable = null;
+			//
+			if (tableModel != null) {
+				//
+				IntStream.range(0, tableModel.getRowCount()).forEach(i -> tableModel.removeRow(i));
+				//
+			} // if
+				//
+			try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
+				//
+				final Sheet sheet = testAndApply(x -> WorkbookUtil.getNumberOfSheets(wb) == 1, wb,
+						x -> WorkbookUtil.getSheetAt(x, 0), null);
+				//
+				dataIterable = getDataIterable(
+						testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null));
+				//
+			} catch (final IOException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+			if (Util.iterator(dataIterable) != null) {
+				//
+				for (final Data data : dataIterable) {
+					//
+					if (data == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					tableModel.addRow(new Object[] { data.text, data.voice, data.contents, toBigDecimal(data.width),
+							toBigDecimal(data.height), toBigDecimal(data.x), toBigDecimal(data.y) });// TODO
+					//
+				} // for
+					//
+			} // if
+				//
 		} // if
 			//
+	}
+
+	private static BigDecimal toBigDecimal(final float f) {
+		//
+		final Matcher m = Util.matcher(Pattern.compile("^(-?\\d+)\\.0+$"), Float.toString(f));
+		//
+		if (Util.matches(m) && Util.groupCount(m) > 0) {
+			//
+			return new BigDecimal(Util.group(m, 1));
+			//
+		} // if
+			//
+		return new BigDecimal(f);
+		//
 	}
 
 	@Nullable

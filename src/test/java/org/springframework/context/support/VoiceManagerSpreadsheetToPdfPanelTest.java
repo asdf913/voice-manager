@@ -1,11 +1,13 @@
 package org.springframework.context.support;
 
+import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -66,7 +68,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH_PD_RECTANGLE,
 			METHOD_GET_WIDTH_PD_IMAGE, METHOD_GET_HEIGHT_PD_RECTANGLE, METHOD_GET_HEIGHT_PD_IMAGE,
 			METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE,
-			METHOD_TEST_AND_ACCEPT, METHOD_SET_FIELD, METHOD_SAVE, METHOD_GET_ANNOTATIONS = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_SET_FIELD, METHOD_SAVE, METHOD_GET_ANNOTATIONS, METHOD_TO_BIG_DECIMAL = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -105,6 +107,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_GET_ANNOTATIONS = clz.getDeclaredMethod("getAnnotations", PDPage.class, Consumer.class))
 				.setAccessible(true);
+		//
+		(METHOD_TO_BIG_DECIMAL = clz.getDeclaredMethod("toBigDecimal", Float.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -257,7 +261,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		Collection<Object> collection = null;
 		//
-		String toString = null;
+		String toString, name = null;
 		//
 		Object[] os = null;
 		//
@@ -307,7 +311,11 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 													.allocateInstance(VoiceManagerSpreadsheetToPdfPanel.class))),
 									m, os);
 			//
-			if (Util.contains(Arrays.asList(Float.TYPE, Boolean.TYPE, Integer.TYPE), m.getReturnType())) {
+			if (or(Util.contains(Arrays.asList(Float.TYPE, Boolean.TYPE, Integer.TYPE), m.getReturnType()),
+					Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "getWidth"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Dimension.class })),
+					Boolean.logicalAnd(Objects.equals(name, "toBigDecimal"),
+							Arrays.equals(parameterTypes, new Class<?>[] { Float.TYPE })))) {
 				//
 				Assertions.assertNotNull(invoke, toString);
 				//
@@ -319,6 +327,30 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				//
 		} // for
 			//
+	}
+
+	private static boolean or(final boolean a, final boolean b, final boolean... bs) {
+		//
+		boolean result = a || b;
+		//
+		if (result) {
+			//
+			return result;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if (result |= bs[i]) {
+				//
+				return result;
+				//
+			} // if
+				//
+		} // for
+			//
+		return result;
+		//
 	}
 
 	@Test
@@ -752,6 +784,29 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				return null;
 			} else if (obj instanceof List) {
 				return (List) obj;
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToBigDecimal() throws Throwable {
+		//
+		final BigDecimal bd = new BigDecimal("1.0099999904632568359375");
+		//
+		Assertions.assertEquals(bd, toBigDecimal(bd.floatValue()));
+		//
+	}
+
+	private static BigDecimal toBigDecimal(final float f) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_BIG_DECIMAL.invoke(null, f);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof BigDecimal) {
+				return (BigDecimal) obj;
 			}
 			throw new Throwable(Util.getName(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
