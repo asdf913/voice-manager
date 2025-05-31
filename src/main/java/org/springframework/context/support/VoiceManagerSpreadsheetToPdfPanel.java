@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.GraphicsEnvironment;
 import java.awt.LayoutManager;
@@ -13,6 +14,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -32,10 +34,17 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.ListCellRenderer;
+import javax.swing.MutableComboBoxModel;
 import javax.swing.WindowConstants;
 
 import org.apache.commons.collections4.IterableUtils;
@@ -49,6 +58,7 @@ import org.apache.commons.lang3.function.FailableConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -88,6 +98,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 
 	private static final long serialVersionUID = -7995853525217556061L;
 
+	private ComboBoxModel<Entry<String, Object>> cbmPDRectangle = null;
+
 	private AbstractButton btnExecute = null;
 
 	private VoiceManagerSpreadsheetToPdfPanel() {
@@ -111,12 +123,80 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 		if (f == null || Narcissus.getField(this, f) != null) {
 			//
+			add(new JLabel("Size"));
+			//
+			final JComboBox<Entry<String, Object>> jcbPDRectangle = new JComboBox<>(
+					cbmPDRectangle = new DefaultComboBoxModel<>());
+			//
+			final ListCellRenderer<?> lcr = jcbPDRectangle.getRenderer();
+			//
+			jcbPDRectangle.setRenderer(new ListCellRenderer() {
+
+				@Override
+				public Component getListCellRendererComponent(final JList list, final Object value, final int index,
+						final boolean isSelected, final boolean cellHasFocus) {
+					//
+					return Util.getListCellRendererComponent((ListCellRenderer) lcr, list,
+							Util.getKey(Util.cast(Entry.class, value)), index, isSelected, cellHasFocus);
+					//
+				}
+
+			});
+			//
+			add(jcbPDRectangle, "wrap");
+			//
+			final MutableComboBoxModel mcbm = Util.cast(MutableComboBoxModel.class, cbmPDRectangle);
+			//
+			Util.forEach(
+					Util.filter(Util.stream(FieldUtils.getAllFieldsList(PDRectangle.class)),
+							x -> Boolean.logicalAnd(Util.isAssignableFrom(PDRectangle.class, Util.getType(x)),
+									Util.isStatic(x))),
+					x -> addElement(mcbm, Pair.of(Util.getName(x), Narcissus.getStaticField(x))));
+			//
+			Integer index = null;
+			//
+			final String size = "A4";// TODO
+			//
+			for (int i = 0; i < cbmPDRectangle.getSize(); i++) {
+				//
+				if (!Objects.equals(size, Util.getKey(cbmPDRectangle.getElementAt(i)))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				if (index != null) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				index = Integer.valueOf(i);
+				//
+			} // for
+				//
+			setSelectedIndex(jcbPDRectangle, index);
+			//
+			add(new JLabel());
+			//
 			add(btnExecute = new JButton("Execute"));
 			//
 		} // if
 			//
 		Util.addActionListener(btnExecute, this);
 		//
+	}
+
+	private static void setSelectedIndex(final JComboBox<?> instance, final Number index) {
+		if (instance != null && index != null) {
+			instance.setSelectedIndex(index.intValue());
+		}
+	}
+
+	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) {
+		if (instance != null) {
+			instance.addElement(item);
+		}
 	}
 
 	private static void setLayout(@Nullable final Container instance, final LayoutManager layoutManager) {
@@ -154,7 +234,19 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 				//
 			final PDDocument pdDocument = new PDDocument();
 			//
-			final PDPage pdPage = new PDPage(PDRectangle.A4);// TODO
+			final PDPage pdPage = new PDPage(ObjectUtils.defaultIfNull(Util.cast(PDRectangle.class,
+					testAndApply(Entry.class::isInstance, Util.getSelectedItem(cbmPDRectangle), x -> {
+						//
+						final Collection<Method> ms = Util.toList(Util.filter(
+								testAndApply(Objects::nonNull, Util.getMethods(Util.getClass(x)), Arrays::stream, null),
+								y -> Boolean.logicalAnd(Objects.equals(Util.getName(y), "getValue"),
+										Arrays.equals(Util.getParameterTypes(y), new Class<?>[] {}))));
+						//
+						return testAndApply(Objects::nonNull,
+								testAndApply(y -> IterableUtils.size(y) == 1, ms, y -> IterableUtils.get(y, 0), null),
+								y -> Narcissus.invokeMethod(x, y), null);
+						//
+					}, null)), PDRectangle.A4));
 			//
 			pdDocument.addPage(pdPage);
 			//
