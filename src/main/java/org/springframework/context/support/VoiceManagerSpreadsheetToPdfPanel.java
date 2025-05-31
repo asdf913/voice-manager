@@ -1,6 +1,8 @@
 package org.springframework.context.support;
 
+import java.awt.Container;
 import java.awt.GraphicsEnvironment;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -80,6 +82,7 @@ import org.meeuw.functional.ThrowingRunnableUtil;
 import org.springframework.beans.factory.InitializingBean;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements InitializingBean, ActionListener {
 
@@ -93,19 +96,18 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		//
-		final List<Field> fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
-				f -> Objects.equals(Util.getName(f), "component")));
+		setLayout(this, new MigLayout());// TODO
 		//
-		final Field f = IterableUtils.size(fs) == 1 ? IterableUtils.get(fs, 0) : null;
+		add(btnExecute = new JButton("Execute"));
 		//
-		if (f == null || Narcissus.getField(this, f) != null) {
-			//
-			add(btnExecute = new JButton("Execute"));
-			//
-		} // if
-			//
 		Util.addActionListener(btnExecute, this);
 		//
+	}
+
+	private static void setLayout(final Container instance, final LayoutManager layoutManager) {
+		if (instance != null) {
+			instance.setLayout(layoutManager);
+		}
 	}
 
 	@Override
