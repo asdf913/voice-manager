@@ -119,7 +119,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 	}
 
-	private static void setLayout(final Container instance, final LayoutManager layoutManager) {
+	private static void setLayout(@Nullable final Container instance, final LayoutManager layoutManager) {
 		if (instance != null) {
 			instance.setLayout(layoutManager);
 		}
