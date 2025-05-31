@@ -800,7 +800,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	@Test
 	void testToBigDecimal() throws Throwable {
 		//
-		final BigDecimal bd = new BigDecimal("1.0099999904632568359375");
+		final BigDecimal bd = new BigDecimal("1.0099999904632568");
 		//
 		Assertions.assertEquals(bd, toBigDecimal(bd.floatValue()));
 		//

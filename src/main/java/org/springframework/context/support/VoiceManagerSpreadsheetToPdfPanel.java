@@ -443,7 +443,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 		} // if
 			//
-		return new BigDecimal(f);
+		return BigDecimal.valueOf(f);
 		//
 	}
 
