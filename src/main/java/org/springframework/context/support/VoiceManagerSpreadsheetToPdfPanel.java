@@ -221,7 +221,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 	}
 
-	private static double getWidth(final Dimension instance) {
+	private static double getWidth(@Nullable final Dimension instance) {
 		return instance != null ? instance.getWidth() : 0;
 	}
 
