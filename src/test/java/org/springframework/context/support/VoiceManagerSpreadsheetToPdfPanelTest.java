@@ -74,8 +74,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH_PD_RECTANGLE,
 			METHOD_GET_WIDTH_PD_IMAGE, METHOD_GET_HEIGHT_PD_RECTANGLE, METHOD_GET_HEIGHT_PD_IMAGE,
 			METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE,
-			METHOD_TEST_AND_ACCEPT, METHOD_SET_FIELD, METHOD_SAVE, METHOD_TO_BIG_DECIMAL,
-			METHOD_SET_SELECTED_INDEX = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL, METHOD_SET_SELECTED_INDEX = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -109,8 +108,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_SET_FIELD = clz.getDeclaredMethod("setField", Object.class, Field.class, Object.class))
 				.setAccessible(true);
-		//
-		(METHOD_SAVE = clz.getDeclaredMethod("save", PDDocument.class, File.class, Consumer.class)).setAccessible(true);
 		//
 		(METHOD_TO_BIG_DECIMAL = clz.getDeclaredMethod("toBigDecimal", Float.TYPE)).setAccessible(true);
 		//
@@ -207,42 +204,11 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	}
 
-	private static class MH implements MethodHandler {
-
-		private IOException ioException = null;
-
-		@Override
-		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
-				throws Throwable {
-			//
-			final String methodName = Util.getName(thisMethod);
-			//
-			if (Boolean.logicalOr(Boolean.logicalAnd(self instanceof PDDocument, Objects.equals(methodName, "save")),
-					Boolean.logicalAnd(self instanceof PDPage, Objects.equals(methodName, "getAnnotations")))) {
-				//
-				if (ioException != null) {
-					//
-					throw ioException;
-					//
-				} // if
-					//
-				return null;
-				//
-			} // if
-				//
-			throw new Throwable(methodName);
-			//
-		}
-
-	}
-
 	private IH ih = null;
 
 	private PDImage pdImage = null;
 
 	private PDRectangle pdRectangle = null;
-
-	private MH mh = null;
 
 	@BeforeEach
 	void beforeEach() {
@@ -250,8 +216,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		pdImage = Reflection.newProxy(PDImage.class, ih = new IH());
 		//
 		pdRectangle = Util.cast(PDRectangle.class, Narcissus.allocateInstance(PDRectangle.class));
-		//
-		mh = new MH();
 		//
 	}
 
@@ -739,32 +703,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static void setField(final Object instance, final Field field, final Object value) throws Throwable {
 		try {
 			METHOD_SET_FIELD.invoke(null, instance, field, value);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testSave() throws Throwable {
-		//
-		final PDDocument pdDocument = ProxyUtil.createProxy(PDDocument.class, mh);
-		//
-		Assertions.assertDoesNotThrow(() -> save(pdDocument, null, null));
-		//
-		if (mh != null) {
-			//
-			mh.ioException = new IOException();
-			//
-		} // if
-			//
-		Assertions.assertDoesNotThrow(() -> save(pdDocument, null, null));
-		//
-	}
-
-	private static void save(final PDDocument instance, final File file, final Consumer<IOException> consumer)
-			throws Throwable {
-		try {
-			METHOD_SAVE.invoke(null, instance, file, consumer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -541,25 +541,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 	}
 
-	private static void save(@Nullable final PDDocument instance, final File file,
-			final Consumer<IOException> consumer) {
-		//
-		try {
-			//
-			if (instance != null) {
-				//
-				instance.save(file);
-				//
-			} // if
-				//
-		} catch (final IOException e) {
-			//
-			Util.accept(consumer, e);
-			//
-		} // try
-			//
-	}
-
 	private static class Data {
 
 		@Note("Text")
