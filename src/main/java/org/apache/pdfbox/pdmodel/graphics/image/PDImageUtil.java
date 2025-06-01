@@ -14,8 +14,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import javax.annotation.Nullable;
-
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.meeuw.functional.ThrowingRunnable;
@@ -73,7 +71,7 @@ public interface PDImageUtil {
 		//
 	}
 
-	static int getHeight(@Nullable final PDImage instance) {
+	static int getHeight(final PDImage instance) {
 		//
 		final Map<String, String> map = Map.of("org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject", "stream",
 				"org.apache.pdfbox.pdmodel.graphics.image.PDInlineImage", "parameters");
