@@ -2072,7 +2072,9 @@ public abstract class Util {
 
 	static void removeRow(final DefaultTableModel instance, final int row) {
 		//
-		if (getRowCount(instance) > row) {
+		final Iterable<?> dataVector = instance != null ? instance.getDataVector() : null;
+		//
+		if (IterableUtils.size(dataVector) > row) {
 			//
 			instance.removeRow(row);
 			//
