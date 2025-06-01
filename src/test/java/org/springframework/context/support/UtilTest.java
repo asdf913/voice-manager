@@ -28,6 +28,7 @@ import java.util.stream.Stream;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.bcel.classfile.ClassParser;
@@ -528,8 +529,7 @@ class UtilTest {
 				//
 				if ((name = HasNameUtil.getName(classInfo)) == null || (clz = Util.forName(name)) == null
 						|| Util.contains(Arrays.asList("org.eclipse.jetty.http.MultiPartByteRanges$Parts",
-								"org.eclipse.jetty.http.MultiPartFormData$Parts"), Util.getName(clz))
-						) {
+								"org.eclipse.jetty.http.MultiPartFormData$Parts"), Util.getName(clz))) {
 					//
 					continue;
 					//
@@ -961,6 +961,23 @@ class UtilTest {
 		Assertions.assertNull(Util.getAnnotation(METHOD_COLLECT, Target.class));
 		//
 		Assertions.assertNull(Util.getAnnotation(annotatedElement, null));
+		//
+	}
+
+	@Test
+	void testGetRowCount() throws Throwable {
+		//
+		Assertions.assertEquals(0, Util.getRowCount(new DefaultTableModel()));
+		//
+		FailableStreamUtil.forEach(new FailableStream<>(Stream.of(DefaultTableModel.class,
+				Util.forName("sun.tools.jconsole.inspector.XMBeanInfo$ReadOnlyDefaultTableModel"),
+				Util.forName("sun.tools.jconsole.inspector.TableSorter"))), x -> {
+					//
+					Assertions.assertEquals(0,
+							Util.getRowCount(Util.cast(DefaultTableModel.class, Narcissus.allocateInstance(x))),
+							Util.getName(x));
+					//
+				});
 		//
 	}
 

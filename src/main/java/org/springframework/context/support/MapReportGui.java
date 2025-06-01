@@ -298,7 +298,7 @@ public class MapReportGui extends JFrame
 			//
 			// Remove all row(s)
 			//
-		for (int j = Util.intValue(getRowCount(dtm), 0) - 1; j >= 0; j--) {
+		for (int j = Util.getRowCount(dtm) - 1; j >= 0; j--) {
 			//
 			removeRow(dtm, j);
 			//
@@ -533,11 +533,6 @@ public class MapReportGui extends JFrame
 		if (instance != null) {
 			instance.addRow(rowData);
 		}
-	}
-
-	@Nullable
-	private static Integer getRowCount(@Nullable final TableModel instance) {
-		return instance != null ? Integer.valueOf(instance.getRowCount()) : null;
 	}
 
 	@Nullable

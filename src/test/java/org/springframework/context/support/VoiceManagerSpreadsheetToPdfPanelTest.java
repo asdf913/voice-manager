@@ -67,8 +67,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH_PD_RECTANGLE,
 			METHOD_GET_WIDTH_PD_IMAGE, METHOD_GET_HEIGHT_PD_RECTANGLE, METHOD_GET_HEIGHT_PD_IMAGE,
 			METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE,
-			METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL, METHOD_SET_SELECTED_INDEX, METHOD_ADD_ROW, METHOD_REMOVE_ROW,
-			METHOD_GET_ROW_COUNT = null;
+			METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL, METHOD_SET_SELECTED_INDEX, METHOD_ADD_ROW,
+			METHOD_REMOVE_ROW = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -110,8 +110,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		(METHOD_REMOVE_ROW = clz.getDeclaredMethod("removeRow", DefaultTableModel.class, Integer.TYPE))
 				.setAccessible(true);
 		//
-		(METHOD_GET_ROW_COUNT = clz.getDeclaredMethod("getRowCount", DefaultTableModel.class)).setAccessible(true);
-//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -812,35 +810,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static void removeRow(final DefaultTableModel instance, final int row) throws Throwable {
 		try {
 			METHOD_REMOVE_ROW.invoke(null, instance, row);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetRowCount() throws Throwable {
-		//
-		Assertions.assertEquals(ZERO, getRowCount(new DefaultTableModel()));
-		//
-		FailableStreamUtil.forEach(new FailableStream<>(Stream.of(DefaultTableModel.class,
-				Util.forName("sun.tools.jconsole.inspector.XMBeanInfo$ReadOnlyDefaultTableModel"),
-				Util.forName("sun.tools.jconsole.inspector.TableSorter"))), x -> {
-					//
-					Assertions.assertEquals(ZERO,
-							getRowCount(Util.cast(DefaultTableModel.class, Narcissus.allocateInstance(x))),
-							Util.getName(x));
-					//
-				});
-		//
-	}
-
-	private static int getRowCount(final DefaultTableModel instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_ROW_COUNT.invoke(null, instance);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(Util.getName(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

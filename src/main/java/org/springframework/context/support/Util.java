@@ -57,6 +57,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 
 import org.apache.bcel.classfile.ClassParser;
@@ -2063,6 +2064,10 @@ public abstract class Util {
 	@Nullable
 	static <T> T get(@Nullable final Supplier<T> instance) {
 		return instance != null ? instance.get() : null;
+	}
+
+	static int getRowCount(final DefaultTableModel instance) {
+		return instance != null && instance.getDataVector() != null ? instance.getRowCount() : 0;
 	}
 
 }
