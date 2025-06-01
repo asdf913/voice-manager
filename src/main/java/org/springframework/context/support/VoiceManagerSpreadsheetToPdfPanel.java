@@ -350,7 +350,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 	}
 
-	private static <T> double testAndApplyAsDouble(final Predicate<T> predicate, final T value,
+	private static <T> double testAndApplyAsDouble(@Nullable final Predicate<T> predicate, final T value,
 			final Object2DoubleFunction<T> functionTrue, @Nullable final Object2DoubleFunction<T> functionFalse,
 			final double defaultValue) {
 		return Util.test(predicate, value) ? applyAsDouble(functionTrue, value, defaultValue)
@@ -362,7 +362,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		return instance != null ? instance.applyAsDouble(operand) : defaultValue;
 	}
 
-	private static double getHeight(final Dimension instnace) {
+	private static double getHeight(@Nullable final Dimension instnace) {
 		return instnace != null ? instnace.getHeight() : 0;
 	}
 
