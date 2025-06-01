@@ -257,7 +257,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 			if (tableModel != null) {
 				//
-				IntStream.range(0, tableModel.getRowCount()).forEach(i -> tableModel.removeRow(i));
+				IntStream.range(0, tableModel.getRowCount()).forEach(i -> removeRow(tableModel, i));
 				//
 			} // if
 				//
@@ -292,6 +292,18 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 					//
 			} // if
 				//
+		} // if
+			//
+	}
+
+	private static void removeRow(final DefaultTableModel instance, final int row) {
+		//
+		final Iterable<?> dataVector = instance != null ? instance.getDataVector() : null;
+		//
+		if (dataVector != null && IterableUtils.size(dataVector) > row) {
+			//
+			instance.removeRow(row);
+			//
 		} // if
 			//
 	}
