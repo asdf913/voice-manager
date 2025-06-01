@@ -161,6 +161,7 @@ import org.apache.commons.validator.routines.UrlValidatorUtil;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
+import org.apache.pdfbox.pdmodel.PDDocumentUtil;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
@@ -3553,7 +3554,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			IOUtils.close(cs);
 			//
-			document.save(ObjectMap.getObject(objectMap, File.class));
+			PDDocumentUtil.save(document, ObjectMap.getObject(objectMap, File.class));
 			//
 		} // if
 			//

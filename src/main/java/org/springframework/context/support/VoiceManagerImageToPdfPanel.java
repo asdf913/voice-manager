@@ -107,6 +107,7 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.commons.validator.routines.UrlValidatorUtil;
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentUtil;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.PDPageUtil;
@@ -1278,17 +1279,12 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				: FailableBiFunctionUtil.apply(functionFalse, t, u);
 	}
 
-	private static void save(@Nullable final PDDocument instance, final File file,
-			final Consumer<IOException> consumer) {
+	private static void save(final PDDocument instance, final File file, final Consumer<IOException> consumer) {
 		//
 		try {
 			//
-			if (instance != null) {
-				//
-				instance.save(file);
-				//
-			} // if
-				//
+			PDDocumentUtil.save(instance, file);
+			//
 		} catch (final IOException e) {
 			//
 			Util.accept(consumer, e);
