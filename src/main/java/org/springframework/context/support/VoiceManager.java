@@ -358,18 +358,18 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 		final MutableComboBoxModel<Object> mcbmAudioFormatWrite = Util.cast(MutableComboBoxModel.class,
 				cbmAudioFormatWrite);
 		//
-		addElement(mcbmAudioFormatWrite, null);
+		Util.addElement(mcbmAudioFormatWrite, null);
 		//
-		forEach(formats, x -> addElement(mcbmAudioFormatWrite, x));
+		forEach(formats, x -> Util.addElement(mcbmAudioFormatWrite, x));
 		//
 		// cbmAudioFormatExecute
 		//
 		final MutableComboBoxModel<Object> mcbmAudioFormatExecute = Util.cast(MutableComboBoxModel.class,
 				cbmAudioFormatExecute);
 		//
-		addElement(mcbmAudioFormatExecute, null);
+		Util.addElement(mcbmAudioFormatExecute, null);
 		//
-		forEach(formats, x -> addElement(mcbmAudioFormatExecute, x));
+		forEach(formats, x -> Util.addElement(mcbmAudioFormatExecute, x));
 		//
 		final String audioFormat = PropertyResolverUtil.getProperty(propertyResolver,
 				"org.springframework.context.support.VoiceManager.audioFormat");
@@ -459,12 +459,6 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 	private static Object get(@Nullable final Field field, @Nullable final Object instance)
 			throws IllegalAccessException {
 		return field != null ? field.get(instance) : null;
-	}
-
-	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, @Nullable final E item) {
-		if (instance != null) {
-			instance.addElement(item);
-		}
 	}
 
 	@Override

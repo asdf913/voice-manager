@@ -439,7 +439,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		testAndAccept(biPredicate, new JComboBox<>(mcbm), growx, this::add);
 		//
-		Util.forEach(imageWriterSpiFormats, mcbm::addElement);
+		Util.forEach(imageWriterSpiFormats, x -> Util.addElement(mcbm, x));
 		//
 		cbmImageFormat = mcbm;
 		//
@@ -637,7 +637,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 				final List<Pronunciation> pronounications = FailableFunctionUtil
 						.apply(onlineNHKJapanesePronunciationsAccentFailableFunction, Util.getText(tfText));
 				//
-				Util.forEach(pronounications, x -> addElement(mcbmPronounication, x));
+				Util.forEach(pronounications, x -> Util.addElement(mcbmPronounication, x));
 				//
 				if (!headless) {
 					//
@@ -895,9 +895,9 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 		//
 		if (MapUtils.isNotEmpty(audioUrls)) {
 			//
-			addElement(mcbmAudioFormat, null);
+			Util.addElement(mcbmAudioFormat, null);
 			//
-			Util.forEach(audioUrls, (k, v) -> addElement(mcbmAudioFormat, k));
+			Util.forEach(audioUrls, (k, v) -> Util.addElement(mcbmAudioFormat, k));
 			//
 		} // if
 			//
@@ -926,12 +926,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			@Nullable final ClipboardOwner owner) {
 		if (instance != null) {
 			instance.setContents(contents, owner);
-		}
-	}
-
-	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, @Nullable final E item) {
-		if (instance != null) {
-			instance.addElement(item);
 		}
 	}
 

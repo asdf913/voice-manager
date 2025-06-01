@@ -259,7 +259,7 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 				//
 			} // if
 				//
-			cbm.addElement(beanDefinitionName);
+			Util.addElement(cbm, beanDefinitionName);
 			//
 			TableUtil.put(table = ObjectUtils.getIfNull(table, HashBasedTable::create), beanDefinitionName, "instance",
 					instance = BeanFactoryUtil.getBean(dlbf, beanDefinitionName));

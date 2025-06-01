@@ -91,7 +91,7 @@ class JlptLevelGuiTest {
 
 	private static Method METHOD_SET_PREFERRED_WIDTH, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_TEST_AND_APPLY,
 			METHOD_SET_CONTENTS, METHOD_INVOKE, METHOD_IIF, METHOD_RUN, METHOD_SET_JLPT_VOCABULARY_AND_LEVEL,
-			METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM, METHOD_ADD_ELEMENT, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE,
+			METHOD_GET_LEVEL, METHOD_FOR_EACH_STREAM, METHOD_TEST_AND_ACCEPT, METHOD_BROWSE,
 			METHOD_ADD_DOCUMENT_LISTENER, METHOD_SET_SELECTED_INDICES, METHOD_TO_URI, METHOD_REMOVE_ELEMENT_AT,
 			METHOD_MAX = null;
 
@@ -124,9 +124,6 @@ class JlptLevelGuiTest {
 		(METHOD_GET_LEVEL = clz.getDeclaredMethod("getLevel", JlptVocabulary.class)).setAccessible(true);
 		//
 		(METHOD_FOR_EACH_STREAM = clz.getDeclaredMethod("forEach", Iterable.class, Consumer.class)).setAccessible(true);
-		//
-		(METHOD_ADD_ELEMENT = clz.getDeclaredMethod("addElement", MutableComboBoxModel.class, Object.class))
-				.setAccessible(true);
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class, Consumer.class))
 				.setAccessible(true);
@@ -825,21 +822,6 @@ class JlptLevelGuiTest {
 	private static <T> void forEach(final Iterable<T> instance, final Consumer<? super T> action) throws Throwable {
 		try {
 			METHOD_FOR_EACH_STREAM.invoke(null, instance, action);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAddElement() {
-		//
-		Assertions.assertDoesNotThrow(() -> addElement(null, null));
-		//
-	}
-
-	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) throws Throwable {
-		try {
-			METHOD_ADD_ELEMENT.invoke(null, instance, item);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

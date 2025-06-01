@@ -26,8 +26,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.MutableComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 
@@ -42,6 +44,7 @@ import org.apache.bcel.generic.InvokeInstruction;
 import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.ReferenceType;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailablePredicate;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -1019,6 +1022,24 @@ class UtilTest {
 					//
 				});
 		//
+	}
+
+	@Test
+	void testAddElement() {
+		//
+		final Class<?>[] classes = new Class<?>[] { DefaultComboBoxModel.class,
+				Util.forName("javax.swing.text.html.OptionComboBoxModel") };
+		//
+		for (int i = 0; classes != null && i < classes.length; i++) {
+			//
+			final Class<?> clz = ArrayUtils.get(classes, i);
+			//
+			Assertions.assertDoesNotThrow(
+					() -> Util.addElement(Util.cast(MutableComboBoxModel.class, Narcissus.allocateInstance(clz)), null),
+					Util.getName(clz));
+			//
+		} // for
+			//
 	}
 
 }

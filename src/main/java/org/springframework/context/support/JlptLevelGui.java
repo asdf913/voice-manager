@@ -477,7 +477,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 			final List<JlptVocabulary> temp = Util.toList(Util.filter(Util.stream(jlptVocabularies),
 					x -> Boolean.logicalOr(Objects.equals(text, getKanji(x)), Objects.equals(text, getKana(x)))));
 			//
-			forEach(temp, x -> addElement(cbmJlptVocabulary, x));
+			forEach(temp, x -> Util.addElement(cbmJlptVocabulary, x));
 			//
 			if (IterableUtils.size(temp) > 1) {
 				//
@@ -592,12 +592,6 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 				//
 		} // if
 			//
-	}
-
-	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, final E item) {
-		if (instance != null) {
-			instance.addElement(item);
-		}
 	}
 
 	private static <T> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,

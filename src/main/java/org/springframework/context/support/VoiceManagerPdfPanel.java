@@ -1368,9 +1368,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			final MutableComboBoxModel<Object> mcbmAudioFormatWrite = Util.cast(MutableComboBoxModel.class,
 					instance.cbmAudioFormat);
 			//
-			addElement(mcbmAudioFormatWrite, null);
+			Util.addElement(mcbmAudioFormatWrite, null);
 			//
-			Util.forEach(formats, x -> addElement(mcbmAudioFormatWrite, x));
+			Util.forEach(formats, x -> Util.addElement(mcbmAudioFormatWrite, x));
 			//
 			Util.setSelectedItem(mcbmAudioFormatWrite, instance.audioFormat);
 			//
@@ -1433,7 +1433,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			sort(instance.imageWriterSpiFormats, createImageFormatComparator(instance.imageFormatOrders));
 			//
-			Util.forEach(instance.imageWriterSpiFormats, mcbm::addElement);
+			Util.forEach(instance.imageWriterSpiFormats, x -> Util.addElement(mcbm, x));
 			//
 			instance.cbmImageFormat = mcbm;
 			//
@@ -1495,12 +1495,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	private static void setLayout(@Nullable final Container instance, final LayoutManager layoutManager) {
 		if (instance != null) {
 			instance.setLayout(layoutManager);
-		}
-	}
-
-	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, @Nullable final E item) {
-		if (instance != null) {
-			instance.addElement(item);
 		}
 	}
 

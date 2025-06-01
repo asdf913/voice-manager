@@ -15,10 +15,8 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.swing.AbstractButton;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.MutableComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.collections4.IterableUtils;
@@ -66,7 +64,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH_PD_RECTANGLE,
 			METHOD_GET_WIDTH_PD_IMAGE, METHOD_GET_HEIGHT_PD_RECTANGLE, METHOD_GET_HEIGHT_PD_IMAGE,
 			METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE,
-			METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL, METHOD_SET_SELECTED_INDEX, METHOD_ADD_ELEMENT = null;
+			METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL, METHOD_SET_SELECTED_INDEX = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -101,9 +99,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		(METHOD_TO_BIG_DECIMAL = clz.getDeclaredMethod("toBigDecimal", Float.TYPE)).setAccessible(true);
 		//
 		(METHOD_SET_SELECTED_INDEX = clz.getDeclaredMethod("setSelectedIndex", JComboBox.class, Number.class))
-				.setAccessible(true);
-		//
-		(METHOD_ADD_ELEMENT = clz.getDeclaredMethod("addElement", MutableComboBoxModel.class, Object.class))
 				.setAccessible(true);
 		//
 	}
@@ -753,32 +748,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
 		//
-	}
-
-	@Test
-	void testAddElement() {
-		//
-		final Class<?>[] classes = new Class<?>[] { DefaultComboBoxModel.class,
-				Util.forName("javax.swing.text.html.OptionComboBoxModel") };
-		//
-		for (int i = ZERO; classes != null && i < classes.length; i++) {
-			//
-			final Class<?> clz = ArrayUtils.get(classes, i);
-			//
-			Assertions.assertDoesNotThrow(
-					() -> addElement(Util.cast(MutableComboBoxModel.class, Narcissus.allocateInstance(clz)), null),
-					Util.getName(clz));
-			//
-		} // for
-			//
-	}
-
-	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) throws Throwable {
-		try {
-			METHOD_ADD_ELEMENT.invoke(null, instance, item);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 }

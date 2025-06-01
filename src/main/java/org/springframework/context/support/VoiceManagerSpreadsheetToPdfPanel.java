@@ -169,7 +169,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 					Util.filter(Util.stream(FieldUtils.getAllFieldsList(PDRectangle.class)),
 							x -> Boolean.logicalAnd(Util.isAssignableFrom(PDRectangle.class, Util.getType(x)),
 									Util.isStatic(x))),
-					x -> addElement(mcbm, Pair.of(Util.getName(x), Narcissus.getStaticField(x))));
+					x -> Util.addElement(mcbm, Pair.of(Util.getName(x), Narcissus.getStaticField(x))));
 			//
 			Integer index = null;
 			//
@@ -226,29 +226,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		if (instance != null && index != null) {
 			instance.setSelectedIndex(index.intValue());
 		}
-	}
-
-	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, final E item) {
-		//
-		final Iterable<?> iterable = Util.toList(Util.map(
-				Util.filter(
-						Util.stream(testAndApply(Objects::nonNull, Util.getClass(instance),
-								FieldUtils::getAllFieldsList, null)),
-						x -> Util.isAssignableFrom(Collection.class, Util.getType(x))),
-				x -> Narcissus.getField(instance, x)));
-		//
-		testAndRunThrows(IterableUtils.size(iterable) > 1, () -> {
-			//
-			throw new IllegalStateException();
-			//
-		});
-		//
-		if (testAndApply(x -> IterableUtils.size(x) == 1, iterable, x -> IterableUtils.get(x, 0), null) != null) {
-			//
-			instance.addElement(item);
-			//
-		} // if
-			//
 	}
 
 	private static void setLayout(@Nullable final Container instance, final LayoutManager layoutManager) {

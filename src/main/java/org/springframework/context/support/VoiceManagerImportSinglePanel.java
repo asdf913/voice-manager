@@ -1850,7 +1850,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 			} // if
 				//
-			forEach(pronounications, x -> addElement(mcbmPronunciation, x));
+			forEach(pronounications, x -> Util.addElement(mcbmPronunciation, x));
 			//
 		} catch (final IOException e) {
 			//
@@ -1923,9 +1923,9 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 		if (MapUtils.isNotEmpty(audioUrls)) {
 			//
-			addElement(mcbmAudioFormat, null);
+			Util.addElement(mcbmAudioFormat, null);
 			//
-			Util.forEach(audioUrls, (k, v) -> addElement(mcbmAudioFormat, k));
+			Util.forEach(audioUrls, (k, v) -> Util.addElement(mcbmAudioFormat, k));
 			//
 		} // if
 			//
@@ -4614,7 +4614,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			final List<JlptVocabulary> temp = Util.toList(Util.filter(Util.stream(jlptVocabularies),
 					x -> Boolean.logicalOr(Objects.equals(text, getKanji(x)), Objects.equals(text, getKana(x)))));
 			//
-			forEach(temp, x -> addElement(mcbmJlptVocabulary, x));
+			forEach(temp, x -> Util.addElement(mcbmJlptVocabulary, x));
 			//
 			if (IterableUtils.size(temp) > 1) {
 				//
@@ -4681,12 +4681,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			@Nullable final FailableConsumer<T, E> consumer) throws E {
 		if (Util.test(predicate, value)) {
 			FailableConsumerUtil.accept(consumer, value);
-		}
-	}
-
-	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, @Nullable final E item) {
-		if (instance != null) {
-			instance.addElement(item);
 		}
 	}
 

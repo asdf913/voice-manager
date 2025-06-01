@@ -505,9 +505,9 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 		final MutableComboBoxModel<Object> mcbmAudioFormatWrite = Util.cast(MutableComboBoxModel.class,
 				cbmAudioFormatWrite);
 		//
-		addElement(mcbmAudioFormatWrite, null);
+		Util.addElement(mcbmAudioFormatWrite, null);
 		//
-		forEach(formats, x -> addElement(mcbmAudioFormatWrite, x));
+		forEach(formats, x -> Util.addElement(mcbmAudioFormatWrite, x));
 		//
 		add(jcbAudioFormat);
 		//
@@ -600,12 +600,6 @@ public class VoiceManagerTtsPanel extends JPanel implements Titled, Initializing
 			//
 		return list;
 		//
-	}
-
-	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, @Nullable final E item) {
-		if (instance != null) {
-			instance.addElement(item);
-		}
 	}
 
 	@Override

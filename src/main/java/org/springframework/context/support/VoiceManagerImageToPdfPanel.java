@@ -326,7 +326,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				Util.filter(Util.stream(FieldUtils.getAllFieldsList(PDRectangle.class)),
 						x -> Boolean.logicalAnd(Util.isAssignableFrom(PDRectangle.class, Util.getType(x)),
 								Util.isStatic(x))),
-				x -> addElement(mcbm, Pair.of(Util.getName(x), Narcissus.getStaticField(x))));
+				x -> Util.addElement(mcbm, Pair.of(Util.getName(x), Narcissus.getStaticField(x))));
 		//
 		Integer index = null;
 		//
@@ -496,12 +496,6 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	private static void setLayoutConstraints(@Nullable final MigLayout instance, final Object constr) {
 		if (instance != null) {
 			instance.setLayoutConstraints(constr);
-		}
-	}
-
-	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, final E item) {
-		if (instance != null) {
-			instance.addElement(item);
 		}
 	}
 

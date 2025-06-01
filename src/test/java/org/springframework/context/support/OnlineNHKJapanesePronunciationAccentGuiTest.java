@@ -70,7 +70,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static final int ONE = 1;
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_WIDTH, METHOD_ADD_ELEMENT, METHOD_REMOVE_ELEMENT_AT,
+	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_WIDTH, METHOD_REMOVE_ELEMENT_AT,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_MAP_INT_STREAM,
 			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_SAVE_PITCH_ACCENT_IMAGE,
 			METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_GET_FIELD, METHOD_SAVE_FILE,
@@ -86,9 +86,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_GET_WIDTH = clz.getDeclaredMethod("getWidth", Dimension2D.class)).setAccessible(true);
-		//
-		(METHOD_ADD_ELEMENT = clz.getDeclaredMethod("addElement", MutableComboBoxModel.class, Object.class))
-				.setAccessible(true);
 		//
 		(METHOD_REMOVE_ELEMENT_AT = clz.getDeclaredMethod("removeElementAt", MutableComboBoxModel.class, Integer.TYPE))
 				.setAccessible(true);
@@ -578,23 +575,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return (Double) obj;
 			}
 			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAddElement() {
-		//
-		Assertions.assertDoesNotThrow(() -> addElement(null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> addElement(mutableComboBoxModel, null));
-		//
-	}
-
-	private static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) throws Throwable {
-		try {
-			METHOD_ADD_ELEMENT.invoke(null, instance, item);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

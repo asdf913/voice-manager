@@ -57,6 +57,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
+import javax.swing.MutableComboBoxModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 
@@ -2087,6 +2088,27 @@ public abstract class Util {
 		if (instance != null && instance.getDataVector() != null) {
 			//
 			instance.addRow(rowData);
+			//
+		} // if
+			//
+	}
+
+	static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) {
+		//
+		final Iterable<?> iterable = toList(map(
+				filter(stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
+						x -> isAssignableFrom(Collection.class, getType(x))),
+				x -> Narcissus.getField(instance, x)));
+		//
+		if (IterableUtils.size(iterable) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		if (testAndApply(x -> IterableUtils.size(x) == 1, iterable, x -> IterableUtils.get(x, 0), null) != null) {
+			//
+			instance.addElement(item);
 			//
 		} // if
 			//
