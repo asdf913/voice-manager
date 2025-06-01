@@ -311,7 +311,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 	}
 
-	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer) {
+	private static <T> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
+			final Consumer<T> consumer) {
 		if (Util.test(predicate, value)) {
 			Util.accept(consumer, value);
 		}
