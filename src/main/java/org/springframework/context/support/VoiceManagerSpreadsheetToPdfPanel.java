@@ -421,12 +421,22 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 			pdAnnotationFileAttachment.setContents(data.contents);
 			//
-			Util.add(getAnnotations(pdPage, e -> {
+			// Util.add(getAnnotations(pdPage, e -> {
+			// //
+			// throw new RuntimeException(e);
+			// //
+			// }), pdAnnotationFileAttachment);
+			//
+			try {
+				//
+				Util.add(PDPageUtil.getAnnotations(pdPage), pdAnnotationFileAttachment);
+				//
+			} catch (final IOException e) {
 				//
 				throw new RuntimeException(e);
 				//
-			}), pdAnnotationFileAttachment);
-			//
+			} // try
+				//
 		} // for
 			//
 		if (!isTestMode()) {
