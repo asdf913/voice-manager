@@ -67,10 +67,10 @@ import javassist.util.proxy.ProxyUtil;
 
 class VoiceManagerImageToPdfPanelTest {
 
-	private static Method METHOD_GET_WIDTH, METHOD_GET_HEIGHT, METHOD_IS_PD_IMAGE, METHOD_GET_ANNOTATIONS,
-			METHOD_GET_MESSAGE, METHOD_WRITE_VOICE_TO_FILE, METHOD_SAVE, METHOD_CREATE_PD_EMBEDDED_FILE,
-			METHOD_TEST_AND_ACCEPT, METHOD_GET_FONT_NAME_3, METHOD_GET_FONT_NAME_2, METHOD_GET_INDEX, METHOD_ADD_IMAGE,
-			METHOD_SIZE, METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD, METHOD_TEST_AND_GET = null;
+	private static Method METHOD_IS_PD_IMAGE, METHOD_GET_ANNOTATIONS, METHOD_GET_MESSAGE, METHOD_WRITE_VOICE_TO_FILE,
+			METHOD_SAVE, METHOD_CREATE_PD_EMBEDDED_FILE, METHOD_TEST_AND_ACCEPT, METHOD_GET_FONT_NAME_3,
+			METHOD_GET_FONT_NAME_2, METHOD_GET_INDEX, METHOD_ADD_IMAGE, METHOD_SIZE, METHOD_SET_CONTENTS,
+			METHOD_GET_SYSTEM_CLIPBOARD, METHOD_TEST_AND_GET = null;
 
 	private static Class<?> CLASS_OBJECT_MAP = null;
 
@@ -78,10 +78,6 @@ class VoiceManagerImageToPdfPanelTest {
 	static void beforeAll() throws NoSuchMethodException {
 		//
 		final Class<?> clz = VoiceManagerImageToPdfPanel.class;
-		//
-		(METHOD_GET_WIDTH = clz.getDeclaredMethod("getWidth", PDImage.class)).setAccessible(true);
-		//
-		(METHOD_GET_HEIGHT = clz.getDeclaredMethod("getHeight", PDImage.class)).setAccessible(true);
 		//
 		(METHOD_IS_PD_IMAGE = clz.getDeclaredMethod("isPDImage", byte[].class)).setAccessible(true);
 		//
@@ -128,8 +124,6 @@ class VoiceManagerImageToPdfPanelTest {
 
 	private static class IH implements InvocationHandler {
 
-		private Integer width, height = null;
-
 		private Map<?, ?> properties = null;
 
 		private List<?> list = null;
@@ -145,19 +139,7 @@ class VoiceManagerImageToPdfPanelTest {
 				//
 			final String methodName = Util.getName(method);
 			//
-			if (proxy instanceof PDImage) {
-				//
-				if (Objects.equals(methodName, "getWidth")) {
-					//
-					return width;
-					//
-				} else if (Objects.equals(methodName, "getHeight")) {
-					//
-					return height;
-					//
-				} // if
-					//
-			} else if (proxy instanceof PropertyResolver) {
+			if (proxy instanceof PropertyResolver) {
 				//
 				if (Objects.equals(methodName, "containsProperty") && args != null && args.length > 0) {
 					//
@@ -386,60 +368,6 @@ class VoiceManagerImageToPdfPanelTest {
 				//
 		} // for
 			//
-	}
-
-	@Test
-	void testGetWidth() throws Throwable {
-		//
-		final int zero = 0;
-		//
-		if (ih != null) {
-			//
-			ih.width = zero;
-			//
-		} // if
-			//
-		Assertions.assertEquals(zero, getWidth(Reflection.newProxy(PDImage.class, ih)));
-		//
-	}
-
-	private static int getWidth(final PDImage instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_WIDTH.invoke(null, instance);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(Util.getName(Util.getClass(instance)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetHeight() throws Throwable {
-		//
-		final int zero = 0;
-		//
-		if (ih != null) {
-			//
-			ih.height = zero;
-			//
-		} // if
-			//
-		Assertions.assertEquals(zero, getHeight(pdImage));
-		//
-	}
-
-	private static int getHeight(final PDImage instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_HEIGHT.invoke(null, instance);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(Util.getName(Util.getClass(instance)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test

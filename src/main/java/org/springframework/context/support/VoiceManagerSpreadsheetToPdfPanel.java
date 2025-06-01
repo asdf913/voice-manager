@@ -76,6 +76,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecification;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageUtil;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
 import org.apache.poi.ss.usermodel.Cell;
@@ -567,10 +568,10 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 				//
 				try (final PDPageContentStream cs = new PDPageContentStream(pdDocument, pdPage)) {
 					//
-					imageWidth = getWidth(pdImageXObject = PDImageXObject.createFromByteArray(pdDocument,
+					imageWidth = PDImageUtil.getWidth(pdImageXObject = PDImageXObject.createFromByteArray(pdDocument,
 							pictureData.getData(), null));
 					//
-					imageHeight = getHeight(pdImageXObject);
+					imageHeight = PDImageUtil.getHeight(pdImageXObject);
 					//
 					pageHeight = imageHeight * (ratioMin = Math.min(imageWidth == 0 ? 0 : pageWidth / imageWidth,
 							imageHeight == 0 ? 0 : getHeight(mediaBox) / imageHeight));
@@ -630,106 +631,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 		} // if
 			//
-	}
-
-	private static int getHeight(@Nullable final PDImage instance) {
-		//
-		final Map<String, String> map = Map.of("org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject", "stream",
-				"org.apache.pdfbox.pdmodel.graphics.image.PDInlineImage", "parameters");
-		//
-		final Iterable<Entry<String, String>> entrySet = Util.entrySet(map);
-		//
-		if (Util.iterator(entrySet) != null) {
-			//
-			final Class<?> clz = Util.getClass(instance);
-			//
-			final String name = Util.getName(Util.getClass(instance));
-			//
-			List<Field> fs = null;
-			//
-			Field f = null;
-			//
-			for (final Entry<String, String> entry : entrySet) {
-				//
-				if (!Objects.equals(name, Util.getKey(entry))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				testAndRunThrows(
-						IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
-								x -> Objects.equals(Util.getName(x), Util.getValue(entry))))) > 1,
-						() -> {
-							//
-							throw new IllegalStateException();
-							//
-						});
-				//
-				if ((f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) != null
-						&& Narcissus.getField(instance, f) == null) {
-					//
-					return 0;
-					//
-				} // if
-					//
-					//
-			} // for
-				//
-		} // if
-			//
-		return instance != null ? instance.getHeight() : 0;
-		//
-	}
-
-	private static int getWidth(@Nullable final PDImage instance) {
-		//
-		final Map<String, String> map = Map.of("org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject", "stream",
-				"org.apache.pdfbox.pdmodel.graphics.image.PDInlineImage", "parameters");
-		//
-		final Iterable<Entry<String, String>> entrySet = Util.entrySet(map);
-		//
-		if (Util.iterator(entrySet) != null) {
-			//
-			final Class<?> clz = Util.getClass(instance);
-			//
-			final String name = Util.getName(Util.getClass(instance));
-			//
-			List<Field> fs = null;
-			//
-			Field f = null;
-			//
-			for (final Entry<String, String> entry : entrySet) {
-				//
-				if (!Objects.equals(name, Util.getKey(entry))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				testAndRunThrows(
-						IterableUtils.size(fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(clz)),
-								x -> Objects.equals(Util.getName(x), Util.getValue(entry))))) > 1,
-						() -> {
-							//
-							throw new IllegalStateException();
-							//
-						});
-				//
-				if ((f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null)) != null
-						&& Narcissus.getField(instance, f) == null) {
-					//
-					return 0;
-					//
-				} // if
-					//
-					//
-			} // for
-				//
-		} // if
-			//
-		return instance != null ? instance.getWidth() : 0;
-		//
 	}
 
 	@Nullable

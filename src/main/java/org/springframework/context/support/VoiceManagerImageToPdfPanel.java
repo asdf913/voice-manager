@@ -120,6 +120,7 @@ import org.apache.pdfbox.pdmodel.font.PDFontUtil;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageUtil;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
@@ -1236,9 +1237,9 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			@Nullable final PDPageContentStream cs, final float pageWidth, final float size, final float textHeight)
 			throws IOException {
 		//
-		final float imageWidth = getWidth(pdImageXObject);
+		final float imageWidth = PDImageUtil.getWidth(pdImageXObject);
 		//
-		final float imageHeight = getHeight(pdImageXObject);
+		final float imageHeight = PDImageUtil.getHeight(pdImageXObject);
 		//
 		final float ratioMin = Math.min(imageWidth == 0 ? 0 : pageWidth / imageWidth,
 				imageHeight == 0 ? 0 : getHeight(pdRectangle) / imageHeight);
@@ -1352,14 +1353,6 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 			//
 		return null;
 		//
-	}
-
-	private static int getWidth(@Nullable final PDImage instance) {
-		return instance != null ? instance.getWidth() : 0;
-	}
-
-	private static int getHeight(@Nullable final PDImage instance) {
-		return instance != null ? instance.getHeight() : 0;
 	}
 
 	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,

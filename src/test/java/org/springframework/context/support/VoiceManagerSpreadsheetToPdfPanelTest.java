@@ -65,10 +65,9 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static final int ZERO = 0;
 
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH_PD_RECTANGLE,
-			METHOD_GET_WIDTH_PD_IMAGE, METHOD_GET_HEIGHT_PD_RECTANGLE, METHOD_GET_HEIGHT_PD_IMAGE,
-			METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE,
-			METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL, METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT,
-			METHOD_OR = null;
+			METHOD_GET_HEIGHT_PD_RECTANGLE, METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA,
+			METHOD_GET_DATA_ITERABLE, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL, METHOD_SET_SELECTED_INDEX,
+			METHOD_TEST_AND_ACCEPT, METHOD_OR = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -82,11 +81,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_GET_WIDTH_PD_RECTANGLE = clz.getDeclaredMethod("getWidth", PDRectangle.class)).setAccessible(true);
 		//
-		(METHOD_GET_WIDTH_PD_IMAGE = clz.getDeclaredMethod("getWidth", PDImage.class)).setAccessible(true);
-		//
 		(METHOD_GET_HEIGHT_PD_RECTANGLE = clz.getDeclaredMethod("getHeight", PDRectangle.class)).setAccessible(true);
-		//
-		(METHOD_GET_HEIGHT_PD_IMAGE = clz.getDeclaredMethod("getHeight", PDImage.class)).setAccessible(true);
 		//
 		(METHOD_GET_DRAWING_PATRIARCH = clz.getDeclaredMethod("getDrawingPatriarch", Sheet.class)).setAccessible(true);
 		//
@@ -123,8 +118,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		private CellType cellType = null;
 
 		private Double numericCellValue = null;
-
-		private Integer width, height = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -180,18 +173,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof PDImage) {
-				//
-				if (Objects.equals(name, "getWidth")) {
-					//
-					return width;
-					//
-				} else if (Objects.equals(name, "getHeight")) {
-					//
-					return height;
-					//
-				} // if
-					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -202,14 +183,12 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private IH ih = null;
 
-	private PDImage pdImage = null;
-
 	private PDRectangle pdRectangle = null;
 
 	@BeforeEach
 	void beforeEach() {
 		//
-		pdImage = Reflection.newProxy(PDImage.class, ih = new IH());
+		ih = new IH();
 		//
 		pdRectangle = Util.cast(PDRectangle.class, Narcissus.allocateInstance(PDRectangle.class));
 		//
@@ -376,26 +355,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		Assertions.assertEquals(0f, getWidth(Util.cast(PDRectangle.class, pdRectangle)));
 		//
-		if (ih != null) {
-			//
-			ih.width = Integer.valueOf(ZERO);
-			//
-		} // if
-			//
-		Assertions.assertEquals(ZERO, getWidth(pdImage));
-		//
-		final Class<?>[] classes = new Class<?>[] { PDImageXObject.class, PDInlineImage.class };
-		//
-		Class<?> clz = null;
-		//
-		for (int i = ZERO; classes != null && i < classes.length; i++) {
-			//
-			Assertions.assertEquals(ZERO,
-					getWidth(Util.cast(PDImage.class, Narcissus.allocateInstance(clz = ArrayUtils.get(classes, i)))),
-					Util.getName(clz));
-			//
-		} // for
-			//
 	}
 
 	private static float getWidth(final PDRectangle instance) throws Throwable {
@@ -410,43 +369,11 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		}
 	}
 
-	private static int getWidth(final PDImage instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_WIDTH_PD_IMAGE.invoke(null, instance);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
 	@Test
 	void testGetHeight() throws Throwable {
 		//
 		Assertions.assertEquals(0f, getHeight(Util.cast(PDRectangle.class, pdRectangle)));
 		//
-		if (ih != null) {
-			//
-			ih.height = Integer.valueOf(ZERO);
-			//
-		} // if
-			//
-		Assertions.assertEquals(ZERO, getHeight(pdImage));
-		//
-		final Class<?>[] classes = new Class<?>[] { PDImageXObject.class, PDInlineImage.class };
-		//
-		Class<?> clz = null;
-		//
-		for (int i = ZERO; classes != null && i < classes.length; i++) {
-			//
-			Assertions.assertEquals(ZERO,
-					getHeight(Util.cast(PDImage.class, Narcissus.allocateInstance(clz = ArrayUtils.get(classes, i)))),
-					Util.getName(clz));
-			//
-		} // for
-			//
 	}
 
 	private static float getHeight(final PDRectangle instance) throws Throwable {
@@ -454,18 +381,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			final Object obj = METHOD_GET_HEIGHT_PD_RECTANGLE.invoke(null, instance);
 			if (obj instanceof Float) {
 				return ((Float) obj).floatValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	private static int getHeight(final PDImage instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_HEIGHT_PD_IMAGE.invoke(null, instance);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
