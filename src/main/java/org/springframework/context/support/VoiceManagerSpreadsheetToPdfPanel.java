@@ -388,12 +388,23 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 				//
 			(pdComplexFileSpecification = new PDComplexFileSpecification()).setFile(i + ".wav");
 			//
-			testAndAccept(Objects::nonNull,
-					tempFile = createTempFile(RandomStringUtils.secureStrong().nextAlphabetic(3), null, e -> {
-						//
-						throw new RuntimeException(e);
-						//
-					}), Util::deleteOnExit);
+			try {
+				//
+				Util.deleteOnExit(
+						tempFile = File.createTempFile(RandomStringUtils.secureStrong().nextAlphabetic(3), null));
+				//
+			} catch (final IOException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+//			testAndAccept(Objects::nonNull,
+//					tempFile = createTempFile(RandomStringUtils.secureStrong().nextAlphabetic(3), null, e -> {
+//						//
+//						throw new RuntimeException(e);
+//						//
+//					}), Util::deleteOnExit);
 			//
 			speechApi.writeVoiceToFile(data.text, getVoice(speechApi,
 					objIntFunction = ObjectUtils.getIfNull(objIntFunction, LanguageCodeToTextObjIntFunction::new),
