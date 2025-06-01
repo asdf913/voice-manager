@@ -66,14 +66,10 @@ class PDImageUtilTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Stream) {
+			} else if (proxy instanceof Stream && Objects.equals(name, "filter")) {
 				//
-				if (Objects.equals(name, "filter")) {
-					//
-					return proxy;
-					//
-				} // if
-					//
+				return proxy;
+				//
 			} // if
 				//
 			throw new Throwable(name);
