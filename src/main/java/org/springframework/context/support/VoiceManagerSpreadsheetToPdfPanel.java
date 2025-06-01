@@ -425,18 +425,22 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 		} // for
 			//
-		testAndAccept(x -> !isTestMode(), file = Util.toFile(Path.of("test.pdf")), x -> {// TODO
+		if (!isTestMode()) {
 			//
-			System.out.println(Util.getAbsolutePath(x));
+			System.out.println(Util.getAbsolutePath(file = Util.toFile(Path.of("test.pdf"))));
 			//
-			save(pdDocument, x, e -> {
+			try {
+				//
+				pdDocument.save(file);
+				//
+			} catch (final IOException e) {
 				//
 				throw new RuntimeException(e);
 				//
-			});
+			} // try
+				//
+		} // if
 			//
-		});
-		//
 	}
 
 	private static BigDecimal toBigDecimal(final float f) {
