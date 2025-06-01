@@ -357,7 +357,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 				: applyAsDouble(functionFalse, value, defaultValue);
 	}
 
-	private static <T> double applyAsDouble(final Object2DoubleFunction<T> instance, final T operand,
+	private static <T> double applyAsDouble(@Nullable final Object2DoubleFunction<T> instance, final T operand,
 			final double defaultValue) {
 		return instance != null ? instance.applyAsDouble(operand) : defaultValue;
 	}
