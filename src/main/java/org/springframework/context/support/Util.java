@@ -2067,7 +2067,7 @@ public abstract class Util {
 		return instance != null ? instance.get() : null;
 	}
 
-	static int getRowCount(final DefaultTableModel instance) {
+	static int getRowCount(@Nullable final DefaultTableModel instance) {
 		return instance != null && instance.getDataVector() != null ? instance.getRowCount() : 0;
 	}
 
@@ -2083,7 +2083,7 @@ public abstract class Util {
 			//
 	}
 
-	static void addRow(final DefaultTableModel instance, final Object[] rowData) {
+	static void addRow(@Nullable final DefaultTableModel instance, final Object[] rowData) {
 		//
 		if (instance != null && instance.getDataVector() != null) {
 			//
