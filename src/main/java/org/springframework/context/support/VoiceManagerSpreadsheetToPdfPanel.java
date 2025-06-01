@@ -4,9 +4,11 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +43,7 @@ import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -79,6 +82,7 @@ import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageUtil;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellUtil;
@@ -124,6 +128,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 
 	private JTextComponent tfFile = null;
 
+	private JLabel lblThumbnail = null;
+
 	private VoiceManagerSpreadsheetToPdfPanel() {
 	}
 
@@ -165,9 +171,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 
 			});
 			//
-			final String wrap = "wrap";
-			//
-			add(jcbPDRectangle, wrap);
+			add(jcbPDRectangle, String.format("span %1$s", 2));
 			//
 			final MutableComboBoxModel mcbm = Util.cast(MutableComboBoxModel.class, cbmPDRectangle);
 			//
@@ -201,6 +205,10 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 				//
 			setSelectedIndex(jcbPDRectangle, index);
 			//
+			final String wrap = "wrap";
+			//
+			add(lblThumbnail = new JLabel(), String.format("%1$s,span 1 %2$s,wmin %3$s,hmin %4$s", wrap, 4, 102, 159));
+			//
 			// File
 			//
 			add(new JLabel("File"));
@@ -225,9 +233,11 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 			add(new JLabel());
 			//
-			add(btnPreview = new JButton("Preview"));
+			final String top = "top";
 			//
-			add(btnExecute = new JButton("Execute"));
+			add(btnPreview = new JButton("Preview"), top);
+			//
+			add(btnExecute = new JButton("Execute"), top);
 			//
 		} // if
 			//
@@ -264,6 +274,12 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 			Util.setText(tfFile, null);
 			//
+			if (lblThumbnail != null) {
+				//
+				lblThumbnail.setIcon(new ImageIcon());
+				//
+			} // if
+				//
 			File file = getSelectedFile(Util.toFile(Path.of(".")));
 			//
 			Iterable<Data> dataIterable = null;
@@ -281,6 +297,39 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 				testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), file,
 						x -> Util.setText(tfFile, Util.getAbsolutePath(Util.getAbsoluteFile(x))));
 				//
+			} catch (final IOException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+			try (final PDDocument pdDocument = createPDDocument(file)) {
+				//
+				if (lblThumbnail != null) {
+					//
+					final BufferedImage bufferedImage = new PDFRenderer(pdDocument).renderImage(0);
+					//
+					if (bufferedImage != null) {
+						//
+						final int width = bufferedImage.getWidth();
+						//
+						final int height = bufferedImage.getHeight();
+						//
+						final Dimension preferredSize = getPreferredSize();
+						//
+						final float ratioMin = Math
+								.max(height / (float) (preferredSize != null ? preferredSize.getHeight() : 1), 1);
+						//
+						lblThumbnail.setIcon(
+								new ImageIcon(bufferedImage.getScaledInstance(Math.max((int) (width / ratioMin), 1),
+										Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT)));
+						//
+						revalidate();
+						//
+					} // if
+						//
+				} // if
+					//
 			} catch (final IOException e) {
 				//
 				throw new RuntimeException(e);

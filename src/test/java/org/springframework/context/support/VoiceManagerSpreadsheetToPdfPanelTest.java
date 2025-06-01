@@ -20,6 +20,7 @@ import java.util.function.Predicate;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.collections4.IterableUtils;
@@ -667,6 +668,10 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
 		//
 		FieldUtils.writeDeclaredField(instance, "tableModel", new DefaultTableModel(), true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
+		FieldUtils.writeDeclaredField(instance, "lblThumbnail", new JLabel(), true);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
 		//
