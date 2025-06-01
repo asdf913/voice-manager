@@ -1,6 +1,7 @@
 package org.springframework.context.support;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -17,12 +18,16 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
@@ -834,6 +839,34 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testActionPerformed() throws IllegalAccessException {
+		//
+		final VoiceManagerSpreadsheetToPdfPanel instance = Util.cast(VoiceManagerSpreadsheetToPdfPanel.class,
+				Narcissus.allocateInstance(VoiceManagerSpreadsheetToPdfPanel.class));
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent("", ZERO, null)));
+		//
+		final AbstractButton btnPreview = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnPreview", btnPreview, true);
+		//
+		final ActionEvent actionEvent = new ActionEvent(btnPreview, ZERO, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
+		FieldUtils.writeDeclaredField(instance, "tableModel", new DefaultTableModel(), true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
 	}
 
 }

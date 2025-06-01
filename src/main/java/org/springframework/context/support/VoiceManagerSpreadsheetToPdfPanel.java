@@ -248,143 +248,9 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 		final Object source = Util.getSource(evt);
 		//
-		if (Objects.equals(source, btnExecute)) {// TODO
+		if (Objects.equals(source, btnExecute)) {
 			//
-			Drawing<?> drawingPatriarch = null;
-			//
-			Iterable<Data> dataList = null;
-			//
-			File file = getSelectedFile();
-			//
-			try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
-				//
-				final Sheet sheet = testAndApply(x -> WorkbookUtil.getNumberOfSheets(wb) == 1, wb,
-						x -> WorkbookUtil.getSheetAt(x, 0), null);
-				//
-				drawingPatriarch = getDrawingPatriarch(sheet);
-				//
-				dataList = getDataIterable(
-						testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null));
-				//
-			} catch (final IOException e) {
-				//
-				throw new RuntimeException(e);
-				//
-			} // try
-				//
-			final PDDocument pdDocument = new PDDocument();
-			//
-			final PDPage pdPage = new PDPage(ObjectUtils.defaultIfNull(Util.cast(PDRectangle.class,
-					testAndApply(Entry.class::isInstance, Util.getSelectedItem(cbmPDRectangle), x -> {
-						//
-						final Collection<Method> ms = Util.toList(Util.filter(
-								testAndApply(Objects::nonNull, Util.getMethods(Util.getClass(x)), Arrays::stream, null),
-								y -> Boolean.logicalAnd(Objects.equals(Util.getName(y), "getValue"),
-										Arrays.equals(Util.getParameterTypes(y), new Class<?>[] {}))));
-						//
-						return testAndApply(Objects::nonNull,
-								testAndApply(y -> IterableUtils.size(y) == 1, ms, y -> IterableUtils.get(y, 0), null),
-								y -> Narcissus.invokeMethod(x, y), null);
-						//
-					}, null)), PDRectangle.A4));
-			//
-			pdDocument.addPage(pdPage);
-			//
-			final PDRectangle mediaBox = PDPageUtil.getMediaBox(pdPage);
-			//
-			Data data = null;
-			//
-			float ratioMin = 0;
-			//
-			try {
-				//
-				ratioMin = drawImage(drawingPatriarch, pdDocument, pdPage);
-				//
-			} catch (final IOException e) {
-				//
-				throw new RuntimeException(e);
-				//
-			} // try
-				//
-			PDComplexFileSpecification pdComplexFileSpecification = null;
-			//
-			PDAnnotationFileAttachment pdAnnotationFileAttachment = null;
-			//
-			final SpeechApi speechApi = new SpeechApiImpl();
-			//
-			File tempFile = null;
-			//
-			final int size = 10;// TODO
-			//
-			ObjIntFunction<String, String> objIntFunction = null;
-			//
-			for (int i = 0; i < IterableUtils.size(dataList); i++) {
-				//
-				if ((data = IterableUtils.get(dataList, i)) == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				(pdComplexFileSpecification = new PDComplexFileSpecification()).setFile(i + ".wav");
-				//
-				testAndAccept(Objects::nonNull,
-						tempFile = createTempFile(RandomStringUtils.secureStrong().nextAlphabetic(3), null, e -> {
-							//
-							throw new RuntimeException(e);
-							//
-						}), Util::deleteOnExit);
-				//
-				speechApi.writeVoiceToFile(data.text, getVoice(speechApi,
-						objIntFunction = ObjectUtils.getIfNull(objIntFunction, LanguageCodeToTextObjIntFunction::new),
-						data.voice)
-				//
-						, i * -1// TODO
-						//
-						, 100, null, tempFile);
-				//
-				try (final InputStream is = Files.newInputStream(Util.toPath(tempFile))) {
-					//
-					pdComplexFileSpecification.setEmbeddedFile(new PDEmbeddedFile(pdDocument, is));
-					//
-				} catch (final IOException e) {
-					//
-					throw new RuntimeException(e);
-					//
-				} // try
-					//
-				(pdAnnotationFileAttachment = new PDAnnotationFileAttachment()).setFile(pdComplexFileSpecification);
-				//
-				pdAnnotationFileAttachment.setRectangle(new PDRectangle(floatValue(data.x, 0) * ratioMin,
-						getHeight(mediaBox) - (floatValue(data.y, size) + floatValue(data.height, size)) * ratioMin
-						//
-						, floatValue(data.width, size) * ratioMin
-						//
-						, floatValue(data.height, size) * ratioMin)
-				//
-				);
-				//
-				pdAnnotationFileAttachment.setContents(data.contents);
-				//
-				Util.add(getAnnotations(pdPage, e -> {
-					//
-					throw new RuntimeException(e);
-					//
-				}), pdAnnotationFileAttachment);
-				//
-			} // for
-				//
-			testAndAccept(x -> !isTestMode(), file = Util.toFile(Path.of("test.pdf")), x -> {// TODO
-				//
-				System.out.println(Util.getAbsolutePath(x));
-				//
-				save(pdDocument, x, e -> {
-					//
-					throw new RuntimeException(e);
-					//
-				});
-				//
-			});
+			actionPerformedForBtnExecute();
 			//
 		} else if (Objects.equals(source, btnPreview)) {
 			//
@@ -431,6 +297,146 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 				//
 		} // if
 			//
+	}
+
+	private void actionPerformedForBtnExecute() {
+		//
+		Drawing<?> drawingPatriarch = null;
+		//
+		Iterable<Data> dataList = null;
+		//
+		File file = getSelectedFile();
+		//
+		try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
+			//
+			final Sheet sheet = testAndApply(x -> WorkbookUtil.getNumberOfSheets(wb) == 1, wb,
+					x -> WorkbookUtil.getSheetAt(x, 0), null);
+			//
+			drawingPatriarch = getDrawingPatriarch(sheet);
+			//
+			dataList = getDataIterable(
+					testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null));
+			//
+		} catch (final IOException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
+		final PDDocument pdDocument = new PDDocument();
+		//
+		final PDPage pdPage = new PDPage(ObjectUtils.defaultIfNull(Util.cast(PDRectangle.class,
+				testAndApply(Entry.class::isInstance, Util.getSelectedItem(cbmPDRectangle), x -> {
+					//
+					final Collection<Method> ms = Util.toList(Util.filter(
+							testAndApply(Objects::nonNull, Util.getMethods(Util.getClass(x)), Arrays::stream, null),
+							y -> Boolean.logicalAnd(Objects.equals(Util.getName(y), "getValue"),
+									Arrays.equals(Util.getParameterTypes(y), new Class<?>[] {}))));
+					//
+					return testAndApply(Objects::nonNull,
+							testAndApply(y -> IterableUtils.size(y) == 1, ms, y -> IterableUtils.get(y, 0), null),
+							y -> Narcissus.invokeMethod(x, y), null);
+					//
+				}, null)), PDRectangle.A4));
+		//
+		pdDocument.addPage(pdPage);
+		//
+		final PDRectangle mediaBox = PDPageUtil.getMediaBox(pdPage);
+		//
+		Data data = null;
+		//
+		float ratioMin = 0;
+		//
+		try {
+			//
+			ratioMin = drawImage(drawingPatriarch, pdDocument, pdPage);
+			//
+		} catch (final IOException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
+		PDComplexFileSpecification pdComplexFileSpecification = null;
+		//
+		PDAnnotationFileAttachment pdAnnotationFileAttachment = null;
+		//
+		final SpeechApi speechApi = new SpeechApiImpl();
+		//
+		File tempFile = null;
+		//
+		final int size = 10;// TODO
+		//
+		ObjIntFunction<String, String> objIntFunction = null;
+		//
+		for (int i = 0; i < IterableUtils.size(dataList); i++) {
+			//
+			if ((data = IterableUtils.get(dataList, i)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			(pdComplexFileSpecification = new PDComplexFileSpecification()).setFile(i + ".wav");
+			//
+			testAndAccept(Objects::nonNull,
+					tempFile = createTempFile(RandomStringUtils.secureStrong().nextAlphabetic(3), null, e -> {
+						//
+						throw new RuntimeException(e);
+						//
+					}), Util::deleteOnExit);
+			//
+			speechApi.writeVoiceToFile(data.text, getVoice(speechApi,
+					objIntFunction = ObjectUtils.getIfNull(objIntFunction, LanguageCodeToTextObjIntFunction::new),
+					data.voice)
+			//
+					, i * -1// TODO
+					//
+					, 100, null, tempFile);
+			//
+			try (final InputStream is = Files.newInputStream(Util.toPath(tempFile))) {
+				//
+				pdComplexFileSpecification.setEmbeddedFile(new PDEmbeddedFile(pdDocument, is));
+				//
+			} catch (final IOException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+			(pdAnnotationFileAttachment = new PDAnnotationFileAttachment()).setFile(pdComplexFileSpecification);
+			//
+			pdAnnotationFileAttachment.setRectangle(new PDRectangle(floatValue(data.x, 0) * ratioMin,
+					getHeight(mediaBox) - (floatValue(data.y, size) + floatValue(data.height, size)) * ratioMin
+					//
+					, floatValue(data.width, size) * ratioMin
+					//
+					, floatValue(data.height, size) * ratioMin)
+			//
+			);
+			//
+			pdAnnotationFileAttachment.setContents(data.contents);
+			//
+			Util.add(getAnnotations(pdPage, e -> {
+				//
+				throw new RuntimeException(e);
+				//
+			}), pdAnnotationFileAttachment);
+			//
+		} // for
+			//
+		testAndAccept(x -> !isTestMode(), file = Util.toFile(Path.of("test.pdf")), x -> {// TODO
+			//
+			System.out.println(Util.getAbsolutePath(x));
+			//
+			save(pdDocument, x, e -> {
+				//
+				throw new RuntimeException(e);
+				//
+			});
+			//
+		});
+		//
 	}
 
 	private static BigDecimal toBigDecimal(final float f) {
