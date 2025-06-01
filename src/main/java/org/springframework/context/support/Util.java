@@ -2074,7 +2074,7 @@ public abstract class Util {
 		//
 		final Iterable<?> dataVector = instance != null ? instance.getDataVector() : null;
 		//
-		if (IterableUtils.size(dataVector) > row) {
+		if (dataVector != null && IterableUtils.size(dataVector) > row) {
 			//
 			instance.removeRow(row);
 			//
