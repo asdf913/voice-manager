@@ -229,9 +229,26 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 	}
 
 	private static <E> void addElement(@Nullable final MutableComboBoxModel<E> instance, final E item) {
-		if (instance != null) {
+		//
+		final Iterable<?> iterable = Util.toList(Util.map(
+				Util.filter(
+						Util.stream(testAndApply(Objects::nonNull, Util.getClass(instance),
+								FieldUtils::getAllFieldsList, null)),
+						x -> Util.isAssignableFrom(Collection.class, Util.getType(x))),
+				x -> Narcissus.getField(instance, x)));
+		//
+		testAndRunThrows(IterableUtils.size(iterable) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		if (testAndApply(x -> IterableUtils.size(x) == 1, iterable, x -> IterableUtils.get(x, 0), null) != null) {
+			//
 			instance.addElement(item);
-		}
+			//
+		} // if
+			//
 	}
 
 	private static void setLayout(@Nullable final Container instance, final LayoutManager layoutManager) {
