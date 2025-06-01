@@ -70,8 +70,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH_PD_RECTANGLE,
 			METHOD_GET_WIDTH_PD_IMAGE, METHOD_GET_HEIGHT_PD_RECTANGLE, METHOD_GET_HEIGHT_PD_IMAGE,
 			METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE,
-			METHOD_TEST_AND_ACCEPT, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL, METHOD_SET_SELECTED_INDEX,
-			METHOD_ADD_ROW = null;
+			METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL, METHOD_SET_SELECTED_INDEX, METHOD_ADD_ROW = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -99,9 +98,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		(METHOD_GET_PICTURE_DATA = clz.getDeclaredMethod("getPictureData", Picture.class)).setAccessible(true);
 		//
 		(METHOD_GET_DATA_ITERABLE = clz.getDeclaredMethod("getDataIterable", Iterable.class)).setAccessible(true);
-		//
-		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
-				FailableConsumer.class)).setAccessible(true);
 		//
 		(METHOD_SET_FIELD = clz.getDeclaredMethod("setField", Object.class, Field.class, Object.class))
 				.setAccessible(true);
@@ -671,22 +667,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				return (Iterable) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testTestAndAccept() {
-		//
-		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysTrue(), null, null));
-		//
-	}
-
-	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, final T value,
-			final FailableConsumer<T, E> consumer) throws Throwable {
-		try {
-			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, value, consumer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

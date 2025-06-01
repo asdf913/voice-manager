@@ -695,13 +695,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 	}
 
-	private static <T, E extends Throwable> void testAndAccept(final Predicate<T> predicate, @Nullable final T value,
-			final FailableConsumer<T, E> consumer) throws E {
-		if (Util.test(predicate, value)) {
-			FailableConsumerUtil.accept(consumer, value);
-		}
-	}
-
 	@Nullable
 	private static Iterable<Data> getDataIterable(final Iterable<Row> rows) {
 		//
