@@ -106,6 +106,7 @@ import org.meeuw.functional.ThrowingRunnableUtil;
 import org.springframework.beans.factory.InitializingBean;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import it.unimi.dsi.fastutil.objects.Object2DoubleFunction;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements InitializingBean, ActionListener {
@@ -310,10 +311,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 					//
 					final int height = bufferedImage.getHeight();
 					//
-					final Dimension preferredSize = getPreferredSize();
-					//
-					final float ratioMin = Math
-							.max(height / (float) (preferredSize != null ? preferredSize.getHeight() : 1), 1);
+					final float ratioMin = Math.max(height / (float) testAndApplyAsDouble(Objects::nonNull,
+							getPreferredSize(), x -> getHeight(Util.cast(Dimension.class, x)), null, 1), 1);
 					//
 					setIcon(lblThumbnail,
 							new ImageIcon(bufferedImage.getScaledInstance(Math.max((int) (width / ratioMin), 1),
@@ -349,6 +348,22 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 				//
 		} // if
 			//
+	}
+
+	private static <T> double testAndApplyAsDouble(final Predicate<T> predicate, final T value,
+			final Object2DoubleFunction<T> functionTrue, final Object2DoubleFunction<T> functionFalse,
+			final double defaultValue) {
+		return Util.test(predicate, value) ? applyAsDouble(functionTrue, value, defaultValue)
+				: applyAsDouble(functionFalse, value, defaultValue);
+	}
+
+	private static <T> double applyAsDouble(final Object2DoubleFunction<T> instance, final T operand,
+			final double defaultValue) {
+		return instance != null ? instance.applyAsDouble(operand) : defaultValue;
+	}
+
+	private static double getHeight(final Dimension instnace) {
+		return instnace != null ? instnace.getHeight() : 0;
 	}
 
 	private static void setIcon(final JLabel instance, final Icon icon) {
