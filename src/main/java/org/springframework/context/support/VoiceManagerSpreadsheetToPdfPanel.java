@@ -350,7 +350,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 	}
 
-	private PDDocument createPDDocument(final File file) {
+	private PDDocument createPDDocument(@Nullable final File file) {
 		//
 		Drawing<?> drawingPatriarch = null;
 		//
