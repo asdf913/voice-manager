@@ -50,10 +50,12 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.IteratorUtils;
@@ -117,6 +119,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 	private AbstractButton btnPreview = null;
 
 	private DefaultTableModel tableModel = null;
+
+	private JTextComponent tfFile = null;
 
 	private VoiceManagerSpreadsheetToPdfPanel() {
 	}
@@ -195,6 +199,17 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 				//
 			setSelectedIndex(jcbPDRectangle, index);
 			//
+			// File
+			//
+			add(new JLabel("File"));
+			//
+			add(tfFile = new JTextField(), String.format("growx,span %1$s,%2$s", 2, wrap));
+			//
+			Util.setEditable(tfFile, false);
+			//
+			//
+			// Table
+			//
 			add(new JLabel());
 			//
 			final JScrollPane jsp = new JScrollPane(new JTable(tableModel = new DefaultTableModel(
@@ -204,7 +219,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 			jsp.setPreferredSize(new Dimension((int) getWidth(jsp.getPreferredSize()), 39));
 			//
-			// buttons
+			// Buttons
 			//
 			add(new JLabel());
 			//
@@ -245,6 +260,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 		} else if (Objects.equals(source, btnPreview)) {
 			//
+			Util.setText(tfFile, null);
+			//
 			File file = getSelectedFile();
 			//
 			Iterable<Data> dataIterable = null;
@@ -258,6 +275,12 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 				//
 				dataIterable = getDataIterable(
 						testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null));
+				//
+				testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), file, x -> {
+					//
+					Util.setText(tfFile, Util.getAbsolutePath(x));
+					//
+				});
 				//
 			} catch (final IOException e) {
 				//
@@ -287,14 +310,26 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 	}
 
+	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer) {
+		if (Util.test(predicate, value)) {
+			Util.accept(consumer, value);
+		}
+	}
+
 	private void actionPerformedForBtnExecute() {
 		//
 		Drawing<?> drawingPatriarch = null;
 		//
 		Iterable<Data> dataList = null;
 		//
-		File file = getSelectedFile();
+		File file = Util.toFile(testAndApply(Objects::nonNull, Util.getText(tfFile), Path::of, null));
 		//
+		if (file == null || !file.exists() || !file.isFile()) {
+			//
+			file = getSelectedFile();
+			//
+		} // if
+			//
 		try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
 			//
 			final Sheet sheet = testAndApply(x -> WorkbookUtil.getNumberOfSheets(wb) == 1, wb,
