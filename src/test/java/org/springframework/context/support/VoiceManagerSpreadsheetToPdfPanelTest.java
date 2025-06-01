@@ -18,6 +18,10 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import org.apache.commons.lang3.stream.FailableStreamUtil;
+import org.apache.commons.lang3.stream.Streams.FailableStream;
+import java.util.stream.Stream;
+
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -74,7 +78,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH_PD_RECTANGLE,
 			METHOD_GET_WIDTH_PD_IMAGE, METHOD_GET_HEIGHT_PD_RECTANGLE, METHOD_GET_HEIGHT_PD_IMAGE,
 			METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE,
-			METHOD_TEST_AND_ACCEPT, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL, METHOD_SET_SELECTED_INDEX = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL, METHOD_SET_SELECTED_INDEX,
+			METHOD_ADD_ROW = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -113,6 +118,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_SET_SELECTED_INDEX = clz.getDeclaredMethod("setSelectedIndex", JComboBox.class, Number.class))
 				.setAccessible(true);
+		//
+		(METHOD_ADD_ROW = clz.getDeclaredMethod("addRow", DefaultTableModel.class, Object[].class)).setAccessible(true);
 		//
 	}
 
@@ -773,6 +780,31 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
 		//
+	}
+
+	@Test
+	void testAddrow() {
+		//
+		Assertions.assertDoesNotThrow(() -> addRow(new DefaultTableModel(), null));
+		//
+		FailableStreamUtil.forEach(new FailableStream<>(Stream.of(DefaultTableModel.class,
+				Util.forName("sun.tools.jconsole.inspector.XMBeanInfo$ReadOnlyDefaultTableModel"),
+				Util.forName("sun.tools.jconsole.inspector.TableSorter"))), x -> {
+					//
+					Assertions.assertDoesNotThrow(
+							() -> addRow(Util.cast(DefaultTableModel.class, Narcissus.allocateInstance(x)), null),
+							Util.getName(x));
+					//
+				});
+		//
+	}
+
+	private static void addRow(final DefaultTableModel instance, final Object[] rowData) throws Throwable {
+		try {
+			METHOD_ADD_ROW.invoke(null, instance, rowData);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }

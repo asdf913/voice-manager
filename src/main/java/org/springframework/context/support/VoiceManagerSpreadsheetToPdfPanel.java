@@ -288,17 +288,23 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 						//
 					} // if
 						//
-					if (tableModel != null) {
-						//
-						tableModel.addRow(new Object[] { data.text, data.voice, data.contents, toBigDecimal(data.width),
-								toBigDecimal(data.height), toBigDecimal(data.x), toBigDecimal(data.y) });// TODO
-						//
-					} // if
-						//
+					addRow(tableModel, new Object[] { data.text, data.voice, data.contents, toBigDecimal(data.width),
+							toBigDecimal(data.height), toBigDecimal(data.x), toBigDecimal(data.y) });// TODO
+					//
 				} // for
 					//
 			} // if
 				//
+		} // if
+			//
+	}
+
+	private static void addRow(final DefaultTableModel instance, final Object[] rowData) {
+		//
+		if (instance != null && instance.getDataVector() != null) {
+			//
+			instance.addRow(rowData);
+			//
 		} // if
 			//
 	}
