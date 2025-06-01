@@ -263,7 +263,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 			Util.setText(tfFile, null);
 			//
-			File file = getSelectedFile();
+			File file = getSelectedFile(Util.toFile(Path.of(".")));
 			//
 			Iterable<Data> dataIterable = null;
 			//
@@ -325,7 +325,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 		if (or(file == null, !Util.exists(file), !Util.isFile(file))) {
 			//
-			file = getSelectedFile();
+			file = getSelectedFile(Util.toFile(Path.of(".")));
 			//
 		} // if
 			//
@@ -530,9 +530,9 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 	}
 
 	@Nullable
-	private static File getSelectedFile() {
+	private static File getSelectedFile(final File folder) {
 		//
-		final JFileChooser jfc = new JFileChooser();
+		final JFileChooser jfc = new JFileChooser(folder);
 		//
 		if (Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
 				&& jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
