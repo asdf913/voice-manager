@@ -2655,7 +2655,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			clear(defaultTableModel);
 			//
 			ifElse(defaultTableModel != null,
-					() -> addRow(defaultTableModel,
+					() -> Util.addRow(defaultTableModel,
 							new Object[] { getText(voice), getRomaji(voice), NO_FILE_SELECTED }),
 					() -> testAndRun(!GraphicsEnvironment.isHeadless() && !isTestMode(),
 							() -> JOptionPane.showMessageDialog(null, NO_FILE_SELECTED)));
@@ -2757,7 +2757,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 				if (tableModel != null) {
 					//
-					addRow(tableModel, new Object[] { getText(v), getRomaji(v), m });
+					Util.addRow(tableModel, new Object[] { getText(v), getRomaji(v), m });
 					//
 				} else {
 					//
@@ -2820,7 +2820,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 				if (tableModel != null) {
 					//
-					addRow(tableModel, new Object[] { getText(v), getRomaji(v), e });
+					Util.addRow(tableModel, new Object[] { getText(v), getRomaji(v), e });
 					//
 				} else {
 					//
@@ -2854,7 +2854,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 			testAndAccept((a, b) -> a != null, tmImportException, NO_FILE_SELECTED,
 					//
-					(a, b) -> addRow(a, new Object[] { getText(voice), getRomaji(voice), b }),
+					(a, b) -> Util.addRow(a, new Object[] { getText(voice), getRomaji(voice), b }),
 					//
 					(a, b) -> testAndRun(nonHeadlessAndnonTest, () -> JOptionPane.showMessageDialog(null, b))
 			//
@@ -2867,7 +2867,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			testAndAccept((a, b) -> a != null, tmImportException,
 					String.format("File \"%1$s\" does not exist", Util.getAbsolutePath(file)),
 					//
-					(a, b) -> addRow(a, new Object[] { getText(voice), getRomaji(voice), b }),
+					(a, b) -> Util.addRow(a, new Object[] { getText(voice), getRomaji(voice), b }),
 					//
 					(a, b) -> testAndRun(nonHeadlessAndnonTest, () -> JOptionPane.showMessageDialog(null, b))
 			//
@@ -2879,7 +2879,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 			testAndAccept((a, b) -> a != null, tmImportException, "Not A Regular File Selected",
 					//
-					(a, b) -> addRow(a, new Object[] { getText(voice), getRomaji(voice), b }),
+					(a, b) -> Util.addRow(a, new Object[] { getText(voice), getRomaji(voice), b }),
 					//
 					(a, b) -> testAndRun(nonHeadlessAndnonTest, () -> JOptionPane.showMessageDialog(null, b))
 			//
@@ -2891,7 +2891,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 			testAndAccept((a, b) -> a != null, tmImportException, "Empty File Selected",
 					//
-					(a, b) -> addRow(a, new Object[] { getText(voice), getRomaji(voice), b }),
+					(a, b) -> Util.addRow(a, new Object[] { getText(voice), getRomaji(voice), b }),
 					//
 					(a, b) -> testAndRun(nonTest, () -> JOptionPane.showMessageDialog(null, b))
 			//
@@ -3251,16 +3251,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		return Long.valueOf(instance.length());
 		//
-	}
-
-	private static void addRow(@Nullable final DefaultTableModel instance, final Object[] rowData) {
-		//
-		if (instance != null) {
-			//
-			instance.addRow(rowData);
-			//
-		} // if
-			//
 	}
 
 	@Nullable

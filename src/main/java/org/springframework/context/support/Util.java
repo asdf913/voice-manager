@@ -2080,4 +2080,14 @@ public abstract class Util {
 			//
 	}
 
+	static void addRow(final DefaultTableModel instance, final Object[] rowData) {
+		//
+		if (instance != null && instance.getDataVector() != null) {
+			//
+			instance.addRow(rowData);
+			//
+		} // if
+			//
+	}
+
 }

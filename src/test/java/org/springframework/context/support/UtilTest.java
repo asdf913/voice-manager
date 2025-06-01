@@ -1004,4 +1004,21 @@ class UtilTest {
 		//
 	}
 
+	@Test
+	void testAddRow() {
+		//
+		Assertions.assertDoesNotThrow(() -> Util.addRow(new DefaultTableModel(), null));
+		//
+		FailableStreamUtil.forEach(new FailableStream<>(Stream.of(DefaultTableModel.class,
+				Util.forName("sun.tools.jconsole.inspector.XMBeanInfo$ReadOnlyDefaultTableModel"),
+				Util.forName("sun.tools.jconsole.inspector.TableSorter"))), x -> {
+					//
+					Assertions.assertDoesNotThrow(
+							() -> Util.addRow(Util.cast(DefaultTableModel.class, Narcissus.allocateInstance(x)), null),
+							Util.getName(x));
+					//
+				});
+		//
+	}
+
 }

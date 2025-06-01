@@ -331,7 +331,7 @@ public class MapReportGui extends JFrame
 			//
 			for (final Object key : keySet) {
 				//
-				addRow(dtm, os = ArrayUtils.addAll(new Object[] { key },
+				Util.addRow(dtm, os = ArrayUtils.addAll(new Object[] { key },
 						Util.toArray(MultimapUtil.get((Multimap) mm, key))));
 				//
 				IntCollectionUtil.addInt(jTableRowColumnCount, length(os));
@@ -521,12 +521,6 @@ public class MapReportGui extends JFrame
 	@Nullable
 	private static <K, V> Map<K, Collection<V>> asMap(@Nullable final Multimap<K, V> instance) {
 		return instance != null ? instance.asMap() : null;
-	}
-
-	private static void addRow(@Nullable final DefaultTableModel instance, final Object[] rowData) {
-		if (instance != null) {
-			instance.addRow(rowData);
-		}
 	}
 
 	@Nullable

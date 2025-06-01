@@ -70,7 +70,7 @@ class MapReportGuiTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_ADD_ROW, METHOD_GET_PREFERRED_WIDTH, METHOD_AS_MAP,
+	private static Method METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_GET_PREFERRED_WIDTH, METHOD_AS_MAP,
 			METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_LENGTH, METHOD_TEST_AND_APPLY,
 			METHOD_CREATE_MULTIMAP, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
@@ -83,8 +83,6 @@ class MapReportGuiTest {
 		//
 		(METHOD_IS_ALL_ATTRIBUTES_MATCHED = clz.getDeclaredMethod("isAllAttributesMatched", Map.class,
 				AttributeAccessor.class)).setAccessible(true);
-		//
-		(METHOD_ADD_ROW = clz.getDeclaredMethod("addRow", DefaultTableModel.class, Object[].class)).setAccessible(true);
 		//
 		(METHOD_GET_PREFERRED_WIDTH = clz.getDeclaredMethod("getPreferredWidth", Component.class)).setAccessible(true);
 		//
@@ -512,23 +510,6 @@ class MapReportGuiTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(obj != null ? Util.toString(obj.getClass()) : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAddRow() {
-		//
-		Assertions.assertDoesNotThrow(() -> addRow(null, null));
-		//
-		Assertions.assertDoesNotThrow(() -> addRow(new DefaultTableModel(), null));
-		//
-	}
-
-	private static void addRow(final DefaultTableModel instance, final Object[] rowData) throws Throwable {
-		try {
-			METHOD_ADD_ROW.invoke(null, instance, rowData);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -1260,7 +1260,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 				if (tableModel != null) {
 					//
-					addRow(tableModel, new Object[] { getText(v), getRomaji(v), m });
+					Util.addRow(tableModel, new Object[] { getText(v), getRomaji(v), m });
 					//
 				} else {
 					//
@@ -1323,7 +1323,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 				if (tableModel != null) {
 					//
-					addRow(tableModel, new Object[] { getText(v), getRomaji(v), e });
+					Util.addRow(tableModel, new Object[] { getText(v), getRomaji(v), e });
 					//
 				} else {
 					//
@@ -1514,7 +1514,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 			} // for
 				//
-			addRow(tmImportResult, new Object[] { numberOfSheetProcessed, numberOfVoiceProcessed });
+			Util.addRow(tmImportResult, new Object[] { numberOfSheetProcessed, numberOfVoiceProcessed });
 			//
 		} catch (final InvocationTargetException e) {
 			//
@@ -2860,16 +2860,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 		instance.setRenderer(aRenderer);
 		//
-	}
-
-	private static void addRow(@Nullable final DefaultTableModel instance, final Object[] rowData) {
-		//
-		if (instance != null) {
-			//
-			instance.addRow(rowData);
-			//
-		} // if
-			//
 	}
 
 	private static void setMaximum(@Nullable final JProgressBar instance, final int n) {
