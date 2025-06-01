@@ -2093,7 +2093,7 @@ public abstract class Util {
 			//
 	}
 
-	static <E> void addElement(final MutableComboBoxModel<E> instance, final E item) {
+	static <E> void addElement(final MutableComboBoxModel<E> instance, @Nullable final E item) {
 		//
 		final Iterable<?> iterable = toList(map(
 				filter(stream(testAndApply(Objects::nonNull, getClass(instance), FieldUtils::getAllFieldsList, null)),
