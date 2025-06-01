@@ -45,13 +45,17 @@ public interface PDDocumentUtil {
 			//
 		} // if
 			//
-		if (a && IterableUtils.size(iterable) == 1 && IterableUtils.get(iterable, 0) != null && file.isFile()
+		if (a && IterableUtils.size(iterable) == 1 && IterableUtils.get(iterable, 0) != null && isFile(file)
 				&& instance != null) {
 			//
 			instance.save(file);
 			//
 		} // if
 			//
+	}
+
+	private static boolean isFile(final File instance) {
+		return instance != null && instance.isFile();
 	}
 
 	private static String getName(final Member instance) {
