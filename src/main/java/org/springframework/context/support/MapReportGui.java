@@ -300,7 +300,7 @@ public class MapReportGui extends JFrame
 			//
 		for (int j = Util.getRowCount(dtm) - 1; j >= 0; j--) {
 			//
-			removeRow(dtm, j);
+			Util.removeRow(dtm, j);
 			//
 		} // for
 			//
@@ -521,12 +521,6 @@ public class MapReportGui extends JFrame
 	@Nullable
 	private static <K, V> Map<K, Collection<V>> asMap(@Nullable final Multimap<K, V> instance) {
 		return instance != null ? instance.asMap() : null;
-	}
-
-	private static void removeRow(@Nullable final DefaultTableModel instance, final int row) {
-		if (instance != null) {
-			instance.removeRow(row);
-		}
 	}
 
 	private static void addRow(@Nullable final DefaultTableModel instance, final Object[] rowData) {

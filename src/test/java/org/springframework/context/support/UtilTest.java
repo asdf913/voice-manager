@@ -981,4 +981,27 @@ class UtilTest {
 		//
 	}
 
+	@Test
+	void testRemoveRow() {
+		//
+		final DefaultTableModel defaultTableModel = new DefaultTableModel();
+		//
+		Assertions.assertDoesNotThrow(() -> Util.removeRow(defaultTableModel, 0));
+		//
+		defaultTableModel.addRow(new Object[] {});
+		//
+		Assertions.assertDoesNotThrow(() -> Util.removeRow(defaultTableModel, 0));
+		//
+		FailableStreamUtil.forEach(new FailableStream<>(Stream.of(DefaultTableModel.class,
+				Util.forName("sun.tools.jconsole.inspector.XMBeanInfo$ReadOnlyDefaultTableModel"),
+				Util.forName("sun.tools.jconsole.inspector.TableSorter"))), x -> {
+					//
+					Assertions.assertDoesNotThrow(
+							() -> Util.removeRow(Util.cast(DefaultTableModel.class, Narcissus.allocateInstance(x)), -1),
+							Util.getName(x));
+					//
+				});
+		//
+	}
+
 }

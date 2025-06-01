@@ -70,10 +70,10 @@ class MapReportGuiTest {
 
 	private static final String EMPTY = "";
 
-	private static Method METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_REMOVE_ROW, METHOD_ADD_ROW,
-			METHOD_GET_PREFERRED_WIDTH, METHOD_AS_MAP, METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT,
-			METHOD_CREATE_MULTI_MAP, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_LENGTH,
-			METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
+	private static Method METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_ADD_ROW, METHOD_GET_PREFERRED_WIDTH, METHOD_AS_MAP,
+			METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP,
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_LENGTH, METHOD_TEST_AND_APPLY,
+			METHOD_CREATE_MULTIMAP, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
 			METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER, METHOD_WRITE_VALUE_AS_STRING = null;
 
 	@BeforeAll
@@ -83,9 +83,6 @@ class MapReportGuiTest {
 		//
 		(METHOD_IS_ALL_ATTRIBUTES_MATCHED = clz.getDeclaredMethod("isAllAttributesMatched", Map.class,
 				AttributeAccessor.class)).setAccessible(true);
-		//
-		(METHOD_REMOVE_ROW = clz.getDeclaredMethod("removeRow", DefaultTableModel.class, Integer.TYPE))
-				.setAccessible(true);
 		//
 		(METHOD_ADD_ROW = clz.getDeclaredMethod("addRow", DefaultTableModel.class, Object[].class)).setAccessible(true);
 		//
@@ -515,21 +512,6 @@ class MapReportGuiTest {
 				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(obj != null ? Util.toString(obj.getClass()) : null);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testRemoveRow() {
-		//
-		Assertions.assertDoesNotThrow(() -> removeRow(null, 0));
-		//
-	}
-
-	private static void removeRow(final DefaultTableModel instance, final int row) throws Throwable {
-		try {
-			METHOD_REMOVE_ROW.invoke(null, instance, row);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

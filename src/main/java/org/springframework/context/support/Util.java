@@ -2070,4 +2070,14 @@ public abstract class Util {
 		return instance != null && instance.getDataVector() != null ? instance.getRowCount() : 0;
 	}
 
+	static void removeRow(final DefaultTableModel instance, final int row) {
+		//
+		if (getRowCount(instance) > row) {
+			//
+			instance.removeRow(row);
+			//
+		} // if
+			//
+	}
+
 }

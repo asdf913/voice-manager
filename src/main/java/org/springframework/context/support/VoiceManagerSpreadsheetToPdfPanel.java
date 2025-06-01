@@ -255,7 +255,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 			Iterable<Data> dataIterable = null;
 			//
-			Util.forEach(IntStream.range(0, Util.getRowCount(tableModel)), i -> removeRow(tableModel, i));
+			Util.forEach(IntStream.range(0, Util.getRowCount(tableModel)), i -> Util.removeRow(tableModel, i));
 			//
 			try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
 				//
@@ -288,18 +288,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 					//
 			} // if
 				//
-		} // if
-			//
-	}
-
-	private static void removeRow(final DefaultTableModel instance, final int row) {
-		//
-		final Iterable<?> dataVector = instance != null ? instance.getDataVector() : null;
-		//
-		if (dataVector != null && IterableUtils.size(dataVector) > row) {
-			//
-			instance.removeRow(row);
-			//
 		} // if
 			//
 	}
