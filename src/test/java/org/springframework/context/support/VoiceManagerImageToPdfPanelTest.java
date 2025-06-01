@@ -225,8 +225,6 @@ class VoiceManagerImageToPdfPanelTest {
 
 	private VoiceManagerImageToPdfPanel instance = null;
 
-	private PDImage pdImage = null;
-
 	private IH ih = null;
 
 	private MH mh = null;
@@ -236,7 +234,7 @@ class VoiceManagerImageToPdfPanelTest {
 		//
 		instance = new VoiceManagerImageToPdfPanel();
 		//
-		pdImage = Reflection.newProxy(PDImage.class, ih = new IH());
+		ih = new IH();
 		//
 		mh = new MH();
 		//
