@@ -277,11 +277,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 				dataIterable = getDataIterable(
 						testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null));
 				//
-				testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), file, x -> {
-					//
-					Util.setText(tfFile, Util.getAbsolutePath(x));
-					//
-				});
+				testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), file,
+						x -> Util.setText(tfFile, Util.getAbsolutePath(x)));
 				//
 			} catch (final IOException e) {
 				//
