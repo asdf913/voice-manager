@@ -34,7 +34,6 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.graphics.image.PDInlineImage;
-import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.poi.hssf.usermodel.HSSFObjectData;
 import org.apache.poi.hssf.usermodel.HSSFPicture;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -75,7 +74,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH_PD_RECTANGLE,
 			METHOD_GET_WIDTH_PD_IMAGE, METHOD_GET_HEIGHT_PD_RECTANGLE, METHOD_GET_HEIGHT_PD_IMAGE,
 			METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE,
-			METHOD_TEST_AND_ACCEPT, METHOD_SET_FIELD, METHOD_SAVE, METHOD_GET_ANNOTATIONS, METHOD_TO_BIG_DECIMAL,
+			METHOD_TEST_AND_ACCEPT, METHOD_SET_FIELD, METHOD_SAVE, METHOD_TO_BIG_DECIMAL,
 			METHOD_SET_SELECTED_INDEX = null;
 
 	@BeforeAll
@@ -112,9 +111,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_SAVE = clz.getDeclaredMethod("save", PDDocument.class, File.class, Consumer.class)).setAccessible(true);
-		//
-		(METHOD_GET_ANNOTATIONS = clz.getDeclaredMethod("getAnnotations", PDPage.class, Consumer.class))
-				.setAccessible(true);
 		//
 		(METHOD_TO_BIG_DECIMAL = clz.getDeclaredMethod("toBigDecimal", Float.TYPE)).setAccessible(true);
 		//
@@ -769,34 +765,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			throws Throwable {
 		try {
 			METHOD_SAVE.invoke(null, instance, file, consumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetAnnotations() throws Throwable {
-		//
-		if (mh != null) {
-			//
-			mh.ioException = new IOException();
-			//
-		} // if
-			//
-		Assertions.assertNull(getAnnotations(ProxyUtil.createProxy(PDPage.class, mh), null));
-		//
-	}
-
-	private static List<PDAnnotation> getAnnotations(final PDPage instance, final Consumer<IOException> consumer)
-			throws Throwable {
-		try {
-			final Object obj = METHOD_GET_ANNOTATIONS.invoke(null, instance, consumer);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof List) {
-				return (List) obj;
-			}
-			throw new Throwable(Util.getName(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
