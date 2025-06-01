@@ -298,7 +298,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 	}
 
-	private static void addRow(final DefaultTableModel instance, final Object[] rowData) {
+	private static void addRow(@Nullable final DefaultTableModel instance, final Object[] rowData) {
 		//
 		if (instance != null && instance.getDataVector() != null) {
 			//
