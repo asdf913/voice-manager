@@ -2,8 +2,6 @@ package org.springframework.context.support;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -15,11 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
-
-import org.apache.commons.lang3.stream.FailableStreamUtil;
-import org.apache.commons.lang3.stream.Streams.FailableStream;
 import java.util.stream.Stream;
 
 import javax.swing.AbstractButton;
@@ -32,8 +26,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.function.FailableConsumer;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.commons.lang3.stream.FailableStreamUtil;
+import org.apache.commons.lang3.stream.Streams.FailableStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImage;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
@@ -68,8 +62,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
-import javassist.util.proxy.MethodHandler;
-import javassist.util.proxy.ProxyUtil;
 
 class VoiceManagerSpreadsheetToPdfPanelTest {
 
