@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -265,7 +266,9 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 					Boolean.logicalAnd(Objects.equals(name = Util.getName(m), "getWidth"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Dimension.class })),
 					Boolean.logicalAnd(Objects.equals(name, "toBigDecimal"),
-							Arrays.equals(parameterTypes, new Class<?>[] { Float.TYPE })))) {
+							Arrays.equals(parameterTypes, new Class<?>[] { Float.TYPE })),
+					Boolean.logicalAnd(Objects.equals(name, "createPDDocument"),
+							Arrays.equals(parameterTypes, new Class<?>[] { File.class })))) {
 				//
 				Assertions.assertNotNull(invoke, toString);
 				//

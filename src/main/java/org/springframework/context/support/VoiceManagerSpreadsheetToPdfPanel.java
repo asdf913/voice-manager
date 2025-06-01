@@ -59,6 +59,7 @@ import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.IteratorUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -278,7 +279,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 						testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null));
 				//
 				testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), file,
-						x -> Util.setText(tfFile, Util.getAbsolutePath(x)));
+						x -> Util.setText(tfFile, Util.getAbsolutePath(Util.getAbsoluteFile(x))));
 				//
 			} catch (final IOException e) {
 				//
@@ -317,10 +318,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 
 	private void actionPerformedForBtnExecute() {
 		//
-		Drawing<?> drawingPatriarch = null;
-		//
-		Iterable<Data> dataList = null;
-		//
 		File file = Util.toFile(testAndApply(Objects::nonNull, Util.getText(tfFile), Path::of, null));
 		//
 		if (or(file == null, !Util.exists(file), !Util.isFile(file))) {
@@ -329,6 +326,36 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 		} // if
 			//
+		try (final PDDocument pdDocument = createPDDocument(file)) {
+			//
+			System.out.println(Util.getAbsolutePath(file = (Util.toFile(Path.of("test.pdf")))));// TODO
+			//
+			if (!isTestMode()) {
+				//
+				if (!Util.exists(file)) {
+					//
+					FileUtils.touch(file);
+					//
+				} // if
+					//
+				PDDocumentUtil.save(pdDocument, file);
+				//
+			} // if
+				//
+		} catch (final IOException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
+	}
+
+	private PDDocument createPDDocument(final File file) {
+		//
+		Drawing<?> drawingPatriarch = null;
+		//
+		Iterable<Data> dataList = null;
+		//
 		try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
 			//
 			final Sheet sheet = testAndApply(x -> WorkbookUtil.getNumberOfSheets(wb) == 1, wb,
@@ -455,22 +482,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 				//
 		} // for
 			//
-		if (!isTestMode()) {
-			//
-			System.out.println(Util.getAbsolutePath(file = Util.toFile(Path.of("test.pdf"))));
-			//
-			try {
-				//
-				PDDocumentUtil.save(pdDocument, file);
-				//
-			} catch (final IOException e) {
-				//
-				throw new RuntimeException(e);
-				//
-			} // try
-				//
-		} // if
-			//
+		return pdDocument;
+		//
 	}
 
 	private static boolean or(final boolean a, final boolean b, @Nullable final boolean... bs) {
