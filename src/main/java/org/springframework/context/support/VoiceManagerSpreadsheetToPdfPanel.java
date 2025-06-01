@@ -323,7 +323,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 		File file = Util.toFile(testAndApply(Objects::nonNull, Util.getText(tfFile), Path::of, null));
 		//
-		if (file == null || !file.exists() || !file.isFile()) {
+		if (or(file == null, !Util.exists(file), !Util.isFile(file))) {
 			//
 			file = getSelectedFile();
 			//
@@ -471,6 +471,30 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 				//
 		} // if
 			//
+	}
+
+	private static boolean or(final boolean a, final boolean b, @Nullable final boolean... bs) {
+		//
+		boolean result = a || b;
+		//
+		if (result) {
+			//
+			return result;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if (result |= bs[i]) {
+				//
+				return result;
+				//
+			} // if
+				//
+		} // for
+			//
+		return result;
+		//
 	}
 
 	private static BigDecimal toBigDecimal(final float f) {

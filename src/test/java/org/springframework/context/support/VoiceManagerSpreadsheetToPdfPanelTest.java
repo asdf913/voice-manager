@@ -67,7 +67,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH_PD_RECTANGLE,
 			METHOD_GET_WIDTH_PD_IMAGE, METHOD_GET_HEIGHT_PD_RECTANGLE, METHOD_GET_HEIGHT_PD_IMAGE,
 			METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE,
-			METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL, METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT = null;
+			METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL, METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT,
+			METHOD_OR = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -106,6 +107,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class, Consumer.class))
 				.setAccessible(true);
+		//
+		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
 	}
 
@@ -213,7 +216,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	}
 
 	@Test
-	void testNull() {
+	void testNull() throws Throwable {
 		//
 		final Method[] ms = VoiceManagerSpreadsheetToPdfPanel.class.getDeclaredMethods();
 		//
@@ -235,7 +238,10 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		for (int i = ZERO; ms != null && i < ms.length; i++) {
 			//
-			if ((m = ms[i]) == null || m.isSynthetic()) {
+			if ((m = ms[i]) == null || m.isSynthetic()
+					|| Boolean.logicalAnd(Objects.equals(Util.getName(m), "or"),
+							Arrays.equals(Util.getParameterTypes(m),
+									new Class<?>[] { Boolean.TYPE, Boolean.TYPE, boolean[].class }))) {
 				//
 				continue;
 				//
@@ -297,28 +303,23 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			//
 	}
 
-	private static boolean or(final boolean a, final boolean b, final boolean... bs) {
+	@Test
+	void testOr() throws Throwable {
 		//
-		boolean result = a || b;
+		Assertions.assertFalse(or(false, false, null));
 		//
-		if (result) {
-			//
-			return result;
-			//
-		} // if
-			//
-		for (int i = 0; bs != null && i < bs.length; i++) {
-			//
-			if (result |= bs[i]) {
-				//
-				return result;
-				//
-			} // if
-				//
-		} // for
-			//
-		return result;
-		//
+	}
+
+	private static boolean or(final boolean a, final boolean b, final boolean... bs) throws Throwable {
+		try {
+			final Object obj = METHOD_OR.invoke(null, a, b, bs);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	@Test
