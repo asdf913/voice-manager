@@ -43,6 +43,7 @@ import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -274,12 +275,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 			Util.setText(tfFile, null);
 			//
-			if (lblThumbnail != null) {
-				//
-				lblThumbnail.setIcon(new ImageIcon());
-				//
-			} // if
-				//
+			setIcon(lblThumbnail, new ImageIcon());
+			//
 			File file = getSelectedFile(Util.toFile(Path.of(".")));
 			//
 			Iterable<Data> dataIterable = null;
@@ -305,29 +302,25 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 				//
 			try (final PDDocument pdDocument = createPDDocument(file)) {
 				//
-				if (lblThumbnail != null) {
+				final BufferedImage bufferedImage = new PDFRenderer(pdDocument).renderImage(0);
+				//
+				if (bufferedImage != null) {
 					//
-					final BufferedImage bufferedImage = new PDFRenderer(pdDocument).renderImage(0);
+					final int width = bufferedImage.getWidth();
 					//
-					if (bufferedImage != null) {
-						//
-						final int width = bufferedImage.getWidth();
-						//
-						final int height = bufferedImage.getHeight();
-						//
-						final Dimension preferredSize = getPreferredSize();
-						//
-						final float ratioMin = Math
-								.max(height / (float) (preferredSize != null ? preferredSize.getHeight() : 1), 1);
-						//
-						lblThumbnail.setIcon(
-								new ImageIcon(bufferedImage.getScaledInstance(Math.max((int) (width / ratioMin), 1),
-										Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT)));
-						//
-						revalidate();
-						//
-					} // if
-						//
+					final int height = bufferedImage.getHeight();
+					//
+					final Dimension preferredSize = getPreferredSize();
+					//
+					final float ratioMin = Math
+							.max(height / (float) (preferredSize != null ? preferredSize.getHeight() : 1), 1);
+					//
+					setIcon(lblThumbnail,
+							new ImageIcon(bufferedImage.getScaledInstance(Math.max((int) (width / ratioMin), 1),
+									Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT)));
+					//
+					revalidate();
+					//
 				} // if
 					//
 			} catch (final IOException e) {
@@ -354,6 +347,29 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 					//
 			} // if
 				//
+		} // if
+			//
+	}
+
+	private static void setIcon(final JLabel instance, final Icon icon) {
+		//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				x -> Objects.equals(Util.getName(x), "objectLock")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (f != null && Narcissus.getField(instance, f) != null) {
+			//
+			instance.setIcon(icon);
+			//
 		} // if
 			//
 	}

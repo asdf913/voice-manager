@@ -18,6 +18,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import javax.swing.AbstractButton;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -66,7 +67,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH_PD_RECTANGLE,
 			METHOD_GET_HEIGHT_PD_RECTANGLE, METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA,
 			METHOD_GET_DATA_ITERABLE, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL, METHOD_SET_SELECTED_INDEX,
-			METHOD_TEST_AND_ACCEPT, METHOD_OR = null;
+			METHOD_TEST_AND_ACCEPT, METHOD_OR, METHOD_SET_ICON = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -103,6 +104,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
+		//
+		(METHOD_SET_ICON = clz.getDeclaredMethod("setIcon", JLabel.class, Icon.class)).setAccessible(true);
 		//
 	}
 
@@ -688,6 +691,22 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, value, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetIcon() {
+		//
+		Assertions.assertDoesNotThrow(
+				() -> setIcon(Util.cast(JLabel.class, Narcissus.allocateInstance(JLabel.class)), null));
+		//
+	}
+
+	private static void setIcon(final JLabel instance, final Icon icon) throws Throwable {
+		try {
+			METHOD_SET_ICON.invoke(null, instance, icon);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
