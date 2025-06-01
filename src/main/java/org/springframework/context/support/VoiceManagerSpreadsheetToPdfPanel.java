@@ -351,7 +351,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 	}
 
 	private static <T> double testAndApplyAsDouble(final Predicate<T> predicate, final T value,
-			final Object2DoubleFunction<T> functionTrue, final Object2DoubleFunction<T> functionFalse,
+			final Object2DoubleFunction<T> functionTrue, @Nullable final Object2DoubleFunction<T> functionFalse,
 			final double defaultValue) {
 		return Util.test(predicate, value) ? applyAsDouble(functionTrue, value, defaultValue)
 				: applyAsDouble(functionFalse, value, defaultValue);
