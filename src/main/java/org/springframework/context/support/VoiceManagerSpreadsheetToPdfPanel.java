@@ -485,12 +485,12 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 						&& (argumentTypes = invokeStatic.getArgumentTypes(cpg)) != null && argumentTypes.length == 1
 						&& Objects.equals(TypeUtil.getClassName(argumentTypes[0]), "java.io.File")) {
 					//
-					if (method != null) {
+					testAndRunThrows(method != null, () -> {
 						//
 						throw new IllegalStateException();
 						//
-					} // if
-						//
+					});
+					//
 					testAndRunThrows(
 							IterableUtils.size(ms = Util.toList(Util.filter(testAndApply(Objects::nonNull,
 									Util.getMethods(Util.forName(invokeStatic.getClassName(cpg))), Arrays::stream,
