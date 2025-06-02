@@ -325,14 +325,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 				//
 				final int height = bufferedImage.getHeight();
 				//
-				// final boolean gui = isGui();
-				//
 				final Dimension preferredSize = isGui() ? getPreferredSize() : null;
-				//
-				// final float ratioMin = Math.max(height / (float)
-				// testAndApplyAsDouble(Objects::nonNull,
-				// getPreferredSize(), x -> getHeight(Util.cast(Dimension.class, x)), null, 1),
-				// 1);
 				//
 				final float ratioMin = Math
 						.max(height / (float) (preferredSize != null ? preferredSize.getHeight() : 1), 1);
