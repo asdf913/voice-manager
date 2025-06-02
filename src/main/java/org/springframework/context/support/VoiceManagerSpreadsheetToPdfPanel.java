@@ -78,6 +78,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.PDPageUtil;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.common.PDRectangleUtil;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecification;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageUtil;
@@ -535,14 +536,15 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 				//
 			(pdAnnotationFileAttachment = new PDAnnotationFileAttachment()).setFile(pdComplexFileSpecification);
 			//
-			pdAnnotationFileAttachment.setRectangle(new PDRectangle(floatValue(data.x, 0) * ratioMin,
-					getHeight(mediaBox) - (floatValue(data.y, size) + floatValue(data.height, size)) * ratioMin
+			pdAnnotationFileAttachment
+					.setRectangle(new PDRectangle(floatValue(data.x, 0) * ratioMin, PDRectangleUtil.getHeight(mediaBox)
+							- (floatValue(data.y, size) + floatValue(data.height, size)) * ratioMin
 					//
-					, floatValue(data.width, size) * ratioMin
+							, floatValue(data.width, size) * ratioMin
+							//
+							, floatValue(data.height, size) * ratioMin)
 					//
-					, floatValue(data.height, size) * ratioMin)
-			//
-			);
+					);
 			//
 			pdAnnotationFileAttachment.setContents(data.contents);
 			//
@@ -643,7 +645,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 		final PDRectangle mediaBox = PDPageUtil.getMediaBox(pdPage);
 		//
-		float pageWidth = getWidth(mediaBox);
+		float pageWidth = PDRectangleUtil.getWidth(mediaBox);
 		//
 		float imageWidth, imageHeight, pageHeight, ratioMin = 0;
 		//
@@ -662,7 +664,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 					imageHeight = PDImageUtil.getHeight(pdImageXObject);
 					//
 					pageHeight = imageHeight * (ratioMin = Math.min(imageWidth == 0 ? 0 : pageWidth / imageWidth,
-							imageHeight == 0 ? 0 : getHeight(mediaBox) / imageHeight));
+							imageHeight == 0 ? 0 : PDRectangleUtil.getHeight(mediaBox) / imageHeight));
 					//
 					cs.drawImage(pdImageXObject, 0, (imageHeight - pageHeight) / 2, imageWidth * ratioMin, pageHeight);
 					//
@@ -1032,54 +1034,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		} // if
 			//
 		return instance.getDrawingPatriarch();
-		//
-	}
-
-	private static float getWidth(@Nullable final PDRectangle instance) {
-		//
-		final List<Field> fs = Util.toList(Util.filter(
-				testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)), Arrays::stream, null),
-				x -> Objects.equals(Util.getName(x), "rectArray")));
-		//
-		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
-			//
-			throw new IllegalStateException();
-			//
-		});
-		//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-		//
-		if (f != null && Narcissus.getField(instance, f) == null) {
-			//
-			return 0;
-			//
-		} // if
-			//
-		return instance != null ? instance.getWidth() : 0;
-		//
-	}
-
-	private static float getHeight(@Nullable final PDRectangle instance) {
-		//
-		final List<Field> fs = Util.toList(Util.filter(
-				testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)), Arrays::stream, null),
-				x -> Objects.equals(Util.getName(x), "rectArray")));
-		//
-		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
-			//
-			throw new IllegalStateException();
-			//
-		});
-		//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-		//
-		if (f != null && Narcissus.getField(instance, f) == null) {
-			//
-			return 0;
-			//
-		} // if
-			//
-		return instance != null ? instance.getHeight() : 0;
 		//
 	}
 

@@ -112,6 +112,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.PDPageUtil;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.common.PDRectangleUtil;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecification;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.font.PDFont;
@@ -759,9 +760,9 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				//
 				final PDRectangle mediaBox = PDPageUtil.getMediaBox(pdPage);
 				//
-				float pageWidth = getWidth(mediaBox);
+				float pageWidth = PDRectangleUtil.getWidth(mediaBox);
 				//
-				float pageHeight = getHeight(mediaBox);
+				float pageHeight = PDRectangleUtil.getHeight(mediaBox);
 				//
 				final float size = pageWidth / 10;
 				//
@@ -1045,7 +1046,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 					//
 					value = Integer.toString(100 - i * 10) + "%"
 					//
-					, font, fontSize)) / 2, (getHeight(PDPageUtil.getMediaBox(pdPage)) - size
+					, font, fontSize)) / 2, (PDRectangleUtil.getHeight(PDPageUtil.getMediaBox(pdPage)) - size
 			//
 							- (getAscent(pdFontDescriptor = PDFontUtil.getFontDescriptor(font), 0) / 1000 * fontSize)
 							+ (getDescent(pdFontDescriptor, 0) / 1000 * fontSize))
@@ -1241,7 +1242,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		final float imageHeight = PDImageUtil.getHeight(pdImageXObject);
 		//
 		final float ratioMin = Math.min(imageWidth == 0 ? 0 : pageWidth / imageWidth,
-				imageHeight == 0 ? 0 : getHeight(pdRectangle) / imageHeight);
+				imageHeight == 0 ? 0 : PDRectangleUtil.getHeight(pdRectangle) / imageHeight);
 		//
 		final float pageHeight = imageHeight * ratioMin;
 		//
@@ -1359,14 +1360,6 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		if (Util.test(predicate, value)) {
 			FailableConsumerUtil.accept(consumer, value);
 		}
-	}
-
-	private static float getWidth(@Nullable final PDRectangle instance) {
-		return instance != null ? instance.getWidth() : 0;
-	}
-
-	private static float getHeight(@Nullable final PDRectangle instance) {
-		return instance != null ? instance.getHeight() : 0;
 	}
 
 	@Nullable

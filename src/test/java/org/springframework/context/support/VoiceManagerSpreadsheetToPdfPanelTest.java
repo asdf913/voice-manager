@@ -64,10 +64,9 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private static final int ZERO = 0;
 
-	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_WIDTH_PD_RECTANGLE,
-			METHOD_GET_HEIGHT_PD_RECTANGLE, METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE, METHOD_GET_PICTURE_DATA,
-			METHOD_GET_DATA_ITERABLE, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL, METHOD_SET_SELECTED_INDEX,
-			METHOD_TEST_AND_ACCEPT, METHOD_OR, METHOD_SET_ICON = null;
+	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE,
+			METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL,
+			METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT, METHOD_OR, METHOD_SET_ICON = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -78,10 +77,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_GET_FIELD_BY_NAME = clz.getDeclaredMethod("getFieldByName", Collection.class, String.class))
 				.setAccessible(true);
-		//
-		(METHOD_GET_WIDTH_PD_RECTANGLE = clz.getDeclaredMethod("getWidth", PDRectangle.class)).setAccessible(true);
-		//
-		(METHOD_GET_HEIGHT_PD_RECTANGLE = clz.getDeclaredMethod("getHeight", PDRectangle.class)).setAccessible(true);
 		//
 		(METHOD_GET_DRAWING_PATRIARCH = clz.getDeclaredMethod("getDrawingPatriarch", Sheet.class)).setAccessible(true);
 		//
@@ -185,14 +180,10 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private IH ih = null;
 
-	private PDRectangle pdRectangle = null;
-
 	@BeforeEach
 	void beforeEach() {
 		//
 		ih = new IH();
-		//
-		pdRectangle = Util.cast(PDRectangle.class, Narcissus.allocateInstance(PDRectangle.class));
 		//
 	}
 
@@ -351,44 +342,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				return null;
 			} else if (obj instanceof Field) {
 				return (Field) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetWidth() throws Throwable {
-		//
-		Assertions.assertEquals(0f, getWidth(Util.cast(PDRectangle.class, pdRectangle)));
-		//
-	}
-
-	private static float getWidth(final PDRectangle instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_WIDTH_PD_RECTANGLE.invoke(null, instance);
-			if (obj instanceof Float) {
-				return ((Float) obj).floatValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetHeight() throws Throwable {
-		//
-		Assertions.assertEquals(0f, getHeight(Util.cast(PDRectangle.class, pdRectangle)));
-		//
-	}
-
-	private static float getHeight(final PDRectangle instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_HEIGHT_PD_RECTANGLE.invoke(null, instance);
-			if (obj instanceof Float) {
-				return ((Float) obj).floatValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

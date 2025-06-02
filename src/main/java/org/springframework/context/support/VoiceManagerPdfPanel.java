@@ -167,6 +167,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.PDPageContentStream.AppendMode;
 import org.apache.pdfbox.pdmodel.PDPageUtil;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.common.PDRectangleUtil;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDComplexFileSpecification;
 import org.apache.pdfbox.pdmodel.common.filespecification.PDEmbeddedFile;
 import org.apache.pdfbox.pdmodel.font.PDFont;
@@ -3456,7 +3457,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 					// Position on the page
 					//
 					attachment.setRectangle(new PDRectangle(index++ * size,
-							getHeight(md) - Util.intValue(largestY, 0) - size, size, size));
+							PDRectangleUtil.getHeight(md) - Util.intValue(largestY, 0) - size, size, size));
 					//
 					attachment.setContents(value = Util.getValue(entry));
 					//
@@ -3481,8 +3482,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 											() -> Pattern.compile("^(\\d+%).+$")), value),
 									x -> Util.group(x, 1), x -> value_)
 							//
-							, font, fontSize)) / 2, lastHeight = (getHeight(md) - Util.intValue(largestY, 0) - size
-					//
+							, font, fontSize)) / 2,
+							lastHeight = (PDRectangleUtil.getHeight(md) - Util.intValue(largestY, 0) - size
+							//
 									- (getAscent(pdFontDescriptor = PDFontUtil.getFontDescriptor(font), 0) / 1000
 											* fontSize)
 									+ (getDescent(pdFontDescriptor, 0) / 1000 * fontSize))
@@ -3793,11 +3795,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		final PDRectangle md = ObjectMap.getObject(objectMap, PDRectangle.class);
 		//
-		final float width = getWidth(md, 0);
+		final float width = PDRectangleUtil.getWidth(md);
 		//
 		final double ratioWidth = width / floatValue(getWidth(bi), width);
 		//
-		final float pdfHeight = Math.min(getHeight(md, 0), lastHeight);
+		final float pdfHeight = Math.min(PDRectangleUtil.getHeight(md), lastHeight);
 		//
 		final double ratioHeight = pdfHeight / floatValue(getHeight(bi), pdfHeight);
 		//
@@ -3850,14 +3852,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		} // try
 			//
-	}
-
-	private static float getHeight(@Nullable final PDRectangle instance, final float defaultValue) {
-		return instance != null ? instance.getHeight() : defaultValue;
-	}
-
-	private static float getWidth(@Nullable final PDRectangle instance, final float defaultValue) {
-		return instance != null ? instance.getWidth() : defaultValue;
 	}
 
 	@Nullable
@@ -4087,10 +4081,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
-	}
-
-	private static float getHeight(@Nullable final PDRectangle instance) {
-		return instance != null ? instance.getHeight() : 0;
 	}
 
 	@Nullable
