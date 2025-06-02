@@ -363,22 +363,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 	}
 
-	private static <T> double testAndApplyAsDouble(@Nullable final Predicate<T> predicate, final T value,
-			final Object2DoubleFunction<T> functionTrue, @Nullable final Object2DoubleFunction<T> functionFalse,
-			final double defaultValue) {
-		return Util.test(predicate, value) ? applyAsDouble(functionTrue, value, defaultValue)
-				: applyAsDouble(functionFalse, value, defaultValue);
-	}
-
-	private static <T> double applyAsDouble(@Nullable final Object2DoubleFunction<T> instance, final T operand,
-			final double defaultValue) {
-		return instance != null ? instance.applyAsDouble(operand) : defaultValue;
-	}
-
-	private static double getHeight(@Nullable final Dimension instnace) {
-		return instnace != null ? instnace.getHeight() : 0;
-	}
-
 	private static void setIcon(final JLabel instance, final Icon icon) {
 		//
 		final Iterable<Field> fs = Util.toList(Util.filter(
