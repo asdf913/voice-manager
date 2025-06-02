@@ -569,12 +569,12 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		if (!Util.contains(collection,
 				testAndApply((a, b) -> b != null, Util.getKey(entry), file, Narcissus::invokeStaticMethod, null))) {
 			//
-			if (!GraphicsEnvironment.isHeadless()) {// TODO
+			testAndRunThrows(!GraphicsEnvironment.isHeadless(), () -> {// TODO
 				//
 				JOptionPane.showMessageDialog(null, String.format("Allowed file type %1$s", collection));
 				//
-			} // if
-				//
+			});
+			//
 			return;
 			//
 		} // if
