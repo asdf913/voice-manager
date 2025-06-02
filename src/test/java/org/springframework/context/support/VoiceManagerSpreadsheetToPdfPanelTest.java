@@ -59,7 +59,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
-import it.unimi.dsi.fastutil.objects.Object2DoubleFunction;
 
 class VoiceManagerSpreadsheetToPdfPanelTest {
 

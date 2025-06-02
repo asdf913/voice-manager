@@ -106,7 +106,6 @@ import org.meeuw.functional.ThrowingRunnableUtil;
 import org.springframework.beans.factory.InitializingBean;
 
 import io.github.toolfactory.narcissus.Narcissus;
-import it.unimi.dsi.fastutil.objects.Object2DoubleFunction;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements InitializingBean, ActionListener {
