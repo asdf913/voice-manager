@@ -329,8 +329,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 		File file = getSelectedFile(Util.toFile(Path.of(".")));
 		//
-		if (!Util.contains(collection, testAndApply((a, b) -> b != null, Util.getKey(entry), file,
-				(a, b) -> Narcissus.invokeStaticMethod(a, b), null))) {
+		if (!Util.contains(collection,
+				testAndApply((a, b) -> b != null, Util.getKey(entry), file, Narcissus::invokeStaticMethod, null))) {
 			//
 			if (!GraphicsEnvironment.isHeadless()) {// TODO
 				//
@@ -566,8 +566,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 		File file = Util.toFile(testAndApply(Objects::nonNull, Util.getText(tfFile), Path::of, null));
 		//
-		if (!Util.contains(collection, testAndApply((a, b) -> b != null, Util.getKey(entry), file,
-				(a, b) -> Narcissus.invokeStaticMethod(a, b), null))) {
+		if (!Util.contains(collection,
+				testAndApply((a, b) -> b != null, Util.getKey(entry), file, Narcissus::invokeStaticMethod, null))) {
 			//
 			if (!GraphicsEnvironment.isHeadless()) {// TODO
 				//
