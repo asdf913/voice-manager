@@ -274,77 +274,89 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 		} else if (Objects.equals(source, btnPreview)) {
 			//
-			Util.setText(tfFile, null);
+			actionPerformedForBtnPreview();
 			//
-			setIcon(lblThumbnail, new ImageIcon());
+		} // if
 			//
-			File file = getSelectedFile(Util.toFile(Path.of(".")));
+	}
+
+	private void actionPerformedForBtnPreview() {
+		//
+		Util.setText(tfFile, null);
+		//
+		setIcon(lblThumbnail, new ImageIcon());
+		//
+		File file = getSelectedFile(Util.toFile(Path.of(".")));
+		//
+		Iterable<Data> dataIterable = null;
+		//
+		Util.forEach(IntStream.range(0, Util.getRowCount(tableModel)), i -> Util.removeRow(tableModel, i));
+		//
+		try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
 			//
-			Iterable<Data> dataIterable = null;
+			final Sheet sheet = testAndApply(x -> WorkbookUtil.getNumberOfSheets(wb) == 1, wb,
+					x -> WorkbookUtil.getSheetAt(x, 0), null);
 			//
-			Util.forEach(IntStream.range(0, Util.getRowCount(tableModel)), i -> Util.removeRow(tableModel, i));
+			dataIterable = getDataIterable(
+					testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null));
 			//
-			try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
+			testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), file,
+					x -> Util.setText(tfFile, Util.getAbsolutePath(Util.getAbsoluteFile(x))));
+			//
+		} catch (final IOException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
+		try (final PDDocument pdDocument = createPDDocument(file)) {
+			//
+			final BufferedImage bufferedImage = new PDFRenderer(pdDocument).renderImage(0);
+			//
+			if (bufferedImage != null) {
 				//
-				final Sheet sheet = testAndApply(x -> WorkbookUtil.getNumberOfSheets(wb) == 1, wb,
-						x -> WorkbookUtil.getSheetAt(x, 0), null);
+				final int width = bufferedImage.getWidth();
 				//
-				dataIterable = getDataIterable(
-						testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null));
+				final int height = bufferedImage.getHeight();
 				//
-				testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), file,
-						x -> Util.setText(tfFile, Util.getAbsolutePath(Util.getAbsoluteFile(x))));
+				final Dimension preferredSize = getPreferredSize();
 				//
-			} catch (final IOException e) {
+				// final float ratioMin = Math.max(height / (float)
+				// testAndApplyAsDouble(Objects::nonNull,
+				// getPreferredSize(), x -> getHeight(Util.cast(Dimension.class, x)), null, 1),
+				// 1);
 				//
-				throw new RuntimeException(e);
+				final float ratioMin = Math
+						.max(height / (float) (preferredSize != null ? preferredSize.getHeight() : 1), 1);
 				//
-			} // try
+				setIcon(lblThumbnail,
+						new ImageIcon(bufferedImage.getScaledInstance(Math.max((int) (width / ratioMin), 1),
+								Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT)));
 				//
-			try (final PDDocument pdDocument = createPDDocument(file)) {
+				revalidate();
 				//
-				final BufferedImage bufferedImage = new PDFRenderer(pdDocument).renderImage(0);
+			} // if
 				//
-				if (bufferedImage != null) {
+		} catch (final IOException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
+		if (Util.iterator(dataIterable) != null) {
+			//
+			for (final Data data : dataIterable) {
+				//
+				if (data == null) {
 					//
-					final int width = bufferedImage.getWidth();
-					//
-					final int height = bufferedImage.getHeight();
-					//
-					final float ratioMin = Math.max(height / (float) testAndApplyAsDouble(Objects::nonNull,
-							getPreferredSize(), x -> getHeight(Util.cast(Dimension.class, x)), null, 1), 1);
-					//
-					setIcon(lblThumbnail,
-							new ImageIcon(bufferedImage.getScaledInstance(Math.max((int) (width / ratioMin), 1),
-									Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT)));
-					//
-					revalidate();
+					continue;
 					//
 				} // if
 					//
-			} catch (final IOException e) {
+				Util.addRow(tableModel, new Object[] { data.text, data.voice, data.contents, toBigDecimal(data.width),
+						toBigDecimal(data.height), toBigDecimal(data.x), toBigDecimal(data.y) });// TODO
 				//
-				throw new RuntimeException(e);
-				//
-			} // try
-				//
-			if (Util.iterator(dataIterable) != null) {
-				//
-				for (final Data data : dataIterable) {
-					//
-					if (data == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					Util.addRow(tableModel,
-							new Object[] { data.text, data.voice, data.contents, toBigDecimal(data.width),
-									toBigDecimal(data.height), toBigDecimal(data.x), toBigDecimal(data.y) });// TODO
-					//
-				} // for
-					//
-			} // if
+			} // for
 				//
 		} // if
 			//
