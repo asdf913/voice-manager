@@ -309,13 +309,11 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 		Util.forEach(IntStream.range(0, Util.getRowCount(tableModel)), i -> Util.removeRow(tableModel, i));
 		//
-		File file = getSelectedFile(Util.toFile(Path.of(".")));
-		//
 		Entry<Method, Collection<Object>> entry = null;
 		//
 		try {
 			//
-			entry = getAllowedFileMagicMethodAndCollection(file);
+			entry = getAllowedFileMagicMethodAndCollection();
 			//
 		} catch (final IOException e) {
 			//
@@ -324,6 +322,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		} // try
 			//
 		final Collection<?> collection = Util.getValue(entry);
+		//
+		File file = getSelectedFile(Util.toFile(Path.of(".")));
 		//
 		if (!Util.contains(collection, file != null ? Narcissus.invokeStaticMethod(Util.getKey(entry), file) : null)) {
 			//
@@ -404,8 +404,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 	}
 
-	private static Entry<Method, Collection<Object>> getAllowedFileMagicMethodAndCollection(final File file)
-			throws IOException {
+	private static Entry<Method, Collection<Object>> getAllowedFileMagicMethodAndCollection() throws IOException {
 		//
 		List<Object> list = null;
 		//
@@ -532,13 +531,11 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 
 	private void actionPerformedForBtnExecute() {
 		//
-		File file = Util.toFile(testAndApply(Objects::nonNull, Util.getText(tfFile), Path::of, null));
-		//
 		Entry<Method, Collection<Object>> entry = null;
 		//
 		try {
 			//
-			entry = getAllowedFileMagicMethodAndCollection(file);
+			entry = getAllowedFileMagicMethodAndCollection();
 			//
 		} catch (final IOException e) {
 			//
@@ -547,6 +544,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		} // try
 			//
 		final Collection<?> collection = Util.getValue(entry);
+		//
+		File file = Util.toFile(testAndApply(Objects::nonNull, Util.getText(tfFile), Path::of, null));
 		//
 		if (!Util.contains(collection, file != null ? Narcissus.invokeStaticMethod(Util.getKey(entry), file) : null)) {
 			//
