@@ -407,12 +407,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 	@Nullable
 	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, @Nullable final U u,
 			final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse) {
-		return Util.test(predicate, t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
-	}
-
-	@Nullable
-	private static <T, U, R> R apply(@Nullable final BiFunction<T, U, R> instance, final T t, @Nullable final U u) {
-		return instance != null ? instance.apply(t, u) : null;
+		return Util.test(predicate, t, u) ? Util.apply(functionTrue, t, u) : Util.apply(functionFalse, t, u);
 	}
 
 	private static Entry<Method, Collection<Object>> getAllowedFileMagicMethodAndCollection() throws IOException {

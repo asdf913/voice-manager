@@ -678,12 +678,7 @@ public class VoiceManagerOnlineTtsPanel extends JPanel
 	@Nullable
 	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, @Nullable final T t, final U u,
 			final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse) {
-		return Util.test(predicate, t, u) ? apply(functionTrue, t, u) : apply(functionFalse, t, u);
-	}
-
-	@Nullable
-	private static <T, U, R> R apply(@Nullable final BiFunction<T, U, R> instance, @Nullable final T t, final U u) {
-		return instance != null ? instance.apply(t, u) : null;
+		return Util.test(predicate, t, u) ? Util.apply(functionTrue, t, u) : Util.apply(functionFalse, t, u);
 	}
 
 	private static <T, U, V, R> R testAndApply(final TriPredicate<T, U, V> predicate, @Nullable final T t, final U u,

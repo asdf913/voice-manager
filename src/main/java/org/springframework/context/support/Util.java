@@ -36,6 +36,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -494,6 +495,10 @@ public abstract class Util {
 	@Nullable
 	static <T, R> R apply(@Nullable final Function<T, R> instance, @Nullable final T value) {
 		return instance != null ? instance.apply(value) : null;
+	}
+
+	static <T, U, R> R apply(final BiFunction<T, U, R> instance, final T t, final U u) {
+		return instance != null ? instance.apply(t, u) : null;
 	}
 
 	@Nullable
