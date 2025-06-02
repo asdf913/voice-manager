@@ -288,92 +288,85 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 
 	private void actionPerformedForBtnPreview() {
 		//
-		try {// TODO
-				//
-			Util.setText(tfFile, null);
+		Util.setText(tfFile, null);
+		//
+		setIcon(lblThumbnail, new ImageIcon());
+		//
+		File file = getSelectedFile(Util.toFile(Path.of(".")));
+		//
+		Iterable<Data> dataIterable = null;
+		//
+		Util.forEach(IntStream.range(0, Util.getRowCount(tableModel)), i -> Util.removeRow(tableModel, i));
+		//
+		try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
 			//
-			setIcon(lblThumbnail, new ImageIcon());
+			final Sheet sheet = testAndApply(x -> WorkbookUtil.getNumberOfSheets(wb) == 1, wb,
+					x -> WorkbookUtil.getSheetAt(x, 0), null);
 			//
-			File file = getSelectedFile(Util.toFile(Path.of(".")));
+			dataIterable = getDataIterable(
+					testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null));
 			//
-			Iterable<Data> dataIterable = null;
+			testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), file,
+					x -> Util.setText(tfFile, Util.getAbsolutePath(Util.getAbsoluteFile(x))));
 			//
-			Util.forEach(IntStream.range(0, Util.getRowCount(tableModel)), i -> Util.removeRow(tableModel, i));
+		} catch (final IOException e) {
 			//
-			try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
+		try (final PDDocument pdDocument = createPDDocument(file)) {
+			//
+			final BufferedImage bufferedImage = new PDFRenderer(pdDocument).renderImage(0);
+			//
+			if (bufferedImage != null) {
 				//
-				final Sheet sheet = testAndApply(x -> WorkbookUtil.getNumberOfSheets(wb) == 1, wb,
-						x -> WorkbookUtil.getSheetAt(x, 0), null);
+				final int width = bufferedImage.getWidth();
 				//
-				dataIterable = getDataIterable(
-						testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null));
+				final int height = bufferedImage.getHeight();
 				//
-				testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), file,
-						x -> Util.setText(tfFile, Util.getAbsolutePath(Util.getAbsoluteFile(x))));
+				// final boolean gui = isGui();
 				//
-			} catch (final IOException e) {
+				final Dimension preferredSize = isGui() ? getPreferredSize() : null;
 				//
-				throw new RuntimeException(e);
+				// final float ratioMin = Math.max(height / (float)
+				// testAndApplyAsDouble(Objects::nonNull,
+				// getPreferredSize(), x -> getHeight(Util.cast(Dimension.class, x)), null, 1),
+				// 1);
 				//
-			} // try
+				final float ratioMin = Math
+						.max(height / (float) (preferredSize != null ? preferredSize.getHeight() : 1), 1);
 				//
-			try (final PDDocument pdDocument = createPDDocument(file)) {
+				setIcon(lblThumbnail,
+						new ImageIcon(bufferedImage.getScaledInstance(Math.max((int) (width / ratioMin), 1),
+								Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT)));
 				//
-				final BufferedImage bufferedImage = new PDFRenderer(pdDocument).renderImage(0);
+				revalidate();
 				//
-				if (bufferedImage != null) {
+			} // if
+				//
+		} catch (final IOException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
+		if (Util.iterator(dataIterable) != null) {
+			//
+			for (final Data data : dataIterable) {
+				//
+				if (data == null) {
 					//
-					final int width = bufferedImage.getWidth();
-					//
-					final int height = bufferedImage.getHeight();
-					//
-					// final boolean gui = isGui();
-					//
-					final Dimension preferredSize = isGui() ? getPreferredSize() : null;
-					//
-					// final float ratioMin = Math.max(height / (float)
-					// testAndApplyAsDouble(Objects::nonNull,
-					// getPreferredSize(), x -> getHeight(Util.cast(Dimension.class, x)), null, 1),
-					// 1);
-					//
-					final float ratioMin = Math
-							.max(height / (float) (preferredSize != null ? preferredSize.getHeight() : 1), 1);
-					//
-					setIcon(lblThumbnail,
-							new ImageIcon(bufferedImage.getScaledInstance(Math.max((int) (width / ratioMin), 1),
-									Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT)));
-					//
-					revalidate();
+					continue;
 					//
 				} // if
 					//
-			} catch (final IOException e) {
+				Util.addRow(tableModel, new Object[] { data.text, data.voice, data.contents, toBigDecimal(data.width),
+						toBigDecimal(data.height), toBigDecimal(data.x), toBigDecimal(data.y) });// TODO
 				//
-				throw new RuntimeException(e);
+			} // for
 				//
-			} // try
-				//
-			if (Util.iterator(dataIterable) != null) {
-				//
-				for (final Data data : dataIterable) {
-					//
-					if (data == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					Util.addRow(tableModel,
-							new Object[] { data.text, data.voice, data.contents, toBigDecimal(data.width),
-									toBigDecimal(data.height), toBigDecimal(data.x), toBigDecimal(data.y) });// TODO
-					//
-				} // for
-					//
-			} // if
-		} catch (final Throwable th) {// TODO
-			th.printStackTrace();// TODO
-			throw th instanceof RuntimeException re ? re : new RuntimeException(th);// TODO
-		} // try
+		} // if
 			//
 	}
 
