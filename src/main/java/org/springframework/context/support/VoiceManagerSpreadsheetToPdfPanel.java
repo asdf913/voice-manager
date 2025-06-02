@@ -321,7 +321,24 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 					//
 					final int height = bufferedImage.getHeight();
 					//
-					final Dimension preferredSize = getPreferredSize();
+					final List<Field> fs = Util
+							.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
+									f -> Objects.equals(Util.getName(f), "component")));
+					//
+					testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+						//
+						throw new IllegalStateException();
+						//
+					});
+					//
+					final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0),
+							null);
+					//
+//					final boolean gui = f == null || Narcissus.getField(this, f) != null;
+					//
+					final Dimension preferredSize = f == null || Narcissus.getField(this, f) != null
+							? getPreferredSize()
+							: null;
 					//
 					// final float ratioMin = Math.max(height / (float)
 					// testAndApplyAsDouble(Objects::nonNull,
