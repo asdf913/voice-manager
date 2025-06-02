@@ -477,15 +477,20 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 						//
 					} // if
 						//
-					if (IterableUtils.size(ms = Util.toList(Util.filter(testAndApply(Objects::nonNull,
-							Util.getMethods(Util.forName(invokeStatic.getClassName(cpg))), Arrays::stream, null),
-							x -> Boolean.logicalAnd(Objects.equals(Util.getName(x), invokeStatic.getMethodName(cpg)),
-									Arrays.equals(Util.getParameterTypes(x), new Class<?>[] { File.class }))))) > 1) {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
+					testAndRunThrows(
+							IterableUtils.size(ms = Util.toList(Util.filter(testAndApply(Objects::nonNull,
+									Util.getMethods(Util.forName(invokeStatic.getClassName(cpg))), Arrays::stream,
+									null),
+									x -> Boolean.logicalAnd(
+											Objects.equals(Util.getName(x), invokeStatic.getMethodName(cpg)),
+											Arrays.equals(Util.getParameterTypes(x),
+													new Class<?>[] { File.class }))))) > 1,
+							() -> {
+								//
+								throw new IllegalStateException();
+								//
+							});
+					//
 					method = Unit.with(
 							testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null));
 					//
