@@ -330,11 +330,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		if (!Util.contains(collection,
 				testAndApply((a, b) -> b != null, Util.getKey(entry), file, Narcissus::invokeStaticMethod, null))) {
 			//
-			testAndRunThrows(!GraphicsEnvironment.isHeadless(), () -> {// TODO
-				//
-				JOptionPane.showMessageDialog(null, String.format("Allowed file type %1$s", collection));
-				//
-			});
+			testAndRunThrows(!GraphicsEnvironment.isHeadless(),
+					() -> JOptionPane.showMessageDialog(null, String.format("Allowed file type %1$s", collection)));// TODO
 			//
 			return;
 			//
@@ -568,11 +565,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		if (!Util.contains(collection,
 				testAndApply((a, b) -> b != null, Util.getKey(entry), file, Narcissus::invokeStaticMethod, null))) {
 			//
-			testAndRunThrows(!GraphicsEnvironment.isHeadless(), () -> {// TODO
-				//
-				JOptionPane.showMessageDialog(null, String.format("Allowed file type %1$s", collection));
-				//
-			});
+			testAndRunThrows(!GraphicsEnvironment.isHeadless(),
+					() -> JOptionPane.showMessageDialog(null, String.format("Allowed file type %1$s", collection)));// TODO
 			//
 			return;
 			//
