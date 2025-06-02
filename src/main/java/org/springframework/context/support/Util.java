@@ -497,6 +497,7 @@ public abstract class Util {
 		return instance != null ? instance.apply(value) : null;
 	}
 
+	@Nullable
 	static <T, U, R> R apply(@Nullable final BiFunction<T, U, R> instance, @Nullable final T t, @Nullable final U u) {
 		return instance != null ? instance.apply(t, u) : null;
 	}
