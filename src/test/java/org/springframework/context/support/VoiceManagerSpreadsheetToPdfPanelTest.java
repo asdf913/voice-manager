@@ -266,6 +266,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 					Boolean.logicalAnd(Objects.equals(name, "toBigDecimal"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Float.TYPE })),
 					Boolean.logicalAnd(Objects.equals(name, "createPDDocument"),
+							Arrays.equals(parameterTypes, new Class<?>[] { File.class })),
+					Boolean.logicalAnd(Objects.equals(name, "getAllowedFileMagicMethodAndCollection"),
 							Arrays.equals(parameterTypes, new Class<?>[] { File.class })))) {
 				//
 				Assertions.assertNotNull(invoke, toString);

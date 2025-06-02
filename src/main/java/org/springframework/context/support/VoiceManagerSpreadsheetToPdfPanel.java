@@ -51,6 +51,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -61,6 +62,20 @@ import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.JTextComponent;
 
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ClassParserUtil;
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.JavaClassUtil;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.GETSTATIC;
+import org.apache.bcel.generic.IF_ACMPNE;
+import org.apache.bcel.generic.INVOKESTATIC;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.MethodGenUtil;
+import org.apache.bcel.generic.Type;
+import org.apache.bcel.generic.TypeUtil;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.io.FileUtils;
@@ -292,11 +307,37 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 		setIcon(lblThumbnail, new ImageIcon());
 		//
+		Util.forEach(IntStream.range(0, Util.getRowCount(tableModel)), i -> Util.removeRow(tableModel, i));
+		//
 		File file = getSelectedFile(Util.toFile(Path.of(".")));
 		//
-		Iterable<Data> dataIterable = null;
+		Entry<Method, Collection<Object>> entry = null;
 		//
-		Util.forEach(IntStream.range(0, Util.getRowCount(tableModel)), i -> Util.removeRow(tableModel, i));
+		try {
+			//
+			entry = getAllowedFileMagicMethodAndCollection(file);
+			//
+		} catch (final IOException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
+		final Collection<?> collection = Util.getValue(entry);
+		//
+		if (!Util.contains(collection, file != null ? Narcissus.invokeStaticMethod(Util.getKey(entry), file) : null)) {
+			//
+			if (!GraphicsEnvironment.isHeadless()) {// TODO
+				//
+				JOptionPane.showMessageDialog(null, String.format("Allowed file type %1$s", collection));
+				//
+			} // if
+				//
+			return;
+			//
+		} // if
+			//
+		Iterable<Data> dataIterable = null;
 		//
 		try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
 			//
@@ -363,6 +404,102 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 	}
 
+	private static Entry<Method, Collection<Object>> getAllowedFileMagicMethodAndCollection(final File file)
+			throws IOException {
+		//
+		List<Object> list = null;
+		//
+		Class<?> clz = WorkbookFactory.class;
+		//
+		IValue0<Method> method = null;
+		//
+		try (final InputStream is = Util.getResourceAsStream(clz,
+				String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))) {
+			//
+			// org.apache.poi.ss.usermodel.WorkbookFactory.create(java.io.File,java.lang.String,boolean)
+			//
+			final JavaClass javaClass = ClassParserUtil
+					.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null));
+			//
+			List<java.lang.reflect.Method> ms = Util.toList(
+					Util.filter(testAndApply(Objects::nonNull, Util.getDeclaredMethods(clz), Arrays::stream, null),
+							m -> Boolean.logicalAnd(Objects.equals(Util.getName(m), "create"),
+									Arrays.equals(Util.getParameterTypes(m),
+											new Class<?>[] { File.class, String.class, Boolean.TYPE }))));
+			//
+			if (IterableUtils.size(ms) > 1) {
+				//
+				throw new IllegalStateException();
+				//
+			} // if
+				//
+			final org.apache.bcel.classfile.Method m = testAndApply(Objects::nonNull,
+					testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null),
+					x -> JavaClassUtil.getMethod(javaClass, x), null);
+			//
+			final Instruction[] ins = InstructionListUtil.getInstructions(MethodGenUtil
+					.getInstructionList(testAndApply(Objects::nonNull, m, x -> new MethodGen(x, null, null), null)));
+			//
+			final ConstantPoolGen cpg = new ConstantPoolGen(javaClass.getConstantPool());
+			//
+			List<Field> fs = null;
+			//
+			Field f = null;
+			//
+			Type[] argumentTypes = null;
+			//
+			for (int i = 0; ins != null && i < ins.length; i++) {
+				//
+				if (ins[i] instanceof GETSTATIC gs && i < ins.length - 1 && ins[i + 1] instanceof IF_ACMPNE) {
+					//
+					if (IterableUtils.size(fs = Util.toList(Util.filter(testAndApply(Objects::nonNull,
+							Util.getDeclaredFields(Util.forName(TypeUtil.getClassName(
+									gs.getLoadClassType(new ConstantPoolGen(javaClass.getConstantPool()))))),
+							Arrays::stream, null), x -> Objects.equals(Util.getName(x), gs.getFieldName(cpg))))) > 1) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					if (Util.isStatic(f = testAndApply(x -> IterableUtils.size(x) == 1, fs,
+							x -> IterableUtils.get(x, 0), null))) {
+						//
+						Util.add(list = ObjectUtils.getIfNull(list, ArrayList::new), Narcissus.getStaticField(f));
+						//
+					} // if
+						//
+				} else if (ins[i] instanceof INVOKESTATIC invokeStatic
+						&& (argumentTypes = invokeStatic.getArgumentTypes(cpg)) != null && argumentTypes.length == 1
+						&& Objects.equals(TypeUtil.getClassName(argumentTypes[0]), "java.io.File")) {
+					//
+					if (method != null) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					if (IterableUtils.size(ms = Util.toList(Util.filter(testAndApply(Objects::nonNull,
+							Util.getMethods(Util.forName(invokeStatic.getClassName(cpg))), Arrays::stream, null),
+							x -> Boolean.logicalAnd(Objects.equals(Util.getName(x), invokeStatic.getMethodName(cpg)),
+									Arrays.equals(Util.getParameterTypes(x), new Class<?>[] { File.class }))))) > 1) {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+					method = Unit.with(
+							testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null));
+					//
+				} // if
+					//
+			} // for
+				//
+		} // try
+			//
+		return Pair.of(IValue0Util.getValue0(method), list);
+		//
+	}
+
 	private static void setIcon(final JLabel instance, final Icon icon) {
 		//
 		final Iterable<Field> fs = Util.toList(Util.filter(
@@ -397,6 +534,32 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 		File file = Util.toFile(testAndApply(Objects::nonNull, Util.getText(tfFile), Path::of, null));
 		//
+		Entry<Method, Collection<Object>> entry = null;
+		//
+		try {
+			//
+			entry = getAllowedFileMagicMethodAndCollection(file);
+			//
+		} catch (final IOException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
+		final Collection<?> collection = Util.getValue(entry);
+		//
+		if (!Util.contains(collection, file != null ? Narcissus.invokeStaticMethod(Util.getKey(entry), file) : null)) {
+			//
+			if (!GraphicsEnvironment.isHeadless()) {// TODO
+				//
+				JOptionPane.showMessageDialog(null, String.format("Allowed file type %1$s", collection));
+				//
+			} // if
+				//
+			return;
+			//
+		} // if
+			//
 		if (or(file == null, !Util.exists(file), !Util.isFile(file))) {
 			//
 			file = getSelectedFile(Util.toFile(Path.of(".")));
