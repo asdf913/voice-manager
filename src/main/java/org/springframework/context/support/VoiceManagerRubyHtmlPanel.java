@@ -536,11 +536,9 @@ public class VoiceManagerRubyHtmlPanel extends JPanel
 	}
 
 	@Nullable
-	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
-			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
-			@Nullable final FailableBiFunction<T, U, R, E> functionFalse) throws E {
-		return Util.test(predicate, t, u) ? FailableBiFunctionUtil.apply(functionTrue, t, u)
-				: FailableBiFunctionUtil.apply(functionFalse, t, u);
+	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiFunction<T, U, R> functionTrue, @Nullable final BiFunction<T, U, R> functionFalse) {
+		return Util.test(predicate, t, u) ? Util.apply(functionTrue, t, u) : Util.apply(functionFalse, t, u);
 	}
 
 	private static int length(@Nullable final Object[] instance) {

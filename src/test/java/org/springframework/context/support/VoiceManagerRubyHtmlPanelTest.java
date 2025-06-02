@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
@@ -90,7 +91,7 @@ class VoiceManagerRubyHtmlPanelTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_TEST_AND_APPLY5 = clz.getDeclaredMethod("testAndApply", BiPredicate.class, Object.class, Object.class,
-				FailableBiFunction.class, FailableBiFunction.class)).setAccessible(true);
+				BiFunction.class, BiFunction.class)).setAccessible(true);
 		//
 		(METHOD_GET_LAYOUT_MANAGER = clz.getDeclaredMethod("getLayoutManager", Object.class, Iterable.class))
 				.setAccessible(true);
@@ -525,9 +526,8 @@ class VoiceManagerRubyHtmlPanelTest {
 		}
 	}
 
-	private static <T, U, R, E extends Throwable> R testAndApply(final BiPredicate<T, U> predicate, final T t,
-			final U u, final FailableBiFunction<T, U, R, E> functionTrue,
-			final FailableBiFunction<T, U, R, E> functionFalse) throws Throwable {
+	private static <T, U, R> R testAndApply(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiFunction<T, U, R> functionTrue, final BiFunction<T, U, R> functionFalse) throws Throwable {
 		try {
 			return (R) METHOD_TEST_AND_APPLY5.invoke(null, predicate, t, u, functionTrue, functionFalse);
 		} catch (final InvocationTargetException e) {
