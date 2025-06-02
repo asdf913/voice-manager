@@ -140,18 +140,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 		setLayout(this, new MigLayout());// TODO
 		//
-		final List<Field> fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
-				f -> Objects.equals(Util.getName(f), "component")));
-		//
-		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
-			//
-			throw new IllegalStateException();
-			//
-		});
-		//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-		//
-		if (f == null || Narcissus.getField(this, f) != null) {
+		if (isGui()) {
 			//
 			add(new JLabel("Size"));
 			//
@@ -247,6 +236,23 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 	}
 
+	private boolean isGui() {
+		//
+		final List<Field> fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
+				f -> Objects.equals(Util.getName(f), "component")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		return f == null || Narcissus.getField(this, f) != null;
+		//
+	}
+
 	private static double getWidth(@Nullable final Dimension instance) {
 		return instance != null ? instance.getWidth() : 0;
 	}
@@ -321,24 +327,9 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 					//
 					final int height = bufferedImage.getHeight();
 					//
-					final List<Field> fs = Util
-							.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
-									f -> Objects.equals(Util.getName(f), "component")));
+					// final boolean gui = isGui();
 					//
-					testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
-						//
-						throw new IllegalStateException();
-						//
-					});
-					//
-					final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0),
-							null);
-					//
-//					final boolean gui = f == null || Narcissus.getField(this, f) != null;
-					//
-					final Dimension preferredSize = f == null || Narcissus.getField(this, f) != null
-							? getPreferredSize()
-							: null;
+					final Dimension preferredSize = isGui() ? getPreferredSize() : null;
 					//
 					// final float ratioMin = Math.max(height / (float)
 					// testAndApplyAsDouble(Objects::nonNull,
