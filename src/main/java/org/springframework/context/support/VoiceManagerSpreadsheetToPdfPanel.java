@@ -156,7 +156,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private JLabel lblThumbnail = null;
 
-	private BufferedImage bufferedImage = null;
+	private transient BufferedImage bufferedImage = null;
 
 	private VoiceManagerSpreadsheetToPdfPanel() {
 	}
