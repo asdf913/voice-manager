@@ -619,9 +619,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	@Test
 	void testActionPerformed() throws IllegalAccessException {
 		//
-		final VoiceManagerSpreadsheetToPdfPanel instance = Util.cast(VoiceManagerSpreadsheetToPdfPanel.class,
-				Narcissus.allocateInstance(VoiceManagerSpreadsheetToPdfPanel.class));
-		//
 		if (instance == null) {
 			//
 			return;
