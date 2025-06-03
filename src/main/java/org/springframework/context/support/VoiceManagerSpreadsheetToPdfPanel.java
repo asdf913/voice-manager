@@ -1287,7 +1287,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				throw new IllegalStateException();
 				//
 			});
-				//
+			//
 			final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 			//
 			final boolean condition = f == null || Narcissus.getField(bufferedImage, f) != null;
@@ -1307,7 +1307,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 					129// TODO
 			;
 			//
-			if (gui) {
+			testAndRunThrows(gui, () -> {
 				//
 				final float ratioMin = Math.max(height / (float) (screenHeight != 0 ? screenHeight : 1), 1);
 				//
@@ -1318,8 +1318,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 								ImageIcon::new, null),
 						"Image", JOptionPane.PLAIN_MESSAGE);
 				//
-			} // if
-				//
+			});
+			//
 		} // if
 			//
 	}
