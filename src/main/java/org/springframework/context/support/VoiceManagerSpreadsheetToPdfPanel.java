@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -387,7 +388,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			if ((bufferedImage = new PDFRenderer(pdDocument).renderImage(0)) != null) {
 				//
-				final int width = bufferedImage.getWidth();
+				final int width = getWidth(bufferedImage);
 				//
 				final int height = bufferedImage.getHeight();
 				//
@@ -427,6 +428,25 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static int getWidth(final RenderedImage instance) {
+		//
+		final List<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				x -> Objects.equals(Util.getName(x), "raster")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		return (f == null || Narcissus.getField(instance, f) != null) && instance != null ? instance.getWidth() : 0;
+		//
 	}
 
 	private static <T> T testAndGet(final boolean condition, final Supplier<T> supplierTrue,
@@ -1296,9 +1316,9 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 			//
-			final boolean condition = f == null || Narcissus.getField(bufferedImage, f) != null;
+			final int width = getWidth(bufferedImage);
 			//
-			final int width = condition ? bufferedImage.getWidth() : 0;
+			final boolean condition = f == null || Narcissus.getField(bufferedImage, f) != null;
 			//
 			final int height = condition ? bufferedImage.getHeight() : 0;
 			//
