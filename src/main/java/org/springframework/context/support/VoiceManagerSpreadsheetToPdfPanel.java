@@ -6,8 +6,11 @@ import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.LayoutManager;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +56,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -125,7 +129,8 @@ import org.springframework.beans.factory.InitializingBean;
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
-public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements InitializingBean, ActionListener {
+public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
+		implements InitializingBean, ActionListener, MouseListener {
 
 	private static final long serialVersionUID = -7995853525217556061L;
 
@@ -150,6 +155,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 	private JTextComponent tfException = null;
 
 	private JLabel lblThumbnail = null;
+
+	private BufferedImage bufferedImage = null;
 
 	private VoiceManagerSpreadsheetToPdfPanel() {
 	}
@@ -218,6 +225,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			final String wrap = "wrap";
 			//
 			add(lblThumbnail = new JLabel(), String.format("%1$s,span 1 %2$s,wmin %3$s,hmin %4$s", wrap, 5, 102, 159));
+			//
+			lblThumbnail.addMouseListener(this);
 			//
 			// File
 			//
@@ -316,6 +325,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 		setIcon(lblThumbnail, new ImageIcon());
 		//
+		bufferedImage = null;
+		//
 		Util.forEach(IntStream.range(0, Util.getRowCount(tableModel)), i -> Util.removeRow(tableModel, i));
 		//
 		Entry<Method, Collection<Object>> entry = null;
@@ -365,9 +376,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 		try (final PDDocument pdDocument = createPDDocument(file, false)) {
 			//
-			final BufferedImage bufferedImage = new PDFRenderer(pdDocument).renderImage(0);
-			//
-			if (bufferedImage != null) {
+			if ((bufferedImage = new PDFRenderer(pdDocument).renderImage(0)) != null) {
 				//
 				final int width = bufferedImage.getWidth();
 				//
@@ -1252,6 +1261,79 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 		return testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
+	}
+
+	@Override
+	public void mouseClicked(final MouseEvent evt) {
+		//
+		if (Objects.equals(Util.getSource(evt), lblThumbnail)) {
+			//
+			if (bufferedImage != null) {
+				//
+				final List<Field> fs = Util
+						.toList(Util.filter(
+								Util.stream(testAndApply(Objects::nonNull, Util.getClass(bufferedImage),
+										FieldUtils::getAllFieldsList, null)),
+								x -> Objects.equals(Util.getName(x), "raster")));
+				//
+				if (IterableUtils.size(fs) > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+				//
+				final boolean condition = f == null || Narcissus.getField(bufferedImage, f) != null;
+				//
+				final int width = condition ? bufferedImage.getWidth() : 0;
+				//
+				final int height = condition ? bufferedImage.getHeight() : 0;
+				//
+				final Toolkit toolkit = Toolkit.getDefaultToolkit();
+				//
+				final boolean gui = !GraphicsEnvironment.isHeadless();
+				//
+				final Dimension screenSize = toolkit != null && gui ? toolkit.getScreenSize() : null;
+				//
+				final double screenHeight = (screenSize != null ? screenSize.getHeight() : 0) -
+				//
+						129// TODO
+				;
+				//
+				if (gui) {
+					//
+					final float ratioMin = Math.max(height / (float) (screenHeight != 0 ? screenHeight : 1), 1);
+					//
+					JOptionPane.showMessageDialog(null,
+							testAndApply(Objects::nonNull,
+									condition ? bufferedImage.getScaledInstance(Math.max((int) (width / ratioMin), 1),
+											Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT) : null,
+									ImageIcon::new, null),
+							"Image", JOptionPane.PLAIN_MESSAGE);
+					//
+				} // if
+					//
+			} // if
+				//
+		} // if
+			//
+	}
+
+	@Override
+	public void mousePressed(final MouseEvent evt) {
+	}
+
+	@Override
+	public void mouseReleased(final MouseEvent evt) {
+	}
+
+	@Override
+	public void mouseEntered(final MouseEvent evt) {
+	}
+
+	@Override
+	public void mouseExited(final MouseEvent evt) {
 	}
 
 }

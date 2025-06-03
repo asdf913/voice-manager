@@ -2,6 +2,8 @@ package org.springframework.context.support;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -184,10 +186,15 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private IH ih = null;
 
+	private VoiceManagerSpreadsheetToPdfPanel instance = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		ih = new IH();
+		//
+		instance = Util.cast(VoiceManagerSpreadsheetToPdfPanel.class,
+				Narcissus.allocateInstance(VoiceManagerSpreadsheetToPdfPanel.class));
 		//
 	}
 
@@ -209,8 +216,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		Object[] os = null;
 		//
 		Object invoke = null;
-		//
-		VoiceManagerSpreadsheetToPdfPanel instance = null;
 		//
 		for (int i = ZERO; ms != null && i < ms.length; i++) {
 			//
@@ -689,6 +694,24 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testMouseClicked() throws IllegalAccessException {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		FieldUtils.writeDeclaredField(instance, "bufferedImage", Narcissus.allocateInstance(BufferedImage.class), true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.mouseClicked(null));
+		//
+		Assertions.assertDoesNotThrow(
+				() -> instance.mouseClicked(new MouseEvent(new JLabel(), ZERO, ZERO, ZERO, ZERO, ZERO, ZERO, false)));
+		//
 	}
 
 }
