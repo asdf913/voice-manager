@@ -38,6 +38,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -390,7 +391,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 				final int height = bufferedImage.getHeight();
 				//
-				final Dimension preferredSize = isGui() ? getPreferredSize() : null;
+				final Dimension preferredSize = testAndGet(isGui(), () -> getPreferredSize(), null);
 				//
 				final float ratioMin = Math
 						.max(height / (float) (preferredSize != null ? preferredSize.getHeight() : 1), 1);
@@ -426,6 +427,11 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static <T> T testAndGet(final boolean condition, final Supplier<T> supplierTrue,
+			final Supplier<T> supplierFalse) {
+		return condition ? Util.get(supplierTrue) : Util.get(supplierFalse);
 	}
 
 	@Nullable

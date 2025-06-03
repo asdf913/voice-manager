@@ -20,6 +20,7 @@ import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import javax.swing.AbstractButton;
 import javax.swing.Icon;
@@ -69,7 +70,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE,
 			METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL,
-			METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT, METHOD_OR, METHOD_SET_ICON, METHOD_TEST_AND_APPLY = null;
+			METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT, METHOD_OR, METHOD_SET_ICON, METHOD_TEST_AND_APPLY,
+			METHOD_TEST_AND_GET = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -107,6 +109,9 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", BiPredicate.class, Object.class, Object.class,
 				BiFunction.class, BiFunction.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_GET = clz.getDeclaredMethod("testAndGet", Boolean.TYPE, Supplier.class, Supplier.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -709,6 +714,22 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		Assertions.assertDoesNotThrow(
 				() -> instance.mouseClicked(new MouseEvent(new JLabel(), ZERO, ZERO, ZERO, ZERO, ZERO, ZERO, false)));
 		//
+	}
+
+	@Test
+	void testTestAndGet() throws Throwable {
+		//
+		Assertions.assertNull(testAndGet(true, null, null));
+		//
+	}
+
+	private static <T> T testAndGet(final boolean condition, final Supplier<T> supplierTrue,
+			final Supplier<T> supplierFalse) throws Throwable {
+		try {
+			return (T) METHOD_TEST_AND_GET.invoke(null, condition, supplierTrue, supplierFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }
