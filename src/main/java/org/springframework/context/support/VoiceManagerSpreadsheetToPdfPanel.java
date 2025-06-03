@@ -430,7 +430,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 	}
 
-	private static int getWidth(final RenderedImage instance) {
+	private static int getWidth(@Nullable final RenderedImage instance) {
 		//
 		final List<Field> fs = Util.toList(Util.filter(
 				Util.stream(
@@ -449,7 +449,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 	}
 
-	private static int getHeight(final RenderedImage instance) {
+	private static int getHeight(@Nullable final RenderedImage instance) {
 		//
 		final List<Field> fs = Util.toList(Util.filter(
 				Util.stream(
