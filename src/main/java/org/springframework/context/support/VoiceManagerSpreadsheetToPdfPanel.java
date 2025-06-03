@@ -136,6 +136,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private static final long serialVersionUID = -7995853525217556061L;
 
+	private static final String RASTER = "raster";
+
 	private transient ComboBoxModel<Entry<String, Object>> cbmPDRectangle = null;
 
 	@Target(ElementType.FIELD)
@@ -435,7 +437,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		final List<Field> fs = Util.toList(Util.filter(
 				Util.stream(
 						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
-				x -> Objects.equals(Util.getName(x), "raster")));
+				x -> Objects.equals(Util.getName(x), RASTER)));
 		//
 		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
 			//
@@ -454,7 +456,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		final List<Field> fs = Util.toList(Util.filter(
 				Util.stream(
 						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
-				x -> Objects.equals(Util.getName(x), "raster")));
+				x -> Objects.equals(Util.getName(x), RASTER)));
 		//
 		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
 			//
@@ -1344,7 +1346,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 						.toList(Util.filter(
 								Util.stream(testAndApply(Objects::nonNull, Util.getClass(bufferedImage),
 										FieldUtils::getAllFieldsList, null)),
-								x -> Objects.equals(Util.getName(x), "raster")));
+								x -> Objects.equals(Util.getName(x), RASTER)));
 				//
 				testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
 					//
