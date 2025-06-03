@@ -390,7 +390,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 				final int width = getWidth(bufferedImage);
 				//
-				final int height = bufferedImage.getHeight();
+				final int height = getHeight(bufferedImage);
 				//
 				final Dimension preferredSize = testAndGet(isGui(), () -> getPreferredSize(), null);
 				//
@@ -446,6 +446,25 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
 		return (f == null || Narcissus.getField(instance, f) != null) && instance != null ? instance.getWidth() : 0;
+		//
+	}
+
+	private static int getHeight(final RenderedImage instance) {
+		//
+		final List<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				x -> Objects.equals(Util.getName(x), "raster")));
+		//
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+			//
+			throw new IllegalStateException();
+			//
+		});
+		//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		return (f == null || Narcissus.getField(instance, f) != null) && instance != null ? instance.getHeight() : 0;
 		//
 	}
 
@@ -1302,25 +1321,9 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 		if (Objects.equals(Util.getSource(evt), lblThumbnail) && bufferedImage != null) {
 			//
-			final List<Field> fs = Util
-					.toList(Util.filter(
-							Util.stream(testAndApply(Objects::nonNull, Util.getClass(bufferedImage),
-									FieldUtils::getAllFieldsList, null)),
-							x -> Objects.equals(Util.getName(x), "raster")));
-			//
-			testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
-				//
-				throw new IllegalStateException();
-				//
-			});
-			//
-			final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-			//
 			final int width = getWidth(bufferedImage);
 			//
-			final boolean condition = f == null || Narcissus.getField(bufferedImage, f) != null;
-			//
-			final int height = condition ? bufferedImage.getHeight() : 0;
+			final int height = getHeight(bufferedImage);
 			//
 			final Toolkit toolkit = Toolkit.getDefaultToolkit();
 			//
@@ -1337,11 +1340,25 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 				final float ratioMin = Math.max(height / (float) (screenHeight != 0 ? screenHeight : 1), 1);
 				//
+				final List<Field> fs = Util
+						.toList(Util.filter(
+								Util.stream(testAndApply(Objects::nonNull, Util.getClass(bufferedImage),
+										FieldUtils::getAllFieldsList, null)),
+								x -> Objects.equals(Util.getName(x), "raster")));
+				//
+				testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
+					//
+					throw new IllegalStateException();
+					//
+				});
+				//
+				final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+				//
 				JOptionPane.showMessageDialog(null,
-						testAndApply(Objects::nonNull,
-								condition ? bufferedImage.getScaledInstance(Math.max((int) (width / ratioMin), 1),
-										Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT) : null,
-								ImageIcon::new, null),
+						testAndApply(Objects::nonNull, f == null || Narcissus.getField(bufferedImage, f) != null
+								? bufferedImage.getScaledInstance(Math.max((int) (width / ratioMin), 1),
+										Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT)
+								: null, ImageIcon::new, null),
 						"Image", JOptionPane.PLAIN_MESSAGE);
 				//
 			});
