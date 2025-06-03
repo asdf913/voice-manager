@@ -145,7 +145,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 
 	private DefaultTableModel tableModel = null;
 
-	private JTextComponent tfFile = null;
+	private JTextComponent tfFile, tfException = null;
 
 	private JLabel lblThumbnail = null;
 
@@ -215,16 +215,13 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 			final String wrap = "wrap";
 			//
-			add(lblThumbnail = new JLabel(), String.format("%1$s,span 1 %2$s,wmin %3$s,hmin %4$s", wrap, 4, 102, 159));
+			add(lblThumbnail = new JLabel(), String.format("%1$s,span 1 %2$s,wmin %3$s,hmin %4$s", wrap, 5, 102, 159));
 			//
 			// File
 			//
 			add(new JLabel("File"));
 			//
 			add(tfFile = new JTextField(), String.format("growx,span %1$s,%2$s", 2, wrap));
-			//
-			Util.setEditable(tfFile, false);
-			//
 			//
 			// Table
 			//
@@ -241,15 +238,23 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 			add(new JLabel());
 			//
+			add(btnPreview = new JButton("Preview"));
+			//
+			add(btnExecute = new JButton("Execute"), wrap);
+			//
+			// Exception
+			//
 			final String top = "top";
 			//
-			add(btnPreview = new JButton("Preview"), top);
+			add(new JLabel("Execption"), top);
 			//
-			add(btnExecute = new JButton("Execute"), top);
+			add(tfException = new JTextField(), String.format("growx,span %1$s,%2$s,%3$s", 2, wrap, top));
 			//
 		} // if
 			//
-		Util.forEach(Arrays.asList(btnPreview, btnExecute), x -> Util.addActionListener(x, this));
+		Util.forEach(Stream.of(tfFile, tfException), x -> Util.setEditable(x, false));
+		//
+		Util.forEach(Stream.of(btnPreview, btnExecute), x -> Util.addActionListener(x, this));
 		//
 	}
 
@@ -305,7 +310,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 
 	private void actionPerformedForBtnPreview() {
 		//
-		Util.setText(tfFile, null);
+		Util.forEach(Stream.of(tfFile, tfException), x -> Util.setText(x, null));
 		//
 		setIcon(lblThumbnail, new ImageIcon());
 		//
@@ -330,8 +335,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		if (!Util.contains(collection,
 				testAndApply((a, b) -> b != null, Util.getKey(entry), file, Narcissus::invokeStaticMethod, null))) {
 			//
-			testAndRunThrows(!GraphicsEnvironment.isHeadless(),
-					() -> JOptionPane.showMessageDialog(null, String.format("Allowed file type %1$s", collection)));// TODO
+			testAndRunThrows(file != null,
+					() -> Util.setText(tfException, String.format("Allowed file type %1$s", collection)));
 			//
 			return;
 			//
@@ -542,6 +547,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 
 	private void actionPerformedForBtnExecute() {
 		//
+		Util.setText(tfException, null);
+		//
 		Entry<Method, Collection<Object>> entry = null;
 		//
 		try {
@@ -558,19 +565,19 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 		//
 		File file = Util.toFile(testAndApply(Objects::nonNull, Util.getText(tfFile), Path::of, null));
 		//
-		if (!Util.contains(collection,
-				testAndApply((a, b) -> b != null, Util.getKey(entry), file, Narcissus::invokeStaticMethod, null))) {
-			//
-			testAndRunThrows(!GraphicsEnvironment.isHeadless(),
-					() -> JOptionPane.showMessageDialog(null, String.format("Allowed file type %1$s", collection)));// TODO
-			//
-			return;
-			//
-		} // if
-			//
 		if (or(file == null, !Util.exists(file), !Util.isFile(file))) {
 			//
 			file = getSelectedFile(Util.toFile(Path.of(".")));
+			//
+		} // if
+			//
+		if (!Util.contains(collection,
+				testAndApply((a, b) -> b != null, Util.getKey(entry), file, Narcissus::invokeStaticMethod, null))) {
+			//
+			testAndRunThrows(file != null,
+					() -> Util.setText(tfException, String.format("Allowed file type %1$s", collection)));
+			//
+			return;
 			//
 		} // if
 			//
