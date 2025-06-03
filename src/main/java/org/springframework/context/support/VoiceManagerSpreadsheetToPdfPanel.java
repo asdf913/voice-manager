@@ -1266,54 +1266,50 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 	@Override
 	public void mouseClicked(final MouseEvent evt) {
 		//
-		if (Objects.equals(Util.getSource(evt), lblThumbnail)) {
+		if (Objects.equals(Util.getSource(evt), lblThumbnail) && bufferedImage != null) {
 			//
-			if (bufferedImage != null) {
+			final List<Field> fs = Util
+					.toList(Util.filter(
+							Util.stream(testAndApply(Objects::nonNull, Util.getClass(bufferedImage),
+									FieldUtils::getAllFieldsList, null)),
+							x -> Objects.equals(Util.getName(x), "raster")));
+			//
+			if (IterableUtils.size(fs) > 1) {
 				//
-				final List<Field> fs = Util
-						.toList(Util.filter(
-								Util.stream(testAndApply(Objects::nonNull, Util.getClass(bufferedImage),
-										FieldUtils::getAllFieldsList, null)),
-								x -> Objects.equals(Util.getName(x), "raster")));
+				throw new IllegalStateException();
 				//
-				if (IterableUtils.size(fs) > 1) {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-				final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+			} // if
 				//
-				final boolean condition = f == null || Narcissus.getField(bufferedImage, f) != null;
+			final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+			//
+			final boolean condition = f == null || Narcissus.getField(bufferedImage, f) != null;
+			//
+			final int width = condition ? bufferedImage.getWidth() : 0;
+			//
+			final int height = condition ? bufferedImage.getHeight() : 0;
+			//
+			final Toolkit toolkit = Toolkit.getDefaultToolkit();
+			//
+			final boolean gui = !GraphicsEnvironment.isHeadless();
+			//
+			final Dimension screenSize = toolkit != null && gui ? toolkit.getScreenSize() : null;
+			//
+			final double screenHeight = (screenSize != null ? screenSize.getHeight() : 0) -
+			//
+					129// TODO
+			;
+			//
+			if (gui) {
 				//
-				final int width = condition ? bufferedImage.getWidth() : 0;
+				final float ratioMin = Math.max(height / (float) (screenHeight != 0 ? screenHeight : 1), 1);
 				//
-				final int height = condition ? bufferedImage.getHeight() : 0;
+				JOptionPane.showMessageDialog(null,
+						testAndApply(Objects::nonNull,
+								condition ? bufferedImage.getScaledInstance(Math.max((int) (width / ratioMin), 1),
+										Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT) : null,
+								ImageIcon::new, null),
+						"Image", JOptionPane.PLAIN_MESSAGE);
 				//
-				final Toolkit toolkit = Toolkit.getDefaultToolkit();
-				//
-				final boolean gui = !GraphicsEnvironment.isHeadless();
-				//
-				final Dimension screenSize = toolkit != null && gui ? toolkit.getScreenSize() : null;
-				//
-				final double screenHeight = (screenSize != null ? screenSize.getHeight() : 0) -
-				//
-						129// TODO
-				;
-				//
-				if (gui) {
-					//
-					final float ratioMin = Math.max(height / (float) (screenHeight != 0 ? screenHeight : 1), 1);
-					//
-					JOptionPane.showMessageDialog(null,
-							testAndApply(Objects::nonNull,
-									condition ? bufferedImage.getScaledInstance(Math.max((int) (width / ratioMin), 1),
-											Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT) : null,
-									ImageIcon::new, null),
-							"Image", JOptionPane.PLAIN_MESSAGE);
-					//
-				} // if
-					//
 			} // if
 				//
 		} // if
