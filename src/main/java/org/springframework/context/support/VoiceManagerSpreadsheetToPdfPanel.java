@@ -1282,11 +1282,11 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 									FieldUtils::getAllFieldsList, null)),
 							x -> Objects.equals(Util.getName(x), "raster")));
 			//
-			if (IterableUtils.size(fs) > 1) {
+			testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
 				//
 				throw new IllegalStateException();
 				//
-			} // if
+			});
 				//
 			final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 			//
