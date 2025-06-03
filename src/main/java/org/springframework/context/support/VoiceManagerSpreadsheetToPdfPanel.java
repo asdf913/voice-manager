@@ -363,7 +363,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 		} // try
 			//
-		try (final PDDocument pdDocument = createPDDocument(file)) {
+		try (final PDDocument pdDocument = createPDDocument(file, false)) {
 			//
 			final BufferedImage bufferedImage = new PDFRenderer(pdDocument).renderImage(0);
 			//
@@ -583,7 +583,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 		} // if
 			//
-		try (final PDDocument pdDocument = createPDDocument(file)) {
+		try (final PDDocument pdDocument = createPDDocument(file, true)) {
 			//
 			System.out.println(Util.getAbsolutePath(file = (Util.toFile(Path.of("test.pdf")))));// TODO
 			//
@@ -607,7 +607,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 			//
 	}
 
-	private PDDocument createPDDocument(@Nullable final File file) {
+	private PDDocument createPDDocument(@Nullable final File file, final boolean generateAudio) {
 		//
 		Drawing<?> drawingPatriarch = null;
 		//
@@ -683,36 +683,42 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 				//
 			} // if
 				//
-			(pdComplexFileSpecification = new PDComplexFileSpecification()).setFile(i + ".wav");
+			pdComplexFileSpecification = new PDComplexFileSpecification();
 			//
-			try {
+			if (generateAudio) {
 				//
-				Util.deleteOnExit(
-						tempFile = File.createTempFile(RandomStringUtils.secureStrong().nextAlphabetic(3), null));
+				pdComplexFileSpecification.setFile(i + ".wav");// TODO
 				//
-			} catch (final IOException e) {
-				//
-				throw new RuntimeException(e);
-				//
-			} // try
-				//
-			speechApi.writeVoiceToFile(data.text, getVoice(speechApi,
-					objIntFunction = ObjectUtils.getIfNull(objIntFunction, LanguageCodeToTextObjIntFunction::new),
-					data.voice)
-			//
-					, i * -1// TODO
+				try {
 					//
-					, 100, null, tempFile);
-			//
-			try (final InputStream is = Files.newInputStream(Util.toPath(tempFile))) {
+					Util.deleteOnExit(
+							tempFile = File.createTempFile(RandomStringUtils.secureStrong().nextAlphabetic(3), null));
+					//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
+				speechApi.writeVoiceToFile(data.text, getVoice(speechApi,
+						objIntFunction = ObjectUtils.getIfNull(objIntFunction, LanguageCodeToTextObjIntFunction::new),
+						data.voice)
 				//
-				pdComplexFileSpecification.setEmbeddedFile(new PDEmbeddedFile(pdDocument, is));
+						, i * -1// TODO
+						//
+						, 100, null, tempFile);
 				//
-			} catch (final IOException e) {
-				//
-				throw new RuntimeException(e);
-				//
-			} // try
+				try (final InputStream is = Files.newInputStream(Util.toPath(tempFile))) {
+					//
+					pdComplexFileSpecification.setEmbeddedFile(new PDEmbeddedFile(pdDocument, is));
+					//
+				} catch (final IOException e) {
+					//
+					throw new RuntimeException(e);
+					//
+				} // try
+					//
+			} // if
 				//
 			(pdAnnotationFileAttachment = new PDAnnotationFileAttachment()).setFile(pdComplexFileSpecification);
 			//
