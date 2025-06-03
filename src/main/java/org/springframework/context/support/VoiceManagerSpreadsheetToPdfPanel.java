@@ -325,8 +325,16 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 		setIcon(lblThumbnail, new ImageIcon());
 		//
-		bufferedImage = null;
-		//
+		try {
+			//
+			FieldUtils.writeDeclaredField(this, "bufferedImage", null, true);
+			//
+		} catch (final IllegalAccessException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
 		Util.forEach(IntStream.range(0, Util.getRowCount(tableModel)), i -> Util.removeRow(tableModel, i));
 		//
 		Entry<Method, Collection<Object>> entry = null;
