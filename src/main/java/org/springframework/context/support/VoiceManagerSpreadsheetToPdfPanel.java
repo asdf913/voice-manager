@@ -144,7 +144,10 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel implements Initial
 
 	private DefaultTableModel tableModel = null;
 
-	private JTextComponent tfFile, tfException = null;
+	@Note("File")
+	private JTextComponent tfFile = null;
+
+	private JTextComponent tfException = null;
 
 	private JLabel lblThumbnail = null;
 
