@@ -114,6 +114,7 @@ import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Picture;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.RowUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -989,7 +990,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				for (int j = 0; j < row.getLastCellNum(); j++) {
 					//
 					if ((f = getFieldByName(FieldUtils.getAllFieldsList(Data.class),
-							map.get(Integer.valueOf(j)))) == null || (cell = row.getCell(j)) == null) {
+							map.get(Integer.valueOf(j)))) == null || (cell = RowUtil.getCell(row, j)) == null) {
 						//
 						continue;
 						//
@@ -1036,7 +1037,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		for (int j = 0; row != null && j < row.getLastCellNum(); j++) {
 			//
 			Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Integer.valueOf(j),
-					CellUtil.getStringCellValue(row.getCell(j)));
+					CellUtil.getStringCellValue(RowUtil.getCell(row, j)));
 			//
 		} // for
 			//

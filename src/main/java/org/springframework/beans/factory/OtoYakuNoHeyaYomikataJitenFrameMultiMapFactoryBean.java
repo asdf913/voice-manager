@@ -18,6 +18,7 @@ import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.poi.ss.usermodel.CellUtil;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.RowUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -112,12 +113,12 @@ public class OtoYakuNoHeyaYomikataJitenFrameMultiMapFactoryBean implements Facto
 				for (int i = 1; sheet != null && i < sheet.getPhysicalNumberOfRows()
 						&& (row = sheet.getRow(i)) != null; i++) {
 					//
-					(ih = new IH()).name = CellUtil.getStringCellValue(row.getCell(1));
+					(ih = new IH()).name = CellUtil.getStringCellValue(RowUtil.getCell(row, 1));
 					//
-					ih.src = CellUtil.getStringCellValue(row.getCell(2));
+					ih.src = CellUtil.getStringCellValue(RowUtil.getCell(row, 2));
 					//
 					MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, ArrayListMultimap::create),
-							CellUtil.getStringCellValue(row.getCell(0)), Reflection.newProxy(Frame.class, ih));
+							CellUtil.getStringCellValue(RowUtil.getCell(row, 0)), Reflection.newProxy(Frame.class, ih));
 					//
 				} // for
 					//
