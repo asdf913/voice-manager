@@ -1016,8 +1016,9 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 						//
 					} // if
 						//
-					if (Objects.equals(Boolean.class, Util.getClass(value = getValue(cell, formulaEvaluator)))
-							&& Objects.equals(Util.getType(f), String.class)) {
+					if (Boolean.logicalAnd(
+							Objects.equals(Boolean.class, Util.getClass(value = getValue(cell, formulaEvaluator))),
+							Objects.equals(Util.getType(f), String.class))) {
 						//
 						value = Util.toString(value);
 						//
