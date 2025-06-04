@@ -198,14 +198,10 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof FormulaEvaluator) {
+			} else if (proxy instanceof FormulaEvaluator && Objects.equals(name, "evaluate")) {
 				//
-				if (Objects.equals(name, "evaluate")) {
-					//
-					return cellValue;
-					//
-				} // if
-					//
+				return cellValue;
+				//
 			} // if
 				//
 			throw new Throwable(name);
