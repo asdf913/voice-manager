@@ -1398,7 +1398,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 	@Override
 	public void mouseClicked(final MouseEvent evt) {
 		//
-		if (Objects.equals(Util.getSource(evt), lblThumbnail) && bufferedImage != null) {
+		if (Objects.equals(Util.getSource(evt), lblThumbnail)) {
 			//
 			final int width = getWidth(bufferedImage);
 			//
