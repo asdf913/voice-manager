@@ -224,6 +224,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private Cell cell = null;
 
+	private ObjectMapper objectMapper = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -234,6 +236,14 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		instance = Util.cast(VoiceManagerSpreadsheetToPdfPanel.class,
 				Narcissus.allocateInstance(VoiceManagerSpreadsheetToPdfPanel.class));
 		//
+		if ((objectMapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)) != null) {
+			//
+			objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+			//
+			objectMapper.setDefaultPropertyInclusion(Include.NON_NULL);
+			//
+		} // if
+			//
 	}
 
 	@Test
@@ -552,16 +562,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		if (ih != null) {
 			//
 			Util.add(ih.cells = ObjectUtils.getIfNull(ih.cells, ArrayList::new), cell);
-			//
-		} // if
-			//
-		final ObjectMapper objectMapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-		//
-		if (objectMapper != null) {
-			//
-			objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
-			//
-			objectMapper.setDefaultPropertyInclusion(Include.NON_NULL);
 			//
 		} // if
 			//
@@ -885,7 +885,19 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertNull(toData(Collections.singletonMap(Integer.valueOf(1), "text"), row, null));
+		Assertions.assertEquals("{}", ObjectMapperUtil.writeValueAsString(objectMapper,
+				toData(Collections.singletonMap(Integer.valueOf(0), "text"), row, null)));
+		//
+		if (ih != null) {
+			//
+			ih.cellType = CellType.NUMERIC;
+			//
+			ih.numericCellValue = Double.valueOf(ZERO);
+			//
+		} // if
+			//
+		Assertions.assertEquals("{\"text\":\"0\"}", ObjectMapperUtil.writeValueAsString(objectMapper,
+				toData(Collections.singletonMap(Integer.valueOf(0), "text"), row, null)));
 		//
 	}
 

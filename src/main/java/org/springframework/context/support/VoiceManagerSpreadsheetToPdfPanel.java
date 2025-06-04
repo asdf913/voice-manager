@@ -1014,7 +1014,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 	}
 
 	@Nullable
-	private static Data toData(final Map<?, String> map,@Nullable final Row row, final FormulaEvaluator formulaEvaluator) {
+	private static Data toData(final Map<?, String> map, @Nullable final Row row,
+			final FormulaEvaluator formulaEvaluator) {
 		//
 		Data data = null;
 		//
@@ -1023,6 +1024,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		Cell cell = null;
 		//
 		Object value = null;
+		//
+		Double d = null;
 		//
 		for (int i = 0; row != null && i < row.getLastCellNum(); i++) {
 			//
@@ -1038,6 +1041,11 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 					Objects.equals(Util.getType(f), String.class))) {
 				//
 				value = Util.toString(value);
+				//
+			} else if (Boolean.logicalAnd((d = Util.cast(Double.class, value)) != null,
+					Objects.equals(Util.getType(f), String.class))) {
+				//
+				value = Util.toString(toBigDecimal(d.floatValue()));
 				//
 			} // if
 				//
