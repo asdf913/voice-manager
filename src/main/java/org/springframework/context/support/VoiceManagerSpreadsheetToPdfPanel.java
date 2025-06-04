@@ -433,7 +433,9 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				Util.addRow(tableModel,
 						new Object[] { data.text, data.voice, data.contents,
 								data.width != null ? toBigDecimal(data.width.floatValue()) : null,
-								toBigDecimal(data.height), toBigDecimal(data.x), toBigDecimal(data.y) });// TODO
+								data.height != null ? toBigDecimal(data.height.floatValue()) : null,
+								data.x != null ? toBigDecimal(data.x.floatValue()) : null,
+								data.y != null ? toBigDecimal(data.y.floatValue()) : null });// TODO
 				//
 			} // for
 				//
