@@ -1048,7 +1048,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 		CellValue cellValue = null;
 		//
-		if (Objects.equals(cellType = CellUtil.getCellType(cell), CellType.FORMULA)) {
+		if (Objects.equals(cellType, CellType.FORMULA)) {
 			//
 			if (Objects.equals(
 					cellType = CellValueUtil
