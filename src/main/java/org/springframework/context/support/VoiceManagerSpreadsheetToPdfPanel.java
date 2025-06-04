@@ -853,24 +853,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 	}
 
 	@Nullable
-	private static File createTempFile(final String prefix, @Nullable final String suffix,
-			final Consumer<IOException> consumer) {
-		//
-		try {
-			//
-			return testAndApply(Objects::nonNull, prefix, x -> File.createTempFile(x, suffix), null);
-			//
-		} catch (final IOException e) {
-			//
-			Util.accept(consumer, e);
-			//
-		} // try
-			//
-		return null;
-		//
-	}
-
-	@Nullable
 	private static File getSelectedFile(final File folder) {
 		//
 		final JFileChooser jfc = new JFileChooser(folder);
