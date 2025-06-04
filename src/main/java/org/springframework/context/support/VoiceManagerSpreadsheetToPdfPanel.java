@@ -1013,6 +1013,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static Data toData(final Map<?, String> map, final Row row, final FormulaEvaluator formulaEvaluator) {
 		//
 		Data data = null;
