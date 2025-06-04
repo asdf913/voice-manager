@@ -1405,7 +1405,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 					129// TODO
 			;
 			//
-			testAndRunThrows(gui, () -> {
+			testAndRunThrows(gui && !isTestMode(), () -> {
 				//
 				final float ratioMin = Math.max(height / (float) (screenHeight != 0 ? screenHeight : 1), 1);
 				//
