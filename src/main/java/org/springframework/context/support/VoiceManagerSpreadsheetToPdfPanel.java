@@ -438,7 +438,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 	}
 
-	private static Object[] toArray(final Data data) {
+	private static Object[] toArray(@Nullable final Data data) {
 		//
 		if (data == null) {
 			//
