@@ -1013,38 +1013,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 						//
 					} // if
 						//
-					value = null;
-					//
-					if (Objects.equals(cellType = CellUtil.getCellType(cell), CellType.FORMULA)) {
-						//
-						if (Objects.equals(
-								cellType = CellValueUtil
-										.getCellType(cellValue = FormulaEvaluatorUtil.evaluate(formulaEvaluator, cell)),
-								CellType.NUMERIC)) {
-							//
-							value = cellValue.getNumberValue();
-							//
-						} else if (Objects.equals(cellType, CellType.BOOLEAN)) {
-							//
-							value = cellValue.getBooleanValue();
-							//
-						} else {
-							//
-							value = CellValueUtil.getStringValue(cellValue);
-							//
-						} // if
-							//
-					} else if (Objects.equals(cellType, CellType.NUMERIC)) {
-						//
-						value = getNumericCellValue(cell);
-						//
-					} else {
-						//
-						value = CellUtil.getStringCellValue(cell);
-						//
-					} // if
-						//
-					if (Objects.equals(Boolean.class, Util.getClass(value))
+					if (Objects.equals(Boolean.class, Util.getClass(value = getValue(cell, formulaEvaluator)))
 							&& Objects.equals(Util.getType(f), String.class)) {
 						//
 						value = Util.toString(value);
@@ -1060,6 +1029,47 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		} // for
 			//
 		return dataList;
+		//
+	}
+
+	private static Object getValue(final Cell cell, final FormulaEvaluator formulaEvaluator) {
+		//
+		CellType cellType = CellUtil.getCellType(cell);
+		//
+		Object value;
+		//
+		CellValue cellValue = null;
+		//
+		if (Objects.equals(cellType = CellUtil.getCellType(cell), CellType.FORMULA)) {
+			//
+			if (Objects.equals(
+					cellType = CellValueUtil
+							.getCellType(cellValue = FormulaEvaluatorUtil.evaluate(formulaEvaluator, cell)),
+					CellType.NUMERIC)) {
+				//
+				value = cellValue.getNumberValue();
+				//
+			} else if (Objects.equals(cellType, CellType.BOOLEAN)) {
+				//
+				value = cellValue.getBooleanValue();
+				//
+			} else {
+				//
+				value = CellValueUtil.getStringValue(cellValue);
+				//
+			} // if
+				//
+		} else if (Objects.equals(cellType, CellType.NUMERIC)) {
+			//
+			value = getNumericCellValue(cell);
+			//
+		} else {
+			//
+			value = CellUtil.getStringCellValue(cell);
+			//
+		} // if
+			//
+		return value;
 		//
 	}
 

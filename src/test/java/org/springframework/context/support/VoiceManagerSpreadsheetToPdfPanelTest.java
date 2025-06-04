@@ -39,6 +39,7 @@ import org.apache.poi.hssf.usermodel.HSSFPicture;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Picture;
@@ -73,7 +74,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE,
 			METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL,
 			METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT, METHOD_OR, METHOD_SET_ICON, METHOD_TEST_AND_APPLY,
-			METHOD_TEST_AND_GET, METHOD_TO_MAP = null;
+			METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -118,6 +119,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_TO_MAP = clz.getDeclaredMethod("toMap", Row.class, FormulaEvaluator.class)).setAccessible(true);
 		//
+		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Cell.class, FormulaEvaluator.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -131,6 +134,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		private CellType cellType = null;
 
 		private Double numericCellValue = null;
+
+		private CellValue cellValue = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -183,6 +188,14 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				} else if (Objects.equals(name, "getCellType")) {
 					//
 					return cellType;
+					//
+				} // if
+					//
+			} else if (proxy instanceof FormulaEvaluator) {
+				//
+				if (Objects.equals(name, "evaluate")) {
+					//
+					return cellValue;
 					//
 				} // if
 					//
@@ -766,6 +779,45 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				return (Map) obj;
 			}
 			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetValue() throws Throwable {
+		//
+		if (ih != null) {
+			//
+			ih.cellType = CellType.FORMULA;
+			//
+		} // if
+			//
+		Assertions.assertNull(getValue(cell, Reflection.newProxy(FormulaEvaluator.class, ih)));
+		//
+		if (ih != null) {
+			//
+			ih.cellValue = new CellValue(ZERO);
+			//
+		} // if
+			//
+		Assertions.assertEquals(Double.valueOf(ZERO), getValue(cell, Reflection.newProxy(FormulaEvaluator.class, ih)));
+		//
+		final boolean b = true;
+		//
+		if (ih != null) {
+			//
+			ih.cellValue = CellValue.valueOf(b);
+			//
+		} // if
+			//
+		Assertions.assertEquals(Boolean.valueOf(b), getValue(cell, Reflection.newProxy(FormulaEvaluator.class, ih)));
+		//
+	}
+
+	private static Object getValue(final Cell cell, final FormulaEvaluator formulaEvaluator) throws Throwable {
+		try {
+			return METHOD_GET_VALUE.invoke(null, cell, formulaEvaluator);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
