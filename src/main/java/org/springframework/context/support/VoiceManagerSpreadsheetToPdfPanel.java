@@ -989,11 +989,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 		Cell cell = null;
 		//
-		CellType cellType = null;
-		//
 		Object value = null;
-		//
-		CellValue cellValue = null;
 		//
 		for (int i = 0; i < IterableUtils.size(rows); i++) {
 			//
