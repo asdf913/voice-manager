@@ -440,13 +440,17 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private static Object[] toArray(final Data data) {
 		//
-		return data != null
-				? new Object[] { data.text, data.voice, data.contents,
-						data.width != null ? toBigDecimal(data.width.floatValue()) : null,
-						data.height != null ? toBigDecimal(data.height.floatValue()) : null,
-						data.x != null ? toBigDecimal(data.x.floatValue()) : null,
-						data.y != null ? toBigDecimal(data.y.floatValue()) : null }
-				: null;
+		if (data == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return new Object[] { data.text, data.voice, data.contents,
+				data.width != null ? toBigDecimal(data.width.floatValue()) : null,
+				data.height != null ? toBigDecimal(data.height.floatValue()) : null,
+				data.x != null ? toBigDecimal(data.x.floatValue()) : null,
+				data.y != null ? toBigDecimal(data.y.floatValue()) : null };
 		//
 	}
 
