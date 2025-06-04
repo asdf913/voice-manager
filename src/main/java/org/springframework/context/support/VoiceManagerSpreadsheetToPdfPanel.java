@@ -110,6 +110,7 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellUtil;
+import org.apache.poi.ss.usermodel.CellValue;
 import org.apache.poi.ss.usermodel.CellValueUtil;
 import org.apache.poi.ss.usermodel.CreationHelperUtil;
 import org.apache.poi.ss.usermodel.Drawing;
@@ -429,8 +430,10 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 					//
 				} // if
 					//
-				Util.addRow(tableModel, new Object[] { data.text, data.voice, data.contents, toBigDecimal(data.width),
-						toBigDecimal(data.height), toBigDecimal(data.x), toBigDecimal(data.y) });// TODO
+				Util.addRow(tableModel,
+						new Object[] { data.text, data.voice, data.contents,
+								data.width != null ? toBigDecimal(data.width.floatValue()) : null,
+								toBigDecimal(data.height), toBigDecimal(data.x), toBigDecimal(data.y) });// TODO
 				//
 			} // for
 				//
@@ -977,6 +980,12 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 		Cell cell = null;
 		//
+		CellType cellType = null;
+		//
+		Object value = null;
+		//
+		CellValue cellValue = null;
+		//
 		for (int i = 0; i < IterableUtils.size(rows); i++) {
 			//
 			if ((row = IterableUtils.get(rows, i)) == null) {
@@ -1002,8 +1011,34 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 						//
 					} // if
 						//
-					setField(data, f, testAndApply(x -> Objects.equals(CellUtil.getCellType(x), CellType.NUMERIC), cell,
-							VoiceManagerSpreadsheetToPdfPanel::getNumericCellValue, CellUtil::getStringCellValue));
+					value = null;
+					//
+					if (Objects.equals(cellType = CellUtil.getCellType(cell), CellType.FORMULA)) {
+						//
+						if (Objects.equals(
+								CellValueUtil
+										.getCellType(cellValue = FormulaEvaluatorUtil.evaluate(formulaEvaluator, cell)),
+								CellType.NUMERIC)) {
+							//
+							value = cellValue.getNumberValue();
+							//
+						} else {
+							//
+							value = CellValueUtil.getStringValue(cellValue);
+							//
+						} // if
+							//
+					} else if (Objects.equals(cellType, CellType.NUMERIC)) {
+						//
+						value = getNumericCellValue(cell);
+						//
+					} else {
+						//
+						value = CellUtil.getStringCellValue(cell);
+						//
+					} // if
+						//
+					setField(data, f, value);
 					//
 				} // for
 					//
