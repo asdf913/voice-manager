@@ -110,7 +110,11 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellUtil;
+import org.apache.poi.ss.usermodel.CellValueUtil;
+import org.apache.poi.ss.usermodel.CreationHelperUtil;
 import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.FormulaEvaluatorUtil;
 import org.apache.poi.ss.usermodel.Picture;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.apache.poi.ss.usermodel.Row;
@@ -376,7 +380,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 					x -> WorkbookUtil.getSheetAt(x, 0), null);
 			//
 			dataIterable = getDataIterable(
-					testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null));
+					testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null),
+					CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb)));
 			//
 			testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), file,
 					x -> Util.setText(tfFile, Util.getAbsolutePath(Util.getAbsoluteFile(x))));
@@ -686,7 +691,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			drawingPatriarch = getDrawingPatriarch(sheet);
 			//
 			dataList = getDataIterable(
-					testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null));
+					testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null),
+					CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb)));
 			//
 		} catch (final IOException e) {
 			//
@@ -957,7 +963,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 	}
 
 	@Nullable
-	private static Iterable<Data> getDataIterable(final Iterable<Row> rows) {
+	private static Iterable<Data> getDataIterable(final Iterable<Row> rows, final FormulaEvaluator formulaEvaluator) {
 		//
 		Row row = null;
 		//
@@ -981,7 +987,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 			if (map == null) {
 				//
-				map = toMap(row);
+				map = toMap(row, formulaEvaluator);
 				//
 			} else {
 				//
@@ -1030,14 +1036,27 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 	}
 
 	@Nullable
-	private static Map<Integer, String> toMap(@Nullable final Row row) {
+	private static Map<Integer, String> toMap(@Nullable final Row row, final FormulaEvaluator formulaEvaluator) {
 		//
 		Map<Integer, String> map = null;
 		//
-		for (int j = 0; row != null && j < row.getLastCellNum(); j++) {
+		Cell cell = null;
+		//
+		Object value = null;
+		//
+		for (int i = 0; row != null && i < row.getLastCellNum(); i++) {
 			//
-			Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Integer.valueOf(j),
-					CellUtil.getStringCellValue(RowUtil.getCell(row, j)));
+			if (Objects.equals(CellUtil.getCellType(cell = RowUtil.getCell(row, i)), CellType.FORMULA)) {
+				//
+				value = CellValueUtil.getStringValue(FormulaEvaluatorUtil.evaluate(formulaEvaluator, cell));
+				//
+			} else {
+				//
+				value = CellUtil.getStringCellValue(cell);
+				//
+			} // if
+				//
+			Util.put(map = ObjectUtils.getIfNull(map, LinkedHashMap::new), Integer.valueOf(i), Util.toString(value));
 			//
 		} // for
 			//

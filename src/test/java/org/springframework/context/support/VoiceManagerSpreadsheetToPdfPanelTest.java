@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -39,6 +40,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Drawing;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Picture;
 import org.apache.poi.ss.usermodel.PictureData;
 import org.apache.poi.ss.usermodel.Row;
@@ -71,7 +73,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE,
 			METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL,
 			METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT, METHOD_OR, METHOD_SET_ICON, METHOD_TEST_AND_APPLY,
-			METHOD_TEST_AND_GET = null;
+			METHOD_TEST_AND_GET, METHOD_TO_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -90,7 +92,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_GET_PICTURE_DATA = clz.getDeclaredMethod("getPictureData", Picture.class)).setAccessible(true);
 		//
-		(METHOD_GET_DATA_ITERABLE = clz.getDeclaredMethod("getDataIterable", Iterable.class)).setAccessible(true);
+		(METHOD_GET_DATA_ITERABLE = clz.getDeclaredMethod("getDataIterable", Iterable.class, FormulaEvaluator.class))
+				.setAccessible(true);
 		//
 		(METHOD_SET_FIELD = clz.getDeclaredMethod("setField", Object.class, Field.class, Object.class))
 				.setAccessible(true);
@@ -112,6 +115,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_TEST_AND_GET = clz.getDeclaredMethod("testAndGet", Boolean.TYPE, Supplier.class, Supplier.class))
 				.setAccessible(true);
+		//
+		(METHOD_TO_MAP = clz.getDeclaredMethod("toMap", Row.class, FormulaEvaluator.class)).setAccessible(true);
 		//
 	}
 
@@ -193,10 +198,16 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private VoiceManagerSpreadsheetToPdfPanel instance = null;
 
+	private Row row = null;
+
+	private Cell cell = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
-		ih = new IH();
+		row = Reflection.newProxy(Row.class, ih = new IH());
+		//
+		cell = Reflection.newProxy(Cell.class, ih);
 		//
 		instance = Util.cast(VoiceManagerSpreadsheetToPdfPanel.class,
 				Narcissus.allocateInstance(VoiceManagerSpreadsheetToPdfPanel.class));
@@ -514,20 +525,18 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	@Test
 	void testGetDataIterable() throws Throwable {
 		//
-		Assertions.assertNull(getDataIterable(Collections.singleton(null)));
+		Assertions.assertNull(getDataIterable(Collections.singleton(null), null));
 		//
 		if (ih != null) {
 			//
-			Util.add(ih.cells = ObjectUtils.getIfNull(ih.cells, ArrayList::new), Reflection.newProxy(Cell.class, ih));
+			Util.add(ih.cells = ObjectUtils.getIfNull(ih.cells, ArrayList::new), cell);
 			//
 		} // if
 			//
-		final Row row = Reflection.newProxy(Row.class, ih);
-		//
 		final ObjectMapper objectMapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		//
 		Assertions.assertEquals("[{}]",
-				ObjectMapperUtil.writeValueAsString(objectMapper, getDataIterable(Collections.nCopies(2, row))));
+				ObjectMapperUtil.writeValueAsString(objectMapper, getDataIterable(Collections.nCopies(2, row), null)));
 		//
 		if (ih != null) {
 			//
@@ -536,7 +545,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		} // if
 			//
 		Assertions.assertEquals("[{}]",
-				ObjectMapperUtil.writeValueAsString(objectMapper, getDataIterable(Collections.nCopies(2, row))));
+				ObjectMapperUtil.writeValueAsString(objectMapper, getDataIterable(Collections.nCopies(2, row), null)));
 		//
 		if (ih != null) {
 			//
@@ -549,13 +558,14 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		} // if
 			//
 		Assertions.assertEquals("[{}]",
-				ObjectMapperUtil.writeValueAsString(objectMapper, getDataIterable(Collections.nCopies(2, row))));
+				ObjectMapperUtil.writeValueAsString(objectMapper, getDataIterable(Collections.nCopies(2, row), null)));
 		//
 	}
 
-	private static Iterable<?> getDataIterable(final Iterable<Row> rows) throws Throwable {
+	private static Iterable<?> getDataIterable(final Iterable<Row> rows, final FormulaEvaluator formulaEvaluator)
+			throws Throwable {
 		try {
-			final Object obj = METHOD_GET_DATA_ITERABLE.invoke(null, rows);
+			final Object obj = METHOD_GET_DATA_ITERABLE.invoke(null, rows, formulaEvaluator);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Iterable) {
@@ -727,6 +737,35 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			final Supplier<T> supplierFalse) throws Throwable {
 		try {
 			return (T) METHOD_TEST_AND_GET.invoke(null, condition, supplierTrue, supplierFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToMap() throws Throwable {
+		//
+		if (ih != null) {
+			//
+			ih.cells = Collections.singletonList(cell);
+			//
+			ih.cellType = CellType.FORMULA;
+			//
+		} // if
+			//
+		Assertions.assertEquals(Collections.singletonMap(Integer.valueOf(ZERO), null), toMap(row, null));
+		//
+	}
+
+	private static Map<Integer, String> toMap(final Row row, final FormulaEvaluator formulaEvaluator) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_MAP.invoke(null, row, formulaEvaluator);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Map) {
+				return (Map) obj;
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
