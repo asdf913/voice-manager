@@ -430,17 +430,24 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 					//
 				} // if
 					//
-				Util.addRow(tableModel,
-						new Object[] { data.text, data.voice, data.contents,
-								data.width != null ? toBigDecimal(data.width.floatValue()) : null,
-								data.height != null ? toBigDecimal(data.height.floatValue()) : null,
-								data.x != null ? toBigDecimal(data.x.floatValue()) : null,
-								data.y != null ? toBigDecimal(data.y.floatValue()) : null });// TODO
+				Util.addRow(tableModel, toArray(data));
 				//
 			} // for
 				//
 		} // if
 			//
+	}
+
+	private static Object[] toArray(final Data data) {
+		//
+		return data != null
+				? new Object[] { data.text, data.voice, data.contents,
+						data.width != null ? toBigDecimal(data.width.floatValue()) : null,
+						data.height != null ? toBigDecimal(data.height.floatValue()) : null,
+						data.x != null ? toBigDecimal(data.x.floatValue()) : null,
+						data.y != null ? toBigDecimal(data.y.floatValue()) : null }
+				: null;
+		//
 	}
 
 	private static int getWidth(@Nullable final RenderedImage instance) {

@@ -71,10 +71,12 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private static final int ZERO = 0;
 
+	private static Class<?> CLASS_DATA = null;
+
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE,
 			METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL,
 			METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT, METHOD_OR, METHOD_SET_ICON, METHOD_TEST_AND_APPLY,
-			METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE = null;
+			METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -120,6 +122,11 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		(METHOD_TO_MAP = clz.getDeclaredMethod("toMap", Row.class, FormulaEvaluator.class)).setAccessible(true);
 		//
 		(METHOD_GET_VALUE = clz.getDeclaredMethod("getValue", Cell.class, FormulaEvaluator.class)).setAccessible(true);
+		//
+		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray",
+				CLASS_DATA = Util
+						.forName("org.springframework.context.support.VoiceManagerSpreadsheetToPdfPanel$Data")))
+				.setAccessible(true);
 		//
 	}
 
@@ -818,6 +825,42 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static Object getValue(final Cell cell, final FormulaEvaluator formulaEvaluator) throws Throwable {
 		try {
 			return METHOD_GET_VALUE.invoke(null, cell, formulaEvaluator);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToArray() throws Throwable {
+		//
+		final Object data = Narcissus.allocateInstance(CLASS_DATA);
+		//
+		Assertions.assertArrayEquals(Util.toArray(Collections.nCopies(7, null)), toArray(data));
+		//
+		Util.forEach(FieldUtils.getAllFieldsList(Util.getClass(data)).stream(), f -> {
+			//
+			if (Objects.equals(Util.getType(f), Float.class)) {
+				//
+				Narcissus.setField(data, f, Float.valueOf(ZERO));
+				//
+			} // if
+				//
+		});
+		//
+		Assertions.assertArrayEquals(ArrayUtils.addAll(Util.toArray(Collections.nCopies(3, null)),
+				Util.toArray(Collections.nCopies(4, BigDecimal.valueOf(ZERO)))), toArray(data));
+		//
+	}
+
+	private static Object[] toArray(final Object data) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_ARRAY.invoke(null, data);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Object[]) {
+				return (Object[]) obj;
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
