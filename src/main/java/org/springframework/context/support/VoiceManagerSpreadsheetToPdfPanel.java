@@ -1010,34 +1010,49 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 			} else {
 				//
-				Util.add(dataList = ObjectUtils.getIfNull(dataList, ArrayList::new), data = new Data());
+				Util.add(dataList = ObjectUtils.getIfNull(dataList, ArrayList::new),
+						toData(map, row, formulaEvaluator));
 				//
-				for (int j = 0; j < row.getLastCellNum(); j++) {
-					//
-					if ((f = getFieldByName(FieldUtils.getAllFieldsList(Data.class),
-							map.get(Integer.valueOf(j)))) == null || (cell = RowUtil.getCell(row, j)) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					if (Boolean.logicalAnd(
-							Objects.equals(Boolean.class, Util.getClass(value = getValue(cell, formulaEvaluator))),
-							Objects.equals(Util.getType(f), String.class))) {
-						//
-						value = Util.toString(value);
-						//
-					} // if
-						//
-					setField(data, f, value);
-					//
-				} // for
-					//
 			} // if
 				//
 		} // for
 			//
 		return dataList;
+		//
+	}
+
+	private static Data toData(final Map<?, String> map, final Row row, final FormulaEvaluator formulaEvaluator) {
+		//
+		Data data = null;
+		//
+		Field f = null;
+		//
+		Cell cell = null;
+		//
+		Object value = null;
+		//
+		for (int i = 0; row != null && i < row.getLastCellNum(); i++) {
+			//
+			if ((f = getFieldByName(FieldUtils.getAllFieldsList(Data.class), Util.get(map, Integer.valueOf(i)))) == null
+					|| (cell = RowUtil.getCell(row, i)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			if (Boolean.logicalAnd(
+					Objects.equals(Boolean.class, Util.getClass(value = getValue(cell, formulaEvaluator))),
+					Objects.equals(Util.getType(f), String.class))) {
+				//
+				value = Util.toString(value);
+				//
+			} // if
+				//
+			setField(data = ObjectUtils.getIfNull(data, Data::new), f, value);
+			//
+		} // for
+			//
+		return data;
 		//
 	}
 
