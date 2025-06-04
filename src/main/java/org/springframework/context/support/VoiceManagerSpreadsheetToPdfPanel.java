@@ -1018,11 +1018,15 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 					if (Objects.equals(cellType = CellUtil.getCellType(cell), CellType.FORMULA)) {
 						//
 						if (Objects.equals(
-								CellValueUtil
+								cellType = CellValueUtil
 										.getCellType(cellValue = FormulaEvaluatorUtil.evaluate(formulaEvaluator, cell)),
 								CellType.NUMERIC)) {
 							//
 							value = cellValue.getNumberValue();
+							//
+						} else if (Objects.equals(cellType, CellType.BOOLEAN)) {
+							//
+							value = cellValue.getBooleanValue();
 							//
 						} else {
 							//
@@ -1037,6 +1041,13 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 					} else {
 						//
 						value = CellUtil.getStringCellValue(cell);
+						//
+					} // if
+						//
+					if (Objects.equals(Boolean.class, Util.getClass(value))
+							&& Objects.equals(Util.getType(f), String.class)) {
+						//
+						value = Util.toString(value);
 						//
 					} // if
 						//
