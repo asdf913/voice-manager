@@ -60,6 +60,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.meeuw.functional.Predicates;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -76,7 +79,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE,
 			METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL,
 			METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT, METHOD_OR, METHOD_SET_ICON, METHOD_TEST_AND_APPLY,
-			METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY = null;
+			METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY, METHOD_TO_DATA = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -126,6 +129,9 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		(METHOD_TO_ARRAY = clz.getDeclaredMethod("toArray",
 				CLASS_DATA = Util
 						.forName("org.springframework.context.support.VoiceManagerSpreadsheetToPdfPanel$Data")))
+				.setAccessible(true);
+		//
+		(METHOD_TO_DATA = clz.getDeclaredMethod("toData", Map.class, Row.class, FormulaEvaluator.class))
 				.setAccessible(true);
 		//
 	}
@@ -551,7 +557,15 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			//
 		final ObjectMapper objectMapper = new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		//
-		Assertions.assertEquals("[{}]",
+		if (objectMapper != null) {
+			//
+			objectMapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
+			//
+			objectMapper.setDefaultPropertyInclusion(Include.NON_NULL);
+			//
+		} // if
+			//
+		Assertions.assertEquals("[null]",
 				ObjectMapperUtil.writeValueAsString(objectMapper, getDataIterable(Collections.nCopies(2, row), null)));
 		//
 		if (ih != null) {
@@ -560,7 +574,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals("[{}]",
+		Assertions.assertEquals("[{\"text\":\"text\"}]",
 				ObjectMapperUtil.writeValueAsString(objectMapper, getDataIterable(Collections.nCopies(2, row), null)));
 		//
 		if (ih != null) {
@@ -573,7 +587,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals("[{}]",
+		Assertions.assertEquals("[{\"x\":0.1}]",
 				ObjectMapperUtil.writeValueAsString(objectMapper, getDataIterable(Collections.nCopies(2, row), null)));
 		//
 	}
@@ -857,6 +871,28 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				return (Object[]) obj;
 			}
 			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToData() throws Throwable {
+		//
+		if (ih != null) {
+			//
+			ih.cells = Collections.singletonList(cell);
+			//
+		} // if
+			//
+		Assertions.assertNull(toData(Collections.singletonMap(Integer.valueOf(1), "text"), row, null));
+		//
+	}
+
+	private static Object toData(final Map<?, String> map, final Row row, final FormulaEvaluator formulaEvaluator)
+			throws Throwable {
+		try {
+			return METHOD_TO_DATA.invoke(null, map, row, formulaEvaluator);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
