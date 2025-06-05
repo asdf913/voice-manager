@@ -83,6 +83,7 @@ import org.apache.bcel.generic.Type;
 import org.apache.bcel.generic.TypeUtil;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.IteratorUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -130,7 +131,14 @@ import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.ThrowingRunnableUtil;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.FactoryBeanUtil;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.ListableBeanFactoryUtil;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationContextUtil;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
@@ -140,7 +148,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
-		implements InitializingBean, ActionListener, MouseListener, Titled, EnvironmentAware {
+		implements InitializingBean, ActionListener, MouseListener, Titled, EnvironmentAware, ApplicationContextAware {
 
 	private static final long serialVersionUID = -7995853525217556061L;
 
@@ -172,6 +180,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private transient PropertyResolver propertyResolver = null;
 
+	private ApplicationContext applicationContext = null;
+
 	private VoiceManagerSpreadsheetToPdfPanel() {
 	}
 
@@ -186,9 +196,19 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 	}
 
 	@Override
+	public void setApplicationContext(final ApplicationContext applicationContext) {
+		this.applicationContext = applicationContext;
+	}
+
+	@Override
 	public void afterPropertiesSet() throws Exception {
 		//
-		setLayout(this, new MigLayout());// TODO
+		setLayout(this,
+				ObjectUtils.getIfNull(
+						getLayoutManager(ApplicationContextUtil.getAutowireCapableBeanFactory(applicationContext),
+								Util.entrySet(
+										ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class))),
+						MigLayout::new));
 		//
 		if (isGui()) {
 			//
@@ -292,6 +312,65 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		Util.forEach(Stream.of(tfFile, tfException), x -> Util.setEditable(x, false));
 		//
 		Util.forEach(Stream.of(btnPreview, btnExecute), x -> Util.addActionListener(x, this));
+		//
+	}
+
+	private static LayoutManager getLayoutManager(final AutowireCapableBeanFactory acbf,
+			final Iterable<Entry<String, Object>> entrySet) throws Exception {
+		//
+		if (Util.iterator(entrySet) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		IValue0<LayoutManager> iValue0 = null;
+		//
+		List<Field> fs = null;
+		//
+		for (final Entry<String, Object> entry : entrySet) {
+			//
+			if (!(Util.getValue(entry) instanceof LayoutManager)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			fs = Util
+					.toList(Util.filter(
+							Util.stream(testAndApply(Objects::nonNull, Util.getClass(acbf),
+									x -> FieldUtils.getAllFieldsList(x), null)),
+							x -> Objects.equals(Util.getName(x), "singletonObjects")));
+			//
+			for (int i = 0; i < IterableUtils.size(fs); i++) {
+				//
+				if (FactoryBeanUtil
+						.getObject(
+								Util.cast(
+										FactoryBean.class, MapUtils
+												.getObject(
+														Util.cast(Map.class,
+																Narcissus.getObjectField(acbf,
+																		IterableUtils.get(fs, i))),
+														Util.getKey(entry)))) instanceof LayoutManager lm) {
+					//
+					if (iValue0 == null) {
+						//
+						iValue0 = Unit.with(lm);
+						//
+					} else {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+		} // for
+			//
+		return IValue0Util.getValue0(iValue0);
 		//
 	}
 

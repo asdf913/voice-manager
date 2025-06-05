@@ -1,6 +1,7 @@
 package org.springframework.context.support;
 
 import java.awt.Dimension;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -17,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Map.Entry;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -59,6 +61,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.meeuw.functional.Predicates;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -79,7 +82,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE,
 			METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL,
 			METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT, METHOD_OR, METHOD_SET_ICON, METHOD_TEST_AND_APPLY,
-			METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY, METHOD_TO_DATA = null;
+			METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY, METHOD_TO_DATA,
+			METHOD_GET_LAYOUT_MANAGER = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -134,6 +138,9 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		(METHOD_TO_DATA = clz.getDeclaredMethod("toData", Map.class, Row.class, FormulaEvaluator.class))
 				.setAccessible(true);
 		//
+		(METHOD_GET_LAYOUT_MANAGER = clz.getDeclaredMethod("getLayoutManager", AutowireCapableBeanFactory.class,
+				Iterable.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -149,6 +156,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		private Double numericCellValue = null;
 
 		private CellValue cellValue = null;
+
+		private Object value = null;
 
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -208,6 +217,14 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				//
 				return cellValue;
 				//
+			} else if (proxy instanceof Entry) {
+				//
+				if (Objects.equals(name, "getValue")) {
+					//
+					return value;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -907,6 +924,38 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			throws Throwable {
 		try {
 			return METHOD_TO_DATA.invoke(null, map, row, formulaEvaluator);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetLayoutManager() throws Throwable {
+		//
+		final Entry<String, Object> entry = Reflection.newProxy(Entry.class, ih);
+		//
+		Assertions.assertNull(getLayoutManager(null, Collections.singleton(entry)));
+		//
+		if (ih != null) {
+			//
+			ih.value = Reflection.newProxy(LayoutManager.class, ih);
+			//
+		} // if
+			//
+		Assertions.assertNull(getLayoutManager(null, Collections.singleton(entry)));
+		//
+	}
+
+	private static LayoutManager getLayoutManager(final AutowireCapableBeanFactory acbf,
+			final Iterable<Entry<String, Object>> entrySet) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_LAYOUT_MANAGER.invoke(null, acbf, entrySet);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof LayoutManager) {
+				return (LayoutManager) obj;
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
