@@ -170,7 +170,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private transient BufferedImage bufferedImage = null;
 
-	private PropertyResolver propertyResolver = null;
+	private transient PropertyResolver propertyResolver = null;
 
 	private VoiceManagerSpreadsheetToPdfPanel() {
 	}
