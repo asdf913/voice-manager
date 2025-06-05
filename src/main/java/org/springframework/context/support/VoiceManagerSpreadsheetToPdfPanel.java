@@ -180,7 +180,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private transient PropertyResolver propertyResolver = null;
 
-	private ApplicationContext applicationContext = null;
+	private transient ApplicationContext applicationContext = null;
 
 	private VoiceManagerSpreadsheetToPdfPanel() {
 	}
