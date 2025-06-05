@@ -91,6 +91,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -854,7 +855,14 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 		File tempFile = null;
 		//
-		final int size = 10;// TODO
+		final int defaultPdAnnotationFileAttachmentRectangleSize = 10;
+		//
+		final int pdAnnotationFileAttachmentRectangleSize = NumberUtils.toInt(testAndApply(
+				PropertyResolverUtil::containsProperty, propertyResolver,
+				"org.springframework.context.support.VoiceManagerSpreadsheetToPdfPanel.pdAnnotationFileAttachment.rectangle.size",
+				PropertyResolverUtil::getProperty,
+				(a, b) -> Integer.toString(defaultPdAnnotationFileAttachmentRectangleSize)),
+				defaultPdAnnotationFileAttachmentRectangleSize);
 		//
 		ObjIntFunction<String, String> objIntFunction = null;
 		//
@@ -905,15 +913,15 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 			(pdAnnotationFileAttachment = new PDAnnotationFileAttachment()).setFile(pdComplexFileSpecification);
 			//
-			pdAnnotationFileAttachment
-					.setRectangle(new PDRectangle(floatValue(data.x, 0) * ratioMin, PDRectangleUtil.getHeight(mediaBox)
-							- (floatValue(data.y, size) + floatValue(data.height, size)) * ratioMin
+			pdAnnotationFileAttachment.setRectangle(new PDRectangle(floatValue(data.x, 0) * ratioMin,
+					PDRectangleUtil.getHeight(mediaBox) - (floatValue(data.y, pdAnnotationFileAttachmentRectangleSize)
+							+ floatValue(data.height, pdAnnotationFileAttachmentRectangleSize)) * ratioMin
 					//
-							, floatValue(data.width, size) * ratioMin
-							//
-							, floatValue(data.height, size) * ratioMin)
+					, floatValue(data.width, pdAnnotationFileAttachmentRectangleSize) * ratioMin
 					//
-					);
+					, floatValue(data.height, pdAnnotationFileAttachmentRectangleSize) * ratioMin)
+			//
+			);
 			//
 			pdAnnotationFileAttachment.setContents(data.contents);
 			//
