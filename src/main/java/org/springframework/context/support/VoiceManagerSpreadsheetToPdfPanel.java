@@ -138,7 +138,7 @@ import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
-		implements InitializingBean, ActionListener, MouseListener {
+		implements InitializingBean, ActionListener, MouseListener, Titled {
 
 	private static final long serialVersionUID = -7995853525217556061L;
 
@@ -169,6 +169,11 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 	private transient BufferedImage bufferedImage = null;
 
 	private VoiceManagerSpreadsheetToPdfPanel() {
+	}
+
+	@Override
+	public String getTitle() {
+		return "Spreadsheet to PDF";
 	}
 
 	@Override

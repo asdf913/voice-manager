@@ -1173,6 +1173,10 @@
 			ref="LanguageCodeToTextObjIntFunction" />
 	</bean>
 
+	<bean
+		class="org.springframework.context.support.VoiceManagerSpreadsheetToPdfPanel">
+	</bean>
+
 	<!---->
 	<bean
 		class="org.springframework.context.support.VoiceManagerRubyHtmlPanel"/>
