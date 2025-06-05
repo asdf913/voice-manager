@@ -825,7 +825,7 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 				//
 				Util.put(m1 = ObjectUtils.getIfNull(m1, LinkedHashMap::new),
 						(titled = Util.cast(Titled.class, c)) != null ? getTitle(titled)
-								: Util.getName(Util.getClass(c)),
+								: StringUtils.substringAfterLast(Util.getName(Util.getClass(c)), '.'),
 						c);
 				//
 			} // for
