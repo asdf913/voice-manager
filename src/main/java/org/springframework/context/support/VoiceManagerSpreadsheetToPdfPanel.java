@@ -336,11 +336,10 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 			} // if
 				//
-			fs = Util
-					.toList(Util.filter(
-							Util.stream(testAndApply(Objects::nonNull, Util.getClass(acbf),
-									x -> FieldUtils.getAllFieldsList(x), null)),
-							x -> Objects.equals(Util.getName(x), "singletonObjects")));
+			fs = Util.toList(Util.filter(
+					Util.stream(
+							testAndApply(Objects::nonNull, Util.getClass(acbf), FieldUtils::getAllFieldsList, null)),
+					x -> Objects.equals(Util.getName(x), "singletonObjects")));
 			//
 			for (int i = 0; i < IterableUtils.size(fs); i++) {
 				//
