@@ -962,28 +962,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	}
 
-	public static void main(final String[] args) throws Exception {
-		//
-		final VoiceManagerSpreadsheetToPdfPanel instance = new VoiceManagerSpreadsheetToPdfPanel();
-		//
-		instance.afterPropertiesSet();
-		//
-		final JFrame jFrame = !GraphicsEnvironment.isHeadless() ? new JFrame() : null;
-		//
-		if (jFrame != null) {
-			//
-			jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-			//
-			jFrame.add(instance);
-			//
-			jFrame.pack();
-			//
-			jFrame.setVisible(true);
-			//
-		} // if
-			//
-	}
-
 	@Nullable
 	private static Iterable<Data> getDataIterable(final Iterable<Row> rows, final FormulaEvaluator formulaEvaluator) {
 		//
