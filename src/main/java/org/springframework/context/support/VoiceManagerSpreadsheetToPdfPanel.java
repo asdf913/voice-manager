@@ -131,12 +131,16 @@ import org.javatuples.valueintf.IValue0Util;
 import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.ThrowingRunnableUtil;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.PropertyResolver;
+import org.springframework.core.env.PropertyResolverUtil;
 
 import io.github.toolfactory.narcissus.Narcissus;
 import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
-		implements InitializingBean, ActionListener, MouseListener, Titled {
+		implements InitializingBean, ActionListener, MouseListener, Titled, EnvironmentAware {
 
 	private static final long serialVersionUID = -7995853525217556061L;
 
@@ -166,12 +170,19 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private transient BufferedImage bufferedImage = null;
 
+	private PropertyResolver propertyResolver = null;
+
 	private VoiceManagerSpreadsheetToPdfPanel() {
 	}
 
 	@Override
 	public String getTitle() {
 		return "Spreadsheet to PDF";
+	}
+
+	@Override
+	public void setEnvironment(final Environment environment) {
+		propertyResolver = environment;
 	}
 
 	@Override
@@ -213,7 +224,9 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			Integer index = null;
 			//
-			final String size = "A4";// TODO
+			final String size = testAndApply(PropertyResolverUtil::containsProperty, propertyResolver,
+					"org.springframework.context.support.VoiceManagerImageToPdfPanel.PDRectangle",
+					PropertyResolverUtil::getProperty, (a, b) -> "A4");
 			//
 			for (int i = 0; i < cbmPDRectangle.getSize(); i++) {
 				//
