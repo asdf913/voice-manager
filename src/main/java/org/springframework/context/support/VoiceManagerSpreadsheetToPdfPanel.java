@@ -225,7 +225,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			Integer index = null;
 			//
 			final String size = testAndApply(PropertyResolverUtil::containsProperty, propertyResolver,
-					"org.springframework.context.support.VoiceManagerImageToPdfPanel.PDRectangle",
+					"org.springframework.context.support.VoiceManagerSpreadsheetToPdfPanel.PDRectangle",
 					PropertyResolverUtil::getProperty, (a, b) -> "A4");
 			//
 			for (int i = 0; i < cbmPDRectangle.getSize(); i++) {
