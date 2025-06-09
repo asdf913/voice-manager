@@ -441,8 +441,12 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		} // try
 			//
-		Util.forEach(IntStream.range(0, Util.getRowCount(tableModel)), i -> Util.removeRow(tableModel, i));
-		//
+		if (tableModel != null) {
+			//
+			Util.clear(tableModel.getDataVector());
+			//
+		} // if
+			//
 		Entry<Method, Collection<Object>> entry = null;
 		//
 		try {
