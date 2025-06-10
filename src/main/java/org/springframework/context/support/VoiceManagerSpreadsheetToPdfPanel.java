@@ -441,12 +441,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		} // try
 			//
-		if (tableModel != null) {
-			//
-			Util.clear(tableModel.getDataVector());
-			//
-		} // if
-			//
+		Util.clear(getDataVector(tableModel));
+		//
 		Entry<Method, Collection<Object>> entry = null;
 		//
 		try {
@@ -543,6 +539,10 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 		} // if
 			//
+	}
+
+	private static Collection<?> getDataVector(final DefaultTableModel instance) {
+		return instance != null ? instance.getDataVector() : null;
 	}
 
 	@Nullable
