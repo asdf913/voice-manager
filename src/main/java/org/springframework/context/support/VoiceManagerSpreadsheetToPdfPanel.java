@@ -316,7 +316,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 	}
 
-	private static void setPreferredSize(final Component instance, final Dimension preferredSize) {
+	private static void setPreferredSize(@Nullable final Component instance, final Dimension preferredSize) {
 		if (instance != null) {
 			instance.setPreferredSize(preferredSize);
 		}
