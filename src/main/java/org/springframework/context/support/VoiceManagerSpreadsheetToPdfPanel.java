@@ -167,6 +167,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private AbstractButton btnPreview = null;
 
+	private JScrollPane jsp = null;
+
 	private DefaultTableModel tableModel = null;
 
 	@Note("File")
@@ -284,10 +286,9 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			add(new JLabel());
 			//
-			final JScrollPane jsp = new JScrollPane(new JTable(tableModel = new DefaultTableModel(
-					new Object[] { "text", "voice", "contents", "width", "height", "x", "y" }, 0)));
-			//
-			add(jsp, String.format("%1$s,span %2$s", wrap, 2));// TODO
+			add(jsp = new JScrollPane(new JTable(tableModel = new DefaultTableModel(
+					new Object[] { "text", "voice", "contents", "width", "height", "x", "y" }, 0))),
+					String.format("%1$s,span %2$s", wrap, 2));// TODO
 			//
 			jsp.setPreferredSize(new Dimension((int) getWidth(jsp.getPreferredSize()), 39));
 			//
@@ -532,6 +533,13 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				Util.addRow(tableModel, toArray(data));
 				//
 			} // for
+				//
+			if (jsp != null) {
+				//
+				jsp.setPreferredSize(new Dimension((int) getWidth(jsp.getPreferredSize()),
+						IterableUtils.size(dataIterable) * 17 + 22));
+				//
+			} // if
 				//
 		} // if
 			//
