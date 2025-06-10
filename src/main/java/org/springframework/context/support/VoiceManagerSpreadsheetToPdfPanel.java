@@ -290,7 +290,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 					new Object[] { "text", "voice", "contents", "width", "height", "x", "y" }, 0))),
 					String.format("%1$s,span %2$s", wrap, 2));// TODO
 			//
-			jsp.setPreferredSize(new Dimension((int) getWidth(jsp.getPreferredSize()), 39));
+			jsp.setPreferredSize(new Dimension((int) getWidth(Util.getPreferredSize(jsp)), 39));
 			//
 			// Buttons
 			//
@@ -532,7 +532,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 			if (jsp != null) {
 				//
-				jsp.setPreferredSize(new Dimension((int) getWidth(jsp.getPreferredSize()),
+				jsp.setPreferredSize(new Dimension((int) getWidth(Util.getPreferredSize(jsp)),
 						IterableUtils.size(dataIterable) * 17 + 22));
 				//
 			} // if
