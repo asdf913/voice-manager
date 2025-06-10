@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
@@ -17,8 +18,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -72,6 +73,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyUtil;
 
 class VoiceManagerSpreadsheetToPdfPanelTest {
 
@@ -83,7 +86,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL,
 			METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT, METHOD_OR, METHOD_SET_ICON, METHOD_TEST_AND_APPLY,
 			METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY, METHOD_TO_DATA,
-			METHOD_GET_LAYOUT_MANAGER = null;
+			METHOD_GET_LAYOUT_MANAGER, METHOD_SET_PREFERRED_SIZE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -140,6 +143,9 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_GET_LAYOUT_MANAGER = clz.getDeclaredMethod("getLayoutManager", AutowireCapableBeanFactory.class,
 				Iterable.class)).setAccessible(true);
+		//
+		(METHOD_SET_PREFERRED_SIZE = clz.getDeclaredMethod("setPreferredSize", Component.class, Dimension.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -224,6 +230,24 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			} // if
 				//
 			throw new Throwable(name);
+			//
+		}
+
+	}
+
+	private static class MH implements MethodHandler {
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			if (Objects.equals(Void.TYPE, thisMethod != null ? thisMethod.getReturnType() : null)) {
+				//
+				return null;
+				//
+			} // if
+				//
+			throw new Throwable(Util.getName(thisMethod));
 			//
 		}
 
@@ -952,6 +976,21 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				return (LayoutManager) obj;
 			}
 			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetPreferredSize() {
+		//
+		Assertions.assertDoesNotThrow(() -> setPreferredSize(ProxyUtil.createProxy(Component.class, new MH()), null));
+		//
+	}
+
+	private static void setPreferredSize(final Component instance, final Dimension preferredSize) throws Throwable {
+		try {
+			METHOD_SET_PREFERRED_SIZE.invoke(null, instance, preferredSize);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
