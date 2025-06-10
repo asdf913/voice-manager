@@ -543,7 +543,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 	}
 
-	private static Collection<?> getDataVector(final DefaultTableModel instance) {
+	private static Collection<?> getDataVector(@Nullable final DefaultTableModel instance) {
 		return instance != null ? instance.getDataVector() : null;
 	}
 
