@@ -184,7 +184,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private transient ApplicationContext applicationContext = null;
 
-	private SpeechApi speechApi = null;
+	private transient SpeechApi speechApi = null;
 
 	private VoiceManagerSpreadsheetToPdfPanel() {
 	}
