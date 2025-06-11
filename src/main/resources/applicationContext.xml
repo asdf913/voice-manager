@@ -1175,6 +1175,7 @@
 
 	<bean
 		class="org.springframework.context.support.VoiceManagerSpreadsheetToPdfPanel">
+		<property name="speechApi" ref="speechApi" />
 	</bean>
 
 	<!---->

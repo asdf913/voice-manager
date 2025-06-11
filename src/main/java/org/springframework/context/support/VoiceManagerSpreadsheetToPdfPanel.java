@@ -184,6 +184,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private transient ApplicationContext applicationContext = null;
 
+	private SpeechApi speechApi = null;
+
 	private VoiceManagerSpreadsheetToPdfPanel() {
 	}
 
@@ -200,6 +202,10 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 	@Override
 	public void setApplicationContext(final ApplicationContext applicationContext) {
 		this.applicationContext = applicationContext;
+	}
+
+	public void setSpeechApi(final SpeechApi speechApi) {
+		this.speechApi = speechApi;
 	}
 
 	@Override
@@ -865,8 +871,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 		PDAnnotationFileAttachment pdAnnotationFileAttachment = null;
 		//
-		final SpeechApi speechApi = new SpeechApiImpl();
-		//
 		File tempFile = null;
 		//
 		final int defaultPdAnnotationFileAttachmentRectangleSize = 10;
@@ -905,14 +909,17 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 					//
 				} // try
 					//
-				speechApi.writeVoiceToFile(data.text, getVoice(speechApi,
-						objIntFunction = ObjectUtils.getIfNull(objIntFunction, LanguageCodeToTextObjIntFunction::new),
-						data.voice)
-				//
-						, i * -1// TODO
-						//
-						, 100, null, tempFile);
-				//
+				if (speechApi != null) {
+					//
+					speechApi.writeVoiceToFile(data.text, getVoice(speechApi, objIntFunction = ObjectUtils
+							.getIfNull(objIntFunction, LanguageCodeToTextObjIntFunction::new), data.voice)
+					//
+							, i * -1// TODO
+							//
+							, 100, null, tempFile);
+					//
+				} // if
+					//
 				try (final InputStream is = Files.newInputStream(Util.toPath(tempFile))) {
 					//
 					pdComplexFileSpecification.setEmbeddedFile(new PDEmbeddedFile(pdDocument, is));
