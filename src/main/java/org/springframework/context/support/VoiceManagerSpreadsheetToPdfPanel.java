@@ -909,17 +909,14 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 					//
 				} // try
 					//
-				if (speechApi != null) {
-					//
-					speechApi.writeVoiceToFile(data.text, getVoice(speechApi, objIntFunction = ObjectUtils
-							.getIfNull(objIntFunction, LanguageCodeToTextObjIntFunction::new), data.voice)
-					//
-							, i * -1// TODO
-							//
-							, 100, null, tempFile);
-					//
-				} // if
-					//
+				writeVoiceToFile(speechApi, data.text, getVoice(speechApi,
+						objIntFunction = ObjectUtils.getIfNull(objIntFunction, LanguageCodeToTextObjIntFunction::new),
+						data.voice)
+				//
+						, i * -1// TODO
+						//
+						, 100, null, tempFile);
+				//
 				try (final InputStream is = Files.newInputStream(Util.toPath(tempFile))) {
 					//
 					pdComplexFileSpecification.setEmbeddedFile(new PDEmbeddedFile(pdDocument, is));
@@ -960,6 +957,13 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		return pdDocument;
 		//
+	}
+
+	private static void writeVoiceToFile(final SpeechApi instance, final String text, final String voiceId,
+			final int rate, final int volume, final Map<String, Object> map, final File file) {
+		if (instance != null) {
+			instance.writeVoiceToFile(text, voiceId, rate, volume, map, file);
+		}
 	}
 
 	private static boolean or(final boolean a, final boolean b, @Nullable final boolean... bs) {

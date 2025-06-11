@@ -86,7 +86,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL,
 			METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT, METHOD_OR, METHOD_SET_ICON, METHOD_TEST_AND_APPLY,
 			METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY, METHOD_TO_DATA,
-			METHOD_GET_LAYOUT_MANAGER, METHOD_SET_PREFERRED_SIZE = null;
+			METHOD_GET_LAYOUT_MANAGER, METHOD_SET_PREFERRED_SIZE, METHOD_WRITE_VOICE_TO_FILE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -147,6 +147,9 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		(METHOD_SET_PREFERRED_SIZE = clz.getDeclaredMethod("setPreferredSize", Component.class, Dimension.class))
 				.setAccessible(true);
 		//
+		(METHOD_WRITE_VOICE_TO_FILE = clz.getDeclaredMethod("writeVoiceToFile", SpeechApi.class, String.class,
+				String.class, Integer.TYPE, Integer.TYPE, Map.class, File.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -168,6 +171,12 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
+			if (Objects.equals(Util.getReturnType(method), Void.TYPE)) {
+				//
+				return null;
+				//
+			} // if
+				//
 			final String name = Util.getName(method);
 			//
 			if (proxy instanceof Sheet && Objects.equals(name, "getDrawingPatriarch")) {
@@ -991,6 +1000,23 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static void setPreferredSize(final Component instance, final Dimension preferredSize) throws Throwable {
 		try {
 			METHOD_SET_PREFERRED_SIZE.invoke(null, instance, preferredSize);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testWriteVoiceToFile() {
+		//
+		Assertions.assertDoesNotThrow(
+				() -> writeVoiceToFile(Reflection.newProxy(SpeechApi.class, ih), null, null, 0, 0, null, null));
+		//
+	}
+
+	private static void writeVoiceToFile(final SpeechApi instance, final String text, final String voiceId,
+			final int rate, final int volume, final Map<String, Object> map, final File file) throws Throwable {
+		try {
+			METHOD_WRITE_VOICE_TO_FILE.invoke(null, instance, text, voiceId, rate, volume, map, file);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
