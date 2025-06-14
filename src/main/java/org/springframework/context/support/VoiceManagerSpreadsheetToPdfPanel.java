@@ -245,10 +245,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			add(jcbVoiceId, String.format("span %1$s", 2));
 			//
 			testAndAccept(Objects::nonNull,
-					voiceIdListCellRendererConverter != null
-							? voiceIdListCellRendererConverter
-									.convert(Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceId)))
-							: null,
+					convert(voiceIdListCellRendererConverter, Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceId))),
 					x -> {
 						//
 						final Method[] ms = Util.getDeclaredMethods(JComboBox.class);
@@ -373,6 +370,10 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		Util.forEach(Stream.of(btnPreview, btnExecute), x -> Util.addActionListener(x, this));
 
 		//
+	}
+
+	private static <S, T> T convert(final Converter<S, T> instance, final S source) {
+		return instance != null ? instance.convert(source) : null;
 	}
 
 	private static int length(@Nullable final Object[] instnce) {
