@@ -24,6 +24,7 @@ public class VoiceIdListCellRendererConverter implements Converter<ListCellRende
 		return new ListCellRenderer<>() {
 
 			@Override
+			@Nullable
 			public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
 					final int index, final boolean isSelected, final boolean cellHasFocus) {
 				//
