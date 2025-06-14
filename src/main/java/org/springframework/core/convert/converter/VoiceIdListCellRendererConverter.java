@@ -50,10 +50,12 @@ public class VoiceIdListCellRendererConverter implements Converter<ListCellRende
 				//
 			}
 
+			@Nullable
 			private static String toString(@Nullable final Object instance) {
 				return instance != null ? instance.toString() : null;
 			}
 
+			@Nullable
 			private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
 					final JList<? extends E> list, final E value, final int index, final boolean isSelected,
 					final boolean cellHasFocus) {
