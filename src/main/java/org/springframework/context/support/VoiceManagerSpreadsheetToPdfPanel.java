@@ -267,8 +267,10 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			final String[] voiceIds = testAndApply(x -> SpeechApi.isInstalled(x), speechApi,
 					x -> SpeechApi.getVoiceIds(x), null);
 			//
-			final JComboBox<Object> jcbVoiceId = new JComboBox(testAndApply(Objects::nonNull, voiceIds,
-					x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null));
+			final ComboBoxModel<Object> cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
+					x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null);
+			//
+			final JComboBox<Object> jcbVoiceId = new JComboBox<Object>(cbmVoiceId);
 			//
 			add(jcbVoiceId, String.format("span %1$s", 2));
 			//
