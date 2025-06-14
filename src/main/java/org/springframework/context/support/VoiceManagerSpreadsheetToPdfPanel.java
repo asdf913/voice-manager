@@ -255,8 +255,9 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 						for (int i = 0; i < length(ms); i++) {
 							//
 							if ((m = ArrayUtils.get(ms, i)) == null
-									|| !(Objects.equals(Util.getName(m), "setRenderer") && Arrays.equals(
-											Util.getParameterTypes(m), new Class<?>[] { ListCellRenderer.class }))) {
+									|| !(Boolean.logicalAnd(Objects.equals(Util.getName(m), "setRenderer"),
+											Arrays.equals(Util.getParameterTypes(m),
+													new Class<?>[] { ListCellRenderer.class })))) {
 								//
 								continue;
 								//
