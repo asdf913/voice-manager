@@ -1176,6 +1176,14 @@
 	<bean
 		class="org.springframework.context.support.VoiceManagerSpreadsheetToPdfPanel">
 		<property name="speechApi" ref="speechApi" />
+		<property name="voiceIdListCellRendererConverter"
+			ref="VoiceIdListCellRendererConverter" />
+	</bean>
+
+	<!---->
+	<bean id="VoiceIdListCellRendererConverter"
+		class="org.springframework.core.convert.converter.VoiceIdListCellRendererConverter">
+		<property name="speechApi" ref="speechApi" />
 	</bean>
 
 	<!---->

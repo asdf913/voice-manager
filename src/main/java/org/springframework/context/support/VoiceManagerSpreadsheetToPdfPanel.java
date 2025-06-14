@@ -141,6 +141,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationContextUtil;
 import org.springframework.context.EnvironmentAware;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.convert.converter.VoiceIdListCellRendererConverter;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
@@ -187,6 +189,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private transient SpeechApi speechApi = null;
 
+	private Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter = null;
+
 	private VoiceManagerSpreadsheetToPdfPanel() {
 	}
 
@@ -209,41 +213,9 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		this.speechApi = speechApi;
 	}
 
-	private class VoiceIdListCellRenderer implements ListCellRenderer<Object> {
-
-		private ListCellRenderer<Object> listCellRenderer = null;
-
-		private String commonPrefix = null;
-
-		@Override
-		public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
-				final int index, final boolean isSelected, final boolean cellHasFocus) {
-			//
-			final String s = Util.toString(value);
-			//
-			try {
-				//
-				final String name = SpeechApi.getVoiceAttribute(speechApi, s, "Name");
-				//
-				if (StringUtils.isNotBlank(name)) {
-					//
-					return Util.getListCellRendererComponent(listCellRenderer, list, name, index, isSelected,
-							cellHasFocus);
-					//
-				} // if
-					//
-			} catch (final Error e) {
-				//
-				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-				//
-			} // try
-				//
-			return Util.getListCellRendererComponent(listCellRenderer, list,
-					StringUtils.startsWith(s, commonPrefix) ? StringUtils.substringAfter(s, commonPrefix) : value,
-					index, isSelected, cellHasFocus);
-			//
-		}
-
+	public void setVoiceIdListCellRendererConverter(
+			final Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter) {
+		this.voiceIdListCellRendererConverter = voiceIdListCellRendererConverter;
 	}
 
 	@Override
@@ -274,14 +246,12 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			add(jcbVoiceId, String.format("span %1$s", 2));
 			//
-			final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer();
-			//
-			voiceIdListCellRenderer.listCellRenderer = Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceId));
-			//
-			voiceIdListCellRenderer.commonPrefix = String.join("",
-					StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
-			//
-			jcbVoiceId.setRenderer(voiceIdListCellRenderer);
+			testAndAccept(Objects::nonNull,
+					voiceIdListCellRendererConverter != null
+							? voiceIdListCellRendererConverter
+									.convert(Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceId)))
+							: null,
+					x -> jcbVoiceId.setRenderer(x));
 			//
 			final String wrap = "wrap";
 			//
