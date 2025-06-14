@@ -249,7 +249,27 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 							? voiceIdListCellRendererConverter
 									.convert(Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceId)))
 							: null,
-					x -> jcbVoiceId.setRenderer(x));
+					x -> {
+						//
+						final Method[] ms = Util.getDeclaredMethods(JComboBox.class);
+						//
+						Method m = null;
+						//
+						for (int i = 0; ms != null && i < ms.length; i++) {
+							//
+							if ((m = ArrayUtils.get(ms, i)) == null
+									|| !(Objects.equals(Util.getName(m), "setRenderer") && Arrays.equals(
+											Util.getParameterTypes(m), new Class<?>[] { ListCellRenderer.class }))) {
+								//
+								continue;
+								//
+							} // if
+								//
+							Narcissus.invokeMethod(jcbVoiceId, m, x);
+							//
+						} // for
+							//
+					});
 			//
 			final String wrap = "wrap";
 			//
