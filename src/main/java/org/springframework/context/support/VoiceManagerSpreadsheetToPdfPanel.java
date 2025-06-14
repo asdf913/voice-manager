@@ -187,7 +187,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private transient SpeechApi speechApi = null;
 
-	private Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter = null;
+	private transient Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter = null;
 
 	private VoiceManagerSpreadsheetToPdfPanel() {
 	}

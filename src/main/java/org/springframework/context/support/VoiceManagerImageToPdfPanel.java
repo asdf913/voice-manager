@@ -221,7 +221,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 	private transient ComboBoxModel<Entry<String, Object>> cbmPDRectangle = null;
 
-	private Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter = null;
+	private transient Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter = null;
 
 	private static boolean isTestMode() {
 		return Util.forName("org.junit.jupiter.api.Test") != null;
