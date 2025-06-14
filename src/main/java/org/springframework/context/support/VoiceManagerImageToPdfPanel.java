@@ -145,6 +145,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationContextUtil;
 import org.springframework.context.EnvironmentAware;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
@@ -220,52 +221,10 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 
 	private transient ComboBoxModel<Entry<String, Object>> cbmPDRectangle = null;
 
+	private Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter = null;
+
 	private static boolean isTestMode() {
 		return Util.forName("org.junit.jupiter.api.Test") != null;
-	}
-
-	private static class VoiceIdListCellRenderer implements ListCellRenderer<Object> {
-
-		private SpeechApi speechApi = null;
-
-		private ListCellRenderer<Object> listCellRenderer = null;
-
-		private String commonPrefix = null;
-
-		private VoiceIdListCellRenderer(final SpeechApi speechApi) {
-			this.speechApi = speechApi;
-		}
-
-		@Override
-		@Nullable
-		public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
-				final int index, final boolean isSelected, final boolean cellHasFocus) {
-			//
-			final String s = Util.toString(value);
-			//
-			try {
-				//
-				final String name = SpeechApi.getVoiceAttribute(speechApi, s, "Name");
-				//
-				if (StringUtils.isNotBlank(name)) {
-					//
-					return Util.getListCellRendererComponent(listCellRenderer, list, name, index, isSelected,
-							cellHasFocus);
-					//
-				} // if
-					//
-			} catch (final Error e) {
-				//
-				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-				//
-			} // try
-				//
-			return Util.getListCellRendererComponent(listCellRenderer, list,
-					StringUtils.startsWith(s, commonPrefix) ? StringUtils.substringAfter(s, commonPrefix) : value,
-					index, isSelected, cellHasFocus);
-			//
-		}
-
 	}
 
 	@Override
@@ -286,6 +245,11 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 	public void setLanguageCodeToTextObjIntFunction(
 			final ObjIntFunction<String, String> languageCodeToTextObjIntFunction) {
 		this.languageCodeToTextObjIntFunction = languageCodeToTextObjIntFunction;
+	}
+
+	public void setVoiceIdListCellRendererConverter(
+			final Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter) {
+		this.voiceIdListCellRendererConverter = voiceIdListCellRendererConverter;
 	}
 
 	@Override
@@ -389,15 +353,11 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 		if ((cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
 				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
 			//
-			final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer(speechApi);
-			//
-			voiceIdListCellRenderer.listCellRenderer = Util.getRenderer(Util.cast(JComboBox.class,
-					jcbVoiceId = new JComboBox<>(Util.cast(ComboBoxModel.class, cbmVoiceId))));
-			//
-			voiceIdListCellRenderer.commonPrefix = String.join("",
-					StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
-			//
-			jcbVoiceId.setRenderer(voiceIdListCellRenderer);
+			testAndAccept(Objects::nonNull,
+					convert(voiceIdListCellRendererConverter,
+							Util.getRenderer(Util.cast(JComboBox.class,
+									jcbVoiceId = new JComboBox<>(Util.cast(ComboBoxModel.class, cbmVoiceId))))),
+					x -> jcbVoiceId.setRenderer(x));
 			//
 			jcbVoiceId.addItemListener(this);
 			//
@@ -487,6 +447,10 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				Stream.of(tfSpeechLanguageCode, tfSpeechLanguageName, tfImageFile, tfImageUrlStateCode, tfOutputFile),
 				x -> Util.setEditable(x, false));
 		//
+	}
+
+	private static <S, T> T convert(final Converter<S, T> instance, final S source) {
+		return instance != null ? instance.convert(source) : null;
 	}
 
 	private static void setSelectedIndex(@Nullable final JComboBox<?> instance, @Nullable final Number index) {
