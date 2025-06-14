@@ -14,6 +14,10 @@ public class VoiceIdListCellRendererConverter implements Converter<ListCellRende
 
 	private SpeechApi speechApi = null;
 
+	public void setSpeechApi(final SpeechApi speechApi) {
+		this.speechApi = speechApi;
+	}
+
 	@Override
 	public ListCellRenderer<Object> convert(final ListCellRenderer<Object> lcr) {
 		//

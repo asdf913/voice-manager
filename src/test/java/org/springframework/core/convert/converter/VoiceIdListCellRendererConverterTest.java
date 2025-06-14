@@ -54,7 +54,7 @@ class VoiceIdListCellRendererConverterTest {
 	}
 
 	@Test
-	void testConvert() throws ReflectiveOperationException {
+	void testConvert() throws NoSuchMethodException {
 		//
 		final VoiceIdListCellRendererConverter instance = new VoiceIdListCellRendererConverter();
 		//
@@ -77,7 +77,7 @@ class VoiceIdListCellRendererConverterTest {
 			//
 			ih.voiceIds = new String[] { ih.voiceAttribute = "voiceAttribute" };
 			//
-			FieldUtils.writeDeclaredField(instance, "speechApi", Reflection.newProxy(SpeechApi.class, ih), true);
+			instance.setSpeechApi(Reflection.newProxy(SpeechApi.class, ih));
 			//
 			Assertions.assertNull(Narcissus.invokeMethod(lcr, method, null, "", 0, false, false));
 			//
