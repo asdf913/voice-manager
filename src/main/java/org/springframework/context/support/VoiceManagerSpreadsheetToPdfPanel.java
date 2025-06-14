@@ -255,7 +255,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 						//
 						Method m = null;
 						//
-						for (int i = 0; ms != null && i < ms.length; i++) {
+						for (int i = 0; i < length(ms); i++) {
 							//
 							if ((m = ArrayUtils.get(ms, i)) == null
 									|| !(Objects.equals(Util.getName(m), "setRenderer") && Arrays.equals(
@@ -373,6 +373,10 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		Util.forEach(Stream.of(btnPreview, btnExecute), x -> Util.addActionListener(x, this));
 
 		//
+	}
+
+	private static int length(final Object[] instnce) {
+		return instnce != null ? instnce.length : 0;
 	}
 
 	private static void setPreferredSize(@Nullable final Component instance, final Dimension preferredSize) {
@@ -716,9 +720,10 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			Type[] argumentTypes = null;
 			//
-			for (int i = 0; ins != null && i < ins.length; i++) {
+			for (int i = 0; i < length(ins); i++) {
 				//
-				if (ins[i] instanceof GETSTATIC gs && i < ins.length - 1 && ins[i + 1] instanceof IF_ACMPNE) {
+				if (ArrayUtils.get(ins, i) instanceof GETSTATIC gs && i < length(ins) - 1
+						&& ArrayUtils.get(ins, i + 1) instanceof IF_ACMPNE) {
 					//
 					if (IterableUtils.size(fs = Util.toList(Util.filter(testAndApply(Objects::nonNull,
 							Util.getDeclaredFields(Util.forName(TypeUtil.getClassName(
@@ -737,8 +742,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 					} // if
 						//
 				} else if (ins[i] instanceof INVOKESTATIC invokeStatic
-						&& (argumentTypes = invokeStatic.getArgumentTypes(cpg)) != null && argumentTypes.length == 1
-						&& Objects.equals(TypeUtil.getClassName(argumentTypes[0]), "java.io.File")) {
+						&& (argumentTypes = invokeStatic.getArgumentTypes(cpg)) != null && length(argumentTypes) == 1
+						&& Objects.equals(TypeUtil.getClassName(ArrayUtils.get(argumentTypes, 0)), "java.io.File")) {
 					//
 					testAndRunThrows(method != null, () -> {
 						//
@@ -1387,7 +1392,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 		final String[] voiceIds = SpeechApi.getVoiceIds(speechApi);
 		//
-		final int length = voiceIds != null ? voiceIds.length : 0;
+		final int length = length(voiceIds);
 		//
 		for (int j = 0; j < length; j++) {
 			//
