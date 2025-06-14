@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -31,6 +32,7 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.ListCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.commons.collections4.IterableUtils;
@@ -236,6 +238,14 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				//
 				return value;
 				//
+			} else if (proxy instanceof ListCellRenderer) {
+				//
+				if (Objects.equals(name, "getListCellRendererComponent")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(name);
@@ -272,12 +282,16 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private ObjectMapper objectMapper = null;
 
+	private SpeechApi speechApi = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		row = Reflection.newProxy(Row.class, ih = new IH());
 		//
 		cell = Reflection.newProxy(Cell.class, ih);
+		//
+		speechApi = Reflection.newProxy(SpeechApi.class, ih);
 		//
 		instance = Util.cast(VoiceManagerSpreadsheetToPdfPanel.class,
 				Narcissus.allocateInstance(VoiceManagerSpreadsheetToPdfPanel.class));
@@ -493,8 +507,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	@Test
 	void testGetVoice() throws Throwable {
-		//
-		final SpeechApi speechApi = Reflection.newProxy(SpeechApi.class, ih);
 		//
 		if (ih != null) {
 			//
@@ -1020,6 +1032,54 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testVoiceIdListCellRenderer() throws ReflectiveOperationException {
+		//
+		final Class<?> clz = Util.forName(
+				"org.springframework.context.support.VoiceManagerSpreadsheetToPdfPanel$VoiceIdListCellRenderer");
+		//
+		final Constructor<?> constructor = clz != null
+				? clz.getDeclaredConstructor(VoiceManagerSpreadsheetToPdfPanel.class)
+				: null;
+		//
+		if (constructor != null) {
+			//
+			constructor.setAccessible(true);
+			//
+		} // if
+			//
+		final ListCellRenderer<?> lcr = Util.cast(ListCellRenderer.class,
+				constructor != null ? constructor.newInstance(instance) : null);
+		//
+		if (lcr != null) {
+			//
+			Assertions.assertNull(lcr.getListCellRendererComponent(null, null, 0, false, false));
+			//
+			FieldUtils.writeDeclaredField(instance, "speechApi", speechApi, true);
+			//
+			Assertions.assertNull(lcr.getListCellRendererComponent(null, null, 0, false, false));
+			//
+			FieldUtils.writeDeclaredField(instance, "speechApi", null, true);
+			//
+			FieldUtils.writeDeclaredField(lcr, "listCellRenderer", Reflection.newProxy(ListCellRenderer.class, ih),
+					true);
+			//
+			Assertions.assertNull(lcr.getListCellRendererComponent(null, null, 0, false, false));
+			//
+			final SpeechApiImpl speechApiImpl = new SpeechApiImpl();
+			//
+			FieldUtils.writeDeclaredField(instance, "speechApi", speechApiImpl, true);
+			//
+			Assertions.assertNull(lcr.getListCellRendererComponent(null, null, 0, false, false));
+			//
+			FieldUtils.writeDeclaredField(speechApiImpl, "instance", new SpeechApiSystemSpeechImpl(), true);
+			//
+			Assertions.assertNull(lcr.getListCellRendererComponent(null, null, 0, false, false));
+			//
+		} // if
+			//
 	}
 
 }

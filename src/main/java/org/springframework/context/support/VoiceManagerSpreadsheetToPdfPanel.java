@@ -131,6 +131,7 @@ import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
 import org.meeuw.functional.ThrowingRunnable;
 import org.meeuw.functional.ThrowingRunnableUtil;
+import org.oxbow.swingbits.dialog.task.TaskDialogsUtil;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.FactoryBeanUtil;
 import org.springframework.beans.factory.InitializingBean;
@@ -208,6 +209,43 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		this.speechApi = speechApi;
 	}
 
+	private class VoiceIdListCellRenderer implements ListCellRenderer<Object> {
+
+		private ListCellRenderer<Object> listCellRenderer = null;
+
+		private String commonPrefix = null;
+
+		@Override
+		public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
+				final int index, final boolean isSelected, final boolean cellHasFocus) {
+			//
+			final String s = Util.toString(value);
+			//
+			try {
+				//
+				final String name = SpeechApi.getVoiceAttribute(speechApi, s, "Name");
+				//
+				if (StringUtils.isNotBlank(name)) {
+					//
+					return Util.getListCellRendererComponent(listCellRenderer, list, name, index, isSelected,
+							cellHasFocus);
+					//
+				} // if
+					//
+			} catch (final Error e) {
+				//
+				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
+				//
+			} // try
+				//
+			return Util.getListCellRendererComponent(listCellRenderer, list,
+					StringUtils.startsWith(s, commonPrefix) ? StringUtils.substringAfter(s, commonPrefix) : value,
+					index, isSelected, cellHasFocus);
+			//
+		}
+
+	}
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		//
@@ -219,6 +257,36 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 						MigLayout::new));
 		//
 		if (isGui()) {
+			//
+			// Voice Id
+			//
+			add(new JLabel("Voice Id"));
+			//
+			// TODO
+			//
+			final String[] voiceIds = testAndApply(x -> SpeechApi.isInstalled(x), speechApi,
+					x -> SpeechApi.getVoiceIds(x), null);
+			//
+			final JComboBox<Object> jcbVoiceId = new JComboBox(testAndApply(Objects::nonNull, voiceIds,
+					x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null));
+			//
+			add(jcbVoiceId, String.format("span %1$s", 2));
+			//
+			final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer();
+			//
+			voiceIdListCellRenderer.listCellRenderer = Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceId));
+			//
+			voiceIdListCellRenderer.commonPrefix = String.join("",
+					StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
+			//
+			jcbVoiceId.setRenderer(voiceIdListCellRenderer);
+			//
+			final String wrap = "wrap";
+			//
+			add(lblThumbnail = new JLabel(),
+					String.format("%1$s,span 1 %2$s,wmin %3$s,hmin %4$s", wrap, 6, 102, 159 + 29));
+			//
+			lblThumbnail.addMouseListener(this);
 			//
 			add(new JLabel("Size"));
 			//
@@ -240,7 +308,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 			});
 			//
-			add(jcbPDRectangle, String.format("span %1$s", 2));
+			add(jcbPDRectangle, String.format("span %1$s,%2$s", 2, wrap));
 			//
 			final MutableComboBoxModel mcbm = Util.cast(MutableComboBoxModel.class, cbmPDRectangle);
 			//
@@ -275,12 +343,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			} // for
 				//
 			setSelectedIndex(jcbPDRectangle, index);
-			//
-			final String wrap = "wrap";
-			//
-			add(lblThumbnail = new JLabel(), String.format("%1$s,span 1 %2$s,wmin %3$s,hmin %4$s", wrap, 5, 102, 159));
-			//
-			lblThumbnail.addMouseListener(this);
 			//
 			// File
 			//
@@ -319,6 +381,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		Util.forEach(Stream.of(tfFile, tfException), x -> Util.setEditable(x, false));
 		//
 		Util.forEach(Stream.of(btnPreview, btnExecute), x -> Util.addActionListener(x, this));
+
 		//
 	}
 
