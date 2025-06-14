@@ -375,7 +375,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 	}
 
-	private static int length(final Object[] instnce) {
+	private static int length(@Nullable final Object[] instnce) {
 		return instnce != null ? instnce.length : 0;
 	}
 
