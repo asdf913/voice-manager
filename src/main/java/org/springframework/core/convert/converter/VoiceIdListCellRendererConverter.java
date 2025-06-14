@@ -2,6 +2,7 @@ package org.springframework.core.convert.converter;
 
 import java.awt.Component;
 
+import javax.annotation.Nullable;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
@@ -49,11 +50,11 @@ public class VoiceIdListCellRendererConverter implements Converter<ListCellRende
 				//
 			}
 
-			private static String toString(final Object instance) {
+			private static String toString(@Nullable final Object instance) {
 				return instance != null ? instance.toString() : null;
 			}
 
-			private static <E> Component getListCellRendererComponent(final ListCellRenderer<E> instance,
+			private static <E> Component getListCellRendererComponent(@Nullable final ListCellRenderer<E> instance,
 					final JList<? extends E> list, final E value, final int index, final boolean isSelected,
 					final boolean cellHasFocus) {
 				//
