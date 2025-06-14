@@ -238,14 +238,10 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				//
 				return value;
 				//
-			} else if (proxy instanceof ListCellRenderer) {
+			} else if (proxy instanceof ListCellRenderer && Objects.equals(name, "getListCellRendererComponent")) {
 				//
-				if (Objects.equals(name, "getListCellRendererComponent")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
