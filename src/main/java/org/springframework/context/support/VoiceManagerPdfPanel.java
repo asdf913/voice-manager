@@ -1264,9 +1264,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						Util.getRenderer(Util.cast(JComboBox.class, instance.jcbVoiceId = new JComboBox<>(
 								Util.cast(ComboBoxModel.class, instance.cbmVoiceId)))));
 				//
-				testAndAccept((a, b) -> b != null, instance.jcbVoiceId, lcr, (a, b) -> {
-					setRenderer(a, b);
-				});
+				testAndAccept((a, b) -> b != null, instance.jcbVoiceId, lcr, VoiceManagerPdfPanel::setRenderer);
 				//
 				instance.jcbVoiceId.addItemListener(instance);
 				//
