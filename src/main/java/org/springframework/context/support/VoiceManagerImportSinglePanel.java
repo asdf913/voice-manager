@@ -4509,7 +4509,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 	}
 
-	private static <E> void setRenderer(@Nullable final JComboBox<?> instance, final ListCellRenderer<?> aRenderer) {
+	private static void setRenderer(@Nullable final JComboBox<?> instance, final ListCellRenderer<?> aRenderer) {
 		//
 		if (instance == null) {
 			//
