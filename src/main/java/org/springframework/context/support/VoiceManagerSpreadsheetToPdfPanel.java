@@ -381,6 +381,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		} // if
 	}
 
+	@Nullable
 	private static <S, T> T convert(@Nullable final Converter<S, T> instance, final S source) {
 		return instance != null ? instance.convert(source) : null;
 	}
