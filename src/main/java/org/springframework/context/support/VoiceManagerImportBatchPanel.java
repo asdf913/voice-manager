@@ -196,6 +196,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationContextUtil;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.support.VoiceManager.ByteConverter;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.convert.converter.ConverterUtil;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
@@ -400,6 +402,8 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 	@Nullable
 	private String[] mp3Tags = null;
 
+	private Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter = null;
+
 	@Override
 	public void setEnvironment(final Environment environment) {
 		this.propertyResolver = environment;
@@ -447,6 +451,11 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 
 	public void setSpeechApi(final SpeechApi speechApi) {
 		this.speechApi = speechApi;
+	}
+
+	public void setVoiceIdListCellRendererConverter(
+			final Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter) {
+		this.voiceIdListCellRendererConverter = voiceIdListCellRendererConverter;
 	}
 
 	@Nullable
@@ -555,17 +564,10 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				voiceIds = testAndApply(x -> SpeechApi.isInstalled(x), speechApi, x -> SpeechApi.getVoiceIds(x), null),
 				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
 			//
-			final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer();
+			(jcbVoiceId = new JComboBox(cbmVoiceId)).addItemListener(this);
 			//
-			voiceIdListCellRenderer.listCellRenderer = Util
-					.getRenderer(Util.cast(JComboBox.class, jcbVoiceId = new JComboBox(cbmVoiceId)));
-			//
-			jcbVoiceId.addItemListener(this);
-			//
-			voiceIdListCellRenderer.commonPrefix = String.join("",
-					StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
-			//
-			jcbVoiceId.setRenderer(voiceIdListCellRenderer);
+			testAndAccept((a, b) -> b != null, jcbVoiceId, ConverterUtil.convert(voiceIdListCellRendererConverter,
+					Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceId))), (a, b) -> setRenderer(a, b));
 			//
 			final JPanel jPanel = new JPanel();
 			//
@@ -2750,44 +2752,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		//
 	}
 
-	private class VoiceIdListCellRenderer implements ListCellRenderer<Object> {
-
-		private ListCellRenderer<Object> listCellRenderer = null;
-
-		private String commonPrefix = null;
-
-		@Override
-		@Nullable
-		public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
-				final int index, final boolean isSelected, final boolean cellHasFocus) {
-			//
-			final String s = Util.toString(value);
-			//
-			try {
-				//
-				final String name = SpeechApi.getVoiceAttribute(speechApi, s, "Name");
-				//
-				if (StringUtils.isNotBlank(name)) {
-					//
-					return Util.getListCellRendererComponent(listCellRenderer, list, name, index, isSelected,
-							cellHasFocus);
-					//
-				} // if
-					//
-			} catch (final Error e) {
-				//
-				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-				//
-			} // try
-				//
-			return Util.getListCellRendererComponent(listCellRenderer, list,
-					StringUtils.startsWith(s, commonPrefix) ? StringUtils.substringAfter(s, commonPrefix) : value,
-					index, isSelected, cellHasFocus);
-			//
-		}
-
-	}
-
 	private String getVoiceIdForExecute(final boolean nonTest) {
 		//
 		String voiceId = Util.toString(Util.getSelectedItem(cbmVoiceId));
@@ -2801,17 +2765,12 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			if (cbmVoiceIdLocal != null) {
 				//
-				final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer();
+				(jcbVoiceIdLocal = new JComboBox<>(cbmVoiceIdLocal)).addItemListener(this);
 				//
-				voiceIdListCellRenderer.listCellRenderer = Util
-						.getRenderer(Util.cast(JComboBox.class, jcbVoiceIdLocal = new JComboBox<>(cbmVoiceIdLocal)));
-				//
-				jcbVoiceIdLocal.addItemListener(this);
-				//
-				voiceIdListCellRenderer.commonPrefix = String.join("",
-						StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
-				//
-				setRenderer(jcbVoiceIdLocal, voiceIdListCellRenderer);
+				testAndAccept((a, b) -> b != null, jcbVoiceIdLocal,
+						ConverterUtil.convert(voiceIdListCellRendererConverter,
+								Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceIdLocal))),
+						(a, b) -> setRenderer(a, b));
 				//
 			} // if
 				//

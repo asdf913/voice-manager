@@ -1071,6 +1071,8 @@
 		<property name="mp3Tags"
 			value="${org.springframework.context.support.VoiceManager.mp3Tags}" />
 		<property name="speechApi" ref="speechApi" />
+		<property name="voiceIdListCellRendererConverter"
+			ref="VoiceIdListCellRendererConverter" />
 	</bean>
 	
 	<!---->
