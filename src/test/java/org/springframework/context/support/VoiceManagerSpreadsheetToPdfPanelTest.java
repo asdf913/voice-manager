@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -86,9 +87,9 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE,
 			METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL,
-			METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT, METHOD_OR, METHOD_SET_ICON, METHOD_TEST_AND_APPLY,
-			METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY, METHOD_TO_DATA,
-			METHOD_GET_LAYOUT_MANAGER, METHOD_SET_PREFERRED_SIZE, METHOD_WRITE_VOICE_TO_FILE = null;
+			METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_OR, METHOD_SET_ICON,
+			METHOD_TEST_AND_APPLY, METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY,
+			METHOD_TO_DATA, METHOD_GET_LAYOUT_MANAGER, METHOD_SET_PREFERRED_SIZE, METHOD_WRITE_VOICE_TO_FILE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -118,8 +119,11 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		(METHOD_SET_SELECTED_INDEX = clz.getDeclaredMethod("setSelectedIndex", JComboBox.class, Number.class))
 				.setAccessible(true);
 		//
-		(METHOD_TEST_AND_ACCEPT = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class, Consumer.class))
-				.setAccessible(true);
+		(METHOD_TEST_AND_ACCEPT3 = clz.getDeclaredMethod("testAndAccept", Predicate.class, Object.class,
+				Consumer.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_ACCEPT4 = clz.getDeclaredMethod("testAndAccept", BiPredicate.class, Object.class, Object.class,
+				BiConsumer.class)).setAccessible(true);
 		//
 		(METHOD_OR = clz.getDeclaredMethod("or", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
@@ -751,12 +755,23 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.alwaysTrue(), null, null));
 		//
+		Assertions.assertDoesNotThrow(() -> testAndAccept(Predicates.biAlwaysTrue(), null, null, null));
+		//
 	}
 
 	private static <T> void testAndAccept(final Predicate<T> predicate, final T value, final Consumer<T> consumer)
 			throws Throwable {
 		try {
-			METHOD_TEST_AND_ACCEPT.invoke(null, predicate, value, consumer);
+			METHOD_TEST_AND_ACCEPT3.invoke(null, predicate, value, consumer);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiConsumer<T, U> consumer) throws Throwable {
+		try {
+			METHOD_TEST_AND_ACCEPT4.invoke(null, predicate, t, u, consumer);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

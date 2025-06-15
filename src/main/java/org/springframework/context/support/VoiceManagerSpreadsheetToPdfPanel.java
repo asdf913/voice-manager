@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -244,30 +245,9 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			add(jcbVoiceId, String.format("span %1$s", 2));
 			//
-			testAndAccept(Objects::nonNull,
+			testAndAccept((a, b) -> a != null && b != null, jcbVoiceId,
 					convert(voiceIdListCellRendererConverter, Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceId))),
-					x -> {
-						//
-						final Method[] ms = Util.getDeclaredMethods(JComboBox.class);
-						//
-						Method m = null;
-						//
-						for (int i = 0; i < length(ms); i++) {
-							//
-							if ((m = ArrayUtils.get(ms, i)) == null
-									|| !(Boolean.logicalAnd(Objects.equals(Util.getName(m), "setRenderer"),
-											Arrays.equals(Util.getParameterTypes(m),
-													new Class<?>[] { ListCellRenderer.class })))) {
-								//
-								continue;
-								//
-							} // if
-								//
-							Narcissus.invokeMethod(jcbVoiceId, m, x);
-							//
-						} // for
-							//
-					});
+					(a, b) -> setRenderer(a, b));
 			//
 			final String wrap = "wrap";
 			//
@@ -371,6 +351,34 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		Util.forEach(Stream.of(btnPreview, btnExecute), x -> Util.addActionListener(x, this));
 
 		//
+	}
+
+	private static void setRenderer(final JComboBox<?> jcb, final ListCellRenderer<?> lcr) {
+		//
+		final Method[] ms = Util.getDeclaredMethods(JComboBox.class);
+		//
+		Method m = null;
+		//
+		for (int i = 0; i < length(ms); i++) {
+			//
+			if (!(Boolean.logicalAnd(Objects.equals(Util.getName(m = ArrayUtils.get(ms, i)), "setRenderer"),
+					Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { ListCellRenderer.class })))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			testAndAccept((a, b) -> a != null && b != null, jcb, m, (a, b) -> Narcissus.invokeMethod(a, b, lcr));
+			//
+		} // for
+			//
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> predicate, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (Util.test(predicate, t, u)) {
+			Util.accept(consumer, t, u);
+		} // if
 	}
 
 	private static <S, T> T convert(final Converter<S, T> instance, final S source) {
