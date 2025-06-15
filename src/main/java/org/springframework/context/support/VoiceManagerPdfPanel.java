@@ -226,6 +226,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.ConfigurableApplicationContextUtil;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.support.VoiceManager.ByteConverter;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.convert.converter.ConverterUtil;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
@@ -451,6 +453,8 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 	private transient FailableFunction<String, String, IOException> furiganaFailableFunction = null;
 
 	private transient ComboBoxModel<FontName> cbmFontName = null;
+
+	private Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter = null;
 
 	@Override
 	public String getTitle() {
@@ -913,6 +917,11 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		this.languageCodeToTextObjIntFunction = languageCodeToTextObjIntFunction;
 	}
 
+	public void setVoiceIdListCellRendererConverter(
+			final Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter) {
+		this.voiceIdListCellRendererConverter = voiceIdListCellRendererConverter;
+	}
+
 	@Nullable
 	private static BrowserType chromium(@Nullable final Playwright instance) {
 		return instance != null ? instance.chromium() : null;
@@ -928,50 +937,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		return playwrightBrowserTypeFunction;
 		//
-	}
-
-	private static class VoiceIdListCellRenderer implements ListCellRenderer<Object> {
-
-		private SpeechApi speechApi = null;
-
-		private ListCellRenderer<Object> listCellRenderer = null;
-
-		private String commonPrefix = null;
-
-		private VoiceIdListCellRenderer(final SpeechApi speechApi) {
-			this.speechApi = speechApi;
-		}
-
-		@Override
-		@Nullable
-		public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
-				final int index, final boolean isSelected, final boolean cellHasFocus) {
-			//
-			final String s = Util.toString(value);
-			//
-			try {
-				//
-				final String name = SpeechApi.getVoiceAttribute(speechApi, s, "Name");
-				//
-				if (StringUtils.isNotBlank(name)) {
-					//
-					return Util.getListCellRendererComponent(listCellRenderer, list, name, index, isSelected,
-							cellHasFocus);
-					//
-				} // if
-					//
-			} catch (final Error e) {
-				//
-				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-				//
-			} // try
-				//
-			return Util.getListCellRendererComponent(listCellRenderer, list,
-					StringUtils.startsWith(s, commonPrefix) ? StringUtils.substringAfter(s, commonPrefix) : value,
-					index, isSelected, cellHasFocus);
-			//
-		}
-
 	}
 
 	/**
@@ -1296,15 +1261,13 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			if ((instance.cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
 					x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
 				//
-				final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer(speechApi);
+				final ListCellRenderer<?> lcr = ConverterUtil.convert(instance.voiceIdListCellRendererConverter,
+						Util.getRenderer(Util.cast(JComboBox.class, instance.jcbVoiceId = new JComboBox<>(
+								Util.cast(ComboBoxModel.class, instance.cbmVoiceId)))));
 				//
-				voiceIdListCellRenderer.listCellRenderer = Util.getRenderer(Util.cast(JComboBox.class,
-						instance.jcbVoiceId = new JComboBox<>(Util.cast(ComboBoxModel.class, instance.cbmVoiceId))));
-				//
-				voiceIdListCellRenderer.commonPrefix = String.join("",
-						StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
-				//
-				instance.jcbVoiceId.setRenderer(voiceIdListCellRenderer);
+				testAndAccept((a, b) -> b != null, instance.jcbVoiceId, lcr, (a, b) -> {
+					setRenderer(a, b);
+				});
 				//
 				instance.jcbVoiceId.addItemListener(instance);
 				//
@@ -1382,6 +1345,27 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 		return panel;
 		//
+	}
+
+	private static void setRenderer(final JComboBox<?> jcb, final ListCellRenderer<?> lcr) {
+		//
+		final Method[] ms = Util.getDeclaredMethods(JComboBox.class);
+		//
+		Method m = null;
+		//
+		for (int i = 0; i < length(ms); i++) {
+			//
+			if (!(Boolean.logicalAnd(Objects.equals(Util.getName(m = ArrayUtils.get(ms, i)), "setRenderer"),
+					Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { ListCellRenderer.class })))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			testAndAccept((a, b) -> a != null && b != null, jcb, m, (a, b) -> Narcissus.invokeMethod(a, b, lcr));
+			//
+		} // for
+			//
 	}
 
 	private static JPanel createImagePanel(@Nullable final VoiceManagerPdfPanel instance,
