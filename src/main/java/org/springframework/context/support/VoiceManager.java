@@ -622,6 +622,8 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 
 		private String[] importTabNames = null;
 
+		private Integer height = null;
+
 		@Override
 		public void stateChanged(final ChangeEvent evt) {
 			//
@@ -629,11 +631,41 @@ public class VoiceManager extends JFrame implements ActionListener, EnvironmentA
 			//
 			if (jtp != null) {
 				//
-				setVisible(component, ArrayUtils.contains(importTabNames, jtp.getTitleAt(jtp.getSelectedIndex())));
+				final int selectedIndex = jtp.getSelectedIndex();
 				//
+				final boolean visible = jtp.getTabCount() > selectedIndex && selectedIndex >= 0
+						&& ArrayUtils.contains(importTabNames, jtp.getTitleAt(selectedIndex));
+				//
+				setVisible(component, visible);
+				//
+				final Dimension size = jtp.getSize();
+				//
+				if (size != null && size.getHeight() > 0) {
+					//
+					if (height == null) {
+						//
+						height = Integer.valueOf((int) size.getHeight());
+						//
+					} // if
+						//
+					final int width = jtp.getWidth();
+					//
+					if (visible) {
+						//
+						jtp.setMaximumSize(new Dimension(width, 450));
+						//
+					} else if (height != null) {
+						//
+						jtp.setMaximumSize(new Dimension(width, height.intValue()));
+						//
+					} // if
+						//
+				} // if
+					//
 			} // if
 				//
 		}
+
 	}
 
 	private void init() throws NoSuchFieldException, NoSuchMethodException {

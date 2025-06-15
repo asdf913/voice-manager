@@ -2669,8 +2669,21 @@ class VoiceManagerTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(
-				() -> stateChanged(Util.cast(ChangeListener.class, newInstance(constructor)), null));
+		final ChangeListener changeListener = Util.cast(ChangeListener.class, newInstance(constructor));
+		//
+		Assertions.assertDoesNotThrow(() -> stateChanged(changeListener, null));
+		//
+		final JTabbedPane jTabbedPane = new JTabbedPane();
+		//
+		final ChangeEvent changeEvent = new ChangeEvent(jTabbedPane);
+		//
+		Assertions.assertDoesNotThrow(() -> stateChanged(changeListener, changeEvent));
+		//
+		jTabbedPane.setSize(0, 1);
+		//
+		Assertions.assertDoesNotThrow(() -> stateChanged(changeListener, changeEvent));
+		//
+		Assertions.assertDoesNotThrow(() -> stateChanged(changeListener, changeEvent));
 		//
 	}
 
