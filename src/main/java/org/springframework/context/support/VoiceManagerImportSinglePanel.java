@@ -490,7 +490,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 	@Nullable
 	private transient Iterable<String> imageWriterSpiFormats = null;
 
-	private Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter = null;
+	private transient Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter = null;
 
 	@Override
 	public String getTitle() {
