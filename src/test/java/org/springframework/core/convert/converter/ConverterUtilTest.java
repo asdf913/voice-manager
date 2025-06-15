@@ -22,14 +22,10 @@ class ConverterUtilTest {
 			//
 			final String name = method != null ? method.getName() : null;
 			//
-			if (proxy instanceof Converter) {
+			if (proxy instanceof Converter && Objects.equals(name, "convert")) {
 				//
-				if (Objects.equals(name, "convert")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(name);
