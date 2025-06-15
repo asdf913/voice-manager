@@ -1049,6 +1049,8 @@
 		<property name="imageWriterSpiFormats"
 			ref="ImageWriterSpiFormatIterable" />
 		<!-- -->
+		<property name="voiceIdListCellRendererConverter"
+			ref="VoiceIdListCellRendererConverter" />
 	</bean>
 
 	<!---->

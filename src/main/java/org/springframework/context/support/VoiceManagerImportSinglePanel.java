@@ -176,6 +176,8 @@ import org.springframework.context.ApplicationContextUtil;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.support.VoiceManager.ByteConverter;
 import org.springframework.core.AttributeAccessor;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.convert.converter.ConverterUtil;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
@@ -488,6 +490,8 @@ public class VoiceManagerImportSinglePanel extends JPanel
 	@Nullable
 	private transient Iterable<String> imageWriterSpiFormats = null;
 
+	private Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter = null;
+
 	@Override
 	public String getTitle() {
 		return "Import(Single)";
@@ -621,6 +625,11 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} // if
 			//
+	}
+
+	public void setVoiceIdListCellRendererConverter(
+			final Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter) {
+		this.voiceIdListCellRendererConverter = voiceIdListCellRendererConverter;
 	}
 
 	@Nullable
@@ -3549,44 +3558,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 	}
 
-	private class VoiceIdListCellRenderer implements ListCellRenderer<Object> {
-
-		private ListCellRenderer<Object> listCellRenderer = null;
-
-		private String commonPrefix = null;
-
-		@Override
-		@Nullable
-		public Component getListCellRendererComponent(final JList<? extends Object> list, final Object value,
-				final int index, final boolean isSelected, final boolean cellHasFocus) {
-			//
-			final String s = Util.toString(value);
-			//
-			try {
-				//
-				final String name = SpeechApi.getVoiceAttribute(speechApi, s, "Name");
-				//
-				if (StringUtils.isNotBlank(name)) {
-					//
-					return Util.getListCellRendererComponent(listCellRenderer, list, name, index, isSelected,
-							cellHasFocus);
-					//
-				} // if
-					//
-			} catch (final Error e) {
-				//
-				TaskDialogsUtil.errorOrPrintStackTraceOrAssertOrShowException(e);
-				//
-			} // try
-				//
-			return Util.getListCellRendererComponent(listCellRenderer, list,
-					StringUtils.startsWith(s, commonPrefix) ? StringUtils.substringAfter(s, commonPrefix) : value,
-					index, isSelected, cellHasFocus);
-			//
-		}
-
-	}
-
 	private String getVoiceIdForExecute(final boolean nonTest) {
 		//
 		String voiceId = Util.toString(Util.getSelectedItem(cbmVoiceId));
@@ -3600,17 +3571,9 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 			if (cbmVoiceIdLocal != null) {
 				//
-				final VoiceIdListCellRenderer voiceIdListCellRenderer = new VoiceIdListCellRenderer();
-				//
-				voiceIdListCellRenderer.listCellRenderer = Util
-						.getRenderer(Util.cast(JComboBox.class, jcbVoiceIdLocal = new JComboBox<>(cbmVoiceIdLocal)));
-				//
-				jcbVoiceIdLocal.addItemListener(this);
-				//
-				voiceIdListCellRenderer.commonPrefix = String.join("",
-						StringUtils.substringBeforeLast(StringUtils.getCommonPrefix(voiceIds), "\\"), "\\");
-				//
-				setRenderer(jcbVoiceIdLocal, voiceIdListCellRenderer);
+				setRenderer(jcbVoiceIdLocal = new JComboBox<>(cbmVoiceIdLocal),
+						ConverterUtil.convert(voiceIdListCellRendererConverter,
+								Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceIdLocal))));
 				//
 			} // if
 				//
@@ -4546,8 +4509,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 	}
 
-	private static <E> void setRenderer(@Nullable final JComboBox<E> instance,
-			final ListCellRenderer<? super E> aRenderer) {
+	private static <E> void setRenderer(@Nullable final JComboBox<?> instance, final ListCellRenderer<?> aRenderer) {
 		//
 		if (instance == null) {
 			//
@@ -4569,8 +4531,25 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			//
 		} // try
 			//
-		instance.setRenderer(aRenderer);
+			//
+		final Method[] ms = Util.getDeclaredMethods(JComboBox.class);
 		//
+		Method m = null;
+		//
+		for (int i = 0; i < length(ms); i++) {
+			//
+			if (!(Boolean.logicalAnd(Objects.equals(Util.getName(m = ArrayUtils.get(ms, i)), "setRenderer"),
+					Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { ListCellRenderer.class })))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			testAndAccept((a, b) -> a != null && b != null, instance, m,
+					(a, b) -> Narcissus.invokeMethod(a, b, aRenderer));
+			//
+		} // for
+			//
 	}
 
 	@Nullable
