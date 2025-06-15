@@ -453,7 +453,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 
 	private transient ComboBoxModel<FontName> cbmFontName = null;
 
-	private Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter = null;
+	private transient Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter = null;
 
 	@Override
 	public String getTitle() {
