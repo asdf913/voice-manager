@@ -146,6 +146,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationContextUtil;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.convert.converter.ConverterUtil;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
@@ -354,7 +355,7 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null)) != null) {
 			//
 			testAndAccept(Objects::nonNull,
-					convert(voiceIdListCellRendererConverter,
+					ConverterUtil.convert(voiceIdListCellRendererConverter,
 							Util.getRenderer(Util.cast(JComboBox.class,
 									jcbVoiceId = new JComboBox<>(Util.cast(ComboBoxModel.class, cbmVoiceId))))),
 					x -> jcbVoiceId.setRenderer(x));
@@ -447,11 +448,6 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				Stream.of(tfSpeechLanguageCode, tfSpeechLanguageName, tfImageFile, tfImageUrlStateCode, tfOutputFile),
 				x -> Util.setEditable(x, false));
 		//
-	}
-
-	@Nullable
-	private static <S, T> T convert(@Nullable final Converter<S, T> instance, final S source) {
-		return instance != null ? instance.convert(source) : null;
 	}
 
 	private static void setSelectedIndex(@Nullable final JComboBox<?> instance, @Nullable final Number index) {

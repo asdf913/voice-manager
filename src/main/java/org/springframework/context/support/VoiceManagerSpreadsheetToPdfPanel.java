@@ -142,6 +142,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationContextUtil;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.convert.converter.ConverterUtil;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.core.env.PropertyResolverUtil;
@@ -246,7 +247,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			add(jcbVoiceId, String.format("span %1$s", 2));
 			//
 			testAndAccept((a, b) -> a != null && b != null, jcbVoiceId,
-					convert(voiceIdListCellRendererConverter, Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceId))),
+					ConverterUtil.convert(voiceIdListCellRendererConverter,
+							Util.getRenderer(Util.cast(JComboBox.class, jcbVoiceId))),
 					(a, b) -> setRenderer(a, b));
 			//
 			final String wrap = "wrap";
@@ -379,11 +381,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		if (Util.test(predicate, t, u)) {
 			Util.accept(consumer, t, u);
 		} // if
-	}
-
-	@Nullable
-	private static <S, T> T convert(@Nullable final Converter<S, T> instance, final S source) {
-		return instance != null ? instance.convert(source) : null;
 	}
 
 	private static int length(@Nullable final Object[] instnce) {
