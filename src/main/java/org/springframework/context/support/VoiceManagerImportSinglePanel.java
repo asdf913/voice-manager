@@ -1201,9 +1201,9 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				if (IterableUtils.size(fs = Util.toList(Util.filter(
 						Util.stream(testAndApply(Objects::nonNull, Util.getClass(value = Util.getValue(en)),
 								FieldUtils::getAllFieldsList, null)),
-						f -> Boolean.logicalAnd(Objects.equals(Util.getName(f), fieldName),
-								Util.isAssignableFrom(clz, Util.getType(f)))
-								&& !Objects.equals(Util.getKey(en), excludedBeanName)))) > 1) {
+						f -> and(Objects.equals(Util.getName(f), fieldName),
+								Util.isAssignableFrom(clz, Util.getType(f)),
+								!Objects.equals(Util.getKey(en), excludedBeanName))))) > 1) {
 					//
 					throw new IllegalStateException();
 					//
@@ -1236,6 +1236,30 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		} // if
 			//
 		return null;
+		//
+	}
+
+	private static boolean and(final boolean a, final boolean b, final boolean... bs) {
+		//
+		boolean result = a && b;
+		//
+		if (!result) {
+			//
+			return false;
+			//
+		} // if
+			//
+		for (int i = 0; bs != null && i < bs.length; i++) {
+			//
+			if (!(result &= bs[i])) {
+				//
+				return false;
+				//
+			} // if
+				//
+		} // for
+			//
+		return result;
 		//
 	}
 
