@@ -1211,16 +1211,14 @@ public class VoiceManagerImportSinglePanel extends JPanel
 					//
 				if (IterableUtils.size(fs) == 1) {
 					//
-					if (iValue0 == null) {
-						//
-						iValue0 = Unit.with(Pair.of(value, IterableUtils.get(fs, 0)));
-						//
-					} else {
+					testAndRun(iValue0 != null, () -> {
 						//
 						throw new IllegalStateException();
 						//
-					} // if
-						//
+					});
+					//
+					iValue0 = Unit.with(Pair.of(value, IterableUtils.get(fs, 0)));
+					//
 				} // if
 					//
 			} // for
