@@ -42,7 +42,7 @@ import javassist.util.proxy.ProxyUtil;
 
 class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryBeanTest {
 
-	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5, METHOD_AND,
+	private static Method METHOD_GET_UNICODE_BLOCKS, METHOD_TEST_AND_APPLY4, METHOD_TEST_AND_APPLY5,
 			METHOD_TO_MULTI_MAP_STRING, METHOD_TO_MULTI_MAP_ELEMENT, METHOD_TO_MULTI_MAP_ITERABLE,
 			METHOD_TO_MULTI_MAP_3_ITERABLE, METHOD_TO_MULTI_MAP_3_MULTI_MAP, METHOD_VALIDATE = null;
 
@@ -58,8 +58,6 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 		//
 		(METHOD_TEST_AND_APPLY5 = clz.getDeclaredMethod("testAndApply", BiPredicate.class, Object.class, Object.class,
 				BiFunction.class, BiFunction.class)).setAccessible(true);
-		//
-		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
 		(METHOD_TO_MULTI_MAP_STRING = clz.getDeclaredMethod("toMultimap", PatternMap.class, String.class))
 				.setAccessible(true);
@@ -230,39 +228,6 @@ class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapFactoryB
 				return null;
 			} else if (obj instanceof List) {
 				return (List) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAnd() throws Throwable {
-		//
-		Assertions.assertFalse(and(true, false));
-		//
-		Assertions.assertTrue(and(true, true, null));
-		//
-		Assertions.assertFalse(and(true, true, false));
-		//
-		if (!isSystemPropertiesContainsTestGetObject) {
-			//
-			Assertions.assertFalse(and(false, false));
-			//
-			Assertions.assertFalse(and(true, true, false));
-			//
-			Assertions.assertTrue(and(true, true, true));
-			//
-		} // if
-			//
-	}
-
-	private static boolean and(final boolean a, final boolean b, final boolean... bs) throws Throwable {
-		try {
-			final Object obj = METHOD_AND.invoke(null, a, b, bs);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

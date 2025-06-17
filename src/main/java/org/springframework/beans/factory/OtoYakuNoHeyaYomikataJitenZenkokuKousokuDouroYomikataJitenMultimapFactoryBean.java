@@ -378,7 +378,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create), Util.group(m1, 1),
 					s2);
 			//
-		} else if (and(
+		} else if (Util.and(
 				Util.matches(m1 = Util.matcher(PatternMap.getPattern(patternMap,
 						"^(\\p{InCJKUnifiedIdeographs}+)の(\\p{InCJKUnifiedIdeographs}+)$"), s1)),
 				Util.groupCount(m1) > 0,
@@ -443,7 +443,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 				//
 			} // if
 				//
-		} else if (and(Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
+		} else if (Util.and(Util.matches(matcher = Util.matcher(PatternMap.getPattern(patternMap,
 				"^(\\p{InCJKUnifiedIdeographs}+)\\([\\p{InCJKUnifiedIdeographs}|\\p{InHalfwidthAndFullwidthForms}]+）$"),
 				s1)), Util.groupCount(matcher) > 0,
 				Objects.equals(Collections.singletonList(UnicodeBlock.HIRAGANA), getUnicodeBlocks(s2)))) {
@@ -451,7 +451,7 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 			MultimapUtil.put(multimap = ObjectUtils.getIfNull(multimap, LinkedHashMultimap::create),
 					Util.group(matcher, 1), s2);
 			//
-		} else if (and(
+		} else if (Util.and(
 				Util.matches(matcher = Util.matcher(
 						PatternMap.getPattern(patternMap, "^(\\p{InCJKUnifiedIdeographs}+)([\\p{InKatakana}\\s]+)$"),
 						s1)),
@@ -515,7 +515,8 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		//
 		for (int i = 0; i < IterableUtils.size(textNodes); i++) {
 			//
-			if (and(Util.matches(matcher = Util.matcher(pattern, TextNodeUtil.text(IterableUtils.get(textNodes, i)))),
+			if (Util.and(
+					Util.matches(matcher = Util.matcher(pattern, TextNodeUtil.text(IterableUtils.get(textNodes, i)))),
 					Util.groupCount(matcher) > 0, i > 0)
 					&& Objects.equals(Collections.singletonList(UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS),
 							getUnicodeBlocks(s1 = TextNodeUtil.text(IterableUtils.get(textNodes, i - 1))))) {
@@ -528,30 +529,6 @@ public class OtoYakuNoHeyaYomikataJitenZenkokuKousokuDouroYomikataJitenMultimapF
 		} // for
 			//
 		return multimap;
-		//
-	}
-
-	private static boolean and(final boolean a, final boolean b, @Nullable final boolean... bs) {
-		//
-		boolean result = a && b;
-		//
-		if (!result) {
-			//
-			return false;
-			//
-		} // if
-			//
-		for (int i = 0; bs != null && i < bs.length; i++) {
-			//
-			if (!(result &= bs[i])) {
-				//
-				return false;
-				//
-			} // if
-				//
-		} // for
-			//
-		return result;
 		//
 	}
 
