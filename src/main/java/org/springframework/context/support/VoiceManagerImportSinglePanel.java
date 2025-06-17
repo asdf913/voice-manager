@@ -774,7 +774,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				//
 				if (IterableUtils.size(fs = Util.toList(Util.filter(
 						Util.stream(testAndApply(Objects::nonNull, Util.getClass(value = Util.getValue(entry)),
-								x -> FieldUtils.getAllFieldsList(x), null)),
+								FieldUtils::getAllFieldsList, null)),
 						f -> Objects.equals(Util.getName(f), "tmImportException")
 								&& Util.isAssignableFrom(DefaultTableModel.class, Util.getType(f))
 								&& !Objects.equals(Util.getKey(entry), beanName)))) > 1) {
