@@ -2120,7 +2120,7 @@ public abstract class Util {
 			//
 	}
 
-	static boolean and(final boolean a, final boolean b, final boolean... bs) {
+	static boolean and(final boolean a, final boolean b, @Nullable final boolean... bs) {
 		//
 		boolean result = a && b;
 		//
