@@ -160,6 +160,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtil;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.FactoryBeanUtil;
 import org.springframework.beans.factory.InitializingBean;
@@ -214,7 +215,7 @@ import net.miginfocom.swing.MigLayout;
 
 public class VoiceManagerImportSinglePanel extends JPanel
 		implements Titled, InitializingBean, EnvironmentAware, DocumentListener, ItemListener, KeyListener,
-		ChangeListener, ActionListener, BeanFactoryPostProcessor, ApplicationContextAware {
+		ChangeListener, ActionListener, BeanFactoryPostProcessor, ApplicationContextAware, BeanNameAware {
 
 	private static final long serialVersionUID = -3130553405296925918L;
 
@@ -492,6 +493,11 @@ public class VoiceManagerImportSinglePanel extends JPanel
 
 	private transient Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter = null;
 
+	private DefaultTableModel tmImportException = null;
+
+	private String beanName = null;
+
+	//
 	@Override
 	public String getTitle() {
 		return "Import(Single)";
@@ -632,6 +638,11 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		this.voiceIdListCellRendererConverter = voiceIdListCellRendererConverter;
 	}
 
+	@Override
+	public void setBeanName(final String beanName) {
+		this.beanName = beanName;
+	}
+
 	@Nullable
 	private static <E> Iterator<E> asIterator(@Nullable final Enumeration<E> instance) {
 		return instance != null ? instance.asIterator() : null;
@@ -748,6 +759,57 @@ public class VoiceManagerImportSinglePanel extends JPanel
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		//
+		final Iterable<Entry<String, Object>> entrySet = Util
+				.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class));
+		//
+		if (Util.iterator(entrySet) != null) {
+			//
+			Iterable<Field> fs = null;
+			//
+			Object value = null;
+			//
+			IValue0<Entry<Object, Field>> iValue0 = null;
+			//
+			for (final Entry<String, Object> entry : entrySet) {
+				//
+				if (IterableUtils.size(fs = Util.toList(Util.filter(
+						Util.stream(testAndApply(Objects::nonNull, Util.getClass(value = Util.getValue(entry)),
+								x -> FieldUtils.getAllFieldsList(x), null)),
+						f -> Objects.equals(Util.getName(f), "tmImportException")
+								&& Util.isAssignableFrom(DefaultTableModel.class, Util.getType(f))
+								&& !Objects.equals(Util.getKey(entry), beanName)))) > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				if (IterableUtils.size(fs) == 1) {
+					//
+					if (iValue0 == null) {
+						//
+						iValue0 = Unit.with(Pair.of(value, IterableUtils.get(fs, 0)));
+						//
+					} else {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+			final Entry<Object, Field> entry = IValue0Util.getValue0(iValue0);
+			//
+			if (entry != null) {
+				//
+				tmImportException = Util.cast(DefaultTableModel.class,
+						Narcissus.getField(Util.getKey(entry), Util.getValue(entry)));
+				//
+			} // if
+				//
+		} // if
+			//
 		setLayout(ObjectUtils.getIfNull(IValue0Util.getValue0(getLayoutManager(applicationContext)), MigLayout::new));
 		//
 		// Language
@@ -2433,20 +2495,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 			} // try
 				//
 		} // if
-			//
-		DefaultTableModel tmImportException = null;
-		//
-		try {
-			//
-			tmImportException = testAndApply(Objects::nonNull, voiceManager,
-					x -> Util.cast(DefaultTableModel.class, FieldUtils.readDeclaredField(x, "tmImportException", true)),
-					null);
-			//
-		} catch (final IllegalAccessException e) {
-			//
-			errorOrAssertOrShowException(headless, e);
-			//
-		} // try
 			//
 		if (Boolean.logicalAnd(file == null, !useTtsVoice)) {
 			//
