@@ -32,17 +32,13 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class VoiceManagerImportSinglePanelTest {
 
-	private static Method MEHTOD_GET_OBJECT_BY_FIELD_NAME_AND_TYPE, MEHTOD_AND = null;
+	private static Method MEHTOD_GET_OBJECT_BY_FIELD_NAME_AND_TYPE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
 		//
-		final Class<?> clz = VoiceManagerImportSinglePanel.class;
-		//
-		(MEHTOD_GET_OBJECT_BY_FIELD_NAME_AND_TYPE = clz.getDeclaredMethod("getObjectByFieldNameAndType", Iterable.class,
-				Entry.class, String.class)).setAccessible(true);
-		//
-		(MEHTOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
+		(MEHTOD_GET_OBJECT_BY_FIELD_NAME_AND_TYPE = Util.getDeclaredMethod(VoiceManagerImportSinglePanel.class,
+				"getObjectByFieldNameAndType", Iterable.class, Entry.class, String.class)).setAccessible(true);
 		//
 	}
 
@@ -268,29 +264,6 @@ class VoiceManagerImportSinglePanelTest {
 			final Entry<String, Class<T>> entry, final String excludedBeanName) throws Throwable {
 		try {
 			return (T) MEHTOD_GET_OBJECT_BY_FIELD_NAME_AND_TYPE.invoke(null, entrySet, entry, excludedBeanName);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAnd() throws Throwable {
-		//
-		Assertions.assertFalse(and(true, false));
-		//
-		Assertions.assertTrue(and(true, true, null));
-		//
-		Assertions.assertFalse(and(true, true, false));
-		//
-	}
-
-	private static boolean and(final boolean a, final boolean b, final boolean... bs) throws Throwable {
-		try {
-			final Object obj = MEHTOD_AND.invoke(null, a, b, bs);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

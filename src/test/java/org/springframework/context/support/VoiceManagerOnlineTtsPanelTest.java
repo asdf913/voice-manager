@@ -97,7 +97,7 @@ class VoiceManagerOnlineTtsPanelTest {
 			METHOD_TEST_AND_APPLY6, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_PREVIOUS_ELEMENT_SIBLING,
 			METHOD_TEST_AND_RUN_THROWS, METHOD_SELECT_STREAM, METHOD_SET_CONTENTS, METHOD_GET_SYSTEM_CLIPBOARD,
 			METHOD_IIF, METHOD_GET_VOICE, METHOD_EQUALS, METHOD_SHOW_SAVE_DIALOG, METHOD_SET_ENABLED, METHOD_SHA512HEX,
-			METHOD_CREATE_INPUT_STREAM_SOURCE, METHOD_CAN_READ, METHOD_AND, METHOD_ADD_LIST_DATA_LISTENER,
+			METHOD_CREATE_INPUT_STREAM_SOURCE, METHOD_CAN_READ, METHOD_ADD_LIST_DATA_LISTENER,
 			METHOD_GET_ANNOTATED_ELEMENT_OBJECT_ENTRY, METHOD_GET_STRING_OBJECT_ENTRY = null;
 
 	@BeforeAll
@@ -155,8 +155,6 @@ class VoiceManagerOnlineTtsPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_CAN_READ = clz.getDeclaredMethod("canRead", File.class)).setAccessible(true);
-		//
-		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
 		(METHOD_ADD_LIST_DATA_LISTENER = clz.getDeclaredMethod("addListDataListener", ListModel.class,
 				ListDataListener.class)).setAccessible(true);
@@ -938,29 +936,6 @@ class VoiceManagerOnlineTtsPanelTest {
 	private static boolean canRead(final File instance) throws Throwable {
 		try {
 			final Object obj = METHOD_CAN_READ.invoke(null, instance);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAnd() throws Throwable {
-		//
-		Assertions.assertTrue(and(true, true, null));
-		//
-		Assertions.assertFalse(and(true, true, false));
-		//
-		Assertions.assertTrue(and(true, true, true));
-		//
-	}
-
-	private static boolean and(final boolean a, final boolean b, final boolean... bs) throws Throwable {
-		try {
-			final Object obj = METHOD_AND.invoke(null, a, b, bs);
 			if (obj instanceof Boolean) {
 				return ((Boolean) obj).booleanValue();
 			}

@@ -27,21 +27,13 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class SpeechApiImplTest {
 
-	private static Method METHOD_AND, METHOD_TEST_AND_APPLY = null;
+	private static Method METHOD_TEST_AND_APPLY = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
 		//
-		final Class<?> clz = SpeechApiImpl.class;
-		//
-		if ((METHOD_AND = Util.getDeclaredMethod(clz, "and", Boolean.TYPE, Boolean.TYPE, boolean[].class)) != null) {
-			//
-			METHOD_AND.setAccessible(true);
-			//
-		} // if
-			//
-		if ((METHOD_TEST_AND_APPLY = Util.getDeclaredMethod(clz, "testAndApply", Predicate.class, Object.class,
-				Function.class, Function.class)) != null) {
+		if ((METHOD_TEST_AND_APPLY = Util.getDeclaredMethod(SpeechApiImpl.class, "testAndApply", Predicate.class,
+				Object.class, Function.class, Function.class)) != null) {
 			//
 			METHOD_TEST_AND_APPLY.setAccessible(true);
 			//
@@ -179,29 +171,6 @@ class SpeechApiImplTest {
 				//
 		} // for
 			//
-	}
-
-	@Test
-	void testAnd() throws Throwable {
-		//
-		Assertions.assertFalse(and(true, false));
-		//
-		Assertions.assertTrue(and(true, true, null));
-		//
-		Assertions.assertFalse(and(true, true, false));
-		//
-	}
-
-	private static boolean and(final boolean a, final boolean b, final boolean... bs) throws Throwable {
-		try {
-			final Object obj = METHOD_AND.invoke(null, a, b, bs);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
 	}
 
 	@Test

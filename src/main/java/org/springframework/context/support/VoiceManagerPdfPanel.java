@@ -2683,7 +2683,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		if (Boolean.logicalAnd(StringUtils.isNotBlank(string), IterableUtils.size(es) == 2)) {
 			//
-			plainText &= and(ElementUtil.childrenSize(element = IterableUtils.get(es, 0)) == 0,
+			plainText &= Util.and(ElementUtil.childrenSize(element = IterableUtils.get(es, 0)) == 0,
 					NodeUtil.attributesSize(element) == 0,
 					//
 					ArrayUtils.contains(new int[] { 0, 1 }, NodeUtil.childNodeSize(element = IterableUtils.get(es, 1))),
@@ -2698,20 +2698,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		} // if
 			//
 		return plainText;
-		//
-	}
-
-	private static boolean and(final boolean a, final boolean b, @Nullable final boolean... bs) {
-		//
-		boolean result = Boolean.logicalAnd(a, b);
-		//
-		for (int i = 0; bs != null && i < bs.length; i++) {
-			//
-			result &= bs[i];
-			//
-		} // for
-			//
-		return result;
 		//
 	}
 

@@ -54,8 +54,8 @@ import javassist.util.proxy.ProxyUtil;
 
 class GaKuNenBeTsuKanJiGuiTest {
 
-	private static Method METHOD_CREATE_WORK_BOOK, METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE, METHOD_AND,
-			METHOD_IIF, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_LENGTH, METHOD_LONG_VALUE,
+	private static Method METHOD_CREATE_WORK_BOOK, METHOD_SET_SELECTED_ITEM_BY_ITERABLE, METHOD_INVOKE, METHOD_IIF,
+			METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_LENGTH, METHOD_LONG_VALUE,
 			METHOD_SET_PREFERRED_WIDTH, METHOD_MAX, METHOD_CREATE_DIMENSION_COMPARATOR = null;
 
 	@BeforeAll
@@ -71,8 +71,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 		//
 		(METHOD_INVOKE = clz.getDeclaredMethod("invoke", Method.class, Object.class, Object[].class))
 				.setAccessible(true);
-		//
-		(METHOD_AND = clz.getDeclaredMethod("and", Boolean.TYPE, Boolean.TYPE, boolean[].class)).setAccessible(true);
 		//
 		(METHOD_IIF = clz.getDeclaredMethod("iif", Boolean.TYPE, Object.class, Object.class)).setAccessible(true);
 		//
@@ -457,29 +455,6 @@ class GaKuNenBeTsuKanJiGuiTest {
 	private static Object invoke(final Method method, final Object instance, final Object... args) throws Throwable {
 		try {
 			return METHOD_INVOKE.invoke(null, method, instance, args);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAnd() throws Throwable {
-		//
-		Assertions.assertFalse(and(true, false));
-		//
-		Assertions.assertTrue(and(true, true, null));
-		//
-		Assertions.assertFalse(and(true, true, false));
-		//
-	}
-
-	private static boolean and(final boolean a, final boolean b, final boolean... bs) throws Throwable {
-		try {
-			final Object obj = METHOD_AND.invoke(null, a, b, bs);
-			if (obj instanceof Boolean) {
-				return ((Boolean) obj).booleanValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

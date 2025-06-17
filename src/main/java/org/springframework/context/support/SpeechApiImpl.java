@@ -48,7 +48,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean, App
 			//
 			final String methodName = Util.getName(method);
 			//
-			if (and(proxy instanceof SpeechApi, Objects.equals(methodName, "isInstalled"),
+			if (Util.and(proxy instanceof SpeechApi, Objects.equals(methodName, "isInstalled"),
 					Objects.equals(OperatingSystem.LINUX, OperatingSystemUtil.getOperatingSystem()))) {
 				//
 				final Map<?, ?> properties = System.getProperties();
@@ -122,7 +122,7 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean, App
 			//
 			final List<Method> ms = Util.toList(Util.filter(
 					Arrays.stream(Util.getDeclaredMethods(Util.forName("com.sun.jna.platform.win32.VersionHelpers"))),
-					m -> and(Objects.equals(Util.getName(m), "IsWindows10OrGreater"), getParameterCount(m) == 0,
+					m -> Util.and(Objects.equals(Util.getName(m), "IsWindows10OrGreater"), getParameterCount(m) == 0,
 							Util.isStatic(m))));
 			//
 			if (ms == null || ms.isEmpty()) {
@@ -140,30 +140,6 @@ public class SpeechApiImpl implements SpeechApi, Provider, InitializingBean, App
 		} // try
 			//
 		return null;
-		//
-	}
-
-	private static boolean and(final boolean a, final boolean b, @Nullable final boolean... bs) {
-		//
-		boolean result = a && b;
-		//
-		if (!result) {
-			//
-			return result;
-			//
-		} // if
-			//
-		for (int i = 0; bs != null && i < bs.length; i++) {
-			//
-			if (!(result &= bs[i])) {
-				//
-				return result;
-				//
-			} // if
-				//
-		} // for
-			//
-		return result;
 		//
 	}
 

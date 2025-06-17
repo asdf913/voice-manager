@@ -354,7 +354,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 				//
 				IOUtils.closeQuietly(workbook);
 				//
-				testAndAccept(f -> and(Util.exists(f), Util.isFile(f), longValue(length(f), 0) == 0), file,
+				testAndAccept(f -> Util.and(Util.exists(f), Util.isFile(f), longValue(length(f), 0) == 0), file,
 						FileUtils::deleteQuietly);
 				//
 			} // try
@@ -368,7 +368,7 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 							Util.getDeclaredMethods(Util
 									.forName("org.springframework.beans.factory.GaKuNenBeTsuKanJiMultimapFactoryBean")),
 							Arrays::stream, null),
-					m -> and(Objects.equals(Util.getName(m), "createMultimapByUrl"), Arrays
+					m -> Util.and(Objects.equals(Util.getName(m), "createMultimapByUrl"), Arrays
 							.equals(new Class<?>[] { String.class, Duration.class }, Util.getParameterTypes(m)))));
 			//
 			final int size = IterableUtils.size(ms);
@@ -414,30 +414,6 @@ public class GaKuNenBeTsuKanJiGui extends JFrame
 
 	private static <T> T iif(final boolean condition, final T trueValue, final T falseValue) {
 		return condition ? trueValue : falseValue;
-	}
-
-	private static boolean and(final boolean a, final boolean b, @Nullable final boolean... bs) {
-		//
-		boolean result = a && b;
-		//
-		if (!result) {
-			//
-			return false;
-			//
-		} // if
-			//
-		for (int i = 0; bs != null && i < bs.length; i++) {
-			//
-			if (!(result &= bs[i])) {
-				//
-				return false;
-				//
-			} // if
-				//
-		} // for
-			//
-		return result;
-		//
 	}
 
 	@Nullable

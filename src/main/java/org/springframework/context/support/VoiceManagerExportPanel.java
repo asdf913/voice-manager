@@ -3515,8 +3515,8 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 					//
 				showPharse(voiceManagerExportPanel, pharse);
 				//
-				if (and(Objects.equals(getNumerator(pharse), getDenominator(pharse)), Objects.equals(counter, count),
-						exportPresentation)) {
+				if (Util.and(Objects.equals(getNumerator(pharse), getDenominator(pharse)),
+						Objects.equals(counter, count), exportPresentation)) {
 					//
 					try (final InputStream is = Util.getResourceAsStream(VoiceManager.class,
 							exportPresentationTemplate)) {
@@ -3611,30 +3611,6 @@ public class VoiceManagerExportPanel extends JPanel implements Titled, Initializ
 		@Nullable
 		private static String getFilePath(@Nullable final Voice instance) {
 			return instance != null ? instance.getFilePath() : null;
-		}
-
-		private static boolean and(final boolean a, final boolean b, @Nullable final boolean... bs) {
-			//
-			boolean result = a && b;
-			//
-			if (!result) {
-				//
-				return false;
-				//
-			} // if
-				//
-			for (int i = 0; bs != null && i < bs.length; i++) {
-				//
-				if (!(result &= bs[i])) {
-					//
-					return false;
-					//
-				} // if
-					//
-			} // for
-				//
-			return result;
-			//
 		}
 
 		@Nullable
