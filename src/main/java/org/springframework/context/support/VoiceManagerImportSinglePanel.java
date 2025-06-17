@@ -1179,6 +1179,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		//
 	}
 
+	@Nullable
 	private static <T> T getObjectByFieldNameAndType(final Iterable<Entry<String, Object>> entrySet,
 			final Entry<String, Class<T>> entry, final String excludedBeanName) {
 		//
@@ -1199,8 +1200,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				if (IterableUtils.size(fs = Util.toList(Util.filter(
 						Util.stream(testAndApply(Objects::nonNull, Util.getClass(value = Util.getValue(en)),
 								FieldUtils::getAllFieldsList, null)),
-						f -> Objects.equals(Util.getName(f), fieldName) 
-						&& Util.isAssignableFrom(clz, Util.getType(f))
+						f -> Objects.equals(Util.getName(f), fieldName) && Util.isAssignableFrom(clz, Util.getType(f))
 								&& !Objects.equals(Util.getKey(en), excludedBeanName)))) > 1) {
 					//
 					throw new IllegalStateException();
