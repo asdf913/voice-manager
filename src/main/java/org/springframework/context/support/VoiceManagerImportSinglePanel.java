@@ -759,57 +759,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		//
-		final Iterable<Entry<String, Object>> entrySet = Util
-				.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class));
-		//
-		if (Util.iterator(entrySet) != null) {
-			//
-			Iterable<Field> fs = null;
-			//
-			Object value = null;
-			//
-			IValue0<Entry<Object, Field>> iValue0 = null;
-			//
-			for (final Entry<String, Object> entry : entrySet) {
-				//
-				if (IterableUtils.size(fs = Util.toList(Util.filter(
-						Util.stream(testAndApply(Objects::nonNull, Util.getClass(value = Util.getValue(entry)),
-								FieldUtils::getAllFieldsList, null)),
-						f -> Objects.equals(Util.getName(f), "tmImportException")
-								&& Util.isAssignableFrom(DefaultTableModel.class, Util.getType(f))
-								&& !Objects.equals(Util.getKey(entry), beanName)))) > 1) {
-					//
-					throw new IllegalStateException();
-					//
-				} // if
-					//
-				if (IterableUtils.size(fs) == 1) {
-					//
-					if (iValue0 == null) {
-						//
-						iValue0 = Unit.with(Pair.of(value, IterableUtils.get(fs, 0)));
-						//
-					} else {
-						//
-						throw new IllegalStateException();
-						//
-					} // if
-						//
-				} // if
-					//
-			} // for
-				//
-			final Entry<Object, Field> entry = IValue0Util.getValue0(iValue0);
-			//
-			if (entry != null) {
-				//
-				tmImportException = Util.cast(DefaultTableModel.class,
-						Narcissus.getField(Util.getKey(entry), Util.getValue(entry)));
-				//
-			} // if
-				//
-		} // if
-			//
 		setLayout(ObjectUtils.getIfNull(IValue0Util.getValue0(getLayoutManager(applicationContext)), MigLayout::new));
 		//
 		// Language
@@ -1223,6 +1172,68 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				x -> SpeechApi.getVoiceIds(x), null)) != null);
 		//
 		Util.setEnabled(tfPronunciationPageStatusCode, false);
+		//
+		tmImportException = getObjectByFieldNameAndType(
+				Util.entrySet(ListableBeanFactoryUtil.getBeansOfType(applicationContext, Object.class)),
+				Pair.of("tmImportException", DefaultTableModel.class), beanName);
+		//
+	}
+
+	private static <T> T getObjectByFieldNameAndType(final Iterable<Entry<String, Object>> entrySet,
+			final Entry<String, Class<T>> entry, final String excludedBeanName) {
+		//
+		if (Util.iterator(entrySet) != null) {
+			//
+			final String fieldName = Util.getKey(entry);
+			//
+			final Class<T> clz = Util.getValue(entry);
+			//
+			Iterable<Field> fs = null;
+			//
+			Object value = null;
+			//
+			IValue0<Entry<Object, Field>> iValue0 = null;
+			//
+			for (final Entry<String, Object> en : entrySet) {
+				//
+				if (IterableUtils.size(fs = Util.toList(Util.filter(
+						Util.stream(testAndApply(Objects::nonNull, Util.getClass(value = Util.getValue(en)),
+								FieldUtils::getAllFieldsList, null)),
+						f -> Objects.equals(Util.getName(f), fieldName) 
+						&& Util.isAssignableFrom(clz, Util.getType(f))
+								&& !Objects.equals(Util.getKey(en), excludedBeanName)))) > 1) {
+					//
+					throw new IllegalStateException();
+					//
+				} // if
+					//
+				if (IterableUtils.size(fs) == 1) {
+					//
+					if (iValue0 == null) {
+						//
+						iValue0 = Unit.with(Pair.of(value, IterableUtils.get(fs, 0)));
+						//
+					} else {
+						//
+						throw new IllegalStateException();
+						//
+					} // if
+						//
+				} // if
+					//
+			} // for
+				//
+			final Entry<Object, Field> en = IValue0Util.getValue0(iValue0);
+			//
+			if (en != null) {
+				//
+				return Util.cast(clz, Narcissus.getField(Util.getKey(en), Util.getValue(en)));
+				//
+			} // if
+				//
+		} // if
+			//
+		return null;
 		//
 	}
 

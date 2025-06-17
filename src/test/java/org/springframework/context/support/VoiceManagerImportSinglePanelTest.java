@@ -4,12 +4,14 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.image.RenderedImage;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 import javax.swing.JFileChooser;
@@ -19,7 +21,9 @@ import javax.swing.table.DefaultTableModel;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +31,17 @@ import domain.Voice;
 import io.github.toolfactory.narcissus.Narcissus;
 
 class VoiceManagerImportSinglePanelTest {
+
+	private static Method MEHTOD_GET_OBJECT_BY_FIELD_NAME_AND_TYPE = null;
+
+	@BeforeAll
+	static void beforeAll() throws NoSuchMethodException {
+		//
+		(MEHTOD_GET_OBJECT_BY_FIELD_NAME_AND_TYPE = VoiceManagerImportSinglePanel.class
+				.getDeclaredMethod("getObjectByFieldNameAndType", Iterable.class, Entry.class, String.class))
+				.setAccessible(true);
+		//
+	}
 
 	private VoiceManagerImportSinglePanel instance = null;
 
@@ -223,6 +238,33 @@ class VoiceManagerImportSinglePanelTest {
 				//
 		} // for
 			//
+	}
+
+	@Test
+	void testGetObjectByFieldNameAndType() throws Throwable {
+		//
+		final String empty = "";
+		//
+		Assertions.assertNull(getObjectByFieldNameAndType(Collections.singleton(Pair.of(null, empty)), null, null));
+		//
+		final Entry<String, Object> e1 = Pair.of(empty, empty);
+		//
+		final Entry<String, Class<byte[]>> e2 = Pair.of("value", byte[].class);
+		//
+		Assertions.assertArrayEquals(new byte[] {}, getObjectByFieldNameAndType(Collections.singleton(e1), e2, null));
+		//
+		Assertions.assertThrows(IllegalStateException.class,
+				() -> getObjectByFieldNameAndType(Collections.nCopies(2, e1), e2, null));
+		//
+	}
+
+	private static <T> T getObjectByFieldNameAndType(final Iterable<Entry<String, Object>> entrySet,
+			final Entry<String, Class<T>> entry, final String excludedBeanName) throws Throwable {
+		try {
+			return (T) MEHTOD_GET_OBJECT_BY_FIELD_NAME_AND_TYPE.invoke(null, entrySet, entry, excludedBeanName);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }
