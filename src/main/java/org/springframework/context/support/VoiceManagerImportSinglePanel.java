@@ -1200,7 +1200,8 @@ public class VoiceManagerImportSinglePanel extends JPanel
 				if (IterableUtils.size(fs = Util.toList(Util.filter(
 						Util.stream(testAndApply(Objects::nonNull, Util.getClass(value = Util.getValue(en)),
 								FieldUtils::getAllFieldsList, null)),
-						f -> Objects.equals(Util.getName(f), fieldName) && Util.isAssignableFrom(clz, Util.getType(f))
+						f -> Boolean.logicalAnd(Objects.equals(Util.getName(f), fieldName),
+								Util.isAssignableFrom(clz, Util.getType(f)))
 								&& !Objects.equals(Util.getKey(en), excludedBeanName)))) > 1) {
 					//
 					throw new IllegalStateException();
