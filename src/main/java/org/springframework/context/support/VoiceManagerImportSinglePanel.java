@@ -493,6 +493,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 
 	private transient Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter = null;
 
+	@Nullable
 	private DefaultTableModel tmImportException = null;
 
 	private String beanName = null;
