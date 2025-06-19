@@ -191,7 +191,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private transient Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter = null;
 
-	private ComboBoxModel<Object> cbmVoiceId = null;
+	private transient ComboBoxModel<Object> cbmVoiceId = null;
 
 	private VoiceManagerSpreadsheetToPdfPanel() {
 	}
