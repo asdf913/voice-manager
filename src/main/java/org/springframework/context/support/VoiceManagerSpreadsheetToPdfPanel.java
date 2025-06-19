@@ -191,6 +191,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private transient Converter<ListCellRenderer<Object>, ListCellRenderer<Object>> voiceIdListCellRendererConverter = null;
 
+	private ComboBoxModel<Object> cbmVoiceId = null;
+
 	private VoiceManagerSpreadsheetToPdfPanel() {
 	}
 
@@ -234,15 +236,11 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			add(new JLabel("Voice Id"));
 			//
-			// TODO
-			//
 			final String[] voiceIds = testAndApply(x -> SpeechApi.isInstalled(x), speechApi,
 					x -> SpeechApi.getVoiceIds(x), null);
 			//
-			final ComboBoxModel<Object> cbmVoiceId = testAndApply(Objects::nonNull, voiceIds,
-					x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null);
-			//
-			final JComboBox<Object> jcbVoiceId = new JComboBox<Object>(cbmVoiceId);
+			final JComboBox<Object> jcbVoiceId = new JComboBox<Object>(cbmVoiceId = testAndApply(Objects::nonNull,
+					voiceIds, x -> new DefaultComboBoxModel<>(ArrayUtils.insert(0, x, (String) null)), null));
 			//
 			add(jcbVoiceId, String.format("span %1$s", 2));
 			//
@@ -975,10 +973,15 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 					//
 				} // try
 					//
-				writeVoiceToFile(speechApi, data.text, getVoice(speechApi,
-						objIntFunction = ObjectUtils.getIfNull(objIntFunction, LanguageCodeToTextObjIntFunction::new),
-						data.voice)
-				//
+				writeVoiceToFile(speechApi, data.text,
+						//
+						StringUtils.defaultIfBlank(
+								getVoice(speechApi,
+										objIntFunction = ObjectUtils.getIfNull(objIntFunction,
+												LanguageCodeToTextObjIntFunction::new),
+										data.voice),
+								Util.toString(Util.getSelectedItem(cbmVoiceId)))
+						//
 						, i * -1// TODO
 						//
 						, 100, null, tempFile);
