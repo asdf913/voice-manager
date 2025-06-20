@@ -278,14 +278,10 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				//
 			final String name = Util.getName(thisMethod);
 			//
-			if (self instanceof Dimension2D) {
+			if (self instanceof Dimension2D && Objects.equals(name, "getHeight")) {
 				//
-				if (Objects.equals(name, "getHeight")) {
-					//
-					return height;
-					//
-				} // if
-					//
+				return height;
+				//
 			} // if
 				//
 			throw new Throwable(name);
