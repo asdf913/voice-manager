@@ -633,7 +633,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 	}
 
-	private static <E> void forEachRemaining(final Iterator<E> instance, final Consumer<? super E> action) {
+	private static <E> void forEachRemaining(@Nullable final Iterator<E> instance, final Consumer<? super E> action) {
 		//
 		if (instance == null) {
 			//
