@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -193,6 +195,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private transient ComboBoxModel<Object> cbmVoiceId = null;
 
+	private MutableComboBoxModel<Object> cbmSheet = null;
+
 	private VoiceManagerSpreadsheetToPdfPanel() {
 	}
 
@@ -252,7 +256,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			final String wrap = "wrap";
 			//
 			add(lblThumbnail = new JLabel(),
-					String.format("%1$s,span 1 %2$s,wmin %3$s,hmin %4$s", wrap, 6, 102, 159 + 29));
+					String.format("%1$s,span 1 %2$s,wmin %3$s,hmin %4$s", wrap, 7, 102, 159 + 29));
 			//
 			lblThumbnail.addMouseListener(this);
 			//
@@ -318,6 +322,13 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			add(tfFile = new JTextField(), String.format("growx,span %1$s,%2$s", 2, wrap));
 			//
+			// Sheet
+			//
+			add(new JLabel("Sheet"));
+			//
+			add(new JComboBox<>(cbmSheet = new DefaultComboBoxModel<>(new Object[] { null })),
+					String.format("growx,span %1$s,%2$s", 2, wrap));
+			//
 			// Table
 			//
 			add(new JLabel());
@@ -349,7 +360,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		Util.forEach(Stream.of(tfFile, tfException), x -> Util.setEditable(x, false));
 		//
 		Util.forEach(Stream.of(btnPreview, btnExecute), x -> Util.addActionListener(x, this));
-
 		//
 	}
 
@@ -548,6 +558,16 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 		try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
 			//
+			// Sheet
+			//
+			for (int i = Util.getSize(cbmSheet) - 1; i > 0; i--) {
+				//
+				cbmSheet.removeElementAt(i);
+				//
+			} // for
+				//
+			forEachRemaining(Util.iterator(wb), x -> cbmSheet.addElement(x.getSheetName()));
+			//
 			final Sheet sheet = testAndApply(x -> WorkbookUtil.getNumberOfSheets(wb) == 1, wb,
 					x -> WorkbookUtil.getSheetAt(x, 0), null);
 			//
@@ -568,21 +588,25 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			if ((bufferedImage = new PDFRenderer(pdDocument).renderImage(0)) != null) {
 				//
-				final int width = getWidth(bufferedImage);
-				//
-				final int height = getHeight(bufferedImage);
-				//
-				final Dimension preferredSize = testAndGet(isGui(), () -> getPreferredSize(), null);
-				//
-				final float ratioMin = Math
-						.max(height / (float) (preferredSize != null ? preferredSize.getHeight() : 1), 1);
-				//
-				setIcon(lblThumbnail,
-						new ImageIcon(bufferedImage.getScaledInstance(Math.max((int) (width / ratioMin), 1),
-								Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT)));
-				//
-				revalidate();
-				//
+				if (IterableUtils.size(dataIterable) > 0) {
+					//
+					final int width = getWidth(bufferedImage);
+					//
+					final int height = getHeight(bufferedImage);
+					//
+					final Dimension preferredSize = testAndGet(isGui(), () -> getPreferredSize(), null);
+					//
+					final float ratioMin = Math
+							.max(height / (float) (preferredSize != null ? preferredSize.getHeight() : 1), 1);
+					//
+					setIcon(lblThumbnail,
+							new ImageIcon(bufferedImage.getScaledInstance(Math.max((int) (width / ratioMin), 1),
+									Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT)));
+					//
+					revalidate();
+					//
+				} // if
+					//
 			} // if
 				//
 		} catch (final IOException e) {
@@ -607,6 +631,22 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 			setPreferredSize(jsp, new Dimension((int) getWidth(Util.getPreferredSize(jsp)),
 					IterableUtils.size(dataIterable) * 17 + 22));
+			//
+		} // if
+			//
+	}
+
+	private static <E> void forEachRemaining(final Iterator<E> instance, final Consumer<? super E> action) {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		if (Proxy.isProxyClass(Util.getClass(instance)) || action != null) {
+			//
+			instance.forEachRemaining(action);
 			//
 		} // if
 			//

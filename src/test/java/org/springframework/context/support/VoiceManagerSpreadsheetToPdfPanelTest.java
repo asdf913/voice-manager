@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -17,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -39,6 +39,7 @@ import javax.swing.table.DefaultTableModel;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.function.Consumers;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.poi.hssf.usermodel.HSSFObjectData;
 import org.apache.poi.hssf.usermodel.HSSFPicture;
@@ -89,7 +90,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL,
 			METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_OR, METHOD_SET_ICON,
 			METHOD_TEST_AND_APPLY, METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY,
-			METHOD_TO_DATA, METHOD_GET_LAYOUT_MANAGER, METHOD_SET_PREFERRED_SIZE, METHOD_WRITE_VOICE_TO_FILE = null;
+			METHOD_TO_DATA, METHOD_GET_LAYOUT_MANAGER, METHOD_SET_PREFERRED_SIZE, METHOD_WRITE_VOICE_TO_FILE,
+			METHOD_FOR_EACH_REMAINING = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -155,6 +157,9 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_WRITE_VOICE_TO_FILE = clz.getDeclaredMethod("writeVoiceToFile", SpeechApi.class, String.class,
 				String.class, Integer.TYPE, Integer.TYPE, Map.class, File.class)).setAccessible(true);
+		//
+		(METHOD_FOR_EACH_REMAINING = clz.getDeclaredMethod("forEachRemaining", Iterator.class, Consumer.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -1040,6 +1045,28 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			final int rate, final int volume, final Map<String, Object> map, final File file) throws Throwable {
 		try {
 			METHOD_WRITE_VOICE_TO_FILE.invoke(null, instance, text, voiceId, rate, volume, map, file);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testForEachRemaining() {
+		//
+		Assertions.assertDoesNotThrow(() -> forEachRemaining(Reflection.newProxy(Iterator.class, ih), null));
+		//
+		final Iterable<?> iterable = Collections.emptyList();
+		//
+		Assertions.assertDoesNotThrow(() -> forEachRemaining(Util.iterator(iterable), null));
+		//
+		Assertions.assertDoesNotThrow(() -> forEachRemaining(Util.iterator(iterable), Consumers.nop()));
+		//
+	}
+
+	private static <E> void forEachRemaining(final Iterator<E> instance, final Consumer<? super E> action)
+			throws Throwable {
+		try {
+			METHOD_FOR_EACH_REMAINING.invoke(null, instance, action);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
