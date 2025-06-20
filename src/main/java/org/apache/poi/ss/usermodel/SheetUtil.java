@@ -10,4 +10,8 @@ public interface SheetUtil {
 		return instance != null ? instance.createDrawingPatriarch() : null;
 	}
 
+	static String getSheetName(final Sheet instance) {
+		return instance != null ? instance.getSheetName() : null;
+	}
+
 }

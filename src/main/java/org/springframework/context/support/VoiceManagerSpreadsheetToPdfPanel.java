@@ -123,6 +123,7 @@ import org.apache.poi.ss.usermodel.PictureData;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.RowUtil;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.SheetUtil;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.usermodel.WorkbookUtil;
@@ -566,7 +567,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 			} // for
 				//
-			forEachRemaining(Util.iterator(wb), x -> cbmSheet.addElement(x.getSheetName()));
+			forEachRemaining(Util.iterator(wb), x -> cbmSheet.addElement(SheetUtil.getSheetName(x)));
 			//
 			final Sheet sheet = testAndApply(x -> WorkbookUtil.getNumberOfSheets(wb) == 1, wb,
 					x -> WorkbookUtil.getSheetAt(x, 0), null);

@@ -1455,7 +1455,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			for (int i = 0; i < WorkbookUtil.getNumberOfSheets(workbook); i++) {
 				//
-				if (Util.contains(sheetExclued, getSheetName(sheet = WorkbookUtil.getSheetAt(workbook, i)))) {
+				if (Util.contains(sheetExclued, SheetUtil.getSheetName(sheet = WorkbookUtil.getSheetAt(workbook, i)))) {
 					//
 					continue;
 					//
@@ -1509,7 +1509,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 				//
 				);
 				//
-				Util.setText(tfCurrentProcessingSheetName, getSheetName(sheet));
+				Util.setText(tfCurrentProcessingSheetName, SheetUtil.getSheetName(sheet));
 				//
 				numberOfSheetProcessed = Integer.valueOf(Util.intValue(numberOfSheetProcessed, 0) + 1);
 				//
@@ -1773,9 +1773,12 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			final Integer numberOfSheets = WorkbookUtil.getNumberOfSheets(workbook);
 			//
-			final int maxSheetNameLength = orElse(max(mapToInt(Util.map(
-					testAndApply(Objects::nonNull, spliterator(workbook), x -> StreamSupport.stream(x, false), null),
-					VoiceManagerImportBatchPanel::getSheetName), StringUtils::length)), 0);
+			final int maxSheetNameLength = orElse(
+					max(mapToInt(
+							Util.map(testAndApply(Objects::nonNull, spliterator(workbook),
+									x -> StreamSupport.stream(x, false), null), SheetUtil::getSheetName),
+							StringUtils::length)),
+					0);
 			//
 			FormulaEvaluator formulaEvaluator = null;
 			//
@@ -1820,7 +1823,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 						(it = new ImportTask()).sheetCurrentAndTotal = Pair.of(getCurrentSheetIndex(sheet),
 								numberOfSheets);
 						//
-						it.currentSheetName = StringUtils.leftPad(getSheetName(sheet), maxSheetNameLength);
+						it.currentSheetName = StringUtils.leftPad(SheetUtil.getSheetName(sheet), maxSheetNameLength);
 						//
 						it.counter = Integer.valueOf(row.getRowNum());
 						//
@@ -2629,7 +2632,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			for (int i = 0; i < numberOfSheets; i++) {
 				//
-				if (!Objects.equals(workbook.getSheetName(i), getSheetName(sheet))) {
+				if (!Objects.equals(workbook.getSheetName(i), SheetUtil.getSheetName(sheet))) {
 					continue;
 				} // if
 					//
@@ -2824,11 +2827,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		if (instance != null) {
 			instance.setMaximum(n);
 		}
-	}
-
-	@Nullable
-	private static String getSheetName(@Nullable final Sheet instance) {
-		return instance != null ? instance.getSheetName() : null;
 	}
 
 	@Nullable
