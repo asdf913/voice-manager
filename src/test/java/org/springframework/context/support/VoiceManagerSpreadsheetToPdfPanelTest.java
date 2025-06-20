@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -92,7 +93,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_OR, METHOD_SET_ICON,
 			METHOD_TEST_AND_APPLY, METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY,
 			METHOD_TO_DATA, METHOD_GET_LAYOUT_MANAGER, METHOD_SET_PREFERRED_SIZE, METHOD_WRITE_VOICE_TO_FILE,
-			METHOD_FOR_EACH_REMAINING, METHOD_GET_HEIGHT = null;
+			METHOD_FOR_EACH_REMAINING, METHOD_GET_HEIGHT, METHOD_GET_SCALED_INSTANCE = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -163,6 +164,9 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_HEIGHT = clz.getDeclaredMethod("getHeight", Dimension2D.class, Double.TYPE)).setAccessible(true);
+		//
+		(METHOD_GET_SCALED_INSTANCE = clz.getDeclaredMethod("getScaledInstance", Image.class, Integer.TYPE,
+				Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -270,9 +274,15 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
 			//
-			if (Objects.equals(Util.getReturnType(thisMethod), Void.TYPE)) {
+			final Class<?> returnType = Util.getReturnType(thisMethod);
+			//
+			if (Objects.equals(returnType, Void.TYPE)) {
 				//
 				return null;
+				//
+			} else if (Util.isAssignableFrom(returnType, Util.getClass(self))) {
+				//
+				return self;
 				//
 			} // if
 				//
@@ -1107,6 +1117,28 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			final Object obj = METHOD_GET_HEIGHT.invoke(null, instance, defaultValue);
 			if (obj instanceof Double) {
 				return ((Double) obj).doubleValue();
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetScaledInstance() throws Throwable {
+		//
+		Assertions.assertEquals(ZERO, getScaledInstance(ProxyUtil.createProxy(Image.class, mh), ZERO, ZERO, ZERO));
+		//
+	}
+
+	private static Image getScaledInstance(final Image instance, final int width, final int height, final int hints)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SCALED_INSTANCE.invoke(null, instance, width, height, hints);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Image) {
+				return (Image) obj;
 			}
 			throw new Throwable(Util.getName(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

@@ -596,10 +596,10 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				final float ratioMin = Math
 						.max(height / (float) getHeight(testAndGet(isGui(), () -> getPreferredSize(), null), 1), 1);
 				//
-				setIcon(lblThumbnail,
-						new ImageIcon(
-								bufferedImage.getScaledInstance(Math.max((int) (getWidth(bufferedImage) / ratioMin), 1),
-										Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT)));
+				setIcon(lblThumbnail, testAndApply(Objects::nonNull,
+						getScaledInstance(bufferedImage, Math.max((int) (getWidth(bufferedImage) / ratioMin), 1),
+								Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT),
+						x -> new ImageIcon(x), null));
 				//
 				revalidate();
 				//
@@ -630,6 +630,10 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		} // if
 			//
+	}
+
+	private static Image getScaledInstance(final Image instance, final int width, final int height, final int hints) {
+		return instance != null ? instance.getScaledInstance(width, height, hints) : instance;
 	}
 
 	private static double getHeight(@Nullable final Dimension2D instance, final double defaultValue) {
@@ -1656,10 +1660,12 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 				//
 				JOptionPane.showMessageDialog(null,
-						testAndApply(Objects::nonNull, f == null || Narcissus.getField(bufferedImage, f) != null
-								? bufferedImage.getScaledInstance(Math.max((int) (width / ratioMin), 1),
-										Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT)
-								: null, ImageIcon::new, null),
+						testAndApply(Objects::nonNull,
+								f == null || Narcissus.getField(bufferedImage, f) != null
+										? getScaledInstance(bufferedImage, Math.max((int) (width / ratioMin), 1),
+												Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT)
+										: null,
+								ImageIcon::new, null),
 						"Image", JOptionPane.PLAIN_MESSAGE);
 				//
 			});
