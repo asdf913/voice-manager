@@ -195,7 +195,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private transient ComboBoxModel<Object> cbmVoiceId = null;
 
-	private MutableComboBoxModel<Object> cbmSheet = null;
+	private transient MutableComboBoxModel<Object> cbmSheet = null;
 
 	private VoiceManagerSpreadsheetToPdfPanel() {
 	}
