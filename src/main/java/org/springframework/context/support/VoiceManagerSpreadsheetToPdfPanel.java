@@ -586,27 +586,24 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		try (final PDDocument pdDocument = createPDDocument(file, false)) {
 			//
-			if ((bufferedImage = new PDFRenderer(pdDocument).renderImage(0)) != null) {
+			if ((bufferedImage = new PDFRenderer(pdDocument).renderImage(0)) != null
+					&& IterableUtils.size(dataIterable) > 0) {
 				//
-				if (IterableUtils.size(dataIterable) > 0) {
-					//
-					final int width = getWidth(bufferedImage);
-					//
-					final int height = getHeight(bufferedImage);
-					//
-					final Dimension preferredSize = testAndGet(isGui(), () -> getPreferredSize(), null);
-					//
-					final float ratioMin = Math
-							.max(height / (float) (preferredSize != null ? preferredSize.getHeight() : 1), 1);
-					//
-					setIcon(lblThumbnail,
-							new ImageIcon(bufferedImage.getScaledInstance(Math.max((int) (width / ratioMin), 1),
-									Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT)));
-					//
-					revalidate();
-					//
-				} // if
-					//
+				final int width = getWidth(bufferedImage);
+				//
+				final int height = getHeight(bufferedImage);
+				//
+				final Dimension preferredSize = testAndGet(isGui(), () -> getPreferredSize(), null);
+				//
+				final float ratioMin = Math
+						.max(height / (float) (preferredSize != null ? preferredSize.getHeight() : 1), 1);
+				//
+				setIcon(lblThumbnail,
+						new ImageIcon(bufferedImage.getScaledInstance(Math.max((int) (width / ratioMin), 1),
+								Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT)));
+				//
+				revalidate();
+				//
 			} // if
 				//
 		} catch (final IOException e) {
