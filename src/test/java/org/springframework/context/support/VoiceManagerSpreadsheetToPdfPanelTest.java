@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.lang.reflect.Field;
@@ -91,7 +92,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_OR, METHOD_SET_ICON,
 			METHOD_TEST_AND_APPLY, METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY,
 			METHOD_TO_DATA, METHOD_GET_LAYOUT_MANAGER, METHOD_SET_PREFERRED_SIZE, METHOD_WRITE_VOICE_TO_FILE,
-			METHOD_FOR_EACH_REMAINING = null;
+			METHOD_FOR_EACH_REMAINING, METHOD_GET_HEIGHT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -160,6 +161,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_FOR_EACH_REMAINING = clz.getDeclaredMethod("forEachRemaining", Iterator.class, Consumer.class))
 				.setAccessible(true);
+		//
+		(METHOD_GET_HEIGHT = clz.getDeclaredMethod("getHeight", Dimension2D.class, Double.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -261,17 +264,31 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private static class MH implements MethodHandler {
 
+		private Double height = null;
+
 		@Override
 		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
 				throws Throwable {
 			//
-			if (Objects.equals(Void.TYPE, thisMethod != null ? thisMethod.getReturnType() : null)) {
+			if (Objects.equals(Util.getReturnType(thisMethod), Void.TYPE)) {
 				//
 				return null;
 				//
 			} // if
 				//
-			throw new Throwable(Util.getName(thisMethod));
+			final String name = Util.getName(thisMethod);
+			//
+			if (self instanceof Dimension2D) {
+				//
+				if (Objects.equals(name, "getHeight")) {
+					//
+					return height;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(name);
 			//
 		}
 
@@ -288,6 +305,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private ObjectMapper objectMapper = null;
 
 	private SpeechApi speechApi = null;
+
+	private MH mh = null;
 
 	@BeforeEach
 	void beforeEach() {
@@ -309,6 +328,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			//
 		} // if
 			//
+		mh = new MH();
+		//
 	}
 
 	@Test
@@ -1021,7 +1042,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	@Test
 	void testSetPreferredSize() {
 		//
-		Assertions.assertDoesNotThrow(() -> setPreferredSize(ProxyUtil.createProxy(Component.class, new MH()), null));
+		Assertions.assertDoesNotThrow(() -> setPreferredSize(ProxyUtil.createProxy(Component.class, mh), null));
 		//
 	}
 
@@ -1067,6 +1088,31 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			throws Throwable {
 		try {
 			METHOD_FOR_EACH_REMAINING.invoke(null, instance, action);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetHeight() throws Throwable {
+		//
+		if (mh != null) {
+			//
+			mh.height = Integer.valueOf(ZERO).doubleValue();
+			//
+		} // if
+			//
+		Assertions.assertEquals(ZERO, getHeight(ProxyUtil.createProxy(Dimension2D.class, mh), ZERO));
+		//
+	}
+
+	private static double getHeight(final Dimension2D instance, final double defaultValue) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_HEIGHT.invoke(null, instance, defaultValue);
+			if (obj instanceof Double) {
+				return ((Double) obj).doubleValue();
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

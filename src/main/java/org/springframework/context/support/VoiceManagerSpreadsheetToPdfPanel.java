@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
@@ -590,18 +591,15 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			if ((bufferedImage = new PDFRenderer(pdDocument).renderImage(0)) != null
 					&& IterableUtils.size(dataIterable) > 0) {
 				//
-				final int width = getWidth(bufferedImage);
-				//
 				final int height = getHeight(bufferedImage);
 				//
-				final Dimension preferredSize = testAndGet(isGui(), () -> getPreferredSize(), null);
-				//
 				final float ratioMin = Math
-						.max(height / (float) (preferredSize != null ? preferredSize.getHeight() : 1), 1);
+						.max(height / (float) getHeight(testAndGet(isGui(), () -> getPreferredSize(), null), 1), 1);
 				//
 				setIcon(lblThumbnail,
-						new ImageIcon(bufferedImage.getScaledInstance(Math.max((int) (width / ratioMin), 1),
-								Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT)));
+						new ImageIcon(
+								bufferedImage.getScaledInstance(Math.max((int) (getWidth(bufferedImage) / ratioMin), 1),
+										Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT)));
 				//
 				revalidate();
 				//
@@ -632,6 +630,10 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		} // if
 			//
+	}
+
+	private static double getHeight(final Dimension2D instance, final double defaultValue) {
+		return instance != null ? instance.getHeight() : defaultValue;
 	}
 
 	private static <E> void forEachRemaining(@Nullable final Iterator<E> instance, final Consumer<? super E> action) {
@@ -1629,9 +1631,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			final boolean gui = !GraphicsEnvironment.isHeadless();
 			//
-			final Dimension screenSize = toolkit != null && gui ? toolkit.getScreenSize() : null;
-			//
-			final double screenHeight = (screenSize != null ? screenSize.getHeight() : 0) -
+			final double screenHeight = getHeight(toolkit != null && gui ? toolkit.getScreenSize() : null, 0) -
 			//
 					129// TODO
 			;
