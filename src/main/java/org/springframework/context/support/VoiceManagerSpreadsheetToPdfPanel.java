@@ -636,7 +636,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		return instance != null ? instance.getHeight() : defaultValue;
 	}
 
-	private static <E> void forEachRemaining(@Nullable final Iterator<E> instance, final Consumer<? super E> action) {
+	private static <E> void forEachRemaining(@Nullable final Iterator<E> instance,
+			@Nullable final Consumer<? super E> action) {
 		//
 		if (instance == null) {
 			//
