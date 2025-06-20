@@ -632,7 +632,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 	}
 
-	private static double getHeight(final Dimension2D instance, final double defaultValue) {
+	private static double getHeight(@Nullable final Dimension2D instance, final double defaultValue) {
 		return instance != null ? instance.getHeight() : defaultValue;
 	}
 
