@@ -562,7 +562,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				: null) {
 			//
 			if (Boolean.logicalAnd(
-					(bufferedImage = (pdDocument != null ? new PDFRenderer(pdDocument).renderImage(0) : null)) != null,
+					(bufferedImage = (renderImage(
+							testAndApply(Objects::nonNull, pdDocument, x -> new PDFRenderer(x), null), 0))) != null,
 					IterableUtils.size(dataIterable) > 0)) {
 				//
 				final int imageHeight = getHeight(bufferedImage);
@@ -615,6 +616,37 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		setPreferredSize(jsp, new Dimension((int) getWidth(Util.getPreferredSize(jsp)),
 				Math.max(IterableUtils.size(dataIterable), 1) * 17 + 22));
+		//
+	}
+
+	private static BufferedImage renderImage(final PDFRenderer instance, final int pageIndex) throws IOException {
+		//
+		if (instance == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				f -> Objects.equals(Util.getName(f), "pageTree")));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field field = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (field != null && Narcissus.getField(instance, field) == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		return instance.renderImage(pageIndex);
 		//
 	}
 
