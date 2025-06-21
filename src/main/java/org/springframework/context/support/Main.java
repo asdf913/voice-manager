@@ -509,8 +509,10 @@ public class Main {
 				//
 				// instructions
 				//
-			if (Objects.equals(Arrays.asList(NEW.class, DUP.class, INVOKESPECIAL.class, ATHROW.class), Util.toList(
-					Util.map(testAndApply(Objects::nonNull, ins, Arrays::stream, null), x -> Util.getClass(x))))) {
+			final Stream<Instruction> stream = testAndApply(Objects::nonNull, ins, Arrays::stream, null);
+			//
+			if (Objects.equals(Arrays.asList(NEW.class, DUP.class, INVOKESPECIAL.class, ATHROW.class),
+					Util.toList(Util.map(stream, x -> Util.getClass(x))))) {
 				//
 				final Class<?> c = Util.forName(className);
 				//
