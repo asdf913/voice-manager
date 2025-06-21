@@ -203,7 +203,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 	private JComboBox<String> jcbSheet = null;
 
 	@Nullable
-	private Double height = null;
+	private Double lastImageHeight = null;
 
 	private VoiceManagerSpreadsheetToPdfPanel() {
 	}
@@ -558,14 +558,16 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 					//
 					final int imageHeight = getHeight(bufferedImage);
 					//
-					if (height == null) {
+					if (lastImageHeight == null) {
 						//
-						height = Double.valueOf(getHeight(testAndGet(isGui(), () -> getPreferredSize(), null), 1));
+						lastImageHeight = Double
+								.valueOf(getHeight(testAndGet(isGui(), () -> getPreferredSize(), null), 1));
 						//
 					} // if
 						//
-					final float ratioMin = Math.max(
-							imageHeight / (float) (Util.doubleValue(height, 0) != 0 ? Util.doubleValue(height, 0) : 1),
+					final float ratioMin = Math.max(imageHeight
+							/ (float) (Util.doubleValue(lastImageHeight, 0) != 0 ? Util.doubleValue(lastImageHeight, 0)
+									: 1),
 							1);
 					//
 					if (ratioMin != 0) {
@@ -618,7 +620,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 		setIcon(lblThumbnail, new ImageIcon());
 		//
-		height = null;
+		lastImageHeight = null;
 		//
 		Util.forEach(Util.map(sorted(Util.map(IntStream.range(1, Util.getSize(cbmSheet)), i -> -i)), i -> -i),
 				i -> Util.removeElementAt(cbmSheet, i));
