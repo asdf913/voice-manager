@@ -564,7 +564,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			// Sheet
 			//
-			Util.forEach(map(sorted(map(IntStream.range(1, Util.getSize(cbmSheet)), i -> -i)), i -> -i),
+			Util.forEach(Util.map(sorted(Util.map(IntStream.range(1, Util.getSize(cbmSheet)), i -> -i)), i -> -i),
 					i -> cbmSheet.removeElementAt(i));
 			//
 			forEachRemaining(Util.iterator(wb), x -> cbmSheet.addElement(SheetUtil.getSheetName(x)));
@@ -637,12 +637,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private static IntStream sorted(final IntStream instance) {
 		return instance != null ? instance.sorted() : instance;
-	}
-
-	private static IntStream map(final IntStream instance, final IntUnaryOperator mapper) {
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
-				? instance.map(mapper)
-				: instance;
 	}
 
 	@Nullable

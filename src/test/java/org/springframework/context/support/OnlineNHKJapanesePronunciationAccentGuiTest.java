@@ -71,7 +71,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 	private static final int ONE = 1;
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_WIDTH, METHOD_REMOVE_ELEMENT_AT,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_MAP_INT_STREAM,
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS,
 			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_SAVE_PITCH_ACCENT_IMAGE,
 			METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_GET_FIELD, METHOD_SAVE_FILE,
 			METHOD_IIF, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_SET_PREFERRED_SIZE, METHOD_MAX,
@@ -94,9 +94,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		//
 		(METHOD_SET_CONTENTS = clz.getDeclaredMethod("setContents", Clipboard.class, Transferable.class,
 				ClipboardOwner.class)).setAccessible(true);
-		//
-		(METHOD_MAP_INT_STREAM = clz.getDeclaredMethod("map", IntStream.class, IntUnaryOperator.class))
-				.setAccessible(true);
 		//
 		(METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS = clz
 				.getDeclaredMethod("setPitchAccentImageToSystemClipboardContents", Pronunciation.class))
@@ -633,27 +630,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 			throws Throwable {
 		try {
 			METHOD_SET_CONTENTS.invoke(null, instance, contents, owner);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMap() throws Throwable {
-		//
-		Assertions.assertNull(map((IntStream) null, null));
-		//
-	}
-
-	private static IntStream map(final IntStream instance, final IntUnaryOperator mapper) throws Throwable {
-		try {
-			final Object obj = METHOD_MAP_INT_STREAM.invoke(null, instance, mapper);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof IntStream) {
-				return (IntStream) obj;
-			}
-			throw new Throwable(Util.toString(getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

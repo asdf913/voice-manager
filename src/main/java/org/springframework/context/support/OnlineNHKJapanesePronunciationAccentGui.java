@@ -909,12 +909,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	 */
 	@Nullable
 	private static IntStream reverseRange(final int from, final int to) {
-		return map(IntStream.range(from, to), i -> to - i + from - 1);
-	}
-
-	@Nullable
-	private static IntStream map(@Nullable final IntStream instance, final IntUnaryOperator mapper) {
-		return instance != null ? instance.map(mapper) : instance;
+		return Util.map(IntStream.range(from, to), i -> to - i + from - 1);
 	}
 
 	@Nullable

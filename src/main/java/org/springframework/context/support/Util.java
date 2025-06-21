@@ -41,6 +41,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
+import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
@@ -147,6 +148,12 @@ public abstract class Util {
 		return instance != null && (Proxy.isProxyClass(getClass(instance)) || mapper != null) ? instance.map(mapper)
 				: null;
 		//
+	}
+
+	static IntStream map(final IntStream instance, final IntUnaryOperator mapper) {
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
+				? instance.map(mapper)
+				: instance;
 	}
 
 	@Nullable

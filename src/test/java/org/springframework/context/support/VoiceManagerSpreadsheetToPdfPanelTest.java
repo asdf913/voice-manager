@@ -172,8 +172,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		(METHOD_SORTED = clz.getDeclaredMethod("sorted", IntStream.class)).setAccessible(true);
 		//
-		(METHOD_MAP = clz.getDeclaredMethod("map", IntStream.class, IntUnaryOperator.class)).setAccessible(true);
-		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -324,8 +322,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private SpeechApi speechApi = null;
 
-	private IntStream intStream = null;
-
 	private MH mh = null;
 
 	@BeforeEach
@@ -336,8 +332,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		cell = Reflection.newProxy(Cell.class, ih);
 		//
 		speechApi = Reflection.newProxy(SpeechApi.class, ih);
-		//
-		intStream = Reflection.newProxy(IntStream.class, ih);
 		//
 		instance = Util.cast(VoiceManagerSpreadsheetToPdfPanel.class,
 				Narcissus.allocateInstance(VoiceManagerSpreadsheetToPdfPanel.class));
@@ -1167,6 +1161,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	@Test
 	void testSorted() throws Throwable {
 		//
+		final IntStream intStream = Reflection.newProxy(IntStream.class, ih);
+		//
 		Assertions.assertSame(intStream, sorted(intStream));
 		//
 	}
@@ -1174,31 +1170,6 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static IntStream sorted(final IntStream instance) throws Throwable {
 		try {
 			final Object obj = METHOD_SORTED.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof IntStream) {
-				return (IntStream) obj;
-			}
-			throw new Throwable(Util.getName(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMap() throws Throwable {
-		//
-		Assertions.assertSame(intStream, map(intStream, null));
-		//
-		Assertions.assertSame(intStream = IntStream.empty(), map(intStream, null));
-		//
-		Assertions.assertNotNull(map(intStream, IntUnaryOperator.identity()));
-		//
-	}
-
-	private static IntStream map(final IntStream instance, final IntUnaryOperator mapper) throws Throwable {
-		try {
-			final Object obj = METHOD_MAP.invoke(null, instance, mapper);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof IntStream) {

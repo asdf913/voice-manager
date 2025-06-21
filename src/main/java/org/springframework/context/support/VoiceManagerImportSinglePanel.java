@@ -4784,14 +4784,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 	 */
 	@Nullable
 	private static IntStream reverseRange(final int from, final int to) {
-		return map(IntStream.range(from, to), i -> to - i + from - 1);
-	}
-
-	@Nullable
-	private static IntStream map(@Nullable final IntStream instance, @Nullable final IntUnaryOperator mapper) {
-		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
-				? instance.map(mapper)
-				: instance;
+		return Util.map(IntStream.range(from, to), i -> to - i + from - 1);
 	}
 
 	private static void addDocumentListener(@Nullable final javax.swing.text.Document instance,
