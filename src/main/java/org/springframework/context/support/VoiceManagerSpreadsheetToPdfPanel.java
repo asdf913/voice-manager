@@ -555,10 +555,10 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		} // try
 			//
-		final int selectedIndex = jcbSheet != null ? jcbSheet.getSelectedIndex() : -1;
+		final int selectedIndex = getSelectedIndex(jcbSheet);
 		//
 		try (final PDDocument pdDocument = jcbSheet != null && selectedIndex > 0
-				? createPDDocument(file, jcbSheet.getSelectedIndex() - 1, false)
+				? createPDDocument(file, selectedIndex - 1, false)
 				: null) {
 			//
 			if ((bufferedImage = (pdDocument != null ? new PDFRenderer(pdDocument).renderImage(0) : null)) != null
@@ -614,6 +614,38 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		setPreferredSize(jsp, new Dimension((int) getWidth(Util.getPreferredSize(jsp)),
 				Math.max(IterableUtils.size(dataIterable), 1) * 17 + 22));
+		//
+	}
+
+	private static int getSelectedIndex(final JComboBox<?> instance) {
+		//
+		if (instance == null) {
+			//
+			return -1;
+			//
+		} // if
+			//
+		final Iterable<Field> fs = Util
+				.toList(Util.filter(
+						Util.stream(testAndApply(Objects::nonNull, Util.getClass(instance),
+								x -> FieldUtils.getAllFieldsList(x), null)),
+						f -> Objects.equals(Util.getName(f), "dataModel")));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field field = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		if (field != null && Narcissus.getField(instance, field) == null) {
+			//
+			return -1;
+			//
+		} // if
+			//
+		return instance.getSelectedIndex();
 		//
 	}
 

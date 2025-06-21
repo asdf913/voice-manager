@@ -94,7 +94,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_OR, METHOD_SET_ICON,
 			METHOD_TEST_AND_APPLY, METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY,
 			METHOD_TO_DATA, METHOD_GET_LAYOUT_MANAGER, METHOD_SET_PREFERRED_SIZE, METHOD_WRITE_VOICE_TO_FILE,
-			METHOD_FOR_EACH_REMAINING, METHOD_GET_HEIGHT, METHOD_GET_SCALED_INSTANCE, METHOD_SORTED = null;
+			METHOD_FOR_EACH_REMAINING, METHOD_GET_HEIGHT, METHOD_GET_SCALED_INSTANCE, METHOD_SORTED,
+			METHOD_GET_SELECTED_INDEX = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -170,6 +171,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_SORTED = clz.getDeclaredMethod("sorted", IntStream.class)).setAccessible(true);
+		//
+		(METHOD_GET_SELECTED_INDEX = clz.getDeclaredMethod("getSelectedIndex", JComboBox.class)).setAccessible(true);
 		//
 	}
 
@@ -1185,6 +1188,26 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				return null;
 			} else if (obj instanceof IntStream) {
 				return (IntStream) obj;
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSelectedIndex() throws Throwable {
+		//
+		Assertions.assertEquals(-1,
+				getSelectedIndex(Util.cast(JComboBox.class, Narcissus.allocateInstance(JComboBox.class))));
+		//
+	}
+
+	private static int getSelectedIndex(final JComboBox<?> instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SELECTED_INDEX.invoke(null, instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.getName(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
