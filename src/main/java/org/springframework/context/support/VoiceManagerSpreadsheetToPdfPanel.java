@@ -619,7 +619,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 	}
 
-	private static BufferedImage renderImage(final PDFRenderer instance, final int pageIndex) throws IOException {
+	private static BufferedImage renderImage(@Nullable final PDFRenderer instance, final int pageIndex)
+			throws IOException {
 		//
 		if (instance == null) {
 			//
