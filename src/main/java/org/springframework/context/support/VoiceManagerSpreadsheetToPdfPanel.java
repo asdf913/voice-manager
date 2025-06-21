@@ -202,6 +202,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private JComboBox<String> jcbSheet = null;
 
+	@Nullable
 	private Double height = null;
 
 	private VoiceManagerSpreadsheetToPdfPanel() {
@@ -971,6 +972,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 	}
 
+	@Nullable
 	private PDDocument createPDDocument(@Nullable final File file, final boolean generateAudio) {
 		//
 		try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
