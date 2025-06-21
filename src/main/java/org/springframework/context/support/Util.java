@@ -2128,7 +2128,7 @@ public abstract class Util {
 			//
 	}
 
-	static void removeElementAt(final MutableComboBoxModel<?> instance, final int index) {
+	static void removeElementAt(@Nullable final MutableComboBoxModel<?> instance, final int index) {
 		if (instance != null) {
 			instance.removeElementAt(index);
 		}
