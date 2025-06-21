@@ -561,10 +561,11 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				? createPDDocument(file, selectedIndex - 1, false)
 				: null) {
 			//
-			if (Boolean.logicalAnd(
-					(bufferedImage = (renderImage(
-							testAndApply(Objects::nonNull, pdDocument, x -> new PDFRenderer(x), null), 0))) != null,
-					IterableUtils.size(dataIterable) > 0)) {
+			if (Boolean
+					.logicalAnd(
+							(bufferedImage = (renderImage(
+									testAndApply(Objects::nonNull, pdDocument, PDFRenderer::new, null), 0))) != null,
+							IterableUtils.size(dataIterable) > 0)) {
 				//
 				final int imageHeight = getHeight(bufferedImage);
 				//
