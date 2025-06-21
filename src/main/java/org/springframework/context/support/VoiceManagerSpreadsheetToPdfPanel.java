@@ -518,100 +518,103 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		} else if (Objects.equals(source, jcbSheet)) {
 			//
-			setIcon(lblThumbnail, new ImageIcon());
-			//
-			for (int i = (tableModel != null ? tableModel.getRowCount() : 0) - 1; i >= 0; i--) {
-				//
-				tableModel.removeRow(i);
-				//
-			} // for
-				//
-			final File file = testAndApply(Objects::nonNull, Util.getText(tfFile), x -> Util.toFile(Path.of(x)), null);
-			//
-			Iterable<Data> dataIterable = null;
-			//
-			try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
-				//
-				final Sheet sheet = WorkbookUtil.getSheet(wb, Util.toString(Util.getSelectedItem(cbmSheet)));
-				//
-				dataIterable = getDataIterable(
-						testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null),
-						CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb)));
-				//
-				testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), file,
-						x -> Util.setText(tfFile, Util.getAbsolutePath(Util.getAbsoluteFile(x))));
-				//
-			} catch (final IOException e) {
-				//
-				throw new RuntimeException(e);
-				//
-			} // try
-				//
-			final int selectedIndex = jcbSheet != null ? jcbSheet.getSelectedIndex() : -1;
-			//
-			try (final PDDocument pdDocument = jcbSheet != null && selectedIndex > 0
-					? createPDDocument(file, jcbSheet.getSelectedIndex() - 1, false)
-					: null) {
-				//
-				if ((bufferedImage = (pdDocument != null ? new PDFRenderer(pdDocument).renderImage(0) : null)) != null
-						&& IterableUtils.size(dataIterable) > 0) {
-					//
-					final int imageHeight = getHeight(bufferedImage);
-					//
-					if (lastImageHeight == null) {
-						//
-						lastImageHeight = Double
-								.valueOf(getHeight(testAndGet(isGui(), () -> getPreferredSize(), null), 1));
-						//
-					} // if
-						//
-					final float ratioMin = Math.max(imageHeight
-							/ (float) (Util.doubleValue(lastImageHeight, 0) != 0 ? Util.doubleValue(lastImageHeight, 0)
-									: 1),
-							1);
-					//
-					if (ratioMin != 0) {
-						//
-						setIcon(lblThumbnail,
-								testAndApply(Objects::nonNull,
-										getScaledInstance(bufferedImage,
-												Math.max((int) (getWidth(bufferedImage) / ratioMin), 1),
-												Math.max((int) (imageHeight / ratioMin), 1), Image.SCALE_DEFAULT),
-										ImageIcon::new, null));
-						//
-					} // if
-						//
-					revalidate();
-					//
-				} // if
-					//
-			} catch (final IOException e) {
-				//
-				throw new RuntimeException(e);
-				//
-			} // try
-				//
-			if (Util.iterator(dataIterable) != null) {
-				//
-				for (final Data data : dataIterable) {
-					//
-					if (data == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					Util.addRow(tableModel, toArray(data));
-					//
-				} // for
-					//
-			} // if
-				//
-			setPreferredSize(jsp, new Dimension((int) getWidth(Util.getPreferredSize(jsp)),
-					Math.max(IterableUtils.size(dataIterable), 1) * 17 + 22));
+			actionPerformedJcbSheet();
 			//
 		} // if
 			//
+	}
+
+	private void actionPerformedJcbSheet() {
+		//
+		setIcon(lblThumbnail, new ImageIcon());
+		//
+		for (int i = (tableModel != null ? tableModel.getRowCount() : 0) - 1; i >= 0; i--) {
+			//
+			tableModel.removeRow(i);
+			//
+		} // for
+			//
+		final File file = testAndApply(Objects::nonNull, Util.getText(tfFile), x -> Util.toFile(Path.of(x)), null);
+		//
+		Iterable<Data> dataIterable = null;
+		//
+		try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
+			//
+			final Sheet sheet = WorkbookUtil.getSheet(wb, Util.toString(Util.getSelectedItem(cbmSheet)));
+			//
+			dataIterable = getDataIterable(
+					testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null),
+					CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb)));
+			//
+			testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), file,
+					x -> Util.setText(tfFile, Util.getAbsolutePath(Util.getAbsoluteFile(x))));
+			//
+		} catch (final IOException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
+		final int selectedIndex = jcbSheet != null ? jcbSheet.getSelectedIndex() : -1;
+		//
+		try (final PDDocument pdDocument = jcbSheet != null && selectedIndex > 0
+				? createPDDocument(file, jcbSheet.getSelectedIndex() - 1, false)
+				: null) {
+			//
+			if ((bufferedImage = (pdDocument != null ? new PDFRenderer(pdDocument).renderImage(0) : null)) != null
+					&& IterableUtils.size(dataIterable) > 0) {
+				//
+				final int imageHeight = getHeight(bufferedImage);
+				//
+				if (lastImageHeight == null) {
+					//
+					lastImageHeight = Double.valueOf(getHeight(testAndGet(isGui(), () -> getPreferredSize(), null), 1));
+					//
+				} // if
+					//
+				final float ratioMin = Math.max(imageHeight
+						/ (float) (Util.doubleValue(lastImageHeight, 0) != 0 ? Util.doubleValue(lastImageHeight, 0)
+								: 1),
+						1);
+				//
+				if (ratioMin != 0) {
+					//
+					setIcon(lblThumbnail, testAndApply(Objects::nonNull,
+							getScaledInstance(bufferedImage, Math.max((int) (getWidth(bufferedImage) / ratioMin), 1),
+									Math.max((int) (imageHeight / ratioMin), 1), Image.SCALE_DEFAULT),
+							ImageIcon::new, null));
+					//
+				} // if
+					//
+				revalidate();
+				//
+			} // if
+				//
+		} catch (final IOException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
+		if (Util.iterator(dataIterable) != null) {
+			//
+			for (final Data data : dataIterable) {
+				//
+				if (data == null) {
+					//
+					continue;
+					//
+				} // if
+					//
+				Util.addRow(tableModel, toArray(data));
+				//
+			} // for
+				//
+		} // if
+			//
+		setPreferredSize(jsp, new Dimension((int) getWidth(Util.getPreferredSize(jsp)),
+				Math.max(IterableUtils.size(dataIterable), 1) * 17 + 22));
+		//
 	}
 
 	private void actionPerformedForBtnPreview() {
