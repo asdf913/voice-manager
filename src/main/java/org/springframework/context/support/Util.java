@@ -150,7 +150,7 @@ public abstract class Util {
 		//
 	}
 
-	static IntStream map(final IntStream instance, final IntUnaryOperator mapper) {
+	static IntStream map(@Nullable final IntStream instance, @Nullable final IntUnaryOperator mapper) {
 		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
 				? instance.map(mapper)
 				: instance;
