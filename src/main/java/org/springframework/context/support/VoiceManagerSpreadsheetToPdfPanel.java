@@ -618,7 +618,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 	}
 
-	private static int getSelectedIndex(final JComboBox<?> instance) {
+	private static int getSelectedIndex(@Nullable final JComboBox<?> instance) {
 		//
 		if (instance == null) {
 			//
