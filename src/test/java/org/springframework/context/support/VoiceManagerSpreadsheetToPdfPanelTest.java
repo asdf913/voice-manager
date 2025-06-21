@@ -1127,7 +1127,9 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	@Test
 	void testGetScaledInstance() throws Throwable {
 		//
-		Assertions.assertEquals(ZERO, getScaledInstance(ProxyUtil.createProxy(Image.class, mh), ZERO, ZERO, ZERO));
+		final Image image = ProxyUtil.createProxy(Image.class, mh);
+		//
+		Assertions.assertSame(image, getScaledInstance(image, ZERO, ZERO, ZERO));
 		//
 	}
 
