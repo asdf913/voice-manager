@@ -2128,6 +2128,12 @@ public abstract class Util {
 			//
 	}
 
+	static void removeElementAt(final MutableComboBoxModel<?> instance, final int index) {
+		if (instance != null) {
+			instance.removeElementAt(index);
+		}
+	}
+
 	static boolean and(final boolean a, final boolean b, @Nullable final boolean... bs) {
 		//
 		boolean result = a && b;

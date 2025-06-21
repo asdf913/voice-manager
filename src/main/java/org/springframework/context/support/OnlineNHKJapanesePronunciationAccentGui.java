@@ -625,11 +625,11 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			// Remove all element(s) in "mcbmPronounication"
 			//
 			Util.forEach(reverseRange(0, Util.getSize(mcbmPronounication)),
-					i -> removeElementAt(mcbmPronounication, i));
+					i -> Util.removeElementAt(mcbmPronounication, i));
 			//
 			// Remove all element(s) in "mcbmAudioFormat"
 			//
-			Util.forEach(reverseRange(0, Util.getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
+			Util.forEach(reverseRange(0, Util.getSize(mcbmAudioFormat)), i -> Util.removeElementAt(mcbmAudioFormat, i));
 			//
 			try {
 				//
@@ -888,7 +888,7 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 	private static void pronounicationChanged(@Nullable final Pronunciation pronunciation,
 			final MutableComboBoxModel<String> mcbmAudioFormat) {
 		//
-		Util.forEach(reverseRange(0, Util.getSize(mcbmAudioFormat)), i -> removeElementAt(mcbmAudioFormat, i));
+		Util.forEach(reverseRange(0, Util.getSize(mcbmAudioFormat)), i -> Util.removeElementAt(mcbmAudioFormat, i));
 		//
 		final Map<String, String> audioUrls = pronunciation != null ? pronunciation.getAudioUrls() : null;
 		//
@@ -920,12 +920,6 @@ public class OnlineNHKJapanesePronunciationAccentGui extends JFrame
 			@Nullable final ClipboardOwner owner) {
 		if (instance != null) {
 			instance.setContents(contents, owner);
-		}
-	}
-
-	private static void removeElementAt(@Nullable final MutableComboBoxModel<?> instance, final int index) {
-		if (instance != null) {
-			instance.removeElementAt(index);
 		}
 	}
 

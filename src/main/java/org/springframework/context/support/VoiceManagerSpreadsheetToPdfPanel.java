@@ -564,7 +564,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			// Sheet
 			//
 			Util.forEach(Util.map(sorted(Util.map(IntStream.range(1, Util.getSize(cbmSheet)), i -> -i)), i -> -i),
-					i -> cbmSheet.removeElementAt(i));
+					i -> Util.removeElementAt(cbmSheet, i));
 			//
 			forEachRemaining(Util.iterator(wb), x -> cbmSheet.addElement(SheetUtil.getSheetName(x)));
 			//

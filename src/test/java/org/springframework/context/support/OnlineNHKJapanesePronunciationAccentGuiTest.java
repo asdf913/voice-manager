@@ -68,8 +68,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private static final int ONE = 1;
 
-	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_WIDTH, METHOD_REMOVE_ELEMENT_AT,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS,
+	private static Method METHOD_TEST_AND_APPLY, METHOD_GET_WIDTH, METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS,
 			METHOD_SET_PITCH_ACCENT_IMAGE_TO_SYSTEM_CLIPBOARD_CONTENTS, METHOD_SAVE_PITCH_ACCENT_IMAGE,
 			METHOD_PLAY_AUDIO, METHOD_SAVE_AUDIO, METHOD_PRONOUNICATION_CHANGED, METHOD_GET_FIELD, METHOD_SAVE_FILE,
 			METHOD_IIF, METHOD_SORT, METHOD_CREATE_IMAGE_FORMAT_COMPARATOR, METHOD_SET_PREFERRED_SIZE, METHOD_MAX,
@@ -84,9 +83,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_GET_WIDTH = clz.getDeclaredMethod("getWidth", Dimension2D.class)).setAccessible(true);
-		//
-		(METHOD_REMOVE_ELEMENT_AT = clz.getDeclaredMethod("removeElementAt", MutableComboBoxModel.class, Integer.TYPE))
-				.setAccessible(true);
 		//
 		(METHOD_GET_SYSTEM_CLIP_BOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
 		//
@@ -153,7 +149,7 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			if (Objects.equals(method != null ? method.getReturnType() : null, Void.TYPE)) {
+			if (Objects.equals(Util.getReturnType(method), Void.TYPE)) {
 				//
 				return null;
 				//
@@ -267,8 +263,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 
 	private Entry<?, ?> entry = null;
 
-	private MutableComboBoxModel<?> mutableComboBoxModel = null;
-
 	private Map<?, ?> map = null;
 
 	@BeforeEach
@@ -299,8 +293,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 		pronunciation = new Pronunciation();
 		//
 		entry = Reflection.newProxy(Entry.class, ih = new IH());
-		//
-		mutableComboBoxModel = Reflection.newProxy(MutableComboBoxModel.class, ih);
 		//
 		map = Reflection.newProxy(Map.class, ih);
 		//
@@ -570,23 +562,6 @@ class OnlineNHKJapanesePronunciationAccentGuiTest {
 				return (Double) obj;
 			}
 			throw new Throwable(Util.toString(getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testRemoveElementAt() {
-		//
-		Assertions.assertDoesNotThrow(() -> removeElementAt(null, 0));
-		//
-		Assertions.assertDoesNotThrow(() -> removeElementAt(mutableComboBoxModel, 0));
-		//
-	}
-
-	private static void removeElementAt(final MutableComboBoxModel<?> instance, final int index) throws Throwable {
-		try {
-			METHOD_REMOVE_ELEMENT_AT.invoke(null, instance, index);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
