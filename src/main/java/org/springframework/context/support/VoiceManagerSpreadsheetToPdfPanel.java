@@ -568,6 +568,12 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			forEachRemaining(Util.iterator(wb), x -> cbmSheet.addElement(SheetUtil.getSheetName(x)));
 			//
+			if (IterableUtils.size(wb) == 1) {
+				//
+				Util.setSelectedItem(cbmSheet, Util.getElementAt(cbmSheet, 1));
+				//
+			} // if
+				//
 			final Sheet sheet = testAndApply(x -> WorkbookUtil.getNumberOfSheets(wb) == 1, wb,
 					x -> WorkbookUtil.getSheetAt(x, 0), null);
 			//
