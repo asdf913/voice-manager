@@ -27,7 +27,6 @@ import java.lang.reflect.Proxy;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -526,8 +525,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 			} // for
 				//
-			final File file = testAndApply(Objects::nonNull, Util.getText(tfFile), x -> Util.toFile(Paths.get(x)),
-					null);
+			final File file = testAndApply(Objects::nonNull, Util.getText(tfFile), x -> Util.toFile(Path.of(x)), null);
 			//
 			Iterable<Data> dataIterable = null;
 			//
