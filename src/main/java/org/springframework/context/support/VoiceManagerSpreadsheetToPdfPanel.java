@@ -995,7 +995,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 	}
 
-	private PDDocument createPDDocument(final File file, final int index, final boolean generateAudio) {
+	private PDDocument createPDDocument(@Nullable final File file, final int index, final boolean generateAudio) {
 		//
 		Drawing<?> drawingPatriarch = null;
 		//
