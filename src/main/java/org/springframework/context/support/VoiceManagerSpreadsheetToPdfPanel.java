@@ -557,8 +557,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		final int selectedIndex = getSelectedIndex(jcbSheet);
 		//
-		try (final PDDocument pdDocument = jcbSheet != null && selectedIndex > 0
-				? createPDDocument(file, selectedIndex - 1, false)
+		try (final PDDocument pdDocument = selectedIndex > 0 ? createPDDocument(file, selectedIndex - 1, false)
 				: null) {
 			//
 			if (Boolean
