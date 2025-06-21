@@ -596,11 +596,15 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				final float ratioMin = Math
 						.max(height / (float) getHeight(testAndGet(isGui(), () -> getPreferredSize(), null), 1), 1);
 				//
-				setIcon(lblThumbnail, testAndApply(Objects::nonNull,
-						getScaledInstance(bufferedImage, Math.max((int) (getWidth(bufferedImage) / ratioMin), 1),
-								Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT),
-						ImageIcon::new, null));
-				//
+				if (ratioMin != 0) {
+					//
+					setIcon(lblThumbnail, testAndApply(Objects::nonNull,
+							getScaledInstance(bufferedImage, Math.max((int) (getWidth(bufferedImage) / ratioMin), 1),
+									Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT),
+							ImageIcon::new, null));
+					//
+				} // if
+					//
 				revalidate();
 				//
 			} // if
