@@ -599,7 +599,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				setIcon(lblThumbnail, testAndApply(Objects::nonNull,
 						getScaledInstance(bufferedImage, Math.max((int) (getWidth(bufferedImage) / ratioMin), 1),
 								Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT),
-						x -> new ImageIcon(x), null));
+						ImageIcon::new, null));
 				//
 				revalidate();
 				//
