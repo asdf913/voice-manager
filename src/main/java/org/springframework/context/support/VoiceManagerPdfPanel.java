@@ -2779,9 +2779,10 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		//
 		DataFlavor df = null;
 		//
-		final int maxLength1 = orElse(max(mapToInt(Util.map(
-				testAndApply(Objects::nonNull, spliterator(entrySet), x -> StreamSupport.stream(x, false), null),
-				Util::getKey), StringUtils::length)), 0);
+		final Stream<Entry<String, DataFlavor>> stream = testAndApply(Objects::nonNull, spliterator(entrySet),
+				x -> StreamSupport.stream(x, false), null);
+		//
+		final int maxLength1 = orElse(max(mapToInt(Util.map(stream, Util::getKey), StringUtils::length)), 0);
 		//
 		final int maxLength2 = orElse(max(mapToInt(Util.map(
 				testAndApply(Objects::nonNull, spliterator(entrySet), x -> StreamSupport.stream(x, false), null),
