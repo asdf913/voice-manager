@@ -635,7 +635,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 	}
 
-	private static IntStream sorted(final IntStream instance) {
+	private static IntStream sorted(@Nullable final IntStream instance) {
 		return instance != null ? instance.sorted() : instance;
 	}
 
