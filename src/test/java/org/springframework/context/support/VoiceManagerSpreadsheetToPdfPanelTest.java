@@ -27,8 +27,10 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.IntStream;
 
 import javax.swing.AbstractButton;
 import javax.swing.Icon;
@@ -93,7 +95,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			METHOD_SET_SELECTED_INDEX, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4, METHOD_OR, METHOD_SET_ICON,
 			METHOD_TEST_AND_APPLY, METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY,
 			METHOD_TO_DATA, METHOD_GET_LAYOUT_MANAGER, METHOD_SET_PREFERRED_SIZE, METHOD_WRITE_VOICE_TO_FILE,
-			METHOD_FOR_EACH_REMAINING, METHOD_GET_HEIGHT, METHOD_GET_SCALED_INSTANCE = null;
+			METHOD_FOR_EACH_REMAINING, METHOD_GET_HEIGHT, METHOD_GET_SCALED_INSTANCE, METHOD_SORTED, METHOD_MAP = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -168,6 +170,10 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		(METHOD_GET_SCALED_INSTANCE = clz.getDeclaredMethod("getScaledInstance", Image.class, Integer.TYPE,
 				Integer.TYPE, Integer.TYPE)).setAccessible(true);
 		//
+		(METHOD_SORTED = clz.getDeclaredMethod("sorted", IntStream.class)).setAccessible(true);
+		//
+		(METHOD_MAP = clz.getDeclaredMethod("map", IntStream.class, IntUnaryOperator.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -189,9 +195,15 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			if (Objects.equals(Util.getReturnType(method), Void.TYPE)) {
+			final Class<?> returnType = Util.getReturnType(method);
+			//
+			if (Objects.equals(returnType, Void.TYPE)) {
 				//
 				return null;
+				//
+			} else if (Util.isAssignableFrom(returnType, Util.getClass(proxy))) {
+				//
+				return proxy;
 				//
 			} // if
 				//
@@ -312,6 +324,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 
 	private SpeechApi speechApi = null;
 
+	private IntStream intStream = null;
+
 	private MH mh = null;
 
 	@BeforeEach
@@ -322,6 +336,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		cell = Reflection.newProxy(Cell.class, ih);
 		//
 		speechApi = Reflection.newProxy(SpeechApi.class, ih);
+		//
+		intStream = Reflection.newProxy(IntStream.class, ih);
 		//
 		instance = Util.cast(VoiceManagerSpreadsheetToPdfPanel.class,
 				Narcissus.allocateInstance(VoiceManagerSpreadsheetToPdfPanel.class));
@@ -1141,6 +1157,52 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 				return null;
 			} else if (obj instanceof Image) {
 				return (Image) obj;
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSorted() throws Throwable {
+		//
+		Assertions.assertSame(intStream, sorted(intStream));
+		//
+	}
+
+	private static IntStream sorted(final IntStream instance) throws Throwable {
+		try {
+			final Object obj = METHOD_SORTED.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IntStream) {
+				return (IntStream) obj;
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testMap() throws Throwable {
+		//
+		Assertions.assertSame(intStream, map(intStream, null));
+		//
+		Assertions.assertSame(intStream = IntStream.empty(), map(intStream, null));
+		//
+		Assertions.assertNotNull(map(intStream, IntUnaryOperator.identity()));
+		//
+	}
+
+	private static IntStream map(final IntStream instance, final IntUnaryOperator mapper) throws Throwable {
+		try {
+			final Object obj = METHOD_MAP.invoke(null, instance, mapper);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof IntStream) {
+				return (IntStream) obj;
 			}
 			throw new Throwable(Util.getName(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

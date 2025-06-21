@@ -42,11 +42,13 @@ import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -562,12 +564,9 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			// Sheet
 			//
-			for (int i = Util.getSize(cbmSheet) - 1; i > 0; i--) {
-				//
-				cbmSheet.removeElementAt(i);
-				//
-			} // for
-				//
+			Util.forEach(map(sorted(map(IntStream.range(1, Util.getSize(cbmSheet)), i -> -i)), i -> -i),
+					i -> cbmSheet.removeElementAt(i));
+			//
 			forEachRemaining(Util.iterator(wb), x -> cbmSheet.addElement(SheetUtil.getSheetName(x)));
 			//
 			final Sheet sheet = testAndApply(x -> WorkbookUtil.getNumberOfSheets(wb) == 1, wb,
@@ -634,6 +633,16 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		} // if
 			//
+	}
+
+	private static IntStream sorted(final IntStream instance) {
+		return instance != null ? instance.sorted() : instance;
+	}
+
+	private static IntStream map(final IntStream instance, final IntUnaryOperator mapper) {
+		return instance != null && (Proxy.isProxyClass(Util.getClass(instance)) || mapper != null)
+				? instance.map(mapper)
+				: instance;
 	}
 
 	@Nullable
