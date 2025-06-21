@@ -1706,7 +1706,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			final int width = getWidth(bufferedImage);
 			//
-			final int height = getHeight(bufferedImage);
+			final int imageHeight = getHeight(bufferedImage);
 			//
 			final Toolkit toolkit = Toolkit.getDefaultToolkit();
 			//
@@ -1719,7 +1719,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			testAndRunThrows(gui && !isTestMode(), () -> {
 				//
-				final float ratioMin = Math.max(height / (float) (screenHeight != 0 ? screenHeight : 1), 1);
+				final float ratioMin = Math.max(imageHeight / (float) (screenHeight != 0 ? screenHeight : 1), 1);
 				//
 				final List<Field> fs = Util
 						.toList(Util.filter(
@@ -1739,7 +1739,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 						testAndApply(Objects::nonNull,
 								f == null || Narcissus.getField(bufferedImage, f) != null
 										? getScaledInstance(bufferedImage, Math.max((int) (width / ratioMin), 1),
-												Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT)
+												Math.max((int) (imageHeight / ratioMin), 1), Image.SCALE_DEFAULT)
 										: null,
 								ImageIcon::new, null),
 						"Image", JOptionPane.PLAIN_MESSAGE);
