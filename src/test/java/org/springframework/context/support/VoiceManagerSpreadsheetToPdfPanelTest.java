@@ -425,7 +425,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 					Boolean.logicalAnd(Objects.equals(name, "toBigDecimal"),
 							Arrays.equals(parameterTypes, new Class<?>[] { Float.TYPE })),
 					Boolean.logicalAnd(Objects.equals(name, "createPDDocument"),
-							Arrays.equals(parameterTypes, new Class<?>[] { File.class, Boolean.TYPE })),
+							Arrays.equals(parameterTypes, new Class<?>[] { File.class, Integer.TYPE, Boolean.TYPE })),
 					Boolean.logicalAnd(Objects.equals(name, "getAllowedFileMagicMethodAndCollection"),
 							Arrays.equals(parameterTypes, new Class<?>[] {})),
 					Boolean.logicalAnd(Objects.equals(name, "getTitle"),
@@ -666,7 +666,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals("[null]",
+		Assertions.assertEquals("null",
 				ObjectMapperUtil.writeValueAsString(objectMapper, getDataIterable(Collections.nCopies(2, row), null)));
 		//
 		if (ih != null) {
@@ -773,21 +773,33 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent("", ZERO, null)));
 		//
+		// btnPreview
+		//
 		final AbstractButton btnPreview = new JButton();
 		//
 		FieldUtils.writeDeclaredField(instance, "btnPreview", btnPreview, true);
 		//
-		final ActionEvent actionEvent = new ActionEvent(btnPreview, ZERO, null);
+		final ActionEvent actionEventBtnPreview = new ActionEvent(btnPreview, ZERO, null);
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnPreview));
 		//
 		FieldUtils.writeDeclaredField(instance, "tableModel", new DefaultTableModel(), true);
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnPreview));
 		//
 		FieldUtils.writeDeclaredField(instance, "lblThumbnail", new JLabel(), true);
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnPreview));
+		//
+		FieldUtils.writeDeclaredField(instance, "btnPreview", btnPreview, true);
+		//
+		// jcbSheet
+		//
+		final JComboBox<?> jcbSheet = new JComboBox<>();
+		//
+		FieldUtils.writeDeclaredField(instance, "jcbSheet", jcbSheet, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(jcbSheet, ZERO, null)));
 		//
 	}
 

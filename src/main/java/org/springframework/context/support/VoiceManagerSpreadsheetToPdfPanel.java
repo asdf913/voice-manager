@@ -198,7 +198,11 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private transient ComboBoxModel<Object> cbmVoiceId = null;
 
-	private transient MutableComboBoxModel<Object> cbmSheet = null;
+	private transient MutableComboBoxModel<String> cbmSheet = null;
+
+	private JComboBox<String> jcbSheet = null;
+
+	private Double height = null;
 
 	private VoiceManagerSpreadsheetToPdfPanel() {
 	}
@@ -329,8 +333,10 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			add(new JLabel("Sheet"));
 			//
-			add(new JComboBox<>(cbmSheet = new DefaultComboBoxModel<>(new Object[] { null })),
+			add(jcbSheet = new JComboBox<>(cbmSheet = new DefaultComboBoxModel<>(new String[] { null })),
 					String.format("growx,span %1$s,%2$s", 2, wrap));
+			//
+			jcbSheet.addActionListener(this);
 			//
 			// Table
 			//
@@ -509,6 +515,98 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			actionPerformedForBtnPreview();
 			//
+		} else if (Objects.equals(source, jcbSheet)) {
+			//
+			setIcon(lblThumbnail, new ImageIcon());
+			//
+			for (int i = (tableModel != null ? tableModel.getRowCount() : 0) - 1; i >= 0; i--) {
+				//
+				tableModel.removeRow(i);
+				//
+			} // for
+				//
+			final File file = testAndApply(Objects::nonNull, Util.getText(tfFile), x -> new File(x), null);
+			//
+			Iterable<Data> dataIterable = null;
+			//
+			try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
+				//
+				final Sheet sheet = WorkbookUtil.getSheet(wb, Util.toString(Util.getSelectedItem(cbmSheet)));
+				//
+				dataIterable = getDataIterable(
+						testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null),
+						CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb)));
+				//
+				testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), file,
+						x -> Util.setText(tfFile, Util.getAbsolutePath(Util.getAbsoluteFile(x))));
+				//
+			} catch (final IOException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+			final int selectedIndex = jcbSheet != null ? jcbSheet.getSelectedIndex() : -1;
+			//
+			try (final PDDocument pdDocument = jcbSheet != null && selectedIndex > 0
+					? createPDDocument(file, jcbSheet.getSelectedIndex() - 1, false)
+					: null) {
+				//
+				if ((bufferedImage = (pdDocument != null ? new PDFRenderer(pdDocument).renderImage(0) : null)) != null
+						&& IterableUtils.size(dataIterable) > 0) {
+					//
+					final int imageHeight = getHeight(bufferedImage);
+					//
+					if (height == null) {
+						//
+						height = Double.valueOf(getHeight(testAndGet(isGui(), () -> getPreferredSize(), null), 1));
+						//
+					} // if
+						//
+					final float ratioMin = Math.max(
+							imageHeight / (float) (Util.doubleValue(height, 0) != 0 ? Util.doubleValue(height, 0) : 1),
+							1);
+					//
+					if (ratioMin != 0) {
+						//
+						setIcon(lblThumbnail,
+								testAndApply(Objects::nonNull,
+										getScaledInstance(bufferedImage,
+												Math.max((int) (getWidth(bufferedImage) / ratioMin), 1),
+												Math.max((int) (imageHeight / ratioMin), 1), Image.SCALE_DEFAULT),
+										ImageIcon::new, null));
+						//
+					} // if
+						//
+					revalidate();
+					//
+				} // if
+					//
+			} catch (final IOException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+			if (Util.iterator(dataIterable) != null) {
+				//
+				for (final Data data : dataIterable) {
+					//
+					if (data == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					Util.addRow(tableModel, toArray(data));
+					//
+				} // for
+					//
+			} // if
+				//
+			setPreferredSize(jsp, new Dimension((int) getWidth(Util.getPreferredSize(jsp)),
+					Math.max(IterableUtils.size(dataIterable), 1) * 17 + 22));
+			//
 		} // if
 			//
 	}
@@ -518,6 +616,11 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		Util.forEach(Stream.of(tfFile, tfException), x -> Util.setText(x, null));
 		//
 		setIcon(lblThumbnail, new ImageIcon());
+		//
+		height = null;
+		//
+		Util.forEach(Util.map(sorted(Util.map(IntStream.range(1, Util.getSize(cbmSheet)), i -> -i)), i -> -i),
+				i -> Util.removeElementAt(cbmSheet, i));
 		//
 		try {
 			//
@@ -557,83 +660,24 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		} // if
 			//
-		Iterable<Data> dataIterable = null;
-		//
 		try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
 			//
-			// Sheet
-			//
-			Util.forEach(Util.map(sorted(Util.map(IntStream.range(1, Util.getSize(cbmSheet)), i -> -i)), i -> -i),
-					i -> Util.removeElementAt(cbmSheet, i));
-			//
 			forEachRemaining(Util.iterator(wb), x -> cbmSheet.addElement(SheetUtil.getSheetName(x)));
-			//
-			testAndRunThrows(IterableUtils.size(wb) == 1,
-					() -> Util.setSelectedItem(cbmSheet, Util.getElementAt(cbmSheet, 1)));
-			//
-			final Sheet sheet = testAndApply(x -> WorkbookUtil.getNumberOfSheets(wb) == 1, wb,
-					x -> WorkbookUtil.getSheetAt(x, 0), null);
-			//
-			dataIterable = getDataIterable(
-					testAndApply(Objects::nonNull, Util.iterator(sheet), IteratorUtils::toList, null),
-					CreationHelperUtil.createFormulaEvaluator(WorkbookUtil.getCreationHelper(wb)));
 			//
 			testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), file,
 					x -> Util.setText(tfFile, Util.getAbsolutePath(Util.getAbsoluteFile(x))));
 			//
+			testAndRunThrows(IterableUtils.size(wb) == 1, () -> {
+				//
+				jcbSheet.setSelectedIndex(1);
+				//
+			});
+			//
 		} catch (final IOException e) {
 			//
 			throw new RuntimeException(e);
 			//
 		} // try
-			//
-		try (final PDDocument pdDocument = createPDDocument(file, false)) {
-			//
-			if ((bufferedImage = new PDFRenderer(pdDocument).renderImage(0)) != null
-					&& IterableUtils.size(dataIterable) > 0) {
-				//
-				final int height = getHeight(bufferedImage);
-				//
-				final float ratioMin = Math
-						.max(height / (float) getHeight(testAndGet(isGui(), () -> getPreferredSize(), null), 1), 1);
-				//
-				if (ratioMin != 0) {
-					//
-					setIcon(lblThumbnail, testAndApply(Objects::nonNull,
-							getScaledInstance(bufferedImage, Math.max((int) (getWidth(bufferedImage) / ratioMin), 1),
-									Math.max((int) (height / ratioMin), 1), Image.SCALE_DEFAULT),
-							ImageIcon::new, null));
-					//
-				} // if
-					//
-				revalidate();
-				//
-			} // if
-				//
-		} catch (final IOException e) {
-			//
-			throw new RuntimeException(e);
-			//
-		} // try
-			//
-		if (Util.iterator(dataIterable) != null) {
-			//
-			for (final Data data : dataIterable) {
-				//
-				if (data == null) {
-					//
-					continue;
-					//
-				} // if
-					//
-				Util.addRow(tableModel, toArray(data));
-				//
-			} // for
-				//
-			setPreferredSize(jsp, new Dimension((int) getWidth(Util.getPreferredSize(jsp)),
-					IterableUtils.size(dataIterable) * 17 + 22));
-			//
-		} // if
 			//
 	}
 
@@ -933,14 +977,33 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private PDDocument createPDDocument(@Nullable final File file, final boolean generateAudio) {
 		//
+		try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
+			//
+			if (WorkbookUtil.getNumberOfSheets(wb) == 1) {
+				//
+				return createPDDocument(file, 0, generateAudio);
+				//
+			} // if
+				//
+			return null;
+			//
+		} catch (final IOException e) {
+			//
+			throw new RuntimeException(e);
+			//
+		} // try
+			//
+	}
+
+	private PDDocument createPDDocument(final File file, final int index, final boolean generateAudio) {
+		//
 		Drawing<?> drawingPatriarch = null;
 		//
 		Iterable<Data> dataList = null;
 		//
 		try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
 			//
-			final Sheet sheet = testAndApply(x -> WorkbookUtil.getNumberOfSheets(wb) == 1, wb,
-					x -> WorkbookUtil.getSheetAt(x, 0), null);
+			final Sheet sheet = WorkbookUtil.getSheetAt(wb, index);
 			//
 			drawingPatriarch = getDrawingPatriarch(sheet);
 			//
@@ -1220,6 +1283,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 		Collection<Data> dataList = null;
 		//
+		Data data = null;
+		//
 		for (int i = 0; i < IterableUtils.size(rows); i++) {
 			//
 			if ((row = IterableUtils.get(rows, i)) == null) {
@@ -1232,10 +1297,9 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 				map = toMap(row, formulaEvaluator);
 				//
-			} else {
+			} else if ((data = toData(map, row, formulaEvaluator)) != null) {
 				//
-				Util.add(dataList = ObjectUtils.getIfNull(dataList, ArrayList::new),
-						toData(map, row, formulaEvaluator));
+				Util.add(dataList = ObjectUtils.getIfNull(dataList, ArrayList::new), data);
 				//
 			} // if
 				//
