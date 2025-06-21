@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import com.google.common.base.Predicates;
 import com.google.common.reflect.Reflection;
 
 import io.github.toolfactory.narcissus.Narcissus;
@@ -185,6 +186,8 @@ class PDFRendererUtilTest {
 	void testTest() throws Throwable {
 		//
 		Assertions.assertFalse(test(null, null));
+		//
+		Assertions.assertFalse(test(Predicates.alwaysFalse(), null));
 		//
 	}
 
