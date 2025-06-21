@@ -667,11 +667,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			testAndAccept(x -> Boolean.logicalAnd(Util.exists(x), Util.isFile(x)), file,
 					x -> Util.setText(tfFile, Util.getAbsolutePath(Util.getAbsoluteFile(x))));
 			//
-			testAndRunThrows(IterableUtils.size(wb) == 1, () -> {
-				//
-				jcbSheet.setSelectedIndex(1);
-				//
-			});
+			testAndRunThrows(IterableUtils.size(wb) == 1, () -> jcbSheet.setSelectedIndex(1));
 			//
 		} catch (final IOException e) {
 			//
