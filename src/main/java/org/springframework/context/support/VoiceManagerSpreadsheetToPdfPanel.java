@@ -528,9 +528,9 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 		setIcon(lblThumbnail, new ImageIcon());
 		//
-		for (int i = (tableModel != null ? tableModel.getRowCount() : 0) - 1; i >= 0; i--) {
+		for (int i = Util.getRowCount(tableModel); i >= 0; i--) {
 			//
-			tableModel.removeRow(i);
+			Util.removeRow(tableModel, i);
 			//
 		} // for
 			//
