@@ -125,6 +125,7 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.apache.pdfbox.rendering.PDFRendererUtil;
 import org.d2ab.function.ObjIntFunction;
 import org.d2ab.function.ObjIntFunctionUtil;
 import org.javatuples.Unit;
@@ -941,7 +942,8 @@ public class VoiceManagerImageToPdfPanel extends JPanel
 				//
 			} // try
 				//
-			final IntIntPair intIntPair = getMinimumAndMaximumY(new PDFRenderer(pdDocument).renderImage(0));
+			final IntIntPair intIntPair = getMinimumAndMaximumY(
+					PDFRendererUtil.renderImage(new PDFRenderer(pdDocument), 0));
 			//
 			return intIntPair != null ? intIntPair.rightInt() - intIntPair.leftInt() + 1 : 0;
 			//

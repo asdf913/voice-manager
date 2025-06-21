@@ -111,6 +111,7 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageUtil;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.apache.pdfbox.rendering.PDFRendererUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CellUtil;
@@ -560,11 +561,10 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		try (final PDDocument pdDocument = selectedIndex > 0 ? createPDDocument(file, selectedIndex - 1, false)
 				: null) {
 			//
-			if (Boolean
-					.logicalAnd(
-							(bufferedImage = (renderImage(
-									testAndApply(Objects::nonNull, pdDocument, PDFRenderer::new, null), 0))) != null,
-							IterableUtils.size(dataIterable) > 0)) {
+			if (Boolean.logicalAnd(
+					(bufferedImage = (PDFRendererUtil.renderImage(
+							testAndApply(Objects::nonNull, pdDocument, PDFRenderer::new, null), 0))) != null,
+					IterableUtils.size(dataIterable) > 0)) {
 				//
 				final int imageHeight = getHeight(bufferedImage);
 				//
@@ -614,39 +614,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		setPreferredSize(jsp, new Dimension((int) getWidth(Util.getPreferredSize(jsp)),
 				Math.max(IterableUtils.size(dataIterable), 1) * 17 + 22));
-		//
-	}
-
-	@Nullable
-	private static BufferedImage renderImage(@Nullable final PDFRenderer instance, final int pageIndex)
-			throws IOException {
-		//
-		if (instance == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		final Iterable<Field> fs = Util.toList(Util.filter(
-				Util.stream(
-						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
-				f -> Objects.equals(Util.getName(f), "pageTree")));
-		//
-		if (IterableUtils.size(fs) > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		final Field field = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-		//
-		if (field != null && Narcissus.getField(instance, field) == null) {
-			//
-			return null;
-			//
-		} // if
-			//
-		return instance.renderImage(pageIndex);
 		//
 	}
 

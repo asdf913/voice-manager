@@ -177,6 +177,7 @@ import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationFileAttachment;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.apache.pdfbox.rendering.PDFRendererUtil;
 import org.d2ab.collection.ints.IntCollectionUtil;
 import org.d2ab.collection.ints.IntList;
 import org.d2ab.function.ObjIntFunction;
@@ -2281,7 +2282,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 						a -> JOptionPane.showMessageDialog(null,
 								testAndApply(Objects::nonNull,
 										chop(testAndApply(x -> getNumberOfPages(x) > 0, a,
-												x -> new PDFRenderer(x).renderImage(0), null)),
+												x -> PDFRendererUtil.renderImage(new PDFRenderer(x), 0), null)),
 										ImageIcon::new, null),
 								IMAGE, JOptionPane.PLAIN_MESSAGE, null));
 				//
@@ -3292,9 +3293,7 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 			//
 			final PDRectangle md = PDPageUtil.getMediaBox(pd);
 			//
-			final PDFRenderer pdfRenderer = new PDFRenderer(document);
-			//
-			final BufferedImage bi = pdfRenderer.renderImage(0);
+			final BufferedImage bi = PDFRendererUtil.renderImage(new PDFRenderer(document), 0);
 			//
 			final FloatMap floatMap = ObjectMap.getObject(objectMap, FloatMap.class);
 			//
