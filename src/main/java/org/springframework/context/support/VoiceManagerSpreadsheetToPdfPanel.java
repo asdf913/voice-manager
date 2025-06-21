@@ -632,7 +632,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 	}
 
-	private static Image getScaledInstance(final Image instance, final int width, final int height, final int hints) {
+	private static Image getScaledInstance(@Nullable final Image instance, final int width, final int height,
+			final int hints) {
 		return instance != null ? instance.getScaledInstance(width, height, hints) : instance;
 	}
 
