@@ -569,16 +569,14 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 				final int imageHeight = getHeight(bufferedImage);
 				//
-				if (lastImageHeight == null) {
-					//
-					lastImageHeight = Double.valueOf(getHeight(testAndGet(isGui(), () -> getPreferredSize(), null), 1));
-					//
-				} // if
-					//
-				final float ratioMin = Math.max(imageHeight
-						/ (float) (Util.doubleValue(lastImageHeight, 0) != 0 ? Util.doubleValue(lastImageHeight, 0)
-								: 1),
-						1);
+				final float ratioMin = Math
+						.max(imageHeight
+								/ (float) (Util.doubleValue(
+										lastImageHeight = ObjectUtils.getIfNull(lastImageHeight,
+												() -> Double.valueOf(getHeight(
+														testAndGet(isGui(), () -> getPreferredSize(), null), 1))),
+										0) != 0 ? Util.doubleValue(lastImageHeight, 0) : 1),
+								1);
 				//
 				if (ratioMin != 0) {
 					//
