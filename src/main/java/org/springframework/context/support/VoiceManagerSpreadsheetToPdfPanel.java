@@ -1751,34 +1751,31 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 					129// TODO
 			;
 			//
-			testAndRunThrows(gui && !isTestMode(), () -> {
+			final float ratioMin = Math.max(imageHeight / (float) (screenHeight != 0 ? screenHeight : 1), 1);
+			//
+			final List<Field> fs = Util
+					.toList(Util.filter(
+							Util.stream(testAndApply(Objects::nonNull, Util.getClass(bufferedImage),
+									FieldUtils::getAllFieldsList, null)),
+							x -> Objects.equals(Util.getName(x), RASTER)));
+			//
+			testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
 				//
-				final float ratioMin = Math.max(imageHeight / (float) (screenHeight != 0 ? screenHeight : 1), 1);
-				//
-				final List<Field> fs = Util
-						.toList(Util.filter(
-								Util.stream(testAndApply(Objects::nonNull, Util.getClass(bufferedImage),
-										FieldUtils::getAllFieldsList, null)),
-								x -> Objects.equals(Util.getName(x), RASTER)));
-				//
-				testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
-					//
-					throw new IllegalStateException();
-					//
-				});
-				//
-				final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
-				//
-				JOptionPane.showMessageDialog(null,
-						testAndApply(Objects::nonNull,
-								f == null || Narcissus.getField(bufferedImage, f) != null
-										? getScaledInstance(bufferedImage, Math.max((int) (width / ratioMin), 1),
-												Math.max((int) (imageHeight / ratioMin), 1), Image.SCALE_DEFAULT)
-										: null,
-								ImageIcon::new, null),
-						"Image", JOptionPane.PLAIN_MESSAGE);
+				throw new IllegalStateException();
 				//
 			});
+			//
+			final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+			//
+			testAndRunThrows(Util.and(gui, !isTestMode(), bufferedImage != null)
+					&& (f == null || Narcissus.getField(bufferedImage, f) != null), () -> {
+						//
+						JOptionPane.showMessageDialog(null,
+								new ImageIcon(getScaledInstance(bufferedImage, Math.max((int) (width / ratioMin), 1),
+										Math.max((int) (imageHeight / ratioMin), 1), Image.SCALE_DEFAULT)),
+								"Image", JOptionPane.PLAIN_MESSAGE);
+						//
+					});
 			//
 		} // if
 			//
