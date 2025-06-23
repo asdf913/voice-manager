@@ -1768,14 +1768,14 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 			//
 			testAndRunThrows(Util.and(gui, !isTestMode(), bufferedImage != null)
-					&& (f == null || Narcissus.getField(bufferedImage, f) != null), () -> {
-						//
-						JOptionPane.showMessageDialog(null,
-								new ImageIcon(getScaledInstance(bufferedImage, Math.max((int) (width / ratioMin), 1),
-										Math.max((int) (imageHeight / ratioMin), 1), Image.SCALE_DEFAULT)),
-								"Image", JOptionPane.PLAIN_MESSAGE);
-						//
-					});
+					&& (f == null || Narcissus.getField(bufferedImage, f) != null), () ->
+			//
+			JOptionPane.showMessageDialog(null,
+					new ImageIcon(getScaledInstance(bufferedImage, Math.max((int) (width / ratioMin), 1),
+							Math.max((int) (imageHeight / ratioMin), 1), Image.SCALE_DEFAULT)),
+					"Image", JOptionPane.PLAIN_MESSAGE)
+			//
+			);
 			//
 		} // if
 			//
