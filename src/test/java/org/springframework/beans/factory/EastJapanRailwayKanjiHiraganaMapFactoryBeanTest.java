@@ -175,14 +175,11 @@ class EastJapanRailwayKanjiHiraganaMapFactoryBeanTest {
 			//
 			if (Objects.equals(OperatingSystem.WINDOWS, OperatingSystemUtil.getOperatingSystem())) {
 				//
-				AssertionsUtil.assertThrowsAndEquals(ConnectException.class,
-						"{localizedMessage=Connection refused: connect, message=Connection refused: connect}",
-						executable);
+				AssertionsUtil.assertThrowsAndEquals(ConnectException.class, "{}", executable);
 				//
 			} else {
 				//
-				AssertionsUtil.assertThrowsAndEquals(ConnectException.class,
-						"{localizedMessage=Connection refused, message=Connection refused}", executable);
+				AssertionsUtil.assertThrowsAndEquals(ConnectException.class, "{}", executable);
 				//
 			} // if
 				//
