@@ -1,5 +1,6 @@
 package org.springframework.beans.factory;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -114,7 +115,10 @@ class KeikyuRailwayKanjiHiraganaMapFactoryBeanTest {
 		//
 		final MH mh = new MH();
 		//
-		final Node parentNode = ProxyUtil.createProxy(Node.class, mh);
+		final Element parentNode = ProxyUtil.createProxy(Element.class, mh, x -> {
+			final Constructor<?> constructor = x != null ? x.getDeclaredConstructor(String.class) : null;
+			return constructor != null ? constructor.newInstance("a") : null;
+		});
 		//
 		if (element != null) {
 			//
