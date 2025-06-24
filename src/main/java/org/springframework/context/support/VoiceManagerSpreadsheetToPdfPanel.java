@@ -529,13 +529,13 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private void actionPerformedJcbSheet() {
 		//
-		if (Boolean.logicalAnd(Objects.equals(Util.getText(tfException), MESSAGE_PLEASE_SELECT_A_SHEET),
-				getSelectedIndex(jcbSheet) > 0)) {
-			//
-			Util.setText(tfException, null);
-			//
-		} // if
-			//
+		testAndRunThrows(Boolean.logicalAnd(Objects.equals(Util.getText(tfException), MESSAGE_PLEASE_SELECT_A_SHEET),
+				getSelectedIndex(jcbSheet) > 0), () -> {
+					//
+					Util.setText(tfException, null);
+					//
+				});
+		//
 		setIcon(lblThumbnail, new ImageIcon());
 		//
 		for (int i = Util.getRowCount(tableModel); i >= 0; i--) {
