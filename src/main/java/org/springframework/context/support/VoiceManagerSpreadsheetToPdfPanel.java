@@ -989,21 +989,39 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		} // if
 			//
-			// TODO
-			//
-		final int selectedIndex = getSelectedIndex(jcbSheet);
+		int selectedIndex = -1;
 		//
-		if (selectedIndex < 1) {
+		try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
 			//
-			testAndRunThrows(file != null, () -> Util.setText(tfException, MESSAGE_PLEASE_SELECT_A_SHEET));
+			if (WorkbookUtil.getNumberOfSheets(wb) == 1) {
+				//
+				Util.forEach(Util.map(sorted(Util.map(IntStream.range(1, Util.getSize(cbmSheet)), i -> -i)), i -> -i),
+						i -> Util.removeElementAt(cbmSheet, i));
+				//
+				cbmSheet.addElement(SheetUtil.getSheetName(WorkbookUtil.getSheetAt(wb, 0)));
+				//
+				jcbSheet.setSelectedIndex(1);
+				//
+			} // if
+				//
+			if ((selectedIndex = getSelectedIndex(jcbSheet)) < 1) {
+				//
+				testAndRunThrows(file != null, () -> Util.setText(tfException, MESSAGE_PLEASE_SELECT_A_SHEET));
+				//
+				return;
+				//
+			} // if
+				//
+		} catch (final IOException e) {
 			//
-			return;
+			throw new RuntimeException(e);
 			//
-		} // if
+		} // try
 			//
-		try (final PDDocument pdDocument = createPDDocument(file, true)) {
+		try (final PDDocument pdDocument = createPDDocument(file, selectedIndex - 1, true)) {
 			//
-			System.out.println(Util.getAbsolutePath(file = (Util.toFile(Path.of("test.pdf")))));// TODO
+			System.out.println(Util.getAbsolutePath(
+					file = (Util.toFile(Path.of(StringUtils.joinWith(".", Util.getSelectedItem(cbmSheet), "pdf"))))));
 			//
 			if (!isTestMode()) {
 				//
@@ -1017,27 +1035,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 			} // if
 				//
-		} catch (final IOException e) {
-			//
-			throw new RuntimeException(e);
-			//
-		} // try
-			//
-	}
-
-	@Nullable
-	private PDDocument createPDDocument(@Nullable final File file, final boolean generateAudio) {
-		//
-		try (final Workbook wb = testAndApply(Util::isFile, file, WorkbookFactory::create, null)) {
-			//
-			if (WorkbookUtil.getNumberOfSheets(wb) == 1) {
-				//
-				return createPDDocument(file, 0, generateAudio);
-				//
-			} // if
-				//
-			return null;
-			//
 		} catch (final IOException e) {
 			//
 			throw new RuntimeException(e);
