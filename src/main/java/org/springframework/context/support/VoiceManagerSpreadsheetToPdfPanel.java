@@ -163,6 +163,8 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private static final String RASTER = "raster";
 
+	private static final String MESSAGE_PLEASE_SELECT_A_SHEET = "Please select a sheet";
+
 	private transient ComboBoxModel<Entry<String, Object>> cbmPDRectangle = null;
 
 	@Target(ElementType.FIELD)
@@ -527,6 +529,13 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private void actionPerformedJcbSheet() {
 		//
+		if (Objects.equals(Util.getText(tfException), MESSAGE_PLEASE_SELECT_A_SHEET)
+				&& getSelectedIndex(jcbSheet) > 0) {
+			//
+			Util.setText(tfException, null);
+			//
+		} // if
+			//
 		setIcon(lblThumbnail, new ImageIcon());
 		//
 		for (int i = Util.getRowCount(tableModel); i >= 0; i--) {
@@ -979,6 +988,18 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			testAndRunThrows(file != null,
 					() -> Util.setText(tfException, String.format("Allowed file type %1$s", collection)));
+			//
+			return;
+			//
+		} // if
+			//
+			// TODO
+			//
+		final int selectedIndex = getSelectedIndex(jcbSheet);
+		//
+		if (selectedIndex < 1) {
+			//
+			testAndRunThrows(file != null, () -> Util.setText(tfException, MESSAGE_PLEASE_SELECT_A_SHEET));
 			//
 			return;
 			//

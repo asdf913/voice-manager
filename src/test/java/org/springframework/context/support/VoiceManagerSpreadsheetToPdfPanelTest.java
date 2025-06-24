@@ -32,10 +32,13 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import javax.swing.AbstractButton;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
@@ -88,6 +91,8 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	private static final int ZERO = 0;
 
 	private static Class<?> CLASS_DATA = null;
+
+	private static final String EMPTY = "";
 
 	private static Method METHOD_FLOAT_VALUE, METHOD_GET_FIELD_BY_NAME, METHOD_GET_DRAWING_PATRIARCH, METHOD_GET_VOICE,
 			METHOD_GET_PICTURE_DATA, METHOD_GET_DATA_ITERABLE, METHOD_SET_FIELD, METHOD_TO_BIG_DECIMAL,
@@ -588,19 +593,17 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			//
 		Assertions.assertThrows(IllegalStateException.class, () -> getVoice(speechApi, null, b));
 		//
-		final String empty = "";
-		//
 		if (ih != null) {
 			//
-			ih.voiceIds = new String[] { empty };
+			ih.voiceIds = new String[] { EMPTY };
 			//
 		} // if
 			//
-		Assertions.assertSame(empty, getVoice(speechApi, null, null));
+		Assertions.assertSame(EMPTY, getVoice(speechApi, null, null));
 		//
 		if (ih != null) {
 			//
-			ih.voiceIds = new String[] { empty, empty };
+			ih.voiceIds = new String[] { EMPTY, EMPTY };
 			//
 		} // if
 			//
@@ -714,7 +717,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	@Test
 	void testSetField() {
 		//
-		Assertions.assertDoesNotThrow(() -> setField("", null, null));
+		Assertions.assertDoesNotThrow(() -> setField(EMPTY, null, null));
 		//
 	}
 
@@ -766,7 +769,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 	}
 
 	@Test
-	void testActionPerformed() throws IllegalAccessException {
+	void testActionPerformed() throws ReflectiveOperationException {
 		//
 		if (instance == null) {
 			//
@@ -774,7 +777,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent("", ZERO, null)));
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(EMPTY, ZERO, null)));
 		//
 		// btnPreview
 		//
@@ -802,7 +805,22 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		//
 		FieldUtils.writeDeclaredField(instance, "jcbSheet", jcbSheet, true);
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(jcbSheet, ZERO, null)));
+		final ActionEvent actionEventJcbSheet = new ActionEvent(jcbSheet, ZERO, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventJcbSheet));
+		//
+		FieldUtils.writeDeclaredField(instance, "tfException", new JTextField(Util.toString(FieldUtils
+				.readStaticField(VoiceManagerSpreadsheetToPdfPanel.class, "MESSAGE_PLEASE_SELECT_A_SHEET", true))),
+				true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventJcbSheet));
+		//
+		Narcissus.invokeMethod(jcbSheet, Util.getDeclaredMethod(JComboBox.class, "setModel", ComboBoxModel.class),
+				new DefaultComboBoxModel<>(new Object[] { null, EMPTY }));
+		//
+		jcbSheet.setSelectedItem(EMPTY);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventJcbSheet));
 		//
 	}
 
