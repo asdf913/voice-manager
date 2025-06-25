@@ -188,7 +188,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 	@Note("File")
 	private JTextComponent tfFile = null;
 
-	private JTextComponent tfException = null;
+	private JTextComponent tfOutputFile, tfException = null;
 
 	private JLabel lblThumbnail = null;
 
@@ -270,7 +270,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			final String wrap = "wrap";
 			//
 			add(lblThumbnail = new JLabel(),
-					String.format("%1$s,span 1 %2$s,wmin %3$s,hmin %4$s", wrap, 7, 102, 159 + 29));
+					String.format("%1$s,span 1 %2$s,wmin %3$s,hmin %4$s", wrap, 8, 102, 159 + 29));
 			//
 			lblThumbnail.addMouseListener(this);
 			//
@@ -363,9 +363,15 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 			add(btnExecute = new JButton("Execute"), wrap);
 			//
-			// Exception
+			// Output File
 			//
 			final String top = "top";
+			//
+			add(new JLabel("Output File"));
+			//
+			add(tfOutputFile = new JTextField(), String.format("growx,span %1$s,%2$s,%3$s", 2, wrap, top));
+			//
+			// Exception
 			//
 			add(new JLabel("Execption"), top);
 			//
@@ -373,7 +379,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		} // if
 			//
-		Util.forEach(Stream.of(tfFile, tfException), x -> Util.setEditable(x, false));
+		Util.forEach(Stream.of(tfFile, tfOutputFile, tfException), x -> Util.setEditable(x, false));
 		//
 		Util.forEach(Stream.of(btnPreview, btnExecute), x -> Util.addActionListener(x, this));
 		//
@@ -958,7 +964,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 
 	private void actionPerformedForBtnExecute() {
 		//
-		Util.setText(tfException, null);
+		Util.forEach(Stream.of(tfOutputFile, tfException), x -> Util.setText(x, null));
 		//
 		Entry<Method, Collection<Object>> entry = null;
 		//
@@ -1023,7 +1029,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 			//
 		try (final PDDocument pdDocument = createPDDocument(file, selectedIndex - 1, true)) {
 			//
-			System.out.println(Util.getAbsolutePath(
+			Util.setText(tfOutputFile, Util.getAbsolutePath(
 					file = (Util.toFile(Path.of(StringUtils.joinWith(".", Util.getSelectedItem(cbmSheet), "pdf"))))));
 			//
 			if (!isTestMode()) {
