@@ -188,7 +188,10 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 	@Note("File")
 	private JTextComponent tfFile = null;
 
-	private JTextComponent tfOutputFile, tfException = null;
+	@Note("Output File")
+	private JTextComponent tfOutputFile = null;
+
+	private JTextComponent tfException = null;
 
 	private JLabel lblThumbnail = null;
 
