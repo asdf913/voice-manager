@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.SortedSet;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -1380,7 +1380,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 		Object value = null;
 		//
-		SortedSet<Boolean> bs = null;
+		Set<Boolean> bs = null;
 		//
 		for (int j = 0; j < IterableUtils.size(fs); j++) {
 			//
