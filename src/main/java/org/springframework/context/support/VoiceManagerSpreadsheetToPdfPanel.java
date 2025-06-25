@@ -87,6 +87,7 @@ import org.apache.bcel.generic.MethodGen;
 import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.bcel.generic.Type;
 import org.apache.bcel.generic.TypeUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.IteratorUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -1337,12 +1338,6 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 		Iterable<Field> fs = null;
 		//
-		Field f = null;
-		//
-		Object object = null;
-		//
-		SortedSet<Boolean> bs = null;
-		//
 		for (int i = 0; i < IterableUtils.size(rows); i++) {
 			//
 			if ((row = IterableUtils.get(rows, i)) == null) {
@@ -1363,31 +1358,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 					//
 				} // if
 					//
-				for (int j = 0; j < IterableUtils.size(fs); j++) {
-					//
-					if ((f = IterableUtils.get(fs, j)) == null) {
-						//
-						continue;
-						//
-					} // if
-						//
-					object = Narcissus.getField(data, f);
-					//
-					Util.clear(bs = ObjectUtils.getIfNull(bs, TreeSet::new));
-					//
-					if (Util.isAssignableFrom(CharSequence.class, Util.getType(f))) {
-						//
-						Util.add(bs, Boolean.valueOf(StringUtils.isNotBlank(Util.toString(object))));
-						//
-					} else {
-						//
-						Util.add(bs, Boolean.valueOf(object != null));
-						//
-					} // if
-						//
-				} // for
-					//
-				if (IterableUtils.size(bs) > 1 && Objects.equals(Boolean.FALSE, bs.first())) {
+				if (isAllFieldsNullOrBlank(data, fs)) {
 					//
 					continue;
 					//
@@ -1400,6 +1371,42 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		} // for
 			//
 		return dataList;
+		//
+	}
+
+	private static boolean isAllFieldsNullOrBlank(final Object instance, final Iterable<Field> fs) {
+		//
+		Field f = null;
+		//
+		Object value = null;
+		//
+		SortedSet<Boolean> bs = null;
+		//
+		for (int j = 0; j < IterableUtils.size(fs); j++) {
+			//
+			if ((f = IterableUtils.get(fs, j)) == null) {
+				//
+				continue;
+				//
+			} // if
+				//
+			value = Narcissus.getField(instance, f);
+			//
+			if (Util.isAssignableFrom(CharSequence.class, Util.getType(f))) {
+				//
+				Util.add(bs = ObjectUtils.getIfNull(bs, TreeSet::new),
+						Boolean.valueOf(StringUtils.isNotBlank(Util.toString(value))));
+				//
+			} else {
+				//
+				Util.add(bs = ObjectUtils.getIfNull(bs, TreeSet::new), Boolean.valueOf(value != null));
+				//
+			} // if
+				//
+		} // for
+			//
+		return CollectionUtils.isEqualCollection(bs = ObjectUtils.getIfNull(bs, TreeSet::new),
+				Collections.singleton(Boolean.FALSE));
 		//
 	}
 

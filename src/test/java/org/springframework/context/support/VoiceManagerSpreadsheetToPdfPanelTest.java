@@ -100,7 +100,7 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			METHOD_TEST_AND_APPLY, METHOD_TEST_AND_GET, METHOD_TO_MAP, METHOD_GET_VALUE, METHOD_TO_ARRAY,
 			METHOD_TO_DATA, METHOD_GET_LAYOUT_MANAGER, METHOD_SET_PREFERRED_SIZE, METHOD_WRITE_VOICE_TO_FILE,
 			METHOD_FOR_EACH_REMAINING, METHOD_GET_HEIGHT, METHOD_GET_SCALED_INSTANCE, METHOD_SORTED,
-			METHOD_GET_SELECTED_INDEX = null;
+			METHOD_GET_SELECTED_INDEX, METHOD_IS_ALL_FIELDS_NULL_OR_BLANK = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -178,6 +178,9 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 		(METHOD_SORTED = clz.getDeclaredMethod("sorted", IntStream.class)).setAccessible(true);
 		//
 		(METHOD_GET_SELECTED_INDEX = clz.getDeclaredMethod("getSelectedIndex", JComboBox.class)).setAccessible(true);
+		//
+		(METHOD_IS_ALL_FIELDS_NULL_OR_BLANK = clz.getDeclaredMethod("isAllFieldsNullOrBlank", Object.class,
+				Iterable.class)).setAccessible(true);
 		//
 	}
 
@@ -1226,6 +1229,25 @@ class VoiceManagerSpreadsheetToPdfPanelTest {
 			final Object obj = METHOD_GET_SELECTED_INDEX.invoke(null, instance);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.getName(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testIsAllFieldsNullOrBlank() throws Throwable {
+		//
+		Assertions.assertFalse(isAllFieldsNullOrBlank(null, Collections.singleton(null)));
+		//
+	}
+
+	private static boolean isAllFieldsNullOrBlank(final Object instance, final Iterable<Field> fs) throws Throwable {
+		try {
+			final Object obj = METHOD_IS_ALL_FIELDS_NULL_OR_BLANK.invoke(null, instance, fs);
+			if (obj instanceof Boolean) {
+				return ((Boolean) obj).booleanValue();
 			}
 			throw new Throwable(Util.getName(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
