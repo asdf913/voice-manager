@@ -37,6 +37,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
@@ -1333,6 +1335,14 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 		//
 		Data data = null;
 		//
+		Iterable<Field> fs = null;
+		//
+		Field f = null;
+		//
+		Object object = null;
+		//
+		SortedSet<Boolean> bs = null;
+		//
 		for (int i = 0; i < IterableUtils.size(rows); i++) {
 			//
 			if ((row = IterableUtils.get(rows, i)) == null) {
@@ -1347,6 +1357,42 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 			} else if ((data = toData(map, row, formulaEvaluator)) != null) {
 				//
+				if (fs == null) {
+					//
+					fs = testAndApply(Objects::nonNull, Util.getClass(data), x -> FieldUtils.getAllFieldsList(x), null);
+					//
+				} // if
+					//
+				for (int j = 0; j < IterableUtils.size(fs); j++) {
+					//
+					if ((f = IterableUtils.get(fs, j)) == null) {
+						//
+						continue;
+						//
+					} // if
+						//
+					object = Narcissus.getField(data, f);
+					//
+					Util.clear(bs = ObjectUtils.getIfNull(bs, TreeSet::new));
+					//
+					if (Util.isAssignableFrom(CharSequence.class, Util.getType(f))) {
+						//
+						Util.add(bs, Boolean.valueOf(StringUtils.isNotBlank(Util.toString(object))));
+						//
+					} else {
+						//
+						Util.add(bs, Boolean.valueOf(object != null));
+						//
+					} // if
+						//
+				} // for
+					//
+				if (IterableUtils.size(bs) > 1 && Objects.equals(Boolean.FALSE, bs.first())) {
+					//
+					continue;
+					//
+				} // if
+					//
 				Util.add(dataList = ObjectUtils.getIfNull(dataList, ArrayList::new), data);
 				//
 			} // if
