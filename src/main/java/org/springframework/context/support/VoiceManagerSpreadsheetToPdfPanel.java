@@ -1359,7 +1359,7 @@ public class VoiceManagerSpreadsheetToPdfPanel extends JPanel
 				//
 				if (fs == null) {
 					//
-					fs = testAndApply(Objects::nonNull, Util.getClass(data), x -> FieldUtils.getAllFieldsList(x), null);
+					fs = testAndApply(Objects::nonNull, Util.getClass(data), FieldUtils::getAllFieldsList, null);
 					//
 				} // if
 					//
