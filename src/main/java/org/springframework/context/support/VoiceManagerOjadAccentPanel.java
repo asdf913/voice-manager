@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -121,7 +122,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				PageUtil.navigate(page = newPage(BrowserTypeUtil.launch(chromium(Playwright.create()))),
 						StringUtils.join("https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index/word:",
 								testAndApply(Objects::nonNull, Util.getText(tfText),
-										x -> URLEncoder.encode(x, Charset.forName("utf-8")), null)));
+										x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
 				//
 			} // if
 				//
