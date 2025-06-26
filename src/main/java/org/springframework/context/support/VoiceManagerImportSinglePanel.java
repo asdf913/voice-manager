@@ -2253,7 +2253,8 @@ public class VoiceManagerImportSinglePanel extends JPanel
 	private static List<?> getObjectsByGroupAnnotation(final Object instance, final String group) {
 		//
 		final FailableStream<Field> fs = new FailableStream<>(Util.filter(
-				testAndApply(Objects::nonNull, Util.getDeclaredFields(VoiceManager.class), Arrays::stream, null), f -> {
+				testAndApply(Objects::nonNull, Util.getDeclaredFields(Util.getClass(instance)), Arrays::stream, null),
+				f -> {
 					final Group g = Util.isAnnotationPresent(f, Group.class) ? f.getAnnotation(Group.class) : null;
 					return StringUtils.equals(g != null ? g.value() : null, group);
 				}));
