@@ -149,7 +149,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static void setIcon(final JLabel instance, final Icon icon) {
+	private static void setIcon(@Nullable final JLabel instance, final Icon icon) {
 		//
 		if (instance == null) {
 			//
@@ -196,7 +196,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
-	private static void pack(final Window instance) {
+	private static void pack(@Nullable final Window instance) {
 		//
 		if (instance == null) {
 			//
