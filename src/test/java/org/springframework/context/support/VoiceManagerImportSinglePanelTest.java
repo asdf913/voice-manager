@@ -177,8 +177,6 @@ class VoiceManagerImportSinglePanelTest {
 								Arrays.equals(parameterTypes, new Class[] {}))
 						|| Boolean.logicalAnd(Objects.equals(name, "getBooleanValues"),
 								Arrays.equals(parameterTypes, new Class[] {}))
-						|| Boolean.logicalAnd(Objects.equals(name, "getObjectsByGroupAnnotation"),
-								Arrays.equals(parameterTypes, new Class[] { Object.class, String.class }))
 						|| Boolean.logicalAnd(Objects.equals(name, "createFunctionForBtnConvertToHiraganaOrKatakana"),
 								Arrays.equals(parameterTypes, new Class[] { String.class }))
 						|| Boolean.logicalAnd(Objects.equals(name, "createYomiNameMap"),
@@ -198,9 +196,7 @@ class VoiceManagerImportSinglePanelTest {
 						|| Boolean.logicalAnd(Objects.equals(name, "randomAlphabetic"),
 								Arrays.equals(parameterTypes, new Class[] { Integer.TYPE }))
 						|| Boolean.logicalAnd(Objects.equals(name, "checkFileExtension"),
-								Arrays.equals(parameterTypes, new Class[] { String.class }))
-						|| Boolean.logicalAnd(Objects.equals(name, "getObjectsByGroupAnnotation"),
-								Arrays.equals(parameterTypes, new Class[] { Object.class, String.class }))) {
+								Arrays.equals(parameterTypes, new Class[] { String.class }))) {
 					//
 					Assertions.assertNotNull(invoke, toString);
 					//
