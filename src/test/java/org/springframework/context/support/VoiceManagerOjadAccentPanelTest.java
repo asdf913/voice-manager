@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.Window;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -9,7 +10,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import javax.swing.Icon;
+import javax.swing.JLabel;
+
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +33,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class VoiceManagerOjadAccentPanelTest {
 
-	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL = null;
+	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL, METHOD_SET_ICON,
+			METHOD_PACK = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -43,6 +50,10 @@ class VoiceManagerOjadAccentPanelTest {
 		(METHOD_QUERY_SELECTOR_ALL = clz.getDeclaredMethod("querySelectorAll", Page.class, String.class))
 				.setAccessible(true);
 		//
+		(METHOD_SET_ICON = clz.getDeclaredMethod("setIcon", JLabel.class, Icon.class)).setAccessible(true);
+		//
+		(METHOD_PACK = clz.getDeclaredMethod("pack", Window.class)).setAccessible(true);
+		//
 	}
 
 	private static class IH implements InvocationHandler {
@@ -50,6 +61,12 @@ class VoiceManagerOjadAccentPanelTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
+			if (Objects.equals(Util.getReturnType(method), Integer.TYPE)) {
+				//
+				return 0;
+				//
+			} // if
+				//
 			final String methodName = Util.getName(method);
 			//
 			if (proxy instanceof ElementHandle) {
@@ -104,6 +121,12 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Method m = null;
 		//
+		Object[] os = null;
+		//
+		Object invoke = null;
+		//
+		VoiceManagerOjadAccentPanel instance = null;
+		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ms[i]) == null || m.isSynthetic() || Objects.equals(Util.getName(m), "main")
@@ -113,9 +136,22 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 			} // if
 				//
-			Assertions.assertNull(
-					Narcissus.invokeStaticMethod(m, Util.toArray(Collections.nCopies(m.getParameterCount(), null))),
-					Objects.toString(m));
+			os = Util.toArray(Collections.nCopies(m.getParameterCount(), null));
+			//
+			invoke = Util
+					.isStatic(m)
+							? Narcissus.invokeStaticMethod(m, os)
+							: Narcissus
+									.invokeMethod(
+											instance = ObjectUtils
+													.getIfNull(instance,
+															() -> Util.cast(VoiceManagerOjadAccentPanel.class,
+																	Narcissus.allocateInstance(
+																			VoiceManagerOjadAccentPanel.class))),
+											m, os);
+
+			//
+			Assertions.assertNull(invoke, Objects.toString(m));
 			//
 		} // for
 			//
@@ -132,22 +168,38 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Class<?> parameterType = null;
 		//
+		Object invokeStaticMethod = null;
+		//
+		String toString = null;
+		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ms[i]) == null || (parameterTypes = Util.getParameterTypes(m)) == null
 					|| parameterTypes.length != 1 || (parameterType = ArrayUtils.get(parameterTypes, 0)) == null
-					|| !Modifier.isInterface(parameterType.getModifiers())) {
+					|| !Modifier.isInterface(parameterType.getModifiers())
+					|| StringUtils.startsWith(Util.getName(m), "lambda$")) {
 				//
 				continue;
 				//
 			} // if
 				//
-			Assertions.assertNull(
-					Narcissus.invokeStaticMethod(m, new Object[] { Reflection.newProxy(parameterType, ih) }),
-					Objects.toString(m));
+			invokeStaticMethod = Narcissus.invokeStaticMethod(m,
+					new Object[] { Reflection.newProxy(parameterType, ih) });
 			//
+			toString = Util.toString(m);
+			//
+			if (Objects.equals(Util.getReturnType(m), Boolean.TYPE)) {
+				//
+				Assertions.assertNotNull(invokeStaticMethod, toString);
+			} else {
+				//
+				Assertions.assertNull(invokeStaticMethod, toString);
+				//
+			} // if
+				//
 		} // for
 			//
+
 	}
 
 	@Test
@@ -213,6 +265,37 @@ class VoiceManagerOjadAccentPanelTest {
 				return (List) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testSetIcon() {
+		//
+		Assertions.assertDoesNotThrow(
+				() -> setIcon(Util.cast(JLabel.class, Narcissus.allocateInstance(JLabel.class)), null));
+		//
+	}
+
+	private static void setIcon(final JLabel instance, final Icon icon) throws Throwable {
+		try {
+			METHOD_SET_ICON.invoke(null, instance, icon);
+		} catch (InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testPack() {
+		//
+		Assertions.assertDoesNotThrow(() -> pack(Util.cast(Window.class, Narcissus.allocateInstance(Window.class))));
+		//
+	}
+
+	private static void pack(final Window instance) throws Throwable {
+		try {
+			METHOD_PACK.invoke(null, instance);
 		} catch (InvocationTargetException e) {
 			throw e.getTargetException();
 		}
