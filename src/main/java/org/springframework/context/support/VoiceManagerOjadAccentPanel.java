@@ -23,6 +23,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
@@ -180,7 +181,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		final JFrame jFrame = new JFrame();
 		//
-		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		//
 		final VoiceManagerOjadAccentPanel instance = new VoiceManagerOjadAccentPanel();
 		//
