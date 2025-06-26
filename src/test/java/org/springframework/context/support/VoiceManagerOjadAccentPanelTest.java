@@ -76,14 +76,10 @@ class VoiceManagerOjadAccentPanelTest {
 					//
 				} // if
 					//
-			} else if (proxy instanceof Page) {
+			} else if (proxy instanceof Page && Objects.equals(methodName, "querySelectorAll")) {
 				//
-				if (Objects.equals(methodName, "querySelectorAll")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
