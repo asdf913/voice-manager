@@ -57,7 +57,7 @@ public class VoiceManagerOjadAccentPanel {
 			//
 	}
 
-	private static String[] getFileExtensions(final ContentInfo instance) {
+	private static String[] getFileExtensions(@Nullable final ContentInfo instance) {
 		return instance != null ? instance.getFileExtensions() : null;
 	}
 
@@ -65,19 +65,19 @@ public class VoiceManagerOjadAccentPanel {
 		return instance != null && bytes != null ? instance.findMatch(bytes) : null;
 	}
 
-	private static BrowserType chromium(final Playwright instance) {
+	private static BrowserType chromium(@Nullable final Playwright instance) {
 		return instance != null ? instance.chromium() : null;
 	}
 
-	private static Page newPage(final Browser instance) {
+	private static Page newPage(@Nullable final Browser instance) {
 		return instance != null ? instance.newPage() : null;
 	}
 
-	private static List<ElementHandle> querySelectorAll(final Page instance, final String selector) {
+	private static List<ElementHandle> querySelectorAll(@Nullable final Page instance, final String selector) {
 		return instance != null ? instance.querySelectorAll(selector) : null;
 	}
 
-	private static byte[] screenshot(final ElementHandle instance) {
+	private static byte[] screenshot(@Nullable final ElementHandle instance) {
 		return instance != null ? instance.screenshot() : null;
 	}
 
