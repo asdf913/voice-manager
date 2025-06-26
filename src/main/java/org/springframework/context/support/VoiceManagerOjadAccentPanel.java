@@ -134,9 +134,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							querySelectorAll(page, ".katsuyo_accent"), x -> IterableUtils.get(x, 0), null)),
 					ByteArrayInputStream::new, null)) {
 				//
-				setIcon(lblAccent,
-						testAndApply(Objects::nonNull, testAndApply(Objects::nonNull, is, x -> ImageIO.read(x), null),
-								ImageIcon::new, x -> new ImageIcon()));
+				setIcon(lblAccent, testAndApply(Objects::nonNull,
+						testAndApply(Objects::nonNull, is, ImageIO::read, null), ImageIcon::new, x -> new ImageIcon()));
 				//
 			} catch (final IOException e) {
 				//
@@ -158,11 +157,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
-		final Iterable<Field> fs = Util
-				.toList(Util.filter(
-						Util.stream(testAndApply(Objects::nonNull, Util.getClass(instance),
-								x -> FieldUtils.getAllFieldsList(x), null)),
-						f -> Objects.equals(Util.getName(f), "objectLock")));
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				f -> Objects.equals(Util.getName(f), "objectLock")));
 		//
 		if (IterableUtils.size(fs) > 1) {
 			//
@@ -205,11 +203,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
-		final Iterable<Field> fs = Util
-				.toList(Util.filter(
-						Util.stream(testAndApply(Objects::nonNull, Util.getClass(instance),
-								x -> FieldUtils.getAllFieldsList(x), null)),
-						f -> Objects.equals(Util.getName(f), "objectLock")));
+		final Iterable<Field> fs = Util.toList(Util.filter(
+				Util.stream(
+						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
+				f -> Objects.equals(Util.getName(f), "objectLock")));
 		//
 		if (IterableUtils.size(fs) > 1) {
 			//
