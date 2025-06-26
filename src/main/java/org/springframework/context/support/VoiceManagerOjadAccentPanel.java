@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -59,7 +61,7 @@ public class VoiceManagerOjadAccentPanel {
 		return instance != null ? instance.getFileExtensions() : null;
 	}
 
-	private static ContentInfo findMatch(final ContentInfoUtil instance, final byte[] bytes) {
+	private static ContentInfo findMatch(@Nullable final ContentInfoUtil instance, @Nullable final byte[] bytes) {
 		return instance != null && bytes != null ? instance.findMatch(bytes) : null;
 	}
 
