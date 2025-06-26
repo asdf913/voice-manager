@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class VoiceManagerOjadAccentPanel {
 			//
 			FileUtils
 					.writeByteArrayToFile(
-							file = Util.toFile(Paths.get(StringUtils.joinWith(".", Integer.toString(i),
+							file = Util.toFile(Path.of(StringUtils.joinWith(".", Integer.toString(i),
 									StringUtils.defaultIfBlank((fileExtensions = getFileExtensions(
 											findMatch(cic = ObjectUtils.getIfNull(cic, ContentInfoUtil::new),
 													bs = screenshot(IterableUtils.get(ehs, i))))) != null
