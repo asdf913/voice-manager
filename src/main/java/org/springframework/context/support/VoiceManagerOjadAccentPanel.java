@@ -69,16 +69,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		setLayout(new MigLayout());// TODO
 		//
-		final List<Field> fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(Util.getClass(this))),
-				f -> Objects.equals(Util.getName(f), "component")));
-		//
-		if (IterableUtils.size(fs) > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		final Field f = getFieldByName(Util.getClass(this), "component");
 		//
 		if (f == null || Narcissus.getField(this, f) != null) {
 			//
@@ -100,6 +91,22 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static Field getFieldByName(final Class<?> clz, final String fieldName) {
+		//
+		final List<Field> fs = Util.toList(
+				Util.filter(Util.stream(testAndApply(Objects::nonNull, clz, x -> FieldUtils.getAllFieldsList(x), null)),
+						f -> Objects.equals(Util.getName(f), fieldName)));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		return testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
@@ -157,18 +164,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
-		final Iterable<Field> fs = Util.toList(Util.filter(
-				Util.stream(
-						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
-				f -> Objects.equals(Util.getName(f), "objectLock")));
-		//
-		if (IterableUtils.size(fs) > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		final Field f = getFieldByName(Util.getClass(instance), "objectLock");
 		//
 		if (f == null || Narcissus.getField(instance, f) != null) {
 			//
@@ -184,16 +180,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		//
-		final List<Field> fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(JFrame.class)),
-				f -> Objects.equals(Util.getName(f), "component")));
-		//
-		if (IterableUtils.size(fs) > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		final Field f = getFieldByName(Util.getClass(JFrame.class), "component");
 		//
 		final boolean gui = f == null || Narcissus.getField(jFrame, f) != null;
 		//
@@ -225,18 +212,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
-		final Iterable<Field> fs = Util.toList(Util.filter(
-				Util.stream(
-						testAndApply(Objects::nonNull, Util.getClass(instance), FieldUtils::getAllFieldsList, null)),
-				f -> Objects.equals(Util.getName(f), "objectLock")));
-		//
-		if (IterableUtils.size(fs) > 1) {
-			//
-			throw new IllegalStateException();
-			//
-		} // if
-			//
-		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		final Field f = getFieldByName(Util.getClass(instance), "objectLock");
 		//
 		if (f == null || Narcissus.getField(instance, f) != null) {
 			//
