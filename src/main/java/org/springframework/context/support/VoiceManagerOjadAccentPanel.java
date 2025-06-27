@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.GraphicsEnvironment;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -178,20 +179,42 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	public static void main(final String[] args) throws Exception {
 		//
-		final JFrame jFrame = new JFrame();
+		final JFrame jFrame = !GraphicsEnvironment.isHeadless() ? new JFrame()
+				: Util.cast(JFrame.class, Narcissus.allocateInstance(JFrame.class));
 		//
 		jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		//
+		final List<Field> fs = Util.toList(Util.filter(Util.stream(FieldUtils.getAllFieldsList(JFrame.class)),
+				f -> Objects.equals(Util.getName(f), "component")));
+		//
+		if (IterableUtils.size(fs) > 1) {
+			//
+			throw new IllegalStateException();
+			//
+		} // if
+			//
+		final Field f = testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
+		//
+		final boolean gui = f == null || Narcissus.getField(jFrame, f) != null;
 		//
 		final VoiceManagerOjadAccentPanel instance = new VoiceManagerOjadAccentPanel();
 		//
 		instance.afterPropertiesSet();
 		//
-		jFrame.add(instance);
-		//
+		if (gui) {
+			//
+			jFrame.add(instance);
+			//
+		} // if
+			//
 		pack(instance.window = jFrame);
 		//
-		jFrame.setVisible(true);
-		//
+		if (gui) {
+			//
+			jFrame.setVisible(true);
+			//
+		} // if
+			//
 	}
 
 	private static void pack(@Nullable final Window instance) {
