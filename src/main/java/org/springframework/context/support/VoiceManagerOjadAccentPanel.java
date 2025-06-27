@@ -96,7 +96,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	private static Field getFieldByName(final Class<?> clz, final String fieldName) {
 		//
 		final List<Field> fs = Util.toList(
-				Util.filter(Util.stream(testAndApply(Objects::nonNull, clz, x -> FieldUtils.getAllFieldsList(x), null)),
+				Util.filter(Util.stream(testAndApply(Objects::nonNull, clz, FieldUtils::getAllFieldsList, null)),
 						f -> Objects.equals(Util.getName(f), fieldName)));
 		//
 		if (IterableUtils.size(fs) > 1) {
