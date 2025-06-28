@@ -466,29 +466,29 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testIH() throws Throwable {
 		//
-		final InvocationHandler ih = Util.cast(InvocationHandler.class, Narcissus
+		final InvocationHandler invocationHandler = Util.cast(InvocationHandler.class, Narcissus
 				.allocateInstance(Util.forName("org.springframework.context.support.VoiceManagerOjadAccentPanel$IH")));
 		//
-		if (ih == null) {
+		if (invocationHandler == null) {
 			//
 			return;
 			//
 		} // if
 			//
-		Assertions.assertThrows(Throwable.class, () -> ih.invoke(null, null, null));
+		Assertions.assertThrows(Throwable.class, () -> invocationHandler.invoke(null, null, null));
 		//
-		final Transferable transferable = Reflection.newProxy(Transferable.class, ih);
+		final Transferable transferable = Reflection.newProxy(Transferable.class, invocationHandler);
 		//
-		Assertions.assertThrows(Throwable.class, () -> ih.invoke(transferable, null, null));
+		Assertions.assertThrows(Throwable.class, () -> invocationHandler.invoke(transferable, null, null));
 		//
 		final ObjectMapper objectMapper = new ObjectMapper();
 		//
 		Assertions.assertEquals(
 				ObjectMapperUtil.writeValueAsString(objectMapper, new DataFlavor[] { DataFlavor.imageFlavor }),
-				ObjectMapperUtil.writeValueAsString(objectMapper, ih.invoke(transferable,
+				ObjectMapperUtil.writeValueAsString(objectMapper, invocationHandler.invoke(transferable,
 						Narcissus.findMethod(Transferable.class, "getTransferDataFlavors"), null)));
 		//
-		Assertions.assertNull(ih.invoke(transferable,
+		Assertions.assertNull(invocationHandler.invoke(transferable,
 				Narcissus.findMethod(Transferable.class, "getTransferData", DataFlavor.class), null));
 		//
 	}
