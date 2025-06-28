@@ -159,8 +159,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					final JLabel label = new JLabel();
 					//
-					label.setIcon(testAndApply(Objects::nonNull, value != null ? value.image : null,
-							x -> new ImageIcon(x), x -> new ImageIcon()));
+					label.setIcon(testAndApply(Objects::nonNull, value != null ? value.image : null, ImageIcon::new,
+							x -> new ImageIcon()));
 					//
 					panel.add(label);
 					//
