@@ -2158,6 +2158,7 @@ public abstract class Util {
 		//
 	}
 
+	@Nullable
 	static <E> ListModel<E> getModel(@Nullable final JList<E> instance) {
 		return instance != null ? instance.getModel() : null;
 	}
