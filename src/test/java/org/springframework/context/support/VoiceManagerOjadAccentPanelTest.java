@@ -1,6 +1,7 @@
 package org.springframework.context.support;
 
 import java.awt.Window;
+import java.awt.event.ActionEvent;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -11,11 +12,14 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.swing.Icon;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.MutableComboBoxModel;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,8 +37,8 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class VoiceManagerOjadAccentPanelTest {
 
-	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL, METHOD_SET_ICON,
-			METHOD_PACK = null;
+	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL,
+			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -50,6 +54,9 @@ class VoiceManagerOjadAccentPanelTest {
 		(METHOD_QUERY_SELECTOR_ALL = clz.getDeclaredMethod("querySelectorAll", Page.class, String.class))
 				.setAccessible(true);
 		//
+		(METHOD_QUERY_SELECTOR = clz.getDeclaredMethod("querySelector", ElementHandle.class, String.class))
+				.setAccessible(true);
+//
 		(METHOD_SET_ICON = clz.getDeclaredMethod("setIcon", JLabel.class, Icon.class)).setAccessible(true);
 		//
 		(METHOD_PACK = clz.getDeclaredMethod("pack", Window.class)).setAccessible(true);
@@ -61,9 +68,16 @@ class VoiceManagerOjadAccentPanelTest {
 		@Override
 		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 			//
-			if (Objects.equals(Util.getReturnType(method), Integer.TYPE)) {
+			final Class<?> returnType = Util.getReturnType(method);
+			//
+			if (Objects.equals(returnType, Integer.TYPE)) {
 				//
 				return 0;
+				//
+			} else if (method != null && method.getParameterCount() == 0
+					&& Objects.equals(returnType, method.getDeclaringClass())) {
+				//
+				return proxy;
 				//
 			} // if
 				//
@@ -72,6 +86,14 @@ class VoiceManagerOjadAccentPanelTest {
 			if (proxy instanceof ElementHandle) {
 				//
 				if (Objects.equals(methodName, "screenshot")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(methodName, "textContent")) {
+					//
+					return null;
+					//
+				} else if (Objects.equals(methodName, "querySelector")) {
 					//
 					return null;
 					//
@@ -107,10 +129,14 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private IH ih = null;
 
+	private VoiceManagerOjadAccentPanel instance = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		ih = new IH();
+		//
+		instance = new VoiceManagerOjadAccentPanel();
 		//
 	}
 
@@ -188,7 +214,8 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 			toString = Util.toString(m);
 			//
-			if (Objects.equals(Util.getReturnType(m), Boolean.TYPE)) {
+			if (Objects.equals(Util.getReturnType(m), Boolean.TYPE)
+					|| Objects.equals(Util.getReturnType(m), parameterType)) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
 			} else {
@@ -199,7 +226,34 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 		} // for
 			//
+	}
 
+	@Test
+	void testActionPerformed() throws IllegalAccessException {
+		//
+		if (instance == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(null));
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent("", 0, null)));
+		//
+		final JComboBox<?> jcbTextAndImage = new JComboBox<>();
+		//
+		FieldUtils.writeDeclaredField(instance, "jcbTextAndImage", jcbTextAndImage, true);
+		//
+		final ActionEvent actionEvent = new ActionEvent(jcbTextAndImage, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
+		Util.cast(MutableComboBoxModel.class, jcbTextAndImage.getModel()).addElement(Narcissus.allocateInstance(
+				Util.forName("org.springframework.context.support.VoiceManagerOjadAccentPanel$TextAndImage")));
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		//
 	}
 
 	@Test
@@ -263,6 +317,27 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof List) {
 				return (List) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testQuerySelector() throws Throwable {
+		//
+		Assertions.assertNull(querySelector(Reflection.newProxy(ElementHandle.class, ih), null));
+		//
+	}
+
+	private static ElementHandle querySelector(final ElementHandle instance, final String selector) throws Throwable {
+		try {
+			final Object obj = METHOD_QUERY_SELECTOR.invoke(null, instance, selector);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof ElementHandle) {
+				return (ElementHandle) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (InvocationTargetException e) {

@@ -1,9 +1,13 @@
 package org.springframework.context.support;
 
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Dimension2D;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,17 +17,23 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
+import javax.swing.MutableComboBoxModel;
 import javax.swing.WindowConstants;
 import javax.swing.text.JTextComponent;
 
@@ -64,6 +74,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private Window window = null;
 
+	private static class TextAndImage {
+
+		private String text = null;
+
+		private Image image = null;
+	}
+
+	private JComboBox<TextAndImage> jcbTextAndImage = null;
+
+	private MutableComboBoxModel<TextAndImage> mcbmTextAndImage = null;
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		//
@@ -77,13 +98,77 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final String wrap = "wrap";
 			//
-			add(tfText = new JTextField(), String.format("%1$s,%2$s", wrap, "growx"));
+			final String growx = "growx";
+			//
+			add(tfText = new JTextField(), String.format("%1$s,%2$s", wrap, growx));
 			//
 			add(new JLabel());
 			//
 			add(btnExecute = new JButton("Execute"), wrap);
 			//
 			btnExecute.addActionListener(this);
+			//
+			add(new JLabel("Text And Image"));
+			//
+			add(jcbTextAndImage = new JComboBox<>(
+					mcbmTextAndImage = new DefaultComboBoxModel<>(new TextAndImage[] { null })),
+					String.format("%1$s,%2$s", wrap, growx));
+			//
+			jcbTextAndImage.addActionListener(this);
+			//
+			jcbTextAndImage.setRenderer(new ListCellRenderer<>() {
+
+				@Override
+				public Component getListCellRendererComponent(final JList<? extends TextAndImage> list,
+						final TextAndImage value, final int index, final boolean isSelected,
+						final boolean cellHasFocus) {
+					//
+					final JPanel panel = new JPanel();
+					//
+					final Dimension2D preferredSize = panel.getPreferredSize();
+					//
+					if (preferredSize != null) {
+						//
+						if (list != null && list.getModel() != null && list.getModel().getSize() == 1) {
+							//
+							if (tfText != null && tfText.getPreferredSize() != null) {
+								//
+								panel.setPreferredSize(new Dimension((int) preferredSize.getWidth(),
+										(int) tfText.getPreferredSize().getHeight()));
+								//
+							} // if
+								//
+						} else {
+							//
+							// TODO
+							//
+							if (value == null) {
+								//
+								panel.setPreferredSize(new Dimension((int) preferredSize.getWidth(),
+										Math.max(tfText != null && tfText.getPreferredSize() != null
+												? (int) tfText.getPreferredSize().getHeight()
+												: 0, 26)));
+								//
+							} // if
+								//
+						} // if
+							//
+					} // if
+						//
+					panel.add(new JLabel(value != null ? value.text : null));
+					//
+					final JLabel label = new JLabel();
+					//
+					label.setIcon(testAndApply(Objects::nonNull, value != null ? value.image : null,
+							x -> new ImageIcon(x), x -> new ImageIcon()));
+					//
+					panel.add(label);
+					//
+					return panel;
+					//
+				}
+
+			});
 			//
 			add(new JLabel());
 			//
@@ -119,7 +204,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Override
 	public void actionPerformed(final ActionEvent evt) {
 		//
-		if (Objects.equals(Util.getSource(evt), btnExecute)) {
+		final Object source = Util.getSource(evt);
+		//
+		if (Objects.equals(source, btnExecute)) {
 			//
 			setIcon(lblAccent, new ImageIcon());
 			//
@@ -134,26 +221,88 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // if
 				//
-				// TODO
+			Util.forEach(
+					Util.map(sorted(Util.map(IntStream.range(1, Util.getSize(mcbmTextAndImage)), i -> -i)), i -> -i),
+					i -> Util.removeElementAt(mcbmTextAndImage, i));
+			//
+			// TODO
+			//
+			final List<ElementHandle> ehs = querySelectorAll(page, ".katsuyo_accent");
+			//
+			final List<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
+			//
+			TextAndImage textAndImage = null;
+			//
+			if (IterableUtils.size(ehs) == 1) {
 				//
-			try (final InputStream is = testAndApply(
-					Objects::nonNull, screenshot(testAndApply(x -> IterableUtils.size(x) == 1,
-							querySelectorAll(page, ".katsuyo_accent"), x -> IterableUtils.get(x, 0), null)),
-					ByteArrayInputStream::new, null)) {
+				mcbmTextAndImage.addElement(textAndImage = new TextAndImage());
 				//
-				setIcon(lblAccent, testAndApply(Objects::nonNull,
-						testAndApply(Objects::nonNull, is, ImageIO::read, null), ImageIcon::new, x -> new ImageIcon()));
+				textAndImage.text = StringUtils.trim(textContent(querySelector(
+						testAndApply(x -> IterableUtils.size(x) == 1, words, x -> IterableUtils.get(x, 0), null),
+						".midashi")));
 				//
-			} catch (final IOException e) {
+				try (final InputStream is = testAndApply(Objects::nonNull, screenshot(IterableUtils.get(ehs, 0)),
+						ByteArrayInputStream::new, null)) {
+					//
+					textAndImage.image = testAndApply(Objects::nonNull, is, ImageIO::read, null);
+					//
+				} catch (final IOException e) {
+					//
+					LoggerUtil.error(LOG, e.getMessage(), e);
+					//
+				} // try
+					//
+				mcbmTextAndImage.setSelectedItem(textAndImage);
 				//
-				LoggerUtil.error(LOG, e.getMessage(), e);
+			} else if (IterableUtils.size(words) == IterableUtils.size(ehs)) {
 				//
-			} // try
+				for (int i = 0; i < IterableUtils.size(words); i++) {
+					//
+					mcbmTextAndImage.addElement(textAndImage = new TextAndImage());
+					//
+					textAndImage.text = StringUtils
+							.trim(textContent(querySelector(IterableUtils.get(words, i), ".midashi")));
+					//
+					try (final InputStream is = testAndApply(Objects::nonNull, screenshot(IterableUtils.get(ehs, i)),
+							ByteArrayInputStream::new, null)) {
+						//
+						textAndImage.image = testAndApply(Objects::nonNull, is, ImageIO::read, null);
+						//
+					} catch (final IOException e) {
+						//
+						LoggerUtil.error(LOG, e.getMessage(), e);
+						//
+					} // try
+						//
+				} // for
+					//
+			} // if
 				//
+			pack(window);
+			//
+		} else if (Objects.equals(source, jcbTextAndImage)) {
+			//
+			final TextAndImage textAndImage = Util.cast(TextAndImage.class, jcbTextAndImage.getSelectedItem());
+			//
+			setIcon(lblAccent, testAndApply(Objects::nonNull, textAndImage != null ? textAndImage.image : null,
+					ImageIcon::new, x -> new ImageIcon()));
+			//
 			pack(window);
 			//
 		} // if
 			//
+	}
+
+	private static String textContent(final ElementHandle instance) {
+		return instance != null ? instance.textContent() : null;
+	}
+
+	private static ElementHandle querySelector(final ElementHandle instance, final String selector) {
+		return instance != null ? instance.querySelector(selector) : null;
+	}
+
+	private static IntStream sorted(final IntStream instance) {
+		return instance != null ? instance.sorted() : instance;
 	}
 
 	private static void setIcon(@Nullable final JLabel instance, final Icon icon) {
