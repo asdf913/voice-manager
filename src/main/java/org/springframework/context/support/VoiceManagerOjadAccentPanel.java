@@ -11,6 +11,10 @@ import java.awt.geom.Dimension2D;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -67,7 +71,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static final Logger LOG = LoggerFactory.getLogger(VoiceManagerOjadAccentPanel.class);
 
-	private JTextComponent tfText, tfTextOutput = null;
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	private @interface Note {
+		String value();
+	}
+
+	@Note("Input Text")
+	private JTextComponent tfText = null;
+
+	private JTextComponent tfTextOutput = null;
 
 	private AbstractButton btnExecute = null;
 
