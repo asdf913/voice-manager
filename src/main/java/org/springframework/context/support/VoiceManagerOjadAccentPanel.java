@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -366,21 +367,26 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			ih.image = getImage(Util.cast(TextAndImage.class, jcbTextAndImage.getSelectedItem()));
 			//
 			setContents(
-					Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
-							? getSystemClipboard(Toolkit.getDefaultToolkit())
-							: Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class)),
+					testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
+							() -> getSystemClipboard(Toolkit.getDefaultToolkit()),
+							() -> Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class))),
 					Reflection.newProxy(Transferable.class, ih), null);
 			//
 		} else if (Objects.equals(source, btnCopyText)) {
 			//
 			setContents(
-					Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
-							? getSystemClipboard(Toolkit.getDefaultToolkit())
-							: Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class)),
+					testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
+							() -> getSystemClipboard(Toolkit.getDefaultToolkit()),
+							() -> Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class))),
 					new StringSelection(Util.getText(tfTextOutput)), null);
 			//
 		} // if
 			//
+	}
+
+	private static <T> T testAndGet(final boolean condition, final Supplier<T> supplierTrue,
+			final Supplier<T> supplierFalse) {
+		return condition ? Util.get(supplierTrue) : Util.get(supplierFalse);
 	}
 
 	@Nullable

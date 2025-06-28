@@ -11,8 +11,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,6 +25,7 @@ import javax.swing.JLabel;
 import javax.swing.MutableComboBoxModel;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
@@ -193,6 +195,10 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		final Method[] ms = VoiceManagerOjadAccentPanel.class.getDeclaredMethods();
 		//
+		Collection<Object> collection = null;
+		//
+		Class<?>[] parameterTypes = null;
+		//
 		Method m = null;
 		//
 		Object[] os = null;
@@ -209,7 +215,25 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 			} // if
 				//
-			os = Util.toArray(Collections.nCopies(m.getParameterCount(), null));
+			Util.clear(collection = ObjectUtils.getIfNull(collection, ArrayList::new));
+			//
+			parameterTypes = Util.getParameterTypes(m);
+			//
+			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
+				//
+				if (Objects.equals(ArrayUtils.get(parameterTypes, j), Boolean.TYPE)) {
+					//
+					Util.add(collection, Boolean.TRUE);
+					//
+				} else {
+					//
+					Util.add(collection, null);
+					//
+				} // if
+					//
+			} // for
+				//
+			os = Util.toArray(collection);
 			//
 			invoke = Util.isStatic(m) ? Narcissus.invokeStaticMethod(m, os) : Narcissus.invokeMethod(instance, m, os);
 			//
