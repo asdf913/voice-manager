@@ -245,7 +245,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			if (IterableUtils.size(ehs) == 1) {
 				//
-				mcbmTextAndImage.addElement(textAndImage = new TextAndImage());
+				Util.addElement(mcbmTextAndImage, textAndImage = new TextAndImage());
 				//
 				textAndImage.text = StringUtils.trim(textContent(querySelector(
 						testAndApply(x -> IterableUtils.size(x) == 1, words, x -> IterableUtils.get(x, 0), null),
@@ -254,13 +254,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				textAndImage.image = toImage(screenshot(IterableUtils.get(ehs, 0)),
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
-				mcbmTextAndImage.setSelectedItem(textAndImage);
+				Util.setSelectedItem(mcbmTextAndImage, textAndImage);
 				//
 			} else if (IterableUtils.size(words) == IterableUtils.size(ehs)) {
 				//
 				for (int i = 0; i < IterableUtils.size(words); i++) {
 					//
-					mcbmTextAndImage.addElement(textAndImage = new TextAndImage());
+					Util..addElement(mcbmTextAndImage,textAndImage = new TextAndImage());
 					//
 					textAndImage.text = StringUtils
 							.trim(textContent(querySelector(IterableUtils.get(words, i), ".midashi")));
