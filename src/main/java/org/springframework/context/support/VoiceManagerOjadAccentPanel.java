@@ -133,7 +133,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					if (preferredSize != null) {
 						//
-						if (Util.getSize(getModel(list)) == 1) {
+						if (Util.getSize(Util.getModel(list)) == 1) {
 							//
 							panel.setPreferredSize(new Dimension((int) preferredSize.getWidth(),
 									(int) getHeight(Util.getPreferredSize(tfText))));
@@ -174,11 +174,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
-	}
-
-	@Nullable
-	private static <E> ListModel<E> getModel(@Nullable final JList<E> instance) {
-		return instance != null ? instance.getModel() : null;
 	}
 
 	private static double getHeight(@Nullable final Dimension2D instance) {

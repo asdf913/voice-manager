@@ -537,7 +537,7 @@ public class JlptLevelGui extends JFrame implements InitializingBean, ActionList
 		//
 		for (int i = 0; jlJlptLevel != null && i < jlJlptLevel.getVisibleRowCount(); i++) {
 			//
-			if (StringUtils.equalsAnyIgnoreCase(Util.getElementAt(jlJlptLevel.getModel(), i), level)) {
+			if (StringUtils.equalsAnyIgnoreCase(Util.getElementAt(Util.getModel(jlJlptLevel), i), level)) {
 				//
 				IntCollectionUtil.addInt(intList = ObjectUtils.getIfNull(intList, IntList::create), i);
 				//

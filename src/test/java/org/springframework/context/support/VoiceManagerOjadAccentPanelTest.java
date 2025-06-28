@@ -44,8 +44,7 @@ class VoiceManagerOjadAccentPanelTest {
 	private static Class<?> CLASS_TEXT_AND_IMAGE = null;
 
 	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL,
-			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_TEXT, METHOD_GET_HEIGHT,
-			METHOD_GET_MODEL = null;
+			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_TEXT, METHOD_GET_HEIGHT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -74,8 +73,6 @@ class VoiceManagerOjadAccentPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_HEIGHT = clz.getDeclaredMethod("getHeight", Dimension2D.class)).setAccessible(true);
-		//
-		(METHOD_GET_MODEL = clz.getDeclaredMethod("getModel", JList.class)).setAccessible(true);
 		//
 	}
 
@@ -448,27 +445,6 @@ class VoiceManagerOjadAccentPanelTest {
 			final Object obj = METHOD_GET_HEIGHT.invoke(null, instance);
 			if (obj instanceof Double) {
 				return ((Double) obj).doubleValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testGetModel() throws Throwable {
-		//
-		Assertions.assertNull(getModel(Util.cast(JList.class, Narcissus.allocateInstance(JList.class))));
-		//
-	}
-
-	private static <E> ListModel<E> getModel(final JList<E> instance) throws Throwable {
-		try {
-			final Object obj = METHOD_GET_MODEL.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof ListModel) {
-				return (ListModel) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (InvocationTargetException e) {
