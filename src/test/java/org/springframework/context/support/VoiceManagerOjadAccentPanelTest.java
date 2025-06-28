@@ -275,6 +275,8 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent("", 0, null)));
 		//
+		// jcbTextAndImage
+		//
 		final JComboBox<?> jcbTextAndImage = new JComboBox<>();
 		//
 		FieldUtils.writeDeclaredField(instance, "jcbTextAndImage", jcbTextAndImage, true);
@@ -287,13 +289,21 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventJcbTextAndImage));
 		//
+		// btnCopyImage
+		//
 		final AbstractButton btnCopyImage = new JButton();
 		//
 		FieldUtils.writeDeclaredField(instance, "btnCopyImage", btnCopyImage, true);
 		//
-		final ActionEvent actionEventBtnCopyImage = new ActionEvent(btnCopyImage, 0, null);
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyImage, 0, null)));
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopyImage));
+		// btnCopyText
+		//
+		final AbstractButton btnCopyText = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnCopyText", btnCopyText, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyText, 0, null)));
 		//
 	}
 

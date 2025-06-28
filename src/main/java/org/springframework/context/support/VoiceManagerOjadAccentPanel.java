@@ -9,6 +9,7 @@ import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -94,7 +95,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
-	private AbstractButton btnCopyImage = null;
+	private AbstractButton btnCopyText, btnCopyImage = null;
 
 	private JLabel lblAccent = null;
 
@@ -127,7 +128,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final String growx = "growx";
 			//
-			add(tfTextInput = new JTextField(), String.format("%1$s,%2$s", wrap, growx));
+			final int span = 2;
+			//
+			add(tfTextInput = new JTextField(), String.format("%1$s,%2$s,span %3$s", wrap, growx, span));
 			//
 			add(new JLabel());
 			//
@@ -137,7 +140,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(jcbTextAndImage = new JComboBox<>(
 					mcbmTextAndImage = new DefaultComboBoxModel<>(new TextAndImage[] { null })),
-					String.format("%1$s,%2$s", wrap, growx));
+					String.format("%1$s,%2$s,span %3$s", wrap, growx, span));
 			//
 			jcbTextAndImage.addActionListener(this);
 			//
@@ -191,19 +194,21 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(new JLabel("Text"));
 			//
-			add(tfTextOutput = new JTextField(), String.format("%1$s,%2$s", wrap, growx));
+			add(tfTextOutput = new JTextField(), growx);
+			//
+			add(btnCopyText = new JButton("Copy"), wrap);
 			//
 			Util.setEditable(tfTextOutput, false);
 			//
 			add(new JLabel("Image"));
 			//
-			add(lblAccent = new JLabel(), wrap);
+			add(lblAccent = new JLabel(), String.format("%1$s,span %2$s", wrap, span));
 			//
 			add(new JLabel());
 			//
-			add(btnCopyImage = new JButton("Copy Image"));
+			add(btnCopyImage = new JButton("Copy"));
 			//
-			Util.forEach(Stream.of(btnExecute, btnCopyImage), x -> Util.addActionListener(x, this));
+			Util.forEach(Stream.of(btnExecute, btnCopyText, btnCopyImage), x -> Util.addActionListener(x, this));
 			//
 		} // if
 			//
@@ -363,6 +368,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					toolKit != null && !GraphicsEnvironment.isHeadless() && !isTestMode() ? toolKit.getSystemClipboard()
 							: Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class)),
 					Reflection.newProxy(Transferable.class, ih), null);
+			//
+		} else if (Objects.equals(source, btnCopyText)) {
+			//
+			final Toolkit toolKit = Toolkit.getDefaultToolkit();
+			//
+			setContents(
+					toolKit != null && !GraphicsEnvironment.isHeadless() && !isTestMode() ? toolKit.getSystemClipboard()
+							: Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class)),
+					new StringSelection(Util.getText(tfTextOutput)), null);
 			//
 		} // if
 			//
