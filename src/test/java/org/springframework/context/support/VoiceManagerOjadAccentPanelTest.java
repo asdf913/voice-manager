@@ -151,8 +151,6 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Object invoke = null;
 		//
-		VoiceManagerOjadAccentPanel instance = null;
-		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ms[i]) == null || m.isSynthetic() || Objects.equals(Util.getName(m), "main")
@@ -164,18 +162,7 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 			os = Util.toArray(Collections.nCopies(m.getParameterCount(), null));
 			//
-			invoke = Util
-					.isStatic(m)
-							? Narcissus.invokeStaticMethod(m, os)
-							: Narcissus
-									.invokeMethod(
-											instance = ObjectUtils
-													.getIfNull(instance,
-															() -> Util.cast(VoiceManagerOjadAccentPanel.class,
-																	Narcissus.allocateInstance(
-																			VoiceManagerOjadAccentPanel.class))),
-											m, os);
-
+			invoke = Util.isStatic(m) ? Narcissus.invokeStaticMethod(m, os) : Narcissus.invokeMethod(instance, m, os);
 			//
 			Assertions.assertNull(invoke, Objects.toString(m));
 			//
