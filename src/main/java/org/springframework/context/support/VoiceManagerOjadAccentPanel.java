@@ -361,28 +361,28 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} else if (Objects.equals(source, btnCopyImage)) {
 			//
-			final Toolkit toolKit = Toolkit.getDefaultToolkit();
-			//
 			final IH ih = new IH();
 			//
 			ih.image = getImage(Util.cast(TextAndImage.class, jcbTextAndImage.getSelectedItem()));
 			//
 			setContents(
-					toolKit != null && !GraphicsEnvironment.isHeadless() && !isTestMode() ? toolKit.getSystemClipboard()
+					!GraphicsEnvironment.isHeadless() && !isTestMode() ? getSystemClipboard(Toolkit.getDefaultToolkit())
 							: Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class)),
 					Reflection.newProxy(Transferable.class, ih), null);
 			//
 		} else if (Objects.equals(source, btnCopyText)) {
 			//
-			final Toolkit toolKit = Toolkit.getDefaultToolkit();
-			//
 			setContents(
-					toolKit != null && !GraphicsEnvironment.isHeadless() && !isTestMode() ? toolKit.getSystemClipboard()
+					!GraphicsEnvironment.isHeadless() && !isTestMode() ? getSystemClipboard(Toolkit.getDefaultToolkit())
 							: Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class)),
 					new StringSelection(Util.getText(tfTextOutput)), null);
 			//
 		} // if
 			//
+	}
+
+	private static Clipboard getSystemClipboard(final Toolkit instance) {
+		return instance != null ? instance.getSystemClipboard() : null;
 	}
 
 	private static void setContents(@Nullable final Clipboard instance, final Transferable contents,

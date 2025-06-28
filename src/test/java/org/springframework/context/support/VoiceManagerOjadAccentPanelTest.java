@@ -1,6 +1,8 @@
 package org.springframework.context.support;
 
+import java.awt.Toolkit;
 import java.awt.Window;
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
@@ -48,7 +50,8 @@ class VoiceManagerOjadAccentPanelTest {
 	private static Class<?> CLASS_TEXT_AND_IMAGE = null;
 
 	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL,
-			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_TEXT, METHOD_GET_HEIGHT = null;
+			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_TEXT, METHOD_GET_HEIGHT,
+			METHOD_GET_SYSTEM_CLIP_BOARD = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -77,6 +80,8 @@ class VoiceManagerOjadAccentPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_HEIGHT = clz.getDeclaredMethod("getHeight", Dimension2D.class)).setAccessible(true);
+		//
+		(METHOD_GET_SYSTEM_CLIP_BOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
 		//
 	}
 
@@ -150,6 +155,14 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 				return height;
 				//
+			} else if (self instanceof Toolkit) {
+				//
+				if (Objects.equals(methodName, "getSystemClipboard")) {
+					//
+					return null;
+					//
+				} // if
+					//
 			} // if
 				//
 			throw new Throwable(methodName);
@@ -164,6 +177,8 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private Object textAndImage = null;
 
+	private MH mh = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -172,6 +187,8 @@ class VoiceManagerOjadAccentPanelTest {
 		instance = new VoiceManagerOjadAccentPanel();
 		//
 		textAndImage = Narcissus.allocateInstance(CLASS_TEXT_AND_IMAGE);
+		//
+		mh = new MH();
 		//
 	}
 
@@ -451,8 +468,6 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testGetHeight() throws Throwable {
 		//
-		final MH mh = new MH();
-		//
 		final double height = 0;
 		//
 		mh.height = Double.valueOf(height);
@@ -501,6 +516,27 @@ class VoiceManagerOjadAccentPanelTest {
 		Assertions.assertNull(invocationHandler.invoke(transferable,
 				Narcissus.findMethod(Transferable.class, "getTransferData", DataFlavor.class), null));
 		//
+	}
+
+	@Test
+	void testGetSystemClipboard() throws Throwable {
+		//
+		Assertions.assertEquals(null, getSystemClipboard(ProxyUtil.createProxy(Toolkit.class, mh)));
+		//
+	}
+
+	private static Clipboard getSystemClipboard(final Toolkit instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_SYSTEM_CLIP_BOARD.invoke(null, instance);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Clipboard) {
+				return (Clipboard) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 }
