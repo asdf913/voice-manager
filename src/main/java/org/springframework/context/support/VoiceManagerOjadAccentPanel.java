@@ -78,7 +78,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	@Note("Input Text")
-	private JTextComponent tfText = null;
+	private JTextComponent tfTextInput = null;
 
 	private JTextComponent tfTextOutput = null;
 
@@ -115,7 +115,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final String growx = "growx";
 			//
-			add(tfText = new JTextField(), String.format("%1$s,%2$s", wrap, growx));
+			add(tfTextInput = new JTextField(), String.format("%1$s,%2$s", wrap, growx));
 			//
 			add(new JLabel());
 			//
@@ -147,7 +147,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						if (Util.getSize(Util.getModel(list)) == 1) {
 							//
 							panel.setPreferredSize(new Dimension((int) preferredSize.getWidth(),
-									(int) getHeight(Util.getPreferredSize(tfText))));
+									(int) getHeight(Util.getPreferredSize(tfTextInput))));
 							//
 						} else {
 							//
@@ -156,7 +156,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							if (value == null) {
 								//
 								panel.setPreferredSize(new Dimension((int) preferredSize.getWidth(),
-										Math.max((int) getHeight(Util.getPreferredSize(tfText)), 26)));
+										Math.max((int) getHeight(Util.getPreferredSize(tfTextInput)), 26)));
 								//
 							} // if
 								//
@@ -247,7 +247,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				PageUtil.navigate(page = newPage(BrowserTypeUtil.launch(chromium(Playwright.create()))),
 						StringUtils.join("https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index/word:",
-								testAndApply(Objects::nonNull, Util.getText(tfText),
+								testAndApply(Objects::nonNull, Util.getText(tfTextInput),
 										x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
 				//
 			} // if
