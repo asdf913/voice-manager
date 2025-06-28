@@ -383,6 +383,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
+	@Nullable
 	private static Clipboard getSystemClipboard(@Nullable final Toolkit instance) {
 		return instance != null ? instance.getSystemClipboard() : null;
 	}
