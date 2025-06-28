@@ -145,14 +145,10 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 			final String methodName = Util.getName(thisMethod);
 			//
-			if (self instanceof Dimension2D) {
+			if (self instanceof Dimension2D && Objects.equals(methodName, "getHeight")) {
 				//
-				if (Objects.equals(methodName, "getHeight")) {
-					//
-					return height;
-					//
-				} // if
-					//
+				return height;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
