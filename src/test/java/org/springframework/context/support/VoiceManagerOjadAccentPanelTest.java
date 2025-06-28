@@ -1,6 +1,8 @@
 package org.springframework.context.support;
 
 import java.awt.Window;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Dimension2D;
 import java.lang.reflect.InvocationHandler;
@@ -12,7 +14,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import javax.swing.AbstractButton;
 import javax.swing.Icon;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.MutableComboBoxModel;
@@ -25,6 +29,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
@@ -273,13 +279,21 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		FieldUtils.writeDeclaredField(instance, "jcbTextAndImage", jcbTextAndImage, true);
 		//
-		final ActionEvent actionEvent = new ActionEvent(jcbTextAndImage, 0, null);
+		final ActionEvent actionEventJcbTextAndImage = new ActionEvent(jcbTextAndImage, 0, null);
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventJcbTextAndImage));
 		//
 		Util.cast(MutableComboBoxModel.class, jcbTextAndImage.getModel()).addElement(textAndImage);
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventJcbTextAndImage));
+		//
+		final AbstractButton btnCopyImage = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnCopyImage", btnCopyImage, true);
+		//
+		final ActionEvent actionEventBtnCopyImage = new ActionEvent(btnCopyImage, 0, null);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEventBtnCopyImage));
 		//
 	}
 
@@ -447,6 +461,36 @@ class VoiceManagerOjadAccentPanelTest {
 		} catch (InvocationTargetException e) {
 			throw e.getTargetException();
 		}
+	}
+
+	@Test
+	void testIH() throws Throwable {
+		//
+		final InvocationHandler ih = Util.cast(InvocationHandler.class, Narcissus
+				.allocateInstance(Util.forName("org.springframework.context.support.VoiceManagerOjadAccentPanel$IH")));
+		//
+		if (ih == null) {
+			//
+			return;
+			//
+		} // if
+			//
+		Assertions.assertThrows(Throwable.class, () -> ih.invoke(null, null, null));
+		//
+		final Transferable transferable = Reflection.newProxy(Transferable.class, ih);
+		//
+		Assertions.assertThrows(Throwable.class, () -> ih.invoke(transferable, null, null));
+		//
+		final ObjectMapper objectMapper = new ObjectMapper();
+		//
+		Assertions.assertEquals(
+				ObjectMapperUtil.writeValueAsString(objectMapper, new DataFlavor[] { DataFlavor.imageFlavor }),
+				ObjectMapperUtil.writeValueAsString(objectMapper, ih.invoke(transferable,
+						Narcissus.findMethod(Transferable.class, "getTransferDataFlavors"), null)));
+		//
+		Assertions.assertNull(ih.invoke(transferable,
+				Narcissus.findMethod(Transferable.class, "getTransferData", DataFlavor.class), null));
+		//
 	}
 
 }

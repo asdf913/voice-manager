@@ -4,7 +4,11 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.Window;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Dimension2D;
@@ -16,6 +20,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -23,6 +29,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
@@ -52,6 +59,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.InitializingBean;
 
+import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 import com.microsoft.playwright.Browser;
@@ -82,7 +90,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private JTextComponent tfTextOutput = null;
 
-	private AbstractButton btnExecute = null;
+	private AbstractButton btnExecute, btnCopyImage = null;
 
 	private JLabel lblAccent = null;
 
@@ -120,8 +128,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			add(new JLabel());
 			//
 			add(btnExecute = new JButton("Execute"), wrap);
-			//
-			btnExecute.addActionListener(this);
 			//
 			add(new JLabel("Text And Image"));
 			//
@@ -179,15 +185,21 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 			});
 			//
-			add(new JLabel("Output"));
+			add(new JLabel("Text"));
 			//
 			add(tfTextOutput = new JTextField(), String.format("%1$s,%2$s", wrap, growx));
 			//
 			Util.setEditable(tfTextOutput, false);
 			//
+			add(new JLabel("Image"));
+			//
+			add(lblAccent = new JLabel(), wrap);
+			//
 			add(new JLabel());
 			//
-			add(lblAccent = new JLabel());
+			add(btnCopyImage = new JButton("Copy Image"));
+			//
+			Util.forEach(Stream.of(btnExecute, btnCopyImage), x -> Util.addActionListener(x, this));
 			//
 		} // if
 			//
@@ -228,6 +240,35 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			throws E {
 		return Util.test(predicate, value) ? FailableFunctionUtil.apply(functionTrue, value)
 				: FailableFunctionUtil.apply(functionFalse, value);
+	}
+
+	private static class IH implements InvocationHandler {
+
+		private Image image = null;
+
+		@Override
+		public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+			//
+			final String methodName = Util.getName(method);
+			//
+			if (proxy instanceof Transferable) {
+				//
+				if (Objects.equals(methodName, "getTransferDataFlavors")) {
+					//
+					return new DataFlavor[] { DataFlavor.imageFlavor };
+					//
+				} else if (Objects.equals(methodName, "getTransferData")) {
+					//
+					return image;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
 	}
 
 	@Override
@@ -306,6 +347,24 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			pack(window);
 			//
+		} else if (Objects.equals(source, btnCopyImage)) {
+			//
+			final Toolkit toolKit = Toolkit.getDefaultToolkit();
+			//
+			final Clipboard clipboard = toolKit != null && !GraphicsEnvironment.isHeadless() && !isTestMode()
+					? toolKit.getSystemClipboard()
+					: Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class));
+			//
+			if (clipboard != null) {
+				//
+				final IH ih = new IH();
+				//
+				ih.image = getImage(Util.cast(TextAndImage.class, jcbTextAndImage.getSelectedItem()));
+				//
+				clipboard.setContents(Reflection.newProxy(Transferable.class, ih), null);
+				//
+			} // if
+				//
 		} // if
 			//
 	}
