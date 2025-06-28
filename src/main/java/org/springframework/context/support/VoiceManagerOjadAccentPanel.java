@@ -121,7 +121,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 				@Override
 				public Component getListCellRendererComponent(@Nullable final JList<? extends TextAndImage> list,
-						final TextAndImage value, final int index, final boolean isSelected,
+						@Nullable final TextAndImage value, final int index, final boolean isSelected,
 						final boolean cellHasFocus) {
 					//
 					final JPanel panel = new JPanel();
@@ -179,7 +179,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static Image getImage(final TextAndImage instance) {
+	private static Image getImage(@Nullable final TextAndImage instance) {
 		return instance != null ? instance.image : null;
 	}
 
@@ -298,15 +298,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static String textContent(final ElementHandle instance) {
+	private static String textContent(@Nullable final ElementHandle instance) {
 		return instance != null ? instance.textContent() : null;
 	}
 
-	private static ElementHandle querySelector(final ElementHandle instance, final String selector) {
+	private static ElementHandle querySelector(@Nullable final ElementHandle instance, final String selector) {
 		return instance != null ? instance.querySelector(selector) : null;
 	}
 
-	private static IntStream sorted(final IntStream instance) {
+	private static IntStream sorted(@Nullable final IntStream instance) {
 		return instance != null ? instance.sorted() : instance;
 	}
 
