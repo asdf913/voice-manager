@@ -260,7 +260,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				for (int i = 0; i < IterableUtils.size(words); i++) {
 					//
-					Util..addElement(mcbmTextAndImage,textAndImage = new TextAndImage());
+					Util.addElement(mcbmTextAndImage, textAndImage = new TextAndImage());
 					//
 					textAndImage.text = StringUtils
 							.trim(textContent(querySelector(IterableUtils.get(words, i), ".midashi")));
