@@ -83,7 +83,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private JComboBox<TextAndImage> jcbTextAndImage = null;
 
-	private MutableComboBoxModel<TextAndImage> mcbmTextAndImage = null;
+	private transient MutableComboBoxModel<TextAndImage> mcbmTextAndImage = null;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
