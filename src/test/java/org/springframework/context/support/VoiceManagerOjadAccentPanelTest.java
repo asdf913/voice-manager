@@ -2,6 +2,7 @@ package org.springframework.context.support;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.awt.geom.Dimension2D;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -33,13 +34,15 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 
 import io.github.toolfactory.narcissus.Narcissus;
+import javassist.util.proxy.MethodHandler;
+import javassist.util.proxy.ProxyUtil;
 
 class VoiceManagerOjadAccentPanelTest {
 
 	private static Class<?> CLASS_TEXT_AND_IMAGE = null;
 
 	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL,
-			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_TEXT = null;
+			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_TEXT, METHOD_GET_HEIGHT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -66,6 +69,8 @@ class VoiceManagerOjadAccentPanelTest {
 				CLASS_TEXT_AND_IMAGE = Util
 						.forName("org.springframework.context.support.VoiceManagerOjadAccentPanel$TextAndImage")))
 				.setAccessible(true);
+		//
+		(METHOD_GET_HEIGHT = clz.getDeclaredMethod("getHeight", Dimension2D.class)).setAccessible(true);
 		//
 	}
 
@@ -125,6 +130,32 @@ class VoiceManagerOjadAccentPanelTest {
 
 	}
 
+	private static class MH implements MethodHandler {
+
+		private Double height = null;
+
+		@Override
+		public Object invoke(final Object self, final Method thisMethod, final Method proceed, final Object[] args)
+				throws Throwable {
+			//
+			final String methodName = Util.getName(thisMethod);
+			//
+			if (self instanceof Dimension2D) {
+				//
+				if (Objects.equals(methodName, "getHeight")) {
+					//
+					return height;
+					//
+				} // if
+					//
+			} // if
+				//
+			throw new Throwable(methodName);
+			//
+		}
+
+	}
+
 	private IH ih = null;
 
 	private VoiceManagerOjadAccentPanel instance = null;
@@ -153,6 +184,8 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Object invoke = null;
 		//
+		String toString = null;
+		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
 			if ((m = ms[i]) == null || m.isSynthetic() || Objects.equals(Util.getName(m), "main")
@@ -166,8 +199,18 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 			invoke = Util.isStatic(m) ? Narcissus.invokeStaticMethod(m, os) : Narcissus.invokeMethod(instance, m, os);
 			//
-			Assertions.assertNull(invoke, Objects.toString(m));
+			toString = Util.toString(m);
 			//
+			if (Objects.equals(Util.getReturnType(m), Double.TYPE)) {
+				//
+				Assertions.assertNotNull(invoke, toString);
+				//
+			} else {
+				//
+				Assertions.assertNull(invoke, toString);
+				//
+			} // if
+				//
 		} // for
 			//
 	}
@@ -207,6 +250,7 @@ class VoiceManagerOjadAccentPanelTest {
 					|| Objects.equals(Util.getReturnType(m), parameterType)) {
 				//
 				Assertions.assertNotNull(invokeStaticMethod, toString);
+				//
 			} else {
 				//
 				Assertions.assertNull(invokeStaticMethod, toString);
@@ -378,6 +422,31 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof String) {
 				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetHeight() throws Throwable {
+		//
+		final MH mh = new MH();
+		//
+		final double height = 0;
+		//
+		mh.height = Double.valueOf(height);
+		//
+		Assertions.assertEquals(height, getHeight(ProxyUtil.createProxy(Dimension2D.class, mh)));
+		//
+	}
+
+	private static double getHeight(final Dimension2D instance) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_HEIGHT.invoke(null, instance);
+			if (obj instanceof Double) {
+				return ((Double) obj).doubleValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (InvocationTargetException e) {

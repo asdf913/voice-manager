@@ -132,10 +132,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 						if (list != null && Util.getSize(list.getModel()) == 1) {
 							//
-							if (tfText != null && tfText.getPreferredSize() != null) {
+							if (tfText != null) {
 								//
 								panel.setPreferredSize(new Dimension((int) preferredSize.getWidth(),
-										(int) tfText.getPreferredSize().getHeight()));
+										(int) getHeight(tfText.getPreferredSize())));
 								//
 							} // if
 								//
@@ -146,9 +146,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							if (value == null) {
 								//
 								panel.setPreferredSize(new Dimension((int) preferredSize.getWidth(),
-										Math.max(tfText != null && tfText.getPreferredSize() != null
-												? (int) tfText.getPreferredSize().getHeight()
-												: 0, 26)));
+										Math.max(tfText != null ? (int) getHeight(tfText.getPreferredSize()) : 0, 26)));
 								//
 							} // if
 								//
@@ -177,6 +175,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static double getHeight(final Dimension2D instance) {
+		return instance != null ? instance.getHeight() : 0;
 	}
 
 	private static String getText(final TextAndImage instance) {
