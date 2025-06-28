@@ -366,14 +366,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			ih.image = getImage(Util.cast(TextAndImage.class, jcbTextAndImage.getSelectedItem()));
 			//
 			setContents(
-					!GraphicsEnvironment.isHeadless() && !isTestMode() ? getSystemClipboard(Toolkit.getDefaultToolkit())
+					Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
+							? getSystemClipboard(Toolkit.getDefaultToolkit())
 							: Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class)),
 					Reflection.newProxy(Transferable.class, ih), null);
 			//
 		} else if (Objects.equals(source, btnCopyText)) {
 			//
 			setContents(
-					!GraphicsEnvironment.isHeadless() && !isTestMode() ? getSystemClipboard(Toolkit.getDefaultToolkit())
+					Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode())
+							? getSystemClipboard(Toolkit.getDefaultToolkit())
 							: Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class)),
 					new StringSelection(Util.getText(tfTextOutput)), null);
 			//
