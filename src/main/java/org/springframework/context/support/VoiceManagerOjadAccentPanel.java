@@ -177,6 +177,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.getHeight() : 0;
 	}
 
+	@Nullable
 	private static String getText(@Nullable final TextAndImage instance) {
 		return instance != null ? instance.text : null;
 	}
