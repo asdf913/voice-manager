@@ -36,8 +36,10 @@ import io.github.toolfactory.narcissus.Narcissus;
 
 class VoiceManagerOjadAccentPanelTest {
 
+	private static Class<?> CLASS_TEXT_AND_IMAGE = null;
+
 	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL,
-			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK = null;
+			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_TEXT = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -55,10 +57,15 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_QUERY_SELECTOR = clz.getDeclaredMethod("querySelector", ElementHandle.class, String.class))
 				.setAccessible(true);
-//
+		//
 		(METHOD_SET_ICON = clz.getDeclaredMethod("setIcon", JLabel.class, Icon.class)).setAccessible(true);
 		//
 		(METHOD_PACK = clz.getDeclaredMethod("pack", Window.class)).setAccessible(true);
+		//
+		(METHOD_GET_TEXT = clz.getDeclaredMethod("getText",
+				CLASS_TEXT_AND_IMAGE = Util
+						.forName("org.springframework.context.support.VoiceManagerOjadAccentPanel$TextAndImage")))
+				.setAccessible(true);
 		//
 	}
 
@@ -122,12 +129,16 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private VoiceManagerOjadAccentPanel instance = null;
 
+	private Object textAndImage = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
 		ih = new IH();
 		//
 		instance = new VoiceManagerOjadAccentPanel();
+		//
+		textAndImage = Narcissus.allocateInstance(CLASS_TEXT_AND_IMAGE);
 		//
 	}
 
@@ -227,8 +238,7 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
 		//
-		Util.cast(MutableComboBoxModel.class, jcbTextAndImage.getModel()).addElement(Narcissus.allocateInstance(
-				Util.forName("org.springframework.context.support.VoiceManagerOjadAccentPanel$TextAndImage")));
+		Util.cast(MutableComboBoxModel.class, jcbTextAndImage.getModel()).addElement(textAndImage);
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(actionEvent));
 		//
@@ -349,6 +359,27 @@ class VoiceManagerOjadAccentPanelTest {
 	private static void pack(final Window instance) throws Throwable {
 		try {
 			METHOD_PACK.invoke(null, instance);
+		} catch (InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetText() throws Throwable {
+		//
+		Assertions.assertNull(getText(textAndImage));
+		//
+	}
+
+	private static String getText(final Object textAndImage) throws Throwable {
+		try {
+			final Object obj = METHOD_GET_TEXT.invoke(null, textAndImage);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof String) {
+				return (String) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (InvocationTargetException e) {
 			throw e.getTargetException();
 		}

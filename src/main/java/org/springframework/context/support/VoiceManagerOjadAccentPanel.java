@@ -156,7 +156,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							//
 					} // if
 						//
-					panel.add(new JLabel(value != null ? value.text : null));
+					panel.add(new JLabel(getText(value)));
 					//
 					final JLabel label = new JLabel();
 					//
@@ -177,6 +177,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static String getText(final TextAndImage instance) {
+		return instance != null ? instance.text : null;
 	}
 
 	private static Image getImage(@Nullable final TextAndImage instance) {
