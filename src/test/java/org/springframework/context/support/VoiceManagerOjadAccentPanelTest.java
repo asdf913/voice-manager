@@ -184,8 +184,7 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		for (int i = 0; ms != null && i < ms.length; i++) {
 			//
-			if ((m = ms[i]) == null || m.isSynthetic() || Objects.equals(Util.getName(m), "main")
-					&& Arrays.equals(Util.getParameterTypes(m), new Class<?>[] { String[].class })) {
+			if ((m = ms[i]) == null || m.isSynthetic()) {
 				//
 				continue;
 				//
@@ -197,7 +196,7 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 			toString = Util.toString(m);
 			//
-			if (Objects.equals(Util.getReturnType(m), Double.TYPE)) {
+			if (Util.contains(Arrays.asList(Double.TYPE, Boolean.TYPE), Util.getReturnType(m))) {
 				//
 				Assertions.assertNotNull(invoke, toString);
 				//

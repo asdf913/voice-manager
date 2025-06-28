@@ -222,7 +222,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Page page = null;
 			//
-			if (Util.forName("org.junit.jupiter.api.Test") == null) {
+			if (!isTestMode()) {
 				//
 				PageUtil.navigate(page = newPage(BrowserTypeUtil.launch(chromium(Playwright.create()))),
 						StringUtils.join("https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index/word:",
@@ -287,6 +287,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
+	private static boolean isTestMode() {
+		return Util.forName("org.junit.jupiter.api.Test") != null;
+	}
+
 	@Nullable
 	private static Image toImage(@Nullable final byte[] bs, final Consumer<IOException> consumer) {
 		//
@@ -338,12 +342,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	public static void main(final String[] args) throws Exception {
 		//
-		final JFrame jFrame = !GraphicsEnvironment.isHeadless() ? new JFrame()
+		final JFrame jFrame = Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()) ? new JFrame()
 				: Util.cast(JFrame.class, Narcissus.allocateInstance(JFrame.class));
 		//
 		jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		//
-		final Field f = getFieldByName(Util.getClass(JFrame.class), "component");
+		final Field f = getFieldByName(JFrame.class, "component");
 		//
 		final boolean gui = f == null || Narcissus.getField(jFrame, f) != null;
 		//
