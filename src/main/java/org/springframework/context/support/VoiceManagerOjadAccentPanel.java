@@ -79,6 +79,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		private String text = null;
 
 		private Image image = null;
+
 	}
 
 	private JComboBox<TextAndImage> jcbTextAndImage = null;
@@ -159,8 +160,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					final JLabel label = new JLabel();
 					//
-					label.setIcon(testAndApply(Objects::nonNull, value != null ? value.image : null, ImageIcon::new,
-							x -> new ImageIcon()));
+					label.setIcon(
+							testAndApply(Objects::nonNull, getImage(value), ImageIcon::new, x -> new ImageIcon()));
 					//
 					panel.add(label);
 					//
@@ -176,6 +177,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static Image getImage(final TextAndImage instance) {
+		return instance != null ? instance.image : null;
 	}
 
 	private static Field getFieldByName(final Class<?> clz, final String fieldName) {
@@ -284,8 +289,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final TextAndImage textAndImage = Util.cast(TextAndImage.class, jcbTextAndImage.getSelectedItem());
 			//
-			setIcon(lblAccent, testAndApply(Objects::nonNull, textAndImage != null ? textAndImage.image : null,
-					ImageIcon::new, x -> new ImageIcon()));
+			setIcon(lblAccent,
+					testAndApply(Objects::nonNull, getImage(textAndImage), ImageIcon::new, x -> new ImageIcon()));
 			//
 			pack(window);
 			//
