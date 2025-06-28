@@ -8,6 +8,7 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Dimension2D;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +17,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
@@ -255,17 +257,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						testAndApply(x -> IterableUtils.size(x) == 1, words, x -> IterableUtils.get(x, 0), null),
 						".midashi")));
 				//
-				try (final InputStream is = testAndApply(Objects::nonNull, screenshot(IterableUtils.get(ehs, 0)),
-						ByteArrayInputStream::new, null)) {
-					//
-					textAndImage.image = testAndApply(Objects::nonNull, is, ImageIO::read, null);
-					//
-				} catch (final IOException e) {
+				textAndImage.image = toImage(screenshot(IterableUtils.get(ehs, 0)), e -> {
 					//
 					LoggerUtil.error(LOG, e.getMessage(), e);
 					//
-				} // try
-					//
+				});
+				//
 				mcbmTextAndImage.setSelectedItem(textAndImage);
 				//
 			} else if (IterableUtils.size(words) == IterableUtils.size(ehs)) {
@@ -277,17 +274,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					textAndImage.text = StringUtils
 							.trim(textContent(querySelector(IterableUtils.get(words, i), ".midashi")));
 					//
-					try (final InputStream is = testAndApply(Objects::nonNull, screenshot(IterableUtils.get(ehs, i)),
-							ByteArrayInputStream::new, null)) {
-						//
-						textAndImage.image = testAndApply(Objects::nonNull, is, ImageIO::read, null);
-						//
-					} catch (final IOException e) {
+					textAndImage.image = toImage(screenshot(IterableUtils.get(ehs, i)), e -> {
 						//
 						LoggerUtil.error(LOG, e.getMessage(), e);
 						//
-					} // try
-						//
+					});
+					//
 				} // for
 					//
 			} // if
@@ -305,6 +297,22 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static Image toImage(final byte[] bs, final Consumer<IOException> consumer) {
+		//
+		try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null)) {
+			//
+			return testAndApply(Objects::nonNull, is, ImageIO::read, null);
+			//
+		} catch (final IOException e) {
+			//
+			Util.accept(consumer, e);
+			//
+		} // try
+			//
+		return null;
+		//
 	}
 
 	@Nullable
