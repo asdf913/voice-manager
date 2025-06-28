@@ -85,15 +85,7 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 			if (proxy instanceof ElementHandle) {
 				//
-				if (Objects.equals(methodName, "screenshot")) {
-					//
-					return null;
-					//
-				} else if (Objects.equals(methodName, "textContent")) {
-					//
-					return null;
-					//
-				} else if (Objects.equals(methodName, "querySelector")) {
+				if (Util.contains(Arrays.asList("screenshot", "textContent", "querySelector"), methodName)) {
 					//
 					return null;
 					//
