@@ -33,6 +33,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.WindowConstants;
 import javax.swing.text.JTextComponent;
@@ -130,7 +131,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					if (preferredSize != null) {
 						//
-						if (list != null && Util.getSize(list.getModel()) == 1) {
+						if (Util.getSize(getModel(list)) == 1) {
 							//
 							panel.setPreferredSize(new Dimension((int) preferredSize.getWidth(),
 									(int) getHeight(Util.getPreferredSize(tfText))));
@@ -171,6 +172,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static <E> ListModel<E> getModel(final JList<E> instance) {
+		return instance != null ? instance.getModel() : null;
 	}
 
 	private static double getHeight(final Dimension2D instance) {
