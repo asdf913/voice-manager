@@ -176,6 +176,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
+	@Nullable
 	private static <E> ListModel<E> getModel(@Nullable final JList<E> instance) {
 		return instance != null ? instance.getModel() : null;
 	}
