@@ -130,7 +130,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					if (preferredSize != null) {
 						//
-						if (list != null && list.getModel() != null && list.getModel().getSize() == 1) {
+						if (list != null && Util.getSize(list.getModel()) == 1) {
 							//
 							if (tfText != null && tfText.getPreferredSize() != null) {
 								//
