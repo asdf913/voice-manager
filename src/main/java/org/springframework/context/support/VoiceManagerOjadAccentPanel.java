@@ -353,7 +353,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} else if (Objects.equals(source, jcbTextAndImage)) {
 			//
-			final TextAndImage textAndImage = Util.cast(TextAndImage.class, jcbTextAndImage.getSelectedItem());
+			final TextAndImage textAndImage = Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage));
 			//
 			// text
 			//
@@ -377,7 +377,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final IH ih = new IH();
 			//
-			ih.image = getImage(Util.cast(TextAndImage.class, jcbTextAndImage.getSelectedItem()));
+			ih.image = getImage(Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage)));
 			//
 			setContents(
 					testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
@@ -395,6 +395,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static Object getSelectedItem(final JComboBox<?> instance) {
+		//
+		final Field field = getFieldByName(Util.getClass(instance), "dataModel");
+		//
+		return field != null && Narcissus.getField(instance, field) != null ? instance.getSelectedItem() : null;
+		//
 	}
 
 	private static <T> T testAndGet(final boolean condition, final Supplier<T> supplierTrue,

@@ -53,7 +53,7 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL,
 			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_TEXT, METHOD_GET_HEIGHT,
-			METHOD_GET_SYSTEM_CLIP_BOARD = null;
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -84,6 +84,8 @@ class VoiceManagerOjadAccentPanelTest {
 		(METHOD_GET_HEIGHT = clz.getDeclaredMethod("getHeight", Dimension2D.class)).setAccessible(true);
 		//
 		(METHOD_GET_SYSTEM_CLIP_BOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
+		//
+		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", JComboBox.class)).setAccessible(true);
 		//
 	}
 
@@ -361,7 +363,7 @@ class VoiceManagerOjadAccentPanelTest {
 				return (String[]) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (InvocationTargetException e) {
+		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
 	}
@@ -386,7 +388,7 @@ class VoiceManagerOjadAccentPanelTest {
 				return (ContentInfo) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (InvocationTargetException e) {
+		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
 	}
@@ -407,7 +409,7 @@ class VoiceManagerOjadAccentPanelTest {
 				return (List) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (InvocationTargetException e) {
+		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
 	}
@@ -428,7 +430,7 @@ class VoiceManagerOjadAccentPanelTest {
 				return (ElementHandle) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (InvocationTargetException e) {
+		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
 	}
@@ -444,7 +446,7 @@ class VoiceManagerOjadAccentPanelTest {
 	private static void setIcon(final JLabel instance, final Icon icon) throws Throwable {
 		try {
 			METHOD_SET_ICON.invoke(null, instance, icon);
-		} catch (InvocationTargetException e) {
+		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
 	}
@@ -459,7 +461,7 @@ class VoiceManagerOjadAccentPanelTest {
 	private static void pack(final Window instance) throws Throwable {
 		try {
 			METHOD_PACK.invoke(null, instance);
-		} catch (InvocationTargetException e) {
+		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
 	}
@@ -480,7 +482,7 @@ class VoiceManagerOjadAccentPanelTest {
 				return (String) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (InvocationTargetException e) {
+		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
 	}
@@ -503,7 +505,7 @@ class VoiceManagerOjadAccentPanelTest {
 				return ((Double) obj).doubleValue();
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (InvocationTargetException e) {
+		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
 	}
@@ -554,7 +556,23 @@ class VoiceManagerOjadAccentPanelTest {
 				return (Clipboard) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
-		} catch (InvocationTargetException e) {
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetSelectedItem() throws Throwable {
+		//
+		Assertions.assertEquals(null,
+				getSelectedItem(Util.cast(JComboBox.class, Narcissus.allocateInstance(JComboBox.class))));
+		//
+	}
+
+	private static Object getSelectedItem(final JComboBox<?> instance) throws Throwable {
+		try {
+			return METHOD_GET_SELECTED_ITEM.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
 	}
