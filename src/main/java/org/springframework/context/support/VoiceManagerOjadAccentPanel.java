@@ -119,7 +119,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			jcbTextAndImage.setRenderer(new ListCellRenderer<>() {
 
 				@Override
-				public Component getListCellRendererComponent(final JList<? extends TextAndImage> list,
+				public Component getListCellRendererComponent(@Nullable final JList<? extends TextAndImage> list,
 						final TextAndImage value, final int index, final boolean isSelected,
 						final boolean cellHasFocus) {
 					//
