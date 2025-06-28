@@ -15,8 +15,6 @@ import java.util.Objects;
 import javax.swing.Icon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 
 import org.apache.commons.lang3.ArrayUtils;
