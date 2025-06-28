@@ -214,6 +214,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			Util.forEach(Stream.of(btnExecute, btnCopyText, btnCopyImage), x -> Util.addActionListener(x, this));
 			//
+			Util.forEach(Stream.of(btnCopyText, btnCopyImage), x -> Util.setEnabled(x, false));
+			//
 		} // if
 			//
 	}
@@ -353,10 +355,21 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final TextAndImage textAndImage = Util.cast(TextAndImage.class, jcbTextAndImage.getSelectedItem());
 			//
-			Util.setText(tfTextOutput, getText(textAndImage));
+			// text
 			//
-			setIcon(lblAccent,
-					testAndApply(Objects::nonNull, getImage(textAndImage), ImageIcon::new, x -> new ImageIcon()));
+			final String text = getText(textAndImage);
+			//
+			Util.setText(tfTextOutput, text);
+			//
+			Util.setEnabled(btnCopyText, StringUtils.isNotBlank(text));
+			//
+			// image
+			//
+			final Image image = getImage(textAndImage);
+			//
+			setIcon(lblAccent, testAndApply(Objects::nonNull, image, ImageIcon::new, x -> new ImageIcon()));
+			//
+			Util.setEnabled(btnCopyImage, image != null);
 			//
 			pack(window);
 			//
