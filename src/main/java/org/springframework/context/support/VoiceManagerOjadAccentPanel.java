@@ -67,7 +67,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static final Logger LOG = LoggerFactory.getLogger(VoiceManagerOjadAccentPanel.class);
 
-	private JTextComponent tfText = null;
+	private JTextComponent tfText, tfTextOutput = null;
 
 	private AbstractButton btnExecute = null;
 
@@ -166,6 +166,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 			});
 			//
+			add(new JLabel("Output"));
+			//
+			add(tfTextOutput = new JTextField(), String.format("%1$s,%2$s", wrap, growx));
+			//
+			Util.setEditable(tfTextOutput, false);
+			//
 			add(new JLabel());
 			//
 			add(lblAccent = new JLabel());
@@ -218,6 +224,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		if (Objects.equals(source, btnExecute)) {
 			//
+			Util.setText(tfTextOutput, null);
+			//
 			setIcon(lblAccent, new ImageIcon());
 			//
 			Page page = null;
@@ -247,9 +255,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				Util.addElement(mcbmTextAndImage, textAndImage = new TextAndImage());
 				//
-				textAndImage.text = StringUtils.trim(textContent(querySelector(
+				Util.setText(tfTextOutput, textAndImage.text = StringUtils.trim(textContent(querySelector(
 						testAndApply(x -> IterableUtils.size(x) == 1, words, x -> IterableUtils.get(x, 0), null),
-						".midashi")));
+						".midashi"))));
 				//
 				textAndImage.image = toImage(screenshot(IterableUtils.get(ehs, 0)),
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
@@ -277,6 +285,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		} else if (Objects.equals(source, jcbTextAndImage)) {
 			//
 			final TextAndImage textAndImage = Util.cast(TextAndImage.class, jcbTextAndImage.getSelectedItem());
+			//
+			Util.setText(tfTextOutput, getText(textAndImage));
 			//
 			setIcon(lblAccent,
 					testAndApply(Objects::nonNull, getImage(textAndImage), ImageIcon::new, x -> new ImageIcon()));
