@@ -294,7 +294,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	@Nullable
-	private static Image toImage(final byte[] bs, final Consumer<IOException> consumer) {
+	private static Image toImage(@Nullable final byte[] bs, final Consumer<IOException> consumer) {
 		//
 		try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null)) {
 			//
