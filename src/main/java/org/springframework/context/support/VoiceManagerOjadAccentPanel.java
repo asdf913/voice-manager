@@ -90,7 +90,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private JTextComponent tfTextOutput = null;
 
-	private AbstractButton btnExecute, btnCopyImage = null;
+	@Note("Execute")
+	private AbstractButton btnExecute = null;
+
+	private AbstractButton btnCopyImage = null;
 
 	private JLabel lblAccent = null;
 
