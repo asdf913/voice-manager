@@ -155,14 +155,10 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 				return height;
 				//
-			} else if (self instanceof Toolkit) {
+			} else if (self instanceof Toolkit && Objects.equals(methodName, "getSystemClipboard")) {
 				//
-				if (Objects.equals(methodName, "getSystemClipboard")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
