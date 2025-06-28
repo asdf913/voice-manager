@@ -183,6 +183,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.text : null;
 	}
 
+	@Nullable
 	private static Image getImage(@Nullable final TextAndImage instance) {
 		return instance != null ? instance.image : null;
 	}
@@ -302,14 +303,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
+	@Nullable
 	private static String textContent(@Nullable final ElementHandle instance) {
 		return instance != null ? instance.textContent() : null;
 	}
 
+	@Nullable
 	private static ElementHandle querySelector(@Nullable final ElementHandle instance, final String selector) {
 		return instance != null ? instance.querySelector(selector) : null;
 	}
 
+	@Nullable
 	private static IntStream sorted(@Nullable final IntStream instance) {
 		return instance != null ? instance.sorted() : instance;
 	}
