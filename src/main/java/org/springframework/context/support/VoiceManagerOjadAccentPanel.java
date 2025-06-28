@@ -178,7 +178,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.getModel() : null;
 	}
 
-	private static double getHeight(final Dimension2D instance) {
+	private static double getHeight(@Nullable final Dimension2D instance) {
 		return instance != null ? instance.getHeight() : 0;
 	}
 
