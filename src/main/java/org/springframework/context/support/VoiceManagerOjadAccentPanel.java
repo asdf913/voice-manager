@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
@@ -354,22 +355,23 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final Toolkit toolKit = Toolkit.getDefaultToolkit();
 			//
-			final Clipboard clipboard = toolKit != null && !GraphicsEnvironment.isHeadless() && !isTestMode()
-					? toolKit.getSystemClipboard()
-					: Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class));
+			final IH ih = new IH();
 			//
-			if (clipboard != null) {
-				//
-				final IH ih = new IH();
-				//
-				ih.image = getImage(Util.cast(TextAndImage.class, jcbTextAndImage.getSelectedItem()));
-				//
-				clipboard.setContents(Reflection.newProxy(Transferable.class, ih), null);
-				//
-			} // if
-				//
+			ih.image = getImage(Util.cast(TextAndImage.class, jcbTextAndImage.getSelectedItem()));
+			//
+			setContents(
+					toolKit != null && !GraphicsEnvironment.isHeadless() && !isTestMode() ? toolKit.getSystemClipboard()
+							: Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class)),
+					Reflection.newProxy(Transferable.class, ih), null);
+			//
 		} // if
 			//
+	}
+
+	private static void setContents(final Clipboard instance, final Transferable contents, final ClipboardOwner owner) {
+		if (instance != null) {
+			instance.setContents(contents, owner);
+		}
 	}
 
 	private static boolean isTestMode() {
