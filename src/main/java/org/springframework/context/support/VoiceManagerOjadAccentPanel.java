@@ -14,6 +14,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Dimension2D;
+import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -120,7 +121,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 		private String text = null;
 
-		private Image image = null;
+		private BufferedImage image = null;
 
 	}
 
@@ -405,7 +406,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					testAndApply(x -> IterableUtils.size(x) == 1, words, x -> IterableUtils.get(x, 0), null),
 					".midashi")));
 			//
-			textAndImage.image = toImage(screenshot(IterableUtils.get(ehs, 0)),
+			textAndImage.image = toBufferedImage(screenshot(IterableUtils.get(ehs, 0)),
 					e -> LoggerUtil.error(LOG, e.getMessage(), e));
 			//
 			return Collections.singleton(textAndImage);
@@ -421,7 +422,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				(textAndImage = new TextAndImage()).text = StringUtils
 						.trim(textContent(querySelector(IterableUtils.get(words, i), ".midashi")));
 				//
-				textAndImage.image = toImage(screenshot(IterableUtils.get(ehs, i)),
+				textAndImage.image = toBufferedImage(screenshot(IterableUtils.get(ehs, i)),
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
 				Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
@@ -459,7 +460,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				if (StringUtils.equals(textInput, StringUtils.trim(textContent(eh = IterableUtils.get(ehs, i))))) {
 					//
-					(textAndImage = new TextAndImage()).image = toImage(screenshot(eh),
+					(textAndImage = new TextAndImage()).image = toBufferedImage(screenshot(eh),
 							e -> LoggerUtil.error(LOG, e.getMessage(), e));
 					//
 					ws = StringUtils.split(
@@ -586,7 +587,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	@Nullable
-	private static Image toImage(@Nullable final byte[] bs, final Consumer<IOException> consumer) {
+	private static BufferedImage toBufferedImage(@Nullable final byte[] bs, final Consumer<IOException> consumer) {
 		//
 		try (final InputStream is = testAndApply(Objects::nonNull, bs, ByteArrayInputStream::new, null)) {
 			//
