@@ -56,7 +56,8 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL,
 			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_TEXT, METHOD_GET_HEIGHT,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES = null;
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES2,
+			METHOD_TO_TEXT_AND_IMAGES3 = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -92,7 +93,10 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
 		//
-		(METHOD_TO_TEXT_AND_IMAGES = clz.getDeclaredMethod("toTextAndImages", Iterable.class, String.class,
+		(METHOD_TO_TEXT_AND_IMAGES2 = clz.getDeclaredMethod("toTextAndImages", Iterable.class, Iterable.class))
+				.setAccessible(true);
+		//
+		(METHOD_TO_TEXT_AND_IMAGES3 = clz.getDeclaredMethod("toTextAndImages", Iterable.class, String.class,
 				Iterable.class)).setAccessible(true);
 		//
 	}
@@ -614,12 +618,12 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals("[{\"text\":null,\"image\":null}]", ObjectMapperUtil.writeValueAsString(objectMapper,
-				toTextAndImages(Collections.singleton(null), null, null)));
+		Assertions.assertEquals("[{\"text\":null,\"image\":null}]",
+				ObjectMapperUtil.writeValueAsString(objectMapper, toTextAndImages(Collections.singleton(null), null)));
 		//
 		Assertions.assertEquals("[{\"text\":null,\"image\":null},{\"text\":null,\"image\":null}]",
 				ObjectMapperUtil.writeValueAsString(objectMapper,
-						toTextAndImages(Collections.nCopies(2, null), null, Collections.nCopies(2, null))));
+						toTextAndImages(Collections.nCopies(2, null), Collections.nCopies(2, null))));
 		//
 		Assertions.assertEquals("[{\"text\":null,\"image\":null},{\"text\":null,\"image\":null}]",
 				ObjectMapperUtil.writeValueAsString(objectMapper,
@@ -627,10 +631,25 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 	}
 
+	private static Collection<?> toTextAndImages(final Iterable<ElementHandle> ehs, final Iterable<ElementHandle> words)
+			throws Throwable {
+		try {
+			final Object obj = METHOD_TO_TEXT_AND_IMAGES2.invoke(null, ehs, words);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Collection) {
+				return (Collection) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
 	private static Collection<?> toTextAndImages(final Iterable<ElementHandle> ehs, final String textInput,
 			final Iterable<ElementHandle> words) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_TEXT_AND_IMAGES.invoke(null, ehs, textInput, words);
+			final Object obj = METHOD_TO_TEXT_AND_IMAGES3.invoke(null, ehs, textInput, words);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Collection) {

@@ -373,7 +373,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		final List<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
 		//
-		final Collection<TextAndImage> textAndImages = toTextAndImages(ehs, Util.getText(tfTextInput), words);
+		final Collection<TextAndImage> textAndImages = ObjectUtils.getIfNull(toTextAndImages(ehs, words),
+				() -> toTextAndImages(ehs, Util.getText(tfTextInput), words));
 		//
 		Util.forEach(Util.stream(textAndImages), x -> Util.addElement(mcbmTextAndImage, x));
 		//
@@ -391,7 +392,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
-	private static Collection<TextAndImage> toTextAndImages(final Iterable<ElementHandle> ehs, final String textInput,
+	private static Collection<TextAndImage> toTextAndImages(final Iterable<ElementHandle> ehs,
 			final Iterable<ElementHandle> words) {
 		//
 		TextAndImage textAndImage = null;
@@ -427,13 +428,26 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			return textAndImages;
 			//
-		} else if (IterableUtils.size(words) == 1) {
+		} // if
+			//
+		return null;
+		//
+	}
+
+	private static Collection<TextAndImage> toTextAndImages(final Iterable<ElementHandle> ehs, final String textInput,
+			final Iterable<ElementHandle> words) {
+		//
+		if (IterableUtils.size(words) == 1) {
 			//
 			ElementHandle eh = null;
 			//
 			String w, hiragana;
 			//
 			String[] ws = null;
+			//
+			TextAndImage textAndImage = null;
+			//
+			Collection<TextAndImage> textAndImages = null;
 			//
 			for (int i = 0; i < IterableUtils.size(ehs); i++) {
 				//
