@@ -31,6 +31,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.text.TextStringBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,7 +60,7 @@ class VoiceManagerOjadAccentPanelTest {
 	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL,
 			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_TEXT, METHOD_GET_HEIGHT,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES2,
-			METHOD_TO_TEXT_AND_IMAGES3, METHOD_TO_BYTE_ARRAY = null;
+			METHOD_TO_TEXT_AND_IMAGES3, METHOD_TO_BYTE_ARRAY, METHOD_APPEND = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -103,6 +104,8 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_TO_BYTE_ARRAY = clz.getDeclaredMethod("toByteArray", RenderedImage.class, String.class))
 				.setAccessible(true);
+		//
+		(METHOD_APPEND = clz.getDeclaredMethod("append", TextStringBuilder.class, String.class)).setAccessible(true);
 		//
 	}
 
@@ -683,6 +686,29 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof byte[]) {
 				return (byte[]) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testAppend() throws Throwable {
+		//
+		final TextStringBuilder tsb = new TextStringBuilder();
+		//
+		Assertions.assertSame(tsb, append(tsb, null));
+		//
+	}
+
+	private static TextStringBuilder append(final TextStringBuilder instance, final String str) throws Throwable {
+		try {
+			final Object obj = METHOD_APPEND.invoke(null, instance, str);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof TextStringBuilder) {
+				return (TextStringBuilder) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

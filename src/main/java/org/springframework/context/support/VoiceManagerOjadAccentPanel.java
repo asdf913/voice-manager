@@ -473,12 +473,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						if (StringUtils.startsWith(textInput,
 								commonPrefix = Strings.commonPrefix(
 										StringUtils.trim(textContent(IterableUtils.get(ehs, 0))),
-										StringUtils.trim(textContent(IterableUtils.get(ehs, 1)))))
-								&& tsb != null) {
+										StringUtils.trim(textContent(IterableUtils.get(ehs, 1)))))) {
 							//
-							tsb.append(Strings.commonPrefix(ArrayUtils.get(ws, 0), ArrayUtils.get(ws, 1)));
-							//
-							tsb.append(StringUtils.substringAfter(textInput, commonPrefix));
+							append(append(tsb, Strings.commonPrefix(ArrayUtils.get(ws, 0), ArrayUtils.get(ws, 1))),
+									StringUtils.substringAfter(textInput, commonPrefix));
 							//
 						} // if
 							//
@@ -532,6 +530,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		return null;
 		//
+	}
+
+	private static TextStringBuilder append(final TextStringBuilder instance, final String str) {
+		return instance != null ? instance.append(str) : instance;
 	}
 
 	private static byte[] toByteArray(@Nullable final RenderedImage image, @Nullable final String format)
