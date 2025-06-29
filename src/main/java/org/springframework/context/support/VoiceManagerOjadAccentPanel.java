@@ -498,9 +498,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							//
 						try {
 							//
-							if (Objects.equals(getText(textAndImage), getText(tempTextAndImage))
-									&& Arrays.equals(toByteArray(Util.cast(RenderedImage.class, textAndImage), "PNG"),
-											toByteArray(Util.cast(RenderedImage.class, tempTextAndImage), "PNG"))) {
+							if (Boolean.logicalAnd(Objects.equals(getText(textAndImage), getText(tempTextAndImage)),
+									Arrays.equals(toByteArray(Util.cast(RenderedImage.class, textAndImage), "PNG"),
+											toByteArray(Util.cast(RenderedImage.class, tempTextAndImage), "PNG")))) {
 								//
 								found = true;
 								//
