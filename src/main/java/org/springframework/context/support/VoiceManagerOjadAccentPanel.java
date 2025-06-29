@@ -26,6 +26,9 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -54,6 +57,7 @@ import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
@@ -369,39 +373,67 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		final List<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
 		//
+		final Collection<TextAndImage> textAndImages = toTextAndImages(ehs, Util.getText(tfTextInput), words);
+		//
+		Util.forEach(Util.stream(textAndImages), x -> Util.addElement(mcbmTextAndImage, x));
+		//
+		if (IterableUtils.size(textAndImages) == 1) {
+			//
+			Util.setSelectedItem(mcbmTextAndImage, IterableUtils.get(textAndImages, 0));
+			//
+		} else if (IterableUtils.size(words) == 1) {
+			//
+			if (IterableUtils.size(textAndImages) == 1) {
+				//
+				Util.setSelectedItem(mcbmTextAndImage, IterableUtils.get(textAndImages, 0));
+				//
+			} // if
+				//
+		} // if
+			//
+		pack(window);
+		//
+	}
+
+	private static Collection<TextAndImage> toTextAndImages(final Iterable<ElementHandle> ehs, final String textInput,
+			final Iterable<ElementHandle> words) {
+		//
 		TextAndImage textAndImage = null;
 		//
 		if (IterableUtils.size(ehs) == 1) {
 			//
-			Util.addElement(mcbmTextAndImage, textAndImage = new TextAndImage());
-			//
-			Util.setText(tfTextOutput,
-					textAndImage.text = StringUtils.trim(textContent(querySelector(
-							testAndApply(x -> IterableUtils.size(x) == 1, words, x -> IterableUtils.get(x, 0), null),
-							".midashi"))));
+			(textAndImage = new TextAndImage()).text = StringUtils.trim(textContent(querySelector(
+					testAndApply(x -> IterableUtils.size(x) == 1, words, x -> IterableUtils.get(x, 0), null),
+					".midashi")));
 			//
 			textAndImage.image = toImage(screenshot(IterableUtils.get(ehs, 0)),
 					e -> LoggerUtil.error(LOG, e.getMessage(), e));
 			//
-			Util.setSelectedItem(mcbmTextAndImage, textAndImage);
+			return Collections.singleton(textAndImage);
 			//
-		} else if (IterableUtils.size(words) == IterableUtils.size(ehs)) {
+		} // if
+			//
+		Collection<TextAndImage> textAndImages = null;
+		//
+		if (IterableUtils.size(words) == IterableUtils.size(ehs)) {
 			//
 			for (int i = 0; i < IterableUtils.size(words); i++) {
 				//
-				Util.addElement(mcbmTextAndImage, textAndImage = new TextAndImage());
-				//
-				textAndImage.text = StringUtils
+				(textAndImage = new TextAndImage()).text = StringUtils
 						.trim(textContent(querySelector(IterableUtils.get(words, i), ".midashi")));
 				//
 				textAndImage.image = toImage(screenshot(IterableUtils.get(ehs, i)),
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
+				Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
+				//
 			} // for
 				//
+			return textAndImages;
+			//
 		} else if (IterableUtils.size(words) == 1) {
 			//
-			final String textInput = Util.getText(tfTextInput);
+			ElementHandle eh = null;
 			//
 			String w, hiragana;
 			//
@@ -410,9 +442,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			for (int i = 0; i < IterableUtils.size(ehs); i++) {
 				//
 				if (StringUtils.equals(textInput,
-						StringUtils.trim(hiragana = textContent(IterableUtils.get(ehs, i))))) {
+						StringUtils.trim(hiragana = textContent(eh = IterableUtils.get(ehs, i))))) {
 					//
-					Util.addElement(mcbmTextAndImage, textAndImage = new TextAndImage());
+					(textAndImage = new TextAndImage()).image = toImage(screenshot(eh),
+							e -> LoggerUtil.error(LOG, e.getMessage(), e));
 					//
 					ws = StringUtils.split(
 							StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))), '・');
@@ -429,18 +462,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 						// TODO
 						//
-					textAndImage.image = toImage(screenshot(IterableUtils.get(ehs, i)),
-							e -> LoggerUtil.error(LOG, e.getMessage(), e));
-					//
-					Util.setSelectedItem(mcbmTextAndImage, textAndImage);
+					Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 					//
 				} // if
 					//
-			} // if
+			} // for
 				//
+			return textAndImages;
+			//
 		} // if
 			//
-		pack(window);
+		return null;
 		//
 	}
 

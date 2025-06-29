@@ -14,6 +14,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,6 +34,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
 import com.google.common.reflect.Reflection;
@@ -53,7 +56,7 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL,
 			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_TEXT, METHOD_GET_HEIGHT,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM, METHOD_LENGTH = null;
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -88,6 +91,9 @@ class VoiceManagerOjadAccentPanelTest {
 		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", JComboBox.class)).setAccessible(true);
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
+		//
+		(METHOD_TO_TEXT_AND_IMAGES = clz.getDeclaredMethod("toTextAndImages", Iterable.class, String.class,
+				Iterable.class)).setAccessible(true);
 		//
 	}
 
@@ -181,6 +187,8 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private MH mh = null;
 
+	private ObjectMapper objectMapper = null;
+
 	@BeforeEach
 	void beforeEach() {
 		//
@@ -191,6 +199,8 @@ class VoiceManagerOjadAccentPanelTest {
 		textAndImage = Narcissus.allocateInstance(CLASS_TEXT_AND_IMAGE);
 		//
 		mh = new MH();
+		//
+		objectMapper = new ObjectMapper();
 		//
 	}
 
@@ -530,8 +540,6 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertThrows(Throwable.class, () -> invocationHandler.invoke(transferable, null, null));
 		//
-		final ObjectMapper objectMapper = new ObjectMapper();
-		//
 		Assertions.assertEquals(
 				ObjectMapperUtil.writeValueAsString(objectMapper, new DataFlavor[] { DataFlavor.imageFlavor }),
 				ObjectMapperUtil.writeValueAsString(objectMapper, invocationHandler.invoke(transferable,
@@ -590,6 +598,43 @@ class VoiceManagerOjadAccentPanelTest {
 			final Object obj = METHOD_LENGTH.invoke(null, (Object) instance);
 			if (obj instanceof Integer) {
 				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToTextAndImages() throws Throwable {
+		//
+		if (objectMapper != null) {
+			//
+			objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
+			//
+		} // if
+			//
+		Assertions.assertEquals("[{\"text\":null,\"image\":null}]", ObjectMapperUtil.writeValueAsString(objectMapper,
+				toTextAndImages(Collections.singleton(null), null, null)));
+		//
+		Assertions.assertEquals("[{\"text\":null,\"image\":null},{\"text\":null,\"image\":null}]",
+				ObjectMapperUtil.writeValueAsString(objectMapper,
+						toTextAndImages(Collections.nCopies(2, null), null, Collections.nCopies(2, null))));
+		//
+		Assertions.assertEquals("[{\"text\":null,\"image\":null},{\"text\":null,\"image\":null}]",
+				ObjectMapperUtil.writeValueAsString(objectMapper,
+						toTextAndImages(Collections.nCopies(2, null), null, Collections.nCopies(1, null))));
+		//
+	}
+
+	private static Collection<?> toTextAndImages(final Iterable<ElementHandle> ehs, final String textInput,
+			final Iterable<ElementHandle> words) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_TEXT_AND_IMAGES.invoke(null, ehs, textInput, words);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Collection) {
+				return (Collection) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
