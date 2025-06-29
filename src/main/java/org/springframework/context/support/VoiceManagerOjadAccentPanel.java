@@ -35,6 +35,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -63,6 +65,8 @@ import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableBiConsumer;
+import org.apache.commons.lang3.function.FailableBiConsumerUtil;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -484,12 +488,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 						// TODO
 						//
-					if (!contains(textAndImages, textAndImage)) {
-						//
-						Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
-						//
-					} // if
-						//
+					testAndAccept((a, b) -> !contains(a, b),
+							textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage,
+							(a, b) -> Util.add(a, b));
+					//
 				} // if
 					//
 			} // for
@@ -500,6 +502,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		return null;
 		//
+	}
+
+	private static <T, U> void testAndAccept(final BiPredicate<T, U> instance, final T t, final U u,
+			final BiConsumer<T, U> consumer) {
+		if (Util.test(instance, t, u)) {
+			Util.accept(consumer, t, u);
+		} // if
 	}
 
 	private static boolean contains(@Nullable final Iterable<TextAndImage> textAndImages,
