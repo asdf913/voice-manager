@@ -295,103 +295,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		if (Objects.equals(source, btnExecute)) {
 			//
-			Util.setText(tfTextOutput, null);
-			//
-			setIcon(lblAccent, new ImageIcon());
-			//
-			Page page = null;
-			//
-			if (!isTestMode()) {
-				//
-				PageUtil.navigate(page = newPage(BrowserTypeUtil.launch(chromium(Playwright.create()))),
-						StringUtils.join("https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index/word:",
-								testAndApply(Objects::nonNull, Util.getText(tfTextInput),
-										x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
-				//
-			} // if
-				//
-			Util.forEach(
-					Util.map(sorted(Util.map(IntStream.range(1, Util.getSize(mcbmTextAndImage)), i -> -i)), i -> -i),
-					i -> Util.removeElementAt(mcbmTextAndImage, i));
-			//
-			// TODO
-			//
-			final List<ElementHandle> ehs = querySelectorAll(page, ".katsuyo_accent");
-			//
-			final List<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
-			//
-			TextAndImage textAndImage = null;
-			//
-			if (IterableUtils.size(ehs) == 1) {
-				//
-				Util.addElement(mcbmTextAndImage, textAndImage = new TextAndImage());
-				//
-				Util.setText(tfTextOutput, textAndImage.text = StringUtils.trim(textContent(querySelector(
-						testAndApply(x -> IterableUtils.size(x) == 1, words, x -> IterableUtils.get(x, 0), null),
-						".midashi"))));
-				//
-				textAndImage.image = toImage(screenshot(IterableUtils.get(ehs, 0)),
-						e -> LoggerUtil.error(LOG, e.getMessage(), e));
-				//
-				Util.setSelectedItem(mcbmTextAndImage, textAndImage);
-				//
-			} else if (IterableUtils.size(words) == IterableUtils.size(ehs)) {
-				//
-				for (int i = 0; i < IterableUtils.size(words); i++) {
-					//
-					Util.addElement(mcbmTextAndImage, textAndImage = new TextAndImage());
-					//
-					textAndImage.text = StringUtils
-							.trim(textContent(querySelector(IterableUtils.get(words, i), ".midashi")));
-					//
-					textAndImage.image = toImage(screenshot(IterableUtils.get(ehs, i)),
-							e -> LoggerUtil.error(LOG, e.getMessage(), e));
-					//
-				} // for
-					//
-			} else if (IterableUtils.size(words) == 1) {
-				//
-				final String textInput = Util.getText(tfTextInput);
-				//
-				String w, hiragana;
-				//
-				String[] ws = null;
-				//
-				for (int i = 0; i < IterableUtils.size(ehs); i++) {
-					//
-					if (StringUtils.equals(textInput,
-							StringUtils.trim(hiragana = textContent(IterableUtils.get(ehs, i))))) {
-						//
-						Util.addElement(mcbmTextAndImage, textAndImage = new TextAndImage());
-						//
-						ws = StringUtils.split(
-								StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))),
-								'・');
-						//
-						for (int j = 0; ws != null && j < ws.length; j++) {
-							//
-							if (StringUtils.isNotBlank(Strings.commonSuffix(w = ArrayUtils.get(ws, j), hiragana))) {
-								//
-								textAndImage.text = StringUtils.trim(w);
-								//
-							} // if
-								//
-						} // for
-							//
-							// TODO
-							//
-						textAndImage.image = toImage(screenshot(IterableUtils.get(ehs, i)),
-								e -> LoggerUtil.error(LOG, e.getMessage(), e));
-						//
-						Util.setSelectedItem(mcbmTextAndImage, textAndImage);
-						//
-					} // if
-						//
-				} // if
-					//
-			} // if
-				//
-			pack(window);
+			actionPerformedBtnExecute();
 			//
 		} else if (Objects.equals(source, jcbTextAndImage)) {
 			//
@@ -437,6 +341,107 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private void actionPerformedBtnExecute() {
+		//
+		Util.setText(tfTextOutput, null);
+		//
+		setIcon(lblAccent, new ImageIcon());
+		//
+		Page page = null;
+		//
+		if (!isTestMode()) {
+			//
+			PageUtil.navigate(page = newPage(BrowserTypeUtil.launch(chromium(Playwright.create()))),
+					StringUtils.join("https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index/word:",
+							testAndApply(Objects::nonNull, Util.getText(tfTextInput),
+									x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
+			//
+		} // if
+			//
+		Util.forEach(Util.map(sorted(Util.map(IntStream.range(1, Util.getSize(mcbmTextAndImage)), i -> -i)), i -> -i),
+				i -> Util.removeElementAt(mcbmTextAndImage, i));
+		//
+		// TODO
+		//
+		final List<ElementHandle> ehs = querySelectorAll(page, ".katsuyo_accent");
+		//
+		final List<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
+		//
+		TextAndImage textAndImage = null;
+		//
+		if (IterableUtils.size(ehs) == 1) {
+			//
+			Util.addElement(mcbmTextAndImage, textAndImage = new TextAndImage());
+			//
+			Util.setText(tfTextOutput,
+					textAndImage.text = StringUtils.trim(textContent(querySelector(
+							testAndApply(x -> IterableUtils.size(x) == 1, words, x -> IterableUtils.get(x, 0), null),
+							".midashi"))));
+			//
+			textAndImage.image = toImage(screenshot(IterableUtils.get(ehs, 0)),
+					e -> LoggerUtil.error(LOG, e.getMessage(), e));
+			//
+			Util.setSelectedItem(mcbmTextAndImage, textAndImage);
+			//
+		} else if (IterableUtils.size(words) == IterableUtils.size(ehs)) {
+			//
+			for (int i = 0; i < IterableUtils.size(words); i++) {
+				//
+				Util.addElement(mcbmTextAndImage, textAndImage = new TextAndImage());
+				//
+				textAndImage.text = StringUtils
+						.trim(textContent(querySelector(IterableUtils.get(words, i), ".midashi")));
+				//
+				textAndImage.image = toImage(screenshot(IterableUtils.get(ehs, i)),
+						e -> LoggerUtil.error(LOG, e.getMessage(), e));
+				//
+			} // for
+				//
+		} else if (IterableUtils.size(words) == 1) {
+			//
+			final String textInput = Util.getText(tfTextInput);
+			//
+			String w, hiragana;
+			//
+			String[] ws = null;
+			//
+			for (int i = 0; i < IterableUtils.size(ehs); i++) {
+				//
+				if (StringUtils.equals(textInput,
+						StringUtils.trim(hiragana = textContent(IterableUtils.get(ehs, i))))) {
+					//
+					Util.addElement(mcbmTextAndImage, textAndImage = new TextAndImage());
+					//
+					ws = StringUtils.split(
+							StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))), '・');
+					//
+					for (int j = 0; ws != null && j < ws.length; j++) {
+						//
+						if (StringUtils.isNotBlank(Strings.commonSuffix(w = ArrayUtils.get(ws, j), hiragana))) {
+							//
+							textAndImage.text = StringUtils.trim(w);
+							//
+						} // if
+							//
+					} // for
+						//
+						// TODO
+						//
+					textAndImage.image = toImage(screenshot(IterableUtils.get(ehs, i)),
+							e -> LoggerUtil.error(LOG, e.getMessage(), e));
+					//
+					Util.setSelectedItem(mcbmTextAndImage, textAndImage);
+					//
+				} // if
+					//
+			} // if
+				//
+		} // if
+			//
+		pack(window);
+		//
 	}
 
 	@Nullable
