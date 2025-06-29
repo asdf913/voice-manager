@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
-import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -21,7 +20,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.Icon;
 import javax.swing.JButton;
