@@ -532,7 +532,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
-	private static TextStringBuilder append(final TextStringBuilder instance, final String str) {
+	private static TextStringBuilder append(@Nullable final TextStringBuilder instance, final String str) {
 		return instance != null ? instance.append(str) : instance;
 	}
 
