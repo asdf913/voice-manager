@@ -502,7 +502,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
-	private static boolean contains(final Iterable<TextAndImage> textAndImages, final TextAndImage textAndImage) {
+	private static boolean contains(@Nullable final Iterable<TextAndImage> textAndImages,
+			final TextAndImage textAndImage) {
 		//
 		TextAndImage temp = null;
 		//
