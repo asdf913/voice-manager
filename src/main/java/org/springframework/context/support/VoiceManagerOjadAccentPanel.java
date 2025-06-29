@@ -466,7 +466,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					ws = StringUtils.split(
 							StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))), '・');
 					//
-					if (StringUtils.isBlank(textAndImage.text) && length(ws) == 2 && IterableUtils.size(ehs) > 1) {
+					if (Boolean.logicalAnd(length(ws) == 2, IterableUtils.size(ehs) > 1)) {
 						//
 						TextStringBuilderUtil.clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
 						//
