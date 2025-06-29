@@ -439,6 +439,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
+	@Nullable
 	private static Object getSelectedItem(final JComboBox<?> instance) {
 		//
 		final Field field = getFieldByName(Util.getClass(instance), "dataModel");
