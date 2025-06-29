@@ -53,7 +53,7 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL,
 			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_TEXT, METHOD_GET_HEIGHT,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM = null;
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM, METHOD_LENGTH = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -86,6 +86,8 @@ class VoiceManagerOjadAccentPanelTest {
 		(METHOD_GET_SYSTEM_CLIP_BOARD = clz.getDeclaredMethod("getSystemClipboard", Toolkit.class)).setAccessible(true);
 		//
 		(METHOD_GET_SELECTED_ITEM = clz.getDeclaredMethod("getSelectedItem", JComboBox.class)).setAccessible(true);
+		//
+		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
 		//
 	}
 
@@ -241,7 +243,7 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 			toString = Util.toString(m);
 			//
-			if (Util.contains(Arrays.asList(Double.TYPE, Boolean.TYPE), Util.getReturnType(m))) {
+			if (Util.contains(Arrays.asList(Double.TYPE, Boolean.TYPE, Integer.TYPE), Util.getReturnType(m))) {
 				//
 				Assertions.assertNotNull(invoke, toString);
 				//
@@ -543,7 +545,7 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testGetSystemClipboard() throws Throwable {
 		//
-		Assertions.assertEquals(null, getSystemClipboard(ProxyUtil.createProxy(Toolkit.class, mh)));
+		Assertions.assertNull(getSystemClipboard(ProxyUtil.createProxy(Toolkit.class, mh)));
 		//
 	}
 
@@ -564,14 +566,32 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testGetSelectedItem() throws Throwable {
 		//
-		Assertions.assertEquals(null,
-				getSelectedItem(Util.cast(JComboBox.class, Narcissus.allocateInstance(JComboBox.class))));
+		Assertions.assertNull(getSelectedItem(Util.cast(JComboBox.class, Narcissus.allocateInstance(JComboBox.class))));
 		//
 	}
 
 	private static Object getSelectedItem(final JComboBox<?> instance) throws Throwable {
 		try {
 			return METHOD_GET_SELECTED_ITEM.invoke(null, instance);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testLength() throws Throwable {
+		//
+		Assertions.assertEquals(0, length(new Object[] {}));
+		//
+	}
+
+	private static int length(final Object[] instance) throws Throwable {
+		try {
+			final Object obj = METHOD_LENGTH.invoke(null, (Object) instance);
+			if (obj instanceof Integer) {
+				return ((Integer) obj).intValue();
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

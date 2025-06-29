@@ -417,7 +417,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					ws = StringUtils.split(
 							StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))), '・');
 					//
-					for (int j = 0; ws != null && j < ws.length; j++) {
+					for (int j = 0; j < length(ws); j++) {
 						//
 						if (StringUtils.isNotBlank(Strings.commonSuffix(w = ArrayUtils.get(ws, j), hiragana))) {
 							//
@@ -442,6 +442,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		pack(window);
 		//
+	}
+
+	private static int length(final Object[] instance) {
+		return instance != null ? instance.length : 0;
 	}
 
 	@Nullable
