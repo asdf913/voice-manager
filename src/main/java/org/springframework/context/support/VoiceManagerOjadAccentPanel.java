@@ -378,11 +378,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		Util.forEach(Util.stream(textAndImages), x -> Util.addElement(mcbmTextAndImage, x));
 		//
-		if (IterableUtils.size(textAndImages) == 1) {
-			//
-			Util.setSelectedItem(mcbmTextAndImage, IterableUtils.get(textAndImages, 0));
-			//
-		} else if (IterableUtils.size(words) == 1 && IterableUtils.size(textAndImages) == 1) {
+		if (IterableUtils.size(textAndImages) == 1
+				|| (IterableUtils.size(words) == 1 && IterableUtils.size(textAndImages) == 1)) {
 			//
 			Util.setSelectedItem(mcbmTextAndImage, IterableUtils.get(textAndImages, 0));
 			//
