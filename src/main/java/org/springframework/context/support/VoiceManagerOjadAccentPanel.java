@@ -534,7 +534,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
-	private static byte[] toByteArray(final RenderedImage image, final String format) throws IOException {
+	private static byte[] toByteArray(@Nullable final RenderedImage image, @Nullable final String format)
+			throws IOException {
 		//
 		if (image == null || format == null) {
 			//
