@@ -53,6 +53,7 @@ import javax.swing.WindowConstants;
 import javax.swing.text.JTextComponent;
 
 import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
@@ -62,6 +63,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
 import org.springframework.beans.factory.InitializingBean;
 
+import com.google.common.base.Strings;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
@@ -346,6 +348,46 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							e -> LoggerUtil.error(LOG, e.getMessage(), e));
 					//
 				} // for
+					//
+			} else if (IterableUtils.size(words) == 1) {
+				//
+				final String textInput = Util.getText(tfTextInput);
+				//
+				String w, hiragana;
+				//
+				String[] ws = null;
+				//
+				for (int i = 0; i < IterableUtils.size(ehs); i++) {
+					//
+					if (StringUtils.equals(textInput,
+							StringUtils.trim(hiragana = textContent(IterableUtils.get(ehs, i))))) {
+						//
+						Util.addElement(mcbmTextAndImage, textAndImage = new TextAndImage());
+						//
+						ws = StringUtils.split(
+								StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))),
+								'・');
+						//
+						for (int j = 0; ws != null && j < ws.length; j++) {
+							//
+							if (StringUtils.isNotBlank(Strings.commonSuffix(w = ArrayUtils.get(ws, j), hiragana))) {
+								//
+								textAndImage.text = StringUtils.trim(w);
+								//
+							} // if
+								//
+						} // for
+							//
+							// TODO
+							//
+						textAndImage.image = toImage(screenshot(IterableUtils.get(ehs, i)),
+								e -> LoggerUtil.error(LOG, e.getMessage(), e));
+						//
+						Util.setSelectedItem(mcbmTextAndImage, textAndImage);
+						//
+					} // if
+						//
+				} // if
 					//
 			} // if
 				//
