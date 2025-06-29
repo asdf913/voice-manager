@@ -7,6 +7,9 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Dimension2D;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -18,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -57,7 +61,7 @@ class VoiceManagerOjadAccentPanelTest {
 	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL,
 			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_TEXT, METHOD_GET_HEIGHT,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES2,
-			METHOD_TO_TEXT_AND_IMAGES3 = null;
+			METHOD_TO_TEXT_AND_IMAGES3, METHOD_TO_BYTE_ARRAY = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -98,6 +102,9 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_TO_TEXT_AND_IMAGES3 = clz.getDeclaredMethod("toTextAndImages", Iterable.class, String.class,
 				Iterable.class)).setAccessible(true);
+		//
+		(METHOD_TO_BYTE_ARRAY = clz.getDeclaredMethod("toByteArray", RenderedImage.class, String.class))
+				.setAccessible(true);
 		//
 	}
 
@@ -625,9 +632,8 @@ class VoiceManagerOjadAccentPanelTest {
 				ObjectMapperUtil.writeValueAsString(objectMapper,
 						toTextAndImages(Collections.nCopies(2, null), Collections.nCopies(2, null))));
 		//
-		Assertions.assertEquals("[{\"text\":null,\"image\":null},{\"text\":null,\"image\":null}]",
-				ObjectMapperUtil.writeValueAsString(objectMapper,
-						toTextAndImages(Collections.nCopies(2, null), null, Collections.nCopies(1, null))));
+		Assertions.assertEquals("[{\"text\":null,\"image\":null}]", ObjectMapperUtil.writeValueAsString(objectMapper,
+				toTextAndImages(Collections.nCopies(2, null), null, Collections.nCopies(1, null))));
 		//
 	}
 
@@ -654,6 +660,31 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 			} else if (obj instanceof Collection) {
 				return (Collection) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToByteArray() throws Throwable {
+		//
+		final RenderedImage renderedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+		//
+		Assertions.assertNull(toByteArray(renderedImage, null));
+		//
+		Assertions.assertNotNull(toByteArray(renderedImage, "png"));
+		//
+	}
+
+	private static byte[] toByteArray(final RenderedImage image, final String format) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_BYTE_ARRAY.invoke(null, image, format);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof byte[]) {
+				return (byte[]) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

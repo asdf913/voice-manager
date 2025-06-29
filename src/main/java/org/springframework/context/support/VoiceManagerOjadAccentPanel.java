@@ -14,7 +14,9 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Dimension2D;
+import java.awt.image.RenderedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.ElementType;
@@ -27,6 +29,7 @@ import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -62,6 +65,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.text.TextStringBuilder;
+import org.apache.commons.text.TextStringBuilderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -438,18 +443,21 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			ElementHandle eh = null;
 			//
-			String w, hiragana;
+			String commonPrefix;
 			//
 			String[] ws = null;
 			//
-			TextAndImage textAndImage = null;
+			TextAndImage textAndImage, tempTextAndImage = null;
 			//
 			Collection<TextAndImage> textAndImages = null;
 			//
+			TextStringBuilder tsb = null;
+			//
+			boolean found = false;
+			//
 			for (int i = 0; i < IterableUtils.size(ehs); i++) {
 				//
-				if (StringUtils.equals(textInput,
-						StringUtils.trim(hiragana = textContent(eh = IterableUtils.get(ehs, i))))) {
+				if (StringUtils.equals(textInput, StringUtils.trim(textContent(eh = IterableUtils.get(ehs, i))))) {
 					//
 					(textAndImage = new TextAndImage()).image = toImage(screenshot(eh),
 							e -> LoggerUtil.error(LOG, e.getMessage(), e));
@@ -457,20 +465,62 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					ws = StringUtils.split(
 							StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))), '・');
 					//
-					for (int j = 0; j < length(ws); j++) {
+					if (StringUtils.isBlank(textAndImage.text) && length(ws) == 2 && IterableUtils.size(ehs) > 1) {
 						//
-						if (StringUtils.isNotBlank(Strings.commonSuffix(w = ArrayUtils.get(ws, j), hiragana))) {
+						TextStringBuilderUtil.clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
+						//
+						if (StringUtils.startsWith(textInput,
+								commonPrefix = Strings.commonPrefix(
+										StringUtils.trim(textContent(IterableUtils.get(ehs, 0))),
+										StringUtils.trim(textContent(IterableUtils.get(ehs, 1)))))
+								&& tsb != null) {
 							//
-							textAndImage.text = StringUtils.trim(w);
+							tsb.append(Strings.commonPrefix(ArrayUtils.get(ws, 0), ArrayUtils.get(ws, 1)));
+							//
+							tsb.append(StringUtils.substringAfter(textInput, commonPrefix));
 							//
 						} // if
 							//
-					} // for
+						textAndImage.text = Util.toString(tsb);
+						//
+					} // if
 						//
 						// TODO
 						//
-					Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
+					found = false;
 					//
+					for (int j = 0; j < IterableUtils.size(textAndImages); j++) {
+						//
+						if ((tempTextAndImage = IterableUtils.get(textAndImages, j)) == null) {
+							//
+							continue;
+							//
+						} // if
+							//
+						try {
+							//
+							if (Objects.equals(getText(textAndImage), getText(tempTextAndImage))
+									&& Arrays.equals(toByteArray(Util.cast(RenderedImage.class, textAndImage), "PNG"),
+											toByteArray(Util.cast(RenderedImage.class, tempTextAndImage), "PNG"))) {
+								//
+								found = true;
+								//
+							} // if
+								//
+						} catch (final IOException e) {
+							//
+							throw new RuntimeException(e);
+							//
+						} // try
+							//
+					} // for
+						//
+					if (!found) {
+						//
+						Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
+						//
+					} // if
+						//
 				} // if
 					//
 			} // for
@@ -481,6 +531,24 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		return null;
 		//
+	}
+
+	private static byte[] toByteArray(final RenderedImage image, final String format) throws IOException {
+		//
+		if (image == null || format == null) {
+			//
+			return null;
+			//
+		} // if
+			//
+		try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			//
+			ImageIO.write(image, format, baos);
+			//
+			return baos.toByteArray();
+			//
+		} // try
+			//
 	}
 
 	private static int length(@Nullable final Object[] instance) {
