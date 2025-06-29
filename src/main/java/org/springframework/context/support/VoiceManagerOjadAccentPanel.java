@@ -242,7 +242,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	@Nullable
-	private static Image getImage(@Nullable final TextAndImage instance) {
+	private static BufferedImage getImage(@Nullable final TextAndImage instance) {
 		return instance != null ? instance.image : null;
 	}
 
@@ -448,13 +448,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			String[] ws = null;
 			//
-			TextAndImage textAndImage, tempTextAndImage = null;
+			TextAndImage textAndImage = null;
 			//
 			Collection<TextAndImage> textAndImages = null;
 			//
 			TextStringBuilder tsb = null;
-			//
-			boolean found = false;
 			//
 			for (int i = 0; i < IterableUtils.size(ehs); i++) {
 				//
@@ -486,35 +484,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 						// TODO
 						//
-					found = false;
-					//
-					for (int j = 0; j < IterableUtils.size(textAndImages); j++) {
-						//
-						if ((tempTextAndImage = IterableUtils.get(textAndImages, j)) == null) {
-							//
-							continue;
-							//
-						} // if
-							//
-						try {
-							//
-							if (Boolean.logicalAnd(Objects.equals(getText(textAndImage), getText(tempTextAndImage)),
-									Arrays.equals(toByteArray(Util.cast(RenderedImage.class, textAndImage), "PNG"),
-											toByteArray(Util.cast(RenderedImage.class, tempTextAndImage), "PNG")))) {
-								//
-								found = true;
-								//
-							} // if
-								//
-						} catch (final IOException e) {
-							//
-							throw new RuntimeException(e);
-							//
-						} // try
-							//
-					} // for
-						//
-					if (!found) {
+					if (!contains(textAndImages, textAndImage)) {
 						//
 						Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 						//
@@ -529,6 +499,35 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		} // if
 			//
 		return null;
+		//
+	}
+
+	private static boolean contains(final Iterable<TextAndImage> textAndImages, final TextAndImage textAndImage) {
+		//
+		TextAndImage temp = null;
+		//
+		for (int j = 0; j < IterableUtils.size(textAndImages); j++) {
+			//
+			try {
+				//
+				if (Boolean.logicalAnd(
+						Objects.equals(getText(textAndImage), getText(temp = IterableUtils.get(textAndImages, j))),
+						Arrays.equals(toByteArray(getImage(textAndImage), "PNG"),
+								toByteArray(getImage(temp), "PNG")))) {
+					//
+					return true;
+					//
+				} // if
+					//
+			} catch (final IOException e) {
+				//
+				throw new RuntimeException(e);
+				//
+			} // try
+				//
+		} // for
+			//
+		return false;
 		//
 	}
 
