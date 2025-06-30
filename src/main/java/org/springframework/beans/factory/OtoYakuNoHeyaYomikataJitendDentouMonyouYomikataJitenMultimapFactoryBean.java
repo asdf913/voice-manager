@@ -1009,9 +1009,9 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			} // if
 				//
-			ltsb = StringUtils.length(
-					tsbv = append(TextStringBuilderUtil.clear(ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
-							Util.getValue(e1)));
+			ltsb = StringUtils.length(tsbv = TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
+					Util.getValue(e1)));
 			//
 			for (final String s : ik) {
 				//
@@ -2775,7 +2775,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
-			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
+			TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
 					StringUtils.substringBefore(g24 = Util.group(m2, 4), g22 = Util.group(m2, 2)));
 			//
 			for (int j = StringUtils.length(tsbv) - 1; j >= 0; j--) {
@@ -2897,9 +2898,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			MultimapUtil.put(multimap, g21 = Util.group(m2, 1), g22);
 			//
-			append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
+			TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
 			//
-			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
+			TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
 			//
 			MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
 					substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
@@ -2954,10 +2957,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			MultimapUtil.put(multimap, Util.group(m2, 1),
 					StringUtils.substringBefore(g24 = Util.group(m2, 4), g22 = Util.group(m2, 2)));
 			//
-			append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)),
+			TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)),
 					Util.group(m2, 3));
 			//
-			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
+			TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
 					StringUtils.substringAfter(g24, g22));
 			//
 			testAndAccept((a, b) -> {
@@ -3064,10 +3069,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21, g22, cpk, cpv));
 			//
-			append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)),
+			TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)),
 					StringUtils.substringAfter(g21, cpk));
 			//
-			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
+			TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
 					StringUtils.substringAfter(g22, cpv));
 			//
 			testAndAccept((a, b) -> {
@@ -3186,9 +3193,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			MultimapUtil.put(multimap, g21, g22);
 			//
-			append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
+			TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
 			//
-			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
+			TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
 			//
 			testAndAccept((a, b) -> StringUtils.length(a) > 0 && StringUtils.length(b) > 1 && b.charAt(1) == 'ん', tsbk,
 					tsbv, (a, b) -> {
@@ -3286,9 +3295,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			MultimapUtil.put(multimap, g21, g22);
 			//
-			append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
+			TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
 			//
-			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
+			TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
 			//
 			testAndAccept((a, b) -> StringUtils.length(a) > 1 && StringUtils.length(b) > 1 && b.charAt(1) == 'ん', tsbk,
 					tsbv, (a, b) -> {
@@ -3350,10 +3361,12 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
-			append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)),
+			TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)),
 					Util.group(m2, 3));
 			//
-			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
+			TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)),
 					g24 = Util.group(m2, 4));
 			//
 			testAndAccept((a, b) -> {
@@ -3375,7 +3388,8 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 			});
 			//
-			append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)),
+			TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)),
 					Util.group(m2, 1));
 			//
 			tsbv.deleteCharAt(StringUtils.indexOf(g24, Util.group(m2, 2)));
@@ -3469,9 +3483,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				IntCollectionUtil.addInt(intCollection, i);
 				//
-				append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
+				TextStringBuilderUtil.append(
+						TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
 				//
-				append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
+				TextStringBuilderUtil.append(
+						TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
 				//
 				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
 						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
@@ -3499,9 +3515,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				IntCollectionUtil.addInt(intCollection, i);
 				//
-				append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
+				TextStringBuilderUtil.append(
+						TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
 				//
-				append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
+				TextStringBuilderUtil.append(
+						TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
 				//
 				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
 						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
@@ -3531,9 +3549,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 				//
 				IntCollectionUtil.addInt(intCollection, i);
 				//
-				append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
+				TextStringBuilderUtil.append(
+						TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
 				//
-				append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
+				TextStringBuilderUtil.append(
+						TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
 				//
 				MultimapUtil.put(multimap, substring(tsbk, (length = StringUtils.length(tsbk)) - 1, length),
 						substring(tsbv, (length = StringUtils.length(tsbv)) - 2, length));
@@ -3629,9 +3649,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			MultimapUtil.put(multimap, g21, g22);
 			//
-			append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
+			TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
 			//
-			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
+			TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
 			//
 			testAndAccept((a, b) -> {
 				//
@@ -3795,9 +3817,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			IntCollectionUtil.addInt(intCollection, i);
 			//
-			append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
+			TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
 			//
-			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
+			TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
 			//
 			int lastIndexOf;
 			//
@@ -3926,9 +3950,11 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 			//
 			MultimapUtil.putAll(multimap, ImmutableMultimap.of(g21 = Util.group(m2, 1), g22));
 			//
-			append(TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
+			TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(tsbk = ObjectUtils.getIfNull(tsbk, TextStringBuilder::new)), g21);
 			//
-			append(TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
+			TextStringBuilderUtil.append(
+					TextStringBuilderUtil.clear(tsbv = ObjectUtils.getIfNull(tsbv, TextStringBuilder::new)), g22);
 			//
 			testAndAccept((a, b) -> {
 				//
@@ -8181,27 +8207,6 @@ public class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactory
 	private static TextStringBuilder delete(@Nullable final TextStringBuilder instance, final int startIndex,
 			final int endIndex) {
 		return instance != null ? instance.delete(startIndex, endIndex) : instance;
-	}
-
-	@Nullable
-	private static TextStringBuilder append(@Nullable final TextStringBuilder instance, @Nullable final String str) {
-		//
-		try {
-			//
-			if (instance == null || Narcissus.getField(str, Util.getDeclaredField(String.class, "value")) == null) {
-				//
-				return instance;
-				//
-			} // if
-				//
-		} catch (final NoSuchFieldException e) {
-			//
-			throw new RuntimeException(e);
-			//
-		} // try
-			//
-		return instance.append(str);
-		//
 	}
 
 	@Nullable

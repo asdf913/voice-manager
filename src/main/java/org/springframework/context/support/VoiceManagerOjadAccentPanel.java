@@ -475,7 +475,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 										StringUtils.trim(textContent(IterableUtils.get(ehs, 0))),
 										StringUtils.trim(textContent(IterableUtils.get(ehs, 1)))))) {
 							//
-							append(append(tsb, Strings.commonPrefix(ArrayUtils.get(ws, 0), ArrayUtils.get(ws, 1))),
+							TextStringBuilderUtil.append(
+									TextStringBuilderUtil.append(tsb,
+											Strings.commonPrefix(ArrayUtils.get(ws, 0), ArrayUtils.get(ws, 1))),
 									StringUtils.substringAfter(textInput, commonPrefix));
 							//
 						} // if
@@ -537,11 +539,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		return false;
 		//
-	}
-
-	@Nullable
-	private static TextStringBuilder append(@Nullable final TextStringBuilder instance, final String str) {
-		return instance != null ? instance.append(str) : instance;
 	}
 
 	@Nullable

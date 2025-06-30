@@ -51,7 +51,7 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 	private static final String SPACE = " ";
 
 	private static Method METHOD_TEST_AND_APPLY, METHOD_TO_MULTI_MAP_AND_INT_COLLECTION, METHOD_TEST_AND_ACCEPT3,
-			METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_APPEND, METHOD_SUB_STRING, METHOD_TEST_AND_RUN,
+			METHOD_TEST_AND_ACCEPT4, METHOD_TEST_AND_ACCEPT5, METHOD_SUB_STRING, METHOD_TEST_AND_RUN,
 			METHOD_TO_ENTRY_18A1;
 
 	@BeforeAll
@@ -73,8 +73,6 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 		//
 		(METHOD_TEST_AND_ACCEPT5 = clz.getDeclaredMethod("testAndAccept", TriPredicate.class, Object.class,
 				Object.class, Object.class, TriConsumer.class)).setAccessible(true);
-		//
-		(METHOD_APPEND = clz.getDeclaredMethod("append", TextStringBuilder.class, String.class)).setAccessible(true);
 		//
 		(METHOD_SUB_STRING = clz.getDeclaredMethod("substring", TextStringBuilder.class, Integer.TYPE, Integer.TYPE))
 				.setAccessible(true);
@@ -1873,33 +1871,6 @@ class OtoYakuNoHeyaYomikataJitendDentouMonyouYomikataJitenMultimapFactoryBeanTes
 			final TriConsumer<T, U, V> consumer) throws Throwable {
 		try {
 			METHOD_TEST_AND_ACCEPT5.invoke(null, instance, t, u, v, consumer);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testAppend() throws Throwable {
-		//
-		TextStringBuilder tsb = new TextStringBuilder();
-		//
-		Assertions.assertSame(tsb, append(tsb, Util.cast(String.class, Narcissus.allocateInstance(String.class))));
-		//
-		Assertions.assertSame(
-				tsb = Util.cast(TextStringBuilder.class, Narcissus.allocateInstance(TextStringBuilder.class)),
-				append(tsb, Util.cast(String.class, Narcissus.allocateInstance(String.class))));
-		//
-	}
-
-	private static TextStringBuilder append(final TextStringBuilder instance, final String str) throws Throwable {
-		try {
-			final Object obj = METHOD_APPEND.invoke(null, instance, str);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof TextStringBuilder) {
-				return (TextStringBuilder) obj;
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
