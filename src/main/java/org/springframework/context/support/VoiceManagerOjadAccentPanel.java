@@ -61,6 +61,7 @@ import javax.swing.MutableComboBoxModel;
 import javax.swing.WindowConstants;
 import javax.swing.text.JTextComponent;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -514,37 +515,38 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // for
 			//
-		if (IterableUtils.isEmpty(textAndImages)) {
+		if (CollectionUtils.isNotEmpty(textAndImages)) {
 			//
-			ws = StringUtils
-					.split(StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))), '・');
+			return textAndImages;
 			//
-			for (int i = 0; i < length(ws); i++) {
-				//
-				if (Boolean.logicalAnd(Objects.equals(textInput, ArrayUtils.get(ws, i)), length(ws) == 2)) {
-					//
-					for (int j = 0; j < IterableUtils.size(ehs); j++) {
-						//
-						if (StringUtils.isNotBlank(Strings.commonSuffix(ArrayUtils.get(ws, i),
-								StringUtils.trim(textContent(eh = IterableUtils.get(ehs, j)))))) {
-							//
-							(textAndImage = new TextAndImage()).image = toBufferedImage(screenshot(eh),
-									e -> LoggerUtil.error(LOG, e.getMessage(), e));
-							//
-							textAndImage.text = ArrayUtils.get(ws, i);
-							//
-							Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new),
-									textAndImage);
-							//
-						} // if
-							//
-					} // for
-						//
-				} // if
-					//
-			} // for
-				//
 		} // if
+			//
+		ws = StringUtils.split(StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))),
+				'・');
+		//
+		for (int i = 0; i < length(ws); i++) {
+			//
+			if (Boolean.logicalAnd(Objects.equals(textInput, ArrayUtils.get(ws, i)), length(ws) == 2)) {
+				//
+				for (int j = 0; j < IterableUtils.size(ehs); j++) {
+					//
+					if (StringUtils.isNotBlank(Strings.commonSuffix(ArrayUtils.get(ws, i),
+							StringUtils.trim(textContent(eh = IterableUtils.get(ehs, j)))))) {
+						//
+						(textAndImage = new TextAndImage()).image = toBufferedImage(screenshot(eh),
+								e -> LoggerUtil.error(LOG, e.getMessage(), e));
+						//
+						textAndImage.text = ArrayUtils.get(ws, i);
+						//
+						Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
+						//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
+		} // for
 			//
 		return textAndImages;
 		//
