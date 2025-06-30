@@ -496,11 +496,44 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 			} // for
 				//
+			if (IterableUtils.isEmpty(textAndImages)) {
+				//
+				ws = StringUtils.split(
+						StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))), '・');
+				//
+				for (int i = 0; i < length(ws); i++) {
+					//
+					if (Objects.equals(textInput, ArrayUtils.get(ws, i)) && length(ws) == 2) {
+						//
+						for (int j = 0; j < IterableUtils.size(ehs); j++) {
+							//
+							if (StringUtils.isNotBlank(Strings.commonSuffix(ArrayUtils.get(ws, i),
+									StringUtils.trim(textContent(eh = IterableUtils.get(ehs, j)))))) {
+								//
+								(textAndImage = new TextAndImage()).image = toBufferedImage(screenshot(eh),
+										e -> LoggerUtil.error(LOG, e.getMessage(), e));
+								//
+								textAndImage.text = ArrayUtils.get(ws, i);
+								//
+								Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new),
+										textAndImage);
+								//
+							} // if
+								//
+						} // for
+							//
+					} // if
+						//
+				} // for
+					//
+			} // if
+				//
 			return textAndImages;
 			//
 		} // if
 			//
 		return null;
+
 		//
 	}
 
