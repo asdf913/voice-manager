@@ -517,7 +517,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				for (int i = 0; i < length(ws); i++) {
 					//
-					if (Objects.equals(textInput, ArrayUtils.get(ws, i)) && length(ws) == 2) {
+					if (Boolean.logicalAnd(Objects.equals(textInput, ArrayUtils.get(ws, i)), length(ws) == 2)) {
 						//
 						for (int j = 0; j < IterableUtils.size(ehs); j++) {
 							//
