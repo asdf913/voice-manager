@@ -120,6 +120,10 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 				return 0;
 				//
+			} else if (Objects.equals(returnType, Void.TYPE)) {
+				//
+				return null;
+				//
 			} else if (method != null && method.getParameterCount() == 0
 					&& Objects.equals(returnType, method.getDeclaringClass())) {
 				//

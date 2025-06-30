@@ -404,14 +404,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} finally {
 			//
-			if (playwright != null) {
-				//
-				playwright.close();
-				//
-			} // if
-				//
+			close(playwright);
+			//
 		} // try
 			//
+	}
+
+	private static void close(final Playwright instance) {
+		if (instance != null) {
+			instance.close();
+		}
 	}
 
 	private static Collection<TextAndImage> toTextAndImages(@Nullable final Iterable<ElementHandle> ehs,
