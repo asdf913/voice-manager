@@ -61,7 +61,6 @@ import javax.swing.MutableComboBoxModel;
 import javax.swing.WindowConstants;
 import javax.swing.text.JTextComponent;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -386,10 +385,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final List<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
 			//
-			final Collection<TextAndImage> textAndImages = ObjectUtils.getIfNull(toTextAndImages(ehs, words),
-					() -> toTextAndImages(ehs, Util.getText(tfTextInput), words));
+			final String textInput = Util.getText(tfTextInput);
 			//
-			Util.forEach(Util.stream(textAndImages), x -> Util.addElement(mcbmTextAndImage, x));
+			Collection<TextAndImage> textAndImages = ObjectUtils.getIfNull(toTextAndImages(ehs, words),
+					() -> toTextAndImages1(ehs, textInput, words));
+			//
+			Util.forEach(Util.stream(textAndImages = ObjectUtils.getIfNull(textAndImages,
+					() -> toTextAndImages2(ehs, textInput, words))), x -> Util.addElement(mcbmTextAndImage, x));
 			//
 			if (IterableUtils.size(textAndImages) == 1
 					|| (IterableUtils.size(words) == 1 && IterableUtils.size(textAndImages) == 1)) {
@@ -455,7 +457,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	@Nullable
-	private static Collection<TextAndImage> toTextAndImages(final Iterable<ElementHandle> ehs, final String textInput,
+	private static Collection<TextAndImage> toTextAndImages1(final Iterable<ElementHandle> ehs, final String textInput,
 			final Iterable<ElementHandle> words) {
 		//
 		if (IterableUtils.size(words) != 1) {
@@ -516,14 +518,27 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // for
 			//
-		if (CollectionUtils.isNotEmpty(textAndImages)) {
+		return textAndImages;
+		//
+	}
+
+	private static Collection<TextAndImage> toTextAndImages2(final Iterable<ElementHandle> ehs, final String textInput,
+			final Iterable<ElementHandle> words) {
+		//
+		if (IterableUtils.size(words) != 1) {
 			//
-			return textAndImages;
+			return null;
 			//
 		} // if
 			//
-		ws = StringUtils.split(StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))),
-				'・');
+		ElementHandle eh = null;
+		//
+		TextAndImage textAndImage = null;
+		//
+		Collection<TextAndImage> textAndImages = null;
+		//
+		final String[] ws = StringUtils
+				.split(StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))), '・');
 		//
 		for (int i = 0; i < length(ws); i++) {
 			//

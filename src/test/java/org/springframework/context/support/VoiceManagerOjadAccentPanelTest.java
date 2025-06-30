@@ -58,8 +58,8 @@ class VoiceManagerOjadAccentPanelTest {
 
 	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL,
 			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_TEXT, METHOD_GET_HEIGHT,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES2,
-			METHOD_TO_TEXT_AND_IMAGES3, METHOD_TO_BYTE_ARRAY = null;
+			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES,
+			METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TO_BYTE_ARRAY = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -95,10 +95,13 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_LENGTH = clz.getDeclaredMethod("length", Object[].class)).setAccessible(true);
 		//
-		(METHOD_TO_TEXT_AND_IMAGES2 = clz.getDeclaredMethod("toTextAndImages", Iterable.class, Iterable.class))
+		(METHOD_TO_TEXT_AND_IMAGES = clz.getDeclaredMethod("toTextAndImages", Iterable.class, Iterable.class))
 				.setAccessible(true);
 		//
-		(METHOD_TO_TEXT_AND_IMAGES3 = clz.getDeclaredMethod("toTextAndImages", Iterable.class, String.class,
+		(METHOD_TO_TEXT_AND_IMAGES1 = clz.getDeclaredMethod("toTextAndImages1", Iterable.class, String.class,
+				Iterable.class)).setAccessible(true);
+		//
+		(METHOD_TO_TEXT_AND_IMAGES2 = clz.getDeclaredMethod("toTextAndImages2", Iterable.class, String.class,
 				Iterable.class)).setAccessible(true);
 		//
 		(METHOD_TO_BYTE_ARRAY = clz.getDeclaredMethod("toByteArray", RenderedImage.class, String.class))
@@ -630,15 +633,12 @@ class VoiceManagerOjadAccentPanelTest {
 				ObjectMapperUtil.writeValueAsString(objectMapper,
 						toTextAndImages(Collections.nCopies(2, null), Collections.nCopies(2, null))));
 		//
-		Assertions.assertEquals("[{\"text\":null,\"image\":null}]", ObjectMapperUtil.writeValueAsString(objectMapper,
-				toTextAndImages(Collections.nCopies(2, null), null, Collections.nCopies(1, null))));
-		//
 	}
 
 	private static Collection<?> toTextAndImages(final Iterable<ElementHandle> ehs, final Iterable<ElementHandle> words)
 			throws Throwable {
 		try {
-			final Object obj = METHOD_TO_TEXT_AND_IMAGES2.invoke(null, ehs, words);
+			final Object obj = METHOD_TO_TEXT_AND_IMAGES.invoke(null, ehs, words);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Collection) {
@@ -650,10 +650,46 @@ class VoiceManagerOjadAccentPanelTest {
 		}
 	}
 
-	private static Collection<?> toTextAndImages(final Iterable<ElementHandle> ehs, final String textInput,
+	@Test
+	void testToTextAndImages1() throws Throwable {
+		//
+		if (objectMapper != null) {
+			//
+			objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
+			//
+		} // if
+			//
+		Assertions.assertEquals("[{\"text\":null,\"image\":null}]", ObjectMapperUtil.writeValueAsString(objectMapper,
+				toTextAndImages1(Collections.nCopies(2, null), null, Collections.nCopies(1, null))));
+		//
+	}
+
+	private static Collection<?> toTextAndImages1(final Iterable<ElementHandle> ehs, final String textInput,
 			final Iterable<ElementHandle> words) throws Throwable {
 		try {
-			final Object obj = METHOD_TO_TEXT_AND_IMAGES3.invoke(null, ehs, textInput, words);
+			final Object obj = METHOD_TO_TEXT_AND_IMAGES1.invoke(null, ehs, textInput, words);
+			if (obj == null) {
+				return null;
+			} else if (obj instanceof Collection) {
+				return (Collection) obj;
+			}
+			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testToTextAndImages2() throws Throwable {
+		//
+		Assertions.assertNull(toTextAndImages2(null, null, Collections.nCopies(1, null)));
+		//
+	}
+
+	private static Collection<?> toTextAndImages2(final Iterable<ElementHandle> ehs, final String textInput,
+			final Iterable<ElementHandle> words) throws Throwable {
+		try {
+			final Object obj = METHOD_TO_TEXT_AND_IMAGES2.invoke(null, ehs, textInput, words);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof Collection) {
