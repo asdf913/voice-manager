@@ -363,38 +363,52 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		Page page = null;
 		//
-		if (!isTestMode()) {
+		Playwright playwright = null;
+		//
+		try {
+			if (!isTestMode()) {
+				//
+				PageUtil.navigate(page = newPage(BrowserTypeUtil.launch(chromium(playwright = Playwright.create()))),
+						StringUtils.join("https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index/word:",
+								testAndApply(Objects::nonNull, Util.getText(tfTextInput),
+										x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
+				//
+			} // if
+				//
+			Util.forEach(
+					Util.map(sorted(Util.map(IntStream.range(1, Util.getSize(mcbmTextAndImage)), i -> -i)), i -> -i),
+					i -> Util.removeElementAt(mcbmTextAndImage, i));
 			//
-			PageUtil.navigate(page = newPage(BrowserTypeUtil.launch(chromium(Playwright.create()))),
-					StringUtils.join("https://www.gavo.t.u-tokyo.ac.jp/ojad/search/index/word:",
-							testAndApply(Objects::nonNull, Util.getText(tfTextInput),
-									x -> URLEncoder.encode(x, StandardCharsets.UTF_8), null)));
+			// TODO
 			//
-		} // if
+			final List<ElementHandle> ehs = querySelectorAll(page, ".katsuyo_accent");
 			//
-		Util.forEach(Util.map(sorted(Util.map(IntStream.range(1, Util.getSize(mcbmTextAndImage)), i -> -i)), i -> -i),
-				i -> Util.removeElementAt(mcbmTextAndImage, i));
-		//
-		// TODO
-		//
-		final List<ElementHandle> ehs = querySelectorAll(page, ".katsuyo_accent");
-		//
-		final List<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
-		//
-		final Collection<TextAndImage> textAndImages = ObjectUtils.getIfNull(toTextAndImages(ehs, words),
-				() -> toTextAndImages(ehs, Util.getText(tfTextInput), words));
-		//
-		Util.forEach(Util.stream(textAndImages), x -> Util.addElement(mcbmTextAndImage, x));
-		//
-		if (IterableUtils.size(textAndImages) == 1
-				|| (IterableUtils.size(words) == 1 && IterableUtils.size(textAndImages) == 1)) {
+			final List<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
 			//
-			Util.setSelectedItem(mcbmTextAndImage, IterableUtils.get(textAndImages, 0));
+			final Collection<TextAndImage> textAndImages = ObjectUtils.getIfNull(toTextAndImages(ehs, words),
+					() -> toTextAndImages(ehs, Util.getText(tfTextInput), words));
 			//
-		} // if
+			Util.forEach(Util.stream(textAndImages), x -> Util.addElement(mcbmTextAndImage, x));
 			//
-		pack(window);
-		//
+			if (IterableUtils.size(textAndImages) == 1
+					|| (IterableUtils.size(words) == 1 && IterableUtils.size(textAndImages) == 1)) {
+				//
+				Util.setSelectedItem(mcbmTextAndImage, IterableUtils.get(textAndImages, 0));
+				//
+			} // if
+				//
+			pack(window);
+			//
+		} finally {
+			//
+			if (playwright != null) {
+				//
+				playwright.close();
+				//
+			} // if
+				//
+		} // try
+			//
 	}
 
 	private static Collection<TextAndImage> toTextAndImages(@Nullable final Iterable<ElementHandle> ehs,
