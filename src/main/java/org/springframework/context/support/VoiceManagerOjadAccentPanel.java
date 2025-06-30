@@ -488,7 +488,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						//
 					testAndAccept((a, b) -> !contains(a, b),
 							textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage,
-							(a, b) -> Util.add(a, b));
+							Util::add);
 					//
 				} // if
 					//
