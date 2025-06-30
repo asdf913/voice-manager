@@ -31,7 +31,7 @@ public interface TextStringBuilderUtil {
 		} // if
 			//
 		Iterable<Field> fs = toList(filter(stream(FieldUtils.getAllFieldsList(TextStringBuilder.class)),
-				f -> Objects.equals(f.getName(), "buffer")));
+				f -> Objects.equals(getName(f), "buffer")));
 		//
 		if (IterableUtils.size(fs) > 1) {
 			//
