@@ -456,98 +456,96 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	private static Collection<TextAndImage> toTextAndImages(final Iterable<ElementHandle> ehs, final String textInput,
 			final Iterable<ElementHandle> words) {
 		//
-		if (IterableUtils.size(words) == 1) {
+		if (IterableUtils.size(words) != 1) {
 			//
-			ElementHandle eh = null;
+			return null;
 			//
-			String commonPrefix;
+		} // if
 			//
-			String[] ws = null;
+		ElementHandle eh = null;
+		//
+		String commonPrefix;
+		//
+		String[] ws = null;
+		//
+		TextAndImage textAndImage = null;
+		//
+		Collection<TextAndImage> textAndImages = null;
+		//
+		TextStringBuilder tsb = null;
+		//
+		for (int i = 0; i < IterableUtils.size(ehs); i++) {
 			//
-			TextAndImage textAndImage = null;
-			//
-			Collection<TextAndImage> textAndImages = null;
-			//
-			TextStringBuilder tsb = null;
-			//
-			for (int i = 0; i < IterableUtils.size(ehs); i++) {
+			if (StringUtils.equals(textInput, StringUtils.trim(textContent(eh = IterableUtils.get(ehs, i))))) {
 				//
-				if (StringUtils.equals(textInput, StringUtils.trim(textContent(eh = IterableUtils.get(ehs, i))))) {
-					//
-					(textAndImage = new TextAndImage()).image = toBufferedImage(screenshot(eh),
-							e -> LoggerUtil.error(LOG, e.getMessage(), e));
-					//
-					ws = StringUtils.split(
-							StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))), '・');
-					//
-					if (Boolean.logicalAnd(length(ws) == 2, IterableUtils.size(ehs) > 1)) {
-						//
-						TextStringBuilderUtil.clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
-						//
-						if (StringUtils.startsWith(textInput,
-								commonPrefix = Strings.commonPrefix(
-										StringUtils.trim(textContent(IterableUtils.get(ehs, 0))),
-										StringUtils.trim(textContent(IterableUtils.get(ehs, 1)))))) {
-							//
-							TextStringBuilderUtil.append(
-									TextStringBuilderUtil.append(tsb,
-											Strings.commonPrefix(ArrayUtils.get(ws, 0), ArrayUtils.get(ws, 1))),
-									StringUtils.substringAfter(textInput, commonPrefix));
-							//
-						} // if
-							//
-						textAndImage.text = Util.toString(tsb);
-						//
-					} // if
-						//
-						// TODO
-						//
-					testAndAccept((a, b) -> !contains(a, b),
-							textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage,
-							Util::add);
-					//
-				} // if
-					//
-			} // for
-				//
-			if (IterableUtils.isEmpty(textAndImages)) {
+				(textAndImage = new TextAndImage()).image = toBufferedImage(screenshot(eh),
+						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
 				ws = StringUtils.split(
 						StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))), '・');
 				//
-				for (int i = 0; i < length(ws); i++) {
+				if (Boolean.logicalAnd(length(ws) == 2, IterableUtils.size(ehs) > 1)) {
 					//
-					if (Boolean.logicalAnd(Objects.equals(textInput, ArrayUtils.get(ws, i)), length(ws) == 2)) {
+					TextStringBuilderUtil.clear(tsb = ObjectUtils.getIfNull(tsb, TextStringBuilder::new));
+					//
+					if (StringUtils.startsWith(textInput,
+							commonPrefix = Strings.commonPrefix(
+									StringUtils.trim(textContent(IterableUtils.get(ehs, 0))),
+									StringUtils.trim(textContent(IterableUtils.get(ehs, 1)))))) {
 						//
-						for (int j = 0; j < IterableUtils.size(ehs); j++) {
-							//
-							if (StringUtils.isNotBlank(Strings.commonSuffix(ArrayUtils.get(ws, i),
-									StringUtils.trim(textContent(eh = IterableUtils.get(ehs, j)))))) {
-								//
-								(textAndImage = new TextAndImage()).image = toBufferedImage(screenshot(eh),
-										e -> LoggerUtil.error(LOG, e.getMessage(), e));
-								//
-								textAndImage.text = ArrayUtils.get(ws, i);
-								//
-								Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new),
-										textAndImage);
-								//
-							} // if
-								//
-						} // for
-							//
+						TextStringBuilderUtil.append(
+								TextStringBuilderUtil.append(tsb,
+										Strings.commonPrefix(ArrayUtils.get(ws, 0), ArrayUtils.get(ws, 1))),
+								StringUtils.substringAfter(textInput, commonPrefix));
+						//
 					} // if
 						//
-				} // for
+					textAndImage.text = Util.toString(tsb);
 					//
+				} // if
+					//
+					// TODO
+					//
+				testAndAccept((a, b) -> !contains(a, b),
+						textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage, Util::add);
+				//
 			} // if
 				//
-			return textAndImages;
+		} // for
 			//
+		if (IterableUtils.isEmpty(textAndImages)) {
+			//
+			ws = StringUtils
+					.split(StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))), '・');
+			//
+			for (int i = 0; i < length(ws); i++) {
+				//
+				if (Boolean.logicalAnd(Objects.equals(textInput, ArrayUtils.get(ws, i)), length(ws) == 2)) {
+					//
+					for (int j = 0; j < IterableUtils.size(ehs); j++) {
+						//
+						if (StringUtils.isNotBlank(Strings.commonSuffix(ArrayUtils.get(ws, i),
+								StringUtils.trim(textContent(eh = IterableUtils.get(ehs, j)))))) {
+							//
+							(textAndImage = new TextAndImage()).image = toBufferedImage(screenshot(eh),
+									e -> LoggerUtil.error(LOG, e.getMessage(), e));
+							//
+							textAndImage.text = ArrayUtils.get(ws, i);
+							//
+							Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new),
+									textAndImage);
+							//
+						} // if
+							//
+					} // for
+						//
+				} // if
+					//
+			} // for
+				//
 		} // if
 			//
-		return null;
-
+		return textAndImages;
 		//
 	}
 
