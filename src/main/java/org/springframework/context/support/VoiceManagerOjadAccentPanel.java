@@ -526,27 +526,29 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		for (int i = 0; i < length(ws); i++) {
 			//
-			if (Boolean.logicalAnd(Objects.equals(textInput, ArrayUtils.get(ws, i)), length(ws) == 2)) {
+			if (!Boolean.logicalAnd(Objects.equals(textInput, ArrayUtils.get(ws, i)), length(ws) == 2)) {
 				//
-				for (int j = 0; j < IterableUtils.size(ehs); j++) {
-					//
-					if (!StringUtils.isNotBlank(Strings.commonSuffix(ArrayUtils.get(ws, i),
-							StringUtils.trim(textContent(eh = IterableUtils.get(ehs, j)))))) {
-						//
-						continue;
-						//
-					} // if
-						//
-					(textAndImage = new TextAndImage()).image = toBufferedImage(screenshot(eh),
-							e -> LoggerUtil.error(LOG, e.getMessage(), e));
-					//
-					textAndImage.text = ArrayUtils.get(ws, i);
-					//
-					Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
-					//
-				} // for
-					//
+				continue;
+				//
 			} // if
+				//
+			for (int j = 0; j < IterableUtils.size(ehs); j++) {
+				//
+				if (!StringUtils.isNotBlank(Strings.commonSuffix(ArrayUtils.get(ws, i),
+						StringUtils.trim(textContent(eh = IterableUtils.get(ehs, j)))))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				(textAndImage = new TextAndImage()).image = toBufferedImage(screenshot(eh),
+						e -> LoggerUtil.error(LOG, e.getMessage(), e));
+				//
+				textAndImage.text = ArrayUtils.get(ws, i);
+				//
+				Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
+				//
+			} // for
 				//
 		} // for
 			//
