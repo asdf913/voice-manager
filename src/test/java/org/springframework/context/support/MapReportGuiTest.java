@@ -71,7 +71,7 @@ class MapReportGuiTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_GET_PREFERRED_WIDTH, METHOD_AS_MAP,
-			METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_GET_SYSTEM_CLIP_BOARD,
+			METHOD_GET_VALUES, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_GET_SYSTEM_CLIP_BOARD,
 			METHOD_SET_CONTENTS, METHOD_LENGTH, METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_TEST_AND_ACCEPT3,
 			METHOD_TEST_AND_ACCEPT4, METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER,
 			METHOD_WRITE_VALUE_AS_STRING = null;
@@ -90,8 +90,6 @@ class MapReportGuiTest {
 		//
 		(METHOD_GET_VALUES = clz.getDeclaredMethod("getValues", BeanFactory.class, Class.class, Iterable.class))
 				.setAccessible(true);
-		//
-		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", OptionalInt.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
 		//
@@ -599,27 +597,6 @@ class MapReportGuiTest {
 				return (Collection) obj;
 			}
 			throw new Throwable(Util.toString(obj.getClass()));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testOrElse() throws Throwable {
-		//
-		final int zero = 0;
-		//
-		Assertions.assertEquals(zero, orElse(OptionalInt.of(zero), 1));
-		//
-	}
-
-	private static int orElse(final OptionalInt instance, final int other) throws Throwable {
-		try {
-			final Object obj = METHOD_OR_ELSE.invoke(null, instance, other);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(Util.toString(obj != null ? obj.getClass() : null));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

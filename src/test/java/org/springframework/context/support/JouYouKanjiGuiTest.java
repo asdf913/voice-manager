@@ -74,7 +74,7 @@ class JouYouKanjiGuiTest {
 			METHOD_GET_BOOLEAN_VALUES, METHOD_GET_EXPRESSION_AS_CSS_STRING, METHOD_GET_INDEXED_COLORS,
 			METHOD_GET_STYLES_SOURCE, METHOD_GET_PROPERTY, METHOD_TO_MILLIS, METHOD_SET_FILL_BACK_GROUND_COLOR,
 			METHOD_SET_FILL_PATTERN, METHOD_SPLITERATOR, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
-			METHOD_MAP_TO_INT, METHOD_OR_ELSE, METHOD_SET_AUTO_FILTER, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = null;
+			METHOD_MAP_TO_INT, METHOD_SET_AUTO_FILTER, METHOD_GET_PHYSICAL_NUMBER_OF_ROWS = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -125,8 +125,6 @@ class JouYouKanjiGuiTest {
 				BiConsumer.class)).setAccessible(true);
 		//
 		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
-		//
-		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", OptionalInt.class, Integer.TYPE)).setAccessible(true);
 		//
 		(METHOD_SET_AUTO_FILTER = clz.getDeclaredMethod("setAutoFilter", Sheet.class)).setAccessible(true);
 		//
@@ -922,25 +920,6 @@ class JouYouKanjiGuiTest {
 				return null;
 			} else if (obj instanceof IntStream) {
 				return (IntStream) obj;
-			}
-			throw new Throwable(toString(Util.getClass(obj)));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testOrElse() throws Throwable {
-		//
-		Assertions.assertEquals(ONE, orElse(null, ONE));
-		//
-	}
-
-	private static int orElse(final OptionalInt instance, final int other) throws Throwable {
-		try {
-			final Object obj = METHOD_OR_ELSE.invoke(null, instance, other);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {

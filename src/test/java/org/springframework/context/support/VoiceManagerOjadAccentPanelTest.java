@@ -64,8 +64,7 @@ class VoiceManagerOjadAccentPanelTest {
 	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL,
 			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_KANJI, METHOD_GET_HEIGHT,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES,
-			METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TO_BYTE_ARRAY, METHOD_GET_IF_NULL,
-			METHOD_OR_ELSE = null;
+			METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TO_BYTE_ARRAY, METHOD_GET_IF_NULL = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -114,8 +113,6 @@ class VoiceManagerOjadAccentPanelTest {
 				.setAccessible(true);
 		//
 		(METHOD_GET_IF_NULL = clz.getDeclaredMethod("getIfNull", Object.class, Iterable.class)).setAccessible(true);
-		//
-		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", OptionalInt.class, Integer.TYPE)).setAccessible(true);
 		//
 	}
 
@@ -770,27 +767,6 @@ class VoiceManagerOjadAccentPanelTest {
 	private static <T> T getIfNull(final T object, final Iterable<Supplier<T>> suppliers) throws Throwable {
 		try {
 			return (T) METHOD_GET_IF_NULL.invoke(null, object, suppliers);
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testOrElse() throws Throwable {
-		//
-		final int zero = 0;
-		//
-		Assertions.assertEquals(zero, orElse(OptionalInt.of(zero), 1));
-		//
-	}
-
-	private static int orElse(final OptionalInt instance, final int other) throws Throwable {
-		try {
-			final Object obj = METHOD_OR_ELSE.invoke(null, instance, other);
-			if (obj instanceof Integer) {
-				return ((Integer) obj).intValue();
-			}
-			throw new Throwable(Util.toString(Util.getClass(obj)));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

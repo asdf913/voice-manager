@@ -178,6 +178,10 @@ public abstract class Util {
 		return instance != null ? instance.max() : null;
 	}
 
+	static int orElse(final OptionalInt instance, final int other) {
+		return instance != null ? instance.orElse(other) : other;
+	}
+
 	static <T> void forEach(@Nullable final Iterable<T> instance, @Nullable final Consumer<? super T> action) {
 		if (instance != null && (action != null || Proxy.isProxyClass(getClass(instance)))) {
 			instance.forEach(action);

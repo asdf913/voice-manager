@@ -191,7 +191,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					final ListModel<? extends TextAndImage> model = Util.getModel(list);
 					//
-					final int maxKanjiLength = orElse(Util.max(Util.map(IntStream.range(0, Util.getSize(model)),
+					final int maxKanjiLength = Util.orElse(Util.max(Util.map(IntStream.range(0, Util.getSize(model)),
 							i -> StringUtils.length(getKanji(Util.getElementAt(model, i))))), 0);
 					//
 					panel.setLayout(new MigLayout());
@@ -264,10 +264,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
-	}
-
-	private static int orElse(@Nullable final OptionalInt instance, final int other) {
-		return instance != null ? instance.orElse(other) : other;
 	}
 
 	private static double getHeight(@Nullable final Dimension2D instance) {

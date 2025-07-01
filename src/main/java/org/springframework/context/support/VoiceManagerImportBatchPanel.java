@@ -1773,12 +1773,11 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			//
 			final Integer numberOfSheets = WorkbookUtil.getNumberOfSheets(workbook);
 			//
-			final int maxSheetNameLength = orElse(
-					Util.max(mapToInt(
+			final int maxSheetNameLength = Util
+					.orElse(Util.max(mapToInt(
 							Util.map(testAndApply(Objects::nonNull, spliterator(workbook),
 									x -> StreamSupport.stream(x, false), null), SheetUtil::getSheetName),
-							StringUtils::length)),
-					0);
+							StringUtils::length)), 0);
 			//
 			FormulaEvaluator formulaEvaluator = null;
 			//
@@ -2598,10 +2597,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 		if (instance != null) {
 			instance.submit(task);
 		}
-	}
-
-	private static int orElse(@Nullable final OptionalInt instance, final int other) {
-		return instance != null ? instance.orElse(other) : other;
 	}
 
 	@Nullable

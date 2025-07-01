@@ -391,7 +391,7 @@ class SpeechApiOnlineImplTest {
 					//
 			} // for
 				//
-			final int maxLength = Util.stream(attributes).mapToInt(StringUtils::length).max().orElse(0);
+			final int maxLength = Util.orElse(Util.max(Util.stream(attributes).mapToInt(StringUtils::length)), 0);
 			//
 			for (int i = 0; i < IterableUtils.size(attributes); i++) {
 				//
