@@ -61,7 +61,7 @@ class VoiceManagerOjadAccentPanelTest {
 	private static Class<?> CLASS_TEXT_AND_IMAGE = null;
 
 	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL,
-			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_TEXT, METHOD_GET_HEIGHT,
+			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_KANJI, METHOD_GET_HEIGHT,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES,
 			METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TO_BYTE_ARRAY, METHOD_GET_IF_NULL = null;
 
@@ -86,7 +86,7 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_PACK = clz.getDeclaredMethod("pack", Window.class)).setAccessible(true);
 		//
-		(METHOD_GET_TEXT = clz.getDeclaredMethod("getText",
+		(METHOD_GET_KANJI = clz.getDeclaredMethod("getKanji",
 				CLASS_TEXT_AND_IMAGE = Util
 						.forName("org.springframework.context.support.VoiceManagerOjadAccentPanel$TextAndImage")))
 				.setAccessible(true);
@@ -502,15 +502,15 @@ class VoiceManagerOjadAccentPanelTest {
 	}
 
 	@Test
-	void testGetText() throws Throwable {
+	void testGetKanji() throws Throwable {
 		//
-		Assertions.assertNull(getText(textAndImage));
+		Assertions.assertNull(getKanji(textAndImage));
 		//
 	}
 
-	private static String getText(final Object textAndImage) throws Throwable {
+	private static String getKanji(final Object textAndImage) throws Throwable {
 		try {
-			final Object obj = METHOD_GET_TEXT.invoke(null, textAndImage);
+			final Object obj = METHOD_GET_KANJI.invoke(null, textAndImage);
 			if (obj == null) {
 				return null;
 			} else if (obj instanceof String) {
@@ -637,10 +637,10 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals("[{\"text\":null,\"image\":null}]",
+		Assertions.assertEquals("[{\"kanji\":null,\"image\":null}]",
 				ObjectMapperUtil.writeValueAsString(objectMapper, toTextAndImages(Collections.singleton(null), null)));
 		//
-		Assertions.assertEquals("[{\"text\":null,\"image\":null},{\"text\":null,\"image\":null}]",
+		Assertions.assertEquals("[{\"kanji\":null,\"image\":null},{\"kanji\":null,\"image\":null}]",
 				ObjectMapperUtil.writeValueAsString(objectMapper,
 						toTextAndImages(Collections.nCopies(2, null), Collections.nCopies(2, null))));
 		//
@@ -670,7 +670,7 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals("[{\"text\":null,\"image\":null}]", ObjectMapperUtil.writeValueAsString(objectMapper,
+		Assertions.assertEquals("[{\"kanji\":null,\"image\":null}]", ObjectMapperUtil.writeValueAsString(objectMapper,
 				toTextAndImages1(Collections.nCopies(2, null), null, Collections.nCopies(1, null))));
 		//
 	}

@@ -124,7 +124,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static class TextAndImage {
 
-		private String text = null;
+		private String kanji = null;
 
 		private BufferedImage image = null;
 
@@ -198,7 +198,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							//
 					} // if
 						//
-					panel.add(new JLabel(getText(value)));
+					panel.add(new JLabel(getKanji(value)));
 					//
 					final JLabel label = new JLabel();
 					//
@@ -242,8 +242,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	}
 
 	@Nullable
-	private static String getText(@Nullable final TextAndImage instance) {
-		return instance != null ? instance.text : null;
+	private static String getKanji(@Nullable final TextAndImage instance) {
+		return instance != null ? instance.kanji : null;
 	}
 
 	@Nullable
@@ -318,7 +318,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			// text
 			//
-			final String text = getText(textAndImage);
+			final String text = getKanji(textAndImage);
 			//
 			Util.setText(tfTextOutput, text);
 			//
@@ -439,7 +439,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		if (IterableUtils.size(ehs) == 1) {
 			//
-			(textAndImage = new TextAndImage()).text = StringUtils.trim(textContent(querySelector(
+			(textAndImage = new TextAndImage()).kanji = StringUtils.trim(textContent(querySelector(
 					testAndApply(x -> IterableUtils.size(x) == 1, words, x -> IterableUtils.get(x, 0), null),
 					".midashi")));
 			//
@@ -456,7 +456,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			for (int i = 0; i < IterableUtils.size(words); i++) {
 				//
-				(textAndImage = new TextAndImage()).text = StringUtils
+				(textAndImage = new TextAndImage()).kanji = StringUtils
 						.trim(textContent(querySelector(IterableUtils.get(words, i), ".midashi")));
 				//
 				textAndImage.image = toBufferedImage(screenshot(IterableUtils.get(ehs, i)),
@@ -525,7 +525,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 				} // if
 					//
-				textAndImage.text = Util.toString(tsb);
+				textAndImage.kanji = Util.toString(tsb);
 				//
 			} // if
 				//
@@ -594,7 +594,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					(textAndImage = new TextAndImage()).image = toBufferedImage(
 							screenshot(IValue0Util.getValue0(iValue0)), e -> LoggerUtil.error(LOG, e.getMessage(), e));
 					//
-					textAndImage.text = textContent;
+					textAndImage.kanji = textContent;
 					//
 					Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 					//
@@ -629,7 +629,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				(textAndImage = new TextAndImage()).image = toBufferedImage(screenshot(eh),
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
-				textAndImage.text = ArrayUtils.get(ws, i);
+				textAndImage.kanji = ArrayUtils.get(ws, i);
 				//
 				Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 				//
@@ -658,7 +658,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			try {
 				//
 				if (Boolean.logicalAnd(
-						Objects.equals(getText(textAndImage), getText(temp = IterableUtils.get(textAndImages, j))),
+						Objects.equals(getKanji(textAndImage), getKanji(temp = IterableUtils.get(textAndImages, j))),
 						Arrays.equals(toByteArray(getImage(textAndImage), "PNG"),
 								toByteArray(getImage(temp), "PNG")))) {
 					//
