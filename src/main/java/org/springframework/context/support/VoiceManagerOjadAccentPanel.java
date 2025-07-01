@@ -454,6 +454,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
+	@Nullable
 	private static <T> T getIfNull(@Nullable final T object, final Iterable<Supplier<T>> suppliers) {
 		//
 		if (object != null) {
