@@ -167,14 +167,10 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof Iterable) {
+			} else if (proxy instanceof Iterable && Objects.equals(methodName, "iterator")) {
 				//
-				if (Objects.equals(methodName, "iterator")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
