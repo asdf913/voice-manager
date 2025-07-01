@@ -663,7 +663,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		ElementHandle word = null;
 		//
-		String textContent = null;
+		String textContent, s = null;
+		//
+		String[] ss = null;
 		//
 		for (int i = 0; i < IterableUtils.size(words); i++) {
 			//
@@ -682,6 +684,22 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 				//
+			} else if (length(ss = StringUtils.split(textContent, '・')) == 2) {
+				//
+				for (int j = 0; j < 2; j++) {
+					//
+					(textAndImage = new TextAndImage()).image = toBufferedImage(screenshot(
+							eh = querySelector(word, String.format("td:nth-child(%1$s) .accented_word", j + 3))),
+							e -> LoggerUtil.error(LOG, e.getMessage(), e));
+					//
+					textAndImage.kanji = ArrayUtils.get(ss, j);
+					//
+					textAndImage.hiragana = StringUtils.trim(textContent(eh));
+					//
+					Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
+					//
+				} // for
+					//
 			} // if
 				//
 		} // for
