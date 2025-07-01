@@ -108,7 +108,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("Input Text")
 	private JTextComponent tfTextInput = null;
 
-	private JTextComponent tfKanji, tfHiragana = null;
+	@Note("Kanji")
+	private JTextComponent tfKanji = null;
+
+	@Note("Hiragana")
+	private JTextComponent tfHiragana = null;
 
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
@@ -124,7 +128,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static class TextAndImage {
 
-		private String kanji, hiragana = null;
+		@Note("Kanji")
+		private String kanji = null;
+
+		@Note("Hiragana")
+		private String hiragana = null;
 
 		private BufferedImage image = null;
 
