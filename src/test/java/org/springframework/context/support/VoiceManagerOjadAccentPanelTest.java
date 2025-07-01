@@ -231,13 +231,15 @@ class VoiceManagerOjadAccentPanelTest {
 	}
 
 	@Test
-	void testNull() {
+	void testNull() throws Throwable {
 		//
 		final Method[] ms = VoiceManagerOjadAccentPanel.class.getDeclaredMethods();
 		//
 		Collection<Object> collection = null;
 		//
 		Class<?>[] parameterTypes = null;
+		//
+		Class<?> parameterType = null;
 		//
 		Method m = null;
 		//
@@ -259,11 +261,15 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 			parameterTypes = Util.getParameterTypes(m);
 			//
-			for (int j = 0; parameterTypes != null && j < parameterTypes.length; j++) {
+			for (int j = 0; j < length(parameterTypes); j++) {
 				//
-				if (Objects.equals(ArrayUtils.get(parameterTypes, j), Boolean.TYPE)) {
+				if (Objects.equals(parameterType = ArrayUtils.get(parameterTypes, j), Boolean.TYPE)) {
 					//
-					Util.add(collection, Boolean.TRUE);
+					Util.add(collection, Boolean.FALSE);
+					//
+				} else if (Objects.equals(ArrayUtils.get(parameterTypes, j), Integer.TYPE)) {
+					//
+					Util.add(collection, Integer.valueOf(0));
 					//
 				} else {
 					//

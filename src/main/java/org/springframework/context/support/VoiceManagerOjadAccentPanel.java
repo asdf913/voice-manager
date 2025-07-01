@@ -662,8 +662,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		ElementHandle word = null;
 		//
-		IValue0<ElementHandle> iValue0 = null;
-		//
 		String textContent = null;
 		//
 		for (int i = 0; i < IterableUtils.size(words); i++) {
@@ -673,34 +671,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							.trim(textContent(querySelector(word = IterableUtils.get(words, i), "td:nth-child(2)")))),
 					!StringUtils.contains(textContent, '・'))) {
 				//
-				iValue0 = null;
-				//
-				for (int j = 3; j < Integer.MAX_VALUE; j++) {
-					//
-					if ((eh = querySelector(word, String.format("td:nth-child(%1$s)", j))) == null) {
-						//
-						break;
-						//
-					} // if
-						//
-					if (StringUtils.isBlank(StringUtils.trim(textContent(eh)))) {
-						//
-						continue;
-						//
-					} // if
-						//
-					testAndRunThrows(iValue0 != null, () -> {
-						//
-						throw new IllegalStateException();
-						//
-					});
-					//
-					iValue0 = Unit.with(eh.querySelector(".accented_word"));
-					//
-				} // for
-					//
 				(textAndImage = new TextAndImage()).image = toBufferedImage(
-						screenshot(eh = IValue0Util.getValue0(iValue0)), e -> LoggerUtil.error(LOG, e.getMessage(), e));
+						screenshot(eh = IValue0Util.getValue0(getFirstChild(3, word, ".accented_word"))),
+						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
 				textAndImage.kanji = textContent;
 				//
@@ -713,6 +686,41 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		} // for
 			//
 		return textAndImages;
+		//
+	}
+
+	private static IValue0<ElementHandle> getFirstChild(final int start, final ElementHandle word,
+			final String cssSelector) {
+		//
+		ElementHandle eh = null;
+		//
+		IValue0<ElementHandle> iValue0 = null;
+		//
+		for (int j = start; j < Integer.MAX_VALUE; j++) {
+			//
+			if ((eh = querySelector(word, String.format("td:nth-child(%1$s)", j))) == null) {
+				//
+				break;
+				//
+			} // if
+				//
+			if (StringUtils.isBlank(StringUtils.trim(textContent(eh)))) {
+				//
+				continue;
+				//
+			} // if
+				//
+			testAndRunThrows(iValue0 != null, () -> {
+				//
+				throw new IllegalStateException();
+				//
+			});
+			//
+			iValue0 = Unit.with(querySelector(eh, cssSelector));
+			//
+		} // for
+			//
+		return iValue0;
 		//
 	}
 
