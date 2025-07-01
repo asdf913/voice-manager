@@ -652,6 +652,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
+	@Nullable
 	private static Collection<TextAndImage> toTextAndImages3(final Iterable<ElementHandle> words) {
 		//
 		Collection<TextAndImage> textAndImages = null;
@@ -689,6 +690,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
+	@Nullable
 	private static IValue0<ElementHandle> getFirstChild(final int start, @Nullable final ElementHandle word,
 			final String cssSelector) {
 		//
