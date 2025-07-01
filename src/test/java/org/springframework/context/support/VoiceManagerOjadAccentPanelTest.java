@@ -176,14 +176,10 @@ class VoiceManagerOjadAccentPanelTest {
 				//
 				return null;
 				//
-			} else if (proxy instanceof IntStream) {
+			} else if (proxy instanceof IntStream && Objects.equals(methodName, "max")) {
 				//
-				if (Objects.equals(methodName, "max")) {
-					//
-					return null;
-					//
-				} // if
-					//
+				return null;
+				//
 			} // if
 				//
 			throw new Throwable(methodName);
