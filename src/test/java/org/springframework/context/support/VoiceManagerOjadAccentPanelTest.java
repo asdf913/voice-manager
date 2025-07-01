@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 import javax.swing.AbstractButton;
 import javax.swing.Icon;
@@ -40,6 +41,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
+import com.google.common.base.Suppliers;
 import com.google.common.reflect.Reflection;
 import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
@@ -54,12 +56,14 @@ import javassist.util.proxy.ProxyUtil;
 
 class VoiceManagerOjadAccentPanelTest {
 
+	private static final String EMPTY = "";
+
 	private static Class<?> CLASS_TEXT_AND_IMAGE = null;
 
 	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL,
 			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_TEXT, METHOD_GET_HEIGHT,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES,
-			METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TO_BYTE_ARRAY = null;
+			METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TO_BYTE_ARRAY, METHOD_GET_IF_NULL = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -105,6 +109,9 @@ class VoiceManagerOjadAccentPanelTest {
 				Iterable.class)).setAccessible(true);
 		//
 		(METHOD_TO_BYTE_ARRAY = clz.getDeclaredMethod("toByteArray", RenderedImage.class, String.class))
+				.setAccessible(true);
+		//
+		(METHOD_GET_IF_NULL = clz.getDeclaredMethod("getIfNull", Object.class, Supplier.class, Supplier.class))
 				.setAccessible(true);
 		//
 	}
@@ -340,7 +347,7 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(null));
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent("", 0, null)));
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(EMPTY, 0, null)));
 		//
 		// jcbTextAndImage
 		//
@@ -725,6 +732,23 @@ class VoiceManagerOjadAccentPanelTest {
 				return (byte[]) obj;
 			}
 			throw new Throwable(Util.toString(Util.getClass(obj)));
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
+	}
+
+	@Test
+	void testGetIfNull() throws Throwable {
+		//
+		Assertions.assertSame(EMPTY, getIfNull(null, Suppliers.ofInstance(EMPTY), null));
+		//
+		Assertions.assertNull(getIfNull(null, null, Suppliers.ofInstance(null)));
+		//
+	}
+
+	private static <T> T getIfNull(final T object, final Supplier<T> a, final Supplier<T> b) throws Throwable {
+		try {
+			return (T) METHOD_GET_IF_NULL.invoke(null, object, a, b);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

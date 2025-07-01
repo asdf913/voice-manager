@@ -387,11 +387,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final String textInput = Util.getText(tfTextInput);
 			//
-			Collection<TextAndImage> textAndImages = ObjectUtils.getIfNull(toTextAndImages(ehs, words),
-					() -> toTextAndImages1(ehs, textInput, words));
+			final Collection<TextAndImage> textAndImages = getIfNull(toTextAndImages(ehs, words),
+					() -> toTextAndImages1(ehs, textInput, words), () -> toTextAndImages2(ehs, textInput, words));
 			//
-			Util.forEach(Util.stream(textAndImages = ObjectUtils.getIfNull(textAndImages,
-					() -> toTextAndImages2(ehs, textInput, words))), x -> Util.addElement(mcbmTextAndImage, x));
+			Util.forEach(Util.stream(textAndImages), x -> Util.addElement(mcbmTextAndImage, x));
 			//
 			if (IterableUtils.size(textAndImages) == 1
 					|| (IterableUtils.size(words) == 1 && IterableUtils.size(textAndImages) == 1)) {
@@ -408,6 +407,20 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // try
 			//
+	}
+
+	private static <T> T getIfNull(final T object, final Supplier<T> a, final Supplier<T> b) {
+		//
+		final T result = ObjectUtils.getIfNull(object, a);
+		//
+		if (result != null) {
+			//
+			return result;
+			//
+		} // if
+			//
+		return Util.get(b);
+		//
 	}
 
 	private static void close(@Nullable final Playwright instance) {
