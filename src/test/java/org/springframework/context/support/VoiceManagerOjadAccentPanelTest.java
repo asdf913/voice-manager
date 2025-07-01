@@ -371,13 +371,13 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyImage, 0, null)));
 		//
-		// btnCopyText
+		// btnCopyKanji
 		//
-		final AbstractButton btnCopyText = new JButton();
+		final AbstractButton btnCopyKanji = new JButton();
 		//
-		FieldUtils.writeDeclaredField(instance, "btnCopyText", btnCopyText, true);
+		FieldUtils.writeDeclaredField(instance, "btnCopyKanji", btnCopyKanji, true);
 		//
-		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyText, 0, null)));
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyKanji, 0, null)));
 		//
 	}
 
@@ -637,10 +637,11 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals("[{\"kanji\":null,\"image\":null}]",
+		Assertions.assertEquals("[{\"kanji\":null,\"hiragana\":null,\"image\":null}]",
 				ObjectMapperUtil.writeValueAsString(objectMapper, toTextAndImages(Collections.singleton(null), null)));
 		//
-		Assertions.assertEquals("[{\"kanji\":null,\"image\":null},{\"kanji\":null,\"image\":null}]",
+		Assertions.assertEquals(
+				"[{\"kanji\":null,\"hiragana\":null,\"image\":null},{\"kanji\":null,\"hiragana\":null,\"image\":null}]",
 				ObjectMapperUtil.writeValueAsString(objectMapper,
 						toTextAndImages(Collections.nCopies(2, null), Collections.nCopies(2, null))));
 		//
@@ -670,8 +671,9 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 		} // if
 			//
-		Assertions.assertEquals("[{\"kanji\":null,\"image\":null}]", ObjectMapperUtil.writeValueAsString(objectMapper,
-				toTextAndImages1(Collections.nCopies(2, null), null, Collections.nCopies(1, null))));
+		Assertions.assertEquals("[{\"kanji\":null,\"hiragana\":null,\"image\":null}]",
+				ObjectMapperUtil.writeValueAsString(objectMapper,
+						toTextAndImages1(Collections.nCopies(2, null), null, Collections.nCopies(1, null))));
 		//
 	}
 

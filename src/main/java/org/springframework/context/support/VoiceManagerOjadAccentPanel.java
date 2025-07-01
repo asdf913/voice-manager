@@ -108,13 +108,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("Input Text")
 	private JTextComponent tfTextInput = null;
 
-	private JTextComponent tfTextOutput = null;
+	private JTextComponent tfKanji, tfHiragana = null;
 
 	@Note("Execute")
 	private AbstractButton btnExecute = null;
 
 	@Note("Copy Text")
-	private AbstractButton btnCopyText = null;
+	private AbstractButton btnCopyKanji = null;
 
 	private AbstractButton btnCopyImage = null;
 
@@ -124,7 +124,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static class TextAndImage {
 
-		private String kanji = null;
+		private String kanji, hiragana = null;
 
 		private BufferedImage image = null;
 
@@ -213,13 +213,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 			});
 			//
-			add(new JLabel("Text"));
+			add(new JLabel("Kanji"));
 			//
-			add(tfTextOutput = new JTextField(), growx);
+			add(tfKanji = new JTextField(), growx);
 			//
-			add(btnCopyText = new JButton("Copy"), wrap);
+			add(btnCopyKanji = new JButton("Copy"), wrap);
 			//
-			Util.setEditable(tfTextOutput, false);
+			add(new JLabel("Hiragana"));
+			//
+			add(tfHiragana = new JTextField(), String.format("%1$s,%2$s", growx, wrap));
 			//
 			add(new JLabel("Image"));
 			//
@@ -229,9 +231,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(btnCopyImage = new JButton("Copy"));
 			//
-			Util.forEach(Stream.of(btnExecute, btnCopyText, btnCopyImage), x -> Util.addActionListener(x, this));
+			Util.forEach(Stream.of(btnExecute, btnCopyKanji, btnCopyImage), x -> Util.addActionListener(x, this));
 			//
-			Util.forEach(Stream.of(btnCopyText, btnCopyImage), x -> Util.setEnabled(x, false));
+			Util.forEach(Stream.of(btnCopyKanji, btnCopyImage), x -> Util.setEnabled(x, false));
+			//
+			Util.forEach(Stream.of(tfKanji, tfHiragana), x -> Util.setEditable(x, false));
 			//
 		} // if
 			//
@@ -320,9 +324,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final String text = getKanji(textAndImage);
 			//
-			Util.setText(tfTextOutput, text);
+			Util.setText(tfKanji, text);
 			//
-			Util.setEnabled(btnCopyText, StringUtils.isNotBlank(text));
+			Util.setText(tfHiragana, textAndImage != null ? textAndImage.hiragana : null);
+			//
+			Util.setEnabled(btnCopyKanji, StringUtils.isNotBlank(text));
 			//
 			// image
 			//
@@ -346,13 +352,13 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							() -> Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class))),
 					Reflection.newProxy(Transferable.class, ih), null);
 			//
-		} else if (Objects.equals(source, btnCopyText)) {
+		} else if (Objects.equals(source, btnCopyKanji)) {
 			//
 			setContents(
 					testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
 							() -> getSystemClipboard(Toolkit.getDefaultToolkit()),
 							() -> Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class))),
-					new StringSelection(Util.getText(tfTextOutput)), null);
+					new StringSelection(Util.getText(tfKanji)), null);
 			//
 		} // if
 			//
@@ -360,7 +366,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private void actionPerformedBtnExecute() {
 		//
-		Util.setText(tfTextOutput, null);
+		Util.forEach(Stream.of(tfKanji, tfHiragana), x -> Util.setText(x, null));
 		//
 		setIcon(lblAccent, new ImageIcon());
 		//
@@ -437,14 +443,18 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		TextAndImage textAndImage = null;
 		//
+		ElementHandle eh = null;
+		//
 		if (IterableUtils.size(ehs) == 1) {
 			//
 			(textAndImage = new TextAndImage()).kanji = StringUtils.trim(textContent(querySelector(
 					testAndApply(x -> IterableUtils.size(x) == 1, words, x -> IterableUtils.get(x, 0), null),
 					".midashi")));
 			//
-			textAndImage.image = toBufferedImage(screenshot(IterableUtils.get(ehs, 0)),
+			textAndImage.image = toBufferedImage(screenshot(eh = IterableUtils.get(ehs, 0)),
 					e -> LoggerUtil.error(LOG, e.getMessage(), e));
+			//
+			textAndImage.hiragana = StringUtils.trim(textContent(eh));
 			//
 			return Collections.singleton(textAndImage);
 			//
@@ -461,6 +471,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 				textAndImage.image = toBufferedImage(screenshot(IterableUtils.get(ehs, i)),
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
+				//
+				textAndImage.hiragana = StringUtils.trim(textContent(eh));
 				//
 				Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 				//
@@ -506,6 +518,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			(textAndImage = new TextAndImage()).image = toBufferedImage(screenshot(eh),
 					e -> LoggerUtil.error(LOG, e.getMessage(), e));
+			//
+			textAndImage.hiragana = StringUtils.trim(textContent(eh));
 			//
 			ws = StringUtils
 					.split(StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))), '・');
@@ -592,9 +606,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					} // for
 						//
 					(textAndImage = new TextAndImage()).image = toBufferedImage(
-							screenshot(IValue0Util.getValue0(iValue0)), e -> LoggerUtil.error(LOG, e.getMessage(), e));
+							screenshot(eh = IValue0Util.getValue0(iValue0)),
+							e -> LoggerUtil.error(LOG, e.getMessage(), e));
 					//
 					textAndImage.kanji = textContent;
+					//
+					textAndImage.hiragana = StringUtils.trim(textContent(eh));
 					//
 					Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 					//
@@ -630,6 +647,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
 				textAndImage.kanji = ArrayUtils.get(ws, i);
+				//
+				textAndImage.hiragana = StringUtils.trim(textContent(eh));
 				//
 				Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 				//
