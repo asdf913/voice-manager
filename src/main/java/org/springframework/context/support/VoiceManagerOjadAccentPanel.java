@@ -433,8 +433,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final Collection<TextAndImage> textAndImages = getIfNull(toTextAndImages(ehs, words),
 					Arrays.asList(() -> toTextAndImages1(ehs, textInput, words),
-							() -> toTextAndImages2(ehs, textInput, words),
-							() -> toTextAndImages3(ehs, textInput, words)));
+							() -> toTextAndImages2(ehs, textInput, words), () -> toTextAndImages3(words)));
 			//
 			Util.forEach(Util.stream(textAndImages), x -> Util.addElement(mcbmTextAndImage, x));
 			//
@@ -652,8 +651,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
-	private static Collection<TextAndImage> toTextAndImages3(final Iterable<ElementHandle> ehs, final String textInput,
-			final Iterable<ElementHandle> words) {
+	private static Collection<TextAndImage> toTextAndImages3(final Iterable<ElementHandle> words) {
 		//
 		Collection<TextAndImage> textAndImages = null;
 		//
