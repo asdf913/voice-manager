@@ -516,7 +516,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				(textAndImage = new TextAndImage()).kanji = StringUtils
 						.trim(textContent(querySelector(IterableUtils.get(words, i), ".midashi")));
 				//
-				textAndImage.image = toBufferedImage(screenshot(IterableUtils.get(ehs, i)),
+				textAndImage.image = toBufferedImage(screenshot(eh = IterableUtils.get(ehs, i)),
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
 				textAndImage.hiragana = StringUtils.trim(textContent(eh));
