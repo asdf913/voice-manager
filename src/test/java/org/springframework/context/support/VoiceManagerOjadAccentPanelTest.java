@@ -127,11 +127,7 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 			final Class<?> returnType = Util.getReturnType(method);
 			//
-			if (Objects.equals(returnType, Integer.TYPE)) {
-				//
-				return 0;
-				//
-			} else if (Objects.equals(returnType, Void.TYPE)) {
+			if (Objects.equals(returnType, Void.TYPE)) {
 				//
 				return null;
 				//
@@ -173,10 +169,6 @@ class VoiceManagerOjadAccentPanelTest {
 				return null;
 				//
 			} else if (proxy instanceof Iterable && Objects.equals(methodName, "iterator")) {
-				//
-				return null;
-				//
-			} else if (proxy instanceof IntStream && Objects.equals(methodName, "max")) {
 				//
 				return null;
 				//

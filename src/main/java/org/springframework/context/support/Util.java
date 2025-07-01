@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -170,6 +171,10 @@ public abstract class Util {
 		if (intStream != null && intConsumer != null) {
 			intStream.forEach(intConsumer);
 		}
+	}
+
+	static OptionalInt max(final IntStream instance) {
+		return instance != null ? instance.max() : null;
 	}
 
 	static <T> void forEach(@Nullable final Iterable<T> instance, @Nullable final Consumer<? super T> action) {

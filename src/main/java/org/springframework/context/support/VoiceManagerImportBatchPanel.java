@@ -1774,7 +1774,7 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 			final Integer numberOfSheets = WorkbookUtil.getNumberOfSheets(workbook);
 			//
 			final int maxSheetNameLength = orElse(
-					max(mapToInt(
+					Util.max(mapToInt(
 							Util.map(testAndApply(Objects::nonNull, spliterator(workbook),
 									x -> StreamSupport.stream(x, false), null), SheetUtil::getSheetName),
 							StringUtils::length)),
@@ -2602,11 +2602,6 @@ public class VoiceManagerImportBatchPanel extends JPanel implements Titled, Init
 
 	private static int orElse(@Nullable final OptionalInt instance, final int other) {
 		return instance != null ? instance.orElse(other) : other;
-	}
-
-	@Nullable
-	private static OptionalInt max(@Nullable final IntStream instance) {
-		return instance != null ? instance.max() : null;
 	}
 
 	@Nullable

@@ -751,9 +751,8 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 			} else if (jouYouKanJiList != null) {
 				//
 				Util.setSelectedItem(cbmJouYouKanJi,
-						StringUtils.length(text) <= orElse(max(mapToInt(Util.stream(list), StringUtils::length)), 0)
-								? Util.contains(list, text)
-								: null);
+						StringUtils.length(text) <= orElse(Util.max(mapToInt(Util.stream(list), StringUtils::length)),
+								0) ? Util.contains(list, text) : null);
 				//
 			} // if
 				//
@@ -769,11 +768,6 @@ public class JouYouKanjiGui extends JFrame implements EnvironmentAware, Initiali
 				? instance.mapToInt(mapper)
 				: null;
 		//
-	}
-
-	@Nullable
-	private static OptionalInt max(@Nullable final IntStream instance) {
-		return instance != null ? instance.max() : null;
 	}
 
 	private static int orElse(@Nullable final OptionalInt instance, final int other) {

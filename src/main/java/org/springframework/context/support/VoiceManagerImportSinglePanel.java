@@ -3938,7 +3938,7 @@ public class VoiceManagerImportSinglePanel extends JPanel
 		} else if (jouYouKanJiList != null) {
 			//
 			Util.setSelectedItem(cbmJouYouKanJi,
-					StringUtils.length(text) <= orElse(max(mapToInt(Util.stream(list), StringUtils::length)), 0)
+					StringUtils.length(text) <= orElse(Util.max(mapToInt(Util.stream(list), StringUtils::length)), 0)
 							? Util.contains(list, text)
 							: null);
 			//
@@ -3948,11 +3948,6 @@ public class VoiceManagerImportSinglePanel extends JPanel
 
 	private static int orElse(@Nullable final OptionalInt instance, final int other) {
 		return instance != null ? instance.orElse(other) : other;
-	}
-
-	@Nullable
-	private static OptionalInt max(@Nullable final IntStream instance) {
-		return instance != null ? instance.max() : null;
 	}
 
 	@Nullable

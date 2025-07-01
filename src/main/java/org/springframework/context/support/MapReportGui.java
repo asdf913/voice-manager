@@ -315,7 +315,7 @@ public class MapReportGui extends JFrame
 		Util.addAll(columns,
 				Util.toList(IntStream
 						.range(0,
-								orElse(max(mapToInt(Util.stream(Util.entrySet(asMap(mm))),
+								orElse(Util.max(mapToInt(Util.stream(Util.entrySet(asMap(mm))),
 										x -> IterableUtils.size(Util.getValue(x)))), 0))
 						.mapToObj(x -> String.format("Value %1$s", x + 1))));
 		//
@@ -441,11 +441,6 @@ public class MapReportGui extends JFrame
 
 	private static int orElse(@Nullable final OptionalInt instance, final int other) {
 		return instance != null ? instance.orElse(other) : other;
-	}
-
-	@Nullable
-	private static OptionalInt max(@Nullable final IntStream instance) {
-		return instance != null ? instance.max() : null;
 	}
 
 	@Nullable

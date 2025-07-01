@@ -2783,9 +2783,9 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 		Stream<Entry<String, DataFlavor>> stream = testAndApply(Objects::nonNull, spliterator(entrySet),
 				x -> StreamSupport.stream(x, false), null);
 		//
-		final int maxLength1 = orElse(max(mapToInt(Util.map(stream, Util::getKey), StringUtils::length)), 0);
+		final int maxLength1 = orElse(Util.max(mapToInt(Util.map(stream, Util::getKey), StringUtils::length)), 0);
 		//
-		final int maxLength2 = orElse(max(mapToInt(
+		final int maxLength2 = orElse(Util.max(mapToInt(
 				Util.map(stream = testAndApply(Objects::nonNull, spliterator(entrySet),
 						x -> StreamSupport.stream(x, false), null), x -> Util.toString(Util.getValue(x))),
 				StringUtils::length)), 0);
@@ -2830,11 +2830,6 @@ public class VoiceManagerPdfPanel extends JPanel implements Titled, Initializing
 				? instance.mapToInt(mapper)
 				: null;
 		//
-	}
-
-	@Nullable
-	private static OptionalInt max(@Nullable final IntStream instance) {
-		return instance != null ? instance.max() : null;
 	}
 
 	private static int orElse(@Nullable final OptionalInt instance, final int other) {

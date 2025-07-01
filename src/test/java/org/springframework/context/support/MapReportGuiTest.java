@@ -71,10 +71,10 @@ class MapReportGuiTest {
 	private static final String EMPTY = "";
 
 	private static Method METHOD_IS_ALL_ATTRIBUTES_MATCHED, METHOD_GET_PREFERRED_WIDTH, METHOD_AS_MAP,
-			METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAX, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP,
-			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_SET_CONTENTS, METHOD_LENGTH, METHOD_TEST_AND_APPLY,
-			METHOD_CREATE_MULTIMAP, METHOD_TEST_AND_ACCEPT3, METHOD_TEST_AND_ACCEPT4,
-			METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER, METHOD_WRITE_VALUE_AS_STRING = null;
+			METHOD_GET_VALUES, METHOD_OR_ELSE, METHOD_MAP_TO_INT, METHOD_CREATE_MULTI_MAP, METHOD_GET_SYSTEM_CLIP_BOARD,
+			METHOD_SET_CONTENTS, METHOD_LENGTH, METHOD_TEST_AND_APPLY, METHOD_CREATE_MULTIMAP, METHOD_TEST_AND_ACCEPT3,
+			METHOD_TEST_AND_ACCEPT4, METHOD_WRITER_WITH_DEFAULT_PRETTY_PRINTER, METHOD_WRITER,
+			METHOD_WRITE_VALUE_AS_STRING = null;
 
 	@BeforeAll
 	static void beforeAll() throws ReflectiveOperationException {
@@ -92,8 +92,6 @@ class MapReportGuiTest {
 				.setAccessible(true);
 		//
 		(METHOD_OR_ELSE = clz.getDeclaredMethod("orElse", OptionalInt.class, Integer.TYPE)).setAccessible(true);
-		//
-		(METHOD_MAX = clz.getDeclaredMethod("max", IntStream.class)).setAccessible(true);
 		//
 		(METHOD_MAP_TO_INT = clz.getDeclaredMethod("mapToInt", Stream.class, ToIntFunction.class)).setAccessible(true);
 		//
@@ -622,27 +620,6 @@ class MapReportGuiTest {
 				return ((Integer) obj).intValue();
 			}
 			throw new Throwable(Util.toString(obj != null ? obj.getClass() : null));
-		} catch (final InvocationTargetException e) {
-			throw e.getTargetException();
-		}
-	}
-
-	@Test
-	void testMax() throws Throwable {
-		//
-		Assertions.assertEquals(OptionalInt.empty(), max(IntStream.empty()));
-		//
-	}
-
-	private static OptionalInt max(final IntStream instance) throws Throwable {
-		try {
-			final Object obj = METHOD_MAX.invoke(null, instance);
-			if (obj == null) {
-				return null;
-			} else if (obj instanceof OptionalInt) {
-				return (OptionalInt) obj;
-			}
-			throw new Throwable(Util.toString(obj.getClass()));
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}
