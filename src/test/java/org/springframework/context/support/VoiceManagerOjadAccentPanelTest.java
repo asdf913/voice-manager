@@ -267,7 +267,7 @@ class VoiceManagerOjadAccentPanelTest {
 					//
 					Util.add(collection, Boolean.FALSE);
 					//
-				} else if (Objects.equals(ArrayUtils.get(parameterTypes, j), Integer.TYPE)) {
+				} else if (Objects.equals(parameterType, Integer.TYPE)) {
 					//
 					Util.add(collection, Integer.valueOf(0));
 					//
