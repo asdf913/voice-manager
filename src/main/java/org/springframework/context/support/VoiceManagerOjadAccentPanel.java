@@ -225,7 +225,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							//
 					} // if
 						//
-					panel.add(new JLabel(StringUtils.rightPad(getKanji(value), maxKanjiLength, '　')), "left");
+					panel.add(new JLabel(StringUtils.rightPad(getKanji(value), maxKanjiLength, '\u3000')), "left");
 					//
 					final JLabel label = new JLabel();
 					//
