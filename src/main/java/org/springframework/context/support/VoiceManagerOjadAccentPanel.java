@@ -116,7 +116,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("Copy Text")
 	private AbstractButton btnCopyKanji = null;
 
-	private AbstractButton btnCopyImage = null;
+	private AbstractButton btnCopyHiragana, btnCopyImage = null;
 
 	private JLabel lblAccent = null;
 
@@ -221,7 +221,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(new JLabel("Hiragana"));
 			//
-			add(tfHiragana = new JTextField(), String.format("%1$s,%2$s", growx, wrap));
+			add(tfHiragana = new JTextField(), growx);
+			//
+			add(btnCopyHiragana = new JButton("Copy"), wrap);
 			//
 			add(new JLabel("Image"));
 			//
@@ -231,9 +233,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(btnCopyImage = new JButton("Copy"));
 			//
-			Util.forEach(Stream.of(btnExecute, btnCopyKanji, btnCopyImage), x -> Util.addActionListener(x, this));
+			Util.forEach(Stream.of(btnExecute, btnCopyKanji, btnCopyHiragana, btnCopyImage),
+					x -> Util.addActionListener(x, this));
 			//
-			Util.forEach(Stream.of(btnCopyKanji, btnCopyImage), x -> Util.setEnabled(x, false));
+			Util.forEach(Stream.of(btnCopyKanji, btnCopyHiragana, btnCopyImage), x -> Util.setEnabled(x, false));
 			//
 			Util.forEach(Stream.of(tfKanji, tfHiragana), x -> Util.setEditable(x, false));
 			//
@@ -322,13 +325,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			// text
 			//
-			final String text = getKanji(textAndImage);
+			final String kanji = getKanji(textAndImage);
 			//
-			Util.setText(tfKanji, text);
+			Util.setText(tfKanji, kanji);
 			//
-			Util.setText(tfHiragana, textAndImage != null ? textAndImage.hiragana : null);
+			final String hiragana = textAndImage != null ? textAndImage.hiragana : null;
 			//
-			Util.setEnabled(btnCopyKanji, StringUtils.isNotBlank(text));
+			Util.setText(tfHiragana, hiragana);
+			//
+			Util.setEnabled(btnCopyKanji, StringUtils.isNotBlank(kanji));
+			//
+			Util.setEnabled(btnCopyHiragana, StringUtils.isNotBlank(hiragana));
 			//
 			// image
 			//
@@ -359,6 +366,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							() -> getSystemClipboard(Toolkit.getDefaultToolkit()),
 							() -> Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class))),
 					new StringSelection(Util.getText(tfKanji)), null);
+			//
+		} else if (Objects.equals(source, btnCopyHiragana)) {
+			//
+			setContents(
+					testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
+							() -> getSystemClipboard(Toolkit.getDefaultToolkit()),
+							() -> Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class))),
+					new StringSelection(Util.getText(tfHiragana)), null);
 			//
 		} // if
 			//

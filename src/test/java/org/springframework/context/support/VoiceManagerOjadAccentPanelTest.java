@@ -379,6 +379,14 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyKanji, 0, null)));
 		//
+		// btnCopyHiragana
+		//
+		final AbstractButton btnCopyHiragana = new JButton();
+		//
+		FieldUtils.writeDeclaredField(instance, "btnCopyHiragana", btnCopyHiragana, true);
+		//
+		Assertions.assertDoesNotThrow(() -> instance.actionPerformed(new ActionEvent(btnCopyHiragana, 0, null)));
+		//
 	}
 
 	@Test
