@@ -696,15 +696,24 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		IValue0<ElementHandle> iValue0 = null;
 		//
+		Integer end = null;
+		//
 		for (int j = start; j < Integer.MAX_VALUE; j++) {
 			//
 			if ((eh = querySelector(word, String.format("td:nth-child(%1$s)", j))) == null) {
+				//
+				end = Integer.valueOf(j);
 				//
 				break;
 				//
 			} // if
 				//
-			if (StringUtils.isBlank(StringUtils.trim(textContent(eh)))) {
+		} // for
+			//
+		for (int j = start; end != null && j < end.intValue(); j++) {
+			//
+			if (StringUtils.isBlank(
+					StringUtils.trim(textContent(eh = querySelector(word, String.format("td:nth-child(%1$s)", j)))))) {
 				//
 				continue;
 				//
