@@ -678,7 +678,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		ElementHandle word = null;
 		//
-		String textContent, s = null;
+		String textContent = null;
 		//
 		String[] ss = null;
 		//
