@@ -689,7 +689,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 	}
 
-	private static IValue0<ElementHandle> getFirstChild(final int start, final ElementHandle word,
+	private static IValue0<ElementHandle> getFirstChild(final int start, @Nullable final ElementHandle word,
 			final String cssSelector) {
 		//
 		ElementHandle eh = null;
