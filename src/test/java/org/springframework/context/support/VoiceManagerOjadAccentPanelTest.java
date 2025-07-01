@@ -111,8 +111,7 @@ class VoiceManagerOjadAccentPanelTest {
 		(METHOD_TO_BYTE_ARRAY = clz.getDeclaredMethod("toByteArray", RenderedImage.class, String.class))
 				.setAccessible(true);
 		//
-		(METHOD_GET_IF_NULL = clz.getDeclaredMethod("getIfNull", Object.class, Supplier.class, Supplier.class))
-				.setAccessible(true);
+		(METHOD_GET_IF_NULL = clz.getDeclaredMethod("getIfNull", Object.class, Iterable.class)).setAccessible(true);
 		//
 	}
 
@@ -752,15 +751,15 @@ class VoiceManagerOjadAccentPanelTest {
 	@Test
 	void testGetIfNull() throws Throwable {
 		//
-		Assertions.assertSame(EMPTY, getIfNull(null, Suppliers.ofInstance(EMPTY), null));
+		Assertions.assertSame(EMPTY, getIfNull(EMPTY, null));
 		//
-		Assertions.assertNull(getIfNull(null, null, Suppliers.ofInstance(null)));
+		Assertions.assertSame(EMPTY, getIfNull(null, Collections.singleton(Suppliers.ofInstance(EMPTY))));
 		//
 	}
 
-	private static <T> T getIfNull(final T object, final Supplier<T> a, final Supplier<T> b) throws Throwable {
+	private static <T> T getIfNull(final T object, final Iterable<Supplier<T>> suppliers) throws Throwable {
 		try {
-			return (T) METHOD_GET_IF_NULL.invoke(null, object, a, b);
+			return (T) METHOD_GET_IF_NULL.invoke(null, object, suppliers);
 		} catch (final InvocationTargetException e) {
 			throw e.getTargetException();
 		}

@@ -432,7 +432,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final String textInput = Util.getText(tfTextInput);
 			//
 			final Collection<TextAndImage> textAndImages = getIfNull(toTextAndImages(ehs, words),
-					() -> toTextAndImages1(ehs, textInput, words), () -> toTextAndImages2(ehs, textInput, words));
+					Arrays.asList(() -> toTextAndImages1(ehs, textInput, words),
+							() -> toTextAndImages2(ehs, textInput, words),
+							() -> toTextAndImages3(ehs, textInput, words)));
 			//
 			Util.forEach(Util.stream(textAndImages), x -> Util.addElement(mcbmTextAndImage, x));
 			//
@@ -453,17 +455,27 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
-	private static <T> T getIfNull(final T object, final Supplier<T> a, final Supplier<T> b) {
+	private static <T> T getIfNull(final T object, final Iterable<Supplier<T>> suppliers) {
 		//
-		final T result = ObjectUtils.getIfNull(object, a);
-		//
-		if (result != null) {
+		if (object != null) {
 			//
-			return result;
+			return object;
 			//
 		} // if
 			//
-		return Util.get(b);
+		T result = null;
+		//
+		for (int i = 0; i < IterableUtils.size(suppliers); i++) {
+			//
+			if ((result = Util.get(IterableUtils.get(suppliers, i))) != null) {
+				//
+				return result;
+				//
+			} // if
+				//
+		} // for
+			//
+		return object;
 		//
 	}
 
@@ -591,15 +603,67 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	private static Collection<TextAndImage> toTextAndImages2(final Iterable<ElementHandle> ehs, final String textInput,
 			final Iterable<ElementHandle> words) {
 		//
-		final int size = IterableUtils.size(words);
-		//
+		if (IterableUtils.size(words) != 1) {
+			//
+			return null;
+			//
+		} // if
+			//
 		TextAndImage textAndImage = null;
 		//
 		Collection<TextAndImage> textAndImages = null;
 		//
 		ElementHandle eh = null;
 		//
+		final String[] ws = StringUtils
+				.split(StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))), '・');
+		//
+		for (int i = 0; i < length(ws); i++) {
+			//
+			if (!Boolean.logicalAnd(Objects.equals(textInput, ArrayUtils.get(ws, i)), length(ws) == 2)) {
+				//
+				continue;
+				//
+			} // if
+				//
+			for (int j = 0; j < IterableUtils.size(ehs); j++) {
+				//
+				if (!StringUtils.isNotBlank(Strings.commonSuffix(ArrayUtils.get(ws, i),
+						StringUtils.trim(textContent(eh = IterableUtils.get(ehs, j)))))) {
+					//
+					continue;
+					//
+				} // if
+					//
+				(textAndImage = new TextAndImage()).image = toBufferedImage(screenshot(eh),
+						e -> LoggerUtil.error(LOG, e.getMessage(), e));
+				//
+				textAndImage.kanji = ArrayUtils.get(ws, i);
+				//
+				textAndImage.hiragana = StringUtils.trim(textContent(eh));
+				//
+				Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
+				//
+			} // for
+				//
+		} // for
+			//
+		return textAndImages;
+		//
+	}
+
+	private static Collection<TextAndImage> toTextAndImages3(final Iterable<ElementHandle> ehs, final String textInput,
+			final Iterable<ElementHandle> words) {
+		//
+		Collection<TextAndImage> textAndImages = null;
+		//
+		final int size = IterableUtils.size(words);
+		//
 		if (size != 1) {
+			//
+			TextAndImage textAndImage = null;
+			//
+			ElementHandle eh = null;
 			//
 			ElementHandle word = null;
 			//
@@ -654,42 +718,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 			} // for
 				//
-			return textAndImages;
-			//
 		} // if
-			//
-		final String[] ws = StringUtils
-				.split(StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))), '・');
-		//
-		for (int i = 0; i < length(ws); i++) {
-			//
-			if (!Boolean.logicalAnd(Objects.equals(textInput, ArrayUtils.get(ws, i)), length(ws) == 2)) {
-				//
-				continue;
-				//
-			} // if
-				//
-			for (int j = 0; j < IterableUtils.size(ehs); j++) {
-				//
-				if (!StringUtils.isNotBlank(Strings.commonSuffix(ArrayUtils.get(ws, i),
-						StringUtils.trim(textContent(eh = IterableUtils.get(ehs, j)))))) {
-					//
-					continue;
-					//
-				} // if
-					//
-				(textAndImage = new TextAndImage()).image = toBufferedImage(screenshot(eh),
-						e -> LoggerUtil.error(LOG, e.getMessage(), e));
-				//
-				textAndImage.kanji = ArrayUtils.get(ws, i);
-				//
-				textAndImage.hiragana = StringUtils.trim(textContent(eh));
-				//
-				Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
-				//
-			} // for
-				//
-		} // for
 			//
 		return textAndImages;
 		//
