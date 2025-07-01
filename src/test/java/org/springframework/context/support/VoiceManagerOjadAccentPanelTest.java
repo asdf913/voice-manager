@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.function.Supplier;
-import java.util.stream.IntStream;
 
 import javax.swing.AbstractButton;
 import javax.swing.Icon;
