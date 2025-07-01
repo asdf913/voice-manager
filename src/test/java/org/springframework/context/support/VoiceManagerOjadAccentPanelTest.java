@@ -695,6 +695,8 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertNull(toTextAndImages2(null, null, Collections.nCopies(1, null)));
 		//
+		Assertions.assertNull(toTextAndImages2(null, null, Collections.nCopies(2, null)));
+		//
 	}
 
 	private static Collection<?> toTextAndImages2(final Iterable<ElementHandle> ehs, final String textInput,

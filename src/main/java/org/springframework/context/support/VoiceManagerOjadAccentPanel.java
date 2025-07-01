@@ -70,6 +70,9 @@ import org.apache.commons.lang3.function.FailableFunctionUtil;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.text.TextStringBuilder;
 import org.apache.commons.text.TextStringBuilderUtil;
+import org.javatuples.Unit;
+import org.javatuples.valueintf.IValue0;
+import org.javatuples.valueintf.IValue0Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -526,8 +529,6 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 			} // if
 				//
-				// TODO
-				//
 			testAndAccept((a, b) -> !contains(a, b),
 					textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage, Util::add);
 			//
@@ -541,18 +542,70 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	private static Collection<TextAndImage> toTextAndImages2(final Iterable<ElementHandle> ehs, final String textInput,
 			final Iterable<ElementHandle> words) {
 		//
-		if (IterableUtils.size(words) != 1) {
-			//
-			return null;
-			//
-		} // if
-			//
-		ElementHandle eh = null;
+		final int size = IterableUtils.size(words);
 		//
 		TextAndImage textAndImage = null;
 		//
 		Collection<TextAndImage> textAndImages = null;
 		//
+		ElementHandle eh = null;
+		//
+		if (size != 1) {
+			//
+			ElementHandle word = null;
+			//
+			IValue0<ElementHandle> iValue0 = null;
+			//
+			String textContent = null;
+			//
+			for (int i = 0; i < size; i++) {
+				//
+				if (StringUtils
+						.isNotBlank(textContent = StringUtils.trim(
+								textContent(querySelector(word = IterableUtils.get(words, i), "td:nth-child(2)"))))
+						&& !StringUtils.contains(textContent, '・')) {
+					//
+					iValue0 = null;
+					//
+					for (int j = 3; j < Integer.MAX_VALUE; j++) {
+						//
+						if ((eh = querySelector(word, String.format("td:nth-child(%1$s)", j))) == null) {
+							//
+							break;
+							//
+						} // if
+							//
+						if (StringUtils.isBlank(StringUtils.trim(textContent(eh)))) {
+							//
+							continue;
+							//
+						} // if
+							//
+						if (iValue0 != null) {
+							//
+							throw new IllegalStateException();
+							//
+						} // if
+							//
+						iValue0 = Unit.with(eh.querySelector(".accented_word"));
+						//
+					} // for
+						//
+					(textAndImage = new TextAndImage()).image = toBufferedImage(
+							screenshot(IValue0Util.getValue0(iValue0)), e -> LoggerUtil.error(LOG, e.getMessage(), e));
+					//
+					textAndImage.text = textContent;
+					//
+					Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
+					//
+				} // if
+					//
+			} // for
+				//
+			return textAndImages;
+			//
+		} // if
+			//
 		final String[] ws = StringUtils
 				.split(StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))), '・');
 		//
