@@ -35,6 +35,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.OptionalInt;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -190,15 +191,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					final ListModel<? extends TextAndImage> model = Util.getModel(list);
 					//
-					int maxKanjiLength = 0;
+					final int maxKanjiLength = orElse(max(Util.map(IntStream.range(0, Util.getSize(model)),
+							i -> StringUtils.length(getKanji(Util.getElementAt(model, i))))), 0);
 					//
-					for (int i = 0; i < Util.getSize(model); i++) {
-						//
-						maxKanjiLength = Math.max(maxKanjiLength,
-								StringUtils.length(getKanji(Util.getElementAt(model, i))));
-						//
-					} // for
-						//
 					panel.setLayout(new MigLayout());
 					//
 					final Dimension2D preferredSize = Util.getPreferredSize(panel);
@@ -269,6 +264,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 		} // if
 			//
+	}
+
+	private static OptionalInt max(final IntStream instance) {
+		return instance != null ? instance.max() : null;
+	}
+
+	private static int orElse(final OptionalInt instance, final int other) {
+		return instance != null ? instance.orElse(other) : other;
 	}
 
 	private static double getHeight(@Nullable final Dimension2D instance) {
