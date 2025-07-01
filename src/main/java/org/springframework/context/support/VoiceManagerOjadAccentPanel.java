@@ -694,15 +694,11 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	private static IValue0<ElementHandle> getFirstChild(final int start, @Nullable final ElementHandle word,
 			final String cssSelector) {
 		//
-		ElementHandle eh = null;
-		//
-		IValue0<ElementHandle> iValue0 = null;
-		//
 		Integer end = null;
 		//
 		for (int j = start; j < Integer.MAX_VALUE; j++) {
 			//
-			if ((eh = querySelector(word, String.format("td:nth-child(%1$s)", j))) == null) {
+			if (querySelector(word, String.format("td:nth-child(%1$s)", j)) == null) {
 				//
 				end = Integer.valueOf(j);
 				//
@@ -712,6 +708,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} // for
 			//
+		ElementHandle eh = null;
+		//
+		IValue0<ElementHandle> iValue0 = null;
+		//
 		for (int j = start; end != null && j < end.intValue(); j++) {
 			//
 			if (StringUtils.isBlank(
