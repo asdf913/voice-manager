@@ -178,7 +178,7 @@ public abstract class Util {
 		return instance != null ? instance.max() : null;
 	}
 
-	static int orElse(final OptionalInt instance, final int other) {
+	static int orElse(@Nullable final OptionalInt instance, final int other) {
 		return instance != null ? instance.orElse(other) : other;
 	}
 
