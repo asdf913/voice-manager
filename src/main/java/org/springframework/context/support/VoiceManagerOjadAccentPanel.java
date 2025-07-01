@@ -1,5 +1,6 @@
 package org.springframework.context.support;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
@@ -57,6 +58,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
 import javax.swing.MutableComboBoxModel;
 import javax.swing.WindowConstants;
 import javax.swing.text.JTextComponent;
@@ -187,6 +189,19 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 					//
 					final JPanel panel = new JPanel();
 					//
+					final ListModel<? extends TextAndImage> model = Util.getModel(list);
+					//
+					int maxKanjiLength = 0;
+					//
+					for (int i = 0; i < Util.getSize(model); i++) {
+						//
+						maxKanjiLength = Math.max(maxKanjiLength,
+								StringUtils.length(getKanji(Util.getElementAt(model, i))));
+						//
+					} // for
+						//
+					panel.setLayout(new MigLayout());
+					//
 					final Dimension2D preferredSize = Util.getPreferredSize(panel);
 					//
 					if (preferredSize != null) {
@@ -211,14 +226,14 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							//
 					} // if
 						//
-					panel.add(new JLabel(getKanji(value)));
+					panel.add(new JLabel(StringUtils.rightPad(getKanji(value), maxKanjiLength, '　')), "left");
 					//
 					final JLabel label = new JLabel();
 					//
 					label.setIcon(
 							testAndApply(Objects::nonNull, getImage(value), ImageIcon::new, x -> new ImageIcon()));
 					//
-					panel.add(label);
+					panel.add(label, "right");
 					//
 					return panel;
 					//
