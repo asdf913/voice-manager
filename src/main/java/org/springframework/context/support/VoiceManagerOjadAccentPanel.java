@@ -73,6 +73,8 @@ import org.apache.commons.text.TextStringBuilderUtil;
 import org.javatuples.Unit;
 import org.javatuples.valueintf.IValue0;
 import org.javatuples.valueintf.IValue0Util;
+import org.meeuw.functional.ThrowingRunnable;
+import org.meeuw.functional.ThrowingRunnableUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.LoggerUtil;
@@ -272,14 +274,21 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				Util.filter(Util.stream(testAndApply(Objects::nonNull, clz, FieldUtils::getAllFieldsList, null)),
 						f -> Objects.equals(Util.getName(f), fieldName)));
 		//
-		if (IterableUtils.size(fs) > 1) {
+		testAndRunThrows(IterableUtils.size(fs) > 1, () -> {
 			//
 			throw new IllegalStateException();
 			//
-		} // if
-			//
+		});
+		//
 		return testAndApply(x -> IterableUtils.size(x) == 1, fs, x -> IterableUtils.get(x, 0), null);
 		//
+	}
+
+	private static <E extends Throwable> void testAndRunThrows(final boolean condition,
+			final ThrowingRunnable<E> throwingRunnable) throws E {
+		if (condition) {
+			ThrowingRunnableUtil.runThrows(throwingRunnable);
+		}
 	}
 
 	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, @Nullable final T value,
@@ -618,12 +627,12 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							//
 						} // if
 							//
-						if (iValue0 != null) {
+						testAndRunThrows(iValue0 != null, () -> {
 							//
 							throw new IllegalStateException();
 							//
-						} // if
-							//
+						});
+						//
 						iValue0 = Unit.with(eh.querySelector(".accented_word"));
 						//
 					} // for
