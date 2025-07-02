@@ -199,7 +199,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			for (int i = 0; i < IterableUtils.size(es); i++) {
 				//
-				dcbm.addElement(Pair.of(Util.getValue(attribute(e, "value")), ElementUtil.text(e)));
+				dcbm.addElement(
+						Pair.of(Util.getValue(attribute(e = IterableUtils.get(es, i), "value")), ElementUtil.text(e)));
 				//
 			} // for
 				//
