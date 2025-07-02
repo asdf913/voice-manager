@@ -281,7 +281,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 			@Override
 			public Component getListCellRendererComponent(final JList<? extends TextAndImage> list,
-					final TextAndImage value, final int index, final boolean isSelected, final boolean cellHasFocus) {
+					@Nullable final TextAndImage value, final int index, final boolean isSelected,
+					final boolean cellHasFocus) {
 				//
 				final JPanel panel = new JPanel();
 				//
