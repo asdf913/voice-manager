@@ -324,6 +324,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 	}
 
+	@Nullable
 	private static Attribute attribute(@Nullable final Element instance, final String key) {
 		return instance != null ? instance.attribute(key) : null;
 	}
