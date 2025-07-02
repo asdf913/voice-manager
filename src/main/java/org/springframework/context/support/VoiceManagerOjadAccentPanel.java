@@ -720,12 +720,16 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							eh = querySelector(word, String.format("td:nth-child(%1$s) .accented_word", j + 3))),
 							e -> LoggerUtil.error(LOG, e.getMessage(), e));
 					//
-					textAndImage.kanji = ArrayUtils.get(ss, j);
-					//
 					textAndImage.hiragana = StringUtils.trim(textContent(eh));
 					//
 					Util.add(textAndImages = ObjectUtils.getIfNull(textAndImages, ArrayList::new), textAndImage);
 					//
+					if (StringUtils.endsWith(textAndImage.kanji = ArrayUtils.get(ss, j), "[な]")) {
+						//
+						break;
+						//
+					} // if
+						//
 				} // for
 					//
 			} // if
