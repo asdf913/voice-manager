@@ -59,6 +59,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapperUtil;
@@ -687,15 +688,15 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 			objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
 			//
+			objectMapper.setDefaultPropertyInclusion(Include.NON_NULL);
+			//
 		} // if
 			//
-		Assertions.assertEquals("[{\"kanji\":null,\"hiragana\":null,\"accentImage\":null}]",
+		Assertions.assertEquals("[{}]",
 				ObjectMapperUtil.writeValueAsString(objectMapper, toTextAndImages(Collections.singleton(null), null)));
 		//
-		Assertions.assertEquals(
-				"[{\"kanji\":null,\"hiragana\":null,\"accentImage\":null},{\"kanji\":null,\"hiragana\":null,\"accentImage\":null}]",
-				ObjectMapperUtil.writeValueAsString(objectMapper,
-						toTextAndImages(Collections.nCopies(2, null), Collections.nCopies(2, null))));
+		Assertions.assertEquals("[{},{}]", ObjectMapperUtil.writeValueAsString(objectMapper,
+				toTextAndImages(Collections.nCopies(2, null), Collections.nCopies(2, null))));
 		//
 	}
 
@@ -721,11 +722,12 @@ class VoiceManagerOjadAccentPanelTest {
 			//
 			objectMapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY);
 			//
+			objectMapper.setDefaultPropertyInclusion(Include.NON_NULL);
+			//
 		} // if
 			//
-		Assertions.assertEquals("[{\"kanji\":null,\"hiragana\":null,\"accentImage\":null}]",
-				ObjectMapperUtil.writeValueAsString(objectMapper,
-						toTextAndImages1(Collections.nCopies(2, null), null, Collections.nCopies(1, null))));
+		Assertions.assertEquals("[{}]", ObjectMapperUtil.writeValueAsString(objectMapper,
+				toTextAndImages1(Collections.nCopies(2, null), null, Collections.nCopies(1, null))));
 		//
 	}
 
