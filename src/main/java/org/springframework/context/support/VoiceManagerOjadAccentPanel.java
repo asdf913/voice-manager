@@ -137,7 +137,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 	@Note("Copy Hiragana")
 	private AbstractButton btnCopyHiragana = null;
 
-	private AbstractButton btnCopyAccentImage = null;
+	private AbstractButton btnCopyAccentImage, btnCopyCurveImage = null;
 
 	private JLabel lblAccent, lblCurve = null;
 
@@ -266,10 +266,15 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			add(lblCurve = new JLabel(), String.format("%1$s,span %2$s", wrap, span));
 			//
-			Util.forEach(Stream.of(btnExecute, btnCopyKanji, btnCopyHiragana, btnCopyAccentImage),
+			add(new JLabel());
+			//
+			add(btnCopyCurveImage = new JButton("Copy"));
+			//
+			Util.forEach(Stream.of(btnExecute, btnCopyKanji, btnCopyHiragana, btnCopyAccentImage, btnCopyCurveImage),
 					x -> Util.addActionListener(x, this));
 			//
-			Util.forEach(Stream.of(btnCopyKanji, btnCopyHiragana, btnCopyAccentImage), x -> Util.setEnabled(x, false));
+			Util.forEach(Stream.of(btnCopyKanji, btnCopyHiragana, btnCopyAccentImage, btnCopyCurveImage),
+					x -> Util.setEnabled(x, false));
 			//
 			Util.forEach(Stream.of(tfKanji, tfHiragana), x -> Util.setEditable(x, false));
 			//
@@ -441,14 +446,17 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			// image
 			//
-			final Image image = getAccentImage(textAndImage);
+			Image image = getAccentImage(textAndImage);
 			//
 			setIcon(lblAccent, testAndApply(Objects::nonNull, image, ImageIcon::new, x -> new ImageIcon()));
 			//
-			setIcon(lblCurve, testAndApply(Objects::nonNull, textAndImage != null ? textAndImage.curveImage : null,
-					ImageIcon::new, x -> new ImageIcon()));
-			//
 			Util.setEnabled(btnCopyAccentImage, image != null);
+			//
+			setIcon(lblCurve,
+					testAndApply(Objects::nonNull, image = textAndImage != null ? textAndImage.curveImage : null,
+							ImageIcon::new, x -> new ImageIcon()));
+			//
+			Util.setEnabled(btnCopyCurveImage, image != null);
 			//
 			pack(window);
 			//
@@ -457,6 +465,20 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final IH ih = new IH();
 			//
 			ih.image = getAccentImage(Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage)));
+			//
+			setContents(
+					testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
+							() -> getSystemClipboard(Toolkit.getDefaultToolkit()),
+							() -> Util.cast(Clipboard.class, Narcissus.allocateInstance(Clipboard.class))),
+					Reflection.newProxy(Transferable.class, ih), null);
+			//
+		} else if (Objects.equals(source, btnCopyCurveImage)) {
+			//
+			final IH ih = new IH();
+			//
+			final TextAndImage textAndImage = Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage));
+			//
+			ih.image = textAndImage != null ? textAndImage.curveImage : null;
 			//
 			setContents(
 					testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
