@@ -855,7 +855,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
 				textAndImage.curveImage = toBufferedImage(
-						screenshot(eh = querySelector(word,
+						screenshot(querySelector(word,
 								String.format("td:nth-child(%1$s) .katsuyo_proc_accent_curve canvas", 3))),
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
 				//
@@ -874,7 +874,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 							e -> LoggerUtil.error(LOG, e.getMessage(), e));
 					//
 					textAndImage.curveImage = toBufferedImage(
-							screenshot(eh = querySelector(word,
+							screenshot(querySelector(word,
 									String.format("td:nth-child(%1$s) .katsuyo_proc_accent_curve canvas", j + 3))),
 							e -> LoggerUtil.error(LOG, e.getMessage(), e));
 					//
