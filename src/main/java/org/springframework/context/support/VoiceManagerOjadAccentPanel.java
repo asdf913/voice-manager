@@ -110,6 +110,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 
 	private static final Logger LOG = LoggerFactory.getLogger(VoiceManagerOjadAccentPanel.class);
 
+	private static final String CSS_SELECTOR_MIDASHI = ".midashi";
+
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	private @interface Note {
@@ -513,7 +515,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final List<ElementHandle> words = querySelectorAll(page, "tr[id^=\"word\"]");
 			//
 			final Iterable<String> partOfSpeeches = Util.toList(Util.map(
-					Util.filter(Util.stream(querySelectorAll(page, ".midashi")),
+					Util.filter(Util.stream(querySelectorAll(page, CSS_SELECTOR_MIDASHI)),
 							x -> IterableUtils.isEmpty(x != null ? x.querySelectorAll("div") : null)),
 					x -> StringUtils.trim(textContent(x))));
 			//
@@ -585,7 +587,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			(textAndImage = new TextAndImage()).kanji = StringUtils.trim(textContent(querySelector(
 					testAndApply(x -> IterableUtils.size(x) == 1, words, x -> IterableUtils.get(x, 0), null),
-					".midashi")));
+					CSS_SELECTOR_MIDASHI)));
 			//
 			textAndImage.image = toBufferedImage(screenshot(eh = IterableUtils.get(ehs, 0)),
 					e -> LoggerUtil.error(LOG, e.getMessage(), e));
@@ -603,7 +605,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			for (int i = 0; i < IterableUtils.size(words); i++) {
 				//
 				(textAndImage = new TextAndImage()).kanji = StringUtils
-						.trim(textContent(querySelector(IterableUtils.get(words, i), ".midashi")));
+						.trim(textContent(querySelector(IterableUtils.get(words, i), CSS_SELECTOR_MIDASHI)));
 				//
 				textAndImage.image = toBufferedImage(screenshot(eh = IterableUtils.get(ehs, i)),
 						e -> LoggerUtil.error(LOG, e.getMessage(), e));
@@ -657,8 +659,9 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			textAndImage.hiragana = StringUtils.trim(textContent(eh));
 			//
-			ws = StringUtils
-					.split(StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))), '・');
+			ws = StringUtils.split(
+					StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), CSS_SELECTOR_MIDASHI))),
+					'・');
 			//
 			if (Boolean.logicalAnd(length(ws) == 2, IterableUtils.size(ehs) > 1)) {
 				//
@@ -704,8 +707,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		ElementHandle eh = null;
 		//
-		final String[] ws = StringUtils
-				.split(StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), ".midashi"))), '・');
+		final String[] ws = StringUtils.split(
+				StringUtils.trim(textContent(querySelector(IterableUtils.get(words, 0), CSS_SELECTOR_MIDASHI))), '・');
 		//
 		int size = IterableUtils.size(ehs);
 		//
