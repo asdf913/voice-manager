@@ -505,7 +505,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			final String curve = Util
 					.toString(testAndApply((a, b) -> a instanceof Entry, Util.getSelectedItem(cbmCurve),
 							testAndApply(x -> IterableUtils.size(x) == 1, ms, x -> IterableUtils.get(x, 0), null),
-							(a, b) -> Narcissus.invokeMethod(a, b), null));
+							Narcissus::invokeMethod, null));
 			//
 			if (StringUtils.isNotBlank(curve)) {
 				//
