@@ -637,7 +637,8 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		//
 		if (Util.iterator(partOfSpeeches) != null) {
 			//
-			if (Iterables.elementsEqual(partOfSpeeches, Collections.singleton("2グループの動詞"))
+			if (Iterables.elementsEqual(partOfSpeeches, Collections.singleton("1グループの動詞"))
+					|| Iterables.elementsEqual(partOfSpeeches, Collections.singleton("2グループの動詞"))
 					|| Iterables.elementsEqual(partOfSpeeches, Collections.singleton("い形容詞"))) {
 				//
 				size = 2;

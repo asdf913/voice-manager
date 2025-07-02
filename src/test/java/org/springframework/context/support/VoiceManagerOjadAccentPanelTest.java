@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
+import java.io.InputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import javax.swing.AbstractButton;
@@ -28,9 +30,23 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.MutableComboBoxModel;
 
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ClassParserUtil;
+import org.apache.bcel.classfile.FieldOrMethodUtil;
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.JavaClassUtil;
+import org.apache.bcel.generic.ConstantPoolGen;
+import org.apache.bcel.generic.INVOKESTATIC;
+import org.apache.bcel.generic.Instruction;
+import org.apache.bcel.generic.InstructionListUtil;
+import org.apache.bcel.generic.InvokeInstructionUtil;
+import org.apache.bcel.generic.LDC;
+import org.apache.bcel.generic.MethodGen;
+import org.apache.bcel.generic.MethodGenUtil;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.function.FailableFunction;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -63,7 +79,8 @@ class VoiceManagerOjadAccentPanelTest {
 	private static Method METHOD_GET_FILE_EXTENSIONS, METHOD_FIND_MATCH, METHOD_QUERY_SELECTOR_ALL,
 			METHOD_QUERY_SELECTOR, METHOD_SET_ICON, METHOD_PACK, METHOD_GET_KANJI, METHOD_GET_HEIGHT,
 			METHOD_GET_SYSTEM_CLIP_BOARD, METHOD_GET_SELECTED_ITEM, METHOD_LENGTH, METHOD_TO_TEXT_AND_IMAGES,
-			METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TO_BYTE_ARRAY, METHOD_GET_IF_NULL = null;
+			METHOD_TO_TEXT_AND_IMAGES1, METHOD_TO_TEXT_AND_IMAGES2, METHOD_TEST_AND_APPLY, METHOD_TO_BYTE_ARRAY,
+			METHOD_GET_IF_NULL = null;
 
 	@BeforeAll
 	static void beforeAll() throws NoSuchMethodException {
@@ -107,6 +124,9 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		(METHOD_TO_TEXT_AND_IMAGES2 = clz.getDeclaredMethod("toTextAndImages2", Iterable.class, String.class,
 				Iterable.class, Iterable.class)).setAccessible(true);
+		//
+		(METHOD_TEST_AND_APPLY = clz.getDeclaredMethod("testAndApply", Predicate.class, Object.class,
+				FailableFunction.class, FailableFunction.class)).setAccessible(true);
 		//
 		(METHOD_TO_BYTE_ARRAY = clz.getDeclaredMethod("toByteArray", RenderedImage.class, String.class))
 				.setAccessible(true);
@@ -714,10 +734,50 @@ class VoiceManagerOjadAccentPanelTest {
 		//
 		Assertions.assertNull(toTextAndImages2(null, null, words, Collections.emptySet()));
 		//
-		Assertions.assertNull(toTextAndImages2(null, null, words, Collections.singleton("2グループの動詞")));
+		final Class<?> clz = Util.getClass(instance);
 		//
+		try (final InputStream is = Util.getResourceAsStream(clz,
+				String.format("/%1$s.class", StringUtils.replace(Util.getName(clz), ".", "/")))) {
+			//
+			final org.apache.bcel.classfile.Method m = JavaClassUtil.getMethod(
+					ClassParserUtil.parse(testAndApply(Objects::nonNull, is, x -> new ClassParser(x, null), null)),
+					METHOD_TO_TEXT_AND_IMAGES2);
+			//
+			final ConstantPoolGen cpg = testAndApply(Objects::nonNull, FieldOrMethodUtil.getConstantPool(m),
+					ConstantPoolGen::new, null);
+			//
+			final Instruction[] instructions = InstructionListUtil.getInstructions(MethodGenUtil
+					.getInstructionList(testAndApply(Objects::nonNull, m, x -> new MethodGen(x, null, cpg), null)));
+			//
+			for (int i = 0; i < length(instructions); i++) {
+				//
+				if (ArrayUtils.get(instructions, i) instanceof INVOKESTATIC invokestatic
+						&& Objects.equals(InvokeInstructionUtil.getClassName(invokestatic, cpg),
+								"java.util.Collections")
+						&& Objects.equals(InvokeInstructionUtil.getMethodName(invokestatic, cpg), "singleton") && i > 0
+						&& ArrayUtils.get(instructions, i - 1) instanceof LDC ldc && ldc != null) {
+					//
+					Assertions.assertNull(toTextAndImages2(null, null, words,
+							Collections.singleton(Util.toString(ldc.getValue(cpg)))));
+					//
+				} // if
+					//
+			} // for
+				//
+		} // try
+			//
 		Assertions.assertNull(toTextAndImages2(null, null, Collections.nCopies(2, null), null));
 		//
+	}
+
+	private static <T, R, E extends Throwable> R testAndApply(final Predicate<T> predicate, final T value,
+			final FailableFunction<T, R, E> functionTrue, final FailableFunction<T, R, E> functionFalse)
+			throws Throwable {
+		try {
+			return (R) METHOD_TEST_AND_APPLY.invoke(null, predicate, value, functionTrue, functionFalse);
+		} catch (final InvocationTargetException e) {
+			throw e.getTargetException();
+		}
 	}
 
 	private static Collection<?> toTextAndImages2(final Iterable<ElementHandle> ehs, final String textInput,
