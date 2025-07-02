@@ -390,6 +390,10 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 		return instance != null ? instance.accentImage : null;
 	}
 
+	private static BufferedImage getCurveImage(final TextAndImage instance) {
+		return instance != null ? instance.curveImage : null;
+	}
+
 	private static Field getFieldByName(final Class<?> clz, final String fieldName) {
 		//
 		final List<Field> fs = Util.toList(
@@ -485,7 +489,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			Util.forEach(Stream.of(btnCopyAccentImage, btnSaveAccentImage),
 					x -> Util.setEnabled(x, accentImage != null));
 			//
-			final Image curveImage = textAndImage != null ? textAndImage.curveImage : null;
+			final Image curveImage = getCurveImage(textAndImage);
 			//
 			setIcon(lblCurve, testAndApply(Objects::nonNull, curveImage, ImageIcon::new, x -> new ImageIcon()));
 			//
@@ -509,9 +513,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 			//
 			final IH ih = new IH();
 			//
-			final TextAndImage textAndImage = Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage));
-			//
-			ih.image = textAndImage != null ? textAndImage.curveImage : null;
+			ih.image = getCurveImage(Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage)));
 			//
 			setContents(
 					testAndGet(Boolean.logicalAnd(!GraphicsEnvironment.isHeadless(), !isTestMode()),
@@ -564,9 +566,7 @@ public class VoiceManagerOjadAccentPanel extends JPanel implements InitializingB
 				//
 		} else if (Objects.equals(source, btnSaveCurveImage)) {
 			//
-			final TextAndImage textAndImage = Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage));
-			//
-			final RenderedImage image = textAndImage != null ? textAndImage.curveImage : null;
+			final RenderedImage image = getCurveImage(Util.cast(TextAndImage.class, getSelectedItem(jcbTextAndImage)));
 			//
 			if (image != null) {
 				//
